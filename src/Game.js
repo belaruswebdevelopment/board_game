@@ -1,12 +1,10 @@
 import {INVALID_MOVE} from 'boardgame.io/core';
 import {setupGame} from "./GameSetup";
 
-function IsEndGame(board) {
-    let isEndGame = true;
-    for (let i = 0; i < board.length; i++) {
-        if (board[i] !== null) {
-            isEndGame = false;
-        }
+function IsEndGame(taverns) {
+    let isEndGame = false;
+    if (taverns[taverns.length - 1].length) {
+        isEndGame = true;
     }
     return isEndGame;
 }
@@ -55,22 +53,22 @@ export const BoardGame = {
     },
 
     moves: {
-        clickBoard: (G, ctx, id) => {
-            if (G.board[id] === null) {
+        clickBoard: (G, ctx, tavernId, cardId) => {
+            if (G.taverns[tavernId][cardId] === null) {
                 return INVALID_MOVE;
             }
-            G.players[ctx.currentPlayer].push(G.board[id]);
+            G.players[ctx.currentPlayer].push(G.taverns[tavernId][cardId]);
             if (G.deck.length > 0) {
                 G.deck = ctx.random.Shuffle(G.deck);
-                G.board[id] = G.deck.pop();
+                G.taverns[tavernId][cardId] = G.deck.pop();
             } else {
-                G.board[id] = null;
+                G.taverns[tavernId][cardId] = null;
             }
         },
     },
 
     endIf: (G, ctx) => {
-        if (IsEndGame(G.board)) {
+        if (IsEndGame(G.taverns)) {
             let totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
                 totalScore.push(Scoring(G.players[i]));
@@ -90,16 +88,16 @@ export const BoardGame = {
             let uniqueArr = [];
             let flag = true;
             for (let i = 0; i < G.drawSize; i++) {
-                if ((G.board[i] !== null)) {
+                if ((G.taverns[i] !== null)) {
                     let uniqueArrLength = uniqueArr.length;
                     for (let j = 0; j < uniqueArrLength; j++) {
-                        if (G.board[i].suit === uniqueArr[j].suit && G.board[i].rank === uniqueArr[j].rank) {
+                        if (G.taverns[i].suit === uniqueArr[j].suit && G.taverns[i].rank === uniqueArr[j].rank) {
                             flag = false;
                             j = uniqueArrLength;
                         }
                     }
                     if (flag) {
-                        uniqueArr.push(G.board[i]);
+                        uniqueArr.push(G.taverns[i]);
                         moves.push({move: 'clickBoard', args: [i]});
                     }
                 }

@@ -2,15 +2,14 @@ import React from 'react';
 import {Scoring} from "./Game";
 
 export class GameBoard extends React.Component {
-    onClick(id) {
-        this.props.moves.clickBoard(id);
+    onClick(t, id) {
+        this.props.moves.clickBoard(t, id);
     }
 
     drawBoard(drawSize) {
-        const fullBoardRows = Math.round(Math.sqrt(drawSize));
-        const boardCols = Math.floor(drawSize / fullBoardRows);
-        const lastBoardCol = drawSize % fullBoardRows;
-        const boardRows = lastBoardCol ? fullBoardRows + 1: fullBoardRows;
+        const boardRows = Math.round(Math.sqrt(drawSize));
+        const boardCols = Math.ceil(drawSize / boardRows);
+        const lastBoardCol = drawSize % boardRows;
 
         return [boardRows, boardCols, lastBoardCol];
     }
@@ -19,36 +18,40 @@ export class GameBoard extends React.Component {
         let winner = '';
         if (this.props.ctx.gameover) {
             winner = this.props.ctx.gameover.winner !== undefined ? (
-                <div id="winner">Winner: Player {this.props.ctx.gameover.winner}</div>
+                <div id="winner">Winner: Player {Number(this.props.ctx.gameover.winner) + 1}</div>
             ) : (
                 <div id="winner">Draw!</div>
             );
         }
 
-        const boardData = this.drawBoard(this.props.G.drawSize)
-        let mainBoard = [];
+        let tavernsBoards = [];
         let boardCells = [];
-        for (let i = 0; i < boardData[0]; i++) {
-            boardCells[i] = [];
-            const boardColsNum = boardData[2] && (i === boardData[0] - 1) ? boardData[2] : boardData[1];
-            for (let j = 0; j < boardColsNum; j++) {
-                const id = boardData[1] * i + j;
-                if (this.props.G.board[id] === null) {
-                    boardCells[i].push(
-                        <td key={id} onClick={() => this.onClick(id)}>
-                            {this.props.G.board[id]}
-                        </td>
-                    );
-                } else {
-                    boardCells[i].push(
-                        <td style={this.props.G.colors[this.props.G.board[id]?.suit]} key={id}
-                            onClick={() => this.onClick(id)}>
-                            <b>{this.props.G.board[id].rank}</b>
-                        </td>
-                    );
+        for (let t = 0; t < this.props.G.taverns.length; t++) {
+            for (let i = 0; i < 1; i++) {
+                boardCells[i] = [];
+                for (let j = 0; j < this.props.G.drawSize; j++) {
+                    if (this.props.G.taverns[t][j] === null) {
+                        boardCells[i].push(
+                            <td key={j} onClick={() => this.onClick(t, j)}>
+                                {this.props.G.taverns[t][j]}
+                            </td>
+                        );
+                    } else {
+                        boardCells[i].push(
+                            <td style={this.props.G.colors[this.props.G.taverns[t][j]?.suit]} key={j}
+                                onClick={() => this.onClick(t, j)}>
+                                <b>{this.props.G.taverns[t][j]?.rank}</b>
+                            </td>
+                        );
+                    }
                 }
+                tavernsBoards.push(<div key={t} className="column">
+                    <table>
+                        <caption>Tavern {t + 1}</caption>
+                        <tbody><tr>{boardCells[i]}</tr></tbody>
+                    </table>
+                </div>);
             }
-            mainBoard.push(<tr key={i}>{boardCells[i]}</tr>);
         }
 
         let playersBoards = [];
@@ -82,8 +85,8 @@ export class GameBoard extends React.Component {
             }
 
             playersBoards[p].push(<div key={p} className="column">
-                player {p} cards, {Scoring(this.props.G.players[p])} points
                 <table>
+                    <caption>Player {p + 1} cards, {Scoring(this.props.G.players[p])} points</caption>
                     <tbody>{playerRows[p]}</tbody>
                 </table>
             </div>);
@@ -91,11 +94,10 @@ export class GameBoard extends React.Component {
 
         return (
             <div>
-                <table id="board">
-                    <tbody>{mainBoard}</tbody>
-                </table>
-                {winner}
-
+                <div className="row">
+                    {tavernsBoards}
+                    {winner}
+                </div>
                 <div className="row">
                     {playersBoards}
                 </div>

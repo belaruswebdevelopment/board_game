@@ -52,9 +52,13 @@ export function setupGame(ctx) {
         {suit: 4, rank: 7},
     ];
 
+    let taverns = [];
+    let tavernsSize = 3;
     deck = ctx.random.Shuffle(deck);
-    const drawSize = 10;
-    const board = deck.splice(0, drawSize);
+    const drawSize = ctx.numPlayers;
+    for (let i = 0; i < tavernsSize; i++) {
+        taverns = deck.splice(0, drawSize);
+    }
     let players = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         players[i] = [];
@@ -64,7 +68,7 @@ export function setupGame(ctx) {
         drawSize,
         colors,
         deck,
-        board,
+        taverns,
         players,
     };
 }
