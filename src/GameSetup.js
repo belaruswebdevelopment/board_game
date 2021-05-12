@@ -65,6 +65,7 @@ export function setupGame(ctx) {
     }
 
     return {
+        tavernsNum,
         drawSize,
         colors,
         deck,

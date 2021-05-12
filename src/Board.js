@@ -26,7 +26,7 @@ export class GameBoard extends React.Component {
 
         let tavernsBoards = [];
         let boardCells = [];
-        for (let t = 0; t < this.props.G.taverns.length; t++) {
+        for (let t = 0; t < this.props.G.tavernsNum; t++) {
             for (let i = 0; i < 1; i++) {
                 boardCells[i] = [];
                 for (let j = 0; j < this.props.G.drawSize; j++) {
