@@ -1,9 +1,9 @@
 import {INVALID_MOVE} from 'boardgame.io/core';
 import {setupGame} from "./GameSetup";
 
-function IsEndGame(taverns) {
+function IsEndGame(taverns, deck) {
     let isEndGame = false;
-    if (taverns[taverns.length - 1].length) {
+    if (!deck.length && taverns[taverns.length - 1].every((element) => element === null)) {
         isEndGame = true;
     }
     return isEndGame;
@@ -54,21 +54,25 @@ export const BoardGame = {
 
     moves: {
         clickBoard: (G, ctx, tavernId, cardId) => {
-            if (G.taverns[tavernId][cardId] === null) {
+            let isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
+            if (G.taverns[tavernId][cardId] === null || isEarlyPick) {
                 return INVALID_MOVE;
             }
             G.players[ctx.currentPlayer].push(G.taverns[tavernId][cardId]);
-            if (G.deck.length > 0) {
+            G.taverns[tavernId][cardId] = null;
+            if (G.deck.length > 0 && G.taverns[G.taverns.length - 1].every((element) => element === null)) {
                 G.deck = ctx.random.Shuffle(G.deck);
-                G.taverns[tavernId][cardId] = G.deck.pop();
-            } else {
-                G.taverns[tavernId][cardId] = null;
+                for (let i = 0; i < G.taverns.length; i++) {
+                    for (let j = 0; j < G.drawSize; j++) {
+                        G.taverns[i][j] = G.deck.pop();
+                    }
+                }
             }
         },
     },
 
     endIf: (G, ctx) => {
-        if (IsEndGame(G.taverns)) {
+        if (IsEndGame(G.taverns, G.deck)) {
             let totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
                 totalScore.push(Scoring(G.players[i]));

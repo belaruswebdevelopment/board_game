@@ -53,11 +53,11 @@ export function setupGame(ctx) {
     ];
 
     let taverns = [];
-    let tavernsSize = 3;
+    let tavernsNum = 3;
     deck = ctx.random.Shuffle(deck);
     const drawSize = ctx.numPlayers;
-    for (let i = 0; i < tavernsSize; i++) {
-        taverns = deck.splice(0, drawSize);
+    for (let i = 0; i < tavernsNum; i++) {
+        taverns[i] = deck.splice(0, drawSize);
     }
     let players = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
