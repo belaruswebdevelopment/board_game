@@ -2,8 +2,8 @@ import React from 'react';
 import {Scoring} from "./Game";
 
 export class GameBoard extends React.Component {
-    onClick(tavernId, suitId, cardId) {
-        this.props.moves.clickBoard(tavernId, suitId, cardId);
+    onClick(tavernId, cardId) {
+        this.props.moves.clickBoard(tavernId, cardId);
     }
 
     drawBoard(drawSize) {
@@ -69,13 +69,13 @@ export class GameBoard extends React.Component {
                     </th>
                 );
             }
-            for (let i = 0; i < this.props.G.deck.length; i++) {
+            for (let i = 0; ; i++) {
                 playerRows[p][i] = [];
                 playerCells[i] = [];
                 let isDrawRow = false;
                 for (let j = 0; j < this.props.G.suitsNum; j++) {
                     const id = i + j;
-                    if (this.props.G.players[p][j] === undefined || (this.props.G.players[p][j] && this.props.G.players[p][j][id] === undefined)) {
+                    if (this.props.G.players[p][j] === undefined || (this.props.G.players[p][j] && this.props.G.players[p][j][i] === undefined)) {
                         playerCells[i].push(
                             <td key={id}>
 
@@ -84,8 +84,8 @@ export class GameBoard extends React.Component {
                     } else {
                         isDrawRow = true;
                         playerCells[i].push(
-                            <td key={id} style={this.props.G.colors[this.props.G.players[p][j][id].suit]}>
-                                <b>{this.props.G.players[p][j][id].rank}</b>
+                            <td key={id} style={this.props.G.colors[this.props.G.players[p][j][i].suit]}>
+                                <b>{this.props.G.players[p][j][i].rank}</b>
                             </td>
                         );
                     }

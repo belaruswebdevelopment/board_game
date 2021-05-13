@@ -63,6 +63,9 @@ export function setupGame(ctx) {
     let players = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         players[i] = [];
+        for (let j = 0; j < suitsNum; j++) {
+            players[i][j] = [];
+        }
     }
 
     return {
