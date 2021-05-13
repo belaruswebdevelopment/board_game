@@ -1,3 +1,5 @@
+import {createPlayer} from "./Player";
+
 export function setupGame(ctx) {
     /*
     * 0 - фиолетовые арифметическая
@@ -52,9 +54,23 @@ export function setupGame(ctx) {
         {suit: 4, rank: 7},
     ];
 
+    const tierToEnd = 2;
     let taverns = [];
     const tavernsNum = 3;
     const suitsNum = 5;
+    const fillDeck = (deckConfig) => {
+        const gameDeck = [];
+        for (let i = 0; i < deckConfig.length; i++) {
+            if (typeof deckConfig[i].ranks === "number") {
+                gameDeck.push({suit: deckConfig[i].suit, rank: deckConfig[i].ranks});
+            } else if (typeof deckConfig[i].ranks === "object") {
+                for (let j = 0; j < deckConfig[i].ranks.length; j++) {
+                    gameDeck.push({suit: deckConfig[i].suit, rank: deckConfig[i].ranks[j]});
+                }
+            }
+        }
+        return gameDeck;
+    };
     deck = ctx.random.Shuffle(deck);
     const drawSize = ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
@@ -62,13 +78,14 @@ export function setupGame(ctx) {
     }
     let players = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        players[i] = [];
+        players[i] = createPlayer();
         for (let j = 0; j < suitsNum; j++) {
-            players[i][j] = [];
+            players[i].cards[j] = [];
         }
     }
 
     return {
+        tierToEnd,
         tavernsNum,
         suitsNum,
         drawSize,

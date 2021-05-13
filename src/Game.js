@@ -1,5 +1,6 @@
 import {INVALID_MOVE} from 'boardgame.io/core';
 import {setupGame} from "./GameSetup";
+import {addCardToPlayer} from "./Player";
 
 function IsEndGame(taverns, tavernsNum, deck) {
     let isEndGame = false;
@@ -12,7 +13,7 @@ function IsEndGame(taverns, tavernsNum, deck) {
 export function Scoring(cards) {
     let score = 0;
     let count = [0, 0, 0, 0, 0];
-    let arithmetic = [0, 5, 10, 15, 21, 27, 35, 44, 54, 65, 77];
+    const arithmetic = [0, 5, 10, 15, 21, 27, 35, 44, 54, 65, 77];
     for (let i = 0; i < cards.length; i++) {
         if (i === 0) {
             count[0] += cards[i].length;
@@ -60,11 +61,11 @@ export const BoardGame = {
 
     moves: {
         clickBoard: (G, ctx, tavernId, cardId) => {
-            let isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
+            const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
             if (G.taverns[tavernId][cardId] === null || isEarlyPick) {
                 return INVALID_MOVE;
             }
-            G.players[ctx.currentPlayer][G.taverns[tavernId][cardId].suit].push(G.taverns[tavernId][cardId]);
+            addCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
             G.taverns[tavernId][cardId] = null;
             if (G.deck.length > 0 && G.taverns[G.tavernsNum - 1].every((element) => element === null)) {
                 G.deck = ctx.random.Shuffle(G.deck);
@@ -79,9 +80,9 @@ export const BoardGame = {
 
     endIf: (G, ctx) => {
         if (IsEndGame(G.taverns, G.tavernsNum, G.deck)) {
-            let totalScore = [];
+            const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(Scoring(G.players[i]));
+                totalScore.push(Scoring(G.players[i].cards));
             }
             let winnerScore = Math.max(...totalScore);
             for (let i = ctx.numPlayers - 1; i >= 0; i--) {
@@ -94,8 +95,8 @@ export const BoardGame = {
 
     ai: {
         enumerate: (G) => {
-            let moves = [];
-            let uniqueArr = [];
+            const moves = [];
+            const uniqueArr = [];
             let flag = true;
             const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
             if (tavernId === -1) {

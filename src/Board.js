@@ -24,7 +24,7 @@ export class GameBoard extends React.Component {
             );
         }
 
-        let tavernsBoards = [];
+        const tavernsBoards = [];
         let boardCells = [];
         for (let t = 0; t < this.props.G.tavernsNum; t++) {
             for (let i = 0; i < 1; i++) {
@@ -75,7 +75,7 @@ export class GameBoard extends React.Component {
                 let isDrawRow = false;
                 for (let j = 0; j < this.props.G.suitsNum; j++) {
                     const id = i + j;
-                    if (this.props.G.players[p][j] === undefined || (this.props.G.players[p][j] && this.props.G.players[p][j][i] === undefined)) {
+                    if (this.props.G.players[p].cards[j] === undefined || (this.props.G.players[p].cards[j] && this.props.G.players[p].cards[j][i] === undefined)) {
                         playerCells[i].push(
                             <td key={id}>
 
@@ -84,8 +84,8 @@ export class GameBoard extends React.Component {
                     } else {
                         isDrawRow = true;
                         playerCells[i].push(
-                            <td key={id} style={this.props.G.colors[this.props.G.players[p][j][i].suit]}>
-                                <b>{this.props.G.players[p][j][i].rank}</b>
+                            <td key={id} style={this.props.G.colors[this.props.G.players[p].cards[j][i].suit]}>
+                                <b>{this.props.G.players[p].cards[j][i].rank}</b>
                             </td>
                         );
                     }
@@ -101,7 +101,7 @@ export class GameBoard extends React.Component {
 
             playersBoards[p].push(<div key={p} className="column">
                 <table>
-                    <caption>Player {p + 1} cards, {Scoring(this.props.G.players[p])} points</caption>
+                    <caption>Player {p + 1} cards, {Scoring(this.props.G.players[p].cards)} points</caption>
                     <thead><tr>{playerHeaders[p]}</tr></thead>
                     <tbody>{playerRows[p]}</tbody>
                 </table>
