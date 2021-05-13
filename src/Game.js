@@ -15,32 +15,38 @@ export function Scoring(cards) {
     let arithmetic = [0, 5, 10, 15, 21, 27, 35, 44, 54, 65, 77];
     let rank = 0;
     for (let i = 0; i < cards.length; i++) {
-        if (cards[i].suit === 0) {
-            count[0] += 1;
-        } else if (cards[i].suit === 1) {
-            count[1] += 1;
-        } else if (cards[i].suit === 2) {
-            count[2] += 1;
-            rank += cards[i].rank;
+        if (i === 0) {
+            count[i] += cards[i].length;
+            score += arithmetic[count[i]];
+        } else if (i === 1) {
+            count[i] += cards[i].length;
+            score += count[i] ** 2;
+        } else if (i === 2) {
+            count[i] += cards[i].length;
+            for (let j = 0; j < cards[i].length; j++) {
+                rank += cards[i][j].rank;
+            }
+            score += count[i] * rank;
         } else if (cards[i].suit === 3) {
-            count[3] += 1;
-            score += cards[i].rank;
+            count[i] += cards[i].length;
+            for (let j = 0; j < cards[i].length; j++) {
+                score += cards[i].rank;
+            }
+            if (count[i] > 2) {
+                score += 10;
+            }
         } else if (cards[i].suit === 4) {
             count[4] += 1;
-            score += cards[i].rank;
+            for (let j = 0; j < cards[i].length; j++) {
+                score += cards[i].rank;
+            }
         }
-    }
-    if (count[3] > 2) {
-        score += 10;
     }
     if (Math.min(...count) === 1) {
         score += Math.min(...count) * 6;
     } else if (Math.min(...count) === 2) {
         score += Math.min(...count) * 10;
     }
-    score += arithmetic[count[0]];
-    score += count[1] ** 2;
-    score += count[2] * rank;
 
     return score;
 }
@@ -53,12 +59,15 @@ export const BoardGame = {
     },
 
     moves: {
-        clickBoard: (G, ctx, tavernId, cardId) => {
+        clickBoard: (G, ctx, tavernId, suitId, cardId) => {
             let isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
             if (G.taverns[tavernId][cardId] === null || isEarlyPick) {
                 return INVALID_MOVE;
             }
-            G.players[ctx.currentPlayer].push(G.taverns[tavernId][cardId]);
+            if (G.players[ctx.currentPlayer][suitId] === undefined) {
+                G.players[ctx.currentPlayer][suitId] = [];
+            }
+            G.players[ctx.currentPlayer][suitId].push(G.taverns[tavernId][cardId]);
             G.taverns[tavernId][cardId] = null;
             if (G.deck.length > 0 && G.taverns[G.tavernsNum - 1].every((element) => element === null)) {
                 G.deck = ctx.random.Shuffle(G.deck);
@@ -106,7 +115,7 @@ export const BoardGame = {
                     }
                     if (flag) {
                         uniqueArr.push(G.taverns[tavernId][i]);
-                        moves.push({move: 'clickBoard', args: [tavernId, i]});
+                        moves.push({move: 'clickBoard', args: [tavernId, G.taverns[tavernId][i].suit, i]});
                     }
                 }
                 flag = true;

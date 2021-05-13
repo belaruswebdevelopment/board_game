@@ -2,8 +2,8 @@ import React from 'react';
 import {Scoring} from "./Game";
 
 export class GameBoard extends React.Component {
-    onClick(t, id) {
-        this.props.moves.clickBoard(t, id);
+    onClick(tavernId, suitId, cardId) {
+        this.props.moves.clickBoard(tavernId, suitId, cardId);
     }
 
     drawBoard(drawSize) {
@@ -38,7 +38,7 @@ export class GameBoard extends React.Component {
                         );
                     } else {
                         boardCells[i].push(
-                            <td style={this.props.G.colors[this.props.G.taverns[t][j]?.suit]} key={j}
+                            <td style={this.props.G.colors[this.props.G.taverns[t][j].suit]} key={j}
                                 onClick={() => this.onClick(t, j)}>
                                 <b>{this.props.G.taverns[t][j]?.rank}</b>
                             </td>
@@ -55,38 +55,54 @@ export class GameBoard extends React.Component {
         }
 
         let playersBoards = [];
+        let playerHeaders = [];
         let playerRows = [];
         let playerCells = [];
         for (let p = 0; p < this.props.ctx.numPlayers; p++) {
             playersBoards[p] = [];
+            playerHeaders[p] = [];
             playerRows[p] = [];
-            for (let i = 0; i < 3; i++) {
+            for (let s = 0; s < this.props.G.suitsNum; s++) {
+                playerHeaders[p].push(
+                    <th key={s} style={this.props.G.colors[s]}>
+                        suitName
+                    </th>
+                );
+            }
+            for (let i = 0; i < this.props.G.deck.length; i++) {
                 playerRows[p][i] = [];
                 playerCells[i] = [];
-                for (let j = 0; j < 5; j++) {
-                    const id = 5 * i + j;
-                    if (this.props.G.players[p][id] === undefined) {
+                let isDrawRow = false;
+                for (let j = 0; j < this.props.G.suitsNum; j++) {
+                    const id = i + j;
+                    if (this.props.G.players[p][j] === undefined || (this.props.G.players[p][j] && this.props.G.players[p][j][id] === undefined)) {
                         playerCells[i].push(
                             <td key={id}>
-                                {this.props.G.players[p][id]}
+
                             </td>
                         );
                     } else {
+                        isDrawRow = true;
                         playerCells[i].push(
-                            <td key={id} style={this.props.G.colors[this.props.G.players[p][id]?.suit]}>
-                                <b>{this.props.G.players[p][id].rank}</b>
+                            <td key={id} style={this.props.G.colors[this.props.G.players[p][j][id].suit]}>
+                                <b>{this.props.G.players[p][j][id].rank}</b>
                             </td>
                         );
                     }
                 }
-                playerRows[p][i].push(
-                    <tr key={i}>{playerCells[i]}</tr>
-                );
+                if (isDrawRow) {
+                    playerRows[p][i].push(
+                        <tr key={i}>{playerCells[i]}</tr>
+                    );
+                } else {
+                    break;
+                }
             }
 
             playersBoards[p].push(<div key={p} className="column">
                 <table>
                     <caption>Player {p + 1} cards, {Scoring(this.props.G.players[p])} points</caption>
+                    <thead><tr>{playerHeaders[p]}</tr></thead>
                     <tbody>{playerRows[p]}</tbody>
                 </table>
             </div>);

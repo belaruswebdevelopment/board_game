@@ -53,7 +53,8 @@ export function setupGame(ctx) {
     ];
 
     let taverns = [];
-    let tavernsNum = 3;
+    const tavernsNum = 3;
+    const suitsNum = 5;
     deck = ctx.random.Shuffle(deck);
     const drawSize = ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
@@ -66,6 +67,7 @@ export function setupGame(ctx) {
 
     return {
         tavernsNum,
+        suitsNum,
         drawSize,
         colors,
         deck,

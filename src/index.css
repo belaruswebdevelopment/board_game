@@ -22,6 +22,7 @@ td {
 
 .column {
   float: left;
+  margin-right: 10px;
   width: 20%;
 }
 
