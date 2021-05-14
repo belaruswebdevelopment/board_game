@@ -13,9 +13,9 @@ export class GameBoard extends React.Component {
 
         return (
             <div>
+                {winnerUI}
                 <div className="row">
                     {tavernsUI}
-                    {winnerUI}
                 </div>
                 <div className="row">
                     {playersBoardsUI}
