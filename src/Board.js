@@ -6,7 +6,7 @@ export class GameBoard extends React.Component {
         this.props.moves.clickBoard(tavernId, cardId);
     }
 
-    drawBoard(drawSize) {
+    DrawBoard(drawSize) {
         const boardRows = Math.round(Math.sqrt(drawSize));
         const boardCols = Math.ceil(drawSize / boardRows);
         const lastBoardCol = drawSize % boardRows;

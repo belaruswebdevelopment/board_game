@@ -1,6 +1,6 @@
-import {createPlayer} from "./Player";
+import {CreatePlayer} from "./Player";
 
-export function setupGame(ctx) {
+export function SetupGame(ctx) {
     /*
     * 0 - фиолетовые арифметическая
     * 1 - зелёный квадраты
@@ -58,15 +58,19 @@ export function setupGame(ctx) {
     let taverns = [];
     const tavernsNum = 3;
     const suitsNum = 5;
-    const fillDeck = (deckConfig) => {
+    const CreateCard = (card) => {
+
+    }
+    const FillDeck = (deckConfig) => {
         const gameDeck = [];
         for (let i = 0; i < deckConfig.length; i++) {
-            if (typeof deckConfig[i].ranks === "number") {
-                gameDeck.push({suit: deckConfig[i].suit, rank: deckConfig[i].ranks});
-            } else if (typeof deckConfig[i].ranks === "object") {
-                for (let j = 0; j < deckConfig[i].ranks.length; j++) {
-                    gameDeck.push({suit: deckConfig[i].suit, rank: deckConfig[i].ranks[j]});
+            let count = deckConfig[i].ranks.length ? deckConfig[i].ranks.length : ranks;
+            for (let j = 0; j < count; j++) {
+                let tempCard = CreateCard(deckConfig[i].suit);
+                if (typeof deckConfig[i].ranks === "object") {
+                    tempCard.rank = deckConfig[i].ranks[j];
                 }
+                gameDeck.push(tempCard);
             }
         }
         return gameDeck;
@@ -78,7 +82,7 @@ export function setupGame(ctx) {
     }
     let players = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        players[i] = createPlayer();
+        players[i] = CreatePlayer();
         for (let j = 0; j < suitsNum; j++) {
             players[i].cards[j] = [];
         }

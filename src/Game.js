@@ -1,6 +1,6 @@
 import {INVALID_MOVE} from 'boardgame.io/core';
-import {setupGame} from "./GameSetup";
-import {addCardToPlayer} from "./Player";
+import {SetupGame} from "./GameSetup";
+import {AddCardToPlayer} from "./Player";
 
 function IsEndGame(taverns, tavernsNum, deck) {
     let isEndGame = false;
@@ -53,19 +53,19 @@ export function Scoring(cards) {
 }
 
 export const BoardGame = {
-    setup: setupGame,
+    setup: SetupGame,
 
     turn: {
         moveLimit: 1,
     },
 
     moves: {
-        clickBoard: (G, ctx, tavernId, cardId) => {
+        ClickBoard: (G, ctx, tavernId, cardId) => {
             const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
             if (G.taverns[tavernId][cardId] === null || isEarlyPick) {
                 return INVALID_MOVE;
             }
-            addCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
+            AddCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
             G.taverns[tavernId][cardId] = null;
             if (G.deck.length > 0 && G.taverns[G.tavernsNum - 1].every((element) => element === null)) {
                 G.deck = ctx.random.Shuffle(G.deck);
@@ -113,7 +113,7 @@ export const BoardGame = {
                     }
                     if (flag) {
                         uniqueArr.push(G.taverns[tavernId][i]);
-                        moves.push({move: 'clickBoard', args: [tavernId, i]});
+                        moves.push({move: 'ClickBoard', args: [tavernId, i]});
                     }
                 }
                 flag = true;

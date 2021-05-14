@@ -1,5 +1,5 @@
-export const createPlayer = () => ({cards: [[]], heroes: [], coins: []});
+export const CreatePlayer = () => ({cards: [[]], heroes: [], coins: []});
 
-export const addCardToPlayer = (player, card) => {
+export const AddCardToPlayer = (player, card) => {
     player.cards[card.suit].push(card);
 }
