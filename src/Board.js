@@ -7,9 +7,9 @@ export class GameBoard extends React.Component {
     }
 
     render() {
-        const winnerUI = DrawWinner(this.props);
-        const tavernsUI = DrawTaverns(this.props);
-        const playersBoardsUI = DrawPlayersBoards(this.props);
+        const winnerUI = DrawWinner(this);
+        const tavernsUI = DrawTaverns(this);
+        const playersBoardsUI = DrawPlayersBoards(this);
 
         return (
             <div>

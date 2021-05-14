@@ -3,9 +3,9 @@ import {Scoring} from "./Game";
 
 export const DrawWinner = (data) => {
     let winner = '';
-    if (data.ctx.gameover) {
-        winner = data.ctx.gameover.winner !== undefined ? (
-            <h1>Winner: Player {Number(data.ctx.gameover.winner) + 1}</h1>
+    if (data.props.ctx.gameover) {
+        winner = data.props.ctx.gameover.winner !== undefined ? (
+            <h1>Winner: Player {Number(data.props.ctx.gameover.winner) + 1}</h1>
         ) : (
             <h1>Draw!</h1>
         );
@@ -16,21 +16,21 @@ export const DrawWinner = (data) => {
 export const DrawTaverns = (data) => {
     const tavernsBoards = [];
     let boardCells = [];
-    for (let t = 0; t < data.G.tavernsNum; t++) {
+    for (let t = 0; t < data.props.G.tavernsNum; t++) {
         for (let i = 0; i < 1; i++) {
             boardCells[i] = [];
-            for (let j = 0; j < data.G.drawSize; j++) {
-                if (data.G.taverns[t][j] === null) {
+            for (let j = 0; j < data.props.G.drawSize; j++) {
+                if (data.props.G.taverns[t][j] === null) {
                     boardCells[i].push(
-                        <td key={j} onClick={() => this.OnClick(t, j)}>
-                            {data.G.taverns[t][j]}
+                        <td key={j} onClick={() => data.OnClick(t, j)}>
+                            {data.props.G.taverns[t][j]}
                         </td>
                     );
                 } else {
                     boardCells[i].push(
-                        <td style={data.G.colors[data.G.taverns[t][j].suit]} key={j}
-                            onClick={() => this.OnClick(t, j)}>
-                            <b>{data.G.taverns[t][j]?.rank}</b>
+                        <td style={data.props.G.colors[data.props.G.taverns[t][j].suit]} key={j}
+                            onClick={() => data.OnClick(t, j)}>
+                            <b>{data.props.G.taverns[t][j].rank}</b>
                         </td>
                     );
                 }
@@ -51,13 +51,13 @@ export const DrawPlayersBoards = (data) => {
     let playerHeaders = [];
     let playerRows = [];
     let playerCells = [];
-    for (let p = 0; p < data.ctx.numPlayers; p++) {
+    for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         playersBoards[p] = [];
         playerHeaders[p] = [];
         playerRows[p] = [];
-        for (let s = 0; s < data.G.suitsNum; s++) {
+        for (let s = 0; s < data.props.G.suitsNum; s++) {
             playerHeaders[p].push(
-                <th key={s} style={data.G.colors[s]}>
+                <th key={s} style={data.props.G.colors[s]}>
                     suitName
                 </th>
             );
@@ -66,9 +66,9 @@ export const DrawPlayersBoards = (data) => {
             playerRows[p][i] = [];
             playerCells[i] = [];
             let isDrawRow = false;
-            for (let j = 0; j < data.G.suitsNum; j++) {
+            for (let j = 0; j < data.props.G.suitsNum; j++) {
                 const id = i + j;
-                if (data.G.players[p].cards[j] === undefined || (data.G.players[p].cards[j] && data.G.players[p].cards[j][i] === undefined)) {
+                if (data.props.G.players[p].cards[j] === undefined || (data.props.G.players[p].cards[j] && data.props.G.players[p].cards[j][i] === undefined)) {
                     playerCells[i].push(
                         <td key={id}>
 
@@ -77,8 +77,8 @@ export const DrawPlayersBoards = (data) => {
                 } else {
                     isDrawRow = true;
                     playerCells[i].push(
-                        <td key={id} style={data.G.colors[data.G.players[p].cards[j][i].suit]}>
-                            <b>{data.G.players[p].cards[j][i].rank}</b>
+                        <td key={id} style={data.props.G.colors[data.props.G.players[p].cards[j][i].suit]}>
+                            <b>{data.props.G.players[p].cards[j][i].rank}</b>
                         </td>
                     );
                 }
@@ -94,7 +94,7 @@ export const DrawPlayersBoards = (data) => {
 
         playersBoards[p].push(<div key={p} className="column">
             <table>
-                <caption>Player {p + 1} cards, {Scoring(data.G.players[p].cards)} points</caption>
+                <caption>Player {p + 1} cards, {Scoring(data.props.G.players[p].cards)} points</caption>
                 <thead><tr>{playerHeaders[p]}</tr></thead>
                 <tbody>{playerRows[p]}</tbody>
             </table>
