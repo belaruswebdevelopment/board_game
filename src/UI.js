@@ -30,7 +30,7 @@ export const DrawTaverns = (data) => {
                     boardCells[i].push(
                         <td style={data.props.G.colors[data.props.G.taverns[t][j].suit]} key={j}
                             onClick={() => data.OnClick(t, j)}>
-                            <b>{data.props.G.taverns[t][j].rank}</b>
+                            <b>{data.props.G.taverns[t][j].points}</b>
                         </td>
                     );
                 }
@@ -78,7 +78,7 @@ export const DrawPlayersBoards = (data) => {
                     isDrawRow = true;
                     playerCells[i].push(
                         <td key={id} style={data.props.G.colors[data.props.G.players[p].cards[j][i].suit]}>
-                            <b>{data.props.G.players[p].cards[j][i].rank}</b>
+                            <b>{data.props.G.players[p].cards[j][i].points}</b>
                         </td>
                     );
                 }
