@@ -1,6 +1,6 @@
 import {CreatePlayer} from "./Player";
 
-export function SetupGame(ctx) {
+export const SetupGame = (ctx) => {
     /*
     * 0 - фиолетовые арифметическая
     * 1 - зелёный квадраты

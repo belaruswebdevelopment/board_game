@@ -2,7 +2,7 @@ import React from 'react';
 import {Scoring} from "./Game";
 
 export class GameBoard extends React.Component {
-    onClick(tavernId, cardId) {
+    OnClick = (tavernId, cardId) => {
         this.props.moves.ClickBoard(tavernId, cardId);
     }
 
@@ -24,14 +24,14 @@ export class GameBoard extends React.Component {
                 for (let j = 0; j < this.props.G.drawSize; j++) {
                     if (this.props.G.taverns[t][j] === null) {
                         boardCells[i].push(
-                            <td key={j} onClick={() => this.onClick(t, j)}>
+                            <td key={j} onClick={() => this.OnClick(t, j)}>
                                 {this.props.G.taverns[t][j]}
                             </td>
                         );
                     } else {
                         boardCells[i].push(
                             <td style={this.props.G.colors[this.props.G.taverns[t][j].suit]} key={j}
-                                onClick={() => this.onClick(t, j)}>
+                                onClick={() => this.OnClick(t, j)}>
                                 <b>{this.props.G.taverns[t][j]?.rank}</b>
                             </td>
                         );

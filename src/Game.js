@@ -2,7 +2,7 @@ import {INVALID_MOVE} from 'boardgame.io/core';
 import {SetupGame} from "./GameSetup";
 import {AddCardToPlayer} from "./Player";
 
-function IsEndGame(taverns, tavernsNum, deck) {
+const IsEndGame = (taverns, tavernsNum, deck) => {
     let isEndGame = false;
     if (!deck.length && taverns[tavernsNum - 1].every((element) => element === null)) {
         isEndGame = true;
@@ -10,7 +10,7 @@ function IsEndGame(taverns, tavernsNum, deck) {
     return isEndGame;
 }
 
-export function Scoring(cards) {
+export const Scoring = (cards) => {
     let score = 0;
     let count = [0, 0, 0, 0, 0];
     const arithmetic = [0, 5, 10, 15, 21, 27, 35, 44, 54, 65, 77];
