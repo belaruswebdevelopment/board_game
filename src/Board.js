@@ -3,15 +3,7 @@ import {Scoring} from "./Game";
 
 export class GameBoard extends React.Component {
     onClick(tavernId, cardId) {
-        this.props.moves.clickBoard(tavernId, cardId);
-    }
-
-    DrawBoard(drawSize) {
-        const boardRows = Math.round(Math.sqrt(drawSize));
-        const boardCols = Math.ceil(drawSize / boardRows);
-        const lastBoardCol = drawSize % boardRows;
-
-        return [boardRows, boardCols, lastBoardCol];
+        this.props.moves.ClickBoard(tavernId, cardId);
     }
 
     render() {
