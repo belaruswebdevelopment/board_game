@@ -58,7 +58,7 @@ export const SetupGame = (ctx) => {
     let taverns = [];
     const tavernsNum = 3;
     const suitsNum = 5;
-    const CreateCard = (card) => {
+    /*const CreateCard = (card) => {
 
     }
     const FillDeck = (deckConfig) => {
@@ -74,7 +74,7 @@ export const SetupGame = (ctx) => {
             }
         }
         return gameDeck;
-    };
+    };*/
     deck = ctx.random.Shuffle(deck);
     const drawSize = ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
