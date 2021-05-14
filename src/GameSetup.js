@@ -10,7 +10,7 @@ export const SetupGame = (ctx) => {
         {background: "Tomato"},
         {background: "DodgerBlue"},
     ];
-    let decks = [[[]]];
+    let decks = [];
     const tierToEnd = 1;
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards(suitsConfigArray);
