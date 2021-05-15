@@ -42,7 +42,6 @@ export const BoardGame = {
             AddCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
             G.taverns[tavernId][cardId] = null;
             if (G.decks[G.decks.length - G.tierToEnd]?.length > 0 && G.taverns[G.tavernsNum - 1].every((element) => element === null)) {
-                G.decks[G.decks.length - G.tierToEnd] = ctx.random.Shuffle(G.decks[G.decks.length - G.tierToEnd]);
                 for (let i = 0; i < G.tavernsNum; i++) {
                     for (let j = 0; j < G.drawSize; j++) {
                         G.taverns[i][j] = G.decks[G.decks.length - G.tierToEnd].pop();

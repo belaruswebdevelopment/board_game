@@ -1,5 +1,6 @@
 const TotalPoints = (accumulator, currentValue) => accumulator + currentValue.points;
 const TotalRank = (accumulator, currentValue) => accumulator + currentValue.rank;
+const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;
 
 /*
     * 0 - фиолетовые арифметическая
@@ -54,8 +55,7 @@ const blacksmithSuit = {
         };
     },
     scoringRule: (cards) => {
-        const arithmetic = (startValue, step, ranksCount) => (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;
-        return arithmetic(3, 1, cards.reduce(totalRank, 0));
+        return ArithmeticSum(3, 1, cards.reduce(TotalRank, 0));
     },
     distinction: {
         description: "",
@@ -110,7 +110,7 @@ const hunterSuit = {
         };
     },
     scoringRule: (cards) => {
-        return cards.reduce(totalRank, 0) ** 2;
+        return cards.reduce(TotalRank, 0) ** 2;
     },
     distinction: {
         description: "",
@@ -165,7 +165,7 @@ const minerSuit = {
         };
     },
     scoringRule: (cards) => {
-        return cards.reduce(totalRank, 0) * cards.reduce(totalPoints, 0);
+        return cards.reduce(TotalRank, 0) * cards.reduce(TotalPoints, 0);
     },
     distinction: {
         description: "",
@@ -220,7 +220,7 @@ const warriorSuit = {
         };
     },
     scoringRule: (cards) => {
-        return cards.reduce(totalPoints, 0);
+        return cards.reduce(TotalPoints, 0);
     },
     distinction: {
         description: "",
@@ -275,7 +275,7 @@ const explorerSuit = {
         };
     },
     scoringRule: (cards) => {
-        return cards.reduce(totalPoints, 0);
+        return cards.reduce(TotalPoints, 0);
     },
     distinction: {
         description: "",
