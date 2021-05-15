@@ -1,3 +1,6 @@
+const TotalPoints = (accumulator, currentValue) => accumulator + currentValue.points;
+const TotalRank = (accumulator, currentValue) => accumulator + currentValue.rank;
+
 /*
     * 0 - фиолетовые арифметическая
     * 1 - зелёный квадраты
