@@ -10,19 +10,53 @@ const blacksmithSuit = {
     suitName: 'Blacksmith',
     suitColor: 'Violet',
     description: "",
-    ranksValues: (config) => {
-        return 10;
+    ranksValues: () => {
+        return {
+            2: {
+                0: 10,
+                1: 10,
+            },
+            3: {
+                0: 10,
+                1: 10,
+            },
+            4: {
+                0: 10,
+                1: 10,
+            },
+            5: {
+                0: 10,
+                1: 10,
+            },
+        };
     },
-    pointsValues: (config) => {
-        return 10;
+    pointsValues: () => {
+        return {
+            2: {
+                0: 10,
+                1: 10,
+            },
+            3: {
+                0: 10,
+                1: 10,
+            },
+            4: {
+                0: 10,
+                1: 10,
+            },
+            5: {
+                0: 10,
+                1: 10,
+            },
+        };
     },
     scoringRule: (cards) => {
-        const arithmetic = [0, 5, 10, 15, 21, 27, 35, 44, 54, 65, 77];
+        const arithmetic = (startValue, step, ranksCount) => (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;
         let count = 0;
         for (let i = 0; i < cards.length; i++) {
             count += cards[i].rank;
         }
-        return arithmetic[count];
+        return arithmetic(3, 1, count);
     },
     distinction: {
         description: "",
@@ -36,11 +70,45 @@ const hunterSuit = {
     suitName: 'Hunter',
     suitColor: 'MediumSeaGreen',
     description: "",
-    ranksValues: (config) => {
-        return 9;
+    ranksValues: () => {
+        return {
+            2: {
+                0: 9,
+                1: 9,
+            },
+            3: {
+                0: 9,
+                1: 9,
+            },
+            4: {
+                0: 9,
+                1: 9,
+            },
+            5: {
+                0: 9,
+                1: 9,
+            },
+        };
     },
-    pointsValues: (config) => {
-        return 9;
+    pointsValues: () => {
+        return {
+            2: {
+                0: 9,
+                1: 9,
+            },
+            3: {
+                0: 9,
+                1: 9,
+            },
+            4: {
+                0: 9,
+                1: 9,
+            },
+            5: {
+                0: 9,
+                1: 9,
+            },
+        };
     },
     scoringRule: (cards) => {
         let count = 0;
@@ -61,11 +129,45 @@ const minerSuit = {
     suitName: 'Miner',
     suitColor: 'Khaki',
     description: "",
-    ranksValues: (config) => {
-        return 6;
+    ranksValues: () => {
+        return {
+            2: {
+               0: 6,
+               1: 6,
+            },
+            3: {
+                0: 6,
+                1: 6,
+            },
+            4: {
+                0: 6,
+                1: 6,
+            },
+            5: {
+                0: 6,
+                1: 6,
+            },
+        };
     },
-    pointsValues: (config) => {
-        return [1, 1, 1, 1, 2, 2];
+    pointsValues: () => {
+        return {
+            2: {
+                0: [1, 1, 1, 1, 2, 2],
+                1: [1, 1, 1, 1, 2, 2],
+            },
+            3: {
+                0: [1, 1, 1, 1, 2, 2],
+                1: [1, 1, 1, 1, 2, 2],
+            },
+            4: {
+                0: [1, 1, 1, 1, 2, 2],
+                1: [1, 1, 1, 1, 2, 2],
+            },
+            5: {
+                0: [1, 1, 1, 1, 2, 2],
+                1: [1, 1, 1, 1, 2, 2],
+            },
+        };
     },
     scoringRule: (cards) => {
         let points = 0;
@@ -88,11 +190,45 @@ const warriorSuit = {
     suitName: 'Warrior',
     suitColor: 'Tomato',
     description: "",
-    ranksValues: (config) => {
-        return 6;
+    ranksValues: () => {
+        return {
+            2: {
+                0: 6,
+                1: 6,
+            },
+            3: {
+                0: 6,
+                1: 6,
+            },
+            4: {
+                0: 6,
+                1: 6,
+            },
+            5: {
+                0: 6,
+                1: 6,
+            },
+        };
     },
-    pointsValues: (config) => {
-        return [2, 2, 3, 4, 5, 5];
+    pointsValues: () => {
+        return {
+            2: {
+                0: [2, 2, 3, 4, 5, 5],
+                1: [2, 2, 3, 4, 5, 5],
+            },
+            3: {
+                0: [2, 2, 3, 4, 5, 5],
+                1: [2, 2, 3, 4, 5, 5],
+            },
+            4: {
+                0: [2, 2, 3, 4, 5, 5],
+                1: [2, 2, 3, 4, 5, 5],
+            },
+            5: {
+                0: [2, 2, 3, 4, 5, 5],
+                1: [2, 2, 3, 4, 5, 5],
+            },
+        };
     },
     scoringRule: (cards) => {
         let score = 0;
@@ -113,11 +249,45 @@ const explorerSuit = {
     suitName: 'Explorer',
     suitColor: 'DodgerBlue',
     description: "",
-    ranksValues: (config) => {
-        return 5;
+    ranksValues: () => {
+        return {
+            2: {
+                0: 5,
+                1: 5,
+            },
+            3: {
+                0: 5,
+                1: 5,
+            },
+            4: {
+                0: 5,
+                1: 5,
+            },
+            5: {
+                0: 5,
+                1: 5,
+            },
+        };
     },
-    pointsValues: (config) => {
-        return [4, 5, 6, 6, 7];
+    pointsValues: () => {
+        return {
+            2: {
+                0: [4, 5, 6, 6, 7],
+                1: [4, 5, 6, 6, 7],
+            },
+            3: {
+                0: [4, 5, 6, 6, 7],
+                1: [4, 5, 6, 6, 7],
+            },
+            4: {
+                0: [4, 5, 6, 6, 7],
+                1: [4, 5, 6, 6, 7],
+            },
+            5: {
+                0: [4, 5, 6, 6, 7],
+                1: [4, 5, 6, 6, 7],
+            },
+        };
     },
     scoringRule: (cards) => {
         let score = 0;
