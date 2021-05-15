@@ -55,11 +55,7 @@ const blacksmithSuit = {
     },
     scoringRule: (cards) => {
         const arithmetic = (startValue, step, ranksCount) => (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;
-        let count = 0;
-        for (let i = 0; i < cards.length; i++) {
-            count += cards[i].rank;
-        }
-        return arithmetic(3, 1, count);
+        return arithmetic(3, 1, cards.reduce(totalRank, 0));
     },
     distinction: {
         description: "",
@@ -114,11 +110,7 @@ const hunterSuit = {
         };
     },
     scoringRule: (cards) => {
-        let count = 0;
-        for (let i = 0; i < cards.length; i++) {
-            count += cards[i].rank;
-        }
-        return count ** 2;
+        return cards.reduce(totalRank, 0) ** 2;
     },
     distinction: {
         description: "",
@@ -173,13 +165,7 @@ const minerSuit = {
         };
     },
     scoringRule: (cards) => {
-        let points = 0;
-        let count = 0;
-        for (let i = 0; i < cards.length; i++) {
-            points += cards[i].points;
-            count += cards[i].rank;
-        }
-        return count * points;
+        return cards.reduce(totalRank, 0) * cards.reduce(totalPoints, 0);
     },
     distinction: {
         description: "",
@@ -234,11 +220,7 @@ const warriorSuit = {
         };
     },
     scoringRule: (cards) => {
-        let score = 0;
-        for (let i = 0; i < cards.length; i++) {
-            score += cards[i].points;
-        }
-        return score;
+        return cards.reduce(totalPoints, 0);
     },
     distinction: {
         description: "",
@@ -293,11 +275,7 @@ const explorerSuit = {
         };
     },
     scoringRule: (cards) => {
-        let score = 0;
-        for (let i = 0; i < cards.length; i++) {
-            score += cards[i].points;
-        }
-        return score;
+        return cards.reduce(totalPoints, 0);
     },
     distinction: {
         description: "",
