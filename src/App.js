@@ -5,7 +5,7 @@ import { GameBoard } from './Board';
 const App = Client({
   game: BoardGame,
   board: GameBoard,
-  numPlayers: 3,
+  numPlayers: 5,
 });
 
 export default App;

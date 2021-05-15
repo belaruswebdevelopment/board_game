@@ -1,6 +1,58 @@
 import React from "react";
 import {Scoring} from "./Game";
+import {CountMarketCoins} from "./Coin";
 
+const DrawBoard = (objectsSize) => {
+    const boardRows = Math.ceil(Math.sqrt(objectsSize));
+    const boardCols = Math.floor(objectsSize / boardRows) + 1;
+    const lastBoardCol = objectsSize % boardRows;
+
+    return {boardRows, boardCols, lastBoardCol};
+}
+
+export const DrawMarketCoins = (data) => {
+    const drawData = DrawBoard(data.props.G.marketCoinsUnique.length);
+    const countMarketCoins = CountMarketCoins(data.props.G.marketCoins);
+    let boardRows = [];
+    let boardCells = [];
+    let increment = 0;
+    for (let i = 0; i < drawData.boardRows; i++) {
+        boardRows[i] = [];
+        boardCells[i] = [];
+        for (let j = 0; j < drawData.boardCols; j++) {
+            if (countMarketCoins[data.props.G.marketCoinsUnique[increment]] === undefined) {
+                boardCells[i].push(
+                    <td key={j}>
+                        {data.props.G.marketCoinsUnique[increment]}
+                        <sup>0</sup>
+                    </td>
+                );
+            } else {
+                boardCells[i].push(
+                    <td key={j}>
+                        <b>{data.props.G.marketCoinsUnique[increment]}</b>
+                        <sup>{countMarketCoins[data.props.G.marketCoinsUnique[increment]]}</sup>
+                    </td>
+                );
+            }
+            increment++;
+            if ((i === drawData.boardRows - 1) && (j + 1 === drawData.lastBoardCol)) {
+                j = drawData.boardCols;
+            }
+        }
+        boardRows[i].push(
+            <tr key={i}>{boardCells[i]}</tr>
+        );
+    }
+    return (<div className="column">
+        <table>
+            <caption>Market coins</caption>
+            <tbody>
+            {boardRows}
+            </tbody>
+        </table>
+    </div>);
+}
 export const DrawWinner = (data) => {
     let winner = '';
     if (data.props.ctx.gameover) {

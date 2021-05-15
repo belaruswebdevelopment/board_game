@@ -1,6 +1,8 @@
 import {CreatePlayer} from "./Player";
 import {BuildCards} from "./Card";
 import {suitsConfigArray} from "./SuitData";
+import {initialPlayerCoinsConfig, marketCoinsConfig} from "./CoinData";
+import {BuildCoins} from "./Coin";
 
 export const SetupGame = (ctx) => {
     const colors = [
@@ -30,7 +32,11 @@ export const SetupGame = (ctx) => {
             players[i].cards[j] = [];
         }
     }
-
+    for (let i = 0; i < ctx.numPlayers; i++) {
+        players[i].handCoins = BuildCoins(initialPlayerCoinsConfig, {isInitial: true, isTriggerTrading: false});
+    }
+    let marketCoinsUnique = [];
+    let marketCoins = BuildCoins(marketCoinsConfig, {count: marketCoinsUnique, players: ctx.numPlayers, isInitial: false, isTriggerTrading: false});
     return {
         tierToEnd,
         tavernsNum,
@@ -38,6 +44,8 @@ export const SetupGame = (ctx) => {
         drawSize,
         colors,
         decks,
+        marketCoins,
+        marketCoinsUnique,
         taverns,
         players,
     };

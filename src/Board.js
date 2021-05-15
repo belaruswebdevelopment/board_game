@@ -1,5 +1,5 @@
 import React from 'react';
-import {DrawPlayersBoards, DrawTaverns, DrawWinner} from "./UI";
+import {DrawMarketCoins, DrawPlayersBoards, DrawTaverns, DrawWinner} from "./UI";
 
 export class GameBoard extends React.Component {
     OnClick = (tavernId, cardId) => {
@@ -10,9 +10,11 @@ export class GameBoard extends React.Component {
         const winnerUI = DrawWinner(this);
         const tavernsUI = DrawTaverns(this);
         const playersBoardsUI = DrawPlayersBoards(this);
+        const marketCoinsUI = DrawMarketCoins(this);
 
         return (
             <div>
+                {marketCoinsUI}
                 {winnerUI}
                 <div className="row">
                     {tavernsUI}
