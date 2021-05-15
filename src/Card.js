@@ -15,7 +15,6 @@ export const BuildCards = (deckConfig, data) => {
             const tempRank = Array.isArray(deckConfig[i].ranksValues()[data.players][data.tier]) ? deckConfig[i].ranksValues()[data.players][data.tier][j] : 1;
             const tempPoints = isArray ? deckConfig[i].pointsValues()[data.players][data.tier][j] : undefined;
             cards.push(CreateCard({suit: deckConfig[i].suit, rank: tempRank, points: tempPoints}));
-            console.log(cards)
         }
     }
     return cards;

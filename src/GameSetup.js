@@ -14,7 +14,6 @@ export const SetupGame = (ctx) => {
     const tierToEnd = 2;
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards(suitsConfigArray, {players: ctx.numPlayers, tier: i});
-        console.log('Cards:' + decks[i])
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
     let taverns = [];
