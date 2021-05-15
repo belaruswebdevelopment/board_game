@@ -36,19 +36,23 @@ export const BoardGame = {
     moves: {
         ClickBoard: (G, ctx, tavernId, cardId) => {
             const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
-            let currentDeck = G.decks[G.decks.length - G.tierToEnd];
             if (G.taverns[tavernId][cardId] === null || isEarlyPick) {
                 return INVALID_MOVE;
             }
             AddCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
             G.taverns[tavernId][cardId] = null;
-            if (currentDeck.length > 0 && G.taverns[G.tavernsNum - 1].every((element) => element === null)) {
-                G.decks[G.decks.length - G.tierToEnd] = ctx.random.Shuffle(currentDeck);
+            if (G.decks[G.decks.length - G.tierToEnd]?.length > 0 && G.taverns[G.tavernsNum - 1].every((element) => element === null)) {
+                G.decks[G.decks.length - G.tierToEnd] = ctx.random.Shuffle(G.decks[G.decks.length - G.tierToEnd]);
                 for (let i = 0; i < G.tavernsNum; i++) {
                     for (let j = 0; j < G.drawSize; j++) {
                         G.taverns[i][j] = G.decks[G.decks.length - G.tierToEnd].pop();
-                        if (!currentDeck.length) {
+                        if (!G.decks[G.decks.length - G.tierToEnd].length && G.tierToEnd) {
                             G.tierToEnd--;
+                            if (G.tierToEnd) {
+                                for (let t = 0; t < G.tavernsNum; t++) {
+                                    G.taverns[t] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
+                                }
+                            }
                         }
                     }
                 }

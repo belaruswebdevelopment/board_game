@@ -11,7 +11,7 @@ export const SetupGame = (ctx) => {
         {background: "DodgerBlue"},
     ];
     let decks = [];
-    const tierToEnd = 1;
+    const tierToEnd = 2;
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards(suitsConfigArray);
         decks[i] = ctx.random.Shuffle(decks[i]);
