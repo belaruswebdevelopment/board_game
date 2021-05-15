@@ -1,5 +1,5 @@
 export const initialPlayerCoinsConfig = [
-    {value:0, isTriggerTrading: true}, 2, 3, 4, 5,
+    {value: 0, isTriggerTrading: true}, 2, 3, 4, 5,
 ];
 
 export const marketCoinsConfig = [

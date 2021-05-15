@@ -90,7 +90,9 @@ export const DrawTaverns = (data) => {
             tavernsBoards.push(<div key={t} className="column">
                 <table>
                     <caption>Tavern {t + 1}</caption>
-                    <tbody><tr>{boardCells[i]}</tr></tbody>
+                    <tbody>
+                    <tr>{boardCells[i]}</tr>
+                    </tbody>
                 </table>
             </div>);
         }
@@ -147,7 +149,9 @@ export const DrawPlayersBoards = (data) => {
         playersBoards[p].push(<div key={p} className="column">
             <table>
                 <caption>Player {p + 1} cards, {Scoring(data.props.G.players[p].cards)} points</caption>
-                <thead><tr>{playerHeaders[p]}</tr></thead>
+                <thead>
+                <tr>{playerHeaders[p]}</tr>
+                </thead>
                 <tbody>{playerRows[p]}</tbody>
             </table>
         </div>);

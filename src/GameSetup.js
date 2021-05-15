@@ -36,7 +36,12 @@ export const SetupGame = (ctx) => {
         players[i].handCoins = BuildCoins(initialPlayerCoinsConfig, {isInitial: true, isTriggerTrading: false});
     }
     let marketCoinsUnique = [];
-    let marketCoins = BuildCoins(marketCoinsConfig, {count: marketCoinsUnique, players: ctx.numPlayers, isInitial: false, isTriggerTrading: false});
+    let marketCoins = BuildCoins(marketCoinsConfig, {
+        count: marketCoinsUnique,
+        players: ctx.numPlayers,
+        isInitial: false,
+        isTriggerTrading: false
+    });
     return {
         tierToEnd,
         tavernsNum,

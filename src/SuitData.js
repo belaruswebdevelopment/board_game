@@ -127,8 +127,8 @@ const minerSuit = {
     ranksValues: () => {
         return {
             2: {
-               0: 6,
-               1: 6,
+                0: 6,
+                1: 6,
             },
             3: {
                 0: 6,
