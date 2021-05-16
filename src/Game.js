@@ -47,10 +47,30 @@ export const BoardGame = {
                     if (G.tierToEnd === 0) return;
                 }
                 for (let i = 0; i < G.tavernsNum; i++) {
-                    for (let j = 0; j < G.drawSize; j++) {
-                        G.taverns[i][j] = G.decks[G.decks.length - G.tierToEnd].pop();
-                    }
+                    G.taverns[i] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
                 }
+            }
+        },
+        ClickHandCoin: (G, ctx, coinId) => {
+            const isWrongPick = false;
+            if (isWrongPick) {
+                return INVALID_MOVE;
+            }
+            G.players[ctx.currentPlayer].selectedCoin = coinId;
+        },
+        ClickBoardCoin: (G, ctx, coinId) => {
+            const isWrongPick = false;
+            if (isWrongPick) {
+                return INVALID_MOVE;
+            }
+            if (G.players[ctx.currentPlayer].handCoins[coinId] !== null) {
+                G.players[ctx.currentPlayer].handCoins[coinId] = G.players[ctx.currentPlayer].boardCoins[coinId];
+                G.players[ctx.currentPlayer].boardCoins[coinId] = null;
+            } else if (G.players[ctx.currentPlayer].selectedCoin !== undefined) {
+                G.players[ctx.currentPlayer].boardCoins[coinId] = G.players[ctx.currentPlayer].handCoins[coinId];
+                G.players[ctx.currentPlayer].handCoins[coinId] = null;
+            } else {
+                return INVALID_MOVE;
             }
         },
     },
