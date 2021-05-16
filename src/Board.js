@@ -5,7 +5,6 @@ export class GameBoard extends React.Component {
     OnClick = (tavernId, cardId) => {
         this.props.moves.ClickBoard(tavernId, cardId);
     }
-
     render() {
         const winnerUI = DrawWinner(this);
         const tavernsUI = DrawTaverns(this);

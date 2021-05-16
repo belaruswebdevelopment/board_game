@@ -28,11 +28,9 @@ export const Scoring = (cards) => {
 
 export const BoardGame = {
     setup: SetupGame,
-
     turn: {
         moveLimit: 1,
     },
-
     moves: {
         ClickBoard: (G, ctx, tavernId, cardId) => {
             const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
@@ -58,7 +56,6 @@ export const BoardGame = {
             }
         },
     },
-
     endIf: (G, ctx) => {
         if (IsEndGame(G.taverns, G.tavernsNum, G.decks[G.decks.length - 1])) {
             const totalScore = [];
@@ -73,7 +70,6 @@ export const BoardGame = {
             }
         }
     },
-
     ai: {
         enumerate: (G) => {
             const moves = [];

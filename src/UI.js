@@ -141,7 +141,6 @@ export const DrawPlayersBoards = (data) => {
                 break;
             }
         }
-
         playersBoards[p].push(<div key={p} className="column">
             <table>
                 <caption>Player {p + 1} cards, {Scoring(data.props.G.players[p].cards)} points</caption>
@@ -152,6 +151,5 @@ export const DrawPlayersBoards = (data) => {
             </table>
         </div>);
     }
-
     return playersBoards;
 }
