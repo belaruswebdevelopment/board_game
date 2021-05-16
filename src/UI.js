@@ -231,13 +231,19 @@ export const DrawPlayersBoardsCoins = (data) => {
 
 export const DrawPlayersHandsCoins = (data) => {
     const playersHandsCoins = [];
+    let coinClass = "rounded coin-active";
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         playersHandsCoins[p] = [];
         const playerCells = [];
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
+                if (data.props.G.players[p].selectedCoin === j) {
+                    coinClass = "rounded coin-active selected";
+                } else {
+                    coinClass = "rounded coin-active";
+                }
                 playerCells.push(
-                    <td className="rounded coin-active" key={j} onClick={() => data.OnClickHandCoin(j)}>
+                    <td className={coinClass} key={j} onClick={() => data.OnClickHandCoin(j)}>
                         <b>{data.props.G.players[p].handCoins[j]?.value}</b>
                     </td>
                 );
