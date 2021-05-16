@@ -5,13 +5,6 @@ import {initialPlayerCoinsConfig, marketCoinsConfig} from "./CoinData";
 import {BuildCoins} from "./Coin";
 
 export const SetupGame = (ctx) => {
-    const colors = [
-        {background: "Violet"},
-        {background: "MediumSeaGreen"},
-        {background: "Khaki"},
-        {background: "Tomato"},
-        {background: "DodgerBlue"},
-    ];
     const decks = [];
     const tierToEnd = 2;
     for (let i = 0; i < tierToEnd; i++) {
@@ -47,7 +40,6 @@ export const SetupGame = (ctx) => {
         tavernsNum,
         suitsNum,
         drawSize,
-        colors,
         decks,
         marketCoins,
         marketCoinsUnique,
