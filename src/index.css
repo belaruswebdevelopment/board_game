@@ -39,3 +39,11 @@ td:hover {
 .rounded {
     border-radius: 50%;
 }
+
+.coin-active {
+    background-color: darkorange;
+}
+
+.coin-inactive {
+    background-color: crimson;
+}

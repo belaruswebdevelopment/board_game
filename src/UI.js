@@ -21,14 +21,14 @@ export const DrawMarketCoins = (data) => {
             let increment = i * drawData.boardCols + j;
             if (countMarketCoins[data.props.G.marketCoinsUnique[increment]] === undefined) {
                 boardCells.push(
-                    <td key={j}>
+                    <td className="rounded coin-inactive" key={j}>
                         {data.props.G.marketCoinsUnique[increment]}
                         <sup>0</sup>
                     </td>
                 );
             } else {
                 boardCells.push(
-                    <td key={j}>
+                    <td className="rounded coin-active" key={j}>
                         <b>{data.props.G.marketCoinsUnique[increment]}</b>
                         <sup>{countMarketCoins[data.props.G.marketCoinsUnique[increment]]}</sup>
                     </td>
@@ -163,7 +163,7 @@ export const DrawPlayersCoins = (data) => {
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
                 playerCells[p].push(
-                    <td className="rounded" key={j}>
+                    <td className="rounded coin-active" key={j}>
                         <b>{data.props.G.players[p].handCoins[j].value}</b>
                     </td>
                 );
