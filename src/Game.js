@@ -43,7 +43,7 @@ export const BoardGame = {
         },
         moves: { ClickHandCoin, ClickBoardCoin, },
         endIf: (G, ctx) => {
-          const isHandCoinsEmpty = !G.players[G.players.length - 1].handCoins.some((element) => element !== null);
+          const isHandCoinsEmpty = !G.players.some((element) => element.handCoins.some((e) => e !== null));
           return isHandCoinsEmpty;
         },
         next: 'pickCards',
