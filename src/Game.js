@@ -35,6 +35,28 @@ export const BoardGame = {
         ClickHandCoin,
         ClickBoardCoin,
     },
+    phases: {
+      placeCoins: {
+        start: true,
+        turn: {
+            moveLimit: undefined,
+        },
+        moves: { ClickHandCoin, ClickBoardCoin, },
+        endIf: (G, ctx) => {
+          const isHandCoinsEmpty = !G.players[G.players.length - 1].handCoins.some((element) => element !== null);
+          return isHandCoinsEmpty;
+        },
+        next: 'pickCards',
+      },
+      pickCards: {
+        moves: { ClickCard, },
+        endIf: (G, ctx) => {
+          const isLastTavernEmpty = !G.taverns[G.tavernsNum - 1].some((element) => element !== null);
+          return isLastTavernEmpty;
+        },
+        next: 'placeCoins',
+      },
+    },
     endIf: (G, ctx) => {
         if (IsEndGame(G.taverns, G.tavernsNum, G.decks[G.decks.length - 1])) {
             const totalScore = [];

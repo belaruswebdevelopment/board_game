@@ -34,7 +34,6 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         return INVALID_MOVE;
     }
     if (G.players[ctx.currentPlayer].boardCoins[coinId] !== null) {
-        console.log(G.players[ctx.currentPlayer].handCoins[coinId]);
         const tempId = G.players[ctx.currentPlayer].handCoins.indexOf(null);
         G.players[ctx.currentPlayer].handCoins[tempId] = G.players[ctx.currentPlayer].boardCoins[coinId];
         G.players[ctx.currentPlayer].boardCoins[coinId] = null;
@@ -43,6 +42,7 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         G.players[ctx.currentPlayer].boardCoins[coinId] = G.players[ctx.currentPlayer].handCoins[tempId];
         G.players[ctx.currentPlayer].handCoins[tempId] = null;
         G.players[ctx.currentPlayer].selectedCoin = undefined;
+        if (!G.players[ctx.currentPlayer].handCoins.some((element) => element !== null)) { ctx.events.endTurn(); }
     } else {
         return INVALID_MOVE;
     }

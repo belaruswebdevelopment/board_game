@@ -231,13 +231,19 @@ export const DrawPlayersBoardsCoins = (data) => {
 
 export const DrawPlayersHandsCoins = (data) => {
     const playersHandsCoins = [];
+    let bgColor = {"backgroundColor": "Green"};
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         playersHandsCoins[p] = [];
         const playerCells = [];
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
+                if (data.props.G.players[p].selectedCoin === j) {
+                    bgColor = {"backgroundColor": "Green"};
+                } else {
+                    bgColor = {"backgroundColor": "Orange"};
+                }
                 playerCells.push(
-                    <td className="rounded coin-active" key={j} onClick={() => data.OnClickHandCoin(j)}>
+                    <td className="rounded coin-active" style={bgColor} key={j} onClick={() => data.OnClickHandCoin(j)}>
                         <b>{data.props.G.players[p].handCoins[j]?.value}</b>
                     </td>
                 );
