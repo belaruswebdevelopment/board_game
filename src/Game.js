@@ -41,9 +41,9 @@ export const BoardGame = {
         turn: {
             moveLimit: undefined,
         },
-        onBegin: (G, ctx) => {
-          for (var i = 0; i < G.players.length; i++) {
-            for (var j = 0; j < G.players[i].boardCoins.length; j++) {
+        onBegin: (G) => {
+          for (let i = 0; i < G.players.length; i++) {
+            for (let j = 0; j < G.players[i].boardCoins.length; j++) {
               const tempId = G.players[i].handCoins.indexOf(null);
               if (tempId === -1) { break; }
               G.players[i].handCoins[tempId] = G.players[i].boardCoins[j];
@@ -51,7 +51,10 @@ export const BoardGame = {
             }
           }
         },
-        moves: { ClickHandCoin, ClickBoardCoin, },
+        moves: {
+            ClickHandCoin,
+            ClickBoardCoin,
+        },
         /*endIf: (G, ctx) => {
           const isAllHandCoinsEmpty = !G.players.some((element) => element.handCoins.some((e) => e !== null));
           console.log("phase " + isAllHandCoinsEmpty);
@@ -61,9 +64,8 @@ export const BoardGame = {
       },
       pickCards: {
         moves: { ClickCard, },
-        endIf: (G, ctx) => {
-          const isLastTavernEmpty = !G.taverns[G.tavernsNum - 1].some((element) => element !== null);
-          return isLastTavernEmpty;
+        endIf: (G) => {
+          return !G.taverns[G.tavernsNum - 1].some((element) => element !== null);
         },
         next: 'placeCoins',
       },
