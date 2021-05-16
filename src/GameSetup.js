@@ -27,6 +27,7 @@ export const SetupGame = (ctx) => {
     }
     for (let i = 0; i < ctx.numPlayers; i++) {
         players[i].handCoins = BuildCoins(initialPlayerCoinsConfig, {isInitial: true, isTriggerTrading: false});
+        players[i].boardCoins = Array(initialPlayerCoinsConfig.length).fill(null);
     }
     const marketCoinsUnique = [];
     const marketCoins = BuildCoins(marketCoinsConfig, {

@@ -21,8 +21,8 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
     }
 }
 export const ClickHandCoin = (G, ctx, coinId) => {
-    const isWrongPick = false;
-    if (isWrongPick) {
+    const isEmptyPick = G.players[ctx.currentPlayer].handCoins[coinId] === null;
+    if (isEmptyPick) {
         return INVALID_MOVE;
     }
     G.players[ctx.currentPlayer].selectedCoin = coinId;
@@ -33,12 +33,16 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
     if (isWrongPick) {
         return INVALID_MOVE;
     }
-    if (G.players[ctx.currentPlayer].handCoins[coinId] !== null) {
-        G.players[ctx.currentPlayer].handCoins[coinId] = G.players[ctx.currentPlayer].boardCoins[coinId];
+    if (G.players[ctx.currentPlayer].boardCoins[coinId] !== null) {
+        console.log(G.players[ctx.currentPlayer].handCoins[coinId]);
+        const tempId = G.players[ctx.currentPlayer].handCoins.indexOf(null);
+        G.players[ctx.currentPlayer].handCoins[tempId] = G.players[ctx.currentPlayer].boardCoins[coinId];
         G.players[ctx.currentPlayer].boardCoins[coinId] = null;
     } else if (G.players[ctx.currentPlayer].selectedCoin !== undefined) {
-        G.players[ctx.currentPlayer].boardCoins[coinId] = G.players[ctx.currentPlayer].handCoins[coinId];
-        G.players[ctx.currentPlayer].handCoins[coinId] = null;
+        const tempId = G.players[ctx.currentPlayer].selectedCoin;
+        G.players[ctx.currentPlayer].boardCoins[coinId] = G.players[ctx.currentPlayer].handCoins[tempId];
+        G.players[ctx.currentPlayer].handCoins[tempId] = null;
+        G.players[ctx.currentPlayer].selectedCoin = undefined;
     } else {
         return INVALID_MOVE;
     }
