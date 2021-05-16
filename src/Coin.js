@@ -1,8 +1,8 @@
-const CreateCoin = (coinConfig) => {
+const CreateCoin = ({value, isInitial = false, isTriggerTrading = false} = {}) => {
     return {
-        value: coinConfig.value,
-        isInitial: coinConfig.isInitial,
-        isTriggerTrading: coinConfig.isTriggerTrading
+        value,
+        isInitial,
+        isTriggerTrading
     };
 }
 
@@ -37,7 +37,7 @@ export const BuildCoins = (coinConfig, data) => {
     const coins = [];
     for (let i = 0; i < coinConfig.length; i++) {
         const coinValue = typeof coinConfig[i] === "number" ? coinConfig[i] : coinConfig[i].value;
-        const isTriggerTrading = coinConfig[i].isTriggerTrading !== undefined ? coinConfig[i].isTriggerTrading : data.isTriggerTrading;
+        //const isTriggerTrading = coinConfig[i].isTriggerTrading !== undefined ? coinConfig[i].isTriggerTrading : data.isTriggerTrading;
         const isMarket = data.players !== undefined;
         const count = isMarket ? coinConfig[i].count()[data.players] : 1;
         if (isMarket) {
@@ -47,7 +47,7 @@ export const BuildCoins = (coinConfig, data) => {
             coins.push(CreateCoin({
                 value: coinValue,
                 isInitial: data.isInitial,
-                isTriggerTrading: isTriggerTrading,
+                isTriggerTrading: coinConfig[i].isTriggerTrading,
             }));
         }
     }

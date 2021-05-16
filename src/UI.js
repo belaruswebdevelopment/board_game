@@ -3,9 +3,9 @@ import {Scoring} from "./Game";
 import {CountMarketCoins} from "./Coin";
 
 const DrawBoard = (objectsSize) => {
-    const boardRows = Math.ceil(Math.sqrt(objectsSize));
-    const boardCols = Math.floor(objectsSize / boardRows) + 1;
-    const lastBoardCol = objectsSize % boardRows;
+    const boardRows = Math.floor(Math.sqrt(objectsSize));
+    const boardCols = Math.ceil(objectsSize / boardRows);
+    const lastBoardCol = objectsSize % boardCols;
 
     return {boardRows, boardCols, lastBoardCol};
 }
@@ -14,34 +14,32 @@ export const DrawMarketCoins = (data) => {
     const drawData = DrawBoard(data.props.G.marketCoinsUnique.length);
     const countMarketCoins = CountMarketCoins(data.props.G.marketCoins);
     let boardRows = [];
-    let boardCells = [];
-    let increment = 0;
     for (let i = 0; i < drawData.boardRows; i++) {
         boardRows[i] = [];
-        boardCells[i] = [];
+        let boardCells = [];
         for (let j = 0; j < drawData.boardCols; j++) {
+            let increment = i * drawData.boardCols + j;
             if (countMarketCoins[data.props.G.marketCoinsUnique[increment]] === undefined) {
-                boardCells[i].push(
+                boardCells.push(
                     <td key={j}>
                         {data.props.G.marketCoinsUnique[increment]}
                         <sup>0</sup>
                     </td>
                 );
             } else {
-                boardCells[i].push(
+                boardCells.push(
                     <td key={j}>
                         <b>{data.props.G.marketCoinsUnique[increment]}</b>
                         <sup>{countMarketCoins[data.props.G.marketCoinsUnique[increment]]}</sup>
                     </td>
                 );
             }
-            increment++;
             if ((i === drawData.boardRows - 1) && (j + 1 === drawData.lastBoardCol)) {
-                j = drawData.boardCols;
+                j = drawData.boardCols; // break;
             }
         }
         boardRows[i].push(
-            <tr key={i}>{boardCells[i]}</tr>
+            <tr key={i}>{boardCells}</tr>
         );
     }
     return (<div className="column">
@@ -67,19 +65,18 @@ export const DrawWinner = (data) => {
 
 export const DrawTaverns = (data) => {
     const tavernsBoards = [];
-    let boardCells = [];
     for (let t = 0; t < data.props.G.tavernsNum; t++) {
         for (let i = 0; i < 1; i++) {
-            boardCells[i] = [];
+            let boardCells = [];
             for (let j = 0; j < data.props.G.drawSize; j++) {
                 if (data.props.G.taverns[t][j] === null) {
-                    boardCells[i].push(
+                    boardCells.push(
                         <td key={j} onClick={() => data.OnClick(t, j)}>
                             {data.props.G.taverns[t][j]}
                         </td>
                     );
                 } else {
-                    boardCells[i].push(
+                    boardCells.push(
                         <td style={data.props.G.colors[data.props.G.taverns[t][j].suit]} key={j}
                             onClick={() => data.OnClick(t, j)}>
                             <b>{data.props.G.taverns[t][j].points}</b>
@@ -91,7 +88,7 @@ export const DrawTaverns = (data) => {
                 <table>
                     <caption>Tavern {t + 1}</caption>
                     <tbody>
-                    <tr>{boardCells[i]}</tr>
+                    <tr>{boardCells}</tr>
                     </tbody>
                 </table>
             </div>);
@@ -104,7 +101,6 @@ export const DrawPlayersBoards = (data) => {
     let playersBoards = [];
     let playerHeaders = [];
     let playerRows = [];
-    let playerCells = [];
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         playersBoards[p] = [];
         playerHeaders[p] = [];
@@ -118,19 +114,19 @@ export const DrawPlayersBoards = (data) => {
         }
         for (let i = 0; ; i++) {
             playerRows[p][i] = [];
-            playerCells[i] = [];
+            let playerCells = [];
             let isDrawRow = false;
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 const id = i + j;
                 if (data.props.G.players[p].cards[j] === undefined || (data.props.G.players[p].cards[j] && data.props.G.players[p].cards[j][i] === undefined)) {
-                    playerCells[i].push(
+                    playerCells.push(
                         <td key={id}>
 
                         </td>
                     );
                 } else {
                     isDrawRow = true;
-                    playerCells[i].push(
+                    playerCells.push(
                         <td key={id} style={data.props.G.colors[data.props.G.players[p].cards[j][i].suit]}>
                             <b>{data.props.G.players[p].cards[j][i].points}</b>
                         </td>
@@ -139,7 +135,7 @@ export const DrawPlayersBoards = (data) => {
             }
             if (isDrawRow) {
                 playerRows[p][i].push(
-                    <tr key={i}>{playerCells[i]}</tr>
+                    <tr key={i}>{playerCells}</tr>
                 );
             } else {
                 break;
