@@ -21,11 +21,12 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
     }
 }
 export const ClickHandCoin = (G, ctx, coinId) => {
-    const isEmptyPick = G.players[ctx.currentPlayer].handCoins[coinId] === null;
-    if (isEmptyPick) {
-        return INVALID_MOVE;
-    }
-    G.players[ctx.currentPlayer].selectedCoin = coinId;
+    // const isEmptyPick = G.players[ctx.currentPlayer].handCoins[coinId] === null;
+    // if (isEmptyPick) {
+    //     return INVALID_MOVE;
+    // }
+    // G.players[ctx.currentPlayer].selectedCoin = coinId;
+    Trading(G, G.players[ctx.currentPlayer].handCoins);
 }
 
 export const ClickBoardCoin = (G, ctx, coinId) => {
@@ -34,7 +35,6 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         return INVALID_MOVE;
     }
     if (G.players[ctx.currentPlayer].boardCoins[coinId] !== null) {
-        console.log(G.players[ctx.currentPlayer].handCoins[coinId]);
         const tempId = G.players[ctx.currentPlayer].handCoins.indexOf(null);
         G.players[ctx.currentPlayer].handCoins[tempId] = G.players[ctx.currentPlayer].boardCoins[coinId];
         G.players[ctx.currentPlayer].boardCoins[coinId] = null;
@@ -45,5 +45,53 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         G.players[ctx.currentPlayer].selectedCoin = undefined;
     } else {
         return INVALID_MOVE;
+    }
+}
+
+const Trading = (G, tradingCoins) => {
+    const coinsTotalValue = tradingCoins.reduce((prev, current) => prev + current.value, 0);
+    const coinsMaxValue = tradingCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
+    let coinMaxIndex = null;
+    for (let i = 0; i < tradingCoins.length; i++) {
+        if (tradingCoins[i].value === coinsMaxValue) {
+            coinMaxIndex = i;
+            if (tradingCoins[i].isInitial) {
+                break;
+            }
+        }
+    }
+    let tradedCoin = null;
+    if (coinsTotalValue > G.marketCoins[G.marketCoins.length - 1].value) {
+        for (let i = G.marketCoins.length - 1; i >= 0; i--) {
+            if (G.marketCoins[i]) {
+                tradedCoin = G.marketCoins[i];
+                break;
+            }
+        }
+    } else {
+        for (let i = 0; i < G.marketCoins.length; i++) {
+            if (G.marketCoins[i]) {
+                tradedCoin = G.marketCoins[i];
+                if (G.marketCoins[i].value < coinsTotalValue) {
+                    tradedCoin = G.marketCoins[i];
+                } else if (G.marketCoins[i].value === coinsTotalValue) {
+                    tradedCoin = G.marketCoins[i];
+                    break;
+                } else {
+                    tradedCoin = G.marketCoins[i];
+                    break;
+                }
+            }
+        }
+    }
+    if (tradingCoins[coinMaxIndex].isInitial) {
+        // удалить её
+    } else {
+        // вернуть её на рынок
+    }
+    if (tradedCoin) {
+        // вернуть tradedCoin на борд игрока вместо заменной
+    } else {
+        // вернуть заменную на борд, т.к. нету монет выше достоинства
     }
 }
