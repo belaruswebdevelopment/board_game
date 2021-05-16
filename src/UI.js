@@ -153,3 +153,30 @@ export const DrawPlayersBoards = (data) => {
     }
     return playersBoards;
 }
+
+export const DrawPlayersCoins = (data) => {
+    const playersCoinsBoards = [];
+    const playerCells = [];
+    for (let p = 0; p < data.props.ctx.numPlayers; p++) {
+        playersCoinsBoards[p] = [];
+        playerCells[p] = [];
+        for (let i = 0; i < 1; i++) {
+            for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
+                playerCells[p].push(
+                    <td className="rounded" key={j}>
+                        <b>{data.props.G.players[p].handCoins[j].value}</b>
+                    </td>
+                );
+            }
+        }
+        playersCoinsBoards[p].push(<div key={p} className="column">
+            <table>
+                <caption>Player {p + 1} coins</caption>
+                <tbody>
+                <tr>{playerCells[p]}</tr>
+                </tbody>
+            </table>
+        </div>);
+    }
+    return playersCoinsBoards;
+}

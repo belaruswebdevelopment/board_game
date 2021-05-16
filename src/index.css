@@ -30,9 +30,12 @@ td:hover {
     cursor: pointer;
 }
 
-/* Clear floats after the columns */
 .row:after {
     content: "";
     display: table;
     clear: both;
+}
+
+.rounded {
+    border-radius: 50%;
 }
