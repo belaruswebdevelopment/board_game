@@ -51,14 +51,14 @@ export const BoardGame = {
                 }
             }
         },
-        ClickCoinInHands: (G, ctx, coinId) => {
+        ClickHandCoin: (G, ctx, coinId) => {
             const isWrongPick = false;
             if (isWrongPick) {
                 return INVALID_MOVE;
             }
             G.players[ctx.currentPlayer].selectedCoin = coinId;
         },
-        ClickPlaceOnBoard: (G, ctx, coinId) => {
+        ClickBoardCoin: (G, ctx, coinId) => {
             const isWrongPick = false;
             if (isWrongPick) {
                 return INVALID_MOVE;
