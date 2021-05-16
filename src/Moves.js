@@ -18,6 +18,7 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
         for (let i = 0; i < G.tavernsNum; i++) {
             G.taverns[i] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
         }
+        ctx.events.endPhase({next: 'placeCoins'});
     }
 }
 export const ClickHandCoin = (G, ctx, coinId) => {
@@ -43,6 +44,8 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         G.players[ctx.currentPlayer].handCoins[tempId] = null;
         G.players[ctx.currentPlayer].selectedCoin = undefined;
         if (!G.players[ctx.currentPlayer].handCoins.some((element) => element !== null)) { ctx.events.endTurn(); }
+        const isAllHandCoinsEmpty = !G.players.some((element) => element.handCoins.some((e) => e !== null));
+        if (isAllHandCoinsEmpty) { ctx.events.endPhase({next: 'placeCoins'}); }
     } else {
         return INVALID_MOVE;
     }
