@@ -22,12 +22,12 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
     }
 }
 export const ClickHandCoin = (G, ctx, coinId) => {
-    /*const isEmptyPick = G.players[ctx.currentPlayer].handCoins[coinId] === null;
+    const isEmptyPick = G.players[ctx.currentPlayer].handCoins[coinId] === null;
     if (isEmptyPick) {
         return INVALID_MOVE;
     }
-    G.players[ctx.currentPlayer].selectedCoin = coinId;*/
-    Trading(G, ctx, G.players[ctx.currentPlayer].handCoins);
+    G.players[ctx.currentPlayer].selectedCoin = coinId;
+    // Trading(G, ctx, G.players[ctx.currentPlayer].handCoins);
 }
 
 export const ClickBoardCoin = (G, ctx, coinId) => {
