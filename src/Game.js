@@ -41,6 +41,16 @@ export const BoardGame = {
         turn: {
             moveLimit: undefined,
         },
+        onBegin: (G, ctx) => {
+          for (var i = 0; i < G.players.length; i++) {
+            for (var j = 0; j < G.players.boardCoins.length; j++) {
+              const tempId = G.players[ctx.currentPlayer].handCoins.indexOf(null);
+              if (tempId === -1) { break; }
+              G.players[i].handCoins[tempId] = G.players[i].boardCoins[j];
+              G.players[i].boardCoins[coinId] = null;
+            }
+          }
+        },
         moves: { ClickHandCoin, ClickBoardCoin, },
         endIf: (G, ctx) => {
           const isAllHandCoinsEmpty = !G.players.some((element) => element.handCoins.some((e) => e !== null));
