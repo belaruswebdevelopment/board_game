@@ -12,13 +12,13 @@ export const SetupGame = (ctx) => {
         {background: "Tomato"},
         {background: "DodgerBlue"},
     ];
-    let decks = [];
+    const decks = [];
     const tierToEnd = 2;
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards(suitsConfigArray, {players: ctx.numPlayers, tier: i});
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
-    let taverns = [];
+    const taverns = [];
     const tavernsNum = 3;
     const drawSize = ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
@@ -35,8 +35,8 @@ export const SetupGame = (ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         players[i].handCoins = BuildCoins(initialPlayerCoinsConfig, {isInitial: true, isTriggerTrading: false});
     }
-    let marketCoinsUnique = [];
-    let marketCoins = BuildCoins(marketCoinsConfig, {
+    const marketCoinsUnique = [];
+    const marketCoins = BuildCoins(marketCoinsConfig, {
         count: marketCoinsUnique,
         players: ctx.numPlayers,
         isInitial: false,

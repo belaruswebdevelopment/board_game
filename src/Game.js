@@ -13,7 +13,7 @@ const IsEndGame = (taverns, tavernsNum, deck) => {
 
 export const Scoring = (cards) => {
     let score = 0;
-    let count = [0, 0, 0, 0, 0];
+    const count = [0, 0, 0, 0, 0];
     for (let i = 0; i < cards.length; i++) {
         score += suitsConfigArray[i].scoringRule(cards[i]);
     }
@@ -85,7 +85,7 @@ export const BoardGame = {
                     for (let j = 0; j < uniqueArrLength; j++) {
                         if (G.taverns[tavernId][i].suit === uniqueArr[j].suit && G.taverns[tavernId][i].rank === uniqueArr[j].rank) {
                             flag = false;
-                            j = uniqueArrLength;
+                            break;
                         }
                     }
                     if (flag) {

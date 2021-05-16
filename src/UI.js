@@ -13,7 +13,7 @@ const DrawBoard = (objectsSize) => {
 export const DrawMarketCoins = (data) => {
     const drawData = DrawBoard(data.props.G.marketCoinsUnique.length);
     const countMarketCoins = CountMarketCoins(data.props.G.marketCoins);
-    let boardRows = [];
+    const boardRows = [];
     for (let i = 0; i < drawData.boardRows; i++) {
         boardRows[i] = [];
         const boardCells = [];
@@ -35,7 +35,7 @@ export const DrawMarketCoins = (data) => {
                 );
             }
             if ((i === drawData.boardRows - 1) && (j + 1 === drawData.lastBoardCol)) {
-                j = drawData.boardCols;
+                break;
             }
         }
         boardRows[i].push(
@@ -98,9 +98,9 @@ export const DrawTaverns = (data) => {
 }
 
 export const DrawPlayersBoards = (data) => {
-    let playersBoards = [];
-    let playerHeaders = [];
-    let playerRows = [];
+    const playersBoards = [];
+    const playerHeaders = [];
+    const playerRows = [];
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         playersBoards[p] = [];
         playerHeaders[p] = [];

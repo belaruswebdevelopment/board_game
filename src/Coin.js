@@ -13,15 +13,15 @@ const UniqueCoins = (data, value) => {
 export const CountMarketCoins = (data) => {
     const marketCoins = [];
     let flag = true;
-    let repeated = {};
+    const repeated = {};
     for (let i = 0; i < data.length; i++) {
         let count = 0;
-        let uniqueArrLength = marketCoins.length;
+        const uniqueArrLength = marketCoins.length;
         for (let j = 0; j < uniqueArrLength; j++) {
             if (marketCoins[j].value === data[i].value) {
                 count++;
                 flag = false;
-                j = uniqueArrLength;
+                break;
             }
         }
         repeated[data[i].value] = count + 1;
