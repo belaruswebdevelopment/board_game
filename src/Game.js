@@ -1,7 +1,6 @@
-import {INVALID_MOVE} from 'boardgame.io/core';
 import {SetupGame} from "./GameSetup";
-import {AddCardToPlayer} from "./Player";
 import {suitsConfigArray} from "./SuitData";
+import {ClickBoardCoin, ClickCard, ClickHandCoin} from "./Moves";
 
 const IsEndGame = (taverns, tavernsNum, deck) => {
     let isEndGame = false;
@@ -32,47 +31,9 @@ export const BoardGame = {
         moveLimit: 1,
     },
     moves: {
-        ClickCard: (G, ctx, tavernId, cardId) => {
-            const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
-            const isEmptyPick = G.taverns[tavernId][cardId] === null;
-            if (isEmptyPick || isEarlyPick) {
-                return INVALID_MOVE;
-            }
-            AddCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
-            G.taverns[tavernId][cardId] = null;
-            const isLastTavernEmpty = !G.taverns[G.tavernsNum - 1].some((element) => element !== null);
-            if (isLastTavernEmpty) {
-                if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
-                    G.tierToEnd--;
-                    if (G.tierToEnd === 0) return;
-                }
-                for (let i = 0; i < G.tavernsNum; i++) {
-                    G.taverns[i] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
-                }
-            }
-        },
-        ClickHandCoin: (G, ctx, coinId) => {
-            const isWrongPick = false;
-            if (isWrongPick) {
-                return INVALID_MOVE;
-            }
-            G.players[ctx.currentPlayer].selectedCoin = coinId;
-        },
-        ClickBoardCoin: (G, ctx, coinId) => {
-            const isWrongPick = false;
-            if (isWrongPick) {
-                return INVALID_MOVE;
-            }
-            if (G.players[ctx.currentPlayer].handCoins[coinId] !== null) {
-                G.players[ctx.currentPlayer].handCoins[coinId] = G.players[ctx.currentPlayer].boardCoins[coinId];
-                G.players[ctx.currentPlayer].boardCoins[coinId] = null;
-            } else if (G.players[ctx.currentPlayer].selectedCoin !== undefined) {
-                G.players[ctx.currentPlayer].boardCoins[coinId] = G.players[ctx.currentPlayer].handCoins[coinId];
-                G.players[ctx.currentPlayer].handCoins[coinId] = null;
-            } else {
-                return INVALID_MOVE;
-            }
-        },
+        ClickCard,
+        ClickHandCoin,
+        ClickBoardCoin,
     },
     endIf: (G, ctx) => {
         if (IsEndGame(G.taverns, G.tavernsNum, G.decks[G.decks.length - 1])) {
