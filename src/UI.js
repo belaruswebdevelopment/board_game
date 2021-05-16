@@ -76,14 +76,14 @@ export const DrawTaverns = (data) => {
             for (let j = 0; j < data.props.G.drawSize; j++) {
                 if (data.props.G.taverns[t][j] === null) {
                     boardCells.push(
-                        <td key={j} onClick={() => data.OnClick(t, j)}>
+                        <td key={j} onClick={() => data.OnClickCard(t, j)}>
                             {data.props.G.taverns[t][j]}
                         </td>
                     );
                 } else {
                     boardCells.push(
                         <td style={getSuitStyle(suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor)} key={j}
-                            onClick={() => data.OnClick(t, j)}>
+                            onClick={() => data.OnClickCard(t, j)}>
                             <b>{data.props.G.taverns[t][j].points}</b>
                         </td>
                     );
@@ -181,13 +181,13 @@ export const DrawPlayersBoardsCoins = (data) => {
                     );
                     if (data.props.G.players[p].boardCoins[coinIndex] !== undefined) {
                         playerCells.push(
-                            <td className="rounded coin-tavern-active" key={j}>
+                            <td className="rounded coin-tavern-active" key={j} onClick={() => data.OnClickPlaceOnBoard(j)}>
                                 <b>{data.props.G.players[p].boardCoins[coinIndex].value}</b>
                             </td>
                         );
                     } else {
                         playerCells.push(
-                            <td className="rounded coin-tavern-inactive" key={j}>
+                            <td className="rounded coin-tavern-inactive" key={j} onClick={() => data.OnClickPlaceOnBoard(j)}>
                                 <b>?</b>
                             </td>
                         );
@@ -238,7 +238,7 @@ export const DrawPlayersHandsCoins = (data) => {
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
                 playerCells[p].push(
-                    <td className="rounded coin-active" key={j}>
+                    <td className="rounded coin-active" key={j} onClick={() => data.OnClickCoinInHand(j)}>
                         <b>{data.props.G.players[p].handCoins[j].value}</b>
                     </td>
                 );

@@ -32,7 +32,7 @@ export const BoardGame = {
         moveLimit: 1,
     },
     moves: {
-        ClickBoard: (G, ctx, tavernId, cardId) => {
+        ClickCard: (G, ctx, tavernId, cardId) => {
             const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
             const isEmptyPick = G.taverns[tavernId][cardId] === null;
             if (isEmptyPick || isEarlyPick) {
@@ -47,10 +47,30 @@ export const BoardGame = {
                     if (G.tierToEnd === 0) return;
                 }
                 for (let i = 0; i < G.tavernsNum; i++) {
-                    for (let j = 0; j < G.drawSize; j++) {
-                        G.taverns[i][j] = G.decks[G.decks.length - G.tierToEnd].pop();
-                    }
+                    G.taverns[i] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
                 }
+            }
+        },
+        ClickCoinInHands: (G, ctx, coinId) => {
+            const isWrongPick = false;
+            if (isWrongPick) {
+                return INVALID_MOVE;
+            }
+            G.players[ctx.currentPlayer].selectedCoin = coinId;
+        },
+        ClickPlaceOnBoard: (G, ctx, coinId) => {
+            const isWrongPick = false;
+            if (isWrongPick) {
+                return INVALID_MOVE;
+            }
+            if (G.players[ctx.currentPlayer].handCoins[coinId] !== null) {
+                G.players[ctx.currentPlayer].handCoins[coinId] = G.players[ctx.currentPlayer].boardCoins[coinId];
+                G.players[ctx.currentPlayer].boardCoins[coinId] = null;
+            } else if (G.players[ctx.currentPlayer].selectedCoin !== undefined) {
+                G.players[ctx.currentPlayer].boardCoins[coinId] = G.players[ctx.currentPlayer].handCoins[coinId];
+                G.players[ctx.currentPlayer].handCoins[coinId] = null;
+            } else {
+                return INVALID_MOVE;
             }
         },
     },
@@ -88,7 +108,7 @@ export const BoardGame = {
                     }
                     if (flag) {
                         uniqueArr.push(G.taverns[tavernId][i]);
-                        moves.push({move: 'ClickBoard', args: [tavernId, i]});
+                        moves.push({move: 'ClickCard', args: [tavernId, i]});
                     }
                 }
                 flag = true;

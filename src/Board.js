@@ -9,8 +9,17 @@ import {
 } from "./UI";
 
 export class GameBoard extends React.Component {
-    OnClick = (tavernId, cardId) => {
-        this.props.moves.ClickBoard(tavernId, cardId);
+    OnClickCard = (tavernId, cardId) => {
+        this.props.moves.ClickCard(tavernId, cardId);
+    }
+    OnClickCoinInHand = (coinId) => {
+        this.props.moves.ClickCoinInHands(coinId);
+    }
+    OnClickPlaceOnBoard = (placeId) => {
+        this.props.moves.ClickPlaceOnBoard(placeId);
+    }
+    OnClickCoinOnBoard = (coinId) => {
+        this.props.moves.ClickCoinOnBoard(coinId);
     }
 
     render() {
