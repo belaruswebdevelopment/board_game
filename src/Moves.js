@@ -22,12 +22,12 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
     }
 }
 export const ClickHandCoin = (G, ctx, coinId) => {
-    // const isEmptyPick = G.players[ctx.currentPlayer].handCoins[coinId] === null;
-    // if (isEmptyPick) {
-    //     return INVALID_MOVE;
-    // }
-    // G.players[ctx.currentPlayer].selectedCoin = coinId;
-    Trading(G, G.players[ctx.currentPlayer].handCoins);
+    /*const isEmptyPick = G.players[ctx.currentPlayer].handCoins[coinId] === null;
+    if (isEmptyPick) {
+        return INVALID_MOVE;
+    }
+    G.players[ctx.currentPlayer].selectedCoin = coinId;*/
+    Trading(G, ctx, G.players[ctx.currentPlayer].handCoins);
 }
 
 export const ClickBoardCoin = (G, ctx, coinId) => {
@@ -52,7 +52,7 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
     }
 }
 
-const Trading = (G, tradingCoins) => {
+const Trading = (G, ctx, tradingCoins) => {
     const coinsTotalValue = tradingCoins.reduce((prev, current) => prev + current.value, 0);
     const coinsMaxValue = tradingCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
     let coinMaxIndex = null;
@@ -88,14 +88,13 @@ const Trading = (G, tradingCoins) => {
             }
         }
     }
-    if (tradingCoins[coinMaxIndex].isInitial) {
-        // удалить её
-    } else {
-        // вернуть её на рынок
-    }
+    const tradedCoinsIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(value => value === null);
     if (tradedCoin) {
-        // вернуть tradedCoin на борд игрока вместо заменной
+        G.players[ctx.currentPlayer].boardCoins[tradedCoinsIndex] = tradedCoin;
+        if (!tradingCoins[coinMaxIndex].isInitial) {
+            // Logic returning coin on the market in correct free (null) space
+        }
     } else {
-        // вернуть заменную на борд, т.к. нету монет выше достоинства
+        G.players[ctx.currentPlayer].boardCoins[tradedCoinsIndex] = tradingCoins[coinMaxIndex];
     }
 }
