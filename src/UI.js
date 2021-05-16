@@ -181,13 +181,13 @@ export const DrawPlayersBoardsCoins = (data) => {
                     );
                     if (data.props.G.players[p].boardCoins[coinIndex] !== undefined) {
                         playerCells.push(
-                            <td className="rounded coin-tavern-active" key={j} onClick={() => data.OnClickPlaceOnBoard(j)}>
+                            <td className="rounded coin-tavern-active" key={j} onClick={() => data.OnClickBoardCoin(j)}>
                                 <b>{data.props.G.players[p].boardCoins[coinIndex].value}</b>
                             </td>
                         );
                     } else {
                         playerCells.push(
-                            <td className="rounded coin-tavern-inactive" key={j} onClick={() => data.OnClickPlaceOnBoard(j)}>
+                            <td className="rounded coin-tavern-inactive" key={j} onClick={() => data.OnClickBoardCoin(j)}>
                                 <b>?</b>
                             </td>
                         );
@@ -238,7 +238,7 @@ export const DrawPlayersHandsCoins = (data) => {
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
                 playerCells[p].push(
-                    <td className="rounded coin-active" key={j} onClick={() => data.OnClickCoinInHand(j)}>
+                    <td className="rounded coin-active" key={j} onClick={() => data.OnClickHandCoin(j)}>
                         <b>{data.props.G.players[p].handCoins[j].value}</b>
                     </td>
                 );

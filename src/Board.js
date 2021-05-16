@@ -12,14 +12,11 @@ export class GameBoard extends React.Component {
     OnClickCard = (tavernId, cardId) => {
         this.props.moves.ClickCard(tavernId, cardId);
     }
-    OnClickCoinInHand = (coinId) => {
-        this.props.moves.ClickCoinInHands(coinId);
+    OnClickBoardCoin = (coinId) => {
+        this.props.moves.ClickBoardCoin(coinId);
     }
-    OnClickPlaceOnBoard = (placeId) => {
-        this.props.moves.ClickPlaceOnBoard(placeId);
-    }
-    OnClickCoinOnBoard = (coinId) => {
-        this.props.moves.ClickCoinOnBoard(coinId);
+    OnClickHandCoin = (coinId) => {
+        this.props.moves.ClickHandCoin(coinId);
     }
 
     render() {
