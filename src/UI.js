@@ -1,6 +1,7 @@
 import React from "react";
 import {Scoring} from "./Game";
 import {CountMarketCoins} from "./Coin";
+import {suitsConfigArray} from  "./SuitData.js";
 
 const DrawBoard = (objectsSize) => {
     const boardRows = Math.floor(Math.sqrt(objectsSize));
@@ -8,6 +9,10 @@ const DrawBoard = (objectsSize) => {
     const lastBoardCol = objectsSize % boardCols;
 
     return {boardRows, boardCols, lastBoardCol};
+}
+
+const getSuitStyle = (color) => {
+    return {background: color};
 }
 
 export const DrawMarketCoins = (data) => {
@@ -77,7 +82,7 @@ export const DrawTaverns = (data) => {
                     );
                 } else {
                     boardCells.push(
-                        <td style={data.props.G.colors[data.props.G.taverns[t][j].suit]} key={j}
+                        <td style={getSuitStyle(suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor)} key={j}
                             onClick={() => data.OnClick(t, j)}>
                             <b>{data.props.G.taverns[t][j].points}</b>
                         </td>
@@ -107,8 +112,8 @@ export const DrawPlayersBoards = (data) => {
         playerRows[p] = [];
         for (let s = 0; s < data.props.G.suitsNum; s++) {
             playerHeaders[p].push(
-                <th key={s} style={data.props.G.colors[s]}>
-                    suitName
+                <th key={s} style={getSuitStyle(suitsConfigArray[s].suitColor)}>
+                    {suitsConfigArray[s].suitName}
                 </th>
             );
         }
@@ -127,7 +132,7 @@ export const DrawPlayersBoards = (data) => {
                 } else {
                     isDrawRow = true;
                     playerCells.push(
-                        <td key={id} style={data.props.G.colors[data.props.G.players[p].cards[j][i].suit]}>
+                        <td key={id} style={getSuitStyle(suitsConfigArray[data.props.G.players[p].cards[j][i].suit].suitColor)}>
                             <b>{data.props.G.players[p].cards[j][i].points}</b>
                         </td>
                     );
