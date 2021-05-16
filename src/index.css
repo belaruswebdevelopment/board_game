@@ -47,3 +47,23 @@ td:hover {
 .coin-inactive {
     background-color: crimson;
 }
+
+.coin-tavern-active {
+    border: 3px solid;
+    background-color: darkorange;
+}
+
+.coin-tavern-inactive {
+    border: 3px solid;
+    background-color: crimson;
+}
+
+.coin-trading-active {
+    border: 3px solid;
+    background-color: darkorange;
+}
+
+.coin-trading-inactive {
+    border: 3px solid;
+    background-color: crimson;
+}
