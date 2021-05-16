@@ -176,10 +176,10 @@ export const DrawPlayersBoardsCoins = (data) => {
                 for (let j = 0; j < data.props.G.taverns.length; j++) {
                     playerHeaders[p].push(
                         <th key={j}>
-                            Tavern {j}
+                            Tavern {j + 1}
                         </th>
                     );
-                    if (data.props.G.players[p].boardCoins[coinIndex] !== undefined) {
+                    if (data.props.G.players[p].boardCoins[coinIndex] !== null) {
                         playerCells.push(
                             <td className="rounded coin-tavern-active" key={j} onClick={() => data.OnClickBoardCoin(j)}>
                                 <b>{data.props.G.players[p].boardCoins[coinIndex].value}</b>
@@ -195,16 +195,16 @@ export const DrawPlayersBoardsCoins = (data) => {
                     coinIndex++;
                 }
             } else if (i === 1) {
-                for (let j = 0; j < 2; j++) {
-                    if (data.props.G.players[p].boardCoins[coinIndex] !== undefined) {
+                for (let j = data.props.G.taverns.length; j < data.props.G.players[p].boardCoins.length; j++) {
+                    if (data.props.G.players[p].boardCoins[coinIndex] !== null) {
                         playerCells.push(
-                            <td className="rounded coin-trading-active" key={j}>
+                            <td className="rounded coin-trading-active" key={j} onClick={() => data.OnClickBoardCoin(j)}>
                                 <b>{data.props.G.players[p].boardCoins[coinIndex].value}</b>
                             </td>
                         );
                     } else {
                         playerCells.push(
-                            <td className="rounded coin-trading-inactive" key={j}>
+                            <td className="rounded coin-trading-inactive" key={j} onClick={() => data.OnClickBoardCoin(j)}>
                                 <b>&#8596;</b>
                             </td>
                         );
@@ -231,15 +231,14 @@ export const DrawPlayersBoardsCoins = (data) => {
 
 export const DrawPlayersHandsCoins = (data) => {
     const playersHandsCoins = [];
-    const playerCells = [];
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         playersHandsCoins[p] = [];
-        playerCells[p] = [];
+        const playerCells = [];
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
-                playerCells[p].push(
+                playerCells.push(
                     <td className="rounded coin-active" key={j} onClick={() => data.OnClickHandCoin(j)}>
-                        <b>{data.props.G.players[p].handCoins[j].value}</b>
+                        <b>{data.props.G.players[p].handCoins[j]?.value}</b>
                     </td>
                 );
             }
@@ -248,7 +247,7 @@ export const DrawPlayersHandsCoins = (data) => {
             <table>
                 <caption>Player {p + 1} coins</caption>
                 <tbody>
-                <tr>{playerCells[p]}</tr>
+                <tr>{playerCells}</tr>
                 </tbody>
             </table>
         </div>);
