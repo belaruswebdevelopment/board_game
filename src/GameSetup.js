@@ -1,7 +1,7 @@
-import {CreatePlayer} from "./Player";
+import {BuildPlayer} from "./Player";
 import {BuildCards} from "./Card";
 import {suitsConfigArray} from "./SuitData";
-import {initialPlayerCoinsConfig, marketCoinsConfig} from "./CoinData";
+import {marketCoinsConfig} from "./CoinData";
 import {BuildCoins} from "./Coin";
 
 export const SetupGame = (ctx) => {
@@ -20,14 +20,7 @@ export const SetupGame = (ctx) => {
     let players = [];
     const suitsNum = 5;
     for (let i = 0; i < ctx.numPlayers; i++) {
-        players[i] = CreatePlayer();
-        for (let j = 0; j < suitsNum; j++) {
-            players[i].cards[j] = [];
-        }
-    }
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        players[i].handCoins = BuildCoins(initialPlayerCoinsConfig, {isInitial: true, isTriggerTrading: false});
-        players[i].boardCoins = Array(initialPlayerCoinsConfig.length).fill(null);
+        BuildPlayer(suitsNum, players, i);
     }
     const marketCoinsUnique = [];
     const marketCoins = BuildCoins(marketCoinsConfig, {

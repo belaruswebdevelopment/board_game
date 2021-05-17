@@ -9,6 +9,13 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
     }
     AddCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
     G.taverns[tavernId][cardId] = null;
+    if (G.players[ctx.currentPlayer].boardCoins[tavernId].isTriggerTrading) {
+        const tradingCoins = [];
+        for (let i = G.taverns.length; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
+            tradingCoins.push(G.players[ctx.currentPlayer].boardCoins[i]);
+        }
+        Trading(G, ctx, tradingCoins);
+    }
     const isLastTavernEmpty = !G.taverns[G.tavernsNum - 1].some((element) => element !== null);
     if (isLastTavernEmpty) {
         if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
@@ -20,7 +27,7 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
         }
         ctx.events.endPhase({next: 'placeCoins'});
     }
-    ctx.events.endTurn(); 
+    ctx.events.endTurn();
 }
 export const ClickHandCoin = (G, ctx, coinId) => {
     const isEmptyPick = G.players[ctx.currentPlayer].handCoins[coinId] === null;
@@ -46,11 +53,33 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         G.players[ctx.currentPlayer].handCoins[tempId] = null;
         G.players[ctx.currentPlayer].selectedCoin = undefined;
         const isAllHandCoinsEmpty = !G.players.some((element) => element.handCoins.some((e) => e !== null));
-        if (isAllHandCoinsEmpty) { ctx.events.endPhase({next: 'placeCoins'}); }
-        if (!G.players[ctx.currentPlayer].handCoins.some((element) => element !== null)) { ctx.events.endTurn(); }
+        if (isAllHandCoinsEmpty) {
+            ctx.events.endPhase({next: 'placeCoins'});
+        }
+        if (!G.players[ctx.currentPlayer].handCoins.some((element) => element !== null)) {
+            ctx.events.endTurn();
+        }
     } else {
         return INVALID_MOVE;
     }
+}
+
+export const ResolveBoardCoins = (G, ctx, tavernId) => {
+    const boardCoins = [];
+    for (let i = 0; i < ctx.numPlayers; i++) {
+        boardCoins.push(G.players[i].boardCoins[tavernId]);
+    }
+    const indexedBoardCoins = boardCoins.map((coin, index) => ({
+        coin,
+        index,
+    }));
+    indexedBoardCoins.sort((currentCoin, nextCoin) =>
+        (currentCoin.coin.value < nextCoin.coin.value) ||
+        ((currentCoin.coin.value === nextCoin.coin.value) && (G.players[currentCoin.index].priority < G.players[nextCoin.index].priority)) ? 1 : -1);
+    const playersOrder = indexedBoardCoins.map(coin => coin.index);
+    // todo Priority exchange order
+    const priorityExchangeOrder = [];
+    return {playersOrder, priorityExchangeOrder};
 }
 
 const Trading = (G, ctx, tradingCoins) => {
@@ -67,35 +96,43 @@ const Trading = (G, ctx, tradingCoins) => {
     }
     let tradedCoin = null;
     if (coinsTotalValue > G.marketCoins[G.marketCoins.length - 1].value) {
-        for (let i = G.marketCoins.length - 1; i >= 0; i--) {
-            if (G.marketCoins[i]) {
-                tradedCoin = G.marketCoins[i];
-                break;
-            }
-        }
+        tradedCoin = G.marketCoins[G.marketCoins.length - 1];
     } else {
         for (let i = 0; i < G.marketCoins.length; i++) {
-            if (G.marketCoins[i]) {
+            if (G.marketCoins[i].value < coinsTotalValue) {
                 tradedCoin = G.marketCoins[i];
-                if (G.marketCoins[i].value < coinsTotalValue) {
-                    tradedCoin = G.marketCoins[i];
-                } else if (G.marketCoins[i].value === coinsTotalValue) {
-                    tradedCoin = G.marketCoins[i];
-                    break;
-                } else {
-                    tradedCoin = G.marketCoins[i];
+            } else if (G.marketCoins[i].value === coinsTotalValue) {
+                tradedCoin = G.marketCoins[i];
+                const x= G.marketCoins.splice(i, 1);
+                console.log('1' + x.value)
+                break;
+            } else {
+                tradedCoin = G.marketCoins[i];
+                const y=G.marketCoins.splice(i, 1);
+                console.log('2' + y.value)
+                break;
+            }
+            if (i === G.marketCoins.length - 1) {
+                const z=G.marketCoins.splice(i, 1);
+                console.log('3' + z.value)
+            }
+        }
+        console.log(tradedCoin.value)
+    }
+    G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = null;
+    if (tradedCoin) {
+        G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = tradedCoin;
+        if (!tradingCoins[coinMaxIndex].isInitial) {
+            let returningIndex = null;
+            for (let i = 0; i < G.marketCoins.length; i++) {
+                returningIndex = i;
+                if (G.marketCoins[i].value > tradingCoins[coinMaxIndex].value) {
                     break;
                 }
             }
-        }
-    }
-    const tradedCoinsIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(value => value === null);
-    if (tradedCoin) {
-        G.players[ctx.currentPlayer].boardCoins[tradedCoinsIndex] = tradedCoin;
-        if (!tradingCoins[coinMaxIndex].isInitial) {
-            // Logic returning coin on the market in correct free (null) space
+            G.marketCoins.splice(returningIndex, 0, tradingCoins[coinMaxIndex]);
         }
     } else {
-        G.players[ctx.currentPlayer].boardCoins[tradedCoinsIndex] = tradingCoins[coinMaxIndex];
+        G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = tradingCoins[coinMaxIndex];
     }
 }

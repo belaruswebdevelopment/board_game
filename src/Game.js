@@ -1,6 +1,6 @@
 import {SetupGame} from "./GameSetup";
 import {suitsConfigArray} from "./SuitData";
-import {ClickBoardCoin, ClickCard, ClickHandCoin} from "./Moves";
+import {ClickBoardCoin, ClickCard, ClickHandCoin, ResolveBoardCoins} from "./Moves";
 
 const IsEndGame = (taverns, tavernsNum, deck) => {
     let isEndGame = false;
@@ -33,39 +33,52 @@ export const BoardGame = {
         ClickBoardCoin,
     },
     phases: {
-      placeCoins: {
-        start: true,
-        turn: {
-            moveLimit: undefined,
+        placeCoins: {
+            start: true,
+            turn: {
+                order: {
+                    first: () => 0,
+                    next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
+                },
+            },
+            moves: {
+                ClickHandCoin,
+                ClickBoardCoin,
+            },
+            onBegin: (G) => {
+                for (let i = 0; i < G.players.length; i++) {
+                    for (let j = 0; j < G.players[i].boardCoins.length; j++) {
+                        const tempId = G.players[i].handCoins.indexOf(null);
+                        if (tempId === -1) {
+                            break;
+                        }
+                        G.players[i].handCoins[tempId] = G.players[i].boardCoins[j];
+                        G.players[i].boardCoins[j] = null;
+                    }
+                }
+            },
+            /* todo delete?
+            endIf: (G, ctx) => {
+                return isAllHandCoinsEmpty = !G.players.some((element) => element.handCoins.some((e) => e !== null));
+            },*/
+            next: 'pickCards',
         },
-        onBegin: (G) => {
-          for (let i = 0; i < G.players.length; i++) {
-            for (let j = 0; j < G.players[i].boardCoins.length; j++) {
-              const tempId = G.players[i].handCoins.indexOf(null);
-              if (tempId === -1) { break; }
-              G.players[i].handCoins[tempId] = G.players[i].boardCoins[j];
-              G.players[i].boardCoins[j] = null;
-            }
-          }
+        pickCards: {
+            turn: {
+                order: {
+                    first: () => 0,
+                    next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
+                    playOrder: (G, ctx) => ResolveBoardCoins(G, ctx, G.taverns.findIndex(element => element.some(item => item !== null))).playersOrder,
+                },
+            },
+            moves: {
+                ClickCard,
+            },
+            endIf: (G) => {
+                return !G.taverns[G.tavernsNum - 1].some((element) => element !== null);
+            },
+            next: 'placeCoins',
         },
-        moves: {
-            ClickHandCoin,
-            ClickBoardCoin,
-        },
-        /*endIf: (G, ctx) => {
-          const isAllHandCoinsEmpty = !G.players.some((element) => element.handCoins.some((e) => e !== null));
-          console.log("phase " + isAllHandCoinsEmpty);
-          return isAllHandCoinsEmpty;
-        },*/
-        next: 'pickCards',
-      },
-      pickCards: {
-        moves: { ClickCard, },
-        endIf: (G) => {
-          return !G.taverns[G.tavernsNum - 1].some((element) => element !== null);
-        },
-        next: 'placeCoins',
-      },
     },
     endIf: (G, ctx) => {
         if (IsEndGame(G.taverns, G.tavernsNum, G.decks[G.decks.length - 1])) {
