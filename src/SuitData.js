@@ -2,13 +2,6 @@ const TotalPoints = (accumulator, currentValue) => accumulator + currentValue.po
 const TotalRank = (accumulator, currentValue) => accumulator + currentValue.rank;
 const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;
 
-/*
-    * 0 - фиолетовые арифметическая
-    * 1 - зелёный квадраты
-    * 2 - жёлтый горняки
-    * 3 - красные воины
-    * 4 - голубые разведы
-    */
 const blacksmithSuit = {
     suit: 0,
     suitName: 'Blacksmith',

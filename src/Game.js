@@ -83,9 +83,8 @@ export const BoardGame = {
             for (let i = 0; i < ctx.numPlayers; i++) {
                 totalScore.push(Scoring(G.players[i]));
             }
-            let winnerScore = Math.max(...totalScore);
             for (let i = ctx.numPlayers - 1; i >= 0; i--) {
-                if (winnerScore === totalScore[i]) {
+                if (Math.max(...totalScore) === totalScore[i]) {
                     return {winner: String(i)};
                 }
             }
@@ -103,7 +102,7 @@ export const BoardGame = {
                 }
                 for (let i = 0; i < G.drawSize; i++) {
                     if ((G.taverns[tavernId][i] !== null)) {
-                        let uniqueArrLength = uniqueArr.length;
+                        const uniqueArrLength = uniqueArr.length;
                         for (let j = 0; j < uniqueArrLength; j++) {
                             if (G.taverns[tavernId][i].suit === uniqueArr[j].suit && G.taverns[tavernId][i].rank === uniqueArr[j].rank) {
                                 flag = false;

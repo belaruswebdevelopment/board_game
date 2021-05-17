@@ -23,7 +23,7 @@ export const DrawMarketCoins = (data) => {
         boardRows[i] = [];
         const boardCells = [];
         for (let j = 0; j < drawData.boardCols; j++) {
-            let increment = i * drawData.boardCols + j;
+            const increment = i * drawData.boardCols + j;
             if (countMarketCoins[data.props.G.marketCoinsUnique[increment]] === undefined) {
                 boardCells.push(
                     <td className="rounded coin-inactive" key={j}>
