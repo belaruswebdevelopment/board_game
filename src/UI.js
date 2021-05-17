@@ -216,7 +216,7 @@ export const DrawPlayersBoardsCoins = (data) => {
         }
         playersBoardsCoins[p].push(<div key={p} className="column">
             <table>
-                <caption>Player {p + 1} played coins</caption>
+                <caption>Player {p + 1} played coins, Priority: {data.props.G.players[p].priority}</caption>
                 <thead>
                 <tr>{playerHeaders[p]}</tr>
                 </thead>
