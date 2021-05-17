@@ -67,7 +67,6 @@ export const BoardGame = {
             endIf: (G) => {
                 return !G.taverns[G.tavernsNum - 1].some((element) => element !== null);
             },
-            next: 'placeCoins',
         },
     },
     endIf: (G, ctx) => {

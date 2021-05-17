@@ -20,7 +20,7 @@ export const SetupGame = (ctx) => {
     let players = [];
     const suitsNum = 5;
     for (let i = 0; i < ctx.numPlayers; i++) {
-        BuildPlayer(suitsNum, players, i);
+        players[i] = BuildPlayer(i);
     }
     const marketCoinsUnique = [];
     const marketCoins = BuildCoins(marketCoinsConfig, {
