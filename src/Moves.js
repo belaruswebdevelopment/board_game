@@ -67,8 +67,31 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
     }
 }
 
-export const ResolveBoardCoins = (G, ctx, tavernId) => {
-    const boardCoins = [];
+export const ResolveBoardCoins = (G, ctx) => {
+    const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
+    const playersOrder = [];
+    const exchangeOrder = [];
+    for (let i = 0; i < ctx.numPlayers; i++) {
+        playersOrder.push(i);
+        exchangeOrder.push(i);
+        for (let j = playersOrder.length - 1; j > 0; j--) {
+            if (G.players[playersOrder[j]].boardCoins[tavernId].value > G.players[playersOrder[j - 1]].boardCoins[tavernId].value)
+            {
+                [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+            } else if (G.players[playersOrder[j]].boardCoins[tavernId].value === G.players[playersOrder[j - 1]].boardCoins[tavernId].value) {
+                if (G.players[playersOrder[j]].isPriorityExchangeable && G.players[playersOrder[j - 1]].isPriorityExchangeable) {
+                    [exchangeOrder[i], exchangeOrder[playersOrder[j - 1]]] = [exchangeOrder[playersOrder[j - 1]], exchangeOrder[i]];
+                }
+                if (G.players[playersOrder[j]].priority > G.players[playersOrder[j - 1]].priority) {
+                    [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                }
+            } else {
+              break;
+            }
+        }
+    }
+    /*const boardCoins = [];
+    const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
     for (let i = 0; i < ctx.numPlayers; i++) {
         boardCoins.push(G.players[i].boardCoins[tavernId]);
     }
@@ -79,10 +102,8 @@ export const ResolveBoardCoins = (G, ctx, tavernId) => {
     indexedBoardCoins.sort((currentCoin, nextCoin) =>
         (currentCoin.coin.value < nextCoin.coin.value) ||
         ((currentCoin.coin.value === nextCoin.coin.value) && (G.players[currentCoin.index].priority < G.players[nextCoin.index].priority)) ? 1 : -1);
-    const playersOrder = indexedBoardCoins.map(coin => coin.index);
-    // todo Priority exchange order
-    const priorityExchangeOrder = [];
-    return {playersOrder, priorityExchangeOrder};
+    const playersOrder = indexedBoardCoins.map(coin => coin.index);*/
+    return {playersOrder, exchangeOrder};
 }
 
 const Trading = (G, ctx, tradingCoins) => {

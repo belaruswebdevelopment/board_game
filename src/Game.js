@@ -66,14 +66,27 @@ export const BoardGame = {
                 order: {
                     first: () => 0,
                     next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G, ctx) => ResolveBoardCoins(G, ctx, G.taverns.findIndex(element => element.some(item => item !== null))).playersOrder,
+                    playOrder: (G, ctx) => G.playersOrder,
                 },
+            },
+            onBegin: (G, ctx) => {
+                let {playersOrder, exchangeOrder} = ResolveBoardCoins(G, ctx);
+                [G.playersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
+            },
+            onEnd: (G, ctx) => {
+                const tempPriorities = []
+                for (let i = 0; i < G.exchangeOrder.length; i++) {
+                    tempPriorities[i] = G.players[G.exchangeOrder[i]].priority;
+                }
+                for (let i = 0; i < G.exchangeOrder.length; i++) {
+                    G.players[i].priority = tempPriorities[i];
+                }
             },
             moves: {
                 ClickCard,
             },
             endIf: (G) => {
-                return !G.taverns[G.tavernsNum - 1].some((element) => element !== null);
+                return G.taverns[G.tavernsNum - 1].every((element) => element === null);
             },
         },
     },

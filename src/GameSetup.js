@@ -29,7 +29,11 @@ export const SetupGame = (ctx) => {
         isInitial: false,
         isTriggerTrading: false
     });
+    const playersOrder = [];
+    const exchangeOrder = [];
     return {
+        playersOrder,
+        exchangeOrder,
         tierToEnd,
         tavernsNum,
         suitsNum,
