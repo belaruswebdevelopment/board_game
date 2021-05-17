@@ -2,7 +2,7 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCardToPlayer} from "./Player";
 
 export const ClickCard = (G, ctx, tavernId, cardId) => {
-    const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
+    const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].every((element) => element === null);
     const isEmptyPick = G.taverns[tavernId][cardId] === null;
     if (isEmptyPick || isEarlyPick) {
         return INVALID_MOVE;
@@ -68,15 +68,14 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
 }
 
 export const ResolveBoardCoins = (G, ctx) => {
-    const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
+    const tavernId = G.taverns.findIndex(element => element.every(item => item === null));
     const playersOrder = [];
     const exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         playersOrder.push(i);
         exchangeOrder.push(i);
         for (let j = playersOrder.length - 1; j > 0; j--) {
-            if (G.players[playersOrder[j]].boardCoins[tavernId].value > G.players[playersOrder[j - 1]].boardCoins[tavernId].value)
-            {
+            if (G.players[playersOrder[j]].boardCoins[tavernId].value > G.players[playersOrder[j - 1]].boardCoins[tavernId].value) {
                 [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
             } else if (G.players[playersOrder[j]].boardCoins[tavernId].value === G.players[playersOrder[j - 1]].boardCoins[tavernId].value) {
                 if (G.players[playersOrder[j]].isPriorityExchangeable && G.players[playersOrder[j - 1]].isPriorityExchangeable) {
@@ -86,23 +85,10 @@ export const ResolveBoardCoins = (G, ctx) => {
                     [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
                 }
             } else {
-              break;
+                break;
             }
         }
     }
-    /*const boardCoins = [];
-    const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        boardCoins.push(G.players[i].boardCoins[tavernId]);
-    }
-    const indexedBoardCoins = boardCoins.map((coin, index) => ({
-        coin,
-        index,
-    }));
-    indexedBoardCoins.sort((currentCoin, nextCoin) =>
-        (currentCoin.coin.value < nextCoin.coin.value) ||
-        ((currentCoin.coin.value === nextCoin.coin.value) && (G.players[currentCoin.index].priority < G.players[nextCoin.index].priority)) ? 1 : -1);
-    const playersOrder = indexedBoardCoins.map(coin => coin.index);*/
     return {playersOrder, exchangeOrder};
 }
 

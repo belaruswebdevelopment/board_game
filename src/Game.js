@@ -66,14 +66,14 @@ export const BoardGame = {
                 order: {
                     first: () => 0,
                     next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G, ctx) => G.playersOrder,
+                    playOrder: (G) => G.playersOrder,
                 },
             },
             onBegin: (G, ctx) => {
                 let {playersOrder, exchangeOrder} = ResolveBoardCoins(G, ctx);
                 [G.playersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
             },
-            onEnd: (G, ctx) => {
+            onEnd: (G) => {
                 const tempPriorities = []
                 for (let i = 0; i < G.exchangeOrder.length; i++) {
                     tempPriorities[i] = G.players[G.exchangeOrder[i]].priority;
@@ -109,7 +109,7 @@ export const BoardGame = {
             const uniqueArr = [];
             let flag = true;
             if (ctx.phase === 'pickCards') {
-                const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
+                const tavernId = G.taverns.findIndex(element => element.every(item => item === null));
                 if (tavernId === -1) {
                     return moves;
                 }
@@ -131,16 +131,16 @@ export const BoardGame = {
                 }
             }
             if (ctx.phase === 'placeCoins') {
-                if (G.players[ctx.currentPlayer].selectedCoin !== undefined) {
-                    for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
-                        if (G.players[ctx.currentPlayer].boardCoins[i] === null) {
-                            moves.push({move: 'ClickBoardCoin', args: [i]})
-                        }
-                    }
-                } else {
+                if (G.players[ctx.currentPlayer].selectedCoin === undefined) {
                     for (let i = 0; i < G.players[ctx.currentPlayer].handCoins.length; i++) {
                         if (G.players[ctx.currentPlayer].handCoins[i] !== null) {
                             moves.push({move: 'ClickHandCoin', args: [i]})
+                        }
+                    }
+                } else {
+                    for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
+                        if (G.players[ctx.currentPlayer].boardCoins[i] === null) {
+                            moves.push({move: 'ClickBoardCoin', args: [i]})
                         }
                     }
                 }

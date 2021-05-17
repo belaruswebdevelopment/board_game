@@ -179,16 +179,17 @@ export const DrawPlayersBoardsCoins = (data) => {
                             Tavern {j + 1}
                         </th>
                     );
-                    if (data.props.G.players[p].boardCoins[coinIndex] !== null) {
+                    if (data.props.G.players[p].boardCoins[coinIndex] === null) {
                         playerCells.push(
-                            <td className="rounded coin-tavern-active" key={j} onClick={() => data.OnClickBoardCoin(j)}>
-                                <b>{data.props.G.players[p].boardCoins[coinIndex].value}</b>
+                            <td className="rounded coin-tavern-inactive" key={j}
+                                onClick={() => data.OnClickBoardCoin(j)}>
+                                <b>?</b>
                             </td>
                         );
                     } else {
                         playerCells.push(
-                            <td className="rounded coin-tavern-inactive" key={j} onClick={() => data.OnClickBoardCoin(j)}>
-                                <b>?</b>
+                            <td className="rounded coin-tavern-active" key={j} onClick={() => data.OnClickBoardCoin(j)}>
+                                <b>{data.props.G.players[p].boardCoins[coinIndex].value}</b>
                             </td>
                         );
                     }
@@ -196,16 +197,18 @@ export const DrawPlayersBoardsCoins = (data) => {
                 }
             } else if (i === 1) {
                 for (let j = data.props.G.taverns.length; j < data.props.G.players[p].boardCoins.length; j++) {
-                    if (data.props.G.players[p].boardCoins[coinIndex] !== null) {
+                    if (data.props.G.players[p].boardCoins[coinIndex] === null) {
                         playerCells.push(
-                            <td className="rounded coin-trading-active" key={j} onClick={() => data.OnClickBoardCoin(j)}>
-                                <b>{data.props.G.players[p].boardCoins[coinIndex].value}</b>
+                            <td className="rounded coin-trading-inactive" key={j}
+                                onClick={() => data.OnClickBoardCoin(j)}>
+                                <b>&#8596;</b>
                             </td>
                         );
                     } else {
                         playerCells.push(
-                            <td className="rounded coin-trading-inactive" key={j} onClick={() => data.OnClickBoardCoin(j)}>
-                                <b>&#8596;</b>
+                            <td className="rounded coin-trading-active" key={j}
+                                onClick={() => data.OnClickBoardCoin(j)}>
+                                <b>{data.props.G.players[p].boardCoins[coinIndex].value}</b>
                             </td>
                         );
                     }
