@@ -35,7 +35,6 @@ export const ClickHandCoin = (G, ctx, coinId) => {
         return INVALID_MOVE;
     }
     G.players[ctx.currentPlayer].selectedCoin = coinId;
-    // Trading(G, ctx, G.players[ctx.currentPlayer].handCoins);
 }
 
 export const ClickBoardCoin = (G, ctx, coinId) => {
@@ -103,21 +102,17 @@ const Trading = (G, ctx, tradingCoins) => {
                 tradedCoin = G.marketCoins[i];
             } else if (G.marketCoins[i].value === coinsTotalValue) {
                 tradedCoin = G.marketCoins[i];
-                const x= G.marketCoins.splice(i, 1);
-                console.log('1' + x.value)
+                G.marketCoins.splice(i, 1);
                 break;
             } else {
                 tradedCoin = G.marketCoins[i];
-                const y=G.marketCoins.splice(i, 1);
-                console.log('2' + y.value)
+                G.marketCoins.splice(i, 1);
                 break;
             }
             if (i === G.marketCoins.length - 1) {
-                const z=G.marketCoins.splice(i, 1);
-                console.log('3' + z.value)
+                G.marketCoins.splice(i, 1);
             }
         }
-        console.log(tradedCoin.value)
     }
     G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = null;
     if (tradedCoin) {
