@@ -35,12 +35,6 @@ export const BoardGame = {
     phases: {
         placeCoins: {
             start: true,
-            turn: {
-                order: {
-                    first: () => 0,
-                    next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                },
-            },
             moves: {
                 ClickHandCoin,
                 ClickBoardCoin,
@@ -57,10 +51,6 @@ export const BoardGame = {
                     }
                 }
             },
-            /* todo delete?
-            endIf: (G, ctx) => {
-                return isAllHandCoinsEmpty = !G.players.some((element) => element.handCoins.some((e) => e !== null));
-            },*/
             next: 'pickCards',
         },
         pickCards: {
@@ -77,7 +67,6 @@ export const BoardGame = {
             endIf: (G) => {
                 return !G.taverns[G.tavernsNum - 1].some((element) => element !== null);
             },
-            next: 'placeCoins',
         },
     },
     endIf: (G, ctx) => {

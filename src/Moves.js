@@ -16,7 +16,7 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
         }
         Trading(G, ctx, tradingCoins);
     }
-    const isLastTavernEmpty = !G.taverns[G.tavernsNum - 1].some((element) => element !== null);
+    const isLastTavernEmpty = G.taverns[G.tavernsNum - 1].every((element) => element === null);
     if (isLastTavernEmpty) {
         if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
             G.tierToEnd--;
