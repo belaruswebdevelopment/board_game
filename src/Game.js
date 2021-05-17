@@ -1,6 +1,6 @@
 import {SetupGame} from "./GameSetup";
 import {suitsConfigArray} from "./SuitData";
-import {ClickBoardCoin, ClickCard, ClickHandCoin, ResolveBoardCoins} from "./Moves";
+import {ClickBoardCoin, ClickCard, ClickHandCoin, ResolveBoardCoins, PlaceAllCoins} from "./Moves";
 
 const IsEndGame = (taverns, tavernsNum, deck) => {
     let isEndGame = false;
@@ -39,6 +39,7 @@ export const BoardGame = {
         ClickCard,
         ClickHandCoin,
         ClickBoardCoin,
+        PlaceAllCoins,
     },
     phases: {
         placeCoins: {
@@ -46,6 +47,7 @@ export const BoardGame = {
             moves: {
                 ClickHandCoin,
                 ClickBoardCoin,
+                PlaceAllCoins,
             },
             onBegin: (G) => {
                 for (let i = 0; i < G.players.length; i++) {
@@ -105,7 +107,7 @@ export const BoardGame = {
     },
     ai: {
         enumerate: (G, ctx) => {
-            const moves = [];
+            let moves = [];
             const uniqueArr = [];
             let flag = true;
             if (ctx.phase === 'pickCards') {
@@ -144,6 +146,12 @@ export const BoardGame = {
                         }
                     }
                 }
+            }
+            //make false for standard bot
+            let enableAdvancedBot = true;
+            if (enableAdvancedBot && ctx.phase === 'placeCoins') {
+                moves = [];
+                moves.push({move: 'PlaceAllCoins', args: [[0,1,2,3,4]]})
             }
             return moves;
         },
