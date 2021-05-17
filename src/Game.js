@@ -10,11 +10,19 @@ const IsEndGame = (taverns, tavernsNum, deck) => {
     return isEndGame;
 }
 
-export const Scoring = (cards) => {
+export const Scoring = (player) => {
     let score = 0;
     const count = [0, 0, 0, 0, 0];
-    for (let i = 0; i < cards.length; i++) {
-        score += suitsConfigArray[i].scoringRule(cards[i]);
+    for (let i = 0; i < player.cards.length; i++) {
+        score += suitsConfigArray[i].scoringRule(player.cards[i]);
+    }
+    for (let i = 0; i < player.boardCoins.length; i++) {
+        if (player.boardCoins[i]) {
+            score += player.boardCoins[i].value;
+        } else if (player.handCoins[i]) {
+            score += player.handCoins[i].value;
+
+        }
     }
     if (Math.min(...count) === 1) {
         score += Math.min(...count) * 6;
@@ -73,7 +81,7 @@ export const BoardGame = {
         if (IsEndGame(G.taverns, G.tavernsNum, G.decks[G.decks.length - 1])) {
             const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(Scoring(G.players[i].cards));
+                totalScore.push(Scoring(G.players[i]));
             }
             let winnerScore = Math.max(...totalScore);
             for (let i = ctx.numPlayers - 1; i >= 0; i--) {

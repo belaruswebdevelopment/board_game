@@ -149,7 +149,7 @@ export const DrawPlayersBoards = (data) => {
         }
         playersBoards[p].push(<div key={p} className="column">
             <table>
-                <caption>Player {p + 1} cards, {Scoring(data.props.G.players[p].cards)} points</caption>
+                <caption>Player {p + 1} cards, {Scoring(data.props.G.players[p])} points</caption>
                 <thead>
                 <tr>{playerHeaders[p]}</tr>
                 </thead>
