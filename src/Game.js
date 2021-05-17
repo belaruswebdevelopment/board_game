@@ -27,9 +27,6 @@ export const Scoring = (cards) => {
 
 export const BoardGame = {
     setup: SetupGame,
-    turn: {
-        moveLimit: 1,
-    },
     moves: {
         ClickCard,
         ClickHandCoin,
@@ -85,29 +82,46 @@ export const BoardGame = {
         }
     },
     ai: {
-        enumerate: (G) => {
+        enumerate: (G, ctx) => {
             const moves = [];
             const uniqueArr = [];
             let flag = true;
-            const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
-            if (tavernId === -1) {
-                return moves;
-            }
-            for (let i = 0; i < G.drawSize; i++) {
-                if ((G.taverns[tavernId][i] !== null)) {
-                    let uniqueArrLength = uniqueArr.length;
-                    for (let j = 0; j < uniqueArrLength; j++) {
-                        if (G.taverns[tavernId][i].suit === uniqueArr[j].suit && G.taverns[tavernId][i].rank === uniqueArr[j].rank) {
-                            flag = false;
-                            break;
+            if (ctx.phase === 'pickCards') {
+                const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
+                if (tavernId === -1) {
+                    return moves;
+                }
+                for (let i = 0; i < G.drawSize; i++) {
+                    if ((G.taverns[tavernId][i] !== null)) {
+                        let uniqueArrLength = uniqueArr.length;
+                        for (let j = 0; j < uniqueArrLength; j++) {
+                            if (G.taverns[tavernId][i].suit === uniqueArr[j].suit && G.taverns[tavernId][i].rank === uniqueArr[j].rank) {
+                                flag = false;
+                                break;
+                            }
+                        }
+                        if (flag) {
+                            uniqueArr.push(G.taverns[tavernId][i]);
+                            moves.push({move: 'ClickCard', args: [tavernId, i]});
                         }
                     }
-                    if (flag) {
-                        uniqueArr.push(G.taverns[tavernId][i]);
-                        moves.push({move: 'ClickCard', args: [tavernId, i]});
+                    flag = true;
+                }
+            }
+            if (ctx.phase === 'placeCoins') {
+                if (G.players[ctx.currentPlayer].selectedCoin !== undefined) {
+                    for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
+                        if (G.players[ctx.currentPlayer].boardCoins[i] === null) {
+                            moves.push({move: 'ClickBoardCoin', args: [i]})
+                        }
+                    }
+                } else {
+                    for (let i = 0; i < G.players[ctx.currentPlayer].handCoins.length; i++) {
+                        if (G.players[ctx.currentPlayer].handCoins[i] !== null) {
+                            moves.push({move: 'ClickHandCoin', args: [i]})
+                        }
                     }
                 }
-                flag = true;
             }
             return moves;
         },

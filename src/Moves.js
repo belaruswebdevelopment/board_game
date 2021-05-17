@@ -20,6 +20,7 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
         }
         ctx.events.endPhase({next: 'placeCoins'});
     }
+    ctx.events.endTurn(); 
 }
 export const ClickHandCoin = (G, ctx, coinId) => {
     const isEmptyPick = G.players[ctx.currentPlayer].handCoins[coinId] === null;
@@ -44,9 +45,9 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         G.players[ctx.currentPlayer].boardCoins[coinId] = G.players[ctx.currentPlayer].handCoins[tempId];
         G.players[ctx.currentPlayer].handCoins[tempId] = null;
         G.players[ctx.currentPlayer].selectedCoin = undefined;
-        if (!G.players[ctx.currentPlayer].handCoins.some((element) => element !== null)) { ctx.events.endTurn(); }
         const isAllHandCoinsEmpty = !G.players.some((element) => element.handCoins.some((e) => e !== null));
         if (isAllHandCoinsEmpty) { ctx.events.endPhase({next: 'placeCoins'}); }
+        if (!G.players[ctx.currentPlayer].handCoins.some((element) => element !== null)) { ctx.events.endTurn(); }
     } else {
         return INVALID_MOVE;
     }
