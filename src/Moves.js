@@ -104,11 +104,7 @@ const Trading = (G, ctx, tradingCoins) => {
         for (let i = 0; i < G.marketCoins.length; i++) {
             if (G.marketCoins[i].value < coinsTotalValue) {
                 tradedCoin = G.marketCoins[i];
-            } else if (G.marketCoins[i].value === coinsTotalValue) {
-                tradedCoin = G.marketCoins[i];
-                G.marketCoins.splice(i, 1);
-                break;
-            } else {
+            } else if (G.marketCoins[i].value >= coinsTotalValue) {
                 tradedCoin = G.marketCoins[i];
                 G.marketCoins.splice(i, 1);
                 break;
