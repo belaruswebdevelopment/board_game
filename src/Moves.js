@@ -2,7 +2,7 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCardToPlayer} from "./Player";
 
 export const ClickCard = (G, ctx, tavernId, cardId) => {
-    const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].every((element) => element === null);
+    const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
     const isEmptyPick = G.taverns[tavernId][cardId] === null;
     if (isEmptyPick || isEarlyPick) {
         return INVALID_MOVE;
@@ -68,7 +68,7 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
 }
 
 export const ResolveBoardCoins = (G, ctx) => {
-    const tavernId = G.taverns.findIndex(element => element.every(item => item === null));
+    const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
     const playersOrder = [];
     const exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {

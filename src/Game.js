@@ -109,7 +109,7 @@ export const BoardGame = {
             const uniqueArr = [];
             let flag = true;
             if (ctx.phase === 'pickCards') {
-                const tavernId = G.taverns.findIndex(element => element.every(item => item === null));
+                const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
                 if (tavernId === -1) {
                     return moves;
                 }
