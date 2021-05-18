@@ -5,24 +5,23 @@ import {marketCoinsConfig} from "./CoinData";
 import {BuildCoins} from "./Coin";
 import {Permute, k_combinations} from "./BotConfig";
 
-
-
-
 export const SetupGame = (ctx) => {
-    const decks = [];
-    const tierToEnd = 2;
+    const suitsNum = 5,
+        tierToEnd = 2,
+        exchangeOrder = [],
+        playersOrder = [],
+        decks = [];
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards(suitsConfigArray, {players: ctx.numPlayers, tier: i});
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
-    const taverns = [];
-    const tavernsNum = 3;
-    const drawSize = ctx.numPlayers;
+    const taverns = [],
+        tavernsNum = 3,
+        drawSize = ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
         taverns[i] = decks[0].splice(0, drawSize);
     }
     let players = [];
-    const suitsNum = 5;
     for (let i = 0; i < ctx.numPlayers; i++) {
         players[i] = BuildPlayer(i);
     }
@@ -31,16 +30,13 @@ export const SetupGame = (ctx) => {
         count: marketCoinsUnique,
         players: ctx.numPlayers,
         isInitial: false,
-        isTriggerTrading: false
+        isTriggerTrading: false,
     });
-    const playersOrder = [];
-    const exchangeOrder = [];
-
-    const botData = {};
+    const botData = {},
+        initHandCoinsId = Array(players[0].boardCoins.length).fill().map((item, index) => index),
+        initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
-    let initHandCoinsId = Array(players[0].boardCoins.length).fill().map((item, index) => index);
-    let initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
-    for (var i = 0; i < initCoinsOrder.length; i++) {
+    for (let i = 0; i < initCoinsOrder.length; i++) {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
     }
     botData.allCoinsOrder = allCoinsOrder;

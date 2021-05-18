@@ -2,8 +2,8 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCardToPlayer} from "./Player";
 
 export const ClickCard = (G, ctx, tavernId, cardId) => {
-    const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null);
-    const isEmptyPick = G.taverns[tavernId][cardId] === null;
+    const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null),
+        isEmptyPick = G.taverns[tavernId][cardId] === null;
     if (isEmptyPick || isEarlyPick) {
         return INVALID_MOVE;
     }
@@ -20,7 +20,9 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
     if (isLastTavernEmpty) {
         if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
             G.tierToEnd--;
-            if (G.tierToEnd === 0) return;
+            if (G.tierToEnd === 0) {
+                return;
+            }
         }
         for (let i = 0; i < G.tavernsNum; i++) {
             G.taverns[i] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
@@ -51,11 +53,11 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         G.players[ctx.currentPlayer].handCoins[tempId] = G.players[ctx.currentPlayer].boardCoins[coinId];
         G.players[ctx.currentPlayer].boardCoins[coinId] = null;
     } else if (G.players[ctx.currentPlayer].selectedCoin !== undefined) {
-        const tempId = G.players[ctx.currentPlayer].selectedCoin;
+        const tempId = G.players[ctx.currentPlayer].selectedCoin,
+            isAllHandCoinsEmpty = G.players.every((element) => element.handCoins.every((e) => e === null));
         G.players[ctx.currentPlayer].boardCoins[coinId] = G.players[ctx.currentPlayer].handCoins[tempId];
         G.players[ctx.currentPlayer].handCoins[tempId] = null;
         G.players[ctx.currentPlayer].selectedCoin = undefined;
-        const isAllHandCoinsEmpty = G.players.every((element) => element.handCoins.every((e) => e === null));
         if (isAllHandCoinsEmpty) {
             ctx.events.endPhase({next: 'pickCards'});
         }
@@ -81,9 +83,9 @@ export const PlaceAllCoins = (G, ctx, coinsOrder) => {
 }
 
 export const ResolveBoardCoins = (G, ctx) => {
-    const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
-    const playersOrder = [];
-    const exchangeOrder = [];
+    const playersOrder = [],
+        exchangeOrder = [],
+        tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
     for (let i = 0; i < ctx.numPlayers; i++) {
         playersOrder.push(i);
         exchangeOrder.push(i);
@@ -106,8 +108,8 @@ export const ResolveBoardCoins = (G, ctx) => {
 }
 
 const Trading = (G, ctx, tradingCoins) => {
-    const coinsTotalValue = tradingCoins.reduce((prev, current) => prev + current.value, 0);
-    const coinsMaxValue = tradingCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
+    const coinsTotalValue = tradingCoins.reduce((prev, current) => prev + current.value, 0),
+        coinsMaxValue = tradingCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
     let coinMaxIndex = null;
     for (let i = 0; i < tradingCoins.length; i++) {
         if (tradingCoins[i].value === coinsMaxValue) {

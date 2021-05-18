@@ -4,9 +4,9 @@ import {CountMarketCoins} from "./Coin";
 import {suitsConfigArray} from "./SuitData.js";
 
 const DrawBoard = (objectsSize) => {
-    const boardRows = Math.floor(Math.sqrt(objectsSize));
-    const boardCols = Math.ceil(objectsSize / boardRows);
-    const lastBoardCol = objectsSize % boardCols;
+    const boardRows = Math.floor(Math.sqrt(objectsSize)),
+        boardCols = Math.ceil(objectsSize / boardRows),
+        lastBoardCol = objectsSize % boardCols;
 
     return {boardRows, boardCols, lastBoardCol};
 }
@@ -16,12 +16,12 @@ const getSuitStyle = (color) => {
 }
 
 export const DrawMarketCoins = (data) => {
-    const drawData = DrawBoard(data.props.G.marketCoinsUnique.length);
-    const countMarketCoins = CountMarketCoins(data.props.G.marketCoins);
-    const boardRows = [];
+    const boardRows = [],
+        drawData = DrawBoard(data.props.G.marketCoinsUnique.length),
+        countMarketCoins = CountMarketCoins(data.props.G.marketCoins);
     for (let i = 0; i < drawData.boardRows; i++) {
-        boardRows[i] = [];
         const boardCells = [];
+        boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j;
             if (countMarketCoins[data.props.G.marketCoinsUnique[increment]] === undefined) {
@@ -103,9 +103,9 @@ export const DrawTaverns = (data) => {
 }
 
 export const DrawPlayersBoards = (data) => {
-    const playersBoards = [];
-    const playerHeaders = [];
-    const playerRows = [];
+    const playersBoards = [],
+        playerHeaders = [],
+        playerRows = [];
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         playersBoards[p] = [];
         playerHeaders[p] = [];
@@ -118,12 +118,13 @@ export const DrawPlayersBoards = (data) => {
             );
         }
         for (let i = 0; ; i++) {
-            playerRows[p][i] = [];
             const playerCells = [];
             let isDrawRow = false;
+            playerRows[p][i] = [];
             for (let j = 0; j < data.props.G.suitsNum; j++) {
-                const id = i + j;
-                if (data.props.G.players[p].cards[j] === undefined || (data.props.G.players[p].cards[j] && data.props.G.players[p].cards[j][i] === undefined)) {
+                const id = i + j,
+                    isNotCard = data.props.G.players[p].cards[j] !== undefined && data.props.G.players[p].cards[j][i] === undefined;
+                if (data.props.G.players[p].cards[j] === undefined || isNotCard) {
                     playerCells.push(
                         <td key={id}>
 
@@ -161,17 +162,17 @@ export const DrawPlayersBoards = (data) => {
 }
 
 export const DrawPlayersBoardsCoins = (data) => {
-    const playersBoardsCoins = [];
-    const playerHeaders = [];
-    const playerRows = [];
+    const playersBoardsCoins = [],
+        playerHeaders = [],
+        playerRows = [];
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         let coinIndex = 0;
         playersBoardsCoins[p] = [];
         playerHeaders[p] = [];
         playerRows[p] = [];
         for (let i = 0; i < 2; i++) {
-            playerRows[p][i] = [];
             const playerCells = [];
+            playerRows[p][i] = [];
             if (i === 0) {
                 for (let j = 0; j < data.props.G.taverns.length; j++) {
                     playerHeaders[p].push(
@@ -236,8 +237,8 @@ export const DrawPlayersHandsCoins = (data) => {
     const playersHandsCoins = [];
     let coinClass = "rounded coin-active";
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
-        playersHandsCoins[p] = [];
         const playerCells = [];
+        playersHandsCoins[p] = [];
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
                 if (data.props.G.players[p].selectedCoin === j) {

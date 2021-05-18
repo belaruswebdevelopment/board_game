@@ -20,12 +20,12 @@ export class GameBoard extends React.Component {
     }
 
     render() {
-        const winnerUI = DrawWinner(this);
-        const tavernsUI = DrawTaverns(this);
-        const playersBoardsUI = DrawPlayersBoards(this);
-        const marketCoinsUI = DrawMarketCoins(this);
-        const playersHandsCoinsUI = DrawPlayersHandsCoins(this);
-        const playersBoardsCoinsUI = DrawPlayersBoardsCoins(this);
+        const marketCoinsUI = DrawMarketCoins(this),
+            winnerUI = DrawWinner(this),
+            tavernsUI = DrawTaverns(this),
+            playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
+            playersBoardsUI = DrawPlayersBoards(this),
+            playersHandsCoinsUI = DrawPlayersHandsCoins(this);
         return (
             <div>
                 {marketCoinsUI}
