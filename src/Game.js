@@ -151,7 +151,7 @@ export const BoardGame = {
             let enableAdvancedBot = true;
             if (enableAdvancedBot && ctx.phase === 'placeCoins') {
                 moves = [];
-                for (var i = 0; i < G.botData.allCoinsOrder.length; i++) {
+                for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
                     moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
                 }
             }
