@@ -67,6 +67,21 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
     }
 }
 
+export const PlaceAllCoins = (G, ctx, coinsOrder) => {
+    console.log(coinsOrder);
+    for (var i = 0; i < coinsOrder.length; i++) {
+        let coinId = coinsOrder[i];
+        G.players[ctx.currentPlayer].boardCoins[i] = G.players[ctx.currentPlayer].handCoins[coinId];
+        G.players[ctx.currentPlayer].handCoins[coinId] = null;
+    }
+    console.log(G.players[ctx.currentPlayer].boardCoins);
+    const isAllHandCoinsEmpty = G.players.every((element) => element.handCoins.every((e) => e === null));
+    if (isAllHandCoinsEmpty) {
+        ctx.events.endPhase({next: 'pickCards'});
+    }
+    ctx.events.endTurn();
+}
+
 export const ResolveBoardCoins = (G, ctx) => {
     const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
     const playersOrder = [];
