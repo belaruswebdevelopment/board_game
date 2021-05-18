@@ -3,7 +3,7 @@ import {BuildCards} from "./Card";
 import {suitsConfigArray} from "./SuitData";
 import {marketCoinsConfig} from "./CoinData";
 import {BuildCoins} from "./Coin";
-import {Permute, k_combinations} from "./BotConfig";
+import {Permute, k_combinations, GetAllPicks} from "./BotConfig";
 
 export const SetupGame = (ctx) => {
     const suitsNum = 5,
@@ -40,6 +40,7 @@ export const SetupGame = (ctx) => {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
     }
     botData.allCoinsOrder = allCoinsOrder;
+    botData.allPicks = GetAllPicks({tavernsNum: tavernsNum, playersNum: ctx.numPlayers});
     return {
         botData,
         playersOrder,

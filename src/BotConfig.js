@@ -1,3 +1,5 @@
+import {suitsConfigArray} from "./SuitData";
+
 export function Permute(permutation) {
     const result = [permutation.slice()];
     const length = permutation.length;
@@ -48,4 +50,41 @@ export function k_combinations(set, k) {
         }
     }
     return combs;
+}
+
+export const GetAllPicks = ({tavernsNum, playersNum}) => {
+    const temp = [];
+    const cartesian = (...a) => {
+        if (a.length === 1)
+        {
+            a = a.flat();
+        }
+        return a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
+    };
+    for (let i = 0; i < tavernsNum; i++) {
+        temp[i] = Array(playersNum).fill().map((item, index) => index);
+    }
+    return cartesian(temp);
+}
+
+export const PotentialScoring = ({cards = [], coins = [], tavernsNum = 0, marketCoinsMaxValue = 0}) => {
+    let score = 0;
+    for (let i = 0; i < cards.length; i++) {
+        score += suitsConfigArray[i].scoringRule(cards[i]);
+    }
+    /*for (let i = 0; i < coins.length; i++) {
+        if (coins[i]) {
+            score += coins[i].value;
+        }
+        if (coins[i].isTriggerTrading && i < tavernsNum) {
+            let coinsTotalValue = coins.slice(tavernsNum).reduce((prev, current) => prev + current.value, 0);
+            let coinsMaxValue = coins.slice(tavernsNum).reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
+            if (marketCoinsMaxValue < coinsMaxValue)
+            {
+                coinsMaxValue = marketCoinsMaxValue;
+            }
+            score += (coinsTotalValue - coinsMaxValue);
+        }
+    }*/
+    return score;
 }
