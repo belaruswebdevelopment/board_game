@@ -14,15 +14,15 @@ const IsEndGame = (taverns, tavernsNum, deck) => {
 }
 
 export const Scoring = (player) => {
-    let score = 0;
     const count = [0, 0, 0, 0, 0];
+    let score = 0;
     for (let i = 0; i < player.cards.length; i++) {
         score += suitsConfigArray[i].scoringRule(player.cards[i]);
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
-        if (player.boardCoins[i]) {
+        if (player.boardCoins[i] !== null) {
             score += player.boardCoins[i].value;
-        } else if (player.handCoins[i]) {
+        } else if (player.handCoins[i] !== null) {
             score += player.handCoins[i].value;
 
         }
@@ -69,7 +69,7 @@ export const BoardGame = {
                 },
             },
             onBegin: (G, ctx) => {
-                let {playersOrder, exchangeOrder} = ResolveBoardCoins(G, ctx);
+                const {playersOrder, exchangeOrder} = ResolveBoardCoins(G, ctx);
                 [G.playersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
             },
             onEnd: (G) => {
@@ -104,9 +104,9 @@ export const BoardGame = {
     },
     ai: {
         enumerate: (G, ctx) => {
-            let moves = [];
             const uniqueArr = [];
-            let flag = true;
+            let moves = [],
+                flag = true;
             if (ctx.phase === 'pickCards') {
                 const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
                 if (tavernId === -1) {
@@ -145,7 +145,7 @@ export const BoardGame = {
                 }
             }
             //make false for standard bot
-            let enableAdvancedBot = true;
+            const enableAdvancedBot = true;
             if (enableAdvancedBot && ctx.phase === 'placeCoins') {
                 moves = [];
                 const marketCoinsMaxValue = G.marketCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);

@@ -11,12 +11,12 @@ const UniqueCoins = (data, value) => {
 }
 
 export const CountMarketCoins = (data) => {
-    const marketCoins = [];
+    const marketCoins = [],
+        repeated = {};
     let flag = true;
-    const repeated = {};
     for (let i = 0; i < data.length; i++) {
-        let count = 0;
         const uniqueArrLength = marketCoins.length;
+        let count = 0;
         for (let j = 0; j < uniqueArrLength; j++) {
             if (marketCoins[j].value === data[i].value) {
                 count++;
@@ -36,9 +36,9 @@ export const CountMarketCoins = (data) => {
 export const BuildCoins = (coinConfig, data) => {
     const coins = [];
     for (let i = 0; i < coinConfig.length; i++) {
-        const coinValue = typeof coinConfig[i] === "number" ? coinConfig[i] : coinConfig[i].value;
-        const isMarket = data.players !== undefined;
-        const count = isMarket ? coinConfig[i].count()[data.players] : 1;
+        const isMarket = data.players !== undefined,
+            coinValue = typeof coinConfig[i] === "number" ? coinConfig[i] : coinConfig[i].value,
+            count = isMarket ? coinConfig[i].count()[data.players] : 1;
         if (isMarket) {
             UniqueCoins(data, coinValue);
         }
