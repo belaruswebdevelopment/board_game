@@ -108,7 +108,6 @@ export const BoardGame = {
     ai: {
         enumerate: (G, ctx) => {
             let moves = [];
-            console.log(ctx.phase);
             const uniqueArr = [];
             let flag = true;
             if (ctx.phase === 'pickCards') {
