@@ -3,7 +3,7 @@ import {BuildCards} from "./Card";
 import {suitsConfigArray} from "./SuitData";
 import {marketCoinsConfig} from "./CoinData";
 import {BuildCoins} from "./Coin";
-import {Permute, k_combinations} from "./BotConfig";
+import {Permute, k_combinations, GetAllPicks} from "./BotConfig";
 
 
 
@@ -36,6 +36,8 @@ export const SetupGame = (ctx) => {
     const playersOrder = [];
     const exchangeOrder = [];
 
+
+
     const botData = {};
     let allCoinsOrder = [];
     let initHandCoinsId = Array(players[0].boardCoins.length).fill().map((item, index) => index);
@@ -44,6 +46,7 @@ export const SetupGame = (ctx) => {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
     }
     botData.allCoinsOrder = allCoinsOrder;
+    botData.allPicks = GetAllPicks({tavernsNum: tavernsNum, playersNum: ctx.numPlayers});
     return {
         botData,
         playersOrder,

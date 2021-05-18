@@ -1,4 +1,4 @@
-const CreateCard = ({suit, rank = 1, points} = {}) => {
+export const CreateCard = ({suit, rank = 1, points} = {}) => {
     return {
         suit,
         rank,

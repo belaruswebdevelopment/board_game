@@ -35,3 +35,7 @@ export const BuildPlayer = (id) => {
 export const AddCardToPlayer = (player, card) => {
     player.cards[card.suit].push(card);
 };
+
+export const AddCardToCards = (cards, card) => {
+    cards[card.suit].push(card);
+};
