@@ -68,13 +68,11 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
 }
 
 export const PlaceAllCoins = (G, ctx, coinsOrder) => {
-    console.log(coinsOrder);
-    for (var i = 0; i < coinsOrder.length; i++) {
-        let coinId = coinsOrder[i];
+    for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
+        let coinId = coinsOrder[i] || G.players[ctx.currentPlayer].handCoins.findIndex(element => element !== null);
         G.players[ctx.currentPlayer].boardCoins[i] = G.players[ctx.currentPlayer].handCoins[coinId];
         G.players[ctx.currentPlayer].handCoins[coinId] = null;
     }
-    console.log(G.players[ctx.currentPlayer].boardCoins);
     const isAllHandCoinsEmpty = G.players.every((element) => element.handCoins.every((e) => e === null));
     if (isAllHandCoinsEmpty) {
         ctx.events.endPhase({next: 'pickCards'});
