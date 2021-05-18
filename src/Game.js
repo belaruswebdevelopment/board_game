@@ -38,12 +38,6 @@ export const Scoring = (player) => {
 
 export const BoardGame = {
     setup: SetupGame,
-    moves: {
-        ClickCard,
-        ClickHandCoin,
-        ClickBoardCoin,
-        PlaceAllCoins,
-    },
     phases: {
         placeCoins: {
             start: true,
