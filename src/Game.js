@@ -108,6 +108,7 @@ export const BoardGame = {
     ai: {
         enumerate: (G, ctx) => {
             let moves = [];
+            console.log(ctx.phase);
             const uniqueArr = [];
             let flag = true;
             if (ctx.phase === 'pickCards') {
@@ -151,7 +152,9 @@ export const BoardGame = {
             let enableAdvancedBot = true;
             if (enableAdvancedBot && ctx.phase === 'placeCoins') {
                 moves = [];
-                moves.push({move: 'PlaceAllCoins', args: [[0,1,2,3,4]]})
+                for (var i = 0; i < G.botData.allCoinsOrder.length; i++) {
+                    moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                }
             }
             return moves;
         },
