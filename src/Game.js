@@ -1,7 +1,7 @@
 import {SetupGame} from "./GameSetup";
 import {suitsConfigArray} from "./SuitData";
 import {ClickBoardCoin, ClickCard, ClickHandCoin, ResolveBoardCoins, PlaceAllCoins} from "./Moves";
-import {PotentialScoring} from "./BotConfig";
+// import {PotentialScoring} from "./BotConfig";
 import {CreateCard} from "./Card";
 import {AddCardToCards} from "./Player";
 

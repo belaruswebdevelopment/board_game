@@ -1,10 +1,9 @@
 import {suitsConfigArray} from "./SuitData";
 
 export function Permute(permutation) {
-    const result = [permutation.slice()];
-    const length = permutation.length;
+    const length = permutation.length,
+        result = [permutation.slice()];
     let c = new Array(length).fill(0), i = 1, k, p;
-
     while (i < length) {
         if (c[i] < i) {
             k = i % 2 && c[i];
@@ -53,10 +52,9 @@ export function k_combinations(set, k) {
 }
 
 export const GetAllPicks = ({tavernsNum, playersNum}) => {
-    const temp = [];
-    const cartesian = (...a) => {
-        if (a.length === 1)
-        {
+    const temp = [],
+        cartesian = (...a) => {
+        if (a.length === 1) {
             a = a.flat();
         }
         return a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
