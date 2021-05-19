@@ -18,6 +18,12 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "postcssrc": {
+    "plugins": {
+      "tailwindcss": {},
+      "autoprefixer": {}
+    }
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -35,5 +41,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.2.5",
+    "postcss": "^8.2.15",
+    "tailwindcss": "^2.1.2"
   }
 }

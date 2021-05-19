@@ -1,3 +1,4 @@
+import "tailwindcss/tailwind.css";
 import {Client} from 'boardgame.io/react';
 import {BoardGame} from './Game';
 import {GameBoard} from './Board';
