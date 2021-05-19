@@ -2,7 +2,7 @@ import {SetupGame} from "./GameSetup";
 import {suitsConfigArray} from "./SuitData";
 import {ClickBoardCoin, ClickCard, ClickHandCoin, ResolveBoardCoins, PlaceAllCoins} from "./Moves";
 // import {PotentialScoring} from "./BotConfig";
-import {CreateCard} from "./Card";
+import {CreateCard, CompareCards} from "./Card";
 import {AddCardToCards} from "./Player";
 
 const IsEndGame = (taverns, tavernsNum, deck) => {
@@ -150,15 +150,28 @@ export const BoardGame = {
                 moves = [];
                 // const marketCoinsMaxValue = G.marketCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
                 // let potentialScores = [];
-                let curCards = [];
+                /*let curCards = [];
                 for (let i = 0; i < G.players[ctx.currentPlayer].cards.length; i++) {
                     curCards[i] = [];
                     for (let j = 0; j < G.players[ctx.currentPlayer].cards[i].length; j++) {
                         AddCardToCards(curCards, G.players[ctx.currentPlayer].cards[i][j]);
                     }
-                }
+                }*/
                 // let curScore = PotentialScoring({cards: curCards});
-                for (let i = 0; i < G.botData.allPicks.length; i++) {
+                const indifferentTaverns = Array(G.tavernsNum).fill(true);
+                const temp = [];
+                for (let i = 0; i < G.tavernsNum; i++) {
+                    for (let j = 0; j < G.taverns[i].length; j++) {
+                            temp[j] = CompareCards(G.taverns[i][j], G.averageCards[G.taverns[i][j].suit]);
+                            if ((j > 0) && (temp[j] !== temp[j - 1])) {
+                                indifferentTaverns[i] = false;
+                                break;
+                            }
+                    }
+                }
+                console.log("test indifferentTaverns");
+                console.log(indifferentTaverns);
+                /*for (let i = 0; i < G.botData.allPicks.length; i++) {
                     for (let j = 0; j < G.tavernsNum; j++) {
                         AddCardToCards(curCards, CreateCard(G.taverns[j][G.botData.allPicks[i][j]]));
                     }
@@ -171,7 +184,7 @@ export const BoardGame = {
                             AddCardToCards(curCards, G.players[ctx.currentPlayer].cards[k][m]);
                         }
                     }
-                }
+                }*/
                 //console.log("test potential scores");
                 //console.log(potentialScores);
                 for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
