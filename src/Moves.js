@@ -53,11 +53,11 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         G.players[ctx.currentPlayer].handCoins[tempId] = G.players[ctx.currentPlayer].boardCoins[coinId];
         G.players[ctx.currentPlayer].boardCoins[coinId] = null;
     } else if (G.players[ctx.currentPlayer].selectedCoin !== undefined) {
-        const tempId = G.players[ctx.currentPlayer].selectedCoin,
-            isAllHandCoinsEmpty = G.players.every((element) => element.handCoins.every((e) => e === null));
+        const tempId = G.players[ctx.currentPlayer].selectedCoin;
         G.players[ctx.currentPlayer].boardCoins[coinId] = G.players[ctx.currentPlayer].handCoins[tempId];
         G.players[ctx.currentPlayer].handCoins[tempId] = null;
         G.players[ctx.currentPlayer].selectedCoin = undefined;
+        const isAllHandCoinsEmpty = G.players.every((element) => element.handCoins.every((e) => e === null));
         if (isAllHandCoinsEmpty) {
             ctx.events.endPhase({next: 'pickCards'});
         }
