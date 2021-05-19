@@ -180,5 +180,8 @@ export const BoardGame = {
             }
             return moves;
         },
+        objectives: undefined,
+        iterations: 1,
+        playoutDepth: 100,
     },
 };
