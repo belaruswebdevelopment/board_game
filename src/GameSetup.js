@@ -8,8 +8,7 @@ import {Permute, k_combinations, GetAllPicks} from "./BotConfig";
 export const SetupGame = (ctx) => {
     const suitsNum = 5,
         tierToEnd = 2,
-        exchangeOrder = [],
-        playersOrder = [],
+        debug = true,
         decks = [];
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards(suitsConfigArray, {players: ctx.numPlayers, tier: i});
@@ -21,7 +20,9 @@ export const SetupGame = (ctx) => {
     for (let i = 0; i < tavernsNum; i++) {
         taverns[i] = decks[0].splice(0, drawSize);
     }
-    let players = [];
+    let players = [],
+        playersOrder = [],
+        exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         players[i] = BuildPlayer(i);
     }
@@ -42,17 +43,18 @@ export const SetupGame = (ctx) => {
     botData.allCoinsOrder = allCoinsOrder;
     botData.allPicks = GetAllPicks({tavernsNum, playersNum: ctx.numPlayers});
     return {
-        botData,
-        playersOrder,
-        exchangeOrder,
+        debug,
+        suitsNum,
         tierToEnd,
         tavernsNum,
-        suitsNum,
         drawSize,
         decks,
-        marketCoins,
-        marketCoinsUnique,
         taverns,
         players,
+        playersOrder,
+        exchangeOrder,
+        marketCoins,
+        marketCoinsUnique,
+        botData,
     };
 }

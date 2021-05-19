@@ -9,11 +9,83 @@ const DrawBoard = (objectsSize) => {
         lastBoardCol = objectsSize % boardCols;
 
     return {boardRows, boardCols, lastBoardCol};
-}
+};
 
-const getSuitStyle = (color) => {
+const GetSuitStyle = (color) => {
     return {background: color};
-}
+};
+
+const GetDebugData = (data) => {
+    if (data.props.G.debug) {
+        let debugData = {
+            G: {},
+            ctx: {},
+        };
+        for (let [key, value] of Object.entries(data.props.G)) {
+            debugData.G[key] = value;
+        }
+        for (let [key, value] of Object.entries(data.props.ctx)) {
+            debugData.ctx[key] = value;
+        }
+        return debugData;
+    }
+    return null;
+};
+
+const DrawObjectData = (obj) => {
+    const values = [];
+    for (let [key, value] of Object.entries(obj)) {
+        if (value instanceof Object) {
+            const data = DrawObjectData(value);
+            if (Array.isArray(value)) {
+                const length = value.length;
+                values.push(
+                    <li key={key}>
+                        <details open>
+                            <summary><b><span className="key">{key}</span>: </b><i>Array({length})</i></summary>
+                            <ul>
+                                {data}
+                            </ul>
+                        </details>
+                    </li>
+                );
+            } else {
+                values.push(
+                    <li key={key}>
+                        <details open>
+                            <summary><b><span className="key">{key}</span>: </b><i>Object</i></summary>
+                            <ul>
+                                {data}
+                            </ul>
+                        </details>
+                    </li>
+                );
+            }
+        } else {
+            values.push(
+                <li key={key}>
+                    <b><span className="key">{key}</span>:</b> <span className="value">{value}</span>
+                </li>
+            );
+        }
+    }
+    return (
+        <ul>
+            {values}
+        </ul>
+    );
+};
+
+export const DrawDebugData = (data) => {
+    const debugData = GetDebugData(data),
+        debugInfo = DrawObjectData(debugData);
+    return (
+        <div>
+            <h4>Debug info data:</h4>
+            {debugInfo}
+        </div>
+    );
+};
 
 export const DrawMarketCoins = (data) => {
     const boardRows = [],
@@ -47,15 +119,18 @@ export const DrawMarketCoins = (data) => {
             <tr key={i}>{boardCells}</tr>
         );
     }
-    return (<div className="column">
-        <table>
-            <caption>Market coins</caption>
-            <tbody>
-            {boardRows}
-            </tbody>
-        </table>
-    </div>);
-}
+    return (
+        <div className="column">
+            <table>
+                <caption>Market coins</caption>
+                <tbody>
+                {boardRows}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
 export const DrawWinner = (data) => {
     let winner = '';
     if (data.props.ctx.gameover) {
@@ -66,7 +141,7 @@ export const DrawWinner = (data) => {
         );
     }
     return winner;
-}
+};
 
 export const DrawTaverns = (data) => {
     const tavernsBoards = [];
@@ -82,7 +157,7 @@ export const DrawTaverns = (data) => {
                     );
                 } else {
                     boardCells.push(
-                        <td style={getSuitStyle(suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor)} key={j}
+                        <td style={GetSuitStyle(suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor)} key={j}
                             onClick={() => data.OnClickCard(t, j)}>
                             <b>{data.props.G.taverns[t][j].points}</b>
                         </td>
@@ -100,7 +175,7 @@ export const DrawTaverns = (data) => {
         }
     }
     return tavernsBoards;
-}
+};
 
 export const DrawPlayersBoards = (data) => {
     const playersBoards = [],
@@ -112,7 +187,7 @@ export const DrawPlayersBoards = (data) => {
         playerRows[p] = [];
         for (let s = 0; s < data.props.G.suitsNum; s++) {
             playerHeaders[p].push(
-                <th key={s} style={getSuitStyle(suitsConfigArray[s].suitColor)}>
+                <th key={s} style={GetSuitStyle(suitsConfigArray[s].suitColor)}>
                     {suitsConfigArray[s].suitName}
                 </th>
             );
@@ -134,7 +209,7 @@ export const DrawPlayersBoards = (data) => {
                     isDrawRow = true;
                     playerCells.push(
                         <td key={id}
-                            style={getSuitStyle(suitsConfigArray[data.props.G.players[p].cards[j][i].suit].suitColor)}>
+                            style={GetSuitStyle(suitsConfigArray[data.props.G.players[p].cards[j][i].suit].suitColor)}>
                             <b>{data.props.G.players[p].cards[j][i].points}</b>
                         </td>
                     );
@@ -159,7 +234,7 @@ export const DrawPlayersBoards = (data) => {
         </div>);
     }
     return playersBoards;
-}
+};
 
 export const DrawPlayersBoardsCoins = (data) => {
     const playersBoardsCoins = [],
@@ -231,7 +306,7 @@ export const DrawPlayersBoardsCoins = (data) => {
         </div>);
     }
     return playersBoardsCoins;
-}
+};
 
 export const DrawPlayersHandsCoins = (data) => {
     const playersHandsCoins = [];
@@ -263,4 +338,4 @@ export const DrawPlayersHandsCoins = (data) => {
         </div>);
     }
     return playersHandsCoins;
-}
+};

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    DrawDebugData,
     DrawMarketCoins,
     DrawPlayersBoards,
     DrawPlayersBoardsCoins,
@@ -20,7 +21,8 @@ export class GameBoard extends React.Component {
     }
 
     render() {
-        const marketCoinsUI = DrawMarketCoins(this),
+        const debugUI = DrawDebugData(this),
+            marketCoinsUI = DrawMarketCoins(this),
             winnerUI = DrawWinner(this),
             tavernsUI = DrawTaverns(this),
             playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
@@ -42,6 +44,7 @@ export class GameBoard extends React.Component {
                 <div className="row">
                     {playersHandsCoinsUI}
                 </div>
+                {debugUI}
             </div>
         );
     }
