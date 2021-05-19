@@ -19,9 +19,9 @@ export function Permute(permutation) {
         }
     }
     return result;
-}
+};
 
-export function k_combinations(set, k) {
+export const k_combinations = (set, k) => {
     let i, j, combs, head, tailcombs;
     if (k > set.length || k <= 0) {
         return [];
@@ -49,7 +49,7 @@ export function k_combinations(set, k) {
         }
     }
     return combs;
-}
+};
 
 export const GetAllPicks = ({tavernsNum, playersNum}) => {
     const temp = [],
@@ -63,7 +63,7 @@ export const GetAllPicks = ({tavernsNum, playersNum}) => {
         temp[i] = Array(playersNum).fill().map((item, index) => index);
     }
     return cartesian(temp);
-}
+};
 
 export const PotentialScoring = ({cards = [], coins = [], tavernsNum = 0, marketCoinsMaxValue = 0}) => {
     let score = 0;
@@ -85,4 +85,4 @@ export const PotentialScoring = ({cards = [], coins = [], tavernsNum = 0, market
         }
     }*/
     return score;
-}
+};

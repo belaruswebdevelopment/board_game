@@ -56,7 +56,8 @@ const blacksmithSuit = {
 
         },
     },
-}
+};
+
 const hunterSuit = {
     suit: 1,
     suitName: 'Hunter',
@@ -111,7 +112,8 @@ const hunterSuit = {
 
         },
     },
-}
+};
+
 const minerSuit = {
     suit: 2,
     suitName: 'Miner',
@@ -166,7 +168,8 @@ const minerSuit = {
 
         },
     },
-}
+};
+
 const warriorSuit = {
     suit: 3,
     suitName: 'Warrior',
@@ -221,7 +224,8 @@ const warriorSuit = {
 
         },
     },
-}
+};
+
 const explorerSuit = {
     suit: 4,
     suitName: 'Explorer',
@@ -248,6 +252,7 @@ const explorerSuit = {
         };
     },
     pointsValues: () => {
+        // todo delete one 6th
         return {
             2: {
                 0: [5, 6, 6, 7, 8, 9, 10, 11],
@@ -276,6 +281,6 @@ const explorerSuit = {
 
         },
     },
-}
+};
 
 export const suitsConfigArray = [blacksmithSuit, hunterSuit, minerSuit, warriorSuit, explorerSuit];

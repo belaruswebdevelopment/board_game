@@ -34,7 +34,7 @@ export const SetupGame = (ctx) => {
         isTriggerTrading: false,
     });
     const botData = {},
-        initHandCoinsId = Array(players[0].boardCoins.length).fill().map((item, index) => index),
+        initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined).map((item, index) => index),
         initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
     for (let i = 0; i < initCoinsOrder.length; i++) {
@@ -57,4 +57,4 @@ export const SetupGame = (ctx) => {
         marketCoinsUnique,
         botData,
     };
-}
+};

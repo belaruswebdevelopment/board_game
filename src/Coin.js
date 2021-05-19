@@ -4,11 +4,11 @@ const CreateCoin = ({value, isInitial = false, isTriggerTrading = false} = {}) =
         isInitial,
         isTriggerTrading,
     };
-}
+};
 
 const UniqueCoins = (data, value) => {
     data.count.push(value);
-}
+};
 
 export const CountMarketCoins = (data) => {
     const marketCoins = [],
@@ -31,7 +31,7 @@ export const CountMarketCoins = (data) => {
         flag = true;
     }
     return repeated;
-}
+};
 
 export const BuildCoins = (coinConfig, data) => {
     const coins = [];

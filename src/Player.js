@@ -20,7 +20,7 @@ const CreatePlayer = ({
         priority,
         isPriorityExchangeable,
     };
-}
+};
 
 export const BuildPlayer = (id) => {
     return CreatePlayer({
