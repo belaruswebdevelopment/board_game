@@ -72,3 +72,17 @@ td:hover {
 .selected {
     border: 3px solid #090;
 }
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin-left: 20px;
+}
+
+.key {
+    color: #871d8f;
+}
+
+.value {
+    color: #443ed4;
+}
