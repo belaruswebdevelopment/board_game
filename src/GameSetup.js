@@ -1,5 +1,5 @@
 import {BuildPlayer} from "./Player";
-import {BuildCards} from "./Card";
+import {BuildCards, GetAverageSuitCard} from "./Card";
 import {suitsConfigArray} from "./SuitData";
 import {marketCoinsConfig} from "./CoinData";
 import {BuildCoins} from "./Coin";
@@ -9,11 +9,16 @@ export const SetupGame = (ctx) => {
     const suitsNum = 5,
         tierToEnd = 2,
         debug = true,
-        decks = [];
+        decks = [],
+        averageCards = [];
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards(suitsConfigArray, {players: ctx.numPlayers, tier: i});
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
+    for (let i = 0; i < suitsNum; i++) {
+        averageCards[i] = GetAverageSuitCard(suitsConfigArray[i], {players: ctx.numPlayers, tier: 0});
+    }
+    console.log(averageCards);
     const taverns = [],
         tavernsNum = 3,
         drawSize = ctx.numPlayers;
@@ -48,6 +53,7 @@ export const SetupGame = (ctx) => {
         tierToEnd,
         tavernsNum,
         drawSize,
+        averageCards,
         decks,
         taverns,
         players,
