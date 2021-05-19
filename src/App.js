@@ -9,16 +9,16 @@ class CustomMCTSBot extends MCTSBot {
   constructor(config, ...args) {
     super({
         ...config,
-        //objectives: { /* ... */ },
-        iterations: 500,
-        playoutDepth: 100,
+        objectives: BoardGame.ai.objectives,
+        iterations: BoardGame.ai.iterations,
+        playoutDepth: BoardGame.ai.playoutDepth,
       },
       ...args
     );
   }
 }
 
-const enableLocalPlayer = false;
+const enableLocalPlayer = true;
 const setupBot = {bots: {
     '0': CustomMCTSBot,
     '1': RandomBot,
@@ -29,11 +29,12 @@ const BoardGameClient = Client({
     game: BoardGame,
     board: GameBoard,
     numPlayers: 3,
+    multiplayer: enableLocalPlayer ? Local(setupBot) : undefined,
 });
 
 const App = () => (
   <div>
-    <BoardGameClient />
+    <BoardGameClient playerID = "2"/>
   </div>
 );
 
