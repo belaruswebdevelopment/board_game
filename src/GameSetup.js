@@ -40,7 +40,7 @@ export const SetupGame = (ctx) => {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
     }
     botData.allCoinsOrder = allCoinsOrder;
-    botData.allPicks = GetAllPicks({tavernsNum: tavernsNum, playersNum: ctx.numPlayers});
+    botData.allPicks = GetAllPicks({tavernsNum, playersNum: ctx.numPlayers});
     return {
         botData,
         playersOrder,
