@@ -41,7 +41,7 @@ const DrawObjectData = (obj) => {
                 const length = value.length;
                 values.push(
                     <li key={key}>
-                        <details open>
+                        <details>
                             <summary><b><span className="key">{key}</span>: </b><i>Array({length})</i></summary>
                             <ul>
                                 {data}
@@ -52,7 +52,7 @@ const DrawObjectData = (obj) => {
             } else {
                 values.push(
                     <li key={key}>
-                        <details open>
+                        <details>
                             <summary><b><span className="key">{key}</span>: </b><i>Object</i></summary>
                             <ul>
                                 {data}

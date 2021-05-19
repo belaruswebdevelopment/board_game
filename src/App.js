@@ -1,5 +1,4 @@
 import React from 'react';
-import "tailwindcss/tailwind.css";
 import {Client} from 'boardgame.io/react';
 import {Local} from 'boardgame.io/multiplayer';
 import {MCTSBot, RandomBot} from 'boardgame.io/ai';
