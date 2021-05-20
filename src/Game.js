@@ -192,7 +192,7 @@ export const BoardGame = {
                 }*/
                 //console.log("test potential scores");
                 //console.log(potentialScores);
-                let res = [];
+                const res = [];
                 for (let i = 0; i < G.botData.allPicks.length; i++) {
                     let temp = 0;
                     for (let j = 0; j < G.tavernsNum; j++) {
@@ -215,10 +215,8 @@ export const BoardGame = {
         objectives: () => ({
             isEarlyGame: {
                 checker: (G, ctx) => {
-                    if (G.decks[0].length > 18) {
-                        return true;
-                    }
-                    return false;
+                    return G.decks[0].length > 18;
+
                 },
                 weight: -10.0,
             },
@@ -234,7 +232,7 @@ export const BoardGame = {
                     for (let i = 0; i < ctx.numPlayers; i++) {
                         totalScore.push(Scoring(G.players[i]));
                     }
-                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
                     if (totalScore[ctx.currentPlayer] < top2) {
                         return totalScore[ctx.currentPlayer] >= Math.floor(0.90 * top1);
                     }
@@ -254,7 +252,7 @@ export const BoardGame = {
                     for (let i = 0; i < ctx.numPlayers; i++) {
                         totalScore.push(Scoring(G.players[i]));
                     }
-                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
                     if (totalScore[ctx.currentPlayer] === top2 && top2 < top1) {
                         return totalScore[ctx.currentPlayer] >= Math.floor(0.95 * top1);
                     }
@@ -274,11 +272,9 @@ export const BoardGame = {
                     for (let i = 0; i < ctx.numPlayers; i++) {
                         totalScore.push(Scoring(G.players[i]));
                     }
-                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
-                    if (totalScore[ctx.currentPlayer] === top2 && top2 === top1) {
-                        return true;
-                    }
-                    return false;
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    return totalScore[ctx.currentPlayer] === top2 && top2 === top1;
+
                 },
                 weight: 0.5,
             },
@@ -294,7 +290,7 @@ export const BoardGame = {
                     for (let i = 0; i < ctx.numPlayers; i++) {
                         totalScore.push(Scoring(G.players[i]));
                     }
-                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
                     if (totalScore[ctx.currentPlayer] === top1 && top2 < top1) {
                         return totalScore[ctx.currentPlayer] >= Math.floor(1.06 * top2);
                     }
