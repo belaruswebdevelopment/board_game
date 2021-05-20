@@ -304,9 +304,9 @@ export const DrawPlayersHandsCoins = (data) => {
         playersHandsCoins[p] = [];
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
-                let coinClass = "border-black";
+                let coinClass = "bg-yellow-500";
                 if (data.props.G.players[p].selectedCoin === j) {
-                    coinClass = "border-green-400";
+                    coinClass = "bg-green-400";
                 }
                 if (data.props.G.players[p].handCoins[j] === null) {
                     playerCells.push(
@@ -317,7 +317,7 @@ export const DrawPlayersHandsCoins = (data) => {
                 } else {
                     playerCells.push(
                         <td className="cursor-pointer" key={j} onClick={() => data.OnClickHandCoin(j)}>
-                            <b className={`coin bg-yellow-500 ${coinClass}`}>
+                            <b className={`coin ${coinClass}`}>
                                 {data.props.G.players[p].handCoins[j].value}
                             </b>
                         </td>
