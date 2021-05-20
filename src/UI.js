@@ -145,7 +145,7 @@ export const DrawWinner = (data) => {
     let winner;
     if (data.props.ctx.gameover) {
         winner = data.props.ctx.gameover.winner !== undefined ?
-            "Winner: Player " + Number(data.props.ctx.gameover.winner) + 1 :
+            "Winner: Player " + (Number(data.props.ctx.gameover.winner) + 1) :
             "Draw!";
     } else {
         winner = "Game is started";
@@ -287,6 +287,12 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 <b className="coin bg-red-500">?</b>
                             </td>
                         );
+                    } else if (data.props.ctx.phase === 'placeCoins' && Number(data.props.ctx.currentPlayer) !== p) {
+                        playerCells.push(
+                            <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
+                                <b className="coin bg-yellow-500">secret</b>
+                            </td>
+                        );
                     } else {
                         playerCells.push(
                             <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
@@ -303,6 +309,13 @@ export const DrawPlayersBoardsCoins = (data) => {
                             <td className="cursor-pointer" key={j}
                                 onClick={() => data.OnClickBoardCoin(j)}>
                                 <b className="coin bg-red-500">&#8596;</b>
+                            </td>
+                        );
+                    } else if (data.props.ctx.phase === 'placeCoins' && Number(data.props.ctx.currentPlayer) !== p) {
+                        playerCells.push(
+                            <td className="cursor-pointer" key={j}
+                                onClick={() => data.OnClickBoardCoin(j)}>
+                                <b className="coin bg-yellow-500">secret</b>
                             </td>
                         );
                     } else {
