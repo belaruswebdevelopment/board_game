@@ -211,7 +211,7 @@ export const BoardGame = {
                 if (coinsTotalValue > marketCoinsMaxValue) {
                     coinsTotalValue = marketCoinsMaxValue;
                 }
-                const isTradingProfitable = (coinsTotalValue - coinsMaxValue) > 0;
+                const isTradingProfitable = (coinsTotalValue - coinsMaxValue) > 1;
                 for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
                     if (isTradingProfitable === G.botData.allCoinsOrder[i].slice(0, G.tavernsNum).some(element => G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
                         moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
