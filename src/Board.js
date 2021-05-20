@@ -1,23 +1,32 @@
 import React from 'react';
 import {
+    DrawTierTurns,
+    DrawCurrentPlayer,
+    DrawWinner,
     DrawMarketCoins,
+    DrawCamp,
     DrawTaverns,
+} from "./UI";
+import {
     DrawPlayersBoardsCoins,
     DrawPlayersBoards,
     DrawPlayersHandsCoins,
-    DrawDebugData, DrawWinner, DrawTierTurns, DrawCurrentPlayer,
-} from "./UI";
+} from "./PlayerUI";
+import {DrawDebugData} from "./DebugUI";
 
 export class GameBoard extends React.Component {
+    OnClickCampCard = (cardId) => {
+        this.props.moves.ClickCampCard(cardId);
+    };
     OnClickCard = (tavernId, cardId) => {
         this.props.moves.ClickCard(tavernId, cardId);
-    }
+    };
     OnClickBoardCoin = (coinId) => {
         this.props.moves.ClickBoardCoin(coinId);
-    }
+    };
     OnClickHandCoin = (coinId) => {
         this.props.moves.ClickHandCoin(coinId);
-    }
+    };
 
     render() {
         const gridClass = `col-span-${this.props.ctx.numPlayers}`,
@@ -25,6 +34,7 @@ export class GameBoard extends React.Component {
             currentPlayer = DrawCurrentPlayer(this),
             winnerUI = DrawWinner(this),
             marketCoinsUI = DrawMarketCoins(this),
+            drawCamp = DrawCamp(this),
             tavernsUI = DrawTaverns(this, gridClass),
             playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
             playersBoardsUI = DrawPlayersBoards(this),
@@ -49,8 +59,8 @@ export class GameBoard extends React.Component {
                     <div className={gridClass}>
                         {marketCoinsUI}
                     </div>
-                    <div className={gridClass}>
-                        {marketCoinsUI}
+                    <div className={`${gridClass} justify-self-center`}>
+                        {drawCamp}
                     </div>
                     {tavernsUI}
                     {playersBoardsCoinsUI}

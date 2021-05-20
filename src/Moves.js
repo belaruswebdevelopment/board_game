@@ -1,6 +1,10 @@
 import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCardToPlayer} from "./Player";
 
+export const ClickCampCard = (G, ctx, cardId) => {
+    // todo Add logic
+};
+
 export const ClickCard = (G, ctx, tavernId, cardId) => {
     const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null),
         isEmptyPick = G.taverns[tavernId][cardId] === null;

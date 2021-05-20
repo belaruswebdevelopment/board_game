@@ -1,6 +1,6 @@
 import {SetupGame} from "./GameSetup";
 import {suitsConfigArray} from "./SuitData";
-import {ClickBoardCoin, ClickCard, ClickHandCoin, ResolveBoardCoins, PlaceAllCoins} from "./Moves";
+import {ClickBoardCoin, ClickCard, ClickHandCoin, ResolveBoardCoins, PlaceAllCoins, ClickCampCard} from "./Moves";
 //import {PotentialScoring, CheckHeuristicsForTradingCoin} from "./BotConfig";
 import {CompareCards} from "./Card"; //CreateCard
 //import {AddCardToCards} from "./Player";
@@ -83,6 +83,7 @@ export const BoardGame = {
             },
             moves: {
                 ClickCard,
+                ClickCampCard,
             },
             endIf: (G) => {
                 return G.taverns[G.tavernsNum - 1].every((element) => element === null);
@@ -191,7 +192,7 @@ export const BoardGame = {
                 }*/
                 //console.log("test potential scores");
                 //console.log(potentialScores);
-                let res = [];
+                const res = [];
                 for (let i = 0; i < G.botData.allPicks.length; i++) {
                     let temp = 0;
                     for (let j = 0; j < G.tavernsNum; j++) {
@@ -239,7 +240,7 @@ export const BoardGame = {
                     for (let i = 0; i < ctx.numPlayers; i++) {
                         totalScore.push(Scoring(G.players[i]));
                     }
-                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
                     if (totalScore[ctx.currentPlayer] < top2) {
                         return totalScore[ctx.currentPlayer] >= Math.floor(0.90 * top1);
                     }
@@ -259,7 +260,7 @@ export const BoardGame = {
                     for (let i = 0; i < ctx.numPlayers; i++) {
                         totalScore.push(Scoring(G.players[i]));
                     }
-                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
                     if (totalScore[ctx.currentPlayer] === top2 && top2 < top1) {
                         return totalScore[ctx.currentPlayer] >= Math.floor(0.95 * top1);
                     }
@@ -279,11 +280,9 @@ export const BoardGame = {
                     for (let i = 0; i < ctx.numPlayers; i++) {
                         totalScore.push(Scoring(G.players[i]));
                     }
-                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
-                    if (totalScore[ctx.currentPlayer] === top2 && top2 === top1) {
-                        return true;
-                    }
-                    return false;
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    return totalScore[ctx.currentPlayer] === top2 && top2 === top1;
+
                 },
                 weight: 0.5,
             },
@@ -299,7 +298,7 @@ export const BoardGame = {
                     for (let i = 0; i < ctx.numPlayers; i++) {
                         totalScore.push(Scoring(G.players[i]));
                     }
-                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
                     if (totalScore[ctx.currentPlayer] === top1 && top2 < top1) {
                         return totalScore[ctx.currentPlayer] >= Math.floor(1.06 * top2);
                     }

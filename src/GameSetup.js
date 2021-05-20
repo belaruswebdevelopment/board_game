@@ -8,15 +8,14 @@ import {Permute, k_combinations, GetAllPicks} from "./BotConfig";
 export const SetupGame = (ctx) => {
     const suitsNum = 5,
         tierToEnd = 2,
+        campNum = 5,
         debug = false,
         decks = [],
-        averageCards = [];
+        // todo fix it
+        camp = [null,null,null,null,null];
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards(suitsConfigArray, {players: ctx.numPlayers, tier: i});
         decks[i] = ctx.random.Shuffle(decks[i]);
-    }
-    for (let i = 0; i < suitsNum; i++) {
-        averageCards[i] = GetAverageSuitCard(suitsConfigArray[i], {players: ctx.numPlayers, tier: 0});
     }
     const taverns = [],
         tavernsNum = 3,
@@ -24,23 +23,27 @@ export const SetupGame = (ctx) => {
     for (let i = 0; i < tavernsNum; i++) {
         taverns[i] = decks[0].splice(0, drawSize);
     }
-    let players = [],
+    const players = [],
         playersOrder = [],
         exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         players[i] = BuildPlayer(i);
     }
-    const marketCoinsUnique = [];
-    const marketCoins = BuildCoins(marketCoinsConfig, {
+    const marketCoinsUnique = [],
+        marketCoins = BuildCoins(marketCoinsConfig, {
         count: marketCoinsUnique,
         players: ctx.numPlayers,
         isInitial: false,
         isTriggerTrading: false,
     });
     const botData = {},
+        averageCards = [],
         initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined).map((item, index) => index),
         initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
+    for (let i = 0; i < suitsNum; i++) {
+        averageCards[i] = GetAverageSuitCard(suitsConfigArray[i], {players: ctx.numPlayers, tier: 0});
+    }
     for (let i = 0; i < initCoinsOrder.length; i++) {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
     }
@@ -50,10 +53,11 @@ export const SetupGame = (ctx) => {
         debug,
         suitsNum,
         tierToEnd,
+        campNum,
         tavernsNum,
         drawSize,
         decks,
-        averageCards,
+        camp,
         taverns,
         players,
         playersOrder,
@@ -61,5 +65,6 @@ export const SetupGame = (ctx) => {
         marketCoins,
         marketCoinsUnique,
         botData,
+        averageCards,
     };
 };
