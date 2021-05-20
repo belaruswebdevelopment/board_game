@@ -11,7 +11,7 @@ const IsEndGame = (taverns, tavernsNum, deck) => {
         isEndGame = true;
     }
     return isEndGame;
-}
+};
 
 export const Scoring = (player) => {
     const count = [0, 0, 0, 0, 0];
@@ -34,7 +34,7 @@ export const Scoring = (player) => {
     }
 
     return score;
-}
+};
 
 export const BoardGame = {
     setup: SetupGame,

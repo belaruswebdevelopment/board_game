@@ -2,91 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+td {
+    @apply border-2 w-12 h-12 text-center;
+}
+
+th {
+    @apply border-2 text-center;
+}
+
+.coin {
+    @apply rounded-full inline-flex items-center justify-center border-2 border-black w-12 h-12;
+}
+
 body {
-    margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-td {
-    border: 1px solid #555;
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    text-align: center;
-}
-
-.column {
-    float: left;
-    margin-right: 10px;
-    width: 20%;
-}
-
-td:hover {
-    cursor: pointer;
-}
-
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-.rounded {
-    border-radius: 50%;
-}
-
-
-.coin-active {
-    background-color: darkorange;
-}
-
-.coin-inactive {
-    background-color: crimson;
-}
-
-.coin-tavern-active {
-    border: 3px solid;
-    background-color: darkorange;
-}
-
-.coin-tavern-inactive {
-    border: 3px solid;
-    background-color: crimson;
-}
-
-.coin-trading-active {
-    border: 3px solid;
-    background-color: darkorange;
-}
-
-.coin-trading-inactive {
-    border: 3px solid;
-    background-color: crimson;
-}
-
-.selected {
-    border: 3px solid #090;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-    margin-left: 20px;
-}
-
-.key {
-    color: #871d8f;
-}
-
-.value {
-    color: #443ed4;
 }

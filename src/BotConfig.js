@@ -20,9 +20,9 @@ export function Permute(permutation) {
         }
     }
     return result;
-}
+};
 
-export function k_combinations(set, k) {
+export const k_combinations = (set, k) => {
     let i, j, combs, head, tailcombs;
     if (k > set.length || k <= 0) {
         return [];
@@ -50,7 +50,7 @@ export function k_combinations(set, k) {
         }
     }
     return combs;
-}
+};
 
 export const GetAllPicks = ({tavernsNum, playersNum}) => {
     const temp = [],
@@ -64,7 +64,7 @@ export const GetAllPicks = ({tavernsNum, playersNum}) => {
         temp[i] = Array(playersNum).fill().map((item, index) => index);
     }
     return cartesian(temp);
-}
+};
 
 export const PotentialScoring = ({cards = [], coins = [], tavernsNum = 0, marketCoinsMaxValue = 0}) => {
     let score = 0;
@@ -86,39 +86,39 @@ export const PotentialScoring = ({cards = [], coins = [], tavernsNum = 0, market
         }
     }*/
     return score;
-}
+};
 
 //absolute heuristics
 const isAllCardsEqual = {
     heuristic: (array) => array.every(element => (element.suit === array[0].suit && CompareCards(element, array[0]) === 0)),
     weight: 100,
-}
+};
 
 //relative heuristics
 const isAllWorse = {
     heuristic: (array) => array.every(element => element === -1),
     weight: 40,
-}
+};
 
 const isAllAverage = {
     heuristic: (array) => array.every(element => element === 0),
     weight: 20,
-}
+};
 
 const isAllBetter = {
     heuristic: (array) => array.every(element => element === 1),
     weight: 10,
-}
+};
 
 const isOnlyOneWorse = {
     heuristic: (array) => (array.filter(element => element === -1).length === 1),
     weight: -100,
-}
+};
 
 const isOnlyWorseOrBetter = {
     heuristic: (array) => array.every(element => element !== 0),
     weight: -50,
-}
+};
 
 const absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
 const relativeHeuristicsForTradingCoin = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];

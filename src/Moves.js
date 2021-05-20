@@ -34,14 +34,15 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
         ctx.events.setPhase('pickCards');
     }
     ctx.events.endTurn();
-}
+};
+
 export const ClickHandCoin = (G, ctx, coinId) => {
     const isEmptyPick = G.players[ctx.currentPlayer].handCoins[coinId] === null;
     if (isEmptyPick) {
         return INVALID_MOVE;
     }
     G.players[ctx.currentPlayer].selectedCoin = coinId;
-}
+};
 
 export const ClickBoardCoin = (G, ctx, coinId) => {
     const isWrongPick = false;
@@ -67,7 +68,7 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
     } else {
         return INVALID_MOVE;
     }
-}
+};
 
 export const PlaceAllCoins = (G, ctx, coinsOrder) => {
     for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
@@ -80,7 +81,7 @@ export const PlaceAllCoins = (G, ctx, coinsOrder) => {
         ctx.events.endPhase({next: 'pickCards'});
     }
     ctx.events.endTurn();
-}
+};
 
 export const ResolveBoardCoins = (G, ctx) => {
     const playersOrder = [],
@@ -105,11 +106,11 @@ export const ResolveBoardCoins = (G, ctx) => {
         }
     }
     return {playersOrder, exchangeOrder};
-}
+};
 
 const Trading = (G, ctx, tradingCoins) => {
     const coinsTotalValue = tradingCoins.reduce((prev, current) => prev + current.value, 0),
-        coinsMaxValue = tradingCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
+        coinsMaxValue = tradingCoins.reduce((prev, current) => (prev < current.value) ? current.value : prev, 0);
     let coinMaxIndex = null;
     for (let i = 0; i < tradingCoins.length; i++) {
         if (tradingCoins[i].value === coinsMaxValue) {
@@ -120,24 +121,26 @@ const Trading = (G, ctx, tradingCoins) => {
         }
     }
     let tradedCoin = null;
-    if (coinsTotalValue > G.marketCoins[G.marketCoins.length - 1].value) {
-        tradedCoin = G.marketCoins[G.marketCoins.length - 1];
-    } else {
-        for (let i = 0; i < G.marketCoins.length; i++) {
-            if (G.marketCoins[i].value < coinsTotalValue) {
-                tradedCoin = G.marketCoins[i];
-            } else if (G.marketCoins[i].value >= coinsTotalValue) {
-                tradedCoin = G.marketCoins[i];
-                G.marketCoins.splice(i, 1);
-                break;
-            }
-            if (i === G.marketCoins.length - 1) {
-                G.marketCoins.splice(i, 1);
+    if (G.marketCoins.length) {
+        if (coinsTotalValue > G.marketCoins[G.marketCoins.length - 1].value) {
+            tradedCoin = G.marketCoins[G.marketCoins.length - 1];
+        } else {
+            for (let i = 0; i < G.marketCoins.length; i++) {
+                if (G.marketCoins[i].value < coinsTotalValue) {
+                    tradedCoin = G.marketCoins[i];
+                } else if (G.marketCoins[i].value >= coinsTotalValue) {
+                    tradedCoin = G.marketCoins[i];
+                    G.marketCoins.splice(i, 1);
+                    break;
+                }
+                if (i === G.marketCoins.length - 1) {
+                    G.marketCoins.splice(i, 1);
+                }
             }
         }
     }
     G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = null;
-    if (tradedCoin) {
+    if (tradedCoin !== null) {
         G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = tradedCoin;
         if (!tradingCoins[coinMaxIndex].isInitial) {
             let returningIndex = null;
@@ -152,4 +155,4 @@ const Trading = (G, ctx, tradingCoins) => {
     } else {
         G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = tradingCoins[coinMaxIndex];
     }
-}
+};

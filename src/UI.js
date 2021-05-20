@@ -42,8 +42,9 @@ const DrawObjectData = (obj) => {
                 values.push(
                     <li key={key}>
                         <details>
-                            <summary><b><span className="key">{key}</span>: </b><i>Array({length})</i></summary>
-                            <ul>
+                            <summary><b><span className="text-pink-500">{key}</span>: </b><i>Array({length})</i>
+                            </summary>
+                            <ul className="list-none p-0 ml-5">
                                 {data}
                             </ul>
                         </details>
@@ -53,8 +54,8 @@ const DrawObjectData = (obj) => {
                 values.push(
                     <li key={key}>
                         <details>
-                            <summary><b><span className="key">{key}</span>: </b><i>Object</i></summary>
-                            <ul>
+                            <summary><b><span className="text-pink-500">{key}</span>: </b><i>Object</i></summary>
+                            <ul className="list-none p-0 ml-5">
                                 {data}
                             </ul>
                         </details>
@@ -64,13 +65,14 @@ const DrawObjectData = (obj) => {
         } else {
             values.push(
                 <li key={key}>
-                    <b><span className="key">{key}</span>:</b> <span className="value">{value}</span>
+                    <b><span className="text-pink-500">{key}</span>:</b> <span
+                    className="text-purple-500">{value}</span>
                 </li>
             );
         }
     }
     return (
-        <ul>
+        <ul className="list-none p-0 ml-5">
             {values}
         </ul>
     );
@@ -81,7 +83,7 @@ export const DrawDebugData = (data) => {
         debugInfo = DrawObjectData(debugData);
     return (
         <div>
-            <h4>Debug info data:</h4>
+            <h3>Debug info data:</h3>
             {debugInfo}
         </div>
     );
@@ -98,16 +100,20 @@ export const DrawMarketCoins = (data) => {
             const increment = i * drawData.boardCols + j;
             if (countMarketCoins[data.props.G.marketCoinsUnique[increment]] === undefined) {
                 boardCells.push(
-                    <td className="rounded coin-inactive" key={j}>
-                        {data.props.G.marketCoinsUnique[increment]}
-                        <sup>0</sup>
+                    <td key={j}>
+                        <b className="coin bg-red-500">
+                            {data.props.G.marketCoinsUnique[increment]}
+                            <sup>0</sup>
+                        </b>
                     </td>
                 );
             } else {
                 boardCells.push(
-                    <td className="rounded coin-active" key={j}>
-                        <b>{data.props.G.marketCoinsUnique[increment]}</b>
-                        <sup>{countMarketCoins[data.props.G.marketCoinsUnique[increment]]}</sup>
+                    <td key={j}>
+                        <b className="coin bg-yellow-500">
+                            {data.props.G.marketCoinsUnique[increment]}
+                            <sup>{countMarketCoins[data.props.G.marketCoinsUnique[increment]]}</sup>
+                        </b>
                     </td>
                 );
             }
@@ -120,27 +126,40 @@ export const DrawMarketCoins = (data) => {
         );
     }
     return (
-        <div className="column">
-            <table>
-                <caption>Market coins</caption>
-                <tbody>
-                {boardRows}
-                </tbody>
-            </table>
-        </div>
+        <table>
+            <caption>Market coins</caption>
+            <tbody>
+            {boardRows}
+            </tbody>
+        </table>
     );
 };
 
 export const DrawWinner = (data) => {
-    let winner = '';
+    let winner;
     if (data.props.ctx.gameover) {
-        winner = data.props.ctx.gameover.winner !== undefined ? (
-            <h1>Winner: Player {Number(data.props.ctx.gameover.winner) + 1}</h1>
-        ) : (
-            <h1>Draw!</h1>
-        );
+        winner = data.props.ctx.gameover.winner !== undefined ?
+            "Winner: Player " + Number(data.props.ctx.gameover.winner) + 1 :
+            "Draw!";
+    } else {
+        winner = "Game is started";
     }
-    return winner;
+    return (
+        <b>Game status: {winner}</b>
+    );
+};
+
+export const DrawTierTurns = (data) => {
+    return (
+        <b>Tier: {data.props.G.decks.length - data.props.G.tierToEnd + 1} | Turn: {data.props.ctx.turn}</b>
+    );
+};
+
+export const DrawCurrentPlayer = (data) => {
+    return (
+        <b>Current player: Player {Number(data.props.ctx.currentPlayer) + 1}</b>
+
+    );
 };
 
 export const DrawTaverns = (data) => {
@@ -152,26 +171,27 @@ export const DrawTaverns = (data) => {
                 if (data.props.G.taverns[t][j] === null) {
                     boardCells.push(
                         <td key={j} onClick={() => data.OnClickCard(t, j)}>
-                            {data.props.G.taverns[t][j]}
+
                         </td>
                     );
                 } else {
                     boardCells.push(
-                        <td style={GetSuitStyle(suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor)} key={j}
+                        <td className="cursor-pointer"
+                            style={GetSuitStyle(suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor)} key={j}
                             onClick={() => data.OnClickCard(t, j)}>
                             <b>{data.props.G.taverns[t][j].points}</b>
                         </td>
                     );
                 }
             }
-            tavernsBoards.push(<div key={t} className="column">
-                <table>
+            tavernsBoards.push(
+                <table className={`col-span-${data.props.ctx.numPlayers} justify-self-center`} key={t}>
                     <caption>Tavern {t + 1}</caption>
                     <tbody>
                     <tr>{boardCells}</tr>
                     </tbody>
                 </table>
-            </div>);
+            );
         }
     }
     return tavernsBoards;
@@ -187,7 +207,7 @@ export const DrawPlayersBoards = (data) => {
         playerRows[p] = [];
         for (let s = 0; s < data.props.G.suitsNum; s++) {
             playerHeaders[p].push(
-                <th key={s} style={GetSuitStyle(suitsConfigArray[s].suitColor)}>
+                <th style={GetSuitStyle(suitsConfigArray[s].suitColor)} key={s}>
                     {suitsConfigArray[s].suitName}
                 </th>
             );
@@ -223,15 +243,15 @@ export const DrawPlayersBoards = (data) => {
                 break;
             }
         }
-        playersBoards[p].push(<div key={p} className="column">
-            <table>
+        playersBoards[p].push(
+            <table className="col-span-3" key={p}>
                 <caption>Player {p + 1} cards, {Scoring(data.props.G.players[p])} points</caption>
                 <thead>
                 <tr>{playerHeaders[p]}</tr>
                 </thead>
                 <tbody>{playerRows[p]}</tbody>
             </table>
-        </div>);
+        );
     }
     return playersBoards;
 };
@@ -257,15 +277,15 @@ export const DrawPlayersBoardsCoins = (data) => {
                     );
                     if (data.props.G.players[p].boardCoins[coinIndex] === null) {
                         playerCells.push(
-                            <td className="rounded coin-tavern-inactive" key={j}
+                            <td className="cursor-pointer" key={j}
                                 onClick={() => data.OnClickBoardCoin(j)}>
-                                <b>?</b>
+                                <b className="coin bg-red-500">?</b>
                             </td>
                         );
                     } else {
                         playerCells.push(
-                            <td className="rounded coin-tavern-active" key={j} onClick={() => data.OnClickBoardCoin(j)}>
-                                <b>{data.props.G.players[p].boardCoins[coinIndex].value}</b>
+                            <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
+                                <b className="coin bg-yellow-500">{data.props.G.players[p].boardCoins[coinIndex].value}</b>
                             </td>
                         );
                     }
@@ -275,16 +295,16 @@ export const DrawPlayersBoardsCoins = (data) => {
                 for (let j = data.props.G.taverns.length; j < data.props.G.players[p].boardCoins.length; j++) {
                     if (data.props.G.players[p].boardCoins[coinIndex] === null) {
                         playerCells.push(
-                            <td className="rounded coin-trading-inactive" key={j}
+                            <td className="cursor-pointer" key={j}
                                 onClick={() => data.OnClickBoardCoin(j)}>
-                                <b>&#8596;</b>
+                                <b className="coin bg-red-500">&#8596;</b>
                             </td>
                         );
                     } else {
                         playerCells.push(
-                            <td className="rounded coin-trading-active" key={j}
+                            <td className="cursor-pointer" key={j}
                                 onClick={() => data.OnClickBoardCoin(j)}>
-                                <b>{data.props.G.players[p].boardCoins[coinIndex].value}</b>
+                                <b className="coin bg-yellow-500">{data.props.G.players[p].boardCoins[coinIndex].value}</b>
                             </td>
                         );
                     }
@@ -293,8 +313,8 @@ export const DrawPlayersBoardsCoins = (data) => {
             }
             playerRows[p][i].push(<tr key={i}>{playerCells}</tr>)
         }
-        playersBoardsCoins[p].push(<div key={p} className="column">
-            <table>
+        playersBoardsCoins[p].push(
+            <table className="col-span-3" key={p}>
                 <caption>Player {p + 1} played coins, Priority: {data.props.G.players[p].priority}</caption>
                 <thead>
                 <tr>{playerHeaders[p]}</tr>
@@ -303,39 +323,47 @@ export const DrawPlayersBoardsCoins = (data) => {
                 {playerRows[p]}
                 </tbody>
             </table>
-        </div>);
+        );
     }
     return playersBoardsCoins;
 };
 
 export const DrawPlayersHandsCoins = (data) => {
     const playersHandsCoins = [];
-    let coinClass = "rounded coin-active";
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         const playerCells = [];
         playersHandsCoins[p] = [];
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
+                let coinClass = "border-black";
                 if (data.props.G.players[p].selectedCoin === j) {
-                    coinClass = "rounded coin-active selected";
-                } else {
-                    coinClass = "rounded coin-active";
+                    coinClass = "border-green-400";
                 }
-                playerCells.push(
-                    <td className={coinClass} key={j} onClick={() => data.OnClickHandCoin(j)}>
-                        <b>{data.props.G.players[p].handCoins[j]?.value}</b>
-                    </td>
-                );
+                if (data.props.G.players[p].handCoins[j] === null) {
+                    playerCells.push(
+                        <td key={j}>
+
+                        </td>
+                    );
+                } else {
+                    playerCells.push(
+                        <td className="cursor-pointer" key={j} onClick={() => data.OnClickHandCoin(j)}>
+                            <b className={`coin border-2 bg-yellow-500 ${coinClass}`}>
+                                {data.props.G.players[p].handCoins[j].value}
+                            </b>
+                        </td>
+                    );
+                }
             }
         }
-        playersHandsCoins[p].push(<div key={p} className="column">
-            <table>
+        playersHandsCoins[p].push(
+            <table className="col-span-3" key={p}>
                 <caption>Player {p + 1} coins</caption>
                 <tbody>
                 <tr>{playerCells}</tr>
                 </tbody>
             </table>
-        </div>);
+        );
     }
     return playersHandsCoins;
 };
