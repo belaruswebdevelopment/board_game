@@ -2,8 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+td {
+    @apply border-2 w-12 h-12 text-center;
+}
+
+th {
+    @apply border-2 text-center;
+}
+
 .coin {
-    @apply rounded-full flex items-center justify-center;
+    @apply rounded-full inline-flex items-center justify-center border-2 border-black w-12 h-12;
 }
 
 body {
@@ -12,12 +20,4 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-td, th {
-    border: 1px solid #555;
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    text-align: center;
 }

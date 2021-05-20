@@ -1,12 +1,11 @@
 import React from 'react';
 import {
-    DrawDebugData,
     DrawMarketCoins,
-    DrawPlayersBoards,
-    DrawPlayersBoardsCoins,
-    DrawPlayersHandsCoins,
     DrawTaverns,
-    DrawWinner
+    DrawPlayersBoardsCoins,
+    DrawPlayersBoards,
+    DrawPlayersHandsCoins,
+    DrawDebugData, DrawWinner, DrawTierTurns, DrawCurrentPlayer,
 } from "./UI";
 
 export class GameBoard extends React.Component {
@@ -21,30 +20,47 @@ export class GameBoard extends React.Component {
     }
 
     render() {
-        const debugUI = DrawDebugData(this),
-            marketCoinsUI = DrawMarketCoins(this),
+        const tierTurns = DrawTierTurns(this),
+            currentPlayer = DrawCurrentPlayer(this),
             winnerUI = DrawWinner(this),
+            marketCoinsUI = DrawMarketCoins(this),
             tavernsUI = DrawTaverns(this),
             playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
             playersBoardsUI = DrawPlayersBoards(this),
-            playersHandsCoinsUI = DrawPlayersHandsCoins(this);
+            playersHandsCoinsUI = DrawPlayersHandsCoins(this),
+            debugUI = DrawDebugData(this);
         return (
             <div>
-                {marketCoinsUI}
-                {winnerUI}
-                <div className="row">
-                    {tavernsUI}
+                <div className="flex">
+                    <div
+                        className={`grid auto-rows-min grid-cols-1 lg:grid-cols-${this.props.ctx.numPlayers * 3} gap-2`}>
+                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
+                            {tierTurns}
+                        </div>
+                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
+                            {currentPlayer}
+                        </div>
+                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
+                            {winnerUI}
+                        </div>
+                        <div className={`col-span-${this.props.ctx.numPlayers} justify-self-center`}>
+                            {marketCoinsUI}
+                        </div>
+                        <div className={`col-span-${this.props.ctx.numPlayers} justify-self-center`}>
+                            {marketCoinsUI}
+                        </div>
+                        <div className={`col-span-${this.props.ctx.numPlayers} justify-self-center`}>
+                            {marketCoinsUI}
+                        </div>
+                        {tavernsUI}
+                        {playersBoardsCoinsUI}
+                        {playersBoardsUI}
+                        {playersHandsCoinsUI}
+                    </div>
+                    <div>
+                        {debugUI}
+                    </div>
                 </div>
-                <div className="row">
-                    {playersBoardsCoinsUI}
-                </div>
-                <div className="row">
-                    {playersBoardsUI}
-                </div>
-                <div className="row">
-                    {playersHandsCoinsUI}
-                </div>
-                {debugUI}
             </div>
         );
     }

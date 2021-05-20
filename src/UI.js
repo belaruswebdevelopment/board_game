@@ -42,7 +42,8 @@ const DrawObjectData = (obj) => {
                 values.push(
                     <li key={key}>
                         <details>
-                            <summary><b><span className="text-pink-500">{key}</span>: </b><i>Array({length})</i></summary>
+                            <summary><b><span className="text-pink-500">{key}</span>: </b><i>Array({length})</i>
+                            </summary>
                             <ul className="list-none p-0 ml-5">
                                 {data}
                             </ul>
@@ -64,7 +65,8 @@ const DrawObjectData = (obj) => {
         } else {
             values.push(
                 <li key={key}>
-                    <b><span className="text-pink-500">{key}</span>:</b> <span className="text-purple-500">{value}</span>
+                    <b><span className="text-pink-500">{key}</span>:</b> <span
+                    className="text-purple-500">{value}</span>
                 </li>
             );
         }
@@ -99,7 +101,7 @@ export const DrawMarketCoins = (data) => {
             if (countMarketCoins[data.props.G.marketCoinsUnique[increment]] === undefined) {
                 boardCells.push(
                     <td key={j}>
-                        <b className="coin border-2 border-2-black bg-red-500">
+                        <b className="coin bg-red-500">
                             {data.props.G.marketCoinsUnique[increment]}
                             <sup>0</sup>
                         </b>
@@ -108,7 +110,7 @@ export const DrawMarketCoins = (data) => {
             } else {
                 boardCells.push(
                     <td key={j}>
-                        <b className="coin border-2 border-2-black bg-yellow-500">
+                        <b className="coin bg-yellow-500">
                             {data.props.G.marketCoinsUnique[increment]}
                             <sup>{countMarketCoins[data.props.G.marketCoinsUnique[increment]]}</sup>
                         </b>
@@ -133,7 +135,7 @@ export const DrawMarketCoins = (data) => {
     );
 };
 
-const DrawWinner = (data) => {
+export const DrawWinner = (data) => {
     let winner;
     if (data.props.ctx.gameover) {
         winner = data.props.ctx.gameover.winner !== undefined ?
@@ -143,22 +145,20 @@ const DrawWinner = (data) => {
         winner = "Game is started";
     }
     return (
-        <td>{winner}</td>
+        <b>Game status: {winner}</b>
     );
 };
 
-export const DrawTopPanel = (data) => {
+export const DrawTierTurns = (data) => {
     return (
-        <table className={`col-span-${data.props.ctx.numPlayers * 3}`}>
-            <tbody>
-            <tr>
-                <td>Tier: {data.props.G.decks.length - data.props.G.tierToEnd + 1}</td>
-                <td>Turn: {data.props.ctx.turn}</td>
-                <td>Current player: Player {data.props.ctx.currentPlayer}</td>
-                {DrawWinner(data)}
-            </tr>
-            </tbody>
-        </table>
+        <b>Tier: {data.props.G.decks.length - data.props.G.tierToEnd + 1} | Turn: {data.props.ctx.turn}</b>
+    );
+};
+
+export const DrawCurrentPlayer = (data) => {
+    return (
+        <b>Current player: Player {Number(data.props.ctx.currentPlayer) + 1}</b>
+
     );
 };
 
@@ -176,7 +176,8 @@ export const DrawTaverns = (data) => {
                     );
                 } else {
                     boardCells.push(
-                        <td className="cursor-pointer" style={GetSuitStyle(suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor)} key={j}
+                        <td className="cursor-pointer"
+                            style={GetSuitStyle(suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor)} key={j}
                             onClick={() => data.OnClickCard(t, j)}>
                             <b>{data.props.G.taverns[t][j].points}</b>
                         </td>
@@ -206,7 +207,7 @@ export const DrawPlayersBoards = (data) => {
         playerRows[p] = [];
         for (let s = 0; s < data.props.G.suitsNum; s++) {
             playerHeaders[p].push(
-                <th key={s} style={GetSuitStyle(suitsConfigArray[s].suitColor)}>
+                <th style={GetSuitStyle(suitsConfigArray[s].suitColor)} key={s}>
                     {suitsConfigArray[s].suitName}
                 </th>
             );
@@ -278,13 +279,13 @@ export const DrawPlayersBoardsCoins = (data) => {
                         playerCells.push(
                             <td className="cursor-pointer" key={j}
                                 onClick={() => data.OnClickBoardCoin(j)}>
-                                <b className="coin border-2 border-2-black bg-red-500">?</b>
+                                <b className="coin bg-red-500">?</b>
                             </td>
                         );
                     } else {
                         playerCells.push(
                             <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
-                                <b className="coin border-2 border-2-black bg-yellow-500">{data.props.G.players[p].boardCoins[coinIndex].value}</b>
+                                <b className="coin bg-yellow-500">{data.props.G.players[p].boardCoins[coinIndex].value}</b>
                             </td>
                         );
                     }
@@ -296,14 +297,14 @@ export const DrawPlayersBoardsCoins = (data) => {
                         playerCells.push(
                             <td className="cursor-pointer" key={j}
                                 onClick={() => data.OnClickBoardCoin(j)}>
-                                <b className="coin border-2 border-2-black bg-red-500">&#8596;</b>
+                                <b className="coin bg-red-500">&#8596;</b>
                             </td>
                         );
                     } else {
                         playerCells.push(
                             <td className="cursor-pointer" key={j}
                                 onClick={() => data.OnClickBoardCoin(j)}>
-                                <b className="coin border-2 border-2-black bg-yellow-500">{data.props.G.players[p].boardCoins[coinIndex].value}</b>
+                                <b className="coin bg-yellow-500">{data.props.G.players[p].boardCoins[coinIndex].value}</b>
                             </td>
                         );
                     }
