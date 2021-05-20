@@ -4,7 +4,7 @@ export const CreateCard = ({suit, rank = 1, points} = {}) => {
         rank,
         points,
     };
-}
+};
 
 export const BuildCards = (deckConfig, data) => {
     const cards = [];
