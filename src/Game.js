@@ -206,8 +206,17 @@ export const BoardGame = {
                 console.log(res.splice(0, 9));
                 console.log("pick 3rd card");
                 console.log(res.splice(0, 9));*/
+                const marketCoinsMaxValue = G.marketCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
+                let coinsTotalValue = G.players[ctx.currentPlayer].handCoins.slice(G.tavernsNum).reduce((prev, current) => prev + current.value, 0);
+                const coinsMaxValue = G.players[ctx.currentPlayer].handCoins.slice(G.tavernsNum).reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
+                if (coinsTotalValue > marketCoinsMaxValue) {
+                    coinsTotalValue = marketCoinsMaxValue;
+                }
+                const isTradingProfitable = (coinsTotalValue - coinsMaxValue) > 1;
                 for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
-                    moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                    if (isTradingProfitable === G.botData.allCoinsOrder[i].slice(0, G.tavernsNum).some(element => G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
+                        moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                    }
                 }
             }
             return moves;
@@ -215,8 +224,7 @@ export const BoardGame = {
         objectives: () => ({
             isEarlyGame: {
                 checker: (G, ctx) => {
-                    return G.decks[0].length > 18;
-
+                    return G.decks[0].length > 9;
                 },
                 weight: -10.0,
             },
