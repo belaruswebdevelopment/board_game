@@ -8,7 +8,7 @@ import {Permute, k_combinations, GetAllPicks} from "./BotConfig";
 export const SetupGame = (ctx) => {
     const suitsNum = 5,
         tierToEnd = 2,
-        debug = true,
+        debug = false,
         decks = [],
         averageCards = [];
     for (let i = 0; i < tierToEnd; i++) {

@@ -72,21 +72,27 @@ const DrawObjectData = (obj) => {
         }
     }
     return (
-        <ul className="list-none p-0 ml-5">
-            {values}
-        </ul>
+        <div>
+            <ul className="list-none p-0 ml-5">
+                {values}
+            </ul>
+        </div>
     );
 };
 
 export const DrawDebugData = (data) => {
-    const debugData = GetDebugData(data),
-        debugInfo = DrawObjectData(debugData);
-    return (
-        <div>
-            <h3>Debug info data:</h3>
-            {debugInfo}
-        </div>
-    );
+    const debugData = GetDebugData(data);
+    if (debugData === null) {
+        return null;
+    } else {
+        return (
+            <div>
+                <h3>Debug info data:</h3>
+                {DrawObjectData(debugData)}
+            </div>
+        );
+    }
+
 };
 
 export const DrawMarketCoins = (data) => {
@@ -103,7 +109,7 @@ export const DrawMarketCoins = (data) => {
                     <td key={j}>
                         <b className="coin bg-red-500">
                             {data.props.G.marketCoinsUnique[increment]}
-                           <sup>0</sup>
+                            <sup>0</sup>
                         </b>
                     </td>
                 );

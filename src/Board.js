@@ -32,37 +32,32 @@ export class GameBoard extends React.Component {
             debugUI = DrawDebugData(this),
             classes = `col-span-${this.props.ctx.numPlayers} text-center underline border`;
         return (
-            <div>
-                <div className="flex">
-                    <div
-                        className={`grid auto-rows-min grid-cols-1 lg:grid-cols-${this.props.ctx.numPlayers * 3} gap-2`}>
-                        <div className={classes}>
-                            {tierTurns}
-                        </div>
-                        <div className={classes}>
-                            {currentPlayer}
-                        </div>
-                        <div className={classes}>
-                            {winnerUI}
-                        </div>
-                        <div className={gridClass}>
-                            {marketCoinsUI}
-                        </div>
-                        <div className={gridClass}>
-                            {marketCoinsUI}
-                        </div>
-                        <div className={gridClass}>
-                            {marketCoinsUI}
-                        </div>
-                        {tavernsUI}
-                        {playersBoardsCoinsUI}
-                        {playersBoardsUI}
-                        {playersHandsCoinsUI}
+            <div className="flex">
+                <div className={`grid auto-rows-min grid-cols-1 lg:grid-cols-${this.props.ctx.numPlayers * 3} gap-2`}>
+                    <div className={classes}>
+                        {tierTurns}
                     </div>
-                    <div>
-                        {debugUI}
+                    <div className={classes}>
+                        {currentPlayer}
                     </div>
+                    <div className={classes}>
+                        {winnerUI}
+                    </div>
+                    <div className={gridClass}>
+                        {marketCoinsUI}
+                    </div>
+                    <div className={gridClass}>
+                        {marketCoinsUI}
+                    </div>
+                    <div className={gridClass}>
+                        {marketCoinsUI}
+                    </div>
+                    {tavernsUI}
+                    {playersBoardsCoinsUI}
+                    {playersBoardsUI}
+                    {playersHandsCoinsUI}
                 </div>
+                {debugUI}
             </div>
         );
     }
