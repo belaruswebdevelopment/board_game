@@ -11,6 +11,7 @@ export const SetupGame = (ctx) => {
         campNum = 5,
         debug = false,
         decks = [],
+        heroes = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
         // todo fix it
         camp = [null,null,null,null,null];
     for (let i = 0; i < tierToEnd; i++) {
@@ -57,6 +58,7 @@ export const SetupGame = (ctx) => {
         tavernsNum,
         drawSize,
         decks,
+        heroes,
         camp,
         taverns,
         players,

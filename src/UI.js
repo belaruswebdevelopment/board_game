@@ -86,7 +86,38 @@ export const DrawMarketCoins = (data) => {
     );
 };
 
-export const DrawCamp = (data, gridClass) => {
+export const DrawHeroes = (data) => {
+    const boardRows = [],
+        drawData = DrawBoard(data.props.G.heroes.length);
+    for (let i = 0; i < drawData.boardRows; i++) {
+        const boardCells = [];
+        boardRows[i] = [];
+        for (let j = 0; j < drawData.boardCols; j++) {
+            const increment = i * drawData.boardCols + j;
+            boardCells.push(
+                <td className="cursor-pointer" key={j} onClick={() => data.OnClickHeroCard(increment)}>
+                    {data.props.G.heroes[increment]}
+                </td>
+            );
+            if ((i === drawData.boardRows - 1) && (j + 1 === drawData.lastBoardCol)) {
+                break;
+            }
+        }
+        boardRows[i].push(
+            <tr key={i}>{boardCells}</tr>
+        );
+    }
+    return (
+        <table>
+            <caption>Heroes</caption>
+            <tbody>
+            {boardRows}
+            </tbody>
+        </table>
+    );
+};
+
+export const DrawCamp = (data) => {
     const boardCells = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < data.props.G.campNum; j++) {
@@ -108,7 +139,7 @@ export const DrawCamp = (data, gridClass) => {
         }
     }
     return (
-        <table className={`${gridClass}`}>
+        <table>
             <caption>Camp</caption>
             <tbody>
             <tr>{boardCells}</tr>

@@ -1,6 +1,14 @@
 import {SetupGame} from "./GameSetup";
 import {suitsConfigArray} from "./SuitData";
-import {ClickBoardCoin, ClickCard, ClickHandCoin, ResolveBoardCoins, PlaceAllCoins, ClickCampCard} from "./Moves";
+import {
+    ClickBoardCoin,
+    ClickCard,
+    ClickHandCoin,
+    ResolveBoardCoins,
+    PlaceAllCoins,
+    ClickCampCard,
+    ClickHeroCard
+} from "./Moves";
 //import {PotentialScoring, CheckHeuristicsForTradingCoin} from "./BotConfig";
 import {CompareCards} from "./Card"; //CreateCard
 //import {AddCardToCards} from "./Player";
@@ -83,6 +91,7 @@ export const BoardGame = {
             },
             moves: {
                 ClickCard,
+                ClickHeroCard,
                 ClickCampCard,
             },
             endIf: (G) => {

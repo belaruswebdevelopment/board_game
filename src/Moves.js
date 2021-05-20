@@ -1,6 +1,10 @@
 import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCardToPlayer} from "./Player";
 
+export const ClickHeroCard = (G, ctx, heroId) => {
+    // todo Add logic
+};
+
 export const ClickCampCard = (G, ctx, cardId) => {
     // todo Add logic
 };

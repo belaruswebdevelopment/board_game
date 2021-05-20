@@ -99,7 +99,7 @@ export const DrawPlayersBoards = (data) => {
         for (let s = 0; s < data.props.G.suitsNum; s++) {
             playerHeaders[p].push(
                 <th style={GetSuitStyle(suitsConfigArray[s].suitColor)} key={s}>
-                    {suitsConfigArray[s].suitName}
+                    <img className="block m-auto w-8" src={`/img/${suitsConfigArray[s].suitName}.png`} alt={suitsConfigArray[s].suitName} />
                 </th>
             );
         }

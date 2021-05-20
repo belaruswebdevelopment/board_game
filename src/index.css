@@ -10,6 +10,10 @@ th {
     @apply border-2 text-center;
 }
 
+th {
+    width: 80px;
+}
+
 sup {
     @apply italic text-blue-500;
 }
