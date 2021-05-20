@@ -1,7 +1,7 @@
 import React from "react";
-import {GetSuitStyle} from "./UI";
-import {Scoring} from "./Game";
-import {suitsConfigArray} from "./SuitData";
+import {GetSuitStyle} from "./GameBoardUI";
+import {Scoring} from "../Game";
+import {suitsConfigArray} from "../data/SuitData";
 
 export const DrawPlayersBoardsCoins = (data) => {
     const playersBoardsCoins = [],

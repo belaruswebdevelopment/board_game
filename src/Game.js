@@ -1,5 +1,5 @@
 import {SetupGame} from "./GameSetup";
-import {suitsConfigArray} from "./SuitData";
+import {suitsConfigArray} from "./data/SuitData";
 import {
     ClickBoardCoin,
     ClickCard,

@@ -1,7 +1,7 @@
 import {BuildPlayer} from "./Player";
 import {BuildCards, GetAverageSuitCard} from "./Card";
-import {suitsConfigArray} from "./SuitData";
-import {marketCoinsConfig} from "./CoinData";
+import {suitsConfigArray} from "./data/SuitData";
+import {marketCoinsConfig} from "./data/CoinData";
 import {BuildCoins} from "./Coin";
 import {Permute, k_combinations, GetAllPicks} from "./BotConfig";
 

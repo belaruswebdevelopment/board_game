@@ -1,6 +1,6 @@
 import {BuildCoins} from "./Coin";
-import {initialPlayerCoinsConfig} from "./CoinData";
-import {suitsConfigArray} from "./SuitData";
+import {initialPlayerCoinsConfig} from "./data/CoinData";
+import {suitsConfigArray} from "./data/SuitData";
 
 const CreatePlayer = ({
                           cards = [],
