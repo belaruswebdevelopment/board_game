@@ -31,7 +31,7 @@ export const DrawWinner = (data) => {
     let winner;
     if (data.props.ctx.gameover) {
         winner = data.props.ctx.gameover.winner !== undefined ?
-            "Winner: Player " + Number(data.props.ctx.gameover.winner) + 1 :
+            "Winner: Player " + (Number(data.props.ctx.gameover.winner) + 1) :
             "Draw!";
     } else {
         winner = "Game is started";
