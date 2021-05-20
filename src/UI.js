@@ -158,7 +158,6 @@ export const DrawTierTurns = (data) => {
 export const DrawCurrentPlayer = (data) => {
     return (
         <b>Current player: Player {Number(data.props.ctx.currentPlayer) + 1}</b>
-
     );
 };
 
@@ -348,7 +347,7 @@ export const DrawPlayersHandsCoins = (data) => {
                 } else {
                     playerCells.push(
                         <td className="cursor-pointer" key={j} onClick={() => data.OnClickHandCoin(j)}>
-                            <b className={`coin border-2 bg-yellow-500 ${coinClass}`}>
+                            <b className={`coin bg-yellow-500 ${coinClass}`}>
                                 {data.props.G.players[p].handCoins[j].value}
                             </b>
                         </td>

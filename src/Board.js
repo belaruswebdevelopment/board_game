@@ -34,22 +34,22 @@ export class GameBoard extends React.Component {
                 <div className="flex">
                     <div
                         className={`grid auto-rows-min grid-cols-1 lg:grid-cols-${this.props.ctx.numPlayers * 3} gap-2`}>
-                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
+                        <div className={`col-span-${this.props.ctx.numPlayers} text-center underline border`}>
                             {tierTurns}
                         </div>
-                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
+                        <div className={`col-span-${this.props.ctx.numPlayers} text-center underline border`}>
                             {currentPlayer}
                         </div>
-                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
+                        <div className={`col-span-${this.props.ctx.numPlayers} text-center underline border`}>
                             {winnerUI}
                         </div>
-                        <div className={`col-span-${this.props.ctx.numPlayers} justify-self-center`}>
+                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
                             {marketCoinsUI}
                         </div>
-                        <div className={`col-span-${this.props.ctx.numPlayers} justify-self-center`}>
+                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
                             {marketCoinsUI}
                         </div>
-                        <div className={`col-span-${this.props.ctx.numPlayers} justify-self-center`}>
+                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
                             {marketCoinsUI}
                         </div>
                         {tavernsUI}
