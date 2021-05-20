@@ -192,14 +192,131 @@ export const BoardGame = {
                 }*/
                 //console.log("test potential scores");
                 //console.log(potentialScores);
+                let res = [];
+                for (let i = 0; i < G.botData.allPicks.length; i++) {
+                    let temp = 0;
+                    for (let j = 0; j < G.tavernsNum; j++) {
+                        temp += CompareCards(G.taverns[j][G.botData.allPicks[i][j]], G.averageCards[G.taverns[j][G.botData.allPicks[i][j]].suit]);
+                    }
+                    res.push(temp);
+                }
+                /*console.log("pick 1st card");
+                console.log(res.splice(0, 9));
+                console.log("pick 2nd card");
+                console.log(res.splice(0, 9));
+                console.log("pick 3rd card");
+                console.log(res.splice(0, 9));*/
                 for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
                     moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
                 }
             }
             return moves;
         },
-        objectives: undefined,
-        iterations: 10,
-        playoutDepth: 100,
+        objectives: () => ({
+            isEarlyGame: {
+                checker: (G, ctx) => {
+                    if (G.decks[0].length > 18) {
+                        return true;
+                    }
+                    return false;
+                },
+                weight: -10.0,
+            },
+            isWeaker: {
+                checker: (G, ctx) => {
+                    if (ctx.phase !== 'placeCoins') {
+                        return false;
+                    }
+                    if (G.taverns[0].some(element => element === null)) {
+                        return false;
+                    }
+                    const totalScore = [];
+                    for (let i = 0; i < ctx.numPlayers; i++) {
+                        totalScore.push(Scoring(G.players[i]));
+                    }
+                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    if (totalScore[ctx.currentPlayer] < top2) {
+                        return totalScore[ctx.currentPlayer] >= Math.floor(0.90 * top1);
+                    }
+                    return false;
+                },
+                weight: 0.1,
+            },
+            isSecond: {
+                checker: (G, ctx) => {
+                    if (ctx.phase !== 'placeCoins') {
+                        return false;
+                    }
+                    if (G.taverns[0].some(element => element === null)) {
+                        return false;
+                    }
+                    const totalScore = [];
+                    for (let i = 0; i < ctx.numPlayers; i++) {
+                        totalScore.push(Scoring(G.players[i]));
+                    }
+                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    if (totalScore[ctx.currentPlayer] === top2 && top2 < top1) {
+                        return totalScore[ctx.currentPlayer] >= Math.floor(0.95 * top1);
+                    }
+                    return false;
+                },
+                weight: 0.25,
+            },
+            isEqual: {
+                checker: (G, ctx) => {
+                    if (ctx.phase !== 'placeCoins') {
+                        return false;
+                    }
+                    if (G.taverns[0].some(element => element === null)) {
+                        return false;
+                    }
+                    const totalScore = [];
+                    for (let i = 0; i < ctx.numPlayers; i++) {
+                        totalScore.push(Scoring(G.players[i]));
+                    }
+                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    if (totalScore[ctx.currentPlayer] === top2 && top2 === top1) {
+                        return true;
+                    }
+                    return false;
+                },
+                weight: 0.5,
+            },
+            isFirst: {
+                checker: (G, ctx) => {
+                    if (ctx.phase !== 'pickCards') {
+                        return false;
+                    }
+                    if (G.taverns[0].some(element => element === null)) {
+                        return false;
+                    }
+                    const totalScore = [];
+                    for (let i = 0; i < ctx.numPlayers; i++) {
+                        totalScore.push(Scoring(G.players[i]));
+                    }
+                    let [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    if (totalScore[ctx.currentPlayer] === top1 && top2 < top1) {
+                        return totalScore[ctx.currentPlayer] >= Math.floor(1.06 * top2);
+                    }
+                    return false;
+                },
+                weight: 0.75,
+            },
+        }),
+        iterations: (G, ctx) => {
+            if (ctx.phase === 'pickCards') {
+                const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
+                if (tavernId !== -1 && G.taverns[tavernId].filter(element => element !== null).length === 1) {
+                    return 1;
+                }
+            }
+            return 1000;
+        },
+        playoutDepth: (G, ctx) => {
+            if (G.decks[G.decks.length - 1].length < 27) {
+                return 60;
+            }
+            return 40;
+        },
     },
 };
