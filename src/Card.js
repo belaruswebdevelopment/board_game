@@ -24,8 +24,8 @@ export const BuildCards = (deckConfig, data) => {
 };
 
 export const GetAverageSuitCard = (suitConfig, data) => {
-    const avgCard = CreateCard({suit: suitConfig.suit, rank: 0, points: 0});
-    const count = Array.isArray(suitConfig.pointsValues()[data.players][data.tier]) ?
+    const avgCard = CreateCard({suit: suitConfig.suit, rank: 0, points: 0}),
+        count = Array.isArray(suitConfig.pointsValues()[data.players][data.tier]) ?
         suitConfig.pointsValues()[data.players][data.tier].length :
         suitConfig.pointsValues()[data.players][data.tier];
     for (let i = 0; i < count; i++) {

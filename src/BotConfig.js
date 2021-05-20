@@ -1,7 +1,7 @@
 import {suitsConfigArray} from "./SuitData";
 import {CompareCards} from "./Card";
 
-export function Permute(permutation) {
+export const Permute = (permutation) => {
     const length = permutation.length,
         result = [permutation.slice()];
     let c = new Array(length).fill(0), i = 1, k, p;
@@ -124,11 +124,11 @@ const absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
 const relativeHeuristicsForTradingCoin = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
 
 export const CheckHeuristicsForTradingCoin = (taverns, averageCards) => {
-    let result = Array(taverns.length).fill(0);
-    let temp = taverns.map( (tavern) => absoluteHeuristicsForTradingCoin.reduce( (acc, item) => acc + (item.heuristic(tavern) ? item.weight: 0), 0));
+    let result = Array(taverns.length).fill(0),
+        temp = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight: 0), 0));
     result = result.map((value, index) => value + temp[index]);
     temp = taverns.map((tavern) => tavern.map((card) => CompareCards(card, averageCards[card.suit])));
-    temp = temp.map( (tavern) => relativeHeuristicsForTradingCoin.reduce( (acc, item) => acc + (item.heuristic(tavern) ? item.weight: 0), 0));
+    temp = temp.map((tavern) => relativeHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight: 0), 0));
     result = result.map((value, index) => value + temp[index]);
     return result;
 };

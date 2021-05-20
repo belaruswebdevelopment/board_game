@@ -7,6 +7,7 @@ const blacksmithSuit = {
     suitName: 'Blacksmith',
     suitColor: 'Violet',
     description: "",
+    // todo replace 9th into 8th
     ranksValues: () => {
         return {
             2: {
@@ -252,7 +253,6 @@ const explorerSuit = {
         };
     },
     pointsValues: () => {
-        // todo delete one 6th
         return {
             2: {
                 0: [5, 6, 7, 8, 9, 10, 11],
