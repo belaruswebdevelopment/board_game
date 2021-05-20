@@ -18,7 +18,6 @@ export const SetupGame = (ctx) => {
     for (let i = 0; i < suitsNum; i++) {
         averageCards[i] = GetAverageSuitCard(suitsConfigArray[i], {players: ctx.numPlayers, tier: 0});
     }
-    console.log(averageCards);
     const taverns = [],
         tavernsNum = 3,
         drawSize = ctx.numPlayers;

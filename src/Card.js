@@ -38,9 +38,11 @@ export const GetAverageSuitCard = (suitConfig, data) => {
 };
 
 export const CompareCards = (card1, card2) => {
+    if (card1 === null || card2 === null) {
+        return 0;
+    }
     if (card1.suit === card2.suit) {
-        const result = (card1.points === undefined ? 1 : card1.points) - card2.points;
-        console.log(result);
+        const result = (card1.points === undefined ? 1 : card1.points) - (card2.points === undefined ? 1 : card2.points);
         if (result === 0) {
             return result;
         }
