@@ -28,7 +28,8 @@ export const BuildPlayer = (id) => {
         handCoins: BuildCoins(initialPlayerCoinsConfig,
             {isInitial: true, isTriggerTrading: false}),
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
-        priority: id,
+        // todo generate random priority
+        priority: id + 1,
     });
 };
 

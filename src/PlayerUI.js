@@ -6,11 +6,13 @@ import {suitsConfigArray} from "./SuitData";
 export const DrawPlayersBoardsCoins = (data) => {
     const playersBoardsCoins = [],
         playerHeaders = [],
+        playerFooters = [],
         playerRows = [];
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         let coinIndex = 0;
         playersBoardsCoins[p] = [];
         playerHeaders[p] = [];
+        playerFooters[p] = [];
         playerRows[p] = [];
         for (let i = 0; i < 2; i++) {
             const playerCells = [];
@@ -32,56 +34,85 @@ export const DrawPlayersBoardsCoins = (data) => {
                     } else if (data.props.ctx.phase === 'placeCoins' && Number(data.props.ctx.currentPlayer) !== p) {
                         playerCells.push(
                             <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
-                                <b className="coin bg-yellow-500">secret</b>
+                                <img className="coin" src={`/img/coins/CoinBack.png`} alt="Coin Back"/>
                             </td>
                         );
                     } else {
                         playerCells.push(
                             <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
-                                <b className="coin bg-yellow-500">{data.props.G.players[p].boardCoins[coinIndex].value}</b>
+                                <img className="coin"
+                                     src={`/img/coins/Coin${data.props.G.players[p].handCoins[j].value}${data.props.G.players[p].handCoins[j].isInitial ? "Initial" : ""}.jpg`}
+                                     alt={data.props.G.players[p].handCoins[j].value}/>
                             </td>
                         );
                     }
                     coinIndex++;
                 }
             } else if (i === 1) {
-                for (let j = data.props.G.taverns.length; j < data.props.G.players[p].boardCoins.length; j++) {
-                    if (data.props.G.players[p].boardCoins[coinIndex] === null) {
-                        playerCells.push(
-                            <td className="cursor-pointer" key={j}
-                                onClick={() => data.OnClickBoardCoin(j)}>
-                                <b className="coin bg-red-500">&#8596;</b>
-                            </td>
+                for (let j = data.props.G.taverns.length; j <= data.props.G.players[p].boardCoins.length; j++) {
+                    if (j === data.props.G.players[p].boardCoins.length) {
+                        playerFooters[p].push(
+                            <th key={j}>
+                                Priority
+                            </th>
                         );
-                    } else if (data.props.ctx.phase === 'placeCoins' && Number(data.props.ctx.currentPlayer) !== p) {
                         playerCells.push(
-                            <td className="cursor-pointer" key={j}
-                                onClick={() => data.OnClickBoardCoin(j)}>
-                                <b className="coin bg-yellow-500">secret</b>
+                            <td key={j}>
+                                <img className="priority"
+                                     src={`/img/priorities/Priority${data.props.G.players[p].priority}.png`}
+                                     alt={`Priority ${data.props.G.players[p].priority}`}/>
                             </td>
                         );
                     } else {
-                        playerCells.push(
-                            <td className="cursor-pointer" key={j}
-                                onClick={() => data.OnClickBoardCoin(j)}>
-                                <b className="coin bg-yellow-500">{data.props.G.players[p].boardCoins[coinIndex].value}</b>
-                            </td>
+                        playerFooters[p].push(
+                            <th key={j}>
+                                Exchange {j + 1}
+                            </th>
                         );
+                        if (data.props.G.players[p].boardCoins[coinIndex] === null) {
+                            playerCells.push(
+                                <td className="cursor-pointer" key={j}
+                                    onClick={() => data.OnClickBoardCoin(j)}>
+                                    <b className="coin bg-red-500">&#8596;</b>
+                                </td>
+                            );
+                        } else if (data.props.ctx.phase === 'placeCoins' && Number(data.props.ctx.currentPlayer) !== p) {
+                            playerCells.push(
+                                <td className="cursor-pointer" key={j}
+                                    onClick={() => data.OnClickBoardCoin(j)}>
+                                    <img className="coin" src={`/img/coins/CoinBack.png`} alt="Coin Back"/>
+                                </td>
+                            );
+                        } else {
+                            playerCells.push(
+                                <td className="cursor-pointer" key={j}
+                                    onClick={() => data.OnClickBoardCoin(j)}>
+                                    <img className="coin"
+                                         src={`/img/coins/Coin${data.props.G.players[p].handCoins[j].value}${data.props.G.players[p].handCoins[j].isInitial ? "Initial" : ""}.jpg`}
+                                         alt={data.props.G.players[p].handCoins[j].value}/>
+                                </td>
+                            );
+                        }
+                        coinIndex++;
                     }
-                    coinIndex++;
                 }
             }
             playerRows[p][i].push(<tr key={i}>{playerCells}</tr>)
         }
         playersBoardsCoins[p].push(
             <table className="col-span-3" key={p}>
-                <caption>Player {p + 1} played coins, Priority: {data.props.G.players[p].priority}</caption>
+                <caption>
+                    Player {p + 1} played coins
+                </caption>
                 <thead>
                 <tr>{playerHeaders[p]}</tr>
                 </thead>
                 <tbody>
                 {playerRows[p]}
                 </tbody>
+                <tfoot>
+                {playerFooters[p]}
+                </tfoot>
             </table>
         );
     }
@@ -99,7 +130,8 @@ export const DrawPlayersBoards = (data) => {
         for (let s = 0; s < data.props.G.suitsNum; s++) {
             playerHeaders[p].push(
                 <th style={GetSuitStyle(suitsConfigArray[s].suitColor)} key={s}>
-                    <img className="block m-auto w-8" src={`/img/${suitsConfigArray[s].suitName}.png`} alt={suitsConfigArray[s].suitName} />
+                    <img className="block m-auto w-8" src={`/img/suits/${suitsConfigArray[s].suitName}.png`}
+                         alt={suitsConfigArray[s].suitName}/>
                 </th>
             );
         }
@@ -167,9 +199,9 @@ export const DrawPlayersHandsCoins = (data) => {
                 } else {
                     playerCells.push(
                         <td className="cursor-pointer" key={j} onClick={() => data.OnClickHandCoin(j)}>
-                            <b className={`coin ${coinClass}`}>
-                                {data.props.G.players[p].handCoins[j].value}
-                            </b>
+                            <img className="coin"
+                                 src={`/img/coins/Coin${data.props.G.players[p].handCoins[j].value}${data.props.G.players[p].handCoins[j].isInitial ? "Initial" : ""}.jpg`}
+                                 alt={data.props.G.players[p].handCoins[j].value}/>
                         </td>
                     );
                 }

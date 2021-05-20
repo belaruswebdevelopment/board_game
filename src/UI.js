@@ -52,19 +52,19 @@ export const DrawMarketCoins = (data) => {
             if (countMarketCoins[data.props.G.marketCoinsUnique[increment]] === undefined) {
                 boardCells.push(
                     <td key={j}>
-                        <b className="coin bg-red-500">
-                            {data.props.G.marketCoinsUnique[increment]}
-                            <sup>0</sup>
-                        </b>
+                        <img className="coin"
+                             src={`/img/coins/Coin${data.props.G.marketCoinsUnique[increment]}.jpg`}
+                             alt={data.props.G.marketCoinsUnique[increment]}/>
+                        <b><sup>0</sup></b>
                     </td>
                 );
             } else {
                 boardCells.push(
                     <td key={j}>
-                        <b className="coin bg-yellow-500">
-                            {data.props.G.marketCoinsUnique[increment]}
-                            <sup>{countMarketCoins[data.props.G.marketCoinsUnique[increment]]}</sup>
-                        </b>
+                        <img className="coin"
+                             src={`/img/coins/Coin${data.props.G.marketCoinsUnique[increment]}.jpg`}
+                             alt={data.props.G.marketCoinsUnique[increment]}/>
+                        <b><sup>{countMarketCoins[data.props.G.marketCoinsUnique[increment]]}</sup></b>
                     </td>
                 );
             }
