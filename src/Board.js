@@ -6,11 +6,13 @@ import {
     DrawMarketCoins,
     DrawCamp,
     DrawTaverns,
+} from "./UI";
+import {
     DrawPlayersBoardsCoins,
     DrawPlayersBoards,
     DrawPlayersHandsCoins,
-    DrawDebugData,
-} from "./UI";
+} from "./PlayerUI";
+import {DrawDebugData} from "./DebugUI";
 
 export class GameBoard extends React.Component {
     OnClickCampCard = (cardId) => {
