@@ -20,36 +20,38 @@ export class GameBoard extends React.Component {
     }
 
     render() {
-        const tierTurns = DrawTierTurns(this),
+        const gridClass = `col-span-${this.props.ctx.numPlayers}`,
+            tierTurns = DrawTierTurns(this),
             currentPlayer = DrawCurrentPlayer(this),
             winnerUI = DrawWinner(this),
             marketCoinsUI = DrawMarketCoins(this),
-            tavernsUI = DrawTaverns(this),
+            tavernsUI = DrawTaverns(this, gridClass),
             playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
             playersBoardsUI = DrawPlayersBoards(this),
             playersHandsCoinsUI = DrawPlayersHandsCoins(this),
-            debugUI = DrawDebugData(this);
+            debugUI = DrawDebugData(this),
+            classes = `col-span-${this.props.ctx.numPlayers} text-center underline border`;
         return (
             <div>
                 <div className="flex">
                     <div
                         className={`grid auto-rows-min grid-cols-1 lg:grid-cols-${this.props.ctx.numPlayers * 3} gap-2`}>
-                        <div className={`col-span-${this.props.ctx.numPlayers} text-center underline border`}>
+                        <div className={classes}>
                             {tierTurns}
                         </div>
-                        <div className={`col-span-${this.props.ctx.numPlayers} text-center underline border`}>
+                        <div className={classes}>
                             {currentPlayer}
                         </div>
-                        <div className={`col-span-${this.props.ctx.numPlayers} text-center underline border`}>
+                        <div className={classes}>
                             {winnerUI}
                         </div>
-                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
+                        <div className={gridClass}>
                             {marketCoinsUI}
                         </div>
-                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
+                        <div className={gridClass}>
                             {marketCoinsUI}
                         </div>
-                        <div className={`col-span-${this.props.ctx.numPlayers}`}>
+                        <div className={gridClass}>
                             {marketCoinsUI}
                         </div>
                         {tavernsUI}

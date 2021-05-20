@@ -161,7 +161,7 @@ export const DrawCurrentPlayer = (data) => {
     );
 };
 
-export const DrawTaverns = (data) => {
+export const DrawTaverns = (data, gridClass) => {
     const tavernsBoards = [];
     for (let t = 0; t < data.props.G.tavernsNum; t++) {
         for (let i = 0; i < 1; i++) {
@@ -184,7 +184,7 @@ export const DrawTaverns = (data) => {
                 }
             }
             tavernsBoards.push(
-                <table className={`col-span-${data.props.ctx.numPlayers} justify-self-center`} key={t}>
+                <table className={`${gridClass} justify-self-center`} key={t}>
                     <caption>Tavern {t + 1}</caption>
                     <tbody>
                     <tr>{boardCells}</tr>
