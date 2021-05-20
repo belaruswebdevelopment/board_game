@@ -221,15 +221,6 @@ export const BoardGame = {
                 },
                 weight: -10.0,
             },
-            isLateGame: {
-                checker: (G, ctx) => {
-                    if (G.decks[G.decks.length - 1].length < 27) {
-                        return true;
-                    }
-                    return false;
-                },
-                weight: -10.0,
-            },
             isWeaker: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'placeCoins') {
@@ -311,7 +302,20 @@ export const BoardGame = {
                 weight: 0.75,
             },
         }),
-        iterations: 1000,
-        playoutDepth: 40,
+        iterations: (G, ctx) => {
+            if (ctx.phase === 'pickCards') {
+                const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
+                if (tavernId !== -1 && G.taverns[tavernId].filter(element => element !== null).length === 1) {
+                    return 1;
+                }
+            }
+            return 1000;
+        },
+        playoutDepth: (G, ctx) => {
+            if (G.decks[G.decks.length - 1].length < 27) {
+                return 60;
+            }
+            return 40;
+        },
     },
 };
