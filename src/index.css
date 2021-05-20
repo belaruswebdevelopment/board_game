@@ -10,6 +10,10 @@ th {
     @apply border-2 text-center;
 }
 
+sup {
+    @apply italic text-blue-500;
+}
+
 .coin {
     @apply rounded-full inline-flex items-center justify-center border-2 border-black w-12 h-12;
 }

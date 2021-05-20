@@ -103,7 +103,7 @@ export const DrawMarketCoins = (data) => {
                     <td key={j}>
                         <b className="coin bg-red-500">
                             {data.props.G.marketCoinsUnique[increment]}
-                            <sup>0</sup>
+                           <sup>0</sup>
                         </b>
                     </td>
                 );
