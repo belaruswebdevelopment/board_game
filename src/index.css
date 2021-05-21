@@ -18,6 +18,10 @@ sup {
     @apply inline-flex items-center justify-center w-6 h-6;
 }
 
+.market-coin {
+    @apply rounded-full inline-flex items-center justify-center w-6 h-6;
+}
+
 .coin {
     @apply rounded-full inline-flex items-center justify-center w-12 h-12;
 }

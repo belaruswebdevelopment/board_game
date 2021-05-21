@@ -80,7 +80,11 @@ export const DrawPlayersBoardsCoins = (data) => {
                     if (j === data.props.G.players[p].boardCoins.length) {
                         playerFooters[p].push(
                             <th key={`${i}${j}`}>
-                                @
+                                <span
+                                    style={{background: "url(/img/priorities/Priority.png) no-repeat -35px -5px / 64px 36px"}}
+                                    className="tavern">
+
+                            </span>
                             </th>
                         );
                         playerCells.push(
@@ -93,7 +97,11 @@ export const DrawPlayersBoardsCoins = (data) => {
                     } else {
                         playerFooters[p].push(
                             <th key={j}>
-                                {j + 1}
+                                <span
+                                    style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 24px 24px"}}
+                                    className="market-coin">
+                                    &#8596;
+                            </span>
                             </th>
                         );
                         if (data.props.G.players[p].boardCoins[coinIndex] === null) {
