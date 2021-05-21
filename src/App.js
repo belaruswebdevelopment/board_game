@@ -6,36 +6,37 @@ import {BoardGame} from './Game';
 import {GameBoard} from './Board';
 
 class CustomMCTSBot extends MCTSBot {
-  constructor(config, ...args) {
-    super({
-        ...config,
-        objectives: BoardGame.ai.objectives,
-        iterations: BoardGame.ai.iterations,
-        playoutDepth: BoardGame.ai.playoutDepth,
-      },
-      ...args
-    );
-  }
+    constructor(config, ...args) {
+        super({
+                ...config,
+                objectives: BoardGame.ai.objectives,
+                iterations: BoardGame.ai.iterations,
+                playoutDepth: BoardGame.ai.playoutDepth,
+            },
+            ...args
+        );
+    }
 }
 
-const enableLocalPlayer = true;
-const setupBot = {bots: {
-    '0': CustomMCTSBot,
-    '1': RandomBot,
+const enableLocalPlayer = true,
+    setupBot = {
+        bots: {
+            '0': RandomBot,
+            '1': RandomBot,
+            '2': RandomBot,
+            '3': RandomBot,
+        },
     },
-};
-
-const BoardGameClient = Client({
-    game: BoardGame,
-    board: GameBoard,
-    numPlayers: 3,
-    multiplayer: enableLocalPlayer ? Local(setupBot) : undefined,
-});
-
-const App = () => (
-  <div>
-    <BoardGameClient playerID = "2"/>
-  </div>
-);
+    BoardGameClient = Client({
+        game: BoardGame,
+        board: GameBoard,
+        numPlayers: 5,
+        multiplayer: enableLocalPlayer ? Local(setupBot) : undefined,
+    }),
+    App = () => (
+        <div>
+            <BoardGameClient playerID="4"/>
+        </div>
+    );
 
 export default App;

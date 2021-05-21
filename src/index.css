@@ -7,15 +7,15 @@ td {
 }
 
 th {
-    @apply border-2 text-center;
-}
-
-th {
-    width: 80px;
+    @apply border-2 text-center w-12;
 }
 
 sup {
     @apply italic text-blue-500;
+}
+
+.tavern {
+    @apply inline-flex items-center justify-center w-6 h-6;
 }
 
 .coin {

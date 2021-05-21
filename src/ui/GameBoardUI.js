@@ -10,10 +10,6 @@ const DrawBoard = (objectsSize) => {
     return {boardRows, boardCols, lastBoardCol};
 };
 
-export const GetSuitStyle = (color) => {
-    return {background: color};
-};
-
 export const DrawTierTurns = (data) => {
     return (
         <b>Tier: {data.props.G.decks.length - data.props.G.tierToEnd + 1} | Turn: {data.props.ctx.turn}</b>
@@ -129,9 +125,7 @@ export const DrawCamp = (data) => {
                 );
             } else {
                 boardCells.push(
-                    <td className="cursor-pointer"
-                        /*style={GetSuitStyle(suitsConfigArray[data.props.G.taverns[j].suit].suitColor)}*/ key={j}
-                        onClick={() => data.OnClickCampCard(j)}>
+                    <td className="cursor-pointer" key={j} onClick={() => data.OnClickCampCard(j)}>
                         <b>{data.props.G.camp[j].points}</b>
                     </td>
                 );
@@ -150,6 +144,7 @@ export const DrawCamp = (data) => {
 
 export const DrawTaverns = (data, gridClass) => {
     const tavernsBoards = [];
+    let background = "";
     for (let t = 0; t < data.props.G.tavernsNum; t++) {
         for (let i = 0; i < 1; i++) {
             const boardCells = [];
@@ -162,17 +157,27 @@ export const DrawTaverns = (data, gridClass) => {
                     );
                 } else {
                     boardCells.push(
-                        <td className="cursor-pointer"
-                            style={GetSuitStyle(suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor)} key={j}
+                        <td className={`${suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor} cursor-pointer`}
                             onClick={() => data.OnClickCard(t, j)}>
                             <b>{data.props.G.taverns[t][j].points}</b>
                         </td>
                     );
                 }
             }
+            if (t === 0) {
+                background = "url(/img/taverns/Taverns.png) no-repeat -2px -4px / 74px 42px";
+            } else if (t === 1) {
+                background = "url(/img/taverns/Taverns.png) no-repeat -25px -17px / 74px 42px";
+            } else if (t === 2) {
+                background = "url(/img/taverns/Taverns.png) no-repeat -49px -9px / 74px 42px";
+            }
             tavernsBoards.push(
                 <table className={`${gridClass} justify-self-center`} key={t}>
-                    <caption>Tavern {t + 1}</caption>
+                    <caption>
+                        <span style={{background: background}} className="tavern">
+
+                        </span>
+                    </caption>
                     <tbody>
                     <tr>{boardCells}</tr>
                     </tbody>

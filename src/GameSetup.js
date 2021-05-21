@@ -10,14 +10,20 @@ export const SetupGame = (ctx) => {
         tierToEnd = 2,
         campNum = 5,
         debug = false,
+        expansions = {
+            thingvellir: {
+                active: true,
+            },
+        },
         decks = [],
-        heroes = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+        heroes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
         // todo fix it
-        camp = [null,null,null,null,null];
+        camp = [null, null, null, null, null];
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards(suitsConfigArray, {players: ctx.numPlayers, tier: i});
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
+    // todo move taverns in separate config data file + images for it
     const taverns = [],
         tavernsNum = 3,
         drawSize = ctx.numPlayers;
@@ -32,11 +38,11 @@ export const SetupGame = (ctx) => {
     }
     const marketCoinsUnique = [],
         marketCoins = BuildCoins(marketCoinsConfig, {
-        count: marketCoinsUnique,
-        players: ctx.numPlayers,
-        isInitial: false,
-        isTriggerTrading: false,
-    });
+            count: marketCoinsUnique,
+            players: ctx.numPlayers,
+            isInitial: false,
+            isTriggerTrading: false,
+        });
     const botData = {},
         averageCards = [],
         initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined).map((item, index) => index),
@@ -57,6 +63,7 @@ export const SetupGame = (ctx) => {
         campNum,
         tavernsNum,
         drawSize,
+        expansions,
         decks,
         heroes,
         camp,

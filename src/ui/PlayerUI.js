@@ -1,5 +1,4 @@
 import React from "react";
-import {GetSuitStyle} from "./GameBoardUI";
 import {Scoring} from "../Game";
 import {suitsConfigArray} from "../data/SuitData";
 
@@ -8,6 +7,7 @@ export const DrawPlayersBoardsCoins = (data) => {
         playerHeaders = [],
         playerFooters = [],
         playerRows = [];
+    let background = "";
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         let coinIndex = 0;
         playersBoardsCoins[p] = [];
@@ -19,9 +19,18 @@ export const DrawPlayersBoardsCoins = (data) => {
             playerRows[p][i] = [];
             if (i === 0) {
                 for (let j = 0; j < data.props.G.taverns.length; j++) {
+                    if (j === 0) {
+                        background = "url(/img/taverns/Taverns.png) no-repeat -2px -4px / 74px 42px";
+                    } else if (j === 1) {
+                        background = "url(/img/taverns/Taverns.png) no-repeat -25px -17px / 74px 42px";
+                    } else if (j === 2) {
+                        background = "url(/img/taverns/Taverns.png) no-repeat -49px -9px / 74px 42px";
+                    }
                     playerHeaders[p].push(
-                        <th key={j}>
-                            Tavern {j + 1}
+                        <th key={`${i}${j}`}>
+                            <span style={{background: background}} className="tavern">
+
+                            </span>
                         </th>
                     );
                     if (data.props.G.players[p].boardCoins[coinIndex] === null) {
@@ -41,8 +50,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                         playerCells.push(
                             <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
                                 <img className="coin"
-                                     src={`/img/coins/Coin${data.props.G.players[p].handCoins[j].value}${data.props.G.players[p].handCoins[j].isInitial ? "Initial" : ""}.jpg`}
-                                     alt={data.props.G.players[p].handCoins[j].value}/>
+                                     src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial ? "Initial" : ""}.jpg`}
+                                     alt={data.props.G.players[p].boardCoins[coinIndex].value}/>
                             </td>
                         );
                     }
@@ -52,8 +61,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                 for (let j = data.props.G.taverns.length; j <= data.props.G.players[p].boardCoins.length; j++) {
                     if (j === data.props.G.players[p].boardCoins.length) {
                         playerFooters[p].push(
-                            <th key={j}>
-                                Priority
+                            <th key={`${i}${j}`}>
+                                @
                             </th>
                         );
                         playerCells.push(
@@ -66,7 +75,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                     } else {
                         playerFooters[p].push(
                             <th key={j}>
-                                Exchange {j + 1}
+                                {j + 1}
                             </th>
                         );
                         if (data.props.G.players[p].boardCoins[coinIndex] === null) {
@@ -111,7 +120,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                 {playerRows[p]}
                 </tbody>
                 <tfoot>
-                {playerFooters[p]}
+                <tr>{playerFooters[p]}</tr>
                 </tfoot>
             </table>
         );
@@ -122,40 +131,90 @@ export const DrawPlayersBoardsCoins = (data) => {
 export const DrawPlayersBoards = (data) => {
     const playersBoards = [],
         playerHeaders = [],
-        playerRows = [];
+        playerRows = [],
+        expansion = data.props.G.expansions.thingvellir.active ? 1 : 0;
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         playersBoards[p] = [];
         playerHeaders[p] = [];
         playerRows[p] = [];
-        for (let s = 0; s < data.props.G.suitsNum; s++) {
-            playerHeaders[p].push(
-                <th style={GetSuitStyle(suitsConfigArray[s].suitColor)} key={s}>
-                    <img className="block m-auto w-8" src={`/img/suits/${suitsConfigArray[s].suitName}.png`}
-                         alt={suitsConfigArray[s].suitName}/>
-                </th>
-            );
+        for (let s = 0; s < data.props.G.suitsNum + 1 + expansion; s++) {
+            if (s < data.props.G.suitsNum) {
+                playerHeaders[p].push(
+                    <th className={suitsConfigArray[s].suitColor} key={s}>
+                        <img className="block m-auto w-6" src={`/img/suits/${suitsConfigArray[s].suitName}.png`}
+                             alt={suitsConfigArray[s].suitName}/>
+                    </th>
+                );
+            } else if (s === data.props.G.suitsNum) {
+                playerHeaders[p].push(
+                    <th className="bg-gray-600" key={s}>
+                        <img className="block m-auto w-4" src={`/img/cards/heroes/HeroBack.png`} alt="Hero"/>
+                    </th>
+                );
+            } else if (expansion && s < data.props.G.suitsNum + 1 + expansion) {
+                playerHeaders[p].push(
+                    <th className="bg-yellow-200" key={s}>
+                        <img className="block m-auto w-8" src={`/img/cards/camp/Camp.png`} alt="Camp"/>
+                    </th>
+                );
+            }
         }
         for (let i = 0; ; i++) {
             const playerCells = [];
             let isDrawRow = false;
             playerRows[p][i] = [];
-            for (let j = 0; j < data.props.G.suitsNum; j++) {
-                const id = i + j,
-                    isNotCard = data.props.G.players[p].cards[j] !== undefined && data.props.G.players[p].cards[j][i] === undefined;
-                if (data.props.G.players[p].cards[j] === undefined || isNotCard) {
-                    playerCells.push(
-                        <td key={id}>
+            for (let j = 0; j < data.props.G.suitsNum + 1 + expansion; j++) {
+                const id = i + j;
+                const isNotCard = data.props.G.players[p].cards[j] !== undefined && data.props.G.players[p].cards[j][i] === undefined;
+                const isNotHero = data.props.G.players[p].heroes[i] !== undefined && data.props.G.players[p].heroes[i] === undefined;
+                const isNotCampCard = data.props.G.players[p].cards[i] !== undefined && data.props.G.players[p].cards[i] === undefined;
+                if (j < data.props.G.suitsNum) {
+                    if (data.props.G.players[p].cards[j] === undefined || isNotCard || !isNotHero || !isNotCampCard) {
+                        playerCells.push(
+                            <td key={id}>
 
-                        </td>
-                    );
-                } else {
-                    isDrawRow = true;
-                    playerCells.push(
-                        <td key={id}
-                            style={GetSuitStyle(suitsConfigArray[data.props.G.players[p].cards[j][i].suit].suitColor)}>
-                            <b>{data.props.G.players[p].cards[j][i].points}</b>
-                        </td>
-                    );
+                            </td>
+                        );
+                    } else {
+                        isDrawRow = true;
+                        playerCells.push(
+                            <td key={id}
+                                className={suitsConfigArray[data.props.G.players[p].cards[j][i].suit].suitColor}>
+                                <b>{data.props.G.players[p].cards[j][i].points}</b>
+                            </td>
+                        );
+                    }
+                } else if (!expansion && j === data.props.G.suitsNum + 1) {
+                    if (data.props.G.players[p].heroes[i] === undefined || isNotHero || !isNotCampCard || !isNotCard) {
+                        playerCells.push(
+                            <td key={id}>
+
+                            </td>
+                        );
+                    } else {
+                        isDrawRow = true;
+                        playerCells.push(
+                            <td key={id}
+                                className={suitsConfigArray[data.props.G.players[p].heroes[i].suit].suitColor}>
+                                <b>{data.props.G.players[p].heroes[i].points}</b>
+                            </td>
+                        );
+                    }
+                } else if (expansion && j === data.props.G.suitsNum + expansion) {
+                    if (data.props.G.players[p].campCards[i] === undefined || isNotCampCard || !isNotCard || !isNotHero) {
+                        playerCells.push(
+                            <td key={id}>
+
+                            </td>
+                        );
+                    } else {
+                        isDrawRow = true;
+                        playerCells.push(
+                            <td key={id}>
+                                <b>{data.props.G.players[p].campCards[i].points}</b>
+                            </td>
+                        );
+                    }
                 }
             }
             if (isDrawRow) {
@@ -186,6 +245,7 @@ export const DrawPlayersHandsCoins = (data) => {
         playersHandsCoins[p] = [];
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
+                // todo fix it
                 let coinClass = "bg-yellow-500";
                 if (data.props.G.players[p].selectedCoin === j) {
                     coinClass = "bg-green-400";

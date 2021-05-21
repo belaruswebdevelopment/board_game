@@ -5,7 +5,7 @@ const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue + step *
 const blacksmithSuit = {
     suit: 0,
     suitName: 'Blacksmith',
-    suitColor: 'Violet',
+    suitColor: 'bg-purple-600',
     description: "",
     // todo replace 9th into 8th
     ranksValues: () => {
@@ -62,7 +62,7 @@ const blacksmithSuit = {
 const hunterSuit = {
     suit: 1,
     suitName: 'Hunter',
-    suitColor: 'MediumSeaGreen',
+    suitColor: 'bg-green-600',
     description: "",
     ranksValues: () => {
         return {
@@ -118,7 +118,7 @@ const hunterSuit = {
 const minerSuit = {
     suit: 2,
     suitName: 'Miner',
-    suitColor: 'Khaki',
+    suitColor: 'bg-yellow-600',
     description: "",
     ranksValues: () => {
         return {
@@ -174,7 +174,7 @@ const minerSuit = {
 const warriorSuit = {
     suit: 3,
     suitName: 'Warrior',
-    suitColor: 'Tomato',
+    suitColor: 'bg-red-600',
     description: "",
     ranksValues: () => {
         return {
@@ -230,7 +230,7 @@ const warriorSuit = {
 const explorerSuit = {
     suit: 4,
     suitName: 'Explorer',
-    suitColor: 'DodgerBlue',
+    suitColor: 'bg-blue-600',
     description: "",
     ranksValues: () => {
         return {

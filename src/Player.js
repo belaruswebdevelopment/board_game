@@ -5,6 +5,7 @@ import {suitsConfigArray} from "./data/SuitData";
 const CreatePlayer = ({
                           cards = [],
                           heroes = [],
+                          campCards = [],
                           handCoins = [],
                           boardCoins = [],
                           selectedCoin = undefined,
@@ -13,6 +14,7 @@ const CreatePlayer = ({
                       } = {}) => {
     return {
         cards,
+        campCards,
         heroes,
         handCoins,
         boardCoins,
