@@ -97,8 +97,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 <td className="cursor-pointer" key={j}
                                     onClick={() => data.OnClickBoardCoin(j)}>
                                     <img className="coin"
-                                         src={`/img/coins/Coin${data.props.G.players[p].handCoins[j].value}${data.props.G.players[p].handCoins[j].isInitial ? "Initial" : ""}.jpg`}
-                                         alt={data.props.G.players[p].handCoins[j].value}/>
+                                         src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial ? "Initial" : ""}.jpg`}
+                                         alt={data.props.G.players[p].boardCoins[coinIndex].value}/>
                                 </td>
                             );
                         }
