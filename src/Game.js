@@ -115,8 +115,8 @@ export const BoardGame = {
     ai: {
         enumerate: (G, ctx) => {
             //make false for standard bot
-            const enableAdvancedBot = true;
-            const uniqueArr = [];
+            const enableAdvancedBot = true,
+                uniqueArr = [];
             let moves = [],
                 flag = true;
             if (ctx.phase === 'pickCards') {
