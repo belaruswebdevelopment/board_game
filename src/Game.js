@@ -123,7 +123,7 @@ export const BoardGame = {
                     return moves;
                 }
                 for (let i = 0; i < G.taverns[tavernId].length; i++) {
-                    if ((G.taverns[tavernId][i] === null)) {
+                    if (G.taverns[tavernId][i] === null) {
                         continue;
                     }
                     if (G.taverns[tavernId].some(element => CompareCards(G.taverns[tavernId][i], element) === -1)) {
@@ -183,24 +183,6 @@ export const BoardGame = {
                             }
                     }
                 }*/
-                //console.log("test indifferentTaverns");
-                //console.log(CheckHeuristicsForTradingCoin(G.taverns, G.averageCards));
-                /*for (let i = 0; i < G.botData.allPicks.length; i++) {
-                    for (let j = 0; j < G.tavernsNum; j++) {
-                        AddCardToCards(curCards, CreateCard(G.taverns[j][G.botData.allPicks[i][j]]));
-                    }
-                    // let nextScore = PotentialScoring({cards: curCards});
-                    // potentialScores.push(nextScore - curScore);
-                    curCards = [];
-                    for (let k = 0; k < G.players[ctx.currentPlayer].cards.length; k++) {
-                        curCards[k] = [];
-                        for (let m = 0; m < G.players[ctx.currentPlayer].cards[k].length; m++) {
-                            AddCardToCards(curCards, G.players[ctx.currentPlayer].cards[k][m]);
-                        }
-                    }
-                }*/
-                //console.log("test potential scores");
-                //console.log(potentialScores);
                 const res = [];
                 for (let i = 0; i < G.botData.allPicks.length; i++) {
                     let temp = 0;
@@ -213,8 +195,7 @@ export const BoardGame = {
                 const resultsForTradingCoin = CheckHeuristicsForTradingCoin(G.taverns, G.averageCards);
                 const resultForTradingCoin = Math.min(...resultsForTradingCoin);
                 const positionForTradingCoin = resultsForTradingCoin.findIndex(item => item === resultForTradingCoin);
-
-                const isTradingProfitable = G.decks[G.decks.length - 1].length < 27;
+                const isTradingProfitable = G.decks[G.decks.length - 1].length > 18;
                 for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
                     if (isTradingProfitable && G.botData.allCoinsOrder[i].slice(0, G.tavernsNum).every(element => !G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
                         continue;
@@ -224,7 +205,6 @@ export const BoardGame = {
                     }
                     moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
                 }
-                console.log(moves);
             }
             return moves;
         },
@@ -315,13 +295,37 @@ export const BoardGame = {
             },
         }),
         iterations: (G, ctx) => {
+            const maxIter = G.botData.maxIter;
             if (ctx.phase === 'pickCards') {
                 const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
-                if (tavernId !== -1 && G.taverns[tavernId].filter(element => element !== null).length === 1) {
+                if (tavernId === -1) {
+                    return maxIter;
+                }
+                if (G.taverns[tavernId].filter(element => element !== null).length === 1) {
+                    return 1;
+                }
+                const cardIndex = G.taverns[tavernId].findIndex(element => element !== null);
+                if (G.taverns[tavernId].every(element => (element.suit === G.taverns[tavernId][cardIndex].suit && CompareCards(element, G.taverns[tavernId][cardIndex]) === 0))) {
+                    return 1;
+                }
+                const efficientMovesCount = 0;
+                for (let i = 0; i < G.taverns[tavernId].length; i++) {
+                    if (G.taverns[tavernId][i] === null) {
+                        continue;
+                    }
+                    if (G.taverns[tavernId].some(element => CompareCards(G.taverns[tavernId][i], element) === -1)) {
+                        continue;
+                    }
+                    efficientMovesCount++;
+                    if (efficientMovesCount > 1) {
+                        return maxIter;
+                    }
+                }
+                if (efficientMovesCount === 1) {
                     return 1;
                 }
             }
-            return 1;
+            return maxIter;
         },
         playoutDepth: (G, ctx) => {
             if (G.decks[G.decks.length - 1].length < 27) {
