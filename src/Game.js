@@ -114,6 +114,8 @@ export const BoardGame = {
     },
     ai: {
         enumerate: (G, ctx) => {
+            //make false for standard bot
+            const enableAdvancedBot = true;
             const uniqueArr = [];
             let moves = [],
                 flag = true;
@@ -128,6 +130,12 @@ export const BoardGame = {
                     }
                     if (G.taverns[tavernId].some(element => CompareCards(G.taverns[tavernId][i], element) === -1)) {
                         continue;
+                    }
+                    if (G.decks[0].length > 18) {
+                        const curSuit = G.taverns[tavernId][i].suit;
+                        if ((CompareCards(G.taverns[tavernId][i], G.averageCards[curSuit]) === -1) && G.taverns[tavernId].some(element => (element !== null) && (CompareCards(element, G.averageCards[curSuit]) > -1))) {
+                            continue;
+                        }
                     }
                     const uniqueArrLength = uniqueArr.length;
                     for (let j = 0; j < uniqueArrLength; j++) {
@@ -158,8 +166,6 @@ export const BoardGame = {
                     }
                 }
             }
-            //make false for standard bot
-            const enableAdvancedBot = true;
             if (enableAdvancedBot && ctx.phase === 'placeCoins') {
                 moves = [];
                 // const marketCoinsMaxValue = G.marketCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
@@ -211,13 +217,17 @@ export const BoardGame = {
         objectives: () => ({
             isEarlyGame: {
                 checker: (G, ctx) => {
-                    return G.decks[0].length > 9;
+                    return G.decks[0].length > 0;
                 },
                 weight: -10.0,
             },
             isWeaker: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'placeCoins') {
+                        return false;
+                    }
+                    if (G.decks[G.decks.length - 1].length < 18)
+                    {
                         return false;
                     }
                     if (G.taverns[0].some(element => element === null)) {
@@ -229,7 +239,7 @@ export const BoardGame = {
                     }
                     const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
                     if (totalScore[ctx.currentPlayer] < top2) {
-                        return totalScore[ctx.currentPlayer] >= Math.floor(0.90 * top1);
+                        return totalScore[ctx.currentPlayer] >= Math.floor(0.80 * top1);
                     }
                     return false;
                 },
@@ -238,6 +248,10 @@ export const BoardGame = {
             isSecond: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'placeCoins') {
+                        return false;
+                    }
+                    if (G.decks[G.decks.length - 1].length < 18)
+                    {
                         return false;
                     }
                     if (G.taverns[0].some(element => element === null)) {
@@ -249,7 +263,7 @@ export const BoardGame = {
                     }
                     const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
                     if (totalScore[ctx.currentPlayer] === top2 && top2 < top1) {
-                        return totalScore[ctx.currentPlayer] >= Math.floor(0.95 * top1);
+                        return totalScore[ctx.currentPlayer] >= Math.floor(0.90 * top1);
                     }
                     return false;
                 },
@@ -260,6 +274,10 @@ export const BoardGame = {
                     if (ctx.phase !== 'placeCoins') {
                         return false;
                     }
+                    if (G.decks[G.decks.length - 1].length < 18)
+                    {
+                        return false;
+                    }
                     if (G.taverns[0].some(element => element === null)) {
                         return false;
                     }
@@ -268,7 +286,7 @@ export const BoardGame = {
                         totalScore.push(Scoring(G.players[i]));
                     }
                     const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
-                    return totalScore[ctx.currentPlayer] === top2 && top2 === top1;
+                    return (totalScore[ctx.currentPlayer] === top2) && (top2 === top1);
 
                 },
                 weight: 0.5,
@@ -276,6 +294,10 @@ export const BoardGame = {
             isFirst: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'pickCards') {
+                        return false;
+                    }
+                    if (G.decks[G.decks.length - 1].length < 18)
+                    {
                         return false;
                     }
                     if (G.taverns[0].some(element => element === null)) {
@@ -287,7 +309,7 @@ export const BoardGame = {
                     }
                     const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
                     if (totalScore[ctx.currentPlayer] === top1 && top2 < top1) {
-                        return totalScore[ctx.currentPlayer] >= Math.floor(1.06 * top2);
+                        return totalScore[ctx.currentPlayer] >= Math.floor(1.05 * top2);
                     }
                     return false;
                 },
@@ -306,7 +328,7 @@ export const BoardGame = {
                     return 1;
                 }
                 const cardIndex = currentTavern.findIndex(element => element !== null);
-                if (currentTavern.every(element => (element?.suit === currentTavern[cardIndex].suit && CompareCards(element, currentTavern[cardIndex]) === 0))) {
+                if (currentTavern.every(element => (element === null) || (element.suit === currentTavern[cardIndex].suit && CompareCards(element, currentTavern[cardIndex]) === 0))) {
                     return 1;
                 }
                 let efficientMovesCount = 0;
@@ -316,6 +338,13 @@ export const BoardGame = {
                     }
                     if (currentTavern.some(element => CompareCards(currentTavern[i], element) === -1)) {
                         continue;
+                    }
+
+                    if (G.decks[0].length > 18) {
+                        const curSuit = currentTavern[i].suit;
+                        if ((CompareCards(currentTavern[i], G.averageCards[curSuit]) === -1) && currentTavern.some(element => (element !== null) && (CompareCards(element, G.averageCards[curSuit]) > -1))) {
+                            continue;
+                        }
                     }
                     efficientMovesCount++;
                     if (efficientMovesCount > 1) {
@@ -329,10 +358,10 @@ export const BoardGame = {
             return maxIter;
         },
         playoutDepth: (G, ctx) => {
-            if (G.decks[G.decks.length - 1].length < 27) {
+            if (G.decks[G.decks.length - 1].length < 36) {
                 return 60;
             }
-            return 40;
+            return 42;
         },
     },
 };
