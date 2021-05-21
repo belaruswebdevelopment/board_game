@@ -306,7 +306,7 @@ export const BoardGame = {
                     return 1;
                 }
                 const cardIndex = currentTavern.findIndex(element => element !== null);
-                if (currentTavern.every(element => (element.suit === currentTavern[cardIndex].suit && CompareCards(element, currentTavern[cardIndex]) === 0))) {
+                if (currentTavern.every(element => (element?.suit === currentTavern[cardIndex].suit && CompareCards(element, currentTavern[cardIndex]) === 0))) {
                     return 1;
                 }
                 let efficientMovesCount = 0;
