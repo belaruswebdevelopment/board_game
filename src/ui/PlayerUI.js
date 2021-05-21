@@ -34,12 +34,20 @@ export const DrawPlayersBoardsCoins = (data) => {
                         </th>
                     );
                     if (data.props.G.players[p].boardCoins[coinIndex] === null) {
-                        playerCells.push(
-                            <td className="cursor-pointer" key={j}
-                                onClick={() => data.OnClickBoardCoin(j)}>
-                                <b className="coin bg-red-500">?</b>
-                            </td>
-                        );
+                        if (Number(data.props.ctx.currentPlayer) === p) {
+                            playerCells.push(
+                                <td className="cursor-pointer" key={j}
+                                    onClick={() => data.OnClickBoardCoin(j)}>
+                                    <b className="coin bg-red-500">?</b>
+                                </td>
+                            );
+                        } else {
+                            playerCells.push(
+                                <td className="cursor-pointer" key={j}>
+                                    <b className="coin bg-red-500">?</b>
+                                </td>
+                            );
+                        }
                     } else if (data.props.ctx.phase === 'placeCoins' && Number(data.props.ctx.currentPlayer) !== p) {
                         playerCells.push(
                             <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
@@ -47,13 +55,23 @@ export const DrawPlayersBoardsCoins = (data) => {
                             </td>
                         );
                     } else {
-                        playerCells.push(
-                            <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
-                                <img className="coin"
-                                     src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial ? "Initial" : ""}.jpg`}
-                                     alt={data.props.G.players[p].boardCoins[coinIndex].value}/>
-                            </td>
-                        );
+                        if (Number(data.props.ctx.currentPlayer) === p) {
+                            playerCells.push(
+                                <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
+                                    <img className="coin"
+                                         src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial ? "Initial" : ""}.jpg`}
+                                         alt={data.props.G.players[p].boardCoins[coinIndex].value}/>
+                                </td>
+                            );
+                        } else {
+                            playerCells.push(
+                                <td className="cursor-pointer" key={j}>
+                                    <img className="coin"
+                                         src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial ? "Initial" : ""}.jpg`}
+                                         alt={data.props.G.players[p].boardCoins[coinIndex].value}/>
+                                </td>
+                            );
+                        }
                     }
                     coinIndex++;
                 }
@@ -79,12 +97,20 @@ export const DrawPlayersBoardsCoins = (data) => {
                             </th>
                         );
                         if (data.props.G.players[p].boardCoins[coinIndex] === null) {
-                            playerCells.push(
-                                <td className="cursor-pointer" key={j}
-                                    onClick={() => data.OnClickBoardCoin(j)}>
-                                    <b className="coin bg-red-500">&#8596;</b>
-                                </td>
-                            );
+                            if (Number(data.props.ctx.currentPlayer) === p) {
+                                playerCells.push(
+                                    <td className="cursor-pointer" key={j}
+                                        onClick={() => data.OnClickBoardCoin(j)}>
+                                        <b className="coin bg-red-500">&#8596;</b>
+                                    </td>
+                                );
+                            } else {
+                                playerCells.push(
+                                    <td className="cursor-pointer" key={j}>
+                                        <b className="coin bg-red-500">&#8596;</b>
+                                    </td>
+                                );
+                            }
                         } else if (data.props.ctx.phase === 'placeCoins' && Number(data.props.ctx.currentPlayer) !== p) {
                             playerCells.push(
                                 <td className="cursor-pointer" key={j}
@@ -93,14 +119,24 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 </td>
                             );
                         } else {
-                            playerCells.push(
-                                <td className="cursor-pointer" key={j}
-                                    onClick={() => data.OnClickBoardCoin(j)}>
-                                    <img className="coin"
-                                         src={`/img/coins/Coin${data.props.G.players[p].boardCoins[j].value}${data.props.G.players[p].boardCoins[j].isInitial ? "Initial" : ""}.jpg`}
-                                         alt={data.props.G.players[p].boardCoins[j].value}/>
-                                </td>
-                            );
+                            if (Number(data.props.ctx.currentPlayer) === p) {
+                                playerCells.push(
+                                    <td className="cursor-pointer" key={j}
+                                        onClick={() => data.OnClickBoardCoin(j)}>
+                                        <img className="coin"
+                                             src={`/img/coins/Coin${data.props.G.players[p].boardCoins[j].value}${data.props.G.players[p].boardCoins[j].isInitial ? "Initial" : ""}.jpg`}
+                                             alt={data.props.G.players[p].boardCoins[j].value}/>
+                                    </td>
+                                );
+                            } else {
+                                playerCells.push(
+                                    <td className="cursor-pointer" key={j}>
+                                        <img className="coin"
+                                             src={`/img/coins/Coin${data.props.G.players[p].boardCoins[j].value}${data.props.G.players[p].boardCoins[j].isInitial ? "Initial" : ""}.jpg`}
+                                             alt={data.props.G.players[p].boardCoins[j].value}/>
+                                    </td>
+                                );
+                            }
                         }
                         coinIndex++;
                     }
@@ -257,13 +293,21 @@ export const DrawPlayersHandsCoins = (data) => {
                         </td>
                     );
                 } else {
-                    playerCells.push(
-                        <td className="cursor-pointer" key={j} onClick={() => data.OnClickHandCoin(j)}>
-                            <img className="coin"
-                                 src={`/img/coins/Coin${data.props.G.players[p].handCoins[j].value}${data.props.G.players[p].handCoins[j].isInitial ? "Initial" : ""}.jpg`}
-                                 alt={data.props.G.players[p].handCoins[j].value}/>
-                        </td>
-                    );
+                    if (Number(data.props.ctx.currentPlayer) === p) {
+                        playerCells.push(
+                            <td className="cursor-pointer" key={j} onClick={() => data.OnClickHandCoin(j)}>
+                                <img className="coin"
+                                     src={`/img/coins/Coin${data.props.G.players[p].handCoins[j].value}${data.props.G.players[p].handCoins[j].isInitial ? "Initial" : ""}.jpg`}
+                                     alt={data.props.G.players[p].handCoins[j].value}/>
+                            </td>
+                        );
+                    } else {
+                        playerCells.push(
+                            <td className="cursor-pointer" key={j}>
+                                <img className="coin" src={`/img/coins/CoinBack.jpg`} alt="Coin Back"/>
+                            </td>
+                        );
+                    }
                 }
             }
         }
