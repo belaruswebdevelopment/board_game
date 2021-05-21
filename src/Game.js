@@ -9,7 +9,7 @@ import {
     ClickCampCard,
     ClickHeroCard
 } from "./Moves";
-//import {PotentialScoring, CheckHeuristicsForTradingCoin} from "./BotConfig";
+import {PotentialScoring, CheckHeuristicsForTradingCoin} from "./BotConfig";
 import {CompareCards} from "./Card"; //CreateCard
 //import {AddCardToCards} from "./Player";
 
@@ -209,24 +209,22 @@ export const BoardGame = {
                     }
                     res.push(temp);
                 }
-                /*console.log("pick 1st card");
-                console.log(res.splice(0, 9));
-                console.log("pick 2nd card");
-                console.log(res.splice(0, 9));
-                console.log("pick 3rd card");
-                console.log(res.splice(0, 9));*/
-                const marketCoinsMaxValue = G.marketCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
-                let coinsTotalValue = G.players[ctx.currentPlayer].handCoins.slice(G.tavernsNum).reduce((prev, current) => prev + current.value, 0);
-                const coinsMaxValue = G.players[ctx.currentPlayer].handCoins.slice(G.tavernsNum).reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
-                if (coinsTotalValue > marketCoinsMaxValue) {
-                    coinsTotalValue = marketCoinsMaxValue;
-                }
-                const isTradingProfitable = (coinsTotalValue - coinsMaxValue) > 1;
+
+                const resultsForTradingCoin = CheckHeuristicsForTradingCoin(G.taverns, G.averageCards);
+                const resultForTradingCoin = Math.min(...resultsForTradingCoin);
+                const positionForTradingCoin = resultsForTradingCoin.findIndex(item => item === resultForTradingCoin);
+
+                const isTradingProfitable = G.decks[G.decks.length - 1].length < 27;
                 for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
-                    if (isTradingProfitable === G.botData.allCoinsOrder[i].slice(0, G.tavernsNum).some(element => G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
-                        moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                    if (isTradingProfitable && G.botData.allCoinsOrder[i].slice(0, G.tavernsNum).every(element => !G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
+                        continue;
                     }
+                    if (isTradingProfitable && !G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForTradingCoin]].isTriggerTrading) {
+                        continue;
+                    }
+                    moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
                 }
+                console.log(moves);
             }
             return moves;
         },
@@ -323,7 +321,7 @@ export const BoardGame = {
                     return 1;
                 }
             }
-            return 1000;
+            return 1;
         },
         playoutDepth: (G, ctx) => {
             if (G.decks[G.decks.length - 1].length < 27) {
