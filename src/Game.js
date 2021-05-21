@@ -301,19 +301,20 @@ export const BoardGame = {
                 if (tavernId === -1) {
                     return maxIter;
                 }
-                if (G.taverns[tavernId].filter(element => element !== null).length === 1) {
+                const currentTavern = G.taverns[tavernId];
+                if (currentTavern.filter(element => element !== null).length === 1) {
                     return 1;
                 }
-                const cardIndex = G.taverns[tavernId].findIndex(element => element !== null);
-                if (G.taverns[tavernId].every(element => (element.suit === G.taverns[tavernId][cardIndex].suit && CompareCards(element, G.taverns[tavernId][cardIndex]) === 0))) {
+                const cardIndex = currentTavern.findIndex(element => element !== null);
+                if (currentTavern.every(element => (element.suit === currentTavern[cardIndex].suit && CompareCards(element, currentTavern[cardIndex]) === 0))) {
                     return 1;
                 }
                 const efficientMovesCount = 0;
-                for (let i = 0; i < G.taverns[tavernId].length; i++) {
-                    if (G.taverns[tavernId][i] === null) {
+                for (let i = 0; i < currentTavern.length; i++) {
+                    if (currentTavern[i] === null) {
                         continue;
                     }
-                    if (G.taverns[tavernId].some(element => CompareCards(G.taverns[tavernId][i], element) === -1)) {
+                    if (currentTavern.some(element => CompareCards(currentTavern[i], element) === -1)) {
                         continue;
                     }
                     efficientMovesCount++;
