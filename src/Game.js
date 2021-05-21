@@ -192,10 +192,10 @@ export const BoardGame = {
                     res.push(temp);
                 }
 
-                const resultsForTradingCoin = CheckHeuristicsForTradingCoin(G.taverns, G.averageCards);
-                const resultForTradingCoin = Math.min(...resultsForTradingCoin);
-                const positionForTradingCoin = resultsForTradingCoin.findIndex(item => item === resultForTradingCoin);
-                const isTradingProfitable = G.decks[G.decks.length - 1].length > 18;
+                const resultsForTradingCoin = CheckHeuristicsForTradingCoin(G.taverns, G.averageCards),
+                    resultForTradingCoin = Math.min(...resultsForTradingCoin),
+                    positionForTradingCoin = resultsForTradingCoin.findIndex(item => item === resultForTradingCoin),
+                    isTradingProfitable = G.decks[G.decks.length - 1].length > 18;
                 for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
                     if (isTradingProfitable && G.botData.allCoinsOrder[i].slice(0, G.tavernsNum).every(element => !G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
                         continue;
@@ -309,7 +309,7 @@ export const BoardGame = {
                 if (currentTavern.every(element => (element.suit === currentTavern[cardIndex].suit && CompareCards(element, currentTavern[cardIndex]) === 0))) {
                     return 1;
                 }
-                const efficientMovesCount = 0;
+                let efficientMovesCount = 0;
                 for (let i = 0; i < currentTavern.length; i++) {
                     if (currentTavern[i] === null) {
                         continue;

@@ -136,8 +136,8 @@ const GetCharacteristics = (array) => {
 }
 
 const CompareCharacteristics = (stat1, stat2) => {
-    const eps = 0.0001;
-    const tempCountWorse = Math.sign((stat2.countWorse - 1) ** 2) - Math.sign((stat1.countWorse - 1) ** 2);
+    const eps = 0.0001,
+        tempCountWorse = Math.sign((stat2.countWorse - 1) ** 2) - Math.sign((stat1.countWorse - 1) ** 2);
     if (Math.abs(tempCountWorse) < eps)
     {
         const tempVariation = stat1.variation - stat2.variation;
