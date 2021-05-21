@@ -91,7 +91,7 @@ export const PotentialScoring = ({cards = [], coins = [], tavernsNum = 0, market
 //absolute heuristics
 const isAllCardsEqual = {
     heuristic: (array) => array.every(element => (element.suit === array[0].suit && CompareCards(element, array[0]) === 0)),
-    weight: 100,
+    weight: -100,
 };
 
 //relative heuristics
@@ -123,12 +123,45 @@ const isOnlyWorseOrBetter = {
 const absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
 const relativeHeuristicsForTradingCoin = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
 
+//may be add different kinds of variation (1-order, 2-oder, 4-order, ..., infinity-order)
+const GetCharacteristics = (array) => {
+    const mean = array.reduce((acc, item) => acc + item / array.length, 0),
+          variation = array.reduce((acc, item) => acc + ((item - mean) ** 2) / array.length, 0),
+          countWorse = array.reduce((acc, item) => acc + (item === -1 ? 1: 0), 0);
+    return {
+        mean,
+        variation,
+        countWorse,
+    }
+}
+
+const CompareCharacteristics = (stat1, stat2) => {
+    const eps = 0.0001;
+    const tempCountWorse = Math.sign((stat2.countWorse - 1) ** 2) - Math.sign((stat1.countWorse - 1) ** 2);
+    if (Math.abs(tempCountWorse) < eps)
+    {
+        const tempVariation = stat1.variation - stat2.variation;
+        if (Math.abs(tempVariation) < eps)
+        {
+            return stat1.mean - stat2.mean;
+        }
+        return tempVariation;
+    }
+    return tempCountWorse;
+}
+
 export const CheckHeuristicsForTradingCoin = (taverns, averageCards) => {
     let result = Array(taverns.length).fill(0),
         temp = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight: 0), 0));
     result = result.map((value, index) => value + temp[index]);
     temp = taverns.map((tavern) => tavern.map((card) => CompareCards(card, averageCards[card.suit])));
-    temp = temp.map((tavern) => relativeHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight: 0), 0));
-    result = result.map((value, index) => value + temp[index]);
+    temp = temp.map(element => GetCharacteristics(element));
+    let curIndex = temp.length - 1;
+    for (let i = temp.length - 2; i >= 0; i--) {
+        if (CompareCharacteristics(temp[curIndex], temp[i]) > 0) {
+            curIndex = i;
+        }
+    }
+    result[curIndex] += -10;
     return result;
 };
