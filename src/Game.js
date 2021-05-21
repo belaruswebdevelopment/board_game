@@ -9,7 +9,7 @@ import {
     ClickCampCard,
     ClickHeroCard
 } from "./Moves";
-//import {PotentialScoring, CheckHeuristicsForTradingCoin} from "./BotConfig";
+import {PotentialScoring, CheckHeuristicsForTradingCoin} from "./BotConfig";
 import {CompareCards} from "./Card"; //CreateCard
 //import {AddCardToCards} from "./Player";
 
@@ -123,7 +123,7 @@ export const BoardGame = {
                     return moves;
                 }
                 for (let i = 0; i < G.taverns[tavernId].length; i++) {
-                    if ((G.taverns[tavernId][i] === null)) {
+                    if (G.taverns[tavernId][i] === null) {
                         continue;
                     }
                     if (G.taverns[tavernId].some(element => CompareCards(G.taverns[tavernId][i], element) === -1)) {
@@ -183,24 +183,6 @@ export const BoardGame = {
                             }
                     }
                 }*/
-                //console.log("test indifferentTaverns");
-                //console.log(CheckHeuristicsForTradingCoin(G.taverns, G.averageCards));
-                /*for (let i = 0; i < G.botData.allPicks.length; i++) {
-                    for (let j = 0; j < G.tavernsNum; j++) {
-                        AddCardToCards(curCards, CreateCard(G.taverns[j][G.botData.allPicks[i][j]]));
-                    }
-                    // let nextScore = PotentialScoring({cards: curCards});
-                    // potentialScores.push(nextScore - curScore);
-                    curCards = [];
-                    for (let k = 0; k < G.players[ctx.currentPlayer].cards.length; k++) {
-                        curCards[k] = [];
-                        for (let m = 0; m < G.players[ctx.currentPlayer].cards[k].length; m++) {
-                            AddCardToCards(curCards, G.players[ctx.currentPlayer].cards[k][m]);
-                        }
-                    }
-                }*/
-                //console.log("test potential scores");
-                //console.log(potentialScores);
                 const res = [];
                 for (let i = 0; i < G.botData.allPicks.length; i++) {
                     let temp = 0;
@@ -209,23 +191,19 @@ export const BoardGame = {
                     }
                     res.push(temp);
                 }
-                /*console.log("pick 1st card");
-                console.log(res.splice(0, 9));
-                console.log("pick 2nd card");
-                console.log(res.splice(0, 9));
-                console.log("pick 3rd card");
-                console.log(res.splice(0, 9));*/
-                const marketCoinsMaxValue = G.marketCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
-                let coinsTotalValue = G.players[ctx.currentPlayer].handCoins.slice(G.tavernsNum).reduce((prev, current) => prev + current.value, 0);
-                const coinsMaxValue = G.players[ctx.currentPlayer].handCoins.slice(G.tavernsNum).reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
-                if (coinsTotalValue > marketCoinsMaxValue) {
-                    coinsTotalValue = marketCoinsMaxValue;
-                }
-                const isTradingProfitable = (coinsTotalValue - coinsMaxValue) > 1;
+
+                const resultsForTradingCoin = CheckHeuristicsForTradingCoin(G.taverns, G.averageCards);
+                const resultForTradingCoin = Math.min(...resultsForTradingCoin);
+                const positionForTradingCoin = resultsForTradingCoin.findIndex(item => item === resultForTradingCoin);
+                const isTradingProfitable = G.decks[G.decks.length - 1].length > 18;
                 for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
-                    if (isTradingProfitable === G.botData.allCoinsOrder[i].slice(0, G.tavernsNum).some(element => G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
-                        moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                    if (isTradingProfitable && G.botData.allCoinsOrder[i].slice(0, G.tavernsNum).every(element => !G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
+                        continue;
                     }
+                    if (isTradingProfitable && !G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForTradingCoin]].isTriggerTrading) {
+                        continue;
+                    }
+                    moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
                 }
             }
             return moves;
@@ -317,13 +295,38 @@ export const BoardGame = {
             },
         }),
         iterations: (G, ctx) => {
+            const maxIter = G.botData.maxIter;
             if (ctx.phase === 'pickCards') {
                 const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
-                if (tavernId !== -1 && G.taverns[tavernId].filter(element => element !== null).length === 1) {
+                if (tavernId === -1) {
+                    return maxIter;
+                }
+                const currentTavern = G.taverns[tavernId];
+                if (currentTavern.filter(element => element !== null).length === 1) {
+                    return 1;
+                }
+                const cardIndex = currentTavern.findIndex(element => element !== null);
+                if (currentTavern.every(element => (element.suit === currentTavern[cardIndex].suit && CompareCards(element, currentTavern[cardIndex]) === 0))) {
+                    return 1;
+                }
+                const efficientMovesCount = 0;
+                for (let i = 0; i < currentTavern.length; i++) {
+                    if (currentTavern[i] === null) {
+                        continue;
+                    }
+                    if (currentTavern.some(element => CompareCards(currentTavern[i], element) === -1)) {
+                        continue;
+                    }
+                    efficientMovesCount++;
+                    if (efficientMovesCount > 1) {
+                        return maxIter;
+                    }
+                }
+                if (efficientMovesCount === 1) {
                     return 1;
                 }
             }
-            return 1000;
+            return maxIter;
         },
         playoutDepth: (G, ctx) => {
             if (G.decks[G.decks.length - 1].length < 27) {
