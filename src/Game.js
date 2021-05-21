@@ -219,14 +219,14 @@ export const BoardGame = {
                 checker: (G, ctx) => {
                     return G.decks[0].length > 0;
                 },
-                weight: -10.0,
+                weight: -100.0,
             },
-            isWeaker: {
+            /*isWeaker: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'placeCoins') {
                         return false;
                     }
-                    if (G.decks[G.decks.length - 1].length < 18)
+                    if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
                     {
                         return false;
                     }
@@ -238,19 +238,19 @@ export const BoardGame = {
                         totalScore.push(Scoring(G.players[i]));
                     }
                     const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
-                    if (totalScore[ctx.currentPlayer] < top2) {
-                        return totalScore[ctx.currentPlayer] >= Math.floor(0.80 * top1);
+                    if (totalScore[ctx.currentPlayer] < top2 && top2 < top1) {
+                        return totalScore[ctx.currentPlayer] >= Math.floor(0.85 * top1);
                     }
                     return false;
                 },
-                weight: 0.1,
-            },
-            isSecond: {
+                weight: 0.01,
+            },*/
+            /*isSecond: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'placeCoins') {
                         return false;
                     }
-                    if (G.decks[G.decks.length - 1].length < 18)
+                    if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
                     {
                         return false;
                     }
@@ -267,14 +267,14 @@ export const BoardGame = {
                     }
                     return false;
                 },
-                weight: 0.25,
-            },
-            isEqual: {
+                weight: 0.1,
+            },*/
+            /*isEqual: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'placeCoins') {
                         return false;
                     }
-                    if (G.decks[G.decks.length - 1].length < 18)
+                    if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
                     {
                         return false;
                     }
@@ -286,17 +286,20 @@ export const BoardGame = {
                         totalScore.push(Scoring(G.players[i]));
                     }
                     const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
-                    return (totalScore[ctx.currentPlayer] === top2) && (top2 === top1);
+                    if (totalScore[ctx.currentPlayer] < top2 && top2 === top1) {
+                        return totalScore[ctx.currentPlayer] >= Math.floor(0.90 * top1);
+                    }
+                    return false;
 
                 },
-                weight: 0.5,
-            },
+                weight: 0.1,
+            },*/
             isFirst: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'pickCards') {
                         return false;
                     }
-                    if (G.decks[G.decks.length - 1].length < 18)
+                    if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
                     {
                         return false;
                     }
@@ -308,12 +311,36 @@ export const BoardGame = {
                         totalScore.push(Scoring(G.players[i]));
                     }
                     const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
-                    if (totalScore[ctx.currentPlayer] === top1 && top2 < top1) {
+                    if (totalScore[ctx.currentPlayer] === top1) {
                         return totalScore[ctx.currentPlayer] >= Math.floor(1.05 * top2);
                     }
                     return false;
                 },
-                weight: 0.75,
+                weight: 0.5,
+            },
+            isStronger: {
+                checker: (G, ctx) => {
+                    if (ctx.phase !== 'pickCards') {
+                        return false;
+                    }
+                    if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
+                    {
+                        return false;
+                    }
+                    if (G.taverns[0].some(element => element === null)) {
+                        return false;
+                    }
+                    const totalScore = [];
+                    for (let i = 0; i < ctx.numPlayers; i++) {
+                        totalScore.push(Scoring(G.players[i]));
+                    }
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    if (totalScore[ctx.currentPlayer] === top1) {
+                        return totalScore[ctx.currentPlayer] >= Math.floor(1.10 * top2);
+                    }
+                    return false;
+                },
+                weight: 0.5,
             },
         }),
         iterations: (G, ctx) => {
@@ -358,10 +385,10 @@ export const BoardGame = {
             return maxIter;
         },
         playoutDepth: (G, ctx) => {
-            if (G.decks[G.decks.length - 1].length < 36) {
-                return 60;
+            if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
+                return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 20;
             }
-            return 42;
+            return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 2;
         },
     },
 };
