@@ -24,18 +24,18 @@ const enableLocalPlayer = true,
             '0': RandomBot,
             '1': RandomBot,
             '2': RandomBot,
-            '3': RandomBot,
+            // '3': RandomBot,
         },
     },
     BoardGameClient = Client({
         game: BoardGame,
         board: GameBoard,
-        numPlayers: 5,
+        numPlayers: 4,
         multiplayer: enableLocalPlayer ? Local(setupBot) : undefined,
     }),
     App = () => (
         <div>
-            <BoardGameClient playerID="4"/>
+            <BoardGameClient playerID="3"/>
         </div>
     );
 

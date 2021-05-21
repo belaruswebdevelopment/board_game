@@ -38,13 +38,25 @@ export const DrawPlayersBoardsCoins = (data) => {
                             playerCells.push(
                                 <td className="cursor-pointer" key={j}
                                     onClick={() => data.OnClickBoardCoin(j)}>
-                                    <b className="coin bg-red-500">?</b>
+                                    <span
+                                        style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
+                                        className="coin font-bold text-xl">
+                                        <span style={{background: background}} className="tavern">
+
+                                        </span>
+                                    </span>
                                 </td>
                             );
                         } else {
                             playerCells.push(
                                 <td className="cursor-pointer" key={j}>
-                                    <b className="coin bg-red-500">?</b>
+                                    <span
+                                        style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
+                                        className="coin font-bold text-xl">
+                                        <span style={{background: background}} className="tavern">
+
+                                        </span>
+                                    </span>
                                 </td>
                             );
                         }
@@ -99,9 +111,9 @@ export const DrawPlayersBoardsCoins = (data) => {
                             <th key={j}>
                                 <span
                                     style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 24px 24px"}}
-                                    className="market-coin">
+                                    className="market-coin font-bold text-xl">
                                     &#8596;
-                            </span>
+                                </span>
                             </th>
                         );
                         if (data.props.G.players[p].boardCoins[coinIndex] === null) {
@@ -109,13 +121,21 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 playerCells.push(
                                     <td className="cursor-pointer" key={j}
                                         onClick={() => data.OnClickBoardCoin(j)}>
-                                        <b className="coin bg-red-500">&#8596;</b>
+                                        <span
+                                            style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
+                                            className="coin font-bold text-xl">
+                                        &#8596;
+                                        </span>
                                     </td>
                                 );
                             } else {
                                 playerCells.push(
                                     <td className="cursor-pointer" key={j}>
-                                        <b className="coin bg-red-500">&#8596;</b>
+                                        <span
+                                            style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
+                                            className="coin font-bold text-xl">
+                                        &#8596;
+                                        </span>
                                     </td>
                                 );
                             }
@@ -223,12 +243,12 @@ export const DrawPlayersBoards = (data) => {
                         isDrawRow = true;
                         playerCells.push(
                             <td key={id}
-                                className={suitsConfigArray[data.props.G.players[p].cards[j][i].suit].suitColor}>
+                                className={suitsConfigArray[j].suitColor}>
                                 <b>{data.props.G.players[p].cards[j][i].points}</b>
                             </td>
                         );
                     }
-                } else if (!expansion && j === data.props.G.suitsNum + 1) {
+                } else if (j === data.props.G.suitsNum) {
                     if (data.props.G.players[p].heroes[i] === undefined || isNotHero || !isNotCampCard || !isNotCard) {
                         playerCells.push(
                             <td key={id}>
@@ -239,7 +259,7 @@ export const DrawPlayersBoards = (data) => {
                         isDrawRow = true;
                         playerCells.push(
                             <td key={id}
-                                className={suitsConfigArray[data.props.G.players[p].heroes[i].suit].suitColor}>
+                                className="bg-gray-600">
                                 <b>{data.props.G.players[p].heroes[i].points}</b>
                             </td>
                         );
@@ -254,7 +274,7 @@ export const DrawPlayersBoards = (data) => {
                     } else {
                         isDrawRow = true;
                         playerCells.push(
-                            <td key={id}>
+                            <td className="bg-yellow-200" key={id}>
                                 <b>{data.props.G.players[p].campCards[i].points}</b>
                             </td>
                         );
@@ -297,7 +317,9 @@ export const DrawPlayersHandsCoins = (data) => {
                 if (data.props.G.players[p].handCoins[j] === null) {
                     playerCells.push(
                         <td key={j}>
+                            <span className="coin border">
 
+                            </span>
                         </td>
                     );
                 } else {

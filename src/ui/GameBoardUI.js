@@ -148,13 +148,22 @@ export const DrawTaverns = (data, gridClass) => {
     const tavernsBoards = [];
     let background = "";
     for (let t = 0; t < data.props.G.tavernsNum; t++) {
+        if (t === 0) {
+            background = "url(/img/taverns/Taverns.png) no-repeat -2px -4px / 74px 42px";
+        } else if (t === 1) {
+            background = "url(/img/taverns/Taverns.png) no-repeat -25px -17px / 74px 42px";
+        } else if (t === 2) {
+            background = "url(/img/taverns/Taverns.png) no-repeat -49px -9px / 74px 42px";
+        }
         for (let i = 0; i < 1; i++) {
             const boardCells = [];
             for (let j = 0; j < data.props.G.drawSize; j++) {
                 if (data.props.G.taverns[t][j] === null) {
                     boardCells.push(
                         <td key={j}>
+                            <span style={{background: background}} className="tavern">
 
+                            </span>
                         </td>
                     );
                 } else {
@@ -166,13 +175,6 @@ export const DrawTaverns = (data, gridClass) => {
                         </td>
                     );
                 }
-            }
-            if (t === 0) {
-                background = "url(/img/taverns/Taverns.png) no-repeat -2px -4px / 74px 42px";
-            } else if (t === 1) {
-                background = "url(/img/taverns/Taverns.png) no-repeat -25px -17px / 74px 42px";
-            } else if (t === 2) {
-                background = "url(/img/taverns/Taverns.png) no-repeat -49px -9px / 74px 42px";
             }
             tavernsBoards.push(
                 <table className={`${gridClass} justify-self-center`} key={t}>
