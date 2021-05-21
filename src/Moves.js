@@ -1,12 +1,15 @@
 import {INVALID_MOVE} from "boardgame.io/core";
-import {AddCardToPlayer} from "./Player";
+import {AddCampCardToPlayer, AddCardToPlayer} from "./Player";
 
 export const ClickHeroCard = (G, ctx, heroId) => {
     // todo Add logic
 };
 
 export const ClickCampCard = (G, ctx, cardId) => {
-    // todo Add logic
+    // todo check if currentPlayer and win tavern! Add delete 1 card after all pick and correct next phase and draw camp cards
+    AddCampCardToPlayer(G.players[ctx.currentPlayer], G.camp[cardId]);
+    G.camp[cardId] = null;
+    ctx.events.endTurn();
 };
 
 export const ClickCard = (G, ctx, tavernId, cardId) => {

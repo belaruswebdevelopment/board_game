@@ -110,9 +110,9 @@ export const DrawPlayersBoardsCoins = (data) => {
                         playerFooters[p].push(
                             <th key={j}>
                                 <span
-                                    style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 24px 24px"}}
-                                    className="market-coin font-bold text-xl">
-                                    &#8596;
+                                    style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
+                                    className="market-coin">
+
                                 </span>
                             </th>
                         );
@@ -124,7 +124,11 @@ export const DrawPlayersBoardsCoins = (data) => {
                                         <span
                                             style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
                                             className="coin font-bold text-xl">
-                                        &#8596;
+                                            <span
+                                                style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
+                                                className="market-coin">
+
+                                            </span>
                                         </span>
                                     </td>
                                 );
@@ -134,7 +138,11 @@ export const DrawPlayersBoardsCoins = (data) => {
                                         <span
                                             style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
                                             className="coin font-bold text-xl">
-                                        &#8596;
+                                        <span
+                                            style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
+                                            className="market-coin">
+
+                                        </span>
                                         </span>
                                     </td>
                                 );
@@ -309,11 +317,6 @@ export const DrawPlayersHandsCoins = (data) => {
         playersHandsCoins[p] = [];
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
-                // todo fix it
-                let coinClass = "bg-yellow-500";
-                if (data.props.G.players[p].selectedCoin === j) {
-                    coinClass = "bg-green-400";
-                }
                 if (data.props.G.players[p].handCoins[j] === null) {
                     playerCells.push(
                         <td key={j}>
@@ -324,9 +327,14 @@ export const DrawPlayersHandsCoins = (data) => {
                     );
                 } else {
                     if (Number(data.props.ctx.currentPlayer) === p) {
+                        // todo fix it
+                        let coinClass = "border";
+                        if (data.props.G.players[p].selectedCoin === j) {
+                            coinClass = "border-2 border-green-400";
+                        }
                         playerCells.push(
                             <td className="cursor-pointer" key={j} onClick={() => data.OnClickHandCoin(j)}>
-                                <img className="coin"
+                                <img className={`coin ${coinClass}`}
                                      src={`/img/coins/Coin${data.props.G.players[p].handCoins[j].value}${data.props.G.players[p].handCoins[j].isInitial ? "Initial" : ""}.jpg`}
                                      alt={data.props.G.players[p].handCoins[j].value}/>
                             </td>

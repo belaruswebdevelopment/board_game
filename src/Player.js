@@ -39,6 +39,11 @@ export const AddCardToPlayer = (player, card) => {
     player.cards[card.suit].push(card);
 };
 
+export const AddCampCardToPlayer = (player, card) => {
+    player.campCards.push(card);
+};
+
+// todo ???
 export const AddCardToCards = (cards, card) => {
     cards[card.suit].push(card);
 };
