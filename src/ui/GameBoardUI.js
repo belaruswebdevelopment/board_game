@@ -90,6 +90,7 @@ export const DrawHeroes = (data) => {
         boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j;
+            // todo currentPlayer
             boardCells.push(
                 <td className="cursor-pointer" key={j} onClick={() => data.OnClickHeroCard(increment)}>
                     {data.props.G.heroes[increment]}
@@ -124,6 +125,7 @@ export const DrawCamp = (data) => {
                     </td>
                 );
             } else {
+                // todo currentPlayer
                 boardCells.push(
                     <td className="cursor-pointer" key={j} onClick={() => data.OnClickCampCard(j)}>
                         <b>{data.props.G.camp[j].points}</b>
@@ -156,6 +158,7 @@ export const DrawTaverns = (data, gridClass) => {
                         </td>
                     );
                 } else {
+                    // todo currentPlayer
                     boardCells.push(
                         <td className={`${suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor} cursor-pointer`}
                             onClick={() => data.OnClickCard(t, j)}>

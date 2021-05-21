@@ -97,8 +97,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 <td className="cursor-pointer" key={j}
                                     onClick={() => data.OnClickBoardCoin(j)}>
                                     <img className="coin"
-                                         src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial ? "Initial" : ""}.jpg`}
-                                         alt={data.props.G.players[p].boardCoins[coinIndex].value}/>
+                                         src={`/img/coins/Coin${data.props.G.players[p].boardCoins[j].value}${data.props.G.players[p].boardCoins[j].isInitial ? "Initial" : ""}.jpg`}
+                                         alt={data.props.G.players[p].boardCoins[j].value}/>
                                 </td>
                             );
                         }
@@ -166,8 +166,8 @@ export const DrawPlayersBoards = (data) => {
             for (let j = 0; j < data.props.G.suitsNum + 1 + expansion; j++) {
                 const id = i + j;
                 const isNotCard = data.props.G.players[p].cards[j] !== undefined && data.props.G.players[p].cards[j][i] === undefined;
-                const isNotHero = data.props.G.players[p].heroes[i] !== undefined && data.props.G.players[p].heroes[i] === undefined;
-                const isNotCampCard = data.props.G.players[p].cards[i] !== undefined && data.props.G.players[p].cards[i] === undefined;
+                const isNotHero = data.props.G.players[p].heroes[i] === undefined;
+                const isNotCampCard = data.props.G.players[p].campCards[i] === undefined;
                 if (j < data.props.G.suitsNum) {
                     if (data.props.G.players[p].cards[j] === undefined || isNotCard || !isNotHero || !isNotCampCard) {
                         playerCells.push(
