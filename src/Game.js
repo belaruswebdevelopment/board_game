@@ -209,18 +209,33 @@ export const BoardGame = {
                 if (maxResultForCoins > 0) {
                     positionForMaxCoin = resultsForCoins.findIndex(item => item === maxResultForCoins);
                 }
+                //console.log(resultsForCoins);
                 for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
-                    if (isTradingProfitable && G.botData.allCoinsOrder[i].every(element => !G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
-                        continue;
+                    if (isTradingProfitable && G.botData.allCoinsOrder[i].some(element => G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
+                        if ((positionForMaxCoin !== -1) && G.botData.allCoinsOrder[i].every(item => G.players[ctx.currentPlayer].handCoins[item].value <= G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMaxCoin]].value)) {
+                            if ((positionForMinCoin !== -1) && (G.players[ctx.currentPlayer].handCoins.filter(item => item.value < G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMinCoin]].value).length >= 2)) {
+                                continue;
+                            }
+                            //console.log("positionForMaxCoin");
+                            moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                            //console.log("#" + i.toString().padStart(2) + ":     " + G.botData.allCoinsOrder[i].map(item => G.players[ctx.currentPlayer].handCoins[item].value))
+                            continue;
+                        }
+                        if ((positionForMaxCoin !== -1) && G.botData.allCoinsOrder[i].every(item => G.players[ctx.currentPlayer].handCoins[item].value >= G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMaxCoin]].value)) {
+                            continue;
+                        }
+                        if (isTradingProfitable && (positionForMinCoin !== -1) && G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMinCoin]].isTriggerTrading) {
+                            //console.log("positionForMinCoin");
+                            moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                            //console.log("#" + i.toString().padStart(2) + ":     " + G.botData.allCoinsOrder[i].map(item => G.players[ctx.currentPlayer].handCoins[item].value))
+                            continue;
+                        }
                     }
-                    if ((positionForMaxCoin !== -1) && !G.botData.allCoinsOrder[i].every(item => G.players[ctx.currentPlayer].handCoins[item].value <= G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMaxCoin]].value)) {
-                        continue;
+                    if (!isTradingProfitable) {
+                        moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
                     }
-                    if (isTradingProfitable && (positionForMinCoin !== -1) && !G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMinCoin]].isTriggerTrading) {
-                        continue;
-                    }
-                    moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
                 }
+                //console.log(moves);
             }
             return moves;
         },

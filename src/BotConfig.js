@@ -122,6 +122,7 @@ const isOnlyWorseOrBetter = {
 
 const absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
 const relativeHeuristicsForTradingCoin = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
+console.log(relativeHeuristicsForTradingCoin ? "" : "");
 
 //may be add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
 const GetCharacteristics = (array) => {
@@ -149,12 +150,19 @@ export const CheckHeuristicsForCoinsPlacement = (taverns, averageCards) => {
     result = result.map((value, index) => value + temp[index]);
     temp = taverns.map((tavern) => tavern.map((card) => CompareCards(card, averageCards[card.suit])));
     temp = temp.map(element => GetCharacteristics(element));
-    let curIndex = 0;
-    for (let i = 1; i < temp.length; i++) {
-        if (CompareCharacteristics(temp[curIndex], temp[i]) < 0) {
-            curIndex = i;
+    //console.log("Characteristics: ");
+    //console.log(temp);
+    let maxIndex = 0;
+    let minIndex = temp.length - 1;
+    for (let i = 0; i < temp.length; i++) {
+        if (CompareCharacteristics(temp[maxIndex], temp[i]) < 0) {
+            maxIndex = i;
+        }
+        if (CompareCharacteristics(temp[minIndex], temp[i]) > 0) {
+            minIndex = i;
         }
     }
-    result[curIndex] += 10;
+    result[maxIndex] += 10;
+    result[minIndex] += -10;
     return result;
 };
