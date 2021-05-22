@@ -135,8 +135,8 @@ const GetCharacteristics = (array) => {
 }
 
 const CompareCharacteristics = (stat1, stat2) => {
-    const eps = 0.0001;
-    const tempVariation = stat1.variation - stat2.variation;
+    const eps = 0.0001,
+        tempVariation = stat1.variation - stat2.variation;
     if (Math.abs(tempVariation) < eps)
     {
         return stat1.mean - stat2.mean;
@@ -152,8 +152,8 @@ export const CheckHeuristicsForCoinsPlacement = (taverns, averageCards) => {
     temp = temp.map(element => GetCharacteristics(element));
     //console.log("Characteristics: ");
     //console.log(temp);
-    let maxIndex = 0;
-    let minIndex = temp.length - 1;
+    let maxIndex = 0,
+        minIndex = temp.length - 1;
     for (let i = 0; i < temp.length; i++) {
         if (CompareCharacteristics(temp[maxIndex], temp[i]) < 0) {
             maxIndex = i;
