@@ -62,6 +62,7 @@ export const SetupGame = (ctx) => {
     botData.allCoinsOrder = allCoinsOrder;
     botData.allPicks = GetAllPicks({tavernsNum, playersNum: ctx.numPlayers});
     botData.maxIter = 1000;
+    botData.deckLength = decks[0].length;
     return {
         debug,
         suitsNum,

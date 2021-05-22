@@ -9,9 +9,9 @@ import {
     ClickCampCard,
     ClickHeroCard
 } from "./Moves";
-import {PotentialScoring, CheckHeuristicsForTradingCoin} from "./BotConfig";
+import {PotentialScoring, CheckHeuristicsForCoinsPlacement} from "./BotConfig";
 import {CompareCards} from "./Card";
-import {ChangePlayersPriorities} from "./Priority"; //CreateCard
+import {ChangePlayersPriorities} from "./Priority";
 //import {AddCardToCards} from "./Player";
 
 const IsEndGame = (taverns, tavernsNum, deck) => {
@@ -194,19 +194,44 @@ export const BoardGame = {
                     res.push(temp);
                 }
 
-                const resultsForTradingCoin = CheckHeuristicsForTradingCoin(G.taverns, G.averageCards),
-                    resultForTradingCoin = Math.min(...resultsForTradingCoin),
-                    positionForTradingCoin = resultsForTradingCoin.findIndex(item => item === resultForTradingCoin),
+                const resultsForCoins = CheckHeuristicsForCoinsPlacement(G.taverns, G.averageCards),
+                    minResultForCoins = Math.min(...resultsForCoins),
+                    maxResultForCoins = Math.max(...resultsForCoins),
                     isTradingProfitable = G.decks[G.decks.length - 1].length > 18;
-                for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
-                    if (isTradingProfitable && G.botData.allCoinsOrder[i].slice(0, G.tavernsNum).every(element => !G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
-                        continue;
-                    }
-                    if (isTradingProfitable && !G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForTradingCoin]].isTriggerTrading) {
-                        continue;
-                    }
-                    moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                let [positionForMinCoin, positionForMaxCoin] = [-1, -1];
+                if (minResultForCoins < 0) {
+                    positionForMinCoin = resultsForCoins.findIndex(item => item === minResultForCoins);
                 }
+                if (maxResultForCoins > 0) {
+                    positionForMaxCoin = resultsForCoins.findIndex(item => item === maxResultForCoins);
+                }
+                //console.log(resultsForCoins);
+                for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
+                    if (isTradingProfitable && G.botData.allCoinsOrder[i].some(element => G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
+                        if ((positionForMaxCoin !== -1) && G.botData.allCoinsOrder[i].every(item => G.players[ctx.currentPlayer].handCoins[item].value <= G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMaxCoin]].value)) {
+                            if ((positionForMinCoin !== -1) && (G.players[ctx.currentPlayer].handCoins.filter(item => item.value < G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMinCoin]].value).length >= 2)) {
+                                continue;
+                            }
+                            //console.log("positionForMaxCoin");
+                            moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                            //console.log("#" + i.toString().padStart(2) + ":     " + G.botData.allCoinsOrder[i].map(item => G.players[ctx.currentPlayer].handCoins[item].value))
+                            continue;
+                        }
+                        if ((positionForMaxCoin !== -1) && G.botData.allCoinsOrder[i].every(item => G.players[ctx.currentPlayer].handCoins[item].value >= G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMaxCoin]].value)) {
+                            continue;
+                        }
+                        if (isTradingProfitable && (positionForMinCoin !== -1) && G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMinCoin]].isTriggerTrading) {
+                            //console.log("positionForMinCoin");
+                            moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                            //console.log("#" + i.toString().padStart(2) + ":     " + G.botData.allCoinsOrder[i].map(item => G.players[ctx.currentPlayer].handCoins[item].value))
+                            continue;
+                        }
+                    }
+                    if (!isTradingProfitable) {
+                        moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                    }
+                }
+                //console.log(moves);
             }
             return moves;
         },
@@ -215,14 +240,14 @@ export const BoardGame = {
                 checker: (G, ctx) => {
                     return G.decks[0].length > 0;
                 },
-                weight: -10.0,
+                weight: -100.0,
             },
-            isWeaker: {
+            /*isWeaker: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'placeCoins') {
                         return false;
                     }
-                    if (G.decks[G.decks.length - 1].length < 18)
+                    if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
                     {
                         return false;
                     }
@@ -234,19 +259,19 @@ export const BoardGame = {
                         totalScore.push(Scoring(G.players[i]));
                     }
                     const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
-                    if (totalScore[ctx.currentPlayer] < top2) {
-                        return totalScore[ctx.currentPlayer] >= Math.floor(0.80 * top1);
+                    if (totalScore[ctx.currentPlayer] < top2 && top2 < top1) {
+                        return totalScore[ctx.currentPlayer] >= Math.floor(0.85 * top1);
                     }
                     return false;
                 },
-                weight: 0.1,
-            },
-            isSecond: {
+                weight: 0.01,
+            },*/
+            /*isSecond: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'placeCoins') {
                         return false;
                     }
-                    if (G.decks[G.decks.length - 1].length < 18)
+                    if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
                     {
                         return false;
                     }
@@ -263,14 +288,14 @@ export const BoardGame = {
                     }
                     return false;
                 },
-                weight: 0.25,
-            },
-            isEqual: {
+                weight: 0.1,
+            },*/
+            /*isEqual: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'placeCoins') {
                         return false;
                     }
-                    if (G.decks[G.decks.length - 1].length < 18)
+                    if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
                     {
                         return false;
                     }
@@ -282,17 +307,20 @@ export const BoardGame = {
                         totalScore.push(Scoring(G.players[i]));
                     }
                     const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
-                    return (totalScore[ctx.currentPlayer] === top2) && (top2 === top1);
+                    if (totalScore[ctx.currentPlayer] < top2 && top2 === top1) {
+                        return totalScore[ctx.currentPlayer] >= Math.floor(0.90 * top1);
+                    }
+                    return false;
 
                 },
-                weight: 0.5,
-            },
+                weight: 0.1,
+            },*/
             isFirst: {
                 checker: (G, ctx) => {
                     if (ctx.phase !== 'pickCards') {
                         return false;
                     }
-                    if (G.decks[G.decks.length - 1].length < 18)
+                    if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
                     {
                         return false;
                     }
@@ -304,12 +332,36 @@ export const BoardGame = {
                         totalScore.push(Scoring(G.players[i]));
                     }
                     const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
-                    if (totalScore[ctx.currentPlayer] === top1 && top2 < top1) {
+                    if (totalScore[ctx.currentPlayer] === top1) {
                         return totalScore[ctx.currentPlayer] >= Math.floor(1.05 * top2);
                     }
                     return false;
                 },
-                weight: 0.75,
+                weight: 0.5,
+            },
+            isStronger: {
+                checker: (G, ctx) => {
+                    if (ctx.phase !== 'pickCards') {
+                        return false;
+                    }
+                    if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
+                    {
+                        return false;
+                    }
+                    if (G.taverns[0].some(element => element === null)) {
+                        return false;
+                    }
+                    const totalScore = [];
+                    for (let i = 0; i < ctx.numPlayers; i++) {
+                        totalScore.push(Scoring(G.players[i]));
+                    }
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
+                    if (totalScore[ctx.currentPlayer] === top1) {
+                        return totalScore[ctx.currentPlayer] >= Math.floor(1.10 * top2);
+                    }
+                    return false;
+                },
+                weight: 0.5,
             },
         }),
         iterations: (G, ctx) => {
@@ -354,10 +406,10 @@ export const BoardGame = {
             return maxIter;
         },
         playoutDepth: (G, ctx) => {
-            if (G.decks[G.decks.length - 1].length < 36) {
-                return 60;
+            if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
+                return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 20;
             }
-            return 42;
+            return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 2;
         },
     },
 };
