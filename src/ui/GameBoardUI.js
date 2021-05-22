@@ -14,9 +14,13 @@ const DrawBoard = (objectsSize) => {
 export const DrawTierCards = (data) => {
     return (
         <b>Tier: <span className="italic">
-            {data.props.G.decks.length - data.props.G.tierToEnd + 1}/{data.props.G.decks.length}
-            ({data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length} +
-            {data.props.G.decks.reduce((count, current) => count + current.length, 0)} cards left)
+            {data.props.G.decks.length - data.props.G.tierToEnd + 1 > data.props.G.decks.length
+                ? data.props.G.decks.length : data.props.G.decks.length - data.props.G.tierToEnd + 1}
+            /{data.props.G.decks.length}
+            ({data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd] !== undefined ?
+            data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0}
+            {data.props.G.decks.length - data.props.G.tierToEnd === 0 ? "/"
+                + data.props.G.decks.reduce((count, current) => count + current.length, 0) : ""} cards left)
         </span></b>
     );
 };
