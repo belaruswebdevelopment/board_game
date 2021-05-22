@@ -1,13 +1,13 @@
 import React from "react";
 import {Scoring} from "../Game";
 import {suitsConfigArray} from "../data/SuitData";
+import {tavernsConfig} from "../Tavern";
 
 export const DrawPlayersBoardsCoins = (data) => {
     const playersBoardsCoins = [],
         playerHeaders = [],
         playerFooters = [],
         playerRows = [];
-    let background = "";
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         let coinIndex = 0;
         playersBoardsCoins[p] = [];
@@ -19,16 +19,9 @@ export const DrawPlayersBoardsCoins = (data) => {
             playerRows[p][i] = [];
             if (i === 0) {
                 for (let j = 0; j < data.props.G.taverns.length; j++) {
-                    if (j === 0) {
-                        background = "url(/img/taverns/Taverns.png) no-repeat -2px -4px / 74px 42px";
-                    } else if (j === 1) {
-                        background = "url(/img/taverns/Taverns.png) no-repeat -25px -17px / 74px 42px";
-                    } else if (j === 2) {
-                        background = "url(/img/taverns/Taverns.png) no-repeat -49px -9px / 74px 42px";
-                    }
                     playerHeaders[p].push(
                         <th key={`${i}${j}`}>
-                            <span style={{background: background}} className="tavern">
+                            <span style={{background: tavernsConfig[j].style}} className="tavern">
 
                             </span>
                         </th>
@@ -40,8 +33,9 @@ export const DrawPlayersBoardsCoins = (data) => {
                                     onClick={() => data.OnClickBoardCoin(j)}>
                                     <span
                                         style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
-                                        className="coin font-bold text-xl">
-                                        <span style={{background: background}} className="tavern">
+                                        className="coin">
+                                        {/*todo fix it*/}
+                                        <span style={{background: tavernsConfig[j].style}} className="coin">
 
                                         </span>
                                     </span>
@@ -52,8 +46,9 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 <td className="cursor-pointer" key={j}>
                                     <span
                                         style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
-                                        className="coin font-bold text-xl">
-                                        <span style={{background: background}} className="tavern">
+                                        className="coin">
+                                        {/*todo fix it*/}
+                                        <span style={{background: tavernsConfig[j].style}} className="coin">
 
                                         </span>
                                     </span>
@@ -63,7 +58,10 @@ export const DrawPlayersBoardsCoins = (data) => {
                     } else if (data.props.ctx.phase === 'placeCoins' && Number(data.props.ctx.currentPlayer) !== p) {
                         playerCells.push(
                             <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
-                                <img className="coin" src={`/img/coins/CoinBack.png`} alt="Coin Back"/>
+                                <span style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
+                                      className="tavern">
+
+                                </span>
                             </td>
                         );
                     } else {
@@ -71,7 +69,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                             playerCells.push(
                                 <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
                                     <img className="coin"
-                                         src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial ? "Initial" : ""}.jpg`}
+                                         src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial
+                                             ? "Initial" : ""}.jpg`}
                                          alt={data.props.G.players[p].boardCoins[coinIndex].value}/>
                                 </td>
                             );
@@ -79,7 +78,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                             playerCells.push(
                                 <td className="cursor-pointer" key={j}>
                                     <img className="coin"
-                                         src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial ? "Initial" : ""}.jpg`}
+                                         src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial
+                                             ? "Initial" : ""}.jpg`}
                                          alt={data.props.G.players[p].boardCoins[coinIndex].value}/>
                                 </td>
                             );
@@ -96,14 +96,14 @@ export const DrawPlayersBoardsCoins = (data) => {
                                     style={{background: "url(/img/priorities/Priority.png) no-repeat -35px -5px / 64px 36px"}}
                                     className="tavern">
 
-                            </span>
+                                </span>
                             </th>
                         );
                         playerCells.push(
                             <td key={j}>
                                 <img className="priority"
-                                     src={`/img/priorities/Priority${data.props.G.players[p].priority}.png`}
-                                     alt={`Priority ${data.props.G.players[p].priority}`}/>
+                                     src={`/img/priorities/Priority${data.props.G.players[p].priority.value}.png`}
+                                     alt={`Priority ${data.props.G.players[p].priority.value}`}/>
                             </td>
                         );
                     } else {

@@ -10,7 +10,8 @@ import {
     ClickHeroCard
 } from "./Moves";
 import {PotentialScoring, CheckHeuristicsForTradingCoin} from "./BotConfig";
-import {CompareCards} from "./Card"; //CreateCard
+import {CompareCards} from "./Card";
+import {ChangePlayersPriorities} from "./Priority"; //CreateCard
 //import {AddCardToCards} from "./Player";
 
 const IsEndGame = (taverns, tavernsNum, deck) => {
@@ -77,17 +78,12 @@ export const BoardGame = {
                 },
             },
             onBegin: (G, ctx) => {
+                // todo Open only current taverns coins!
                 const {playersOrder, exchangeOrder} = ResolveBoardCoins(G, ctx);
                 [G.playersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
             },
             onEnd: (G) => {
-                const tempPriorities = []
-                for (let i = 0; i < G.exchangeOrder.length; i++) {
-                    tempPriorities[i] = G.players[G.exchangeOrder[i]].priority;
-                }
-                for (let i = 0; i < G.exchangeOrder.length; i++) {
-                    G.players[i].priority = tempPriorities[i];
-                }
+                ChangePlayersPriorities(G);
             },
             moves: {
                 ClickCard,

@@ -1,6 +1,7 @@
 import {BuildCoins} from "./Coin";
 import {initialPlayerCoinsConfig} from "./data/CoinData";
 import {suitsConfigArray} from "./data/SuitData";
+import {AddPriorityToPlayer} from "./Priority";
 
 const CreatePlayer = ({
                           cards = [],
@@ -10,7 +11,6 @@ const CreatePlayer = ({
                           boardCoins = [],
                           selectedCoin = undefined,
                           priority = 0,
-                          isPriorityExchangeable = true
                       } = {}) => {
     return {
         cards,
@@ -20,18 +20,17 @@ const CreatePlayer = ({
         boardCoins,
         selectedCoin,
         priority,
-        isPriorityExchangeable,
     };
 };
 
-export const BuildPlayer = (id) => {
+export const BuildPlayer = (numPlayers) => {
     return CreatePlayer({
         cards: Array(suitsConfigArray.length).fill(Array(0)),
         handCoins: BuildCoins(initialPlayerCoinsConfig,
             {isInitial: true, isTriggerTrading: false}),
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
         // todo generate random priority
-        priority: id + 1,
+        priority: AddPriorityToPlayer(numPlayers),
     });
 };
 

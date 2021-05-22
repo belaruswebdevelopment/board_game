@@ -6,6 +6,9 @@ import {BuildCoins} from "./Coin";
 import {Permute, k_combinations, GetAllPicks} from "./BotConfig";
 
 export const SetupGame = (ctx) => {
+    // todo add coins upgrade cards logic!
+    // todo add advanced 1 epoch logic (get description from rules)
+    // todo add advanced scoring
     const suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
@@ -16,6 +19,7 @@ export const SetupGame = (ctx) => {
             },
         },
         decks = [],
+        // add heroes logic!
         heroes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
         // todo fix it
         campDeck = [{points: 0},{points: 1},{points: 2},{points: 3},{points: 4}],
@@ -27,7 +31,7 @@ export const SetupGame = (ctx) => {
     // todo move taverns in separate config data file + images for it
     const taverns = [],
         tavernsNum = 3,
-        drawSize = ctx.numPlayers;
+        drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
         taverns[i] = decks[0].splice(0, drawSize);
     }
@@ -35,7 +39,7 @@ export const SetupGame = (ctx) => {
         playersOrder = [],
         exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        players[i] = BuildPlayer(i);
+        players[i] = BuildPlayer(ctx.numPlayers);
     }
     const marketCoinsUnique = [],
         marketCoins = BuildCoins(marketCoinsConfig, {

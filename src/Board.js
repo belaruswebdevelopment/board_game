@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-    DrawTierTurns,
-    DrawCurrentPlayer,
+    DrawTierCards,
+    DrawCurrentPlayerTurn,
     DrawWinner,
     DrawMarketCoins,
     DrawCamp,
@@ -33,8 +33,8 @@ export class GameBoard extends React.Component {
 
     render() {
         const gridClass = `col-span-${this.props.ctx.numPlayers}`,
-            tierTurnsUI = DrawTierTurns(this),
-            currentPlayerUI = DrawCurrentPlayer(this),
+            tierCardsUI = DrawTierCards(this),
+            currentPlayerTurnUI = DrawCurrentPlayerTurn(this),
             winnerUI = DrawWinner(this),
             marketCoinsUI = DrawMarketCoins(this),
             drawHeroesUI = DrawHeroes(this),
@@ -49,10 +49,10 @@ export class GameBoard extends React.Component {
             <div className="flex">
                 <div className={`grid auto-rows-min grid-cols-1 lg:grid-cols-${this.props.ctx.numPlayers * 3} gap-2`}>
                     <div className={classes}>
-                        {tierTurnsUI}
+                        {tierCardsUI}
                     </div>
                     <div className={classes}>
-                        {currentPlayerUI}
+                        {currentPlayerTurnUI}
                     </div>
                     <div className={classes}>
                         {winnerUI}

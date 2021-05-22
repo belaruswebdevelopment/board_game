@@ -1,6 +1,7 @@
 import React from "react";
 import {CountMarketCoins} from "../Coin";
 import {suitsConfigArray} from "../data/SuitData.js";
+import {tavernsConfig} from "../Tavern";
 
 const DrawBoard = (objectsSize) => {
     const boardRows = Math.floor(Math.sqrt(objectsSize)),
@@ -10,15 +11,20 @@ const DrawBoard = (objectsSize) => {
     return {boardRows, boardCols, lastBoardCol};
 };
 
-export const DrawTierTurns = (data) => {
+export const DrawTierCards = (data) => {
     return (
-        <b>Tier: {data.props.G.decks.length - data.props.G.tierToEnd + 1} | Turn: {data.props.ctx.turn}</b>
+        <b>Tier: <span className="italic">
+            {data.props.G.decks.length - data.props.G.tierToEnd + 1}/{data.props.G.decks.length}
+            ({data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length} +
+            {data.props.G.decks.reduce((count, current) => count + current.length, 0)} cards left)
+        </span></b>
     );
 };
 
-export const DrawCurrentPlayer = (data) => {
+export const DrawCurrentPlayerTurn = (data) => {
     return (
-        <b>Current player: Player {Number(data.props.ctx.currentPlayer) + 1}</b>
+        <b>Current player: <span className="italic">Player {Number(data.props.ctx.currentPlayer) + 1}</span> |
+            Turn: <span className="italic">{data.props.ctx.turn}</span></b>
     );
 };
 
@@ -32,7 +38,7 @@ export const DrawWinner = (data) => {
         winner = "Game is started";
     }
     return (
-        <b>Game status: {winner}</b>
+        <b>Game status: <span className="italic">{winner}</span></b>
     );
 };
 
@@ -146,22 +152,14 @@ export const DrawCamp = (data) => {
 
 export const DrawTaverns = (data, gridClass) => {
     const tavernsBoards = [];
-    let background = "";
     for (let t = 0; t < data.props.G.tavernsNum; t++) {
-        if (t === 0) {
-            background = "url(/img/taverns/Taverns.png) no-repeat -2px -4px / 74px 42px";
-        } else if (t === 1) {
-            background = "url(/img/taverns/Taverns.png) no-repeat -25px -17px / 74px 42px";
-        } else if (t === 2) {
-            background = "url(/img/taverns/Taverns.png) no-repeat -49px -9px / 74px 42px";
-        }
         for (let i = 0; i < 1; i++) {
             const boardCells = [];
             for (let j = 0; j < data.props.G.drawSize; j++) {
                 if (data.props.G.taverns[t][j] === null) {
                     boardCells.push(
                         <td key={j}>
-                            <span style={{background: background}} className="tavern">
+                            <span style={{background: tavernsConfig[t].style}} className="tavern">
 
                             </span>
                         </td>
@@ -179,7 +177,7 @@ export const DrawTaverns = (data, gridClass) => {
             tavernsBoards.push(
                 <table className={`${gridClass} justify-self-center`} key={t}>
                     <caption>
-                        <span style={{background: background}} className="tavern">
+                        <span style={{background: tavernsConfig[t].style}} className="tavern">
 
                         </span>
                     </caption>

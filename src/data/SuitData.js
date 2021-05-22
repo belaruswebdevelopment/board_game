@@ -6,7 +6,7 @@ const blacksmithSuit = {
     suit: 0,
     suitName: 'Blacksmith',
     suitColor: 'bg-purple-600',
-    description: "",
+    description: "Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).",
     // todo replace 9th into 8th
     ranksValues: () => {
         return {
@@ -63,7 +63,7 @@ const hunterSuit = {
     suit: 1,
     suitName: 'Hunter',
     suitColor: 'bg-green-600',
-    description: "",
+    description: "Их показатель храбрости равен квадрату числа карт охотников в армии игрока.",
     ranksValues: () => {
         return {
             2: {
@@ -119,7 +119,7 @@ const minerSuit = {
     suit: 2,
     suitName: 'Miner',
     suitColor: 'bg-yellow-600',
-    description: "",
+    description: "Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии игрока.",
     ranksValues: () => {
         return {
             2: {
@@ -175,7 +175,7 @@ const warriorSuit = {
     suit: 3,
     suitName: 'Warrior',
     suitColor: 'bg-red-600',
-    description: "",
+    description: "Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты. В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной монеты к показателю храбрости своих воинов.",
     ranksValues: () => {
         return {
             2: {
@@ -231,7 +231,7 @@ const explorerSuit = {
     suit: 4,
     suitName: 'Explorer',
     suitColor: 'bg-blue-600',
-    description: "",
+    description: "Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.",
     ranksValues: () => {
         return {
             2: {
