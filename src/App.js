@@ -28,15 +28,14 @@ const enableLocalPlayer = true,
         },
     },
     BoardGameClient = Client({
+        debug: false,
         game: BoardGame,
         board: GameBoard,
         numPlayers: 4,
         multiplayer: enableLocalPlayer ? Local(setupBot) : undefined,
     }),
     App = () => (
-        <div>
-            <BoardGameClient playerID="3"/>
-        </div>
+        <BoardGameClient playerID="3"/>
     );
 
 export default App;
