@@ -328,7 +328,7 @@ export const DrawPlayersBoards = (data) => {
                 <thead>
                 <tr className="flex">{playerHeaders[p]}</tr>
                 </thead>
-                <tbody>{playerRows[p]}</tbody>
+                <tbody className="flex flex-col">{playerRows[p]}</tbody>
             </table>
         );
     }

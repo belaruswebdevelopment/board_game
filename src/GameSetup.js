@@ -19,10 +19,13 @@ export const SetupGame = (ctx) => {
             },
         },
         decks = [],
-        // add heroes logic!
+        // todo add heroes logic!
         heroes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
         // todo fix it
-        campDeck = [{points: 0},{points: 1},{points: 2},{points: 3},{points: 4}],
+        campDecks = [
+            [{points: 0},{points: 1},{points: 2},{points: 3},{points: 4}],
+            [{points: 0},{points: 1},{points: 2},{points: 3},{points: 4}]
+        ],
         camp = [{points: 0}, {points: 1}, {points: 2}, {points: 3}, {points: 4}];
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards(suitsConfigArray, {players: ctx.numPlayers, tier: i});
@@ -73,7 +76,7 @@ export const SetupGame = (ctx) => {
         expansions,
         decks,
         heroes,
-        campDeck,
+        campDecks,
         camp,
         taverns,
         players,

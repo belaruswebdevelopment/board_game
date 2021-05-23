@@ -91,7 +91,7 @@ export const DrawMarketCoins = (data) => {
                     style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
                     className="bg-small-market-coin">
 
-                </span> <span>Market coins</span>
+                </span> <span>Market coins ({data.props.G.marketCoins.length} left)</span>
             </caption>
             <tbody>
             {boardRows}
@@ -129,7 +129,7 @@ export const DrawHeroes = (data) => {
                     style={{background: `url(/img/cards/heroes/HeroBack.png) no-repeat 0px 0px / 16px 24px`}}
                     className="bg-hero">
 
-                </span> <span>Heroes</span>
+                </span> <span>Heroes ({data.props.G.heroes.length} left)</span>
             </caption>
             <tbody>
             {boardRows}
@@ -142,7 +142,7 @@ export const DrawCamp = (data) => {
     const boardCells = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < data.props.G.campNum; j++) {
-            if (data.props.G.camp[j] === null) {
+            if (data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd][j] === null) {
                 boardCells.push(
                     <td key={j}>
 
@@ -152,7 +152,7 @@ export const DrawCamp = (data) => {
                 // todo currentPlayer
                 boardCells.push(
                     <td className="bg-yellow-200 cursor-pointer" key={j} onClick={() => data.OnClickCampCard(j)}>
-                        <b>{data.props.G.camp[j].points}</b>
+                        <b>{data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd][j].points}</b>
                     </td>
                 );
             }
@@ -164,7 +164,12 @@ export const DrawCamp = (data) => {
                 <span style={{background: "url(/img/cards/camp/Camp.png) no-repeat 0px 0px / 32px 21px"}}
                       className="bg-camp">
 
-                </span> <span>Camp</span>
+                </span> <span>Camp {data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length
+                ? data.props.G.campDecks.length : data.props.G.campDecks.length - data.props.G.tierToEnd + 1}
+                ({data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd] !== undefined ?
+                data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0}
+                {data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? "/"
+                    + data.props.G.campDecks.reduce((count, current) => count + current.length, 0) : ""} cards left)</span>
             </caption>
             <tbody>
             <tr>{boardCells}</tr>
