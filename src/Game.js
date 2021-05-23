@@ -194,8 +194,8 @@ export const BoardGame = {
                     res.push(temp);
                 }
 
-                let resultsForCoins = CheckHeuristicsForCoinsPlacement(G.taverns, G.averageCards);
                 const hasLowestPriority = HasLowestPriority(G.players, ctx.currentPlayer);
+                let resultsForCoins = CheckHeuristicsForCoinsPlacement(G.taverns, G.averageCards);
                 if (hasLowestPriority) {
                     resultsForCoins = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
                 }
@@ -213,7 +213,7 @@ export const BoardGame = {
                 const allCoinsOrder = G.botData.allCoinsOrder,
                     handCoins = G.players[ctx.currentPlayer].handCoins;
                 for (let i = 0; i < allCoinsOrder.length; i++) {
-                    let hasTrading = allCoinsOrder[i].some(element => handCoins[element].isTriggerTrading);
+                    const hasTrading = allCoinsOrder[i].some(element => handCoins[element].isTriggerTrading);
                     if (tradingProfit < 0) {
                         if (hasTrading) {
                             continue;
