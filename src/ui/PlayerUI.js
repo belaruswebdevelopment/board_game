@@ -20,7 +20,7 @@ export const DrawPlayersBoardsCoins = (data) => {
             if (i === 0) {
                 for (let j = 0; j < data.props.G.taverns.length; j++) {
                     playerHeaders[p].push(
-                        <th key={`${i}${j}`}>
+                        <th key={tavernsConfig[j].name}>
                             <span style={{background: tavernsConfig[j].style}} className="bg-tavern">
 
                             </span>

@@ -55,11 +55,11 @@ export const DrawMarketCoins = (data) => {
         boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j;
-            if (countMarketCoins[data.props.G.marketCoinsUnique[increment]] === undefined) {
+            if (countMarketCoins[data.props.G.marketCoinsUnique[increment].value] === undefined) {
                 boardCells.push(
-                    <td className="bg-yellow-300" key={j}>
+                    <td className="bg-yellow-300" key={data.props.G.marketCoinsUnique[increment].value}>
                         <span
-                            style={{background: `url(/img/coins/Coin${data.props.G.marketCoinsUnique[increment]}.jpg) no-repeat 0px 0px / 48px 48px`}}
+                            style={{background: `url(/img/coins/Coin${data.props.G.marketCoinsUnique[increment].value}.jpg) no-repeat 0px 0px / 48px 48px`}}
                             className="bg-market-coin">
                             <span className="text-red-500">0</span>
                         </span>
@@ -67,11 +67,11 @@ export const DrawMarketCoins = (data) => {
                 );
             } else {
                 boardCells.push(
-                    <td className="bg-yellow-300" key={j}>
+                    <td className="bg-yellow-300" key={data.props.G.marketCoinsUnique[increment].value}>
                         <span
-                            style={{background: `url(/img/coins/Coin${data.props.G.marketCoinsUnique[increment]}.jpg) no-repeat 0px 0px / 48px 48px`}}
+                            style={{background: `url(/img/coins/Coin${data.props.G.marketCoinsUnique[increment].value}.jpg) no-repeat 0px 0px / 48px 48px`}}
                             className="bg-market-coin">
-                            <span className="text-blue-500">{countMarketCoins[data.props.G.marketCoinsUnique[increment]]}</span>
+                            <span className="text-blue-500">{countMarketCoins[data.props.G.marketCoinsUnique[increment].value]}</span>
                         </span>
                     </td>
                 );

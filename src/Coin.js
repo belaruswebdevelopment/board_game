@@ -7,7 +7,7 @@ const CreateCoin = ({value, isInitial = false, isTriggerTrading = false} = {}) =
 };
 
 const UniqueCoins = (data, value) => {
-    data.count.push(value);
+    data.count.push({value});
 };
 
 export const CountMarketCoins = (data) => {
