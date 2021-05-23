@@ -45,3 +45,9 @@ export const ChangePlayersPriorities = (G) => {
         G.players[i].priority = tempPriorities[i];
     }
 };
+
+export const HasLowestPriority = (players, playerId) => {
+    const tempPriorities = players.map(player => player.priority.value),
+        minPriority = Math.min(...tempPriorities);
+    return players[playerId].priority.value === minPriority;
+};
