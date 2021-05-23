@@ -2,58 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-td {
-    @apply border-2 w-12 h-12 text-center;
-}
+@layer base {
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
 
-th {
-    @apply border-2 w-12;
+    td {
+        @apply border-2 w-12 h-12 text-center;
+    }
+
+    th {
+        @apply border-2 w-12;
+    }
 }
 
 .flex-center {
     @apply flex items-center justify-center;
 }
 
-.inline-flex-center {
-    @apply inline-flex items-center justify-center self-center;
+@layer components {
+    .bg-tavern {
+        @apply inline-flex-center w-6 h-6;
+    }
+
+    .bg-camp {
+        @apply inline-flex-center w-8 h-6;
+    }
+
+    .bg-suit {
+        @apply inline-flex-center w-6 h-6;
+    }
+
+    .bg-hero {
+        @apply inline-flex-center w-4 h-6;
+    }
+
+    .bg-priority {
+        @apply inline-flex-center w-8 h-12;
+    }
+
+    .bg-small-market-coin {
+        @apply rounded-full inline-flex-center w-6 h-6;
+    }
+
+    .bg-coin {
+        @apply rounded-full inline-flex-center w-12 h-12;
+    }
+
+    .bg-market-coin {
+        @apply rounded-full inline-flex items-center justify-start w-12 h-12 font-black p-0.5;
+    }
 }
 
-.bg-tavern {
-    @apply inline-flex-center w-6 h-6;
-}
-
-.bg-camp {
-    @apply inline-flex-center w-8 h-6;
-}
-
-.bg-suit {
-    @apply inline-flex-center w-6 h-6;
-}
-
-.bg-hero {
-    @apply inline-flex-center w-4 h-6;
-}
-
-.bg-priority {
-    @apply inline-flex-center w-8 h-12;
-}
-
-.bg-small-market-coin {
-    @apply rounded-full inline-flex-center w-6 h-6;
-}
-
-.bg-coin {
-    @apply rounded-full inline-flex-center w-12 h-12;
-}
-
-.bg-market-coin {
-    @apply rounded-full inline-flex items-center justify-start w-12 h-12 font-black p-0.5;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+@layer utilities {
+    .inline-flex-center {
+        @apply inline-flex items-center justify-center self-center;
+    }
 }
