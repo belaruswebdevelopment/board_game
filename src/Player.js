@@ -29,7 +29,6 @@ export const BuildPlayer = (numPlayers) => {
         handCoins: BuildCoins(initialPlayerCoinsConfig,
             {isInitial: true, isTriggerTrading: false}),
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
-        // todo generate random priority
         priority: AddPriorityToPlayer(numPlayers),
     });
 };
@@ -42,7 +41,6 @@ export const AddCampCardToPlayer = (player, card) => {
     player.campCards.push(card);
 };
 
-// todo ???
 export const AddCardToCards = (cards, card) => {
     cards[card.suit].push(card);
 };

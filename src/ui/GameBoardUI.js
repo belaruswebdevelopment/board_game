@@ -57,20 +57,22 @@ export const DrawMarketCoins = (data) => {
             const increment = i * drawData.boardCols + j;
             if (countMarketCoins[data.props.G.marketCoinsUnique[increment]] === undefined) {
                 boardCells.push(
-                    <td key={j}>
-                        <img className="coin"
-                             src={`/img/coins/Coin${data.props.G.marketCoinsUnique[increment]}.jpg`}
-                             alt={data.props.G.marketCoinsUnique[increment]}/>
-                        <b><sup>0</sup></b>
+                    <td className="bg-yellow-300" key={j}>
+                        <span
+                            style={{background: `url(/img/coins/Coin${data.props.G.marketCoinsUnique[increment]}.jpg) no-repeat 0px 0px / 48px 48px`}}
+                            className="bg-market-coin">
+                            <span className="text-red-500">0</span>
+                        </span>
                     </td>
                 );
             } else {
                 boardCells.push(
-                    <td key={j}>
-                        <img className="coin"
-                             src={`/img/coins/Coin${data.props.G.marketCoinsUnique[increment]}.jpg`}
-                             alt={data.props.G.marketCoinsUnique[increment]}/>
-                        <b><sup>{countMarketCoins[data.props.G.marketCoinsUnique[increment]]}</sup></b>
+                    <td className="bg-yellow-300" key={j}>
+                        <span
+                            style={{background: `url(/img/coins/Coin${data.props.G.marketCoinsUnique[increment]}.jpg) no-repeat 0px 0px / 48px 48px`}}
+                            className="bg-market-coin">
+                            <span className="text-blue-500">{countMarketCoins[data.props.G.marketCoinsUnique[increment]]}</span>
+                        </span>
                     </td>
                 );
             }
@@ -102,8 +104,8 @@ export const DrawHeroes = (data) => {
             const increment = i * drawData.boardCols + j;
             // todo currentPlayer
             boardCells.push(
-                <td className="cursor-pointer" key={j} onClick={() => data.OnClickHeroCard(increment)}>
-                    {data.props.G.heroes[increment]}
+                <td className="bg-gray-600 cursor-pointer" key={j} onClick={() => data.OnClickHeroCard(increment)}>
+                    <span className="text-white">{data.props.G.heroes[increment]}</span>
                 </td>
             );
             if ((i === drawData.boardRows - 1) && (j + 1 === drawData.lastBoardCol)) {
@@ -137,7 +139,7 @@ export const DrawCamp = (data) => {
             } else {
                 // todo currentPlayer
                 boardCells.push(
-                    <td className="cursor-pointer" key={j} onClick={() => data.OnClickCampCard(j)}>
+                    <td className="bg-yellow-200 cursor-pointer" key={j} onClick={() => data.OnClickCampCard(j)}>
                         <b>{data.props.G.camp[j].points}</b>
                     </td>
                 );
@@ -146,7 +148,12 @@ export const DrawCamp = (data) => {
     }
     return (
         <table>
-            <caption>Camp</caption>
+            <caption>
+                <span style={{background: "url(/img/cards/camp/Camp.png) no-repeat 0px 0px / 32px 21px"}}
+                      className="camp">
+
+                </span>
+            </caption>
             <tbody>
             <tr>{boardCells}</tr>
             </tbody>

@@ -137,6 +137,7 @@ export const ResolveBoardCoins = (G, ctx) => {
     }
     return {playersOrder, exchangeOrder};
 };
+
 const Trading = (G, ctx, tradingCoins) => {
     const coinsTotalValue = tradingCoins.reduce((prev, current) => prev + current.value, 0),
         coinsMaxValue = tradingCoins.reduce((prev, current) => (prev < current.value) ? current.value : prev, 0);

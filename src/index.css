@@ -10,19 +10,23 @@ th {
     @apply border-2 text-center w-12;
 }
 
-sup {
-    @apply italic text-blue-500;
-}
-
 .tavern {
     @apply inline-flex items-center justify-center w-6 h-6;
 }
 
-.market-coin {
+.camp {
+    @apply inline-flex items-center justify-center w-8 h-6;
+}
+
+.bg-small-market-coin {
     @apply rounded-full inline-flex items-center justify-center w-6 h-6;
 }
 
-.coin {
+.bg-market-coin {
+    @apply rounded-full inline-flex items-center justify-start w-12 h-12 font-black p-0.5;
+}
+
+.bg-coin {
     @apply rounded-full inline-flex items-center justify-center w-12 h-12;
 }
 

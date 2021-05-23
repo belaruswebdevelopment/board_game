@@ -63,7 +63,7 @@ export class GameBoard extends React.Component {
                     <div className={`${gridClass} justify-self-center`}>
                         {drawHeroesUI}
                     </div>
-                    <div className={`${gridClass} justify-self-center`}>
+                    <div className={`${gridClass} justify-self-center self-center`}>
                         {drawCampUI}
                     </div>
                     {tavernsUI}

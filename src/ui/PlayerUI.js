@@ -32,10 +32,10 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 <td className="cursor-pointer" key={j}
                                     onClick={() => data.OnClickBoardCoin(j)}>
                                     <span
-                                        style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
-                                        className="coin">
+                                        style={{background: "url(/img/coins/CoinBack.png) no-repeat center center / 48px 48px"}}
+                                        className="bg-coin">
                                         {/*todo fix it*/}
-                                        <span style={{background: tavernsConfig[j].style}} className="coin">
+                                        <span style={{background: tavernsConfig[j].style}} className="bg-coin">
 
                                         </span>
                                     </span>
@@ -46,9 +46,9 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 <td className="cursor-pointer" key={j}>
                                     <span
                                         style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
-                                        className="coin">
+                                        className="bg-coin">
                                         {/*todo fix it*/}
-                                        <span style={{background: tavernsConfig[j].style}} className="coin">
+                                        <span style={{background: tavernsConfig[j].style}} className="bg-coin">
 
                                         </span>
                                     </span>
@@ -68,7 +68,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                         if (Number(data.props.ctx.currentPlayer) === p) {
                             playerCells.push(
                                 <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
-                                    <img className="coin"
+                                    <img className="bg-coin"
                                          src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial
                                              ? "Initial" : ""}.jpg`}
                                          alt={data.props.G.players[p].boardCoins[coinIndex].value}/>
@@ -77,7 +77,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                         } else {
                             playerCells.push(
                                 <td className="cursor-pointer" key={j}>
-                                    <img className="coin"
+                                    <img className="bg-coin"
                                          src={`/img/coins/Coin${data.props.G.players[p].boardCoins[coinIndex].value}${data.props.G.players[p].boardCoins[coinIndex].isInitial
                                              ? "Initial" : ""}.jpg`}
                                          alt={data.props.G.players[p].boardCoins[coinIndex].value}/>
@@ -111,7 +111,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             <th key={j}>
                                 <span
                                     style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
-                                    className="market-coin">
+                                    className="bg-small-market-coin">
 
                                 </span>
                             </th>
@@ -123,10 +123,10 @@ export const DrawPlayersBoardsCoins = (data) => {
                                         onClick={() => data.OnClickBoardCoin(j)}>
                                         <span
                                             style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
-                                            className="coin font-bold text-xl">
+                                            className="bg-coin font-bold text-xl">
                                             <span
                                                 style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
-                                                className="market-coin">
+                                                className="bg-small-market-coin">
 
                                             </span>
                                         </span>
@@ -137,10 +137,10 @@ export const DrawPlayersBoardsCoins = (data) => {
                                     <td className="cursor-pointer" key={j}>
                                         <span
                                             style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
-                                            className="coin font-bold text-xl">
+                                            className="bg-coin font-bold text-xl">
                                         <span
                                             style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
-                                            className="market-coin">
+                                            className="bg-small-market-coin">
 
                                         </span>
                                         </span>
@@ -151,7 +151,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             playerCells.push(
                                 <td className="cursor-pointer" key={j}
                                     onClick={() => data.OnClickBoardCoin(j)}>
-                                    <img className="coin" src={`/img/coins/CoinBack.png`} alt="Coin Back"/>
+                                    <img className="bg-coin" src={`/img/coins/CoinBack.png`} alt="Coin Back"/>
                                 </td>
                             );
                         } else {
@@ -159,7 +159,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 playerCells.push(
                                     <td className="cursor-pointer" key={j}
                                         onClick={() => data.OnClickBoardCoin(j)}>
-                                        <img className="coin"
+                                        <img className="bg-coin"
                                              src={`/img/coins/Coin${data.props.G.players[p].boardCoins[j].value}${data.props.G.players[p].boardCoins[j].isInitial ? "Initial" : ""}.jpg`}
                                              alt={data.props.G.players[p].boardCoins[j].value}/>
                                     </td>
@@ -167,7 +167,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             } else {
                                 playerCells.push(
                                     <td className="cursor-pointer" key={j}>
-                                        <img className="coin"
+                                        <img className="bg-coin"
                                              src={`/img/coins/Coin${data.props.G.players[p].boardCoins[j].value}${data.props.G.players[p].boardCoins[j].isInitial ? "Initial" : ""}.jpg`}
                                              alt={data.props.G.players[p].boardCoins[j].value}/>
                                     </td>
@@ -320,7 +320,7 @@ export const DrawPlayersHandsCoins = (data) => {
                 if (data.props.G.players[p].handCoins[j] === null) {
                     playerCells.push(
                         <td key={j}>
-                            <span className="coin border">
+                            <span className="bg-coin border">
 
                             </span>
                         </td>
@@ -334,7 +334,7 @@ export const DrawPlayersHandsCoins = (data) => {
                         }
                         playerCells.push(
                             <td className="cursor-pointer" key={j} onClick={() => data.OnClickHandCoin(j)}>
-                                <img className={`coin ${coinClass}`}
+                                <img className={`bg-coin ${coinClass}`}
                                      src={`/img/coins/Coin${data.props.G.players[p].handCoins[j].value}${data.props.G.players[p].handCoins[j].isInitial ? "Initial" : ""}.jpg`}
                                      alt={data.props.G.players[p].handCoins[j].value}/>
                             </td>
@@ -342,7 +342,7 @@ export const DrawPlayersHandsCoins = (data) => {
                     } else {
                         playerCells.push(
                             <td className="cursor-pointer" key={j}>
-                                <img className="coin" src={`/img/coins/CoinBack.jpg`} alt="Coin Back"/>
+                                <img className="bg-coin" src={`/img/coins/CoinBack.jpg`} alt="Coin Back"/>
                             </td>
                         );
                     }
