@@ -11,7 +11,7 @@ import {
 } from "./Moves";
 import {PotentialScoring, CheckHeuristicsForCoinsPlacement} from "./BotConfig";
 import {CompareCards} from "./Card";
-import {ChangePlayersPriorities} from "./Priority";
+import {ChangePlayersPriorities, HasLowestPriority} from "./Priority";
 //import {AddCardToCards} from "./Player";
 
 const IsEndGame = (taverns, tavernsNum, deck) => {
@@ -194,21 +194,22 @@ export const BoardGame = {
                     res.push(temp);
                 }
 
-                const resultsForCoins = CheckHeuristicsForCoinsPlacement(G.taverns, G.averageCards),
-                    minResultForCoins = Math.min(...resultsForCoins),
+                let resultsForCoins = CheckHeuristicsForCoinsPlacement(G.taverns, G.averageCards);
+                const hasLowestPriority = HasLowestPriority(G.players, ctx.currentPlayer);
+                if (hasLowestPriority) {
+                    resultsForCoins = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
+                }
+                const minResultForCoins = Math.min(...resultsForCoins),
                     maxResultForCoins = Math.max(...resultsForCoins),
                     tradingProfit = G.decks[G.decks.length - 1].length > 18 ? 1: 0;
                 let [positionForMinCoin, positionForMaxCoin] = [-1, -1];
-                if (minResultForCoins < 0) {
+                if (minResultForCoins <= 0) {
                     positionForMinCoin = resultsForCoins.findIndex(item => item === minResultForCoins);
                 }
-                if (maxResultForCoins > 0) {
+                if (maxResultForCoins >= 0) {
                     positionForMaxCoin = resultsForCoins.findIndex(item => item === maxResultForCoins);
                 }
-                if (G.players[ctx.currentPlayer].priority.value === 6 - ctx.numPlayers) {
-                    positionForMinCoin = 0;
-                }
-                console.log(resultsForCoins);
+                //console.log(resultsForCoins);
                 const allCoinsOrder = G.botData.allCoinsOrder,
                     handCoins = G.players[ctx.currentPlayer].handCoins;
                 for (let i = 0; i < allCoinsOrder.length; i++) {
@@ -230,11 +231,11 @@ export const BoardGame = {
                             isTopCoinsOnPosition = allCoinsOrder[i].filter(item => handCoins[item].value > handCoins[allCoinsOrder[i][positionForMaxCoin]].value).length <= 1;
                         }
                         if (hasPositionForMinCoin) {
-                            isMinCoinsOnPosition = allCoinsOrder[i].filter(item => handCoins[item].value < handCoins[allCoinsOrder[i][positionForMinCoin]].value).length <= 1;
+                            isMinCoinsOnPosition = handCoins.filter(item => item.value < handCoins[allCoinsOrder[i][positionForMinCoin]].value).length <= 1;
                         }
                         if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
                             moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
-                            console.log("#" + i.toString().padStart(2) + ":     " + allCoinsOrder[i].map(item => handCoins[item].value));
+                            //console.log("#" + i.toString().padStart(2) + ":     " + allCoinsOrder[i].map(item => handCoins[item].value));
                         }
                     } else {
                         moves.push({move: 'PlaceAllCoins', args: [allCoinsOrder[i]]});
