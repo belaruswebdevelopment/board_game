@@ -193,7 +193,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                     }
                 }
             }
-            playerRows[p][i].push(<tr key={i}>{playerCells}</tr>)
+            playerRows[p][i].push(<tr key={`${data.props.G.players[p].nickname} board coins row ${i}`}>{playerCells}</tr>)
         }
         playersBoardsCoins[p].push(
             <table className="col-span-3" key={`${data.props.G.players[p].nickname} board coins`}>
@@ -316,7 +316,7 @@ export const DrawPlayersBoards = (data) => {
             }
             if (isDrawRow) {
                 playerRows[p][i].push(
-                    <tr key={i}>{playerCells}</tr>
+                    <tr key={`${data.props.G.players[p].nickname} board row ${i}`}>{playerCells}</tr>
                 );
             } else {
                 break;

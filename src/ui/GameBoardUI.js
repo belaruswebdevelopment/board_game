@@ -81,7 +81,7 @@ export const DrawMarketCoins = (data) => {
             }
         }
         boardRows[i].push(
-            <tr key={i}>{boardCells}</tr>
+            <tr key={`Market coins row ${i}`}>{boardCells}</tr>
         );
     }
     return (
@@ -119,7 +119,7 @@ export const DrawHeroes = (data) => {
             }
         }
         boardRows[i].push(
-            <tr key={i}>{boardCells}</tr>
+            <tr key={`Heroes row ${i}`}>{boardCells}</tr>
         );
     }
     return (
@@ -203,7 +203,7 @@ export const DrawTaverns = (data, gridClass) => {
                 }
             }
             tavernsBoards.push(
-                <table className={`${gridClass} justify-self-center`} key={t}>
+                <table className={`${gridClass} justify-self-center`} key={`Tavern ${tavernsConfig[t].name} board`}>
                     <caption>
                         <span style={{background: tavernsConfig[t].style}} className="bg-tavern">
 
