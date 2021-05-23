@@ -120,28 +120,29 @@ export const BoardGame = {
                 if (tavernId === -1) {
                     return moves;
                 }
-                for (let i = 0; i < G.taverns[tavernId].length; i++) {
-                    if (G.taverns[tavernId][i] === null) {
+                const tavern = G.taverns[tavernId];
+                for (let i = 0; i < tavern.length; i++) {
+                    if (tavern[i] === null) {
                         continue;
                     }
-                    if (G.taverns[tavernId].some(element => CompareCards(G.taverns[tavernId][i], element) === -1)) {
+                    if (tavern.some(element => CompareCards(tavern[i], element) < 0)) {
                         continue;
                     }
-                    if (G.decks[0].length > 18) {
-                        const curSuit = G.taverns[tavernId][i].suit;
-                        if ((CompareCards(G.taverns[tavernId][i], G.averageCards[curSuit]) === -1) && G.taverns[tavernId].some(element => (element !== null) && (CompareCards(element, G.averageCards[curSuit]) > -1))) {
-                            continue;
-                        }
+                    const curSuit = tavern[i].suit,
+                        isCurrentCardWorse = CompareCards(tavern[i], G.averageCards[curSuit]) < 0,
+                        isExistCardNotWorse = tavern.some(element => (element !== null) && (CompareCards(element, G.averageCards[element.suit]) >= 0));
+                    if (isCurrentCardWorse && isExistCardNotWorse) {
+                        continue;
                     }
                     const uniqueArrLength = uniqueArr.length;
                     for (let j = 0; j < uniqueArrLength; j++) {
-                        if (G.taverns[tavernId][i].suit === uniqueArr[j].suit && CompareCards(G.taverns[tavernId][i], uniqueArr[j]) === 0) {
+                        if (tavern[i].suit === uniqueArr[j].suit && CompareCards(tavern[i], uniqueArr[j]) === 0) {
                             flag = false;
                             break;
                         }
                     }
                     if (flag) {
-                        uniqueArr.push(G.taverns[tavernId][i]);
+                        uniqueArr.push(tavern[i]);
                         moves.push({move: 'ClickCard', args: [tavernId, i]});
                     }
                     flag = true;
@@ -164,36 +165,6 @@ export const BoardGame = {
             }
             if (enableAdvancedBot && ctx.phase === 'placeCoins') {
                 moves = [];
-                // const marketCoinsMaxValue = G.marketCoins.reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
-                // let potentialScores = [];
-                /*let curCards = [];
-                for (let i = 0; i < G.players[ctx.currentPlayer].cards.length; i++) {
-                    curCards[i] = [];
-                    for (let j = 0; j < G.players[ctx.currentPlayer].cards[i].length; j++) {
-                        AddCardToCards(curCards, G.players[ctx.currentPlayer].cards[i][j]);
-                    }
-                }*/
-                // let curScore = PotentialScoring({cards: curCards});
-                /*const indifferentTaverns = Array(G.tavernsNum).fill(true);
-                const temp = [];
-                for (let i = 0; i < G.tavernsNum; i++) {
-                    for (let j = 0; j < G.taverns[i].length; j++) {
-                            temp[j] = CompareCards(G.taverns[i][j], G.averageCards[G.taverns[i][j].suit]);
-                            if ((j > 0) && (temp[j] !== temp[j - 1])) {
-                                indifferentTaverns[i] = false;
-                                break;
-                            }
-                    }
-                }*/
-                const res = [];
-                for (let i = 0; i < G.botData.allPicks.length; i++) {
-                    let temp = 0;
-                    for (let j = 0; j < G.tavernsNum; j++) {
-                        temp += CompareCards(G.taverns[j][G.botData.allPicks[i][j]], G.averageCards[G.taverns[j][G.botData.allPicks[i][j]].suit]);
-                    }
-                    res.push(temp);
-                }
-
                 const hasLowestPriority = HasLowestPriority(G.players, ctx.currentPlayer);
                 let resultsForCoins = CheckHeuristicsForCoinsPlacement(G.taverns, G.averageCards);
                 if (hasLowestPriority) {
@@ -201,7 +172,7 @@ export const BoardGame = {
                 }
                 const minResultForCoins = Math.min(...resultsForCoins),
                     maxResultForCoins = Math.max(...resultsForCoins),
-                    tradingProfit = G.decks[G.decks.length - 1].length > 18 ? 1: 0;
+                    tradingProfit = G.decks[G.decks.length - 1].length > 9 ? 1 : 0;
                 let [positionForMinCoin, positionForMaxCoin] = [-1, -1];
                 if (minResultForCoins <= 0) {
                     positionForMinCoin = resultsForCoins.findIndex(item => item === minResultForCoins);
@@ -242,6 +213,9 @@ export const BoardGame = {
                     }
                 }
                 //console.log(moves);
+            }
+            if (moves.length === 0) {
+                console.log("ALERT: bot has " + moves.length + " moves. Phase: " + ctx.phase);
             }
             return moves;
         },
