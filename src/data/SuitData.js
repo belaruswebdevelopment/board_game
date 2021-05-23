@@ -230,7 +230,7 @@ const warriorSuit = {
 const explorerSuit = {
     suit: 4,
     suitName: 'Explorer',
-    suitColor: 'bg-blue-600',
+    suitColor: 'bg-blue-500',
     description: "Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.",
     ranksValues: () => {
         return {

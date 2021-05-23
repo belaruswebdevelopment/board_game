@@ -86,7 +86,13 @@ export const DrawMarketCoins = (data) => {
     }
     return (
         <table>
-            <caption>Market coins</caption>
+            <caption className="m-auto">
+                <span
+                    style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
+                    className="bg-small-market-coin">
+
+                </span> <span>Market coins</span>
+            </caption>
             <tbody>
             {boardRows}
             </tbody>
@@ -118,7 +124,13 @@ export const DrawHeroes = (data) => {
     }
     return (
         <table>
-            <caption>Heroes</caption>
+            <caption>
+                <span
+                    style={{background: `url(/img/cards/heroes/HeroBack.png) no-repeat 0px 0px / 16px 24px`}}
+                    className="bg-hero">
+
+                </span> <span>Heroes</span>
+            </caption>
             <tbody>
             {boardRows}
             </tbody>
@@ -150,9 +162,9 @@ export const DrawCamp = (data) => {
         <table>
             <caption>
                 <span style={{background: "url(/img/cards/camp/Camp.png) no-repeat 0px 0px / 32px 21px"}}
-                      className="camp">
+                      className="bg-camp">
 
-                </span>
+                </span> <span>Camp</span>
             </caption>
             <tbody>
             <tr>{boardCells}</tr>
@@ -170,7 +182,7 @@ export const DrawTaverns = (data, gridClass) => {
                 if (data.props.G.taverns[t][j] === null) {
                     boardCells.push(
                         <td key={j}>
-                            <span style={{background: tavernsConfig[t].style}} className="tavern">
+                            <span style={{background: tavernsConfig[t].style}} className="bg-tavern">
 
                             </span>
                         </td>
@@ -188,7 +200,7 @@ export const DrawTaverns = (data, gridClass) => {
             tavernsBoards.push(
                 <table className={`${gridClass} justify-self-center`} key={t}>
                     <caption>
-                        <span style={{background: tavernsConfig[t].style}} className="tavern">
+                        <span style={{background: tavernsConfig[t].style}} className="bg-tavern">
 
                         </span>
                     </caption>

@@ -32,6 +32,7 @@ export class GameBoard extends React.Component {
     };
 
     render() {
+        // todo Cursor-pointer class only for your objects and in current phase!
         const gridClass = `col-span-${this.props.ctx.numPlayers}`,
             tierCardsUI = DrawTierCards(this),
             currentPlayerTurnUI = DrawCurrentPlayerTurn(this),
