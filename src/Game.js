@@ -197,7 +197,7 @@ export const BoardGame = {
                 const resultsForCoins = CheckHeuristicsForCoinsPlacement(G.taverns, G.averageCards),
                     minResultForCoins = Math.min(...resultsForCoins),
                     maxResultForCoins = Math.max(...resultsForCoins),
-                    isTradingProfitable = G.decks[G.decks.length - 1].length > 18;
+                    tradingProfit = G.decks[G.decks.length - 1].length > 18 ? 1: 0;
                 let [positionForMinCoin, positionForMaxCoin] = [-1, -1];
                 if (minResultForCoins < 0) {
                     positionForMinCoin = resultsForCoins.findIndex(item => item === minResultForCoins);
@@ -209,28 +209,35 @@ export const BoardGame = {
                     positionForMinCoin = 0;
                 }
                 console.log(resultsForCoins);
-                for (let i = 0; i < G.botData.allCoinsOrder.length; i++) {
-                    if (!isTradingProfitable) {
-                        moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
-                    } else if (G.botData.allCoinsOrder[i].some(element => G.players[ctx.currentPlayer].handCoins[element].isTriggerTrading)) {
-                        if ((positionForMaxCoin !== -1) && G.botData.allCoinsOrder[i].every(item => G.players[ctx.currentPlayer].handCoins[item].value <= G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMaxCoin]].value)) {
-                            if ((positionForMinCoin !== -1) && (G.players[ctx.currentPlayer].handCoins.filter(item => item.value < G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMinCoin]].value).length >= 2)) {
-                                continue;
-                            }
-                            console.log("positionForMaxCoin");
+                const allCoinsOrder = G.botData.allCoinsOrder,
+                    handCoins = G.players[ctx.currentPlayer].handCoins;
+                for (let i = 0; i < allCoinsOrder.length; i++) {
+                    let hasTrading = allCoinsOrder[i].some(element => handCoins[element].isTriggerTrading);
+                    if (tradingProfit < 0) {
+                        if (hasTrading) {
+                            continue;
+                        }
+                        moves.push({move: 'PlaceAllCoins', args: [allCoinsOrder[i]]});
+                    } else if (tradingProfit > 0) {
+                        if (!hasTrading) {
+                            continue;
+                        }
+                        const hasPositionForMaxCoin = positionForMaxCoin !== -1,
+                            hasPositionForMinCoin = positionForMinCoin !== -1;
+                        let isTopCoinsOnPosition = false,
+                            isMinCoinsOnPosition = false;
+                        if (hasPositionForMaxCoin) {
+                            isTopCoinsOnPosition = allCoinsOrder[i].filter(item => handCoins[item].value > handCoins[allCoinsOrder[i][positionForMaxCoin]].value).length <= 1;
+                        }
+                        if (hasPositionForMinCoin) {
+                            isMinCoinsOnPosition = allCoinsOrder[i].filter(item => handCoins[item].value < handCoins[allCoinsOrder[i][positionForMinCoin]].value).length <= 1;
+                        }
+                        if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
                             moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
-                            console.log("#" + i.toString().padStart(2) + ":     " + G.botData.allCoinsOrder[i].map(item => G.players[ctx.currentPlayer].handCoins[item].value))
-                            continue;
+                            console.log("#" + i.toString().padStart(2) + ":     " + allCoinsOrder[i].map(item => handCoins[item].value));
                         }
-                        if ((positionForMaxCoin !== -1) && G.botData.allCoinsOrder[i].every(item => G.players[ctx.currentPlayer].handCoins[item].value >= G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMaxCoin]].value)) {
-                            continue;
-                        }
-                        if ((positionForMinCoin !== -1) && G.players[ctx.currentPlayer].handCoins[G.botData.allCoinsOrder[i][positionForMinCoin]].isTriggerTrading) {
-                            console.log("positionForMinCoin");
-                            moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
-                            console.log("#" + i.toString().padStart(2) + ":     " + G.botData.allCoinsOrder[i].map(item => G.players[ctx.currentPlayer].handCoins[item].value))
-                            continue;
-                        }
+                    } else {
+                        moves.push({move: 'PlaceAllCoins', args: [allCoinsOrder[i]]});
                     }
                 }
                 //console.log(moves);
