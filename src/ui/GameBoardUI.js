@@ -142,7 +142,9 @@ export const DrawCamp = (data) => {
     const boardCells = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < data.props.G.campNum; j++) {
-            if (data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd][j] === null) {
+            if (data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd] === undefined ||
+                (data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd] !== undefined &&
+                data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd][j] === null)) {
                 boardCells.push(
                     <td key={j}>
 
