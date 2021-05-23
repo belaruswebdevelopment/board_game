@@ -120,26 +120,29 @@ export const BoardGame = {
                 if (tavernId === -1) {
                     return moves;
                 }
-                for (let i = 0; i < G.taverns[tavernId].length; i++) {
-                    if (G.taverns[tavernId][i] === null) {
+                const tavern = G.taverns[tavernId];
+                for (let i = 0; i < tavern.length; i++) {
+                    if (tavern[i] === null) {
                         continue;
                     }
-                    if (G.taverns[tavernId].some(element => CompareCards(G.taverns[tavernId][i], element) < 0)) {
+                    if (tavern.some(element => CompareCards(tavern[i], element) < 0)) {
                         continue;
                     }
-                    const curSuit = G.taverns[tavernId][i].suit;
-                    if ((CompareCards(G.taverns[tavernId][i], G.averageCards[curSuit]) < 0) && G.taverns[tavernId].some(element => (element !== null) && (CompareCards(element, G.averageCards[curSuit]) >= 0))) {
+                    const curSuit = tavern[i].suit,
+                        isCurrentCardWorse = CompareCards(tavern[i], G.averageCards[curSuit]) < 0,
+                        isExistCardNotWorse = tavern.some(element => (element !== null) && (CompareCards(element, G.averageCards[element.suit]) >= 0));
+                    if (isCurrentCardWorse && isExistCardNotWorse) {
                         continue;
                     }
                     const uniqueArrLength = uniqueArr.length;
                     for (let j = 0; j < uniqueArrLength; j++) {
-                        if (G.taverns[tavernId][i].suit === uniqueArr[j].suit && CompareCards(G.taverns[tavernId][i], uniqueArr[j]) === 0) {
+                        if (tavern[i].suit === uniqueArr[j].suit && CompareCards(tavern[i], uniqueArr[j]) === 0) {
                             flag = false;
                             break;
                         }
                     }
                     if (flag) {
-                        uniqueArr.push(G.taverns[tavernId][i]);
+                        uniqueArr.push(tavern[i]);
                         moves.push({move: 'ClickCard', args: [tavernId, i]});
                     }
                     flag = true;
@@ -210,6 +213,9 @@ export const BoardGame = {
                     }
                 }
                 //console.log(moves);
+            }
+            if (moves.length === 0) {
+                console.log("ALERT: bot has " + moves.length + " moves. Phase: " + ctx.phase);
             }
             return moves;
         },

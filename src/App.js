@@ -24,7 +24,7 @@ const enableLocalPlayer = true,
             '0': RandomBot,
             '1': RandomBot,
             '2': RandomBot,
-            // '3': RandomBot,
+            '3': RandomBot,
         },
     },
     BoardGameClient = Client({
