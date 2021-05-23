@@ -4,15 +4,17 @@ import {suitsConfigArray} from "./data/SuitData";
 import {AddPriorityToPlayer} from "./Priority";
 
 const CreatePlayer = ({
+                          nickname = undefined,
                           cards = [],
                           heroes = [],
                           campCards = [],
                           handCoins = [],
                           boardCoins = [],
                           selectedCoin = undefined,
-                          priority = 0,
+                          priority = undefined,
                       } = {}) => {
     return {
+        nickname,
         cards,
         campCards,
         heroes,
@@ -23,8 +25,9 @@ const CreatePlayer = ({
     };
 };
 
-export const BuildPlayer = (numPlayers) => {
+export const BuildPlayer = (numPlayers, nickname) => {
     return CreatePlayer({
+        nickname,
         cards: Array(suitsConfigArray.length).fill(Array(0)),
         handCoins: BuildCoins(initialPlayerCoinsConfig,
             {isInitial: true, isTriggerTrading: false}),

@@ -42,7 +42,7 @@ export const SetupGame = (ctx) => {
         playersOrder = [],
         exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        players[i] = BuildPlayer(ctx.numPlayers);
+        players[i] = BuildPlayer(ctx.numPlayers, "Vasya" + i);
     }
     const marketCoinsUnique = [],
         marketCoins = BuildCoins(marketCoinsConfig, {

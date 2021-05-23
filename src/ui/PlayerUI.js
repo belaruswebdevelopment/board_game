@@ -29,7 +29,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                     if (data.props.G.players[p].boardCoins[coinIndex] === null) {
                         if (Number(data.props.ctx.currentPlayer) === p) {
                             playerCells.push(
-                                <td className="cursor-pointer" key={j}
+                                <td className="cursor-pointer" key={`player${p} tavernsConfig[j].${tavernsConfig[j].name} empty`}
                                     onClick={() => data.OnClickBoardCoin(j)}>
                                     <span
                                         style={{background: "url(/img/coins/CoinBack.png) no-repeat center center / 48px 48px"}}
@@ -42,7 +42,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             );
                         } else {
                             playerCells.push(
-                                <td className="cursor-pointer" key={j}>
+                                <td className="cursor-pointer" key={`player${p} tavernsConfig[j].${tavernsConfig[j].name} coin`}>
                                     <span
                                         style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
                                         className="bg-coin">
@@ -93,7 +93,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                 for (let j = data.props.G.taverns.length; j <= data.props.G.players[p].boardCoins.length; j++) {
                     if (j === data.props.G.players[p].boardCoins.length) {
                         playerFooters[p].push(
-                            <th key={`${i}${j}`}>
+                            <th key={`${data.props.G.players[p].nickname} priority icon`}>
                                 <span
                                     style={{background: "url(/img/priorities/Priority.png) no-repeat -35px -5px / 64px 36px"}}
                                     className="bg-tavern">
@@ -102,7 +102,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             </th>
                         );
                         playerCells.push(
-                            <td key={j}>
+                            <td key={`${data.props.G.players[p].nickname} priority gem`}>
                                 <span
                                     style={{background: `url(/img/priorities/Priority${data.props.G.players[p].priority.value}.png) 
                                     no-repeat 0px 0px / 32px 48px`}}
@@ -113,7 +113,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                         );
                     } else {
                         playerFooters[p].push(
-                            <th key={j}>
+                            <th key={`${data.props.G.players[p].nickname} exchange icon ${j}`}>
                                 <span
                                     style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
                                     className="bg-small-market-coin">
@@ -124,7 +124,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                         if (data.props.G.players[p].boardCoins[coinIndex] === null) {
                             if (Number(data.props.ctx.currentPlayer) === p) {
                                 playerCells.push(
-                                    <td className="cursor-pointer" key={j}
+                                    <td className="cursor-pointer" key={`${data.props.G.players[p].nickname} exchange coin ${j}`}
                                         onClick={() => data.OnClickBoardCoin(j)}>
                                         <span
                                             style={{background: "url(/img/coins/CoinBack.png) no-repeat 0px 0px / 48px 48px"}}
@@ -196,9 +196,9 @@ export const DrawPlayersBoardsCoins = (data) => {
             playerRows[p][i].push(<tr key={i}>{playerCells}</tr>)
         }
         playersBoardsCoins[p].push(
-            <table className="col-span-3" key={p}>
+            <table className="col-span-3" key={`${data.props.G.players[p].nickname} board coins`}>
                 <caption>
-                    Player {p + 1} played coins
+                    Player {p + 1} ({data.props.G.players[p].nickname}) played coins
                 </caption>
                 <thead>
                 <tr>{playerHeaders[p]}</tr>
@@ -227,7 +227,7 @@ export const DrawPlayersBoards = (data) => {
         for (let s = 0; s < data.props.G.suitsNum + 1 + expansion; s++) {
             if (s < data.props.G.suitsNum) {
                 playerHeaders[p].push(
-                    <th className={`${suitsConfigArray[s].suitColor} flex-center`} key={s}>
+                    <th className={`${suitsConfigArray[s].suitColor} flex-center`} key={`${data.props.G.players[p].nickname} ${suitsConfigArray[s].suitName} icon`}>
                         <span
                             style={{background: `url(/img/suits/${suitsConfigArray[s].suitName}.png) no-repeat 0px 0px / 24px 24px`}}
                             className="bg-suit">
@@ -237,7 +237,7 @@ export const DrawPlayersBoards = (data) => {
                 );
             } else if (s === data.props.G.suitsNum) {
                 playerHeaders[p].push(
-                    <th className="bg-gray-600 flex-center" key={s}>
+                    <th className="bg-gray-600 flex-center" key={`${data.props.G.players[p].nickname} hero icon`}>
                         <span
                             style={{background: `url(/img/cards/heroes/HeroBack.png) no-repeat 0px 0px / 16px 24px`}}
                             className="bg-hero">
@@ -247,7 +247,7 @@ export const DrawPlayersBoards = (data) => {
                 );
             } else if (expansion && s < data.props.G.suitsNum + 1 + expansion) {
                 playerHeaders[p].push(
-                    <th className="bg-yellow-200 flex-center" key={s}>
+                    <th className="bg-yellow-200 flex-center" key={`${data.props.G.players[p].nickname} camp`}>
                         <span style={{background: "url(/img/cards/camp/Camp.png) no-repeat 0px 0px / 32px 21px"}}
                               className="bg-camp">
 
@@ -323,8 +323,8 @@ export const DrawPlayersBoards = (data) => {
             }
         }
         playersBoards[p].push(
-            <table className="col-span-3" key={p}>
-                <caption>Player {p + 1} cards, {Scoring(data.props.G.players[p])} points</caption>
+            <table className="col-span-3" key={`${data.props.G.players[p].nickname} board`}>
+                <caption>Player {p + 1} ({data.props.G.players[p].nickname}) cards, {Scoring(data.props.G.players[p])} points</caption>
                 <thead>
                 <tr className="flex">{playerHeaders[p]}</tr>
                 </thead>
@@ -381,8 +381,8 @@ export const DrawPlayersHandsCoins = (data) => {
             }
         }
         playersHandsCoins[p].push(
-            <table className="col-span-3" key={p}>
-                <caption>Player {p + 1} coins</caption>
+            <table className="col-span-3" key={`${data.props.G.players[p].nickname} hand coins`}>
+                <caption>Player {p + 1} ({data.props.G.players[p].nickname}) coins</caption>
                 <tbody>
                 <tr>{playerCells}</tr>
                 </tbody>
