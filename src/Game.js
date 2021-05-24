@@ -165,7 +165,7 @@ export const BoardGame = {
             if (enableAdvancedBot && ctx.phase === 'placeCoins') {
                 moves = [];
                 const hasLowestPriority = HasLowestPriority(G.players, ctx.currentPlayer);
-                let resultsForCoins = CheckHeuristicsForCoinsPlacement(G.taverns, G.averageCards);
+                let resultsForCoins = CheckHeuristicsForCoinsPlacement(G, ctx);
                 if (hasLowestPriority) {
                     resultsForCoins = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
                 }

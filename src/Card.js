@@ -1,4 +1,6 @@
-import {IsTopPlayer, GetTop1PlayerId, GetTop2PlayerId} from "./Player";
+import {IsTopPlayer, GetTop1PlayerId, GetTop2PlayerId, AddCardToCards} from "./Player";
+import {Scoring} from "./Game.js";
+import {suitsConfigArray} from "./data/SuitData";
 
 export const CreateCard = ({suit, rank = 1, points} = {}) => {
     return {
@@ -68,12 +70,39 @@ export const CardProfitForPlayer = (G, ctx, card) => {
     return 0;
 };
 
+export const PotentialScoring = ({player = {}, card = {}}) => {
+    let score = 0,
+        potentialCards = [];
+    for (let i = 0; i < player.cards.length; i++) {
+        potentialCards[i] = [];
+        for (let j = 0; j < player.cards[i].length; j++) {
+            AddCardToCards(potentialCards, player.cards[i][j]);
+        }
+    }
+    AddCardToCards(potentialCards, CreateCard(card));
+    for (let i = 0; i < potentialCards.length; i++) {
+        score += suitsConfigArray[i].scoringRule(potentialCards[i]);
+    }
+    for (let i = 0; i < player.boardCoins.length; i++) {
+        if (player.boardCoins[i] !== null) {
+            score += player.boardCoins[i].value;
+        } else if (player.handCoins[i] !== null) {
+            score += player.handCoins[i].value;
+        }
+    }
+    return score;
+};
+
+
 export const EvaluateCard = (G, ctx, card) => {
     if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
         return CompareCards(card, G.averageCards[card.suit]);
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
-        return CardProfitForPlayer(G, ctx, card);
+        let temp = G.players.map(player => PotentialScoring({player: player, card: card})),
+            result = temp[ctx.currentPlayer];
+        temp.sort((a, b) => b - a);
+        return result === temp[0] ? result + temp[1] : result + temp[0];
     }
-    return CardProfitForPlayer(G, ctx, card);
+    return CompareCards(card, G.averageCards[card.suit]);
 };

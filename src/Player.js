@@ -67,7 +67,7 @@ export const GetTop2PlayerId = (G, top1PlayerId) => {
         maxScore = Math.max(...playersScore);
     let top2PlayerId, temp;
     if (playersScore.filter(score => score === maxScore).length === 1) {
-        temp = playersScore.sort((a, b) => a - b)[1];
+        temp = playersScore.sort((a, b) => b - a)[1];
         top2PlayerId = G.players.findIndex((player, index) => Scoring(player) === temp);
     } else {
         top2PlayerId = G.players.findIndex((player, index) => index !== top1PlayerId && IsTopPlayer(G, index));
