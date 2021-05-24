@@ -10,7 +10,7 @@ import {
     ClickHeroCard
 } from "./Moves";
 import {PotentialScoring, CheckHeuristicsForCoinsPlacement} from "./BotConfig";
-import {CompareCards} from "./Card";
+import {CompareCards, EvaluateCard} from "./Card";
 import {ChangePlayersPriorities, HasLowestPriority} from "./Priority";
 //import {AddCardToCards} from "./Player";
 
@@ -128,9 +128,8 @@ export const BoardGame = {
                     if (tavern.some(element => CompareCards(tavern[i], element) < 0)) {
                         continue;
                     }
-                    const curSuit = tavern[i].suit,
-                        isCurrentCardWorse = CompareCards(tavern[i], G.averageCards[curSuit]) < 0,
-                        isExistCardNotWorse = tavern.some(element => (element !== null) && (CompareCards(element, G.averageCards[element.suit]) >= 0));
+                    const isCurrentCardWorse = EvaluateCard(G, ctx, tavern[i]) < 0,
+                        isExistCardNotWorse = tavern.some(element => (element !== null) && (EvaluateCard(G, ctx, tavern[i]) >= 0));
                     if (isCurrentCardWorse && isExistCardNotWorse) {
                         continue;
                     }

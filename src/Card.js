@@ -1,3 +1,5 @@
+import {IsTopPlayer, GetTop1PlayerId, GetTop2PlayerId} from "./Player";
+
 export const CreateCard = ({suit, rank = 1, points} = {}) => {
     return {
         suit,
@@ -49,4 +51,29 @@ export const CompareCards = (card1, card2) => {
          return result > 0 ? 1 : -1;
     }
     return 0;
+};
+
+export const CardProfitForPlayer = (G, ctx, card) => {
+    if (IsTopPlayer(G, ctx.currentPlayer)) {
+        let top2PlayerId = GetTop2PlayerId(G, ctx.currentPlayer);
+        if (top2PlayerId === -1) {
+            return 0;
+        }
+        return 0;
+    }
+    let top1PlayerId = GetTop1PlayerId(G, ctx.currentPlayer);
+    if (top1PlayerId === -1) {
+        return 0;
+    }
+    return 0;
+};
+
+export const EvaluateCard = (G, ctx, card) => {
+    if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
+        return CompareCards(card, G.averageCards[card.suit]);
+    }
+    if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
+        return CardProfitForPlayer(G, ctx, card);
+    }
+    return CardProfitForPlayer(G, ctx, card);
 };
