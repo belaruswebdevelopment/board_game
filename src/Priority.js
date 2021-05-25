@@ -1,53 +1,34 @@
-const CreatePriority = ({value, isExchangeable = true} = {}) => ({
+export const CreatePriority = ({value, isExchangeable = true} = {}) => ({
     value,
     isExchangeable,
 });
 
 const priorities = [
-    {
-        value: 1,
-        isExchangeable: true,
-    },
-    {
-        value: 2,
-        isExchangeable: true,
-    },
-    {
-        value: 3,
-        isExchangeable: true,
-    },
-    {
-        value: 4,
-        isExchangeable: true,
-    },
-    {
-        value: 5,
-        isExchangeable: true,
-    },
+    CreatePriority({value: 1}),
+    CreatePriority({value: 2}),
+    CreatePriority({value: 3}),
+    CreatePriority({value: 4}),
+    CreatePriority({value: 5}),
 ];
 
 const prioritiesConfig = {
-    2: [priorities[3], priorities[4]],
-    3: [priorities[2], priorities[3], priorities[4]],
-    4: [priorities[1], priorities[2], priorities[3], priorities[4]],
-    5: [priorities[0], priorities[1], priorities[2], priorities[3], priorities[4]],
+    2: priorities.slice(-2),
+    3: priorities.slice(-3),
+    4: priorities.slice(-4),
+    5: priorities.slice(-5),
 };
 
-export const BuildPriorities = (data, priority = undefined) => {
-    if (Array.isArray(data)) {
-        const priorities = prioritiesConfig[data.length].map(priority => priority);
-        for (let i = 0; i < data.length; i++) {
-            const index = Math.floor(Math.random() * priorities.length);
-            const p = priorities.splice(index, 1)[0];
-            data[i].priority = CreatePriority(p);
-        }
-    } else {
-        data.priority = CreatePriority(priority);
+export const BuildPriorities = (players) => {
+    const priorities = prioritiesConfig[players.length];
+    for (let i = 0; i < players.length; i++) {
+        const index = Math.floor(Math.random() * priorities.length);
+        const priority = priorities.splice(index, 1)[0];
+        players[i].priority = CreatePriority(priority);
     }
 };
 
 export const ChangePlayersPriorities = (G) => {
-    const tempPriorities = []
+    const tempPriorities = [];
     for (let i = 0; i < G.exchangeOrder.length; i++) {
         tempPriorities[i] = G.players[G.exchangeOrder[i]].priority;
     }

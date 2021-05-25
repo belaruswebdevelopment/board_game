@@ -13,9 +13,7 @@ export const CreateCard = ({suit, rank = 1, points} = {}) => {
 export const BuildCards = (deckConfig, data) => {
     const cards = [];
     for (let i = 0; i < deckConfig.length; i++) {
-        const count = Array.isArray(deckConfig[i].pointsValues()[data.players][data.tier]) ?
-            deckConfig[i].pointsValues()[data.players][data.tier].length :
-            deckConfig[i].pointsValues()[data.players][data.tier];
+        const count = deckConfig[i].pointsValues()[data.players][data.tier]?.length ?? deckConfig[i].pointsValues()[data.players][data.tier];
         for (let j = 0; j < count; j++) {
             cards.push(CreateCard({
                 suit: deckConfig[i].suit,
@@ -29,12 +27,10 @@ export const BuildCards = (deckConfig, data) => {
 
 export const GetAverageSuitCard = (suitConfig, data) => {
     const avgCard = CreateCard({suit: suitConfig.suit, rank: 0, points: 0}),
-        count = Array.isArray(suitConfig.pointsValues()[data.players][data.tier]) ?
-        suitConfig.pointsValues()[data.players][data.tier].length :
-        suitConfig.pointsValues()[data.players][data.tier];
+        count = suitConfig.pointsValues()[data.players][data.tier]?.length ?? suitConfig.pointsValues()[data.players][data.tier];
     for (let i = 0; i < count; i++) {
-        avgCard.rank += Array.isArray(suitConfig.ranksValues()[data.players][data.tier]) ?? 1;
-        avgCard.points += Array.isArray(suitConfig.pointsValues()[data.players][data.tier]) ?? 1;
+        avgCard.rank += suitConfig.ranksValues()[data.players][data.tier][i] ?? 1;
+        avgCard.points += suitConfig.pointsValues()[data.players][data.tier][i] ?? 1;
     }
     avgCard.rank /= count;
     avgCard.points /= count;
