@@ -1,7 +1,7 @@
 import {CreateCoin} from "../Coin";
 import {CreateCard} from "../Card";
 import {ArithmeticSum, TotalPoints, TotalRank} from "../Score";
-import {BuildPriorities} from "../Priority";
+import {CreatePriority} from "../Priority";
 
 // todo rework switch to player to get distinction awarding
 const blacksmithSuit = {
@@ -181,7 +181,7 @@ const minerSuit = {
         style: "url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 94px 150px",
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
-                BuildPriorities(player, {
+                player.priority = CreatePriority({
                     value: 6,
                     isExchangeable: false,
                 });
