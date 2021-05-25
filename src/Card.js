@@ -1,3 +1,7 @@
+import {IsTopPlayer, GetTop1PlayerId, GetTop2PlayerId, AddCardToCards} from "./Player";
+import {Scoring} from "./Game.js";
+import {suitsConfigArray} from "./data/SuitData";
+
 export const CreateCard = ({suit, rank = 1, points} = {}) => {
     return {
         suit,
@@ -49,4 +53,57 @@ export const CompareCards = (card1, card2) => {
          return result > 0 ? 1 : -1;
     }
     return 0;
+};
+
+export const CardProfitForPlayer = (G, ctx, card) => {
+    if (IsTopPlayer(G, ctx.currentPlayer)) {
+        let top2PlayerId = GetTop2PlayerId(G, ctx.currentPlayer);
+        if (top2PlayerId === -1) {
+            return 0;
+        }
+        return 0;
+    }
+    let top1PlayerId = GetTop1PlayerId(G, ctx.currentPlayer);
+    if (top1PlayerId === -1) {
+        return 0;
+    }
+    return 0;
+};
+
+export const PotentialScoring = ({player = {}, card = {}}) => {
+    let score = 0,
+        potentialCards = [];
+    for (let i = 0; i < player.cards.length; i++) {
+        potentialCards[i] = [];
+        for (let j = 0; j < player.cards[i].length; j++) {
+            AddCardToCards(potentialCards, player.cards[i][j]);
+        }
+    }
+    AddCardToCards(potentialCards, CreateCard(card));
+    for (let i = 0; i < potentialCards.length; i++) {
+        score += suitsConfigArray[i].scoringRule(potentialCards[i]);
+    }
+    for (let i = 0; i < player.boardCoins.length; i++) {
+        if (player.boardCoins[i] !== null) {
+            score += player.boardCoins[i].value;
+        } else if (player.handCoins[i] !== null) {
+            score += player.handCoins[i].value;
+        }
+    }
+    return score;
+};
+
+
+export const EvaluateCard = (G, ctx, card, cardId, tavern) => {
+    if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
+        return CompareCards(card, G.averageCards[card.suit]);
+    }
+    if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
+        let temp = tavern.map(item => G.players.map(player => PotentialScoring({player: player, card: item}))),
+            result = temp[cardId][ctx.currentPlayer];
+        temp.splice(cardId, 1);
+        temp.forEach(element => element.splice(ctx.currentPlayer, 1));
+        return result - Math.max(...temp.map(element => Math.max(...element)));
+    }
+    return CompareCards(card, G.averageCards[card.suit]);
 };

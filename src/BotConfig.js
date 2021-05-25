@@ -1,5 +1,5 @@
 import {suitsConfigArray} from "./data/SuitData";
-import {CompareCards} from "./Card";
+import {CompareCards, EvaluateCard} from "./Card";
 
 export const Permute = (permutation) => {
     const length = permutation.length,
@@ -66,28 +66,6 @@ export const GetAllPicks = ({tavernsNum, playersNum}) => {
     return cartesian(temp);
 };
 
-export const PotentialScoring = ({cards = [], coins = [], tavernsNum = 0, marketCoinsMaxValue = 0}) => {
-    let score = 0;
-    for (let i = 0; i < cards.length; i++) {
-        score += suitsConfigArray[i].scoringRule(cards[i]);
-    }
-    /*for (let i = 0; i < coins.length; i++) {
-        if (coins[i]) {
-            score += coins[i].value;
-        }
-        if (coins[i].isTriggerTrading && i < tavernsNum) {
-            let coinsTotalValue = coins.slice(tavernsNum).reduce((prev, current) => prev + current.value, 0);
-            let coinsMaxValue = coins.slice(tavernsNum).reduce((prev, current) => (prev.value > current.value) ? prev.value : current.value, 0);
-            if (marketCoinsMaxValue < coinsMaxValue)
-            {
-                coinsMaxValue = marketCoinsMaxValue;
-            }
-            score += (coinsTotalValue - coinsMaxValue);
-        }
-    }*/
-    return score;
-};
-
 //absolute heuristics
 const isAllCardsEqual = {
     heuristic: (array) => array.every(element => (element.suit === array[0].suit && CompareCards(element, array[0]) === 0)),
@@ -144,22 +122,22 @@ const CompareCharacteristics = (stat1, stat2) => {
     return tempVariation;
 }
 
-export const CheckHeuristicsForCoinsPlacement = (taverns, averageCards) => {
+export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
+    const taverns = G.taverns,
+        averageCards = G.averageCards;
     let result = Array(taverns.length).fill(0),
-        temp = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight: 0), 0));
+        temp = taverns.map(tavern => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight: 0), 0));
     result = result.map((value, index) => value + temp[index]);
-    temp = taverns.map((tavern) => tavern.map((card) => CompareCards(card, averageCards[card.suit])));
+    temp = taverns.map(tavern => tavern.map((card, index, arr) => EvaluateCard(G, ctx, card, index, arr)));
     temp = temp.map(element => GetCharacteristics(element));
-    //console.log("Characteristics: ");
-    //console.log(temp);
     let maxIndex = 0,
         minIndex = temp.length - 1;
-    for (let i = 0; i < temp.length; i++) {
+    for (let i = 1; i < temp.length; i++) {
         if (CompareCharacteristics(temp[maxIndex], temp[i]) < 0) {
             maxIndex = i;
         }
-        if (CompareCharacteristics(temp[minIndex], temp[i]) > 0) {
-            minIndex = i;
+        if (CompareCharacteristics(temp[minIndex], temp[temp.length - 1 - i]) > 0) {
+            minIndex = temp.length - 1 - i;
         }
     }
     result[maxIndex] += 10;
