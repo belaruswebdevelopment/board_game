@@ -21,8 +21,8 @@ const prioritiesConfig = {
 export const BuildPriorities = (players) => {
     const priorities = prioritiesConfig[players.length];
     for (let i = 0; i < players.length; i++) {
-        const index = Math.floor(Math.random() * priorities.length);
-        const priority = priorities.splice(index, 1)[0];
+        const index = Math.floor(Math.random() * priorities.length),
+            priority = priorities.splice(index, 1)[0];
         players[i].priority = CreatePriority(priority);
     }
 };
