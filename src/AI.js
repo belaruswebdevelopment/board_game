@@ -1,4 +1,4 @@
-import {CompareCards} from "./Card";
+import {CompareCards, EvaluateCard} from "./Card";
 import {HasLowestPriority} from "./Priority";
 import {CheckHeuristicsForCoinsPlacement} from "./BotConfig";
 import {CurrentScoring} from "./Score";
@@ -22,9 +22,8 @@ export const enumerate = (G, ctx) => {
             if (tavern.some(element => CompareCards(tavern[i], element) < 0)) {
                 continue;
             }
-            const curSuit = tavern[i].suit,
-                isCurrentCardWorse = CompareCards(tavern[i], G.averageCards[curSuit]) < 0,
-                isExistCardNotWorse = tavern.some(element => (element !== null) && (CompareCards(element, G.averageCards[element.suit]) >= 0));
+            const isCurrentCardWorse = EvaluateCard(G, ctx, tavern[i]) < 0,
+                isExistCardNotWorse = tavern.some(element => (element !== null) && (EvaluateCard(G, ctx, tavern[i]) >= 0));
             if (isCurrentCardWorse && isExistCardNotWorse) {
                 continue;
             }
@@ -60,7 +59,7 @@ export const enumerate = (G, ctx) => {
     if (enableAdvancedBot && ctx.phase === 'placeCoins') {
         moves = [];
         const hasLowestPriority = HasLowestPriority(G.players, ctx.currentPlayer);
-        let resultsForCoins = CheckHeuristicsForCoinsPlacement(G.taverns, G.averageCards);
+        let resultsForCoins = CheckHeuristicsForCoinsPlacement(G, ctx);
         if (hasLowestPriority) {
             resultsForCoins = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
         }
@@ -108,13 +107,6 @@ export const enumerate = (G, ctx) => {
         }
         //console.log(moves);
     }
-    // todo ADD LOGIC
-    /*if (ctx.phase === 'getDistinctions') {
-        const playerIDDistinction = G.distinctions.findIndex(player => player === Number(ctx.currentPlayer));
-        if (playerIDDistinction !== -1) {
-            moves.push({move: 'ClickDistinctionCard', args: [G, ctx, Number(ctx.currentPlayer), playerIDDistinction]});
-        }
-    }*/
     if (moves.length === 0) {
         console.log("ALERT: bot has " + moves.length + " moves. Phase: " + ctx.phase);
     }
@@ -123,7 +115,7 @@ export const enumerate = (G, ctx) => {
 
 export const objectives = () => ({
     isEarlyGame: {
-        checker: (G, ctx) => {
+        checker: (G) => {
             return G.decks[0].length > 0;
         },
         weight: -100.0,

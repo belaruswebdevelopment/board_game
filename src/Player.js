@@ -1,8 +1,7 @@
 import {BuildCoins} from "./Coin";
 import {initialPlayerCoinsConfig} from "./data/CoinData";
 import {suitsConfigArray} from "./data/SuitData";
-import {AddPriorityToPlayer} from "./Priority";
-import {Scoring} from "./Game";
+import {CurrentScoring} from "./Score";
 
 const CreatePlayer = ({
                           nickname = undefined,
@@ -49,8 +48,8 @@ export const AddCardToCards = (cards, card) => {
 };
 
 export const IsTopPlayer = (G, playerId) => {
-    const score = Scoring(G.players[playerId]);
-    return G.players.every(player => Scoring(player) <= score);
+    const score = CurrentScoring(G.players[playerId]);
+    return G.players.every(player => CurrentScoring(player) <= score);
 };
 
 export const GetTop1PlayerId = (G, currentPlayerId) => {
@@ -62,12 +61,12 @@ export const GetTop1PlayerId = (G, currentPlayerId) => {
 };
 
 export const GetTop2PlayerId = (G, top1PlayerId) => {
-    const playersScore = G.players.map(player => Scoring(player)),
+    const playersScore = G.players.map(player => CurrentScoring(player)),
         maxScore = Math.max(...playersScore);
     let top2PlayerId, temp;
     if (playersScore.filter(score => score === maxScore).length === 1) {
         temp = playersScore.sort((a, b) => b - a)[1];
-        top2PlayerId = G.players.findIndex((player, index) => Scoring(player) === temp);
+        top2PlayerId = G.players.findIndex((player, index) => CurrentScoring(player) === temp);
     } else {
         top2PlayerId = G.players.findIndex((player, index) => index !== top1PlayerId && IsTopPlayer(G, index));
     }

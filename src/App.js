@@ -1,4 +1,3 @@
-/*
 import React from 'react';
 import {Client} from 'boardgame.io/react';
 import {Local} from 'boardgame.io/multiplayer';
@@ -41,8 +40,7 @@ const enableLocalPlayer = true,
     );
 
 export default App;
-*/
-import {Client} from 'boardgame.io/react';
+/*import {Client} from 'boardgame.io/react';
 import {BoardGame} from './Game';
 import {GameBoard} from './Board';
 
@@ -52,4 +50,4 @@ const App = Client({
     numPlayers: 3,
 });
 
-export default App;
+export default App;*/
