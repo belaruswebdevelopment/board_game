@@ -128,20 +128,16 @@ export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
     let result = Array(taverns.length).fill(0),
         temp = taverns.map(tavern => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight: 0), 0));
     result = result.map((value, index) => value + temp[index]);
-    temp = taverns.map(tavern => tavern.map(card => EvaluateCard(G, ctx, card)));
-    //console.log("Taverns results: ");
-    //console.log(temp);
+    temp = taverns.map(tavern => tavern.map((card, index, arr) => EvaluateCard(G, ctx, card, index, arr)));
     temp = temp.map(element => GetCharacteristics(element));
-    //console.log("Characteristics: ");
-    //console.log(temp);
     let maxIndex = 0,
         minIndex = temp.length - 1;
-    for (let i = 0; i < temp.length; i++) {
+    for (let i = 1; i < temp.length; i++) {
         if (CompareCharacteristics(temp[maxIndex], temp[i]) < 0) {
             maxIndex = i;
         }
-        if (CompareCharacteristics(temp[minIndex], temp[i]) > 0) {
-            minIndex = i;
+        if (CompareCharacteristics(temp[minIndex], temp[temp.length - 1 - i]) > 0) {
+            minIndex = temp.length - 1 - i;
         }
     }
     result[maxIndex] += 10;

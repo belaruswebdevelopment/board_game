@@ -94,15 +94,16 @@ export const PotentialScoring = ({player = {}, card = {}}) => {
 };
 
 
-export const EvaluateCard = (G, ctx, card) => {
+export const EvaluateCard = (G, ctx, card, cardId, tavern) => {
     if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
         return CompareCards(card, G.averageCards[card.suit]);
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
-        let temp = G.players.map(player => PotentialScoring({player: player, card: card})),
-            result = temp[ctx.currentPlayer];
-        temp.sort((a, b) => b - a);
-        return result === temp[0] ? result + temp[1] : result + temp[0];
+        let temp = tavern.map(item => G.players.map(player => PotentialScoring({player: player, card: item}))),
+            result = temp[cardId][ctx.currentPlayer];
+        temp.splice(cardId, 1);
+        temp.forEach(element => element.splice(ctx.currentPlayer, 1));
+        return result - Math.max(...temp.map(element => Math.max(...element)));
     }
     return CompareCards(card, G.averageCards[card.suit]);
 };
