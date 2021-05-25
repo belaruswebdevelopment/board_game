@@ -1,7 +1,7 @@
 import React from "react";
-import {Scoring} from "../Game";
 import {suitsConfigArray} from "../data/SuitData";
 import {tavernsConfig} from "../Tavern";
+import {CurrentScoring, FinalScoring} from "../Score";
 
 export const DrawPlayersBoardsCoins = (data) => {
     const playersBoardsCoins = [],
@@ -227,7 +227,7 @@ export const DrawPlayersBoards = (data) => {
         for (let s = 0; s < data.props.G.suitsNum + 1 + expansion; s++) {
             if (s < data.props.G.suitsNum) {
                 playerHeaders[p].push(
-                    <th className={`${suitsConfigArray[s].suitColor} flex-center`} key={`${data.props.G.players[p].nickname} ${suitsConfigArray[s].suitName} icon`}>
+                    <th className={`${suitsConfigArray[s].suitColor}`} key={`${data.props.G.players[p].nickname} ${suitsConfigArray[s].suitName} icon`}>
                         <span
                             style={{background: `url(/img/suits/${suitsConfigArray[s].suitName}.png) no-repeat 0px 0px / 24px 24px`}}
                             className="bg-suit">
@@ -237,7 +237,7 @@ export const DrawPlayersBoards = (data) => {
                 );
             } else if (s === data.props.G.suitsNum) {
                 playerHeaders[p].push(
-                    <th className="bg-gray-600 flex-center" key={`${data.props.G.players[p].nickname} hero icon`}>
+                    <th className="bg-gray-600" key={`${data.props.G.players[p].nickname} hero icon`}>
                         <span
                             style={{background: `url(/img/cards/heroes/HeroBack.png) no-repeat 0px 0px / 16px 24px`}}
                             className="bg-hero">
@@ -247,8 +247,8 @@ export const DrawPlayersBoards = (data) => {
                 );
             } else if (expansion && s < data.props.G.suitsNum + 1 + expansion) {
                 playerHeaders[p].push(
-                    <th className="bg-yellow-200 flex-center" key={`${data.props.G.players[p].nickname} camp`}>
-                        <span style={{background: "url(/img/cards/camp/Camp.png) no-repeat 0px 0px / 32px 21px"}}
+                    <th className="bg-yellow-200" key={`${data.props.G.players[p].nickname} camp`}>
+                        <span style={{background: "url(/img/cards/camp/Camp.png) no-repeat 0px 3px / 24px 18px"}}
                               className="bg-camp">
 
                         </span>
@@ -324,11 +324,14 @@ export const DrawPlayersBoards = (data) => {
         }
         playersBoards[p].push(
             <table className="col-span-3" key={`${data.props.G.players[p].nickname} board`}>
-                <caption>Player {p + 1} ({data.props.G.players[p].nickname}) cards, {Scoring(data.props.G.players[p])} points</caption>
+                <caption>Player {p + 1} ({data.props.G.players[p].nickname}) cards,
+                    {data.props.G.tierToEnd === 0 ?
+                        "Final: " + FinalScoring(data.props.G, data.props.ctx, data.props.G.players[p], CurrentScoring(data.props.G.players[p])) :
+                        CurrentScoring(data.props.G.players[p])} points</caption>
                 <thead>
-                <tr className="flex">{playerHeaders[p]}</tr>
+                <tr>{playerHeaders[p]}</tr>
                 </thead>
-                <tbody className="flex flex-col">{playerRows[p]}</tbody>
+                <tbody>{playerRows[p]}</tbody>
             </table>
         );
     }

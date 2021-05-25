@@ -1,18 +1,20 @@
 import {SetupGame} from "./GameSetup";
-import {suitsConfigArray} from "./data/SuitData";
 import {
     ClickBoardCoin,
-    ClickCard,
-    ClickHandCoin,
-    ResolveBoardCoins,
-    PlaceAllCoins,
     ClickCampCard,
-    ClickHeroCard
+    ClickCard, ClickCardToPickDistinction, ClickCoinToUpgradeDistinction,
+    ClickDistinctionCard,
+    ClickHandCoin,
+    ClickHeroCard,
+    PlaceAllCoins,
+    ResolveBoardCoins
 } from "./Moves";
+
 import {PotentialScoring, CheckHeuristicsForCoinsPlacement} from "./BotConfig";
 import {CompareCards, EvaluateCard} from "./Card";
 import {ChangePlayersPriorities, HasLowestPriority} from "./Priority";
-//import {AddCardToCards} from "./Player";
+import {CheckDistinction, CurrentScoring} from "./Score";
+import {enumerate, iterations, objectives, playoutDepth} from "./AI";
 
 const IsEndGame = (taverns, tavernsNum, deck) => {
     let isEndGame = false;
@@ -20,29 +22,6 @@ const IsEndGame = (taverns, tavernsNum, deck) => {
         isEndGame = true;
     }
     return isEndGame;
-};
-
-export const Scoring = (player) => {
-    const count = [0, 0, 0, 0, 0];
-    let score = 0;
-    for (let i = 0; i < player.cards.length; i++) {
-        score += suitsConfigArray[i].scoringRule(player.cards[i]);
-    }
-    for (let i = 0; i < player.boardCoins.length; i++) {
-        if (player.boardCoins[i] !== null) {
-            score += player.boardCoins[i].value;
-        } else if (player.handCoins[i] !== null) {
-            score += player.handCoins[i].value;
-
-        }
-    }
-    if (Math.min(...count) === 1) {
-        score += Math.min(...count) * 6;
-    } else if (Math.min(...count) === 2) {
-        score += Math.min(...count) * 10;
-    }
-
-    return score;
 };
 
 export const BoardGame = {
@@ -55,6 +34,7 @@ export const BoardGame = {
                 ClickBoardCoin,
                 PlaceAllCoins,
             },
+            next: 'pickCards',
             onBegin: (G) => {
                 for (let i = 0; i < G.players.length; i++) {
                     for (let j = 0; j < G.players[i].boardCoins.length; j++) {
@@ -67,7 +47,6 @@ export const BoardGame = {
                     }
                 }
             },
-            next: 'pickCards',
         },
         pickCards: {
             turn: {
@@ -77,6 +56,11 @@ export const BoardGame = {
                     playOrder: (G) => G.playersOrder,
                 },
             },
+            moves: {
+                ClickCard,
+                ClickHeroCard,
+                ClickCampCard,
+            },
             onBegin: (G, ctx) => {
                 // todo Open only current taverns coins!
                 const {playersOrder, exchangeOrder} = ResolveBoardCoins(G, ctx);
@@ -85,13 +69,33 @@ export const BoardGame = {
             onEnd: (G) => {
                 ChangePlayersPriorities(G);
             },
-            moves: {
-                ClickCard,
-                ClickHeroCard,
-                ClickCampCard,
-            },
             endIf: (G) => {
                 return G.taverns[G.tavernsNum - 1].every((element) => element === null);
+            },
+        },
+        getDistinctions: {
+            turn: {
+                order: {
+                    first: () => 0,
+                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.playersOrder.length,
+                    playOrder: (G) => G.playersOrder,
+                },
+            },
+            next: 'placeCoins',
+            moves: {
+                ClickDistinctionCard,
+                ClickCoinToUpgradeDistinction,
+                ClickCardToPickDistinction,
+            },
+            onBegin: (G, ctx) => {
+                CheckDistinction(G, ctx);
+                G.playersOrder = G.distinctions.filter(i => i !== undefined);
+            },
+            onEnd: (G) => {
+                G.distinctions = Array(G.suitsNum).fill(undefined);
+            },
+            endIf: (G) => {
+                return G.distinctions.every((element) => element === undefined);
             },
         },
     },
@@ -99,7 +103,7 @@ export const BoardGame = {
         if (IsEndGame(G.taverns, G.tavernsNum, G.decks[G.decks.length - 1])) {
             const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(Scoring(G.players[i]));
+                totalScore.push(CurrentScoring(G.players[i]));
             }
             for (let i = ctx.numPlayers - 1; i >= 0; i--) {
                 if (Math.max(...totalScore) === totalScore[i]) {
@@ -394,5 +398,9 @@ export const BoardGame = {
             }
             return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 2;
         },
+        //enumerate,
+        //objectives,
+        //iterations,
+        //playoutDepth,
     },
 };

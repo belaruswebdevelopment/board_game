@@ -5,7 +5,10 @@ import {
     DrawWinner,
     DrawMarketCoins,
     DrawCamp,
-    DrawTaverns, DrawHeroes,
+    DrawTaverns,
+    DrawHeroes,
+    DrawDistinctions,
+    DrawDistinctionProfit,
 } from "./ui/GameBoardUI";
 import {
     DrawPlayersBoardsCoins,
@@ -21,6 +24,9 @@ export class GameBoard extends React.Component {
     OnClickCampCard = (cardId) => {
         this.props.moves.ClickCampCard(cardId);
     };
+    OnClickDistinctionCard = (cardId) => {
+        this.props.moves.ClickDistinctionCard(cardId);
+    };
     OnClickCard = (tavernId, cardId) => {
         this.props.moves.ClickCard(tavernId, cardId);
     };
@@ -29,6 +35,12 @@ export class GameBoard extends React.Component {
     };
     OnClickHandCoin = (coinId) => {
         this.props.moves.ClickHandCoin(coinId);
+    };
+    OnClickCoinToUpgradeDistinction = (coinId) => {
+        this.props.moves.ClickCoinToUpgradeDistinction(coinId);
+    };
+    OnClickCardToPickDistinction = (cardId, deck) => {
+        this.props.moves.ClickCardToPickDistinction(cardId, deck);
     };
 
     render() {
@@ -40,6 +52,9 @@ export class GameBoard extends React.Component {
             marketCoinsUI = DrawMarketCoins(this),
             drawHeroesUI = DrawHeroes(this),
             drawCampUI = DrawCamp(this),
+            drawDistinctionsUI = DrawDistinctions(this),
+            drawDistinctionProfitUI = this.props.G.drawDistinction ? DrawDistinctionProfit(this, this.props.G.drawDistinction)
+                : this.props.G.drawDistinction,
             tavernsUI = DrawTaverns(this, gridClass),
             playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
             playersBoardsUI = DrawPlayersBoards(this),
@@ -64,7 +79,9 @@ export class GameBoard extends React.Component {
                     <div className={`${gridClass} justify-self-center`}>
                         {drawHeroesUI}
                     </div>
-                    <div className={`${gridClass} justify-self-center self-center`}>
+                    <div className={`${gridClass} justify-self-center h-full flex flex-col justify-evenly`}>
+                        {drawDistinctionsUI}
+                        {drawDistinctionProfitUI}
                         {drawCampUI}
                     </div>
                     {tavernsUI}

@@ -2,6 +2,7 @@ import React from "react";
 import {CountMarketCoins} from "../Coin";
 import {suitsConfigArray} from "../data/SuitData.js";
 import {tavernsConfig} from "../Tavern";
+import {ClickCoinToUpgrade} from "../Moves";
 
 const DrawBoard = (objectsSize) => {
     const boardRows = Math.floor(Math.sqrt(objectsSize)),
@@ -17,8 +18,7 @@ export const DrawTierCards = (data) => {
             {data.props.G.decks.length - data.props.G.tierToEnd + 1 > data.props.G.decks.length
                 ? data.props.G.decks.length : data.props.G.decks.length - data.props.G.tierToEnd + 1}
             /{data.props.G.decks.length}
-            ({data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd] !== undefined ?
-            data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0}
+            ({data.props.G.decks.length - data.props.G.tierToEnd !== 2 ? data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0}
             {data.props.G.decks.length - data.props.G.tierToEnd === 0 ? "/"
                 + data.props.G.decks.reduce((count, current) => count + current.length, 0) : ""} cards left)
         </span></b>
@@ -71,7 +71,9 @@ export const DrawMarketCoins = (data) => {
                         <span
                             style={{background: `url(/img/coins/Coin${data.props.G.marketCoinsUnique[increment].value}.jpg) no-repeat 0px 0px / 48px 48px`}}
                             className="bg-market-coin">
-                            <span className="text-blue-500">{countMarketCoins[data.props.G.marketCoinsUnique[increment].value]}</span>
+                            <span className="text-blue-500">
+                                {countMarketCoins[data.props.G.marketCoinsUnique[increment].value]}
+                            </span>
                         </span>
                     </td>
                 );
@@ -86,12 +88,12 @@ export const DrawMarketCoins = (data) => {
     }
     return (
         <table>
-            <caption className="m-auto">
-                <span
-                    style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
-                    className="bg-small-market-coin">
+            <caption>
+                <span className="block">
+                    <span style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
+                          className="bg-top-market-coin">
 
-                </span> <span className="font-black">Market coins ({data.props.G.marketCoins.length} left)</span>
+                    </span> Market coins ({data.props.G.marketCoins.length} left)</span>
             </caption>
             <tbody>
             {boardRows}
@@ -127,12 +129,96 @@ export const DrawHeroes = (data) => {
             <caption>
                 <span
                     style={{background: `url(/img/cards/heroes/HeroBack.png) no-repeat 0px 0px / 16px 24px`}}
-                    className="bg-hero">
+                    className="bg-top-hero">
 
-                </span> <span className="font-black">Heroes ({data.props.G.heroes.length} left)</span>
+                </span> <span>Heroes ({data.props.G.heroes.length} left)</span>
             </caption>
             <tbody>
             {boardRows}
+            </tbody>
+        </table>
+    );
+};
+
+export const DrawDistinctions = (data) => {
+    const boardCells = [];
+    for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < data.props.G.suitsNum; j++) {
+            // todo currentPlayer
+            boardCells.push(
+                <td className="bg-green-500 cursor-pointer" key={j} onClick={() => data.OnClickDistinctionCard(j)}
+                    title={suitsConfigArray[j].distinction.description}>
+                    <span style={{background: suitsConfigArray[j].distinction.style}}
+                          className="bg-suit-distinction">
+
+                    </span>
+                </td>
+            );
+        }
+    }
+    return (
+        <table>
+            <caption>
+                <span style={{background: "url(/img/distinctions/DistinctionsBack.png) no-repeat 0px 0px / 16px 24px"}}
+                      className="bg-top-distinctions">
+
+                </span> <span>Distinctions</span>
+            </caption>
+            <tbody>
+            <tr>{boardCells}</tr>
+            </tbody>
+        </table>
+    );
+};
+
+export const DrawDistinctionProfit = (data, suit) => {
+    const boardCells = [];
+    let caption = "Get ";
+    for (let i = 0; i < 1; i++) {
+        if (suit === 3) {
+            caption += "coin to upgrade up to 5.";
+            for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
+                if (!data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
+                    // todo currentPlayer
+                    boardCells.push(
+                        <td className="cursor-pointer" key={j} onClick={() => data.OnClickCoinToUpgradeDistinction(j)}>
+                            <span
+                                style={{
+                                    background: `url(/img/coins/Coin${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value}${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial
+                                        ? "Initial" : ""}.jpg) no-repeat 0px 0px / 48px 48px`
+                                }}
+                                className={`bg-coin border-2`}>
+
+                            </span>
+                        </td>
+                    );
+                }
+            }
+        } else if (suit === 4) {
+            caption += "one card to your board.";
+            const deck = [];
+            for (let j = 0; j < 3; j++) {
+                // todo currentPlayer
+                deck.push(data.props.G.decks[1][j]);
+                boardCells.push(
+                    <td className={`${suitsConfigArray[data.props.G.decks[1][j].suit].suitColor} cursor-pointer`} key={j}
+                        onClick={() => data.OnClickCardToPickDistinction(j, deck)}>
+                        <b>{deck[j].points}</b>
+                    </td>
+                );
+            }
+        }
+    }
+    return (
+        <table>
+            <caption>
+                <span style={{background: "url(/img/distinctions/DistinctionsBack.png) no-repeat 0px 0px / 16px 24px"}}
+                      className="bg-top-distinctions">
+
+                </span> <span>{caption}</span>
+            </caption>
+            <tbody>
+            <tr>{boardCells}</tr>
             </tbody>
         </table>
     );
@@ -144,7 +230,7 @@ export const DrawCamp = (data) => {
         for (let j = 0; j < data.props.G.campNum; j++) {
             if (data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd] === undefined ||
                 (data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd] !== undefined &&
-                data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd][j] === null)) {
+                    data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd][j] === null)) {
                 boardCells.push(
                     <td key={j}>
 
@@ -163,15 +249,16 @@ export const DrawCamp = (data) => {
     return (
         <table>
             <caption>
-                <span style={{background: "url(/img/cards/camp/Camp.png) no-repeat 0px 0px / 32px 21px"}}
-                      className="bg-camp">
+                <span style={{background: "url(/img/cards/camp/Camp.png) no-repeat 0px 3px / 24px 18px"}}
+                      className="bg-top-camp">
 
-                </span> <span className="font-black">Camp {data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length
-                ? data.props.G.campDecks.length : data.props.G.campDecks.length - data.props.G.tierToEnd + 1}
-                ({data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd] !== undefined ?
-                data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0}
-                {data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? "/"
-                    + data.props.G.campDecks.reduce((count, current) => count + current.length, 0) : ""} cards left)</span>
+                </span>
+                <span>Camp {data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length
+                    ? data.props.G.campDecks.length : data.props.G.campDecks.length - data.props.G.tierToEnd + 1}
+                    ({data.props.G.campDecks.length - data.props.G.tierToEnd !== 2 ?
+                        data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0}
+                    {data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? "/"
+                        + data.props.G.campDecks.reduce((count, current) => count + current.length, 0) : ""} cards left)</span>
             </caption>
             <tbody>
             <tr>{boardCells}</tr>

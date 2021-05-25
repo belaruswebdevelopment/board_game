@@ -1,3 +1,8 @@
+const CreatePriority = ({value, isExchangeable = true} = {}) => ({
+    value,
+    isExchangeable,
+});
+
 const priorities = [
     {
         value: 1,
@@ -19,10 +24,6 @@ const priorities = [
         value: 5,
         isExchangeable: true,
     },
-    {
-        value: 6,
-        isExchangeable: false,
-    },
 ];
 
 const prioritiesConfig = {
@@ -32,8 +33,17 @@ const prioritiesConfig = {
     5: [priorities[0], priorities[1], priorities[2], priorities[3], priorities[4]],
 };
 
-export const AddPriorityToPlayer = (playersNum) => {
-    return prioritiesConfig[playersNum].splice(Math.floor(Math.random() * prioritiesConfig[playersNum].length), 1)[0];
+export const BuildPriorities = (data, priority = undefined) => {
+    if (Array.isArray(data)) {
+        const priorities = prioritiesConfig[data.length].map(priority => priority);
+        for (let i = 0; i < data.length; i++) {
+            const index = Math.floor(Math.random() * priorities.length);
+            const p = priorities.splice(index, 1)[0];
+            data[i].priority = CreatePriority(p);
+        }
+    } else {
+        data.priority = CreatePriority(priority);
+    }
 };
 
 export const ChangePlayersPriorities = (G) => {
