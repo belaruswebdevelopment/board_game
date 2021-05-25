@@ -4,6 +4,7 @@ import {suitsConfigArray} from "./data/SuitData";
 import {marketCoinsConfig} from "./data/CoinData";
 import {BuildCoins} from "./Coin";
 import {Permute, k_combinations, GetAllPicks} from "./BotConfig";
+import {BuildPriorities} from "./Priority";
 
 export const SetupGame = (ctx) => {
     // todo add coins upgrade cards logic!
@@ -13,6 +14,7 @@ export const SetupGame = (ctx) => {
         tierToEnd = 2,
         campNum = 5,
         debug = false,
+        drawDistinction = null,
         expansions = {
             thingvellir: {
                 active: true,
@@ -26,7 +28,8 @@ export const SetupGame = (ctx) => {
             [{points: 0},{points: 1},{points: 2},{points: 3},{points: 4}],
             [{points: 0},{points: 1},{points: 2},{points: 3},{points: 4}]
         ],
-        camp = [{points: 0}, {points: 1}, {points: 2}, {points: 3}, {points: 4}];
+        camp = [{points: 0}, {points: 1}, {points: 2}, {points: 3}, {points: 4}],
+        distinctions = Array(suitsNum).fill(null);
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards(suitsConfigArray, {players: ctx.numPlayers, tier: i});
         decks[i] = ctx.random.Shuffle(decks[i]);
@@ -44,6 +47,7 @@ export const SetupGame = (ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         players[i] = BuildPlayer(ctx.numPlayers, "Vasya" + i);
     }
+    BuildPriorities(players);
     const marketCoinsUnique = [],
         marketCoins = BuildCoins(marketCoinsConfig, {
             count: marketCoinsUnique,
@@ -68,6 +72,7 @@ export const SetupGame = (ctx) => {
     botData.deckLength = decks[0].length;
     return {
         debug,
+        drawDistinction,
         suitsNum,
         tierToEnd,
         campNum,
@@ -78,6 +83,7 @@ export const SetupGame = (ctx) => {
         heroes,
         campDecks,
         camp,
+        distinctions,
         taverns,
         players,
         playersOrder,

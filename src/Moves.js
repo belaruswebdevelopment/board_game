@@ -1,5 +1,8 @@
 import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCampCardToPlayer, AddCardToPlayer} from "./Player";
+import {suitsConfigArray} from "./data/SuitData";
+import {Trading, UpgradeCoin} from "./Coin";
+import {DrawDistinctionProfit} from "./ui/GameBoardUI";
 
 export const ClickHeroCard = (G, ctx, heroId) => {
     // todo Add logic
@@ -31,6 +34,7 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
     if (isLastTavernEmpty) {
         if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
             G.tierToEnd--;
+            ctx.events.setPhase('getDistinctions');
             if (G.tierToEnd === 0) {
                 return;
             }
@@ -138,52 +142,33 @@ export const ResolveBoardCoins = (G, ctx) => {
     return {playersOrder, exchangeOrder};
 };
 
-const Trading = (G, ctx, tradingCoins) => {
-    const coinsTotalValue = tradingCoins.reduce((prev, current) => prev + current.value, 0),
-        coinsMaxValue = tradingCoins.reduce((prev, current) => (prev < current.value) ? current.value : prev, 0);
-    let coinMaxIndex = null;
-    for (let i = 0; i < tradingCoins.length; i++) {
-        if (tradingCoins[i].value === coinsMaxValue) {
-            coinMaxIndex = i;
-            if (tradingCoins[i].isInitial) {
-                break;
+export const ClickDistinctionCard = (G, ctx, cardID) => {
+    if (G.distinctions.some(item => item !== null)) {
+        const index = G.distinctions.findIndex(id => id === Number(ctx.currentPlayer));
+        if (index !== -1) {
+            if (index === cardID) {
+                suitsConfigArray[cardID].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
             }
-        }
-    }
-    let tradedCoin = null;
-    if (G.marketCoins.length) {
-        if (coinsTotalValue > G.marketCoins[G.marketCoins.length - 1].value) {
-            tradedCoin = G.marketCoins[G.marketCoins.length - 1];
-            G.marketCoins.splice(G.marketCoins.length - 1, 1);
         } else {
-            for (let i = 0; i < G.marketCoins.length; i++) {
-                if (G.marketCoins[i].value < coinsTotalValue) {
-                    tradedCoin = G.marketCoins[i];
-                } else if (G.marketCoins[i].value >= coinsTotalValue) {
-                    tradedCoin = G.marketCoins[i];
-                    G.marketCoins.splice(i, 1);
-                    break;
-                }
-                if (i === G.marketCoins.length - 1) {
-                    G.marketCoins.splice(i, 1);
-                }
-            }
-        }
-    }
-    G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = null;
-    if (tradedCoin !== null) {
-        G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = tradedCoin;
-        if (!tradingCoins[coinMaxIndex].isInitial) {
-            let returningIndex = null;
-            for (let i = 0; i < G.marketCoins.length; i++) {
-                returningIndex = i;
-                if (G.marketCoins[i].value > tradingCoins[coinMaxIndex].value) {
-                    break;
-                }
-            }
-            G.marketCoins.splice(returningIndex, 0, tradingCoins[coinMaxIndex]);
+            return INVALID_MOVE;
         }
     } else {
-        G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = tradingCoins[coinMaxIndex];
+        return INVALID_MOVE;
     }
+};
+
+export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
+    G.drawDistinction = null;
+    UpgradeCoin(G, ctx, coinID, 5);
+    delete G.distinctions[3];
+    ctx.events.endTurn();
+};
+
+export const ClickCardToPickDistinction = (G, ctx, cardID) => {
+    G.drawDistinction = null;
+    G.players[ctx.currentPlayer].cards[G.decks[1][cardID].suit].push(G.decks[1][cardID]);
+    G.decks[1].splice(cardID, 1);
+    G.decks[1] = ctx.random.Shuffle(G.decks[1]);
+    delete G.distinctions[4];
+    ctx.events.endTurn();
 };

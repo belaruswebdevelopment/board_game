@@ -1,7 +1,6 @@
 import {BuildCoins} from "./Coin";
 import {initialPlayerCoinsConfig} from "./data/CoinData";
 import {suitsConfigArray} from "./data/SuitData";
-import {AddPriorityToPlayer} from "./Priority";
 
 const CreatePlayer = ({
                           nickname = undefined,
@@ -32,7 +31,6 @@ export const BuildPlayer = (numPlayers, nickname) => {
         handCoins: BuildCoins(initialPlayerCoinsConfig,
             {isInitial: true, isTriggerTrading: false}),
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
-        priority: AddPriorityToPlayer(numPlayers),
     });
 };
 

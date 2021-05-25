@@ -1,30 +1,32 @@
-const TotalPoints = (accumulator, currentValue) => accumulator + currentValue.points;
-const TotalRank = (accumulator, currentValue) => accumulator + currentValue.rank;
-const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;
+import {CreateCoin} from "../Coin";
+import {CreateCard} from "../Card";
+import {ArithmeticSum, TotalPoints, TotalRank} from "../Score";
+import {BuildPriorities} from "../Priority";
 
+// todo rework switch to player to get distinction awarding
 const blacksmithSuit = {
     suit: 0,
     suitName: 'Blacksmith',
     suitColor: 'bg-purple-600',
     description: "Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).",
-    // todo replace 9th into 8th
+    // todo replace 8(1) 10(2)!
     ranksValues: () => {
         return {
             2: {
                 0: 9,
-                1: 9,
+                1: 10,
             },
             3: {
                 0: 9,
-                1: 9,
+                1: 10,
             },
             4: {
                 0: 9,
-                1: 9,
+                1: 10,
             },
             5: {
                 0: 10,
-                1: 10,
+                1: 13,
             },
         };
     },
@@ -32,29 +34,36 @@ const blacksmithSuit = {
         return {
             2: {
                 0: 9,
-                1: 9,
+                1: 10,
             },
             3: {
                 0: 9,
-                1: 9,
+                1: 10,
             },
             4: {
                 0: 9,
-                1: 9,
+                1: 10,
             },
             5: {
                 0: 10,
-                1: 10,
+                1: 13,
             },
         };
     },
-    scoringRule: (cards) => {
-        return ArithmeticSum(3, 1, cards.reduce(TotalRank, 0));
-    },
+    scoringRule: (cards) => ArithmeticSum(3, 1, cards.reduce(TotalRank, 0)),
     distinction: {
-        description: "",
-        awarding: () => {
-
+        description: "Получив знак отличия кузнецов, сразу же призовите Главного кузнеца с двумя шевронами в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов.",
+        style: "url(/img/distinctions/Distinctions.png) no-repeat 0px -100px / 94px 150px",
+        awarding: (G, ctx, player) => {
+            if (G.tierToEnd !== 0) {
+                player.cards[0].push(CreateCard({
+                    suit: 0,
+                    rank: 2,
+                    points: 2,
+                }));
+                delete G.distinctions[0];
+                ctx.events.endTurn();
+            }
         },
     },
 };
@@ -104,13 +113,19 @@ const hunterSuit = {
             },
         };
     },
-    scoringRule: (cards) => {
-        return cards.reduce(TotalRank, 0) ** 2;
-    },
+    scoringRule: (cards) => cards.reduce(TotalRank, 0) ** 2,
     distinction: {
-        description: "",
-        awarding: () => {
-
+        description: "Получив знак отличия охотников, сразу же обменяйте свою монету с номиналом 0 на особую монету с номиналом 3. Эта монета также позволяет обменивать монеты в кошеле и не может быть улучшена.",
+        style: "url(/img/distinctions/Distinctions.png) no-repeat -64px 0px / 94px 150px",
+        awarding: (G, ctx, player) => {
+            if (G.tierToEnd !== 0) {
+                player.boardCoins[player.boardCoins.findIndex(coin => coin.value === 0)] = CreateCoin({
+                    value: 3,
+                    isTriggerTrading: true,
+                });
+                delete G.distinctions[1];
+                ctx.events.endTurn();
+            }
         },
     },
 };
@@ -160,13 +175,26 @@ const minerSuit = {
             },
         };
     },
-    scoringRule: (cards) => {
-        return cards.reduce(TotalRank, 0) * cards.reduce(TotalPoints, 0);
-    },
+    scoringRule: (cards) => cards.reduce(TotalRank, 0) * cards.reduce(TotalPoints, 0),
     distinction: {
-        description: "",
-        awarding: () => {
-
+        description: "Получив знак отличия горняков, сразу же положите особый кристалл 6 поверх вашего текущего кристалла (тот остаётся скрытым до конца игры). В конце игры обладатель этого кристалла прибавит +3 очка к итоговому показателю храбрости своей армии. Этот кристалл позволяет победить во всех спорах при равенстве ставок и никогда не обменивается.",
+        style: "url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 94px 150px",
+        awarding: (G, ctx, player) => {
+            if (G.tierToEnd !== 0) {
+                BuildPriorities(player, {
+                    value: 6,
+                    isExchangeable: false,
+                });
+                delete G.distinctions[2];
+                ctx.events.endTurn();
+            } else {
+                // todo move to FinalScoring
+                if (player.priority.value === 6) {
+                    return 3;
+                } else {
+                    return 0;
+                }
+            }
         },
     },
 };
@@ -216,13 +244,17 @@ const warriorSuit = {
             },
         };
     },
-    scoringRule: (cards) => {
-        return cards.reduce(TotalPoints, 0);
-    },
+    scoringRule: (cards) => cards.reduce(TotalPoints, 0),
     distinction: {
-        description: "",
-        awarding: () => {
-
+        description: "Получив знак отличия воинов, сразу же улучшите одну из своих монет, добавив к её номиналу +5.",
+        style: "url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 94px 150px",
+        awarding: (G, ctx, player) => {
+            if (G.tierToEnd !== 0) {
+                G.drawDistinction = 3;
+            } else {
+                // todo move to FinalScoring
+                return Math.max(...player.boardCoins.map(coin => coin.value));
+            }
         },
     },
 };
@@ -272,13 +304,14 @@ const explorerSuit = {
             },
         };
     },
-    scoringRule: (cards) => {
-        return cards.reduce(TotalPoints, 0);
-    },
+    scoringRule: (cards) => cards.reduce(TotalPoints, 0),
     distinction: {
-        description: "",
-        awarding: () => {
-
+        description: "Получив знак отличия разведчиков, сразу же возьмите 3 карты из колоды эпохи 2 и сохраните у себя одну из этих карт. Если это карта дворфа, сразу же поместите его в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов. Если это карта королевская награда, то улучшите одну из своих монет. Две оставшиеся карты возвращаются в колоду эпохи 2. Положите карту знак отличия разведчиков в командную зону рядом с вашим планшетом.",
+        style: "url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 94px 150px",
+        awarding: (G) => {
+            if (G.tierToEnd !== 0) {
+                G.drawDistinction = 4;
+            }
         },
     },
 };
