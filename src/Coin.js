@@ -6,46 +6,29 @@ export const CreateCoin = ({value, isInitial = false, isTriggerTrading = false} 
     };
 };
 
-const UniqueCoins = (data, value) => {
-    data.count.push({value});
-};
 
-export const CountMarketCoins = (data) => {
-    const marketCoins = [],
-        repeated = {};
-    let flag = true;
-    for (let i = 0; i < data.length; i++) {
-        const uniqueArrLength = marketCoins.length;
-        let count = 0;
-        for (let j = 0; j < uniqueArrLength; j++) {
-            if (marketCoins[j].value === data[i].value) {
-                count++;
-                flag = false;
-                break;
-            }
-        }
-        repeated[data[i].value] = count + 1;
-        if (flag) {
-            marketCoins.push(data[i]);
-        }
-        flag = true;
+export const CountMarketCoins = (G) => {
+    const repeated = {};
+    for (let i = 0; i < G.marketCoinsUnique.length; i++) {
+        let temp = G.marketCoinsUnique[i].value;
+        repeated[temp] = G.marketCoins.filter(coin => coin.value === temp).length;
     }
     return repeated;
 };
 
-export const BuildCoins = (coinConfig, data) => {
+export const BuildCoins = (coinConfig, opts) => {
     const coins = [];
     for (let i = 0; i < coinConfig.length; i++) {
-        const isMarket = data.players !== undefined,
-            coinValue = typeof coinConfig[i] === "number" ? coinConfig[i] : coinConfig[i].value,
-            count = isMarket ? coinConfig[i].count()[data.players] : 1;
+        const isMarket = opts.players !== undefined,
+            coinValue = coinConfig[i]?.value ?? coinConfig[i],
+            count = isMarket ? coinConfig[i].count()[opts.players] : 1;
         if (isMarket) {
-            UniqueCoins(data, coinValue);
+            opts.count.push({value: coinValue});
         }
         for (let c = 0; c < count; c++) {
             coins.push(CreateCoin({
                 value: coinValue,
-                isInitial: data.isInitial,
+                isInitial: opts.isInitial,
                 isTriggerTrading: coinConfig[i].isTriggerTrading,
             }));
         }
