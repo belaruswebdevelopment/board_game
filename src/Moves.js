@@ -2,22 +2,13 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCampCardToPlayer, AddCardToPlayer} from "./Player";
 import {suitsConfigArray} from "./data/SuitData";
 import {Trading, UpgradeCoin} from "./Coin";
+import {CheckCurrentTavernEmpty, CheckEmptyLastTavern, GetCurrentTavernNumber} from "./Tavern";
+import {CheckPickHero} from "./Hero";
 
 export const ClickHeroCard = (G, ctx, heroID) => {
     G.players[ctx.currentPlayer].heroes.push(G.heroes[heroID]);
     G.heroes[heroID] = null;
-    let tavernId = null;
-    for (let i = 0; i < G.tavernsNum; i++) {
-        if (G.taverns[i].some(element => element === null) && G.taverns[i].some(element => element !== null)) {
-            tavernId = i;
-            break;
-        } else if ((i !== G.tavernsNum - 1) && G.taverns[i].every(element => element === null) && G.taverns[i + 1].every(element => element !== null)) {
-            tavernId = i;
-            break;
-        } else if (i === G.tavernsNum - 1) {
-            tavernId = i;
-        }
-    }
+    const tavernId = GetCurrentTavernNumber(G);
     if (CheckPickHero(G, ctx)) {
         // todo Check if we need to end stage or auto
         ctx.events.endStage();
@@ -47,34 +38,6 @@ const ActivateTrading = (G, ctx, tavernId) => {
         Trading(G, ctx, tradingCoins);
     }
 }
-
-const CheckEmptyLastTavern = (G, ctx) => {
-    const isLastTavernEmpty = G.taverns[G.tavernsNum - 1].every((element) => element === null);
-    if (isLastTavernEmpty) {
-        if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
-            G.tierToEnd--;
-            ctx.events.setPhase('getDistinctions');
-            if (G.tierToEnd === 0) {
-                return;
-            }
-        }
-        for (let i = 0; i < G.tavernsNum; i++) {
-            G.taverns[i] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
-        }
-        ctx.events.setPhase('placeCoins');
-    }
-}
-
-const CheckCurrentTavernEmpty = (G, ctx, tavernId) => {
-    const isCurrentTavernEmpty = G.taverns[tavernId].every((element) => element === null);
-    if (isCurrentTavernEmpty) {
-        ctx.events.setPhase('pickCards');
-    }
-}
-
-const CheckPickHero = (G, ctx) => {
-    return Math.min(...G.players[ctx.currentPlayer].cards.map(item => item.length)) > G.players[ctx.currentPlayer].heroes.length
-};
 
 export const ClickCard = (G, ctx, tavernId, cardId) => {
     const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null),
@@ -215,18 +178,7 @@ export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
 export const ClickCoinToUpgrade = (G, ctx, coinID) => {
     G.drawProfit = null;
     UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].pickedCard.value);
-    let tavernId = null;
-    for (let i = 0; i < G.tavernsNum; i++) {
-        if (G.taverns[i].some(element => element === null) && G.taverns[i].some(element => element !== null)) {
-            tavernId = i;
-            break;
-        } else if ((i !== G.tavernsNum - 1) && G.taverns[i].every(element => element === null) && G.taverns[i + 1].every(element => element !== null)) {
-            tavernId = i;
-            break;
-        } else if (i === G.tavernsNum - 1) {
-            tavernId = i;
-        }
-    }
+    let tavernId = GetCurrentTavernNumber(G);
     ActivateTrading(G, ctx, tavernId);
     CheckEmptyLastTavern(G, ctx);
     CheckCurrentTavernEmpty(G, ctx, tavernId);
