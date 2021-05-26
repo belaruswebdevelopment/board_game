@@ -262,17 +262,8 @@ export const DrawPlayersBoards = (data) => {
             playerRows[p][i] = [];
             for (let j = 0; j < data.props.G.suitsNum + 1 + expansion; j++) {
                 const id = i + j;
-                const isNotCard = data.props.G.players[p].cards[j] !== undefined && data.props.G.players[p].cards[j][i] === undefined;
-                const isNotHero = data.props.G.players[p].heroes[i] === undefined;
-                const isNotCampCard = data.props.G.players[p].campCards[i] === undefined;
                 if (j < data.props.G.suitsNum) {
-                    if (data.props.G.players[p].cards[j] === undefined || isNotCard || !isNotHero || !isNotCampCard) {
-                        playerCells.push(
-                            <td key={id}>
-
-                            </td>
-                        );
-                    } else {
+                    if (data.props.G.players[p].cards[j] !== undefined && data.props.G.players[p].cards[j][i] !== undefined) {
                         isDrawRow = true;
                         playerCells.push(
                             <td key={id}
@@ -280,15 +271,15 @@ export const DrawPlayersBoards = (data) => {
                                 <b>{data.props.G.players[p].cards[j][i].points}</b>
                             </td>
                         );
-                    }
-                } else if (j === data.props.G.suitsNum) {
-                    if (data.props.G.players[p].heroes[i] === undefined || isNotHero || !isNotCampCard || !isNotCard) {
+                    } else {
                         playerCells.push(
                             <td key={id}>
 
                             </td>
                         );
-                    } else {
+                    }
+                } else if (j === data.props.G.suitsNum) {
+                    if (data.props.G.players[p].heroes[i] !== undefined) {
                         isDrawRow = true;
                         playerCells.push(
                             <td key={id}
@@ -296,19 +287,25 @@ export const DrawPlayersBoards = (data) => {
                                 <b>{data.props.G.players[p].heroes[i].points}</b>
                             </td>
                         );
-                    }
-                } else if (expansion && j === data.props.G.suitsNum + expansion) {
-                    if (data.props.G.players[p].campCards[i] === undefined || isNotCampCard || !isNotCard || !isNotHero) {
+                    } else {
                         playerCells.push(
                             <td key={id}>
 
                             </td>
                         );
-                    } else {
+                    }
+                } else if (expansion && j === data.props.G.suitsNum + expansion) {
+                    if (data.props.G.players[p].campCards[i] !== undefined) {
                         isDrawRow = true;
                         playerCells.push(
                             <td className="bg-yellow-200" key={id}>
                                 <b>{data.props.G.players[p].campCards[i].points}</b>
+                            </td>
+                        );
+                    } else {
+                        playerCells.push(
+                            <td key={id}>
+
                             </td>
                         );
                     }

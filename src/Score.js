@@ -33,16 +33,9 @@ const CheckCurrentSuitDistinction = (G, ctx, suit) => {
 };
 
 export const CurrentScoring = (player) => {
-    const count = [0, 0, 0, 0, 0];
     let score = 0;
     for (let i = 0; i < player.cards.length; i++) {
         score += suitsConfigArray[i].scoringRule(player.cards[i]);
-    }
-    // todo rework to Heroes scoring
-    if (Math.min(...count) === 1) {
-        score += Math.min(...count) * 6;
-    } else if (Math.min(...count) === 2) {
-        score += Math.min(...count) * 10;
     }
     return score;
 };
@@ -56,5 +49,7 @@ export const FinalScoring = (G, ctx, player, currentScore) => {
     if (warriorsDistinction !== undefined && G.players.findIndex(p => p.nickname === player.nickname) === warriorsDistinction) {
         score += suitsConfigArray[3].distinction.awarding(G, ctx, player);
     }
+    // todo rework heroes profit
+    score += player.heroes.length * 17;
     return score;
 };

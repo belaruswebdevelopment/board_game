@@ -19,7 +19,7 @@ const prioritiesConfig = {
 };
 
 export const BuildPriorities = (players) => {
-    const priorities = prioritiesConfig[players.length];
+    const priorities = prioritiesConfig[players.length].map(priority => priority);
     for (let i = 0; i < players.length; i++) {
         const index = Math.floor(Math.random() * priorities.length),
             priority = priorities.splice(index, 1)[0];

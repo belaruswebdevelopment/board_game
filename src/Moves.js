@@ -2,10 +2,28 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCampCardToPlayer, AddCardToPlayer} from "./Player";
 import {suitsConfigArray} from "./data/SuitData";
 import {Trading, UpgradeCoin} from "./Coin";
-import {DrawDistinctionProfit} from "./ui/GameBoardUI";
 
-export const ClickHeroCard = (G, ctx, heroId) => {
+export const ClickHeroCard = (G, ctx, heroID) => {
     // todo Add logic
+    G.players[ctx.currentPlayer].heroes.push(G.heroes[heroID]);
+    G.heroes.splice(heroID, 1);
+    let tavernId = null;
+    for (let i = 0; i < G.tavernsNum; i++) {
+        if (G.taverns[i].some(element => element === null) && G.taverns[i].some(element => element !== null)) {
+            tavernId = i;
+            break;
+        } else if ((i !== G.tavernsNum - 1) && G.taverns[i].every(element => element === null) && G.taverns[i + 1].every(element => element !== null)) {
+            tavernId = i;
+            break;
+        } else if (i === G.tavernsNum - 1) {
+            tavernId = i;
+        }
+    }
+    ActivateTrading(G, ctx, tavernId);
+    CheckEmptyLastTavern(G, ctx);
+    CheckCurrentTavernEmpty(G, ctx, tavernId);
+    ctx.events.endStage();
+    ctx.events.endTurn();
 };
 
 export const ClickCampCard = (G, ctx, cardId) => {
@@ -15,14 +33,7 @@ export const ClickCampCard = (G, ctx, cardId) => {
     ctx.events.endTurn();
 };
 
-export const ClickCard = (G, ctx, tavernId, cardId) => {
-    const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null),
-        isEmptyPick = G.taverns[tavernId][cardId] === null;
-    if (isEmptyPick || isEarlyPick) {
-        return INVALID_MOVE;
-    }
-    AddCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
-    G.taverns[tavernId][cardId] = null;
+const ActivateTrading = (G, ctx, tavernId) => {
     if (G.players[ctx.currentPlayer].boardCoins[tavernId].isTriggerTrading) {
         const tradingCoins = [];
         for (let i = G.taverns.length; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
@@ -30,6 +41,9 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
         }
         Trading(G, ctx, tradingCoins);
     }
+}
+
+const CheckEmptyLastTavern = (G, ctx) => {
     const isLastTavernEmpty = G.taverns[G.tavernsNum - 1].every((element) => element === null);
     if (isLastTavernEmpty) {
         if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
@@ -44,11 +58,37 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
         }
         ctx.events.setPhase('placeCoins');
     }
+}
+
+const CheckCurrentTavernEmpty = (G, ctx, tavernId) => {
     const isCurrentTavernEmpty = G.taverns[tavernId].every((element) => element === null);
     if (isCurrentTavernEmpty) {
         ctx.events.setPhase('pickCards');
     }
-    ctx.events.endTurn();
+}
+
+export const ClickCard = (G, ctx, tavernId, cardId) => {
+    const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null),
+        isEmptyPick = G.taverns[tavernId][cardId] === null;
+    if (isEmptyPick || isEarlyPick) {
+        return INVALID_MOVE;
+    }
+    AddCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
+    G.taverns[tavernId][cardId] = null;
+    const cardsArraysCount = [];
+    for (let i = 0; i < G.players[ctx.currentPlayer].cards.length; i++) {
+        cardsArraysCount.push(G.players[ctx.currentPlayer].cards[i].length);
+    }
+    const min = Math.min(...cardsArraysCount);
+    if (min > 0 && min > G.players[ctx.currentPlayer].heroes.length) {
+        console.log(123)
+        ctx.events.setStage('pickHero');
+    } else {
+        ActivateTrading(G, ctx, tavernId);
+        CheckEmptyLastTavern(G, ctx);
+        CheckCurrentTavernEmpty(G, ctx, tavernId);
+        ctx.events.endTurn();
+    }
 };
 
 export const ClickHandCoin = (G, ctx, coinId) => {

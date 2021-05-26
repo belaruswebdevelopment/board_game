@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import {Client} from 'boardgame.io/react';
 import {Local} from 'boardgame.io/multiplayer';
 import {MCTSBot, RandomBot} from 'boardgame.io/ai';
@@ -29,7 +29,7 @@ const enableLocalPlayer = true,
         },
     },
     BoardGameClient = Client({
-        debug: false,
+        debug: true,
         game: BoardGame,
         board: GameBoard,
         numPlayers: 4,
@@ -39,8 +39,8 @@ const enableLocalPlayer = true,
         <BoardGameClient playerID="3"/>
     );
 
-export default App;
-/*import {Client} from 'boardgame.io/react';
+export default App;*/
+import {Client} from 'boardgame.io/react';
 import {BoardGame} from './Game';
 import {GameBoard} from './Board';
 
@@ -50,4 +50,4 @@ const App = Client({
     numPlayers: 3,
 });
 
-export default App;*/
+export default App;

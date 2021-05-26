@@ -52,10 +52,16 @@ export const BoardGame = {
                     next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
                     playOrder: (G) => G.playersOrder,
                 },
+                stages: {
+                    pickHero: {
+                        moves: {
+                            ClickHeroCard,
+                        },
+                    },
+                },
             },
             moves: {
                 ClickCard,
-                ClickHeroCard,
                 ClickCampCard,
             },
             onBegin: (G, ctx) => {
