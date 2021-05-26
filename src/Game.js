@@ -2,7 +2,7 @@ import {SetupGame} from "./GameSetup";
 import {
     ClickBoardCoin,
     ClickCampCard,
-    ClickCard, ClickCardToPickDistinction, ClickCoinToUpgradeDistinction,
+    ClickCard, ClickCardToPickDistinction, ClickCoinToUpgrade, ClickCoinToUpgradeDistinction,
     ClickDistinctionCard,
     ClickHandCoin,
     ClickHeroCard,
@@ -56,6 +56,11 @@ export const BoardGame = {
                     pickHero: {
                         moves: {
                             ClickHeroCard,
+                        },
+                    },
+                    upgradeCoin: {
+                        moves: {
+                            ClickCoinToUpgrade,
                         },
                     },
                 },

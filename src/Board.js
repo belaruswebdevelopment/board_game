@@ -8,7 +8,7 @@ import {
     DrawTaverns,
     DrawHeroes,
     DrawDistinctions,
-    DrawDistinctionProfit,
+    DrawProfit,
 } from "./ui/GameBoardUI";
 import {
     DrawPlayersBoardsCoins,
@@ -42,6 +42,9 @@ export class GameBoard extends React.Component {
     OnClickCardToPickDistinction = (cardId, deck) => {
         this.props.moves.ClickCardToPickDistinction(cardId, deck);
     };
+    OnClickCoinToUpgrade = (coinId) => {
+        this.props.moves.ClickCoinToUpgrade(coinId);
+    };
 
     render() {
         // todo Cursor-pointer class only for your objects and in current phase!
@@ -53,8 +56,8 @@ export class GameBoard extends React.Component {
             drawHeroesUI = DrawHeroes(this),
             drawCampUI = DrawCamp(this),
             drawDistinctionsUI = DrawDistinctions(this),
-            drawDistinctionProfitUI = this.props.G.drawDistinction ? DrawDistinctionProfit(this, this.props.G.drawDistinction)
-                : this.props.G.drawDistinction,
+            drawDistinctionProfitUI = this.props.G.drawProfit ? DrawProfit(this, this.props.G.drawProfit)
+                : this.props.G.drawProfit,
             tavernsUI = DrawTaverns(this, gridClass),
             playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
             playersBoardsUI = DrawPlayersBoards(this),

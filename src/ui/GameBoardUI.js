@@ -100,12 +100,20 @@ export const DrawHeroes = (data) => {
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j;
             // todo currentPlayer
-            boardCells.push(
-                <td className="bg-gray-600 cursor-pointer" key={j} onClick={() => data.OnClickHeroCard(increment)}>
-                    <span className="text-white">{data.props.G.heroes[increment]}</span>
-                </td>
-            );
-            if ((i === drawData.boardRows - 1) && (j + 1 === drawData.lastBoardCol)) {
+            if (data.props.G.heroes[increment] === null) {
+                boardCells.push(
+                    <td className="bg-gray-600" key={j}>
+
+                    </td>
+                );
+            } else {
+                boardCells.push(
+                    <td className="bg-gray-600 cursor-pointer" key={j} onClick={() => data.OnClickHeroCard(increment)}>
+                        <span className="text-white">{data.props.G.heroes[increment]}</span>
+                    </td>
+                );
+            }
+            if (increment + 1 === data.props.G.heroes.length) {
                 break;
             }
         }
@@ -160,11 +168,11 @@ export const DrawDistinctions = (data) => {
     );
 };
 
-export const DrawDistinctionProfit = (data, suit) => {
+export const DrawProfit = (data, option) => {
     const boardCells = [];
     let caption = "Get ";
     for (let i = 0; i < 1; i++) {
-        if (suit === 3) {
+        if (option === 3) {
             caption += "coin to upgrade up to 5.";
             for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                 if (!data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
@@ -183,18 +191,38 @@ export const DrawDistinctionProfit = (data, suit) => {
                     );
                 }
             }
-        } else if (suit === 4) {
+        } else if (option === 4) {
             caption += "one card to your board.";
             const deck = [];
             for (let j = 0; j < 3; j++) {
                 // todo currentPlayer
                 deck.push(data.props.G.decks[1][j]);
                 boardCells.push(
-                    <td className={`${suitsConfigArray[data.props.G.decks[1][j].suit].suitColor} cursor-pointer`} key={j}
+                    <td className={`${suitsConfigArray[data.props.G.decks[1][j].suit].suitColor} cursor-pointer`}
+                        key={j}
                         onClick={() => data.OnClickCardToPickDistinction(j, deck)}>
                         <b>{deck[j].points}</b>
                     </td>
                 );
+            }
+        } else if (option === "upgradeCoin") {
+            caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.value + " .";
+            for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
+                if (!data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
+                    // todo currentPlayer
+                    boardCells.push(
+                        <td className="cursor-pointer" key={j} onClick={() => data.OnClickCoinToUpgrade(j)}>
+                            <span
+                                style={{
+                                    background: `url(/img/coins/Coin${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value}${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial
+                                        ? "Initial" : ""}.jpg) no-repeat 0px 0px / 48px 48px`
+                                }}
+                                className={`bg-coin border-2`}>
+
+                            </span>
+                        </td>
+                    );
+                }
             }
         }
     }
@@ -273,9 +301,10 @@ export const DrawTaverns = (data, gridClass) => {
                 } else {
                     // todo currentPlayer
                     boardCells.push(
-                        <td className={`${suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor} cursor-pointer`}
+                        <td className={`${suitsConfigArray[data.props.G.taverns[t][j].suit]?.suitColor !== undefined ?
+                            suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor : ""} cursor-pointer`}
                             onClick={() => data.OnClickCard(t, j)}>
-                            <b>{data.props.G.taverns[t][j].points}</b>
+                            <b>{data.props.G.taverns[t][j].points ?? data.props.G.taverns[t][j].value}</b>
                         </td>
                     );
                 }

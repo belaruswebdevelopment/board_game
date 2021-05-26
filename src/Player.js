@@ -10,8 +10,9 @@ const CreatePlayer = ({
                           campCards = [],
                           handCoins = [],
                           boardCoins = [],
-                          selectedCoin = undefined,
                           priority = undefined,
+                          selectedCoin = undefined,
+                          pickedCard = undefined,
                       } = {}) => {
     return {
         nickname,
@@ -20,8 +21,9 @@ const CreatePlayer = ({
         heroes,
         handCoins,
         boardCoins,
-        selectedCoin,
         priority,
+        selectedCoin,
+        pickedCard,
     };
 };
 
@@ -36,7 +38,12 @@ export const BuildPlayer = (numPlayers, nickname) => {
 };
 
 export const AddCardToPlayer = (player, card) => {
+    if (card.value !== undefined) {
+        player.pickedCard = card;
+        return false;
+    }
     player.cards[card.suit].push(card);
+    return true;
 };
 
 export const AddCampCardToPlayer = (player, card) => {

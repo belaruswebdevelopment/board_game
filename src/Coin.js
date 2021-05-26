@@ -6,7 +6,6 @@ export const CreateCoin = ({value, isInitial = false, isTriggerTrading = false} 
     };
 };
 
-
 export const CountMarketCoins = (G) => {
     const repeated = {};
     for (let i = 0; i < G.marketCoinsUnique.length; i++) {
@@ -94,6 +93,7 @@ export const UpgradeCoin = (G, ctx, j, value) => {
     let upgradeCoin = null;
     if (G.marketCoins.length) {
         if (newValue > G.marketCoins[G.marketCoins.length - 1].value) {
+            console.log(2)
             upgradeCoin = G.marketCoins[G.marketCoins.length - 1];
             G.marketCoins.splice(G.marketCoins.length - 1, 1);
         } else {

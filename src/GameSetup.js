@@ -5,6 +5,7 @@ import {marketCoinsConfig} from "./data/CoinData";
 import {BuildCoins} from "./Coin";
 import {Permute, k_combinations, GetAllPicks} from "./BotConfig";
 import {BuildPriorities} from "./Priority";
+import {actionCardsConfigArray} from "./data/ActionCardData";
 
 export const SetupGame = (ctx) => {
     // todo add coins upgrade cards logic!
@@ -14,7 +15,7 @@ export const SetupGame = (ctx) => {
         tierToEnd = 2,
         campNum = 5,
         debug = false,
-        drawDistinction = null,
+        drawProfit = null,
         expansions = {
             thingvellir: {
                 active: true,
@@ -31,7 +32,7 @@ export const SetupGame = (ctx) => {
         camp = [{points: 0}, {points: 1}, {points: 2}, {points: 3}, {points: 4}],
         distinctions = Array(suitsNum).fill(null);
     for (let i = 0; i < tierToEnd; i++) {
-        decks[i] = BuildCards(suitsConfigArray, {players: ctx.numPlayers, tier: i});
+        decks[i] = BuildCards({suits: suitsConfigArray, actions: actionCardsConfigArray}, {players: ctx.numPlayers, tier: i});
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
     // todo move taverns in separate config data file + images for it
@@ -72,7 +73,7 @@ export const SetupGame = (ctx) => {
     botData.deckLength = decks[0].length;
     return {
         debug,
-        drawDistinction,
+        drawProfit,
         suitsNum,
         tierToEnd,
         campNum,

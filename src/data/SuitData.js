@@ -9,24 +9,23 @@ const blacksmithSuit = {
     suitName: 'Blacksmith',
     suitColor: 'bg-purple-600',
     description: "Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).",
-    // todo replace 8(1) 10(2)!
     ranksValues: () => {
         return {
             2: {
-                0: 9,
-                1: 10,
+                0: 8,
+                1: 8,
             },
             3: {
-                0: 9,
-                1: 10,
+                0: 8,
+                1: 8,
             },
             4: {
-                0: 9,
-                1: 10,
+                0: 8,
+                1: 8,
             },
             5: {
                 0: 10,
-                1: 13,
+                1: 10,
             },
         };
     },
@@ -250,7 +249,7 @@ const warriorSuit = {
         style: "url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 94px 150px",
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
-                G.drawDistinction = 3;
+                G.drawProfit = 3;
             } else {
                 // todo move to FinalScoring
                 return Math.max(...player.boardCoins.map(coin => coin.value));
@@ -310,7 +309,7 @@ const explorerSuit = {
         style: "url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 94px 150px",
         awarding: (G) => {
             if (G.tierToEnd !== 0) {
-                G.drawDistinction = 4;
+                G.drawProfit = 4;
             }
         },
     },

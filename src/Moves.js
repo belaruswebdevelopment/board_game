@@ -4,9 +4,8 @@ import {suitsConfigArray} from "./data/SuitData";
 import {Trading, UpgradeCoin} from "./Coin";
 
 export const ClickHeroCard = (G, ctx, heroID) => {
-    // todo Add logic
     G.players[ctx.currentPlayer].heroes.push(G.heroes[heroID]);
-    G.heroes.splice(heroID, 1);
+    G.heroes[heroID] = null;
     let tavernId = null;
     for (let i = 0; i < G.tavernsNum; i++) {
         if (G.taverns[i].some(element => element === null) && G.taverns[i].some(element => element !== null)) {
@@ -19,11 +18,17 @@ export const ClickHeroCard = (G, ctx, heroID) => {
             tavernId = i;
         }
     }
-    ActivateTrading(G, ctx, tavernId);
-    CheckEmptyLastTavern(G, ctx);
-    CheckCurrentTavernEmpty(G, ctx, tavernId);
-    ctx.events.endStage();
-    ctx.events.endTurn();
+    if (CheckPickHero(G, ctx)) {
+        // todo Check if we need to end stage or auto
+        ctx.events.endStage();
+        ctx.events.setStage('pickHero');
+    } else {
+        ActivateTrading(G, ctx, tavernId);
+        CheckEmptyLastTavern(G, ctx);
+        CheckCurrentTavernEmpty(G, ctx, tavernId);
+        ctx.events.endStage();
+        ctx.events.endTurn();
+    }
 };
 
 export const ClickCampCard = (G, ctx, cardId) => {
@@ -67,27 +72,30 @@ const CheckCurrentTavernEmpty = (G, ctx, tavernId) => {
     }
 }
 
+const CheckPickHero = (G, ctx) => {
+    return Math.min(...G.players[ctx.currentPlayer].cards.map(item => item.length)) > G.players[ctx.currentPlayer].heroes.length
+};
+
 export const ClickCard = (G, ctx, tavernId, cardId) => {
     const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null),
         isEmptyPick = G.taverns[tavernId][cardId] === null;
     if (isEmptyPick || isEarlyPick) {
         return INVALID_MOVE;
     }
-    AddCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
+    const isAdded = AddCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
     G.taverns[tavernId][cardId] = null;
-    const cardsArraysCount = [];
-    for (let i = 0; i < G.players[ctx.currentPlayer].cards.length; i++) {
-        cardsArraysCount.push(G.players[ctx.currentPlayer].cards[i].length);
-    }
-    const min = Math.min(...cardsArraysCount);
-    if (min > 0 && min > G.players[ctx.currentPlayer].heroes.length) {
-        console.log(123)
-        ctx.events.setStage('pickHero');
+    if (isAdded) {
+        if (CheckPickHero(G, ctx)) {
+            ctx.events.setStage('pickHero');
+        } else {
+            ActivateTrading(G, ctx, tavernId);
+            CheckEmptyLastTavern(G, ctx);
+            CheckCurrentTavernEmpty(G, ctx, tavernId);
+            ctx.events.endTurn();
+        }
     } else {
-        ActivateTrading(G, ctx, tavernId);
-        CheckEmptyLastTavern(G, ctx);
-        CheckCurrentTavernEmpty(G, ctx, tavernId);
-        ctx.events.endTurn();
+        ctx.events.setStage('upgradeCoin');
+        G.drawProfit = "upgradeCoin";
     }
 };
 
@@ -198,14 +206,36 @@ export const ClickDistinctionCard = (G, ctx, cardID) => {
 };
 
 export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
-    G.drawDistinction = null;
+    G.drawProfit = null;
     UpgradeCoin(G, ctx, coinID, 5);
     delete G.distinctions[3];
     ctx.events.endTurn();
 };
 
+export const ClickCoinToUpgrade = (G, ctx, coinID) => {
+    G.drawProfit = null;
+    UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].pickedCard.value);
+    let tavernId = null;
+    for (let i = 0; i < G.tavernsNum; i++) {
+        if (G.taverns[i].some(element => element === null) && G.taverns[i].some(element => element !== null)) {
+            tavernId = i;
+            break;
+        } else if ((i !== G.tavernsNum - 1) && G.taverns[i].every(element => element === null) && G.taverns[i + 1].every(element => element !== null)) {
+            tavernId = i;
+            break;
+        } else if (i === G.tavernsNum - 1) {
+            tavernId = i;
+        }
+    }
+    ActivateTrading(G, ctx, tavernId);
+    CheckEmptyLastTavern(G, ctx);
+    CheckCurrentTavernEmpty(G, ctx, tavernId);
+    ctx.events.endStage();
+    ctx.events.endTurn();
+};
+
 export const ClickCardToPickDistinction = (G, ctx, cardID) => {
-    G.drawDistinction = null;
+    G.drawProfit = null;
     G.players[ctx.currentPlayer].cards[G.decks[1][cardID].suit].push(G.decks[1][cardID]);
     G.decks[1].splice(cardID, 1);
     G.decks[1] = ctx.random.Shuffle(G.decks[1]);

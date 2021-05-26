@@ -1,5 +1,4 @@
 import {IsTopPlayer, GetTop1PlayerId, GetTop2PlayerId, AddCardToCards} from "./Player";
-import {Scoring} from "./Game.js";
 import {suitsConfigArray} from "./data/SuitData";
 
 export const CreateCard = ({suit, rank = 1, points} = {}) => {
@@ -10,15 +9,28 @@ export const CreateCard = ({suit, rank = 1, points} = {}) => {
     };
 };
 
+const CreateActionCard = ({value} = {}) => {
+    return {
+        value,
+    };
+};
+
 export const BuildCards = (deckConfig, data) => {
     const cards = [];
-    for (let i = 0; i < deckConfig.length; i++) {
-        const count = deckConfig[i].pointsValues()[data.players][data.tier]?.length ?? deckConfig[i].pointsValues()[data.players][data.tier];
+    for (let i = 0; i < deckConfig.suits.length; i++) {
+        const count = deckConfig.suits[i].pointsValues()[data.players][data.tier].length ?? deckConfig.suits[i].pointsValues()[data.players][data.tier];
         for (let j = 0; j < count; j++) {
             cards.push(CreateCard({
-                suit: deckConfig[i].suit,
-                rank: deckConfig[i].ranksValues()[data.players][data.tier][j],
-                points: deckConfig[i].pointsValues()[data.players][data.tier][j],
+                suit: deckConfig.suits[i].suit,
+                rank: deckConfig.suits[i].ranksValues()[data.players][data.tier][j],
+                points: deckConfig.suits[i].pointsValues()[data.players][data.tier][j],
+            }));
+        }
+    }
+    for (let i = 0; i < deckConfig.actions.length; i++) {
+        for (let j = 0; j < deckConfig.actions[i].amount()[data.players][data.tier]; j++) {
+            cards.push(CreateActionCard({
+                value: deckConfig.actions[i].value,
             }));
         }
     }
