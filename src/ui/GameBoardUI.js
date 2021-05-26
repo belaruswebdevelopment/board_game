@@ -49,36 +49,25 @@ export const DrawWinner = (data) => {
 export const DrawMarketCoins = (data) => {
     const boardRows = [],
         drawData = DrawBoard(data.props.G.marketCoinsUnique.length),
-        countMarketCoins = CountMarketCoins(data.props.G.marketCoins);
+        countMarketCoins = CountMarketCoins(data.props.G);
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells = [];
         boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j;
-            if (countMarketCoins[data.props.G.marketCoinsUnique[increment].value] === undefined) {
-                boardCells.push(
-                    <td className="bg-yellow-300" key={data.props.G.marketCoinsUnique[increment].value}>
-                        <span
-                            style={{background: `url(/img/coins/Coin${data.props.G.marketCoinsUnique[increment].value}.jpg) no-repeat 0px 0px / 48px 48px`}}
-                            className="bg-market-coin">
-                            <span className="text-red-500">0</span>
+            const tempCoinValue = data.props.G.marketCoinsUnique[increment].value;
+            boardCells.push(
+                <td className="bg-yellow-300" key={tempCoinValue}>
+                    <span
+                        style={{background: `url(/img/coins/Coin${tempCoinValue}.jpg) no-repeat 0px 0px / 48px 48px`}}
+                        className="bg-market-coin">
+                        <span className={countMarketCoins[tempCoinValue] === 0 ? "text-red-500" : "text-blue-500"}>
+                            {countMarketCoins[tempCoinValue]}
                         </span>
-                    </td>
-                );
-            } else {
-                boardCells.push(
-                    <td className="bg-yellow-300" key={data.props.G.marketCoinsUnique[increment].value}>
-                        <span
-                            style={{background: `url(/img/coins/Coin${data.props.G.marketCoinsUnique[increment].value}.jpg) no-repeat 0px 0px / 48px 48px`}}
-                            className="bg-market-coin">
-                            <span className="text-blue-500">
-                                {countMarketCoins[data.props.G.marketCoinsUnique[increment].value]}
-                            </span>
-                        </span>
-                    </td>
-                );
-            }
-            if ((i === drawData.boardRows - 1) && (j + 1 === drawData.lastBoardCol)) {
+                    </span>
+                </td>
+            );
+            if (increment + 1 === data.props.G.marketCoinsUnique.length) {
                 break;
             }
         }
