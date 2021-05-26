@@ -10,7 +10,7 @@ export const CreateCoin = ({value, isInitial = false, isTriggerTrading = false} 
 export const CountMarketCoins = (G) => {
     const repeated = {};
     for (let i = 0; i < G.marketCoinsUnique.length; i++) {
-        let temp = G.marketCoinsUnique[i].value;
+        const temp = G.marketCoinsUnique[i].value;
         repeated[temp] = G.marketCoins.filter(coin => coin.value === temp).length;
     }
     return repeated;

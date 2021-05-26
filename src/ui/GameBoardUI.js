@@ -54,8 +54,8 @@ export const DrawMarketCoins = (data) => {
         const boardCells = [];
         boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
-            const increment = i * drawData.boardCols + j;
-            const tempCoinValue = data.props.G.marketCoinsUnique[increment].value;
+            const increment = i * drawData.boardCols + j,
+                tempCoinValue = data.props.G.marketCoinsUnique[increment].value;
             boardCells.push(
                 <td className="bg-yellow-300" key={tempCoinValue}>
                     <span
