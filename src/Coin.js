@@ -35,10 +35,8 @@ export const BuildCoins = (coinConfig, opts) => {
     return coins;
 };
 
-// todo rework in ONE function
 export const Trading = (G, ctx, tradingCoins) => {
-    const coinsTotalValue = tradingCoins.reduce((prev, current) => prev + current.value, 0),
-        coinsValues = tradingCoins.map(coin => coin.value),
+    const coinsValues = tradingCoins.map(coin => coin.value),
         coinsMaxValue = Math.max(...coinsValues);
     let coinMaxIndex = null;
     for (let i = 0; i < tradingCoins.length; i++) {
@@ -49,51 +47,13 @@ export const Trading = (G, ctx, tradingCoins) => {
             }
         }
     }
-    let tradedCoin = null;
-    if (G.marketCoins.length) {
-        if (coinsTotalValue > G.marketCoins[G.marketCoins.length - 1].value) {
-            tradedCoin = G.marketCoins[G.marketCoins.length - 1];
-            G.marketCoins.splice(G.marketCoins.length - 1, 1);
-        } else {
-            for (let i = 0; i < G.marketCoins.length; i++) {
-                if (G.marketCoins[i].value < coinsTotalValue) {
-                    tradedCoin = G.marketCoins[i];
-                } else if (G.marketCoins[i].value >= coinsTotalValue) {
-                    tradedCoin = G.marketCoins[i];
-                    G.marketCoins.splice(i, 1);
-                    break;
-                }
-                if (i === G.marketCoins.length - 1) {
-                    G.marketCoins.splice(i, 1);
-                }
-            }
-        }
-    }
-    G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = null;
-    if (tradedCoin !== null) {
-        G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = tradedCoin;
-        if (!tradingCoins[coinMaxIndex].isInitial) {
-            let returningIndex = null;
-            for (let i = 0; i < G.marketCoins.length; i++) {
-                returningIndex = i;
-                if (G.marketCoins[i].value > tradingCoins[coinMaxIndex].value) {
-                    break;
-                }
-            }
-            G.marketCoins.splice(returningIndex, 0, tradingCoins[coinMaxIndex]);
-        }
-    } else {
-        G.players[ctx.currentPlayer].boardCoins[G.taverns.length + coinMaxIndex] = tradingCoins[coinMaxIndex];
-    }
+    UpgradeCoin(G, ctx, G.taverns.length + coinMaxIndex, tradingCoins[coinMaxIndex], tradingCoins.reduce((prev, current) => prev + current.value, 0));
 };
 
-export const UpgradeCoin = (G, ctx, j, value) => {
-    const upgradedCoin = G.players[ctx.currentPlayer].boardCoins[j],
-        newValue = G.players[ctx.currentPlayer].boardCoins[j].value + value;
+export const UpgradeCoin = (G, ctx, j, upgradedCoin, newValue) => {
     let upgradeCoin = null;
     if (G.marketCoins.length) {
         if (newValue > G.marketCoins[G.marketCoins.length - 1].value) {
-            console.log(2)
             upgradeCoin = G.marketCoins[G.marketCoins.length - 1];
             G.marketCoins.splice(G.marketCoins.length - 1, 1);
         } else {

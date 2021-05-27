@@ -177,7 +177,8 @@ export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
 
 export const ClickCoinToUpgrade = (G, ctx, coinID) => {
     G.drawProfit = null;
-    UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].pickedCard.value);
+    UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID],
+        G.players[ctx.currentPlayer].boardCoins[coinID].value + G.players[ctx.currentPlayer].pickedCard.value);
     let tavernId = GetCurrentTavernNumber(G);
     ActivateTrading(G, ctx, tavernId);
     CheckEmptyLastTavern(G, ctx);

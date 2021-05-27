@@ -206,7 +206,7 @@ export const DrawProfit = (data, option) => {
                 );
             }
         } else if (option === "upgradeCoin") {
-            caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.value + " .";
+            caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.value + ".";
             for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                 if (!data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
                     // todo currentPlayer

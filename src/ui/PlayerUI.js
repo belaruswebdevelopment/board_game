@@ -284,7 +284,7 @@ export const DrawPlayersBoards = (data) => {
                         playerCells.push(
                             <td key={id}
                                 className="bg-gray-600">
-                                <b>{data.props.G.players[p].heroes[i].points}</b>
+                                <b>{data.props.G.players[p].heroes[i].value}</b>
                             </td>
                         );
                     } else {
