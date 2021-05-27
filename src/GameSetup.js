@@ -8,9 +8,6 @@ import {BuildPriorities} from "./Priority";
 import {actionCardsConfigArray} from "./data/ActionCardData";
 
 export const SetupGame = (ctx) => {
-    // todo add coins upgrade cards logic!
-    // todo add advanced 1 epoch logic (get description from rules)
-    // todo add advanced scoring
     const suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
@@ -35,7 +32,6 @@ export const SetupGame = (ctx) => {
         decks[i] = BuildCards({suits: suitsConfigArray, actions: actionCardsConfigArray}, {players: ctx.numPlayers, tier: i});
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
-    // todo move taverns in separate config data file + images for it
     const taverns = [],
         tavernsNum = 3,
         drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;

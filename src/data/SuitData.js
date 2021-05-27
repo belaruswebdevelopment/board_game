@@ -3,7 +3,6 @@ import {CreateCard} from "../Card";
 import {ArithmeticSum, TotalPoints, TotalRank} from "../Score";
 import {CreatePriority} from "../Priority";
 
-// todo rework switch to player to get distinction awarding
 const blacksmithSuit = {
     suit: 0,
     suitName: 'Blacksmith',
@@ -187,7 +186,6 @@ const minerSuit = {
                 delete G.distinctions[2];
                 ctx.events.endTurn();
             } else {
-                // todo move to FinalScoring
                 if (player.priority.value === 6) {
                     return 3;
                 } else {
@@ -251,7 +249,6 @@ const warriorSuit = {
             if (G.tierToEnd !== 0) {
                 G.drawProfit = 3;
             } else {
-                // todo move to FinalScoring
                 return Math.max(...player.boardCoins.map(coin => coin.value));
             }
         },

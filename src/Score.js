@@ -49,6 +49,7 @@ export const FinalScoring = (G, ctx, player, currentScore) => {
     if (warriorsDistinction !== undefined && G.players.findIndex(p => p.nickname === player.nickname) === warriorsDistinction) {
         score += suitsConfigArray[3].distinction.awarding(G, ctx, player);
     }
+    score += suitsConfigArray[2].distinction.awarding(G, ctx, player);
     // todo rework heroes profit
     score += player.heroes.length * 17;
     return score;

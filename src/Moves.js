@@ -10,7 +10,6 @@ export const ClickHeroCard = (G, ctx, heroID) => {
     G.heroes[heroID] = null;
     const tavernId = GetCurrentTavernNumber(G);
     if (CheckPickHero(G, ctx)) {
-        // todo Check if we need to end stage or auto
         ctx.events.endStage();
         ctx.events.setStage('pickHero');
     } else {
