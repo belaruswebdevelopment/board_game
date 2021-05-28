@@ -71,7 +71,6 @@ export const BoardGame = {
                 ClickCampCard,
             },
             onBegin: (G, ctx) => {
-                // todo Open only current taverns coins!
                 G.currentTavern++;
                 const {playersOrder, exchangeOrder} = ResolveBoardCoins(G, ctx);
                 [G.playersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];

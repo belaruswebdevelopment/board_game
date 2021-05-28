@@ -26,6 +26,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             </span>
                         </th>
                     );
+                    // todo CLEANUP & Open only current taverns coins!
                     if (data.props.G.players[p].boardCoins[coinIndex] === null) {
                         if (Number(data.props.ctx.currentPlayer) === p) {
                             playerCells.push(

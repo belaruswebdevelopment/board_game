@@ -56,7 +56,6 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
         }
     } else {
         ctx.events.setStage('upgradeCoin');
-        G.taverns[tavernId][cardId] = null;
         G.drawProfit = "upgradeCoin";
     }
 };
@@ -94,7 +93,7 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         return INVALID_MOVE;
     }
 };
-// todo rework!
+
 export const PlaceAllCoins = (G, ctx, coinsOrder) => {
     for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
         const coinId = coinsOrder[i] || G.players[ctx.currentPlayer].handCoins.findIndex(element => element !== null);
