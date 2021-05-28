@@ -14,8 +14,7 @@ export const tavernsConfig = {
 };
 
 export const CheckEmptyLastTavern = (G, ctx) => {
-    const isLastTavernEmpty = G.taverns[G.tavernsNum - 1].every((element) => element === null);
-    if (isLastTavernEmpty) {
+    if (G.taverns[G.tavernsNum - 1].every((element) => element === null)) {
         if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
             G.tierToEnd--;
             ctx.events.setPhase('getDistinctions');
@@ -31,24 +30,7 @@ export const CheckEmptyLastTavern = (G, ctx) => {
 }
 
 export const CheckCurrentTavernEmpty = (G, ctx, tavernId) => {
-    const isCurrentTavernEmpty = G.taverns[tavernId].every((element) => element === null);
-    if (isCurrentTavernEmpty) {
+    if (G.taverns[tavernId].every((element) => element === null)) {
         ctx.events.setPhase('pickCards');
     }
-}
-
-export const GetCurrentTavernNumber = (G) => {
-    let tavernId = null;
-    for (let i = 0; i < G.tavernsNum; i++) {
-        if (G.taverns[i].some(element => element === null) && G.taverns[i].some(element => element !== null)) {
-            tavernId = i;
-            break;
-        } else if ((i !== G.tavernsNum - 1) && G.taverns[i].every(element => element === null) && G.taverns[i + 1].every(element => element !== null)) {
-            tavernId = i;
-            break;
-        } else if (i === G.tavernsNum - 1) {
-            tavernId = i;
-        }
-    }
-    return tavernId;
 }

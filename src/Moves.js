@@ -2,20 +2,19 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCampCardToPlayer, AddCardToPlayer} from "./Player";
 import {suitsConfigArray} from "./data/SuitData";
 import {Trading, UpgradeCoin} from "./Coin";
-import {CheckCurrentTavernEmpty, CheckEmptyLastTavern, GetCurrentTavernNumber} from "./Tavern";
+import {CheckCurrentTavernEmpty, CheckEmptyLastTavern} from "./Tavern";
 import {CheckPickHero} from "./Hero";
 
 export const ClickHeroCard = (G, ctx, heroID) => {
     G.players[ctx.currentPlayer].heroes.push(G.heroes[heroID]);
     G.heroes[heroID] = null;
-    const tavernId = GetCurrentTavernNumber(G);
     if (CheckPickHero(G, ctx)) {
         ctx.events.endStage();
         ctx.events.setStage('pickHero');
     } else {
-        ActivateTrading(G, ctx, tavernId);
+        ActivateTrading(G, ctx, G.currentTavern);
         CheckEmptyLastTavern(G, ctx);
-        CheckCurrentTavernEmpty(G, ctx, tavernId);
+        CheckCurrentTavernEmpty(G, ctx, G.currentTavern);
         ctx.events.endStage();
         ctx.events.endTurn();
     }
@@ -57,6 +56,7 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
         }
     } else {
         ctx.events.setStage('upgradeCoin');
+        G.taverns[tavernId][cardId] = null;
         G.drawProfit = "upgradeCoin";
     }
 };
@@ -94,7 +94,7 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         return INVALID_MOVE;
     }
 };
-
+// todo rework!
 export const PlaceAllCoins = (G, ctx, coinsOrder) => {
     for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
         const coinId = coinsOrder[i] || G.players[ctx.currentPlayer].handCoins.findIndex(element => element !== null);
@@ -178,10 +178,9 @@ export const ClickCoinToUpgrade = (G, ctx, coinID) => {
     G.drawProfit = null;
     UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID],
         G.players[ctx.currentPlayer].boardCoins[coinID].value + G.players[ctx.currentPlayer].pickedCard.value);
-    let tavernId = GetCurrentTavernNumber(G);
-    ActivateTrading(G, ctx, tavernId);
+    ActivateTrading(G, ctx, G.currentTavern);
     CheckEmptyLastTavern(G, ctx);
-    CheckCurrentTavernEmpty(G, ctx, tavernId);
+    CheckCurrentTavernEmpty(G, ctx, G.currentTavern);
     ctx.events.endStage();
     ctx.events.endTurn();
 };

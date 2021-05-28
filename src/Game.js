@@ -33,6 +33,7 @@ export const BoardGame = {
             },
             next: 'pickCards',
             onBegin: (G) => {
+                G.currentTavern = -1;
                 for (let i = 0; i < G.players.length; i++) {
                     for (let j = 0; j < G.players[i].boardCoins.length; j++) {
                         const tempId = G.players[i].handCoins.indexOf(null);
@@ -71,14 +72,12 @@ export const BoardGame = {
             },
             onBegin: (G, ctx) => {
                 // todo Open only current taverns coins!
+                G.currentTavern++;
                 const {playersOrder, exchangeOrder} = ResolveBoardCoins(G, ctx);
                 [G.playersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
             },
             onEnd: (G) => {
                 ChangePlayersPriorities(G);
-            },
-            endIf: (G) => {
-                return G.taverns[G.tavernsNum - 1].every((element) => element === null);
             },
         },
         getDistinctions: {

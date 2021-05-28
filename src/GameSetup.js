@@ -34,6 +34,7 @@ export const SetupGame = (ctx) => {
     }
     const taverns = [],
         tavernsNum = 3,
+        currentTavern = null,
         drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
         taverns[i] = decks[0].splice(0, drawSize);
@@ -74,6 +75,7 @@ export const SetupGame = (ctx) => {
         tierToEnd,
         campNum,
         tavernsNum,
+        currentTavern,
         drawSize,
         expansions,
         decks,

@@ -2,7 +2,6 @@ import React from "react";
 import {CountMarketCoins} from "../Coin";
 import {suitsConfigArray} from "../data/SuitData.js";
 import {tavernsConfig} from "../Tavern";
-import {ClickCoinToUpgrade} from "../Moves";
 
 const DrawBoard = (objectsSize) => {
     const boardRows = Math.floor(Math.sqrt(objectsSize)),
