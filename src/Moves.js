@@ -4,14 +4,15 @@ import {suitsConfigArray} from "./data/SuitData";
 import {Trading, UpgradeCoin} from "./Coin";
 import {CheckCurrentTavernEmpty, CheckEmptyLastTavern} from "./Tavern";
 import {CheckPickHero} from "./Hero";
+import {IsValidMove} from "./MoveValidator";
 
-export const ClickHeroCard = (G, ctx, heroID) => {
-    const isEmptyPick = G.heroes[heroID] === null;
-    if (isEmptyPick) {
+export const ClickHeroCard = (G, ctx, heroId) => {
+    const isValidMove = IsValidMove({obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length]});
+    if (!isValidMove) {
         return INVALID_MOVE;
     }
-    G.players[ctx.currentPlayer].heroes.push(G.heroes[heroID]);
-    G.heroes[heroID] = null;
+    G.players[ctx.currentPlayer].heroes.push(G.heroes[heroId]);
+    G.heroes[heroId] = null;
     if (CheckPickHero(G, ctx)) {
         ctx.events.endStage();
         ctx.events.setStage('pickHero');
@@ -42,9 +43,9 @@ const ActivateTrading = (G, ctx, tavernId) => {
 }
 
 export const ClickCard = (G, ctx, tavernId, cardId) => {
-    const isEarlyPick = tavernId > 0 && G.taverns[tavernId - 1].some((element) => element !== null),
-        isEmptyPick = G.taverns[tavernId][cardId] === null;
-    if (isEmptyPick || isEarlyPick) {
+    const isValidMove = IsValidMove({objId: tavernId, values: [G.currentTavern]}) &&
+        IsValidMove({obj: G.taverns[tavernId][cardId], objId: cardId, range: [0, G.taverns[tavernId].length]});
+    if (!isValidMove) {
         return INVALID_MOVE;
     }
     const isAdded = AddCardToPlayer(G.players[ctx.currentPlayer], G.taverns[tavernId][cardId]);
@@ -65,32 +66,33 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
 };
 
 export const ClickHandCoin = (G, ctx, coinId) => {
-    const isEmptyPick = G.players[ctx.currentPlayer].handCoins[coinId] === null;
-    if (isEmptyPick) {
+    const isValidMove = IsValidMove({obj: G.players[ctx.currentPlayer].handCoins[coinId], objId: coinId, range: [0, G.players[ctx.currentPlayer].handCoins.length]});
+    if (!isValidMove) {
         return INVALID_MOVE;
     }
     G.players[ctx.currentPlayer].selectedCoin = coinId;
 };
 
 export const ClickBoardCoin = (G, ctx, coinId) => {
-    const isWrongPick = false;
-    if (isWrongPick) {
+    const player = G.players[ctx.currentPlayer],
+        isValidMove = IsValidMove({objId: coinId, range: [0, player.boardCoins.length]});
+    if (!isValidMove) {
         return INVALID_MOVE;
     }
-    if (G.players[ctx.currentPlayer].boardCoins[coinId] !== null) {
-        const tempId = G.players[ctx.currentPlayer].handCoins.indexOf(null);
-        G.players[ctx.currentPlayer].handCoins[tempId] = G.players[ctx.currentPlayer].boardCoins[coinId];
-        G.players[ctx.currentPlayer].boardCoins[coinId] = null;
-    } else if (G.players[ctx.currentPlayer].selectedCoin !== undefined) {
-        const tempId = G.players[ctx.currentPlayer].selectedCoin;
-        G.players[ctx.currentPlayer].boardCoins[coinId] = G.players[ctx.currentPlayer].handCoins[tempId];
-        G.players[ctx.currentPlayer].handCoins[tempId] = null;
-        G.players[ctx.currentPlayer].selectedCoin = undefined;
-        const isAllHandCoinsEmpty = G.players.every((element) => element.handCoins.every((e) => e === null));
-        if (isAllHandCoinsEmpty) {
+    if (player.boardCoins[coinId] !== null) {
+        const tempId = player.handCoins.indexOf(null);
+        player.handCoins[tempId] = player.boardCoins[coinId];
+        player.boardCoins[coinId] = null;
+    } else if (player.selectedCoin !== undefined) {
+        const tempId = player.selectedCoin;
+        player.boardCoins[coinId] = player.handCoins[tempId];
+        player.handCoins[tempId] = null;
+        player.selectedCoin = undefined;
+        const isHandCoinsEmpty = G.players.every((element) => element.handCoins.every((e) => e === null));
+        if (isHandCoinsEmpty) {
             ctx.events.endPhase({next: 'pickCards'});
         }
-        if (G.players[ctx.currentPlayer].handCoins.every((element) => element === null)) {
+        if (player.handCoins.every((element) => element === null)) {
             ctx.events.endTurn();
         }
     } else {
@@ -104,8 +106,8 @@ export const PlaceAllCoins = (G, ctx, coinsOrder) => {
         G.players[ctx.currentPlayer].boardCoins[i] = G.players[ctx.currentPlayer].handCoins[coinId];
         G.players[ctx.currentPlayer].handCoins[coinId] = null;
     }
-    const isAllHandCoinsEmpty = G.players.every((element) => element.handCoins.every((e) => e === null));
-    if (isAllHandCoinsEmpty) {
+    const isHandCoinsEmpty = G.players.every((element) => element.handCoins.every((e) => e === null));
+    if (isHandCoinsEmpty) {
         ctx.events.endPhase({next: 'pickCards'});
     }
     ctx.events.endTurn();
@@ -155,14 +157,12 @@ export const ResolveBoardCoins = (G, ctx) => {
 };
 
 export const ClickDistinctionCard = (G, ctx, cardID) => {
-    const isAllEmpty = G.distinctions.every(item => item === null),
-        index = G.distinctions.findIndex(id => id === Number(ctx.currentPlayer));
-    if (isAllEmpty || index === -1) {
+    const index = G.distinctions.findIndex(id => id === Number(ctx.currentPlayer)),
+        isValidMove = IsValidMove({objId: cardID, values: [index]});
+    if (!isValidMove) {
         return INVALID_MOVE;
     }
-    if (index === cardID) {
-        suitsConfigArray[cardID].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
-    }
+    suitsConfigArray[cardID].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
 };
 
 export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
