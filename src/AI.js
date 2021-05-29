@@ -26,11 +26,7 @@ export const enumerate = (G, ctx) => {
         moves.push({move: 'ClickCoinToUpgradeDistinction', args: [0]});
     }
     if (ctx.phase === 'pickCards') {
-        const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
-        if (tavernId === -1) {
-            return moves;
-        }
-        const tavern = G.taverns[tavernId];
+        const tavern = G.taverns[G.currentTavern];
         for (let i = 0; i < tavern.length; i++) {
             if (tavern[i] === null) {
                 continue;
@@ -38,8 +34,9 @@ export const enumerate = (G, ctx) => {
             if (tavern.some(element => CompareCards(tavern[i], element) < 0)) {
                 continue;
             }
-            const isCurrentCardWorse = EvaluateCard(G, ctx, tavern[i]) < 0,
-                isExistCardNotWorse = tavern.some(element => (element !== null) && (EvaluateCard(G, ctx, tavern[i]) >= 0));
+            const isCurrentCardWorse = EvaluateCard(G, ctx, tavern[i], i, tavern) < 0,
+                isExistCardNotWorse = tavern.some(element => (element !== null) &&
+                    (EvaluateCard(G, ctx, tavern[i], i, tavern) >= 0));
             if (isCurrentCardWorse && isExistCardNotWorse) {
                 continue;
             }
@@ -52,7 +49,7 @@ export const enumerate = (G, ctx) => {
             }
             if (flag) {
                 uniqueArr.push(tavern[i]);
-                moves.push({move: 'ClickCard', args: [tavernId, i]});
+                moves.push({move: 'ClickCard', args: [G.currentTavern, i]});
             }
             flag = true;
         }
@@ -262,11 +259,7 @@ export const objectives = () => ({
 export const iterations = (G, ctx) => {
     const maxIter = G.botData.maxIter;
     if (ctx.phase === 'pickCards') {
-        const tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
-        if (tavernId === -1) {
-            return maxIter;
-        }
-        const currentTavern = G.taverns[tavernId];
+        const currentTavern = G.taverns[G.currentTavern];
         if (currentTavern.filter(element => element !== null).length === 1) {
             return 1;
         }

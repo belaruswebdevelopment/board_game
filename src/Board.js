@@ -39,6 +39,9 @@ export class GameBoard extends React.Component {
     OnClickCoinToUpgradeDistinction = (coinId) => {
         this.props.moves.ClickCoinToUpgradeDistinction(coinId);
     };
+    OnClickCoinToUpgradeInDistinction = (coinId, value) => {
+        this.props.moves.ClickCoinToUpgradeInDistinction(coinId, value);
+    };
     OnClickCardToPickDistinction = (cardId, deck) => {
         this.props.moves.ClickCardToPickDistinction(cardId, deck);
     };
@@ -60,8 +63,8 @@ export class GameBoard extends React.Component {
                 : this.props.G.drawProfit,
             tavernsUI = DrawTaverns(this, gridClass),
             playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
-            playersBoardsUI = DrawPlayersBoards(this),
             playersHandsCoinsUI = DrawPlayersHandsCoins(this),
+            playersBoardsUI = DrawPlayersBoards(this),
             debugUI = DrawDebugData(this),
             classes = `col-span-${this.props.ctx.numPlayers} text-center underline border`;
         return (
@@ -89,8 +92,8 @@ export class GameBoard extends React.Component {
                     </div>
                     {tavernsUI}
                     {playersBoardsCoinsUI}
-                    {playersBoardsUI}
                     {playersHandsCoinsUI}
+                    {playersBoardsUI}
                 </div>
                 {debugUI}
             </div>

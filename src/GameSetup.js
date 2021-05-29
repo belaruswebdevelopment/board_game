@@ -27,13 +27,15 @@ export const SetupGame = (ctx) => {
             [{points: 0},{points: 1},{points: 2},{points: 3},{points: 4}]
         ],
         camp = [{points: 0}, {points: 1}, {points: 2}, {points: 3}, {points: 4}],
-        distinctions = Array(suitsNum).fill(null);
+        distinctions = Array(suitsNum).fill(null)
+    let winner = null;
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards({suits: suitsConfigArray, actions: actionCardsConfigArray}, {players: ctx.numPlayers, tier: i});
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
     const taverns = [],
         tavernsNum = 3,
+        currentTavern = null,
         drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
         taverns[i] = decks[0].splice(0, drawSize);
@@ -69,11 +71,13 @@ export const SetupGame = (ctx) => {
     botData.deckLength = decks[0].length;
     return {
         debug,
+        winner,
         drawProfit,
         suitsNum,
         tierToEnd,
         campNum,
         tavernsNum,
+        currentTavern,
         drawSize,
         expansions,
         decks,

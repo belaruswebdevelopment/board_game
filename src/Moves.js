@@ -2,7 +2,7 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCampCardToPlayer, AddCardToPlayer} from "./Player";
 import {suitsConfigArray} from "./data/SuitData";
 import {Trading, UpgradeCoin} from "./Coin";
-import {CheckCurrentTavernEmpty, CheckEmptyLastTavern, GetCurrentTavernNumber} from "./Tavern";
+import {CheckCurrentTavernEmpty, CheckEmptyLastTavern} from "./Tavern";
 import {CheckPickHero} from "./Hero";
 
 export const ClickHeroCard = (G, ctx, heroID) => {
@@ -12,14 +12,13 @@ export const ClickHeroCard = (G, ctx, heroID) => {
     }
     G.players[ctx.currentPlayer].heroes.push(G.heroes[heroID]);
     G.heroes[heroID] = null;
-    const tavernId = GetCurrentTavernNumber(G);
     if (CheckPickHero(G, ctx)) {
         ctx.events.endStage();
         ctx.events.setStage('pickHero');
     } else {
-        ActivateTrading(G, ctx, tavernId);
+        ActivateTrading(G, ctx, G.currentTavern);
         CheckEmptyLastTavern(G, ctx);
-        CheckCurrentTavernEmpty(G, ctx, tavernId);
+        CheckCurrentTavernEmpty(G, ctx, G.currentTavern);
         ctx.events.endStage();
         ctx.events.endTurn();
     }
@@ -115,16 +114,15 @@ export const PlaceAllCoins = (G, ctx, coinsOrder) => {
 export const ResolveBoardCoins = (G, ctx) => {
     const playersOrder = [],
         coinValues = [],
-        exchangeOrder = [],
-        tavernId = G.taverns.findIndex(element => element.some(item => item !== null));
+        exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         playersOrder.push(i);
         exchangeOrder.push(i);
-        coinValues[i] = G.players[i].boardCoins[tavernId].value;
+        coinValues[i] = G.players[i].boardCoins[G.currentTavern].value;
         for (let j = playersOrder.length - 1; j > 0; j--) {
-            if (G.players[playersOrder[j]].boardCoins[tavernId].value > G.players[playersOrder[j - 1]].boardCoins[tavernId].value) {
+            if (G.players[playersOrder[j]].boardCoins[G.currentTavern].value > G.players[playersOrder[j - 1]].boardCoins[G.currentTavern].value) {
                 [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
-            } else if (G.players[playersOrder[j]].boardCoins[tavernId].value === G.players[playersOrder[j - 1]].boardCoins[tavernId].value) {
+            } else if (G.players[playersOrder[j]].boardCoins[G.currentTavern].value === G.players[playersOrder[j - 1]].boardCoins[G.currentTavern].value) {
                 if (G.players[playersOrder[j]].priority.value > G.players[playersOrder[j - 1]].priority.value) {
                     [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
                 }
@@ -141,7 +139,7 @@ export const ResolveBoardCoins = (G, ctx) => {
         if (counts[prop] <= 1) {
             continue;
         }
-        const tiePlayers = G.players.filter(player => player.boardCoins[tavernId].value === Number(prop) && player.priority.isExchangeable);
+        const tiePlayers = G.players.filter(player => player.boardCoins[G.currentTavern].value === Number(prop) && player.priority.isExchangeable);
         while (tiePlayers.length > 1) {
             const tiePlayersPriorities = tiePlayers.map(player => player.priority.value),
                 maxPriority = Math.max(...tiePlayersPriorities),
@@ -181,8 +179,15 @@ export const ClickDistinctionCard = (G, ctx, cardID) => {
 
 export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
     G.drawProfit = null;
-    UpgradeCoin(G, ctx, coinID, 5);
+    UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID], G.players[ctx.currentPlayer].boardCoins[coinID].value + 5);
     delete G.distinctions[3];
+    ctx.events.endTurn();
+};
+
+export const ClickCoinToUpgradeInDistinction = (G, ctx, coinID, value) => {
+    G.drawProfit = null;
+    UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID], G.players[ctx.currentPlayer].boardCoins[coinID].value + value);
+    delete G.distinctions[4];
     ctx.events.endTurn();
 };
 
@@ -190,19 +195,22 @@ export const ClickCoinToUpgrade = (G, ctx, coinID) => {
     G.drawProfit = null;
     UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID],
         G.players[ctx.currentPlayer].boardCoins[coinID].value + G.players[ctx.currentPlayer].pickedCard.value);
-    let tavernId = GetCurrentTavernNumber(G);
-    ActivateTrading(G, ctx, tavernId);
+    ActivateTrading(G, ctx, G.currentTavern);
     CheckEmptyLastTavern(G, ctx);
-    CheckCurrentTavernEmpty(G, ctx, tavernId);
+    CheckCurrentTavernEmpty(G, ctx, G.currentTavern);
     ctx.events.endStage();
     ctx.events.endTurn();
 };
 
 export const ClickCardToPickDistinction = (G, ctx, cardID) => {
     G.drawProfit = null;
-    G.players[ctx.currentPlayer].cards[G.decks[1][cardID].suit].push(G.decks[1][cardID]);
+    const isAdded = AddCardToPlayer(G.players[ctx.currentPlayer], G.decks[1][cardID]);
     G.decks[1].splice(cardID, 1);
     G.decks[1] = ctx.random.Shuffle(G.decks[1]);
-    delete G.distinctions[4];
-    ctx.events.endTurn();
+    if (isAdded) {
+        delete G.distinctions[4];
+        ctx.events.endTurn();
+    } else {
+        G.drawProfit = "upgradeCoinDistinction";
+    }
 };

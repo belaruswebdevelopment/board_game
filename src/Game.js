@@ -2,7 +2,11 @@ import {SetupGame} from "./GameSetup";
 import {
     ClickBoardCoin,
     ClickCampCard,
-    ClickCard, ClickCardToPickDistinction, ClickCoinToUpgrade, ClickCoinToUpgradeDistinction,
+    ClickCard,
+    ClickCardToPickDistinction,
+    ClickCoinToUpgrade,
+    ClickCoinToUpgradeDistinction,
+    ClickCoinToUpgradeInDistinction,
     ClickDistinctionCard,
     ClickHandCoin,
     ClickHeroCard,
@@ -12,14 +16,6 @@ import {
 import {ChangePlayersPriorities} from "./Priority";
 import {CheckDistinction, CurrentScoring} from "./Score";
 import {enumerate, iterations, objectives, playoutDepth} from "./AI";
-
-const IsEndGame = (taverns, tavernsNum, deck) => {
-    let isEndGame = false;
-    if (!deck.length && taverns[tavernsNum - 1].every((element) => element === null)) {
-        isEndGame = true;
-    }
-    return isEndGame;
-};
 
 export const BoardGame = {
     setup: SetupGame,
@@ -33,6 +29,7 @@ export const BoardGame = {
             },
             next: 'pickCards',
             onBegin: (G) => {
+                G.currentTavern = -1;
                 for (let i = 0; i < G.players.length; i++) {
                     for (let j = 0; j < G.players[i].boardCoins.length; j++) {
                         const tempId = G.players[i].handCoins.indexOf(null);
@@ -70,15 +67,12 @@ export const BoardGame = {
                 ClickCampCard,
             },
             onBegin: (G, ctx) => {
-                // todo Open only current taverns coins!
+                G.currentTavern++;
                 const {playersOrder, exchangeOrder} = ResolveBoardCoins(G, ctx);
                 [G.playersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
             },
             onEnd: (G) => {
                 ChangePlayersPriorities(G);
-            },
-            endIf: (G) => {
-                return G.taverns[G.tavernsNum - 1].every((element) => element === null);
             },
         },
         getDistinctions: {
@@ -94,6 +88,7 @@ export const BoardGame = {
                 ClickDistinctionCard,
                 ClickCoinToUpgradeDistinction,
                 ClickCardToPickDistinction,
+                ClickCoinToUpgradeInDistinction,
             },
             onBegin: (G, ctx) => {
                 CheckDistinction(G, ctx);
@@ -107,16 +102,15 @@ export const BoardGame = {
             },
         },
     },
-    endIf: (G, ctx) => {
-        if (IsEndGame(G.taverns, G.tavernsNum, G.decks[G.decks.length - 1])) {
-            const totalScore = [];
-            for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(CurrentScoring(G.players[i]));
-            }
-            for (let i = ctx.numPlayers - 1; i >= 0; i--) {
-                if (Math.max(...totalScore) === totalScore[i]) {
-                    return {winner: String(i)};
-                }
+    onEnd: (G, ctx) => {
+        const totalScore = [];
+        for (let i = 0; i < ctx.numPlayers; i++) {
+            totalScore.push(CurrentScoring(G.players[i]));
+        }
+        for (let i = ctx.numPlayers - 1; i >= 0; i--) {
+            if (Math.max(...totalScore) === totalScore[i]) {
+                G.winner = i;
+                return G;
             }
         }
     },
