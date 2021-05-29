@@ -34,14 +34,6 @@ const ValidateByValues = (num, values) => {
     return values.includes(num);
 };
 
-const CreateMoveValidator = ({move, getValue, getRange}) => {
-    return {
-        move,
-        getValue,
-        getRange,
-    };
-};
-
 export const moveValidators = {
     ClickHeroCard: {
         getRange: ({G, ctx}) => ([0, G.heroes.length]),
