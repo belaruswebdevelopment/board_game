@@ -247,6 +247,7 @@ const warriorSuit = {
         style: "url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 94px 150px",
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
+                ctx.events.setStage('upgradeDistinctionCoin');
                 G.drawProfit = 3;
             } else {
                 return Math.max(...player.boardCoins.map(coin => coin.value));
@@ -304,8 +305,9 @@ const explorerSuit = {
     distinction: {
         description: "Получив знак отличия разведчиков, сразу же возьмите 3 карты из колоды эпохи 2 и сохраните у себя одну из этих карт. Если это карта дворфа, сразу же поместите его в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов. Если это карта королевская награда, то улучшите одну из своих монет. Две оставшиеся карты возвращаются в колоду эпохи 2. Положите карту знак отличия разведчиков в командную зону рядом с вашим планшетом.",
         style: "url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 94px 150px",
-        awarding: (G) => {
+        awarding: (G, ctx) => {
             if (G.tierToEnd !== 0) {
+                ctx.events.setStage('pickDistinctionCard');
                 G.drawProfit = 4;
             }
         },

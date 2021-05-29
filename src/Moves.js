@@ -163,18 +163,6 @@ export const ClickDistinctionCard = (G, ctx, cardID) => {
     if (index === cardID) {
         suitsConfigArray[cardID].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
     }
-    /*if (G.distinctions.some(item => item !== null)) {
-        const index = G.distinctions.findIndex(id => id === Number(ctx.currentPlayer));
-        if (index !== -1) {
-            if (index === cardID) {
-                suitsConfigArray[cardID].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
-            }
-        } else {
-            return INVALID_MOVE;
-        }
-    } else {
-        return INVALID_MOVE;
-    }*/
 };
 
 export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
@@ -194,6 +182,7 @@ export const ClickCoinToUpgradeInDistinction = (G, ctx, coinID, value) => {
     G.drawProfit = null;
     UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID], G.players[ctx.currentPlayer].boardCoins[coinID].value + value);
     delete G.distinctions[4];
+    ctx.events.endStage();
     ctx.events.endTurn();
 };
 
@@ -218,8 +207,10 @@ export const ClickCardToPickDistinction = (G, ctx, cardID) => {
     G.decks[1] = ctx.random.Shuffle(G.decks[1]);
     if (isAdded) {
         delete G.distinctions[4];
+        ctx.events.endStage();
         ctx.events.endTurn();
     } else {
+        ctx.events.setStage('upgradeCoinInDistinction');
         G.drawProfit = "upgradeCoinDistinction";
     }
 };

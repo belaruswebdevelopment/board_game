@@ -82,13 +82,27 @@ export const BoardGame = {
                     next: (G, ctx) => (ctx.playOrderPos + 1) % G.playersOrder.length,
                     playOrder: (G) => G.playersOrder,
                 },
+                stages: {
+                    pickDistinctionCard: {
+                        moves: {
+                            ClickCardToPickDistinction,
+                        },
+                    },
+                    upgradeDistinctionCoin: {
+                        moves: {
+                            ClickCoinToUpgradeDistinction,
+                        },
+                    },
+                    upgradeCoinInDistinction: {
+                        moves: {
+                            ClickCoinToUpgradeInDistinction,
+                        },
+                    },
+                },
             },
             next: 'placeCoins',
             moves: {
                 ClickDistinctionCard,
-                ClickCoinToUpgradeDistinction,
-                ClickCardToPickDistinction,
-                ClickCoinToUpgradeInDistinction,
             },
             onBegin: (G, ctx) => {
                 CheckDistinction(G, ctx);
