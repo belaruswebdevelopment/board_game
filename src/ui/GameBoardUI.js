@@ -34,8 +34,8 @@ export const DrawCurrentPlayerTurn = (data) => {
 export const DrawWinner = (data) => {
     let winner;
     if (data.props.ctx.gameover) {
-        winner = data.props.ctx.gameover.winner !== undefined ?
-            "Winner: Player " + (Number(data.props.ctx.gameover.winner) + 1) :
+        winner = data.props.ctx.gameover.winner !== null ?
+            "Winner: Player " + (data.props.G.winner + 1) :
             "Draw!";
     } else {
         winner = "Game is started";
@@ -196,13 +196,20 @@ export const DrawProfit = (data, option) => {
             for (let j = 0; j < 3; j++) {
                 // todo currentPlayer
                 deck.push(data.props.G.decks[1][j]);
-                boardCells.push(
-                    <td className={`${suitsConfigArray[data.props.G.decks[1][j].suit].suitColor} cursor-pointer`}
-                        key={j}
-                        onClick={() => data.OnClickCardToPickDistinction(j, deck)}>
-                        <b>{deck[j].points}</b>
-                    </td>
-                );
+                if (data.props.G.decks[1][j].suit !== undefined) {
+                    boardCells.push(
+                        <td className={`${suitsConfigArray[data.props.G.decks[1][j].suit].suitColor} cursor-pointer`}
+                            key={j} onClick={() => data.OnClickCardToPickDistinction(j, deck)}>
+                            <b>{deck[j].points}</b>
+                        </td>
+                    );
+                } else if (data.props.G.decks[1][j].value !== undefined) {
+                    boardCells.push(
+                        <td className="cursor-pointer" key={j} onClick={() => data.OnClickCardToPickDistinction(j, deck)}>
+                            <b>{deck[j].value}</b>
+                        </td>
+                    );
+                }
             }
         } else if (option === "upgradeCoin") {
             caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.value + ".";
@@ -211,6 +218,26 @@ export const DrawProfit = (data, option) => {
                     // todo currentPlayer
                     boardCells.push(
                         <td className="cursor-pointer" key={j} onClick={() => data.OnClickCoinToUpgrade(j)}>
+                            <span
+                                style={{
+                                    background: `url(/img/coins/Coin${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value}${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial
+                                        ? "Initial" : ""}.jpg) no-repeat 0px 0px / 48px 48px`
+                                }}
+                                className={`bg-coin border-2`}>
+
+                            </span>
+                        </td>
+                    );
+                }
+            }
+        } else if (option === "upgradeCoinDistinction") {
+            caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.value + ".";
+            for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
+                if (!data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
+                    // todo currentPlayer
+                    boardCells.push(
+                        <td className="cursor-pointer" key={j} onClick={() => data.OnClickCoinToUpgradeInDistinction(j,
+                            data.props.G.players[data.props.ctx.currentPlayer].pickedCard.value)}>
                             <span
                                 style={{
                                     background: `url(/img/coins/Coin${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value}${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial
@@ -299,13 +326,20 @@ export const DrawTaverns = (data, gridClass) => {
                     );
                 } else {
                     // todo currentPlayer
-                    boardCells.push(
-                        <td className={`${suitsConfigArray[data.props.G.taverns[t][j].suit]?.suitColor !== undefined ?
-                            suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor : ""} cursor-pointer`}
-                            onClick={() => data.OnClickCard(t, j)}>
-                            <b>{data.props.G.taverns[t][j].points ?? data.props.G.taverns[t][j].value}</b>
-                        </td>
-                    );
+                    if (data.props.G.taverns[t][j].suit !== undefined) {
+                        boardCells.push(
+                            <td className={`${suitsConfigArray[data.props.G.taverns[t][j].suit].suitColor} cursor-pointer`}
+                                onClick={() => data.OnClickCard(t, j)}>
+                                <b>{data.props.G.taverns[t][j].points}</b>
+                            </td>
+                        );
+                    } else if (data.props.G.taverns[t][j].value !== undefined) {
+                        boardCells.push(
+                            <td className="cursor-pointer" onClick={() => data.OnClickCard(t, j)}>
+                                <b>{data.props.G.taverns[t][j].value}</b>
+                            </td>
+                        );
+                    }
                 }
             }
             tavernsBoards.push(

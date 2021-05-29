@@ -343,7 +343,7 @@ export const DrawPlayersBoards = (data) => {
                         playerCells.push(
                             <td key={id}
                                 className="bg-gray-600">
-                                <b>{data.props.G.players[p].heroes[i].value}</b>
+                                <b>{data.props.G.players[p].heroes[i]}</b>
                             </td>
                         );
                     } else {
@@ -382,7 +382,7 @@ export const DrawPlayersBoards = (data) => {
             <div className="col-span-3" key={`${data.props.G.players[p].nickname} board`}>
                 <table>
                     <caption>Player {p + 1} ({data.props.G.players[p].nickname}) cards,
-                        {data.props.G.tierToEnd === 0 ?
+                        {data.props.G.winner !== null ?
                             "Final: " + FinalScoring(data.props.G, data.props.ctx, data.props.G.players[p], CurrentScoring(data.props.G.players[p])) :
                             CurrentScoring(data.props.G.players[p])} points</caption>
                     <thead>

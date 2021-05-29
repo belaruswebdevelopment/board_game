@@ -17,10 +17,11 @@ export const CheckEmptyLastTavern = (G, ctx) => {
     if (G.taverns[G.tavernsNum - 1].every((element) => element === null)) {
         if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
             G.tierToEnd--;
-            ctx.events.setPhase('getDistinctions');
-            if (G.tierToEnd === 0) {
+            if (!G.decks[G.decks.length - 1].length) {
+                ctx.events.endGame();
                 return;
             }
+            ctx.events.setPhase('getDistinctions');
         }
         for (let i = 0; i < G.tavernsNum; i++) {
             G.taverns[i] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);

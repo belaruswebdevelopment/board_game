@@ -27,7 +27,8 @@ export const SetupGame = (ctx) => {
             [{points: 0},{points: 1},{points: 2},{points: 3},{points: 4}]
         ],
         camp = [{points: 0}, {points: 1}, {points: 2}, {points: 3}, {points: 4}],
-        distinctions = Array(suitsNum).fill(null);
+        distinctions = Array(suitsNum).fill(null)
+    let winner = null;
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards({suits: suitsConfigArray, actions: actionCardsConfigArray}, {players: ctx.numPlayers, tier: i});
         decks[i] = ctx.random.Shuffle(decks[i]);
@@ -70,6 +71,7 @@ export const SetupGame = (ctx) => {
     botData.deckLength = decks[0].length;
     return {
         debug,
+        winner,
         drawProfit,
         suitsNum,
         tierToEnd,

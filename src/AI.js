@@ -18,8 +18,9 @@ export const enumerate = (G, ctx) => {
             if (tavern.some(element => CompareCards(tavern[i], element) < 0)) {
                 continue;
             }
-            const isCurrentCardWorse = EvaluateCard(G, ctx, tavern[i]) < 0,
-                isExistCardNotWorse = tavern.some(element => (element !== null) && (EvaluateCard(G, ctx, tavern[i]) >= 0));
+            const isCurrentCardWorse = EvaluateCard(G, ctx, tavern[i], i, tavern) < 0,
+                isExistCardNotWorse = tavern.some(element => (element !== null) &&
+                    (EvaluateCard(G, ctx, tavern[i], i, tavern) >= 0));
             if (isCurrentCardWorse && isExistCardNotWorse) {
                 continue;
             }
