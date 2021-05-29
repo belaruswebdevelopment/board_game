@@ -13,8 +13,7 @@ export const enumerate = (G, ctx) => {
     const activeStageOfCurrentPlayer = ctx.activePlayers?.[ctx.currentPlayer];
     if (activeStageOfCurrentPlayer === 'pickHero') {
         const moveName = 'ClickHeroCard',
-            minValue = moveValidators[moveName].getRange({G: G})[0],
-            maxValue = moveValidators[moveName].getRange({G: G})[1];
+            [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
         for (let i = minValue; i < maxValue; i++) {
             if (!moveValidators[moveName].validate({G: G, id: i})) {
                 continue;
@@ -23,8 +22,7 @@ export const enumerate = (G, ctx) => {
         }
     } else if (activeStageOfCurrentPlayer === 'upgradeCoin') {
         const moveName = 'ClickCoinToUpgrade',
-            minValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[0],
-            maxValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[1];
+            [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
         for (let i = minValue; i < maxValue; i++) {
             if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
                 continue;
@@ -40,8 +38,7 @@ export const enumerate = (G, ctx) => {
             }
         } else if (activeStageOfCurrentPlayer === 'upgradeDistinctionCoin') {
             const moveName = 'ClickCoinToUpgradeDistinction',
-                minValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[0],
-                maxValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[1];
+                [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
             for (let i = minValue; i < maxValue; i++) {
                 if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
                     continue;
@@ -50,8 +47,7 @@ export const enumerate = (G, ctx) => {
             }
         } else if (activeStageOfCurrentPlayer === 'upgradeCoinInDistinction') {
             const moveName = 'ClickCoinToUpgradeInDistinction',
-                minValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[0],
-                maxValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[1];
+                [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
             for (let i = minValue; i < maxValue; i++) {
                 if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
                     continue;
@@ -60,8 +56,7 @@ export const enumerate = (G, ctx) => {
             }
         } else {
             const moveName = 'ClickDistinctionCard',
-                minValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[0],
-                maxValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[1];
+                [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
             for (let i = minValue; i < maxValue; i++) {
                 if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
                     continue;
