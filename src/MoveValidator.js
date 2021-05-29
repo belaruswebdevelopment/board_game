@@ -34,6 +34,20 @@ const ValidateByValues = (num, values) => {
     return values.includes(num);
 };
 
+export const moveBy = {
+    pickCards: {
+        default: "ClickCard",
+        pickHero: "ClickHeroCard",
+        upgradeCoin: "ClickCoinToUpgrade",
+    },
+    getDistinctions: {
+        default: "ClickDistinctionCard",
+        pickDistinctionCard: "ClickCardToPickDistinction",
+        upgradeDistinctionCoin: "ClickCoinToUpgradeDistinction",
+        upgradeCoinInDistinction: "ClickCoinToUpgradeInDistinction",
+    },
+};
+
 export const moveValidators = {
     ClickHeroCard: {
         getRange: ({G, ctx}) => ([0, G.heroes.length]),
