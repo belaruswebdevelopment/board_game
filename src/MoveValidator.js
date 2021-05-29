@@ -44,13 +44,27 @@ const CreateMoveValidator = ({move, getValue, getRange}) => {
 
 export const moveValidators = {
     ClickHeroCard: {
-        getValue: ({G, id}) => G.heroes[id],
-        getRange: ({G}) => ([0, G.heroes.length]),
-        validate: ({G, id}) => G.heroes[id] !== null,
+        getRange: ({G, ctx}) => ([0, G.heroes.length]),
+        validate: ({G, ctx, id}) => G.heroes[id] !== null,
     },
     ClickCoinToUpgrade: {
-        getValue: ({G, id}) => G.heroes[id],
         getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
         validate: ({G, ctx, id}) => G.players[ctx.currentPlayer].boardCoins[id].isTriggerTrading === false,
+    },
+    ClickCoinToUpgradeDistinction: {
+        getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
+        validate: ({G, ctx, id}) => G.players[ctx.currentPlayer].boardCoins[id].isTriggerTrading === false,
+    },
+    ClickCoinToUpgradeInDistinction: {
+        getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
+        validate: ({G, ctx, id}) => G.players[ctx.currentPlayer].boardCoins[id].isTriggerTrading === false,
+    },
+    ClickCardToPickDistinction: {
+        getRange: ({G, ctx}) => ([0, 3]),
+        validate: ({G, ctx, id}) => true,
+    },
+    ClickDistinctionCard: {
+        getRange: ({G, ctx}) => ([0, G.distinctions.length]),
+        validate: ({G, ctx, id}) => G.distinctions.findIndex(id => id === Number(ctx.currentPlayer)) === id,
     },
 };

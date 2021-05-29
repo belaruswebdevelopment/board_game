@@ -39,19 +39,35 @@ export const enumerate = (G, ctx) => {
                 moves.push({move: 'ClickCardToPickDistinction', args: [i]});
             }
         } else if (activeStageOfCurrentPlayer === 'upgradeDistinctionCoin') {
-            for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
-                moves.push({move: 'ClickCoinToUpgradeDistinction', args: [i]});
+            const moveName = 'ClickCoinToUpgradeDistinction',
+                minValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[0],
+                maxValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[1];
+            for (let i = minValue; i < maxValue; i++) {
+                if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
+                    continue;
+                }
+                moves.push({move: moveName, args: [i]});
             }
         } else if (activeStageOfCurrentPlayer === 'upgradeCoinInDistinction') {
-            for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
-                moves.push({move: 'ClickCoinToUpgradeInDistinction', args: [i]});
+            const moveName = 'ClickCoinToUpgradeInDistinction',
+                minValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[0],
+                maxValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[1];
+            for (let i = minValue; i < maxValue; i++) {
+                if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
+                    continue;
+                }
+                moves.push({move: moveName, args: [i]});
             }
-        }
-        if (moves.length > 0) {
-            return moves;
-        }
-        for (let i = 0; i < G.distinctions.length; i++) {
-            moves.push({move: 'ClickDistinctionCard', args: [i]});
+        } else {
+            const moveName = 'ClickDistinctionCard',
+                minValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[0],
+                maxValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[1];
+            for (let i = minValue; i < maxValue; i++) {
+                if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
+                    continue;
+                }
+                moves.push({move: moveName, args: [i]});
+            }
         }
     }
     if (moves.length > 0) {
