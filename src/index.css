@@ -16,7 +16,7 @@
     }
 
     table {
-        @apply border-2;
+        @apply border-collapse border-2;
     }
 
     td {
