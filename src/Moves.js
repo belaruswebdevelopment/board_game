@@ -157,12 +157,10 @@ export const ResolveBoardCoins = (G, ctx) => {
 export const ClickDistinctionCard = (G, ctx, cardID) => {
     const isAllEmpty = G.distinctions.every(item => item === null),
         index = G.distinctions.findIndex(id => id === Number(ctx.currentPlayer));
-    if (isAllEmpty || index === -1) {
+    if (isAllEmpty || index === -1 || index !== cardID) {
         return INVALID_MOVE;
     }
-    if (index === cardID) {
-        suitsConfigArray[cardID].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
-    }
+    suitsConfigArray[cardID].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
 };
 
 export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {

@@ -9,23 +9,37 @@ export const enumerate = (G, ctx) => {
         uniqueArr = [];
     let moves = [],
         flag = true;
-
-    if (ctx.activePlayers?.[ctx.currentPlayer] === 'pickHero') {
+    const activeStageOfCurrentPlayer = ctx.activePlayers?.[ctx.currentPlayer];
+    if (activeStageOfCurrentPlayer === 'pickHero') {
         for (let i = 0; i < G.heroes.length; i++) {
             moves.push({move: 'ClickHeroCard', args: [i]});
         }
-    } else if (ctx.activePlayers?.[ctx.currentPlayer] === 'upgradeCoin') {
-        for (var i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
+    } else if (activeStageOfCurrentPlayer === 'upgradeCoin') {
+        for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
             moves.push({move: 'ClickCoinToUpgrade', args: [i]});
         }
     }
 
     if (ctx.phase === 'getDistinctions') {
-        for (var i = 0; i < ctx.numPlayers; i++) {
+        if (activeStageOfCurrentPlayer === 'pickDistinctionCard') {
+            for (let i = 0; i < 3; i++) {
+                moves.push({move: 'ClickCardToPickDistinction', args: [i]});
+            }
+        } else if (activeStageOfCurrentPlayer === 'upgradeDistinctionCoin') {
+            for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
+                moves.push({move: 'ClickCoinToUpgradeDistinction', args: [i]});
+            }
+        } else if (activeStageOfCurrentPlayer === 'upgradeCoinInDistinction') {
+            for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
+                moves.push({move: 'ClickCoinToUpgradeInDistinction', args: [i]});
+            }
+        }
+        if (moves.length > 0) {
+            return moves;
+        }
+        for (let i = 0; i < G.distinctions.length; i++) {
             moves.push({move: 'ClickDistinctionCard', args: [i]});
         }
-        moves.push({move: 'ClickCardToPickDistinction', args: [0]});
-        moves.push({move: 'ClickCoinToUpgradeDistinction', args: [0]});
     }
     if (moves.length > 0) {
         return moves;
