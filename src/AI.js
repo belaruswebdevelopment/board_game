@@ -16,7 +16,6 @@ export const enumerate = (G, ctx) => {
         if (ctx.phase === 'pickCards' && stage === 'default') {
             continue;
         }
-        console.log(typeof stage);
         if (stage.startsWith(activeStageOfCurrentPlayer))
         {
             const moveName = moveBy[ctx.phase][stage],
@@ -27,7 +26,6 @@ export const enumerate = (G, ctx) => {
                 }
                 moves.push({move: moveName, args: [i]});
             }
-            break;
         }
     }
     if (moves.length > 0) {
