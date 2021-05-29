@@ -2,31 +2,43 @@ import {CompareCards, EvaluateCard} from "./Card";
 import {HasLowestPriority} from "./Priority";
 import {CheckHeuristicsForCoinsPlacement} from "./BotConfig";
 import {CurrentScoring} from "./Score";
-import {IsValidMove, moveValidators, moveBy} from "./MoveValidator";
+import {moveValidators, moveBy} from "./MoveValidator";
 
 export const enumerate = (G, ctx) => {
     //make false for standard bot
     const enableAdvancedBot = false,
         uniqueArr = [];
     let moves = [],
-        flag = true;
+        flag = true,
+        advancedString = 'advanced',
+        isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(key => key.includes(advancedString));
     const activeStageOfCurrentPlayer = ctx.activePlayers?.[ctx.currentPlayer] ?? 'default';
 
     for (const stage in moveBy[ctx.phase]) {
         if (ctx.phase === 'pickCards' && stage.startsWith('default')) {
             continue;
         }
-        if (stage.startsWith(activeStageOfCurrentPlayer))
+        if (stage.includes(activeStageOfCurrentPlayer) && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot))
         {
             const moveName = moveBy[ctx.phase][stage],
-                [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
+                [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx}),
+                hasGetValue = moveValidators[moveName].hasOwnProperty('getValue');
+            let argValue;
             for (let i = minValue; i < maxValue; i++) {
                 if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
                     continue;
                 }
-                moves.push({move: moveName, args: [i]});
+                if (hasGetValue) {
+                    argValue = moveValidators[moveName].getValue({G: G, ctx: ctx, id: i});
+                } else {
+                    argValue = i;
+                }
+                moves.push({move: moveName, args: [argValue]});
             }
         }
+    }
+    if (moves.length > 0) {
+        return moves;
     }
     if (ctx.phase === 'pickCards' && activeStageOfCurrentPlayer === 'default') {
         const tavern = G.taverns[G.currentTavern];
