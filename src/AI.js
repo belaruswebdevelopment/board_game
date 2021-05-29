@@ -13,7 +13,7 @@ export const enumerate = (G, ctx) => {
     const activeStageOfCurrentPlayer = ctx.activePlayers?.[ctx.currentPlayer] ?? 'default';
 
     for (const stage in moveBy[ctx.phase]) {
-        if (ctx.phase === 'pickCards' && stage === 'default') {
+        if (ctx.phase === 'pickCards' && stage.startsWith('default')) {
             continue;
         }
         if (stage.startsWith(activeStageOfCurrentPlayer))
