@@ -11,40 +11,22 @@ export const enumerate = (G, ctx) => {
     let moves = [],
         flag = true;
     const activeStageOfCurrentPlayer = ctx.activePlayers?.[ctx.currentPlayer] ?? 'default';
-    if (activeStageOfCurrentPlayer === 'pickHero') {
-        const moveName = 'ClickHeroCard',
-            [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
-        for (let i = minValue; i < maxValue; i++) {
-            if (!moveValidators[moveName].validate({G: G, id: i})) {
-                continue;
-            }
-            moves.push({move: moveName, args: [i]});
-        }
-    } else if (activeStageOfCurrentPlayer === 'upgradeCoin') {
-        const moveName = 'ClickCoinToUpgrade',
-            [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
-        for (let i = minValue; i < maxValue; i++) {
-            if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
-                continue;
-            }
-            moves.push({move: moveName, args: [i]});
-        }
-    }
 
-    if (ctx.phase === 'getDistinctions') {
-        for (const stage in moveBy[ctx.phase]) {
-            if (activeStageOfCurrentPlayer === stage)
-            {
-                const moveName = moveBy[ctx.phase][stage],
-                    [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
-                for (let i = minValue; i < maxValue; i++) {
-                    if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
-                        continue;
-                    }
-                    moves.push({move: moveName, args: [i]});
+    for (const stage in moveBy[ctx.phase]) {
+        if (ctx.phase === 'pickCards' && stage === 'default') {
+            continue;
+        }
+        if (activeStageOfCurrentPlayer === stage)
+        {
+            const moveName = moveBy[ctx.phase][stage],
+                [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
+            for (let i = minValue; i < maxValue; i++) {
+                if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
+                    continue;
                 }
-                break;
+                moves.push({move: moveName, args: [i]});
             }
+            break;
         }
     }
     if (moves.length > 0) {

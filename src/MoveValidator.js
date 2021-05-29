@@ -35,6 +35,11 @@ const ValidateByValues = (num, values) => {
 };
 
 export const moveBy = {
+    /*placeCoins: {
+        default: "ClickCard",
+        pickHero: "ClickHeroCard",
+        upgradeCoin: "ClickCoinToUpgrade",
+    },*/
     pickCards: {
         default: "ClickCard",
         pickHero: "ClickHeroCard",
