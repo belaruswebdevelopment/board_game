@@ -197,7 +197,7 @@ export const DrawPlayersBoardsCoins = (data) => {
             playerRows[p][i].push(<tr key={`${data.props.G.players[p].nickname} board coins row ${i}`}>{playerCells}</tr>)
         }
         playersBoardsCoins[p].push(
-            <table className="col-span-3" key={`${data.props.G.players[p].nickname} board coins`}>
+            <table className="mx-auto" key={`${data.props.G.players[p].nickname} board coins`}>
                 <caption>
                     Player {p + 1} ({data.props.G.players[p].nickname}) played coins
                 </caption>
@@ -262,7 +262,7 @@ export const DrawPlayersHandsCoins = (data) => {
             }
         }
         playersHandsCoins[p].push(
-            <table className="col-span-3" key={`${data.props.G.players[p].nickname} hand coins`}>
+            <table className="mx-auto" key={`${data.props.G.players[p].nickname} hand coins`}>
                 <caption>Player {p + 1} ({data.props.G.players[p].nickname}) coins</caption>
                 <tbody>
                 <tr>{playerCells}</tr>
@@ -379,18 +379,16 @@ export const DrawPlayersBoards = (data) => {
             }
         }
         playersBoards[p].push(
-            <div className="col-span-3" key={`${data.props.G.players[p].nickname} board`}>
-                <table>
-                    <caption>Player {p + 1} ({data.props.G.players[p].nickname}) cards,
-                        {data.props.G.winner !== null ?
-                            "Final: " + FinalScoring(data.props.G, data.props.ctx, data.props.G.players[p], CurrentScoring(data.props.G.players[p])) :
-                            CurrentScoring(data.props.G.players[p])} points</caption>
-                    <thead>
-                    <tr>{playerHeaders[p]}</tr>
-                    </thead>
-                    <tbody>{playerRows[p]}</tbody>
-                </table>
-            </div>
+            <table className="mx-auto" key={`${data.props.G.players[p].nickname} board`}>
+                <caption>Player {p + 1} ({data.props.G.players[p].nickname}) cards,
+                    {data.props.G.winner !== null ?
+                        "Final: " + FinalScoring(data.props.G, data.props.ctx, data.props.G.players[p], CurrentScoring(data.props.G.players[p])) :
+                        CurrentScoring(data.props.G.players[p])} points</caption>
+                <thead>
+                <tr>{playerHeaders[p]}</tr>
+                </thead>
+                <tbody>{playerRows[p]}</tbody>
+            </table>
         );
     }
     return playersBoards;

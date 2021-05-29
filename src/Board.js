@@ -51,7 +51,7 @@ export class GameBoard extends React.Component {
 
     render() {
         // todo Cursor-pointer class only for your objects and in current phase!
-        const gridClass = `col-span-${this.props.ctx.numPlayers}`,
+        const gridClass = `col-span-4`,
             tierCardsUI = DrawTierCards(this),
             currentPlayerTurnUI = DrawCurrentPlayerTurn(this),
             winnerUI = DrawWinner(this),
@@ -66,10 +66,10 @@ export class GameBoard extends React.Component {
             playersHandsCoinsUI = DrawPlayersHandsCoins(this),
             playersBoardsUI = DrawPlayersBoards(this),
             debugUI = DrawDebugData(this),
-            classes = `col-span-${this.props.ctx.numPlayers} text-center underline border`;
+            classes = `col-span-4 text-center underline border`;
         return (
             <div className="flex">
-                <div className={`grid auto-rows-min grid-cols-1 lg:grid-cols-${this.props.ctx.numPlayers * 3} gap-2`}>
+                <div className={`grid auto-cols-min grid-cols-1 lg:grid-cols-12 gap-1`}>
                     <div className={classes}>
                         {tierCardsUI}
                     </div>
@@ -91,9 +91,11 @@ export class GameBoard extends React.Component {
                         {drawCampUI}
                     </div>
                     {tavernsUI}
-                    {playersBoardsCoinsUI}
-                    {playersHandsCoinsUI}
-                    {playersBoardsUI}
+                    <div className={`col-span-full flex flex-col gap-1`}>
+                        <div className="flex flex-col xl:flex-row">{playersBoardsCoinsUI}</div>
+                        <div className="flex flex-col xl:flex-row">{playersHandsCoinsUI}</div>
+                        <div className="flex items-start flex-col xl:flex-row">{playersBoardsUI}</div>
+                    </div>
                 </div>
                 {debugUI}
             </div>

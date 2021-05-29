@@ -15,12 +15,16 @@
         @apply font-black;
     }
 
+    table {
+        @apply border-2;
+    }
+
     td {
         @apply border-2 w-12 h-12 text-center;
     }
 
     th {
-        @apply border-2 w-12 h-6;
+        @apply border-2 w-10 h-6;
     }
 }
 
