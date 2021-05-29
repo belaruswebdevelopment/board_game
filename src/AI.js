@@ -2,6 +2,7 @@ import {CompareCards, EvaluateCard} from "./Card";
 import {HasLowestPriority} from "./Priority";
 import {CheckHeuristicsForCoinsPlacement} from "./BotConfig";
 import {CurrentScoring} from "./Score";
+import {IsValidMove, moveValidators} from "./MoveValidator";
 
 export const enumerate = (G, ctx) => {
     //make false for standard bot
@@ -11,12 +12,24 @@ export const enumerate = (G, ctx) => {
         flag = true;
     const activeStageOfCurrentPlayer = ctx.activePlayers?.[ctx.currentPlayer];
     if (activeStageOfCurrentPlayer === 'pickHero') {
-        for (let i = 0; i < G.heroes.length; i++) {
-            moves.push({move: 'ClickHeroCard', args: [i]});
+        const moveName = 'ClickHeroCard',
+            minValue = moveValidators[moveName].getRange({G: G})[0],
+            maxValue = moveValidators[moveName].getRange({G: G})[1];
+        for (let i = minValue; i < maxValue; i++) {
+            if (!moveValidators[moveName].validate({G: G, id: i})) {
+                continue;
+            }
+            moves.push({move: moveName, args: [i]});
         }
     } else if (activeStageOfCurrentPlayer === 'upgradeCoin') {
-        for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
-            moves.push({move: 'ClickCoinToUpgrade', args: [i]});
+        const moveName = 'ClickCoinToUpgrade',
+            minValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[0],
+            maxValue = moveValidators[moveName].getRange({G: G, ctx: ctx})[1];
+        for (let i = minValue; i < maxValue; i++) {
+            if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
+                continue;
+            }
+            moves.push({move: moveName, args: [i]});
         }
     }
 
