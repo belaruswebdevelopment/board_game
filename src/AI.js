@@ -6,7 +6,7 @@ import {IsValidMove, moveValidators, moveBy} from "./MoveValidator";
 
 export const enumerate = (G, ctx) => {
     //make false for standard bot
-    const enableAdvancedBot = true,
+    const enableAdvancedBot = false,
         uniqueArr = [];
     let moves = [],
         flag = true;
@@ -28,10 +28,7 @@ export const enumerate = (G, ctx) => {
             }
         }
     }
-    if (moves.length > 0) {
-        return moves;
-    }
-    if (ctx.phase === 'pickCards') {
+    if (ctx.phase === 'pickCards' && activeStageOfCurrentPlayer === 'default') {
         const tavern = G.taverns[G.currentTavern];
         for (let i = 0; i < tavern.length; i++) {
             if (tavern[i] === null) {
@@ -58,21 +55,6 @@ export const enumerate = (G, ctx) => {
                 moves.push({move: 'ClickCard', args: [G.currentTavern, i]});
             }
             flag = true;
-        }
-    }
-    if (!enableAdvancedBot && ctx.phase === 'placeCoins') {
-        if (G.players[ctx.currentPlayer].selectedCoin === undefined) {
-            for (let i = 0; i < G.players[ctx.currentPlayer].handCoins.length; i++) {
-                if (G.players[ctx.currentPlayer].handCoins[i] !== null) {
-                    moves.push({move: 'ClickHandCoin', args: [i]})
-                }
-            }
-        } else {
-            for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
-                if (G.players[ctx.currentPlayer].boardCoins[i] === null) {
-                    moves.push({move: 'ClickBoardCoin', args: [i]})
-                }
-            }
         }
     }
     if (enableAdvancedBot && ctx.phase === 'placeCoins') {
