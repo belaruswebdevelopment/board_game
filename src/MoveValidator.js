@@ -35,11 +35,10 @@ const ValidateByValues = (num, values) => {
 };
 
 export const moveBy = {
-    /*placeCoins: {
-        default: "ClickCard",
-        pickHero: "ClickHeroCard",
-        upgradeCoin: "ClickCoinToUpgrade",
-    },*/
+    placeCoins: {
+        default1: "ClickHandCoin",
+        default2: "ClickBoardCoin",
+    },
     pickCards: {
         default: "ClickCard",
         pickHero: "ClickHeroCard",
@@ -54,6 +53,14 @@ export const moveBy = {
 };
 
 export const moveValidators = {
+    ClickHandCoin: {
+        getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].handCoins.length]),
+        validate: ({G, ctx, id}) => G.players[ctx.currentPlayer].selectedCoin === undefined && G.players[ctx.currentPlayer].handCoins[id] !== null,
+    },
+    ClickBoardCoin: {
+        getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
+        validate: ({G, ctx, id}) => G.players[ctx.currentPlayer].selectedCoin !== undefined && G.players[ctx.currentPlayer].boardCoins[id] === null,
+    },
     ClickHeroCard: {
         getRange: ({G, ctx}) => ([0, G.heroes.length]),
         validate: ({G, ctx, id}) => G.heroes[id] !== null,

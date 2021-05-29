@@ -16,7 +16,8 @@ export const enumerate = (G, ctx) => {
         if (ctx.phase === 'pickCards' && stage === 'default') {
             continue;
         }
-        if (activeStageOfCurrentPlayer === stage)
+        console.log(typeof stage);
+        if (stage.startsWith(activeStageOfCurrentPlayer))
         {
             const moveName = moveBy[ctx.phase][stage],
                 [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
