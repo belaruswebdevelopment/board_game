@@ -2,73 +2,45 @@ import {CompareCards, EvaluateCard} from "./Card";
 import {HasLowestPriority} from "./Priority";
 import {CheckHeuristicsForCoinsPlacement} from "./BotConfig";
 import {CurrentScoring} from "./Score";
-import {IsValidMove, moveValidators} from "./MoveValidator";
+import {moveValidators, moveBy} from "./MoveValidator";
 
 export const enumerate = (G, ctx) => {
     //make false for standard bot
-    const enableAdvancedBot = true,
+    const enableAdvancedBot = false,
         uniqueArr = [];
     let moves = [],
-        flag = true;
-    const activeStageOfCurrentPlayer = ctx.activePlayers?.[ctx.currentPlayer];
-    if (activeStageOfCurrentPlayer === 'pickHero') {
-        const moveName = 'ClickHeroCard',
-            [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
-        for (let i = minValue; i < maxValue; i++) {
-            if (!moveValidators[moveName].validate({G: G, id: i})) {
-                continue;
-            }
-            moves.push({move: moveName, args: [i]});
-        }
-    } else if (activeStageOfCurrentPlayer === 'upgradeCoin') {
-        const moveName = 'ClickCoinToUpgrade',
-            [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
-        for (let i = minValue; i < maxValue; i++) {
-            if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
-                continue;
-            }
-            moves.push({move: moveName, args: [i]});
-        }
-    }
+        flag = true,
+        advancedString = 'advanced',
+        isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(key => key.includes(advancedString));
+    const activeStageOfCurrentPlayer = ctx.activePlayers?.[ctx.currentPlayer] ?? 'default';
 
-    if (ctx.phase === 'getDistinctions') {
-        if (activeStageOfCurrentPlayer === 'pickDistinctionCard') {
-            for (let i = 0; i < 3; i++) {
-                moves.push({move: 'ClickCardToPickDistinction', args: [i]});
-            }
-        } else if (activeStageOfCurrentPlayer === 'upgradeDistinctionCoin') {
-            const moveName = 'ClickCoinToUpgradeDistinction',
-                [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
+    for (const stage in moveBy[ctx.phase]) {
+        if (ctx.phase === 'pickCards' && stage.startsWith('default')) {
+            continue;
+        }
+        if (stage.includes(activeStageOfCurrentPlayer) && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot))
+        {
+            const moveName = moveBy[ctx.phase][stage],
+                [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx}),
+                hasGetValue = moveValidators[moveName].hasOwnProperty('getValue');
+            let argValue;
             for (let i = minValue; i < maxValue; i++) {
                 if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
                     continue;
                 }
-                moves.push({move: moveName, args: [i]});
-            }
-        } else if (activeStageOfCurrentPlayer === 'upgradeCoinInDistinction') {
-            const moveName = 'ClickCoinToUpgradeInDistinction',
-                [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
-            for (let i = minValue; i < maxValue; i++) {
-                if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
-                    continue;
+                if (hasGetValue) {
+                    argValue = moveValidators[moveName].getValue({G: G, ctx: ctx, id: i});
+                } else {
+                    argValue = i;
                 }
-                moves.push({move: moveName, args: [i]});
-            }
-        } else {
-            const moveName = 'ClickDistinctionCard',
-                [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx});
-            for (let i = minValue; i < maxValue; i++) {
-                if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
-                    continue;
-                }
-                moves.push({move: moveName, args: [i]});
+                moves.push({move: moveName, args: [argValue]});
             }
         }
     }
     if (moves.length > 0) {
         return moves;
     }
-    if (ctx.phase === 'pickCards') {
+    if (ctx.phase === 'pickCards' && activeStageOfCurrentPlayer === 'default') {
         const tavern = G.taverns[G.currentTavern];
         for (let i = 0; i < tavern.length; i++) {
             if (tavern[i] === null) {
@@ -95,21 +67,6 @@ export const enumerate = (G, ctx) => {
                 moves.push({move: 'ClickCard', args: [G.currentTavern, i]});
             }
             flag = true;
-        }
-    }
-    if (!enableAdvancedBot && ctx.phase === 'placeCoins') {
-        if (G.players[ctx.currentPlayer].selectedCoin === undefined) {
-            for (let i = 0; i < G.players[ctx.currentPlayer].handCoins.length; i++) {
-                if (G.players[ctx.currentPlayer].handCoins[i] !== null) {
-                    moves.push({move: 'ClickHandCoin', args: [i]})
-                }
-            }
-        } else {
-            for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
-                if (G.players[ctx.currentPlayer].boardCoins[i] === null) {
-                    moves.push({move: 'ClickBoardCoin', args: [i]})
-                }
-            }
         }
     }
     if (enableAdvancedBot && ctx.phase === 'placeCoins') {
