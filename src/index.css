@@ -12,7 +12,7 @@
     }
 
     caption {
-        @apply font-black;
+        @apply font-light;
     }
 
     table {
@@ -20,41 +20,41 @@
     }
 
     td {
-        @apply border-2 w-12 h-12 text-center;
+        @apply border-2 w-6 h-6 text-center;
     }
 
     th {
-        @apply border-2 w-10 h-6;
+        @apply border-2 w-6 h-6;
     }
 }
 
 @layer components {
     .bg-tavern {
-        @apply block-center w-6 h-6;
+        @apply block-center w-4 h-4;
     }
 
     .bg-camp {
-        @apply block-center w-6 h-6;
+        @apply block-center w-4 h-4;
     }
 
     .bg-suit {
-        @apply block-center w-6 h-6;
+        @apply block-center w-4 h-4;
     }
 
     .bg-suit-distinction {
-        @apply block-center w-8 h-12;
+        @apply block-center w-6 h-8;
     }
 
     .bg-hero {
-        @apply block-center w-4 h-6;
+        @apply block-center w-6 h-6;
     }
 
     .bg-priority {
-        @apply block-center w-8 h-12;
+        @apply block-center w-6 h-8;
     }
 
     .bg-top-market-coin {
-        @apply rounded-full inline-block w-6 h-6;
+        @apply rounded-full inline-block w-4 h-4;
     }
 
     .bg-top-hero {
@@ -62,23 +62,23 @@
     }
 
     .bg-top-distinctions {
-        @apply inline-block w-4 h-6;
+        @apply inline-block w-3 h-4;
     }
 
     .bg-top-camp {
-        @apply inline-block w-6 h-6;
+        @apply inline-block w-4 h-4;
     }
 
     .bg-small-market-coin {
-        @apply rounded-full block-center w-6 h-6;
+        @apply rounded-full block-center w-4 h-4;
     }
 
     .bg-coin {
-        @apply rounded-full inline-flex-center w-12 h-12;
+        @apply rounded-full inline-flex-center w-8 h-8;
     }
 
     .bg-market-coin {
-        @apply rounded-full inline-flex items-center justify-start w-12 h-12 font-black p-0.5;
+        @apply rounded-full inline-flex items-center justify-start w-8 h-8 font-black p-0.5;
     }
 }
 

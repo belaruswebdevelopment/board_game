@@ -2,6 +2,7 @@ import React from "react";
 import {CountMarketCoins} from "../Coin";
 import {suitsConfigArray} from "../data/SuitData.js";
 import {tavernsConfig} from "../Tavern";
+import {Styles} from "../data/StyleData";
 
 const DrawBoard = (objectsSize) => {
     const boardRows = Math.floor(Math.sqrt(objectsSize)),
@@ -57,9 +58,7 @@ export const DrawMarketCoins = (data) => {
                 tempCoinValue = data.props.G.marketCoinsUnique[increment].value;
             boardCells.push(
                 <td className="bg-yellow-300" key={tempCoinValue}>
-                    <span
-                        style={{background: `url(/img/coins/Coin${tempCoinValue}.jpg) no-repeat 0px 0px / 48px 48px`}}
-                        className="bg-market-coin">
+                    <span style={Styles.Coin(tempCoinValue, false)} className="bg-market-coin">
                         <span className={countMarketCoins[tempCoinValue] === 0 ? "text-red-500" : "text-blue-500"}>
                             {countMarketCoins[tempCoinValue]}
                         </span>
@@ -78,8 +77,7 @@ export const DrawMarketCoins = (data) => {
         <table>
             <caption>
                 <span className="block">
-                    <span style={{background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px"}}
-                          className="bg-top-market-coin">
+                    <span style={Styles.Exchange()} className="bg-top-market-coin">
 
                     </span> Market coins ({data.props.G.marketCoins.length} left)</span>
             </caption>
@@ -123,9 +121,7 @@ export const DrawHeroes = (data) => {
     return (
         <table>
             <caption>
-                <span
-                    style={{background: `url(/img/cards/heroes/HeroBack.png) no-repeat 0px 0px / 16px 24px`}}
-                    className="bg-top-hero">
+                <span style={Styles.HeroBack()} className="bg-top-hero">
 
                 </span> <span>Heroes ({data.props.G.heroes.length} left)</span>
             </caption>
@@ -144,8 +140,7 @@ export const DrawDistinctions = (data) => {
             boardCells.push(
                 <td className="bg-green-500 cursor-pointer" key={j} onClick={() => data.OnClickDistinctionCard(j)}
                     title={suitsConfigArray[j].distinction.description}>
-                    <span style={{background: suitsConfigArray[j].distinction.style}}
-                          className="bg-suit-distinction">
+                    <span style={Styles.Distinctions(j)} className="bg-suit-distinction">
 
                     </span>
                 </td>
@@ -155,8 +150,7 @@ export const DrawDistinctions = (data) => {
     return (
         <table>
             <caption>
-                <span style={{background: "url(/img/distinctions/DistinctionsBack.png) no-repeat 0px 0px / 16px 24px"}}
-                      className="bg-top-distinctions">
+                <span style={Styles.DistinctionsBack()} className="bg-top-distinctions">
 
                 </span> <span>Distinctions</span>
             </caption>
@@ -178,11 +172,8 @@ export const DrawProfit = (data, option) => {
                     // todo currentPlayer
                     boardCells.push(
                         <td className="cursor-pointer" key={j} onClick={() => data.OnClickCoinToUpgradeDistinction(j)}>
-                            <span
-                                style={{
-                                    background: `url(/img/coins/Coin${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value}${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial
-                                        ? "Initial" : ""}.jpg) no-repeat 0px 0px / 48px 48px`
-                                }}
+                            <span style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value,
+                                    data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial)}
                                 className={`bg-coin border-2`}>
 
                             </span>
@@ -219,10 +210,8 @@ export const DrawProfit = (data, option) => {
                     boardCells.push(
                         <td className="cursor-pointer" key={j} onClick={() => data.OnClickCoinToUpgrade(j)}>
                             <span
-                                style={{
-                                    background: `url(/img/coins/Coin${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value}${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial
-                                        ? "Initial" : ""}.jpg) no-repeat 0px 0px / 48px 48px`
-                                }}
+                                style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value,
+                                    data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial)}
                                 className={`bg-coin border-2`}>
 
                             </span>
@@ -239,10 +228,8 @@ export const DrawProfit = (data, option) => {
                         <td className="cursor-pointer" key={j} onClick={() => data.OnClickCoinToUpgradeInDistinction(j,
                             data.props.G.players[data.props.ctx.currentPlayer].pickedCard.value)}>
                             <span
-                                style={{
-                                    background: `url(/img/coins/Coin${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value}${data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial
-                                        ? "Initial" : ""}.jpg) no-repeat 0px 0px / 48px 48px`
-                                }}
+                                style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value,
+                                    data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial)}
                                 className={`bg-coin border-2`}>
 
                             </span>
@@ -255,8 +242,7 @@ export const DrawProfit = (data, option) => {
     return (
         <table>
             <caption>
-                <span style={{background: "url(/img/distinctions/DistinctionsBack.png) no-repeat 0px 0px / 16px 24px"}}
-                      className="bg-top-distinctions">
+                <span style={Styles.DistinctionsBack()} className="bg-top-distinctions">
 
                 </span> <span>{caption}</span>
             </caption>
@@ -276,7 +262,9 @@ export const DrawCamp = (data) => {
                     data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd][j] === null)) {
                 boardCells.push(
                     <td key={j}>
+                        <span style={Styles.Camp()} className="bg-camp">
 
+                        </span>
                     </td>
                 );
             } else {
@@ -292,8 +280,7 @@ export const DrawCamp = (data) => {
     return (
         <table>
             <caption>
-                <span style={{background: "url(/img/cards/camp/Camp.png) no-repeat 0px 3px / 24px 18px"}}
-                      className="bg-top-camp">
+                <span style={Styles.Camp()} className="bg-top-camp">
 
                 </span>
                 <span>Camp {data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length
@@ -319,7 +306,7 @@ export const DrawTaverns = (data, gridClass) => {
                 if (data.props.G.taverns[t][j] === null) {
                     boardCells.push(
                         <td key={j}>
-                            <span style={{background: tavernsConfig[t].style}} className="bg-tavern">
+                            <span style={Styles.Taverns(t)} className="bg-tavern">
 
                             </span>
                         </td>
@@ -345,7 +332,7 @@ export const DrawTaverns = (data, gridClass) => {
             tavernsBoards.push(
                 <table className={`${gridClass} justify-self-center`} key={`Tavern ${tavernsConfig[t].name} board`}>
                     <caption>
-                        <span style={{background: tavernsConfig[t].style}} className="bg-tavern">
+                        <span style={Styles.Taverns(t)} className="bg-tavern">
 
                         </span>
                     </caption>

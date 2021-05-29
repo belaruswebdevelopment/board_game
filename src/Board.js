@@ -69,7 +69,7 @@ export class GameBoard extends React.Component {
             classes = `col-span-4 text-center underline border`;
         return (
             <div className="flex">
-                <div className={`grid auto-cols-min grid-cols-1 lg:grid-cols-12 gap-1`}>
+                <div className={`grid auto-cols-min grid-cols-1 md:grid-cols-12 gap-1`}>
                     <div className={classes}>
                         {tierCardsUI}
                     </div>
@@ -92,9 +92,9 @@ export class GameBoard extends React.Component {
                     </div>
                     {tavernsUI}
                     <div className={`col-span-full flex flex-col gap-1`}>
-                        <div className="flex flex-col xl:flex-row">{playersBoardsCoinsUI}</div>
-                        <div className="flex flex-col xl:flex-row">{playersHandsCoinsUI}</div>
-                        <div className="flex items-start flex-col xl:flex-row">{playersBoardsUI}</div>
+                        <div className="flex flex-col lg:flex-row gap-1">{playersBoardsCoinsUI}</div>
+                        <div className="flex flex-col lg:flex-row gap-1">{playersHandsCoinsUI}</div>
+                        <div className="flex items-start flex-col lg:flex-row gap-1">{playersBoardsUI}</div>
                     </div>
                 </div>
                 {debugUI}
