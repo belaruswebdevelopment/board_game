@@ -30,19 +30,23 @@
 
 @layer components {
     .bg-tavern {
-        @apply block-center w-4 h-4;
+        @apply block-center w-6 h-6;
+    }
+
+    .bg-priority-icon {
+        @apply block-center w-8 h-6;
     }
 
     .bg-camp {
-        @apply block-center w-4 h-4;
+        @apply block-center w-6 h-6;
     }
 
     .bg-suit {
-        @apply block-center w-4 h-4;
+        @apply block-center w-6 h-6;
     }
 
     .bg-suit-distinction {
-        @apply block-center w-6 h-8;
+        @apply block-center w-8 h-12;
     }
 
     .bg-hero {
@@ -50,15 +54,15 @@
     }
 
     .bg-priority {
-        @apply block-center w-6 h-8;
+        @apply block-center w-8 h-10;
     }
 
     .bg-top-market-coin {
-        @apply rounded-full inline-block w-4 h-4;
+        @apply rounded-full inline-block w-6 h-6;
     }
 
     .bg-top-hero {
-        @apply inline-block w-4 h-6;
+        @apply inline-block w-6 h-6;
     }
 
     .bg-top-distinctions {
@@ -66,19 +70,19 @@
     }
 
     .bg-top-camp {
-        @apply inline-block w-4 h-4;
+        @apply inline-block w-6 h-6;
     }
 
     .bg-small-market-coin {
-        @apply rounded-full block-center w-4 h-4;
+        @apply rounded-full block-center w-6 h-6;
     }
 
     .bg-coin {
-        @apply rounded-full inline-flex-center w-8 h-8;
+        @apply rounded-full inline-flex-center w-10 h-10;
     }
 
     .bg-market-coin {
-        @apply rounded-full inline-flex items-center justify-start w-8 h-8 font-black p-0.5;
+        @apply rounded-full inline-flex items-center justify-start w-10 h-10 font-bold p-0.5;
     }
 }
 

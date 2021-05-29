@@ -90,7 +90,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                     if (j === data.props.G.players[p].boardCoins.length) {
                         playerFooters[p].push(
                             <th key={`${data.props.G.players[p].nickname} priority icon`}>
-                                <span style={Styles.Priority()} className="bg-tavern">
+                                <span style={Styles.Priority()} className="bg-priority-icon">
 
                                 </span>
                             </th>
