@@ -178,6 +178,9 @@ export const ClickDistinctionCard = (G, ctx, cardID) => {
 };
 
 export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
+    if (G.players[ctx.currentPlayer].boardCoins[coinID].isTriggerTrading) {
+        return INVALID_MOVE;
+    }
     G.drawProfit = null;
     UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID], G.players[ctx.currentPlayer].boardCoins[coinID].value + 5);
     delete G.distinctions[3];
@@ -185,6 +188,9 @@ export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
 };
 
 export const ClickCoinToUpgradeInDistinction = (G, ctx, coinID, value) => {
+    if (G.players[ctx.currentPlayer].boardCoins[coinID].isTriggerTrading) {
+        return INVALID_MOVE;
+    }
     G.drawProfit = null;
     UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID], G.players[ctx.currentPlayer].boardCoins[coinID].value + value);
     delete G.distinctions[4];
@@ -192,6 +198,9 @@ export const ClickCoinToUpgradeInDistinction = (G, ctx, coinID, value) => {
 };
 
 export const ClickCoinToUpgrade = (G, ctx, coinID) => {
+    if (G.players[ctx.currentPlayer].boardCoins[coinID].isTriggerTrading) {
+        return INVALID_MOVE;
+    }
     G.drawProfit = null;
     UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID],
         G.players[ctx.currentPlayer].boardCoins[coinID].value + G.players[ctx.currentPlayer].pickedCard.value);

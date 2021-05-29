@@ -87,9 +87,14 @@ export const PotentialScoring = ({player = {}, card = {}}) => {
             AddCardToCards(potentialCards, player.cards[i][j]);
         }
     }
-    AddCardToCards(potentialCards, CreateCard(card));
+    if (card && card.suit !== undefined) {
+        AddCardToCards(potentialCards, CreateCard(card));
+    }
     for (let i = 0; i < potentialCards.length; i++) {
         score += suitsConfigArray[i].scoringRule(potentialCards[i]);
+    }
+    if (card && card.suit === undefined) {
+        score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
         if (player.boardCoins[i] !== null) {

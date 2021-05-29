@@ -15,7 +15,9 @@ export const enumerate = (G, ctx) => {
             moves.push({move: 'ClickHeroCard', args: [i]});
         }
     } else if (ctx.activePlayers?.[ctx.currentPlayer] === 'upgradeCoin') {
-        moves.push({move: 'ClickCoinToUpgrade', args: [0]});
+        for (var i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
+            moves.push({move: 'ClickCoinToUpgrade', args: [i]});
+        }
     }
 
     if (ctx.phase === 'getDistinctions') {
@@ -24,6 +26,9 @@ export const enumerate = (G, ctx) => {
         }
         moves.push({move: 'ClickCardToPickDistinction', args: [0]});
         moves.push({move: 'ClickCoinToUpgradeDistinction', args: [0]});
+    }
+    if (moves.length > 0) {
+        return moves;
     }
     if (ctx.phase === 'pickCards') {
         const tavern = G.taverns[G.currentTavern];
@@ -86,7 +91,6 @@ export const enumerate = (G, ctx) => {
         if (maxResultForCoins >= 0) {
             positionForMaxCoin = resultsForCoins.findIndex(item => item === maxResultForCoins);
         }
-        //console.log(resultsForCoins);
         const allCoinsOrder = G.botData.allCoinsOrder,
             handCoins = G.players[ctx.currentPlayer].handCoins;
         for (let i = 0; i < allCoinsOrder.length; i++) {
