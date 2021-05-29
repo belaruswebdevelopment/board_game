@@ -50,7 +50,7 @@ export const GetAverageSuitCard = (suitConfig, data) => {
 };
 
 export const CompareCards = (card1, card2) => {
-    if (card1 === null || card2 === null) {
+    if (!card1 || !card2) {
         return 0;
     }
     if (card1.suit === card2.suit) {
@@ -87,9 +87,14 @@ export const PotentialScoring = ({player = {}, card = {}}) => {
             AddCardToCards(potentialCards, player.cards[i][j]);
         }
     }
-    AddCardToCards(potentialCards, CreateCard(card));
+    if (card && card.suit !== undefined) {
+        AddCardToCards(potentialCards, CreateCard(card));
+    }
     for (let i = 0; i < potentialCards.length; i++) {
         score += suitsConfigArray[i].scoringRule(potentialCards[i]);
+    }
+    if (card && card.suit === undefined) {
+        score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
         if (player.boardCoins[i] !== null) {

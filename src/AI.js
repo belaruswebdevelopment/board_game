@@ -9,6 +9,27 @@ export const enumerate = (G, ctx) => {
         uniqueArr = [];
     let moves = [],
         flag = true;
+
+    if (ctx.activePlayers?.[ctx.currentPlayer] === 'pickHero') {
+        for (let i = 0; i < G.heroes.length; i++) {
+            moves.push({move: 'ClickHeroCard', args: [i]});
+        }
+    } else if (ctx.activePlayers?.[ctx.currentPlayer] === 'upgradeCoin') {
+        for (var i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
+            moves.push({move: 'ClickCoinToUpgrade', args: [i]});
+        }
+    }
+
+    if (ctx.phase === 'getDistinctions') {
+        for (var i = 0; i < ctx.numPlayers; i++) {
+            moves.push({move: 'ClickDistinctionCard', args: [i]});
+        }
+        moves.push({move: 'ClickCardToPickDistinction', args: [0]});
+        moves.push({move: 'ClickCoinToUpgradeDistinction', args: [0]});
+    }
+    if (moves.length > 0) {
+        return moves;
+    }
     if (ctx.phase === 'pickCards') {
         const tavern = G.taverns[G.currentTavern];
         for (let i = 0; i < tavern.length; i++) {
@@ -38,7 +59,7 @@ export const enumerate = (G, ctx) => {
             flag = true;
         }
     }
-    if (ctx.phase === 'placeCoins') {
+    if (!enableAdvancedBot && ctx.phase === 'placeCoins') {
         if (G.players[ctx.currentPlayer].selectedCoin === undefined) {
             for (let i = 0; i < G.players[ctx.currentPlayer].handCoins.length; i++) {
                 if (G.players[ctx.currentPlayer].handCoins[i] !== null) {
@@ -70,7 +91,6 @@ export const enumerate = (G, ctx) => {
         if (maxResultForCoins >= 0) {
             positionForMaxCoin = resultsForCoins.findIndex(item => item === maxResultForCoins);
         }
-        //console.log(resultsForCoins);
         const allCoinsOrder = G.botData.allCoinsOrder,
             handCoins = G.players[ctx.currentPlayer].handCoins;
         for (let i = 0; i < allCoinsOrder.length; i++) {

@@ -6,6 +6,10 @@ import {CheckCurrentTavernEmpty, CheckEmptyLastTavern} from "./Tavern";
 import {CheckPickHero} from "./Hero";
 
 export const ClickHeroCard = (G, ctx, heroID) => {
+    const isEmptyPick = G.heroes[heroID] === null;
+    if (isEmptyPick) {
+        return INVALID_MOVE;
+    }
     G.players[ctx.currentPlayer].heroes.push(G.heroes[heroID]);
     G.heroes[heroID] = null;
     if (CheckPickHero(G, ctx)) {
@@ -151,7 +155,15 @@ export const ResolveBoardCoins = (G, ctx) => {
 };
 
 export const ClickDistinctionCard = (G, ctx, cardID) => {
-    if (G.distinctions.some(item => item !== null)) {
+    const isAllEmpty = G.distinctions.every(item => item === null),
+        index = G.distinctions.findIndex(id => id === Number(ctx.currentPlayer));
+    if (isAllEmpty || index === -1) {
+        return INVALID_MOVE;
+    }
+    if (index === cardID) {
+        suitsConfigArray[cardID].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
+    }
+    /*if (G.distinctions.some(item => item !== null)) {
         const index = G.distinctions.findIndex(id => id === Number(ctx.currentPlayer));
         if (index !== -1) {
             if (index === cardID) {
@@ -162,10 +174,13 @@ export const ClickDistinctionCard = (G, ctx, cardID) => {
         }
     } else {
         return INVALID_MOVE;
-    }
+    }*/
 };
 
 export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
+    if (G.players[ctx.currentPlayer].boardCoins[coinID].isTriggerTrading) {
+        return INVALID_MOVE;
+    }
     G.drawProfit = null;
     UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID], G.players[ctx.currentPlayer].boardCoins[coinID].value + 5);
     delete G.distinctions[3];
@@ -173,6 +188,9 @@ export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
 };
 
 export const ClickCoinToUpgradeInDistinction = (G, ctx, coinID, value) => {
+    if (G.players[ctx.currentPlayer].boardCoins[coinID].isTriggerTrading) {
+        return INVALID_MOVE;
+    }
     G.drawProfit = null;
     UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID], G.players[ctx.currentPlayer].boardCoins[coinID].value + value);
     delete G.distinctions[4];
@@ -180,6 +198,9 @@ export const ClickCoinToUpgradeInDistinction = (G, ctx, coinID, value) => {
 };
 
 export const ClickCoinToUpgrade = (G, ctx, coinID) => {
+    if (G.players[ctx.currentPlayer].boardCoins[coinID].isTriggerTrading) {
+        return INVALID_MOVE;
+    }
     G.drawProfit = null;
     UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID],
         G.players[ctx.currentPlayer].boardCoins[coinID].value + G.players[ctx.currentPlayer].pickedCard.value);
