@@ -27,10 +27,10 @@ const CreatePlayer = ({
     };
 };
 
-export const BuildPlayer = (numPlayers, nickname) => {
+export const BuildPlayer = (numPlayers, suitsNum, nickname) => {
     return CreatePlayer({
         nickname,
-        cards: Array(suitsConfigArray.length).fill(Array(0)),
+        cards: Array(suitsNum).fill(Array(0)),
         handCoins: BuildCoins(initialPlayerCoinsConfig,
             {isInitial: true, isTriggerTrading: false}),
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
@@ -42,7 +42,7 @@ export const AddCardToPlayer = (player, card) => {
         player.pickedCard = card;
         return false;
     }
-    player.cards[card.suit].push(card);
+    player.cards[Object.keys(suitsConfigArray).findIndex(suit => suit === card.suit)].push(card);
     return true;
 };
 
@@ -51,7 +51,7 @@ export const AddCampCardToPlayer = (player, card) => {
 };
 
 export const AddCardToCards = (cards, card) => {
-    cards[card.suit].push(card);
+    cards[Object.keys(suitsConfigArray).findIndex(suit => suit === card.suit)].push(card);
 };
 
 export const IsTopPlayer = (G, playerId) => {

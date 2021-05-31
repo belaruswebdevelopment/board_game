@@ -4,7 +4,7 @@ import {ArithmeticSum, TotalPoints, TotalRank} from "../Score";
 import {CreatePriority} from "../Priority";
 
 const blacksmithSuit = {
-    suit: 0,
+    suit: "blacksmith",
     suitName: 'Blacksmith',
     suitColor: 'bg-purple-600',
     description: "Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).",
@@ -66,7 +66,7 @@ const blacksmithSuit = {
 };
 
 const hunterSuit = {
-    suit: 1,
+    suit: "hunter",
     suitName: 'Hunter',
     suitColor: 'bg-green-600',
     description: "Их показатель храбрости равен квадрату числа карт охотников в армии игрока.",
@@ -127,7 +127,7 @@ const hunterSuit = {
 };
 
 const minerSuit = {
-    suit: 2,
+    suit: "miner",
     suitName: 'Miner',
     suitColor: 'bg-yellow-600',
     description: "Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии игрока.",
@@ -194,7 +194,7 @@ const minerSuit = {
 };
 
 const warriorSuit = {
-    suit: 3,
+    suit: "warrior",
     suitName: 'Warrior',
     suitColor: 'bg-red-600',
     description: "Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты. В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной монеты к показателю храбрости своих воинов.",
@@ -253,7 +253,7 @@ const warriorSuit = {
 };
 
 const explorerSuit = {
-    suit: 4,
+    suit: "explorer",
     suitName: 'Explorer',
     suitColor: 'bg-blue-500',
     description: "Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.",
@@ -309,4 +309,10 @@ const explorerSuit = {
     },
 };
 
-export const suitsConfigArray = [blacksmithSuit, hunterSuit, minerSuit, warriorSuit, explorerSuit];
+export const suitsConfigArray = {
+    blacksmith: blacksmithSuit,
+    hunter:hunterSuit,
+    miner: minerSuit,
+    warrior: warriorSuit,
+    explorer: explorerSuit,
+};

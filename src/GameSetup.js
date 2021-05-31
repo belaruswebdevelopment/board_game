@@ -44,7 +44,7 @@ export const SetupGame = (ctx) => {
         playersOrder = [],
         exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        players[i] = BuildPlayer(ctx.numPlayers, "Vasya" + i);
+        players[i] = BuildPlayer(ctx.numPlayers, suitsNum, "Vasya" + i);
     }
     BuildPriorities(players);
     const marketCoinsUnique = [],
@@ -59,8 +59,8 @@ export const SetupGame = (ctx) => {
         initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined).map((item, index) => index),
         initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
-    for (let i = 0; i < suitsNum; i++) {
-        averageCards[i] = GetAverageSuitCard(suitsConfigArray[i], {players: ctx.numPlayers, tier: 0});
+    for (const suit in suitsConfigArray) {
+        averageCards[suit] = GetAverageSuitCard(suitsConfigArray[suit], {players: ctx.numPlayers, tier: 0});
     }
     for (let i = 0; i < initCoinsOrder.length; i++) {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));

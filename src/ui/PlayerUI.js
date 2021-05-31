@@ -255,16 +255,17 @@ export const DrawPlayersBoards = (data) => {
         playersBoards[p] = [];
         playerHeaders[p] = [];
         playerRows[p] = [];
-        for (let s = 0; s < data.props.G.suitsNum + 1 + expansion; s++) {
-            if (s < data.props.G.suitsNum) {
-                playerHeaders[p].push(
-                    <th className={`${suitsConfigArray[s].suitColor}`} key={`${data.props.G.players[p].nickname} ${suitsConfigArray[s].suitName}`}>
-                        <span style={Styles.Suits(suitsConfigArray[s].suitName)} className="bg-suit">
+        for (const suit in suitsConfigArray) {
+            playerHeaders[p].push(
+                <th className={`${suitsConfigArray[suit].suitColor}`} key={`${data.props.G.players[p].nickname} ${suitsConfigArray[suit].suitName}`}>
+                        <span style={Styles.Suits(suitsConfigArray[suit].suitName)} className="bg-suit">
 
                         </span>
-                    </th>
-                );
-            } else if (s === data.props.G.suitsNum) {
+                </th>
+            );
+        }
+        for (let s = 0; s < 1 + expansion; s++) {
+           if (s === 0) {
                 playerHeaders[p].push(
                     <th className="bg-gray-600" key={`${data.props.G.players[p].nickname} hero icon`}>
                         <span style={Styles.HeroBack()} className="bg-hero">
@@ -272,7 +273,7 @@ export const DrawPlayersBoards = (data) => {
                         </span>
                     </th>
                 );
-            } else if (expansion && s < data.props.G.suitsNum + 1 + expansion) {
+            } else {
                 playerHeaders[p].push(
                     <th className="bg-yellow-200" key={`${data.props.G.players[p].nickname} camp icon`}>
                         <span style={Styles.Camp()} className="bg-camp">
@@ -284,28 +285,31 @@ export const DrawPlayersBoards = (data) => {
         }
         for (let i = 0; ; i++) {
             const playerCells = [];
-            let isDrawRow = false;
+            let isDrawRow = false,
+            j = 0,
+            id = 0;
             playerRows[p][i] = [];
-            for (let j = 0; j < data.props.G.suitsNum + 1 + expansion; j++) {
-                const id = i + j;
-                if (j < data.props.G.suitsNum) {
-                    // todo fix 1 row cards
-                    if (data.props.G.players[p].cards[j] !== undefined && data.props.G.players[p].cards[j][i] !== undefined) {
-                        isDrawRow = true;
-                        playerCells.push(
-                            <td key={id}
-                                className={suitsConfigArray[j].suitColor}>
-                                <b>{data.props.G.players[p].cards[j][i].points}</b>
-                            </td>
-                        );
-                    } else {
-                        playerCells.push(
-                            <td key={id}>
+            for (const suit in suitsConfigArray) {
+                id = i + j;
+                if (data.props.G.players[p].cards[j] !== undefined && data.props.G.players[p].cards[j][i] !== undefined) {
+                    isDrawRow = true;
+                    playerCells.push(
+                        <td key={id} className={suitsConfigArray[suit].suitColor}>
+                            <b>{data.props.G.players[p].cards[j][i].points}</b>
+                        </td>
+                    );
+                } else {
+                    playerCells.push(
+                        <td key={id}>
 
-                            </td>
-                        );
-                    }
-                } else if (j === data.props.G.suitsNum) {
+                        </td>
+                    );
+                }
+                j++;
+            }
+            for (let k = 0; k < 1 + expansion; k++) {
+                id += k + 1;
+                if (k === 1) {
                     if (data.props.G.players[p].heroes[i] !== undefined) {
                         isDrawRow = true;
                         playerCells.push(
@@ -321,7 +325,7 @@ export const DrawPlayersBoards = (data) => {
                             </td>
                         );
                     }
-                } else if (expansion && j === data.props.G.suitsNum + expansion) {
+                } else {
                     if (data.props.G.players[p].campCards[i] !== undefined) {
                         isDrawRow = true;
                         playerCells.push(
@@ -348,8 +352,7 @@ export const DrawPlayersBoards = (data) => {
         }
         playersBoards[p].push(
             <table className="mx-auto" key={`${data.props.G.players[p].nickname} board`}>
-                <caption>Player {p + 1} ({data.props.G.players[p].nickname}) cards,
-                    {data.props.G.winner !== null ?
+                <caption>Player {p + 1} ({data.props.G.players[p].nickname}) cards, {data.props.G.winner !== null ?
                         "Final: " + FinalScoring(data.props.G, data.props.ctx, data.props.G.players[p], CurrentScoring(data.props.G.players[p])) :
                         CurrentScoring(data.props.G.players[p])} points</caption>
                 <thead>

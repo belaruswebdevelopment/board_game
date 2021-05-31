@@ -17,13 +17,13 @@ const CreateActionCard = ({value} = {}) => {
 
 export const BuildCards = (deckConfig, data) => {
     const cards = [];
-    for (let i = 0; i < deckConfig.suits.length; i++) {
-        const count = deckConfig.suits[i].pointsValues()[data.players][data.tier].length ?? deckConfig.suits[i].pointsValues()[data.players][data.tier];
+    for (const suit in suitsConfigArray) {
+        const count = deckConfig.suits[suit].pointsValues()[data.players][data.tier].length ?? deckConfig.suits[suit].pointsValues()[data.players][data.tier];
         for (let j = 0; j < count; j++) {
             cards.push(CreateCard({
-                suit: deckConfig.suits[i].suit,
-                rank: deckConfig.suits[i].ranksValues()[data.players][data.tier][j],
-                points: deckConfig.suits[i].pointsValues()[data.players][data.tier][j],
+                suit: deckConfig.suits[suit].suit,
+                rank: deckConfig.suits[suit].ranksValues()[data.players][data.tier][j],
+                points: deckConfig.suits[suit].pointsValues()[data.players][data.tier][j],
             }));
         }
     }
@@ -90,8 +90,10 @@ export const PotentialScoring = ({player = {}, card = {}}) => {
     if (card && card.suit !== undefined) {
         AddCardToCards(potentialCards, CreateCard(card));
     }
-    for (let i = 0; i < potentialCards.length; i++) {
-        score += suitsConfigArray[i].scoringRule(potentialCards[i]);
+    let i = 0;
+    for (const suit in suitsConfigArray) {
+        score += suitsConfigArray[suit].scoringRule(potentialCards[i]);
+        i++;
     }
     if (card && card.suit === undefined) {
         score += card.value;
@@ -106,10 +108,9 @@ export const PotentialScoring = ({player = {}, card = {}}) => {
     return score;
 };
 
-
 export const EvaluateCard = (G, ctx, card, cardId, tavern) => {
     if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
-        return CompareCards(card, G.averageCards[card.suit]);
+        return CompareCards(card, G.averageCards[Object.keys(suitsConfigArray).findIndex(suit => suit === card.suit)]);
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
         let temp = tavern.map(item => G.players.map(player => PotentialScoring({player: player, card: item}))),
@@ -118,5 +119,5 @@ export const EvaluateCard = (G, ctx, card, cardId, tavern) => {
         temp.forEach(element => element.splice(ctx.currentPlayer, 1));
         return result - Math.max(...temp.map(element => Math.max(...element)));
     }
-    return CompareCards(card, G.averageCards[card.suit]);
+    return CompareCards(card, G.averageCards[Object.keys(suitsConfigArray).findIndex(suit => suit === card.suit)]);
 };

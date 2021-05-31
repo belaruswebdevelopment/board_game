@@ -162,7 +162,7 @@ export const ClickDistinctionCard = (G, ctx, cardID) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    suitsConfigArray[cardID].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
+    suitsConfigArray[Object.keys(suitsConfigArray)[cardID]].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
 };
 
 export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {

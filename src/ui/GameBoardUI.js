@@ -134,17 +134,19 @@ export const DrawHeroes = (data) => {
 
 export const DrawDistinctions = (data) => {
     const boardCells = [];
+    let j = 0;
     for (let i = 0; i < 1; i++) {
-        for (let j = 0; j < data.props.G.suitsNum; j++) {
+        for (const suit in suitsConfigArray) {
             // todo currentPlayer
             boardCells.push(
-                <td className="bg-green-500 cursor-pointer" key={j} onClick={() => data.OnClickDistinctionCard(j)}
-                    title={suitsConfigArray[j].distinction.description}>
-                    <span style={Styles.Distinctions(j)} className="bg-suit-distinction">
+                <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`} onClick={() => data.OnClickDistinctionCard(j)}
+                    title={suitsConfigArray[suit].distinction.description}>
+                    <span style={Styles.Distinctions(suit)} className="bg-suit-distinction">
 
                     </span>
                 </td>
             );
+            i++;
         }
     }
     return (

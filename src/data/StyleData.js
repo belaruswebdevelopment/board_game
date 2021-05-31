@@ -5,23 +5,23 @@ export const Styles = {
     Distinctions: (distinction) => {
         // todo Fix sizes
         switch (distinction) {
-        case 0:
+        case "blacksmith":
             return {
                 background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -100px / 94px 150px",
             };
-        case 1:
+        case "hunter":
             return {
                 background: "url(/img/distinctions/Distinctions.png) no-repeat -64px 0px / 94px 150px",
             };
-        case 2:
+        case "miner":
             return {
                 background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 94px 150px",
             };
-            case 3:
+            case "warrior":
             return {
                 background: "url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 94px 150px",
             };
-            case 4:
+            case "explorer":
             return {
                 background: "url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 94px 150px",
             };

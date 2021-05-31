@@ -7,21 +7,23 @@ export const TotalRank = (accumulator, currentValue) => accumulator + currentVal
 export const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;
 
 export const CheckDistinction = (G, ctx) => {
-    for (let s = 0; s < G.suitsNum; s++) {
-        const result = CheckCurrentSuitDistinction(G, ctx, s);
-        G.distinctions[s] = result;
+    let i = 0;
+    for (const suit in suitsConfigArray) {
+        const result = CheckCurrentSuitDistinction(G, ctx, suit);
+        G.distinctions[i] = result;
         if (result === undefined) {
-            if (s === 4) {
+            if (suit === "explorer") {
                 G.decks[1].splice(0, 1);
             }
         }
+        i++;
     }
 };
 
 const CheckCurrentSuitDistinction = (G, ctx, suit) => {
     const playersRanks = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        playersRanks.push(G.players[i].cards[suit].reduce(TotalRank, 0));
+        playersRanks.push(G.players[i].cards[Object.keys(suitsConfigArray).findIndex(item => item === suit)].reduce(TotalRank, 0));
     }
     const max = Math.max(...playersRanks),
         maxPlayers = playersRanks.filter(count => count === max);
@@ -33,9 +35,13 @@ const CheckCurrentSuitDistinction = (G, ctx, suit) => {
 };
 
 export const CurrentScoring = (player) => {
-    let score = 0;
-    for (let i = 0; i < player.cards.length; i++) {
-        score += suitsConfigArray[i].scoringRule(player.cards[i]);
+    let score = 0,
+        i = 0;
+    for (const suit in suitsConfigArray) {
+        if (player.cards[i] !== undefined) {
+            score += suitsConfigArray[suit].scoringRule(player.cards[i]);
+        }
+        i++;
     }
     return score;
 };
@@ -45,11 +51,12 @@ export const FinalScoring = (G, ctx, player, currentScore) => {
     for (let i = 0; i < player.boardCoins.length; i++) {
         score += player.boardCoins[i].value;
     }
-    const warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, 3);
+    // todo Check if Distinctions exists!
+    const warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, "warrior");
     if (warriorsDistinction !== undefined && G.players.findIndex(p => p.nickname === player.nickname) === warriorsDistinction) {
-        score += suitsConfigArray[3].distinction.awarding(G, ctx, player);
+        score += suitsConfigArray["warrior"].distinction.awarding(G, ctx, player);
     }
-    score += suitsConfigArray[2].distinction.awarding(G, ctx, player);
+    score += suitsConfigArray["miner"].distinction.awarding(G, ctx, player) ?? 0;
     // todo rework heroes profit
     score += player.heroes.length * 17;
     return score;
