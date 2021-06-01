@@ -7,91 +7,91 @@ export const Styles = {
             switch (heroName) {
                 case "Bonfur":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -96px -48px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -96px -48px / 288px 144px",
                     };
                 case "Aegur":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -128px -96px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -128px -96px / 288px 144px",
                     };
                 case "Dagda":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -128px -48px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -128px -48px / 288px 144px",
                     };
                 case "Aral":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -160px -96px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -160px -96px / 288px 144px",
                     };
                 case "Lokdur":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -224px 0px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -224px 0px / 288px 144px",
                     };
                 case "Zoral":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -32px -48px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -32px -48px / 288px 144px",
                     };
                 case "Tarah":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -160px 0px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -160px 0px / 288px 144px",
                     };
                 case "Kraal":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -192px 0px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -192px 0px / 288px 144px",
                     };
                 case "Idunn":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -128px 0px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -128px 0px / 288px 144px",
                     };
                 case "Hourya":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -96px -96px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -96px -96px / 288px 144px",
                     };
                 case "Dwerg Bergelmir":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat 0px 0px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat 0px 0px / 288px 144px",
                     };
                 case "Dwerg Jungir":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -64px 0px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -64px 0px / 288px 144px",
                     };
                 case "Dwerg Aesir":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -64px -48px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -64px -48px / 288px 144px",
                     };
                 case "Dwerg Ymir":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -32px -96px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -32px -96px / 288px 144px",
                     };
                 case "Dwerg Sigmir":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -64px -96px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -64px -96px / 288px 144px",
                     };
                 case "Ylud":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -32px 0px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -32px 0px / 288px 144px",
                     };
                 case "Uline":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -96px 0px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -96px 0px / 288px 144px",
                     };
                 case "Grid":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -256px 0px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -256px 0px / 288px 144px",
                     };
                 case "Thrud":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat 0px -48px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat 0px -48px / 288px 144px",
                     };
                 case "Skaa":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -160px -48px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -160px -48px / 288px 144px",
                     };
                 case "Jarika":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat -192px -48px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -192px -48px / 288px 144px",
                     };
                 case "Astrid":
                     return {
-                        background: "url(/img/heroes/basic/heroes.png) no-repeat 0px -96px / 288px 144px",
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat 0px -96px / 288px 144px",
                     };
                 default:
                     return {
@@ -102,23 +102,23 @@ export const Styles = {
             switch (heroName) {
                 case "Andumia":
                     return {
-                        background: "url(/img/heroes/thingvellir/heroes.png) no-repeat 0px 0px / 128px 100px",
+                        background: "url(/img/cards/heroes/thingvellir/heroes.png) no-repeat 0px 0px / 128px 100px",
                     };
                 case "Holda":
                     return {
-                        background: "url(/img/heroes/thingvellir/heroes.png) no-repeat -32px -0px / 128px 100px",
+                        background: "url(/img/cards/heroes/thingvellir/heroes.png) no-repeat -32px -0px / 128px 100px",
                     };
                 case "Khrad":
                     return {
-                        background: "url(/img/heroes/thingvellir/heroes.png) no-repeat -64px 0px / 128px 100px",
+                        background: "url(/img/cards/heroes/thingvellir/heroes.png) no-repeat -64px 0px / 128px 100px",
                     };
                 case "Olwin":
                     return {
-                        background: "url(/img/heroes/thingvellir/heroes.png) no-repeat 0px -50px / 128px 100px",
+                        background: "url(/img/cards/heroes/thingvellir/heroes.png) no-repeat 0px -50px / 128px 100px",
                     };
                 case "Zolkur":
                     return {
-                        background: "url(/img/heroes/thingvellir/heroes.png) no-repeat -96px -50px / 128px 100px",
+                        background: "url(/img/cards/heroes/thingvellir/heroes.png) no-repeat -96px -50px / 128px 100px",
                     };
                 default:
                     return {
