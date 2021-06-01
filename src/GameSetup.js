@@ -6,6 +6,7 @@ import {BuildCoins} from "./Coin";
 import {Permute, k_combinations, GetAllPicks} from "./BotConfig";
 import {BuildPriorities} from "./Priority";
 import {actionCardsConfigArray} from "./data/ActionCardData";
+import {BuildHeroes} from "./Hero";
 
 export const SetupGame = (ctx) => {
     const suitsNum = 5,
@@ -19,9 +20,7 @@ export const SetupGame = (ctx) => {
             },
         },
         decks = [],
-        // todo add heroes logic!
-        heroes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
-        // todo fix it
+        // todo add camp logic
         campDecks = [
             [{points: 0},{points: 1},{points: 2},{points: 3},{points: 4}],
             [{points: 0},{points: 1},{points: 2},{points: 3},{points: 4}]
@@ -33,6 +32,14 @@ export const SetupGame = (ctx) => {
         decks[i] = BuildCards({suits: suitsConfigArray, actions: actionCardsConfigArray}, {players: ctx.numPlayers, tier: i});
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
+    const heroesConfigArray = ["base"];
+    for (const expansion in expansions) {
+        if (expansions[expansion].active) {
+            heroesConfigArray.push(expansion);
+        }
+    }
+    // todo add heroes logic!
+    const heroes = BuildHeroes(heroesConfigArray);
     const taverns = [],
         tavernsNum = 3,
         currentTavern = null,

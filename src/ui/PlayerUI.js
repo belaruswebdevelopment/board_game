@@ -22,7 +22,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                 for (let j = 0; j < data.props.G.taverns.length; j++) {
                     playerHeaders[p].push(
                         <th key={tavernsConfig[j].name}>
-                            <span style={Styles.Taverns(j)} className="bg-tavern">
+                            <span style={Styles.Taverns(j)} className="bg-tavern-icon">
 
                             </span>
                         </th>
@@ -34,7 +34,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 <td className="cursor-pointer" key={`player${p} tavernsConfig[j].${tavernsConfig[j].name} empty`}
                                     onClick={() => data.OnClickBoardCoin(j)}>
                                     <span style={Styles.CoinBack()} className="bg-coin">
-                                        <span style={Styles.Taverns(j)} className="bg-tavern">
+                                        <span style={Styles.Taverns(j)} className="bg-tavern-icon">
 
                                         </span>
                                     </span>
@@ -44,7 +44,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             playerCells.push(
                                 <td className="cursor-pointer" key={`player${p} tavernsConfig[j].${tavernsConfig[j].name} coin`}>
                                     <span style={Styles.CoinBack()} className="bg-coin">
-                                        <span style={Styles.Taverns(j)} className="bg-tavern">
+                                        <span style={Styles.Taverns(j)} className="bg-tavern-icon">
 
                                         </span>
                                     </span>
@@ -258,7 +258,7 @@ export const DrawPlayersBoards = (data) => {
         for (const suit in suitsConfigArray) {
             playerHeaders[p].push(
                 <th className={`${suitsConfigArray[suit].suitColor}`} key={`${data.props.G.players[p].nickname} ${suitsConfigArray[suit].suitName}`}>
-                        <span style={Styles.Suits(suitsConfigArray[suit].suitName)} className="bg-suit">
+                        <span style={Styles.Suits(suitsConfigArray[suit].suitName)} className="bg-suit-icon">
 
                         </span>
                 </th>
@@ -268,7 +268,7 @@ export const DrawPlayersBoards = (data) => {
            if (s === 0) {
                 playerHeaders[p].push(
                     <th className="bg-gray-600" key={`${data.props.G.players[p].nickname} hero icon`}>
-                        <span style={Styles.HeroBack()} className="bg-hero">
+                        <span style={Styles.HeroBack()} className="bg-hero-icon">
 
                         </span>
                     </th>
@@ -276,7 +276,7 @@ export const DrawPlayersBoards = (data) => {
             } else {
                 playerHeaders[p].push(
                     <th className="bg-yellow-200" key={`${data.props.G.players[p].nickname} camp icon`}>
-                        <span style={Styles.Camp()} className="bg-camp">
+                        <span style={Styles.Camp()} className="bg-camp-icon">
 
                         </span>
                     </th>

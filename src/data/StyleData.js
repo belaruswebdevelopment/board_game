@@ -2,31 +2,157 @@ export const Styles = {
     Suits: (suitName) => ({
         background: `url(/img/suits/${suitName}.png) no-repeat 0px 0px / 24px 24px`
     }),
+    Heroes: (game, heroName) => {
+        if (game === "base") {
+            switch (heroName) {
+                case "Bonfur":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -96px -48px / 288px 144px",
+                    };
+                case "Aegur":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -128px -96px / 288px 144px",
+                    };
+                case "Dagda":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -128px -48px / 288px 144px",
+                    };
+                case "Aral":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -160px -96px / 288px 144px",
+                    };
+                case "Lokdur":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -224px 0px / 288px 144px",
+                    };
+                case "Zoral":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -32px -48px / 288px 144px",
+                    };
+                case "Tarah":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -160px 0px / 288px 144px",
+                    };
+                case "Kraal":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -192px 0px / 288px 144px",
+                    };
+                case "Idunn":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -128px 0px / 288px 144px",
+                    };
+                case "Hourya":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -96px -96px / 288px 144px",
+                    };
+                case "Dwerg Bergelmir":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat 0px 0px / 288px 144px",
+                    };
+                case "Dwerg Jungir":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -64px 0px / 288px 144px",
+                    };
+                case "Dwerg Aesir":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -64px -48px / 288px 144px",
+                    };
+                case "Dwerg Ymir":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -32px -96px / 288px 144px",
+                    };
+                case "Dwerg Sigmir":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -64px -96px / 288px 144px",
+                    };
+                case "Ylud":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -32px 0px / 288px 144px",
+                    };
+                case "Uline":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -96px 0px / 288px 144px",
+                    };
+                case "Grid":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -256px 0px / 288px 144px",
+                    };
+                case "Thrud":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat 0px -48px / 288px 144px",
+                    };
+                case "Skaa":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -160px -48px / 288px 144px",
+                    };
+                case "Jarika":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat -192px -48px / 288px 144px",
+                    };
+                case "Astrid":
+                    return {
+                        background: "url(/img/heroes/basic/heroes.png) no-repeat 0px -96px / 288px 144px",
+                    };
+                default:
+                    return {
+                        background: "",
+                    };
+            }
+        } else if (game === "thingvellir") {
+            switch (heroName) {
+                case "Andumia":
+                    return {
+                        background: "url(/img/heroes/thingvellir/heroes.png) no-repeat 0px 0px / 128px 100px",
+                    };
+                case "Holda":
+                    return {
+                        background: "url(/img/heroes/thingvellir/heroes.png) no-repeat -32px -0px / 128px 100px",
+                    };
+                case "Khrad":
+                    return {
+                        background: "url(/img/heroes/thingvellir/heroes.png) no-repeat -64px 0px / 128px 100px",
+                    };
+                case "Olwin":
+                    return {
+                        background: "url(/img/heroes/thingvellir/heroes.png) no-repeat 0px -50px / 128px 100px",
+                    };
+                case "Zolkur":
+                    return {
+                        background: "url(/img/heroes/thingvellir/heroes.png) no-repeat -96px -50px / 128px 100px",
+                    };
+                default:
+                    return {
+                        background: "",
+                    };
+            }
+        }
+    },
     Distinctions: (distinction) => {
-        // todo Fix sizes
         switch (distinction) {
-        case "blacksmith":
-            return {
-                background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -100px / 94px 150px",
-            };
-        case "hunter":
-            return {
-                background: "url(/img/distinctions/Distinctions.png) no-repeat -64px 0px / 94px 150px",
-            };
-        case "miner":
-            return {
-                background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 94px 150px",
-            };
+            case "blacksmith":
+                return {
+                    background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -100px / 94px 150px",
+                };
+            case "hunter":
+                return {
+                    background: "url(/img/distinctions/Distinctions.png) no-repeat -64px 0px / 94px 150px",
+                };
+            case "miner":
+                return {
+                    background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 94px 150px",
+                };
             case "warrior":
-            return {
-                background: "url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 94px 150px",
-            };
+                return {
+                    background: "url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 94px 150px",
+                };
             case "explorer":
-            return {
-                background: "url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 94px 150px",
-            };
-        default:
-            return "";
+                return {
+                    background: "url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 94px 150px",
+                };
+            default:
+                return {
+                    background: "",
+                };
         }
     },
     DistinctionsBack: () => ({
@@ -50,7 +176,7 @@ export const Styles = {
     Priorities: (priority) => ({
         background: `url(/img/priorities/Priority${priority}.png) no-repeat 0px 0px / 28px 38px`,
     }),
-    Exchange : () => ({
+    Exchange: () => ({
         background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px",
     }),
     Taverns: (tavernID) => {
@@ -68,7 +194,9 @@ export const Styles = {
                     background: "url(/img/taverns/Taverns.png) no-repeat -49px -9px / 75px 42px",
                 };
             default:
-                return "";
+                return {
+                    background: "",
+                };
         }
     },
 };

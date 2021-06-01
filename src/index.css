@@ -29,7 +29,7 @@
 }
 
 @layer components {
-    .bg-tavern {
+    .bg-tavern-icon {
         @apply block-center w-6 h-6;
     }
 
@@ -37,11 +37,15 @@
         @apply block-center w-8 h-6;
     }
 
-    .bg-camp {
+    .bg-priority {
+        @apply block-center w-8 h-10;
+    }
+
+    .bg-camp-icon {
         @apply block-center w-6 h-6;
     }
 
-    .bg-suit {
+    .bg-suit-icon {
         @apply block-center w-6 h-6;
     }
 
@@ -49,27 +53,27 @@
         @apply block-center w-8 h-12;
     }
 
-    .bg-hero {
+    .bg-hero-icon {
         @apply block-center w-6 h-6;
     }
 
-    .bg-priority {
-        @apply block-center w-8 h-10;
+    .bg-hero {
+        @apply block-center w-8 h-12;
     }
 
-    .bg-top-market-coin {
+    .bg-top-market-coin-icon {
         @apply rounded-full inline-block w-6 h-6;
     }
 
-    .bg-top-hero {
+    .bg-top-hero-icon {
         @apply inline-block w-6 h-6;
     }
 
-    .bg-top-distinctions {
+    .bg-top-distinctions-icon {
         @apply inline-block w-3 h-4;
     }
 
-    .bg-top-camp {
+    .bg-top-camp-icon {
         @apply inline-block w-6 h-6;
     }
 

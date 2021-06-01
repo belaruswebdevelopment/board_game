@@ -77,7 +77,7 @@ export const DrawMarketCoins = (data) => {
         <table>
             <caption>
                 <span className="block">
-                    <span style={Styles.Exchange()} className="bg-top-market-coin">
+                    <span style={Styles.Exchange()} className="bg-top-market-coin-icon">
 
                     </span> Market coins ({data.props.G.marketCoins.length} left)</span>
             </caption>
@@ -105,8 +105,13 @@ export const DrawHeroes = (data) => {
                 );
             } else {
                 boardCells.push(
-                    <td className="bg-gray-600 cursor-pointer" key={j} onClick={() => data.OnClickHeroCard(increment)}>
-                        <span className="text-white">{data.props.G.heroes[increment]}</span>
+                    <td className="bg-gray-600 cursor-pointer" key={`Hero ${data.props.G.heroes[increment].name} card`}
+                        onClick={() => data.OnClickHeroCard(increment)}>
+                        <span style={Styles.Heroes(data.props.G.heroes[increment].game, data.props.G.heroes[increment].name)}
+                              title={data.props.G.heroes[increment].description}
+                              className="bg-hero">
+
+                        </span>
                     </td>
                 );
             }
@@ -121,7 +126,7 @@ export const DrawHeroes = (data) => {
     return (
         <table>
             <caption>
-                <span style={Styles.HeroBack()} className="bg-top-hero">
+                <span style={Styles.HeroBack()} className="bg-top-hero-icon">
 
                 </span> <span>Heroes ({data.props.G.heroes.length} left)</span>
             </caption>
@@ -152,7 +157,7 @@ export const DrawDistinctions = (data) => {
     return (
         <table>
             <caption>
-                <span style={Styles.DistinctionsBack()} className="bg-top-distinctions">
+                <span style={Styles.DistinctionsBack()} className="bg-top-distinctions-icon">
 
                 </span> <span>Distinctions</span>
             </caption>
@@ -244,7 +249,7 @@ export const DrawProfit = (data, option) => {
     return (
         <table>
             <caption>
-                <span style={Styles.DistinctionsBack()} className="bg-top-distinctions">
+                <span style={Styles.DistinctionsBack()} className="bg-top-distinctions-icon">
 
                 </span> <span>{caption}</span>
             </caption>
@@ -264,7 +269,7 @@ export const DrawCamp = (data) => {
                     data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd][j] === null)) {
                 boardCells.push(
                     <td key={j}>
-                        <span style={Styles.Camp()} className="bg-camp">
+                        <span style={Styles.Camp()} className="bg-camp-icon">
 
                         </span>
                     </td>
@@ -282,7 +287,7 @@ export const DrawCamp = (data) => {
     return (
         <table>
             <caption>
-                <span style={Styles.Camp()} className="bg-top-camp">
+                <span style={Styles.Camp()} className="bg-top-camp-icon">
 
                 </span>
                 <span>Camp {data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length
@@ -308,7 +313,7 @@ export const DrawTaverns = (data, gridClass) => {
                 if (data.props.G.taverns[t][j] === null) {
                     boardCells.push(
                         <td key={j}>
-                            <span style={Styles.Taverns(t)} className="bg-tavern">
+                            <span style={Styles.Taverns(t)} className="bg-tavern-icon">
 
                             </span>
                         </td>
@@ -334,7 +339,7 @@ export const DrawTaverns = (data, gridClass) => {
             tavernsBoards.push(
                 <table className={`${gridClass} justify-self-center`} key={`Tavern ${tavernsConfig[t].name} board`}>
                     <caption>
-                        <span style={Styles.Taverns(t)} className="bg-tavern">
+                        <span style={Styles.Taverns(t)} className="bg-tavern-icon">
 
                         </span>
                     </caption>
