@@ -45,6 +45,7 @@ import {BoardGame} from './Game';
 import {GameBoard} from './Board';
 
 const App = Client({
+    // debug: false,
     game: BoardGame,
     board: GameBoard,
     numPlayers: 5,

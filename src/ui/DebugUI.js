@@ -23,11 +23,10 @@ const DrawObjectData = (obj) => {
         if (value instanceof Object) {
             const data = DrawObjectData(value);
             if (Array.isArray(value)) {
-                const length = value.length;
                 values.push(
                     <li key={key}>
                         <details>
-                            <summary><b><span className="text-pink-500">{key}</span>: </b><i>Array({length})</i>
+                            <summary><b><span className="text-pink-500">{key}</span>: </b><i>Array({value.length})</i>
                             </summary>
                             <ul className="list-none p-0 ml-5">
                                 {data}

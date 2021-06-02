@@ -18,8 +18,7 @@ export const enumerate = (G, ctx) => {
         if (ctx.phase === 'pickCards' && stage.startsWith('default')) {
             continue;
         }
-        if (stage.includes(activeStageOfCurrentPlayer) && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot))
-        {
+        if (stage.includes(activeStageOfCurrentPlayer) && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
             const moveName = moveBy[ctx.phase][stage],
                 [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx}),
                 hasGetValue = moveValidators[moveName].hasOwnProperty('getValue');
@@ -210,8 +209,7 @@ export const objectives = () => ({
             if (ctx.phase !== 'pickCards') {
                 return false;
             }
-            if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
-            {
+            if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length)) {
                 return false;
             }
             if (G.taverns[0].some(element => element === null)) {
@@ -234,8 +232,7 @@ export const objectives = () => ({
             if (ctx.phase !== 'pickCards') {
                 return false;
             }
-            if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
-            {
+            if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length)) {
                 return false;
             }
             if (G.taverns[0].some(element => element === null)) {
