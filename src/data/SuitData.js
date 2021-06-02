@@ -54,7 +54,7 @@ const blacksmithSuit = {
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
                 player.cards[0].push(CreateCard({
-                    suit: 0,
+                    suit: "blacksmith",
                     rank: 2,
                     points: 2,
                 }));
