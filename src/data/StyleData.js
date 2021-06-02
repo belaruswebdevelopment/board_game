@@ -131,23 +131,23 @@ export const Styles = {
         switch (distinction) {
             case "blacksmith":
                 return {
-                    background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -100px / 94px 150px",
+                    background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -100px / 96px 150px",
                 };
             case "hunter":
                 return {
-                    background: "url(/img/distinctions/Distinctions.png) no-repeat -64px 0px / 94px 150px",
+                    background: "url(/img/distinctions/Distinctions.png) no-repeat -64px 0px / 96px 150px",
                 };
             case "miner":
                 return {
-                    background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 94px 150px",
+                    background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 96px 150px",
                 };
             case "warrior":
                 return {
-                    background: "url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 94px 150px",
+                    background: "url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 96px 150px",
                 };
             case "explorer":
                 return {
-                    background: "url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 94px 150px",
+                    background: "url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 96px 150px",
                 };
             default:
                 return {
@@ -164,6 +164,62 @@ export const Styles = {
     Camp: () => ({
         background: "url(/img/cards/camp/Camp.png) no-repeat 0px 3px / 24px 18px",
     }),
+    CampCards: (tier, cardName) => {
+        switch (cardName) {
+            case 0:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px 0px / 128px 144px`,
+                };
+            case 1:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px 0px  / 128px 144px`,
+                };
+            case 2:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px 0px / 128px 144px`,
+                };
+            case 3:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px 0px / 128px 144px`,
+                };
+            case 4:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px -48px / 128px 144px`,
+                };
+            case 5:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px -48px / 128px 144px`,
+                };
+            case 6:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px -48px / 128px 144px`,
+                };
+            case 7:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px -48px / 128px 144px`,
+                };
+            case 8:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px -96px / 128px 144px`,
+                };
+            case 9:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px -96px / 128px 144px`,
+                };
+            case 10:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px -96px / 128px 144px`,
+                };
+            case 11:
+                return {
+                    background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px -96px / 128px 144px`,
+                };
+            default:
+                return {
+                    background: "",
+                };
+        }
+    },
     Coin: (value, initial) => ({
         background: `url(/img/coins/Coin${value}${initial ? "Initial" : ""}.jpg) no-repeat 0px 0px / 40px 40px`,
     }),
@@ -183,7 +239,7 @@ export const Styles = {
         switch (tavernID) {
             case 0:
                 return {
-                    background: "url(/img/taverns/Taverns.png) no-repeat -3px -6px / 75px 42px",
+                    background: "url(/img/taverns/Taverns.png) no-repeat -2px -6px / 75px 42px",
                 };
             case 1:
                 return {
@@ -191,7 +247,7 @@ export const Styles = {
                 };
             case 2:
                 return {
-                    background: "url(/img/taverns/Taverns.png) no-repeat -49px -9px / 75px 42px",
+                    background: "url(/img/taverns/Taverns.png) no-repeat -50px -9px / 75px 42px",
                 };
             default:
                 return {

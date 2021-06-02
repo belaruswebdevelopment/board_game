@@ -309,13 +309,15 @@ export const DrawPlayersBoards = (data) => {
             }
             for (let k = 0; k < 1 + expansion; k++) {
                 id += k + 1;
-                if (k === 1) {
+                if (k === 0) {
                     if (data.props.G.players[p].heroes[i] !== undefined) {
                         isDrawRow = true;
                         playerCells.push(
-                            <td key={id}
-                                className="bg-gray-600">
-                                <b>{data.props.G.players[p].heroes[i]}</b>
+                            <td key={id} className="bg-gray-600">
+                                <span style={Styles.Heroes(data.props.G.players[p].heroes[i].game, data.props.G.players[p].heroes[i].name)}
+                                      title={data.props.G.players[p].heroes[i].description} className="bg-hero">
+
+                                </span>
                             </td>
                         );
                     } else {
@@ -330,7 +332,10 @@ export const DrawPlayersBoards = (data) => {
                         isDrawRow = true;
                         playerCells.push(
                             <td className="bg-yellow-200" key={id}>
-                                <b>{data.props.G.players[p].campCards[i].points}</b>
+                                <span style={Styles.CampCards(data.props.G.players[p].campCards[i].tier, data.props.G.players[p].campCards[i].name)}
+                                      title={data.props.G.players[p].campCards[i].description} className="bg-camp">
+
+                                </span>
                             </td>
                         );
                     } else {

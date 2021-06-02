@@ -1,3 +1,5 @@
+import {CheckEmptyCampCards, RefillCamp} from "./Camp";
+
 export const tavernsConfig = {
     0: {
         name: "«Весёлый гоблин»",
@@ -11,7 +13,7 @@ export const tavernsConfig = {
 };
 
 export const CheckEmptyLastTavern = (G, ctx) => {
-    if (G.taverns[G.tavernsNum - 1].every((element) => element === null)) {
+    if (G.taverns[G.tavernsNum - 1].every(element => element === null)) {
         if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
             G.tierToEnd--;
             if (!G.decks[G.decks.length - 1].length) {
@@ -19,10 +21,12 @@ export const CheckEmptyLastTavern = (G, ctx) => {
                 return;
             }
             ctx.events.setPhase('getDistinctions');
+            RefillCamp(G);
         }
         for (let i = 0; i < G.tavernsNum; i++) {
             G.taverns[i] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
         }
+        CheckEmptyCampCards(G);
         ctx.events.setPhase('placeCoins');
     }
 }

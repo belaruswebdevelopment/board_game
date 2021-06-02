@@ -43,6 +43,7 @@ export const moveBy = {
     },
     pickCards: {
         default: "ClickCard",
+        default1: "ClickCampCard",
         pickHero: "ClickHeroCard",
         upgradeCoin: "ClickCoinToUpgrade",
     },
@@ -91,5 +92,10 @@ export const moveValidators = {
     ClickDistinctionCard: {
         getRange: ({G, ctx}) => ([0, G.distinctions.length]),
         validate: ({G, ctx, id}) => G.distinctions.findIndex(id => id === Number(ctx.currentPlayer)) === id,
+    },
+    // todo Sasha check logic
+    ClickCampCard: {
+        getRange: ({G, ctx}) => ([0, G.camp.length]),
+        validate: ({G, ctx, id}) => G.expansions.thingvellir && Number(ctx.currentPlayer) === G.playersOrder[0],
     },
 };

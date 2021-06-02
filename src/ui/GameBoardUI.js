@@ -107,9 +107,10 @@ export const DrawHeroes = (data) => {
                 boardCells.push(
                     <td className="bg-gray-600 cursor-pointer" key={`Hero ${data.props.G.heroes[increment].name} card`}
                         onClick={() => data.OnClickHeroCard(increment)}>
-                        <span style={Styles.Heroes(data.props.G.heroes[increment].game, data.props.G.heroes[increment].name)}
-                              title={data.props.G.heroes[increment].description}
-                              className="bg-hero">
+                        <span
+                            style={Styles.Heroes(data.props.G.heroes[increment].game, data.props.G.heroes[increment].name)}
+                            title={data.props.G.heroes[increment].description}
+                            className="bg-hero">
 
                         </span>
                     </td>
@@ -144,7 +145,8 @@ export const DrawDistinctions = (data) => {
         for (const suit in suitsConfigArray) {
             // todo currentPlayer
             boardCells.push(
-                <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`} onClick={() => data.OnClickDistinctionCard(j)}
+                <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
+                    onClick={() => data.OnClickDistinctionCard(j)}
                     title={suitsConfigArray[suit].distinction.description}>
                     <span style={Styles.Distinctions(suit)} className="bg-suit-distinction">
 
@@ -179,7 +181,8 @@ export const DrawProfit = (data, option) => {
                     // todo currentPlayer
                     boardCells.push(
                         <td className="cursor-pointer" key={j} onClick={() => data.OnClickCoinToUpgradeDistinction(j)}>
-                            <span style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value,
+                            <span
+                                style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value,
                                     data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial)}
                                 className={`bg-coin border-2`}>
 
@@ -203,7 +206,8 @@ export const DrawProfit = (data, option) => {
                     );
                 } else if (data.props.G.decks[1][j].value !== undefined) {
                     boardCells.push(
-                        <td className="cursor-pointer" key={j} onClick={() => data.OnClickCardToPickDistinction(j, deck)}>
+                        <td className="cursor-pointer" key={j}
+                            onClick={() => data.OnClickCardToPickDistinction(j, deck)}>
                             <b>{deck[j].value}</b>
                         </td>
                     );
@@ -264,9 +268,7 @@ export const DrawCamp = (data) => {
     const boardCells = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < data.props.G.campNum; j++) {
-            if (data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd] === undefined ||
-                (data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd] !== undefined &&
-                    data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd][j] === null)) {
+            if (data.props.G.camp[j] === null || data.props.G.camp[j] === undefined) {
                 boardCells.push(
                     <td key={j}>
                         <span style={Styles.Camp()} className="bg-camp-icon">
@@ -277,8 +279,12 @@ export const DrawCamp = (data) => {
             } else {
                 // todo currentPlayer
                 boardCells.push(
-                    <td className="bg-yellow-200 cursor-pointer" key={j} onClick={() => data.OnClickCampCard(j)}>
-                        <b>{data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd][j].points}</b>
+                    <td className="bg-yellow-200 cursor-pointer" key={`Camp ${data.props.G.camp[j].name} card`}
+                        onClick={() => data.OnClickCampCard(j)}>
+                        <span style={Styles.CampCards(data.props.G.camp[j].tier, data.props.G.camp[j].name)}
+                              title={data.props.G.camp[j].description} className="bg-camp">
+
+                        </span>
                     </td>
                 );
             }

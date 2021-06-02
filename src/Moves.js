@@ -26,7 +26,14 @@ export const ClickHeroCard = (G, ctx, heroId) => {
 };
 
 export const ClickCampCard = (G, ctx, cardId) => {
-    // todo check if currentPlayer and win tavern! Add delete 1 card after all pick and correct next phase and draw camp cards
+    // todo Is it real to create isValidMove with different conditions? {condition: [G.expansions.thingvellir], [Number(ctx.currentPlayer), G.playersOrder[0]]]}
+    //  -> if 1 argument check on true, if 2 arguments compare === on true
+    const isValidMove = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]}) &&
+        G.expansions.thingvellir && Number(ctx.currentPlayer) === G.playersOrder[0];
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    // todo Add delete 1 card after all pick and correct next phase and draw camp cards
     AddCampCardToPlayer(G.players[ctx.currentPlayer], G.camp[cardId]);
     G.camp[cardId] = null;
     ctx.events.endTurn();
