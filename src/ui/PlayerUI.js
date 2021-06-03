@@ -293,11 +293,24 @@ export const DrawPlayersBoards = (data) => {
                 id = i + j;
                 if (data.props.G.players[p].cards[j] !== undefined && data.props.G.players[p].cards[j][i] !== undefined) {
                     isDrawRow = true;
-                    playerCells.push(
-                        <td key={id} className={suitsConfigArray[suit].suitColor}>
-                            <b>{data.props.G.players[p].cards[j][i].points}</b>
-                        </td>
-                    );
+                    if (data.props.G.players[p].cards[j][i].game !== undefined) {
+                        playerCells.push(
+                            <td key={id} className={suitsConfigArray[suit].suitColor}>
+                            <span
+                                style={Styles.Heroes(data.props.G.players[p].cards[j][i].game, data.props.G.players[p].cards[j][i].name)}
+                                title={data.props.G.players[p].cards[j][i].description}
+                                className="bg-hero">
+
+                            </span>
+                            </td>
+                        );
+                    } else {
+                        playerCells.push(
+                            <td key={id} className={suitsConfigArray[suit].suitColor}>
+                                <b>{data.props.G.players[p].cards[j][i].points}</b>
+                            </td>
+                        );
+                    }
                 } else {
                     playerCells.push(
                         <td key={id}>
@@ -311,15 +324,17 @@ export const DrawPlayersBoards = (data) => {
                 id += k + 1;
                 if (k === 0) {
                     if (data.props.G.players[p].heroes[i] !== undefined) {
-                        isDrawRow = true;
-                        playerCells.push(
-                            <td key={id} className="bg-gray-600">
+                        if (!data.props.G.players[p].heroes[i].suit) {
+                            isDrawRow = true;
+                            playerCells.push(
+                                <td key={id} className="bg-gray-600">
                                 <span style={Styles.Heroes(data.props.G.players[p].heroes[i].game, data.props.G.players[p].heroes[i].name)}
                                       title={data.props.G.players[p].heroes[i].description} className="bg-hero">
 
                                 </span>
-                            </td>
-                        );
+                                </td>
+                            );
+                        }
                     } else {
                         playerCells.push(
                             <td key={id}>

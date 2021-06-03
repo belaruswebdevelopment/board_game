@@ -13,6 +13,10 @@ export const ClickHeroCard = (G, ctx, heroId) => {
         return INVALID_MOVE;
     }
     G.players[ctx.currentPlayer].heroes.push(G.heroes[heroId]);
+    if (G.heroes[heroId].suit) {
+        G.players[ctx.currentPlayer].cards[Object.keys(suitsConfigArray).findIndex(suit => suit === G.heroes[heroId].suit)].push(G.heroes[heroId]);
+    }
+    // todo not null, make inActive?
     G.heroes[heroId] = null;
     if (CheckPickHero(G, ctx)) {
         ctx.events.endStage();
