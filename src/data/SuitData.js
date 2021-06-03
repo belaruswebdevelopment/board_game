@@ -2,7 +2,6 @@ import {CreateCoin} from "../Coin";
 import {CreateCard} from "../Card";
 import {ArithmeticSum, TotalPoints, TotalRank} from "../Score";
 import {CreatePriority} from "../Priority";
-import {UpgradeCoinAction} from "../Actions";
 
 const blacksmithSuit = {
     suit: "blacksmith",

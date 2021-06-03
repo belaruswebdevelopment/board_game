@@ -5,7 +5,7 @@ import {Trading} from "./Coin";
 import {CheckCurrentTavernEmpty, CheckEmptyLastTavern} from "./Tavern";
 import {CheckPickHero} from "./Hero";
 import {IsValidMove} from "./MoveValidator";
-import {ActionDispatcher, UpgradeCoinAction} from "./Actions";
+import {ActionDispatcher} from "./Actions";
 
 export const ClickHeroCard = (G, ctx, heroId) => {
     const isValidMove = IsValidMove({obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length]});
