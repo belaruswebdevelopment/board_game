@@ -93,7 +93,12 @@ const Grid = {
     suit: null,
     rank: null,
     points: 7,
-    action: () => {},
+    action: {
+        actionName: "UpgradeCoinAction",
+        config: {
+            value: 7,
+        },
+    },
     scoringRule: () => {},
 };
 

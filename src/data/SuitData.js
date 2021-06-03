@@ -2,6 +2,7 @@ import {CreateCoin} from "../Coin";
 import {CreateCard} from "../Card";
 import {ArithmeticSum, TotalPoints, TotalRank} from "../Score";
 import {CreatePriority} from "../Priority";
+import {UpgradeCoinAction} from "../Actions";
 
 const blacksmithSuit = {
     suit: "blacksmith",
@@ -243,6 +244,14 @@ const warriorSuit = {
         description: "Получив знак отличия воинов, сразу же улучшите одну из своих монет, добавив к её номиналу +5.",
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
+                player.pickedCard = {
+                    action: {
+                        actionName: "UpgradeCoinAction",
+                        config: {
+                            value: 5,
+                        },
+                    },
+                };
                 ctx.events.setStage('upgradeDistinctionCoin');
                 G.drawProfit = 3;
             } else {

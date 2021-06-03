@@ -1,10 +1,11 @@
 import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCampCardToPlayer, AddCardToPlayer} from "./Player";
 import {suitsConfigArray} from "./data/SuitData";
-import {Trading, UpgradeCoin} from "./Coin";
+import {Trading} from "./Coin";
 import {CheckCurrentTavernEmpty, CheckEmptyLastTavern} from "./Tavern";
 import {CheckPickHero} from "./Hero";
 import {IsValidMove} from "./MoveValidator";
+import {ActionDispatcher, UpgradeCoinAction} from "./Actions";
 
 export const ClickHeroCard = (G, ctx, heroId) => {
     const isValidMove = IsValidMove({obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length]});
@@ -172,34 +173,29 @@ export const ClickDistinctionCard = (G, ctx, cardID) => {
     suitsConfigArray[Object.keys(suitsConfigArray)[cardID]].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
 };
 
-export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
+const ActivateCoinUpgrade = (G, ctx, coinID) => {
     if (G.players[ctx.currentPlayer].boardCoins[coinID].isTriggerTrading) {
         return INVALID_MOVE;
     }
     G.drawProfit = null;
-    UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID], G.players[ctx.currentPlayer].boardCoins[coinID].value + 5);
+    ActionDispatcher(G.players[ctx.currentPlayer].pickedCard.action, G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID], G.players[ctx.currentPlayer].boardCoins[coinID].value);
+}
+
+export const ClickCoinToUpgradeDistinction = (G, ctx, coinID) => {
+    ActivateCoinUpgrade(G, ctx, coinID);
     delete G.distinctions[3];
     ctx.events.endTurn();
 };
 
-export const ClickCoinToUpgradeInDistinction = (G, ctx, coinID, value) => {
-    if (G.players[ctx.currentPlayer].boardCoins[coinID].isTriggerTrading) {
-        return INVALID_MOVE;
-    }
-    G.drawProfit = null;
-    UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID], G.players[ctx.currentPlayer].boardCoins[coinID].value + value);
+export const ClickCoinToUpgradeInDistinction = (G, ctx, coinID) => {
+    ActivateCoinUpgrade(G, ctx, coinID);
     delete G.distinctions[4];
     ctx.events.endStage();
     ctx.events.endTurn();
 };
 
 export const ClickCoinToUpgrade = (G, ctx, coinID) => {
-    if (G.players[ctx.currentPlayer].boardCoins[coinID].isTriggerTrading) {
-        return INVALID_MOVE;
-    }
-    G.drawProfit = null;
-    UpgradeCoin(G, ctx, coinID, G.players[ctx.currentPlayer].boardCoins[coinID],
-        G.players[ctx.currentPlayer].boardCoins[coinID].value + G.players[ctx.currentPlayer].pickedCard.value);
+    ActivateCoinUpgrade(G, ctx, coinID);
     ActivateTrading(G, ctx, G.currentTavern);
     CheckEmptyLastTavern(G, ctx);
     CheckCurrentTavernEmpty(G, ctx, G.currentTavern);

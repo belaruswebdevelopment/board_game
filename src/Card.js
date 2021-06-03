@@ -9,9 +9,10 @@ export const CreateCard = ({suit, rank = 1, points} = {}) => {
     };
 };
 
-const CreateActionCard = ({value} = {}) => {
+const CreateActionCard = ({value, action} = {}) => {
     return {
         value,
+        action,
     };
 };
 
@@ -31,6 +32,7 @@ export const BuildCards = (deckConfig, data) => {
         for (let j = 0; j < deckConfig.actions[i].amount()[data.players][data.tier]; j++) {
             cards.push(CreateActionCard({
                 value: deckConfig.actions[i].value,
+                action: deckConfig.actions[i].action,
             }));
         }
     }

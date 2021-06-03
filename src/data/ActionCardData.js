@@ -1,5 +1,11 @@
 const upgradeCoinUpTo3 = {
     value: 3,
+    action: {
+        actionName: "UpgradeCoinAction",
+        config: {
+            value: 3,
+        },
+    },
     amount: () => {
         return {
             2: {
@@ -24,6 +30,12 @@ const upgradeCoinUpTo3 = {
 
 const upgradeCoinUpTo5 = {
     value: 5,
+    action: {
+        actionName: "UpgradeCoinAction",
+        config: {
+            value: 5,
+        },
+    },
     amount: () => {
         return {
             2: {

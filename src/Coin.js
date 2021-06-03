@@ -37,7 +37,8 @@ export const BuildCoins = (coinConfig, opts) => {
 
 export const Trading = (G, ctx, tradingCoins) => {
     const coinsValues = tradingCoins.map(coin => coin.value),
-        coinsMaxValue = Math.max(...coinsValues);
+        coinsMaxValue = Math.max(...coinsValues),
+        coinMinValue = Math.min(...coinsValues)
     let coinMaxIndex = null;
     for (let i = 0; i < tradingCoins.length; i++) {
         if (tradingCoins[i].value === coinsMaxValue) {
@@ -47,10 +48,11 @@ export const Trading = (G, ctx, tradingCoins) => {
             }
         }
     }
-    UpgradeCoin(G, ctx, G.taverns.length + coinMaxIndex, tradingCoins[coinMaxIndex], tradingCoins.reduce((prev, current) => prev + current.value, 0));
+    UpgradeCoin({value: coinMinValue}, G, ctx, G.taverns.length + coinMaxIndex, tradingCoins[coinMaxIndex], coinsMaxValue);
 };
 
-export const UpgradeCoin = (G, ctx, j, upgradedCoin, newValue) => {
+export const UpgradeCoin = (config, G, ctx, j, upgradedCoin, currentValue) => {
+    const newValue = currentValue + config.value;
     let upgradeCoin = null;
     if (G.marketCoins.length) {
         if (newValue > G.marketCoins[G.marketCoins.length - 1].value) {

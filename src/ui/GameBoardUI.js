@@ -214,7 +214,7 @@ export const DrawProfit = (data, option) => {
                 }
             }
         } else if (option === "upgradeCoin") {
-            caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.value + ".";
+            caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.action.config.value + ".";
             for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                 if (!data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
                     // todo currentPlayer
@@ -231,13 +231,12 @@ export const DrawProfit = (data, option) => {
                 }
             }
         } else if (option === "upgradeCoinDistinction") {
-            caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.value + ".";
+            caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.action.config.value + ".";
             for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                 if (!data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
                     // todo currentPlayer
                     boardCells.push(
-                        <td className="cursor-pointer" key={j} onClick={() => data.OnClickCoinToUpgradeInDistinction(j,
-                            data.props.G.players[data.props.ctx.currentPlayer].pickedCard.value)}>
+                        <td className="cursor-pointer" key={j} onClick={() => data.OnClickCoinToUpgradeInDistinction(j)}>
                             <span
                                 style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value,
                                     data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial)}
