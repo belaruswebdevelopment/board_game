@@ -5,8 +5,10 @@ const Dwerg_Bergelmir = {
     suit: null,
     rank: null,
     points: null,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Ylud = {
@@ -16,8 +18,10 @@ const Ylud = {
     suit: null,
     rank: null,
     points: null,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Dwerg_Jungir = {
@@ -27,8 +31,10 @@ const Dwerg_Jungir = {
     suit: null,
     rank: null,
     points: null,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Uline = {
@@ -38,8 +44,10 @@ const Uline = {
     suit: null,
     rank: null,
     points: 9,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Idunn = {
@@ -49,8 +57,10 @@ const Idunn = {
     suit: "explorer",
     rank: 1,
     points: 7,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Tarah = {
@@ -60,8 +70,10 @@ const Tarah = {
     suit: "warrior",
     rank: 1,
     points: 14,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Kraal = {
@@ -71,8 +83,10 @@ const Kraal = {
     suit: "warrior",
     rank: 2,
     points: 7,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Lokdur = {
@@ -82,8 +96,10 @@ const Lokdur = {
     suit: "miner",
     rank: 1,
     points: 3,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Grid = {
@@ -99,7 +115,8 @@ const Grid = {
             value: 7,
         },
     },
-    scoringRule: () => {},
+    scoringRule: () => {
+    },
 };
 
 const Thrud = {
@@ -109,8 +126,10 @@ const Thrud = {
     suit: null,
     rank: null,
     points: 13,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Zoral = {
@@ -120,8 +139,10 @@ const Zoral = {
     suit: "miner",
     rank: 3,
     points: 1,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Dwerg_Aesir = {
@@ -131,8 +152,10 @@ const Dwerg_Aesir = {
     suit: null,
     rank: null,
     points: null,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Bonfur = {
@@ -142,8 +165,10 @@ const Bonfur = {
     suit: "blacksmith",
     rank: 3,
     points: null,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Dagda = {
@@ -153,8 +178,10 @@ const Dagda = {
     suit: "hunter",
     rank: 3,
     points: null,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Skaa = {
@@ -164,8 +191,10 @@ const Skaa = {
     suit: null,
     rank: null,
     points: 17,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Jarika = {
@@ -175,8 +204,10 @@ const Jarika = {
     suit: null,
     rank: null,
     points: 8,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Astrid = {
@@ -186,8 +217,10 @@ const Astrid = {
     suit: null,
     rank: null,
     points: null,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Dwerg_Ymir = {
@@ -197,8 +230,10 @@ const Dwerg_Ymir = {
     suit: null,
     rank: null,
     points: null,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Dwerg_Sigmir = {
@@ -208,8 +243,10 @@ const Dwerg_Sigmir = {
     suit: null,
     rank: null,
     points: null,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Hourya = {
@@ -219,8 +256,10 @@ const Hourya = {
     suit: "explorer",
     rank: 1,
     points: 20,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Aegur = {
@@ -230,8 +269,10 @@ const Aegur = {
     suit: "blacksmith",
     rank: 2,
     points: null,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Aral = {
@@ -241,8 +282,10 @@ const Aral = {
     suit: "hunter",
     rank: 2,
     points: null,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Andumia = {
@@ -252,8 +295,10 @@ const Andumia = {
     suit: null,
     rank: null,
     points: 12,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Holda = {
@@ -263,8 +308,10 @@ const Holda = {
     suit: null,
     rank: null,
     points: 12,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Khrad = {
@@ -274,8 +321,10 @@ const Khrad = {
     suit: null,
     rank: null,
     points: 4,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Olwin = {
@@ -285,8 +334,10 @@ const Olwin = {
     suit: null,
     rank: null,
     points: 9,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 const Zolkur = {
@@ -296,8 +347,10 @@ const Zolkur = {
     suit: null,
     rank: null,
     points: 10,
-    action: () => {},
-    scoringRule: () => {},
+    action: () => {
+    },
+    scoringRule: () => {
+    },
 };
 
 export const heroesConfig = {

@@ -58,11 +58,19 @@ export const moveBy = {
 export const moveValidators = {
     ClickHandCoin: {
         getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].handCoins.length]),
-        validate: ({G, ctx, id}) => G.players[ctx.currentPlayer].selectedCoin === undefined && G.players[ctx.currentPlayer].handCoins[id] !== null,
+        validate: ({
+                       G,
+                       ctx,
+                       id
+                   }) => G.players[ctx.currentPlayer].selectedCoin === undefined && G.players[ctx.currentPlayer].handCoins[id] !== null,
     },
     ClickBoardCoin: {
         getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
-        validate: ({G, ctx, id}) => G.players[ctx.currentPlayer].selectedCoin !== undefined && G.players[ctx.currentPlayer].boardCoins[id] === null,
+        validate: ({
+                       G,
+                       ctx,
+                       id
+                   }) => G.players[ctx.currentPlayer].selectedCoin !== undefined && G.players[ctx.currentPlayer].boardCoins[id] === null,
     },
     PlaceAllCoins: {
         getRange: ({G, ctx}) => ([0, G.botData.allCoinsOrder.length]),

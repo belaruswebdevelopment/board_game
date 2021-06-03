@@ -55,11 +55,11 @@ export const k_combinations = (set, k) => {
 export const GetAllPicks = ({tavernsNum, playersNum}) => {
     const temp = [],
         cartesian = (...a) => {
-        if (a.length === 1) {
-            a = a.flat();
-        }
-        return a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
-    };
+            if (a.length === 1) {
+                a = a.flat();
+            }
+            return a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
+        };
     for (let i = 0; i < tavernsNum; i++) {
         temp[i] = Array(playersNum).fill().map((item, index) => index);
     }
@@ -105,7 +105,7 @@ console.log(relativeHeuristicsForTradingCoin ? "" : "");
 //may be add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
 const GetCharacteristics = (array) => {
     const mean = array.reduce((acc, item) => acc + item / array.length, 0),
-          variation = array.reduce((acc, item) => acc + ((item - mean) ** 2) / array.length, 0);
+        variation = array.reduce((acc, item) => acc + ((item - mean) ** 2) / array.length, 0);
     return {
         mean,
         variation,
@@ -115,8 +115,7 @@ const GetCharacteristics = (array) => {
 const CompareCharacteristics = (stat1, stat2) => {
     const eps = 0.0001,
         tempVariation = stat1.variation - stat2.variation;
-    if (Math.abs(tempVariation) < eps)
-    {
+    if (Math.abs(tempVariation) < eps) {
         return stat1.mean - stat2.mean;
     }
     return tempVariation;
@@ -126,7 +125,7 @@ export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
     const taverns = G.taverns,
         averageCards = G.averageCards;
     let result = Array(taverns.length).fill(0),
-        temp = taverns.map(tavern => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight: 0), 0));
+        temp = taverns.map(tavern => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight : 0), 0));
     result = result.map((value, index) => value + temp[index]);
     temp = taverns.map(tavern => tavern.map((card, index, arr) => EvaluateCard(G, ctx, card, index, arr)));
     temp = temp.map(element => GetCharacteristics(element));

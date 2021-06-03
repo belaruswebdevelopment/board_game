@@ -31,7 +31,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                     if (data.props.G.players[p].boardCoins[coinIndex] === null) {
                         if (Number(data.props.ctx.currentPlayer) === p) {
                             playerCells.push(
-                                <td className="cursor-pointer" key={`player${p} tavernsConfig[j].${tavernsConfig[j].name} empty`}
+                                <td className="cursor-pointer"
+                                    key={`player${p} tavernsConfig[j].${tavernsConfig[j].name} empty`}
                                     onClick={() => data.OnClickBoardCoin(j)}>
                                     <span style={Styles.CoinBack()} className="bg-coin">
                                         <span style={Styles.Taverns(j)} className="bg-tavern-icon">
@@ -42,7 +43,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                             );
                         } else {
                             playerCells.push(
-                                <td className="cursor-pointer" key={`player${p} tavernsConfig[j].${tavernsConfig[j].name} coin`}>
+                                <td className="cursor-pointer"
+                                    key={`player${p} tavernsConfig[j].${tavernsConfig[j].name} coin`}>
                                     <span style={Styles.CoinBack()} className="bg-coin">
                                         <span style={Styles.Taverns(j)} className="bg-tavern-icon">
 
@@ -65,7 +67,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 <td className="cursor-pointer" key={j} onClick={() => data.OnClickBoardCoin(j)}>
                                     <span style={Styles.Coin(data.props.G.players[p].boardCoins[coinIndex].value,
                                         data.props.G.players[p].boardCoins[coinIndex].isInitial)}
-                                        className="bg-coin">
+                                          className="bg-coin">
 
                                     </span>
                                 </td>
@@ -97,7 +99,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                         );
                         playerCells.push(
                             <td key={`${data.props.G.players[p].nickname} priority gem`}>
-                                <span style={Styles.Priorities(data.props.G.players[p].priority.value)} className="bg-priority">
+                                <span style={Styles.Priorities(data.props.G.players[p].priority.value)}
+                                      className="bg-priority">
 
                                 </span>
                             </td>
@@ -113,7 +116,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                         if (data.props.G.players[p].boardCoins[coinIndex] === null) {
                             if (Number(data.props.ctx.currentPlayer) === p) {
                                 playerCells.push(
-                                    <td className="cursor-pointer" key={`${data.props.G.players[p].nickname} exchange coin ${j}`}
+                                    <td className="cursor-pointer"
+                                        key={`${data.props.G.players[p].nickname} exchange coin ${j}`}
                                         onClick={() => data.OnClickBoardCoin(j)}>
                                         <span style={Styles.CoinBack()} className="bg-coin">
                                             <span style={Styles.Exchange()} className="bg-small-market-coin">
@@ -148,8 +152,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                                     <td className="cursor-pointer" key={j}
                                         onClick={() => data.OnClickBoardCoin(j)}>
                                         <span style={Styles.Coin(data.props.G.players[p].boardCoins[coinIndex].value,
-                                                data.props.G.players[p].boardCoins[coinIndex].isInitial)}
-                                            className="bg-coin">
+                                            data.props.G.players[p].boardCoins[coinIndex].isInitial)}
+                                              className="bg-coin">
 
                                         </span>
                                     </td>
@@ -159,7 +163,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                                     <td className="cursor-pointer" key={j}>
                                         <span style={Styles.Coin(data.props.G.players[p].boardCoins[coinIndex].value,
                                             data.props.G.players[p].boardCoins[coinIndex].isInitial)}
-                                            className="bg-coin">
+                                              className="bg-coin">
 
                                         </span>
                                     </td>
@@ -170,7 +174,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                     }
                 }
             }
-            playerRows[p][i].push(<tr key={`${data.props.G.players[p].nickname} board coins row ${i}`}>{playerCells}</tr>)
+            playerRows[p][i].push(<tr
+                key={`${data.props.G.players[p].nickname} board coins row ${i}`}>{playerCells}</tr>)
         }
         playersBoardsCoins[p].push(
             <table className="mx-auto" key={`${data.props.G.players[p].nickname} board coins`}>
@@ -217,7 +222,7 @@ export const DrawPlayersHandsCoins = (data) => {
                             <td className="cursor-pointer" key={j} onClick={() => data.OnClickHandCoin(j)}>
                                 <span style={Styles.Coin(data.props.G.players[p].handCoins[j].value,
                                     data.props.G.players[p].handCoins[j].isInitial)}
-                                    className={`bg-coin ${coinClass}`}>
+                                      className={`bg-coin ${coinClass}`}>
 
                                 </span>
                             </td>
@@ -257,7 +262,8 @@ export const DrawPlayersBoards = (data) => {
         playerRows[p] = [];
         for (const suit in suitsConfigArray) {
             playerHeaders[p].push(
-                <th className={`${suitsConfigArray[suit].suitColor}`} key={`${data.props.G.players[p].nickname} ${suitsConfigArray[suit].suitName}`}>
+                <th className={`${suitsConfigArray[suit].suitColor}`}
+                    key={`${data.props.G.players[p].nickname} ${suitsConfigArray[suit].suitName}`}>
                         <span style={Styles.Suits(suitsConfigArray[suit].suitName)} className="bg-suit-icon">
 
                         </span>
@@ -265,7 +271,7 @@ export const DrawPlayersBoards = (data) => {
             );
         }
         for (let s = 0; s < 1 + expansion; s++) {
-           if (s === 0) {
+            if (s === 0) {
                 playerHeaders[p].push(
                     <th className="bg-gray-600" key={`${data.props.G.players[p].nickname} hero icon`}>
                         <span style={Styles.HeroBack()} className="bg-hero-icon">
@@ -286,8 +292,8 @@ export const DrawPlayersBoards = (data) => {
         for (let i = 0; ; i++) {
             const playerCells = [];
             let isDrawRow = false,
-            j = 0,
-            id = 0;
+                j = 0,
+                id = 0;
             playerRows[p][i] = [];
             for (const suit in suitsConfigArray) {
                 id = i + j;
@@ -328,10 +334,11 @@ export const DrawPlayersBoards = (data) => {
                             isDrawRow = true;
                             playerCells.push(
                                 <td key={id} className="bg-gray-600">
-                                <span style={Styles.Heroes(data.props.G.players[p].heroes[i].game, data.props.G.players[p].heroes[i].name)}
-                                      title={data.props.G.players[p].heroes[i].description} className="bg-hero">
+                                    <span
+                                        style={Styles.Heroes(data.props.G.players[p].heroes[i].game, data.props.G.players[p].heroes[i].name)}
+                                        title={data.props.G.players[p].heroes[i].description} className="bg-hero">
 
-                                </span>
+                                    </span>
                                 </td>
                             );
                         }
@@ -347,8 +354,9 @@ export const DrawPlayersBoards = (data) => {
                         isDrawRow = true;
                         playerCells.push(
                             <td className="bg-yellow-200" key={id}>
-                                <span style={Styles.CampCards(data.props.G.players[p].campCards[i].tier, data.props.G.players[p].campCards[i].name)}
-                                      title={data.props.G.players[p].campCards[i].description} className="bg-camp">
+                                <span
+                                    style={Styles.CampCards(data.props.G.players[p].campCards[i].tier, data.props.G.players[p].campCards[i].name)}
+                                    title={data.props.G.players[p].campCards[i].description} className="bg-camp">
 
                                 </span>
                             </td>
@@ -373,8 +381,9 @@ export const DrawPlayersBoards = (data) => {
         playersBoards[p].push(
             <table className="mx-auto" key={`${data.props.G.players[p].nickname} board`}>
                 <caption>Player {p + 1} ({data.props.G.players[p].nickname}) cards, {data.props.G.winner !== null ?
-                        "Final: " + FinalScoring(data.props.G, data.props.ctx, data.props.G.players[p], CurrentScoring(data.props.G.players[p])) :
-                        CurrentScoring(data.props.G.players[p])} points</caption>
+                    "Final: " + FinalScoring(data.props.G, data.props.ctx, data.props.G.players[p], CurrentScoring(data.props.G.players[p])) :
+                    CurrentScoring(data.props.G.players[p])} points
+                </caption>
                 <thead>
                 <tr>{playerHeaders[p]}</tr>
                 </thead>

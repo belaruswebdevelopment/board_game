@@ -60,7 +60,7 @@ export const CompareCards = (card1, card2) => {
         if (result === 0) {
             return result;
         }
-         return result > 0 ? 1 : -1;
+        return result > 0 ? 1 : -1;
     }
     return 0;
 };

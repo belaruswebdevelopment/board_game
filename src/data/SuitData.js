@@ -319,7 +319,7 @@ const explorerSuit = {
 
 export const suitsConfigArray = {
     blacksmith: blacksmithSuit,
-    hunter:hunterSuit,
+    hunter: hunterSuit,
     miner: minerSuit,
     warrior: warriorSuit,
     explorer: explorerSuit,

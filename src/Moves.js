@@ -78,7 +78,11 @@ export const ClickCard = (G, ctx, tavernId, cardId) => {
 };
 
 export const ClickHandCoin = (G, ctx, coinId) => {
-    const isValidMove = IsValidMove({obj: G.players[ctx.currentPlayer].handCoins[coinId], objId: coinId, range: [0, G.players[ctx.currentPlayer].handCoins.length]});
+    const isValidMove = IsValidMove({
+        obj: G.players[ctx.currentPlayer].handCoins[coinId],
+        objId: coinId,
+        range: [0, G.players[ctx.currentPlayer].handCoins.length]
+    });
     if (!isValidMove) {
         return INVALID_MOVE;
     }

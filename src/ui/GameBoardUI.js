@@ -236,7 +236,8 @@ export const DrawProfit = (data, option) => {
                 if (!data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
                     // todo currentPlayer
                     boardCells.push(
-                        <td className="cursor-pointer" key={j} onClick={() => data.OnClickCoinToUpgradeInDistinction(j)}>
+                        <td className="cursor-pointer" key={j}
+                            onClick={() => data.OnClickCoinToUpgradeInDistinction(j)}>
                             <span
                                 style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value,
                                     data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial)}
