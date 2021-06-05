@@ -1,4 +1,3 @@
-import {suitsConfigArray} from "./data/SuitData";
 import {CompareCards, EvaluateCard} from "./Card";
 
 export const Permute = (permutation) => {

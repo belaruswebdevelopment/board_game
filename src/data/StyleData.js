@@ -235,8 +235,8 @@ export const Styles = {
     Exchange: () => ({
         background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px",
     }),
-    Taverns: (tavernID) => {
-        switch (tavernID) {
+    Taverns: (tavernId) => {
+        switch (tavernId) {
             case 0:
                 return {
                     background: "url(/img/taverns/Taverns.png) no-repeat -2px -6px / 75px 42px",

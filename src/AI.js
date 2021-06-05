@@ -10,18 +10,18 @@ export const enumerate = (G, ctx) => {
         uniqueArr = [];
     let moves = [],
         flag = true,
-        advancedString = 'advanced',
+        advancedString = "advanced",
         isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(key => key.includes(advancedString));
-    const activeStageOfCurrentPlayer = ctx.activePlayers?.[ctx.currentPlayer] ?? 'default';
+    const activeStageOfCurrentPlayer = ctx.activePlayers?.[ctx.currentPlayer] ?? "default";
 
     for (const stage in moveBy[ctx.phase]) {
-        if (ctx.phase === 'pickCards' && stage.startsWith('default')) {
+        if (ctx.phase === "pickCards" && stage.startsWith("default")) {
             continue;
         }
         if (stage.includes(activeStageOfCurrentPlayer) && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
             const moveName = moveBy[ctx.phase][stage],
                 [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx}),
-                hasGetValue = moveValidators[moveName].hasOwnProperty('getValue');
+                hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
             let argValue;
             for (let i = minValue; i < maxValue; i++) {
                 if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
@@ -39,7 +39,7 @@ export const enumerate = (G, ctx) => {
     if (moves.length > 0) {
         return moves;
     }
-    if (ctx.phase === 'pickCards' && activeStageOfCurrentPlayer === 'default') {
+    if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default") {
         const tavern = G.taverns[G.currentTavern];
         for (let i = 0; i < tavern.length; i++) {
             if (tavern[i] === null) {
@@ -63,12 +63,12 @@ export const enumerate = (G, ctx) => {
             }
             if (flag) {
                 uniqueArr.push(tavern[i]);
-                moves.push({move: 'ClickCard', args: [G.currentTavern, i]});
+                moves.push({move: "ClickCard", args: [G.currentTavern, i]});
             }
             flag = true;
         }
     }
-    if (enableAdvancedBot && ctx.phase === 'placeCoins') {
+    if (enableAdvancedBot && ctx.phase === "placeCoins") {
         moves = [];
         const hasLowestPriority = HasLowestPriority(G.players, ctx.currentPlayer);
         let resultsForCoins = CheckHeuristicsForCoinsPlacement(G, ctx);
@@ -93,7 +93,7 @@ export const enumerate = (G, ctx) => {
                 if (hasTrading) {
                     continue;
                 }
-                moves.push({move: 'PlaceAllCoins', args: [allCoinsOrder[i]]});
+                moves.push({move: "BotsPlaceAllCoins", args: [allCoinsOrder[i]]});
             } else if (tradingProfit > 0) {
                 if (!hasTrading) {
                     continue;
@@ -109,11 +109,11 @@ export const enumerate = (G, ctx) => {
                     isMinCoinsOnPosition = handCoins.filter(item => item.value < handCoins[allCoinsOrder[i][positionForMinCoin]].value).length <= 1;
                 }
                 if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
-                    moves.push({move: 'PlaceAllCoins', args: [G.botData.allCoinsOrder[i]]});
+                    moves.push({move: "BotsPlaceAllCoins", args: [G.botData.allCoinsOrder[i]]});
                     //console.log("#" + i.toString().padStart(2) + ":     " + allCoinsOrder[i].map(item => handCoins[item].value));
                 }
             } else {
-                moves.push({move: 'PlaceAllCoins', args: [allCoinsOrder[i]]});
+                moves.push({move: "BotsPlaceAllCoins", args: [allCoinsOrder[i]]});
             }
         }
         //console.log(moves);
@@ -133,7 +133,7 @@ export const objectives = () => ({
     },
     /*isWeaker: {
         checker: (G, ctx) => {
-            if (ctx.phase !== 'placeCoins') {
+            if (ctx.phase !== "placeCoins") {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
@@ -157,7 +157,7 @@ export const objectives = () => ({
     },*/
     /*isSecond: {
         checker: (G, ctx) => {
-            if (ctx.phase !== 'placeCoins') {
+            if (ctx.phase !== "placeCoins") {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
@@ -181,7 +181,7 @@ export const objectives = () => ({
     },*/
     /*isEqual: {
         checker: (G, ctx) => {
-            if (ctx.phase !== 'placeCoins') {
+            if (ctx.phase !== "placeCoins") {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
@@ -206,7 +206,7 @@ export const objectives = () => ({
     },*/
     isFirst: {
         checker: (G, ctx) => {
-            if (ctx.phase !== 'pickCards') {
+            if (ctx.phase !== "pickCards") {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length)) {
@@ -229,7 +229,7 @@ export const objectives = () => ({
     },
     isStronger: {
         checker: (G, ctx) => {
-            if (ctx.phase !== 'pickCards') {
+            if (ctx.phase !== "pickCards") {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length)) {
@@ -254,7 +254,7 @@ export const objectives = () => ({
 
 export const iterations = (G, ctx) => {
     const maxIter = G.botData.maxIter;
-    if (ctx.phase === 'pickCards') {
+    if (ctx.phase === "pickCards") {
         const currentTavern = G.taverns[G.currentTavern];
         if (currentTavern.filter(element => element !== null).length === 1) {
             return 1;

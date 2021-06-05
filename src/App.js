@@ -1,9 +1,9 @@
-/*import React from 'react';
-import {Client} from 'boardgame.io/react';
-import {Local} from 'boardgame.io/multiplayer';
-import {MCTSBot, RandomBot} from 'boardgame.io/ai';
-import {BoardGame} from './Game';
-import {GameBoard} from './Board';
+/*import React from "react";
+import {Client} from "boardgame.io/react";
+import {Local} from "boardgame.io/multiplayer";
+import {MCTSBot, RandomBot} from "boardgame.io/ai";
+import {BoardGame} from "./Game";
+import {GameBoard} from "./Board";
 
 class CustomMCTSBot extends MCTSBot {
     constructor(config, ...args) {
@@ -21,11 +21,11 @@ class CustomMCTSBot extends MCTSBot {
 const enableLocalPlayer = true,
     setupBot = {
         bots: {
-            '0': RandomBot,
-            '1': RandomBot,
-            '2': RandomBot,
-            '3': RandomBot,
-            // '4': RandomBot,
+            "0": RandomBot,
+            "1": RandomBot,
+            "2": RandomBot,
+            "3": RandomBot,
+            // "4": RandomBot,
         },
     },
     BoardGameClient = Client({
@@ -40,9 +40,9 @@ const enableLocalPlayer = true,
     );
 
 export default App;*/
-import {Client} from 'boardgame.io/react';
-import {BoardGame} from './Game';
-import {GameBoard} from './Board';
+import {Client} from "boardgame.io/react";
+import {BoardGame} from "./Game";
+import {GameBoard} from "./Board";
 
 const App = Client({
     // debug: false,
