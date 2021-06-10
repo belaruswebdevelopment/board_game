@@ -1,5 +1,12 @@
 import {CompareCards, EvaluateCard} from "./Card";
 
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @param permutation
+ * @returns {*[]}
+ * @constructor
+ */
 export const Permute = (permutation) => {
     const length = permutation.length,
         result = [permutation.slice()];
@@ -21,8 +28,15 @@ export const Permute = (permutation) => {
     return result;
 };
 
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @param set
+ * @param k
+ * @returns {*[]}
+ */
 export const k_combinations = (set, k) => {
-    let i, j, combs, head, tailcombs;
+    let i, j, combs, head, tailCombs;
     if (k > set.length || k <= 0) {
         return [];
     }
@@ -41,16 +55,24 @@ export const k_combinations = (set, k) => {
         // head is a list that includes only our current element.
         head = set.slice(i, i + 1);
         // We take smaller combinations from the subsequent elements
-        tailcombs = k_combinations(set.slice(i + 1), k - 1);
+        tailCombs = k_combinations(set.slice(i + 1), k - 1);
         // For each (k-1)-combination we join it with the current
         // and store it to the set of k-combinations.
-        for (j = 0; j < tailcombs.length; j++) {
-            combs.push(head.concat(tailcombs[j]));
+        for (j = 0; j < tailCombs.length; j++) {
+            combs.push(head.concat(tailCombs[j]));
         }
     }
     return combs;
 };
 
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @param tavernsNum
+ * @param playersNum
+ * @returns {FlatArray<*[], 1>}
+ * @constructor
+ */
 export const GetAllPicks = ({tavernsNum, playersNum}) => {
     const temp = [],
         cartesian = (...a) => {
@@ -66,42 +88,89 @@ export const GetAllPicks = ({tavernsNum, playersNum}) => {
 };
 
 //absolute heuristics
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (function(*): *), weight: number}}
+ */
 const isAllCardsEqual = {
-    heuristic: (array) => array.every(element => (element.suit === array[0].suit && CompareCards(element, array[0]) === 0)),
+    heuristic: (array) => array.every(card => (card.suit === array[0].suit && CompareCards(card, array[0]) === 0)),
     weight: -100,
 };
 
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (function(*): *), weight: number}}
+ */
 //relative heuristics
 const isAllWorse = {
-    heuristic: (array) => array.every(element => element === -1),
+    heuristic: (array) => array.every(card => card === -1),
     weight: 40,
 };
 
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (function(*): *), weight: number}}
+ */
 const isAllAverage = {
-    heuristic: (array) => array.every(element => element === 0),
+    heuristic: (array) => array.every(card => card === 0),
     weight: 20,
 };
 
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (function(*): *), weight: number}}
+ */
 const isAllBetter = {
-    heuristic: (array) => array.every(element => element === 1),
+    heuristic: (array) => array.every(card => card === 1),
     weight: 10,
 };
 
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (function(*): boolean), weight: number}}
+ */
 const isOnlyOneWorse = {
-    heuristic: (array) => (array.filter(element => element === -1).length === 1),
+    heuristic: (array) => (array.filter(card => card === -1).length === 1),
     weight: -100,
 };
 
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (function(*): *), weight: number}}
+ */
 const isOnlyWorseOrBetter = {
-    heuristic: (array) => array.every(element => element !== 0),
+    heuristic: (array) => array.every(card => card !== 0),
     weight: -50,
 };
 
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (function(*): *), weight: number}[]}
+ */
 const absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @type {({heuristic: (function(*): *), weight: number}|{heuristic: (function(*): boolean), weight: number})[]}
+ */
 const relativeHeuristicsForTradingCoin = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
 console.log(relativeHeuristicsForTradingCoin ? "" : "");
 
 //may be add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @param array
+ * @returns {{mean, variation}}
+ * @constructor
+ */
 const GetCharacteristics = (array) => {
     const mean = array.reduce((acc, item) => acc + item / array.length, 0),
         variation = array.reduce((acc, item) => acc + ((item - mean) ** 2) / array.length, 0);
@@ -111,6 +180,14 @@ const GetCharacteristics = (array) => {
     }
 }
 
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @param stat1
+ * @param stat2
+ * @returns {number}
+ * @constructor
+ */
 const CompareCharacteristics = (stat1, stat2) => {
     const eps = 0.0001,
         tempVariation = stat1.variation - stat2.variation;
@@ -120,11 +197,20 @@ const CompareCharacteristics = (stat1, stat2) => {
     return tempVariation;
 }
 
+/**
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @param G
+ * @param ctx
+ * @returns {any[]}
+ * @constructor
+ */
 export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
     const taverns = G.taverns,
         averageCards = G.averageCards;
     let result = Array(taverns.length).fill(0),
-        temp = taverns.map(tavern => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight : 0), 0));
+        temp = taverns.map(tavern => absoluteHeuristicsForTradingCoin
+            .reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight : 0), 0));
     result = result.map((value, index) => value + temp[index]);
     temp = taverns.map(tavern => tavern.map((card, index, arr) => EvaluateCard(G, ctx, card, index, arr)));
     temp = temp.map(element => GetCharacteristics(element));

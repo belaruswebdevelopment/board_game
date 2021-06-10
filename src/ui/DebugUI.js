@@ -1,5 +1,14 @@
 import React from "react";
 
+/**
+ * СОбирает данные в объект для отрисовки дебаг информации.
+ * Применения:
+ * 1) Используется в отрисовке дебаг панели.
+ *
+ * @param data Глобальные параметры.
+ * @returns {{ctx: {}, G: {}}|null}
+ * @constructor
+ */
 const GetDebugData = (data) => {
     if (data.props.G.debug) {
         const debugData = {
@@ -17,6 +26,15 @@ const GetDebugData = (data) => {
     return null;
 };
 
+/**
+ * Отрисовка информации в дебаг панели.
+ * Применения:
+ * 1) Отрисовка игрового поля.
+ *
+ * @param obj Информация.
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const DrawObjectData = (obj) => {
     const values = [];
     for (let [key, value] of Object.entries(obj)) {
@@ -64,6 +82,15 @@ const DrawObjectData = (obj) => {
     );
 };
 
+/**
+ * Отрисовка дебаг панели.
+ * Применения:
+ * 1) Отрисовка игрового поля.
+ *
+ * @param data Глобальные параметры.
+ * @returns {JSX.Element|null}
+ * @constructor
+ */
 export const DrawDebugData = (data) => {
     const debugData = GetDebugData(data);
     if (debugData === null) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
     DrawTierCards,
     DrawCurrentPlayerTurn,
@@ -17,6 +17,9 @@ import {
 } from "./ui/PlayerUI";
 import {DrawDebugData} from "./ui/DebugUI";
 
+/**
+ * Отрисовка игрового стола.
+ */
 export class GameBoard extends React.Component {
     OnClickHeroCard = (heroId) => {
         this.props.moves.ClickHeroCard(heroId);
@@ -27,8 +30,8 @@ export class GameBoard extends React.Component {
     OnClickDistinctionCard = (cardId) => {
         this.props.moves.ClickDistinctionCard(cardId);
     };
-    OnClickCard = (tavernId, cardId) => {
-        this.props.moves.ClickCard(tavernId, cardId);
+    OnClickCard = (cardId) => {
+        this.props.moves.ClickCard(cardId);
     };
     OnClickBoardCoin = (coinId) => {
         this.props.moves.ClickBoardCoin(coinId);
@@ -36,22 +39,52 @@ export class GameBoard extends React.Component {
     OnClickHandCoin = (coinId) => {
         this.props.moves.ClickHandCoin(coinId);
     };
-    OnClickCoinToUpgradeDistinction = (coinId) => {
-        this.props.moves.ClickCoinToUpgradeDistinction(coinId);
+    OnClickCoinToUpgradeDistinction = (coinId, type, isInitial) => {
+        this.props.moves.ClickCoinToUpgradeDistinction(coinId, type, isInitial);
     };
-    OnClickCoinToUpgradeInDistinction = (coinId) => {
-        this.props.moves.ClickCoinToUpgradeInDistinction(coinId);
+    OnClickCoinToUpgradeInDistinction = (coinId, type, isInitial) => {
+        this.props.moves.ClickCoinToUpgradeInDistinction(coinId, type, isInitial);
     };
     OnClickCardToPickDistinction = (cardId, deck) => {
         this.props.moves.ClickCardToPickDistinction(cardId, deck);
     };
-    OnClickCoinToUpgrade = (coinId) => {
-        this.props.moves.ClickCoinToUpgrade(coinId);
+    OnClickCoinToUpgrade = (coinId, type, isInitial) => {
+        this.props.moves.ClickCoinToUpgrade(coinId, type, isInitial);
+    };
+    OnClickCoinToUpgradeGrid = (coinId, type, isInitial) => {
+        this.props.moves.GridAction(coinId, type, isInitial);
+    };
+    OnClickCardToDiscard = (suitId, cardId, hero) => {
+        this.props.moves.DiscardCard(suitId, cardId, hero);
+    };
+    OnClickSuitToPlaceCard = (suitId) => {
+        this.props.moves.PlaceCard(suitId);
+    };
+    OnClickCardFromDiscard = (cardId) => {
+        this.props.moves.PickDiscardCard(cardId);
+    };
+    OnClickCoinToUpgradeFromDiscard = (coinId, type, isInitial) => {
+        this.props.moves.UpgradeCoinFromDiscard(coinId, type, isInitial);
+    };
+    OnClickSuitToPlaceYlud = (suitId) => {
+        this.props.moves.PlaceYlud(suitId);
+    };
+    OnClickSuitToPlaceThrud = (suitId) => {
+        this.props.moves.PlaceThrud(suitId);
+    };
+    OnClickSuitToMoveThrud = (suitId) => {
+        this.props.moves.MoveThrud(suitId);
+    };
+    OnClickCardToDiscard2Players = (cardId) => {
+        this.props.moves.DiscardCard2Players(cardId);
+    };
+    OnClickCampCardHolda = (cardId) => {
+        this.props.moves.PickCampCardHolda(cardId);
     };
 
     render() {
-        // todo Cursor-pointer class only for your objects and in current phase!
-        const gridClass = `col-span-4`,
+        const gridClass = "col-span-4",
+            classes = "col-span-4 text-center underline border",
             tierCardsUI = DrawTierCards(this),
             currentPlayerTurnUI = DrawCurrentPlayerTurn(this),
             winnerUI = DrawWinner(this),
@@ -65,11 +98,10 @@ export class GameBoard extends React.Component {
             playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
             playersHandsCoinsUI = DrawPlayersHandsCoins(this),
             playersBoardsUI = DrawPlayersBoards(this),
-            debugUI = DrawDebugData(this),
-            classes = `col-span-4 text-center underline border`;
+            debugUI = DrawDebugData(this);
         return (
             <div className="flex">
-                <div className={`grid auto-cols-min grid-cols-1 md:grid-cols-12 gap-1`}>
+                <div className="grid auto-cols-min grid-cols-1 md:grid-cols-12 gap-1">
                     <div className={classes}>
                         {tierCardsUI}
                     </div>
@@ -91,7 +123,7 @@ export class GameBoard extends React.Component {
                         {drawCampUI}
                     </div>
                     {tavernsUI}
-                    <div className={`col-span-full flex flex-col gap-1`}>
+                    <div className="col-span-full flex flex-col gap-1">
                         <div className="flex flex-col lg:flex-row gap-1">{playersBoardsCoinsUI}</div>
                         <div className="flex flex-col lg:flex-row gap-1">{playersHandsCoinsUI}</div>
                         <div className="flex items-start flex-col lg:flex-row gap-1">{playersBoardsUI}</div>

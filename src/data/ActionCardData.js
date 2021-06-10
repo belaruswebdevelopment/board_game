@@ -1,3 +1,10 @@
+/**
+ *  Карта улучшения монеты на 3.
+ * Применения:
+ * 1) Используется в конфиге карт улучшения монет.
+ *
+ * @type {{amount: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), action: {config: {value: number}, actionName: string}, value: number}} Карта улучшения монеты.
+ */
 const upgradeCoinUpTo3 = {
     value: 3,
     action: {
@@ -28,6 +35,13 @@ const upgradeCoinUpTo3 = {
     },
 };
 
+/**
+ * Карта улучшения монеты на 5.
+ * Применения:
+ * 1) Используется в конфиге карт улучшения монет.
+ *
+ * @type {{amount: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), action: {config: {value: number}, actionName: string}, value: number}} Карта улучшения монеты.
+ */
 const upgradeCoinUpTo5 = {
     value: 5,
     action: {
@@ -58,4 +72,11 @@ const upgradeCoinUpTo5 = {
     },
 };
 
+/**
+ * Конфиг карт улучшения монет.
+ * Применения:
+ * 1) Происходит при создании всех карт улучшения монет при инициализации игры.
+ *
+ * @type {({amount: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), action: {config: {value: number}, actionName: string}, value: number}|{amount: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), action: {config: {value: number}, actionName: string}, value: number})[]} Массив карт улучшения монеты.
+ */
 export const actionCardsConfigArray = [upgradeCoinUpTo3, upgradeCoinUpTo5];

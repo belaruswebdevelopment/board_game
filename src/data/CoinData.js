@@ -1,3 +1,10 @@
+/**
+ * Конфиг базовых монет игрока.
+ * Применения:
+ * 1) Происходит при создании всех базовых монет игрока при инициализации игры.
+ *
+ * @type {[{isTriggerTrading: boolean, value: number}, number, number, number, number]}
+ */
 export const initialPlayerCoinsConfig = [
     {value: 0, isTriggerTrading: true},
     2,
@@ -6,6 +13,13 @@ export const initialPlayerCoinsConfig = [
     5,
 ];
 
+/**
+ * Конфиг монет рынка.
+ * Применения:
+ * 1) Происходит при создании всех монет рынка при инициализации игры.
+ *
+ * @type {[{count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]}
+ */
 export const marketCoinsConfig = [
     {
         value: 5,

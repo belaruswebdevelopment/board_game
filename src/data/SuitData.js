@@ -3,9 +3,17 @@ import {CreateCard} from "../Card";
 import {ArithmeticSum, TotalPoints, TotalRank} from "../Score";
 import {CreatePriority} from "../Priority";
 
+/**
+ * Фракция кузнецов.
+ * Применения:
+ * 1) Используется в конфиге фракций.
+ *
+ * @Add ranks count on suits track and may be potential points for hunters and blacksmiths.
+ * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: blacksmithSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}}
+ */
 const blacksmithSuit = {
     suit: "blacksmith",
-    suitName: 'Blacksmith',
+    suitName: "Blacksmith",
     suitColor: 'bg-purple-600',
     description: "Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).",
     ranksValues: () => {
@@ -65,10 +73,17 @@ const blacksmithSuit = {
     },
 };
 
+/**
+ * Фракция охотников.
+ * Применения:
+ * 1) Используется в конфиге фракций.
+ *
+ * @type {{scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: hunterSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}}
+ */
 const hunterSuit = {
     suit: "hunter",
-    suitName: 'Hunter',
-    suitColor: 'bg-green-600',
+    suitName: "Hunter",
+    suitColor: "bg-green-600",
     description: "Их показатель храбрости равен квадрату числа карт охотников в армии игрока.",
     ranksValues: () => {
         return {
@@ -126,10 +141,17 @@ const hunterSuit = {
     },
 };
 
+/**
+ * Фракция горняков.
+ * Применения:
+ * 1) Используется в конфиге фракций.
+ *
+ * @type {{scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}}
+ */
 const minerSuit = {
     suit: "miner",
-    suitName: 'Miner',
-    suitColor: 'bg-yellow-600',
+    suitName: "Miner",
+    suitColor: "bg-yellow-600",
     description: "Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии игрока.",
     ranksValues: () => {
         return {
@@ -193,10 +215,17 @@ const minerSuit = {
     },
 };
 
+/**
+ * Фракция воинов.
+ * Применения:
+ * 1) Используется в конфиге фракций.
+ *
+ * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}}
+ */
 const warriorSuit = {
     suit: "warrior",
-    suitName: 'Warrior',
-    suitColor: 'bg-red-600',
+    suitName: "Warrior",
+    suitColor: "bg-red-600",
     description: "Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты. В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной монеты к показателю храбрости своих воинов.",
     ranksValues: () => {
         return {
@@ -251,8 +280,8 @@ const warriorSuit = {
                         },
                     },
                 };
-                ctx.events.setStage('upgradeDistinctionCoin');
-                G.drawProfit = 3;
+                ctx.events.setStage("upgradeDistinctionCoin");
+                G.drawProfit = "warriorDistinction";
             } else {
                 return Math.max(...player.boardCoins.map(coin => coin.value));
             }
@@ -260,10 +289,17 @@ const warriorSuit = {
     },
 };
 
+/**
+ * Фракция разведчиков.
+ * Применения:
+ * 1) Используется в конфиге фракций.
+ *
+ * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: explorerSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}}
+ */
 const explorerSuit = {
     suit: "explorer",
-    suitName: 'Explorer',
-    suitColor: 'bg-blue-500',
+    suitName: "Explorer",
+    suitColor: "bg-blue-500",
     description: "Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.",
     ranksValues: () => {
         return {
@@ -310,14 +346,21 @@ const explorerSuit = {
         description: "Получив знак отличия разведчиков, сразу же возьмите 3 карты из колоды эпохи 2 и сохраните у себя одну из этих карт. Если это карта дворфа, сразу же поместите его в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов. Если это карта королевская награда, то улучшите одну из своих монет. Две оставшиеся карты возвращаются в колоду эпохи 2. Положите карту знак отличия разведчиков в командную зону рядом с вашим планшетом.",
         awarding: (G, ctx) => {
             if (G.tierToEnd !== 0) {
-                ctx.events.setStage('pickDistinctionCard');
-                G.drawProfit = 4;
+                ctx.events.setStage("pickDistinctionCard");
+                G.drawProfit = "explorerDistinction";
             }
         },
     },
 };
 
-export const suitsConfigArray = {
+/**
+ * Конфиг фракций.
+ * Применения:
+ * 1) Происходит при создании всех карт при инициализации игры.
+ *
+ * @type {{blacksmith: {scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: blacksmithSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}, warrior: {scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}, explorer: {scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: explorerSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}, hunter: {scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: hunterSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}, miner: {scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}}} Все фракции.
+ */
+export const suitsConfig = {
     blacksmith: blacksmithSuit,
     hunter: hunterSuit,
     miner: minerSuit,

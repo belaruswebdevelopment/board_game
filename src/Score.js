@@ -1,14 +1,55 @@
-import {suitsConfigArray} from "./data/SuitData";
+import {suitsConfig} from "./data/SuitData";
+import {heroesConfig} from "./data/HeroData";
 
+/**
+ * Высчитывает суммарное количество очков фракции.
+ * Применения:
+ * 1) Применяется при подсчёте очков фракций, не зависящих от количества шевронов.
+ *
+ * @param accumulator Аккумулятивное значение очков.
+ * @param currentValue Текущее значение очков.
+ * @returns {*} Суммарное количество очков фракции.
+ * @constructor
+ */
 export const TotalPoints = (accumulator, currentValue) => accumulator + currentValue.points;
 
+/**
+ * Высчитывает суммарное количество шевронов фракции.
+ * Применения:
+ * 1) Применяется при подсчёте шевронов фракций, не зависящих от количества очков.
+ *
+ * @param accumulator Аккумулятивное значение шевронов.
+ * @param currentValue Текущее значение шевронов.
+ * @returns {*} Суммарное количество шевронов фракции.
+ * @constructor
+ */
 export const TotalRank = (accumulator, currentValue) => accumulator + currentValue.rank;
 
+/**
+ * Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.
+ * Применения:
+ * 1) Применяется для подсчёта очков фракции, зависящих от арифметической прогрессии очков по количеству шевронов (фракция кузнецов).
+ *
+ * @param startValue Стартовое значение очков.
+ * @param step Шаг.
+ * @param ranksCount Суммарное количество шевронов.
+ * @returns {number} Сумарное количество очков фракции.
+ * @constructor
+ */
 export const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;
 
+/**
+ * Подсчёт преимуществ по количеству шевронов фракций в конце эпохи.
+ * Применения:
+ * 1) Отрбатывает в начале фазы получения преимуществ за количество шевронов каждой фракции.
+ *
+ * @param G
+ * @param ctx
+ * @constructor
+ */
 export const CheckDistinction = (G, ctx) => {
     let i = 0;
-    for (const suit in suitsConfigArray) {
+    for (const suit in suitsConfig) {
         const result = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[i] = result;
         if (result === undefined) {
@@ -20,10 +61,22 @@ export const CheckDistinction = (G, ctx) => {
     }
 };
 
-const CheckCurrentSuitDistinction = (G, ctx, suit) => {
+/**
+ * Высчитывает наличие игрока с преимуществом по шевронам конкретной фракции.
+ * 1) Применяется в подсчёте преимуществ по количеству шевронов фракций в конце эпохи.
+ * 2) Применяется при подсчёте преимуществ по количеству шевронов фракции в конце игры (фракция воинов).
+ *
+ * @param G
+ * @param ctx
+ * @param suitName Фракция.
+ * @returns {undefined|number} Индекс игрока с преимуществом по шевронам конкретной фракции.
+ * @constructor
+ */
+const CheckCurrentSuitDistinction = (G, ctx, suitName) => {
     const playersRanks = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        playersRanks.push(G.players[i].cards[Object.keys(suitsConfigArray).findIndex(item => item === suit)].reduce(TotalRank, 0));
+        const suitIndex = Object.keys(suitsConfig).findIndex(suit => suit === suitName);
+        playersRanks.push(G.players[i].cards[suitIndex].reduce(TotalRank, 0));
     }
     const max = Math.max(...playersRanks),
         maxPlayers = playersRanks.filter(count => count === max);
@@ -34,30 +87,66 @@ const CheckCurrentSuitDistinction = (G, ctx, suit) => {
     }
 };
 
+/**
+ * Подсчитывает суммарное количество текущих очков выбранного игрока.
+ * Применения:
+ * 1) Посчёт и вывод на игровое поле текущее количество очков каждого игрока.
+ * 2) Подсчёт и вывод на игровое поле финальное количество очков каждого игрока.
+ * 3) Подсчёт очков игроков для анализ ботами.
+ *
+ * @param player Игрок.
+ * @returns {number} Суммарное количество текущих очков игрока.
+ * @constructor
+ */
 export const CurrentScoring = (player) => {
     let score = 0,
         i = 0;
-    for (const suit in suitsConfigArray) {
+    for (const suit in suitsConfig) {
         if (player.cards[i] !== undefined) {
-            score += suitsConfigArray[suit].scoringRule(player.cards[i]);
+            score += suitsConfig[suit].scoringRule(player.cards[i]);
         }
         i++;
     }
     return score;
 };
 
+/**
+ * Подситывает финальное количество очков выбранного игрока.
+ * Применения:
+ * 1) Подсчёт и вывод на игровое поле финальное количество очков каждого игрока.
+ *
+ * @param G
+ * @param ctx
+ * @param player Игрок.
+ * @param currentScore Текущее количество очков без учёта финального подсчёта.
+ * @returns {*} Финальное количество очков игрока.
+ * @constructor
+ */
 export const FinalScoring = (G, ctx, player, currentScore) => {
     let score = currentScore;
     for (let i = 0; i < player.boardCoins.length; i++) {
         score += player.boardCoins[i].value;
     }
-    // todo Check if Distinctions exists!
-    const warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, "warrior");
-    if (warriorsDistinction !== undefined && G.players.findIndex(p => p.nickname === player.nickname) === warriorsDistinction) {
-        score += suitsConfigArray["warrior"].distinction.awarding(G, ctx, player);
+    const suitWarriorIndex = Object.keys(suitsConfig).findIndex(suit => suit === "warrior");
+    if (suitWarriorIndex !== -1) {
+        const warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, "warrior");
+        if (warriorsDistinction !== undefined && G.players.findIndex(p => p.nickname === player.nickname) === warriorsDistinction) {
+            score += suitsConfig["warrior"].distinction.awarding(G, ctx, player);
+        }
     }
-    score += suitsConfigArray["miner"].distinction.awarding(G, ctx, player) ?? 0;
-    // todo rework heroes profit
-    score += player.heroes.length * 17;
+    const suitMinerIndex = Object.keys(suitsConfig).findIndex(suit => suit === "miner");
+    if (suitMinerIndex !== -1) {
+        score += suitsConfig["miner"].distinction.awarding(G, ctx, player) ?? 0;
+    }
+    let dwerg_brothers = 0;
+    const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
+    for (let i = 0; i < player.heroes.length; i++) {
+        if (player.heroes[i].name.startsWith("Dwerg")) {
+            dwerg_brothers += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name).scoringRule(player);
+        } else {
+            score += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name).scoringRule(player);
+        }
+    }
+    score += dwerg_brothers_scoring[dwerg_brothers];
     return score;
 };

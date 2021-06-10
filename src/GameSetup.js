@@ -1,6 +1,6 @@
 import {BuildPlayer} from "./Player";
 import {BuildCards, GetAverageSuitCard} from "./Card";
-import {suitsConfigArray} from "./data/SuitData";
+import {suitsConfig} from "./data/SuitData";
 import {marketCoinsConfig} from "./data/CoinData";
 import {BuildCoins} from "./Coin";
 import {Permute, k_combinations, GetAllPicks} from "./BotConfig";
@@ -10,10 +10,19 @@ import {BuildHeroes} from "./Hero";
 import {BuildCampCards} from "./Camp";
 import {campConfig} from "./data/CampData";
 
+/**
+ * Сетап игры.
+ *
+ * @todo актуализировать когда игра будет готова.
+ * @param ctx
+ * @returns {{suitsNum: number, campNum: number, campPicked: boolean, tavernsNum: number, discardCampCardsDeck: *[], tierToEnd: number, currentTavern: null, marketCoins: *[], drawSize: (number|*), heroes: *[], discardCardsDeck: *[], drawProfit: null, distinctions: any[], decks: *[], expansions: {thingvellir: {active: boolean}}, taverns: *[], exchangeOrder: *[], botData: {}, averageCards: *[], debug: boolean, players: *[], actionsNum: null, camp: T[], winner: null, campDecks: ([{tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, null, null, null, null, null, null, null]|[{tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, null, null, null, null, null, null, null])[], playersOrder: *[], marketCoinsUnique: *[]}}
+ * @constructor
+ */
 export const SetupGame = (ctx) => {
     const suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
+        actionsNum = null,
         debug = false,
         drawProfit = null,
         expansions = {
@@ -22,6 +31,8 @@ export const SetupGame = (ctx) => {
             },
         },
         decks = [],
+        discardCardsDeck = [],
+        discardCampCardsDeck = [],
         // todo add camp logic
         campDecks = [
             [{name: 0, description: "", tier: 0,}, {name: 1, description: "", tier: 0,}, {
@@ -71,9 +82,10 @@ export const SetupGame = (ctx) => {
         // campDecks[i] = BuildCampCards(i, campConfig);
         campDecks[i] = ctx.random.Shuffle(campDecks[i]);
     }
-    let camp = campDecks[0].splice(0, campNum);
+    let campPicked = false,
+        camp = campDecks[0].splice(0, campNum);
     for (let i = 0; i < tierToEnd; i++) {
-        decks[i] = BuildCards({suits: suitsConfigArray, actions: actionCardsConfigArray}, {
+        decks[i] = BuildCards({suits: suitsConfig, actions: actionCardsConfigArray}, {
             players: ctx.numPlayers,
             tier: i
         });
@@ -85,7 +97,6 @@ export const SetupGame = (ctx) => {
             heroesConfigArray.push(expansion);
         }
     }
-    // todo add heroes logic!
     const heroes = BuildHeroes(heroesConfigArray);
     const taverns = [],
         tavernsNum = 3,
@@ -113,8 +124,8 @@ export const SetupGame = (ctx) => {
         initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined).map((item, index) => index),
         initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
-    for (const suit in suitsConfigArray) {
-        averageCards[suit] = GetAverageSuitCard(suitsConfigArray[suit], {players: ctx.numPlayers, tier: 0});
+    for (const suit in suitsConfig) {
+        averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {players: ctx.numPlayers, tier: 0});
     }
     for (let i = 0; i < initCoinsOrder.length; i++) {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
@@ -130,13 +141,17 @@ export const SetupGame = (ctx) => {
         suitsNum,
         tierToEnd,
         campNum,
+        actionsNum,
         tavernsNum,
         currentTavern,
         drawSize,
         expansions,
         decks,
+        discardCardsDeck,
+        discardCampCardsDeck,
         heroes,
         campDecks,
+        campPicked,
         camp,
         distinctions,
         taverns,

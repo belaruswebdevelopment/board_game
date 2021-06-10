@@ -1,3 +1,10 @@
+/**
+ * Стилизация при отрисовке всех картинок в игре.
+ * Применения:
+ * 1) Используется при отрисовке всех картинок в игре.
+ *
+ * @type {{Priorities: (function(*): {background: string}), CoinBack: (function(): {background: string}), Taverns: ((function(*): ({background: string}))|*), Priority: (function(): {background: string}), Heroes: ((function(*, *): ({background: string}|undefined))|*), Distinctions: ((function(*): ({background: string}))|*), Suits: (function(*): {background: string}), DistinctionsBack: (function(): {background: string}), HeroBack: (function(): {background: string}), Exchange: (function(): {background: string}), Coin: (function(*, *): {background: string}), CampCards: ((function(*, *): ({background: string}))|*), Camp: (function(): {background: string})}}
+ */
 export const Styles = {
     Suits: (suitName) => ({
         background: `url(/img/suits/${suitName}.png) no-repeat 0px 0px / 24px 24px`
