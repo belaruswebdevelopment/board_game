@@ -132,7 +132,7 @@ export const FinalScoring = (G, ctx, player, currentScore) => {
     if (suitWarriorIndex !== -1) {
         const warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, "warrior");
         if (warriorsDistinction !== undefined && G.players.findIndex(p => p.nickname === player.nickname) === warriorsDistinction) {
-            score += suitsConfig["warrior"].distinction.awarding(G, ctx, player);
+            score += suitsConfig["warrior"].distinction.awarding(G, ctx, player) ?? 0;
         }
     }
     const suitMinerIndex = GetSuitIndexByName("miner");
@@ -143,9 +143,9 @@ export const FinalScoring = (G, ctx, player, currentScore) => {
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
         if (player.heroes[i].name.startsWith("Dwerg")) {
-            dwerg_brothers += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name).scoringRule(player);
+            dwerg_brothers += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name)?.scoringRule() ?? 0;
         } else {
-            score += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name).scoringRule(player);
+            score += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name)?.scoringRule() ?? 0;
         }
     }
     score += dwerg_brothers_scoring[dwerg_brothers];

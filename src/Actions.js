@@ -418,7 +418,6 @@ export const DiscardTradingCoin = (G, ctx, config) => {
  * @constructor
  */
 export const DiscardSuitCard = (G, ctx, config) => {
-    // todo Rework by server multiplayer game
     const suitId = GetSuitIndexByName(config.suit),
         value = {};
     for (let i = 0; i < ctx.numPlayers; i++) {
