@@ -107,6 +107,7 @@ export const Trading = (G, ctx, tradingCoins) => {
         action = {
             actionName: "UpgradeCoinAction",
             config: {
+                number: 1,
                 value: coinsMinValue,
             },
         };
@@ -118,6 +119,7 @@ export const Trading = (G, ctx, tradingCoins) => {
         action = {
             actionName: "UpgradeCoinAction",
             config: {
+                number: 1,
                 value: coinsMaxValue,
             },
         };
@@ -150,7 +152,7 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial, up
                 allHandCoins = G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null);
             for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
                 if (G.players[ctx.currentPlayer].boardCoins[i] === null) {
-                    allCoins.push(allHandCoins.splice(0, 1));
+                    allCoins.push(allHandCoins.splice(0, 1)[0]);
                 } else {
                     allCoins.push(G.players[ctx.currentPlayer].boardCoins[i]);
                 }

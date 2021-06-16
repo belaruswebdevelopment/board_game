@@ -414,7 +414,8 @@ export const DrawPlayersBoards = (data) => {
                             <td key={`${data.props.G.players[p].nickname} camp card ${data.props.G.players[p].campCards[i].name}`}>
                                 <span
                                     style={Styles.CampCards(data.props.G.players[p].campCards[i].tier, data.props.G.players[p].campCards[i].name)}
-                                    title={data.props.G.players[p].campCards[i].description} className="bg-camp">
+                                    title={data.props.G.players[p].campCards[i].description ?? data.props.G.players[p].campCards[i].name}
+                                    className="bg-camp">
 
                                 </span>
                             </td>

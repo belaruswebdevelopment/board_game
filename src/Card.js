@@ -15,7 +15,7 @@ import {suitsConfig} from "./data/SuitData";
  * @returns {{name, rank: number, suit, points: null}} Карта.
  * @constructor
  */
-export const CreateCard = ({type, suit, rank = 1, points = null, name} = {}) => {
+export const CreateCard = ({type = "базовая", suit, rank = 1, points = null, name} = {}) => {
     return {
         type,
         suit,
@@ -36,7 +36,7 @@ export const CreateCard = ({type, suit, rank = 1, points = null, name} = {}) => 
  * @returns {{action, value}} Карта улучшения монеты.
  * @constructor
  */
-const CreateActionCard = ({type, value, action} = {}) => {
+const CreateActionCard = ({type = "улучшение монеты", value, action} = {}) => {
     return {
         type,
         value,
@@ -61,7 +61,6 @@ export const BuildCards = (deckConfig, data) => {
             deckConfig.suits[suit].pointsValues()[data.players][data.tier];
         for (let j = 0; j < count; j++) {
             cards.push(CreateCard({
-                type: "базовая",
                 suit: deckConfig.suits[suit].suit,
                 rank: deckConfig.suits[suit].ranksValues()[data.players][data.tier][j],
                 points: deckConfig.suits[suit].pointsValues()[data.players][data.tier][j],
@@ -71,7 +70,6 @@ export const BuildCards = (deckConfig, data) => {
     for (let i = 0; i < deckConfig.actions.length; i++) {
         for (let j = 0; j < deckConfig.actions[i].amount()[data.players][data.tier]; j++) {
             cards.push(CreateActionCard({
-                type: "улучшение монеты",
                 value: deckConfig.actions[i].value,
                 action: deckConfig.actions[i].action,
             }));
@@ -175,11 +173,8 @@ export const PotentialScoring = ({player = {}, card = {}}) => {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
-        if (player.boardCoins[i] !== null) {
-            score += player.boardCoins[i].value;
-        } else if (player.handCoins[i] !== null) {
-            score += player.handCoins[i].value;
-        }
+        score += player.boardCoins[i]?.value ?? 0;
+        score += player.handCoins[i]?.value ?? 0;
     }
     return score;
 };

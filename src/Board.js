@@ -78,10 +78,18 @@ export class GameBoard extends React.Component {
     OnClickCardToDiscard2Players = (cardId) => {
         this.props.moves.DiscardCard2Players(cardId);
     };
-    OnClickCampCardHolda = (cardId) => {
-        this.props.moves.PickCampCardHolda(cardId);
+    OnClickDiscardCardFromPlayerBoard = (suitId, cardId) => {
+        this.props.moves.DiscardCardFromPlayerBoard(suitId, cardId);
     };
-
+    OnClickDiscardSuitCardFromPlayerBoard = (suitId, cardId) => {
+        this.props.moves.DiscardSuitCardFromPlayerBoard(suitId, cardId);
+    };
+    OnClickCoinToAddToPouch = (suitId, cardId) => {
+        this.props.moves.AddCoinToPouch(suitId, cardId);
+    };
+    OnClickCoinToUpgradeVidofnirVedrfolnir = (coinId, type, isInitial) => {
+        this.props.moves.UpgradeCoinVidofnirVedrfolnir(coinId, type, isInitial);
+    };
     render() {
         const gridClass = "col-span-4",
             classes = "col-span-4 text-center underline border",

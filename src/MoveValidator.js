@@ -76,18 +76,18 @@ const ValidateByValues = (num, values) => {
  * @todo Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
- * @param coinID
+ * @param coinId
  * @param type
  * @returns {boolean}
  * @constructor
  */
-export const CoinUpgradeValidation = (G, ctx, coinID, type) => {
+export const CoinUpgradeValidation = (G, ctx, coinId, type) => {
     if (type === "board") {
-        if (G.players[ctx.currentPlayer].boardCoins[coinID].isTriggerTrading) {
+        if (G.players[ctx.currentPlayer].boardCoins[coinId].isTriggerTrading) {
             return false;
         }
     } else if (type === "hand") {
-        const handCoinPosition = G.players[ctx.currentPlayer].boardCoins[coinID].filter((coin, index) => coin === null && index <= coinID).length;
+        const handCoinPosition = G.players[ctx.currentPlayer].boardCoins[coinId].filter((coin, index) => coin === null && index <= coinId).length;
         if (G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null)[handCoinPosition].isTriggerTrading) {
             return false;
         }
@@ -157,7 +157,7 @@ export const moveValidators = {
                 const suitId = Object.keys(suitsConfig).findIndex(suit => suit === G.heroes[id].action.config.conditions.suitCountMin.suit);
                 isValid = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0) >= G.heroes[id].action.config.conditions.suitCountMin.value;
             }
-            return isValid;
+            return isValid || G.players[ctx.currentPlayer].buffs?.["noHero"];
         },
     },
     ClickCoinToUpgrade: {
@@ -182,6 +182,8 @@ export const moveValidators = {
     },
     ClickCampCard: {
         getRange: ({G, ctx}) => ([0, G.camp.length]),
-        validate: ({G, ctx, id}) => G.expansions.thingvellir && Number(ctx.currentPlayer) === G.playersOrder[0],
+        validate: ({G, ctx, id}) => G.expansions.thingvellir &&
+            (Number(ctx.currentPlayer) === G.playersOrder[0] || (G.players[ctx.currentPlayer].buffs?.["goCamp"] && G.campPicked === false) ||
+                G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]),
     },
 };

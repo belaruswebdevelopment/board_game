@@ -125,7 +125,7 @@ export const CurrentScoring = (player) => {
 export const FinalScoring = (G, ctx, player, currentScore) => {
     let score = currentScore;
     for (let i = 0; i < player.boardCoins.length; i++) {
-        score += player.boardCoins[i].value;
+        score += player.boardCoins[i]?.value ?? 0;
     }
     const suitWarriorIndex = Object.keys(suitsConfig).findIndex(suit => suit === "warrior");
     if (suitWarriorIndex !== -1) {
@@ -150,3 +150,16 @@ export const FinalScoring = (G, ctx, player, currentScore) => {
     score += dwerg_brothers_scoring[dwerg_brothers];
     return score;
 };
+
+export const ScoreWinner = (ctx, G) => {
+    const totalScore = [];
+    for (let i = 0; i < ctx.numPlayers; i++) {
+        totalScore.push(CurrentScoring(G.players[i]));
+    }
+    for (let i = ctx.numPlayers - 1; i >= 0; i--) {
+        if (Math.max(...totalScore) === totalScore[i]) {
+            G.winner = i;
+            return G;
+        }
+    }
+}

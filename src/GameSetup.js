@@ -8,7 +8,7 @@ import {BuildPriorities} from "./Priority";
 import {actionCardsConfigArray} from "./data/ActionCardData";
 import {BuildHeroes} from "./Hero";
 import {BuildCampCards} from "./Camp";
-import {campConfig} from "./data/CampData";
+import {artefactsConfig, mercenariesConfig} from "./data/CampData";
 
 /**
  * Сетап игры.
@@ -32,54 +32,12 @@ export const SetupGame = (ctx) => {
         },
         decks = [],
         discardCardsDeck = [],
-        discardCampCardsDeck = [],
-        // todo add camp logic
-        campDecks = [
-            [{name: 0, description: "", tier: 0,}, {name: 1, description: "", tier: 0,}, {
-                name: 2,
-                description: "",
-                tier: 0,
-            },
-                {name: 3, description: "", tier: 0,}, {name: 4, description: "", tier: 0,}, {
-                name: 5,
-                description: "",
-                tier: 0,
-            },
-                {name: 6, description: "", tier: 0,}, {name: 7, description: "", tier: 0,}, {
-                name: 8,
-                description: "",
-                tier: 0,
-            },
-                {name: 9, description: "", tier: 0,}, {name: 10, description: "", tier: 0,}, {
-                name: 11,
-                description: "",
-                tier: 0,
-            }],
-            [{name: 0, description: "", tier: 1,}, {name: 1, description: "", tier: 1,}, {
-                name: 2,
-                description: "",
-                tier: 1,
-            },
-                {name: 3, description: "", tier: 1,}, {name: 4, description: "", tier: 1,}, {
-                name: 5,
-                description: "",
-                tier: 1,
-            },
-                {name: 6, description: "", tier: 1,}, {name: 7, description: "", tier: 1,}, {
-                name: 8,
-                description: "",
-                tier: 1,
-            },
-                {name: 9, description: "", tier: 1,}, {name: 10, description: "", tier: 1,}, {
-                name: 11,
-                description: "",
-                tier: 1,
-            }],
-        ],
+        campDecks = [],
         distinctions = Array(suitsNum).fill(null);
-    let winner = null;
+    let winner = null,
+        discardCampCardsDeck = [];
     for (let i = 0; i < tierToEnd; i++) {
-        // campDecks[i] = BuildCampCards(i, campConfig);
+        campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
         campDecks[i] = ctx.random.Shuffle(campDecks[i]);
     }
     let campPicked = false,

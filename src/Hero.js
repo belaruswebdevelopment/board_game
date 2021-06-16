@@ -1,5 +1,6 @@
 import {TotalRank} from "./Score";
 import {heroesConfig} from "./data/HeroData";
+import {suitsConfig} from "./data/SuitData";
 
 /**
  * Создание героя.
@@ -9,7 +10,7 @@ import {heroesConfig} from "./data/HeroData";
  * @param type Тип.
  * @param name Название.
  * @param description Описание.
- * @param game Игра/дополнене.
+ * @param game Игра/дополнение.
  * @param suit Фракция.
  * @param rank Шевроны.
  * @param points Очки.
@@ -75,5 +76,30 @@ export const BuildHeroes = (config) => {
  * @constructor
  */
 export const CheckPickHero = (G, ctx) => {
-    return Math.min(...G.players[ctx.currentPlayer].cards.map(item => item.reduce(TotalRank, 0))) > G.players[ctx.currentPlayer].heroes.length;
+    if (G.players[ctx.currentPlayer].buffs?.["noHero"]) {
+        return false;
+    } else {
+        return Math.min(...G.players[ctx.currentPlayer].cards.map(item => item.reduce(TotalRank, 0))) > G.players[ctx.currentPlayer].heroes.length;
+    }
+};
+
+/**
+ * Удаляет Труд в конце игры с поля игрока.
+ * Применения:
+ * 1) Происходит в конце матча после всех игровых событий.
+ *
+ * @param G
+ * @param ctx
+ * @constructor
+ */
+export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
+    for (let i = 0; i < ctx.numPlayers; i++) {
+        const playerCards = G.players[i].cards.flat();
+        const thrud = playerCards.find(card => card.name === "Thrud");
+        if (thrud) {
+            const thrudSuit = Object.keys(suitsConfig).findIndex(suit => suit === thrud.suit),
+                thrudIndex = G.players[i].cards[thrudSuit].findIndex(card => card.name === "Thrud");
+            G.players[i].cards[thrudSuit].splice(thrudIndex, 1);
+        }
+    }
 };

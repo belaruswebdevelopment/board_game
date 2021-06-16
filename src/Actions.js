@@ -1,10 +1,16 @@
 import {ReturnCoinToPlayerHands, UpgradeCoin} from "./Coin";
-import {EndHeroAction} from "./Moves";
 import {heroesConfig} from "./data/HeroData";
 import {INVALID_MOVE} from "boardgame.io/core";
 import {suitsConfig} from "./data/SuitData";
 import {TotalRank} from "./Score";
-import {AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards} from "./Player";
+import {
+    AddCampCardToPlayer,
+    AddCampCardToPlayerCards,
+    AddHeroCardToPlayerCards,
+    AddHeroCardToPlayerHeroCards
+} from "./Player";
+import {CheckPickHero} from "./Hero";
+import {AfterBasicPickCardActions} from "./moves/Moves";
 
 /**
  * Диспетчер действий при их активаци.
@@ -52,6 +58,21 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         case "GetClosedCoinIntoPlayerHand":
             action = GetClosedCoinIntoPlayerHand;
             break;
+        case "AddCampCardToCards":
+            action = AddCampCardToCards;
+            break;
+        case "RecruitHero":
+            action = RecruitHero;
+            break;
+        case "StartVidofnirVedrfolnirAction":
+            action = StartVidofnirVedrfolnirAction;
+            break;
+        case "DiscardTradingCoin":
+            action = DiscardTradingCoin;
+            break;
+        case "DiscardSuitCard":
+            action = DiscardSuitCard;
+            break;
         default:
             action = null;
     }
@@ -71,8 +92,13 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
  * @constructor
  */
 const UpgradeCoinAction = (G, ctx, config, ...args) => {
+    G.actionsNum = config.number;
+    G.actionsNum--;
     UpgradeCoin(G, ctx, config, ...args);
-    CheckEndHeroActions(G, ctx, config);
+    if (!G.actionsNum) {
+        G.actionsNum = null;
+        CheckEndActions(G, ctx, config);
+    }
 };
 
 /**
@@ -86,6 +112,9 @@ const UpgradeCoinAction = (G, ctx, config, ...args) => {
  * @constructor
  */
 const DrawProfitAction = (G, ctx, config) => {
+    if (config.name === "GridAction") {
+        G.players[ctx.currentPlayer].pickedCard = config;
+    }
     G.drawProfit = config.name;
 };
 
@@ -105,7 +134,7 @@ const AddHeroToCards = (G, ctx, config) => {
     if (hero.suit) {
         AddHeroCardToPlayerCards(G, ctx, config, hero);
     } else {
-        CheckEndHeroActions(G, ctx, config);
+        CheckEndActions(G, ctx, config);
     }
 };
 
@@ -121,7 +150,7 @@ const AddHeroToCards = (G, ctx, config) => {
  */
 const AddBuffToPlayer = (G, ctx, config) => {
     G.players[ctx.currentPlayer].buffs[config.buff.name] = config.buff.value;
-    CheckEndHeroActions(G, ctx, config);
+    CheckEndActions(G, ctx, config);
 };
 
 const GetClosedCoinIntoPlayerHand = (G, ctx, config) => {
@@ -135,7 +164,7 @@ const GetClosedCoinIntoPlayerHand = (G, ctx, config) => {
             ReturnCoinToPlayerHands(G.players[ctx.currentPlayer], i);
         }
     }
-    CheckEndHeroActions(G, ctx, config);
+    CheckEndActions(G, ctx, config);
 };
 
 /**
@@ -171,7 +200,7 @@ const PickHeroWithConditions = (G, ctx, config) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    CheckEndHeroActions(G, ctx, config);
+    CheckEndActions(G, ctx, config);
 };
 
 /**
@@ -232,7 +261,7 @@ const PickCampCard = (G, ctx, config) => {
     if (G.camp.length) {
         G.drawProfit = config.name;
     } else {
-        CheckEndHeroActions(G, ctx, config);
+        CheckEndActions(G, ctx, config);
     }
 };
 
@@ -248,28 +277,196 @@ const PickCampCard = (G, ctx, config) => {
  */
 const PickDiscardCard = (G, ctx, config) => {
     if (G.discardCardsDeck.length) {
+        G.actionsNum = config.number;
         G.drawProfit = config.name;
     } else {
-        CheckEndHeroActions(G, ctx, config);
+        CheckEndActions(G, ctx, config);
     }
 };
 
 /**
- * Проверка закончились ли все действия, связанные с взятием героя.
+ * Действия, связанные с добавлением карт кэмпа в конкретную фракцию игрока.
  * Применения:
- * 1) После каждого выполнения действий, связанных с взятием конкретного героя.
+ * 1) При выборе карт кэмпа, добавляющихся в конкретную фракцию игрока.
+ *
  *
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
  * @constructor
  */
-export const CheckEndHeroActions = (G, ctx, config) => {
-    if (config.hero) {
+export const AddCampCardToCards = (G, ctx, config) => {
+    const campCardIndex = G.camp.findIndex(card => card?.name === config.card);
+    const campCard = G.camp[campCardIndex];
+    G.camp[campCardIndex] = null;
+    G.campPicked = true;
+    if (campCard.suit) {
+        AddCampCardToPlayerCards(G, ctx, campCard, config);
+    } else {
+        AddCampCardToPlayer(G, ctx, campCard);
+        CheckEndActions(G, ctx, config);
+    }
+};
+
+/**
+ * Действия, связанные с взятием героя.
+ * Применения:
+ * 1) При выборе карт кэмпа, дающих возможность взять карту героя.
+ *
+ * @param G
+ * @param ctx
+ * @constructor
+ */
+export const RecruitHero = (G, ctx) => {
+    ctx.events.setStage("pickHero");
+};
+
+/**
+ * Действия, связанные с активацией способности артефакта Vidofnir Vedrfolnir.
+ * Применения:
+ * 1) При выборе карт кэмпа артефакта Vidofnir Vedrfolnir.
+ *
+ * @param G
+ * @param ctx
+ * @constructor
+ */
+export const ActivateVidofnirVedrfolnirAction = (G, ctx) => {
+    let coinsValue = 0;
+    for (let j = G.tavernsNum; j < G.players[ctx.currentPlayer].boardCoins.length; j++) {
+        if (G.players[ctx.currentPlayer].boardCoins[j] &&
+            !G.players[ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
+            coinsValue++;
+        }
+    }
+    let action;
+    if (coinsValue === 2) {
+        action = {
+            action: {
+                actionName: "UpgradeCoinAction",
+                config: {
+                    number: 2,
+                    value: 3,
+                },
+            },
+        };
+    } else if (coinsValue === 1) {
+        action = {
+            action: {
+                actionName: "UpgradeCoinAction",
+                config: {
+                    number: 1,
+                    value: 5,
+                },
+            },
+        };
+    }
+    G.actionsNum = action.action.config.number;
+    G.players[ctx.currentPlayer].pickedCard = action;
+    G.drawProfit = "VidofnirVedrfolnirAction";
+};
+
+/**
+ * Действия, связанные со стартом способности артефакта Vidofnir Vedrfolnir.
+ * Применения:
+ * 1) При старте способности карты кэмпа артефакта Vidofnir Vedrfolnir.
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @constructor
+ */
+export const StartVidofnirVedrfolnirAction = (G, ctx, config) => {
+    if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline") {
+        G.drawProfit = config.name;
+        G.actionsNum = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
+    } else {
+        ActivateVidofnirVedrfolnirAction(G, ctx);
+    }
+};
+
+/**
+ * Действия, связанные со сбросом обменной монеты.
+ * Применения:
+ * 1) При выборе карты кэмпа артефакта Jarnglofi.
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @constructor
+ */
+export const DiscardTradingCoin = (G, ctx, config) => {
+    let tradingCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin.value === 0);
+    if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && tradingCoinIndex === -1) {
+        tradingCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin.value === 0);
+        G.players[ctx.currentPlayer].handCoins.splice(tradingCoinIndex, 1, null);
+    } else {
+        G.players[ctx.currentPlayer].boardCoins.splice(tradingCoinIndex, 1, null);
+    }
+    CheckEndActions(G, ctx, config);
+};
+
+/**
+ * Действия, связанные с дискардом карты из конфретной фракции игрока.
+ * Применения:
+ * 1) При выборе карты кэмпа артефакта Hofud.
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @constructor
+ */
+export const DiscardSuitCard = (G, ctx, config) => {
+    // todo Rework by server multiplayer game
+    const suitId = Object.keys(suitsConfig).findIndex(suit => suit === config.suit),
+        value = {};
+    for (let i = 0; i < ctx.numPlayers; i++) {
+        if (i !== Number(ctx.currentPlayer) && G.players[i].cards[suitId].length) {
+            value[i] = "discardSuitCard";
+        }
+    }
+    ctx.events.setActivePlayers({
+        value,
+        moveLimit: 1,
+    });
+    G.drawProfit = config.name;
+};
+
+/**
+ * Завершение текущего экшена.
+ * Применения:
+ * 1) Срабатывает после завершения каждого экшена.
+ *
+ * @param G
+ * @param ctx
+ * @constructor
+ */
+export const EndAction = (G, ctx) => {
+    G.drawProfit = null;
+    if (CheckPickHero(G, ctx)) {
+        ctx.events.endStage();
+        ctx.events.setStage("pickHero");
+    } else {
+        ctx.events.endStage();
+        AfterBasicPickCardActions(G, ctx);
+    }
+};
+
+/**
+ * Проверка закончились ли все действия, связанные с завершением текущего экшена.
+ * Применения:
+ * 1) После каждого выполнения действий, связанных с завершением текущего экшена.
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @constructor
+ */
+export const CheckEndActions = (G, ctx, config) => {
+    if (config.hero || config.card) {
         if (config.action) {
             ActionDispatcher(G, ctx, config.action);
         } else {
-            EndHeroAction(G, ctx);
+            EndAction(G, ctx);
         }
     }
 };

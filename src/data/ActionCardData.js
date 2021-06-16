@@ -10,6 +10,7 @@ const upgradeCoinUpTo3 = {
     action: {
         actionName: "UpgradeCoinAction",
         config: {
+            number: 1,
             value: 3,
         },
     },
@@ -47,6 +48,7 @@ const upgradeCoinUpTo5 = {
     action: {
         actionName: "UpgradeCoinAction",
         config: {
+            number: 1,
             value: 5,
         },
     },

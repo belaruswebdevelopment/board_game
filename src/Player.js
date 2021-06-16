@@ -2,8 +2,8 @@ import {BuildCoins} from "./Coin";
 import {initialPlayerCoinsConfig} from "./data/CoinData";
 import {suitsConfig} from "./data/SuitData";
 import {CurrentScoring} from "./Score";
-import {CheckAndMoveThrud, StartThrudMoving} from "./Moves";
-import {CheckEndHeroActions} from "./Actions";
+import {CheckEndActions} from "./Actions";
+import {CheckAndMoveThrud, StartThrudMoving} from "./moves/HeroMoves";
 
 /**
  * Создание игрока.
@@ -33,7 +33,7 @@ const CreatePlayer = ({
                           priority,
                           buffs = {},
                           selectedCoin,
-                          pickedCard,
+                          pickedCard = {},
                       } = {}) => {
     return {
         nickname,
@@ -108,6 +108,30 @@ export const AddCampCardToPlayer = (G, ctx, card) => {
 };
 
 /**
+ * Добавляет карту кэмпа в массив карт игрока.
+ * Применения:
+ * 1) Происходит когда добавляется карта кэмпа на планшет игрока.
+ *
+ * @param G
+ * @param ctx
+ * @param card Карта кэмпа.
+ * @param config Конфиг действий героя.
+ * @constructor
+ */
+export const AddCampCardToPlayerCards = (G, ctx, card, config) => {
+    if (card.suit) {
+        const suitId = Object.keys(suitsConfig).findIndex(suit => suit === card.suit);
+        const isMoveThrud = CheckAndMoveThrud(G, ctx, card);
+        G.players[ctx.currentPlayer].cards[suitId].push(card);
+        if (isMoveThrud) {
+            StartThrudMoving(G, ctx, card);
+        } else {
+            CheckEndActions(G, ctx, config);
+        }
+    }
+};
+
+/**
  * Добавляет героя в массив героев игрока.
  * Применения:
  * 1) Происходит когда добавляется герой на планшет игрока.
@@ -143,7 +167,7 @@ export const AddHeroCardToPlayerCards = (G, ctx, config, hero) => {
         if (isMoveThrud) {
             StartThrudMoving(G, ctx, hero);
         } else {
-            CheckEndHeroActions(G, ctx, config);
+            CheckEndActions(G, ctx, config);
         }
     }
 };

@@ -8,8 +8,8 @@ import {CreatePriority} from "../Priority";
  * Применения:
  * 1) Используется в конфиге фракций.
  *
- * @Add ranks count on suits track and may be potential points for hunters and blacksmiths.
- * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: blacksmithSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}}
+ * @todo Add ranks count on suits track and may be potential points for hunters and blacksmiths.
+ * @type {{scoringRule: (function(*): number), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: blacksmithSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}} Кузнецы.
  */
 const blacksmithSuit = {
     suit: "blacksmith",
@@ -78,7 +78,7 @@ const blacksmithSuit = {
  * Применения:
  * 1) Используется в конфиге фракций.
  *
- * @type {{scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: hunterSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}}
+ * @type {{scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: hunterSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}} Охотники.
  */
 const hunterSuit = {
     suit: "hunter",
@@ -146,7 +146,7 @@ const hunterSuit = {
  * Применения:
  * 1) Используется в конфиге фракций.
  *
- * @type {{scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}}
+ * @type {{scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}} Горняки.
  */
 const minerSuit = {
     suit: "miner",
@@ -220,7 +220,7 @@ const minerSuit = {
  * Применения:
  * 1) Используется в конфиге фракций.
  *
- * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}}
+ * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}} Воины.
  */
 const warriorSuit = {
     suit: "warrior",
@@ -276,6 +276,7 @@ const warriorSuit = {
                     action: {
                         actionName: "UpgradeCoinAction",
                         config: {
+                            number: 1,
                             value: 5,
                         },
                     },
@@ -294,7 +295,7 @@ const warriorSuit = {
  * Применения:
  * 1) Используется в конфиге фракций.
  *
- * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: explorerSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}}
+ * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: explorerSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}} Разведчики.
  */
 const explorerSuit = {
     suit: "explorer",
@@ -358,7 +359,7 @@ const explorerSuit = {
  * Применения:
  * 1) Происходит при создании всех карт при инициализации игры.
  *
- * @type {{blacksmith: {scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: blacksmithSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}, warrior: {scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}, explorer: {scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: explorerSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}, hunter: {scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: hunterSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}, miner: {scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}}} Все фракции.
+ * @type {{blacksmith: {scoringRule: (function(*): number), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: blacksmithSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}, warrior: {scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}, explorer: {scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: explorerSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}, hunter: {scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: hunterSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}, miner: {scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}}} Все фракции.
  */
 export const suitsConfig = {
     blacksmith: blacksmithSuit,

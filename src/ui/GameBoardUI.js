@@ -3,6 +3,7 @@ import {CountMarketCoins} from "../Coin";
 import {suitsConfig} from "../data/SuitData.js";
 import {tavernsConfig} from "../Tavern";
 import {Styles} from "../data/StyleData";
+import {CurrentScoring, FinalScoring} from "../Score";
 
 const DrawBoard = (objectsSize) => {
     const boardRows = Math.floor(Math.sqrt(objectsSize)),
@@ -228,6 +229,124 @@ export const DrawDistinctions = (data) => {
 };
 
 /**
+ * Отрисовка планшета конкретного игрока для дискарда карты.
+ * Применения:
+ * 1) Отрисовка планшета конкретного игрока для дискарда карты по действию артефакта Brisingamens.
+ *
+ * @param data Глобальные параметры.
+ * @returns {JSX.Element} Шаблон.
+ * @constructor
+ */
+const DrawPlayerBoardForCardDiscard = (data) => {
+    const playerHeaders = [],
+        playerRows = [];
+    for (const suit in suitsConfig) {
+        playerHeaders.push(
+            <th className={`${suitsConfig[suit].suitColor}`}
+                key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} ${suitsConfig[suit].suitName}`}>
+                <span style={Styles.Suits(suitsConfig[suit].suitName)} className="bg-suit-icon">
+
+                </span>
+            </th>
+        );
+    }
+    for (let i = 0; ; i++) {
+        const playerCells = [];
+        let isDrawRow = false,
+            id = 0;
+        playerRows[i] = [];
+        for (let j = 0; j < data.props.G.suitsNum; j++) {
+            const suit = Object.keys(suitsConfig)[j];
+            id = i + j;
+            if (data.props.G.players[data.props.ctx.currentPlayer].cards[j] !== undefined &&
+                data.props.G.players[data.props.ctx.currentPlayer].cards[j][i] !== undefined) {
+                isDrawRow = true;
+                if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].type !== "герой") {
+                    playerCells.push(
+                        <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} card ${id}`}
+                            onClick={() => data.OnClickDiscardCardFromPlayerBoard(j, i)}
+                            className={suitsConfig[suit].suitColor}>
+                            <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
+                        </td>
+                    );
+                }
+            } else {
+                playerCells.push(
+                    <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} card ${id}`}>
+
+                    </td>
+                );
+            }
+        }
+        if (isDrawRow) {
+            playerRows[i].push(
+                <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} board row ${i}`}>{playerCells}</tr>
+            );
+        } else {
+            break;
+        }
+    }
+    return (
+        <table>
+            <thead>
+            <tr>{playerHeaders}</tr>
+            </thead>
+            <tbody>{playerRows}</tbody>
+        </table>
+    );
+};
+
+/**
+ * Отрисовка планшета конкретного игрока для дискарда карты конкретной фракции.
+ * Применения:
+ * 1) Отрисовка планшета конкретного игрока для дискарда карты конкретной фракции по действию артефакта Hofud.
+ *
+ * @param data Глобальные параметры.
+ * @param suitName Фракция.
+ * @returns {JSX.Element} Шаблон.
+ * @constructor
+ */
+const DrawPlayerBoardForSuitCardDiscard = (data, suitName) => {
+    const playerHeaders = [],
+        playerRows = [],
+        suitId = Object.keys(suitsConfig).findIndex(suit => suit === suitName);
+    playerHeaders.push(
+        <th className={`${suitsConfig[suitName].suitColor} discard suit`}
+            key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} ${suitsConfig[suitName].suitName}`}>
+            <span style={Styles.Suits(suitsConfig[suitName].suitName)} className="bg-suit-icon">
+
+            </span>
+        </th>
+    );
+    for (let i = 0; data.props.G.players[data.props.ctx.currentPlayer].cards[suitId].length; i++) {
+        for (let j = 0; j < 1; j++) {
+            if (data.props.G.players[data.props.ctx.currentPlayer].cards[suitId] !== undefined &&
+                data.props.G.players[data.props.ctx.currentPlayer].cards[suitId][i] !== undefined) {
+                if (data.props.G.players[data.props.ctx.currentPlayer].cards[suitId][i].type !== "герой") {
+                    playerRows[i] = [];
+                    playerRows[i].push(
+                        <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit card board row ${i}`}>
+                            <td onClick={() => data.OnClickDiscardSuitCardFromPlayerBoard(suitId, i)}
+                                className={`${suitsConfig[suitName].suitColor}  cursor-pointer`}>
+                                <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
+                            </td>
+                        </tr>
+                    );
+                }
+            }
+        }
+    }
+    return (
+        <table>
+            <thead>
+            <tr>{playerHeaders}</tr>
+            </thead>
+            <tbody>{playerRows}</tbody>
+        </table>
+    );
+};
+
+/**
  * Отрисовка профита от карт и героев.
  * Применения:
  * 1) Отрисовка игрового поля.
@@ -279,10 +398,10 @@ export const DrawProfit = (data, option) => {
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
                             key={`Move Thrud on ${suitsConfig[suit].suitName}`}>
-                        <span style={Styles.Suits(suitsConfig[suit].suitName)} className="bg-suit-icon"
-                              onClick={() => data.OnClickSuitToMoveThrud(j)}>
+                            <span style={Styles.Suits(suitsConfig[suit].suitName)} className="bg-suit-icon"
+                                  onClick={() => data.OnClickSuitToMoveThrud(j)}>
 
-                        </span>
+                            </span>
                         </td>
                     );
                 }
@@ -353,8 +472,14 @@ export const DrawProfit = (data, option) => {
                     );
                 }
             }
-        } else if (option === "AndumiaAction") {
-            caption += "one card from discard pile to your board.";
+        } else if (option === "AndumiaAction" || option === "BrisingamensAction") {
+            let count;
+            if (option === "AndumiaAction") {
+                count = "one";
+            } else if (option === "BrisingamensAction") {
+                count = "two";
+            }
+            caption += `${count} card from discard pile to your board.`;
             for (let j = 0; j < data.props.G.discardCardsDeck.length; j++) {
                 if (data.props.G.discardCardsDeck[j].suit !== undefined) {
                     boardCells.push(
@@ -372,14 +497,28 @@ export const DrawProfit = (data, option) => {
                     );
                 }
             }
+        } else if (option === "BrisingamensEndGameAction") {
+            caption += "one card to discard from your board.";
+            boardCells.push(
+                <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard card NUMBER`}>
+                    {DrawPlayerBoardForCardDiscard(data)}
+                </td>
+            );
+        } else if (option === "HofudAction") {
+            caption += "one warrior card to discard from your board.";
+            boardCells.push(
+                <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit card board`}>
+                    {DrawPlayerBoardForSuitCardDiscard(data, "warrior")}
+                </td>
+            );
         } else if (option === "HoldaAction") {
             caption += "one card from camp to your board.";
             for (let j = 0; j < data.props.G.campNum; j++) {
-                if (data.props.G.camp[j] !== null || data.props.G.camp[j] !== undefined) {
+                if (data.props.G.camp[j]) {
                     boardCells.push(
                         <td className="bg-yellow-200 cursor-pointer"
                             key={`Camp ${data.props.G.camp[j].name} card for hero pick`}
-                            onClick={() => data.OnClickCampCardHolda(j)}>
+                            onClick={() => data.OnClickCampCard(j)}>
                             <span style={Styles.CampCards(data.props.G.camp[j].tier, data.props.G.camp[j].name)}
                                   title={data.props.G.camp[j].description} className="bg-camp">
 
@@ -409,78 +548,133 @@ export const DrawProfit = (data, option) => {
                 }
             }
         } else {
-            caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.action.config.value + ".";
-            const handCoins = data.props.G.players[data.props.ctx.currentPlayer].handCoins.filter(coin => coin !== null);
-            let handCoinIndex = -1;
-            for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
-                let drawData = "",
-                    type = "board",
-                    isInitial = false;
-                if (data.props.G.players[data.props.ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" &&
-                    data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j] === null) {
-                    handCoinIndex++;
-                    isInitial = handCoins[handCoinIndex].isInitial;
-                    const handCoinId = data.props.G.players[data.props.ctx.currentPlayer].handCoins
-                        .findIndex(coin => coin?.value === handCoins[handCoinIndex].value && coin?.isInitial === handCoins[handCoinIndex].isInitial);
-                    if (!data.props.G.players[data.props.ctx.currentPlayer].handCoins[handCoinId].isTriggerTrading) {
-                        type = "hand";
-                        isInitial = handCoins[handCoinIndex].isInitial;
+            if (option === "VidofnirVedrfolnirStartAction") {
+                caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch to fill it.`;
+                for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].handCoins.length; j++) {
+                    let drawData = "";
+                    if (data.props.G.players[data.props.ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" &&
+                        data.props.G.players[data.props.ctx.currentPlayer].handCoins[j] !== null) {
                         drawData = (
                             <span
-                                style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].handCoins[handCoinId].value,
-                                    data.props.G.players[data.props.ctx.currentPlayer].handCoins[handCoinId].isInitial)}
+                                style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].handCoins[j].value,
+                                    data.props.G.players[data.props.ctx.currentPlayer].handCoins[j].isInitial)}
+                                className={`bg-coin border-2`}>
+
+                                </span>
+                        );
+                    }
+                    if (drawData !== "") {
+                        boardCells.push(
+                            <td className="cursor-pointer" key={`Coin ${j} to pouch`}
+                                onClick={() => data.OnClickCoinToAddToPouch(j)}>
+                                {drawData}
+                            </td>
+                        );
+                    }
+                }
+            } else if (option === "VidofnirVedrfolnirAction") {
+                caption = `Get coin to upgrade up to ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.action.config.value}.`;
+                for (let j = data.props.G.tavernsNum; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
+                    let drawData = "",
+                        type = "board",
+                        isInitial = false;
+                    if (data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j] &&
+                        !data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
+                        isInitial = data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial;
+                        drawData = (
+                            <span
+                                style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value,
+                                    data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial)}
                                 className={`bg-coin border-2`}>
 
                             </span>
                         );
                     }
-                } else if (!data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
-                    isInitial = data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial;
-                    drawData = (
-                        <span
-                            style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value,
-                                data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial)}
-                            className={`bg-coin border-2`}>
+                    if (drawData !== "") {
+                        if (data.props.G.players[data.props.ctx.currentPlayer].pickedCard.action.coinId !== j) {
+                            boardCells.push(
+                                <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
+                                    onClick={() => data.OnClickCoinToUpgradeVidofnirVedrfolnir(j, type, isInitial)}>
+                                    {drawData}
+                                </td>
+                            );
+                        }
+                    }
+                }
+            } else {
+                caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.action.config.value + ".";
+                const handCoins = data.props.G.players[data.props.ctx.currentPlayer].handCoins.filter(coin => coin !== null);
+                let handCoinIndex = -1;
+                for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
+                    let drawData = "",
+                        type = "board",
+                        isInitial = false;
+                    if (data.props.G.players[data.props.ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" &&
+                        data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j] === null) {
+                        handCoinIndex++;
+                        isInitial = handCoins[handCoinIndex].isInitial;
+                        const handCoinId = data.props.G.players[data.props.ctx.currentPlayer].handCoins
+                            .findIndex(coin => coin?.value === handCoins[handCoinIndex].value && coin?.isInitial === handCoins[handCoinIndex].isInitial);
+                        if (!data.props.G.players[data.props.ctx.currentPlayer].handCoins[handCoinId].isTriggerTrading) {
+                            type = "hand";
+                            isInitial = handCoins[handCoinIndex].isInitial;
+                            drawData = (
+                                <span
+                                    style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].handCoins[handCoinId].value,
+                                        data.props.G.players[data.props.ctx.currentPlayer].handCoins[handCoinId].isInitial)}
+                                    className={`bg-coin border-2`}>
+
+                            </span>
+                            );
+                        }
+                    } else if (!data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j]?.isTriggerTrading) {
+                        isInitial = data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial;
+                        drawData = (
+                            <span
+                                style={Styles.Coin(data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].value,
+                                    data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial)}
+                                className={`bg-coin border-2`}>
 
                         </span>
-                    );
-                }
-                if (drawData !== "") {
-                    if (option === "upgradeCoin") {
-                        boardCells.push(
-                            <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
-                                onClick={() => data.OnClickCoinToUpgrade(j, type, isInitial)}>
-                                {drawData}
-                            </td>
                         );
-                    } else if (option === "upgradeCoinFromDiscard") {
-                        boardCells.push(
-                            <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
-                                onClick={() => data.OnClickCoinToUpgradeFromDiscard(j, type, isInitial)}>
-                                {drawData}
-                            </td>
-                        );
-                    } else if (option === "warriorDistinction") {
-                        boardCells.push(
-                            <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
-                                onClick={() => data.OnClickCoinToUpgradeDistinction(j, type, isInitial)}>
-                                {drawData}
-                            </td>
-                        );
-                    } else if (option === "upgradeCoinDistinction") {
-                        boardCells.push(
-                            <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
-                                onClick={() => data.OnClickCoinToUpgradeInDistinction(j, type, isInitial)}>
-                                {drawData}
-                            </td>
-                        );
-                    } else if (option === "GridAction") {
-                        boardCells.push(
-                            <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
-                                onClick={() => data.OnClickCoinToUpgradeGrid(j, type, isInitial)}>
-                                {drawData}
-                            </td>
-                        );
+                    }
+                    if (drawData !== "") {
+                        if (option === "upgradeCoin") {
+                            boardCells.push(
+                                <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
+                                    onClick={() => data.OnClickCoinToUpgrade(j, type, isInitial)}>
+                                    {drawData}
+                                </td>
+                            );
+                        } else if (option === "upgradeCoinFromDiscard") {
+                            boardCells.push(
+                                <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
+                                    onClick={() => data.OnClickCoinToUpgradeFromDiscard(j, type, isInitial)}>
+                                    {drawData}
+                                </td>
+                            );
+                        } else if (option === "warriorDistinction") {
+                            boardCells.push(
+                                <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
+                                    onClick={() => data.OnClickCoinToUpgradeDistinction(j, type, isInitial)}>
+                                    {drawData}
+                                </td>
+                            );
+                        } else if (option === "upgradeCoinDistinction") {
+                            boardCells.push(
+                                <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
+                                    onClick={() => data.OnClickCoinToUpgradeInDistinction(j, type, isInitial)}>
+                                    {drawData}
+                                </td>
+                            );
+                        } else if (option === "GridAction") {
+                            boardCells.push(
+                                <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
+                                    onClick={() => data.OnClickCoinToUpgradeGrid(j, type, isInitial)}>
+                                    {drawData}
+                                </td>
+                            );
+                        }
                     }
                 }
             }
@@ -506,53 +700,58 @@ export const DrawProfit = (data, option) => {
  * 1) Отрисовка игрового поля.
  *
  * @param data Глобальные параметры.
- * @returns {JSX.Element} Шаблон.
+ * @returns
+    {
+        JSX.Element
+    }
+ Шаблон.
  * @constructor
  */
 export const DrawCamp = (data) => {
-    const boardCells = [];
-    for (let i = 0; i < 1; i++) {
-        for (let j = 0; j < data.props.G.campNum; j++) {
-            if (data.props.G.camp[j] === null || data.props.G.camp[j] === undefined) {
-                boardCells.push(
-                    <td key={`Camp ${j} icon`}>
+        const boardCells = [];
+        for (let i = 0; i < 1; i++) {
+            for (let j = 0; j < data.props.G.campNum; j++) {
+                if (data.props.G.camp[j] === null || data.props.G.camp[j] === undefined) {
+                    boardCells.push(
+                        <td key={`Camp ${j} icon`}>
                         <span style={Styles.Camp()} className="bg-camp-icon">
 
                         </span>
-                    </td>
-                );
-            } else {
-                boardCells.push(
-                    <td className="bg-yellow-200 cursor-pointer" key={`Camp ${data.props.G.camp[j].name} card`}
-                        onClick={() => data.OnClickCampCard(j)}>
+                        </td>
+                    );
+                } else {
+                    boardCells.push(
+                        <td className="bg-yellow-200 cursor-pointer" key={`Camp ${data.props.G.camp[j].name} card`}
+                            onClick={() => data.OnClickCampCard(j)}>
                         <span style={Styles.CampCards(data.props.G.camp[j].tier, data.props.G.camp[j].name)}
-                              title={data.props.G.camp[j].description} className="bg-camp">
+                              title={data.props.G.camp[j].description ?? data.props.G.camp[j].name} className="bg-camp">
 
                         </span>
-                    </td>
-                );
+                        </td>
+                    );
+                }
             }
         }
-    }
-    return (
-        <table>
-            <caption>
+        return (
+            <table>
+                <caption>
                 <span style={Styles.Camp()} className="bg-top-camp-icon">
 
                 </span>
-                <span>Camp {data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length
-                    ? data.props.G.campDecks.length : data.props.G.campDecks.length - data.props.G.tierToEnd + 1}
-                    ({data.props.G.campDecks.length - data.props.G.tierToEnd !== 2 ?
-                        data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0}
-                    {data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? "/"
-                        + data.props.G.campDecks.reduce((count, current) => count + current.length, 0) : ""} cards left)</span>
-            </caption>
-            <tbody>
-            <tr>{boardCells}</tr>
-            </tbody>
-        </table>
-    );
-};
+                    <span>Camp {data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length
+                        ? data.props.G.campDecks.length : data.props.G.campDecks.length - data.props.G.tierToEnd + 1}
+                        ({data.props.G.campDecks.length - data.props.G.tierToEnd !== 2 ?
+                            data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0}
+                        {data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? "/"
+                            + data.props.G.campDecks.reduce((count, current) => count + current.length, 0) : ""} cards left)</span>
+                </caption>
+                <tbody>
+                <tr>{boardCells}</tr>
+                </tbody>
+            </table>
+        );
+    }
+;
 
 /**
  * Отрисовка карт таверн.
@@ -561,56 +760,61 @@ export const DrawCamp = (data) => {
  *
  * @param data Глобальные параметры.
  * @param gridClass Класс для отрисовки таверны.
- * @returns {*[]} Шаблон.
+ * @returns
+    {*
+        []
+    }
+ Шаблон.
  * @constructor
  */
 export const DrawTaverns = (data, gridClass) => {
-    const tavernsBoards = [];
-    for (let t = 0; t < data.props.G.tavernsNum; t++) {
-        for (let i = 0; i < 1; i++) {
-            const boardCells = [];
-            for (let j = 0; j < data.props.G.drawSize; j++) {
-                if (data.props.G.taverns[t][j] === null) {
-                    boardCells.push(
-                        <td key={`${tavernsConfig[t].name} ${j}`}>
+        const tavernsBoards = [];
+        for (let t = 0; t < data.props.G.tavernsNum; t++) {
+            for (let i = 0; i < 1; i++) {
+                const boardCells = [];
+                for (let j = 0; j < data.props.G.drawSize; j++) {
+                    if (data.props.G.taverns[t][j] === null) {
+                        boardCells.push(
+                            <td key={`${tavernsConfig[t].name} ${j}`}>
                             <span style={Styles.Taverns(t)} className="bg-tavern-icon">
 
                             </span>
-                        </td>
-                    );
-                } else {
-                    if (data.props.G.taverns[t][j].suit !== undefined) {
-                        boardCells.push(
-                            <td className={`${suitsConfig[data.props.G.taverns[t][j].suit].suitColor} cursor-pointer`}
-                                key={`${tavernsConfig[t].name} card ${j}`}
-                                onClick={() => data.OnClickCard(j)}>
-                                <b>{data.props.G.taverns[t][j].points}</b>
                             </td>
                         );
-                    } else if (data.props.G.taverns[t][j].type === "улучшение монеты") {
-                        boardCells.push(
-                            <td className="cursor-pointer"
-                                key={`${tavernsConfig[t].name} card ${j}`}
-                                onClick={() => data.OnClickCard(j)}>
-                                <b>{data.props.G.taverns[t][j].value}</b>
-                            </td>
-                        );
+                    } else {
+                        if (data.props.G.taverns[t][j].suit !== undefined) {
+                            boardCells.push(
+                                <td className={`${suitsConfig[data.props.G.taverns[t][j].suit].suitColor} cursor-pointer`}
+                                    key={`${tavernsConfig[t].name} card ${j}`}
+                                    onClick={() => data.OnClickCard(j)}>
+                                    <b>{data.props.G.taverns[t][j].points}</b>
+                                </td>
+                            );
+                        } else if (data.props.G.taverns[t][j].type === "улучшение монеты") {
+                            boardCells.push(
+                                <td className="cursor-pointer"
+                                    key={`${tavernsConfig[t].name} card ${j}`}
+                                    onClick={() => data.OnClickCard(j)}>
+                                    <b>{data.props.G.taverns[t][j].value}</b>
+                                </td>
+                            );
+                        }
                     }
                 }
-            }
-            tavernsBoards.push(
-                <table className={`${gridClass} justify-self-center`} key={`Tavern ${tavernsConfig[t].name} board`}>
-                    <caption>
+                tavernsBoards.push(
+                    <table className={`${gridClass} justify-self-center`} key={`Tavern ${tavernsConfig[t].name} board`}>
+                        <caption>
                         <span style={Styles.Taverns(t)} className="bg-tavern-icon">
 
                         </span>
-                    </caption>
-                    <tbody>
-                    <tr>{boardCells}</tr>
-                    </tbody>
-                </table>
-            );
+                        </caption>
+                        <tbody>
+                        <tr>{boardCells}</tr>
+                        </tbody>
+                    </table>
+                );
+            }
         }
+        return tavernsBoards;
     }
-    return tavernsBoards;
-};
+;
