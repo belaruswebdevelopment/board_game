@@ -1,5 +1,5 @@
-import {suitsConfig} from "./SuitData";
 import {TotalRank} from "../Score";
+import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 
 /**
  * Данные о герое.
@@ -129,7 +129,7 @@ const Idunn = {
             hero: "Idunn",
         },
     },
-    scoringRule: (player) => player.cards[Object.keys(suitsConfig).findIndex(suit => suit === "explorer")].reduce(TotalRank, 0) * 2,
+    scoringRule: (player) => player.cards[GetSuitIndexByName("explorer")].reduce(TotalRank, 0) * 2,
 };
 
 /**

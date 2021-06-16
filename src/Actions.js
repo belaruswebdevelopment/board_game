@@ -1,5 +1,4 @@
 import {ReturnCoinToPlayerHands, UpgradeCoin} from "./Coin";
-import {heroesConfig} from "./data/HeroData";
 import {INVALID_MOVE} from "boardgame.io/core";
 import {suitsConfig} from "./data/SuitData";
 import {TotalRank} from "./Score";
@@ -11,6 +10,8 @@ import {
 } from "./Player";
 import {CheckPickHero} from "./Hero";
 import {AfterBasicPickCardActions} from "./moves/Moves";
+import {GetSuitIndexByName} from "./helpers/SuitHelpers";
+import {GetHeroIndexByName} from "./helpers/HeroHelpers";
 
 /**
  * Диспетчер действий при их активаци.
@@ -129,7 +130,8 @@ const DrawProfitAction = (G, ctx, config) => {
  * @constructor
  */
 const AddHeroToCards = (G, ctx, config) => {
-    const hero = G.heroes[Object.keys(heroesConfig).findIndex(hero => hero === config.hero)];
+    const heroIndex = GetHeroIndexByName(config.hero),
+        hero = G.heroes[heroIndex];
     AddHeroCardToPlayerHeroCards(G, ctx, hero);
     if (hero.suit) {
         AddHeroCardToPlayerCards(G, ctx, config, hero);
@@ -187,7 +189,7 @@ const PickHeroWithConditions = (G, ctx, config) => {
                 for (const key in config.conditions[condition]) {
                     if (config.conditions[condition].hasOwnProperty(key)) {
                         if (key === "suit") {
-                            const suitId = Object.keys(suitsConfig).findIndex(suit => suit === config.conditions[condition][key]);
+                            const suitId = GetSuitIndexByName(config.conditions[condition][key]);
                             ranks = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0);
                         } else if (key === "value") {
                             isValidMove = ranks >= config.conditions[condition][key];
@@ -417,7 +419,7 @@ export const DiscardTradingCoin = (G, ctx, config) => {
  */
 export const DiscardSuitCard = (G, ctx, config) => {
     // todo Rework by server multiplayer game
-    const suitId = Object.keys(suitsConfig).findIndex(suit => suit === config.suit),
+    const suitId = GetSuitIndexByName(config.suit),
         value = {};
     for (let i = 0; i < ctx.numPlayers; i++) {
         if (i !== Number(ctx.currentPlayer) && G.players[i].cards[suitId].length) {

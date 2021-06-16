@@ -9,6 +9,7 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {AfterBasicPickCardActions, CheckEndTierPhaseEnded} from "./Moves";
 import {ActivateCoinUpgrade, UpgradeCoinFromDiscard} from "./CoinMoves";
 import {ClickCampCard} from "./CampMoves";
+import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 
 export const ClickHeroCard = (G, ctx, heroId) => {
     const isValidMove = IsValidMove({obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length]}) ||
@@ -88,7 +89,7 @@ export const PlaceYlud = (G, ctx, suitId) => {
 
 export const CheckAndMoveThrud = (G, ctx, card) => {
     if (card.suit) {
-        const suitId = Object.keys(suitsConfig).findIndex(suit => suit === card.suit),
+        const suitId = GetSuitIndexByName(card.suit),
             index = G.players[ctx.currentPlayer].cards[suitId].findIndex(card => card.name === "Thrud");
         if (index !== -1) {
             G.players[ctx.currentPlayer].cards[suitId].splice(index, 1);

@@ -82,7 +82,7 @@ export const GetAllPicks = ({tavernsNum, playersNum}) => {
             return a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
         };
     for (let i = 0; i < tavernsNum; i++) {
-        temp[i] = Array(playersNum).fill().map((item, index) => index);
+        temp[i] = Array(playersNum).fill(undefined).map((item, index) => index);
     }
     return cartesian(temp);
 };

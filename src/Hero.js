@@ -1,6 +1,6 @@
 import {TotalRank} from "./Score";
 import {heroesConfig} from "./data/HeroData";
-import {suitsConfig} from "./data/SuitData";
+import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 
 /**
  * Создание героя.
@@ -97,7 +97,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
         const playerCards = G.players[i].cards.flat();
         const thrud = playerCards.find(card => card.name === "Thrud");
         if (thrud) {
-            const thrudSuit = Object.keys(suitsConfig).findIndex(suit => suit === thrud.suit),
+            const thrudSuit = GetSuitIndexByName(thrud.suit),
                 thrudIndex = G.players[i].cards[thrudSuit].findIndex(card => card.name === "Thrud");
             G.players[i].cards[thrudSuit].splice(thrudIndex, 1);
         }

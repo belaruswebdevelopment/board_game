@@ -1,5 +1,6 @@
 import {IsTopPlayer, GetTop1PlayerId, GetTop2PlayerId, AddCardToCards} from "./Player";
 import {suitsConfig} from "./data/SuitData";
+import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 
 /**
  * Создание карты.
@@ -125,11 +126,10 @@ export const CompareCards = (card1, card2) => {
  * @todo Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
- * @param card
  * @returns {number}
  * @constructor
  */
-export const CardProfitForPlayer = (G, ctx, card) => {
+export const CardProfitForPlayer = (G, ctx) => {
     if (IsTopPlayer(G, ctx.currentPlayer)) {
         let top2PlayerId = GetTop2PlayerId(G, ctx.currentPlayer);
         if (top2PlayerId === -1) {
@@ -191,7 +191,7 @@ export const PotentialScoring = ({player = {}, card = {}}) => {
  * @constructor
  */
 export const EvaluateCard = (G, ctx, card, cardId, tavern) => {
-    const suitId = Object.keys(suitsConfig).findIndex(suit => suit === card.suit);
+    const suitId = GetSuitIndexByName(card.suit);
     if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
         return CompareCards(card, G.averageCards[suitId]);
     }

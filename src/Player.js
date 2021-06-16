@@ -1,9 +1,9 @@
 import {BuildCoins} from "./Coin";
 import {initialPlayerCoinsConfig} from "./data/CoinData";
-import {suitsConfig} from "./data/SuitData";
 import {CurrentScoring} from "./Score";
 import {CheckEndActions} from "./Actions";
 import {CheckAndMoveThrud, StartThrudMoving} from "./moves/HeroMoves";
+import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 
 /**
  * Создание игрока.
@@ -88,7 +88,7 @@ export const AddCardToPlayer = (G, ctx, card) => {
     if (card.type === "улучшение монеты") {
         return false;
     }
-    const suitIndex = Object.keys(suitsConfig).findIndex(suit => suit === card.suit);
+    const suitIndex = GetSuitIndexByName(card.suit);
     G.players[ctx.currentPlayer].cards[suitIndex].push(card);
     return true;
 };
@@ -120,7 +120,7 @@ export const AddCampCardToPlayer = (G, ctx, card) => {
  */
 export const AddCampCardToPlayerCards = (G, ctx, card, config) => {
     if (card.suit) {
-        const suitId = Object.keys(suitsConfig).findIndex(suit => suit === card.suit);
+        const suitId = GetSuitIndexByName(card.suit);
         const isMoveThrud = CheckAndMoveThrud(G, ctx, card);
         G.players[ctx.currentPlayer].cards[suitId].push(card);
         if (isMoveThrud) {
@@ -161,7 +161,7 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
 export const AddHeroCardToPlayerCards = (G, ctx, config, hero) => {
     if (hero.suit) {
         hero.active = false;
-        const suitId = Object.keys(suitsConfig).findIndex(suit => suit === hero.suit);
+        const suitId = GetSuitIndexByName(hero.suit);
         const isMoveThrud = CheckAndMoveThrud(G, ctx, hero);
         G.players[ctx.currentPlayer].cards[suitId].push(hero);
         if (isMoveThrud) {
@@ -182,7 +182,7 @@ export const AddHeroCardToPlayerCards = (G, ctx, config, hero) => {
  * @constructor
  */
 export const AddCardToCards = (cards, card) => {
-    const suitIndex = Object.keys(suitsConfig).findIndex(suit => suit === card.suit);
+    const suitIndex = GetSuitIndexByName(card.suit);
     cards[suitIndex].push(card);
 };
 
@@ -240,7 +240,7 @@ export const GetTop2PlayerId = (G, top1PlayerId) => {
     let top2PlayerId, temp;
     if (playersScore.filter(score => score === maxScore).length === 1) {
         temp = playersScore.sort((a, b) => b - a)[1];
-        top2PlayerId = G.players.findIndex((player, index) => CurrentScoring(player) === temp);
+        top2PlayerId = G.players.findIndex(player => CurrentScoring(player) === temp);
     } else {
         top2PlayerId = G.players.findIndex((player, index) => index !== top1PlayerId && IsTopPlayer(G, index));
     }

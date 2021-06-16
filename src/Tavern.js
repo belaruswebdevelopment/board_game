@@ -24,6 +24,7 @@ export const tavernsConfig = {
  * Применения:
  * 1) Проверяет после каждого выбора карты дворфа из таверны.
  * 2) Проверяет после каждого выбора карты улучшения монеты из таверны.
+ * 3) Проверяет после каждого выбора карты кэмпа из таверны.
  *
  * @param G
  * @param ctx
@@ -33,16 +34,13 @@ export const tavernsConfig = {
 export const CheckCurrentTavernEmpty = (G, ctx) => {
     if (ctx.numPlayers === 2) {
         if (G.taverns[G.currentTavern].filter(card => card !== null).length === 1) {
-            const cardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
-            DiscardCardFromTavern(G, cardIndex);
+            const discardCardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
+            DiscardCardFromTavern(G, discardCardIndex);
             return true;
         }
-    } else {
-        if (G.taverns[G.currentTavern].every(card => card === null)) {
-            return true;
-        }
+        return false;
     }
-    return false;
+    return G.taverns[G.currentTavern].every(card => card === null);
 }
 
 /**

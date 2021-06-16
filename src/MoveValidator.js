@@ -1,6 +1,5 @@
-import {suitsConfig} from "./data/SuitData";
 import {TotalRank} from "./Score";
-import {INVALID_MOVE} from "boardgame.io/core";
+import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 
 /**
  * Validates arguments inside of move.
@@ -98,7 +97,7 @@ export const CoinUpgradeValidation = (G, ctx, coinId, type) => {
 /**
  *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{placeCoins: {default1: string, default2: string, default_advanced: string}, null: {}, pickCards: {default: string, default1: string, upgradeCoin: string, pickHero: string}, getDistinctions: {upgradeDistinctionCoin: string, default: string, upgradeCoinInDistinction: string, pickDistinctionCard: string}}}
+ * @type {{placeCoins: {default1: string, default2: string, default_advanced: string}, null: {}, pickCards: {default: string, upgradeCoin: string, pickHero: string, pickCampCard: string}, getDistinctions: {upgradeDistinctionCoin: string, default: string, upgradeCoinInDistinction: string, pickDistinctionCard: string}}}
  */
 export const moveBy = {
     null: {},
@@ -144,17 +143,17 @@ export const moveValidators = {
                    }) => G.players[ctx.currentPlayer].selectedCoin !== undefined && G.players[ctx.currentPlayer].boardCoins[id] === null,
     },
     BotsPlaceAllCoins: {
-        getRange: ({G, ctx}) => ([0, G.botData.allCoinsOrder.length]),
+        getRange: ({G}) => ([0, G.botData.allCoinsOrder.length]),
         getValue: ({G, ctx, id}) => G.botData.allCoinsOrder[id],
-        validate: ({G, ctx, id}) => true,
+        validate: () => true,
     },
     ClickHeroCard: {
-        getRange: ({G, ctx}) => ([0, G.heroes.length]),
+        getRange: ({G}) => ([0, G.heroes.length]),
         validate: ({G, ctx, id}) => {
             let isValid = G.heroes[id].active;
             // todo Add validators to others heroes
             if (G.heroes[id].name === "Hourya") {
-                const suitId = Object.keys(suitsConfig).findIndex(suit => suit === G.heroes[id].action.config.conditions.suitCountMin.suit);
+                const suitId = GetSuitIndexByName(G.heroes[id].action.config.conditions.suitCountMin.suit);
                 isValid = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0) >= G.heroes[id].action.config.conditions.suitCountMin.value;
             }
             return isValid || G.players[ctx.currentPlayer].buffs?.["noHero"];
@@ -173,16 +172,16 @@ export const moveValidators = {
         validate: ({G, ctx, id, type}) => CoinUpgradeValidation(G, ctx, id, type),
     },
     ClickCardToPickDistinction: {
-        getRange: ({G, ctx}) => ([0, 3]),
-        validate: ({G, ctx, id}) => true,
+        getRange: () => ([0, 3]),
+        validate: () => true,
     },
     ClickDistinctionCard: {
-        getRange: ({G, ctx}) => ([0, G.distinctions.length]),
+        getRange: ({G}) => ([0, G.distinctions.length]),
         validate: ({G, ctx, id}) => G.distinctions.findIndex(id => id === Number(ctx.currentPlayer)) === id,
     },
     ClickCampCard: {
-        getRange: ({G, ctx}) => ([0, G.camp.length]),
-        validate: ({G, ctx, id}) => G.expansions.thingvellir &&
+        getRange: ({G}) => ([0, G.camp.length]),
+        validate: ({G, ctx}) => G.expansions.thingvellir &&
             (Number(ctx.currentPlayer) === G.playersOrder[0] || (G.players[ctx.currentPlayer].buffs?.["goCamp"] && G.campPicked === false) ||
                 G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]),
     },

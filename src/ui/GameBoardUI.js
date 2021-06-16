@@ -3,7 +3,7 @@ import {CountMarketCoins} from "../Coin";
 import {suitsConfig} from "../data/SuitData.js";
 import {tavernsConfig} from "../Tavern";
 import {Styles} from "../data/StyleData";
-import {CurrentScoring, FinalScoring} from "../Score";
+import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 
 const DrawBoard = (objectsSize) => {
     const boardRows = Math.floor(Math.sqrt(objectsSize)),
@@ -309,7 +309,7 @@ const DrawPlayerBoardForCardDiscard = (data) => {
 const DrawPlayerBoardForSuitCardDiscard = (data, suitName) => {
     const playerHeaders = [],
         playerRows = [],
-        suitId = Object.keys(suitsConfig).findIndex(suit => suit === suitName);
+        suitId = GetSuitIndexByName(suitName);
     playerHeaders.push(
         <th className={`${suitsConfig[suitName].suitColor} discard suit`}
             key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} ${suitsConfig[suitName].suitName}`}>

@@ -1,5 +1,6 @@
 import {suitsConfig} from "./data/SuitData";
 import {heroesConfig} from "./data/HeroData";
+import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 
 /**
  * Высчитывает суммарное количество очков фракции.
@@ -69,13 +70,13 @@ export const CheckDistinction = (G, ctx) => {
  * @param G
  * @param ctx
  * @param suitName Фракция.
- * @returns {undefined|number} Индекс игрока с преимуществом по шевронам конкретной фракции.
+ * @returns {undefined|number} Индекс игрока с преимуществом по шевронам конкретной фракции, если имеется.
  * @constructor
  */
 const CheckCurrentSuitDistinction = (G, ctx, suitName) => {
     const playersRanks = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const suitIndex = Object.keys(suitsConfig).findIndex(suit => suit === suitName);
+        const suitIndex = GetSuitIndexByName(suitName);
         playersRanks.push(G.players[i].cards[suitIndex].reduce(TotalRank, 0));
     }
     const max = Math.max(...playersRanks),
@@ -127,14 +128,14 @@ export const FinalScoring = (G, ctx, player, currentScore) => {
     for (let i = 0; i < player.boardCoins.length; i++) {
         score += player.boardCoins[i]?.value ?? 0;
     }
-    const suitWarriorIndex = Object.keys(suitsConfig).findIndex(suit => suit === "warrior");
+    const suitWarriorIndex = GetSuitIndexByName("warrior");
     if (suitWarriorIndex !== -1) {
         const warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, "warrior");
         if (warriorsDistinction !== undefined && G.players.findIndex(p => p.nickname === player.nickname) === warriorsDistinction) {
             score += suitsConfig["warrior"].distinction.awarding(G, ctx, player);
         }
     }
-    const suitMinerIndex = Object.keys(suitsConfig).findIndex(suit => suit === "miner");
+    const suitMinerIndex = GetSuitIndexByName("miner");
     if (suitMinerIndex !== -1) {
         score += suitsConfig["miner"].distinction.awarding(G, ctx, player) ?? 0;
     }
