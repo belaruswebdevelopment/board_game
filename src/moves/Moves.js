@@ -180,7 +180,7 @@ export const ClickCard = (G, ctx, cardId) => {
 };
 
 export const ClickDistinctionCard = (G, ctx, cardID) => {
-    const index = G.distinctions.findIndex(id => id === Number(ctx.currentPlayer)),
+    const index = G.distinctions.indexOf(Number(ctx.currentPlayer)),
         isValidMove = IsValidMove({objId: cardID, values: [index]});
     if (!isValidMove) {
         return INVALID_MOVE;

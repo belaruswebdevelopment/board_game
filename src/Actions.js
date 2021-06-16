@@ -397,9 +397,9 @@ export const StartVidofnirVedrfolnirAction = (G, ctx, config) => {
  * @constructor
  */
 export const DiscardTradingCoin = (G, ctx, config) => {
-    let tradingCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin.value === 0);
+    let tradingCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin?.value === 0);
     if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && tradingCoinIndex === -1) {
-        tradingCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin.value === 0);
+        tradingCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin?.value === 0);
         G.players[ctx.currentPlayer].handCoins.splice(tradingCoinIndex, 1, null);
     } else {
         G.players[ctx.currentPlayer].boardCoins.splice(tradingCoinIndex, 1, null);

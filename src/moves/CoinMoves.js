@@ -139,7 +139,8 @@ export const ResolveBoardCoins = (G, ctx) => {
 };
 
 export const ActivateCoinUpgrade = (G, ctx, action, coinId, type, isInitial) => {
-    ActionDispatcher(G, ctx, action, coinId, type, isInitial, G.players[ctx.currentPlayer].boardCoins[coinId], G.players[ctx.currentPlayer].boardCoins[coinId].value);
+    ActionDispatcher(G, ctx, action, coinId, type, isInitial, G.players[ctx.currentPlayer].boardCoins[coinId],
+        G.players[ctx.currentPlayer].boardCoins[coinId].value);
 };
 
 export const ClickCoinToUpgradeDistinction = (G, ctx, coinId, type, isInitial) => {

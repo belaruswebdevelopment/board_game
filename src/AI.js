@@ -90,10 +90,10 @@ export const enumerate = (G, ctx) => {
             tradingProfit = G.decks[G.decks.length - 1].length > 9 ? 1 : 0;
         let [positionForMinCoin, positionForMaxCoin] = [-1, -1];
         if (minResultForCoins <= 0) {
-            positionForMinCoin = resultsForCoins.findIndex(item => item === minResultForCoins);
+            positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
         }
         if (maxResultForCoins >= 0) {
-            positionForMaxCoin = resultsForCoins.findIndex(item => item === maxResultForCoins);
+            positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
         }
         const allCoinsOrder = G.botData.allCoinsOrder,
             handCoins = G.players[ctx.currentPlayer].handCoins;

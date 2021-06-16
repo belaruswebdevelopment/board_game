@@ -82,7 +82,7 @@ const CheckCurrentSuitDistinction = (G, ctx, suitName) => {
     const max = Math.max(...playersRanks),
         maxPlayers = playersRanks.filter(count => count === max);
     if (maxPlayers.length === 1) {
-        return playersRanks.findIndex(count => count === maxPlayers[0]);
+        return playersRanks.indexOf(maxPlayers[0]);
     } else {
         return undefined;
     }

@@ -177,7 +177,7 @@ export const moveValidators = {
     },
     ClickDistinctionCard: {
         getRange: ({G}) => ([0, G.distinctions.length]),
-        validate: ({G, ctx, id}) => G.distinctions.findIndex(id => id === Number(ctx.currentPlayer)) === id,
+        validate: ({G, ctx, id}) => G.distinctions.indexOf(Number(ctx.currentPlayer)) === id,
     },
     ClickCampCard: {
         getRange: ({G}) => ([0, G.camp.length]),

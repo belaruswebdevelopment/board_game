@@ -209,7 +209,7 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial, up
             G.players[ctx.currentPlayer].boardCoins[upgradingCoinId] = null;
         }
         if (ctx.activePlayers?.[ctx.currentPlayer] === "placeTradingCoinsUline") {
-            const emptyCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin === null);
+            const emptyCoinIndex = G.players[ctx.currentPlayer].handCoins.indexOf(null);
             G.players[ctx.currentPlayer].handCoins[emptyCoinIndex] = upgradedCoin;
         } else {
             if (handCoinIndex === -1) {
