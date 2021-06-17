@@ -23,6 +23,7 @@ export const SetupGame = (ctx) => {
         tierToEnd = 2,
         campNum = 5,
         actionsNum = null,
+        log = true,
         debug = false,
         drawProfit = null,
         expansions = {
@@ -30,6 +31,7 @@ export const SetupGame = (ctx) => {
                 active: true,
             },
         },
+        logData = [],
         decks = [],
         discardCardsDeck = [],
         campDecks = [],
@@ -69,7 +71,7 @@ export const SetupGame = (ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         players[i] = BuildPlayer(ctx.numPlayers, suitsNum, "Vasya" + i);
     }
-    BuildPriorities(players);
+    BuildPriorities(this, players);
     const marketCoinsUnique = [],
         marketCoins = BuildCoins(marketCoinsConfig, {
             count: marketCoinsUnique,
@@ -77,8 +79,7 @@ export const SetupGame = (ctx) => {
             isInitial: false,
             isTriggerTrading: false,
         });
-    const botData = {},
-        averageCards = [],
+    const averageCards = [],
         initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined).map((item, index) => index),
         initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
@@ -88,11 +89,14 @@ export const SetupGame = (ctx) => {
     for (let i = 0; i < initCoinsOrder.length; i++) {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
     }
-    botData.allCoinsOrder = allCoinsOrder;
-    botData.allPicks = GetAllPicks({tavernsNum, playersNum: ctx.numPlayers});
-    botData.maxIter = 1000;
-    botData.deckLength = decks[0].length;
+    const botData = {
+        allCoinsOrder,
+        allPicks: GetAllPicks({tavernsNum, playersNum: ctx.numPlayers}),
+        maxIter: 1000,
+        deckLength: decks[0].length,
+    };
     return {
+        log,
         debug,
         winner,
         drawProfit,
@@ -104,6 +108,7 @@ export const SetupGame = (ctx) => {
         currentTavern,
         drawSize,
         expansions,
+        logData,
         decks,
         discardCardsDeck,
         discardCampCardsDeck,
@@ -118,7 +123,7 @@ export const SetupGame = (ctx) => {
         exchangeOrder,
         marketCoins,
         marketCoinsUnique,
-        botData,
         averageCards,
+        botData,
     };
 };

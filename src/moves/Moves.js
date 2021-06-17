@@ -8,7 +8,7 @@ import {DiscardCardIfCampCardPicked, RefillEmptyCampCards} from "../Camp";
 import {CheckAndMoveThrud, CheckAndStartUlineActionsOrContinue, StartThrudMoving} from "./HeroMoves";
 import {ActivateTrading} from "./CoinMoves";
 import {DiscardCardFromTavern} from "../Card";
-
+// todo Add logging
 export const CheckEndTierPhaseEnded = (G, ctx) => {
     if (G.tierToEnd) {
         ctx.events.setPhase("getDistinctions");

@@ -4,6 +4,8 @@ import {CurrentScoring} from "./Score";
 import {CheckEndActions} from "./Actions";
 import {CheckAndMoveThrud, StartThrudMoving} from "./moves/HeroMoves";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
+import {AddDataToLog} from "./Logging";
+import {suitsConfig} from "./data/SuitData";
 
 /**
  * Создание игрока.
@@ -86,10 +88,13 @@ export const BuildPlayer = (playersNum, suitsNum, nickname) => {
 export const AddCardToPlayer = (G, ctx, card) => {
     G.players[ctx.currentPlayer].pickedCard = card;
     if (card.type === "улучшение монеты") {
+        AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту улучшения монеты на +${card.value}.`);
         return false;
     }
     const suitIndex = GetSuitIndexByName(card.suit);
     G.players[ctx.currentPlayer].cards[suitIndex].push(card);
+    AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту ${card} во фракцию 
+    ${suitsConfig[card.suit].suitName}.`);
     return true;
 };
 
@@ -105,6 +110,7 @@ export const AddCardToPlayer = (G, ctx, card) => {
  */
 export const AddCampCardToPlayer = (G, ctx, card) => {
     G.players[ctx.currentPlayer].campCards.push(card);
+    AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту кэмпа ${card.name}.`);
 };
 
 /**
@@ -123,6 +129,8 @@ export const AddCampCardToPlayerCards = (G, ctx, card, config) => {
         const suitId = GetSuitIndexByName(card.suit);
         const isMoveThrud = CheckAndMoveThrud(G, ctx, card);
         G.players[ctx.currentPlayer].cards[suitId].push(card);
+        AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту кэмпа ${card.name} во фракцию 
+        ${suitsConfig[card.suit].suitName}.`);
         if (isMoveThrud) {
             StartThrudMoving(G, ctx, card);
         } else {
@@ -145,6 +153,7 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
     G.players[ctx.currentPlayer].pickedCard = hero;
     hero.active = false;
     G.players[ctx.currentPlayer].heroes.push(hero);
+    AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал героя ${hero.name}.`);
 };
 
 /**
@@ -159,19 +168,18 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
  * @constructor
  */
 export const AddHeroCardToPlayerCards = (G, ctx, config, hero) => {
-    if (hero.suit) {
-        hero.active = false;
-        const suitId = GetSuitIndexByName(hero.suit);
-        const isMoveThrud = CheckAndMoveThrud(G, ctx, hero);
-        G.players[ctx.currentPlayer].cards[suitId].push(hero);
-        if (isMoveThrud) {
-            StartThrudMoving(G, ctx, hero);
-        } else {
-            CheckEndActions(G, ctx, config);
-        }
+    hero.active = false;
+    const suitId = GetSuitIndexByName(hero.suit);
+    const isMoveThrud = CheckAndMoveThrud(G, ctx, hero);
+    G.players[ctx.currentPlayer].cards[suitId].push(hero);
+    AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил героя ${hero.name} во фракцию 
+    ${suitsConfig[hero.suit].suitName}.`);
+    if (isMoveThrud) {
+        StartThrudMoving(G, ctx, hero);
+    } else {
+        CheckEndActions(G, ctx, config);
     }
 };
-
 /**
  * Добавляет карту в массив потенциальных карт для ботов.
  * Применения:

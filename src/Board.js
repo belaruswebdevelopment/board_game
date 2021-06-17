@@ -16,6 +16,7 @@ import {
     DrawPlayersHandsCoins,
 } from "./ui/PlayerUI";
 import {DrawDebugData} from "./ui/DebugUI";
+import {DrawLogData} from "./ui/LogUI";
 
 /**
  * Отрисовка игрового стола.
@@ -106,6 +107,7 @@ export class GameBoard extends React.Component {
             playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
             playersHandsCoinsUI = DrawPlayersHandsCoins(this),
             playersBoardsUI = DrawPlayersBoards(this),
+            logUI = DrawLogData(this),
             debugUI = DrawDebugData(this);
         return (
             <div className="flex">
@@ -137,6 +139,7 @@ export class GameBoard extends React.Component {
                         <div className="flex items-start flex-col lg:flex-row gap-1">{playersBoardsUI}</div>
                     </div>
                 </div>
+                {logUI}
                 {debugUI}
             </div>
         );

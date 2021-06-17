@@ -3,7 +3,7 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {ActionDispatcher} from "../Actions";
 import {DiscardCardFromTavern} from "../Card";
 import {AfterBasicPickCardActions} from "./Moves";
-
+// todo Add logging
 /**
  * Выбор карты из кэмпа.
  * Применения:

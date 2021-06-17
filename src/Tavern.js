@@ -1,4 +1,5 @@
 import {DiscardCardFromTavern} from "./Card";
+import {AddDataToLog} from "./Logging";
 
 /**
  * Конфиг таверн.
@@ -40,6 +41,7 @@ export const CheckCurrentTavernEmpty = (G, ctx) => {
         }
         return false;
     }
+    AddDataToLog(G, "game", `Таверна ${tavernsConfig[G.currentTavern].name} пустая.`);
     return G.taverns[G.currentTavern].every(card => card === null);
 }
 
@@ -55,5 +57,6 @@ export const CheckCurrentTavernEmpty = (G, ctx) => {
 export const RefillTaverns = (G) => {
     for (let i = 0; i < G.tavernsNum; i++) {
         G.taverns[i] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
+        AddDataToLog(G, "game", "Все таверны заполнены новыми картами.");
     }
 };

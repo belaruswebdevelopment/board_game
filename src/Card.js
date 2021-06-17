@@ -1,6 +1,8 @@
 import {IsTopPlayer, GetTop1PlayerId, GetTop2PlayerId, AddCardToCards} from "./Player";
 import {suitsConfig} from "./data/SuitData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
+import {AddDataToLog} from "./Logging";
+import {tavernsConfig} from "./Tavern";
 
 /**
  * Создание карты.
@@ -206,17 +208,19 @@ export const EvaluateCard = (G, ctx, card, cardId, tavern) => {
 };
 
 /**
- * Автоматически убирает оставшуюся карту из таверны в стопку сброса.
+ * Убирает карту из таверны в стопку сброса.
  * Применения:
  * 1) При игре на 2-х игроков убирает не выбранную карту.
  * 2) Убирает оставшуюся карту при выборе карты из кэмпа.
  * 3) Игрок убирает одну карту при игре на двух игроков, если выбирает карту из кэмпа.
  *
  * @param G
- * @param cardIndex Индекс сбрасываемой карты в таверне.
+ * @param discardCardIndex Индекс сбрасываемой карты в таверне.
  * @constructor
  */
-export const DiscardCardFromTavern = (G, cardIndex) => {
-    G.discardCardsDeck.push(G.taverns[G.currentTavern][cardIndex]);
-    G.taverns[G.currentTavern][cardIndex] = null;
+export const DiscardCardFromTavern = (G, discardCardIndex) => {
+    const discardedCard = G.taverns[G.currentTavern][discardCardIndex];
+    G.discardCardsDeck.push(discardedCard);
+    G.taverns[G.currentTavern][discardCardIndex] = null;
+    AddDataToLog(G, "game", `Карта ${discardedCard} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
 };

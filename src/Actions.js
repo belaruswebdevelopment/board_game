@@ -12,7 +12,8 @@ import {CheckPickHero} from "./Hero";
 import {AfterBasicPickCardActions} from "./moves/Moves";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {GetHeroIndexByName} from "./helpers/HeroHelpers";
-
+import {AddDataToLog} from "./Logging";
+// todo Add logging
 /**
  * Диспетчер действий при их активаци.
  * Применения:

@@ -10,7 +10,7 @@ import {AfterBasicPickCardActions, CheckEndTierPhaseEnded} from "./Moves";
 import {ActivateCoinUpgrade, UpgradeCoinFromDiscard} from "./CoinMoves";
 import {ClickCampCard} from "./CampMoves";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
-
+// todo Add logging
 export const ClickHeroCard = (G, ctx, heroId) => {
     const isValidMove = IsValidMove({obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length]}) ||
         G.players[ctx.currentPlayer].buffs?.["recruitHero"];

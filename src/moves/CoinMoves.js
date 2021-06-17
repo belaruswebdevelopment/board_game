@@ -4,7 +4,7 @@ import {Trading} from "../Coin";
 import {CheckAndStartUlineActionsOrContinue} from "./HeroMoves";
 import {ActionDispatcher, ActivateVidofnirVedrfolnirAction, EndAction} from "../Actions";
 import {AfterBasicPickCardActions} from "./Moves";
-
+// todo Add logging
 export const ActivateTrading = (G, ctx) => {
     if (G.players[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading) {
         const tradingCoins = [];

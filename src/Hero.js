@@ -1,6 +1,7 @@
 import {TotalRank} from "./Score";
 import {heroesConfig} from "./data/HeroData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
+import {AddDataToLog} from "./Logging";
 
 /**
  * Создание героя.
@@ -79,7 +80,12 @@ export const CheckPickHero = (G, ctx) => {
     if (G.players[ctx.currentPlayer].buffs?.["noHero"]) {
         return false;
     } else {
-        return Math.min(...G.players[ctx.currentPlayer].cards.map(item => item.reduce(TotalRank, 0))) > G.players[ctx.currentPlayer].heroes.length;
+        const isCanPickHero = Math.min(...G.players[ctx.currentPlayer].cards.map(item => item.reduce(TotalRank, 0)))
+            > G.players[ctx.currentPlayer].heroes.length;
+        if (isCanPickHero) {
+            AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} должен выбрать нового героя.`);
+        }
+        return isCanPickHero;
     }
 };
 
@@ -100,6 +106,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
             const thrudSuit = GetSuitIndexByName(thrud.suit),
                 thrudIndex = G.players[i].cards[thrudSuit].findIndex(card => card.name === "Thrud");
             G.players[i].cards[thrudSuit].splice(thrudIndex, 1);
+            AddDataToLog(G, "game", `Герой Труд игрока ${G.players[i].nickname} уходит с игрового поля.`);
         }
     }
 };

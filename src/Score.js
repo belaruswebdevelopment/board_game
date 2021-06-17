@@ -1,6 +1,7 @@
 import {suitsConfig} from "./data/SuitData";
 import {heroesConfig} from "./data/HeroData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
+import {AddDataToLog} from "./Logging";
 
 /**
  * Высчитывает суммарное количество очков фракции.
@@ -55,7 +56,8 @@ export const CheckDistinction = (G, ctx) => {
         G.distinctions[i] = result;
         if (result === undefined) {
             if (suit === "explorer") {
-                G.decks[1].splice(0, 1);
+                const discardedCard = G.decks[1].splice(0, 1)[0];
+                AddDataToLog(G, "private", `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard}.`);
             }
         }
         i++;
@@ -74,6 +76,7 @@ export const CheckDistinction = (G, ctx) => {
  * @constructor
  */
 const CheckCurrentSuitDistinction = (G, ctx, suitName) => {
+    AddDataToLog(G, "game", "Преимущество по фракциям в конце эпохи:");
     const playersRanks = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const suitIndex = GetSuitIndexByName(suitName);
@@ -82,8 +85,12 @@ const CheckCurrentSuitDistinction = (G, ctx, suitName) => {
     const max = Math.max(...playersRanks),
         maxPlayers = playersRanks.filter(count => count === max);
     if (maxPlayers.length === 1) {
-        return playersRanks.indexOf(maxPlayers[0]);
+        const playerDistinctionIndex = playersRanks.indexOf(maxPlayers[0]);
+        AddDataToLog(G, "public", `Преимущество по фракции ${suitsConfig[suitName].suitName} получил игрок: 
+        ${G.players[playerDistinctionIndex].nickname}.`);
+        return playerDistinctionIndex;
     } else {
+        AddDataToLog(G, "public", `Преимущество по фракции ${suitsConfig[suitName].suitName} никто не получил.`);
         return undefined;
     }
 };
@@ -119,47 +126,71 @@ export const CurrentScoring = (player) => {
  * @param G
  * @param ctx
  * @param player Игрок.
- * @param currentScore Текущее количество очков без учёта финального подсчёта.
  * @returns {*} Финальное количество очков игрока.
  * @constructor
  */
-export const FinalScoring = (G, ctx, player, currentScore) => {
-    let score = currentScore;
+export const FinalScoring = (G, ctx, player) => {
+    AddDataToLog(G, "game", `Результаты игры игрока ${player.nickname}:`);
+    let score = CurrentScoring(player);
+    AddDataToLog(G, "public", `Очки за карты дворфов игрока ${player.nickname}: ${score}`);
+    let coinsValue = 0;
     for (let i = 0; i < player.boardCoins.length; i++) {
-        score += player.boardCoins[i]?.value ?? 0;
+        coinsValue += player.boardCoins[i]?.value ?? 0;
     }
+    if (player.buffs?.["everyTurn"] === "Uline") {
+        for (let i = 0; i < player.handCoins.length; i++) {
+            coinsValue += player.handCoins[i]?.value ?? 0;
+        }
+    }
+    score += coinsValue;
+    AddDataToLog(G, "public", `Очки за монеты игрока ${player.nickname}: ${coinsValue}`);
     const suitWarriorIndex = GetSuitIndexByName("warrior");
     if (suitWarriorIndex !== -1) {
         const warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, "warrior");
         if (warriorsDistinction !== undefined && G.players.findIndex(p => p.nickname === player.nickname) === warriorsDistinction) {
-            score += suitsConfig["warrior"].distinction.awarding(G, ctx, player) ?? 0;
+            const warriorDistinctionScore = suitsConfig["warrior"].distinction.awarding(G, ctx, player) ?? 0;
+            score += warriorDistinctionScore;
+            AddDataToLog(G, "public", `Очки за преимущество по воинам игрока ${player.nickname}: ${warriorDistinctionScore}`);
         }
     }
     const suitMinerIndex = GetSuitIndexByName("miner");
     if (suitMinerIndex !== -1) {
-        score += suitsConfig["miner"].distinction.awarding(G, ctx, player) ?? 0;
+        const minerDistinctionPriorityScore = suitsConfig["miner"].distinction.awarding(G, ctx, player) ?? 0
+        score += minerDistinctionPriorityScore;
+        if (minerDistinctionPriorityScore) {
+            AddDataToLog(G, "public", `Очки за кристалл преимущества по горнякам игрока ${player.nickname}: 
+            ${minerDistinctionPriorityScore}`);
+        }
     }
-    let dwerg_brothers = 0;
+    let heroesScore = 0,
+        dwerg_brothers = 0;
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
         if (player.heroes[i].name.startsWith("Dwerg")) {
             dwerg_brothers += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name)?.scoringRule() ?? 0;
         } else {
-            score += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name)?.scoringRule() ?? 0;
+            heroesScore += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name)?.scoringRule() ?? 0;
         }
     }
-    score += dwerg_brothers_scoring[dwerg_brothers];
+    AddDataToLog(G, "private", `Очки за героев братьев Двергов (${dwerg_brothers} шт.) игрока ${player.nickname}: 
+    ${dwerg_brothers_scoring[dwerg_brothers]}.`);
+    heroesScore += dwerg_brothers_scoring[dwerg_brothers];
+    AddDataToLog(G, "public", `Очки за героев игрока ${player.nickname}: ${heroesScore}.`);
+    score += heroesScore;
+    AddDataToLog(G, "public", `Итоговый счёт игрока ${player.nickname}: ${score}.`);
     return score;
 };
 
-export const ScoreWinner = (ctx, G) => {
+export const ScoreWinner = (G, ctx) => {
+    AddDataToLog(G, "game", "Финальные результаты игры:");
     const totalScore = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        totalScore.push(CurrentScoring(G.players[i]));
+        totalScore.push(FinalScoring(G, ctx, G.players[i]));
     }
     for (let i = ctx.numPlayers - 1; i >= 0; i--) {
         if (Math.max(...totalScore) === totalScore[i]) {
             G.winner = i;
+            AddDataToLog(G, "public", `Определился победитель: игрок ${G.players[i].nickname}.`);
             return G;
         }
     }

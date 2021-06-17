@@ -1,4 +1,5 @@
 import {DiscardCardFromTavern} from "./Card";
+import {AddDataToLog} from "./Logging";
 
 /**
  * Создание карты артефакта для кэмпа.
@@ -131,6 +132,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
     }
     return campCards;
 };
+
 /**
  * Автоматически убирает оставшуюся карту таверны в стопку сброса при выборе карты из кэмпа.
  * Применения:
@@ -142,8 +144,8 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
 export const DiscardCardIfCampCardPicked = (G) => {
     if (G.campPicked === true) {
         G.campPicked = false;
-        const cardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
-        DiscardCardFromTavern(G, cardIndex);
+        const discardCardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
+        DiscardCardFromTavern(G, discardCardIndex);
     }
 };
 
@@ -171,6 +173,7 @@ export const RefillEmptyCampCards = (G) => {
                 AddCardToCamp(G, cardIndex);
             }
         });
+        AddDataToLog(G, "game", "Кэмп заполнен новыми картами.");
     }
 };
 
@@ -187,6 +190,7 @@ export const RefillCamp = (G) => {
     for (let i = 0; i < G.campNum; i++) {
         AddCardToCamp(G, i);
     }
+    AddDataToLog(G, "game", "Кэмп заполнен новыми картами новой эпохи.");
 }
 
 /**
@@ -207,6 +211,7 @@ const AddRemainingCampCardsToDiscard = (G) => {
         G.discardCampCardsDeck = G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]);
         G.campDecks[G.campDecks.length - G.tierToEnd - 1].length = 0;
     }
+    AddDataToLog(G, "game", "Оставшиеся карты кэмпа сброшены.");
 };
 
 /**

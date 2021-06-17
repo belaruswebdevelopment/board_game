@@ -1,4 +1,6 @@
 import {ActionDispatcher} from "./Actions";
+import {AddDataToLog} from "./Logging";
+import {tavernsConfig} from "./Tavern";
 
 /**
  * Создание монеты.
@@ -80,6 +82,7 @@ export const CountMarketCoins = (G) => {
  * @constructor
  */
 export const Trading = (G, ctx, tradingCoins) => {
+    AddDataToLog(G, "game", `Активирован обмен монет игрока ${G.players[ctx.currentPlayer].nickname}.`);
     const coinsValues = tradingCoins.map(coin => coin.value),
         coinsMaxValue = Math.max(...coinsValues),
         coinsMinValue = Math.min(...coinsValues);
@@ -142,10 +145,11 @@ export const Trading = (G, ctx, tradingCoins) => {
  * @param type Тип обменной монеты.
  * @param isInitial Являетя ли обменная монета базовой.
  * @param upgradingCoin Обменная монета.
- * @param currentValue Текущее начение обменной монеты.
+ * @param currentValue Текущее значение обменной монеты.
  * @constructor
  */
 export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial, upgradingCoin, currentValue) => {
+    // todo Add logging
     if (config?.coin === "min") {
         if (type === "hand") {
             const allCoins = [],
@@ -201,6 +205,9 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial, up
             }
         }
     }
+    AddDataToLog(G, "private", `Начато обновление монеты '${upgradingCoin}' c ID ${upgradingCoinId} с типом ${type} 
+    с initial ${isInitial} с ценностью '${currentValue}' на +${newValue}.`);
+    AddDataToLog(G, "game", `Начато обновление монеты с ценностью '${currentValue}' на +${newValue}.`);
     if (upgradedCoin !== null) {
         let handCoinIndex = -1;
         if (G.players[ctx.currentPlayer].boardCoins[upgradingCoinId] === null) {
@@ -214,8 +221,12 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial, up
         } else {
             if (handCoinIndex === -1) {
                 G.players[ctx.currentPlayer].boardCoins[upgradingCoinId] = upgradedCoin;
+                AddDataToLog(G, "public", `Монета с ценностью '${upgradingCoin.value}' вернулась на поле игрока 
+                ${G.players[ctx.currentPlayer].nickname}.`);
             } else {
                 G.players[ctx.currentPlayer].handCoins[handCoinIndex] = upgradedCoin;
+                AddDataToLog(G, "public", `Монета с ценностью '${upgradingCoin.value}' вернулась на руку игрока 
+                ${G.players[ctx.currentPlayer].nickname}.`);
             }
         }
         if (!upgradingCoin.isInitial) {
@@ -227,6 +238,7 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial, up
                 }
             }
             G.marketCoins.splice(returningIndex, 0, upgradingCoin);
+            AddDataToLog(G, "game", `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
         }
     }
 };
@@ -248,6 +260,7 @@ export const ReturnCoinsToPlayerHands = (G) => {
             }
         }
     }
+    AddDataToLog(G, "game", "Все монеты вернулись в руки игроков.");
 };
 
 /**
