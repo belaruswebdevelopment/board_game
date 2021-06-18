@@ -1,6 +1,5 @@
-import {ActionDispatcher} from "./Actions";
 import {AddDataToLog} from "./Logging";
-import {tavernsConfig} from "./Tavern";
+import {AddActionsToStack} from "./helpers/StackHelpers";
 
 /**
  * Создание монеты.
@@ -86,7 +85,7 @@ export const Trading = (G, ctx, tradingCoins) => {
     const coinsValues = tradingCoins.map(coin => coin.value),
         coinsMaxValue = Math.max(...coinsValues),
         coinsMinValue = Math.min(...coinsValues);
-    let action,
+    let stack,
         upgradingCoinId,
         upgradingCoin,
         coinMaxIndex,
@@ -107,7 +106,7 @@ export const Trading = (G, ctx, tradingCoins) => {
         }
     }
     if (G.players[ctx.currentPlayer].buffs?.["upgradeNextCoin"] === "min") {
-        action = {
+        stack = {
             actionName: "UpgradeCoinAction",
             config: {
                 number: 1,
@@ -119,7 +118,7 @@ export const Trading = (G, ctx, tradingCoins) => {
         currentCoinValue = coinsMaxValue;
         delete G.players[ctx.currentPlayer].buffs["upgradeNextCoin"];
     } else {
-        action = {
+        stack = {
             actionName: "UpgradeCoinAction",
             config: {
                 number: 1,
@@ -130,7 +129,7 @@ export const Trading = (G, ctx, tradingCoins) => {
         upgradingCoin = tradingCoins[coinMaxIndex];
         currentCoinValue = coinsMinValue;
     }
-    ActionDispatcher(G, ctx, action, upgradingCoinId, "board", upgradingCoin.isInitial, upgradingCoin, currentCoinValue);
+    AddActionsToStack(G, ctx, ctx.currentPlayer, stack, upgradingCoinId, "board", upgradingCoin.isInitial, upgradingCoin, currentCoinValue);
 };
 
 /**

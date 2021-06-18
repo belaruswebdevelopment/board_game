@@ -273,7 +273,7 @@ const warriorSuit = {
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
                 player.pickedCard = {
-                    action: {
+                    stack: {
                         actionName: "UpgradeCoinAction",
                         config: {
                             number: 1,

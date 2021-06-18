@@ -5,11 +5,19 @@ import {tavernsConfig} from "../Tavern";
 import {Styles} from "../data/StyleData";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 
+/**
+ * Отрисовка сегмента игрового поля по указанным данным.
+ * Применения:
+ * 1) Используется для отрисовски некоторых сегментов игрового поля.
+ *
+ * @param objectsSize Данные для вычисления параметров отрисовки сегмента игрового поля.
+ * @returns {{boardCols: number, lastBoardCol: number, boardRows: number}} Параметры для отрисовки сегмента игрового поля.
+ * @constructor
+ */
 const DrawBoard = (objectsSize) => {
     const boardRows = Math.floor(Math.sqrt(objectsSize)),
         boardCols = Math.ceil(objectsSize / boardRows),
         lastBoardCol = objectsSize % boardCols;
-
     return {boardRows, boardCols, lastBoardCol};
 };
 
@@ -449,7 +457,7 @@ export const DrawProfit = (data, option) => {
                             <td
                                 className={`${suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].suit].suitColor} cursor-pointer`}
                                 key={`Discarded card ${j}`}
-                                onClick={() => data.OnClickCardToDiscard(j, last, option.replace("Action", ""))}>
+                                onClick={() => data.OnClickCardToDiscard(j, last)}>
                                 <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].points}</b>
                             </td>
                         );
@@ -573,7 +581,7 @@ export const DrawProfit = (data, option) => {
                     }
                 }
             } else if (option === "VidofnirVedrfolnirAction") {
-                caption = `Get coin to upgrade up to ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.action.config.value}.`;
+                caption = `Get coin to upgrade up to ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.stack.config.value}.`;
                 for (let j = data.props.G.tavernsNum; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                     let drawData = "",
                         type = "board",
@@ -591,7 +599,7 @@ export const DrawProfit = (data, option) => {
                         );
                     }
                     if (drawData !== "") {
-                        if (data.props.G.players[data.props.ctx.currentPlayer].pickedCard.action.coinId !== j) {
+                        if (data.props.G.stack[data.props.ctx.currentPlayer][0].config.coinId !== j) {
                             boardCells.push(
                                 <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
                                     onClick={() => data.OnClickCoinToUpgradeVidofnirVedrfolnir(j, type, isInitial)}>
@@ -602,7 +610,7 @@ export const DrawProfit = (data, option) => {
                     }
                 }
             } else {
-                caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.action.config.value + ".";
+                caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.stack.config.value + ".";
                 const handCoins = data.props.G.players[data.props.ctx.currentPlayer].handCoins.filter(coin => coin !== null);
                 let handCoinIndex = -1;
                 for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
@@ -708,50 +716,49 @@ export const DrawProfit = (data, option) => {
  * @constructor
  */
 export const DrawCamp = (data) => {
-        const boardCells = [];
-        for (let i = 0; i < 1; i++) {
-            for (let j = 0; j < data.props.G.campNum; j++) {
-                if (data.props.G.camp[j] === null || data.props.G.camp[j] === undefined) {
-                    boardCells.push(
-                        <td key={`Camp ${j} icon`}>
+    const boardCells = [];
+    for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < data.props.G.campNum; j++) {
+            if (data.props.G.camp[j] === null || data.props.G.camp[j] === undefined) {
+                boardCells.push(
+                    <td key={`Camp ${j} icon`}>
                         <span style={Styles.Camp()} className="bg-camp-icon">
 
                         </span>
-                        </td>
-                    );
-                } else {
-                    boardCells.push(
-                        <td className="bg-yellow-200 cursor-pointer" key={`Camp ${data.props.G.camp[j].name} card`}
-                            onClick={() => data.OnClickCampCard(j)}>
+                    </td>
+                );
+            } else {
+                boardCells.push(
+                    <td className="bg-yellow-200 cursor-pointer" key={`Camp ${data.props.G.camp[j].name} card`}
+                        onClick={() => data.OnClickCampCard(j)}>
                         <span style={Styles.CampCards(data.props.G.camp[j].tier, data.props.G.camp[j].name)}
                               title={data.props.G.camp[j].description ?? data.props.G.camp[j].name} className="bg-camp">
 
                         </span>
-                        </td>
-                    );
-                }
+                    </td>
+                );
             }
         }
-        return (
-            <table>
-                <caption>
+    }
+    return (
+        <table>
+            <caption>
                 <span style={Styles.Camp()} className="bg-top-camp-icon">
 
                 </span>
-                    <span>Camp {data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length
-                        ? data.props.G.campDecks.length : data.props.G.campDecks.length - data.props.G.tierToEnd + 1}
-                        ({data.props.G.campDecks.length - data.props.G.tierToEnd !== 2 ?
-                            data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0}
-                        {data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? "/"
-                            + data.props.G.campDecks.reduce((count, current) => count + current.length, 0) : ""} cards left)</span>
-                </caption>
-                <tbody>
-                <tr>{boardCells}</tr>
-                </tbody>
-            </table>
-        );
-    }
-;
+                <span>Camp {data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length
+                    ? data.props.G.campDecks.length : data.props.G.campDecks.length - data.props.G.tierToEnd + 1}
+                    ({data.props.G.campDecks.length - data.props.G.tierToEnd !== 2 ?
+                        data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0}
+                    {data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? "/"
+                        + data.props.G.campDecks.reduce((count, current) => count + current.length, 0) : ""} cards left)</span>
+            </caption>
+            <tbody>
+            <tr>{boardCells}</tr>
+            </tbody>
+        </table>
+    );
+};
 
 /**
  * Отрисовка карт таверн.
@@ -768,53 +775,52 @@ export const DrawCamp = (data) => {
  * @constructor
  */
 export const DrawTaverns = (data, gridClass) => {
-        const tavernsBoards = [];
-        for (let t = 0; t < data.props.G.tavernsNum; t++) {
-            for (let i = 0; i < 1; i++) {
-                const boardCells = [];
-                for (let j = 0; j < data.props.G.drawSize; j++) {
-                    if (data.props.G.taverns[t][j] === null) {
-                        boardCells.push(
-                            <td key={`${tavernsConfig[t].name} ${j}`}>
+    const tavernsBoards = [];
+    for (let t = 0; t < data.props.G.tavernsNum; t++) {
+        for (let i = 0; i < 1; i++) {
+            const boardCells = [];
+            for (let j = 0; j < data.props.G.drawSize; j++) {
+                if (data.props.G.taverns[t][j] === null) {
+                    boardCells.push(
+                        <td key={`${tavernsConfig[t].name} ${j}`}>
                             <span style={Styles.Taverns(t)} className="bg-tavern-icon">
 
                             </span>
+                        </td>
+                    );
+                } else {
+                    if (data.props.G.taverns[t][j].suit !== undefined) {
+                        boardCells.push(
+                            <td className={`${suitsConfig[data.props.G.taverns[t][j].suit].suitColor} cursor-pointer`}
+                                key={`${tavernsConfig[t].name} card ${j}`}
+                                onClick={() => data.OnClickCard(j)}>
+                                <b>{data.props.G.taverns[t][j].points}</b>
                             </td>
                         );
-                    } else {
-                        if (data.props.G.taverns[t][j].suit !== undefined) {
-                            boardCells.push(
-                                <td className={`${suitsConfig[data.props.G.taverns[t][j].suit].suitColor} cursor-pointer`}
-                                    key={`${tavernsConfig[t].name} card ${j}`}
-                                    onClick={() => data.OnClickCard(j)}>
-                                    <b>{data.props.G.taverns[t][j].points}</b>
-                                </td>
-                            );
-                        } else if (data.props.G.taverns[t][j].type === "улучшение монеты") {
-                            boardCells.push(
-                                <td className="cursor-pointer"
-                                    key={`${tavernsConfig[t].name} card ${j}`}
-                                    onClick={() => data.OnClickCard(j)}>
-                                    <b>{data.props.G.taverns[t][j].value}</b>
-                                </td>
-                            );
-                        }
+                    } else if (data.props.G.taverns[t][j].type === "улучшение монеты") {
+                        boardCells.push(
+                            <td className="cursor-pointer"
+                                key={`${tavernsConfig[t].name} card ${j}`}
+                                onClick={() => data.OnClickCard(j)}>
+                                <b>{data.props.G.taverns[t][j].value}</b>
+                            </td>
+                        );
                     }
                 }
-                tavernsBoards.push(
-                    <table className={`${gridClass} justify-self-center`} key={`Tavern ${tavernsConfig[t].name} board`}>
-                        <caption>
+            }
+            tavernsBoards.push(
+                <table className={`${gridClass} justify-self-center`} key={`Tavern ${tavernsConfig[t].name} board`}>
+                    <caption>
                         <span style={Styles.Taverns(t)} className="bg-tavern-icon">
 
                         </span>
-                        </caption>
-                        <tbody>
-                        <tr>{boardCells}</tr>
-                        </tbody>
-                    </table>
-                );
-            }
+                    </caption>
+                    <tbody>
+                    <tr>{boardCells}</tr>
+                    </tbody>
+                </table>
+            );
         }
-        return tavernsBoards;
     }
-;
+    return tavernsBoards;
+};

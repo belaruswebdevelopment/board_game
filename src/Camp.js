@@ -98,7 +98,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
                     suit: artefactConfig[campArtefactCard].suit,
                     rank: artefactConfig[campArtefactCard].rank,
                     points: artefactConfig[campArtefactCard].points,
-                    action: artefactConfig[campArtefactCard].action,
+                    stack: artefactConfig[campArtefactCard].action,
                 }));
             }
         }
@@ -122,7 +122,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
             tier,
             name: name.trim(),
             variants: mercenariesConfig[tier][i],
-            action: {
+            stack: {
                 actionName: "AddCampCardToCards",
                 config: {
                     card: name.trim(),

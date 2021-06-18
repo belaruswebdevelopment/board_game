@@ -55,7 +55,7 @@ export const BuildHeroes = (config) => {
                 suit: heroesConfig[hero].suit,
                 rank: heroesConfig[hero].rank,
                 points: heroesConfig[hero].points,
-                action: heroesConfig[hero].action,
+                stack: heroesConfig[hero].action,
             }));
         }
     }
