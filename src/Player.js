@@ -121,24 +121,14 @@ export const AddCampCardToPlayer = (G, ctx, card) => {
  * @param G
  * @param ctx
  * @param card Карта кэмпа.
- * @param config Конфиг действий героя.
  * @constructor
  */
-export const AddCampCardToPlayerCards = (G, ctx, card, config) => {
-    if (card.suit) {
-        const suitId = GetSuitIndexByName(card.suit);
-        const isMoveThrud = CheckAndMoveThrud(G, ctx, card);
-        G.players[ctx.currentPlayer].cards[suitId].push(card);
-        AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту кэмпа ${card.name} во фракцию 
+export const AddCampCardToPlayerCards = (G, ctx, card) => {
+    const suitId = GetSuitIndexByName(card.suit);
+    G.players[ctx.currentPlayer].cards[suitId].push(card);
+    AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту кэмпа ${card.name} во фракцию 
         ${suitsConfig[card.suit].suitName}.`);
-        if (isMoveThrud) {
-            StartThrudMoving(G, ctx, card);
-        } else {
-            CheckEndActions(G, ctx, config);
-        }
-    }
 };
-
 /**
  * Добавляет героя в массив героев игрока.
  * Применения:
@@ -163,22 +153,15 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
  * @param hero Герой.
  * @constructor
  */
-export const AddHeroCardToPlayerCards = (G, ctx, config, hero) => {
+export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
     hero.active = false;
     const suitId = GetSuitIndexByName(hero.suit);
-    const isMoveThrud = CheckAndMoveThrud(G, ctx, hero);
     G.players[ctx.currentPlayer].cards[suitId].push(hero);
     AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил героя ${hero.name} во фракцию 
     ${suitsConfig[hero.suit].suitName}.`);
-    if (isMoveThrud) {
-        StartThrudMoving(G, ctx, hero);
-    } else {
-        CheckEndActions(G, ctx, config);
-    }
 };
 /**
  * Добавляет карту в массив потенциальных карт для ботов.

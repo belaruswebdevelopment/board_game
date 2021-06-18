@@ -181,6 +181,16 @@ export const FinalScoring = (G, ctx, player) => {
     return score;
 };
 
+/**
+ * Подсчитывает финальный подсчёт очков для определения победителя.
+ * Применения:
+ * 1) Используется в конце игры для определения победителя для вывода данных на игрвое поле.
+ *
+ * @param G
+ * @param ctx
+ * @returns {*} Глобальные данные с информацией о возможном победителе.
+ * @constructor
+ */
 export const ScoreWinner = (G, ctx) => {
     AddDataToLog(G, "game", "Финальные результаты игры:");
     const totalScore = [];

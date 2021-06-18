@@ -55,8 +55,8 @@ export class GameBoard extends React.Component {
     OnClickCoinToUpgradeGrid = (coinId, type, isInitial) => {
         this.props.moves.GridAction(coinId, type, isInitial);
     };
-    OnClickCardToDiscard = (suitId, cardId, hero) => {
-        this.props.moves.DiscardCard(suitId, cardId, hero);
+    OnClickCardToDiscard = (suitId, cardId) => {
+        this.props.moves.DiscardCard(suitId, cardId);
     };
     OnClickSuitToPlaceCard = (suitId) => {
         this.props.moves.PlaceCard(suitId);
