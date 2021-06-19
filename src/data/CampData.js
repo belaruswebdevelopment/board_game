@@ -368,17 +368,7 @@ const Gjallarhorn = {
             },
         },
         {
-            actionName: "AddBuffToPlayer",
-            config: {
-                card: "Gjallarhorn",
-                buff: {
-                    name: "recruitHero",
-                    value: true,
-                },
-            },
-        },
-        {
-            actionName: "RecruitHero",
+            actionName: "PickHero",
             config: {
                 card: "Gjallarhorn",
             },

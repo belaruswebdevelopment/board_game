@@ -14,8 +14,8 @@ import {AddDataToLog} from "./Logging";
  * @param suit Фракция.
  * @param rank Шевроны.
  * @param points Очки.
- * @param action Действия.
- * @returns {{game, name, description, rank, action, suit, type, points}} Карта артефакта для кэмпа.
+ * @param stack Действия.
+ * @returns {{game, name, description, rank, stack, suit, type, points}} Карта артефакта для кэмпа.
  * @constructor
  */
 export const CreateArtefactCampCard = ({
@@ -27,7 +27,7 @@ export const CreateArtefactCampCard = ({
                                            suit,
                                            rank,
                                            points,
-                                           action
+                                           stack,
                                        } = {}) => {
     return {
         type,
@@ -38,7 +38,7 @@ export const CreateArtefactCampCard = ({
         suit,
         rank,
         points,
-        action,
+        stack,
     };
 };
 
@@ -52,8 +52,8 @@ export const CreateArtefactCampCard = ({
  * @param name Название.
  * @param game Игра/дополнение.
  * @param variants Варианты карт.
- * @param action Действия.
- * @returns {{game: string, tier: (number|*), name, variants, type: string}} Карта наёмника для кэмпа.
+ * @param stack Действия.
+ * @returns {{game: string, tier: (number|*), name, variants, stack, type: string}} Карта наёмника для кэмпа.
  * @constructor
  */
 export const CreateMercenaryCampCard = ({
@@ -62,7 +62,7 @@ export const CreateMercenaryCampCard = ({
                                             name,
                                             game = "thingvellir",
                                             variants,
-                                            action
+                                            stack
                                         } = {}) => {
     return {
         type,
@@ -70,7 +70,7 @@ export const CreateMercenaryCampCard = ({
         name,
         game,
         variants,
-        action,
+        stack,
     };
 };
 
@@ -98,7 +98,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
                     suit: artefactConfig[campArtefactCard].suit,
                     rank: artefactConfig[campArtefactCard].rank,
                     points: artefactConfig[campArtefactCard].points,
-                    stack: artefactConfig[campArtefactCard].action,
+                    stack: artefactConfig[campArtefactCard].stack,
                 }));
             }
         }
@@ -122,12 +122,14 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
             tier,
             name: name.trim(),
             variants: mercenariesConfig[tier][i],
-            stack: {
-                actionName: "AddCampCardToCards",
-                config: {
-                    card: name.trim(),
+            stack: [
+                {
+                    actionName: "AddCampCardToCards",
+                    config: {
+                        card: name.trim(),
+                    },
                 },
-            },
+            ],
         }));
     }
     return campCards;

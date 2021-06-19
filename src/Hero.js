@@ -16,11 +16,11 @@ import {AddDataToLog} from "./Logging";
  * @param rank Шевроны.
  * @param points Очки.
  * @param active Взят ли герой.
- * @param action Действия.
- * @returns {{game, name, description, rank, active: boolean, action, suit, points}} Герой.
+ * @param stack Действия.
+ * @returns {{game, name, description, rank, active: boolean, stack, suit, points}} Герой.
  * @constructor
  */
-export const CreateHero = ({type, name, description, game, suit, rank, points, active = true, action} = {}) => {
+export const CreateHero = ({type, name, description, game, suit, rank, points, active = true, stack} = {}) => {
     return {
         type,
         name,
@@ -30,7 +30,7 @@ export const CreateHero = ({type, name, description, game, suit, rank, points, a
         rank,
         points,
         active,
-        action,
+        stack,
     };
 };
 
@@ -55,7 +55,7 @@ export const BuildHeroes = (config) => {
                 suit: heroesConfig[hero].suit,
                 rank: heroesConfig[hero].rank,
                 points: heroesConfig[hero].points,
-                stack: heroesConfig[hero].action,
+                stack: heroesConfig[hero].stack,
             }));
         }
     }

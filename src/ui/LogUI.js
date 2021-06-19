@@ -10,34 +10,34 @@ import React from "react";
  * @constructor
  */
 export const DrawLogData = (data) => {
-    if (data.log) {
-        const logData = [];
-        for (let i = 0; i < data.logData; i++) {
-            if (logData[i].type === "private") {
-                logData.push(
+    if (data.props.G.log) {
+        const loggingData = [];
+        for (let i = data.props.G.logData.length - 1; i >= 0; i--) {
+            if (data.props.G.logData[i].type === "private") {
+                loggingData.push(
                     <li key={`Log ${i}`} className="text-red-500">
-                        {logData[i].value}
+                        {data.props.G.logData[i].value}
                     </li>
                 );
-            } else if (logData[i].type === "game") {
-                logData.push(
+            } else if (data.props.G.logData[i].type === "game") {
+                loggingData.push(
                     <li key={`Log ${i}`} className="text-blue-500">
-                        {logData[i].value}
+                        {data.props.G.logData[i].value}
                     </li>
                 );
-            } else if (logData[i].type === "public") {
-                logData.push(
-                    <li key={`Log ${i}`} className="text-blue-500">
-                        {logData[i].value}
+            } else if (data.props.G.logData[i].type === "public") {
+                loggingData.push(
+                    <li key={`Log ${i}`} className="text-green-500">
+                        {data.props.G.logData[i].value}
                     </li>
                 );
             }
         }
         return (
-            <div>
+            <div className="ml-3 w-1/4 border h-screen overflow-y-auto">
                 <h3>Log data:</h3>
                 <ul className="list-none p-0 ml-5">
-                    {logData}
+                    {loggingData}
                 </ul>
             </div>
         );

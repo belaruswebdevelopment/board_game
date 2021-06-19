@@ -316,7 +316,7 @@ export const DrawPlayersBoards = (data) => {
             playerHeaders[p].push(
                 <th className={`${suitsConfig[suit].suitColor}`}
                     key={`${data.props.G.players[p].nickname} ${suitsConfig[suit].suitName}`}>
-                    <span style={Styles.Suits(suitsConfig[suit].suitName)} className="bg-suit-icon">
+                    <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
 
                     </span>
                 </th>

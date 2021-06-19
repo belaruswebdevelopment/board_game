@@ -39,11 +39,11 @@ export const CreateCard = ({type = "базовая", suit, rank = 1, points = nu
  * @returns {{action, value}} Карта улучшения монеты.
  * @constructor
  */
-const CreateActionCard = ({type = "улучшение монеты", value, action} = {}) => {
+const CreateActionCard = ({type = "улучшение монеты", value, stack} = {}) => {
     return {
         type,
         value,
-        action,
+        stack,
     };
 };
 
@@ -74,7 +74,7 @@ export const BuildCards = (deckConfig, data) => {
         for (let j = 0; j < deckConfig.actions[i].amount()[data.players][data.tier]; j++) {
             cards.push(CreateActionCard({
                 value: deckConfig.actions[i].value,
-                stack: deckConfig.actions[i].action,
+                stack: deckConfig.actions[i].stack,
             }));
         }
     }
