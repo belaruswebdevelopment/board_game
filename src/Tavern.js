@@ -41,8 +41,11 @@ export const CheckCurrentTavernEmpty = (G, ctx) => {
         }
         return false;
     }
-    AddDataToLog(G, "game", `Таверна ${tavernsConfig[G.currentTavern].name} пустая.`);
-    return G.taverns[G.currentTavern].every(card => card === null);
+    const isCurrentTavernEmpty = G.taverns[G.currentTavern].every(card => card === null);
+    if (isCurrentTavernEmpty) {
+        AddDataToLog(G, "game", `Таверна ${tavernsConfig[G.currentTavern].name} пустая.`);
+    }
+    return isCurrentTavernEmpty;
 }
 
 /**

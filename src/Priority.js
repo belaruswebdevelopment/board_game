@@ -52,18 +52,15 @@ const prioritiesConfig = {
  * 1) Раздаёт кристаллы после создания всех игроков.
  *
  * @todo Доработать возможность раздачи кристаллов каждому игроку по отдельности.
- * @param G
  * @param players Массив всех игроков.
  * @constructor
  */
-export const BuildPriorities = (G, players) => {
-    AddDataToLog(G, "game", "Получение стартовых кристаллов игроками:");
+export const BuildPriorities = (players) => {
     const priorities = prioritiesConfig[players.length].map(priority => priority);
     for (let i = 0; i < players.length; i++) {
         const randomPriorityIndex = Math.floor(Math.random() * priorities.length),
             priority = priorities.splice(randomPriorityIndex, 1)[0];
         players[i].priority = CreatePriority(priority);
-        AddDataToLog(G, "public", `Игрок ${G.players[i].nickname} получил кристалл ${players[i].priority}.`);
     }
 };
 
@@ -82,8 +79,10 @@ export const ChangePlayersPriorities = (G) => {
         tempPriorities[i] = G.players[G.exchangeOrder[i]].priority;
     }
     for (let i = 0; i < G.exchangeOrder.length; i++) {
-        G.players[i].priority = tempPriorities[i];
-        AddDataToLog(G, "public", `Игрок ${G.players[i].nickname} получил кристалл ${tempPriorities[i]}.`);
+        if (G.players[i].priority.value !== tempPriorities[i].value) {
+            AddDataToLog(G, "public", `Игрок ${G.players[i].nickname} получил кристалл с приоритетом ${tempPriorities[i].value}.`);
+            G.players[i].priority = tempPriorities[i];
+        }
     }
 };
 
