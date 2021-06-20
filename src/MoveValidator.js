@@ -155,7 +155,7 @@ export const moveValidators = {
             if (G.heroes[id].name === "Hourya") {
                 const suitId = GetSuitIndexByName(G.heroes[id].stack[0].config.conditions.suitCountMin.suit);
                 isValid = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0) >=
-                    G.stack[ctx.currentPlayer][0].config.conditions.suitCountMin.value;
+                    G.stack[ctx.currentPlayer][0].stack.config.conditions.suitCountMin.value;
             }
             return isValid || G.players[ctx.currentPlayer].buffs?.["noHero"];
         },

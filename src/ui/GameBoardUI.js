@@ -581,7 +581,7 @@ export const DrawProfit = (data, option) => {
                     }
                 }
             } else if (option === "VidofnirVedrfolnirAction") {
-                caption = `Get coin to upgrade up to ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.value}.`;
+                caption = `Get coin to upgrade up to ${data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.value}.`;
                 for (let j = data.props.G.tavernsNum; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                     let drawData = "",
                         type = "board",
@@ -599,7 +599,7 @@ export const DrawProfit = (data, option) => {
                         );
                     }
                     if (drawData !== "") {
-                        if (data.props.G.stack[data.props.ctx.currentPlayer][0].config.coinId !== j) {
+                        if (data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.coinId !== j) {
                             boardCells.push(
                                 <td className="cursor-pointer" key={`Coin ${j} to upgrade`}
                                     onClick={() => data.OnClickCoinToUpgradeVidofnirVedrfolnir(j, type, isInitial)}>
@@ -610,7 +610,7 @@ export const DrawProfit = (data, option) => {
                     }
                 }
             } else {
-                caption += "coin to upgrade up to " + data.props.G.stack[data.props.ctx.currentPlayer][0].config.value + ".";
+                caption += "coin to upgrade up to " + data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.value + ".";
                 const handCoins = data.props.G.players[data.props.ctx.currentPlayer].handCoins.filter(coin => coin !== null);
                 let handCoinIndex = -1;
                 for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {

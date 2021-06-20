@@ -1,5 +1,5 @@
 import {AddDataToLog} from "./Logging";
-import {AddActionsToStack} from "./helpers/StackHelpers";
+import {AddActionsToStack, EndActionFromStackAndAddNew, StartActionFromStackOrEndActions} from "./helpers/StackHelpers";
 
 /**
  * Создание монеты.
@@ -107,10 +107,13 @@ export const Trading = (G, ctx, tradingCoins) => {
     }
     if (G.players[ctx.currentPlayer].buffs?.["upgradeNextCoin"] === "min") {
         stack = {
-            actionName: "UpgradeCoinAction",
-            config: {
-                number: 1,
-                value: coinsMinValue,
+            stack: {
+                actionName: "UpgradeCoinAction",
+                config: {
+                    number: 1,
+                    value: coinsMinValue,
+                    isTrading: true,
+                },
             },
         };
         upgradingCoinId = G.tavernsNum + coinMinIndex;
@@ -118,18 +121,24 @@ export const Trading = (G, ctx, tradingCoins) => {
         currentCoinValue = coinsMaxValue;
         delete G.players[ctx.currentPlayer].buffs["upgradeNextCoin"];
     } else {
-        stack = {
-            actionName: "UpgradeCoinAction",
-            config: {
-                number: 1,
-                value: coinsMaxValue,
+        stack = [
+            {
+                stack: {
+                    actionName: "UpgradeCoinAction",
+                    config: {
+                        number: 1,
+                        value: coinsMaxValue,
+                        isTrading: true,
+                    },
+                },
             },
-        };
+        ];
         upgradingCoinId = G.tavernsNum + coinMaxIndex;
         upgradingCoin = tradingCoins[coinMaxIndex];
         currentCoinValue = coinsMinValue;
     }
-    AddActionsToStack(G, ctx, ctx.currentPlayer, stack, upgradingCoinId, "board", upgradingCoin.isInitial, upgradingCoin, currentCoinValue);
+    AddActionsToStack(G, ctx, stack);
+    return StartActionFromStackOrEndActions(G, ctx, null, upgradingCoinId, "board", upgradingCoin.isInitial, upgradingCoin, currentCoinValue);
 };
 
 /**
@@ -204,9 +213,10 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial, up
             }
         }
     }
+    // todo fixit
     AddDataToLog(G, "private", `Начато обновление монеты '${upgradingCoin}' c ID ${upgradingCoinId} с типом ${type} 
-    с initial ${isInitial} с ценностью '${currentValue}' на +${newValue}.`);
-    AddDataToLog(G, "game", `Начато обновление монеты с ценностью '${currentValue}' на +${newValue}.`);
+    с initial ${isInitial} с ценностью '${upgradingCoin.value}' на +${newValue}.`);
+    AddDataToLog(G, "game", `Начато обновление монеты с ценностью '${upgradingCoin.value}' на +${newValue}.`);
     if (upgradedCoin !== null) {
         let handCoinIndex = -1;
         if (G.players[ctx.currentPlayer].boardCoins[upgradingCoinId] === null) {
@@ -220,11 +230,11 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial, up
         } else {
             if (handCoinIndex === -1) {
                 G.players[ctx.currentPlayer].boardCoins[upgradingCoinId] = upgradedCoin;
-                AddDataToLog(G, "public", `Монета с ценностью '${upgradingCoin.value}' вернулась на поле игрока 
+                AddDataToLog(G, "public", `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока 
                 ${G.players[ctx.currentPlayer].nickname}.`);
             } else {
                 G.players[ctx.currentPlayer].handCoins[handCoinIndex] = upgradedCoin;
-                AddDataToLog(G, "public", `Монета с ценностью '${upgradingCoin.value}' вернулась на руку игрока 
+                AddDataToLog(G, "public", `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока 
                 ${G.players[ctx.currentPlayer].nickname}.`);
             }
         }

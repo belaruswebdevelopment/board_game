@@ -2,8 +2,9 @@ import {CoinUpgradeValidation, IsValidMove} from "../MoveValidator";
 import {INVALID_MOVE} from "boardgame.io/core";
 import {Trading} from "../Coin";
 import {CheckAndStartUlineActionsOrContinue} from "./HeroMoves";
-import {ActionDispatcher, ActivateVidofnirVedrfolnirAction, EndAction} from "../Actions";
+import {ActivateVidofnirVedrfolnirAction, EndAction} from "../Actions";
 import {AfterBasicPickCardActions} from "./Moves";
+import {AddActionsToStack, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
 // todo Add logging
 export const ActivateTrading = (G, ctx) => {
     if (G.players[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading) {
@@ -12,6 +13,9 @@ export const ActivateTrading = (G, ctx) => {
             tradingCoins.push(G.players[ctx.currentPlayer].boardCoins[i]);
         }
         Trading(G, ctx, tradingCoins);
+        return true;
+    } else {
+        return false;
     }
 };
 
@@ -138,17 +142,13 @@ export const ResolveBoardCoins = (G, ctx) => {
     return {playersOrder, exchangeOrder};
 };
 
-export const ActivateCoinUpgrade = (G, ctx, action, coinId, type, isInitial) => {
-    ActionDispatcher(G, ctx, action, coinId, type, isInitial, G.players[ctx.currentPlayer].boardCoins[coinId],
-        G.players[ctx.currentPlayer].boardCoins[coinId].value);
-};
-
 export const ClickCoinToUpgradeDistinction = (G, ctx, coinId, type, isInitial) => {
     const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ActivateCoinUpgrade(G, ctx, G.players[ctx.currentPlayer].pickedCard.action, coinId, type, isInitial);
+    AddActionsToStack(G, ctx, ctx.currentPlayer, G.players[ctx.currentPlayer].pickedCard.stack, coinId, type, isInitial,
+        G.players[ctx.currentPlayer].boardCoins[coinId], G.players[ctx.currentPlayer].boardCoins[coinId].value);
     G.drawProfit = null;
     delete G.distinctions[3];
     ctx.events.endTurn();
@@ -159,7 +159,8 @@ export const ClickCoinToUpgradeInDistinction = (G, ctx, coinId, type, isInitial)
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ActivateCoinUpgrade(G, ctx, G.players[ctx.currentPlayer].pickedCard.action, coinId, type, isInitial);
+    AddActionsToStack(G, ctx, ctx.currentPlayer, G.players[ctx.currentPlayer].pickedCard.stack, coinId, type, isInitial,
+        G.players[ctx.currentPlayer].boardCoins[coinId], G.players[ctx.currentPlayer].boardCoins[coinId].value);
     G.drawProfit = null;
     delete G.distinctions[4];
     ctx.events.endTurn();
@@ -170,30 +171,28 @@ export const ClickCoinToUpgrade = (G, ctx, coinId, type, isInitial) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ActivateCoinUpgrade(G, ctx, G.players[ctx.currentPlayer].pickedCard.action, coinId, type, isInitial);
-    G.drawProfit = null;
-    AfterBasicPickCardActions(G, ctx);
+    return EndActionFromStackAndAddNew(G, ctx, ctx.currentPlayer, coinId, type, isInitial, G.players[ctx.currentPlayer].boardCoins[coinId],
+        G.players[ctx.currentPlayer].boardCoins[coinId].value);
 };
 
 export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) => {
-    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) || G.players[ctx.currentPlayer].pickedCard.action.coinId !== coinId;
+    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) || G.players[ctx.currentPlayer].pickedCard.stack[0].config.coinId !== coinId;
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ActivateCoinUpgrade(G, ctx, G.players[ctx.currentPlayer].pickedCard.action, coinId, type, isInitial);
+    AddActionsToStack(G, ctx, ctx.currentPlayer, G.players[ctx.currentPlayer].pickedCard.stack, coinId, type, isInitial,
+        G.players[ctx.currentPlayer].boardCoins[coinId], G.players[ctx.currentPlayer].boardCoins[coinId].value);
     if (!G.actionsNum) {
         G.actionsNum = null;
         G.drawProfit = null;
         AfterBasicPickCardActions(G, ctx);
     } else {
         G.players[ctx.currentPlayer].pickedCard = {
-            action: {
-                actionName: "UpgradeCoinAction",
-                config: {
-                    number: 1,
-                    value: 2,
-                },
+            actionName: "UpgradeCoinAction",
+            config: {
                 coinId,
+                number: 1,
+                value: 2,
             },
         };
     }
@@ -204,7 +203,8 @@ export const UpgradeCoinFromDiscard = (G, ctx, coinId, type, isInitial) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    ActivateCoinUpgrade(G, ctx, G.players[ctx.currentPlayer].pickedCard.action, coinId, type, isInitial);
+    AddActionsToStack(G, ctx, ctx.currentPlayer, G.players[ctx.currentPlayer].pickedCard.stack, coinId, type, isInitial,
+        G.players[ctx.currentPlayer].boardCoins[coinId], G.players[ctx.currentPlayer].boardCoins[coinId].value);
     EndAction(G, ctx);
 };
 
