@@ -1,8 +1,6 @@
 import {BuildCoins} from "./Coin";
 import {initialPlayerCoinsConfig} from "./data/CoinData";
 import {CurrentScoring} from "./Score";
-import {CheckEndActions} from "./Actions";
-import {CheckAndMoveThrud, StartThrudMoving} from "./moves/HeroMoves";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {AddDataToLog} from "./Logging";
 import {suitsConfig} from "./data/SuitData";
@@ -93,8 +91,8 @@ export const AddCardToPlayer = (G, ctx, card) => {
     }
     const suitIndex = GetSuitIndexByName(card.suit);
     G.players[ctx.currentPlayer].cards[suitIndex].push(card);
-    AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту ${card} во фракцию 
-    ${suitsConfig[card.suit].suitName}.`);
+    AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту 
+    (шевронов: ${card.rank}${card.points === null ? "" : ", очков: " + card.points}) во фракцию ${suitsConfig[card.suit].suitName}.`);
     return true;
 };
 

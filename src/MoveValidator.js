@@ -153,8 +153,9 @@ export const moveValidators = {
             let isValid = G.heroes[id].active;
             // todo Add validators to others heroes
             if (G.heroes[id].name === "Hourya") {
-                const suitId = GetSuitIndexByName(G.heroes[id].action.config.conditions.suitCountMin.suit);
-                isValid = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0) >= G.heroes[id].action.config.conditions.suitCountMin.value;
+                const suitId = GetSuitIndexByName(G.heroes[id].stack[0].config.conditions.suitCountMin.suit);
+                isValid = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0) >=
+                    G.stack[ctx.currentPlayer][0].config.conditions.suitCountMin.value;
             }
             return isValid || G.players[ctx.currentPlayer].buffs?.["noHero"];
         },

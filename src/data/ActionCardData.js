@@ -9,8 +9,19 @@ const upgradeCoinUpTo3 = {
     value: 3,
     stack: [
         {
+            actionName: "DrawProfitAction",
+            config: {
+                name: "upgradeCoin",
+                stageName: "upgradeCoin",
+                number: 1,
+                value: 3,
+            },
+        },
+        {
             actionName: "UpgradeCoinAction",
             config: {
+                name: "upgradeCoin",
+                stageName: "upgradeCoin",
                 number: 1,
                 value: 3,
             },
@@ -51,6 +62,8 @@ const upgradeCoinUpTo5 = {
         {
             actionName: "UpgradeCoinAction",
             config: {
+                name: "upgradeCoin",
+                stageName: "upgradeCoin",
                 number: 1,
                 value: 5,
             },

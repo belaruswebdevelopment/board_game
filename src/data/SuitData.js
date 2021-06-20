@@ -13,7 +13,7 @@ import {CreatePriority} from "../Priority";
  */
 const blacksmithSuit = {
     suit: "blacksmith",
-    suitName: "Blacksmith",
+    suitName: "Кузнецы",
     suitColor: 'bg-purple-600',
     description: "Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).",
     ranksValues: () => {
@@ -82,7 +82,7 @@ const blacksmithSuit = {
  */
 const hunterSuit = {
     suit: "hunter",
-    suitName: "Hunter",
+    suitName: "Охотники",
     suitColor: "bg-green-600",
     description: "Их показатель храбрости равен квадрату числа карт охотников в армии игрока.",
     ranksValues: () => {
@@ -150,7 +150,7 @@ const hunterSuit = {
  */
 const minerSuit = {
     suit: "miner",
-    suitName: "Miner",
+    suitName: "Горняки",
     suitColor: "bg-yellow-600",
     description: "Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии игрока.",
     ranksValues: () => {
@@ -224,7 +224,7 @@ const minerSuit = {
  */
 const warriorSuit = {
     suit: "warrior",
-    suitName: "Warrior",
+    suitName: "Воины",
     suitColor: "bg-red-600",
     description: "Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты. В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной монеты к показателю храбрости своих воинов.",
     ranksValues: () => {
@@ -273,12 +273,10 @@ const warriorSuit = {
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
                 player.pickedCard = {
-                    stack: {
-                        actionName: "UpgradeCoinAction",
-                        config: {
-                            number: 1,
-                            value: 5,
-                        },
+                    actionName: "UpgradeCoinAction",
+                    config: {
+                        number: 1,
+                        value: 5,
                     },
                 };
                 ctx.events.setStage("upgradeDistinctionCoin");
@@ -299,7 +297,7 @@ const warriorSuit = {
  */
 const explorerSuit = {
     suit: "explorer",
-    suitName: "Explorer",
+    suitName: "Разведчики",
     suitColor: "bg-blue-500",
     description: "Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.",
     ranksValues: () => {

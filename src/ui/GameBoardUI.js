@@ -252,7 +252,7 @@ const DrawPlayerBoardForCardDiscard = (data) => {
         playerHeaders.push(
             <th className={`${suitsConfig[suit].suitColor}`}
                 key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} ${suitsConfig[suit].suitName}`}>
-                <span style={Styles.Suits(suitsConfig[suit].suitName)} className="bg-suit-icon">
+                <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
 
                 </span>
             </th>
@@ -376,7 +376,7 @@ export const DrawProfit = (data, option) => {
                 boardCells.push(
                     <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
                         key={`Place Ylud on ${suitsConfig[suit].suitName}`}>
-                            <span style={Styles.Suits(suitsConfig[suit].suitName)} className="bg-suit-icon"
+                            <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
                                   onClick={() => data.OnClickSuitToPlaceYlud(j)}>
 
                             </span>
@@ -391,7 +391,7 @@ export const DrawProfit = (data, option) => {
                 boardCells.push(
                     <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
                         key={`Add Thrud on ${suitsConfig[suit].suitName}`}>
-                        <span style={Styles.Suits(suitsConfig[suit].suitName)} className="bg-suit-icon"
+                        <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
                               onClick={() => data.OnClickSuitToPlaceThrud(j)}>
 
                         </span>
@@ -406,7 +406,7 @@ export const DrawProfit = (data, option) => {
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
                             key={`Move Thrud on ${suitsConfig[suit].suitName}`}>
-                            <span style={Styles.Suits(suitsConfig[suit].suitName)} className="bg-suit-icon"
+                            <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
                                   onClick={() => data.OnClickSuitToMoveThrud(j)}>
 
                             </span>
@@ -472,7 +472,7 @@ export const DrawProfit = (data, option) => {
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
                             key={`Place Olwin's double on ${suitsConfig[suit].suitName}`}>
-                            <span style={Styles.Suits(suitsConfig[suit].suitName)} className="bg-suit-icon"
+                            <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
                                   onClick={() => data.OnClickSuitToPlaceCard(j)}>
 
                             </span>
@@ -568,7 +568,7 @@ export const DrawProfit = (data, option) => {
                                     data.props.G.players[data.props.ctx.currentPlayer].handCoins[j].isInitial)}
                                 className={`bg-coin border-2`}>
 
-                                </span>
+                            </span>
                         );
                     }
                     if (drawData !== "") {
@@ -581,7 +581,7 @@ export const DrawProfit = (data, option) => {
                     }
                 }
             } else if (option === "VidofnirVedrfolnirAction") {
-                caption = `Get coin to upgrade up to ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.stack.config.value}.`;
+                caption = `Get coin to upgrade up to ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.value}.`;
                 for (let j = data.props.G.tavernsNum; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                     let drawData = "",
                         type = "board",
@@ -610,7 +610,7 @@ export const DrawProfit = (data, option) => {
                     }
                 }
             } else {
-                caption += "coin to upgrade up to " + data.props.G.players[data.props.ctx.currentPlayer].pickedCard.stack.config.value + ".";
+                caption += "coin to upgrade up to " + data.props.G.stack[data.props.ctx.currentPlayer][0].config.value + ".";
                 const handCoins = data.props.G.players[data.props.ctx.currentPlayer].handCoins.filter(coin => coin !== null);
                 let handCoinIndex = -1;
                 for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {

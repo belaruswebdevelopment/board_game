@@ -37,7 +37,8 @@ export const SetupGame = (ctx) => {
         campDecks = [],
         distinctions = Array(suitsNum).fill(null);
     let winner = null,
-        discardCampCardsDeck = [];
+        discardCampCardsDeck = [],
+        stack = Array(ctx.numPlayers).fill([]);
     for (let i = 0; i < tierToEnd; i++) {
         campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
         campDecks[i] = ctx.random.Shuffle(campDecks[i]);
@@ -71,7 +72,7 @@ export const SetupGame = (ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         players[i] = BuildPlayer(ctx.numPlayers, suitsNum, "Vasya" + i);
     }
-    BuildPriorities(this, players);
+    BuildPriorities(players);
     const marketCoinsUnique = [],
         marketCoins = BuildCoins(marketCoinsConfig, {
             count: marketCoinsUnique,
@@ -112,6 +113,7 @@ export const SetupGame = (ctx) => {
         decks,
         discardCardsDeck,
         discardCampCardsDeck,
+        stack,
         heroes,
         campDecks,
         campPicked,
