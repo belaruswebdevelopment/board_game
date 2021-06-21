@@ -6,7 +6,7 @@ import React from "react";
  * 1) Используется в отрисовке дебаг панели.
  *
  * @param data Глобальные параметры.
- * @returns {{ctx: {}, G: {}}|null}
+ * @returns {{ctx: {}, G: {}}|undefined}
  * @constructor
  */
 const GetDebugData = (data) => {
@@ -23,7 +23,7 @@ const GetDebugData = (data) => {
         }
         return debugData;
     }
-    return null;
+    return undefined;
 };
 
 /**
@@ -93,7 +93,7 @@ const DrawObjectData = (obj) => {
  */
 export const DrawDebugData = (data) => {
     const debugData = GetDebugData(data);
-    if (debugData === null) {
+    if (debugData === undefined) {
         return null;
     } else {
         return (

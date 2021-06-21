@@ -124,9 +124,11 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
             variants: mercenariesConfig[tier][i],
             stack: [
                 {
-                    actionName: "AddCampCardToCards",
-                    config: {
-                        card: name.trim(),
+                    stack: {
+                        actionName: "AddCampCardToCards",
+                        config: {
+                            card: name.trim(),
+                        },
                     },
                 },
             ],

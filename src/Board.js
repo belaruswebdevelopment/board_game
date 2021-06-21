@@ -40,20 +40,11 @@ export class GameBoard extends React.Component {
     OnClickHandCoin = (coinId) => {
         this.props.moves.ClickHandCoin(coinId);
     };
-    OnClickCoinToUpgradeDistinction = (coinId, type, isInitial) => {
-        this.props.moves.ClickCoinToUpgradeDistinction(coinId, type, isInitial);
-    };
-    OnClickCoinToUpgradeInDistinction = (coinId, type, isInitial) => {
-        this.props.moves.ClickCoinToUpgradeInDistinction(coinId, type, isInitial);
-    };
     OnClickCardToPickDistinction = (cardId, deck) => {
         this.props.moves.ClickCardToPickDistinction(cardId, deck);
     };
     OnClickCoinToUpgrade = (coinId, type, isInitial) => {
         this.props.moves.ClickCoinToUpgrade(coinId, type, isInitial);
-    };
-    OnClickCoinToUpgradeGrid = (coinId, type, isInitial) => {
-        this.props.moves.GridAction(coinId, type, isInitial);
     };
     OnClickCardToDiscard = (suitId, cardId) => {
         this.props.moves.DiscardCard(suitId, cardId);
@@ -64,9 +55,6 @@ export class GameBoard extends React.Component {
     OnClickCardFromDiscard = (cardId) => {
         this.props.moves.PickDiscardCard(cardId);
     };
-    OnClickCoinToUpgradeFromDiscard = (coinId, type, isInitial) => {
-        this.props.moves.UpgradeCoinFromDiscard(coinId, type, isInitial);
-    };
     OnClickSuitToPlaceYlud = (suitId) => {
         this.props.moves.PlaceYlud(suitId);
     };
@@ -74,7 +62,7 @@ export class GameBoard extends React.Component {
         this.props.moves.PlaceThrud(suitId);
     };
     OnClickSuitToMoveThrud = (suitId) => {
-        this.props.moves.MoveThrud(suitId);
+        this.props.moves.PlaceThrud(suitId);
     };
     OnClickCardToDiscard2Players = (cardId) => {
         this.props.moves.DiscardCard2Players(cardId);
@@ -84,6 +72,9 @@ export class GameBoard extends React.Component {
     };
     OnClickDiscardSuitCardFromPlayerBoard = (suitId, cardId) => {
         this.props.moves.DiscardSuitCardFromPlayerBoard(suitId, cardId);
+    };
+    OnClickCampCardHolda = (cardId) => {
+        this.props.moves.ClickCampCardHolda(cardId);
     };
     OnClickCoinToAddToPouch = (suitId, cardId) => {
         this.props.moves.AddCoinToPouch(suitId, cardId);

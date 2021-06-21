@@ -70,7 +70,7 @@ export const SetupGame = (ctx) => {
         playersOrder = [],
         exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        players[i] = BuildPlayer(ctx.numPlayers, suitsNum, "Vasya" + i);
+        players[i] = BuildPlayer(ctx.numPlayers, suitsNum, "Dan" + i);
     }
     BuildPriorities(players);
     const marketCoinsUnique = [],

@@ -18,11 +18,11 @@ export const CreatePriority = ({value, isExchangeable = true} = {}) => ({
 });
 
 /**
- * Массив кристаллов.
+ * Массив кристаллов приоритетов.
  * Применения:
  * 1) Используется в конфиге кристаллов.
  *
- * @type {{isExchangeable: boolean, value}[]}
+ * @type {{isExchangeable: boolean, value}[]} Массив кристаллов.
  */
 const priorities = [
     CreatePriority({value: 1}),
@@ -37,7 +37,7 @@ const priorities = [
  * Применения:
  * 1) Используется при раздаче кристаллов всем игрокам (в зависимости от количества игроков).
  *
- * @type {{"2": {isExchangeable: boolean, value}[], "3": {isExchangeable: boolean, value}[], "4": {isExchangeable: boolean, value}[], "5": {isExchangeable: boolean, value}[]}}
+ * @type {{"2": {isExchangeable: boolean, value}[], "3": {isExchangeable: boolean, value}[], "4": {isExchangeable: boolean, value}[], "5": {isExchangeable: boolean, value}[]}} Конфиг кристаллов.
  */
 const prioritiesConfig = {
     2: priorities.slice(-2),
@@ -92,7 +92,7 @@ export const ChangePlayersPriorities = (G) => {
  * 1) Используется для ботов при определении приоритета выставления монет.
  *
  * @param G
- * @param playerId ID выбранного грока.
+ * @param playerId Id выбранного грока.
  * @returns {boolean} Имеет ли выбранный игрок наименьший кристалл.
  * @constructor
  */

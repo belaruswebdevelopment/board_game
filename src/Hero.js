@@ -2,6 +2,7 @@ import {TotalRank} from "./Score";
 import {heroesConfig} from "./data/HeroData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {AddDataToLog} from "./Logging";
+import {AddActionsToStackAfterCurrent} from "./helpers/StackHelpers";
 
 /**
  * Создание героя.
@@ -77,15 +78,23 @@ export const BuildHeroes = (config) => {
  * @constructor
  */
 export const CheckPickHero = (G, ctx) => {
-    if (G.players[ctx.currentPlayer].buffs?.["noHero"]) {
-        return false;
-    } else {
+    if (!G.players[ctx.currentPlayer].buffs?.["noHero"]) {
         const isCanPickHero = Math.min(...G.players[ctx.currentPlayer].cards.map(item => item.reduce(TotalRank, 0)))
             > G.players[ctx.currentPlayer].heroes.length;
         if (isCanPickHero) {
+            const stack = [
+                {
+                    stack: {
+                        actionName: "PickHero",
+                        config: {
+                            stageName: "pickHero",
+                        }
+                    }
+                },
+            ];
             AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} должен выбрать нового героя.`);
+            AddActionsToStackAfterCurrent(G, ctx, stack);
         }
-        return isCanPickHero;
     }
 };
 

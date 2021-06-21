@@ -153,7 +153,7 @@ export const moveValidators = {
             let isValid = G.heroes[id].active;
             // todo Add validators to others heroes
             if (G.heroes[id].name === "Hourya") {
-                const suitId = GetSuitIndexByName(G.heroes[id].stack[0].config.conditions.suitCountMin.suit);
+                const suitId = GetSuitIndexByName(G.heroes[id].stack[0].stack.config.conditions.suitCountMin.suit);
                 isValid = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0) >=
                     G.stack[ctx.currentPlayer][0].stack.config.conditions.suitCountMin.value;
             }
@@ -182,8 +182,7 @@ export const moveValidators = {
     },
     ClickCampCard: {
         getRange: ({G}) => ([0, G.camp.length]),
-        validate: ({G, ctx}) => G.expansions.thingvellir &&
-            (Number(ctx.currentPlayer) === G.playersOrder[0] || (G.players[ctx.currentPlayer].buffs?.["goCamp"] && G.campPicked === false) ||
-                G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]),
+        validate: ({G, ctx}) => G.expansions.thingvellir && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
+            G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]),
     },
 };

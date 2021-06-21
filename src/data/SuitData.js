@@ -130,7 +130,8 @@ const hunterSuit = {
         description: "Получив знак отличия охотников, сразу же обменяйте свою монету с номиналом 0 на особую монету с номиналом 3. Эта монета также позволяет обменивать монеты в кошеле и не может быть улучшена.",
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
-                player.boardCoins[player.boardCoins.findIndex(coin => coin.value === 0)] = CreateCoin({
+                const tradingCoinIndex = player.boardCoins.findIndex(coin => coin.value === 0);
+                player.boardCoins[tradingCoinIndex] = CreateCoin({
                     value: 3,
                     isTriggerTrading: true,
                 });
@@ -272,6 +273,7 @@ const warriorSuit = {
         description: "Получив знак отличия воинов, сразу же улучшите одну из своих монет, добавив к её номиналу +5.",
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
+                // todo Add to Stack!
                 player.pickedCard = {
                     actionName: "UpgradeCoinAction",
                     config: {
@@ -279,8 +281,8 @@ const warriorSuit = {
                         value: 5,
                     },
                 };
-                ctx.events.setStage("upgradeDistinctionCoin");
-                G.drawProfit = "warriorDistinction";
+                ctx.events.setStage("upgradeCoin");
+                G.drawProfit = "upgradeCoin";
             } else {
                 return Math.max(...player.boardCoins.map(coin => coin.value));
             }
@@ -345,6 +347,7 @@ const explorerSuit = {
         description: "Получив знак отличия разведчиков, сразу же возьмите 3 карты из колоды эпохи 2 и сохраните у себя одну из этих карт. Если это карта дворфа, сразу же поместите его в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов. Если это карта королевская награда, то улучшите одну из своих монет. Две оставшиеся карты возвращаются в колоду эпохи 2. Положите карту знак отличия разведчиков в командную зону рядом с вашим планшетом.",
         awarding: (G, ctx) => {
             if (G.tierToEnd !== 0) {
+                // todo Add to Stack!
                 ctx.events.setStage("pickDistinctionCard");
                 G.drawProfit = "explorerDistinction";
             }

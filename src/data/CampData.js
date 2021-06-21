@@ -5,7 +5,7 @@ import {TotalRank} from "../Score";
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {card: string}, actionName: string}, {config: {buff: {name: string, value: boolean}, card: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {card: string}, actionName: string}}, {stack: {config: {buff: {name: string, value: boolean}, card: string}, actionName: string}}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Fafnir_Baleygr = {
     name: "Fafnir Baleygr",
@@ -17,18 +17,22 @@ const Fafnir_Baleygr = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Fafnir Baleygr",
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Fafnir Baleygr",
+                },
             },
         },
         {
-            actionName: "AddBuffToPlayer",
-            config: {
-                card: "Fafnir Baleygr",
-                buff: {
-                    name: "goCamp",
-                    value: true,
+            stack: {
+                actionName: "AddBuffToPlayer",
+                config: {
+                    card: "Fafnir Baleygr",
+                    buff: {
+                        name: "goCamp",
+                        value: true,
+                    },
                 },
             },
         },
@@ -41,7 +45,7 @@ const Fafnir_Baleygr = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): function(*): *), game: string, stack: [{config: {card: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): function(*): *), game: string, stack: [{stack: {config: {card: string}, actionName: string}}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Draupnir = {
     name: "Draupnir",
@@ -53,9 +57,11 @@ const Draupnir = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Draupnir",
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Draupnir",
+                },
             },
         },
     ],
@@ -67,7 +73,7 @@ const Draupnir = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {card: string}, actionName: string}], tier: number, name: string, description: string, rank: number, suit: string, points: number}} Артефакт.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {card: string}, actionName: string}}], tier: number, name: string, description: string, rank: number, suit: string, points: number}} Артефакт.
  */
 const Vegvisir = {
     name: "Vegvisir",
@@ -79,9 +85,11 @@ const Vegvisir = {
     points: 13,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Vegvisir",
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Vegvisir",
+                },
             },
         },
     ],
@@ -93,7 +101,7 @@ const Vegvisir = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): function(*): *), game: string, stack: [{config: {card: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): function(*): *), game: string, stack: [{stack: {config: {card: string}, actionName: string}}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Svalinn = {
     name: "Svalinn",
@@ -105,9 +113,11 @@ const Svalinn = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Svalinn",
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Svalinn",
+                },
             },
         },
     ],
@@ -119,7 +129,7 @@ const Svalinn = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {card: string}, actionName: string}, {config: {buff: {name: string, value: boolean}, card: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {card: string}, actionName: string}}, {stack: {config: {buff: {name: string, value: boolean}, card: string}, actionName: string}}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Megingjord = {
     name: "Megingjord",
@@ -131,18 +141,22 @@ const Megingjord = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Megingjord",
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Megingjord",
+                },
             },
         },
         {
-            actionName: "AddBuffToPlayer",
-            config: {
-                card: "Megingjord",
-                buff: {
-                    name: "noHero",
-                    value: true,
+            stack: {
+                actionName: "AddBuffToPlayer",
+                config: {
+                    card: "Megingjord",
+                    buff: {
+                        name: "noHero",
+                        value: true,
+                    },
                 },
             },
         },
@@ -155,7 +169,7 @@ const Megingjord = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {card: string}, actionName: string}, {config: {name: string, card: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {card: string}, actionName: string}}, {stack: {config: {name: string, card: string}, actionName: string}}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Vidofnir_Vedrfolnir = {
     name: "Vidofnir Vedrfolnir",
@@ -167,16 +181,20 @@ const Vidofnir_Vedrfolnir = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Vidofnir Vedrfolnir",
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Vidofnir Vedrfolnir",
+                },
             },
         },
         {
-            actionName: "StartVidofnirVedrfolnirAction",
-            config: {
-                card: "Vidofnir Vedrfolnir",
-                name: "VidofnirVedrfolnirStartAction",
+            stack: {
+                actionName: "StartVidofnirVedrfolnirAction",
+                config: {
+                    card: "Vidofnir Vedrfolnir",
+                    name: "VidofnirVedrfolnirStartAction",
+                },
             },
         },
     ],
@@ -188,7 +206,7 @@ const Vidofnir_Vedrfolnir = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {card: string}, actionName: string}, {config: {buff: {name: string, value: boolean}, card: string}, actionName: string}, {config: {number: number, name: string, card: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {card: string}, actionName: string}}, {stack: {config: {buff: {name: string, value: boolean}, card: string}, actionName: string}}, {stack: {config: {number: number, name: string, card: string}, actionName: string}}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Brisingamens = {
     name: "Brisingamens",
@@ -200,27 +218,33 @@ const Brisingamens = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Brisingamens",
-            },
-        },
-        {
-            actionName: "AddBuffToPlayer",
-            config: {
-                card: "Brisingamens",
-                buff: {
-                    name: "discardCardEndGame",
-                    value: true,
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Brisingamens",
                 },
             },
         },
         {
-            actionName: "PickDiscardCard",
-            config: {
-                card: "Brisingamens",
-                name: "BrisingamensAction",
-                number: 2,
+            stack: {
+                actionName: "AddBuffToPlayer",
+                config: {
+                    card: "Brisingamens",
+                    buff: {
+                        name: "discardCardEndGame",
+                        value: true,
+                    },
+                },
+            },
+        },
+        {
+            stack: {
+                actionName: "PickDiscardCard",
+                config: {
+                    card: "Brisingamens",
+                    name: "BrisingamensAction",
+                    number: 2,
+                },
             },
         },
     ],
@@ -232,7 +256,7 @@ const Brisingamens = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): function(*): *), game: string, stack: [{config: {card: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): function(*): *), game: string, stack: [{stack: {config: {card: string}, actionName: string}}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Mjollnir = {
     name: "Mjollnir",
@@ -244,9 +268,11 @@ const Mjollnir = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Mjollnir",
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Mjollnir",
+                },
             },
         },
     ],
@@ -258,7 +284,7 @@ const Mjollnir = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {card: string}, actionName: string}, {config: {name: string, suit: string, card: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {card: string}, actionName: string}}, {stack: {config: {name: string, suit: string, card: string}, actionName: string}}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Hofud = {
     name: "Hofud",
@@ -270,17 +296,21 @@ const Hofud = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Hofud",
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Hofud",
+                },
             },
         },
         {
-            actionName: "DiscardSuitCard",
-            config: {
-                name: "HofudAction",
-                card: "Hofud",
-                suit: "warrior",
+            stack: {
+                actionName: "DiscardSuitCard",
+                config: {
+                    name: "HofudAction",
+                    card: "Hofud",
+                    suit: "warrior",
+                },
             },
         },
     ],
@@ -292,7 +322,7 @@ const Hofud = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): function(*): *), game: string, stack: [{config: {card: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): function(*): *), game: string, stack: [{stack: {config: {card: string}, actionName: string}}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Hrafnsmerki = {
     name: "Hrafnsmerki",
@@ -304,9 +334,11 @@ const Hrafnsmerki = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Hrafnsmerki",
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Hrafnsmerki",
+                },
             },
         },
     ],
@@ -318,7 +350,7 @@ const Hrafnsmerki = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {card: string}, actionName: string}, {config: {card: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {card: string}, actionName: string}}, {stack: {config: {card: string}, actionName: string}}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Jarnglofi = {
     name: "Jarnglofi",
@@ -330,15 +362,19 @@ const Jarnglofi = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Jarnglofi",
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Jarnglofi",
+                },
             },
         },
         {
-            actionName: "DiscardTradingCoin",
-            config: {
-                card: "Jarnglofi",
+            stack: {
+                actionName: "DiscardTradingCoin",
+                config: {
+                    card: "Jarnglofi",
+                },
             },
         },
     ],
@@ -350,7 +386,7 @@ const Jarnglofi = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): number), game: string, tier: number, name: string, description: string, rank: null, action: {config: {card: string}, actionName: string}, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {card: string}, actionName: string}}, {stack: {config: {card: string}, actionName: string}}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Gjallarhorn = {
     name: "Gjallarhorn",
@@ -362,15 +398,19 @@ const Gjallarhorn = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
-            config: {
-                card: "Gjallarhorn",
+            stack: {
+                actionName: "AddCampCardToCards",
+                config: {
+                    card: "Gjallarhorn",
+                },
             },
         },
         {
-            actionName: "PickHero",
-            config: {
-                card: "Gjallarhorn",
+            stack: {
+                actionName: "PickHero",
+                config: {
+                    card: "Gjallarhorn",
+                },
             },
         },
     ],
@@ -540,7 +580,7 @@ export const mercenariesConfig = [
  * Применения:
  * 1) Происходит при создании всех карт артефактов для кэмпа при инициализации игры.
  *
- * @type {{Svalinn: {scoringRule: (function(): function(*): *), game: string, stack: {config: {card: string}, actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Brisingamens: {scoringRule: (function(): number), game: string, stack: ({config: {card: string}, actionName: string}|{config: {buff: {name: string, value: boolean}, card: string}, actionName: string}|{config: {number: number, name: string, card: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Vidofnir_Vedrfolnir: {scoringRule: (function(): number), game: string, stack: ({config: {card: string}, actionName: string}|{config: {name: string, card: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Hrafnsmerki: {scoringRule: (function(): function(*): *), game: string, stack: {config: {card: string}, actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Gjallarhorn: {scoringRule: (function(): number), game: string, tier: number, name: string, description: string, rank: null, action: {config: {card: string}, actionName: string}, suit: null, points: null}, Hofud: {scoringRule: (function(): number), game: string, stack: ({config: {card: string}, actionName: string}|{config: {name: string, suit: string, card: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Draupnir: {scoringRule: (function(): function(*): *), game: string, stack: {config: {card: string}, actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Mjollnir: {scoringRule: (function(): function(*): *), game: string, stack: {config: {card: string}, actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Jarnglofi: {scoringRule: (function(): number), game: string, stack: {config: {card: string}, actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Megingjord: {scoringRule: (function(): number), game: string, stack: ({config: {card: string}, actionName: string}|{config: {buff: {name: string, value: boolean}, card: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Fafnir_Baleygr: {scoringRule: (function(): number), game: string, stack: ({config: {card: string}, actionName: string}|{config: {buff: {name: string, value: boolean}, card: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Vegvisir: {scoringRule: (function(): number), game: string, stack: {config: {card: string}, actionName: string}[], tier: number, name: string, description: string, rank: number, suit: string, points: number}}} Все карты артефактов для кэмпа.
+ * @type {{Svalinn: {scoringRule: (function(): function(*): *), game: string, stack: {stack: {config: {card: string}, actionName: string}}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Brisingamens: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {card: string}, actionName: string}}|{stack: {config: {buff: {name: string, value: boolean}, card: string}, actionName: string}}|{stack: {config: {number: number, name: string, card: string}, actionName: string}})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Vidofnir_Vedrfolnir: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {card: string}, actionName: string}}|{stack: {config: {name: string, card: string}, actionName: string}})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Hrafnsmerki: {scoringRule: (function(): function(*): *), game: string, stack: {stack: {config: {card: string}, actionName: string}}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Gjallarhorn: {scoringRule: (function(): number), game: string, stack: {stack: {config: {card: string}, actionName: string}}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Hofud: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {card: string}, actionName: string}}|{stack: {config: {name: string, suit: string, card: string}, actionName: string}})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Draupnir: {scoringRule: (function(): function(*): *), game: string, stack: {stack: {config: {card: string}, actionName: string}}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Mjollnir: {scoringRule: (function(): function(*): *), game: string, stack: {stack: {config: {card: string}, actionName: string}}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Jarnglofi: {scoringRule: (function(): number), game: string, stack: {stack: {config: {card: string}, actionName: string}}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Megingjord: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {card: string}, actionName: string}}|{stack: {config: {buff: {name: string, value: boolean}, card: string}, actionName: string}})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Fafnir_Baleygr: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {card: string}, actionName: string}}|{stack: {config: {buff: {name: string, value: boolean}, card: string}, actionName: string}})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Vegvisir: {scoringRule: (function(): number), game: string, stack: {stack: {config: {card: string}, actionName: string}}[], tier: number, name: string, description: string, rank: number, suit: string, points: number}}} Все карты артефактов для кэмпа.
  */
 export const artefactsConfig = {
     Fafnir_Baleygr,
