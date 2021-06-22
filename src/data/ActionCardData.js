@@ -29,7 +29,7 @@ const upgradeCoinUpTo3 = {
                     value: 3,
                 },
             },
-        }
+        },
     ],
     amount: () => {
         return {
@@ -84,7 +84,7 @@ const upgradeCoinUpTo5 = {
                     value: 5,
                 },
             },
-        }
+        },
     ],
     amount: () => {
         return {

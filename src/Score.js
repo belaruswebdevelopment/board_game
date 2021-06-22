@@ -51,13 +51,14 @@ export const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue +
  */
 export const CheckDistinction = (G, ctx) => {
     let i = 0;
+    AddDataToLog(G, "game", "Преимущество по фракциям в конце эпохи:");
     for (const suit in suitsConfig) {
         const result = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[i] = result;
-        if (result === undefined) {
-            if (suit === "explorer") {
+        if (suit === "explorer") {
+            if (result === undefined) {
                 const discardedCard = G.decks[1].splice(0, 1)[0];
-                AddDataToLog(G, "private", `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard}.`);
+                AddDataToLog(G, "private", `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
             }
         }
         i++;
@@ -76,7 +77,6 @@ export const CheckDistinction = (G, ctx) => {
  * @constructor
  */
 const CheckCurrentSuitDistinction = (G, ctx, suitName) => {
-    AddDataToLog(G, "game", "Преимущество по фракциям в конце эпохи:");
     const playersRanks = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const suitIndex = GetSuitIndexByName(suitName);

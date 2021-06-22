@@ -278,7 +278,7 @@ const CheckPickDiscardCard = (G, ctx) => {
  */
 const PickDiscardCard = (G, ctx, config, cardId) => {
     const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
-        pickedCard = G.discardCardsDeck.splice(cardId, 1);
+        pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
     if (isAdded) {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
     } else {

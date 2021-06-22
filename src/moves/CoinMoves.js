@@ -5,7 +5,7 @@ import {CheckAndStartUlineActionsOrContinue} from "./HeroMoves";
 import {AfterBasicPickCardActions} from "./Moves";
 import {
     AddActionsToStack,
-    EndActionFromStackAndAddNew,
+    EndActionFromStackAndAddNew, StartActionFromStackOrEndActions,
 } from "../helpers/StackHelpers";
 import {ActivateVidofnirVedrfolnirAction} from "../actions/CampActions";
 // todo Add logging
@@ -150,17 +150,20 @@ export const ClickCoinToUpgrade = (G, ctx, coinId, type, isInitial) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    // todo FixIt or move it away?
     if (G.distinctions.length) {
-        delete G.distinctions[3];
-        delete G.distinctions[4];
-        // TODO ??? ctx.events.endTurn();
+        const isDistinction3 = G.distinctions[3] !== undefined;
+        if (isDistinction3) {
+            delete G.distinctions[3];
+        } else if (!isDistinction3 && G.distinctions[4] !== undefined) {
+            delete G.distinctions[4];
+        }
     }
     return EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
 };
 
 export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) => {
-    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) || G.players[ctx.currentPlayer].pickedCard.stack[0].config.coinId !== coinId;
+    // todo FixIt
+    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && G.players[ctx.currentPlayer].pickedCard?.stack[0]?.config?.coinId !== coinId;
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -170,14 +173,34 @@ export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) =
         G.drawProfit = null;
         AfterBasicPickCardActions(G, ctx);
     } else {
-        G.players[ctx.currentPlayer].pickedCard = {
-            actionName: "UpgradeCoinAction",
-            config: {
-                coinId,
-                number: 1,
-                value: 2,
+        const stack = [
+            {
+                stack: {
+                    actionName: "DrawProfitAction",
+                    config: {
+                        coinId,
+                        name: "upgradeCoin",
+                        stageName: "upgradeCoin",
+                        number: 1,
+                        value: 2,
+                    },
+                },
             },
-        };
+            {
+                stack: {
+                    actionName: "UpgradeCoinAction",
+                    config: {
+                        coinId,
+                        name: "upgradeCoin",
+                        stageName: "upgradeCoin",
+                        number: 1,
+                        value: 2,
+                    },
+                },
+            },
+        ];
+        AddActionsToStack(G, ctx, stack);
+        return StartActionFromStackOrEndActions(G, ctx);
     }
 };
 

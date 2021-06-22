@@ -81,23 +81,23 @@ const ValidateByValues = (num, values) => {
  * @constructor
  */
 export const CoinUpgradeValidation = (G, ctx, coinId, type) => {
-    if (type === "board") {
-        if (G.players[ctx.currentPlayer].boardCoins[coinId].isTriggerTrading) {
-            return false;
-        }
-    } else if (type === "hand") {
+    if (type === "hand") {
         const handCoinPosition = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => coin === null && index <= coinId).length;
-        if (G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null)[handCoinPosition].isTriggerTrading) {
-            return false;
+        if (!G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null)[handCoinPosition].isTriggerTrading) {
+            return true;
+        }
+    } else {
+        if (!G.players[ctx.currentPlayer].boardCoins[coinId].isTriggerTrading) {
+            return true;
         }
     }
-    return true;
+    return false;
 };
 
 /**
  *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{placeCoins: {default1: string, default2: string, default_advanced: string}, null: {}, pickCards: {default: string, upgradeCoin: string, pickHero: string, pickCampCard: string}, getDistinctions: {upgradeDistinctionCoin: string, default: string, upgradeCoinInDistinction: string, pickDistinctionCard: string}}}
+ * @type {{placeCoins: {default1: string, default2: string, default_advanced: string}, null: {}, pickCards: {default: string, upgradeCoin: string, defaultPickCampCard: string, pickHero: string}, getDistinctions: {upgradeDistinctionCoin: string, default: string, upgradeCoinInDistinction: string, pickDistinctionCard: string}}}
  */
 export const moveBy = {
     null: {},
@@ -108,7 +108,7 @@ export const moveBy = {
     },
     pickCards: {
         default: "ClickCard",
-        pickCampCard: "ClickCampCard",
+        defaultPickCampCard: "ClickCampCard",
         pickHero: "ClickHeroCard",
         upgradeCoin: "ClickCoinToUpgrade",
     },

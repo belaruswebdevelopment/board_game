@@ -40,8 +40,8 @@ export class GameBoard extends React.Component {
     OnClickHandCoin = (coinId) => {
         this.props.moves.ClickHandCoin(coinId);
     };
-    OnClickCardToPickDistinction = (cardId, deck) => {
-        this.props.moves.ClickCardToPickDistinction(cardId, deck);
+    OnClickCardToPickDistinction = (cardId) => {
+        this.props.moves.ClickCardToPickDistinction(cardId);
     };
     OnClickCoinToUpgrade = (coinId, type, isInitial) => {
         this.props.moves.ClickCoinToUpgrade(coinId, type, isInitial);
