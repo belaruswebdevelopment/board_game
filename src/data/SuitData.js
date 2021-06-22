@@ -2,6 +2,8 @@ import {CreateCoin} from "../Coin";
 import {CreateCard} from "../Card";
 import {ArithmeticSum, TotalPoints, TotalRank} from "../Score";
 import {CreatePriority} from "../Priority";
+import {AddActionsToStack, StartActionFromStackOrEndActions} from "../helpers/StackHelpers";
+import {AddDataToLog} from "../Logging";
 
 /**
  * Фракция кузнецов.
@@ -67,6 +69,7 @@ const blacksmithSuit = {
                     points: 2,
                 }));
                 delete G.distinctions[0];
+                AddDataToLog(G, "game", `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
                 ctx.events.endTurn();
             }
         },
@@ -136,6 +139,7 @@ const hunterSuit = {
                     isTriggerTrading: true,
                 });
                 delete G.distinctions[1];
+                AddDataToLog(G, "game", `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
                 ctx.events.endTurn();
             }
         },
@@ -204,6 +208,7 @@ const minerSuit = {
                     isExchangeable: false,
                 });
                 delete G.distinctions[2];
+                AddDataToLog(G, "game", `Игрок ${player.nickname} обменял по знаку отличия горняков свой кристалл на особый кристалл 6.`);
                 ctx.events.endTurn();
             } else {
                 if (player.priority.value === 6) {
@@ -273,16 +278,34 @@ const warriorSuit = {
         description: "Получив знак отличия воинов, сразу же улучшите одну из своих монет, добавив к её номиналу +5.",
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
-                // todo Add to Stack!
-                player.pickedCard = {
-                    actionName: "UpgradeCoinAction",
-                    config: {
-                        number: 1,
-                        value: 5,
+                const stack = [
+                    {
+                        stack: {
+                            actionName: "DrawProfitAction",
+                            config: {
+                                name: "upgradeCoin",
+                                stageName: "upgradeCoin",
+                                number: 1,
+                                value: 5,
+                            },
+                        },
                     },
-                };
-                ctx.events.setStage("upgradeCoin");
-                G.drawProfit = "upgradeCoin";
+                    {
+                        stack: {
+                            actionName: "UpgradeCoinAction",
+                            config: {
+                                name: "upgradeCoin",
+                                stageName: "upgradeCoin",
+                                number: 1,
+                                value: 5,
+                            },
+                        },
+                    },
+                ];
+                AddDataToLog(G, "game", `Игрок ${player.nickname} получил по знаку отличия воинов возможность 
+                улучшить одну из своих монет на +5:`);
+                AddActionsToStack(G, ctx, stack);
+                return StartActionFromStackOrEndActions(G, ctx);
             } else {
                 return Math.max(...player.boardCoins.map(coin => coin.value));
             }
@@ -345,11 +368,23 @@ const explorerSuit = {
     scoringRule: (cards) => cards.reduce(TotalPoints, 0),
     distinction: {
         description: "Получив знак отличия разведчиков, сразу же возьмите 3 карты из колоды эпохи 2 и сохраните у себя одну из этих карт. Если это карта дворфа, сразу же поместите его в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов. Если это карта королевская награда, то улучшите одну из своих монет. Две оставшиеся карты возвращаются в колоду эпохи 2. Положите карту знак отличия разведчиков в командную зону рядом с вашим планшетом.",
-        awarding: (G, ctx) => {
+        awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
-                // todo Add to Stack!
-                ctx.events.setStage("pickDistinctionCard");
-                G.drawProfit = "explorerDistinction";
+                const stack = [
+                    {
+                        stack: {
+                            actionName: "DrawProfitAction",
+                            config: {
+                                name: "explorerDistinction",
+                                stageName: "pickDistinctionCard",
+                            },
+                        },
+                    },
+                ];
+                AddDataToLog(G, "game", `Игрок ${player.nickname} получил по знаку отличия разведчиков возможность
+                 получить карту из колоды второй эпохи:`);
+                AddActionsToStack(G, ctx, stack);
+                return StartActionFromStackOrEndActions(G, ctx);
             }
         },
     },

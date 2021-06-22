@@ -81,23 +81,23 @@ const ValidateByValues = (num, values) => {
  * @constructor
  */
 export const CoinUpgradeValidation = (G, ctx, coinId, type) => {
-    if (type === "board") {
-        if (G.players[ctx.currentPlayer].boardCoins[coinId].isTriggerTrading) {
-            return false;
-        }
-    } else if (type === "hand") {
+    if (type === "hand") {
         const handCoinPosition = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => coin === null && index <= coinId).length;
-        if (G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null)[handCoinPosition].isTriggerTrading) {
-            return false;
+        if (!G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null)[handCoinPosition - 1].isTriggerTrading) {
+            return true;
+        }
+    } else {
+        if (!G.players[ctx.currentPlayer].boardCoins[coinId].isTriggerTrading) {
+            return true;
         }
     }
-    return true;
+    return false;
 };
 
 /**
  *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{placeCoins: {default1: string, default2: string, default_advanced: string}, null: {}, pickCards: {default: string, upgradeCoin: string, pickHero: string, pickCampCard: string}, getDistinctions: {upgradeDistinctionCoin: string, default: string, upgradeCoinInDistinction: string, pickDistinctionCard: string}}}
+ * @type {{placeCoins: {default1: string, default2: string, default_advanced: string}, null: {}, pickCards: {default: string, upgradeCoin: string, defaultPickCampCard: string, pickHero: string}, getDistinctions: {upgradeDistinctionCoin: string, default: string, upgradeCoinInDistinction: string, pickDistinctionCard: string}}}
  */
 export const moveBy = {
     null: {},
@@ -108,15 +108,14 @@ export const moveBy = {
     },
     pickCards: {
         default: "ClickCard",
-        pickCampCard: "ClickCampCard",
+        defaultPickCampCard: "ClickCampCard",
         pickHero: "ClickHeroCard",
         upgradeCoin: "ClickCoinToUpgrade",
     },
     getDistinctions: {
         default: "ClickDistinctionCard",
         pickDistinctionCard: "ClickCardToPickDistinction",
-        upgradeDistinctionCoin: "ClickCoinToUpgradeDistinction",
-        upgradeCoinInDistinction: "ClickCoinToUpgradeInDistinction",
+        upgradeCoin: "ClickCoinToUpgrade",
     },
 };
 
@@ -155,20 +154,12 @@ export const moveValidators = {
             if (G.heroes[id].name === "Hourya") {
                 const suitId = GetSuitIndexByName(G.heroes[id].stack[0].stack.config.conditions.suitCountMin.suit);
                 isValid = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0) >=
-                    G.stack[ctx.currentPlayer][0].stack.config.conditions.suitCountMin.value;
+                    G.heroes[id].stack[0].stack.config.conditions.suitCountMin.value;
             }
             return isValid || G.players[ctx.currentPlayer].buffs?.["noHero"];
         },
     },
     ClickCoinToUpgrade: {
-        getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
-        validate: ({G, ctx, id, type}) => CoinUpgradeValidation(G, ctx, id, type),
-    },
-    ClickCoinToUpgradeDistinction: {
-        getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
-        validate: ({G, ctx, id, type}) => CoinUpgradeValidation(G, ctx, id, type),
-    },
-    ClickCoinToUpgradeInDistinction: {
         getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
         validate: ({G, ctx, id, type}) => CoinUpgradeValidation(G, ctx, id, type),
     },

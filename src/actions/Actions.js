@@ -10,10 +10,11 @@ import {
     GetClosedCoinIntoPlayerHand,
     PickHero,
     PickHeroWithConditions,
-    PlaceThrudAction, PlaceYludAction
+    PlaceThrudAction,
+    PlaceYludAction
 } from "./HeroActions";
 import {
-    AddCampCardToCards,
+    AddCampCardToCards, AddCoinToPouchAction,
     CheckPickCampCard,
     DiscardSuitCard,
     DiscardTradingCoin,
@@ -85,6 +86,9 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         case "PickHero":
             action = PickHero;
             break;
+        case "AddCoinToPouchAction":
+            action = AddCoinToPouchAction;
+            break;
         case "StartVidofnirVedrfolnirAction":
             action = StartVidofnirVedrfolnirAction;
             break;
@@ -118,9 +122,10 @@ const UpgradeCoinAction = (G, ctx, config, ...args) => {
     G.actionsNum--;
     UpgradeCoin(G, ctx, config, ...args);
     if (G.actionsNum === 0) {
+        G.drawProfit = null;
         G.actionsNum = null;
-        return EndActionFromStackAndAddNew(G, ctx);
     }
+    return EndActionFromStackAndAddNew(G, ctx);
 };
 
 /**
@@ -277,17 +282,45 @@ const CheckPickDiscardCard = (G, ctx) => {
  * @constructor
  */
 const PickDiscardCard = (G, ctx, config, cardId) => {
+    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
     const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
-        pickedCard = G.discardCardsDeck.splice(cardId, 1);
-    if (isAdded) {
-        CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-    } else {
-        AddActionsToStackAfterCurrent(G, ctx, G.players[ctx.currentPlayer].pickedCard.stack);
-    }
+        pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
     if (G.actionsNum === 0) {
         G.drawProfit = null;
         G.actionsNum = null;
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
     }
-    return EndActionFromStackAndAddNew(G, ctx);
+    if (!isAdded) {
+        if (G.actionsNum === 1) {
+            const stack = [
+                {
+                    stack: {
+                        actionName: "DrawProfitAction",
+                        config: {
+                            stageName: "pickDiscardCard",
+                            card: "Brisingamens",
+                            name: "BrisingamensAction",
+                            number: 1,
+                        },
+                    },
+                },
+                {
+                    stack: {
+                        actionName: "PickDiscardCard",
+                        config: {
+                            stageName: "pickDiscardCard",
+                            card: "Brisingamens",
+                            name: "BrisingamensAction",
+                            number: 1,
+                        },
+                    },
+                },
+            ];
+            AddActionsToStackAfterCurrent(G, ctx, stack);
+        }
+        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
+    }
+    if (G.actionsNum === null || G.stack[ctx.currentPlayer].length > 1) {
+        return EndActionFromStackAndAddNew(G, ctx);
+    }
 };
-

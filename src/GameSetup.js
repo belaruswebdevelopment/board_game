@@ -26,6 +26,7 @@ export const SetupGame = (ctx) => {
         log = true,
         debug = false,
         drawProfit = null,
+        suitIdForMjollnir = null,
         expansions = {
             thingvellir: {
                 active: true,
@@ -108,6 +109,7 @@ export const SetupGame = (ctx) => {
         tavernsNum,
         currentTavern,
         drawSize,
+        suitIdForMjollnir,
         expansions,
         logData,
         decks,

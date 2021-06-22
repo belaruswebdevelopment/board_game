@@ -88,8 +88,8 @@ export const CheckPickHero = (G, ctx) => {
                         actionName: "PickHero",
                         config: {
                             stageName: "pickHero",
-                        }
-                    }
+                        },
+                    },
                 },
             ];
             AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} должен выбрать нового героя.`);

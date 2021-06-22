@@ -1,4 +1,4 @@
-import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
+import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AddCampCardToPlayer, AddCampCardToPlayerCards} from "../Player";
 import {CheckAndMoveThrudOrPickHeroAction} from "./HeroActions";
@@ -46,49 +46,36 @@ export const AddCampCardToCards = (G, ctx, config) => {
 };
 
 /**
- * Действия, связанные с активацией способности артефакта Vidofnir Vedrfolnir.
+ * Действия, связанные с добавлением монет в кошелёк для обмена при наличии пермонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.
  * Применения:
- * 1) При выборе карт кэмпа артефакта Vidofnir Vedrfolnir.
+ * 1) При выборе карты кэмпа Vidofnir Vedrfolnir и наличии героя Улина.
  *
  * @param G
  * @param ctx
- * @returns {*}
+ * @param config Конфиг действий героя.
+ * @param coinId Id монеты.
  * @constructor
  */
-export const ActivateVidofnirVedrfolnirAction = (G, ctx) => {
-    ctx.setStage(G.stack[ctx.currentPlayer][0].actionName.toLowerCase());
-    let coinsValue = 0;
-    for (let j = G.tavernsNum; j < G.players[ctx.currentPlayer].boardCoins.length; j++) {
-        if (G.players[ctx.currentPlayer].boardCoins[j] &&
-            !G.players[ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
-            coinsValue++;
-        }
-    }
-    let stack;
-    if (coinsValue === 2) {
-        stack = [
+export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
+    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    const player = G.players[ctx.currentPlayer];
+    const tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
+    player.boardCoins[tempId] = player.handCoins[coinId];
+    player.handCoins[coinId] = null;
+    if (G.actionsNum === 0) {
+        const stack = [
             {
-                actionName: "UpgradeCoinAction",
-                config: {
-                    number: 2,
-                    value: 3,
+                stack: {
+                    actionName: "StartVidofnirVedrfolnirAction",
+                    config: {
+                        card: "Vidofnir Vedrfolnir",
+                    },
                 },
             },
         ];
-    } else if (coinsValue === 1) {
-        stack = [
-            {
-                actionName: "UpgradeCoinAction",
-                config: {
-                    number: 1,
-                    value: 5,
-                },
-            },
-        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
+        return EndActionFromStackAndAddNew(G, ctx);
     }
-    G.actionsNum = stack.config.number;
-    G.players[ctx.currentPlayer].pickedCard = stack[0];
-    G.drawProfit = "VidofnirVedrfolnirAction";
 };
 
 /**
@@ -98,20 +85,75 @@ export const ActivateVidofnirVedrfolnirAction = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
  * @returns {*}
  * @constructor
  */
-export const StartVidofnirVedrfolnirAction = (G, ctx, config) => {
-    if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline") {
-        // todo CheckIT
-        ctx.setStage(G.stack[ctx.currentPlayer][0].actionName.toLowerCase());
-        G.drawProfit = config.name;
-        G.actionsNum = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
+export const StartVidofnirVedrfolnirAction = (G, ctx) => {
+    const number = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
+    if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && number > 0) {
+        const stack = [
+            {
+                stack: {
+                    actionName: "DrawProfitAction",
+                    config: {
+                        name: "AddCoinToPouchVidofnirVedrfolnir",
+                        stageName: "addCoinToPouch",
+                        number: number,
+                    },
+                },
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
     } else {
-        ActivateVidofnirVedrfolnirAction(G, ctx);
+        let coinsValue = 0,
+            stack = [];
+        for (let j = G.tavernsNum; j < G.players[ctx.currentPlayer].boardCoins.length; j++) {
+            if (G.players[ctx.currentPlayer].boardCoins[j] &&
+                !G.players[ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
+                coinsValue++;
+            }
+        }
+        if (coinsValue === 1) {
+            stack = [
+                {
+                    stack: {
+                        actionName: "DrawProfitAction",
+                        config: {
+                            name: "VidofnirVedrfolnirAction",
+                            stageName: "upgradeCoinVidofnirVedrfolnir",
+                            number: 1,
+                            value: 5,
+                        },
+                    },
+                },
+                {
+                    stack: {
+                        actionName: "UpgradeCoinAction",
+                        config: {
+                            number: 1,
+                            value: 5,
+                        },
+                    },
+                },
+            ];
+        } else if (coinsValue === 2) {
+            stack = [
+                {
+                    stack: {
+                        actionName: "DrawProfitAction",
+                        config: {
+                            name: "VidofnirVedrfolnirAction",
+                            stageName: "upgradeCoinVidofnirVedrfolnir",
+                            number: 2,
+                            value: 3,
+                        },
+                    },
+                },
+            ];
+        }
+        AddActionsToStackAfterCurrent(G, ctx, stack);
     }
-    // todo return EndActionFromStackAndAddNew(G, ctx);
+    return EndActionFromStackAndAddNew(G, ctx);
 };
 
 /**
@@ -125,8 +167,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx, config) => {
  * @constructor
  */
 export const DiscardTradingCoin = (G, ctx) => {
-    // todo CheckIT
-    ctx.setStage(G.stack[ctx.currentPlayer][0].actionName.toLowerCase());
+    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
     let tradingCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin?.value === 0);
     if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && tradingCoinIndex === -1) {
         tradingCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin?.value === 0);
@@ -149,7 +190,7 @@ export const DiscardTradingCoin = (G, ctx) => {
  * @constructor
  */
 export const DiscardSuitCard = (G, ctx, config) => {
-    ctx.setStage(G.stack[ctx.currentPlayer][0].actionName.toLowerCase());
+    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
     const suitId = GetSuitIndexByName(config.suit),
         value = {};
     for (let i = 0; i < ctx.numPlayers; i++) {

@@ -386,22 +386,20 @@ export const DrawProfit = (data, option) => {
             }
         } else if (option === "explorerDistinction") {
             caption += "one card to your board.";
-            const deck = [];
             for (let j = 0; j < 3; j++) {
-                deck.push(data.props.G.decks[1][j]);
                 if (data.props.G.decks[1][j].suit !== undefined) {
                     boardCells.push(
                         <td className={`${suitsConfig[data.props.G.decks[1][j].suit].suitColor} cursor-pointer`}
                             key={`Card ${j} to player board`}
-                            onClick={() => data.OnClickCardToPickDistinction(j, deck)}>
-                            <b>{deck[j].points}</b>
+                            onClick={() => data.OnClickCardToPickDistinction(j)}>
+                            <b>{data.props.G.decks[1][j].points}</b>
                         </td>
                     );
                 } else if (data.props.G.decks[1][j].type === "улучшение монеты") {
                     boardCells.push(
                         <td className="cursor-pointer" key={`Card ${j} to player board`}
-                            onClick={() => data.OnClickCardToPickDistinction(j, deck)}>
-                            <b>{deck[j].value}</b>
+                            onClick={() => data.OnClickCardToPickDistinction(j)}>
+                            <b>{data.props.G.decks[1][j].value}</b>
                         </td>
                     );
                 }
@@ -509,7 +507,7 @@ export const DrawProfit = (data, option) => {
                     );
                 }
             }
-        } else if (option === "VidofnirVedrfolnirStartAction") {
+        } else if (option === "AddCoinToPouchVidofnirVedrfolnir") {
             caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch to fill it.`;
             for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].handCoins.length; j++) {
                 let drawData = "";

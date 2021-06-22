@@ -1,4 +1,4 @@
-import { IsValidMove} from "../MoveValidator";
+import {IsValidMove} from "../MoveValidator";
 import {INVALID_MOVE} from "boardgame.io/core";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {
@@ -94,13 +94,4 @@ export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
         ctx.events.setPhase("pickCards");
     }
     return false;
-};
-
-export const PickDiscardCard = (G, ctx, cardId) => {
-    G.actionsNum--;
-    if (G.actionsNum) {
-        return StartActionFromStackOrEndActions(G, ctx, null, cardId);
-    } else {
-        return EndActionFromStackAndAddNew(G, ctx, [], cardId);
-    }
 };

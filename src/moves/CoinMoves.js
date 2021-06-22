@@ -4,10 +4,10 @@ import {Trading} from "../Coin";
 import {CheckAndStartUlineActionsOrContinue} from "./HeroMoves";
 import {AfterBasicPickCardActions} from "./Moves";
 import {
-    AddActionsToStack,
-    EndActionFromStackAndAddNew,
+    AddActionsToStack, AddActionsToStackAfterCurrent,
+    EndActionFromStackAndAddNew, StartActionFromStackOrEndActions,
 } from "../helpers/StackHelpers";
-import {ActivateVidofnirVedrfolnirAction} from "../actions/CampActions";
+import {ActivateVidofnirVedrfolnirAction, AddCoinToPouchAction} from "../actions/CampActions";
 // todo Add logging
 export const ActivateTrading = (G, ctx) => {
     if (G.players[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading) {
@@ -150,47 +150,77 @@ export const ClickCoinToUpgrade = (G, ctx, coinId, type, isInitial) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    // todo FixIt or move it away?
     if (G.distinctions.length) {
-        delete G.distinctions[3];
-        delete G.distinctions[4];
-        // TODO ??? ctx.events.endTurn();
+        const isDistinction3 = G.distinctions[3] !== undefined;
+        if (isDistinction3) {
+            delete G.distinctions[3];
+        } else if (!isDistinction3 && G.distinctions[4] !== undefined) {
+            delete G.distinctions[4];
+        }
     }
+    G.drawProfit = null;
     return EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
 };
 
 export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) => {
-    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) || G.players[ctx.currentPlayer].pickedCard.stack[0].config.coinId !== coinId;
+    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && G.stack[ctx.currentPlayer][0].stack.config.coinId !== coinId;
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddActionsToStack(G, ctx, ctx.currentPlayer, G.players[ctx.currentPlayer].pickedCard.stack, coinId, type, isInitial);
-    if (G.actionsNum === 0) {
-        G.actionsNum = null;
-        G.drawProfit = null;
-        AfterBasicPickCardActions(G, ctx);
-    } else {
-        G.players[ctx.currentPlayer].pickedCard = {
-            actionName: "UpgradeCoinAction",
-            config: {
-                coinId,
-                number: 1,
-                value: 2,
+    if (G.actionsNum === 2) {
+        const stack = [
+            {
+                stack: {
+                    actionName: "UpgradeCoinAction",
+                    config: {
+                        number: 2,
+                        value: 3,
+                    },
+                },
             },
-        };
+            {
+                stack: {
+                    actionName: "DrawProfitAction",
+                    config: {
+                        coinId,
+                        name: "VidofnirVedrfolnirAction",
+                        stageName: "upgradeCoinVidofnirVedrfolnir",
+                        number: 1,
+                        value: 2,
+                    },
+                },
+            },
+            {
+                stack: {
+                    actionName: "UpgradeCoinAction",
+                    config: {
+                        coinId,
+                        number: 1,
+                        value: 2,
+                    },
+                },
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
     }
+    return EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
 };
 
 export const AddCoinToPouch = (G, ctx, coinId) => {
-    const player = G.players[ctx.currentPlayer];
-    if (player.handCoins[coinId] !== null) {
-        const tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
-        player.boardCoins[tempId] = player.handCoins[coinId];
-        player.handCoins[coinId] = null;
+    if (G.players[ctx.currentPlayer].handCoins[coinId] !== null) {
         G.actionsNum--;
-        if (G.actionsNum === 0) {
-            ActivateVidofnirVedrfolnirAction(G, ctx);
-        }
+        const stack = [
+            {
+                stack: {
+                    actionName: "AddCoinToPouchAction",
+                    config: {
+                        stageName: "addCoinToPouch",
+                    },
+                },
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
+        return EndActionFromStackAndAddNew(G, ctx, [], coinId);
     } else {
         return INVALID_MOVE;
     }

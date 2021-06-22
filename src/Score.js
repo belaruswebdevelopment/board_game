@@ -2,6 +2,7 @@ import {suitsConfig} from "./data/SuitData";
 import {heroesConfig} from "./data/HeroData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {AddDataToLog} from "./Logging";
+import {artefactsConfig} from "./data/CampData";
 
 /**
  * Высчитывает суммарное количество очков фракции.
@@ -51,13 +52,14 @@ export const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue +
  */
 export const CheckDistinction = (G, ctx) => {
     let i = 0;
+    AddDataToLog(G, "game", "Преимущество по фракциям в конце эпохи:");
     for (const suit in suitsConfig) {
         const result = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[i] = result;
-        if (result === undefined) {
-            if (suit === "explorer") {
+        if (suit === "explorer") {
+            if (result === undefined) {
                 const discardedCard = G.decks[1].splice(0, 1)[0];
-                AddDataToLog(G, "private", `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard}.`);
+                AddDataToLog(G, "private", `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
             }
         }
         i++;
@@ -76,7 +78,6 @@ export const CheckDistinction = (G, ctx) => {
  * @constructor
  */
 const CheckCurrentSuitDistinction = (G, ctx, suitName) => {
-    AddDataToLog(G, "game", "Преимущество по фракциям в конце эпохи:");
     const playersRanks = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const suitIndex = GetSuitIndexByName(suitName);
@@ -169,7 +170,9 @@ export const FinalScoring = (G, ctx, player) => {
         if (player.heroes[i].name.startsWith("Dwerg")) {
             dwerg_brothers += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name)?.scoringRule() ?? 0;
         } else {
-            heroesScore += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name)?.scoringRule() ?? 0;
+            const currentHeroScore = Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name)?.scoringRule(player) ?? 0;
+            AddDataToLog(G, "private", `Очки за героя ${player.heroes[i].name} игрока ${player.nickname}: ${currentHeroScore}.`);
+            heroesScore += currentHeroScore;
         }
     }
     AddDataToLog(G, "private", `Очки за героев братьев Двергов (${dwerg_brothers} шт.) игрока ${player.nickname}: 
@@ -177,6 +180,17 @@ export const FinalScoring = (G, ctx, player) => {
     heroesScore += dwerg_brothers_scoring[dwerg_brothers];
     AddDataToLog(G, "public", `Очки за героев игрока ${player.nickname}: ${heroesScore}.`);
     score += heroesScore;
+    if (G.expansions.thingvellir) {
+        let artifactsScore = 0;
+        for (let i = 0; i < player.campCards.length; i++) {
+            const currentArtefactScore = Object.values(artefactsConfig).find(artefact => artefact.name === player.campCards[i].name)
+                ?.scoringRule(player, G.suitIdForMjollnir) ?? 0;
+            AddDataToLog(G, "private", `Очки за артефакт ${player.campCards[i].name} игрока ${player.nickname}: ${currentArtefactScore}.`);
+            artifactsScore += currentArtefactScore;
+        }
+        AddDataToLog(G, "public", `Очки за артефакты игрока ${player.nickname}: ${artifactsScore}.`);
+        score += artifactsScore;
+    }
     AddDataToLog(G, "public", `Итоговый счёт игрока ${player.nickname}: ${score}.`);
     return score;
 };

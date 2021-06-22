@@ -222,5 +222,5 @@ export const DiscardCardFromTavern = (G, discardCardIndex) => {
     const discardedCard = G.taverns[G.currentTavern][discardCardIndex];
     G.discardCardsDeck.push(discardedCard);
     G.taverns[G.currentTavern][discardCardIndex] = null;
-    AddDataToLog(G, "game", `Карта ${discardedCard} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
+    AddDataToLog(G, "game", `Карта ${discardedCard.name} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
 };

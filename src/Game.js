@@ -1,5 +1,5 @@
 import {SetupGame} from "./GameSetup";
-import {ClickCard, ClickCardToPickDistinction, ClickDistinctionCard,} from "./moves/Moves";
+import {ClickCard, ClickCardToPickDistinction, ClickDistinctionCard, PickDiscardCard,} from "./moves/Moves";
 import {ChangePlayersPriorities} from "./Priority";
 import {CheckDistinction, ScoreWinner} from "./Score";
 import {enumerate, iterations, objectives, playoutDepth} from "./AI";
@@ -9,7 +9,6 @@ import {RefillCamp} from "./Camp";
 import {
     ClickHeroCard,
     DiscardCard,
-    PickDiscardCard,
     PlaceCard,
 } from "./moves/HeroMoves";
 import {
@@ -33,7 +32,7 @@ import {
  *  Применения:
  *  1) При инициализации игрового стола.
  *
- * @type {{onEnd: (function(*=, *=): *), ai: {playoutDepth: ((function(*, *): number)|*), enumerate: ((function(*=, *=): *[])|*), objectives: ((function(): {isEarlyGame: {weight: number, checker: (function(*): boolean)}, isFirst: {weight: number, checker: ((function(*, *): boolean)|*)}, isStronger: {weight: number, checker: ((function(*, *): boolean)|*)}})|*), iterations: ((function(*, *): number)|*)}, setup: ((function(*): {suitsNum: number, campNum: number, campPicked: boolean, tavernsNum: number, discardCampCardsDeck: *[], tierToEnd: number, currentTavern: null, marketCoins: *[], drawSize: (number|*), heroes: *[], discardCardsDeck: *[], drawProfit: null, distinctions: *[], decks: *[], expansions: {thingvellir: {active: boolean}}, taverns: *[], exchangeOrder: *[], botData: {}, averageCards: *[], debug: boolean, players: *[], actionsNum: null, camp: T[], winner: null, campDecks: ({tier: number, name: number, description: string}|null)[][], playersOrder: *[], marketCoinsUnique: *[]})|*), phases: {placeCoins: {next: string, onBegin: BoardGame.phases.placeCoins.onBegin, moves: {ClickHandCoin: ((function(*, *, *=): (string|undefined))|*), BotsPlaceAllCoins: BotsPlaceAllCoins, ClickBoardCoin: ((function(*=, *=, *=): (string|undefined))|*)}, start: boolean, turn: {order: {next: (function(*, *)), first: (function(): number), playOrder: (function(*): []|*)}}}, placeCoinsUline: {onBegin: BoardGame.phases.placeCoinsUline.onBegin, moves: {ClickHandCoin: ((function(*, *, *=): (string|undefined))|*), ClickBoardCoin: ((function(*=, *=, *=): (string|undefined))|*)}, turn: {order: {next: (function(*, *)), first: (function(): number), playOrder: (function(*): []|*)}}}, pickCards: {onBegin: BoardGame.phases.pickCards.onBegin, onEnd: BoardGame.phases.pickCards.onEnd, moves: {ClickCard: ((function(*=, *=, *=): (string|undefined))|*), ClickCampCard: ((function(*=, *=, *=): (string|*))|*)}, turn: {stages: {discardCard: {moves: {DiscardCard2Players: DiscardCard2Players}}, pickDiscardCardAndumia: {moves: {PickDiscardCard: ((function(*=, *=, *=): (*))|*)}}, campAction: {moves: {PickDiscardCard: ((function(*=, *=, *=): (*))|*), AddCoinToPouch: ((function(*=, *=, *): (string|undefined))|*), UpgradeCoinVidofnirVedrfolnir: ((function(*=, *=, *=, *=, *=): (string|undefined))|*)}}, discardCardFromBoard: {moves: {DiscardCard: ((function(*=, *=, *=, *=): (*|undefined))|*)}}, placeTradingCoinsUline: {moves: {ClickHandCoin: ((function(*, *, *=): (string|undefined))|*), ClickBoardCoin: ((function(*=, *=, *=): (string|undefined))|*)}}, discardSuitCard: {moves: {DiscardSuitCardFromPlayerBoard: DiscardSuitCardFromPlayerBoard}}, upgradeCoin: {moves: {ClickCoinToUpgrade: ((function(*=, *=, *=, *=, *=): (string))|*)}}, pickHero: {moves: {ClickHeroCard: ((function(*=, *=, *=): (string))|*)}}, placeCards: {moves: {PlaceCard: ((function(*=, *=, *=): (*))|*)}}, pickCampCardHolda: {moves: {ClickCampCardHolda: ((function(*=, *=, *=): (string|*))|*)}}}, order: {next: (function(*, *)), first: (function(): number), playOrder: (function(*): []|*)}}}, getDistinctions: {next: string, onBegin: BoardGame.phases.getDistinctions.onBegin, onEnd: BoardGame.phases.getDistinctions.onEnd, moves: {ClickDistinctionCard: ((function(*=, *=, *=): (string|undefined))|*)}, endIf: (function(*): boolean), turn: {stages: {upgradeCoin: {moves: {ClickCoinToUpgrade: ((function(*=, *=, *=, *=, *=): (string))|*)}}, pickDistinctionCard: {moves: {ClickCardToPickDistinction: ClickCardToPickDistinction}}}, order: {next: (function(*, *)), first: (function(): number), playOrder: (function(*): []|*)}}}, endTier: {onEnd: BoardGame.phases.endTier.onEnd, moves: {DiscardCardFromPlayerBoard: DiscardCardFromPlayerBoard}, turn: {stages: {pickDiscardCardAndumia: {moves: {PickDiscardCard: ((function(*=, *=, *=): (*))|*)}}, discardCardFromBoard: {moves: {DiscardCard: ((function(*=, *=, *=, *=): (*|undefined))|*)}}, upgradeCoin: {moves: {ClickCoinToUpgrade: ((function(*=, *=, *=, *=, *=): (string))|*)}}, pickHero: {moves: {ClickHeroCard: ((function(*=, *=, *=): (string))|*)}}, placeCards: {moves: {PlaceCard: ((function(*=, *=, *=): (*))|*)}}, pickCampCardHolda: {moves: {ClickCampCardHolda: ((function(*=, *=, *=): (string|*))|*)}}}, order: {next: (function(*, *)), first: (function(): number), playOrder: (function(*): []|*)}}}}}} Игра.
+ * @type {{onEnd: (function(*=, *=): *), ai: {playoutDepth: ((function(*, *): number)|*), enumerate: ((function(*=, *=): *[])|*), objectives: ((function(): {isEarlyGame: {weight: number, checker: (function(*): boolean)}, isFirst: {weight: number, checker: ((function(*, *): boolean)|*)}, isStronger: {weight: number, checker: ((function(*, *): boolean)|*)}})|*), iterations: ((function(*, *): number)|*)}, setup: ((function(*): {suitsNum: number, campNum: number, campPicked: boolean, tavernsNum: number, discardCampCardsDeck: *[], tierToEnd: number, currentTavern: null, marketCoins: *[], drawSize: (number|*), heroes: *[], discardCardsDeck: *[], drawProfit: null, distinctions: *[], decks: *[], expansions: {thingvellir: {active: boolean}}, taverns: *[], exchangeOrder: *[], botData: {}, averageCards: *[], debug: boolean, players: *[], actionsNum: null, camp: T[], winner: null, campDecks: ({tier: number, name: number, description: string}|null)[][], playersOrder: *[], marketCoinsUnique: *[]})|*), phases: {placeCoins: {next: string, onBegin: BoardGame.phases.placeCoins.onBegin, moves: {ClickHandCoin: ((function(*, *, *=): (string|undefined))|*), BotsPlaceAllCoins: BotsPlaceAllCoins, ClickBoardCoin: ((function(*=, *=, *=): (string|undefined))|*)}, start: boolean, turn: {order: {next: (function(*, *)), first: (function(): number), playOrder: (function(*): []|*)}}}, placeCoinsUline: {onBegin: BoardGame.phases.placeCoinsUline.onBegin, moves: {ClickHandCoin: ((function(*, *, *=): (string|undefined))|*), ClickBoardCoin: ((function(*=, *=, *=): (string|undefined))|*)}, turn: {order: {next: (function(*, *)), first: (function(): number), playOrder: (function(*): []|*)}}}, pickCards: {onBegin: BoardGame.phases.pickCards.onBegin, onEnd: BoardGame.phases.pickCards.onEnd, moves: {ClickCard: ((function(*=, *=, *=): (string|undefined))|*), ClickCampCard: ((function(*=, *=, *=): (string|*))|*)}, turn: {stages: {discardCard: {moves: {DiscardCard2Players: DiscardCard2Players}}, campAction: {moves: {AddCoinToPouch: ((function(*=, *=, *): (string|undefined))|*), UpgradeCoinVidofnirVedrfolnir: ((function(*=, *=, *=, *=, *=): (string|undefined))|*)}}, pickDiscardCard: {moves: {PickDiscardCard: ((function(*=, *=, *=): (*))|*)}}, discardCardFromBoard: {moves: {DiscardCard: ((function(*=, *=, *=, *=): (*|undefined))|*)}}, placeTradingCoinsUline: {moves: {ClickHandCoin: ((function(*, *, *=): (string|undefined))|*), ClickBoardCoin: ((function(*=, *=, *=): (string|undefined))|*)}}, discardSuitCard: {moves: {DiscardSuitCardFromPlayerBoard: DiscardSuitCardFromPlayerBoard}}, upgradeCoin: {moves: {ClickCoinToUpgrade: ((function(*=, *=, *=, *=, *=): (string))|*)}}, pickHero: {moves: {ClickHeroCard: ((function(*=, *=, *=): (string))|*)}}, placeCards: {moves: {PlaceCard: ((function(*=, *=, *=): (*))|*)}}, pickCampCardHolda: {moves: {ClickCampCardHolda: ((function(*=, *=, *=): (string|*))|*)}}}, order: {next: (function(*, *)), first: (function(): number), playOrder: (function(*): []|*)}}}, getDistinctions: {next: string, onBegin: BoardGame.phases.getDistinctions.onBegin, onEnd: BoardGame.phases.getDistinctions.onEnd, moves: {ClickDistinctionCard: ((function(*=, *=, *=): (string|undefined))|*)}, endIf: (function(*): boolean), turn: {stages: {upgradeCoin: {moves: {ClickCoinToUpgrade: ((function(*=, *=, *=, *=, *=): (string))|*)}}, pickDistinctionCard: {moves: {ClickCardToPickDistinction: ((function(*=, *=, *=): *)|*)}}}, order: {next: (function(*, *)), first: (function(): number), playOrder: (function(*): []|*)}}}, endTier: {onEnd: BoardGame.phases.endTier.onEnd, moves: {DiscardCardFromPlayerBoard: DiscardCardFromPlayerBoard}, turn: {stages: {pickDiscardCard: {moves: {PickDiscardCard: ((function(*=, *=, *=): (*))|*)}}, discardCardFromBoard: {moves: {DiscardCard: ((function(*=, *=, *=, *=): (*|undefined))|*)}}, upgradeCoin: {moves: {ClickCoinToUpgrade: ((function(*=, *=, *=, *=, *=): (string))|*)}}, pickHero: {moves: {ClickHeroCard: ((function(*=, *=, *=): (string))|*)}}, placeCards: {moves: {PlaceCard: ((function(*=, *=, *=): (*))|*)}}, pickCampCardHolda: {moves: {ClickCampCardHolda: ((function(*=, *=, *=): (string|*))|*)}}}, order: {next: (function(*, *)), first: (function(): number), playOrder: (function(*): []|*)}}}}}} Игра.
  */
 export const BoardGame = {
     setup: SetupGame,
@@ -112,9 +111,24 @@ export const BoardGame = {
                             ClickCampCardHolda,
                         },
                     },
-                    pickDiscardCardAndumia: {
+                    pickDiscardCard: {
                         moves: {
                             PickDiscardCard,
+                        },
+                    },
+                    addCoinToPouch: {
+                        moves: {
+                            AddCoinToPouch,
+                        },
+                    },
+                    upgradeCoinVidofnirVedrfolnir: {
+                        moves: {
+                            UpgradeCoinVidofnirVedrfolnir,
+                        },
+                    },
+                    discardSuitCard: {
+                        moves: {
+                            DiscardSuitCardFromPlayerBoard,
                         },
                     },
                     upgradeCoin: {
@@ -137,19 +151,6 @@ export const BoardGame = {
                         moves: {
                             ClickHandCoin,
                             ClickBoardCoin,
-                        },
-                    },
-                    // todo rework in stages
-                    campAction: {
-                        moves: {
-                            AddCoinToPouch,
-                            UpgradeCoinVidofnirVedrfolnir,
-                            PickDiscardCard,
-                        },
-                    },
-                    discardSuitCard: {
-                        moves: {
-                            DiscardSuitCardFromPlayerBoard,
                         },
                     },
                 },
@@ -191,9 +192,24 @@ export const BoardGame = {
                             ClickCampCardHolda,
                         },
                     },
-                    pickDiscardCardAndumia: {
+                    pickDiscardCard: {
                         moves: {
                             PickDiscardCard,
+                        },
+                    },
+                    addCoinToPouch: {
+                        moves: {
+                            AddCoinToPouch,
+                        },
+                    },
+                    upgradeCoinVidofnirVedrfolnir: {
+                        moves: {
+                            UpgradeCoinVidofnirVedrfolnir,
+                        },
+                    },
+                    discardSuitCard: {
+                        moves: {
+                            DiscardSuitCardFromPlayerBoard,
                         },
                     },
                     upgradeCoin: {

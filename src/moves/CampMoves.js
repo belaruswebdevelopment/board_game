@@ -78,6 +78,7 @@ export const DiscardCard2Players = (G, ctx, cardId) => {
  * @constructor
  */
 export const DiscardCardFromPlayerBoard = (G, ctx, suitId, cardId) => {
+    // todo FixIt to action
     G.players[ctx.currentPlayer].cards[suitId].filter(card => card.type !== "герой").splice(cardId, 1);
     delete G.players[ctx.currentPlayer].buffs["discardCardEndGame"];
     ctx.events.endPhase();

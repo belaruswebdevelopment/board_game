@@ -800,7 +800,7 @@ const Andumia = {
             stack: {
                 actionName: "DrawProfitAction",
                 config: {
-                    stageName: "pickDiscardCardAndumia",
+                    stageName: "pickDiscardCard",
                     hero: "Andumia",
                     name: "AndumiaAction",
                     number: 1,
