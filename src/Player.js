@@ -92,7 +92,8 @@ export const AddCardToPlayer = (G, ctx, card) => {
     const suitIndex = GetSuitIndexByName(card.suit);
     G.players[ctx.currentPlayer].cards[suitIndex].push(card);
     AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту 
-    (шевронов: ${card.rank}${card.points === null ? "" : ", очков: " + card.points}) во фракцию ${suitsConfig[card.suit].suitName}.`);
+    (${card.name === undefined ? "" : `имя: ${card.name}, `}шевронов: ${card.rank}${card.points === null ? "" : `, очков: ${card.points}`}) 
+    во фракцию ${suitsConfig[card.suit].suitName}.`);
     return true;
 };
 
@@ -127,6 +128,7 @@ export const AddCampCardToPlayerCards = (G, ctx, card) => {
     AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту кэмпа ${card.name} во фракцию 
         ${suitsConfig[card.suit].suitName}.`);
 };
+
 /**
  * Добавляет героя в массив героев игрока.
  * Применения:
@@ -155,7 +157,6 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
  * @constructor
  */
 export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
-    hero.active = false;
     const suitId = GetSuitIndexByName(hero.suit);
     G.players[ctx.currentPlayer].cards[suitId].push(hero);
     AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил героя ${hero.name} во фракцию 

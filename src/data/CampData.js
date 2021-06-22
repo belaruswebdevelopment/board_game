@@ -39,7 +39,7 @@ const Fafnir_Baleygr = {
     ],
     scoringRule: () => 0,
 };
-
+//+
 /**
  * Данные об артефакте.
  * Применения:
@@ -95,7 +95,7 @@ const Vegvisir = {
     ],
     scoringRule: () => 0,
 };
-
+//+
 /**
  * Данные об артефакте.
  * Применения:
@@ -123,7 +123,7 @@ const Svalinn = {
     ],
     scoringRule: () => (player) => player.heroes.length * 5,
 };
-
+//+checkIt
 /**
  * Данные об артефакте.
  * Применения:
@@ -250,7 +250,7 @@ const Brisingamens = {
     ],
     scoringRule: () => 0,
 };
-
+//+
 /**
  * Данные об артефакте.
  * Применения:
@@ -316,7 +316,7 @@ const Hofud = {
     ],
     scoringRule: () => 0,
 };
-
+//+
 /**
  * Данные об артефакте.
  * Применения:

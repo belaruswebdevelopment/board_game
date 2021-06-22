@@ -1,4 +1,5 @@
-import {ActionDispatcher, EndAction} from "../Actions";
+import {ActionDispatcher} from "../actions/Actions";
+import {EndAction} from "./ActionHelper";
 
 /**
  * Добавляет действия в стэк действий конкретного игрока.
@@ -14,8 +15,32 @@ import {ActionDispatcher, EndAction} from "../Actions";
 export const AddActionsToStack = (G, ctx, stack) => {
     if (stack.length) {
         for (let i = stack.length - 1; i >= 0; i--) {
-            const playerId = stack[i].playerId ?? ctx.currentPlayer;
+            const playerId = stack[i]["playerId"] ?? ctx.currentPlayer;
             G.stack[playerId].unshift(stack[i]);
+        }
+    }
+};
+
+/**
+ * Добавляет действия в стэк действий конкретного игрока после текущего.
+ * Применения:
+ * 1) Выполняется при необходимости добавить действия в стэк действий после текущего.
+ *
+ * @param G
+ * @param ctx
+ * @param stack Стэк действий.
+ * @returns {*} Старт действий.
+ * @constructor
+ */
+export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
+    if (stack.length) {
+        for (let i = stack.length - 1; i >= 0; i--) {
+            const playerId = stack[i]["playerId"] ?? ctx.currentPlayer;
+            if (i === stack.length - 1 && G.stack[playerId][0]) {
+                G.stack[playerId].splice(1, 0, stack[i]);
+            } else {
+                G.stack[playerId].unshift(stack[i]);
+            }
         }
     }
 };
@@ -48,15 +73,16 @@ export const StartActionFromStackOrEndActions = (G, ctx, isTrading = null, ...ar
  * @param G
  * @param ctx
  * @param newStack Новый стэк.
+ * @param args Дополнительные аргументы.
  * @returns {*} Выполнение действий.
  * @constructor
  */
-export const EndActionFromStackAndAddNew = (G, ctx, newStack = []) => {
+export const EndActionFromStackAndAddNew = (G, ctx, newStack = [], ...args) => {
     if (ctx.activePlayers?.[ctx.currentPlayer]) {
         ctx.events.endStage();
     }
     const isTrading = G.stack[ctx.currentPlayer][0].stack.config.isTrading ?? null;
     G.stack[ctx.currentPlayer].shift();
     AddActionsToStack(G, ctx, newStack);
-    return StartActionFromStackOrEndActions(G, ctx, isTrading);
+    return StartActionFromStackOrEndActions(G, ctx, isTrading, ...args);
 };

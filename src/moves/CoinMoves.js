@@ -2,9 +2,12 @@ import {CoinUpgradeValidation, IsValidMove} from "../MoveValidator";
 import {INVALID_MOVE} from "boardgame.io/core";
 import {Trading} from "../Coin";
 import {CheckAndStartUlineActionsOrContinue} from "./HeroMoves";
-import {ActivateVidofnirVedrfolnirAction, EndAction} from "../Actions";
 import {AfterBasicPickCardActions} from "./Moves";
-import {AddActionsToStack, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
+import {
+    AddActionsToStack,
+    EndActionFromStackAndAddNew,
+} from "../helpers/StackHelpers";
+import {ActivateVidofnirVedrfolnirAction} from "../actions/CampActions";
 // todo Add logging
 export const ActivateTrading = (G, ctx) => {
     if (G.players[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading) {
@@ -50,7 +53,7 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
             ctx.events.setPhase("pickCards");
         } else if (ctx.activePlayers?.[ctx.currentPlayer] === "placeTradingCoinsUline") {
             G.actionsNum--;
-            if (!G.actionsNum) {
+            if (G.actionsNum === 0) {
                 G.actionsNum = null;
             }
             AfterBasicPickCardActions(G, ctx);
@@ -142,37 +145,18 @@ export const ResolveBoardCoins = (G, ctx) => {
     return {playersOrder, exchangeOrder};
 };
 
-export const ClickCoinToUpgradeDistinction = (G, ctx, coinId, type, isInitial) => {
-    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
-    if (!isValidMove) {
-        return INVALID_MOVE;
-    }
-    AddActionsToStack(G, ctx, ctx.currentPlayer, G.players[ctx.currentPlayer].pickedCard.stack, coinId, type, isInitial,
-        G.players[ctx.currentPlayer].boardCoins[coinId], G.players[ctx.currentPlayer].boardCoins[coinId].value);
-    G.drawProfit = null;
-    delete G.distinctions[3];
-    ctx.events.endTurn();
-};
-
-export const ClickCoinToUpgradeInDistinction = (G, ctx, coinId, type, isInitial) => {
-    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
-    if (!isValidMove) {
-        return INVALID_MOVE;
-    }
-    AddActionsToStack(G, ctx, ctx.currentPlayer, G.players[ctx.currentPlayer].pickedCard.stack, coinId, type, isInitial,
-        G.players[ctx.currentPlayer].boardCoins[coinId], G.players[ctx.currentPlayer].boardCoins[coinId].value);
-    G.drawProfit = null;
-    delete G.distinctions[4];
-    ctx.events.endTurn();
-};
-
 export const ClickCoinToUpgrade = (G, ctx, coinId, type, isInitial) => {
     const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    return EndActionFromStackAndAddNew(G, ctx, ctx.currentPlayer, coinId, type, isInitial, G.players[ctx.currentPlayer].boardCoins[coinId],
-        G.players[ctx.currentPlayer].boardCoins[coinId].value);
+    // todo FixIt or move it away?
+    if (G.distinctions.length) {
+        delete G.distinctions[3];
+        delete G.distinctions[4];
+        // TODO ??? ctx.events.endTurn();
+    }
+    return EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
 };
 
 export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) => {
@@ -180,9 +164,8 @@ export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) =
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddActionsToStack(G, ctx, ctx.currentPlayer, G.players[ctx.currentPlayer].pickedCard.stack, coinId, type, isInitial,
-        G.players[ctx.currentPlayer].boardCoins[coinId], G.players[ctx.currentPlayer].boardCoins[coinId].value);
-    if (!G.actionsNum) {
+    AddActionsToStack(G, ctx, ctx.currentPlayer, G.players[ctx.currentPlayer].pickedCard.stack, coinId, type, isInitial);
+    if (G.actionsNum === 0) {
         G.actionsNum = null;
         G.drawProfit = null;
         AfterBasicPickCardActions(G, ctx);
@@ -198,16 +181,6 @@ export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) =
     }
 };
 
-export const UpgradeCoinFromDiscard = (G, ctx, coinId, type, isInitial) => {
-    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
-    if (!isValidMove) {
-        return INVALID_MOVE;
-    }
-    AddActionsToStack(G, ctx, ctx.currentPlayer, G.players[ctx.currentPlayer].pickedCard.stack, coinId, type, isInitial,
-        G.players[ctx.currentPlayer].boardCoins[coinId], G.players[ctx.currentPlayer].boardCoins[coinId].value);
-    EndAction(G, ctx);
-};
-
 export const AddCoinToPouch = (G, ctx, coinId) => {
     const player = G.players[ctx.currentPlayer];
     if (player.handCoins[coinId] !== null) {
@@ -215,7 +188,7 @@ export const AddCoinToPouch = (G, ctx, coinId) => {
         player.boardCoins[tempId] = player.handCoins[coinId];
         player.handCoins[coinId] = null;
         G.actionsNum--;
-        if (!G.actionsNum) {
+        if (G.actionsNum === 0) {
             ActivateVidofnirVedrfolnirAction(G, ctx);
         }
     } else {

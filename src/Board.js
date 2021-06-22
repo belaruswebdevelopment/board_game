@@ -55,15 +55,6 @@ export class GameBoard extends React.Component {
     OnClickCardFromDiscard = (cardId) => {
         this.props.moves.PickDiscardCard(cardId);
     };
-    OnClickSuitToPlaceYlud = (suitId) => {
-        this.props.moves.PlaceYlud(suitId);
-    };
-    OnClickSuitToPlaceThrud = (suitId) => {
-        this.props.moves.PlaceThrud(suitId);
-    };
-    OnClickSuitToMoveThrud = (suitId) => {
-        this.props.moves.PlaceThrud(suitId);
-    };
     OnClickCardToDiscard2Players = (cardId) => {
         this.props.moves.DiscardCard2Players(cardId);
     };

@@ -1,13 +1,15 @@
 import {INVALID_MOVE} from "boardgame.io/core";
 import {AddCardToPlayer} from "../Player";
 import {suitsConfig} from "../data/SuitData";
-import {CheckCurrentTavernEmpty, RefillTaverns} from "../Tavern";
-import {CheckPickHero, RemoveThrudFromPlayerBoardAfterGameEnd} from "../Hero";
+import {CheckIfCurrentTavernEmpty, RefillTaverns} from "../Tavern";
+import {RemoveThrudFromPlayerBoardAfterGameEnd} from "../Hero";
 import {IsValidMove} from "../MoveValidator";
 import {DiscardCardIfCampCardPicked, RefillEmptyCampCards} from "../Camp";
-import {CheckAndMoveThrud, CheckAndStartUlineActionsOrContinue, StartThrudMoving} from "./HeroMoves";
+import {CheckAndStartUlineActionsOrContinue, StartThrudMoving} from "./HeroMoves";
 import {ActivateTrading} from "./CoinMoves";
 import {DiscardCardFromTavern} from "../Card";
+import {AddActionsToStack, StartActionFromStackOrEndActions} from "../helpers/StackHelpers";
+import {CheckAndMoveThrudOrPickHeroAction} from "../actions/HeroActions";
 // todo Add logging
 export const CheckEndTierPhaseEnded = (G, ctx) => {
     if (G.tierToEnd) {
@@ -34,43 +36,50 @@ export const CheckEndTierPhaseEnded = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @param isTrading Является ли действие обменом монет (трейдингом).
  * @constructor
  */
-export const AfterBasicPickCardActions = (G, ctx) => {
-    if (G.players[ctx.currentPlayer].buffs?.["noHero"]) {
-        delete G.players[ctx.currentPlayer].buffs["noHero"];
-    } else if (G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]) {
+export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
+    // todo rework it all!
+    G.players[ctx.currentPlayer].pickedCard = null;
+    if (G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]) {
+        // todo Rework it or delete in the Click camp card move?
         delete G.players[ctx.currentPlayer].buffs?.["goCampOneTime"];
     }
     if (ctx.phase !== "endTier") {
-        if (Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1]) &&
-            ctx.playOrder.length < Number(ctx.numPlayers)) {
-            const cardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
-            DiscardCardFromTavern(G, cardIndex);
-        }
         const isUlinePlaceTradingCoin = CheckAndStartUlineActionsOrContinue(G, ctx);
         if (isUlinePlaceTradingCoin !== "placeTradingCoinsUline" && isUlinePlaceTradingCoin !== "nextPlaceTradingCoinsUline") {
-            ActivateTrading(G, ctx);
-            if (Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) {
-                DiscardCardIfCampCardPicked(G);
+            let isTradingActivated = false;
+            if (!isTrading) {
+                isTradingActivated = ActivateTrading(G, ctx);
             }
-            const isLastTavern = G.tavernsNum - 1 === G.currentTavern,
-                isCurrentTavernEmpty = CheckCurrentTavernEmpty(G, ctx);
-            if (isCurrentTavernEmpty && isLastTavern) {
-                AfterLastTavernEmptyActions(G, ctx);
-            } else if (isCurrentTavernEmpty) {
-                const isPlaceCoinsUline = CheckAndStartUlineActionsOrContinue(G, ctx);
-                if (isPlaceCoinsUline !== "endPlaceTradingCoinsUline" && isPlaceCoinsUline !== "placeCoinsUline") {
-                    ctx.events.setPhase("pickCards");
-                } else {
-                    ctx.events.setPhase("placeCoinsUline")
+            if (!isTradingActivated) {
+                if (Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1]) &&
+                    ctx.playOrder.length < Number(ctx.numPlayers)) {
+                    const cardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
+                    DiscardCardFromTavern(G, cardIndex);
                 }
-            } else {
-                if (Number(ctx.currentPlayer) === Number(ctx.playOrder[0]) && G.campPicked && ctx.numPlayers === 2) {
-                    G.drawProfit = "discardCard";
-                    ctx.events.setStage("discardCard");
+                if (Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) {
+                    DiscardCardIfCampCardPicked(G);
+                }
+                const isLastTavern = G.tavernsNum - 1 === G.currentTavern,
+                    isCurrentTavernEmpty = CheckIfCurrentTavernEmpty(G, ctx);
+                if (isCurrentTavernEmpty && isLastTavern) {
+                    AfterLastTavernEmptyActions(G, ctx);
+                } else if (isCurrentTavernEmpty) {
+                    const isPlaceCoinsUline = CheckAndStartUlineActionsOrContinue(G, ctx);
+                    if (isPlaceCoinsUline !== "endPlaceTradingCoinsUline" && isPlaceCoinsUline !== "placeCoinsUline") {
+                        ctx.events.setPhase("pickCards");
+                    } else {
+                        ctx.events.setPhase("placeCoinsUline")
+                    }
                 } else {
-                    ctx.events.endTurn();
+                    if (Number(ctx.currentPlayer) === Number(ctx.playOrder[0]) && G.campPicked && ctx.numPlayers === 2) {
+                        G.drawProfit = "discardCard";
+                        ctx.events.setStage("discardCard");
+                    } else {
+                        ctx.events.endTurn();
+                    }
                 }
             }
         }
@@ -79,6 +88,7 @@ export const AfterBasicPickCardActions = (G, ctx) => {
             isThrudOnThePlayerSuitBoard = G.players[ctx.currentPlayer].cards.flat().findIndex(card => card.name === "Thrud") !== -1;
         if (isPlayerHasThrud && !isThrudOnThePlayerSuitBoard) {
             const yludCard = G.players[ctx.currentPlayer].cards.flat().find(card => card.name === "Ylud");
+            // todo FIXIT
             StartThrudMoving(G, ctx, yludCard);
         } else {
             CheckEndTierPhaseEnded(G, ctx);
@@ -161,21 +171,16 @@ export const ClickCard = (G, ctx, cardId) => {
     }
     const card = G.taverns[G.currentTavern][cardId];
     G.taverns[G.currentTavern][cardId] = null;
-    const isAdded = AddCardToPlayer(G, ctx, card),
-        thrud = CheckAndMoveThrud(G, ctx, card);
-    if (thrud) {
-        StartThrudMoving(G, ctx, card);
+    const isAdded = AddCardToPlayer(G, ctx, card);
+    if (isAdded) {
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
     } else {
-        if (isAdded) {
-            if (CheckPickHero(G, ctx)) {
-                ctx.events.setStage("pickHero");
-            } else {
-                AfterBasicPickCardActions(G, ctx);
-            }
-        } else {
-            ctx.events.setStage("upgradeCoin");
-            G.drawProfit = "upgradeCoin";
-        }
+        AddActionsToStack(G, ctx, G.players[ctx.currentPlayer].pickedCard.stack);
+    }
+    if (G.stack[ctx.currentPlayer].length) {
+        return StartActionFromStackOrEndActions(G, ctx);
+    } else {
+        AfterBasicPickCardActions(G, ctx);
     }
 };
 

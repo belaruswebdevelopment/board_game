@@ -368,46 +368,16 @@ export const DrawProfit = (data, option) => {
     const boardCells = [];
     let caption = "Get ";
     for (let i = 0; i < 1; i++) {
-        if (option === "endTier") {
-            caption += "suit to add Ylud to your board.";
+        if (option === "placeCards") {
+            caption += `suit to place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} to that suit.`;
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 const suit = Object.keys(suitsConfig)[j];
-                // todo draw Ylud profit for every suit?
-                boardCells.push(
-                    <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                        key={`Place Ylud on ${suitsConfig[suit].suitName}`}>
-                            <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
-                                  onClick={() => data.OnClickSuitToPlaceYlud(j)}>
-
-                            </span>
-                    </td>
-                );
-            }
-        } else if (option === "ThrudAction") {
-            caption += "suit to add Thrud to your board.";
-            for (let j = 0; j < data.props.G.suitsNum; j++) {
-                const suit = Object.keys(suitsConfig)[j];
-                // todo draw Thrud profit for every suit?
-                boardCells.push(
-                    <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                        key={`Add Thrud on ${suitsConfig[suit].suitName}`}>
-                        <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
-                              onClick={() => data.OnClickSuitToPlaceThrud(j)}>
-
-                        </span>
-                    </td>
-                );
-            }
-        } else if (option === "moveThrud") {
-            caption += "suit to move Thrud to that suit.";
-            for (let j = 0; j < data.props.G.suitsNum; j++) {
-                const suit = Object.keys(suitsConfig)[j];
-                if (suit !== data.props.G.players[data.props.ctx.currentPlayer].pickedCard.suit) {
+                if (suit !== data.props.G.players[data.props.ctx.currentPlayer].pickedCard?.suit) {
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                            key={`Move Thrud on ${suitsConfig[suit].suitName}`}>
+                            key={`Place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} on ${suitsConfig[suit].suitName}`}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
-                                  onClick={() => data.OnClickSuitToMoveThrud(j)}>
+                                  onClick={() => data.OnClickSuitToPlaceCard(j)}>
 
                             </span>
                         </td>
@@ -462,22 +432,6 @@ export const DrawProfit = (data, option) => {
                             </td>
                         );
                     }
-                }
-            }
-        } else if (option === "OlwinAction") {
-            caption += "two suits to add Olwin's doubles to your board.";
-            for (let j = 0; j < data.props.G.suitsNum; j++) {
-                const suit = Object.keys(suitsConfig)[j];
-                if (suit !== data.props.G.players[data.props.ctx.currentPlayer].pickedCard?.suit) {
-                    boardCells.push(
-                        <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                            key={`Place Olwin's double on ${suitsConfig[suit].suitName}`}>
-                            <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
-                                  onClick={() => data.OnClickSuitToPlaceCard(j)}>
-
-                            </span>
-                        </td>
-                    );
                 }
             }
         } else if (option === "AndumiaAction" || option === "BrisingamensAction") {
