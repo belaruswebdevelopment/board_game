@@ -9,6 +9,147 @@ export const Styles = {
     Suits: (suitName) => ({
         background: `url(/img/suits/${suitName}.png) no-repeat 0px 0px / 24px 24px`
     }),
+    Cards: (suit, points, name) => {
+        if (name === "Olwin") {
+            switch (name) {
+                case "Olwin":
+                    return {
+                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -32px -50px / 288px 144px",
+                    };
+                default:
+                    return {
+                        background: "",
+                    };
+            }
+        } else if (suit) {
+            switch (suit) {
+                case "blacksmith":
+                    return {
+                        background: "url(/img/cards/basic/basic0.png) no-repeat 0px 0px / 288px 288px",
+                    };
+                case "hunter":
+                    return {
+                        background: "url(/img/cards/basic/basic0.png) no-repeat -128px 0px / 288px 288px",
+                    };
+                case "miner":
+                    switch (points) {
+                        case 0:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -192px 0px / 288px 288px",
+                            };
+                        case 1:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -192px -48px / 288px 288px",
+                            };
+                        case 2:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -224px -48px / 288px 288px",
+                            };
+                        default:
+                            return {
+                                background: "",
+                            };
+                    }
+                case "warrior":
+                    switch (points) {
+                        case 3:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -96px -256px / 288px 288px",
+                            };
+                        case 4:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat 0px -144px / 288px 288px",
+                            };
+                        case 5:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -32px -144px / 288px 288px",
+                            };
+                        case 6:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -64px -144px / 288px 288px",
+                            };
+                        case 7:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -32px -192px / 288px 288px",
+                            };
+                        case 8:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -64px -192px / 288px 288px",
+                            };
+                        case 9:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat 0px -240px / 288px 288px",
+                            };
+                        case 10:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -32px -240px / 288px 288px",
+                            };
+                        default:
+                            return {
+                                background: "",
+                            };
+                    }
+                case "explorer":
+                    switch (points) {
+                        case 5:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -224px -48px / 288px 288px",
+                            };
+                        case 6:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -96px -144px / 288px 288px",
+                            };
+                        case 7:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -128px -144px / 288px 288px",
+                            };
+                        case 8:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -160px -144px / 288px 288px",
+                            };
+                        case 9:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -96px -192px / 288px 288px",
+                            };
+                        case 10:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -128px -192px / 288px 288px",
+                            };
+                        case 11:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -160px -192px / 288px 288px",
+                            };
+                        case 12:
+                            return {
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -224px -48px / 288px 288px",
+                            };
+                        default:
+                            return {
+                                background: "",
+                            };
+                    }
+                default:
+                    return {
+                        background: "",
+                    };
+            }
+        } else {
+            switch (name) {
+                case "улучшение монеты на +3":
+                    return {
+                        background: "url(/img/cards/basic/basic0.png) no-repeat 0px 0px / 288px 288px",
+                    };
+                case "улучшение монеты на +5":
+                    return {
+                        background: "url(/img/cards/basic/basic0.png) no-repeat 0px 0px / 288px 288px",
+                    };
+                default:
+                    return {
+                        background: "",
+                    };
+            }
+        }
+    },
     Heroes: (game, heroName) => {
         if (game === "base") {
             switch (heroName) {

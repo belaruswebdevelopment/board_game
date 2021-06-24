@@ -720,23 +720,19 @@ export const DrawTaverns = (data, gridClass) => {
                         </td>
                     );
                 } else {
-                    if (data.props.G.taverns[t][j].suit !== undefined) {
-                        boardCells.push(
-                            <td className={`${suitsConfig[data.props.G.taverns[t][j].suit].suitColor} cursor-pointer`}
-                                key={`${tavernsConfig[t].name} card ${j}`}
-                                onClick={() => data.OnClickCard(j)}>
-                                <b>{data.props.G.taverns[t][j].points}</b>
-                            </td>
-                        );
-                    } else if (data.props.G.taverns[t][j].type === "улучшение монеты") {
-                        boardCells.push(
-                            <td className="cursor-pointer"
-                                key={`${tavernsConfig[t].name} card ${j}`}
-                                onClick={() => data.OnClickCard(j)}>
-                                <b>{data.props.G.taverns[t][j].value}</b>
-                            </td>
-                        );
-                    }
+                    boardCells.push(
+                        <td className="cursor-pointer"
+                            key={`${tavernsConfig[t].name} card ${j} ${data.props.G.taverns[t][j].name}`}
+                            onClick={() => data.OnClickCard(j)}>
+                            <span
+                                style={Styles.Cards(data.props.G.taverns[t][j].suit, data.props.G.taverns[t][j].points,
+                                    data.props.G.taverns[t][j].name)}
+                                title={data.props.G.taverns[t][j].name}
+                                className="bg-card">
+
+                            </span>
+                        </td>
+                    );
                 }
             }
             tavernsBoards.push(

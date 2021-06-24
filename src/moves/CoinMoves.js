@@ -3,11 +3,8 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {Trading} from "../Coin";
 import {CheckAndStartUlineActionsOrContinue} from "./HeroMoves";
 import {AfterBasicPickCardActions} from "./Moves";
-import {
-    AddActionsToStack, AddActionsToStackAfterCurrent,
-    EndActionFromStackAndAddNew, StartActionFromStackOrEndActions,
-} from "../helpers/StackHelpers";
-import {ActivateVidofnirVedrfolnirAction, AddCoinToPouchAction} from "../actions/CampActions";
+import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
+
 // todo Add logging
 export const ActivateTrading = (G, ctx) => {
     if (G.players[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading) {

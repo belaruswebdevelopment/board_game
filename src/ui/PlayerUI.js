@@ -381,17 +381,47 @@ export const DrawPlayersBoards = (data) => {
                                 </span>
                             </td>
                         );
+                    } else if (data.props.G.players[p].cards[j][i].type === "артефакт") {
+                        playerCells.push(
+                            <td key={`${data.props.G.players[p].nickname} camp card artefact ${data.props.G.players[p].campCards[i].name}`}
+                                className={suitsConfig[suit].suitColor}>
+                                <span
+                                    style={Styles.CampCards(data.props.G.players[p].campCards[i].tier, data.props.G.players[p].campCards[i].path)}
+                                    title={data.props.G.players[p].campCards[i].description}
+                                    className="bg-camp">
+
+                                </span>
+                            </td>
+                        );
+                    } else if (data.props.G.players[p].cards[j][i].type === "наёмник") {
+                        playerCells.push(
+                            <td key={`${data.props.G.players[p].nickname} camp card mercenary ${data.props.G.players[p].cards[j][i].name}`}
+                                className={suitsConfig[suit].suitColor}>
+                                <span
+                                    style={Styles.CampCards(data.props.G.players[p].cards[j][i].tier, data.props.G.players[p].cards[j][i].path)}
+                                    title={data.props.G.players[p].cards[j][i].name}
+                                    className="bg-camp">
+
+                                </span>
+                            </td>
+                        );
                     } else {
                         playerCells.push(
-                            <td key={`${data.props.G.players[p].nickname} card ${id}`}
+                            <td key={`${data.props.G.players[p].nickname} card ${id} ${data.props.G.players[p].cards[j][i].name}`}
                                 className={suitsConfig[suit].suitColor}>
-                                <b>{data.props.G.players[p].cards[j][i].points}</b>
+                                <span
+                                    style={Styles.Cards(data.props.G.players[p].cards[j][i].suit, data.props.G.players[p].cards[j][i].points,
+                                        data.props.G.players[p].cards[j][i].name)}
+                                    title={data.props.G.players[p].cards[j][i].name}
+                                    className="bg-card">
+
+                                </span>
                             </td>
                         );
                     }
                 } else {
                     playerCells.push(
-                        <td key={`${data.props.G.players[p].nickname} card ${id}`}>
+                        <td key={`${data.props.G.players[p].nickname} empty card ${id}`}>
 
                         </td>
                     );

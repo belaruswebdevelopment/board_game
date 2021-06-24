@@ -15,16 +15,22 @@ import {tavernsConfig} from "./Tavern";
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
+ * @param game Игра/дополнение.
+ * @param tier Эпоха.
+ * @param path URL путь.
  * @returns {{name, rank: number, suit, points: null}} Карта.
  * @constructor
  */
-export const CreateCard = ({type = "базовая", suit, rank = 1, points = null, name} = {}) => {
+export const CreateCard = ({type = "базовая", suit, rank = 1, points = null, name, game, tier, path} = {}) => {
     return {
         type,
         suit,
         rank,
         points,
         name,
+        game,
+        tier,
+        path,
     };
 };
 
@@ -69,7 +75,7 @@ export const BuildCards = (deckConfig, data) => {
                 rank: deckConfig.suits[suit].ranksValues()[data.players][data.tier][j],
                 points: deckConfig.suits[suit].pointsValues()[data.players][data.tier][j],
                 name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: ${deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] ?? 1}, 
-                очков: ${deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] ?
+                очков: ${deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] !== undefined ?
                     deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] + ")" : "нет)" }`,
             }));
         }

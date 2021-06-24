@@ -160,6 +160,7 @@ export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
     AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил героя ${hero.name} во фракцию 
     ${suitsConfig[hero.suit].suitName}.`);
 };
+
 /**
  * Добавляет карту в массив потенциальных карт для ботов.
  * Применения:

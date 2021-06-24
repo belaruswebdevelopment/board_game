@@ -54,6 +54,10 @@
         @apply block-center w-8 h-12;
     }
 
+    .bg-card {
+        @apply block-center w-8 h-12;
+    }
+
     .bg-hero-icon {
         @apply block-center w-6 h-6;
     }

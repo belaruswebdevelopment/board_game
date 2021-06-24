@@ -353,7 +353,7 @@ const Hrafnsmerki = {
             },
         },
     ],
-    scoringRule: (player) => player.campCards.filter(campCard => campCard.type === "наёмник").length * 5,
+    scoringRule: (player) => player.cards.flat().filter(card => card.type === "наёмник").length * 5,
 };
 //+
 /**
