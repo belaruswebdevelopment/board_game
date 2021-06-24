@@ -86,14 +86,12 @@ export const BuildPlayer = (playersNum, suitsNum, nickname) => {
 export const AddCardToPlayer = (G, ctx, card) => {
     G.players[ctx.currentPlayer].pickedCard = card;
     if (card.type === "улучшение монеты") {
-        AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту улучшения монеты на +${card.value}.`);
+        AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту '${card.name}'.`);
         return false;
     }
     const suitIndex = GetSuitIndexByName(card.suit);
     G.players[ctx.currentPlayer].cards[suitIndex].push(card);
-    AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту 
-    (${card.name === undefined ? "" : `имя: ${card.name}, `}шевронов: ${card.rank}${card.points === null ? "" : `, очков: ${card.points}`}) 
-    во фракцию ${suitsConfig[card.suit].suitName}.`);
+    AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту '${card.name}'.`);
     return true;
 };
 
@@ -125,7 +123,7 @@ export const AddCampCardToPlayer = (G, ctx, card) => {
 export const AddCampCardToPlayerCards = (G, ctx, card) => {
     const suitId = GetSuitIndexByName(card.suit);
     G.players[ctx.currentPlayer].cards[suitId].push(card);
-    AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту кэмпа ${card.name} во фракцию 
+    AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту кэмпа '${card.name}' во фракцию 
         ${suitsConfig[card.suit].suitName}.`);
 };
 

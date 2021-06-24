@@ -39,11 +39,12 @@ export const CreateCard = ({type = "базовая", suit, rank = 1, points = nu
  * @returns {{action, value}} Карта улучшения монеты.
  * @constructor
  */
-const CreateActionCard = ({type = "улучшение монеты", value, stack} = {}) => {
+const CreateActionCard = ({type = "улучшение монеты", value, stack, name} = {}) => {
     return {
         type,
         value,
         stack,
+        name,
     };
 };
 
@@ -67,6 +68,9 @@ export const BuildCards = (deckConfig, data) => {
                 suit: deckConfig.suits[suit].suit,
                 rank: deckConfig.suits[suit].ranksValues()[data.players][data.tier][j],
                 points: deckConfig.suits[suit].pointsValues()[data.players][data.tier][j],
+                name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: ${deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] ?? 1}, 
+                очков: ${deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] ?
+                    deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] + ")" : "нет)" }`,
             }));
         }
     }
@@ -75,6 +79,7 @@ export const BuildCards = (deckConfig, data) => {
             cards.push(CreateActionCard({
                 value: deckConfig.actions[i].value,
                 stack: deckConfig.actions[i].stack,
+                name: `улучшение монеты на +${deckConfig.actions[i].value}`,
             }));
         }
     }

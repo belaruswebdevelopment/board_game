@@ -34,7 +34,7 @@ export const DrawLogData = (data) => {
             }
         }
         return (
-            <div className="ml-3 w-1/4 border h-screen overflow-y-auto">
+            <div className="ml-3 w-1/4 border overflow-y-auto">
                 <h3>Log data:</h3>
                 <ul className="list-none p-0 ml-5">
                     {loggingData}

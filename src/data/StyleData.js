@@ -171,9 +171,9 @@ export const Styles = {
     Camp: () => ({
         background: "url(/img/cards/camp/Camp.png) no-repeat 0px 3px / 24px 18px",
     }),
-    CampCards: (tier, cardName) => {
+    CampCards: (tier, cardPath) => {
         if (tier === 0) {
-            switch (cardName) {
+            switch (cardPath) {
                 case "Draupnir":
                     return {
                         background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px 0px / 128px 144px`,
@@ -228,7 +228,7 @@ export const Styles = {
                     };
             }
         } else if (tier === 1) {
-            switch (cardName) {
+            switch (cardPath) {
                 case "Mjollnir":
                     return {
                         background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px 0px / 128px 144px`,

@@ -15,6 +15,7 @@ import {
     StartActionFromStackOrEndActions
 } from "../helpers/StackHelpers";
 import {CheckAndMoveThrudOrPickHeroAction} from "../actions/HeroActions";
+import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 
 // todo Add logging
 export const CheckEndTierPhaseEnded = (G, ctx) => {
@@ -66,6 +67,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                     DiscardCardFromTavern(G, cardIndex);
                 }
                 if (Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) {
+                    G.campPicked = false;
                     DiscardCardIfCampCardPicked(G);
                 }
                 const isLastTavern = G.tavernsNum - 1 === G.currentTavern,
@@ -178,15 +180,17 @@ export const ClickCard = (G, ctx, cardId) => {
         return INVALID_MOVE;
     }
     const card = G.taverns[G.currentTavern][cardId];
+    let suitId = null;
     G.taverns[G.currentTavern][cardId] = null;
     const isAdded = AddCardToPlayer(G, ctx, card);
     if (isAdded) {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
+        suitId = GetSuitIndexByName(card.suit);
     } else {
         AddActionsToStack(G, ctx, card.stack);
     }
     if (G.stack[ctx.currentPlayer].length) {
-        return StartActionFromStackOrEndActions(G, ctx);
+        return StartActionFromStackOrEndActions(G, ctx, null, suitId);
     } else {
         AfterBasicPickCardActions(G, ctx);
     }
@@ -204,15 +208,17 @@ export const ClickDistinctionCard = (G, ctx, cardID) => {
 export const ClickCardToPickDistinction = (G, ctx, cardId) => {
     const isAdded = AddCardToPlayer(G, ctx, G.decks[1][cardId]),
         pickedCard = G.decks[1].splice(cardId, 1)[0];
+    let suitId = null;
     G.decks[1] = ctx.random.Shuffle(G.decks[1]);
     if (isAdded) {
         delete G.distinctions[4];
         CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
+        suitId = GetSuitIndexByName(pickedCard.suit);
     } else {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
     G.drawProfit = null;
-    return EndActionFromStackAndAddNew(G, ctx);
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 
 export const PickDiscardCard = (G, ctx, cardId) => {

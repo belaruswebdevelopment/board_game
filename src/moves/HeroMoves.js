@@ -16,12 +16,7 @@ export const ClickHeroCard = (G, ctx, heroId) => {
 };
 
 export const PlaceCard = (G, ctx, suitId) => {
-    G.actionsNum--;
-    if (G.actionsNum) {
-        return EndActionFromStackAndAddNew(G, ctx, [], suitId);
-    } else {
-        return StartActionFromStackOrEndActions(G, ctx, null, suitId);
-    }
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 
 export const CheckAndMoveThrud = (G, ctx, card) => {
@@ -42,6 +37,7 @@ export const StartThrudMoving = (G, ctx, card) => {
             stack: {
                 actionName: "DrawProfitAction",
                 config: {
+                    hero: "Thrud",
                     name: "placeCards",
                     stageName: "placeCards",
                     suit: card.suit,
@@ -51,9 +47,11 @@ export const StartThrudMoving = (G, ctx, card) => {
         {
             stack: {
                 actionName: "PlaceThrudAction",
-                config: {},
+                config: {
+                    hero: "Thrud",
+                },
             },
-        }
+        },
     ];
     AddActionsToStackAfterCurrent(G, ctx, stack);
 };

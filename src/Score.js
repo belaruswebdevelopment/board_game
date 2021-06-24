@@ -207,15 +207,26 @@ export const FinalScoring = (G, ctx, player) => {
  */
 export const ScoreWinner = (G, ctx) => {
     AddDataToLog(G, "game", "Финальные результаты игры:");
-    const totalScore = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        totalScore.push(FinalScoring(G, ctx, G.players[i]));
+        G.totalScore.push(FinalScoring(G, ctx, G.players[i]));
     }
+    const maxScore = Math.max(...G.totalScore),
+        maxPlayers = G.totalScore.filter(score => score === maxScore).length;
+    let winners = 0;
+    G.winner = [];
     for (let i = ctx.numPlayers - 1; i >= 0; i--) {
-        if (Math.max(...totalScore) === totalScore[i]) {
-            G.winner = i;
-            AddDataToLog(G, "public", `Определился победитель: игрок ${G.players[i].nickname}.`);
-            return G;
+        if (maxScore === G.totalScore[i]) {
+            if (maxPlayers > winners) {
+                G.winner.push(i);
+                winners++;
+                AddDataToLog(G, "game", `Определился победитель: игрок ${G.players[i].nickname}.`);
+                if (maxPlayers === winners) {
+                    break;
+                }
+            }
         }
+    }
+    if (G.winner.length) {
+        return G;
     }
 }

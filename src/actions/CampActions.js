@@ -15,7 +15,7 @@ import {CheckAndMoveThrudOrPickHeroAction} from "./HeroActions";
  */
 export const CheckPickCampCard = (G, ctx) => {
     if (G.camp.length === 0) {
-        G.stack[ctx.currentPlayer].slice(1);
+        G.stack[ctx.currentPlayer].splice(1);
     }
     return EndActionFromStackAndAddNew(G, ctx);
 };
@@ -34,15 +34,17 @@ export const CheckPickCampCard = (G, ctx) => {
 export const AddCampCardToCards = (G, ctx, config) => {
     const campCardIndex = G.camp.findIndex(card => card?.name === config.card);
     const campCard = G.camp[campCardIndex];
+    let suitId = null;
     G.camp[campCardIndex] = null;
     G.campPicked = true;
     if (campCard.suit) {
         AddCampCardToPlayerCards(G, ctx, campCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, campCard);
+        suitId = GetSuitIndexByName(campCard.suit);
     } else {
         AddCampCardToPlayer(G, ctx, campCard);
     }
-    return EndActionFromStackAndAddNew(G, ctx);
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 
 /**

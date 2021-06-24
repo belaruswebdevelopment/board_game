@@ -72,14 +72,23 @@ export const DrawCurrentPlayerTurn = (data) => {
 export const DrawWinner = (data) => {
     let winner;
     if (data.props.ctx.gameover) {
-        winner = data.props.ctx.gameover.winner !== null ?
-            "Winner: Player " + (data.props.G.winner + 1) :
-            "Draw!";
+        if (data.props.G.winner !== undefined) {
+            if (data.props.G.winner.length === 1) {
+                winner = `Winner: Player ${data.props.G.players[data.props.G.winner[0]].nickname}`;
+            } else {
+                winner = "Winners: ";
+                data.props.G.winner.forEach((playerId, index) => {
+                    winner += `${index + 1}) Player ${data.props.G.players[playerId].nickname}; `;
+                });
+            }
+        } else {
+            winner = "Draw!";
+        }
     } else {
         winner = "Game is started";
     }
     return (
-        <b>Game status: <span className="italic">{winner}</span></b>
+        <b>Game status: <span className="italic">{winner.trim()}</span></b>
     );
 };
 
@@ -369,13 +378,14 @@ export const DrawProfit = (data, option) => {
     let caption = "Get ";
     for (let i = 0; i < 1; i++) {
         if (option === "placeCards") {
-            caption += `suit to place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} to that suit.`;
+            // todo FixIt
+            caption += `suit to place ${data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.hero} to that suit.`;
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 const suit = Object.keys(suitsConfig)[j];
                 if (suit !== data.props.G.players[data.props.ctx.currentPlayer].pickedCard?.suit) {
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                            key={`Place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} on ${suitsConfig[suit].suitName}`}>
+                            key={`Place ${data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.hero} on ${suitsConfig[suit].suitName}`}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
                                   onClick={() => data.OnClickSuitToPlaceCard(j)}>
 
@@ -433,11 +443,9 @@ export const DrawProfit = (data, option) => {
                 }
             }
         } else if (option === "AndumiaAction" || option === "BrisingamensAction") {
-            let count;
-            if (option === "AndumiaAction") {
+            let count = data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.number === 1 ? "one" : "two";
+            if (option === "BrisingamensAction" && data.props.G.discardCardsDeck.length === 1) {
                 count = "one";
-            } else if (option === "BrisingamensAction") {
-                count = "two";
             }
             caption += `${count} card from discard pile to your board.`;
             for (let j = 0; j < data.props.G.discardCardsDeck.length; j++) {
@@ -479,7 +487,7 @@ export const DrawProfit = (data, option) => {
                         <td className="bg-yellow-200 cursor-pointer"
                             key={`Camp ${data.props.G.camp[j].name} card for hero pick`}
                             onClick={() => data.OnClickCampCardHolda(j)}>
-                            <span style={Styles.CampCards(data.props.G.camp[j].tier, data.props.G.camp[j].name)}
+                            <span style={Styles.CampCards(data.props.G.camp[j].tier, data.props.G.camp[j].path)}
                                   title={data.props.G.camp[j].description} className="bg-camp">
 
                             </span>
@@ -654,7 +662,7 @@ export const DrawCamp = (data) => {
                 boardCells.push(
                     <td className="bg-yellow-200 cursor-pointer" key={`Camp ${data.props.G.camp[j].name} card`}
                         onClick={() => data.OnClickCampCard(j)}>
-                        <span style={Styles.CampCards(data.props.G.camp[j].tier, data.props.G.camp[j].name)}
+                        <span style={Styles.CampCards(data.props.G.camp[j].tier, data.props.G.camp[j].path)}
                               title={data.props.G.camp[j].description ?? data.props.G.camp[j].name} className="bg-camp">
 
                         </span>

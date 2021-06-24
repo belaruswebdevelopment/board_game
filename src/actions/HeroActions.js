@@ -31,7 +31,7 @@ export const PlaceThrudAction = (G, ctx, config, suitId) => {
         points = 0;
     }
     const thrudCard = CreateCard({
-        suit: suit,
+        suit,
         rank: 1,
         points: points,
         type: "герой",
@@ -79,7 +79,7 @@ export const PlaceYludAction = (G, ctx, config, suitId) => {
     AddCardToPlayer(G, ctx, yludCard);
     CheckAndMoveThrudOrPickHeroAction(G, ctx, yludCard);
     G.drawProfit = null;
-    return EndActionFromStackAndAddNew(G, ctx);
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 
 /**
@@ -115,12 +115,14 @@ export const CheckAndMoveThrudOrPickHeroAction = (G, ctx, card) => {
 export const AddHeroToCards = (G, ctx, config) => {
     const heroIndex = GetHeroIndexByName(config.hero),
         hero = G.heroes[heroIndex];
+    let suitId = null;
     AddHeroCardToPlayerHeroCards(G, ctx, hero);
     if (hero.suit) {
         AddHeroCardToPlayerCards(G, ctx, hero);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
+        suitId = GetSuitIndexByName(hero.suit);
     }
-    return EndActionFromStackAndAddNew(G, ctx);
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 
 /**

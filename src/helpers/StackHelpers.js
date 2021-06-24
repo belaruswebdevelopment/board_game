@@ -34,12 +34,16 @@ export const AddActionsToStack = (G, ctx, stack) => {
  */
 export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
     if (stack.length) {
+        let noCurrent = false;
         for (let i = stack.length - 1; i >= 0; i--) {
             const playerId = stack[i]["playerId"] ?? ctx.currentPlayer;
-            if (i === stack.length - 1 && !G.stack[playerId][0]) {
-                G.stack[playerId].unshift(stack[i]);
-            } else {
+            if (i === stack.length - 1 && G.stack[playerId][0] === undefined) {
+                G.stack[playerId].push(stack[i]);
+                noCurrent = true;
+            } else if (!noCurrent) {
                 G.stack[playerId].splice(1, 0, stack[i]);
+            } else if (noCurrent) {
+                G.stack[playerId].unshift(stack[i]);
             }
         }
     }

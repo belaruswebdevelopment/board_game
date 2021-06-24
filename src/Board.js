@@ -92,7 +92,7 @@ export class GameBoard extends React.Component {
             logUI = DrawLogData(this),
             debugUI = DrawDebugData(this);
         return (
-            <div className="flex">
+            <div className="flex h-screen">
                 <div className="grid auto-cols-min grid-cols-1 md:grid-cols-12 gap-1">
                     <div className={classes}>
                         {tierCardsUI}

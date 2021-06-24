@@ -1,8 +1,9 @@
 import React from "react";
 import {suitsConfig} from "../data/SuitData";
 import {tavernsConfig} from "../Tavern";
-import {CurrentScoring, FinalScoring} from "../Score";
+import {CurrentScoring, TotalRank} from "../Score";
 import {Styles} from "../data/StyleData";
+import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 
 /**
  * Отрисовка планшета монет, выложенных игроком на стол.
@@ -128,7 +129,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                         if (data.props.G.players[p].boardCoins[coinIndex] === null) {
                             if (Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase !== "placeCoinsUline" &&
                                 (data.props.ctx.phase === "placeCoins" ||
-                                    data.props.ctx.activePlayers?.[data.props.ctx.currentPlayer] === "placeTradingCoinsUline" )) {
+                                    data.props.ctx.activePlayers?.[data.props.ctx.currentPlayer] === "placeTradingCoinsUline")) {
                                 playerCells.push(
                                     <td className="cursor-pointer"
                                         key={`${data.props.G.players[p].nickname} exchange coin ${j} empty`}
@@ -152,7 +153,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 );
                             }
                         } else if (Number(data.props.ctx.currentPlayer) === p && (data.props.ctx.phase === "placeCoins" ||
-                                data.props.ctx.activePlayers?.[data.props.ctx.currentPlayer] === "placeTradingCoinsUline")) {
+                            data.props.ctx.activePlayers?.[data.props.ctx.currentPlayer] === "placeTradingCoinsUline")) {
                             playerCells.push(
                                 <td className="cursor-pointer"
                                     key={`${data.props.G.players[p].nickname} placed exchange coin ${j}`}
@@ -305,11 +306,13 @@ export const DrawPlayersHandsCoins = (data) => {
 export const DrawPlayersBoards = (data) => {
     const playersBoards = [],
         playerHeaders = [],
+        playerHeadersCount = [],
         playerRows = [],
         expansion = data.props.G.expansions.thingvellir.active ? 1 : 0;
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         playersBoards[p] = [];
         playerHeaders[p] = [];
+        playerHeadersCount[p] = [];
         playerRows[p] = [];
         for (const suit in suitsConfig) {
             // todo draw ranks number in current suit?
@@ -319,6 +322,11 @@ export const DrawPlayersBoards = (data) => {
                     <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
 
                     </span>
+                </th>
+            );
+            playerHeadersCount[p].push(
+                <th key={`${data.props.G.players[p].nickname} ${suitsConfig[suit].suitName} count`}>
+                    <b>{data.props.G.players[p].cards[GetSuitIndexByName(suit)].reduce(TotalRank, 0)}</b>
                 </th>
             );
         }
@@ -331,12 +339,22 @@ export const DrawPlayersBoards = (data) => {
                         </span>
                     </th>
                 );
+                playerHeadersCount[p].push(
+                    <th key={`${data.props.G.players[p].nickname} hero count`}>
+                        <b>{data.props.G.players[p].heroes.length}</b>
+                    </th>
+                );
             } else {
                 playerHeaders[p].push(
                     <th className="bg-yellow-200" key={`${data.props.G.players[p].nickname} camp icon`}>
                         <span style={Styles.Camp()} className="bg-camp-icon">
 
                         </span>
+                    </th>
+                );
+                playerHeadersCount[p].push(
+                    <th key={`${data.props.G.players[p].nickname} camp counts`}>
+                        <b>{data.props.G.players[p].campCards.length}</b>
                     </th>
                 );
             }
@@ -383,23 +401,21 @@ export const DrawPlayersBoards = (data) => {
                 id += k + 1;
                 if (k === 0) {
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity) or draw number in the TH tag
-                    if (data.props.G.players[p].heroes[i] !== undefined) {
-                        if (!data.props.G.players[p].heroes[i].suit &&
-                            !((data.props.G.players[p].heroes[i].name === "Ylud" &&
-                                data.props.G.players[p].cards.flat().findIndex(card => card.name === "Ylud") !== -1) ||
-                                (data.props.G.players[p].heroes[i].name === "Thrud" &&
-                                    data.props.G.players[p].cards.flat().findIndex(card => card.name === "Thrud") !== -1))) {
-                            isDrawRow = true;
-                            playerCells.push(
-                                <td key={`${data.props.G.players[p].nickname} hero ${data.props.G.players[p].heroes[i].name}`}>
-                                    <span
-                                        style={Styles.Heroes(data.props.G.players[p].heroes[i].game, data.props.G.players[p].heroes[i].name)}
-                                        title={data.props.G.players[p].heroes[i].description} className="bg-hero">
+                    if (data.props.G.players[p].heroes[i] !== undefined && (!data.props.G.players[p].heroes[i].suit &&
+                        !((data.props.G.players[p].heroes[i].name === "Ylud" &&
+                            data.props.G.players[p].cards.flat().findIndex(card => card.name === "Ylud") !== -1) ||
+                            (data.props.G.players[p].heroes[i].name === "Thrud" &&
+                                data.props.G.players[p].cards.flat().findIndex(card => card.name === "Thrud") !== -1)))) {
+                        isDrawRow = true;
+                        playerCells.push(
+                            <td key={`${data.props.G.players[p].nickname} hero ${data.props.G.players[p].heroes[i].name}`}>
+                                <span
+                                    style={Styles.Heroes(data.props.G.players[p].heroes[i].game, data.props.G.players[p].heroes[i].name)}
+                                    title={data.props.G.players[p].heroes[i].description} className="bg-hero">
 
-                                    </span>
-                                </td>
-                            );
-                        }
+                                </span>
+                            </td>
+                        );
                     } else {
                         playerCells.push(
                             <td key={`${data.props.G.players[p].nickname} hero ${i}`}>
@@ -413,7 +429,7 @@ export const DrawPlayersBoards = (data) => {
                         playerCells.push(
                             <td key={`${data.props.G.players[p].nickname} camp card ${data.props.G.players[p].campCards[i].name}`}>
                                 <span
-                                    style={Styles.CampCards(data.props.G.players[p].campCards[i].tier, data.props.G.players[p].campCards[i].name)}
+                                    style={Styles.CampCards(data.props.G.players[p].campCards[i].tier, data.props.G.players[p].campCards[i].path)}
                                     title={data.props.G.players[p].campCards[i].description ?? data.props.G.players[p].campCards[i].name}
                                     className="bg-camp">
 
@@ -440,11 +456,11 @@ export const DrawPlayersBoards = (data) => {
         playersBoards[p].push(
             <table className="mx-auto" key={`${data.props.G.players[p].nickname} board`}>
                 <caption>Player {p + 1} ({data.props.G.players[p].nickname}) cards, {data.props.G.winner !== null ?
-                    "Final: " + FinalScoring(data.props.G, data.props.ctx, data.props.G.players[p], CurrentScoring(data.props.G.players[p])) :
-                    CurrentScoring(data.props.G.players[p])} points
+                    `Final: ${data.props.G.totalScore[p]}` : CurrentScoring(data.props.G.players[p])} points
                 </caption>
                 <thead>
                 <tr>{playerHeaders[p]}</tr>
+                <tr>{playerHeadersCount[p]}</tr>
                 </thead>
                 <tbody>{playerRows[p]}</tbody>
             </table>

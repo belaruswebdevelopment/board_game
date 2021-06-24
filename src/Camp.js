@@ -1,5 +1,6 @@
 import {DiscardCardFromTavern} from "./Card";
 import {AddDataToLog} from "./Logging";
+import {suitsConfig} from "./data/SuitData";
 
 /**
  * Создание карты артефакта для кэмпа.
@@ -8,6 +9,7 @@ import {AddDataToLog} from "./Logging";
  *
  * @param type Тип.
  * @param tier Эпоха.
+ * @param path URL путь.
  * @param name Название.
  * @param description Описание.
  * @param game Игра/дополнение.
@@ -21,6 +23,7 @@ import {AddDataToLog} from "./Logging";
 export const CreateArtefactCampCard = ({
                                            type = "артефакт",
                                            tier,
+                                           path,
                                            name,
                                            description,
                                            game,
@@ -32,6 +35,7 @@ export const CreateArtefactCampCard = ({
     return {
         type,
         tier,
+        path,
         name,
         description,
         game,
@@ -49,6 +53,7 @@ export const CreateArtefactCampCard = ({
  *
  * @param type Тип.
  * @param tier Эпоха.
+ * @param path URL путь.
  * @param name Название.
  * @param game Игра/дополнение.
  * @param variants Варианты карт.
@@ -59,6 +64,7 @@ export const CreateArtefactCampCard = ({
 export const CreateMercenaryCampCard = ({
                                             type = "наёмник",
                                             tier,
+                                            path,
                                             name,
                                             game = "thingvellir",
                                             variants,
@@ -67,6 +73,7 @@ export const CreateMercenaryCampCard = ({
     return {
         type,
         tier,
+        path,
         name,
         game,
         variants,
@@ -92,6 +99,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
             if (artefactConfig[campArtefactCard].tier === tier) {
                 campCards.push(CreateArtefactCampCard({
                     tier,
+                    path: artefactConfig[campArtefactCard].name,
                     name: artefactConfig[campArtefactCard].name,
                     description: artefactConfig[campArtefactCard].description,
                     game: artefactConfig[campArtefactCard].game,
@@ -104,15 +112,22 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
         }
     }
     for (let i = 0; i < mercenariesConfig[tier].length; i++) {
-        let name = "";
+        let name = "",
+            path = "";
         for (const campMercenarySuit in mercenariesConfig[tier][i]) {
             if (mercenariesConfig[tier][i].hasOwnProperty(campMercenarySuit)) {
-                name += campMercenarySuit + " ";
+                path += campMercenarySuit + " ";
+                name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
                 for (const campMercenaryCardProperty in mercenariesConfig[tier][i][campMercenarySuit]) {
                     if (mercenariesConfig[tier][i][campMercenarySuit].hasOwnProperty(campMercenaryCardProperty)) {
+                        if (campMercenaryCardProperty === "rank") {
+                            name += `шевронов: ${mercenariesConfig[tier][i][campMercenarySuit].rank}, `;
+                        }
                         if (campMercenaryCardProperty === "points") {
-                            name += mercenariesConfig[tier][i][campMercenarySuit].points ?
+                            path += mercenariesConfig[tier][i][campMercenarySuit].points ?
                                 mercenariesConfig[tier][i][campMercenarySuit].points + " " : "";
+                            name += `очков: ${mercenariesConfig[tier][i][campMercenarySuit].points ?
+                                mercenariesConfig[tier][i][campMercenarySuit].points + ") " : "нет) "}`;
                         }
                     }
                 }
@@ -120,6 +135,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
         }
         campCards.push(CreateMercenaryCampCard({
             tier,
+            path: path.trim(),
             name: name.trim(),
             variants: mercenariesConfig[tier][i],
             stack: [

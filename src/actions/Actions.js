@@ -20,6 +20,7 @@ import {
     DiscardTradingCoin,
     StartVidofnirVedrfolnirAction
 } from "./CampActions";
+import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 // todo Add logging
 /**
  * Диспетчер действий при их активаци.
@@ -140,7 +141,6 @@ const UpgradeCoinAction = (G, ctx, config, ...args) => {
  */
 const DrawProfitAction = (G, ctx, config) => {
     ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
-    G.players[ctx.currentPlayer].pickedCard = config;
     G.actionsNum = config.number ?? null;
     G.drawProfit = config.name;
 };
@@ -229,27 +229,50 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
  */
 const PlaceCards = (G, ctx, config, suitId) => {
     ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
-    G.players[ctx.currentPlayer].pickedCard = {
-        suit: suitId,
-    };
+    G.actionsNum--;
     const suit = Object.keys(suitsConfig)[suitId];
     let points = 0;
     if (suit === "hunter" || suit === "blacksmith") {
         points = null;
     }
     const olwinDouble = CreateCard({
-        suit: suit,
+        suit,
         rank: 1,
         points: points,
         name: "Olwin",
     });
     AddCardToPlayer(G, ctx, olwinDouble);
-    if (G.actionsNum === 0) {
+    if (G.actionsNum === 1) {
+        const stack = [
+            {
+                stack: {
+                    actionName: "DrawProfitAction",
+                    config: {
+                        name: "placeCards",
+                        stageName: "placeCards",
+                        hero: "Olwin",
+                        number: 1,
+                    },
+                },
+            },
+            {
+                stack: {
+                    actionName: "PlaceCards",
+                    config: {
+                        stageName: "placeCards",
+                        hero: "Olwin",
+                    },
+                },
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
+    }
+    if (G.actionsNum === 0 || G.stack[ctx.currentPlayer].length > 2) {
         G.drawProfit = null;
         G.actionsNum = null;
-        CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
-        return EndActionFromStackAndAddNew(G, ctx);
     }
+    CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 
 /**
@@ -264,7 +287,7 @@ const PlaceCards = (G, ctx, config, suitId) => {
  */
 const CheckPickDiscardCard = (G, ctx) => {
     if (G.discardCardsDeck.length === 0) {
-        G.stack[ctx.currentPlayer].slice(1);
+        G.stack[ctx.currentPlayer].splice(1);
     }
     return EndActionFromStackAndAddNew(G, ctx);
 };
@@ -285,42 +308,44 @@ const PickDiscardCard = (G, ctx, config, cardId) => {
     ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
     const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
         pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
-    if (G.actionsNum === 0) {
+    if (G.actionsNum === 1 && G.discardCardsDeck.length > 0) {
+        const stack = [
+            {
+                stack: {
+                    actionName: "DrawProfitAction",
+                    config: {
+                        stageName: "pickDiscardCard",
+                        card: "Brisingamens",
+                        name: "BrisingamensAction",
+                        number: 1,
+                    },
+                },
+            },
+            {
+                stack: {
+                    actionName: "PickDiscardCard",
+                    config: {
+                        stageName: "pickDiscardCard",
+                        card: "Brisingamens",
+                        name: "BrisingamensAction",
+                        number: 1,
+                    },
+                },
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
+    }
+    if (G.actionsNum === 0 || G.stack[ctx.currentPlayer].length > 2 || G.discardCardsDeck.length === 0) {
         G.drawProfit = null;
         G.actionsNum = null;
-        CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
     }
-    if (!isAdded) {
-        if (G.actionsNum === 1) {
-            const stack = [
-                {
-                    stack: {
-                        actionName: "DrawProfitAction",
-                        config: {
-                            stageName: "pickDiscardCard",
-                            card: "Brisingamens",
-                            name: "BrisingamensAction",
-                            number: 1,
-                        },
-                    },
-                },
-                {
-                    stack: {
-                        actionName: "PickDiscardCard",
-                        config: {
-                            stageName: "pickDiscardCard",
-                            card: "Brisingamens",
-                            name: "BrisingamensAction",
-                            number: 1,
-                        },
-                    },
-                },
-            ];
-            AddActionsToStackAfterCurrent(G, ctx, stack);
-        }
+    if (isAdded) {
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
+    } else {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
     if (G.actionsNum === null || G.stack[ctx.currentPlayer].length > 1) {
-        return EndActionFromStackAndAddNew(G, ctx);
+        const suitId = GetSuitIndexByName(pickedCard.suit);
+        return EndActionFromStackAndAddNew(G, ctx, [], suitId);
     }
 };
