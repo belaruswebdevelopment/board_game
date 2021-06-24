@@ -56,11 +56,9 @@ export const CheckDistinction = (G, ctx) => {
     for (const suit in suitsConfig) {
         const result = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[i] = result;
-        if (suit === "explorer") {
-            if (result === undefined) {
-                const discardedCard = G.decks[1].splice(0, 1)[0];
-                AddDataToLog(G, "private", `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
-            }
+        if (suit === "explorer" && result === undefined) {
+            const discardedCard = G.decks[1].splice(0, 1)[0];
+            AddDataToLog(G, "private", `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
         }
         i++;
     }
@@ -215,14 +213,12 @@ export const ScoreWinner = (G, ctx) => {
     let winners = 0;
     G.winner = [];
     for (let i = ctx.numPlayers - 1; i >= 0; i--) {
-        if (maxScore === G.totalScore[i]) {
-            if (maxPlayers > winners) {
-                G.winner.push(i);
-                winners++;
-                AddDataToLog(G, "game", `Определился победитель: игрок ${G.players[i].nickname}.`);
-                if (maxPlayers === winners) {
-                    break;
-                }
+        if (maxScore === G.totalScore[i] && maxPlayers > winners) {
+            G.winner.push(i);
+            winners++;
+            AddDataToLog(G, "game", `Определился победитель: игрок ${G.players[i].nickname}.`);
+            if (maxPlayers === winners) {
+                break;
             }
         }
     }

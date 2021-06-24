@@ -36,8 +36,8 @@ export const CheckIfCurrentTavernEmpty = (G, ctx) => {
     if (ctx.numPlayers === 2) {
         if (G.taverns[G.currentTavern].filter(card => card !== null).length === 1) {
             const discardCardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
-            G.campPicked = false;
             DiscardCardFromTavern(G, discardCardIndex);
+            G.campPicked = false;
             return true;
         }
         return false;
