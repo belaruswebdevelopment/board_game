@@ -33,7 +33,8 @@ import {
     DiscardSuitCardFromPlayerBoard
 } from "./moves/CampMoves";
 import {AddActionsToStack, StartActionFromStackOrEndActions} from "./helpers/StackHelpers";
-
+// todo Add logging
+// todo Clear unused config parameters in Actions!
 /**
  * Параметры игры.
  *  Применения:

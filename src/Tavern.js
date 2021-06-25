@@ -9,13 +9,13 @@ import {AddDataToLog} from "./Logging";
  * @type {{"0": {name: string}, "1": {name: string}, "2": {name: string}}} Таверна.
  */
 export const tavernsConfig = {
-    "0": {
+    0: {
         name: "«Весёлый гоблин»",
     },
-    "1": {
+    1: {
         name: "«Парящий дракон»",
     },
-    "2": {
+    2: {
         name: "«Гарцующий конь»",
     },
 };

@@ -19,6 +19,7 @@ import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 
 // todo Add logging
 export const CheckEndTierPhaseEnded = (G, ctx) => {
+    G.campPicked = false;
     if (G.tierToEnd) {
         ctx.events.setPhase("getDistinctions");
     } else {
@@ -105,6 +106,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
         ctx.events.endTurn();
     } else if (ctx.phase === "enlistmentMercenaries") {
         if (Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) {
+            G.campPicked = false;
             ctx.events.setPhase("endTier");
         } else {
             ctx.events.endTurn();
