@@ -54,7 +54,7 @@ export const Styles = {
                     switch (points) {
                         case 3:
                             return {
-                                background: "url(/img/cards/basic/basic0.png) no-repeat -96px -256px / 288px 288px",
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -256px -96px / 288px 288px",
                             };
                         case 4:
                             return {
@@ -93,7 +93,7 @@ export const Styles = {
                     switch (points) {
                         case 5:
                             return {
-                                background: "url(/img/cards/basic/basic0.png) no-repeat -224px -48px / 288px 288px",
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -64px -240px / 288px 288px",
                             };
                         case 6:
                             return {
@@ -121,7 +121,7 @@ export const Styles = {
                             };
                         case 12:
                             return {
-                                background: "url(/img/cards/basic/basic0.png) no-repeat -224px -48px / 288px 288px",
+                                background: "url(/img/cards/basic/basic0.png) no-repeat -96px -240px / 288px 288px",
                             };
                         default:
                             return {
@@ -137,11 +137,11 @@ export const Styles = {
             switch (name) {
                 case "улучшение монеты на +3":
                     return {
-                        background: "url(/img/cards/basic/basic0.png) no-repeat 0px 0px / 288px 288px",
+                        background: "url(/img/cards/basic/basic0.png) no-repeat -128px -240px / 288px 288px",
                     };
                 case "улучшение монеты на +5":
                     return {
-                        background: "url(/img/cards/basic/basic0.png) no-repeat 0px 0px / 288px 288px",
+                        background: "url(/img/cards/basic/basic1.png) no-repeat -128px -240px / 288px 288px",
                     };
                 default:
                     return {

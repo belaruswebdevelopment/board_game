@@ -73,6 +73,18 @@ export class GameBoard extends React.Component {
     OnClickCoinToUpgradeVidofnirVedrfolnir = (coinId, type, isInitial) => {
         this.props.moves.UpgradeCoinVidofnirVedrfolnir(coinId, type, isInitial);
     };
+    OnClickStartEnlistmentMercenaries = () => {
+        this.props.moves.StartEnlistmentMercenaries();
+    };
+    OnClickPassEnlistmentMercenaries = () => {
+        this.props.moves.PassEnlistmentMercenaries();
+    };
+    OnClickGetEnlistmentMercenaries = (cardId) => {
+        this.props.moves.GetEnlistmentMercenaries(cardId);
+    };
+    OnClickSuitToPlaceMercenary = (suitId) => {
+        this.props.moves.PlaceEnlistmentMercenaries(suitId);
+    };
     render() {
         const gridClass = "col-span-4",
             classes = "col-span-4 text-center underline border",
@@ -92,7 +104,7 @@ export class GameBoard extends React.Component {
             logUI = DrawLogData(this),
             debugUI = DrawDebugData(this);
         return (
-            <div className="flex h-screen">
+            <div className="flex">
                 <div className="grid auto-cols-min grid-cols-1 md:grid-cols-12 gap-1">
                     <div className={classes}>
                         {tierCardsUI}

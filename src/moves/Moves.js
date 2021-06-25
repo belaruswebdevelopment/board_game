@@ -53,7 +53,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
         // todo Rework it or delete in the Click camp card move?
         delete G.players[ctx.currentPlayer].buffs?.["goCampOneTime"];
     }
-    if (ctx.phase !== "endTier" && ctx.phase !== "getDistinctions") {
+    if (ctx.phase === "pickCards") {
         const isUlinePlaceTradingCoin = CheckAndStartUlineActionsOrContinue(G, ctx);
         if (isUlinePlaceTradingCoin !== "placeTradingCoinsUline" && isUlinePlaceTradingCoin !== "nextPlaceTradingCoinsUline") {
             let isTradingActivated = false;
@@ -103,6 +103,12 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
         }
     } else if (ctx.phase === "getDistinctions") {
         ctx.events.endTurn();
+    } else if (ctx.phase === "enlistmentMercenaries") {
+        if (Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) {
+            ctx.events.setPhase("endTier");
+        } else {
+            ctx.events.endTurn();
+        }
     }
 };
 
@@ -149,6 +155,30 @@ const CheckEndTierActions = (G, ctx) => {
 };
 
 /**
+ * Проверяет есть ли у игроков наёмники для начала их вербовки.
+ * Применения:
+ * 1) При наличии у игроков наёмников в конце текущей эпохи.
+ *
+ * @param G
+ * @param ctx
+ * @constructor
+ */
+const CheckEnlistmentMercenaries = (G, ctx) => {
+    let count = false;
+    for (let i = 0; i < G.players.length; i++) {
+        if (G.players[i].campCards.filter(card => card.type === "наёмник").length > 0) {
+            count = true;
+            break;
+        }
+    }
+    if (count) {
+        ctx.events.setPhase("enlistmentMercenaries");
+    } else {
+        CheckEndTierActions(G, ctx);
+    }
+};
+
+/**
  * Выполняет основные действия после того как опустела последняя таверна.
  * Применения:
  * 1) После того как опустела последняя таверна.
@@ -161,7 +191,11 @@ const CheckEndTierActions = (G, ctx) => {
 const AfterLastTavernEmptyActions = (G, ctx) => {
     if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
         G.tierToEnd--;
-        CheckEndTierActions(G, ctx);
+        if (G.expansions.thingvellir) {
+            CheckEnlistmentMercenaries(G, ctx);
+        } else {
+            CheckEndTierActions(G, ctx);
+        }
     } else {
         RefillEmptyCampCards(G);
         RefillTaverns(G);
@@ -232,4 +266,54 @@ export const PickDiscardCard = (G, ctx, cardId) => {
             return EndActionFromStackAndAddNew(G, ctx, [], cardId);
         }
     }
+};
+
+export const StartEnlistmentMercenaries = (G, ctx) => {
+    const stack = [
+        {
+            stack: {
+                actionName: "DrawProfitAction",
+                config: {
+                    name: "enlistmentMercenaries",
+                },
+            },
+        },
+    ];
+    return EndActionFromStackAndAddNew(G, ctx, stack);
+};
+
+export const PassEnlistmentMercenaries = (G, ctx) => {
+    const stack = [
+        {
+            stack: {
+                actionName: "PassEnlistmentMercenariesAction",
+                config: {},
+            },
+        },
+    ];
+    return EndActionFromStackAndAddNew(G, ctx, stack);
+};
+
+export const GetEnlistmentMercenaries = (G, ctx, cardId) => {
+    const stack = [
+        {
+            stack: {
+                actionName: "GetEnlistmentMercenariesAction",
+                config: {},
+            },
+        },
+    ];
+    return EndActionFromStackAndAddNew(G, ctx, stack, cardId);
+};
+
+export const PlaceEnlistmentMercenaries = (G, ctx, suitId) => {
+    const stack = [
+        {
+            stack: {
+                actionName: "PlaceEnlistmentMercenariesAction",
+                config: {},
+            },
+        },
+    ];
+    return EndActionFromStackAndAddNew(G, ctx, stack, suitId);
 };

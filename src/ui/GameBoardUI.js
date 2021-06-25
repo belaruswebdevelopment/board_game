@@ -279,20 +279,37 @@ const DrawPlayerBoardForCardDiscard = (data) => {
                 data.props.G.players[data.props.ctx.currentPlayer].cards[j][i] !== undefined) {
                 isDrawRow = true;
                 if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].type !== "герой") {
-                    playerCells.push(
-                        <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} card ${id}`}
-                            onClick={() => data.OnClickDiscardCardFromPlayerBoard(j, i)}
-                            className={suitsConfig[suit].suitColor}>
-                            <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
-                        </td>
-                    );
+                    if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].type === "наёмник") {
+                        playerCells.push(
+                            <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} card ${id}`}
+                                onClick={() => data.OnClickDiscardCardFromPlayerBoard(j, i)}
+                                className={suitsConfig[suit].suitColor}>
+                                <span
+                                    style={Styles.CampCards(data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].tier,
+                                        data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].path)}
+                                    title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name}
+                                    className="bg-camp">
+                                    <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
+                                </span>
+                            </td>
+                        );
+                    } else {
+                        playerCells.push(
+                            <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} card ${id}`}
+                                onClick={() => data.OnClickDiscardCardFromPlayerBoard(j, i)}
+                                className={suitsConfig[suit].suitColor}>
+                            <span
+                                style={Styles.Cards(data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].suit,
+                                    data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points,
+                                    data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name)}
+                                title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name}
+                                className="bg-card">
+                                <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
+                            </span>
+                            </td>
+                        );
+                    }
                 }
-            } else {
-                playerCells.push(
-                    <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} card ${id}`}>
-
-                    </td>
-                );
             }
         }
         if (isDrawRow) {
@@ -341,14 +358,38 @@ const DrawPlayerBoardForSuitCardDiscard = (data, suitName) => {
                 data.props.G.players[data.props.ctx.currentPlayer].cards[suitId][i] !== undefined) {
                 if (data.props.G.players[data.props.ctx.currentPlayer].cards[suitId][i].type !== "герой") {
                     playerRows[i] = [];
-                    playerRows[i].push(
-                        <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit card board row ${i}`}>
-                            <td onClick={() => data.OnClickDiscardSuitCardFromPlayerBoard(suitId, i)}
-                                className={`${suitsConfig[suitName].suitColor}  cursor-pointer`}>
-                                <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
-                            </td>
-                        </tr>
-                    );
+                    if (data.props.G.players[data.props.ctx.currentPlayer].type === "наёмник") {
+                        playerRows[i].push(
+                            <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit card board row ${i}`}>
+                                <td onClick={() => data.OnClickDiscardSuitCardFromPlayerBoard(suitId, i)}
+                                    className={`${suitsConfig[suitName].suitColor}  cursor-pointer`}>
+                                <span
+                                    style={Styles.CampCards(data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].tier,
+                                        data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].path)}
+                                    title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name}
+                                    className="bg-camp">
+                                    <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
+                                </span>
+                                </td>
+                            </tr>
+                        );
+                    } else {
+                        playerRows[i].push(
+                            <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit card board row ${i}`}>
+                                <td onClick={() => data.OnClickDiscardSuitCardFromPlayerBoard(suitId, i)}
+                                    className={`${suitsConfig[suitName].suitColor}  cursor-pointer`}>
+                                <span
+                                    style={Styles.Cards(data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].suit,
+                                        data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points,
+                                        data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name)}
+                                    title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name}
+                                    className="bg-card">
+                                    <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
+                                </span>
+                                </td>
+                            </tr>
+                        );
+                    }
                 }
             }
         }
@@ -378,7 +419,6 @@ export const DrawProfit = (data, option) => {
     let caption = "Get ";
     for (let i = 0; i < 1; i++) {
         if (option === "placeCards") {
-            // todo FixIt
             caption += `suit to place ${data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.hero} to that suit.`;
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 const suit = Object.keys(suitsConfig)[j];
@@ -397,22 +437,20 @@ export const DrawProfit = (data, option) => {
         } else if (option === "explorerDistinction") {
             caption += "one card to your board.";
             for (let j = 0; j < 3; j++) {
-                if (data.props.G.decks[1][j].suit !== undefined) {
-                    boardCells.push(
-                        <td className={`${suitsConfig[data.props.G.decks[1][j].suit].suitColor} cursor-pointer`}
-                            key={`Card ${j} to player board`}
-                            onClick={() => data.OnClickCardToPickDistinction(j)}>
-                            <b>{data.props.G.decks[1][j].points}</b>
-                        </td>
-                    );
-                } else if (data.props.G.decks[1][j].type === "улучшение монеты") {
-                    boardCells.push(
-                        <td className="cursor-pointer" key={`Card ${j} to player board`}
-                            onClick={() => data.OnClickCardToPickDistinction(j)}>
-                            <b>{data.props.G.decks[1][j].value}</b>
-                        </td>
-                    );
-                }
+                boardCells.push(
+                    <td className={`${suitsConfig[data.props.G.decks[1][j].suit].suitColor} cursor-pointer`}
+                        key={`Card ${j} to player board`}
+                        onClick={() => data.OnClickCardToPickDistinction(j)}>
+                        <span
+                            style={Styles.Cards(data.props.G.decks[1][j].suit, data.props.G.decks[1][j].points,
+                                data.props.G.decks[1][j].name)}
+                            title={data.props.G.decks[1][j].name}
+                            className="bg-card">
+                            <b className="text-white">{data.props.G.decks[1][j].points ??
+                            data.props.G.decks[1][j].value}</b>
+                        </span>
+                    </td>
+                );
             }
         } else if (option === "BonfurAction" || option === "DagdaAction") {
             let suit = null;
@@ -431,14 +469,38 @@ export const DrawProfit = (data, option) => {
                         data.props.G.players[data.props.ctx.currentPlayer].pickedCard?.suit)) {
                     const last = data.props.G.players[data.props.ctx.currentPlayer].cards[j].length - 1;
                     if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].type !== "герой") {
-                        boardCells.push(
-                            <td
-                                className={`${suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].suit].suitColor} cursor-pointer`}
-                                key={`Discarded card ${j}`}
-                                onClick={() => data.OnClickCardToDiscard(j, last)}>
-                                <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].points}</b>
-                            </td>
-                        );
+                        if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].type === "наёмник") {
+                            boardCells.push(
+                                <td
+                                    className={`${suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].suit].suitColor} cursor-pointer`}
+                                    key={`Discarded card ${j}`}
+                                    onClick={() => data.OnClickCardToDiscard(j, last)}>
+                                    <span
+                                        style={Styles.CampCards(data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].tier,
+                                            data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].path)}
+                                        title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].name}
+                                        className="bg-camp">
+                                        <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].points}</b>
+                                    </span>
+                                </td>
+                            );
+                        } else {
+                            boardCells.push(
+                                <td
+                                    className={`${suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].suit].suitColor} cursor-pointer`}
+                                    key={`Discarded card ${j}`}
+                                    onClick={() => data.OnClickCardToDiscard(j, last)}>
+                                <span
+                                    style={Styles.Cards(data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].suit,
+                                        data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].points,
+                                        data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].name)}
+                                    title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].name}
+                                    className="bg-card">
+                                    <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].points}</b>
+                                </span>
+                                </td>
+                            );
+                        }
                     }
                 }
             }
@@ -449,21 +511,19 @@ export const DrawProfit = (data, option) => {
             }
             caption += `${count} card from discard pile to your board.`;
             for (let j = 0; j < data.props.G.discardCardsDeck.length; j++) {
-                if (data.props.G.discardCardsDeck[j].suit !== undefined) {
-                    boardCells.push(
-                        <td className={`${suitsConfig[data.props.G.discardCardsDeck[j].suit].suitColor} cursor-pointer`}
-                            key={`Card ${j} from discard`} onClick={() => data.OnClickCardFromDiscard(j)}>
-                            <b>{data.props.G.discardCardsDeck[j].points}</b>
-                        </td>
-                    );
-                } else if (data.props.G.discardCardsDeck[j].type === "улучшение монеты") {
-                    boardCells.push(
-                        <td className="cursor-pointer" key={`Card ${j} from discard`}
-                            onClick={() => data.OnClickCardFromDiscard(j)}>
-                            <b>{data.props.G.discardCardsDeck[j].value}</b>
-                        </td>
-                    );
-                }
+                boardCells.push(
+                    <td className={`${suitsConfig[data.props.G.discardCardsDeck[j].suit].suitColor} cursor-pointer`}
+                        key={`Card ${j} from discard`} onClick={() => data.OnClickCardFromDiscard(j)}>
+                        <span
+                            style={Styles.Cards(data.props.G.discardCardsDeck[j].suit, data.props.G.discardCardsDeck[j].points,
+                                data.props.G.discardCardsDeck[j].name)}
+                            title={data.props.G.discardCardsDeck[j].name}
+                            className="bg-card">
+                            <b className="text-white">{data.props.G.discardCardsDeck[j].points ??
+                            data.props.G.discardCardsDeck[j].value}</b>
+                        </span>
+                    </td>
+                );
             }
         } else if (option === "BrisingamensEndGameAction") {
             caption += "one card to discard from your board.";
@@ -498,22 +558,21 @@ export const DrawProfit = (data, option) => {
         } else if (option === "discardCard") {
             caption += "one card to discard from current tavern.";
             for (let j = 0; j < data.props.G.drawSize; j++) {
-                if (data.props.G.taverns[data.props.G.currentTavern][j].suit !== undefined) {
-                    boardCells.push(
-                        <td className={`${suitsConfig[data.props.G.taverns[data.props.G.currentTavern][j].suit].suitColor} cursor-pointer`}
-                            onClick={() => data.OnClickCardToDiscard2Players(j)}
-                            key={`Discard card ${j} from tavern`}>
-                            <b>{data.props.G.taverns[data.props.G.currentTavern][j].points}</b>
-                        </td>
-                    );
-                } else if (data.props.G.taverns[data.props.G.currentTavern][j].type === "улучшение монеты") {
-                    boardCells.push(
-                        <td className="cursor-pointer" onClick={() => data.OnClickCardToDiscard2Players(j)}
-                            key={`Discard card ${j} from tavern`}>
-                            <b>{data.props.G.taverns[data.props.G.currentTavern][j].value}</b>
-                        </td>
-                    );
-                }
+                boardCells.push(
+                    <td className={`${suitsConfig[data.props.G.taverns[data.props.G.currentTavern][j].suit].suitColor} cursor-pointer`}
+                        onClick={() => data.OnClickCardToDiscard2Players(j)}
+                        key={`Discard card ${j} from tavern`}>
+                        <span
+                            style={Styles.Cards(data.props.G.taverns[data.props.G.currentTavern][j].suit,
+                                data.props.G.taverns[data.props.G.currentTavern][j].points,
+                                data.props.G.taverns[data.props.G.currentTavern][j].name)}
+                            title={data.props.G.taverns[data.props.G.currentTavern][j].name}
+                            className="bg-card">
+                            <b className="text-white">{data.props.G.taverns[data.props.G.currentTavern][j].points ??
+                            data.props.G.taverns[data.props.G.currentTavern][j].value}</b>
+                        </span>
+                    </td>
+                );
             }
         } else if (option === "AddCoinToPouchVidofnirVedrfolnir") {
             caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch to fill it.`;
@@ -527,7 +586,7 @@ export const DrawProfit = (data, option) => {
                                 data.props.G.players[data.props.ctx.currentPlayer].handCoins[j].isInitial)}
                             className={`bg-coin border-2`}>
 
-                            </span>
+                        </span>
                     );
                 }
                 if (drawData !== "") {
@@ -535,6 +594,59 @@ export const DrawProfit = (data, option) => {
                         <td className="cursor-pointer" key={`Coin ${j} to pouch`}
                             onClick={() => data.OnClickCoinToAddToPouch(j)}>
                             {drawData}
+                        </td>
+                    );
+                }
+            }
+        } else if (option === "startOrPassEnlistmentMercenaries") {
+            caption = "Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.";
+            for (let j = 0; j < 2; j++) {
+                if (j === 0) {
+                    boardCells.push(
+                        <td className="cursor-pointer" key={`Start Enlistment Mercenaries`}
+                            onClick={() => data.OnClickStartEnlistmentMercenaries()}>
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Start
+                            </button>
+                        </td>
+                    );
+                } else {
+                    boardCells.push(
+                        <td className="cursor-pointer" key={`Pass Enlistment Mercenaries`}
+                            onClick={() => data.OnClickPassEnlistmentMercenaries()}>
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Pass
+                            </button>
+                        </td>
+                    );
+                }
+            }
+        } else if (option === "enlistmentMercenaries") {
+            caption += "mercenary to place it to your player board.";
+            const mercenaries = data.props.G.players[data.props.ctx.currentPlayer].campCards.filter(card => card.type === "наёмник");
+            for (let j = 0; j < mercenaries.length; j++) {
+                boardCells.push(
+                    <td className="cursor-pointer" key={`Get Enlistment Mercenaries ${mercenaries[j].name}`}
+                        onClick={() => data.OnClickGetEnlistmentMercenaries(j)}>
+                        <span style={Styles.CampCards(mercenaries[j].tier, mercenaries[j].path)}
+                              title={mercenaries.name} className="bg-camp">
+
+                        </span>
+                    </td>
+                );
+            }
+        } else if (option === "placeEnlistmentMercenaries") {
+            caption += `suit to place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} to that suit.`;
+            for (let j = 0; j < data.props.G.suitsNum; j++) {
+                const suit = Object.keys(suitsConfig)[j];
+                if (suit === data.props.G.players[data.props.ctx.currentPlayer].pickedCard.variants.suit) {
+                    boardCells.push(
+                        <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
+                            key={`Place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} ${j} on ${suitsConfig[suit].suitName}`}>
+                            <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
+                                  onClick={() => data.OnClickSuitToPlaceMercenary(j)}>
+
+                            </span>
                         </td>
                     );
                 }
@@ -729,7 +841,7 @@ export const DrawTaverns = (data, gridClass) => {
                                     data.props.G.taverns[t][j].name)}
                                 title={data.props.G.taverns[t][j].name}
                                 className="bg-card">
-
+                                <b className="text-white">{data.props.G.taverns[t][j].points ?? data.props.G.taverns[t][j].value}</b>
                             </span>
                         </td>
                     );

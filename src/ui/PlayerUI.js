@@ -315,7 +315,6 @@ export const DrawPlayersBoards = (data) => {
         playerHeadersCount[p] = [];
         playerRows[p] = [];
         for (const suit in suitsConfig) {
-            // todo draw ranks number in current suit?
             playerHeaders[p].push(
                 <th className={`${suitsConfig[suit].suitColor}`}
                     key={`${data.props.G.players[p].nickname} ${suitsConfig[suit].suitName}`}>
@@ -414,7 +413,8 @@ export const DrawPlayersBoards = (data) => {
                                         data.props.G.players[p].cards[j][i].name)}
                                     title={data.props.G.players[p].cards[j][i].name}
                                     className="bg-card">
-
+                                    <b className="text-white">{data.props.G.players[p].cards[j][i].points ??
+                                    data.props.G.players[p].cards[j][i].value}</b>
                                 </span>
                             </td>
                         );
@@ -430,7 +430,7 @@ export const DrawPlayersBoards = (data) => {
             for (let k = 0; k < 1 + expansion; k++) {
                 id += k + 1;
                 if (k === 0) {
-                    // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity) or draw number in the TH tag
+                    // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                     if (data.props.G.players[p].heroes[i] !== undefined && (!data.props.G.players[p].heroes[i].suit &&
                         !((data.props.G.players[p].heroes[i].name === "Ylud" &&
                             data.props.G.players[p].cards.flat().findIndex(card => card.name === "Ylud") !== -1) ||

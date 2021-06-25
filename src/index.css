@@ -20,7 +20,7 @@
     }
 
     td {
-        @apply border-2 w-6 h-6 text-center;
+        @apply border-2 w-8 h-12 text-center;
     }
 
     th {
@@ -29,6 +29,10 @@
 }
 
 @layer components {
+    .log {
+        height: 800px;
+    }
+
     .bg-tavern-icon {
         @apply block-center w-6 h-6;
     }
@@ -55,7 +59,7 @@
     }
 
     .bg-card {
-        @apply block-center w-8 h-12;
+        @apply inline-flex-center text-xl w-8 h-12;
     }
 
     .bg-hero-icon {

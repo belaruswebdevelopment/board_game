@@ -99,6 +99,15 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         case "DiscardSuitCard":
             action = DiscardSuitCard;
             break;
+        case "PassEnlistmentMercenariesAction":
+            action = PassEnlistmentMercenariesAction;
+            break;
+        case "GetEnlistmentMercenariesAction":
+            action = GetEnlistmentMercenariesAction;
+            break;
+        case "PlaceEnlistmentMercenariesAction":
+            action = PlaceEnlistmentMercenariesAction;
+            break;
         default:
             action = null;
     }
@@ -140,7 +149,9 @@ const UpgradeCoinAction = (G, ctx, config, ...args) => {
  * @constructor
  */
 const DrawProfitAction = (G, ctx, config) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    if (G.stack[ctx.currentPlayer][0].stack.config.stageName) {
+        ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    }
     G.actionsNum = config.number ?? null;
     G.drawProfit = config.name;
 };
@@ -348,4 +359,88 @@ const PickDiscardCard = (G, ctx, config, cardId) => {
         const suitId = GetSuitIndexByName(pickedCard.suit);
         return EndActionFromStackAndAddNew(G, ctx, [], suitId);
     }
+};
+
+/**
+ * Первый игрок в фазе вербовки наёмников может пасануть, чтобы вербовать последним.
+ * Применения:
+ * 1) Может применятся первым игроком в фазе вербовки наёмников.
+ *
+ * @param G
+ * @param ctx
+ * @returns {*}
+ * @constructor
+ */
+const PassEnlistmentMercenariesAction = (G, ctx) => {
+    ctx.playOrder.push(ctx.currentPlayer);
+    return EndActionFromStackAndAddNew(G, ctx);
+};
+
+/**
+ * Игрок выбирает наёмника для вербовки.
+ * 1) Применяется когда игроку нужно выбрать наёмника для вербовки.
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ * @returns {*}
+ * @constructor
+ */
+const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
+    G.player[ctx.currentPlayer].pickedCard = G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник")[cardId];
+    const stack = [
+        {
+            stack: {
+                actionName: "DrawProfitAction",
+                config: {
+                    name: "placeEnlistmentMercenaries",
+                },
+            },
+        },
+    ];
+    return EndActionFromStackAndAddNew(G, ctx, stack);
+};
+
+/**
+ * Игрок выбирает фракцию для вербовки указанного наёмника.
+ * 1) Применяется когда игроку нужно выбрать фракцию для вербовки наёмника.
+ *
+ * @param G
+ * @param ctx
+ * @param suitId Id фракции.
+ * @returns {*}
+ * @constructor
+ */
+const PlaceEnlistmentMercenariesAction = (G, ctx, suitId) => {
+    const suit = Object.keys(suitsConfig)[suitId];
+    const mercenaryCard = CreateCard({
+        type: "наёмник",
+        suit,
+        rank: 1,
+        points: G.players[ctx.currentPlayer].pickedCard.suit.points,
+        name: G.players[ctx.currentPlayer].pickedCard.name,
+        tier: G.players[ctx.currentPlayer].pickedCard.tier,
+        path: G.players[ctx.currentPlayer].pickedCard.path,
+    });
+    AddCardToPlayer(G, ctx, mercenaryCard);
+    const cardIndex = G.players[ctx.currentPlayer].campCards.indexOf(G.players[ctx.currentPlayer].pickedCard);
+    G.players[ctx.currentPlayer].campCards.splice(cardIndex, 1);
+    if (G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник").length) {
+        const stack = [
+            {
+                stack: {
+                    actionName: "DrawProfitAction",
+                    config: {
+                        name: "enlistmentMercenaries",
+                    },
+                },
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
+    }
+    CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
+    if (G.stack[ctx.currentPlayer].length > 2) {
+        G.drawProfit = null;
+    }
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
