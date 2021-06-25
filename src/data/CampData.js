@@ -1,5 +1,5 @@
 import {TotalRank} from "../Score";
-//+
+
 /**
  * Данные об артефакте.
  * Применения:
@@ -39,7 +39,7 @@ const Fafnir_Baleygr = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные об артефакте.
  * Применения:
@@ -67,7 +67,7 @@ const Draupnir = {
     ],
     scoringRule: (player) => player.boardCoins.filter(coin => coin.value >= 15).length * 6,
 };
-//+
+
 /**
  * Данные об артефакте.
  * Применения:
@@ -95,7 +95,7 @@ const Vegvisir = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные об артефакте.
  * Применения:
@@ -123,7 +123,7 @@ const Svalinn = {
     ],
     scoringRule: (player) => player.heroes.length * 5,
 };
-//+
+
 /**
  * Данные об артефакте.
  * Применения:
@@ -163,7 +163,7 @@ const Megingjord = {
     ],
     scoringRule: () => 28,
 };
-//+
+
 /**
  * Данные об артефакте.
  * Применения:
@@ -199,7 +199,7 @@ const Vidofnir_Vedrfolnir = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные об артефакте.
  * Применения:
@@ -261,7 +261,7 @@ const Brisingamens = {
     ],
     scoringRule: () => 0,
 };
-//+ todo Add Stage to choose suit class for G.classForMjollnir!
+// todo Add Stage to choose suit class for G.classForMjollnir!
 /**
  * Данные об артефакте.
  * Применения:
@@ -327,7 +327,7 @@ const Hofud = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные об артефакте.
  * Применения:
@@ -355,7 +355,7 @@ const Hrafnsmerki = {
     ],
     scoringRule: (player) => player.cards.flat().filter(card => card.type === "наёмник").length * 5,
 };
-//+
+
 /**
  * Данные об артефакте.
  * Применения:
@@ -391,7 +391,7 @@ const Jarnglofi = {
     ],
     scoringRule: () => 24,
 };
-//+
+
 /**
  * Данные об артефакте.
  * Применения:

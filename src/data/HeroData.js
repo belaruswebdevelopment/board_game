@@ -1,6 +1,6 @@
 import {TotalRank} from "../Score";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -27,7 +27,7 @@ const Dwerg_Bergelmir = {
     ],
     scoringRule: () => 1,
 };
-//+- checkEndTiersActions and rework AddBuff?!
+// todo rework AddBuff?!
 /**
  * Данные о герое.
  * Применения:
@@ -73,7 +73,7 @@ const Ylud = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -100,7 +100,7 @@ const Dwerg_Jungir = {
     ],
     scoringRule: () => 1,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -147,7 +147,7 @@ const Uline = {
     ],
     scoringRule: () => 9,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -174,7 +174,7 @@ const Idunn = {
     ],
     scoringRule: (player) => player.cards[GetSuitIndexByName("explorer")].reduce(TotalRank, 0) * 2,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -201,7 +201,7 @@ const Tarah = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -228,7 +228,7 @@ const Kraal = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -255,7 +255,7 @@ const Lokdur = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -304,7 +304,7 @@ const Grid = {
     ],
     scoringRule: () => 7,
 };
-//+- checkWithYlud
+
 /**
  * Данные о герое.
  * Применения:
@@ -349,7 +349,7 @@ const Thrud = {
     ],
     scoringRule: () => 13,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -376,7 +376,7 @@ const Zoral = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -403,7 +403,7 @@ const Dwerg_Aesir = {
     ],
     scoringRule: () => 1,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -462,7 +462,7 @@ const Bonfur = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -522,7 +522,7 @@ const Dagda = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -549,7 +549,7 @@ const Skaa = {
     ],
     scoringRule: () => 17,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -588,7 +588,7 @@ const Jarika = {
     ],
     scoringRule: () => 8,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -615,7 +615,7 @@ const Astrid = {
     ],
     scoringRule: (player) => Math.max(...player.boardCoins.map(coin => coin.value)),
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -642,7 +642,7 @@ const Dwerg_Ymir = {
     ],
     scoringRule: () => 1,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -669,7 +669,7 @@ const Dwerg_Sigmir = {
     ],
     scoringRule: () => 1,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -710,7 +710,7 @@ const Hourya = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -737,7 +737,7 @@ const Aegur = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -764,7 +764,7 @@ const Aral = {
     ],
     scoringRule: () => 0,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -819,7 +819,7 @@ const Andumia = {
     ],
     scoringRule: () => 12,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -877,7 +877,7 @@ const Holda = {
     ],
     scoringRule: () => 12,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -915,7 +915,7 @@ const Khrad = {
     ],
     scoringRule: () => 4,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:
@@ -962,7 +962,7 @@ const Olwin = {
     ],
     scoringRule: () => 9,
 };
-//+
+
 /**
  * Данные о герое.
  * Применения:

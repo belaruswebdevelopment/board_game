@@ -10,7 +10,7 @@ import {AddDataToLog} from "../Logging";
  * Применения:
  * 1) Используется в конфиге фракций.
  *
- * @todo Add ranks count on suits track and may be potential points for hunters and blacksmiths.
+ * @todo Add may be potential points for hunters and blacksmiths.
  * @type {{scoringRule: (function(*): number), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: blacksmithSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}} Кузнецы.
  */
 const blacksmithSuit = {
