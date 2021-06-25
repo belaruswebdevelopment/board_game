@@ -27,7 +27,7 @@ export const ClickCampCard = (G, ctx, cardId) => {
         return INVALID_MOVE;
     }
     AddActionsToStack(G, ctx, G.camp[cardId].stack);
-    return StartActionFromStackOrEndActions(G, ctx);
+    return StartActionFromStackOrEndActions(G, ctx, null, cardId);
 };
 
 /**
@@ -47,7 +47,7 @@ export const ClickCampCardHolda = (G, ctx, cardId) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    return EndActionFromStackAndAddNew(G, ctx, G.camp[cardId].stack);
+    return EndActionFromStackAndAddNew(G, ctx, G.camp[cardId].stack, cardId);
 };
 
 /**
@@ -61,6 +61,7 @@ export const ClickCampCardHolda = (G, ctx, cardId) => {
  * @constructor
  */
 export const DiscardCard2Players = (G, ctx, cardId) => {
+    // todo rework in action
     DiscardCardFromTavern(G, cardId);
     G.drawProfit = null;
     ctx.events.endTurn();
@@ -78,7 +79,7 @@ export const DiscardCard2Players = (G, ctx, cardId) => {
  * @constructor
  */
 export const DiscardCardFromPlayerBoard = (G, ctx, suitId, cardId) => {
-    // todo FixIt to action
+    // todo rework in action
     G.players[ctx.currentPlayer].cards[suitId].filter(card => card.type !== "герой").splice(cardId, 1);
     delete G.players[ctx.currentPlayer].buffs["discardCardEndGame"];
     ctx.events.endPhase();
@@ -97,6 +98,7 @@ export const DiscardCardFromPlayerBoard = (G, ctx, suitId, cardId) => {
  * @constructor
  */
 export const DiscardSuitCardFromPlayerBoard = (G, ctx, suitId, cardId) => {
+    // todo rework in action
     G.discardCardsDeck.push(G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0]);
     if (ctx.activePlayers.length === 0) {
         ctx.events.endStage();

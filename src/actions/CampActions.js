@@ -21,30 +21,44 @@ export const CheckPickCampCard = (G, ctx) => {
 };
 
 /**
- * Действия, связанные с добавлением карт кэмпа в конкретную фракцию игрока.
+ * Действия, связанные с добавлением карт кэмпа в массив карт игрока.
  * Применения:
- * 1) При выборе карт кэмпа, добавляющихся в конкретную фракцию игрока.
+ * 1) При выборе карт кэмпа, добавляющихся на планшет игрока.
  *
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
+ * @param cardId Id карты.
  * @returns {*}
  * @constructor
  */
-export const AddCampCardToCards = (G, ctx, config) => {
-    const campCardIndex = G.camp.findIndex(card => card?.name === config.card);
-    const campCard = G.camp[campCardIndex];
-    let suitId = null;
-    G.camp[campCardIndex] = null;
+export const AddCampCardToCards = (G, ctx, config, cardId) => {
+    const campCard = G.camp[cardId];
+    let suitId = null,
+        stack = [];
+    G.camp[cardId] = null;
     G.campPicked = true;
     if (campCard.suit) {
         AddCampCardToPlayerCards(G, ctx, campCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, campCard);
         suitId = GetSuitIndexByName(campCard.suit);
     } else {
+        // todo Check if in enlistmentMercenaries phase pick new mercenary by Holda action and need to place it on player board
         AddCampCardToPlayer(G, ctx, campCard);
+        if (ctx.phase === "enlistmentMercenaries" && G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник").length) {
+            stack = [
+                {
+                    stack: {
+                        actionName: "DrawProfitAction",
+                        config: {
+                            name: "enlistmentMercenaries",
+                        },
+                    },
+                },
+            ];
+        }
     }
-    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    return EndActionFromStackAndAddNew(G, ctx, stack, suitId);
 };
 
 /**
