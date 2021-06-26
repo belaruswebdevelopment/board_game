@@ -59,7 +59,8 @@
     }
 
     .bg-card {
-        @apply inline-flex-center text-xl w-8 h-12;
+        @apply block-center text-xl text-white w-8 h-12;
+        line-height: 48px;
     }
 
     .bg-hero-icon {
@@ -87,7 +88,8 @@
     }
 
     .bg-camp {
-        @apply block-center w-8 h-12;
+        @apply block-center text-xl text-white w-8 h-12;
+        line-height: 48px;
     }
 
     .bg-top-camp-icon {

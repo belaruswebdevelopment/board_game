@@ -279,9 +279,10 @@ const DrawPlayerBoardForCardDiscard = (data) => {
                 data.props.G.players[data.props.ctx.currentPlayer].cards[j][i] !== undefined) {
                 isDrawRow = true;
                 if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].type !== "герой") {
-                    if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].type === "наёмник") {
+                    if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].type === "наёмник" ||
+                        data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].type === "артефакт") {
                         playerCells.push(
-                            <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} card ${id}`}
+                            <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} camp card ${id}`}
                                 onClick={() => data.OnClickDiscardCardFromPlayerBoard(j, i)}
                                 className={suitsConfig[suit].suitColor}>
                                 <span
@@ -289,7 +290,7 @@ const DrawPlayerBoardForCardDiscard = (data) => {
                                         data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].path)}
                                     title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name}
                                     className="bg-camp">
-                                    <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
+                                    <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
                                 </span>
                             </td>
                         );
@@ -304,7 +305,7 @@ const DrawPlayerBoardForCardDiscard = (data) => {
                                     data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name)}
                                 title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name}
                                 className="bg-card">
-                                <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
+                                <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
                             </span>
                             </td>
                         );
@@ -358,7 +359,8 @@ const DrawPlayerBoardForSuitCardDiscard = (data, suitName) => {
                 data.props.G.players[data.props.ctx.currentPlayer].cards[suitId][i] !== undefined) {
                 if (data.props.G.players[data.props.ctx.currentPlayer].cards[suitId][i].type !== "герой") {
                     playerRows[i] = [];
-                    if (data.props.G.players[data.props.ctx.currentPlayer].type === "наёмник") {
+                    if (data.props.G.players[data.props.ctx.currentPlayer].type === "наёмник" ||
+                        data.props.G.players[data.props.ctx.currentPlayer].type === "артефакт") {
                         playerRows[i].push(
                             <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit card board row ${i}`}>
                                 <td onClick={() => data.OnClickDiscardSuitCardFromPlayerBoard(suitId, i)}
@@ -368,7 +370,7 @@ const DrawPlayerBoardForSuitCardDiscard = (data, suitName) => {
                                         data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].path)}
                                     title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name}
                                     className="bg-camp">
-                                    <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
+                                    <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
                                 </span>
                                 </td>
                             </tr>
@@ -384,7 +386,7 @@ const DrawPlayerBoardForSuitCardDiscard = (data, suitName) => {
                                         data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name)}
                                     title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].name}
                                     className="bg-card">
-                                    <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
+                                    <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].points}</b>
                                 </span>
                                 </td>
                             </tr>
@@ -446,7 +448,7 @@ export const DrawProfit = (data, option) => {
                                 data.props.G.decks[1][j].name)}
                             title={data.props.G.decks[1][j].name}
                             className="bg-card">
-                            <b className="text-white">{data.props.G.decks[1][j].points ??
+                            <b>{data.props.G.decks[1][j].points ??
                             data.props.G.decks[1][j].value}</b>
                         </span>
                     </td>
@@ -469,18 +471,19 @@ export const DrawProfit = (data, option) => {
                         data.props.G.players[data.props.ctx.currentPlayer].pickedCard?.suit)) {
                     const last = data.props.G.players[data.props.ctx.currentPlayer].cards[j].length - 1;
                     if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].type !== "герой") {
-                        if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].type === "наёмник") {
+                        if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].type === "наёмник" ||
+                            data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].type === "артефакт") {
                             boardCells.push(
                                 <td
                                     className={`${suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].suit].suitColor} cursor-pointer`}
-                                    key={`Discarded card ${j}`}
+                                    key={`Discarded card ${data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].name} ${j}`}
                                     onClick={() => data.OnClickCardToDiscard(j, last)}>
                                     <span
                                         style={Styles.CampCards(data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].tier,
                                             data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].path)}
                                         title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].name}
                                         className="bg-camp">
-                                        <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].points}</b>
+                                        <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].points}</b>
                                     </span>
                                 </td>
                             );
@@ -488,7 +491,7 @@ export const DrawProfit = (data, option) => {
                             boardCells.push(
                                 <td
                                     className={`${suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].suit].suitColor} cursor-pointer`}
-                                    key={`Discarded card ${j}`}
+                                    key={`Discarded card data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].name ${j}`}
                                     onClick={() => data.OnClickCardToDiscard(j, last)}>
                                 <span
                                     style={Styles.Cards(data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].suit,
@@ -496,7 +499,7 @@ export const DrawProfit = (data, option) => {
                                         data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].name)}
                                     title={data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].name}
                                     className="bg-card">
-                                    <b className="text-white">{data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].points}</b>
+                                    <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j][last].points}</b>
                                 </span>
                                 </td>
                             );
@@ -519,7 +522,7 @@ export const DrawProfit = (data, option) => {
                                 data.props.G.discardCardsDeck[j].name)}
                             title={data.props.G.discardCardsDeck[j].name}
                             className="bg-card">
-                            <b className="text-white">{data.props.G.discardCardsDeck[j].points ??
+                            <b>{data.props.G.discardCardsDeck[j].points ??
                             data.props.G.discardCardsDeck[j].value}</b>
                         </span>
                     </td>
@@ -549,7 +552,7 @@ export const DrawProfit = (data, option) => {
                             onClick={() => data.OnClickCampCardHolda(j)}>
                             <span style={Styles.CampCards(data.props.G.camp[j].tier, data.props.G.camp[j].path)}
                                   title={data.props.G.camp[j].description} className="bg-camp">
-
+                                <b>{data.props.G.camp[j].points ?? ""}</b>
                             </span>
                         </td>
                     );
@@ -568,7 +571,7 @@ export const DrawProfit = (data, option) => {
                                 data.props.G.taverns[data.props.G.currentTavern][j].name)}
                             title={data.props.G.taverns[data.props.G.currentTavern][j].name}
                             className="bg-card">
-                            <b className="text-white">{data.props.G.taverns[data.props.G.currentTavern][j].points ??
+                            <b>{data.props.G.taverns[data.props.G.currentTavern][j].points ??
                             data.props.G.taverns[data.props.G.currentTavern][j].value}</b>
                         </span>
                     </td>
@@ -610,7 +613,7 @@ export const DrawProfit = (data, option) => {
                             </button>
                         </td>
                     );
-                } else {
+                } else if (data.props.G.playersOrder.length > 1) {
                     boardCells.push(
                         <td className="cursor-pointer" key={`Pass Enlistment Mercenaries`}
                             onClick={() => data.OnClickPassEnlistmentMercenaries()}>
@@ -626,11 +629,11 @@ export const DrawProfit = (data, option) => {
             const mercenaries = data.props.G.players[data.props.ctx.currentPlayer].campCards.filter(card => card.type === "наёмник");
             for (let j = 0; j < mercenaries.length; j++) {
                 boardCells.push(
-                    <td className="cursor-pointer" key={`Get Enlistment Mercenaries ${mercenaries[j].name}`}
+                    <td className="cursor-pointer" key={`Get enlistment mercenaries ${mercenaries[j].name} ${j}`}
                         onClick={() => data.OnClickGetEnlistmentMercenaries(j)}>
                         <span style={Styles.CampCards(mercenaries[j].tier, mercenaries[j].path)}
                               title={mercenaries.name} className="bg-camp">
-
+                            <b>{mercenaries.points ?? ""}</b>
                         </span>
                     </td>
                 );
@@ -639,13 +642,13 @@ export const DrawProfit = (data, option) => {
             caption += `suit to place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} to that suit.`;
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 const suit = Object.keys(suitsConfig)[j];
-                if (suit === data.props.G.players[data.props.ctx.currentPlayer].pickedCard.variants.suit) {
+                if (suit === data.props.G.players[data.props.ctx.currentPlayer].pickedCard.variants[suit]?.suit) {
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
                             key={`Place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} ${j} on ${suitsConfig[suit].suitName}`}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
                                   onClick={() => data.OnClickSuitToPlaceMercenary(j)}>
-
+                                <b>{data.props.G.players[data.props.ctx.currentPlayer].pickedCard.points ?? ""}</b>
                             </span>
                         </td>
                     );
@@ -764,7 +767,7 @@ export const DrawCamp = (data) => {
         for (let j = 0; j < data.props.G.campNum; j++) {
             if (data.props.G.camp[j] === null || data.props.G.camp[j] === undefined) {
                 boardCells.push(
-                    <td key={`Camp ${j} icon`}>
+                    <td className="bg-yellow-200" key={`Camp ${j} icon`}>
                         <span style={Styles.Camp()} className="bg-camp-icon">
 
                         </span>
@@ -776,7 +779,7 @@ export const DrawCamp = (data) => {
                         onClick={() => data.OnClickCampCard(j)}>
                         <span style={Styles.CampCards(data.props.G.camp[j].tier, data.props.G.camp[j].path)}
                               title={data.props.G.camp[j].description ?? data.props.G.camp[j].name} className="bg-camp">
-
+                            <b>{data.props.G.camp[j].points ?? ""}</b>
                         </span>
                     </td>
                 );
@@ -841,7 +844,7 @@ export const DrawTaverns = (data, gridClass) => {
                                     data.props.G.taverns[t][j].name)}
                                 title={data.props.G.taverns[t][j].name}
                                 className="bg-card">
-                                <b className="text-white">{data.props.G.taverns[t][j].points ?? data.props.G.taverns[t][j].value}</b>
+                                <b>{data.props.G.taverns[t][j].points ?? data.props.G.taverns[t][j].value}</b>
                             </span>
                         </td>
                     );

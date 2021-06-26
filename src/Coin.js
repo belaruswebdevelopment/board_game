@@ -188,7 +188,8 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
         const handCoinPosition = G.players[ctx.currentPlayer].boardCoins
             .filter((coin, index) => coin === null && index <= upgradingCoinId).length;
         upgradingCoin = G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null)[handCoinPosition - 1];
-        upgradingCoinId = G.players[ctx.currentPlayer].handCoins.indexOf(upgradingCoin);
+        upgradingCoinId = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin.value === upgradingCoin.value &&
+            coin.isInitial === isInitial);
     } else {
         upgradingCoin = G.players[ctx.currentPlayer].boardCoins[upgradingCoinId];
     }

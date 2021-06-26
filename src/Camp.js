@@ -162,11 +162,11 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @constructor
  */
 export const DiscardCardIfCampCardPicked = (G) => {
-    if (G.campPicked === true) {
-        G.campPicked = false;
-        const discardCardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
+    const discardCardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
+    if (G.campPicked === true && discardCardIndex !== -1) {
         DiscardCardFromTavern(G, discardCardIndex);
     }
+    G.campPicked = false;
 };
 
 /**

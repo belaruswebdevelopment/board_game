@@ -32,9 +32,10 @@ import {
     DiscardCardFromPlayerBoard,
     DiscardSuitCardFromPlayerBoard
 } from "./moves/CampMoves";
-import {AddActionsToStack, StartActionFromStackOrEndActions} from "./helpers/StackHelpers";
+import {AddActionsToStack} from "./helpers/StackHelpers";
 // todo Add logging
 // todo Clear unused config parameters in Actions!
+// todo Add colors for cards Points by suit colors!
 /**
  * Параметры игры.
  *  Применения:
@@ -231,68 +232,48 @@ export const BoardGame = {
                         },
                     },
                     // End
-                    startOrPassEnlistmentMercenaries: {
-                        moves: {
-                            StartEnlistmentMercenaries,
-                            PassEnlistmentMercenaries,
-                        },
-                    }
                 },
             },
             moves: {
+                StartEnlistmentMercenaries,
+                PassEnlistmentMercenaries,
                 GetEnlistmentMercenaries,
                 PlaceEnlistmentMercenaries,
             },
             onBegin: (G, ctx) => {
-                const players = G.players.map(),
-                playersIndexes = [];
-                players.sort((a, b) => {
-                    if (a.campCards.filter(card => card.type === "наёмник").length > b.campCards.filter(card => card.type === "наёмник").length) {
+                const players = G.players.map(player => player),
+                    playersIndexes = [];
+                players.sort((nextPlayer, currentPlayer) => {
+                    if (nextPlayer.campCards.filter(card => card.type === "наёмник").length < currentPlayer.campCards.filter(card => card.type === "наёмник").length) {
                         return 1;
-                    } else if (a.campCards.filter(card => card.type === "наёмник").length < b.campCards.filter(card => card.type === "наёмник").length) {
+                    } else if (nextPlayer.campCards.filter(card => card.type === "наёмник").length > currentPlayer.campCards.filter(card => card.type === "наёмник").length) {
                         return -1;
                     }
-                    if (a.priority > b.priority) {
+                    if (nextPlayer.priority.value < currentPlayer.priority.value) {
                         return 1;
-                    } else if (a.priority < b.priority) {
+                    } else if (nextPlayer.priority.value > currentPlayer.priority.value) {
                         return -1;
                     }
                     return 0;
                 });
                 players.forEach(playerSorted => {
-                    if (playerSorted.filter(card => card.type === "наёмник").length > 0) {
-                        playersIndexes.push(G.players.indexOf(playerSorted));
-                        // todo checkIt playersIndexes.push(G.players.findIndex(player => player.nickname === playerSorted.nickname));
+                    if (playerSorted.campCards.filter(card => card.type === "наёмник").length > 0) {
+                        playersIndexes.push(G.players.findIndex(player => player.nickname === playerSorted.nickname));
                     }
                 });
                 G.playersOrder = playersIndexes;
-                let stack;
-                if (G.playersOrder.length === 1) {
-                    stack = [
-                        {
-                            stack: {
-                                actionName: "DrawProfitAction",
-                                config: {
-                                    name: "enlistmentMercenaries",
-                                },
+                const stack = [
+                    {
+                        stack: {
+                            actionName: "DrawProfitAction",
+                            playerId: G.playersOrder[0],
+                            config: {
+                                name: "startOrPassEnlistmentMercenaries",
                             },
                         },
-                    ];
-                } else {
-                    stack = [
-                        {
-                            stack: {
-                                actionName: "DrawProfitAction",
-                                config: {
-                                    name: "startOrPassEnlistmentMercenaries",
-                                    stageName: "startOrPassEnlistmentMercenaries",
-                                },
-                            },
-                        },
-                    ];
-                }
+                    },
+                ];
                 AddActionsToStack(G, ctx, stack);
-                StartActionFromStackOrEndActions(G, ctx);
             },
         },
         endTier: {

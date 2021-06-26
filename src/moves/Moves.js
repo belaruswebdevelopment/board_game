@@ -68,8 +68,8 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                     DiscardCardFromTavern(G, cardIndex);
                 }
                 if (Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) {
-                    G.campPicked = false;
                     DiscardCardIfCampCardPicked(G);
+                    G.campPicked = false;
                 }
                 const isLastTavern = G.tavernsNum - 1 === G.currentTavern,
                     isCurrentTavernEmpty = CheckIfCurrentTavernEmpty(G, ctx);
@@ -107,9 +107,22 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
     } else if (ctx.phase === "enlistmentMercenaries") {
         if (Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) {
             G.campPicked = false;
-            ctx.events.setPhase("endTier");
+            CheckEndTierActions(G, ctx);
         } else {
+            const stack = [
+                {
+                    stack: {
+                        actionName: "DrawProfitAction",
+                        playerId: ctx.playOrder[ctx.playOrder.findIndex(playerIndex => Number(playerIndex) === Number(ctx.currentPlayer)) + 1],
+                        config: {
+                            name: "enlistmentMercenaries",
+                        },
+                    },
+                },
+            ];
             ctx.events.endTurn();
+            AddActionsToStack(G, ctx, stack);
+            G.drawProfit = "enlistmentMercenaries";
         }
     }
 };
@@ -174,6 +187,7 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
         }
     }
     if (count) {
+        G.drawProfit = "startOrPassEnlistmentMercenaries";
         ctx.events.setPhase("enlistmentMercenaries");
     } else {
         CheckEndTierActions(G, ctx);
@@ -258,16 +272,7 @@ export const ClickCardToPickDistinction = (G, ctx, cardId) => {
 };
 
 export const PickDiscardCard = (G, ctx, cardId) => {
-    G.actionsNum--;
-    if (G.actionsNum) {
-        return EndActionFromStackAndAddNew(G, ctx, [], cardId);
-    } else {
-        if (G.drawProfit === "BrisingamensAction" && G.stack[ctx.currentPlayer].length === 1) {
-            return StartActionFromStackOrEndActions(G, ctx, null, cardId);
-        } else {
-            return EndActionFromStackAndAddNew(G, ctx, [], cardId);
-        }
-    }
+    return EndActionFromStackAndAddNew(G, ctx, [], cardId);
 };
 
 export const StartEnlistmentMercenaries = (G, ctx) => {
