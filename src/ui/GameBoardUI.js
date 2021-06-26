@@ -455,17 +455,15 @@ export const DrawProfit = (data, option) => {
                 );
             }
         } else if (option === "BonfurAction" || option === "DagdaAction") {
-            let suit = null;
             if (option === "BonfurAction") {
                 caption += "one card to discard from your board.";
-                suit = "blacksmith";
             } else if (option === "DagdaAction") {
                 caption += "two card to discard from your board.";
-                suit = "hunter";
             }
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][0] !== undefined &&
-                    suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][0].suit].suit !== suit &&
+                    suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][0].suit].suit !==
+                    data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.suit &&
                     !(option === "DagdaAction" && data.props.G.actionsNum === 1 &&
                         suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][0].suit].suit ===
                         data.props.G.players[data.props.ctx.currentPlayer].pickedCard?.suit)) {

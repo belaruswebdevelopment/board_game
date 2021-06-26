@@ -57,16 +57,7 @@ export const StartThrudMoving = (G, ctx, card) => {
 };
 
 export const DiscardCard = (G, ctx, suitId, cardId) => {
-    G.actionsNum--;
-    if (G.actionsNum) {
-        return EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
-    } else {
-        if (G.drawProfit === "DagdaAction") {
-            return StartActionFromStackOrEndActions(G, ctx, null, suitId, cardId);
-        } else if (G.drawProfit === "BonfurAction") {
-            return EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
-        }
-    }
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };
 
 export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {

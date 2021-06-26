@@ -187,13 +187,42 @@ const AddBuffToPlayer = (G, ctx, config) => {
  */
 export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId) => {
     ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    G.actionsNum--;
     G.players[ctx.currentPlayer].pickedCard = G.players[ctx.currentPlayer].cards[suitId][cardId];
     G.discardCardsDeck.push(G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0]);
-    if (G.actionsNum === 0) {
-        G.drawProfit = null;
-        G.actionsNum = null;
-        return EndActionFromStackAndAddNew(G, ctx);
+    if (G.actionsNum === 1) {
+        const stack = [
+            {
+                stack: {
+                    actionName: "DrawProfitAction",
+                    config: {
+                        stageName: "discardCardFromBoard",
+                        hero: "Dagda",
+                        name: "DagdaAction",
+                        suit: "hunter",
+                        number: 1,
+                    },
+                },
+            },
+            {
+                stack: {
+                    actionName: "DiscardCardsFromPlayerBoardAction",
+                    config: {
+                        stageName: "discardCardFromBoard",
+                        hero: "Dagda",
+                        suit: "hunter",
+                        number: 1,
+                    },
+                },
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
     }
+    G.drawProfit = null;
+    if (G.actionsNum === 0) {
+        G.actionsNum = null;
+    }
+    return EndActionFromStackAndAddNew(G, ctx);
 };
 
 /**
