@@ -33,6 +33,10 @@
         height: 800px;
     }
 
+    .bg-top-tavern-icon {
+        @apply inline-block w-6 h-6;
+    }
+
     .bg-tavern-icon {
         @apply block-center w-6 h-6;
     }
@@ -68,7 +72,8 @@
     }
 
     .bg-hero {
-        @apply block-center w-8 h-12;
+        @apply block-center text-xl text-white w-8 h-12;
+        line-height: 48px;
     }
 
     .bg-hero-inactive {

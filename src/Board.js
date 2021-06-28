@@ -22,65 +22,11 @@ import {DrawLogData} from "./ui/LogUI";
  * Отрисовка игрового стола.
  */
 export class GameBoard extends React.Component {
-    OnClickHeroCard = (heroId) => {
-        this.props.moves.ClickHeroCard(heroId);
-    };
-    OnClickCampCard = (cardId) => {
-        this.props.moves.ClickCampCard(cardId);
-    };
     OnClickDistinctionCard = (cardId) => {
         this.props.moves.ClickDistinctionCard(cardId);
     };
-    OnClickCard = (cardId) => {
-        this.props.moves.ClickCard(cardId);
-    };
-    OnClickBoardCoin = (coinId) => {
-        this.props.moves.ClickBoardCoin(coinId);
-    };
-    OnClickHandCoin = (coinId) => {
-        this.props.moves.ClickHandCoin(coinId);
-    };
-    OnClickCardToPickDistinction = (cardId) => {
-        this.props.moves.ClickCardToPickDistinction(cardId);
-    };
-    OnClickCoinToUpgrade = (coinId, type, isInitial) => {
-        this.props.moves.ClickCoinToUpgrade(coinId, type, isInitial);
-    };
-    OnClickCardToDiscard = (suitId, cardId) => {
-        this.props.moves.DiscardCard(suitId, cardId);
-    };
     OnClickSuitToPlaceCard = (suitId) => {
         this.props.moves.PlaceCard(suitId);
-    };
-    OnClickCardFromDiscard = (cardId) => {
-        this.props.moves.PickDiscardCard(cardId);
-    };
-    OnClickCardToDiscard2Players = (cardId) => {
-        this.props.moves.DiscardCard2Players(cardId);
-    };
-    OnClickDiscardCardFromPlayerBoard = (suitId, cardId) => {
-        this.props.moves.DiscardCardFromPlayerBoard(suitId, cardId);
-    };
-    OnClickDiscardSuitCardFromPlayerBoard = (suitId, cardId) => {
-        this.props.moves.DiscardSuitCardFromPlayerBoard(suitId, cardId);
-    };
-    OnClickCampCardHolda = (cardId) => {
-        this.props.moves.ClickCampCardHolda(cardId);
-    };
-    OnClickCoinToAddToPouch = (suitId, cardId) => {
-        this.props.moves.AddCoinToPouch(suitId, cardId);
-    };
-    OnClickCoinToUpgradeVidofnirVedrfolnir = (coinId, type, isInitial) => {
-        this.props.moves.UpgradeCoinVidofnirVedrfolnir(coinId, type, isInitial);
-    };
-    OnClickStartEnlistmentMercenaries = () => {
-        this.props.moves.StartEnlistmentMercenaries();
-    };
-    OnClickPassEnlistmentMercenaries = () => {
-        this.props.moves.PassEnlistmentMercenaries();
-    };
-    OnClickGetEnlistmentMercenaries = (cardId) => {
-        this.props.moves.GetEnlistmentMercenaries(cardId);
     };
     OnClickSuitToPlaceMercenary = (suitId) => {
         this.props.moves.PlaceEnlistmentMercenaries(suitId);

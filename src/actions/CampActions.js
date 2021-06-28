@@ -43,7 +43,6 @@ export const AddCampCardToCards = (G, ctx, config, cardId) => {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, campCard);
         suitId = GetSuitIndexByName(campCard.suit);
     } else {
-        // todo Check if in enlistmentMercenaries phase pick new mercenary by Holda action and need to place it on player board
         AddCampCardToPlayer(G, ctx, campCard);
         if (ctx.phase === "enlistmentMercenaries" && G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник").length) {
             stack = [
