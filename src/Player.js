@@ -198,7 +198,7 @@ export const IsTopPlayer = (G, playerId) => {
  * Применения:
  * 1)
  *
- * @todo Саше: Добавить описание для функции и параметров. && replace currentPlayerId - ctx.currentPlayer?
+ * @todo Саше: Добавить описание для функции и параметров
  * @param G
  * @param currentPlayerId
  * @returns {*}
