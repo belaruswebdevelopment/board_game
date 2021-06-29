@@ -65,7 +65,7 @@ const Draupnir = {
             },
         },
     ],
-    scoringRule: (player) => player.boardCoins.filter(coin => coin.value >= 15).length * 6,
+    scoringRule: player => player.boardCoins.filter(coin => coin.value >= 15).length * 6,
 };
 
 /**
@@ -121,7 +121,7 @@ const Svalinn = {
             },
         },
     ],
-    scoringRule: (player) => player.heroes.length * 5,
+    scoringRule: player => player.heroes.length * 5,
 };
 
 /**
@@ -261,7 +261,7 @@ const Brisingamens = {
     ],
     scoringRule: () => 0,
 };
-// todo Add Stage to choose suit class for G.classForMjollnir!
+
 /**
  * Данные об артефакте.
  * Применения:
@@ -283,6 +283,18 @@ const Mjollnir = {
                 actionName: "AddCampCardToCards",
                 config: {
                     card: "Mjollnir",
+                },
+            },
+        },
+        {
+            stack: {
+                actionName: "AddBuffToPlayer",
+                config: {
+                    card: "Mjollnir",
+                    buff: {
+                        name: "getMjollnirProfit",
+                        value: true,
+                    },
                 },
             },
         },
@@ -353,7 +365,7 @@ const Hrafnsmerki = {
             },
         },
     ],
-    scoringRule: (player) => player.cards.flat().filter(card => card.type === "наёмник").length * 5,
+    scoringRule: player => player.cards.flat().filter(card => card.type === "наёмник").length * 5,
 };
 
 /**

@@ -9,6 +9,7 @@ import {
     DrawPlayerBoardForCardDiscard,
     DrawPlayerBoardForSuitCardDiscard
 } from "../helpers/UIHelper";
+import {TotalRank} from "../Score";
 
 /**
  * Отрисовка игровой информации о текущей эпохе и количестве карт в деках.
@@ -231,7 +232,7 @@ export const DrawProfit = (data, option) => {
                             key={`Place ${data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.hero} on ${suitsConfig[suit].suitName}`}
                             onClick={() => data.OnClickSuitToPlaceCard(j)}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
-
+                                <b>{data.props.G.stack[0].stack.variants[suit].points ?? ""}</b>
                             </span>
                         </td>
                     );
@@ -294,15 +295,19 @@ export const DrawProfit = (data, option) => {
                 DrawCard(data, boardCells, data.props.G.taverns[data.props.G.currentTavern][j], j, data.props.G.players[data.props.ctx.currentPlayer],
                     data.props.G.taverns[data.props.G.currentTavern][j].suit, "OnClickCardToDiscard2Players", j);
             }
-        } else if (option === "AddCoinToPouchVidofnirVedrfolnir") {
-            caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch to fill it.`;
-            for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].handCoins.length; j++) {
-                if (data.props.G.players[data.props.ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" &&
-                    data.props.G.players[data.props.ctx.currentPlayer].handCoins[j] !== null) {
-                    DrawCoin(data, boardCells, "coin", data.props.G.players[data.props.ctx.currentPlayer].handCoins[j], j,
-                        data.props.G.players[data.props.ctx.currentPlayer], "border-2", null,
-                        "OnClickCoinToAddToPouch", j);
-                }
+        } else if (option === "getMjollnirProfit") {
+            caption += "suit to get Mjollnir profit from ranks on that suit.";
+            for (let j = 0; j < data.props.G.suitsNum; j++) {
+                const suit = Object.keys(suitsConfig)[j];
+                boardCells.push(
+                    <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
+                        key={`${suit} suit to get Mjollnir profit`}
+                        onClick={() => data.OnClickSuitToGetMjollnirProfit(j)}>
+                        <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
+                            <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j].reduce(TotalRank, 0)} + 1</b>
+                        </span>
+                    </td>
+                );
             }
         } else if (option === "startOrPassEnlistmentMercenaries") {
             caption = "Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.";
@@ -336,6 +341,16 @@ export const DrawProfit = (data, option) => {
                             </span>
                         </td>
                     );
+                }
+            }
+        } else if (option === "AddCoinToPouchVidofnirVedrfolnir") {
+            caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch to fill it.`;
+            for (let j = 0; j < data.props.G.players[data.props.ctx.currentPlayer].handCoins.length; j++) {
+                if (data.props.G.players[data.props.ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" &&
+                    data.props.G.players[data.props.ctx.currentPlayer].handCoins[j] !== null) {
+                    DrawCoin(data, boardCells, "coin", data.props.G.players[data.props.ctx.currentPlayer].handCoins[j], j,
+                        data.props.G.players[data.props.ctx.currentPlayer], "border-2", null,
+                        "OnClickCoinToAddToPouch", j);
                 }
             }
         } else {

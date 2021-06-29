@@ -1,6 +1,5 @@
 import {IsValidMove} from "../MoveValidator";
 import {INVALID_MOVE} from "boardgame.io/core";
-import {DiscardCardFromTavern} from "../Card";
 import {AfterBasicPickCardActions} from "./Moves";
 import {
     AddActionsToStack,
@@ -61,10 +60,7 @@ export const ClickCampCardHolda = (G, ctx, cardId) => {
  * @constructor
  */
 export const DiscardCard2Players = (G, ctx, cardId) => {
-    // todo rework in action
-    DiscardCardFromTavern(G, cardId);
-    G.drawProfit = null;
-    ctx.events.endTurn();
+    return EndActionFromStackAndAddNew(G, ctx, [], cardId);
 };
 
 /**
@@ -79,11 +75,7 @@ export const DiscardCard2Players = (G, ctx, cardId) => {
  * @constructor
  */
 export const DiscardCardFromPlayerBoard = (G, ctx, suitId, cardId) => {
-    // todo rework in action
-    G.players[ctx.currentPlayer].cards[suitId].filter(card => card.type !== "герой").splice(cardId, 1);
-    delete G.players[ctx.currentPlayer].buffs["discardCardEndGame"];
-    ctx.events.endPhase();
-    ctx.events.endGame();
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };
 
 /**
@@ -104,4 +96,20 @@ export const DiscardSuitCardFromPlayerBoard = (G, ctx, suitId, cardId) => {
         ctx.events.endStage();
         AfterBasicPickCardActions(G, ctx);
     }
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
+};
+
+/**
+ * Выбирает фракцию для применения финального эффекта артефакта Mjollnir.
+ * Применения:
+ * 1) В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.
+ *
+ * @param G
+ * @param ctx
+ * @param suitId Id фракции.
+ * @returns {*}
+ * @constructor
+ */
+export const GetMjollnirProfit = (G, ctx, suitId) => {
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };

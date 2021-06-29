@@ -24,16 +24,10 @@ import {INVALID_MOVE} from "boardgame.io/core";
  */
 export const PlaceThrudAction = (G, ctx, config, suitId) => {
     const suit = Object.keys(suitsConfig)[suitId];
-    let points = 0;
-    if (suit === "hunter" || suit === "blacksmith") {
-        points = null;
-    } else if (suit === "explorer" || suit === "warrior" || suit === "miner") {
-        points = 0;
-    }
     const thrudCard = CreateCard({
         suit,
-        rank: 1,
-        points: points,
+        rank: G.stack[0].stack.variants[suit].rank,
+        points: G.stack[0].stack.variants[suit].points,
         type: "герой",
         name: "Thrud",
         game: "base",
@@ -58,20 +52,10 @@ export const PlaceThrudAction = (G, ctx, config, suitId) => {
  */
 export const PlaceYludAction = (G, ctx, config, suitId) => {
     const suit = Object.keys(suitsConfig)[suitId];
-    let points = 0;
-    if (suit === "hunter" || suit === "blacksmith") {
-        points = null;
-    } else if (suit === "explorer") {
-        points = 11;
-    } else if (suit === "warrior") {
-        points = 7;
-    } else if (suit === "miner") {
-        points = 1;
-    }
     const yludCard = CreateCard({
         suit: suit,
-        rank: 1,
-        points: points,
+        rank: G.stack[0].stack.variants[suit].rank,
+        points: G.stack[0].stack.variants[suit].points,
         type: "герой",
         name: "Ylud",
         game: "base",

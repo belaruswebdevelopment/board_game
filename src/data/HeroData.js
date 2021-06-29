@@ -51,25 +51,6 @@ const Ylud = {
                 },
             },
         },
-        /* todo Move To Start Action at EndTier
-        {
-            stack: {
-                actionName: "DrawProfitAction",
-                config: {
-                    stageName: "placeCards",
-                    hero: "Ylud",
-                    name: "placeCard",
-                },
-            },
-        },
-        {
-            stack: {
-                actionName: "PlaceYludAction",
-                config: {
-                    hero: "Ylud",
-                },
-            },
-        },*/
     ],
     scoringRule: () => 0,
 };
@@ -335,6 +316,33 @@ const Thrud = {
                     stageName: "placeCards",
                     hero: "Thrud",
                     name: "placeCards",
+                    variants: {
+                        blacksmith: {
+                            suit: "blacksmith",
+                            rank: 1,
+                            points: null,
+                        },
+                        hunter: {
+                            suit: "hunter",
+                            rank: 1,
+                            points: null,
+                        },
+                        explorer: {
+                            suit: "explorer",
+                            rank: 1,
+                            points: null,
+                        },
+                        warrior: {
+                            suit: "warrior",
+                            rank: 1,
+                            points: null,
+                        },
+                        miner: {
+                            suit: "miner",
+                            rank: 1,
+                            points: null,
+                        },
+                    },
                 },
             },
         },
@@ -343,6 +351,33 @@ const Thrud = {
                 actionName: "PlaceThrudAction",
                 config: {
                     hero: "Thrud",
+                    variants: {
+                        blacksmith: {
+                            suit: "blacksmith",
+                            rank: 1,
+                            points: null,
+                        },
+                        hunter: {
+                            suit: "hunter",
+                            rank: 1,
+                            points: null,
+                        },
+                        explorer: {
+                            suit: "explorer",
+                            rank: 1,
+                            points: null,
+                        },
+                        warrior: {
+                            suit: "warrior",
+                            rank: 1,
+                            points: null,
+                        },
+                        miner: {
+                            suit: "miner",
+                            rank: 1,
+                            points: null,
+                        },
+                    },
                 },
             },
         },
@@ -947,6 +982,33 @@ const Olwin = {
                     hero: "Olwin",
                     name: "placeCards",
                     number: 2,
+                    variants: {
+                        blacksmith: {
+                            suit: "blacksmith",
+                            rank: 1,
+                            points: null,
+                        },
+                        hunter: {
+                            suit: "hunter",
+                            rank: 1,
+                            points: null,
+                        },
+                        explorer: {
+                            suit: "explorer",
+                            rank: 1,
+                            points: 0,
+                        },
+                        warrior: {
+                            suit: "warrior",
+                            rank: 1,
+                            points: 0,
+                        },
+                        miner: {
+                            suit: "miner",
+                            rank: 1,
+                            points: 0,
+                        },
+                    },
                 },
             },
         },
@@ -956,6 +1018,33 @@ const Olwin = {
                 config: {
                     stageName: "placeCards",
                     hero: "Olwin",
+                    variants: {
+                        blacksmith: {
+                            suit: "blacksmith",
+                            rank: 1,
+                            points: null,
+                        },
+                        hunter: {
+                            suit: "hunter",
+                            rank: 1,
+                            points: null,
+                        },
+                        explorer: {
+                            suit: "explorer",
+                            rank: 1,
+                            points: 0,
+                        },
+                        warrior: {
+                            suit: "warrior",
+                            rank: 1,
+                            points: 0,
+                        },
+                        miner: {
+                            suit: "miner",
+                            rank: 1,
+                            points: 0,
+                        },
+                    },
                 },
             },
         },

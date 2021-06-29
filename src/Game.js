@@ -30,7 +30,7 @@ import {
     ClickCampCard, ClickCampCardHolda,
     DiscardCard2Players,
     DiscardCardFromPlayerBoard,
-    DiscardSuitCardFromPlayerBoard
+    DiscardSuitCardFromPlayerBoard, GetMjollnirProfit
 } from "./moves/CampMoves";
 import {AddActionsToStack} from "./helpers/StackHelpers";
 // todo Add logging
@@ -334,6 +334,8 @@ export const BoardGame = {
                 },
             },
             moves: {
+                PlaceCard,
+                GetMjollnirProfit,
                 DiscardCardFromPlayerBoard,
             },
         },

@@ -3,7 +3,7 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {suitsConfig} from "../data/SuitData";
 import {AddCardToPlayer} from "../Player";
 import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
-import {CreateCard} from "../Card";
+import {CreateCard, DiscardCardFromTavern} from "../Card";
 import {
     AddHeroToCards,
     CheckAndMoveThrudOrPickHeroAction,
@@ -15,7 +15,7 @@ import {
 } from "./HeroActions";
 import {
     AddCampCardToCards, AddCoinToPouchAction,
-    CheckPickCampCard,
+    CheckPickCampCard, DiscardAnyCardFromPlayerBoard,
     DiscardSuitCard,
     DiscardTradingCoin,
     StartVidofnirVedrfolnirAction
@@ -60,6 +60,9 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         case "DiscardCardsFromPlayerBoardAction":
             action = DiscardCardsFromPlayerBoardAction;
             break;
+        case "DiscardCardFromTavernAction":
+            action = DiscardCardFromTavernAction;
+            break;
         case "PlaceCards":
             action = PlaceCards;
             break;
@@ -98,6 +101,12 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
             break;
         case "DiscardSuitCard":
             action = DiscardSuitCard;
+            break;
+        case "DiscardAnyCardFromPlayerBoard":
+            action = DiscardAnyCardFromPlayerBoard;
+            break;
+        case "GetMjollnirProfitAction":
+            action = GetMjollnirProfitAction;
             break;
         case "PassEnlistmentMercenariesAction":
             action = PassEnlistmentMercenariesAction;
@@ -226,6 +235,23 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId
 };
 
 /**
+ * Сбрасывает карту из таверны по выбору игрока.
+ * Применения:
+ * 1) Применяется при выборе первым игроком карты из кэмпа.
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @param cardId Id карты.
+ * @returns {*}
+ * @constructor
+ */
+const DiscardCardFromTavernAction = (G, ctx, config, cardId) => {
+    DiscardCardFromTavern(G, cardId);
+    return EndActionFromStackAndAddNew(G, ctx);
+};
+
+/**
  * Действия, связанные с возможностью дискарда карт с планшета игрока.
  * Применения:
  * 1) При выборе конкретных героев, дающих возможность дискарда карт с планшета игрока.
@@ -271,18 +297,15 @@ const PlaceCards = (G, ctx, config, suitId) => {
     ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
     G.actionsNum--;
     const suit = Object.keys(suitsConfig)[suitId];
-    let points = 0;
-    if (suit === "hunter" || suit === "blacksmith") {
-        points = null;
-    }
     const olwinDouble = CreateCard({
         suit,
-        rank: 1,
-        points: points,
+        rank: G.stack[0].stack.variants[suit].rank,
+        points: G.stack[0].stack.variants[suit].points,
         name: "Olwin",
     });
     AddCardToPlayer(G, ctx, olwinDouble);
     if (G.actionsNum === 1) {
+        // todo get all this stack from DATA files card.stack[x]
         const stack = [
             {
                 stack: {
@@ -292,6 +315,33 @@ const PlaceCards = (G, ctx, config, suitId) => {
                         stageName: "placeCards",
                         hero: "Olwin",
                         number: 1,
+                        variants: {
+                            blacksmith: {
+                                suit: "blacksmith",
+                                rank: 1,
+                                points: null,
+                            },
+                            hunter: {
+                                suit: "hunter",
+                                rank: 1,
+                                points: null,
+                            },
+                            explorer: {
+                                suit: "explorer",
+                                rank: 1,
+                                points: 0,
+                            },
+                            warrior: {
+                                suit: "warrior",
+                                rank: 1,
+                                points: 0,
+                            },
+                            miner: {
+                                suit: "miner",
+                                rank: 1,
+                                points: 0,
+                            },
+                        },
                     },
                 },
             },
@@ -301,6 +351,33 @@ const PlaceCards = (G, ctx, config, suitId) => {
                     config: {
                         stageName: "placeCards",
                         hero: "Olwin",
+                        variants: {
+                            blacksmith: {
+                                suit: "blacksmith",
+                                rank: 1,
+                                points: null,
+                            },
+                            hunter: {
+                                suit: "hunter",
+                                rank: 1,
+                                points: null,
+                            },
+                            explorer: {
+                                suit: "explorer",
+                                rank: 1,
+                                points: 0,
+                            },
+                            warrior: {
+                                suit: "warrior",
+                                rank: 1,
+                                points: 0,
+                            },
+                            miner: {
+                                suit: "miner",
+                                rank: 1,
+                                points: 0,
+                            },
+                        },
                     },
                 },
             },
@@ -387,6 +464,23 @@ const PickDiscardCard = (G, ctx, config, cardId) => {
     }
     const suitId = GetSuitIndexByName(pickedCard.suit);
     return EndActionFromStackAndAddNew(G, ctx, [], suitId);
+};
+
+/**
+ * Выбор фракции для применения финального эффекта артефакта Mjollnir.
+ * Применения:
+ * 1) В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @param suitId Id фракции.
+ * @returns {*}
+ * @constructor
+ */
+const GetMjollnirProfitAction = (G, ctx, config, suitId) => {
+    G.suitIdForMjollnir = suitId;
+    return EndActionFromStackAndAddNew(G, ctx);
 };
 
 /**

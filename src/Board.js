@@ -31,6 +31,9 @@ export class GameBoard extends React.Component {
     OnClickSuitToPlaceMercenary = (suitId) => {
         this.props.moves.PlaceEnlistmentMercenaries(suitId);
     };
+    OnClickSuitToGetMjollnirProfit = (suitId) => {
+        this.props.moves.GetMjollnirProfit(suitId);
+    };
     render() {
         const gridClass = "col-span-4",
             classes = "col-span-4 text-center underline border",

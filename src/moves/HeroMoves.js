@@ -1,11 +1,7 @@
 import {IsValidMove} from "../MoveValidator";
 import {INVALID_MOVE} from "boardgame.io/core";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
-import {
-    AddActionsToStackAfterCurrent,
-    EndActionFromStackAndAddNew,
-    StartActionFromStackOrEndActions
-} from "../helpers/StackHelpers";
+import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
 // todo Add logging
 export const ClickHeroCard = (G, ctx, heroId) => {
     const isValidMove = IsValidMove({obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length]});
@@ -41,6 +37,33 @@ export const StartThrudMoving = (G, ctx, card) => {
                     name: "placeCards",
                     stageName: "placeCards",
                     suit: card.suit,
+                    variants: {
+                        blacksmith: {
+                            suit: "blacksmith",
+                            rank: 1,
+                            points: null,
+                        },
+                        hunter: {
+                            suit: "hunter",
+                            rank: 1,
+                            points: null,
+                        },
+                        explorer: {
+                            suit: "explorer",
+                            rank: 1,
+                            points: null,
+                        },
+                        warrior: {
+                            suit: "warrior",
+                            rank: 1,
+                            points: null,
+                        },
+                        miner: {
+                            suit: "miner",
+                            rank: 1,
+                            points: null,
+                        },
+                    },
                 },
             },
         },
@@ -49,6 +72,33 @@ export const StartThrudMoving = (G, ctx, card) => {
                 actionName: "PlaceThrudAction",
                 config: {
                     hero: "Thrud",
+                    variants: {
+                        blacksmith: {
+                            suit: "blacksmith",
+                            rank: 1,
+                            points: null,
+                        },
+                        hunter: {
+                            suit: "hunter",
+                            rank: 1,
+                            points: null,
+                        },
+                        explorer: {
+                            suit: "explorer",
+                            rank: 1,
+                            points: null,
+                        },
+                        warrior: {
+                            suit: "warrior",
+                            rank: 1,
+                            points: null,
+                        },
+                        miner: {
+                            suit: "miner",
+                            rank: 1,
+                            points: null,
+                        },
+                    },
                 },
             },
         },

@@ -33,6 +33,9 @@ export const CheckPickCampCard = (G, ctx) => {
  * @constructor
  */
 export const AddCampCardToCards = (G, ctx, config, cardId) => {
+    if (G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]) {
+        delete G.players[ctx.currentPlayer].buffs?.["goCampOneTime"];
+    }
     const campCard = G.camp[cardId];
     let suitId = null,
         stack = [];
@@ -190,6 +193,25 @@ export const DiscardTradingCoin = (G, ctx) => {
     } else {
         G.players[ctx.currentPlayer].boardCoins.splice(tradingCoinIndex, 1, null);
     }
+    return EndActionFromStackAndAddNew(G, ctx);
+};
+
+/**
+ * Действия, связанные со сбросом любой указанной карты со стола игрока в дискард.
+ * Применения:
+ * 1) Применяется при сбрасе карты в дискард в конце игры при наличии артефакта Brisingamens.
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @param suitId Id фракци.
+ * @param cardId Id карты.
+ * @returns {*}
+ * @constructor
+ */
+export const DiscardAnyCardFromPlayerBoard = (G, ctx, config, suitId, cardId) => {
+    G.players[ctx.currentPlayer].cards[suitId].filter(card => card.type !== "герой").splice(cardId, 1);
+    delete G.players[ctx.currentPlayer].buffs["discardCardEndGame"];
     return EndActionFromStackAndAddNew(G, ctx);
 };
 

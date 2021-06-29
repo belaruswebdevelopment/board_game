@@ -5,7 +5,7 @@ import {CheckIfCurrentTavernEmpty, RefillTaverns} from "../Tavern";
 import {RemoveThrudFromPlayerBoardAfterGameEnd} from "../Hero";
 import {IsValidMove} from "../MoveValidator";
 import {DiscardCardIfCampCardPicked, RefillEmptyCampCards} from "../Camp";
-import {CheckAndStartUlineActionsOrContinue, StartThrudMoving} from "./HeroMoves";
+import {CheckAndStartUlineActionsOrContinue} from "./HeroMoves";
 import {ActivateTrading} from "./CoinMoves";
 import {DiscardCardFromTavern} from "../Card";
 import {
@@ -26,7 +26,49 @@ export const CheckEndTierPhaseEnded = (G, ctx) => {
         RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
         if (G.players[G.playersOrder[1]]?.buffs?.["discardCardEndGame"]) {
             G.drawProfit = "BrisingamensEndGameAction";
+            G.stack[G.playersOrder[1]].stack = [
+                {
+                    stack: {
+                        actionName: "DrawProfitAction",
+                        config: {
+                            card: "Brisingamens",
+                            name: "BrisingamensEndGameAction",
+                        },
+                    },
+                },
+                {
+                    stack: {
+                        actionName: "DiscardAnyCardFromPlayerBoard",
+                        config: {
+                            card: "Brisingamens",
+                            name: "BrisingamensEndGameAction",
+                        },
+                    },
+                },
+            ];
             ctx.events.endTurn();
+        } else if (G.players[G.playersOrder.length - 1]?.buffs?.["getMjollnirProfit"]) {
+            G.drawProfit = "getMjollnirProfit";
+            G.stack[G.playersOrder[0]].stack = [
+                {
+                    stack: {
+                        actionName: "DrawProfitAction",
+                        config: {
+                            card: "Mjollnir",
+                            name: "getMjollnirProfit",
+                        },
+                    },
+                },
+                {
+                    stack: {
+                        actionName: "GetMjollnirProfitAction",
+                        config: {
+                            card: "Mjollnir",
+                            name: "getMjollnirProfit",
+                        },
+                    },
+                },
+            ];
         } else {
             ctx.events.endPhase();
             ctx.events.endGame();
@@ -48,12 +90,8 @@ export const CheckEndTierPhaseEnded = (G, ctx) => {
  * @constructor
  */
 export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
-    // todo rework it all!
+    // todo rework it?
     G.players[ctx.currentPlayer].pickedCard = null;
-    if (G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]) {
-        // todo Rework it or delete in the Click camp card move?
-        delete G.players[ctx.currentPlayer].buffs?.["goCampOneTime"];
-    }
     if (ctx.phase === "pickCards") {
         const isUlinePlaceTradingCoin = CheckAndStartUlineActionsOrContinue(G, ctx);
         if (isUlinePlaceTradingCoin !== "placeTradingCoinsUline" && isUlinePlaceTradingCoin !== "nextPlaceTradingCoinsUline") {
@@ -84,8 +122,28 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                     }
                 } else {
                     if (Number(ctx.currentPlayer) === Number(ctx.playOrder[0]) && G.campPicked && ctx.numPlayers === 2) {
-                        G.drawProfit = "discardCard";
-                        ctx.events.setStage("discardCard");
+                        const stack = [
+                            {
+                                stack: {
+                                    actionName: "DrawProfitAction",
+                                    config: {
+                                        stagName: "discardCard",
+                                        name: "discardCard",
+                                    },
+                                },
+                            },
+                            {
+                                stack: {
+                                    actionName: "DiscardCardFromTavernAction",
+                                    config: {
+                                        stagName: "discardCard",
+                                        name: "discardCard",
+                                    },
+                                },
+                            },
+                        ];
+                        AddActionsToStack(G, ctx, stack);
+                        StartActionFromStackOrEndActions(G, ctx);
                     } else {
                         ctx.events.endTurn();
                     }
@@ -93,15 +151,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
             }
         }
     } else if (ctx.phase === "endTier") {
-        const isPlayerHasThrud = G.players[ctx.currentPlayer].heroes.findIndex(hero => hero.name === "Thrud") !== -1,
-            isThrudOnThePlayerSuitBoard = G.players[ctx.currentPlayer].cards.flat().findIndex(card => card.name === "Thrud") !== -1;
-        if (isPlayerHasThrud && !isThrudOnThePlayerSuitBoard) {
-            const yludCard = G.players[ctx.currentPlayer].cards.flat().find(card => card.name === "Ylud");
-            // todo FIXIT
-            StartThrudMoving(G, ctx, yludCard);
-        } else {
-            CheckEndTierPhaseEnded(G, ctx);
-        }
+        CheckEndTierPhaseEnded(G, ctx);
     } else if (ctx.phase === "getDistinctions") {
         ctx.events.endTurn();
     } else if (ctx.phase === "enlistmentMercenaries") {
@@ -130,6 +180,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
 const CheckEndTierActions = (G, ctx) => {
     G.playersOrder = [];
     let ylud = false,
+        brisingamens = false,
         index = -1;
     for (let i = 0; i < G.players.length; i++) {
         index = G.players[i].heroes.findIndex(hero => hero.name === "Ylud");
@@ -145,6 +196,7 @@ const CheckEndTierActions = (G, ctx) => {
                 if (index !== -1) {
                     G.players[ctx.currentPlayer].cards[i].splice(index, 1);
                     G.playersOrder.push(i);
+                    ylud = true;
                 }
             }
         }
@@ -152,12 +204,141 @@ const CheckEndTierActions = (G, ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         if (G.players[i].buffs?.["discardCardEndGame"]) {
             G.playersOrder.push(i);
+            brisingamens = true;
+            break;
+        }
+    }
+    for (let i = 0; i < ctx.numPlayers; i++) {
+        if (G.players[i].buffs?.["getMjollnirProfit"]) {
+            G.playersOrder.push(i);
             break;
         }
     }
     if (G.playersOrder.length) {
-        G.drawProfit = "endTier";
         ctx.events.setPhase("endTier");
+        if (ylud) {
+            G.drawProfit = "endTier";
+            G.stack[G.playersOrder[0]].stack = [
+                {
+                    stack: {
+                        actionName: "DrawProfitAction",
+                        config: {
+                            stageName: "placeCards",
+                            hero: "Ylud",
+                            name: "placeCard",
+                            variants: {
+                                blacksmith: {
+                                    suit: "blacksmith",
+                                    rank: 1,
+                                    points: null,
+                                },
+                                hunter: {
+                                    suit: "hunter",
+                                    rank: 1,
+                                    points: null,
+                                },
+                                explorer: {
+                                    suit: "explorer",
+                                    rank: 1,
+                                    points: 11,
+                                },
+                                warrior: {
+                                    suit: "warrior",
+                                    rank: 1,
+                                    points: 7,
+                                },
+                                miner: {
+                                    suit: "miner",
+                                    rank: 1,
+                                    points: 1,
+                                },
+                            },
+                        },
+                    },
+                },
+                {
+                    stack: {
+                        actionName: "PlaceYludAction",
+                        config: {
+                            hero: "Ylud",
+                            variants: {
+                                blacksmith: {
+                                    suit: "blacksmith",
+                                    rank: 1,
+                                    points: null,
+                                },
+                                hunter: {
+                                    suit: "hunter",
+                                    rank: 1,
+                                    points: null,
+                                },
+                                explorer: {
+                                    suit: "explorer",
+                                    rank: 1,
+                                    points: 11,
+                                },
+                                warrior: {
+                                    suit: "warrior",
+                                    rank: 1,
+                                    points: 7,
+                                },
+                                miner: {
+                                    suit: "miner",
+                                    rank: 1,
+                                    points: 1,
+                                },
+                            },
+                        },
+                    },
+                },
+            ];
+        } else {
+            if (brisingamens) {
+                G.drawProfit = "BrisingamensEndGameAction";
+                G.stack[G.playersOrder[0]].stack = [
+                    {
+                        stack: {
+                            actionName: "DrawProfitAction",
+                            config: {
+                                card: "Brisingamens",
+                                name: "BrisingamensEndGameAction",
+                            },
+                        },
+                    },
+                    {
+                        stack: {
+                            actionName: "DiscardAnyCardFromPlayerBoard",
+                            config: {
+                                card: "Brisingamens",
+                                name: "BrisingamensEndGameAction",
+                            },
+                        },
+                    },
+                ];
+            } else {
+                G.drawProfit = "getMjollnirProfit";
+                G.stack[G.playersOrder[0]].stack = [
+                    {
+                        stack: {
+                            actionName: "DrawProfitAction",
+                            config: {
+                                card: "Mjollnir",
+                                name: "getMjollnirProfit",
+                            },
+                        },
+                    },
+                    {
+                        stack: {
+                            actionName: "GetMjollnirProfitAction",
+                            config: {
+                                card: "Mjollnir",
+                                name: "getMjollnirProfit",
+                            },
+                        },
+                    },
+                ];
+            }
+        }
     } else {
         if (!G.tierToEnd) {
             RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
