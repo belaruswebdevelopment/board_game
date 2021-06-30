@@ -85,7 +85,7 @@ export const EndActionFromStackAndAddNew = (G, ctx, newStack = [], ...args) => {
     if (ctx.activePlayers?.[ctx.currentPlayer]) {
         ctx.events.endStage();
     }
-    const isTrading = G.stack[ctx.currentPlayer][0].config.isTrading ?? null;
+    const isTrading = G.stack[ctx.currentPlayer][0].config?.isTrading ?? null;
     G.stack[ctx.currentPlayer].shift();
     AddActionsToStack(G, ctx, newStack);
     return StartActionFromStackOrEndActions(G, ctx, isTrading, ...args);
