@@ -4,6 +4,17 @@ import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../hel
 import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 import {CheckAndStartUlineActionsOrContinue} from "../helpers/HeroHelpers";
 
+/**
+ * Выбор монеты в руке для выкладки монет.
+ * Применения:
+ * 1) При клике по монете в руке.
+ *
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @returns {string}
+ * @constructor
+ */
 export const ClickHandCoin = (G, ctx, coinId) => {
     const isValidMove = IsValidMove({
         obj: G.players[ctx.currentPlayer].handCoins[coinId],
@@ -16,6 +27,17 @@ export const ClickHandCoin = (G, ctx, coinId) => {
     G.players[ctx.currentPlayer].selectedCoin = coinId;
 };
 
+/**
+ * Выбор места для монет на столе для выкладки монет.
+ * Применения:
+ * 1) При клике по месту для монет на столе.
+ *
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @returns {string}
+ * @constructor
+ */
 export const ClickBoardCoin = (G, ctx, coinId) => {
     const player = G.players[ctx.currentPlayer],
         isValidMove = IsValidMove({objId: coinId, range: [0, player.boardCoins.length]});
@@ -59,6 +81,19 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
     }
 };
 
+/**
+ * Выбор монеты для улучшения.
+ * Применения:
+ * 1) При клике по монете.
+ *
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @param type Тип монеты.
+ * @param isInitial Является ли базовой.
+ * @returns {string|*}
+ * @constructor
+ */
 export const ClickCoinToUpgrade = (G, ctx, coinId, type, isInitial) => {
     const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
     if (!isValidMove) {
@@ -76,6 +111,19 @@ export const ClickCoinToUpgrade = (G, ctx, coinId, type, isInitial) => {
     return EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
 };
 
+/**
+ * Выбор монеты для улучшения по артефакту Vidofnir Vedrfolnir.
+ * Применения:
+ * 1) При клике по монете.
+ *
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @param type Тип монеты.
+ * @param isInitial Является ли базовой.
+ * @returns {string|*}
+ * @constructor
+ */
 export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) => {
     const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && G.stack[ctx.currentPlayer][0].config.coinId !== coinId;
     if (!isValidMove) {
@@ -114,6 +162,17 @@ export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) =
     return EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
 };
 
+/**
+ * Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.
+ * Применения:
+ * 1) При клике по монете.
+ *
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @returns {string|*}
+ * @constructor
+ */
 export const AddCoinToPouch = (G, ctx, coinId) => {
     if (G.players[ctx.currentPlayer].handCoins[coinId] !== null) {
         G.actionsNum--;

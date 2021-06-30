@@ -1,5 +1,15 @@
 import {CheckAndStartUlineActionsOrContinue} from "../helpers/HeroHelpers";
 
+/**
+ * Выкладка монет ботами.
+ * Применения:
+ * 1) Когда ботам нужно выложить все монеты на игровой планшет.
+ *
+ * @param G
+ * @param ctx
+ * @param coinsOrder Порядок выкладки монет.
+ * @constructor
+ */
 export const BotsPlaceAllCoins = (G, ctx, coinsOrder) => {
     for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
         const coinId = coinsOrder[i] || G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin !== null);
