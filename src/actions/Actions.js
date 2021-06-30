@@ -158,8 +158,8 @@ const UpgradeCoinAction = (G, ctx, config, ...args) => {
  * @constructor
  */
 const DrawProfitAction = (G, ctx, config) => {
-    if (G.stack[ctx.currentPlayer][0].stack.config.stageName) {
-        ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    if (G.stack[ctx.currentPlayer][0].config?.stageName) {
+        ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     }
     G.actionsNum = config.number ?? null;
     G.drawProfit = config.name;
@@ -195,22 +195,19 @@ const AddBuffToPlayer = (G, ctx, config) => {
  * @constructor
  */
 export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     G.actionsNum--;
     G.players[ctx.currentPlayer].pickedCard = G.players[ctx.currentPlayer].cards[suitId][cardId];
     G.discardCardsDeck.push(G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0]);
     if (G.actionsNum === 1) {
         const stack = [
             {
-                stack: {
-                    actionName: "DrawProfitAction",
-                    config: {
-                        stageName: "discardCardFromBoard",
-                        hero: "Dagda",
-                        name: "DagdaAction",
-                        suit: "hunter",
-                        number: 1,
-                    },
+                actionName: "DrawProfitAction",
+                config: {
+                    stageName: "discardCardFromBoard",
+                    name: "DagdaAction",
+                    suit: "hunter",
+                    number: 1,
                 },
             },
             {
@@ -218,7 +215,6 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId
                     actionName: "DiscardCardsFromPlayerBoardAction",
                     config: {
                         stageName: "discardCardFromBoard",
-                        hero: "Dagda",
                         suit: "hunter",
                         number: 1,
                     },
@@ -294,13 +290,13 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
  * @constructor
  */
 const PlaceCards = (G, ctx, config, suitId) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     G.actionsNum--;
     const suit = Object.keys(suitsConfig)[suitId];
     const olwinDouble = CreateCard({
         suit,
-        rank: G.stack[0].stack.variants[suit].rank,
-        points: G.stack[0].stack.variants[suit].points,
+        rank: G.stack[0].variants[suit].rank,
+        points: G.stack[0].variants[suit].points,
         name: "Olwin",
     });
     AddCardToPlayer(G, ctx, olwinDouble);
@@ -308,75 +304,71 @@ const PlaceCards = (G, ctx, config, suitId) => {
         // todo get all this stack from DATA files card.stack[x]
         const stack = [
             {
-                stack: {
-                    actionName: "DrawProfitAction",
-                    config: {
-                        name: "placeCards",
-                        stageName: "placeCards",
-                        hero: "Olwin",
-                        number: 1,
-                        variants: {
-                            blacksmith: {
-                                suit: "blacksmith",
-                                rank: 1,
-                                points: null,
-                            },
-                            hunter: {
-                                suit: "hunter",
-                                rank: 1,
-                                points: null,
-                            },
-                            explorer: {
-                                suit: "explorer",
-                                rank: 1,
-                                points: 0,
-                            },
-                            warrior: {
-                                suit: "warrior",
-                                rank: 1,
-                                points: 0,
-                            },
-                            miner: {
-                                suit: "miner",
-                                rank: 1,
-                                points: 0,
-                            },
+                actionName: "DrawProfitAction",
+                config: {
+                    name: "placeCards",
+                    stageName: "placeCards",
+                    hero: "Olwin",
+                    number: 1,
+                    variants: {
+                        blacksmith: {
+                            suit: "blacksmith",
+                            rank: 1,
+                            points: null,
+                        },
+                        hunter: {
+                            suit: "hunter",
+                            rank: 1,
+                            points: null,
+                        },
+                        explorer: {
+                            suit: "explorer",
+                            rank: 1,
+                            points: 0,
+                        },
+                        warrior: {
+                            suit: "warrior",
+                            rank: 1,
+                            points: 0,
+                        },
+                        miner: {
+                            suit: "miner",
+                            rank: 1,
+                            points: 0,
                         },
                     },
                 },
             },
             {
-                stack: {
-                    actionName: "PlaceCards",
-                    config: {
-                        stageName: "placeCards",
-                        hero: "Olwin",
-                        variants: {
-                            blacksmith: {
-                                suit: "blacksmith",
-                                rank: 1,
-                                points: null,
-                            },
-                            hunter: {
-                                suit: "hunter",
-                                rank: 1,
-                                points: null,
-                            },
-                            explorer: {
-                                suit: "explorer",
-                                rank: 1,
-                                points: 0,
-                            },
-                            warrior: {
-                                suit: "warrior",
-                                rank: 1,
-                                points: 0,
-                            },
-                            miner: {
-                                suit: "miner",
-                                rank: 1,
-                                points: 0,
-                            },
+                actionName: "PlaceCards",
+                config: {
+                    stageName: "placeCards",
+                    hero: "Olwin",
+                    variants: {
+                        blacksmith: {
+                            suit: "blacksmith",
+                            rank: 1,
+                            points: null,
+                        },
+                        hunter: {
+                            suit: "hunter",
+                            rank: 1,
+                            points: null,
+                        },
+                        explorer: {
+                            suit: "explorer",
+                            rank: 1,
+                            points: 0,
+                        },
+                        warrior: {
+                            suit: "warrior",
+                            rank: 1,
+                            points: 0,
+                        },
+                        miner: {
+                            suit: "miner",
+                            rank: 1,
+                            points: 0,
                         },
                     },
                 },
@@ -422,32 +414,25 @@ const CheckPickDiscardCard = (G, ctx) => {
  * @constructor
  */
 const PickDiscardCard = (G, ctx, config, cardId) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     G.actionsNum--;
     const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
         pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
     if (G.actionsNum === 1 && G.discardCardsDeck.length > 0) {
         const stack = [
             {
-                stack: {
-                    actionName: "DrawProfitAction",
-                    config: {
-                        stageName: "pickDiscardCard",
-                        card: "Brisingamens",
-                        name: "BrisingamensAction",
-                        number: 1,
-                    },
+                actionName: "DrawProfitAction",
+                config: {
+                    stageName: "pickDiscardCard",
+                    name: "BrisingamensAction",
+                    number: 1,
                 },
             },
             {
-                stack: {
-                    actionName: "PickDiscardCard",
-                    config: {
-                        stageName: "pickDiscardCard",
-                        card: "Brisingamens",
-                        name: "BrisingamensAction",
-                        number: 1,
-                    },
+                actionName: "PickDiscardCard",
+                config: {
+                    stageName: "pickDiscardCard",
+                    number: 1,
                 },
             },
         ];
@@ -513,11 +498,9 @@ const GetEnlistmentMercenariesAction = (G, ctx, config, cardId) => {
     G.players[ctx.currentPlayer].pickedCard = G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник")[cardId];
     const stack = [
         {
-            stack: {
-                actionName: "DrawProfitAction",
-                config: {
-                    name: "placeEnlistmentMercenaries",
-                },
+            actionName: "DrawProfitAction",
+            config: {
+                name: "placeEnlistmentMercenaries",
             },
         },
     ];
@@ -552,11 +535,9 @@ const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
     if (G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник").length) {
         const stack = [
             {
-                stack: {
-                    actionName: "DrawProfitAction",
-                    config: {
-                        name: "enlistmentMercenaries",
-                    },
+                actionName: "DrawProfitAction",
+                config: {
+                    name: "enlistmentMercenaries",
                 },
             },
         ];

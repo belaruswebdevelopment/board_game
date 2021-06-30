@@ -84,11 +84,9 @@ export const CheckPickHero = (G, ctx) => {
         if (isCanPickHero) {
             const stack = [
                 {
-                    stack: {
-                        actionName: "PickHero",
-                        config: {
-                            stageName: "pickHero",
-                        },
+                    actionName: "PickHero",
+                    config: {
+                        stageName: "pickHero",
                     },
                 },
             ];

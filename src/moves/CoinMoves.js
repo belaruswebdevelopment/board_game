@@ -2,8 +2,8 @@ import {CoinUpgradeValidation, IsValidMove} from "../MoveValidator";
 import {INVALID_MOVE} from "boardgame.io/core";
 import {Trading} from "../Coin";
 import {CheckAndStartUlineActionsOrContinue} from "./HeroMoves";
-import {AfterBasicPickCardActions} from "./Moves";
 import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
+import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 
 // todo Add logging
 export const ActivateTrading = (G, ctx) => {
@@ -160,41 +160,35 @@ export const ClickCoinToUpgrade = (G, ctx, coinId, type, isInitial) => {
 };
 
 export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) => {
-    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && G.stack[ctx.currentPlayer][0].stack.config.coinId !== coinId;
+    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && G.stack[ctx.currentPlayer][0].config.coinId !== coinId;
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     if (G.actionsNum === 2) {
         const stack = [
             {
-                stack: {
-                    actionName: "UpgradeCoinAction",
-                    config: {
-                        number: 2,
-                        value: 3,
-                    },
+                actionName: "UpgradeCoinAction",
+                config: {
+                    number: 2,
+                    value: 3,
                 },
             },
             {
-                stack: {
-                    actionName: "DrawProfitAction",
-                    config: {
-                        coinId,
-                        name: "VidofnirVedrfolnirAction",
-                        stageName: "upgradeCoinVidofnirVedrfolnir",
-                        number: 1,
-                        value: 2,
-                    },
+                actionName: "DrawProfitAction",
+                config: {
+                    coinId,
+                    name: "VidofnirVedrfolnirAction",
+                    stageName: "upgradeCoinVidofnirVedrfolnir",
+                    number: 1,
+                    value: 2,
                 },
             },
             {
-                stack: {
-                    actionName: "UpgradeCoinAction",
-                    config: {
-                        coinId,
-                        number: 1,
-                        value: 2,
-                    },
+                actionName: "UpgradeCoinAction",
+                config: {
+                    coinId,
+                    number: 1,
+                    value: 2,
                 },
             },
         ];
@@ -208,11 +202,9 @@ export const AddCoinToPouch = (G, ctx, coinId) => {
         G.actionsNum--;
         const stack = [
             {
-                stack: {
-                    actionName: "AddCoinToPouchAction",
-                    config: {
-                        stageName: "addCoinToPouch",
-                    },
+                actionName: "AddCoinToPouchAction",
+                config: {
+                    stageName: "addCoinToPouch",
                 },
             },
         ];

@@ -50,11 +50,9 @@ export const AddCampCardToCards = (G, ctx, config, cardId) => {
         if (ctx.phase === "enlistmentMercenaries" && G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник").length) {
             stack = [
                 {
-                    stack: {
-                        actionName: "DrawProfitAction",
-                        config: {
-                            name: "enlistmentMercenaries",
-                        },
+                    actionName: "DrawProfitAction",
+                    config: {
+                        name: "enlistmentMercenaries",
                     },
                 },
             ];
@@ -75,7 +73,7 @@ export const AddCampCardToCards = (G, ctx, config, cardId) => {
  * @constructor
  */
 export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     const player = G.players[ctx.currentPlayer];
     const tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
     player.boardCoins[tempId] = player.handCoins[coinId];
@@ -83,11 +81,9 @@ export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
     if (G.actionsNum === 0) {
         const stack = [
             {
-                stack: {
-                    actionName: "StartVidofnirVedrfolnirAction",
-                    config: {
-                        card: "Vidofnir Vedrfolnir",
-                    },
+                actionName: "StartVidofnirVedrfolnirAction",
+                config: {
+                    card: "Vidofnir Vedrfolnir",
                 },
             },
         ];
@@ -111,13 +107,11 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && number > 0) {
         const stack = [
             {
-                stack: {
-                    actionName: "DrawProfitAction",
-                    config: {
-                        name: "AddCoinToPouchVidofnirVedrfolnir",
-                        stageName: "addCoinToPouch",
-                        number: number,
-                    },
+                actionName: "DrawProfitAction",
+                config: {
+                    name: "AddCoinToPouchVidofnirVedrfolnir",
+                    stageName: "addCoinToPouch",
+                    number: number,
                 },
             },
         ];
@@ -134,37 +128,31 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         if (coinsValue === 1) {
             stack = [
                 {
-                    stack: {
-                        actionName: "DrawProfitAction",
-                        config: {
-                            name: "VidofnirVedrfolnirAction",
-                            stageName: "upgradeCoinVidofnirVedrfolnir",
-                            number: 1,
-                            value: 5,
-                        },
+                    actionName: "DrawProfitAction",
+                    config: {
+                        name: "VidofnirVedrfolnirAction",
+                        stageName: "upgradeCoinVidofnirVedrfolnir",
+                        number: 1,
+                        value: 5,
                     },
                 },
                 {
-                    stack: {
-                        actionName: "UpgradeCoinAction",
-                        config: {
-                            number: 1,
-                            value: 5,
-                        },
+                    actionName: "UpgradeCoinAction",
+                    config: {
+                        number: 1,
+                        value: 5,
                     },
                 },
             ];
         } else if (coinsValue === 2) {
             stack = [
                 {
-                    stack: {
-                        actionName: "DrawProfitAction",
-                        config: {
-                            name: "VidofnirVedrfolnirAction",
-                            stageName: "upgradeCoinVidofnirVedrfolnir",
-                            number: 2,
-                            value: 3,
-                        },
+                    actionName: "DrawProfitAction",
+                    config: {
+                        name: "VidofnirVedrfolnirAction",
+                        stageName: "upgradeCoinVidofnirVedrfolnir",
+                        number: 2,
+                        value: 3,
                     },
                 },
             ];
@@ -185,7 +173,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
  * @constructor
  */
 export const DiscardTradingCoin = (G, ctx) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     let tradingCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin?.value === 0);
     if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && tradingCoinIndex === -1) {
         tradingCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin?.value === 0);
@@ -227,7 +215,7 @@ export const DiscardAnyCardFromPlayerBoard = (G, ctx, config, suitId, cardId) =>
  * @constructor
  */
 export const DiscardSuitCard = (G, ctx, config) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     const suitId = GetSuitIndexByName(config.suit),
         value = {};
     for (let i = 0; i < ctx.numPlayers; i++) {

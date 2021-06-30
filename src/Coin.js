@@ -108,13 +108,11 @@ export const Trading = (G, ctx, tradingCoins) => {
     if (G.players[ctx.currentPlayer].buffs?.["upgradeNextCoin"] === "min") {
         stack = [
             {
-                stack: {
-                    actionName: "UpgradeCoinAction",
-                    config: {
-                        number: 1,
-                        value: coinsMaxValue,
-                        isTrading: true,
-                    },
+                actionName: "UpgradeCoinAction",
+                config: {
+                    number: 1,
+                    value: coinsMaxValue,
+                    isTrading: true,
                 },
             },
         ];
@@ -123,13 +121,11 @@ export const Trading = (G, ctx, tradingCoins) => {
     } else {
         stack = [
             {
-                stack: {
-                    actionName: "UpgradeCoinAction",
-                    config: {
-                        number: 1,
-                        value: coinsMinValue,
-                        isTrading: true,
-                    },
+                actionName: "UpgradeCoinAction",
+                config: {
+                    number: 1,
+                    value: coinsMinValue,
+                    isTrading: true,
                 },
             },
         ];

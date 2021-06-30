@@ -26,8 +26,8 @@ export const PlaceThrudAction = (G, ctx, config, suitId) => {
     const suit = Object.keys(suitsConfig)[suitId];
     const thrudCard = CreateCard({
         suit,
-        rank: G.stack[0].stack.variants[suit].rank,
-        points: G.stack[0].stack.variants[suit].points,
+        rank: G.stack[0].variants[suit].rank,
+        points: G.stack[0].variants[suit].points,
         type: "герой",
         name: "Thrud",
         game: "base",
@@ -54,8 +54,8 @@ export const PlaceYludAction = (G, ctx, config, suitId) => {
     const suit = Object.keys(suitsConfig)[suitId];
     const yludCard = CreateCard({
         suit: suit,
-        rank: G.stack[0].stack.variants[suit].rank,
-        points: G.stack[0].stack.variants[suit].points,
+        rank: G.stack[0].variants[suit].rank,
+        points: G.stack[0].variants[suit].points,
         type: "герой",
         name: "Ylud",
         game: "base",
@@ -180,5 +180,5 @@ export const PickHeroWithConditions = (G, ctx, config) => {
  * @constructor
  */
 export const PickHero = (G, ctx) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].stack.config.stageName);
+    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
 };

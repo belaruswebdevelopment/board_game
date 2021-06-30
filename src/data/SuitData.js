@@ -280,7 +280,6 @@ const warriorSuit = {
             if (G.tierToEnd !== 0) {
                 const stack = [
                     {
-                        stack: {
                             actionName: "DrawProfitAction",
                             config: {
                                 name: "upgradeCoin",
@@ -288,10 +287,8 @@ const warriorSuit = {
                                 number: 1,
                                 value: 5,
                             },
-                        },
                     },
                     {
-                        stack: {
                             actionName: "UpgradeCoinAction",
                             config: {
                                 name: "upgradeCoin",
@@ -299,7 +296,6 @@ const warriorSuit = {
                                 number: 1,
                                 value: 5,
                             },
-                        },
                     },
                 ];
                 AddDataToLog(G, "game", `Игрок ${player.nickname} получил по знаку отличия воинов возможность 
@@ -372,13 +368,11 @@ const explorerSuit = {
             if (G.tierToEnd !== 0) {
                 const stack = [
                     {
-                        stack: {
                             actionName: "DrawProfitAction",
                             config: {
                                 name: "explorerDistinction",
                                 stageName: "pickDistinctionCard",
                             },
-                        },
                     },
                 ];
                 AddDataToLog(G, "game", `Игрок ${player.nickname} получил по знаку отличия разведчиков возможность

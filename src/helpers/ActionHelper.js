@@ -1,4 +1,4 @@
-import {AfterBasicPickCardActions} from "../moves/Moves";
+import {AfterBasicPickCardActions} from "./MovesHelpers";
 
 /**
  * Завершение текущего экшена.

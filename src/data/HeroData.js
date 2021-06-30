@@ -6,7 +6,7 @@ import {GetSuitIndexByName} from "../helpers/SuitHelpers";
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
  */
 const Dwerg_Bergelmir = {
     name: "Dwerg Bergelmir",
@@ -17,11 +17,9 @@ const Dwerg_Bergelmir = {
     points: null,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Dwerg_Bergelmir",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Dwerg_Bergelmir",
             },
         },
     ],
@@ -33,7 +31,7 @@ const Dwerg_Bergelmir = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
  */
 const Ylud = {
     name: "Ylud",
@@ -44,11 +42,9 @@ const Ylud = {
     points: null,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Ylud",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Ylud",
             },
         },
     ],
@@ -60,7 +56,7 @@ const Ylud = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
  */
 const Dwerg_Jungir = {
     name: "Dwerg Jungir",
@@ -71,11 +67,9 @@ const Dwerg_Jungir = {
     points: null,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Dwerg_Jungir",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Dwerg_Jungir",
             },
         },
     ],
@@ -87,7 +81,7 @@ const Dwerg_Jungir = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}, {stack: {config: {hero: string, buff: {name: string, value: string}}, actionName: string}}, {stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}, {config: {buff: {name: string, value: string}}, actionName: string}, {actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
  */
 const Uline = {
     name: "Uline",
@@ -98,32 +92,22 @@ const Uline = {
     points: 9,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Uline",
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Uline",
+            },
+        },
+        {
+            actionName: "AddBuffToPlayer",
+            config: {
+                buff: {
+                    name: "everyTurn",
+                    value: "Uline",
                 },
             },
         },
         {
-            stack: {
-                actionName: "AddBuffToPlayer",
-                config: {
-                    hero: "Uline",
-                    buff: {
-                        name: "everyTurn",
-                        value: "Uline",
-                    },
-                },
-            },
-        },
-        {
-            stack: {
-                actionName: "GetClosedCoinIntoPlayerHand",
-                config: {
-                    hero: "Uline",
-                },
-            },
+            actionName: "GetClosedCoinIntoPlayerHand",
         },
     ],
     scoringRule: () => 9,
@@ -134,7 +118,7 @@ const Uline = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(*)), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: (function(*)), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
  */
 const Idunn = {
     name: "Idunn",
@@ -145,11 +129,9 @@ const Idunn = {
     points: 7,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Idunn",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Idunn",
             },
         },
     ],
@@ -161,7 +143,7 @@ const Idunn = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
  */
 const Tarah = {
     name: "Tarah",
@@ -172,11 +154,9 @@ const Tarah = {
     points: 14,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Tarah",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Tarah",
             },
         },
     ],
@@ -188,7 +168,7 @@ const Tarah = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
  */
 const Kraal = {
     name: "Kraal",
@@ -199,11 +179,9 @@ const Kraal = {
     points: 7,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Kraal",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Kraal",
             },
         },
     ],
@@ -215,7 +193,7 @@ const Kraal = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
  */
 const Lokdur = {
     name: "Lokdur",
@@ -226,11 +204,9 @@ const Lokdur = {
     points: 3,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Lokdur",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Lokdur",
             },
         },
     ],
@@ -242,7 +218,7 @@ const Lokdur = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}, {stack: {config: {number: number, stageName: string, name: string, hero: string, value: number}, actionName: string}}, {stack: {config: {number: number, hero: string, value: number}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}, {config: {number: number, stageName: string, name: string, value: number}, actionName: string}, {config: {number: number, value: number}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
  */
 const Grid = {
     name: "Grid",
@@ -253,33 +229,25 @@ const Grid = {
     points: 7,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Grid",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Grid",
             },
         },
         {
-            stack: {
-                actionName: "DrawProfitAction",
-                config: {
-                    stageName: "upgradeCoin",
-                    hero: "Grid",
-                    name: "upgradeCoin",
-                    number: 1,
-                    value: 7,
-                },
+            actionName: "DrawProfitAction",
+            config: {
+                stageName: "upgradeCoin",
+                name: "upgradeCoin",
+                number: 1,
+                value: 7,
             },
         },
         {
-            stack: {
-                actionName: "UpgradeCoinAction",
-                config: {
-                    hero: "Grid",
-                    number: 1,
-                    value: 7,
-                },
+            actionName: "UpgradeCoinAction",
+            config: {
+                number: 1,
+                value: 7,
             },
         },
     ],
@@ -291,7 +259,7 @@ const Grid = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}, {stack: {config: {stageName: string, name: string, hero: string}, actionName: string}}, {stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}, {config: {stageName: string, name: string, variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}}, actionName: string}, {config: {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
  */
 const Thrud = {
     name: "Thrud",
@@ -302,81 +270,73 @@ const Thrud = {
     points: 13,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Thrud",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Thrud",
             },
         },
         {
-            stack: {
-                actionName: "DrawProfitAction",
-                config: {
-                    stageName: "placeCards",
-                    hero: "Thrud",
-                    name: "placeCards",
-                    variants: {
-                        blacksmith: {
-                            suit: "blacksmith",
-                            rank: 1,
-                            points: null,
-                        },
-                        hunter: {
-                            suit: "hunter",
-                            rank: 1,
-                            points: null,
-                        },
-                        explorer: {
-                            suit: "explorer",
-                            rank: 1,
-                            points: null,
-                        },
-                        warrior: {
-                            suit: "warrior",
-                            rank: 1,
-                            points: null,
-                        },
-                        miner: {
-                            suit: "miner",
-                            rank: 1,
-                            points: null,
-                        },
+            actionName: "DrawProfitAction",
+            config: {
+                stageName: "placeCards",
+                name: "placeCards",
+                variants: {
+                    blacksmith: {
+                        suit: "blacksmith",
+                        rank: 1,
+                        points: null,
+                    },
+                    hunter: {
+                        suit: "hunter",
+                        rank: 1,
+                        points: null,
+                    },
+                    explorer: {
+                        suit: "explorer",
+                        rank: 1,
+                        points: null,
+                    },
+                    warrior: {
+                        suit: "warrior",
+                        rank: 1,
+                        points: null,
+                    },
+                    miner: {
+                        suit: "miner",
+                        rank: 1,
+                        points: null,
                     },
                 },
             },
         },
         {
-            stack: {
-                actionName: "PlaceThrudAction",
-                config: {
-                    hero: "Thrud",
-                    variants: {
-                        blacksmith: {
-                            suit: "blacksmith",
-                            rank: 1,
-                            points: null,
-                        },
-                        hunter: {
-                            suit: "hunter",
-                            rank: 1,
-                            points: null,
-                        },
-                        explorer: {
-                            suit: "explorer",
-                            rank: 1,
-                            points: null,
-                        },
-                        warrior: {
-                            suit: "warrior",
-                            rank: 1,
-                            points: null,
-                        },
-                        miner: {
-                            suit: "miner",
-                            rank: 1,
-                            points: null,
-                        },
+            actionName: "PlaceThrudAction",
+            config: {
+                variants: {
+                    blacksmith: {
+                        suit: "blacksmith",
+                        rank: 1,
+                        points: null,
+                    },
+                    hunter: {
+                        suit: "hunter",
+                        rank: 1,
+                        points: null,
+                    },
+                    explorer: {
+                        suit: "explorer",
+                        rank: 1,
+                        points: null,
+                    },
+                    warrior: {
+                        suit: "warrior",
+                        rank: 1,
+                        points: null,
+                    },
+                    miner: {
+                        suit: "miner",
+                        rank: 1,
+                        points: null,
                     },
                 },
             },
@@ -390,7 +350,7 @@ const Thrud = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
  */
 const Zoral = {
     name: "Zoral",
@@ -401,11 +361,9 @@ const Zoral = {
     points: 1,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Zoral",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Zoral",
             },
         },
     ],
@@ -417,7 +375,7 @@ const Zoral = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
  */
 const Dwerg_Aesir = {
     name: "Dwerg Aesir",
@@ -428,11 +386,9 @@ const Dwerg_Aesir = {
     points: null,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Dwerg_Aesir",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Dwerg_Aesir",
             },
         },
     ],
@@ -444,7 +400,7 @@ const Dwerg_Aesir = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {number: number, name: string, hero: string, suit: string}, actionName: string}}, {stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {number: number, suit: string}, actionName: string}, {config: {number: number, stageName: string, name: string, suit: string}, actionName: string}, {config: {number: number, suit: string}, actionName: string}, {config: {hero: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
  */
 const Bonfur = {
     name: "Bonfur",
@@ -455,43 +411,32 @@ const Bonfur = {
     points: null,
     stack: [
         {
-            stack: {
-                actionName: "CheckDiscardCardsFromPlayerBoardAction",
-                config: {
-                    hero: "Bonfur",
-                    suit: "blacksmith",
-                    number: 1,
-                },
+            actionName: "CheckDiscardCardsFromPlayerBoardAction",
+            config: {
+                suit: "blacksmith",
+                number: 1,
             },
         },
         {
-            stack: {
-                actionName: "DrawProfitAction",
-                config: {
-                    stageName: "discardCardFromBoard",
-                    hero: "Bonfur",
-                    name: "BonfurAction",
-                    suit: "blacksmith",
-                    number: 1,
-                },
+            actionName: "DrawProfitAction",
+            config: {
+                stageName: "discardCardFromBoard",
+                name: "BonfurAction",
+                suit: "blacksmith",
+                number: 1,
             },
         },
         {
-            stack: {
-                actionName: "DiscardCardsFromPlayerBoardAction",
-                config: {
-                    hero: "Bonfur",
-                    suit: "blacksmith",
-                    number: 1,
-                },
+            actionName: "DiscardCardsFromPlayerBoardAction",
+            config: {
+                suit: "blacksmith",
+                number: 1,
             },
         },
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Bonfur",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Bonfur",
             },
         },
     ],
@@ -503,7 +448,7 @@ const Bonfur = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {number: number, name: string, hero: string, suit: string}, actionName: string}}, {stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {number: number, suit: string}, actionName: string}, {config: {number: number, stageName: string, name: string, suit: string}, actionName: string}, {config: {number: number, stageName: string, suit: string}, actionName: string}, {config: {hero: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
  */
 const Dagda = {
     name: "Dagda",
@@ -514,44 +459,33 @@ const Dagda = {
     points: null,
     stack: [
         {
-            stack: {
-                actionName: "CheckDiscardCardsFromPlayerBoardAction",
-                config: {
-                    hero: "Dagda",
-                    suit: "hunter",
-                    number: 2,
-                },
+            actionName: "CheckDiscardCardsFromPlayerBoardAction",
+            config: {
+                suit: "hunter",
+                number: 2,
             },
         },
         {
-            stack: {
-                actionName: "DrawProfitAction",
-                config: {
-                    stageName: "discardCardFromBoard",
-                    hero: "Dagda",
-                    name: "DagdaAction",
-                    suit: "hunter",
-                    number: 2,
-                },
+            actionName: "DrawProfitAction",
+            config: {
+                stageName: "discardCardFromBoard",
+                name: "DagdaAction",
+                suit: "hunter",
+                number: 2,
             },
         },
         {
-            stack: {
-                actionName: "DiscardCardsFromPlayerBoardAction",
-                config: {
-                    stageName: "discardCardFromBoard",
-                    hero: "Dagda",
-                    suit: "hunter",
-                    number: 2,
-                },
+            actionName: "DiscardCardsFromPlayerBoardAction",
+            config: {
+                stageName: "discardCardFromBoard",
+                suit: "hunter",
+                number: 2,
             },
         },
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Dagda",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Dagda",
             },
         },
     ],
@@ -563,7 +497,7 @@ const Dagda = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
  */
 const Skaa = {
     name: "Skaa",
@@ -574,11 +508,9 @@ const Skaa = {
     points: 17,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Skaa",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Skaa",
             },
         },
     ],
@@ -590,7 +522,7 @@ const Skaa = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}, {stack: {config: {hero: string, buff: {name: string, value: number}}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}, {config: {buff: {name: string, value: number}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
  */
 const Jarika = {
     name: "Jarika",
@@ -601,22 +533,17 @@ const Jarika = {
     points: 8,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Jarika",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Jarika",
             },
         },
         {
-            stack: {
-                actionName: "AddBuffToPlayer",
-                config: {
-                    hero: "Jarika",
-                    buff: {
-                        name: "upgradeCoin",
-                        value: 2,
-                    },
+            actionName: "AddBuffToPlayer",
+            config: {
+                buff: {
+                    name: "upgradeCoin",
+                    value: 2,
                 },
             },
         },
@@ -629,7 +556,7 @@ const Jarika = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(*): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: (function(*): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
  */
 const Astrid = {
     name: "Astrid",
@@ -640,11 +567,9 @@ const Astrid = {
     points: null,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Astrid",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Astrid",
             },
         },
     ],
@@ -656,7 +581,7 @@ const Astrid = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
  */
 const Dwerg_Ymir = {
     name: "Dwerg Ymir",
@@ -667,11 +592,9 @@ const Dwerg_Ymir = {
     points: null,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Dwerg_Ymir",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Dwerg_Ymir",
             },
         },
     ],
@@ -683,7 +606,7 @@ const Dwerg_Ymir = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
  */
 const Dwerg_Sigmir = {
     name: "Dwerg Sigmir",
@@ -694,11 +617,9 @@ const Dwerg_Sigmir = {
     points: null,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Dwerg_Sigmir",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Dwerg_Sigmir",
             },
         },
     ],
@@ -710,7 +631,7 @@ const Dwerg_Sigmir = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string, conditions: {suitCountMin: {suit: string, value: number}}}, actionName: string}}, {stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {conditions: {suitCountMin: {suit: string, value: number}}}, actionName: string}, {config: {hero: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
  */
 const Hourya = {
     name: "Hourya",
@@ -721,25 +642,20 @@ const Hourya = {
     points: 20,
     stack: [
         {
-            stack: {
-                actionName: "PickHeroWithConditions",
-                config: {
-                    hero: "Hourya",
-                    conditions: {
-                        suitCountMin: {
-                            suit: "explorer",
-                            value: 5,
-                        },
+            actionName: "PickHeroWithConditions",
+            config: {
+                conditions: {
+                    suitCountMin: {
+                        suit: "explorer",
+                        value: 5,
                     },
                 },
             },
         },
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Hourya",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Hourya",
             },
         },
     ],
@@ -751,7 +667,7 @@ const Hourya = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
  */
 const Aegur = {
     name: "Aegur",
@@ -762,11 +678,9 @@ const Aegur = {
     points: null,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Aegur",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Aegur",
             },
         },
     ],
@@ -778,7 +692,7 @@ const Aegur = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
  */
 const Aral = {
     name: "Aral",
@@ -789,11 +703,9 @@ const Aral = {
     points: null,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Aral",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Aral",
             },
         },
     ],
@@ -805,7 +717,7 @@ const Aral = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}, {stack: {config: {number: number, name: string, hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}, {actionName: string}, {config: {number: number, stageName: string, name: string}, actionName: string}, {config: {number: number}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
  */
 const Andumia = {
     name: "Andumia",
@@ -816,39 +728,26 @@ const Andumia = {
     points: 12,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Andumia",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Andumia",
             },
         },
         {
-            stack: {
-                actionName: "CheckPickDiscardCard",
-                config: {
-                    hero: "Andumia",
-                },
+            actionName: "CheckPickDiscardCard",
+        },
+        {
+            actionName: "DrawProfitAction",
+            config: {
+                stageName: "pickDiscardCard",
+                name: "AndumiaAction",
+                number: 1,
             },
         },
         {
-            stack: {
-                actionName: "DrawProfitAction",
-                config: {
-                    stageName: "pickDiscardCard",
-                    hero: "Andumia",
-                    name: "AndumiaAction",
-                    number: 1,
-                },
-            },
-        },
-        {
-            stack: {
-                actionName: "PickDiscardCard",
-                config: {
-                    hero: "Andumia",
-                    number: 1,
-                },
+            actionName: "PickDiscardCard",
+            config: {
+                number: 1,
             },
         },
     ],
@@ -860,7 +759,7 @@ const Andumia = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}, {stack: {config: {buff: {name: string, value: boolean}, card: string}, actionName: string}}, {stack: {config: {name: string, hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}, {actionName: string}, {config: {stageName: string, name: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
  */
 const Holda = {
     name: "Holda",
@@ -871,42 +770,28 @@ const Holda = {
     points: 12,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Holda",
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Holda",
+            },
+        },
+        {
+            actionName: "AddBuffToPlayer",
+            config: {
+                buff: {
+                    name: "goCampOneTime",
+                    value: true,
                 },
             },
         },
         {
-            stack: {
-                actionName: "AddBuffToPlayer",
-                config: {
-                    card: "Holda",
-                    buff: {
-                        name: "goCampOneTime",
-                        value: true,
-                    },
-                },
-            },
+            actionName: "CheckPickCampCard",
         },
         {
-            stack: {
-                actionName: "CheckPickCampCard",
-                config: {
-                    hero: "Holda",
-                    name: "HoldaAction",
-                },
-            },
-        },
-        {
-            stack: {
-                actionName: "DrawProfitAction",
-                config: {
-                    stageName: "pickCampCardHolda",
-                    hero: "Holda",
-                    name: "HoldaAction",
-                },
+            actionName: "DrawProfitAction",
+            config: {
+                stageName: "pickCampCardHolda",
+                name: "HoldaAction",
             },
         },
     ],
@@ -918,7 +803,7 @@ const Holda = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}, {stack: {config: {number: number, hero: string, value: number, coin: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}, {config: {number: number, value: number, coin: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
  */
 const Khrad = {
     name: "Khrad",
@@ -929,22 +814,17 @@ const Khrad = {
     points: 4,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Khrad",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Khrad",
             },
         },
         {
-            stack: {
-                actionName: "UpgradeCoinAction",
-                config: {
-                    hero: "Khrad",
-                    number: 1,
-                    value: 10,
-                    coin: "min",
-                },
+            actionName: "UpgradeCoinAction",
+            config: {
+                number: 1,
+                value: 10,
+                coin: "min",
             },
         },
     ],
@@ -956,7 +836,7 @@ const Khrad = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}, {stack: {config: {number: number, stageName: string, name: string, hero: string}, actionName: string}}, {stack: {config: {hero: string}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}, {config: {number: number, stageName: string, name: string, hero: string, variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}}, actionName: string}, {config: {stageName: string, hero: string, variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
  */
 const Olwin = {
     name: "Olwin",
@@ -967,83 +847,77 @@ const Olwin = {
     points: 9,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Olwin",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Olwin",
             },
         },
         {
-            stack: {
-                actionName: "DrawProfitAction",
-                config: {
-                    stageName: "placeCards",
-                    hero: "Olwin",
-                    name: "placeCards",
-                    number: 2,
-                    variants: {
-                        blacksmith: {
-                            suit: "blacksmith",
-                            rank: 1,
-                            points: null,
-                        },
-                        hunter: {
-                            suit: "hunter",
-                            rank: 1,
-                            points: null,
-                        },
-                        explorer: {
-                            suit: "explorer",
-                            rank: 1,
-                            points: 0,
-                        },
-                        warrior: {
-                            suit: "warrior",
-                            rank: 1,
-                            points: 0,
-                        },
-                        miner: {
-                            suit: "miner",
-                            rank: 1,
-                            points: 0,
-                        },
+            actionName: "DrawProfitAction",
+            config: {
+                stageName: "placeCards",
+                hero: "Olwin",
+                name: "placeCards",
+                number: 2,
+                variants: {
+                    blacksmith: {
+                        suit: "blacksmith",
+                        rank: 1,
+                        points: null,
+                    },
+                    hunter: {
+                        suit: "hunter",
+                        rank: 1,
+                        points: null,
+                    },
+                    explorer: {
+                        suit: "explorer",
+                        rank: 1,
+                        points: 0,
+                    },
+                    warrior: {
+                        suit: "warrior",
+                        rank: 1,
+                        points: 0,
+                    },
+                    miner: {
+                        suit: "miner",
+                        rank: 1,
+                        points: 0,
                     },
                 },
             },
         },
         {
-            stack: {
-                actionName: "PlaceCards",
-                config: {
-                    stageName: "placeCards",
-                    hero: "Olwin",
-                    variants: {
-                        blacksmith: {
-                            suit: "blacksmith",
-                            rank: 1,
-                            points: null,
-                        },
-                        hunter: {
-                            suit: "hunter",
-                            rank: 1,
-                            points: null,
-                        },
-                        explorer: {
-                            suit: "explorer",
-                            rank: 1,
-                            points: 0,
-                        },
-                        warrior: {
-                            suit: "warrior",
-                            rank: 1,
-                            points: 0,
-                        },
-                        miner: {
-                            suit: "miner",
-                            rank: 1,
-                            points: 0,
-                        },
+            actionName: "PlaceCards",
+            config: {
+                stageName: "placeCards",
+                hero: "Olwin",
+                variants: {
+                    blacksmith: {
+                        suit: "blacksmith",
+                        rank: 1,
+                        points: null,
+                    },
+                    hunter: {
+                        suit: "hunter",
+                        rank: 1,
+                        points: null,
+                    },
+                    explorer: {
+                        suit: "explorer",
+                        rank: 1,
+                        points: 0,
+                    },
+                    warrior: {
+                        suit: "warrior",
+                        rank: 1,
+                        points: 0,
+                    },
+                    miner: {
+                        suit: "miner",
+                        rank: 1,
+                        points: 0,
                     },
                 },
             },
@@ -1057,7 +931,7 @@ const Olwin = {
  * Применения:
  * 1) Используется при обращении к данным героя.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{stack: {config: {hero: string}, actionName: string}}, {stack: {config: {hero: string, buff: {name: string, value: string}}, actionName: string}}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{config: {hero: string}, actionName: string}, {config: {buff: {name: string, value: string}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
  */
 const Zolkur = {
     name: "Zolkur",
@@ -1068,22 +942,17 @@ const Zolkur = {
     points: 10,
     stack: [
         {
-            stack: {
-                actionName: "AddHeroToCards",
-                config: {
-                    hero: "Zolkur",
-                },
+            actionName: "AddHeroToCards",
+            config: {
+                hero: "Zolkur",
             },
         },
         {
-            stack: {
-                actionName: "AddBuffToPlayer",
-                config: {
-                    hero: "Zolkur",
-                    buff: {
-                        name: "upgradeNextCoin",
-                        value: "min",
-                    },
+            actionName: "AddBuffToPlayer",
+            config: {
+                buff: {
+                    name: "upgradeNextCoin",
+                    value: "min",
                 },
             },
         },
@@ -1096,7 +965,7 @@ const Zolkur = {
  * Применения:
  * 1) Происходит при создании всех героев при инициализации игры.
  *
- * @type {{Zoral: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: number, suit: string, points: number}, Aegur: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: number, suit: string, points: null}, Dwerg_Ymir: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: null, suit: null, points: null}, Andumia: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {hero: string}, actionName: string}}|{stack: {config: {number: number, name: string, hero: string}, actionName: string}})[], name: string, description: string, rank: null, suit: null, points: number}, Dwerg_Bergelmir: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: null, suit: null, points: null}, Grid: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {hero: string}, actionName: string}}|{stack: {config: {number: number, stageName: string, name: string, hero: string, value: number}, actionName: string}}|{stack: {config: {number: number, hero: string, value: number}, actionName: string}})[], name: string, description: string, rank: null, suit: null, points: number}, Holda: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {hero: string}, actionName: string}}|{stack: {config: {buff: {name: string, value: boolean}, card: string}, actionName: string}}|{stack: {config: {name: string, hero: string}, actionName: string}})[], name: string, description: string, rank: null, suit: null, points: number}, Dwerg_Aesir: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: null, suit: null, points: null}, Dagda: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {number: number, name: string, hero: string, suit: string}, actionName: string}}|{stack: {config: {hero: string}, actionName: string}})[], name: string, description: string, rank: number, suit: string, points: null}, Zolkur: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {hero: string}, actionName: string}}|{stack: {config: {hero: string, buff: {name: string, value: string}}, actionName: string}})[], name: string, description: string, rank: null, suit: null, points: number}, Astrid: {scoringRule: (function(*): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: null, suit: null, points: null}, Tarah: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: number, suit: string, points: number}, Aral: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: number, suit: string, points: null}, Dwerg_Jungir: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: null, suit: null, points: null}, Lokdur: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: number, suit: string, points: number}, Dwerg_Sigmir: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: null, suit: null, points: null}, Ylud: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: null, suit: null, points: null}, Idunn: {scoringRule: (function(*)), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: number, suit: string, points: number}, Uline: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {hero: string}, actionName: string}}|{stack: {config: {hero: string, buff: {name: string, value: string}}, actionName: string}})[], name: string, description: string, rank: null, suit: null, points: number}, Khrad: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {hero: string}, actionName: string}}|{stack: {config: {number: number, hero: string, value: number, coin: string}, actionName: string}})[], name: string, description: string, rank: null, suit: null, points: number}, Bonfur: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {number: number, name: string, hero: string, suit: string}, actionName: string}}|{stack: {config: {hero: string}, actionName: string}})[], name: string, description: string, rank: number, suit: string, points: null}, Kraal: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: number, suit: string, points: number}, Olwin: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {hero: string}, actionName: string}}|{stack: {config: {number: number, stageName: string, name: string, hero: string}, actionName: string}})[], name: string, description: string, rank: null, suit: null, points: number}, Jarika: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {hero: string}, actionName: string}}|{stack: {config: {hero: string, buff: {name: string, value: number}}, actionName: string}})[], name: string, description: string, rank: null, suit: null, points: number}, Hourya: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {hero: string, conditions: {suitCountMin: {suit: string, value: number}}}, actionName: string}}|{stack: {config: {hero: string}, actionName: string}})[], name: string, description: string, rank: number, suit: string, points: number}, Thrud: {scoringRule: (function(): number), game: string, stack: ({stack: {config: {hero: string}, actionName: string}}|{stack: {config: {stageName: string, name: string, hero: string}, actionName: string}})[], name: string, description: string, rank: null, suit: null, points: number}, Skaa: {scoringRule: (function(): number), game: string, stack: {stack: {config: {hero: string}, actionName: string}}[], name: string, description: string, rank: null, suit: null, points: number}}} Все герои.
+ * @type {{Zoral: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Aegur: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: null}, Dwerg_Ymir: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Andumia: {scoringRule: (function(): number), game: string, stack: ({config: {hero: string}, actionName: string}|{actionName: string}|{config: {number: number, stageName: string, name: string}, actionName: string}|{config: {number: number}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}, Dwerg_Bergelmir: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Grid: {scoringRule: (function(): number), game: string, stack: ({config: {hero: string}, actionName: string}|{config: {number: number, stageName: string, name: string, value: number}, actionName: string}|{config: {number: number, value: number}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}, Holda: {scoringRule: (function(): number), game: string, stack: ({config: {hero: string}, actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string}|{actionName: string}|{config: {stageName: string, name: string}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}, Dwerg_Aesir: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Dagda: {scoringRule: (function(): number), game: string, stack: ({config: {number: number, suit: string}, actionName: string}|{config: {number: number, stageName: string, name: string, suit: string}, actionName: string}|{config: {number: number, stageName: string, suit: string}, actionName: string}|{config: {hero: string}, actionName: string})[], name: string, description: string, rank: number, suit: string, points: null}, Zolkur: {scoringRule: (function(): number), game: string, stack: ({config: {hero: string}, actionName: string}|{config: {buff: {name: string, value: string}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}, Astrid: {scoringRule: (function(*): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Tarah: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Aral: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: null}, Dwerg_Jungir: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Lokdur: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Dwerg_Sigmir: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Ylud: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Idunn: {scoringRule: (function(*)), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Uline: {scoringRule: (function(): number), game: string, stack: ({config: {hero: string}, actionName: string}|{config: {buff: {name: string, value: string}}, actionName: string}|{actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}, Khrad: {scoringRule: (function(): number), game: string, stack: ({config: {hero: string}, actionName: string}|{config: {number: number, value: number, coin: string}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}, Bonfur: {scoringRule: (function(): number), game: string, stack: ({config: {number: number, suit: string}, actionName: string}|{config: {number: number, stageName: string, name: string, suit: string}, actionName: string}|{config: {hero: string}, actionName: string})[], name: string, description: string, rank: number, suit: string, points: null}, Kraal: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Olwin: {scoringRule: (function(): number), game: string, stack: ({config: {hero: string}, actionName: string}|{config: {number: number, stageName: string, name: string, hero: string, variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}}, actionName: string}|{config: {stageName: string, hero: string, variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}, Jarika: {scoringRule: (function(): number), game: string, stack: ({config: {hero: string}, actionName: string}|{config: {buff: {name: string, value: number}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}, Hourya: {scoringRule: (function(): number), game: string, stack: ({config: {conditions: {suitCountMin: {suit: string, value: number}}}, actionName: string}|{config: {hero: string}, actionName: string})[], name: string, description: string, rank: number, suit: string, points: number}, Thrud: {scoringRule: (function(): number), game: string, stack: ({config: {hero: string}, actionName: string}|{config: {stageName: string, name: string, variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}}, actionName: string}|{config: {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}, Skaa: {scoringRule: (function(): number), game: string, stack: {config: {hero: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: number}}} Все герои.
  */
 export const heroesConfig = {
     Bonfur,

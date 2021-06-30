@@ -222,17 +222,17 @@ export const DrawProfit = (data, option) => {
     for (let i = 0; i < 1; i++) {
         if (option === "placeCards") {
             caption += `suit to place ${data.props.G.actionsNum ?? 1} 
-            ${data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.hero}${data.props.G.actionsNum > 1 ? "s" : ""} to 
+            ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.hero}${data.props.G.actionsNum > 1 ? "s" : ""} to 
             ${data.props.G.actionsNum > 1 ? "different" : "that"} suit.`;
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 const suit = Object.keys(suitsConfig)[j];
                 if (suit !== data.props.G.players[data.props.ctx.currentPlayer].pickedCard?.suit) {
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                            key={`Place ${data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.hero} on ${suitsConfig[suit].suitName}`}
+                            key={`Place ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.hero} on ${suitsConfig[suit].suitName}`}
                             onClick={() => data.OnClickSuitToPlaceCard(j)}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
-                                <b>{data.props.G.stack[0].stack.variants[suit].points ?? ""}</b>
+                                <b>{data.props.G.stack[0].variants[suit].points ?? ""}</b>
                             </span>
                         </td>
                     );
@@ -249,7 +249,7 @@ export const DrawProfit = (data, option) => {
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][0] !== undefined &&
                     suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][0].suit].suit !==
-                    data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.suit &&
+                    data.props.G.stack[data.props.ctx.currentPlayer][0].config.suit &&
                     !(option === "DagdaAction" && data.props.G.actionsNum === 1 &&
                         suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][0].suit].suit ===
                         data.props.G.players[data.props.ctx.currentPlayer].pickedCard?.suit)) {
@@ -354,14 +354,14 @@ export const DrawProfit = (data, option) => {
                 }
             }
         } else {
-            caption += `coin to upgrade up to ${data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.value}.`;
+            caption += `coin to upgrade up to ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.value}.`;
             if (option === "VidofnirVedrfolnirAction") {
                 for (let j = data.props.G.tavernsNum; j < data.props.G.players[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                     let type = "board",
                         isInitial = false;
                     if (data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j] &&
                         !data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading &&
-                        data.props.G.stack[data.props.ctx.currentPlayer][0].stack.config.coinId !== j) {
+                        data.props.G.stack[data.props.ctx.currentPlayer][0].config.coinId !== j) {
                         isInitial = data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial;
                         DrawCoin(data, boardCells, "coin", data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j], j,
                             data.props.G.players[data.props.ctx.currentPlayer], "border-2", null,

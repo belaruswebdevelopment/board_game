@@ -30,74 +30,70 @@ export const CheckAndMoveThrud = (G, ctx, card) => {
 export const StartThrudMoving = (G, ctx, card) => {
     const stack = [
         {
-            stack: {
-                actionName: "DrawProfitAction",
-                config: {
-                    hero: "Thrud",
-                    name: "placeCards",
-                    stageName: "placeCards",
-                    suit: card.suit,
-                    variants: {
-                        blacksmith: {
-                            suit: "blacksmith",
-                            rank: 1,
-                            points: null,
-                        },
-                        hunter: {
-                            suit: "hunter",
-                            rank: 1,
-                            points: null,
-                        },
-                        explorer: {
-                            suit: "explorer",
-                            rank: 1,
-                            points: null,
-                        },
-                        warrior: {
-                            suit: "warrior",
-                            rank: 1,
-                            points: null,
-                        },
-                        miner: {
-                            suit: "miner",
-                            rank: 1,
-                            points: null,
-                        },
+            actionName: "DrawProfitAction",
+            config: {
+                hero: "Thrud",
+                name: "placeCards",
+                stageName: "placeCards",
+                suit: card.suit,
+                variants: {
+                    blacksmith: {
+                        suit: "blacksmith",
+                        rank: 1,
+                        points: null,
+                    },
+                    hunter: {
+                        suit: "hunter",
+                        rank: 1,
+                        points: null,
+                    },
+                    explorer: {
+                        suit: "explorer",
+                        rank: 1,
+                        points: null,
+                    },
+                    warrior: {
+                        suit: "warrior",
+                        rank: 1,
+                        points: null,
+                    },
+                    miner: {
+                        suit: "miner",
+                        rank: 1,
+                        points: null,
                     },
                 },
             },
         },
         {
-            stack: {
-                actionName: "PlaceThrudAction",
-                config: {
-                    hero: "Thrud",
-                    variants: {
-                        blacksmith: {
-                            suit: "blacksmith",
-                            rank: 1,
-                            points: null,
-                        },
-                        hunter: {
-                            suit: "hunter",
-                            rank: 1,
-                            points: null,
-                        },
-                        explorer: {
-                            suit: "explorer",
-                            rank: 1,
-                            points: null,
-                        },
-                        warrior: {
-                            suit: "warrior",
-                            rank: 1,
-                            points: null,
-                        },
-                        miner: {
-                            suit: "miner",
-                            rank: 1,
-                            points: null,
-                        },
+            actionName: "PlaceThrudAction",
+            config: {
+                hero: "Thrud",
+                variants: {
+                    blacksmith: {
+                        suit: "blacksmith",
+                        rank: 1,
+                        points: null,
+                    },
+                    hunter: {
+                        suit: "hunter",
+                        rank: 1,
+                        points: null,
+                    },
+                    explorer: {
+                        suit: "explorer",
+                        rank: 1,
+                        points: null,
+                    },
+                    warrior: {
+                        suit: "warrior",
+                        rank: 1,
+                        points: null,
+                    },
+                    miner: {
+                        suit: "miner",
+                        rank: 1,
+                        points: null,
                     },
                 },
             },

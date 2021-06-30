@@ -1,11 +1,11 @@
 import {IsValidMove} from "../MoveValidator";
 import {INVALID_MOVE} from "boardgame.io/core";
-import {AfterBasicPickCardActions} from "./Moves";
 import {
     AddActionsToStack,
     EndActionFromStackAndAddNew,
     StartActionFromStackOrEndActions
 } from "../helpers/StackHelpers";
+import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 // todo Add logging
 /**
  * Выбор карты из кэмпа.
