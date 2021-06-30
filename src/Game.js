@@ -19,11 +19,9 @@ import {
 } from "./moves/HeroMoves";
 import {
     AddCoinToPouch,
-    BotsPlaceAllCoins,
     ClickBoardCoin,
     ClickCoinToUpgrade,
     ClickHandCoin,
-    ResolveBoardCoins,
     UpgradeCoinVidofnirVedrfolnir
 } from "./moves/CoinMoves";
 import {
@@ -33,6 +31,8 @@ import {
     DiscardSuitCardFromPlayerBoard, GetMjollnirProfit
 } from "./moves/CampMoves";
 import {AddActionsToStack} from "./helpers/StackHelpers";
+import {BotsPlaceAllCoins} from "./moves/BotMoves";
+import {ResolveBoardCoins} from "./helpers/CoinHelpers";
 // todo Add logging
 // todo Clear unused config parameters in Actions!
 // todo Add colors for cards Points by suit colors!

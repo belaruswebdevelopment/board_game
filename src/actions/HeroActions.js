@@ -4,8 +4,7 @@ import {AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards}
 import {CheckPickHero} from "../Hero";
 import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
 import {ReturnCoinToPlayerHands} from "../Coin";
-import {GetHeroIndexByName} from "../helpers/HeroHelpers";
-import {CheckAndMoveThrud, StartThrudMoving} from "../moves/HeroMoves";
+import {CheckAndMoveThrud, GetHeroIndexByName, StartThrudMoving} from "../helpers/HeroHelpers";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {TotalRank} from "../Score";
 import {INVALID_MOVE} from "boardgame.io/core";

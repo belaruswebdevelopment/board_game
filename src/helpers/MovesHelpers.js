@@ -2,10 +2,10 @@
 import {DiscardCardIfCampCardPicked, RefillEmptyCampCards} from "../Camp";
 import {CheckIfCurrentTavernEmpty, RefillTaverns} from "../Tavern";
 import {RemoveThrudFromPlayerBoardAfterGameEnd} from "../Hero";
-import {CheckAndStartUlineActionsOrContinue} from "../moves/HeroMoves";
-import {ActivateTrading} from "../moves/CoinMoves";
 import {DiscardCardFromTavern} from "../Card";
 import {AddActionsToStack, StartActionFromStackOrEndActions} from "./StackHelpers";
+import {CheckAndStartUlineActionsOrContinue} from "./HeroHelpers";
+import {ActivateTrading} from "./CoinHelpers";
 
 export const CheckEndTierPhaseEnded = (G, ctx) => {
     G.campPicked = false;
