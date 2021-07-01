@@ -284,16 +284,12 @@ const warriorSuit = {
                             config: {
                                 name: "upgradeCoin",
                                 stageName: "upgradeCoin",
-                                number: 1,
                                 value: 5,
                             },
                     },
                     {
                             actionName: "UpgradeCoinAction",
                             config: {
-                                name: "upgradeCoin",
-                                stageName: "upgradeCoin",
-                                number: 1,
                                 value: 5,
                             },
                     },

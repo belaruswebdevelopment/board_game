@@ -107,7 +107,6 @@ export const ClickCoinToUpgrade = (G, ctx, coinId, type, isInitial) => {
             delete G.distinctions[4];
         }
     }
-    G.drawProfit = null;
     return EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
 };
 
@@ -144,7 +143,6 @@ export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) =
                     coinId,
                     name: "VidofnirVedrfolnirAction",
                     stageName: "upgradeCoinVidofnirVedrfolnir",
-                    number: 1,
                     value: 2,
                 },
             },
@@ -152,7 +150,6 @@ export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) =
                 actionName: "UpgradeCoinAction",
                 config: {
                     coinId,
-                    number: 1,
                     value: 2,
                 },
             },

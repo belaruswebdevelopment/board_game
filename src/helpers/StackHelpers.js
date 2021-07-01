@@ -15,7 +15,7 @@ import {EndAction} from "./ActionHelper";
 export const AddActionsToStack = (G, ctx, stack) => {
     if (stack.length) {
         for (let i = stack.length - 1; i >= 0; i--) {
-            const playerId = stack[i].stack["playerId"] ?? ctx.currentPlayer;
+            const playerId = stack[i]["playerId"] ?? ctx.currentPlayer;
             G.stack[playerId].unshift(stack[i]);
         }
     }
@@ -36,7 +36,7 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
     if (stack.length) {
         let noCurrent = false;
         for (let i = stack.length - 1; i >= 0; i--) {
-            const playerId = stack[i].stack["playerId"] ?? ctx.currentPlayer;
+            const playerId = stack[i]["playerId"] ?? ctx.currentPlayer;
             if (i === stack.length - 1 && G.stack[playerId][0] === undefined) {
                 G.stack[playerId].push(stack[i]);
                 noCurrent = true;
@@ -63,7 +63,7 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
  */
 export const StartActionFromStackOrEndActions = (G, ctx, isTrading = null, ...args) => {
     if (G.stack[ctx.currentPlayer][0]) {
-        return ActionDispatcher(G, ctx, G.stack[ctx.currentPlayer][0].stack, ...args);
+        return ActionDispatcher(G, ctx, G.stack[ctx.currentPlayer][0], ...args);
     } else {
         EndAction(G, ctx, isTrading);
     }

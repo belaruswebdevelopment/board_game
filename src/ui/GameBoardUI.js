@@ -278,7 +278,7 @@ export const DrawProfit = (data, option) => {
             caption += "one warrior card to discard from your board.";
             boardCells.push(
                 <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit card board`}>
-                    {DrawPlayerBoardForSuitCardDiscard(data, "warrior")}
+                    {DrawPlayerBoardForSuitCardDiscard(data, data.props.G.stack[data.props.ctx.currentPlayer][0].config.suit)}
                 </td>
             );
         } else if (option === "HoldaAction") {

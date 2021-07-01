@@ -137,7 +137,7 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
  * @constructor
  */
 const UpgradeCoinAction = (G, ctx, config, ...args) => {
-    G.actionsNum = config.number;
+    G.actionsNum = config.number ?? 1;
     G.actionsNum--;
     UpgradeCoin(G, ctx, config, ...args);
     if (G.actionsNum === 0) {
@@ -195,7 +195,7 @@ const AddBuffToPlayer = (G, ctx, config) => {
  * @constructor
  */
 export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
+    G.actionsNum = config.number ?? 1;
     G.actionsNum--;
     G.players[ctx.currentPlayer].pickedCard = G.players[ctx.currentPlayer].cards[suitId][cardId];
     G.discardCardsDeck.push(G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0]);
@@ -207,16 +207,13 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId
                     stageName: "discardCardFromBoard",
                     name: "DagdaAction",
                     suit: "hunter",
-                    number: 1,
                 },
             },
             {
                 stack: {
                     actionName: "DiscardCardsFromPlayerBoardAction",
                     config: {
-                        stageName: "discardCardFromBoard",
                         suit: "hunter",
-                        number: 1,
                     },
                 },
             },
@@ -269,7 +266,7 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
             }
         }
     }
-    const isValidMove = cardsToDiscard.length >= config.number;
+    const isValidMove = cardsToDiscard.length >= config.number ?? 1;
     if (!isValidMove) {
         G.stack[ctx.currentPlayer].splice(1);
         return INVALID_MOVE;
@@ -290,7 +287,7 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
  * @constructor
  */
 const PlaceCards = (G, ctx, config, suitId) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
+    G.actionsNum = config.number ?? 1;
     G.actionsNum--;
     const suit = Object.keys(suitsConfig)[suitId];
     const olwinDouble = CreateCard({
@@ -301,7 +298,7 @@ const PlaceCards = (G, ctx, config, suitId) => {
     });
     AddCardToPlayer(G, ctx, olwinDouble);
     if (G.actionsNum === 1) {
-        // todo get all this stack from DATA files card.stack[x]
+        // todo get all this stack from DATA files card.stack.activation[x]?
         const stack = [
             {
                 actionName: "DrawProfitAction",
@@ -309,7 +306,6 @@ const PlaceCards = (G, ctx, config, suitId) => {
                     name: "placeCards",
                     stageName: "placeCards",
                     hero: "Olwin",
-                    number: 1,
                     variants: {
                         blacksmith: {
                             suit: "blacksmith",
@@ -414,7 +410,7 @@ const CheckPickDiscardCard = (G, ctx) => {
  * @constructor
  */
 const PickDiscardCard = (G, ctx, config, cardId) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
+    G.actionsNum = config.number ?? 1;
     G.actionsNum--;
     const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
         pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
@@ -425,15 +421,10 @@ const PickDiscardCard = (G, ctx, config, cardId) => {
                 config: {
                     stageName: "pickDiscardCard",
                     name: "BrisingamensAction",
-                    number: 1,
                 },
             },
             {
                 actionName: "PickDiscardCard",
-                config: {
-                    stageName: "pickDiscardCard",
-                    number: 1,
-                },
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);

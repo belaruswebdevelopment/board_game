@@ -15,11 +15,10 @@ export const CheckEndTierPhaseEnded = (G, ctx) => {
         RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
         if (G.players[G.playersOrder[1]]?.buffs?.["discardCardEndGame"]) {
             G.drawProfit = "BrisingamensEndGameAction";
-            G.stack[G.playersOrder[1]].stack = [
+            G.stack[G.playersOrder[1]] = [
                 {
                     actionName: "DrawProfitAction",
                     config: {
-                        card: "Brisingamens",
                         name: "BrisingamensEndGameAction",
                     },
                 },
@@ -30,11 +29,10 @@ export const CheckEndTierPhaseEnded = (G, ctx) => {
             ctx.events.endTurn();
         } else if (G.players[G.playersOrder.length - 1]?.buffs?.["getMjollnirProfit"]) {
             G.drawProfit = "getMjollnirProfit";
-            G.stack[G.playersOrder[0]].stack = [
+            G.stack[G.playersOrder[0]] = [
                 {
                     actionName: "DrawProfitAction",
                     config: {
-                        card: "Mjollnir",
                         name: "getMjollnirProfit",
                     },
                 },
@@ -181,7 +179,7 @@ const CheckEndTierActions = (G, ctx) => {
         ctx.events.setPhase("endTier");
         if (ylud) {
             G.drawProfit = "endTier";
-            G.stack[G.playersOrder[0]].stack = [
+            G.stack[G.playersOrder[0]] = [
                 {
                     actionName: "DrawProfitAction",
                     config: {
@@ -254,38 +252,28 @@ const CheckEndTierActions = (G, ctx) => {
         } else {
             if (brisingamens) {
                 G.drawProfit = "BrisingamensEndGameAction";
-                G.stack[G.playersOrder[0]].stack = [
+                G.stack[G.playersOrder[0]] = [
                     {
                         actionName: "DrawProfitAction",
                         config: {
-                            card: "Brisingamens",
                             name: "BrisingamensEndGameAction",
                         },
                     },
                     {
                         actionName: "DiscardAnyCardFromPlayerBoard",
-                        config: {
-                            card: "Brisingamens",
-                            name: "BrisingamensEndGameAction",
-                        },
                     },
                 ];
             } else {
                 G.drawProfit = "getMjollnirProfit";
-                G.stack[G.playersOrder[0]].stack = [
+                G.stack[G.playersOrder[0]] = [
                     {
                         actionName: "DrawProfitAction",
                         config: {
-                            card: "Mjollnir",
                             name: "getMjollnirProfit",
                         },
                     },
                     {
                         actionName: "GetMjollnirProfitAction",
-                        config: {
-                            card: "Mjollnir",
-                            name: "getMjollnirProfit",
-                        },
                     },
                 ];
             }

@@ -239,14 +239,12 @@ const Grid = {
             config: {
                 stageName: "upgradeCoin",
                 name: "upgradeCoin",
-                number: 1,
                 value: 7,
             },
         },
         {
             actionName: "UpgradeCoinAction",
             config: {
-                number: 1,
                 value: 7,
             },
         },
@@ -280,6 +278,7 @@ const Thrud = {
             config: {
                 stageName: "placeCards",
                 name: "placeCards",
+                hero: "Thrud",
                 variants: {
                     blacksmith: {
                         suit: "blacksmith",
@@ -414,7 +413,6 @@ const Bonfur = {
             actionName: "CheckDiscardCardsFromPlayerBoardAction",
             config: {
                 suit: "blacksmith",
-                number: 1,
             },
         },
         {
@@ -423,14 +421,12 @@ const Bonfur = {
                 stageName: "discardCardFromBoard",
                 name: "BonfurAction",
                 suit: "blacksmith",
-                number: 1,
             },
         },
         {
             actionName: "DiscardCardsFromPlayerBoardAction",
             config: {
                 suit: "blacksmith",
-                number: 1,
             },
         },
         {
@@ -478,7 +474,6 @@ const Dagda = {
             actionName: "DiscardCardsFromPlayerBoardAction",
             config: {
                 stageName: "discardCardFromBoard",
-                suit: "hunter",
                 number: 2,
             },
         },
@@ -741,14 +736,10 @@ const Andumia = {
             config: {
                 stageName: "pickDiscardCard",
                 name: "AndumiaAction",
-                number: 1,
             },
         },
         {
             actionName: "PickDiscardCard",
-            config: {
-                number: 1,
-            },
         },
     ],
     scoringRule: () => 12,
@@ -822,7 +813,6 @@ const Khrad = {
         {
             actionName: "UpgradeCoinAction",
             config: {
-                number: 1,
                 value: 10,
                 coin: "min",
             },

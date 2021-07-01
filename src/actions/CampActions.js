@@ -73,7 +73,6 @@ export const AddCampCardToCards = (G, ctx, config, cardId) => {
  * @constructor
  */
 export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     const player = G.players[ctx.currentPlayer];
     const tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
     player.boardCoins[tempId] = player.handCoins[coinId];
@@ -82,9 +81,6 @@ export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
         const stack = [
             {
                 actionName: "StartVidofnirVedrfolnirAction",
-                config: {
-                    card: "Vidofnir Vedrfolnir",
-                },
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
@@ -132,14 +128,12 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                     config: {
                         name: "VidofnirVedrfolnirAction",
                         stageName: "upgradeCoinVidofnirVedrfolnir",
-                        number: 1,
                         value: 5,
                     },
                 },
                 {
                     actionName: "UpgradeCoinAction",
                     config: {
-                        number: 1,
                         value: 5,
                     },
                 },
@@ -173,7 +167,6 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
  * @constructor
  */
 export const DiscardTradingCoin = (G, ctx) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     let tradingCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin?.value === 0);
     if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && tradingCoinIndex === -1) {
         tradingCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin?.value === 0);
@@ -215,7 +208,6 @@ export const DiscardAnyCardFromPlayerBoard = (G, ctx, config, suitId, cardId) =>
  * @constructor
  */
 export const DiscardSuitCard = (G, ctx, config) => {
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     const suitId = GetSuitIndexByName(config.suit),
         value = {};
     for (let i = 0; i < ctx.numPlayers; i++) {

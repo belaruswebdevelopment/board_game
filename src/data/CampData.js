@@ -198,7 +198,6 @@ const Brisingamens = {
         {
             actionName: "PickDiscardCard",
             config: {
-                stageName: "pickDiscardCard",
                 number: 2,
             },
         },
@@ -262,6 +261,7 @@ const Hofud = {
             config: {
                 stageName: "discardSuitCard",
                 name: "HofudAction",
+                suit: "warrior",
             },
         },
         {
