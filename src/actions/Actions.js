@@ -137,13 +137,7 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
  * @constructor
  */
 const UpgradeCoinAction = (G, ctx, config, ...args) => {
-    G.actionsNum = config.number ?? 1;
-    G.actionsNum--;
     UpgradeCoin(G, ctx, config, ...args);
-    if (G.actionsNum === 0) {
-        G.drawProfit = null;
-        G.actionsNum = null;
-    }
     return EndActionFromStackAndAddNew(G, ctx);
 };
 
@@ -161,7 +155,7 @@ const DrawProfitAction = (G, ctx, config) => {
     if (G.stack[ctx.currentPlayer][0].config?.stageName) {
         ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     }
-    G.actionsNum = config.number ?? null;
+    G.actionsNum = config.number ?? 1;
     G.drawProfit = config.name;
 };
 
@@ -195,11 +189,9 @@ const AddBuffToPlayer = (G, ctx, config) => {
  * @constructor
  */
 export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId) => {
-    G.actionsNum = config.number ?? 1;
-    G.actionsNum--;
     G.players[ctx.currentPlayer].pickedCard = G.players[ctx.currentPlayer].cards[suitId][cardId];
     G.discardCardsDeck.push(G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0]);
-    if (G.actionsNum === 1) {
+    if (G.actionsNum === 2) {
         const stack = [
             {
                 actionName: "DrawProfitAction",
@@ -210,19 +202,13 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId
                 },
             },
             {
-                stack: {
-                    actionName: "DiscardCardsFromPlayerBoardAction",
-                    config: {
-                        suit: "hunter",
-                    },
+                actionName: "DiscardCardsFromPlayerBoardAction",
+                config: {
+                    suit: "hunter",
                 },
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
-    }
-    G.drawProfit = null;
-    if (G.actionsNum === 0) {
-        G.actionsNum = null;
     }
     return EndActionFromStackAndAddNew(G, ctx);
 };
@@ -266,7 +252,7 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
             }
         }
     }
-    const isValidMove = cardsToDiscard.length >= config.number ?? 1;
+    const isValidMove = cardsToDiscard.length >= (config.number ?? 1);
     if (!isValidMove) {
         G.stack[ctx.currentPlayer].splice(1);
         return INVALID_MOVE;
@@ -287,94 +273,88 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
  * @constructor
  */
 const PlaceCards = (G, ctx, config, suitId) => {
-    G.actionsNum = config.number ?? 1;
-    G.actionsNum--;
     const suit = Object.keys(suitsConfig)[suitId];
     const olwinDouble = CreateCard({
         suit,
-        rank: G.stack[0].variants[suit].rank,
-        points: G.stack[0].variants[suit].points,
+        rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
+        points: G.stack[ctx.currentPlayer][0].variants[suit].points,
         name: "Olwin",
     });
     AddCardToPlayer(G, ctx, olwinDouble);
-    if (G.actionsNum === 1) {
+    if (G.actionsNum === 2) {
         // todo get all this stack from DATA files card.stack.activation[x]?
         const stack = [
             {
                 actionName: "DrawProfitAction",
+                variants: {
+                    blacksmith: {
+                        suit: "blacksmith",
+                        rank: 1,
+                        points: null,
+                    },
+                    hunter: {
+                        suit: "hunter",
+                        rank: 1,
+                        points: null,
+                    },
+                    explorer: {
+                        suit: "explorer",
+                        rank: 1,
+                        points: 0,
+                    },
+                    warrior: {
+                        suit: "warrior",
+                        rank: 1,
+                        points: 0,
+                    },
+                    miner: {
+                        suit: "miner",
+                        rank: 1,
+                        points: 0,
+                    },
+                },
                 config: {
                     name: "placeCards",
                     stageName: "placeCards",
                     hero: "Olwin",
-                    variants: {
-                        blacksmith: {
-                            suit: "blacksmith",
-                            rank: 1,
-                            points: null,
-                        },
-                        hunter: {
-                            suit: "hunter",
-                            rank: 1,
-                            points: null,
-                        },
-                        explorer: {
-                            suit: "explorer",
-                            rank: 1,
-                            points: 0,
-                        },
-                        warrior: {
-                            suit: "warrior",
-                            rank: 1,
-                            points: 0,
-                        },
-                        miner: {
-                            suit: "miner",
-                            rank: 1,
-                            points: 0,
-                        },
-                    },
                 },
             },
             {
                 actionName: "PlaceCards",
+                variants: {
+                    blacksmith: {
+                        suit: "blacksmith",
+                        rank: 1,
+                        points: null,
+                    },
+                    hunter: {
+                        suit: "hunter",
+                        rank: 1,
+                        points: null,
+                    },
+                    explorer: {
+                        suit: "explorer",
+                        rank: 1,
+                        points: 0,
+                    },
+                    warrior: {
+                        suit: "warrior",
+                        rank: 1,
+                        points: 0,
+                    },
+                    miner: {
+                        suit: "miner",
+                        rank: 1,
+                        points: 0,
+                    },
+                },
                 config: {
                     stageName: "placeCards",
                     hero: "Olwin",
-                    variants: {
-                        blacksmith: {
-                            suit: "blacksmith",
-                            rank: 1,
-                            points: null,
-                        },
-                        hunter: {
-                            suit: "hunter",
-                            rank: 1,
-                            points: null,
-                        },
-                        explorer: {
-                            suit: "explorer",
-                            rank: 1,
-                            points: 0,
-                        },
-                        warrior: {
-                            suit: "warrior",
-                            rank: 1,
-                            points: 0,
-                        },
-                        miner: {
-                            suit: "miner",
-                            rank: 1,
-                            points: 0,
-                        },
-                    },
                 },
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
-    }
-    G.drawProfit = null;
-    if (G.actionsNum === 0 || G.stack[ctx.currentPlayer].length > 2) {
-        G.actionsNum = null;
     }
     CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
     return EndActionFromStackAndAddNew(G, ctx, [], suitId);
@@ -410,11 +390,9 @@ const CheckPickDiscardCard = (G, ctx) => {
  * @constructor
  */
 const PickDiscardCard = (G, ctx, config, cardId) => {
-    G.actionsNum = config.number ?? 1;
-    G.actionsNum--;
     const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
         pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
-    if (G.actionsNum === 1 && G.discardCardsDeck.length > 0) {
+    if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
         const stack = [
             {
                 actionName: "DrawProfitAction",
@@ -428,10 +406,6 @@ const PickDiscardCard = (G, ctx, config, cardId) => {
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
-    }
-    G.drawProfit = null;
-    if (G.actionsNum === 0 || G.stack[ctx.currentPlayer].length > 2 || G.discardCardsDeck.length === 0) {
-        G.actionsNum = null;
     }
     if (isAdded) {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
@@ -515,7 +489,7 @@ const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
         type: "наёмник",
         suit,
         rank: 1,
-        points: G.players[ctx.currentPlayer].pickedCard.variants[suit].points,
+        points: G.players[ctx.currentPlayer].pickedCard.stack[0].variants[suit].points,
         name: G.players[ctx.currentPlayer].pickedCard.name,
         tier: G.players[ctx.currentPlayer].pickedCard.tier,
         path: G.players[ctx.currentPlayer].pickedCard.path,
@@ -535,6 +509,5 @@ const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
         AddActionsToStackAfterCurrent(G, ctx, stack);
     }
     CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
-    G.drawProfit = null;
     return EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };

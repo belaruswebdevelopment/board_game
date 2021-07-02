@@ -221,7 +221,7 @@ export const DrawProfit = (data, option) => {
     let caption = "Get ";
     for (let i = 0; i < 1; i++) {
         if (option === "placeCards") {
-            caption += `suit to place ${data.props.G.actionsNum ?? 1} 
+            caption += `suit to place ${data.props.G.actionsNum} 
             ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.hero}${data.props.G.actionsNum > 1 ? "s" : ""} to 
             ${data.props.G.actionsNum > 1 ? "different" : "that"} suit.`;
             for (let j = 0; j < data.props.G.suitsNum; j++) {
@@ -232,7 +232,7 @@ export const DrawProfit = (data, option) => {
                             key={`Place ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.hero} on ${suitsConfig[suit].suitName}`}
                             onClick={() => data.OnClickSuitToPlaceCard(j)}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
-                                <b>{data.props.G.stack[0].variants[suit].points ?? ""}</b>
+                                <b>{data.props.G.stack[data.props.ctx.currentPlayer][0].variants[suit].points ?? ""}</b>
                             </span>
                         </td>
                     );
@@ -245,7 +245,7 @@ export const DrawProfit = (data, option) => {
                     data.props.G.decks[1][j].suit, "OnClickCardToPickDistinction", j);
             }
         } else if (option === "BonfurAction" || option === "DagdaAction") {
-            caption += `${data.props.G.actionsNum ?? 1} card${data.props.G.actionsNum > 1 ? "s" : ""} to discard from your board.`;
+            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} to discard from your board.`;
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][0] !== undefined &&
                     suitsConfig[data.props.G.players[data.props.ctx.currentPlayer].cards[j][0].suit].suit !==
@@ -262,7 +262,7 @@ export const DrawProfit = (data, option) => {
                 }
             }
         } else if (option === "AndumiaAction" || option === "BrisingamensAction") {
-            caption += `${data.props.G.actionsNum ?? 1} card${data.props.G.actionsNum > 1 ? "s" : ""} from discard pile to your board.`;
+            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} from discard pile to your board.`;
             for (let j = 0; j < data.props.G.discardCardsDeck.length; j++) {
                 DrawCard(data, boardCells, data.props.G.discardCardsDeck[j], j, data.props.G.players[data.props.ctx.currentPlayer],
                     data.props.G.discardCardsDeck[j].suit, "OnClickCardFromDiscard", j);
@@ -331,13 +331,13 @@ export const DrawProfit = (data, option) => {
             caption += `suit to place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} to that suit.`;
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 const suit = Object.keys(suitsConfig)[j];
-                if (suit === data.props.G.players[data.props.ctx.currentPlayer].pickedCard.variants[suit]?.suit) {
+                if (suit === data.props.G.players[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit]?.suit) {
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
                             key={`Place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} ${j} on ${suitsConfig[suit].suitName}`}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
                                   onClick={() => data.OnClickSuitToPlaceMercenary(j)}>
-                                <b>{data.props.G.players[data.props.ctx.currentPlayer].pickedCard.variants[suit].points ?? ""}</b>
+                                <b>{data.props.G.players[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit].points ?? ""}</b>
                             </span>
                         </td>
                     );

@@ -275,68 +275,66 @@ const Thrud = {
         },
         {
             actionName: "DrawProfitAction",
+            variants: {
+                blacksmith: {
+                    suit: "blacksmith",
+                    rank: 1,
+                    points: null,
+                },
+                hunter: {
+                    suit: "hunter",
+                    rank: 1,
+                    points: null,
+                },
+                explorer: {
+                    suit: "explorer",
+                    rank: 1,
+                    points: null,
+                },
+                warrior: {
+                    suit: "warrior",
+                    rank: 1,
+                    points: null,
+                },
+                miner: {
+                    suit: "miner",
+                    rank: 1,
+                    points: null,
+                },
+            },
             config: {
                 stageName: "placeCards",
                 name: "placeCards",
                 hero: "Thrud",
-                variants: {
-                    blacksmith: {
-                        suit: "blacksmith",
-                        rank: 1,
-                        points: null,
-                    },
-                    hunter: {
-                        suit: "hunter",
-                        rank: 1,
-                        points: null,
-                    },
-                    explorer: {
-                        suit: "explorer",
-                        rank: 1,
-                        points: null,
-                    },
-                    warrior: {
-                        suit: "warrior",
-                        rank: 1,
-                        points: null,
-                    },
-                    miner: {
-                        suit: "miner",
-                        rank: 1,
-                        points: null,
-                    },
-                },
             },
         },
         {
             actionName: "PlaceThrudAction",
-            config: {
-                variants: {
-                    blacksmith: {
-                        suit: "blacksmith",
-                        rank: 1,
-                        points: null,
-                    },
-                    hunter: {
-                        suit: "hunter",
-                        rank: 1,
-                        points: null,
-                    },
-                    explorer: {
-                        suit: "explorer",
-                        rank: 1,
-                        points: null,
-                    },
-                    warrior: {
-                        suit: "warrior",
-                        rank: 1,
-                        points: null,
-                    },
-                    miner: {
-                        suit: "miner",
-                        rank: 1,
-                        points: null,
-                    },
+            variants: {
+                blacksmith: {
+                    suit: "blacksmith",
+                    rank: 1,
+                    points: null,
+                },
+                hunter: {
+                    suit: "hunter",
+                    rank: 1,
+                    points: null,
+                },
+                explorer: {
+                    suit: "explorer",
+                    rank: 1,
+                    points: null,
+                },
+                warrior: {
+                    suit: "warrior",
+                    rank: 1,
+                    points: null,
+                },
+                miner: {
+                    suit: "miner",
+                    rank: 1,
+                    points: null,
                 },
             },
         },
@@ -844,72 +842,72 @@ const Olwin = {
         },
         {
             actionName: "DrawProfitAction",
+            variants: {
+                blacksmith: {
+                    suit: "blacksmith",
+                    rank: 1,
+                    points: null,
+                },
+                hunter: {
+                    suit: "hunter",
+                    rank: 1,
+                    points: null,
+                },
+                explorer: {
+                    suit: "explorer",
+                    rank: 1,
+                    points: 0,
+                },
+                warrior: {
+                    suit: "warrior",
+                    rank: 1,
+                    points: 0,
+                },
+                miner: {
+                    suit: "miner",
+                    rank: 1,
+                    points: 0,
+                },
+            },
             config: {
                 stageName: "placeCards",
                 hero: "Olwin",
                 name: "placeCards",
                 number: 2,
-                variants: {
-                    blacksmith: {
-                        suit: "blacksmith",
-                        rank: 1,
-                        points: null,
-                    },
-                    hunter: {
-                        suit: "hunter",
-                        rank: 1,
-                        points: null,
-                    },
-                    explorer: {
-                        suit: "explorer",
-                        rank: 1,
-                        points: 0,
-                    },
-                    warrior: {
-                        suit: "warrior",
-                        rank: 1,
-                        points: 0,
-                    },
-                    miner: {
-                        suit: "miner",
-                        rank: 1,
-                        points: 0,
-                    },
-                },
             },
         },
         {
             actionName: "PlaceCards",
+            variants: {
+                blacksmith: {
+                    suit: "blacksmith",
+                    rank: 1,
+                    points: null,
+                },
+                hunter: {
+                    suit: "hunter",
+                    rank: 1,
+                    points: null,
+                },
+                explorer: {
+                    suit: "explorer",
+                    rank: 1,
+                    points: 0,
+                },
+                warrior: {
+                    suit: "warrior",
+                    rank: 1,
+                    points: 0,
+                },
+                miner: {
+                    suit: "miner",
+                    rank: 1,
+                    points: 0,
+                },
+            },
             config: {
                 stageName: "placeCards",
                 hero: "Olwin",
-                variants: {
-                    blacksmith: {
-                        suit: "blacksmith",
-                        rank: 1,
-                        points: null,
-                    },
-                    hunter: {
-                        suit: "hunter",
-                        rank: 1,
-                        points: null,
-                    },
-                    explorer: {
-                        suit: "explorer",
-                        rank: 1,
-                        points: 0,
-                    },
-                    warrior: {
-                        suit: "warrior",
-                        rank: 1,
-                        points: 0,
-                    },
-                    miner: {
-                        suit: "miner",
-                        rank: 1,
-                        points: 0,
-                    },
-                },
             },
         },
     ],

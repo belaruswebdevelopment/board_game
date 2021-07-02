@@ -172,7 +172,6 @@ export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) =
  */
 export const AddCoinToPouch = (G, ctx, coinId) => {
     if (G.players[ctx.currentPlayer].handCoins[coinId] !== null) {
-        G.actionsNum--;
         const stack = [
             {
                 actionName: "AddCoinToPouchAction",

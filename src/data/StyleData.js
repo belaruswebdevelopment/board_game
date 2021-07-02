@@ -14,7 +14,7 @@ export const Styles = {
             switch (name) {
                 case "Olwin":
                     return {
-                        background: "url(/img/cards/heroes/basic/heroes.png) no-repeat -32px -50px / 288px 144px",
+                        background: "url(/img/cards/heroes/thingvellir/heroes.png) no-repeat -32px -50px / 128px 100px",
                     };
                 default:
                     return {

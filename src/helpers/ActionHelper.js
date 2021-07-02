@@ -11,7 +11,5 @@ import {AfterBasicPickCardActions} from "./MovesHelpers";
  * @constructor
  */
 export const EndAction = (G, ctx, isTrading = null) => {
-    G.drawProfit = null;
-    G.actionsNum = null;
     AfterBasicPickCardActions(G, ctx, isTrading);
 };

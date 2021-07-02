@@ -264,12 +264,10 @@ export const BoardGame = {
                 G.playersOrder = playersIndexes;
                 const stack = [
                     {
-                        stack: {
-                            actionName: "DrawProfitAction",
-                            playerId: G.playersOrder[0],
-                            config: {
-                                name: "startOrPassEnlistmentMercenaries",
-                            },
+                        actionName: "DrawProfitAction",
+                        playerId: G.playersOrder[0],
+                        config: {
+                            name: "startOrPassEnlistmentMercenaries",
                         },
                     },
                 ];

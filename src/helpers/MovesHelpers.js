@@ -182,70 +182,70 @@ const CheckEndTierActions = (G, ctx) => {
             G.stack[G.playersOrder[0]] = [
                 {
                     actionName: "DrawProfitAction",
+                    variants: {
+                        blacksmith: {
+                            suit: "blacksmith",
+                            rank: 1,
+                            points: null,
+                        },
+                        hunter: {
+                            suit: "hunter",
+                            rank: 1,
+                            points: null,
+                        },
+                        explorer: {
+                            suit: "explorer",
+                            rank: 1,
+                            points: 11,
+                        },
+                        warrior: {
+                            suit: "warrior",
+                            rank: 1,
+                            points: 7,
+                        },
+                        miner: {
+                            suit: "miner",
+                            rank: 1,
+                            points: 1,
+                        },
+                    },
                     config: {
                         stageName: "placeCards",
                         hero: "Ylud",
                         name: "placeCard",
-                        variants: {
-                            blacksmith: {
-                                suit: "blacksmith",
-                                rank: 1,
-                                points: null,
-                            },
-                            hunter: {
-                                suit: "hunter",
-                                rank: 1,
-                                points: null,
-                            },
-                            explorer: {
-                                suit: "explorer",
-                                rank: 1,
-                                points: 11,
-                            },
-                            warrior: {
-                                suit: "warrior",
-                                rank: 1,
-                                points: 7,
-                            },
-                            miner: {
-                                suit: "miner",
-                                rank: 1,
-                                points: 1,
-                            },
-                        },
                     },
                 },
                 {
                     actionName: "PlaceYludAction",
+                    variants: {
+                        blacksmith: {
+                            suit: "blacksmith",
+                            rank: 1,
+                            points: null,
+                        },
+                        hunter: {
+                            suit: "hunter",
+                            rank: 1,
+                            points: null,
+                        },
+                        explorer: {
+                            suit: "explorer",
+                            rank: 1,
+                            points: 11,
+                        },
+                        warrior: {
+                            suit: "warrior",
+                            rank: 1,
+                            points: 7,
+                        },
+                        miner: {
+                            suit: "miner",
+                            rank: 1,
+                            points: 1,
+                        },
+                    },
                     config: {
                         hero: "Ylud",
-                        variants: {
-                            blacksmith: {
-                                suit: "blacksmith",
-                                rank: 1,
-                                points: null,
-                            },
-                            hunter: {
-                                suit: "hunter",
-                                rank: 1,
-                                points: null,
-                            },
-                            explorer: {
-                                suit: "explorer",
-                                rank: 1,
-                                points: 11,
-                            },
-                            warrior: {
-                                suit: "warrior",
-                                rank: 1,
-                                points: 7,
-                            },
-                            miner: {
-                                suit: "miner",
-                                rank: 1,
-                                points: 1,
-                            },
-                        },
                     },
                 },
             ];

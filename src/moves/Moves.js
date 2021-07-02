@@ -93,7 +93,6 @@ export const ClickCardToPickDistinction = (G, ctx, cardId) => {
     } else {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
-    G.drawProfit = null;
     return EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 

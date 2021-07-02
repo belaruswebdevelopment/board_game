@@ -56,9 +56,8 @@ export const CreateArtefactCampCard = ({
  * @param path URL путь.
  * @param name Название.
  * @param game Игра/дополнение.
- * @param variants Варианты карт.
  * @param stack Действия.
- * @returns {{game: string, tier: (number|*), name, variants, stack, type: string}} Карта наёмника для кэмпа.
+ * @returns {{game: string, tier: (number|*), name, stack, type: string}} Карта наёмника для кэмпа.
  * @constructor
  */
 export const CreateMercenaryCampCard = ({
@@ -67,7 +66,6 @@ export const CreateMercenaryCampCard = ({
                                             path,
                                             name,
                                             game = "thingvellir",
-                                            variants,
                                             stack
                                         } = {}) => {
     return {
@@ -76,7 +74,6 @@ export const CreateMercenaryCampCard = ({
         path,
         name,
         game,
-        variants,
         stack,
     };
 };
@@ -137,10 +134,10 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
             tier,
             path: path.trim(),
             name: name.trim(),
-            variants: mercenariesConfig[tier][i],
             stack: [
                 {
                     actionName: "AddCampCardToCards",
+                    variants: mercenariesConfig[tier][i],
                 },
             ],
         }));
