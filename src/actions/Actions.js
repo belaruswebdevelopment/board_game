@@ -273,20 +273,16 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
  * @constructor
  */
 const PlaceCards = (G, ctx, config, suitId) => {
-    const suit = Object.keys(suitsConfig)[suitId];
-    const olwinDouble = CreateCard({
-        suit,
-        rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
-        points: G.stack[ctx.currentPlayer][0].variants[suit].points,
-        name: "Olwin",
-    });
-    AddCardToPlayer(G, ctx, olwinDouble);
-    if (G.actionsNum === 2) {
-        // todo get all this stack from DATA files card.stack.activation[x]?
-        const stack = [
-            {
-                actionName: "DrawProfitAction",
-                variants: {
+        const suit = Object.keys(suitsConfig)[suitId];
+        const olwinDouble = CreateCard({
+            suit,
+            rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
+            points: G.stack[ctx.currentPlayer][0].variants[suit].points,
+            name: "Olwin",
+        });
+        AddCardToPlayer(G, ctx, olwinDouble);
+        if (G.actionsNum === 2) {
+            const variants = {
                     blacksmith: {
                         suit: "blacksmith",
                         rank: 1,
@@ -313,52 +309,31 @@ const PlaceCards = (G, ctx, config, suitId) => {
                         points: 0,
                     },
                 },
-                config: {
-                    name: "placeCards",
-                    stageName: "placeCards",
-                    hero: "Olwin",
-                },
-            },
-            {
-                actionName: "PlaceCards",
-                variants: {
-                    blacksmith: {
-                        suit: "blacksmith",
-                        rank: 1,
-                        points: null,
+                stack = [
+                    {
+                        actionName: "DrawProfitAction",
+                        variants,
+                        config: {
+                            name: "placeCards",
+                            stageName: "placeCards",
+                            hero: "Olwin",
+                        },
                     },
-                    hunter: {
-                        suit: "hunter",
-                        rank: 1,
-                        points: null,
+                    {
+                        actionName: "PlaceCards",
+                        variants,
+                        config: {
+                            stageName: "placeCards",
+                            hero: "Olwin",
+                        },
                     },
-                    explorer: {
-                        suit: "explorer",
-                        rank: 1,
-                        points: 0,
-                    },
-                    warrior: {
-                        suit: "warrior",
-                        rank: 1,
-                        points: 0,
-                    },
-                    miner: {
-                        suit: "miner",
-                        rank: 1,
-                        points: 0,
-                    },
-                },
-                config: {
-                    stageName: "placeCards",
-                    hero: "Olwin",
-                },
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+                ];
+            AddActionsToStackAfterCurrent(G, ctx, stack);
+        }
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
+        return EndActionFromStackAndAddNew(G, ctx, [], suitId);
     }
-    CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
-    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
-};
+;
 
 /**
  * Действия, связанные с возможностью взятия карт из дискарда.

@@ -208,6 +208,7 @@ export const DiscardAnyCardFromPlayerBoard = (G, ctx, config, suitId, cardId) =>
  * @constructor
  */
 export const DiscardSuitCard = (G, ctx, config) => {
+    // todo FixIt
     const suitId = GetSuitIndexByName(config.suit),
         value = {};
     for (let i = 0; i < ctx.numPlayers; i++) {
@@ -220,5 +221,5 @@ export const DiscardSuitCard = (G, ctx, config) => {
         moveLimit: 1,
     });
     G.drawProfit = config.name;
-    // todo CHECK return EndActionFromStackAndAddNew(G, ctx);
+    return EndActionFromStackAndAddNew(G, ctx);
 };

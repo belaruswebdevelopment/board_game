@@ -47,77 +47,52 @@ export const CheckAndMoveThrud = (G, ctx, card) => {
  * @constructor
  */
 export const StartThrudMoving = (G, ctx, card) => {
-    const stack = [
-        {
-            actionName: "DrawProfitAction",
-            config: {
-                hero: "Thrud",
-                name: "placeCards",
-                stageName: "placeCards",
-                suit: card.suit,
-                variants: {
-                    blacksmith: {
-                        suit: "blacksmith",
-                        rank: 1,
-                        points: null,
-                    },
-                    hunter: {
-                        suit: "hunter",
-                        rank: 1,
-                        points: null,
-                    },
-                    explorer: {
-                        suit: "explorer",
-                        rank: 1,
-                        points: null,
-                    },
-                    warrior: {
-                        suit: "warrior",
-                        rank: 1,
-                        points: null,
-                    },
-                    miner: {
-                        suit: "miner",
-                        rank: 1,
-                        points: null,
-                    },
-                },
+    const variants = {
+            blacksmith: {
+                suit: "blacksmith",
+                rank: 1,
+                points: null,
+            },
+            hunter: {
+                suit: "hunter",
+                rank: 1,
+                points: null,
+            },
+            explorer: {
+                suit: "explorer",
+                rank: 1,
+                points: null,
+            },
+            warrior: {
+                suit: "warrior",
+                rank: 1,
+                points: null,
+            },
+            miner: {
+                suit: "miner",
+                rank: 1,
+                points: null,
             },
         },
-        {
-            actionName: "PlaceThrudAction",
-            config: {
-                hero: "Thrud",
-                variants: {
-                    blacksmith: {
-                        suit: "blacksmith",
-                        rank: 1,
-                        points: null,
-                    },
-                    hunter: {
-                        suit: "hunter",
-                        rank: 1,
-                        points: null,
-                    },
-                    explorer: {
-                        suit: "explorer",
-                        rank: 1,
-                        points: null,
-                    },
-                    warrior: {
-                        suit: "warrior",
-                        rank: 1,
-                        points: null,
-                    },
-                    miner: {
-                        suit: "miner",
-                        rank: 1,
-                        points: null,
-                    },
+        stack = [
+            {
+                actionName: "DrawProfitAction",
+                config: {
+                    hero: "Thrud",
+                    name: "placeCards",
+                    stageName: "placeCards",
+                    suit: card.suit,
+                    variants,
                 },
             },
-        },
-    ];
+            {
+                actionName: "PlaceThrudAction",
+                config: {
+                    hero: "Thrud",
+                    variants,
+                },
+            },
+        ];
     AddActionsToStackAfterCurrent(G, ctx, stack);
 };
 

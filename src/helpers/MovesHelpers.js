@@ -179,36 +179,37 @@ const CheckEndTierActions = (G, ctx) => {
         ctx.events.setPhase("endTier");
         if (ylud) {
             G.drawProfit = "endTier";
+            const variants = {
+                blacksmith: {
+                    suit: "blacksmith",
+                    rank: 1,
+                    points: null,
+                },
+                hunter: {
+                    suit: "hunter",
+                    rank: 1,
+                    points: null,
+                },
+                explorer: {
+                    suit: "explorer",
+                    rank: 1,
+                    points: 11,
+                },
+                warrior: {
+                    suit: "warrior",
+                    rank: 1,
+                    points: 7,
+                },
+                miner: {
+                    suit: "miner",
+                    rank: 1,
+                    points: 1,
+                },
+            };
             G.stack[G.playersOrder[0]] = [
                 {
                     actionName: "DrawProfitAction",
-                    variants: {
-                        blacksmith: {
-                            suit: "blacksmith",
-                            rank: 1,
-                            points: null,
-                        },
-                        hunter: {
-                            suit: "hunter",
-                            rank: 1,
-                            points: null,
-                        },
-                        explorer: {
-                            suit: "explorer",
-                            rank: 1,
-                            points: 11,
-                        },
-                        warrior: {
-                            suit: "warrior",
-                            rank: 1,
-                            points: 7,
-                        },
-                        miner: {
-                            suit: "miner",
-                            rank: 1,
-                            points: 1,
-                        },
-                    },
+                    variants,
                     config: {
                         stageName: "placeCards",
                         hero: "Ylud",
@@ -217,33 +218,7 @@ const CheckEndTierActions = (G, ctx) => {
                 },
                 {
                     actionName: "PlaceYludAction",
-                    variants: {
-                        blacksmith: {
-                            suit: "blacksmith",
-                            rank: 1,
-                            points: null,
-                        },
-                        hunter: {
-                            suit: "hunter",
-                            rank: 1,
-                            points: null,
-                        },
-                        explorer: {
-                            suit: "explorer",
-                            rank: 1,
-                            points: 11,
-                        },
-                        warrior: {
-                            suit: "warrior",
-                            rank: 1,
-                            points: 7,
-                        },
-                        miner: {
-                            suit: "miner",
-                            rank: 1,
-                            points: 1,
-                        },
-                    },
+                    variants,
                     config: {
                         hero: "Ylud",
                     },
