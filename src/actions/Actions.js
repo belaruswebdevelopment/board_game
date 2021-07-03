@@ -21,6 +21,7 @@ import {
     StartVidofnirVedrfolnirAction
 } from "./CampActions";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
+import {AddDataToLog} from "../Logging";
 // todo Add logging
 /**
  * Диспетчер действий при их активаци.
@@ -152,6 +153,8 @@ const UpgradeCoinAction = (G, ctx, config, ...args) => {
  * @constructor
  */
 const DrawProfitAction = (G, ctx, config) => {
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} должен получить преимущества от нового героя
+    ${config.hero}.`);
     if (G.stack[ctx.currentPlayer][0].config?.stageName) {
         ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     }
@@ -190,6 +193,8 @@ const AddBuffToPlayer = (G, ctx, config) => {
  */
 export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId) => {
     G.players[ctx.currentPlayer].pickedCard = G.players[ctx.currentPlayer].cards[suitId][cardId];
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} отправил в сброс карту 
+    ${G.players[ctx.currentPlayer].pickedCard.name}.`);
     G.discardCardsDeck.push(G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0]);
     if (G.actionsNum === 2) {
         const stack = [
@@ -226,6 +231,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId
  * @constructor
  */
 const DiscardCardFromTavernAction = (G, ctx, config, cardId) => {
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} отправил в сброс карту из таверны:`);
     DiscardCardFromTavern(G, cardId);
     return EndActionFromStackAndAddNew(G, ctx);
 };
@@ -273,67 +279,67 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
  * @constructor
  */
 const PlaceCards = (G, ctx, config, suitId) => {
-        const suit = Object.keys(suitsConfig)[suitId];
-        const olwinDouble = CreateCard({
-            suit,
-            rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
-            points: G.stack[ctx.currentPlayer][0].variants[suit].points,
-            name: "Olwin",
-        });
-        AddCardToPlayer(G, ctx, olwinDouble);
-        if (G.actionsNum === 2) {
-            const variants = {
-                    blacksmith: {
-                        suit: "blacksmith",
-                        rank: 1,
-                        points: null,
-                    },
-                    hunter: {
-                        suit: "hunter",
-                        rank: 1,
-                        points: null,
-                    },
-                    explorer: {
-                        suit: "explorer",
-                        rank: 1,
-                        points: 0,
-                    },
-                    warrior: {
-                        suit: "warrior",
-                        rank: 1,
-                        points: 0,
-                    },
-                    miner: {
-                        suit: "miner",
-                        rank: 1,
-                        points: 0,
+    const suit = Object.keys(suitsConfig)[suitId];
+    const olwinDouble = CreateCard({
+        suit,
+        rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
+        points: G.stack[ctx.currentPlayer][0].variants[suit].points,
+        name: "Olwin",
+    });
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту Olwin во фракцию ${suitsConfig[suit].suitName}.`);
+    AddCardToPlayer(G, ctx, olwinDouble);
+    if (G.actionsNum === 2) {
+        const variants = {
+                blacksmith: {
+                    suit: "blacksmith",
+                    rank: 1,
+                    points: null,
+                },
+                hunter: {
+                    suit: "hunter",
+                    rank: 1,
+                    points: null,
+                },
+                explorer: {
+                    suit: "explorer",
+                    rank: 1,
+                    points: 0,
+                },
+                warrior: {
+                    suit: "warrior",
+                    rank: 1,
+                    points: 0,
+                },
+                miner: {
+                    suit: "miner",
+                    rank: 1,
+                    points: 0,
+                },
+            },
+            stack = [
+                {
+                    actionName: "DrawProfitAction",
+                    variants,
+                    config: {
+                        name: "placeCards",
+                        stageName: "placeCards",
+                        hero: "Olwin",
                     },
                 },
-                stack = [
-                    {
-                        actionName: "DrawProfitAction",
-                        variants,
-                        config: {
-                            name: "placeCards",
-                            stageName: "placeCards",
-                            hero: "Olwin",
-                        },
+                {
+                    actionName: "PlaceCards",
+                    variants,
+                    config: {
+                        stageName: "placeCards",
+                        hero: "Olwin",
                     },
-                    {
-                        actionName: "PlaceCards",
-                        variants,
-                        config: {
-                            stageName: "placeCards",
-                            hero: "Olwin",
-                        },
-                    },
-                ];
-            AddActionsToStackAfterCurrent(G, ctx, stack);
-        }
-        CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
-        return EndActionFromStackAndAddNew(G, ctx, [], suitId);
+                },
+            ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
     }
-;
+    CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
+    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
+};
 
 /**
  * Действия, связанные с возможностью взятия карт из дискарда.
@@ -367,6 +373,7 @@ const CheckPickDiscardCard = (G, ctx) => {
 const PickDiscardCard = (G, ctx, config, cardId) => {
     const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
         pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту ${pickedCard.name} из дискарда.`);
     if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
         const stack = [
             {
