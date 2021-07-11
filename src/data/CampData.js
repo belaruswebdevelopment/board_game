@@ -52,7 +52,7 @@ const Draupnir = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: player => player.boardCoins.filter(coin => coin.value >= 15).length * 6,
+    scoringRule: player => player.boardCoins.filter(coin => coin?.value >= 15).length * 6,
 };
 
 /**

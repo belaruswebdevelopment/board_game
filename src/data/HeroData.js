@@ -566,7 +566,7 @@ const Astrid = {
             },
         },
     ],
-    scoringRule: (player) => Math.max(...player.boardCoins.map(coin => coin.value)),
+    scoringRule: (player) => Math.max(...player.boardCoins.map(coin => coin?.value)),
 };
 
 /**

@@ -133,7 +133,7 @@ const hunterSuit = {
         description: "Получив знак отличия охотников, сразу же обменяйте свою монету с номиналом 0 на особую монету с номиналом 3. Эта монета также позволяет обменивать монеты в кошеле и не может быть улучшена.",
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
-                const tradingCoinIndex = player.boardCoins.findIndex(coin => coin.value === 0);
+                const tradingCoinIndex = player.boardCoins.findIndex(coin => coin?.value === 0);
                 player.boardCoins[tradingCoinIndex] = CreateCoin({
                     value: 3,
                     isTriggerTrading: true,
@@ -299,7 +299,7 @@ const warriorSuit = {
                 AddActionsToStack(G, ctx, stack);
                 return StartActionFromStackOrEndActions(G, ctx);
             } else {
-                return Math.max(...player.boardCoins.map(coin => coin.value));
+                return Math.max(...player.boardCoins.map(coin => coin?.value));
             }
         },
     },

@@ -97,7 +97,7 @@ export const CoinUpgradeValidation = (G, ctx, coinId, type) => {
 /**
  *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{placeCoins: {default1: string, default2: string, default_advanced: string}, null: {}, pickCards: {default: string, upgradeCoin: string, defaultPickCampCard: string, pickHero: string}, getDistinctions: {upgradeDistinctionCoin: string, default: string, upgradeCoinInDistinction: string, pickDistinctionCard: string}}}
+ * @type {{placeCoins: {default1: string, default2: string, default_advanced: string}, null: {}, pickCards: {default: string, upgradeCoin: string, defaultPickCampCard: string, pickHero: string}, getDistinctions: {default: string, upgradeCoin: string, pickDistinctionCard: string}}}
  */
 export const moveBy = {
     null: {},
@@ -122,7 +122,7 @@ export const moveBy = {
 /**
  *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{ClickDistinctionCard: {getRange: (function({G: *, ctx: *}): [number, undefined]), validate: (function({G: *, ctx: *, id: *}): boolean)}, ClickCoinToUpgradeDistinction: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}): boolean)}, ClickCoinToUpgrade: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}): boolean)}, ClickCoinToUpgradeInDistinction: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}): boolean)}, ClickCardToPickDistinction: {getRange: (function({G: *, ctx: *}): number[]), validate: (function({G: *, ctx: *, id: *}): boolean)}, ClickCampCard: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}))}, ClickHandCoin: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}))}, BotsPlaceAllCoins: {getValue: (function({G: *, ctx: *, id: *}): *), getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}): boolean)}, ClickHeroCard: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}): *|boolean|number|ServiceWorker)}, ClickBoardCoin: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}))}}}
+ * @type {{ClickDistinctionCard: {getRange: (function({G: *}): [number, undefined]), validate: (function({G: *, ctx: *, id: *}): boolean)}, ClickCoinToUpgrade: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G?: *, ctx?: *, id?: *, type?: *}): boolean)}, ClickCardToPickDistinction: {getRange: (function(): number[]), validate: (function(): boolean)}, ClickCampCard: {getRange: (function({G: *}): [number, undefined]), validate: (function({G: *, ctx: *}))}, ClickHandCoin: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}))}, BotsPlaceAllCoins: {getValue: (function({G: *, ctx: *, id: *}): *), getRange: (function({G: *}): [number, number]), validate: (function(): boolean)}, ClickHeroCard: {getRange: (function({G: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}))}, ClickBoardCoin: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}))}}}
  */
 export const moveValidators = {
     ClickHandCoin: {
@@ -155,9 +155,6 @@ export const moveValidators = {
                 const suitId = GetSuitIndexByName(G.heroes[id].stack[0].config.conditions.suitCountMin.suit);
                 isValid = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0) >=
                     G.heroes[id].stack[0].config.conditions.suitCountMin.value;
-                if (!isValid) {
-                    G.stack[ctx.currentPlayer].splice(1);
-                }
             }
             return isValid && !G.players[ctx.currentPlayer].buffs?.["noHero"];
         },
