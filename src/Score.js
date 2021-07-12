@@ -130,9 +130,9 @@ export const CurrentScoring = (player) => {
  */
 export const FinalScoring = (G, ctx, player) => {
     AddDataToLog(G, "game", `Результаты игры игрока ${player.nickname}:`);
-    let score = CurrentScoring(player);
+    let score = CurrentScoring(player),
+        coinsValue = 0;
     AddDataToLog(G, "public", `Очки за карты дворфов игрока ${player.nickname}: ${score}`);
-    let coinsValue = 0;
     for (let i = 0; i < player.boardCoins.length; i++) {
         coinsValue += player.boardCoins[i]?.value ?? 0;
     }

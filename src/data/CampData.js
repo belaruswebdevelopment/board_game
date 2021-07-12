@@ -164,7 +164,7 @@ const Vidofnir_Vedrfolnir = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}, {config: {number: number, stageName: string, name: string}, actionName: string}, {config: {number: number, stageName: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}, {config: {number: number, stageName: string, name: string}, actionName: string}, {actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Brisingamens = {
     name: "Brisingamens",
@@ -197,9 +197,6 @@ const Brisingamens = {
         },
         {
             actionName: "PickDiscardCard",
-            config: {
-                number: 2,
-            },
         },
     ],
     scoringRule: () => 0,
@@ -357,7 +354,7 @@ const Gjallarhorn = {
  * Применения:
  * 1) Происходит при создании всех карт артефактов для кэмпа при инициализации игры.
  *
- * @type {([{warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}}, {explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}}, {hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}, {blacksmith: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}, null]|[{blacksmith: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}}, {warrior: {rank: number, suit: string, points: number}, miner: {rank: number, suit: string, points: null}}, {blacksmith: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: number}}, {warrior: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}}, {explorer: {rank: number, suit: string, points: number}, miner: {rank: number, suit: string, points: null}}, null])[]} Все карты наёмников для кэмпа.
+ * @type {([{warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}}, {explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}}, {hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, null]|[{blacksmith: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}}, {warrior: {rank: number, suit: string, points: number}, miner: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: number}}, {warrior: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}}, {explorer: {rank: number, suit: string, points: number}, miner: {rank: number, suit: string, points: number}}, null])[]} Все карты наёмников для кэмпа.
  */
 export const mercenariesConfig = [
     [

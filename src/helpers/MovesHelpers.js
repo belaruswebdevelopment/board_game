@@ -178,7 +178,6 @@ const CheckEndTierActions = (G, ctx) => {
     if (G.playersOrder.length) {
         ctx.events.setPhase("endTier");
         if (ylud) {
-            G.drawProfit = "endTier";
             const variants = {
                 blacksmith: {
                     suit: "blacksmith",
@@ -206,8 +205,9 @@ const CheckEndTierActions = (G, ctx) => {
                     points: 1,
                 },
             };
-            G.stack[G.playersOrder[0]] = [
+            const stack = [
                 {
+                    playerId: G.playersOrder[0],
                     actionName: "DrawProfitAction",
                     variants,
                     config: {
@@ -217,40 +217,46 @@ const CheckEndTierActions = (G, ctx) => {
                     },
                 },
                 {
+                    playerId: G.playersOrder[0],
                     actionName: "PlaceYludAction",
                     variants,
-                    config: {
-                        hero: "Ylud",
-                    },
                 },
             ];
+            AddActionsToStack(G, ctx, stack);
+            G.drawProfit = "placeCards";
         } else {
             if (brisingamens) {
-                G.drawProfit = "BrisingamensEndGameAction";
-                G.stack[G.playersOrder[0]] = [
+                const stack = [
                     {
+                        playerId: G.playersOrder[0],
                         actionName: "DrawProfitAction",
                         config: {
                             name: "BrisingamensEndGameAction",
                         },
                     },
                     {
+                        playerId: G.playersOrder[0],
                         actionName: "DiscardAnyCardFromPlayerBoard",
                     },
                 ];
+                AddActionsToStack(G, ctx, stack);
+                G.drawProfit = "BrisingamensEndGameAction";
             } else {
-                G.drawProfit = "getMjollnirProfit";
-                G.stack[G.playersOrder[0]] = [
+                const stack = [
                     {
+                        playerId: G.playersOrder[0],
                         actionName: "DrawProfitAction",
                         config: {
                             name: "getMjollnirProfit",
                         },
                     },
                     {
+                        playerId: G.playersOrder[0],
                         actionName: "GetMjollnirProfitAction",
                     },
                 ];
+                AddActionsToStack(G, ctx, stack);
+                G.drawProfit = "getMjollnirProfit";
             }
         }
     } else {

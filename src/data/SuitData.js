@@ -299,7 +299,7 @@ const warriorSuit = {
                 AddActionsToStack(G, ctx, stack);
                 return StartActionFromStackOrEndActions(G, ctx);
             } else {
-                return Math.max(...player.boardCoins.map(coin => coin?.value));
+                return Math.max(...player.boardCoins.filter(coin => coin?.value).map(coin => coin.value));
             }
         },
     },

@@ -87,7 +87,7 @@ export const CoinUpgradeValidation = (G, ctx, coinId, type) => {
             return true;
         }
     } else {
-        if (!G.players[ctx.currentPlayer].boardCoins[coinId].isTriggerTrading) {
+        if (G.players[ctx.currentPlayer].boardCoins[coinId] && !G.players[ctx.currentPlayer].boardCoins[coinId].isTriggerTrading) {
             return true;
         }
     }
@@ -117,6 +117,9 @@ export const moveBy = {
         pickDistinctionCard: "ClickCardToPickDistinction",
         upgradeCoin: "ClickCoinToUpgrade",
     },
+    endTier: {},
+    enlistmentMercenaries: {},
+    placeCoinsUline: {},
 };
 
 /**

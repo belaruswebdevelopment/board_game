@@ -64,7 +64,8 @@
     }
 
     .bg-hero-inactive {
-        @apply block-center opacity-50 w-8 h-12;
+        @apply block-center text-xl text-white opacity-50 w-8 h-12;
+        line-height: 48px;
     }
 
     .bg-top-market-coin-icon {

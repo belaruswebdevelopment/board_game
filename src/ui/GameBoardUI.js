@@ -221,7 +221,7 @@ export const DrawProfit = (data, option) => {
     let caption = "Get ";
     for (let i = 0; i < 1; i++) {
         if (option === "placeCards") {
-            caption += `suit to place ${data.props.G.actionsNum} 
+            caption += `suit to place ${data.props.G.actionsNum ?? 1} 
             ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.hero}${data.props.G.actionsNum > 1 ? "s" : ""} to 
             ${data.props.G.actionsNum > 1 ? "different" : "that"} suit.`;
             for (let j = 0; j < data.props.G.suitsNum; j++) {
@@ -490,13 +490,17 @@ export const DrawTaverns = (data, gridClass) => {
                         </td>
                     );
                 } else {
-                    DrawCard(data, boardCells, data.props.G.taverns[t][j], j, null, data.props.G.taverns[t][j].suit,
-                        "OnClickCard", j);
+                    if (j === data.props.G.currentTavern) {
+                        DrawCard(data, boardCells, data.props.G.taverns[t][j], j, null, data.props.G.taverns[t][j].suit,
+                            "OnClickCard", j);
+                    } else {
+                        DrawCard(data, boardCells, data.props.G.taverns[t][j], j, null, data.props.G.taverns[t][j].suit);
+                    }
                 }
             }
             tavernsBoards.push(
                 <table className={`${gridClass} justify-self-center`} key={`Tavern ${tavernsConfig[t].name} board`}>
-                    <caption>
+                    <caption className="whitespace-nowrap">
                         <span style={Styles.Taverns(t)} className="bg-top-tavern-icon">
 
                         </span> <b>{tavernsConfig[t].name}</b>

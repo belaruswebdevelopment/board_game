@@ -77,20 +77,17 @@ export const StartThrudMoving = (G, ctx, card) => {
         stack = [
             {
                 actionName: "DrawProfitAction",
+                variants,
                 config: {
                     hero: "Thrud",
                     name: "placeCards",
                     stageName: "placeCards",
                     suit: card.suit,
-                    variants,
                 },
             },
             {
                 actionName: "PlaceThrudAction",
-                config: {
-                    hero: "Thrud",
-                    variants,
-                },
+                variants,
             },
         ];
     AddActionsToStackAfterCurrent(G, ctx, stack);

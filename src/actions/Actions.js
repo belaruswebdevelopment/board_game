@@ -329,10 +329,6 @@ const PlaceCards = (G, ctx, config, suitId) => {
                 {
                     actionName: "PlaceCards",
                     variants,
-                    config: {
-                        stageName: "placeCards",
-                        hero: "Olwin",
-                    },
                 },
             ];
         AddActionsToStackAfterCurrent(G, ctx, stack);

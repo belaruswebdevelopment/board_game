@@ -163,7 +163,7 @@ const absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
 const relativeHeuristicsForTradingCoin = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
 console.log(relativeHeuristicsForTradingCoin ? "" : "");
 
-//may be add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
+//may be to add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
 /**
  *
  * @todo Саше: сделать описание функции и параметров.
