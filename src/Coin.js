@@ -5,7 +5,7 @@ import {AddActionsToStack, StartActionFromStackOrEndActions} from "./helpers/Sta
  * Создание монеты.
  * Применения:
  * 1) Происходит при создании всех монет при инициализации игры.
- * 2) Вызывается при создании монеты примущества по охотникам.
+ * 2) Вызывается при создании монеты преимущества по охотникам.
  *
  * @param value Значение.
  * @param isInitial Является ли базовой.
@@ -146,7 +146,7 @@ export const Trading = (G, ctx, tradingCoins) => {
  * @param config Конфиг обмена.
  * @param upgradingCoinId Id обменной монеты.
  * @param type Тип обменной монеты.
- * @param isInitial Являетя ли обменная монета базовой.
+ * @param isInitial Является ли обменная монета базовой.
  * @constructor
  */
 export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) => {

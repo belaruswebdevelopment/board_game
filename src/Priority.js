@@ -91,7 +91,7 @@ export const ChangePlayersPriorities = (G) => {
  * 1) Используется для ботов при определении приоритета выставления монет.
  *
  * @param G
- * @param playerId Id выбранного грока.
+ * @param playerId Id выбранного игрока.
  * @returns {boolean} Имеет ли выбранный игрок наименьший кристалл.
  * @constructor
  */

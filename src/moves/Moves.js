@@ -57,7 +57,7 @@ export const ClickCard = (G, ctx, cardId) => {
  *
  * @param G
  * @param ctx
- * @param cardID Id арты.
+ * @param cardID Id карты.
  * @returns {string}
  * @constructor
  */
@@ -113,7 +113,7 @@ export const PickDiscardCard = (G, ctx, cardId) => {
 };
 
 /**
- * Начало вербовки начёмников.
+ * Начало вербовки наёмников.
  * Применения:
  * 1) Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.
  *

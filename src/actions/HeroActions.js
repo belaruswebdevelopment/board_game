@@ -70,7 +70,7 @@ export const PlaceYludAction = (G, ctx, config, suitId) => {
  *
  * @param G
  * @param ctx
- * @param card Карта, помещющаяся на карту героя Труд.
+ * @param card Карта, помещающаяся на карту героя Труд.
  * @constructor
  */
 export const CheckAndMoveThrudOrPickHeroAction = (G, ctx, card) => {
