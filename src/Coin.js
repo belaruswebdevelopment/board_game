@@ -168,8 +168,8 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
                 }
             }
             const minCoinValue = Math.min(...allCoins.filter(coin => coin !== null && !coin.isTriggerTrading)
-                .map(coin => coin.value));
-            const upgradingCoinInitial = allCoins.find(coin => coin.value === minCoinValue && coin.isInitial);
+                .map(coin => coin.value)),
+                upgradingCoinInitial = allCoins.find(coin => coin.value === minCoinValue && coin.isInitial);
             if (upgradingCoinInitial) {
                 upgradingCoin = upgradingCoinInitial;
             } else {

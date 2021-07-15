@@ -286,8 +286,8 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
  * @constructor
  */
 const PlaceCards = (G, ctx, config, suitId) => {
-    const suit = Object.keys(suitsConfig)[suitId];
-    const olwinDouble = CreateCard({
+    const suit = Object.keys(suitsConfig)[suitId],
+        olwinDouble = CreateCard({
         suit,
         rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
         points: G.stack[ctx.currentPlayer][0].variants[suit].points,
@@ -453,8 +453,8 @@ const GetEnlistmentMercenariesAction = (G, ctx, config, cardId) => {
  * @constructor
  */
 const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
-    const suit = Object.keys(suitsConfig)[suitId];
-    const mercenaryCard = CreateCard({
+    const suit = Object.keys(suitsConfig)[suitId],
+        mercenaryCard = CreateCard({
         type: "наёмник",
         suit,
         rank: 1,

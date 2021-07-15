@@ -76,15 +76,15 @@ export const AddCampCardToCards = (G, ctx, config, cardId) => {
  * @constructor
  */
 export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
-    const player = G.players[ctx.currentPlayer];
-    const tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
-    player.boardCoins[tempId] = player.handCoins[coinId];
-    player.handCoins[coinId] = null;
-    const stack = [
+    const player = G.players[ctx.currentPlayer],
+        tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null),
+        stack = [
         {
             actionName: "StartVidofnirVedrfolnirAction",
         },
     ];
+    player.boardCoins[tempId] = player.handCoins[coinId];
+    player.handCoins[coinId] = null;
     AddActionsToStackAfterCurrent(G, ctx, stack);
     return EndActionFromStackAndAddNew(G, ctx);
 };

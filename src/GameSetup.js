@@ -59,8 +59,8 @@ export const SetupGame = (ctx) => {
             heroesConfigArray.push(expansion);
         }
     }
-    const heroes = BuildHeroes(heroesConfigArray);
-    const taverns = [],
+    const heroes = BuildHeroes(heroesConfigArray),
+        taverns = [],
         tavernsNum = 3,
         currentTavern = null,
         drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;

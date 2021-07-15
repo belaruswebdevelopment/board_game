@@ -37,10 +37,6 @@
         @apply inline-block w-6 h-6;
     }
 
-    .bg-tavern-icon {
-        @apply block-center w-6 h-6;
-    }
-
     .bg-priority-icon {
         @apply block-center w-8 h-6;
     }
@@ -50,7 +46,7 @@
         transform: rotate(180deg);
     }
 
-    .bg-camp-icon, .bg-suit-icon, .bg-hero-icon {
+    .bg-camp-icon, .bg-suit-icon, .bg-hero-icon, .bg-tavern-icon {
         @apply block-center w-6 h-6;
     }
 

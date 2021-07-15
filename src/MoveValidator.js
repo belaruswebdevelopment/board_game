@@ -136,19 +136,13 @@ export const moveValidators = {
     // todo Add all validators to all moves
     ClickHandCoin: {
         getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].handCoins.length]),
-        validate: ({
-                       G,
-                       ctx,
-                       id
-                   }) => G.players[ctx.currentPlayer].selectedCoin === undefined && G.players[ctx.currentPlayer].handCoins[id] !== null,
+        validate: ({G, ctx, id}) => G.players[ctx.currentPlayer].selectedCoin === undefined &&
+            G.players[ctx.currentPlayer].handCoins[id] !== null,
     },
     ClickBoardCoin: {
         getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
-        validate: ({
-                       G,
-                       ctx,
-                       id
-                   }) => G.players[ctx.currentPlayer].selectedCoin !== undefined && G.players[ctx.currentPlayer].boardCoins[id] === null,
+        validate: ({G, ctx, id}) => G.players[ctx.currentPlayer].selectedCoin !== undefined &&
+            G.players[ctx.currentPlayer].boardCoins[id] === null,
     },
     BotsPlaceAllCoins: {
         getRange: ({G}) => ([0, G.botData.allCoinsOrder.length]),

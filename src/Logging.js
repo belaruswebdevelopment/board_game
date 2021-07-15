@@ -9,8 +9,5 @@
  * @constructor
  */
 export const AddDataToLog = (G, type, value) => {
-    G.logData.push({
-        type,
-        value,
-    });
+    G.logData.push({type, value});
 };

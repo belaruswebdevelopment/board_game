@@ -107,8 +107,8 @@ export const CheckPickHero = (G, ctx) => {
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const playerCards = G.players[i].cards.flat();
-        const thrud = playerCards.find(card => card.name === "Thrud");
+        const playerCards = G.players[i].cards.flat(),
+            thrud = playerCards.find(card => card.name === "Thrud");
         if (thrud) {
             const thrudSuit = GetSuitIndexByName(thrud.suit),
                 thrudIndex = G.players[i].cards[thrudSuit].findIndex(card => card.name === "Thrud");

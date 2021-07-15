@@ -10,7 +10,10 @@ import {CompareCards, EvaluateCard} from "./Card";
 export const Permute = (permutation) => {
     const length = permutation.length,
         result = [permutation.slice()];
-    let c = new Array(length).fill(0), i = 1, k, p;
+    let c = new Array(length).fill(0),
+        i = 1,
+        k,
+        p;
     while (i < length) {
         if (c[i] < i) {
             k = i % 2 && c[i];
@@ -36,7 +39,11 @@ export const Permute = (permutation) => {
  * @returns {*[]}
  */
 export const k_combinations = (set, k) => {
-    let i, j, combs, head, tailCombs;
+    let i,
+        j,
+        combs,
+        head,
+        tailCombs;
     if (k > set.length || k <= 0) {
         return [];
     }

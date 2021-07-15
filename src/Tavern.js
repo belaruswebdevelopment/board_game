@@ -33,15 +33,16 @@ export const tavernsConfig = {
  * @constructor
  */
 export const CheckIfCurrentTavernEmpty = (G, ctx) => {
-    if (ctx.numPlayers === 2) {
+    let isCurrentTavernEmpty = false;
+    if (ctx.numPlayers > 2) {
+        isCurrentTavernEmpty = G.taverns[G.currentTavern].every(card => card === null);
+    } else {
         if (G.taverns[G.currentTavern].filter(card => card !== null).length === 1) {
             const discardCardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
             DiscardCardFromTavern(G, discardCardIndex);
-            return true;
+            isCurrentTavernEmpty = true;
         }
-        return false;
     }
-    const isCurrentTavernEmpty = G.taverns[G.currentTavern].every(card => card === null);
     if (isCurrentTavernEmpty) {
         AddDataToLog(G, "game", `Таверна ${tavernsConfig[G.currentTavern].name} пустая.`);
     }

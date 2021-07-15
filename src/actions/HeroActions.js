@@ -22,8 +22,8 @@ import {INVALID_MOVE} from "boardgame.io/core";
  * @constructor
  */
 export const PlaceThrudAction = (G, ctx, config, suitId) => {
-    const suit = Object.keys(suitsConfig)[suitId];
-    const thrudCard = CreateCard({
+    const suit = Object.keys(suitsConfig)[suitId],
+        thrudCard = CreateCard({
         suit,
         rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
         points: G.stack[ctx.currentPlayer][0].variants[suit].points,
@@ -49,8 +49,8 @@ export const PlaceThrudAction = (G, ctx, config, suitId) => {
  * @constructor
  */
 export const PlaceYludAction = (G, ctx, config, suitId) => {
-    const suit = Object.keys(suitsConfig)[suitId];
-    const yludCard = CreateCard({
+    const suit = Object.keys(suitsConfig)[suitId],
+        yludCard = CreateCard({
         suit: suit,
         rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
         points: G.stack[ctx.currentPlayer][0].variants[suit].points,
