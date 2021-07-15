@@ -1,10 +1,9 @@
 import {CompareCards, EvaluateCard} from "./Card";
 import {HasLowestPriority} from "./Priority";
 import {CheckHeuristicsForCoinsPlacement} from "./BotConfig";
-import {CurrentScoring} from "./Score";
+import {CurrentScoring, TotalRank} from "./Score";
 import {moveValidators, moveBy} from "./MoveValidator";
 import {suitsConfig} from "./data/SuitData";
-
 /**
  * Возвращает массив возможных ходов для ботов.
  * Применения:
@@ -23,6 +22,8 @@ export const enumerate = (G, ctx) => {
         advancedString = "advanced",
         isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(key => key.includes(advancedString));
     const activeStageOfCurrentPlayer = ctx.activePlayers?.[ctx.currentPlayer] ?? "default";
+    // todo Fix it, now just for bot can do RANDOM move
+    const botMoveArguments = [];
     for (const stage in moveBy[ctx.phase]) {
         if (moveBy[ctx.phase].hasOwnProperty(stage)) {
             if (ctx.phase === "pickCards" && stage.startsWith("default")) {
@@ -51,32 +52,50 @@ export const enumerate = (G, ctx) => {
         return moves;
     }
     if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default") {
-        const tavern = G.taverns[G.currentTavern];
-        for (let i = 0; i < tavern.length; i++) {
-            if (tavern[i] === null) {
-                continue;
+        // todo Fix it, now just for bot can do RANDOM move
+        let pickCardOrCampCard = "card";
+        if (G.expansions.thingvellir && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
+            G.players[ctx.currentPlayer].buffs?.["goCamp"])) {
+            pickCardOrCampCard = Math.floor(Math.random() * 2) ? "card" : "camp";
+        }
+        if (pickCardOrCampCard === "card") {
+            const tavern = G.taverns[G.currentTavern];
+            for (let i = 0; i < tavern.length; i++) {
+                if (tavern[i] === null) {
+                    continue;
+                }
+                if (tavern.some(card => CompareCards(tavern[i], card) < 0)) {
+                    continue;
+                }
+                const isCurrentCardWorse = EvaluateCard(G, ctx, tavern[i], i, tavern) < 0,
+                    isExistCardNotWorse = tavern.some(card => (card !== null) &&
+                        (EvaluateCard(G, ctx, tavern[i], i, tavern) >= 0));
+                if (isCurrentCardWorse && isExistCardNotWorse) {
+                    continue;
+                }
+                const uniqueArrLength = uniqueArr.length;
+                for (let j = 0; j < uniqueArrLength; j++) {
+                    if (tavern[i].suit === uniqueArr[j].suit && CompareCards(tavern[i], uniqueArr[j]) === 0) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    uniqueArr.push(tavern[i]);
+                    moves.push({move: "ClickCard", args: [i]});
+                }
+                flag = true;
             }
-            if (tavern.some(card => CompareCards(tavern[i], card) < 0)) {
-                continue;
-            }
-            const isCurrentCardWorse = EvaluateCard(G, ctx, tavern[i], i, tavern) < 0,
-                isExistCardNotWorse = tavern.some(card => (card !== null) &&
-                    (EvaluateCard(G, ctx, tavern[i], i, tavern) >= 0));
-            if (isCurrentCardWorse && isExistCardNotWorse) {
-                continue;
-            }
-            const uniqueArrLength = uniqueArr.length;
-            for (let j = 0; j < uniqueArrLength; j++) {
-                if (tavern[i].suit === uniqueArr[j].suit && CompareCards(tavern[i], uniqueArr[j]) === 0) {
-                    flag = false;
-                    break;
+        } else {
+            for (let j = 0; j < G.campNum; j++) {
+                if (G.camp[j]) {
+                    botMoveArguments.push([j]);
                 }
             }
-            if (flag) {
-                uniqueArr.push(tavern[i]);
-                moves.push({move: "ClickCard", args: [i]});
-            }
-            flag = true;
+            moves.push({
+                move: "ClickCampCard",
+                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
+            });
         }
     }
     if (enableAdvancedBot && ctx.phase === "placeCoins") {
@@ -84,7 +103,6 @@ export const enumerate = (G, ctx) => {
         const hasLowestPriority = HasLowestPriority(G, ctx.currentPlayer);
         let resultsForCoins = CheckHeuristicsForCoinsPlacement(G, ctx);
         if (hasLowestPriority) {
-            // todo Check if 1 coin deleted by artifact is it work? if no swap map to filter and check on null
             resultsForCoins = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
         }
         const minResultForCoins = Math.min(...resultsForCoins),
@@ -100,7 +118,7 @@ export const enumerate = (G, ctx) => {
         const allCoinsOrder = G.botData.allCoinsOrder,
             handCoins = G.players[ctx.currentPlayer].handCoins;
         for (let i = 0; i < allCoinsOrder.length; i++) {
-            const hasTrading = allCoinsOrder[i].some(coinId => handCoins[coinId].isTriggerTrading);
+            const hasTrading = allCoinsOrder[i].some(coinId => handCoins[coinId]?.isTriggerTrading);
             if (tradingProfit < 0) {
                 if (hasTrading) {
                     continue;
@@ -115,11 +133,11 @@ export const enumerate = (G, ctx) => {
                 let isTopCoinsOnPosition = false,
                     isMinCoinsOnPosition = false;
                 if (hasPositionForMaxCoin) {
-                    isTopCoinsOnPosition = allCoinsOrder[i].filter(item => handCoins[item].value >
-                        handCoins[allCoinsOrder[i][positionForMaxCoin]].value).length <= 1;
+                    isTopCoinsOnPosition = allCoinsOrder[i].filter(item => handCoins[item]?.value >
+                        handCoins[allCoinsOrder[i][positionForMaxCoin]]?.value).length <= 1;
                 }
                 if (hasPositionForMinCoin) {
-                    isMinCoinsOnPosition = handCoins.filter(item => item.value < handCoins[allCoinsOrder[i][positionForMinCoin]].value).length <= 1;
+                    isMinCoinsOnPosition = handCoins.filter(item => item?.value < handCoins[allCoinsOrder[i][positionForMinCoin]]?.value).length <= 1;
                 }
                 if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
                     moves.push({move: "BotsPlaceAllCoins", args: [G.botData.allCoinsOrder[i]]});
@@ -132,7 +150,6 @@ export const enumerate = (G, ctx) => {
         //console.log(moves);
     }
     // todo Fix it, now just for bot can do RANDOM move
-    const botMoveArguments = [];
     if (ctx.phase === "endTier") {
         if (G.drawProfit === "placeCards") {
             for (let j = 0; j < G.suitsNum; j++) {
@@ -143,6 +160,36 @@ export const enumerate = (G, ctx) => {
             }
             moves.push({
                 move: "PlaceCard",
+                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
+            });
+        } else if (G.drawProfit === "getMjollnirProfit") {
+            const totalSuitsRanks = [];
+            for (let j = 0; j < G.suitsNum; j++) {
+                totalSuitsRanks.push(G.players[ctx.currentPlayer].cards[j].reduce(TotalRank, 0));
+            }
+            botMoveArguments.push([totalSuitsRanks.indexOf(Math.max(...totalSuitsRanks))]);
+            moves.push({
+                move: "GetMjollnirProfit",
+                args: [...botMoveArguments[0]]
+            });
+        } else if (G.drawProfit === "BrisingamensEndGameAction") {
+            for (let i = 0; ; i++) {
+                let isDrawRow = false;
+                for (let j = 0; j < G.suitsNum; j++) {
+                    if (G.players[ctx.currentPlayer].cards[j] !== undefined &&
+                        G.players[ctx.currentPlayer].cards[j][i] !== undefined) {
+                        isDrawRow = true;
+                        if (G.players[ctx.currentPlayer].cards[j][i].type !== "герой") {
+                            botMoveArguments.push([j, i]);
+                        }
+                    }
+                }
+                if (!isDrawRow) {
+                    break;
+                }
+            }
+            moves.push({
+                move: "DiscardCardFromPlayerBoard",
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
             });
         }
@@ -211,16 +258,46 @@ export const enumerate = (G, ctx) => {
             moves.push({move: "ClickBoardCoin", args: [G.tavernsNum]});
         }
     }
-    if (activeStageOfCurrentPlayer === "upgradeCoinVidofnirVedrfolnir") {
-        console.log("upgradeCoinVidofnirVedrfolnir")
-        for (let j = G.tavernsNum; j < G.players[ctx.currentPlayer].boardCoins.length; j++) {
-            if (G.players[ctx.currentPlayer].boardCoins[j] && !G.players[ctx.currentPlayer].boardCoins[j].isTriggerTrading &&
-                G.stack[ctx.currentPlayer][0].config.coinId !== j) {
+    if (activeStageOfCurrentPlayer === "addCoinToPouch") {
+        for (let j = 0; j < G.players[ctx.currentPlayer].handCoins.length; j++) {
+            if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && G.players[ctx.currentPlayer].handCoins[j] !== null) {
                 botMoveArguments.push([j]);
             }
         }
         moves.push({
+            move: "AddCoinToPouch",
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
+        });
+    }
+    if (activeStageOfCurrentPlayer === "upgradeCoinVidofnirVedrfolnir") {
+        let type = "board",
+            isInitial = false;
+        for (let j = G.tavernsNum; j < G.players[ctx.currentPlayer].boardCoins.length; j++) {
+            if (G.players[ctx.currentPlayer].boardCoins[j] && !G.players[ctx.currentPlayer].boardCoins[j].isTriggerTrading &&
+                G.stack[ctx.currentPlayer][0].config.coinId !== j) {
+                isInitial = G.players[ctx.currentPlayer].boardCoins[j].isInitial;
+                botMoveArguments.push([j, type, isInitial]);
+            }
+        }
+        moves.push({
             move: "UpgradeCoinVidofnirVedrfolnir",
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
+        });
+    }
+    if (activeStageOfCurrentPlayer === "discardSuitCard") {
+        const suitId = G.stack[ctx.currentPlayer][0].config.suit;
+        for (let i = 0; G.players[ctx.currentPlayer].cards[suitId].length; i++) {
+            for (let j = 0; j < 1; j++) {
+                if (G.players[ctx.currentPlayer].cards[suitId] !== undefined &&
+                    G.players[ctx.currentPlayer].cards[suitId][i] !== undefined) {
+                    if (G.players[ctx.currentPlayer].cards[suitId][i].type !== "герой") {
+                        botMoveArguments.push([suitId, i]);
+                    }
+                }
+            }
+        }
+        moves.push({
+            move: "DiscardSuitCardFromPlayerBoard",
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
         });
     }
@@ -252,6 +329,17 @@ export const enumerate = (G, ctx) => {
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
         });
     }
+    if (ctx.playersNum === 2) {
+        if (activeStageOfCurrentPlayer === "discardCard") {
+            for (let j = 0; j < G.drawSize; j++) {
+                botMoveArguments.push([j]);
+            }
+            moves.push({
+                move: "DiscardCard2Players",
+                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
+            });
+        }
+    }
     if (activeStageOfCurrentPlayer === "placeCards") {
         for (let j = 0; j < G.suitsNum; j++) {
             const suit = Object.keys(suitsConfig)[j];
@@ -276,6 +364,7 @@ export const enumerate = (G, ctx) => {
         });
     }
     if (moves.length === 0) {
+        // todo Fix for bot no moves if have artefact with not pick new hero and get artifact with get new hero (he can pick hero by it's action)
         console.log("ALERT: bot has " + moves.length + " moves. Phase: " + ctx.phase);
     }
     return moves;

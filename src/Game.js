@@ -34,7 +34,6 @@ import {AddActionsToStack} from "./helpers/StackHelpers";
 import {BotsPlaceAllCoins} from "./moves/BotMoves";
 import {ResolveBoardCoins} from "./helpers/CoinHelpers";
 // todo Add logging
-// todo Clear unused config parameters in Actions!
 // todo Add colors for cards Points by suit colors!
 /**
  * Параметры игры.
@@ -74,7 +73,6 @@ export const BoardGame = {
                 }
             },
         },
-        // todo rework phase into stage?!
         placeCoinsUline: {
             turn: {
                 order: {
@@ -257,11 +255,14 @@ export const BoardGame = {
                     return 0;
                 });
                 players.forEach(playerSorted => {
-                    if (playerSorted.campCards.filter(card => card.type === "наёмник").length > 0) {
+                    if (playerSorted.campCards.filter(card => card.type === "наёмник").length) {
                         playersIndexes.push(G.players.findIndex(player => player.nickname === playerSorted.nickname));
                     }
                 });
                 G.playersOrder = playersIndexes;
+                if (playersIndexes.length > 1) {
+                    G.playersOrder.push(playersIndexes[0]);
+                }
                 const stack = [
                     {
                         actionName: "DrawProfitAction",

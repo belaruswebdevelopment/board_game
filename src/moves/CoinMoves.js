@@ -124,37 +124,9 @@ export const ClickCoinToUpgrade = (G, ctx, coinId, type, isInitial) => {
  * @constructor
  */
 export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) => {
-    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && G.stack[ctx.currentPlayer][0].config.coinId !== coinId;
+    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && G.stack[ctx.currentPlayer][0].config["coinId"] !== coinId;
     if (!isValidMove) {
         return INVALID_MOVE;
-    }
-    if (G.actionsNum === 2) {
-        const stack = [
-            {
-                actionName: "UpgradeCoinAction",
-                config: {
-                    number: 2,
-                    value: 3,
-                },
-            },
-            {
-                actionName: "DrawProfitAction",
-                config: {
-                    coinId,
-                    name: "VidofnirVedrfolnirAction",
-                    stageName: "upgradeCoinVidofnirVedrfolnir",
-                    value: 2,
-                },
-            },
-            {
-                actionName: "UpgradeCoinAction",
-                config: {
-                    coinId,
-                    value: 2,
-                },
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
     }
     return EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
 };
@@ -171,18 +143,5 @@ export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) =
  * @constructor
  */
 export const AddCoinToPouch = (G, ctx, coinId) => {
-    if (G.players[ctx.currentPlayer].handCoins[coinId] !== null) {
-        const stack = [
-            {
-                actionName: "AddCoinToPouchAction",
-                config: {
-                    stageName: "addCoinToPouch",
-                },
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
-        return EndActionFromStackAndAddNew(G, ctx, [], coinId);
-    } else {
-        return INVALID_MOVE;
-    }
+    return EndActionFromStackAndAddNew(G, ctx, [], coinId);
 };

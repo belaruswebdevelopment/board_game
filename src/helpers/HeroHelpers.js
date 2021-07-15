@@ -108,7 +108,7 @@ export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
     const ulinePlayerIndex = G.players.findIndex(player => player.buffs?.["everyTurn"] === "Uline");
     if (ulinePlayerIndex !== -1) {
         if (ctx.activePlayers?.[ctx.currentPlayer] !== "placeTradingCoinsUline" && ulinePlayerIndex === Number(ctx.currentPlayer) &&
-            G.players[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading) {
+            G.players[ctx.currentPlayer].boardCoins[G.currentTavern]?.isTriggerTrading) {
             if (G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null)) {
                 G.actionsNum = G.suitsNum - G.tavernsNum;
                 ctx.events.setStage("placeTradingCoinsUline");

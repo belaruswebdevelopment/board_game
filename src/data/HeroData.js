@@ -238,6 +238,7 @@ const Grid = {
             actionName: "DrawProfitAction",
             config: {
                 stageName: "upgradeCoin",
+                hero: "Grid",
                 name: "upgradeCoin",
                 value: 7,
             },
@@ -417,6 +418,7 @@ const Bonfur = {
             actionName: "DrawProfitAction",
             config: {
                 stageName: "discardCardFromBoard",
+                hero: "Bonfur",
                 name: "BonfurAction",
                 suit: "blacksmith",
             },
@@ -463,6 +465,7 @@ const Dagda = {
             actionName: "DrawProfitAction",
             config: {
                 stageName: "discardCardFromBoard",
+                hero: "Dagda",
                 name: "DagdaAction",
                 suit: "hunter",
                 number: 2,
@@ -730,6 +733,7 @@ const Andumia = {
             actionName: "DrawProfitAction",
             config: {
                 stageName: "pickDiscardCard",
+                hero: "Andumia",
                 name: "AndumiaAction",
             },
         },
@@ -777,6 +781,7 @@ const Holda = {
             actionName: "DrawProfitAction",
             config: {
                 stageName: "pickCampCardHolda",
+                hero: "Holda",
                 name: "HoldaAction",
             },
         },

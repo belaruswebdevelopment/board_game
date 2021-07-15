@@ -53,7 +53,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                         DrawCoin(data, playerCells, "coin", data.props.G.players[p].boardCoins[coinIndex], coinIndex,
                             data.props.G.players[p], null, null, "OnClickBoardCoin", j);
                     } else {
-                        if ((data.props.ctx.phase === "placeCoinsUline" && data.props.G.currentTavern >= j - 1) ||
+                        if (data.props.G.winner || (data.props.ctx.phase === "placeCoinsUline" && data.props.G.currentTavern >= j - 1) ||
                             (data.props.ctx.phase !== "placeCoins" && data.props.G.currentTavern >= j)) {
                             DrawCoin(data, playerCells, "coin", data.props.G.players[p].boardCoins[coinIndex], coinIndex,
                                 data.props.G.players[p]);
@@ -105,9 +105,9 @@ export const DrawPlayersBoardsCoins = (data) => {
                             DrawCoin(data, playerCells, "coin", data.props.G.players[p].boardCoins[coinIndex], coinIndex,
                                 data.props.G.players[p], null, null, "OnClickBoardCoin", j);
                         } else {
-                            if (data.props.ctx.phase !== "placeCoins" &&
-                                Number(data.props.ctx.currentPlayer) === p &&
-                                data.props.G.players[p].boardCoins[data.props.G.currentTavern].isTriggerTrading) {
+                            if (data.props.G.winner || (data.props.ctx.phase !== "placeCoins" && Number(data.props.ctx.currentPlayer) === p &&
+                                data.props.G.players[p].boardCoins[data.props.G.currentTavern] &&
+                                data.props.G.players[p].boardCoins[data.props.G.currentTavern].isTriggerTrading)) {
                                 DrawCoin(data, playerCells, "coin", data.props.G.players[p].boardCoins[coinIndex], coinIndex,
                                     data.props.G.players[p]);
                             } else {
@@ -167,13 +167,13 @@ export const DrawPlayersHandsCoins = (data) => {
                         </td>
                     );
                 } else {
-                    if (Number(data.props.ctx.currentPlayer) === p) {
+                    if (Number(data.props.ctx.currentPlayer) === p || data.props.G.winner) {
                         let coinClasses = "border-2";
                         if (data.props.G.players[p].selectedCoin === j) {
                             coinClasses = "border-2 border-green-400";
                         }
-                        if (data.props.ctx.phase === "placeCoins" || data.props.ctx.phase === "placeCoinsUline" ||
-                            data.props.ctx.activePlayers?.[data.props.ctx.currentPlayer] === "placeTradingCoinsUline") {
+                        if (!data.props.G.winner && (data.props.ctx.phase === "placeCoins" || data.props.ctx.phase === "placeCoinsUline" ||
+                            data.props.ctx.activePlayers?.[data.props.ctx.currentPlayer] === "placeTradingCoinsUline")) {
                             DrawCoin(data, playerCells, "coin", data.props.G.players[p].handCoins[j], j, data.props.G.players[p], coinClasses,
                                 null, "OnClickHandCoin", j);
                         } else {

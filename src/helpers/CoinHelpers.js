@@ -12,7 +12,7 @@ import {Trading} from "../Coin";
  * @constructor
  */
 export const ActivateTrading = (G, ctx) => {
-    if (G.players[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading) {
+    if (G.players[ctx.currentPlayer].boardCoins[G.currentTavern]?.isTriggerTrading) {
         const tradingCoins = [];
         for (let i = G.tavernsNum; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
             tradingCoins.push(G.players[ctx.currentPlayer].boardCoins[i]);
@@ -39,11 +39,11 @@ export const ResolveBoardCoins = (G, ctx) => {
         coinValues = [],
         exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        if (G.players[i].boardCoins[G.currentTavern]?.value !== undefined) {
+        if (G.players[i].boardCoins[G.currentTavern]) {
             coinValues[i] = G.players[i].boardCoins[G.currentTavern].value;
             playersOrder.push(i);
-            exchangeOrder.push(i);
         }
+        exchangeOrder.push(i);
         for (let j = playersOrder.length - 1; j > 0; j--) {
             if (G.players[playersOrder[j]].boardCoins[G.currentTavern].value >
                 G.players[playersOrder[j - 1]].boardCoins[G.currentTavern].value) {
@@ -66,7 +66,8 @@ export const ResolveBoardCoins = (G, ctx) => {
         if (counts[prop] <= 1) {
             continue;
         }
-        const tiePlayers = G.players.filter(player => player.boardCoins[G.currentTavern]?.value === Number(prop) && player.priority.isExchangeable);
+        const tiePlayers = G.players.filter(player => player.boardCoins[G.currentTavern] &&
+            player.boardCoins[G.currentTavern].value === Number(prop) && player.priority.isExchangeable);
         while (tiePlayers.length > 1) {
             const tiePlayersPriorities = tiePlayers.map(player => player.priority.value),
                 maxPriority = Math.max(...tiePlayersPriorities),

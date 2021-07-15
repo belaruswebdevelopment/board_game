@@ -33,6 +33,9 @@ export const CheckPickCampCard = (G, ctx) => {
  * @constructor
  */
 export const AddCampCardToCards = (G, ctx, config, cardId) => {
+    if (G.expansions.thingvellir && ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.playersOrder[0] && ctx.activePlayers === null) {
+        G.campPicked = true;
+    }
     if (G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]) {
         delete G.players[ctx.currentPlayer].buffs?.["goCampOneTime"];
     }
@@ -40,7 +43,6 @@ export const AddCampCardToCards = (G, ctx, config, cardId) => {
     let suitId = null,
         stack = [];
     G.camp[cardId] = null;
-    G.campPicked = true;
     if (campCard.suit) {
         AddCampCardToPlayerCards(G, ctx, campCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, campCard);
@@ -77,17 +79,14 @@ export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
     const tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
     player.boardCoins[tempId] = player.handCoins[coinId];
     player.handCoins[coinId] = null;
-    if (G.actionsNum === 0) {
-        const stack = [
-            {
-                actionName: "StartVidofnirVedrfolnirAction",
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
-        return EndActionFromStackAndAddNew(G, ctx);
-    }
+    const stack = [
+        {
+            actionName: "StartVidofnirVedrfolnirAction",
+        },
+    ];
+    AddActionsToStackAfterCurrent(G, ctx, stack);
+    return EndActionFromStackAndAddNew(G, ctx);
 };
-
 /**
  * Действия, связанные со стартом способности артефакта Vidofnir Vedrfolnir.
  * Применения:
@@ -99,8 +98,9 @@ export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
  * @constructor
  */
 export const StartVidofnirVedrfolnirAction = (G, ctx) => {
-    const number = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
-    if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && number > 0) {
+    const number = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length,
+        handCoinsNumber = G.players[ctx.currentPlayer].handCoins.length;
+    if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && number > 0 && handCoinsNumber) {
         const stack = [
             {
                 actionName: "DrawProfitAction",
@@ -109,6 +109,9 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                     stageName: "addCoinToPouch",
                     number: number,
                 },
+            },
+            {
+                actionName: "AddCoinToPouchAction",
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
@@ -132,10 +135,10 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                     },
                 },
                 {
-                    actionName: "UpgradeCoinAction",
+                    actionName: "UpgradeCoinVidofnirVedrfolnirAction",
                     config: {
                         value: 5,
-                    },
+                    }
                 },
             ];
         } else if (coinsValue === 2) {
@@ -149,11 +152,66 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                         value: 3,
                     },
                 },
+                {
+                    actionName: "UpgradeCoinVidofnirVedrfolnirAction",
+                    config: {
+                        value: 3,
+                    }
+                },
             ];
         }
         AddActionsToStackAfterCurrent(G, ctx, stack);
     }
     return EndActionFromStackAndAddNew(G, ctx);
+};
+
+export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type, isInitial) => {
+    let stack;
+    if (G.stack[ctx.currentPlayer][0].config.value === 3) {
+        stack = [
+            {
+                actionName: "UpgradeCoinAction",
+                config: {
+                    value: 3,
+                },
+            },
+            {
+                actionName: "DrawProfitAction",
+                config: {
+                    coinId,
+                    name: "VidofnirVedrfolnirAction",
+                    stageName: "upgradeCoinVidofnirVedrfolnir",
+                    value: 2,
+                },
+            },
+            {
+                actionName: "UpgradeCoinVidofnirVedrfolnirAction",
+                config: {
+                    value: 2,
+                }
+            },
+        ];
+    } else if (G.stack[ctx.currentPlayer][0].config.value === 2) {
+        stack = [
+            {
+                actionName: "UpgradeCoinAction",
+                config: {
+                    value: 2,
+                },
+            },
+        ];
+    } else if (G.stack[ctx.currentPlayer][0].config.value === 5) {
+        stack = [
+            {
+                actionName: "UpgradeCoinAction",
+                config: {
+                    value: 5,
+                },
+            },
+        ];
+    }
+    AddActionsToStackAfterCurrent(G, ctx, stack);
+    return EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
 };
 
 /**
@@ -167,9 +225,9 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
  * @constructor
  */
 export const DiscardTradingCoin = (G, ctx) => {
-    let tradingCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin?.value === 0);
+    let tradingCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin?.isTriggerTrading);
     if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && tradingCoinIndex === -1) {
-        tradingCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin?.value === 0);
+        tradingCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin?.isTriggerTrading);
         G.players[ctx.currentPlayer].handCoins.splice(tradingCoinIndex, 1, null);
     } else {
         G.players[ctx.currentPlayer].boardCoins.splice(tradingCoinIndex, 1, null);
@@ -221,5 +279,23 @@ export const DiscardSuitCard = (G, ctx, config) => {
         moveLimit: 1,
     });
     G.drawProfit = config.name;
+    return EndActionFromStackAndAddNew(G, ctx);
+};
+
+/**
+ * Выбор фракции для применения финального эффекта артефакта Mjollnir.
+ * Применения:
+ * 1) В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @param suitId Id фракции.
+ * @returns {*}
+ * @constructor
+ */
+export const GetMjollnirProfitAction = (G, ctx, config, suitId) => {
+    delete G.players[ctx.currentPlayer].buffs["getMjollnirProfit"];
+    G.suitIdForMjollnir = suitId;
     return EndActionFromStackAndAddNew(G, ctx);
 };

@@ -14,11 +14,14 @@ import {
     PlaceYludAction
 } from "./HeroActions";
 import {
-    AddCampCardToCards, AddCoinToPouchAction,
-    CheckPickCampCard, DiscardAnyCardFromPlayerBoard,
+    AddCampCardToCards,
+    AddCoinToPouchAction,
+    CheckPickCampCard,
+    DiscardAnyCardFromPlayerBoard,
     DiscardSuitCard,
     DiscardTradingCoin,
-    StartVidofnirVedrfolnirAction
+    GetMjollnirProfitAction,
+    StartVidofnirVedrfolnirAction, UpgradeCoinVidofnirVedrfolnirAction
 } from "./CampActions";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AddDataToLog} from "../Logging";
@@ -96,6 +99,9 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
             break;
         case "StartVidofnirVedrfolnirAction":
             action = StartVidofnirVedrfolnirAction;
+            break;
+        case "UpgradeCoinVidofnirVedrfolnirAction":
+            action = UpgradeCoinVidofnirVedrfolnirAction;
             break;
         case "DiscardTradingCoin":
             action = DiscardTradingCoin;
@@ -202,6 +208,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId
                 actionName: "DrawProfitAction",
                 config: {
                     stageName: "discardCardFromBoard",
+                    hero: "Dagda",
                     name: "DagdaAction",
                     suit: "hunter",
                 },
@@ -253,7 +260,7 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
     for (let i = 0; i < G.suitsNum; i++) {
         if (config.suit !== Object.keys(suitsConfig)[i]) {
             const last = G.players[ctx.currentPlayer].cards[i].length - 1;
-            if (G.players[ctx.currentPlayer].cards[i][last].type !== "герой") {
+            if (last >= 0 && G.players[ctx.currentPlayer].cards[i][last].type !== "герой") {
                 cardsToDiscard.push(G.players[ctx.currentPlayer].cards[i][last]);
             }
         }
@@ -395,23 +402,6 @@ const PickDiscardCard = (G, ctx, config, cardId) => {
 };
 
 /**
- * Выбор фракции для применения финального эффекта артефакта Mjollnir.
- * Применения:
- * 1) В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param suitId Id фракции.
- * @returns {*}
- * @constructor
- */
-const GetMjollnirProfitAction = (G, ctx, config, suitId) => {
-    G.suitIdForMjollnir = suitId;
-    return EndActionFromStackAndAddNew(G, ctx);
-};
-
-/**
  * Первый игрок в фазе вербовки наёмников может пасануть, чтобы вербовать последним.
  * Применения:
  * 1) Может применятся первым игроком в фазе вербовки наёмников.
@@ -422,7 +412,6 @@ const GetMjollnirProfitAction = (G, ctx, config, suitId) => {
  * @constructor
  */
 const PassEnlistmentMercenariesAction = (G, ctx) => {
-    ctx.playOrder.push(ctx.currentPlayer);
     return EndActionFromStackAndAddNew(G, ctx);
 };
 

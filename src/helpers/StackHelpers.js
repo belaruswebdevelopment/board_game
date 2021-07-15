@@ -82,7 +82,8 @@ export const StartActionFromStackOrEndActions = (G, ctx, isTrading = null, ...ar
  * @constructor
  */
 export const EndActionFromStackAndAddNew = (G, ctx, newStack = [], ...args) => {
-    if (G.stack[ctx.currentPlayer][0].actionName !== "DrawProfitAction") {
+    if (G.stack[ctx.currentPlayer][0].config?.name === "explorerDistinction" ||
+        G.stack[ctx.currentPlayer][0].actionName !== "DrawProfitAction") {
         G.actionsNum = null;
         G.drawProfit = null;
     }

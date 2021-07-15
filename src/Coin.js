@@ -98,7 +98,8 @@ export const Trading = (G, ctx, tradingCoins) => {
             // if (tradingCoins[i].isInitial) {
             //     break;
             // }
-        } else if (tradingCoins[i].value === coinsMinValue) {
+        }
+        if (tradingCoins[i].value === coinsMinValue) {
             coinMinIndex = i;
             // if (tradingCoins[i].isInitial) {
             //     break;
@@ -151,7 +152,6 @@ export const Trading = (G, ctx, tradingCoins) => {
  */
 export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) => {
     let upgradingCoin;
-    // todo Add logging
     if (G.players[ctx.currentPlayer].buffs["upgradeNextCoin"]) {
         delete G.players[ctx.currentPlayer].buffs["upgradeNextCoin"];
     }
@@ -167,7 +167,8 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
                     allCoins.push(G.players[ctx.currentPlayer].boardCoins[i]);
                 }
             }
-            const minCoinValue = Math.min(...allCoins.filter(coin => !coin?.isTriggerTrading).map(coin => coin?.value));
+            const minCoinValue = Math.min(...allCoins.filter(coin => coin !== null && !coin.isTriggerTrading)
+                .map(coin => coin.value));
             const upgradingCoinInitial = allCoins.find(coin => coin.value === minCoinValue && coin.isInitial);
             if (upgradingCoinInitial) {
                 upgradingCoin = upgradingCoinInitial;
@@ -176,7 +177,8 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
             }
             upgradingCoinId = allCoins.findIndex(coin => coin.value === upgradingCoin.value);
         } else {
-            const minCoinValue = Math.min(...G.players[ctx.currentPlayer].boardCoins.filter(coin => !coin?.isTriggerTrading).map(coin => coin?.value));
+            const minCoinValue = Math.min(...G.players[ctx.currentPlayer].boardCoins
+                .filter(coin => coin !== null && !coin.isTriggerTrading).map(coin => coin.value));
             upgradingCoin = G.players[ctx.currentPlayer].boardCoins.find(coin => coin?.value === minCoinValue);
             upgradingCoinId = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin?.value === upgradingCoin.value);
         }
@@ -184,8 +186,8 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
         const handCoinPosition = G.players[ctx.currentPlayer].boardCoins
             .filter((coin, index) => coin === null && index <= upgradingCoinId).length;
         upgradingCoin = G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null)[handCoinPosition - 1];
-        upgradingCoinId = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin.value === upgradingCoin.value &&
-            coin.isInitial === isInitial);
+        upgradingCoinId = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin?.value === upgradingCoin.value &&
+            coin?.isInitial === isInitial);
     } else {
         upgradingCoin = G.players[ctx.currentPlayer].boardCoins[upgradingCoinId];
     }

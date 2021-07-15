@@ -44,6 +44,7 @@ export const DrawPlayerBoardForCardDiscard = (data) => {
     for (let i = 0; ; i++) {
         const playerCells = [];
         let isDrawRow = false,
+            isExit = true,
             id = 0;
         playerRows[i] = [];
         for (let j = 0; j < data.props.G.suitsNum; j++) {
@@ -51,18 +52,32 @@ export const DrawPlayerBoardForCardDiscard = (data) => {
             id = i + j;
             if (data.props.G.players[data.props.ctx.currentPlayer].cards[j] !== undefined &&
                 data.props.G.players[data.props.ctx.currentPlayer].cards[j][i] !== undefined) {
-                isDrawRow = true;
+                isExit = false;
                 if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].type !== "герой") {
+                    isDrawRow = true;
                     DrawCard(data, playerCells, data.props.G.players[data.props.ctx.currentPlayer].cards[j][i], id,
                         data.props.G.players[data.props.ctx.currentPlayer], suit, "OnClickDiscardCardFromPlayerBoard", j, i);
+                } else {
+                    playerCells.push(
+                        <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} empty card ${id}`}>
+
+                        </td>
+                    );
                 }
+            } else {
+                playerCells.push(
+                    <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} empty card ${id}`}>
+
+                    </td>
+                );
             }
         }
         if (isDrawRow) {
             playerRows[i].push(
                 <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} board row ${i}`}>{playerCells}</tr>
             );
-        } else {
+        }
+        if (isExit) {
             break;
         }
     }
@@ -210,7 +225,7 @@ export const DrawCard = (data, playerCells, card, id, player = null, suit = null
     }
     if (card.type === "герой") {
         styles = Styles.Heroes(card.game, card.name);
-        if (player === null && !card.active){
+        if (player === null && !card.active) {
             spanClasses = "bg-hero-inactive";
             action = null;
         } else {
@@ -233,7 +248,8 @@ export const DrawCard = (data, playerCells, card, id, player = null, suit = null
         tdClasses += " cursor-pointer";
     }
     playerCells.push(
-        <td key={`${player?.nickname ? `player ${player?.nickname} ` : ""}card ${id} ${card.name}`} className={tdClasses}
+        <td key={`${player?.nickname ? `player ${player?.nickname} ` : ""}${suit} card ${id} ${card.name}`}
+            className={tdClasses}
             onClick={() => action?.(...args)}>
             <span style={styles} title={card.description ?? card.name} className={spanClasses}>
                 <b>{card.points ?? card.value ?? ""}</b>
@@ -259,13 +275,13 @@ export const DrawCard = (data, playerCells, card, id, player = null, suit = null
  * @param args Аргументы действия.
  * @constructor
  */
-export const DrawCoin = (data, playerCells, type, coin = null, id, player = null, coinClasses = null,
+export const DrawCoin = (data, playerCells, type, coin, id, player = null, coinClasses = null,
                          additionalParam = null, actionName = null, ...args) => {
-        let styles,
-            span = null,
-            action,
-            tdClasses = "bg-yellow-300",
-            spanClasses;
+    let styles,
+        span = null,
+        action,
+        tdClasses = "bg-yellow-300",
+        spanClasses;
     switch (actionName) {
         case "OnClickBoardCoin":
             action = (...args) => {
@@ -310,7 +326,11 @@ export const DrawCoin = (data, playerCells, type, coin = null, id, player = null
             spanClasses += ` ${coinClasses}`;
         }
         if (type === "coin") {
-            styles = Styles.Coin(coin.value, coin.isInitial);
+            if (coin === undefined) {
+                styles = Styles.CoinBack();
+            } else {
+                styles = Styles.Coin(coin.value, coin.isInitial);
+            }
         } else {
             styles = Styles.CoinBack();
             if (type === "back-small-market-coin") {

@@ -304,7 +304,9 @@ export const DrawProfit = (data, option) => {
                         key={`${suit} suit to get Mjollnir profit`}
                         onClick={() => data.OnClickSuitToGetMjollnirProfit(j)}>
                         <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
-                            <b>{data.props.G.players[data.props.ctx.currentPlayer].cards[j].reduce(TotalRank, 0)} + 1</b>
+                            <b className="whitespace-nowrap text-white">
+                                {data.props.G.players[data.props.ctx.currentPlayer].cards[j].reduce(TotalRank, 0)} + 1
+                            </b>
                         </span>
                     </td>
                 );
@@ -333,10 +335,9 @@ export const DrawProfit = (data, option) => {
                 const suit = Object.keys(suitsConfig)[j];
                 if (suit === data.props.G.players[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit]?.suit) {
                     boardCells.push(
-                        <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
+                        <td className={`${suitsConfig[suit].suitColor} cursor-pointer`} onClick={() => data.OnClickSuitToPlaceMercenary(j)}
                             key={`Place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} ${j} on ${suitsConfig[suit].suitName}`}>
-                            <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon"
-                                  onClick={() => data.OnClickSuitToPlaceMercenary(j)}>
+                            <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
                                 <b>{data.props.G.players[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit].points ?? ""}</b>
                             </span>
                         </td>
@@ -379,18 +380,21 @@ export const DrawProfit = (data, option) => {
                         handCoinIndex++;
                         isInitial = handCoins[handCoinIndex].isInitial;
                         const handCoinId = data.props.G.players[data.props.ctx.currentPlayer].handCoins
-                            .findIndex(coin => coin?.value === handCoins[handCoinIndex].value && coin?.isInitial === handCoins[handCoinIndex].isInitial);
-                        if (!data.props.G.players[data.props.ctx.currentPlayer].handCoins[handCoinId].isTriggerTrading) {
+                            .findIndex(coin => coin?.value === handCoins[handCoinIndex].value && coin?.isInitial ===
+                                handCoins[handCoinIndex].isInitial);
+                        if (data.props.G.players[data.props.ctx.currentPlayer].handCoins[handCoinId] &&
+                            !data.props.G.players[data.props.ctx.currentPlayer].handCoins[handCoinId].isTriggerTrading) {
                             type = "hand";
                             isInitial = handCoins[handCoinIndex].isInitial;
-                            DrawCoin(data, boardCells, "coin", data.props.G.players[data.props.ctx.currentPlayer].handCoins[handCoinId], j,
-                                data.props.G.players[data.props.ctx.currentPlayer], "border-2", null,
+                            DrawCoin(data, boardCells, "coin", data.props.G.players[data.props.ctx.currentPlayer].handCoins[handCoinId],
+                                j, data.props.G.players[data.props.ctx.currentPlayer], "border-2", null,
                                 "OnClickCoinToUpgrade", j, type, isInitial);
                         }
-                    } else if (!data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j]?.isTriggerTrading) {
+                    } else if (data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j] &&
+                        !data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
                         isInitial = data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j].isInitial;
-                        DrawCoin(data, boardCells, "coin", data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j], j,
-                            data.props.G.players[data.props.ctx.currentPlayer], "border-2", null,
+                        DrawCoin(data, boardCells, "coin", data.props.G.players[data.props.ctx.currentPlayer].boardCoins[j],
+                            j, data.props.G.players[data.props.ctx.currentPlayer], "border-2", null,
                             "OnClickCoinToUpgrade", j, type, isInitial);
                     }
                 }
@@ -490,7 +494,7 @@ export const DrawTaverns = (data, gridClass) => {
                         </td>
                     );
                 } else {
-                    if (j === data.props.G.currentTavern) {
+                    if (t === data.props.G.currentTavern) {
                         DrawCard(data, boardCells, data.props.G.taverns[t][j], j, null, data.props.G.taverns[t][j].suit,
                             "OnClickCard", j);
                     } else {

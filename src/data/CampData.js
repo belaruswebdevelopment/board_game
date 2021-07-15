@@ -253,7 +253,7 @@ const Hofud = {
         {
             actionName: "AddCampCardToCards",
         },
-        {
+        /*{
             actionName: "DrawProfitAction",
             config: {
                 stageName: "discardSuitCard",
@@ -266,7 +266,7 @@ const Hofud = {
             config: {
                 suit: "warrior",
             },
-        },
+        },*/
     ],
     scoringRule: () => 0,
 };

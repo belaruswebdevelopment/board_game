@@ -117,8 +117,13 @@ export const moveBy = {
         pickDistinctionCard: "ClickCardToPickDistinction",
         upgradeCoin: "ClickCoinToUpgrade",
     },
-    endTier: {},
-    enlistmentMercenaries: {},
+    endTier: {
+        pickHero: "ClickHeroCard",
+    },
+    enlistmentMercenaries: {
+        pickHero: "ClickHeroCard",
+        upgradeCoin: "ClickCoinToUpgrade",
+    },
     placeCoinsUline: {},
 };
 
@@ -128,6 +133,7 @@ export const moveBy = {
  * @type {{ClickDistinctionCard: {getRange: (function({G: *}): [number, undefined]), validate: (function({G: *, ctx: *, id: *}): boolean)}, ClickCoinToUpgrade: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G?: *, ctx?: *, id?: *, type?: *}): boolean)}, ClickCardToPickDistinction: {getRange: (function(): number[]), validate: (function(): boolean)}, ClickCampCard: {getRange: (function({G: *}): [number, undefined]), validate: (function({G: *, ctx: *}))}, ClickHandCoin: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}))}, BotsPlaceAllCoins: {getValue: (function({G: *, ctx: *, id: *}): *), getRange: (function({G: *}): [number, number]), validate: (function(): boolean)}, ClickHeroCard: {getRange: (function({G: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}))}, ClickBoardCoin: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}))}}}
  */
 export const moveValidators = {
+    // todo Add all validators to all moves
     ClickHandCoin: {
         getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].handCoins.length]),
         validate: ({
@@ -159,9 +165,10 @@ export const moveValidators = {
                 isValid = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0) >=
                     G.heroes[id].stack[0].config.conditions.suitCountMin.value;
             }
-            return isValid && !G.players[ctx.currentPlayer].buffs?.["noHero"];
+            return isValid;
         },
     },
+    // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
     ClickCoinToUpgrade: {
         getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
         validate: ({G, ctx, id, type}) => CoinUpgradeValidation(G, ctx, id, type),
@@ -177,6 +184,6 @@ export const moveValidators = {
     ClickCampCard: {
         getRange: ({G}) => ([0, G.camp.length]),
         validate: ({G, ctx}) => G.expansions.thingvellir && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
-            G.players[ctx.currentPlayer].buffs?.["goCamp"]),
+            (!G.campPicked && G.players[ctx.currentPlayer].buffs?.["goCamp"])),
     },
 };
