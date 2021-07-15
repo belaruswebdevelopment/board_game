@@ -269,6 +269,7 @@ export const BoardGame = {
                         playerId: G.playersOrder[0],
                         config: {
                             name: "startOrPassEnlistmentMercenaries",
+                            drawName: "Start or Pass Enlistment Mercenaries",
                         },
                     },
                 ];

@@ -55,6 +55,7 @@ export const AddCampCardToCards = (G, ctx, config, cardId) => {
                     actionName: "DrawProfitAction",
                     config: {
                         name: "enlistmentMercenaries",
+                        drawName: "Enlistment Mercenaries",
                     },
                 },
             ];
@@ -108,6 +109,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                     name: "AddCoinToPouchVidofnirVedrfolnir",
                     stageName: "addCoinToPouch",
                     number: number,
+                    drawName: "Add coin to pouch Vidofnir Vedrfolnir",
                 },
             },
             {
@@ -132,6 +134,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                         name: "VidofnirVedrfolnirAction",
                         stageName: "upgradeCoinVidofnirVedrfolnir",
                         value: 5,
+                        drawName: "Upgrade coin Vidofnir Vedrfolnir",
                     },
                 },
                 {
@@ -150,6 +153,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                         stageName: "upgradeCoinVidofnirVedrfolnir",
                         number: 2,
                         value: 3,
+                        drawName: "Upgrade coin Vidofnir Vedrfolnir",
                     },
                 },
                 {
@@ -182,6 +186,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
                     name: "VidofnirVedrfolnirAction",
                     stageName: "upgradeCoinVidofnirVedrfolnir",
                     value: 2,
+                    drawName: "Upgrade coin Vidofnir Vedrfolnir",
                 },
             },
             {

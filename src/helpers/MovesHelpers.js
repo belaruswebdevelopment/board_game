@@ -19,6 +19,7 @@ export const CheckEndTierPhaseEnded = (G, ctx) => {
                     actionName: "DrawProfitAction",
                     config: {
                         name: "BrisingamensEndGameAction",
+                        drawName: "Brisingamens end game",
                     },
                 },
                 {
@@ -33,6 +34,7 @@ export const CheckEndTierPhaseEnded = (G, ctx) => {
                     actionName: "DrawProfitAction",
                     config: {
                         name: "getMjollnirProfit",
+                        drawName: "Mjollnir",
                     },
                 },
                 {
@@ -98,6 +100,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                                 config: {
                                     stagName: "discardCard",
                                     name: "discardCard",
+                                    drawName: "Discard tavern card",
                                 },
                             },
                             {
@@ -131,6 +134,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                     playerId: ctx.playOrder[ctx.playOrder.findIndex(playerIndex => Number(playerIndex) === Number(ctx.currentPlayer)) + 1],
                     config: {
                         name: "enlistmentMercenaries",
+                        drawName: "Enlistment Mercenaries",
                     },
                 },
             ];
@@ -215,7 +219,7 @@ const CheckEndTierActions = (G, ctx) => {
                     variants,
                     config: {
                         stageName: "placeCards",
-                        hero: "Ylud",
+                        drawName: "Ylud",
                         name: "placeCard",
                     },
                 },
@@ -235,6 +239,7 @@ const CheckEndTierActions = (G, ctx) => {
                         actionName: "DrawProfitAction",
                         config: {
                             name: "BrisingamensEndGameAction",
+                            drawName: "Brisingamens end game",
                         },
                     },
                     {
@@ -251,6 +256,7 @@ const CheckEndTierActions = (G, ctx) => {
                         actionName: "DrawProfitAction",
                         config: {
                             name: "getMjollnirProfit",
+                            drawName: "Mjollnir",
                         },
                     },
                     {

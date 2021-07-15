@@ -222,14 +222,14 @@ export const DrawProfit = (data, option) => {
     for (let i = 0; i < 1; i++) {
         if (option === "placeCards") {
             caption += `suit to place ${data.props.G.actionsNum ?? 1} 
-            ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.hero}${data.props.G.actionsNum > 1 ? "s" : ""} to 
+            ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.drawName}${data.props.G.actionsNum > 1 ? "s" : ""} to 
             ${data.props.G.actionsNum > 1 ? "different" : "that"} suit.`;
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 const suit = Object.keys(suitsConfig)[j];
                 if (suit !== data.props.G.players[data.props.ctx.currentPlayer].pickedCard?.suit) {
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                            key={`Place ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.hero} on ${suitsConfig[suit].suitName}`}
+                            key={`Place ${data.props.G.stack[data.props.ctx.currentPlayer][0].config.drawName} on ${suitsConfig[suit].suitName}`}
                             onClick={() => data.OnClickSuitToPlaceCard(j)}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
                                 <b>{data.props.G.stack[data.props.ctx.currentPlayer][0].variants[suit].points ?? ""}</b>

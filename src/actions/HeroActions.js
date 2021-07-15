@@ -94,7 +94,7 @@ export const CheckAndMoveThrudOrPickHeroAction = (G, ctx, card) => {
  * @constructor
  */
 export const AddHeroToCards = (G, ctx, config) => {
-    const heroIndex = GetHeroIndexByName(config.hero),
+    const heroIndex = GetHeroIndexByName(config.drawName),
         hero = G.heroes[heroIndex];
     let suitId = null;
     AddHeroCardToPlayerHeroCards(G, ctx, hero);

@@ -14,6 +14,7 @@ const upgradeCoinUpTo3 = {
                 name: "upgradeCoin",
                 stageName: "upgradeCoin",
                 value: 3,
+                drawName: "Upgrade coin",
             },
         },
         {
@@ -61,6 +62,7 @@ const upgradeCoinUpTo5 = {
                 name: "upgradeCoin",
                 stageName: "upgradeCoin",
                 value: 5,
+                drawName: "Upgrade coin",
             },
         },
         {

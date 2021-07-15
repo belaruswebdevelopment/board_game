@@ -206,8 +206,8 @@ const CompareCharacteristics = (stat1, stat2) => {
  * @constructor
  */
 export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
-    const taverns = G.taverns,
-        averageCards = G.averageCards;
+    const taverns = G.taverns/*,
+        averageCards = G.averageCards*/;
     let result = Array(taverns.length).fill(0),
         temp = taverns.map(tavern => absoluteHeuristicsForTradingCoin
             .reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight : 0), 0));

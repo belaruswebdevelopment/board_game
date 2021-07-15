@@ -285,6 +285,7 @@ const warriorSuit = {
                                 name: "upgradeCoin",
                                 stageName: "upgradeCoin",
                                 value: 5,
+                                drawName: "Upgrade coin Warrior distinction",
                             },
                     },
                     {
@@ -368,6 +369,7 @@ const explorerSuit = {
                             config: {
                                 name: "explorerDistinction",
                                 stageName: "pickDistinctionCard",
+                                drawName: "Pick card by Explorer distinction",
                             },
                     },
                 ];

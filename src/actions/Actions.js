@@ -159,8 +159,8 @@ const UpgradeCoinAction = (G, ctx, config, ...args) => {
  * @constructor
  */
 const DrawProfitAction = (G, ctx, config) => {
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} должен получить преимущества от нового героя
-    ${config.hero}.`);
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} должен получить преимущества от действия
+    ${config.drawName}.`);
     if (G.stack[ctx.currentPlayer][0].config?.stageName) {
         ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     }
@@ -208,7 +208,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId
                 actionName: "DrawProfitAction",
                 config: {
                     stageName: "discardCardFromBoard",
-                    hero: "Dagda",
+                    drawName: "Dagda",
                     name: "DagdaAction",
                     suit: "hunter",
                 },
@@ -330,7 +330,7 @@ const PlaceCards = (G, ctx, config, suitId) => {
                     config: {
                         name: "placeCards",
                         stageName: "placeCards",
-                        hero: "Olwin",
+                        drawName: "Olwin",
                     },
                 },
                 {
@@ -384,6 +384,7 @@ const PickDiscardCard = (G, ctx, config, cardId) => {
                 config: {
                     stageName: "pickDiscardCard",
                     name: "BrisingamensAction",
+                    drawName: "Brisingamens",
                 },
             },
             {
@@ -433,6 +434,7 @@ const GetEnlistmentMercenariesAction = (G, ctx, config, cardId) => {
             actionName: "DrawProfitAction",
             config: {
                 name: "placeEnlistmentMercenaries",
+                drawName: "Place Enlistment Mercenaries",
             },
         },
     ];
@@ -470,6 +472,7 @@ const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
                 actionName: "DrawProfitAction",
                 config: {
                     name: "enlistmentMercenaries",
+                    drawName: "Enlistment Mercenaries",
                 },
             },
         ];

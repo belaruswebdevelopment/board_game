@@ -193,6 +193,7 @@ const Brisingamens = {
                 stageName: "pickDiscardCard",
                 name: "BrisingamensAction",
                 number: 2,
+                drawName: "Brisingamens",
             },
         },
         {
@@ -259,6 +260,7 @@ const Hofud = {
                 stageName: "discardSuitCard",
                 name: "HofudAction",
                 suit: "warrior",
+                drawName: "Hofud",
             },
         },
         {

@@ -79,7 +79,7 @@ export const StartThrudMoving = (G, ctx, card) => {
                 actionName: "DrawProfitAction",
                 variants,
                 config: {
-                    hero: "Thrud",
+                    drawName: "Thrud",
                     name: "placeCards",
                     stageName: "placeCards",
                     suit: card.suit,

@@ -128,6 +128,7 @@ export const StartEnlistmentMercenaries = (G, ctx) => {
             actionName: "DrawProfitAction",
             config: {
                 name: "enlistmentMercenaries",
+                drawName: "Enlistment Mercenaries",
             },
         },
     ];

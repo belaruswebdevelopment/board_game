@@ -1,6 +1,6 @@
 import {CoinUpgradeValidation, IsValidMove} from "../MoveValidator";
 import {INVALID_MOVE} from "boardgame.io/core";
-import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
+import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
 import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 import {CheckAndStartUlineActionsOrContinue} from "../helpers/HeroHelpers";
 
