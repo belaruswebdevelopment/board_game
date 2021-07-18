@@ -292,8 +292,10 @@ export const DrawProfit = (data, option) => {
         } else if (option === "discardCard") {
             caption += "one card to discard from current tavern.";
             for (let j = 0; j < data.props.G.drawSize; j++) {
-                DrawCard(data, boardCells, data.props.G.taverns[data.props.G.currentTavern][j], j, data.props.G.players[data.props.ctx.currentPlayer],
-                    data.props.G.taverns[data.props.G.currentTavern][j].suit, "OnClickCardToDiscard2Players", j);
+                if (data.props.G.taverns[data.props.G.currentTavern][j]) {
+                    DrawCard(data, boardCells, data.props.G.taverns[data.props.G.currentTavern][j], j, data.props.G.players[data.props.ctx.currentPlayer],
+                        data.props.G.taverns[data.props.G.currentTavern][j].suit, "OnClickCardToDiscard2Players", j);
+                }
             }
         } else if (option === "getMjollnirProfit") {
             caption += "suit to get Mjollnir profit from ranks on that suit.";

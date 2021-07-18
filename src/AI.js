@@ -329,7 +329,7 @@ export const enumerate = (G, ctx) => {
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
         });
     }
-    if (ctx.playersNum === 2) {
+    if (ctx.numPlayers === 2) {
         if (activeStageOfCurrentPlayer === "discardCard") {
             for (let j = 0; j < G.drawSize; j++) {
                 botMoveArguments.push([j]);

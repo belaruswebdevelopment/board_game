@@ -93,12 +93,13 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                         ctx.events.setPhase("placeCoinsUline")
                     }
                 } else {
-                    if (Number(ctx.currentPlayer) === Number(ctx.playOrder[0]) && G.campPicked && ctx.numPlayers === 2) {
+                    if (Number(ctx.currentPlayer) === Number(ctx.playOrder[0]) && G.campPicked && ctx.numPlayers === 2 &&
+                        G.taverns[G.currentTavern].every(card => card !== null)) {
                         const stack = [
                             {
                                 actionName: "DrawProfitAction",
                                 config: {
-                                    stagName: "discardCard",
+                                    stageName: "discardCard",
                                     name: "discardCard",
                                     drawName: "Discard tavern card",
                                 },
