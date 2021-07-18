@@ -25,7 +25,6 @@ import {
 } from "./CampActions";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AddDataToLog} from "../Logging";
-// todo Add logging
 /**
  * Диспетчер действий при их активации.
  * Применения:
@@ -159,9 +158,10 @@ const UpgradeCoinAction = (G, ctx, config, ...args) => {
  * @constructor
  */
 const DrawProfitAction = (G, ctx, config) => {
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} должен получить преимущества от действия
-    ${config.drawName}.`);
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} должен получить преимущества от 
+    действия '${config.drawName}'.`);
     if (G.stack[ctx.currentPlayer][0].config?.stageName) {
+        AddDataToLog(G, "game", `Начало фазы ${G.stack[ctx.currentPlayer][0].config.stageName}.`);
         ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     }
     G.actionsNum = config.number ?? 1;
@@ -181,6 +181,7 @@ const DrawProfitAction = (G, ctx, config) => {
  */
 const AddBuffToPlayer = (G, ctx, config) => {
     G.players[ctx.currentPlayer].buffs[config.buff.name] = config.buff.value;
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} получил баф '${config.buff.name}'.`);
     return EndActionFromStackAndAddNew(G, ctx);
 };
 
@@ -293,7 +294,8 @@ const PlaceCards = (G, ctx, config, suitId) => {
         points: G.stack[ctx.currentPlayer][0].variants[suit].points,
         name: "Olwin",
     });
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту Olwin во фракцию ${suitsConfig[suit].suitName}.`);
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту Олвин во фракцию 
+    ${suitsConfig[suit].suitName}.`);
     AddCardToPlayer(G, ctx, olwinDouble);
     if (G.actionsNum === 2) {
         const variants = {
@@ -376,7 +378,8 @@ const CheckPickDiscardCard = (G, ctx) => {
 const PickDiscardCard = (G, ctx, config, cardId) => {
     const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
         pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту ${pickedCard.name} из дискарда.`);
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту ${pickedCard.name} 
+    из дискарда.`);
     if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
         const stack = [
             {
@@ -413,6 +416,8 @@ const PickDiscardCard = (G, ctx, config, cardId) => {
  * @constructor
  */
 const PassEnlistmentMercenariesAction = (G, ctx) => {
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} пасанул во время фазы 
+    Enlistment Mercenaries.`);
     return EndActionFromStackAndAddNew(G, ctx);
 };
 
@@ -428,7 +433,10 @@ const PassEnlistmentMercenariesAction = (G, ctx) => {
  * @constructor
  */
 const GetEnlistmentMercenariesAction = (G, ctx, config, cardId) => {
-    G.players[ctx.currentPlayer].pickedCard = G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник")[cardId];
+    G.players[ctx.currentPlayer].pickedCard = G.players[ctx.currentPlayer].campCards
+        .filter(card => card.type === "наёмник")[cardId];
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} во время фазы 
+    Enlistment Mercenaries выбрал наёмника '${G.players[ctx.currentPlayer].pickedCard.name}'.`);
     const stack = [
         {
             actionName: "DrawProfitAction",
@@ -464,6 +472,8 @@ const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
         path: G.players[ctx.currentPlayer].pickedCard.path,
     });
     AddCardToPlayer(G, ctx, mercenaryCard);
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} во время фазы 
+    Enlistment Mercenaries завербовал наёмника '${mercenaryCard.name}'.`);
     const cardIndex = G.players[ctx.currentPlayer].campCards.findIndex(card => card.name === G.players[ctx.currentPlayer].pickedCard.name);
     G.players[ctx.currentPlayer].campCards.splice(cardIndex, 1);
     if (G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник").length) {

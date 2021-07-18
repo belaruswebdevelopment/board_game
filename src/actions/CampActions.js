@@ -2,6 +2,8 @@ import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../hel
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AddCampCardToPlayer, AddCampCardToPlayerCards} from "../Player";
 import {CheckAndMoveThrudOrPickHeroAction} from "./HeroActions";
+import {AddDataToLog} from "../Logging";
+import {suitsConfig} from "../data/SuitData";
 
 /**
  * Действия, связанные с возможностью взятия карт из кэмпа.
@@ -85,6 +87,8 @@ export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
     ];
     player.boardCoins[tempId] = player.handCoins[coinId];
     player.handCoins[coinId] = null;
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} положил монету ценностью 
+    '${player.boardCoins[tempId]}' в свой кошелёк.`);
     AddActionsToStackAfterCurrent(G, ctx, stack);
     return EndActionFromStackAndAddNew(G, ctx);
 };
@@ -237,6 +241,7 @@ export const DiscardTradingCoin = (G, ctx) => {
     } else {
         G.players[ctx.currentPlayer].boardCoins.splice(tradingCoinIndex, 1, null);
     }
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} сбросил монету активирующую обмен.`);
     return EndActionFromStackAndAddNew(G, ctx);
 };
 
@@ -254,7 +259,9 @@ export const DiscardTradingCoin = (G, ctx) => {
  * @constructor
  */
 export const DiscardAnyCardFromPlayerBoard = (G, ctx, config, suitId, cardId) => {
-    G.players[ctx.currentPlayer].cards[suitId].filter(card => card.type !== "герой").splice(cardId, 1);
+    const discardedCard = G.players[ctx.currentPlayer].cards[suitId].filter(card => card.type !== "герой").splice(cardId, 1);
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} сбросил карту ${discardedCard.name} 
+    в дискард.`);
     delete G.players[ctx.currentPlayer].buffs["discardCardEndGame"];
     return EndActionFromStackAndAddNew(G, ctx);
 };
@@ -302,5 +309,7 @@ export const DiscardSuitCard = (G, ctx, config) => {
 export const GetMjollnirProfitAction = (G, ctx, config, suitId) => {
     delete G.players[ctx.currentPlayer].buffs["getMjollnirProfit"];
     G.suitIdForMjollnir = suitId;
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал фракцию 
+    ${Object.values(suitsConfig)[suitId].suitName} для эффекта артефакта Mjollnir.`);
     return EndActionFromStackAndAddNew(G, ctx);
 };

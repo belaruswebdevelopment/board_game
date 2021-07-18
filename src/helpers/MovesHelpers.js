@@ -90,7 +90,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                     if (isPlaceCoinsUline !== "endPlaceTradingCoinsUline" && isPlaceCoinsUline !== "placeCoinsUline") {
                         ctx.events.setPhase("pickCards");
                     } else {
-                        ctx.events.setPhase("placeCoinsUline")
+                        ctx.events.setPhase("placeCoinsUline");
                     }
                 } else {
                     if (Number(ctx.currentPlayer) === Number(ctx.playOrder[0]) && G.campPicked && ctx.numPlayers === 2 &&

@@ -8,6 +8,7 @@ import {CheckAndMoveThrud, GetHeroIndexByName, StartThrudMoving} from "../helper
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {TotalRank} from "../Score";
 import {INVALID_MOVE} from "boardgame.io/core";
+import {AddDataToLog} from "../Logging";
 
 /**
  * Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.
@@ -31,6 +32,8 @@ export const PlaceThrudAction = (G, ctx, config, suitId) => {
         name: "Thrud",
         game: "base",
     });
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту Труд во фракцию 
+    ${suitsConfig[suit].suitName}.`);
     AddCardToPlayer(G, ctx, thrudCard);
     CheckPickHero(G, ctx);
     return EndActionFromStackAndAddNew(G, ctx);
@@ -58,6 +61,8 @@ export const PlaceYludAction = (G, ctx, config, suitId) => {
         name: "Ylud",
         game: "base",
     });
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту Илуд во фракцию 
+    ${suitsConfig[suit].suitName}.`);
     AddCardToPlayer(G, ctx, yludCard);
     CheckAndMoveThrudOrPickHeroAction(G, ctx, yludCard);
     return EndActionFromStackAndAddNew(G, ctx, [], suitId);
@@ -177,5 +182,6 @@ export const PickHeroWithConditions = (G, ctx, config) => {
  * @constructor
  */
 export const PickHero = (G, ctx) => {
+    AddDataToLog(G, "game", `Начало фазы ${G.stack[ctx.currentPlayer][0].config.stageName}.`);
     ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
 };

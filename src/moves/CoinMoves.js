@@ -3,6 +3,7 @@ import {INVALID_MOVE} from "boardgame.io/core";
 import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
 import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 import {CheckAndStartUlineActionsOrContinue} from "../helpers/HeroHelpers";
+// todo Add logging
 
 /**
  * Выбор монеты в руке для выкладки монет.
