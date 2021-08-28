@@ -36,7 +36,7 @@ export const CreateCard = ({type = "базовая", suit, rank = 1, points = nu
 /**
  * Создание карты улучшения монеты.
  * Применения:
- * 1) Происходит при создании всех карт улучшения монеты при инициализации игры.
+ * 1) Происходит при создании всех карт улучшения монеты во время инициализации игры.
  *
  * @param type Тип.
  * @param value Значение.
@@ -73,7 +73,8 @@ export const BuildCards = (deckConfig, data) => {
                 suit: deckConfig.suits[suit].suit,
                 rank: deckConfig.suits[suit].ranksValues()[data.players][data.tier][j],
                 points: deckConfig.suits[suit].pointsValues()[data.players][data.tier][j],
-                name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: ${deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] ?? 1}, 
+                name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 
+                ${deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] ?? 1}, 
                 очков: ${deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] !== undefined ?
                     deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] + ")" : "нет)" }`,
             }));

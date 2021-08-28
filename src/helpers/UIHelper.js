@@ -123,7 +123,7 @@ export const DrawPlayerBoardForSuitCardDiscard = (data, suitName) => {
                     DrawCard(data, playerCells, data.props.G.players[data.props.ctx.currentPlayer].cards[suitId][i], i,
                         data.props.G.players[data.props.ctx.currentPlayer], suitName, "OnClickDiscardSuitCardFromPlayerBoard", suitId, i);
                     playerRows[i].push(
-                        <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit card board row ${i}`}>
+                        <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit cardboard row ${i}`}>
                             {playerCells}
                         </tr>
                     );

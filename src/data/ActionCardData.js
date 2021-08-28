@@ -97,7 +97,7 @@ const upgradeCoinUpTo5 = {
 /**
  * Конфиг карт улучшения монет.
  * Применения:
- * 1) Происходит при создании всех карт улучшения монет при инициализации игры.
+ * 1) Происходит при создании всех карт улучшения монет в ходе инициализации игры.
  *
  * @type {{stack: ({config: {stageName: string, name: string, value: number}, actionName: string}|{config: {value: number}, actionName: string})[], amount: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), value: number}[]} Массив карт улучшения монеты.
  */

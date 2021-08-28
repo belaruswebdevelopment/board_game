@@ -277,7 +277,7 @@ export const DrawProfit = (data, option) => {
         } else if (option === "HofudAction") {
             caption += "one warrior card to discard from your board.";
             boardCells.push(
-                <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit card board`}>
+                <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit cardboard`}>
                     {DrawPlayerBoardForSuitCardDiscard(data, data.props.G.stack[data.props.ctx.currentPlayer][0].config.suit)}
                 </td>
             );
@@ -298,12 +298,12 @@ export const DrawProfit = (data, option) => {
                 }
             }
         } else if (option === "getMjollnirProfit") {
-            caption += "suit to get Mjollnir profit from ranks on that suit.";
+            caption += "suit to get Mjöllnir profit from ranks on that suit.";
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 const suit = Object.keys(suitsConfig)[j];
                 boardCells.push(
                     <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                        key={`${suit} suit to get Mjollnir profit`}
+                        key={`${suit} suit to get Mjöllnir profit`}
                         onClick={() => data.OnClickSuitToGetMjollnirProfit(j)}>
                         <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
                             <b className="whitespace-nowrap text-white">
