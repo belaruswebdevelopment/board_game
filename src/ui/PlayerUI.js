@@ -210,8 +210,7 @@ export const DrawPlayersBoards = (data) => {
     const playersBoards = [],
         playerHeaders = [],
         playerHeadersCount = [],
-        playerRows = [],
-        expansion = data.props.G.expansions.thingvellir.active ? 1 : 0;
+        playerRows = [];
     for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         playersBoards[p] = [];
         playerHeaders[p] = [];
@@ -233,7 +232,7 @@ export const DrawPlayersBoards = (data) => {
                 </th>
             );
         }
-        for (let s = 0; s < 1 + expansion; s++) {
+        for (let s = 0; s < 1 + data.props.G.expansions.thingvellir.active; s++) {
             if (s === 0) {
                 playerHeaders[p].push(
                     <th className="bg-gray-600" key={`${data.props.G.players[p].nickname} hero icon`}>
@@ -281,7 +280,7 @@ export const DrawPlayersBoards = (data) => {
                     );
                 }
             }
-            for (let k = 0; k < 1 + expansion; k++) {
+            for (let k = 0; k < 1 + data.props.G.expansions.thingvellir.active; k++) {
                 id += k + 1;
                 if (k === 0) {
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)

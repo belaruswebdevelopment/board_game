@@ -369,7 +369,9 @@ export const BoardGame = {
             },
             onEnd: (G) => {
                 G.distinctions = Array(G.suitsNum).fill(undefined);
-                RefillCamp(G);
+                if (G.expansions.thingvellir.active) {
+                    RefillCamp(G);
+                }
                 RefillTaverns(G);
             },
             endIf: (G) => G.distinctions.every(distinction => distinction === undefined),

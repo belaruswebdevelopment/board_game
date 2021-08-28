@@ -42,7 +42,7 @@ export class GameBoard extends React.Component {
             winnerUI = DrawWinner(this),
             marketCoinsUI = DrawMarketCoins(this),
             drawHeroesUI = DrawHeroes(this),
-            drawCampUI = DrawCamp(this),
+            drawCampUI = this.props.G.expansions.thingvellir.active ? DrawCamp(this) : null,
             drawDistinctionsUI = DrawDistinctions(this),
             drawDistinctionProfitUI = this.props.G.drawProfit ? DrawProfit(this, this.props.G.drawProfit)
                 : this.props.G.drawProfit,

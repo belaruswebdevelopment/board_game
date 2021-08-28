@@ -54,7 +54,7 @@ export const enumerate = (G, ctx) => {
     if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default") {
         // todo Fix it, now just for bot can do RANDOM move
         let pickCardOrCampCard = "card";
-        if (G.expansions.thingvellir && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
+        if (G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
             G.players[ctx.currentPlayer].buffs?.["goCamp"])) {
             pickCardOrCampCard = Math.floor(Math.random() * 2) ? "card" : "camp";
         }

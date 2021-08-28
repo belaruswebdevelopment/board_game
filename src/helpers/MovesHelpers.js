@@ -87,7 +87,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                     const cardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
                     DiscardCardFromTavern(G, cardIndex);
                 }
-                if (Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) {
+                if (G.expansions.thingvellir.active && Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) {
                     DiscardCardIfCampCardPicked(G);
                 }
                 const isLastTavern = G.tavernsNum - 1 === G.currentTavern,
@@ -336,13 +336,15 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
 const AfterLastTavernEmptyActions = (G, ctx) => {
     if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
         G.tierToEnd--;
-        if (G.expansions.thingvellir) {
+        if (G.expansions.thingvellir.active) {
             CheckEnlistmentMercenaries(G, ctx);
         } else {
             CheckEndTierActions(G, ctx);
         }
     } else {
-        RefillEmptyCampCards(G);
+        if (G.expansions.thingvellir.active) {
+            RefillEmptyCampCards(G);
+        }
         RefillTaverns(G);
         ctx.events.setPhase("placeCoins");
     }

@@ -38,14 +38,17 @@ export const SetupGame = (ctx) => {
         campDecks = [],
         distinctions = Array(suitsNum).fill(null);
     let winner = null,
+        campPicked = false,
+        camp = [],
         discardCampCardsDeck = [],
         stack = Array(ctx.numPlayers).fill([]);
-    for (let i = 0; i < tierToEnd; i++) {
-        campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
-        campDecks[i] = ctx.random.Shuffle(campDecks[i]);
-    }
-    let campPicked = false,
+    if (expansions.thingvellir.active) {
+        for (let i = 0; i < tierToEnd; i++) {
+            campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
+            campDecks[i] = ctx.random.Shuffle(campDecks[i]);
+        }
         camp = campDecks[0].splice(0, campNum);
+    }
     for (let i = 0; i < tierToEnd; i++) {
         decks[i] = BuildCards({suits: suitsConfig, actions: actionCardsConfigArray}, {
             players: ctx.numPlayers,

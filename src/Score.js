@@ -178,7 +178,7 @@ export const FinalScoring = (G, ctx, player) => {
     heroesScore += dwerg_brothers_scoring[dwerg_brothers];
     AddDataToLog(G, "public", `Очки за героев игрока ${player.nickname}: ${heroesScore}.`);
     score += heroesScore;
-    if (G.expansions.thingvellir) {
+    if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
             const currentArtefactScore = Object.values(artefactsConfig).find(artefact => artefact.name === player.campCards[i].name)

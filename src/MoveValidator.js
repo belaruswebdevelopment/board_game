@@ -82,7 +82,8 @@ const ValidateByValues = (num, values) => {
  */
 export const CoinUpgradeValidation = (G, ctx, coinId, type) => {
     if (type === "hand") {
-        const handCoinPosition = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => coin === null && index <= coinId).length;
+        const handCoinPosition = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => coin === null
+            && index <= coinId).length;
         if (!G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null)[handCoinPosition - 1].isTriggerTrading) {
             return true;
         }
@@ -177,7 +178,7 @@ export const moveValidators = {
     },
     ClickCampCard: {
         getRange: ({G}) => ([0, G.camp.length]),
-        validate: ({G, ctx}) => G.expansions.thingvellir && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
+        validate: ({G, ctx}) => G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
             (!G.campPicked && G.players[ctx.currentPlayer].buffs?.["goCamp"])),
     },
 };
