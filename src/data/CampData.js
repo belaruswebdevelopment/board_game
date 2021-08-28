@@ -240,7 +240,7 @@ const Mjollnir = {
  * Применения:
  * 1) Используется при обращении к данным артефакта.
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {config: {stageName: string, name: string}, actionName: string}, {config: {suit: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
+ * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
 const Hofud = {
     name: "Hofud",

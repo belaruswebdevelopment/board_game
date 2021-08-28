@@ -7,6 +7,15 @@ import {AddActionsToStack, StartActionFromStackOrEndActions} from "./StackHelper
 import {CheckAndStartUlineActionsOrContinue} from "./HeroHelpers";
 import {ActivateTrading} from "./CoinHelpers";
 
+/**
+ * Проверяет завершение фазы EndTier.
+ * Применения:
+ * 1) После каждого экшена в фазе EndTier.
+ *
+ * @param G
+ * @param ctx
+ * @constructor
+ */
 export const CheckEndTierPhaseEnded = (G, ctx) => {
     if (G.tierToEnd) {
         ctx.events.setPhase("getDistinctions");
@@ -146,6 +155,15 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
     }
 };
 
+/**
+ * Проверяет завершение экшенов в фазе EndTier.
+ * Применения:
+ * 1) После каждого экшена в фазе EndTier.
+ *
+ * @param G
+ * @param ctx
+ * @constructor
+ */
 const CheckEndTierActions = (G, ctx) => {
     G.playersOrder = [];
     let ylud = false,

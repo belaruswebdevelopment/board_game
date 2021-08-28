@@ -29,7 +29,7 @@ export const CheckPickCampCard = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param config Конфиг действий артефакта.
  * @param cardId Id карты.
  * @returns {*}
  * @constructor
@@ -73,7 +73,7 @@ export const AddCampCardToCards = (G, ctx, config, cardId) => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param config Конфиг действий артефакта.
  * @param coinId Id монеты.
  * @constructor
  */
@@ -92,6 +92,7 @@ export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
     AddActionsToStackAfterCurrent(G, ctx, stack);
     return EndActionFromStackAndAddNew(G, ctx);
 };
+
 /**
  * Действия, связанные со стартом способности артефакта Vidofnir Vedrfolnir.
  * Применения:
@@ -173,6 +174,20 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     return EndActionFromStackAndAddNew(G, ctx);
 };
 
+/**
+ * Действия, связанные с улучшением монеты способности артефакта Vidofnir Vedrfolnir.
+ * Применения:
+ * 1) При старте улучшения монеты карты кэмпа артефакта Vidofnir Vedrfolnir.
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий артефакта.
+ * @param coinId Id монеты.
+ * @param type Тип монеты.
+ * @param isInitial Является ли монета базовой.
+ * @returns {*}
+ * @constructor
+ */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type, isInitial) => {
     let stack;
     if (G.stack[ctx.currentPlayer][0].config.value === 3) {
@@ -252,7 +267,7 @@ export const DiscardTradingCoin = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param config Конфиг действий артефакта.
  * @param suitId Id фракции.
  * @param cardId Id карты.
  * @returns {*}
@@ -273,7 +288,7 @@ export const DiscardAnyCardFromPlayerBoard = (G, ctx, config, suitId, cardId) =>
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param config Конфиг действий артефакта.
  * @returns {*}
  * @constructor
  */
@@ -301,7 +316,7 @@ export const DiscardSuitCard = (G, ctx, config) => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param config Конфиг действий артефакта.
  * @param suitId Id фракции.
  * @returns {*}
  * @constructor
