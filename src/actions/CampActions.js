@@ -35,8 +35,7 @@ export const CheckPickCampCard = (G, ctx) => {
  * @constructor
  */
 export const AddCampCardToCards = (G, ctx, config, cardId) => {
-    if (G.expansions.thingvellir.active && ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.playersOrder[0]
-        && ctx.activePlayers === null) {
+    if (ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.playersOrder[0] && ctx.activePlayers === null) {
         G.campPicked = true;
     }
     if (G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]) {
@@ -82,10 +81,10 @@ export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
     const player = G.players[ctx.currentPlayer],
         tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null),
         stack = [
-        {
-            actionName: "StartVidofnirVedrfolnirAction",
-        },
-    ];
+            {
+                actionName: "StartVidofnirVedrfolnirAction",
+            },
+        ];
     player.boardCoins[tempId] = player.handCoins[coinId];
     player.handCoins[coinId] = null;
     AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} положил монету ценностью 

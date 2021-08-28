@@ -21,36 +21,38 @@ export const CheckEndTierPhaseEnded = (G, ctx) => {
         ctx.events.setPhase("getDistinctions");
     } else {
         RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
-        if (G.players[G.playersOrder[1]]?.buffs?.["discardCardEndGame"]) {
-            G.drawProfit = "BrisingamensEndGameAction";
-            G.stack[G.playersOrder[1]] = [
-                {
-                    actionName: "DrawProfitAction",
-                    config: {
-                        name: "BrisingamensEndGameAction",
-                        drawName: "Brisingamens end game",
+        if (G.expansions.thingvellir.active) {
+            if (G.players[G.playersOrder[1]]?.buffs?.["discardCardEndGame"]) {
+                G.drawProfit = "BrisingamensEndGameAction";
+                G.stack[G.playersOrder[1]] = [
+                    {
+                        actionName: "DrawProfitAction",
+                        config: {
+                            name: "BrisingamensEndGameAction",
+                            drawName: "Brisingamens end game",
+                        },
                     },
-                },
-                {
-                    actionName: "DiscardAnyCardFromPlayerBoard",
-                },
-            ];
-            ctx.events.endTurn();
-        } else if (G.players[G.playersOrder[G.playersOrder.length - 1]]?.buffs?.["getMjollnirProfit"]) {
-            G.drawProfit = "getMjollnirProfit";
-            G.stack[G.playersOrder[G.playersOrder.length - 1]] = [
-                {
-                    actionName: "DrawProfitAction",
-                    config: {
-                        name: "getMjollnirProfit",
-                        drawName: "Mjollnir",
+                    {
+                        actionName: "DiscardAnyCardFromPlayerBoard",
                     },
-                },
-                {
-                    actionName: "GetMjollnirProfitAction",
-                },
-            ];
-            ctx.events.endTurn();
+                ];
+                ctx.events.endTurn();
+            } else if (G.players[G.playersOrder[G.playersOrder.length - 1]]?.buffs?.["getMjollnirProfit"]) {
+                G.drawProfit = "getMjollnirProfit";
+                G.stack[G.playersOrder[G.playersOrder.length - 1]] = [
+                    {
+                        actionName: "DrawProfitAction",
+                        config: {
+                            name: "getMjollnirProfit",
+                            drawName: "Mjollnir",
+                        },
+                    },
+                    {
+                        actionName: "GetMjollnirProfitAction",
+                    },
+                ];
+                ctx.events.endTurn();
+            }
         } else {
             ctx.events.endPhase();
             ctx.events.endGame();
@@ -131,10 +133,10 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
         ctx.events.endTurn();
     } else if (ctx.phase === "enlistmentMercenaries") {
         if (((ctx.playOrderPos === 0 && ctx.playOrder.length === 1) && Number(ctx.currentPlayer) ===
-            Number(ctx.playOrder[ctx.playOrder.length - 1])) || ((ctx.playOrderPos !== 0 && ctx.playOrder.length > 1)
-            && Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) ||
+                Number(ctx.playOrder[ctx.playOrder.length - 1])) || ((ctx.playOrderPos !== 0 && ctx.playOrder.length > 1)
+                && Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) ||
             (ctx.playOrder[ctx.playOrder.length - 2] !== undefined && (Number(ctx.currentPlayer) ===
-                Number(ctx.playOrder[ctx.playOrder.length - 2])) &&
+                    Number(ctx.playOrder[ctx.playOrder.length - 2])) &&
                 !G.players[ctx.playOrder[ctx.playOrder.length - 1]].campCards.filter(card => card.type === "наёмник").length)) {
             CheckEndTierActions(G, ctx);
         } else {
@@ -188,17 +190,19 @@ const CheckEndTierActions = (G, ctx) => {
             }
         }
     }
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        if (G.players[i].buffs?.["discardCardEndGame"]) {
-            G.playersOrder.push(i);
-            brisingamens = true;
-            break;
+    if (G.expansions.thingvellir.active) {
+        for (let i = 0; i < ctx.numPlayers; i++) {
+            if (G.players[i].buffs?.["discardCardEndGame"]) {
+                G.playersOrder.push(i);
+                brisingamens = true;
+                break;
+            }
         }
-    }
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        if (G.players[i].buffs?.["getMjollnirProfit"]) {
-            G.playersOrder.push(i);
-            break;
+        for (let i = 0; i < ctx.numPlayers; i++) {
+            if (G.players[i].buffs?.["getMjollnirProfit"]) {
+                G.playersOrder.push(i);
+                break;
+            }
         }
     }
     if (G.playersOrder.length) {
@@ -250,7 +254,7 @@ const CheckEndTierActions = (G, ctx) => {
             ];
             AddActionsToStack(G, ctx, stack);
             G.drawProfit = "placeCards";
-        } else {
+        } else if (G.expansions.thingvellir.active) {
             if (brisingamens) {
                 const stack = [
                     {

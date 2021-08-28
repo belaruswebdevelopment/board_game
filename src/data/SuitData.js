@@ -291,19 +291,19 @@ const warriorSuit = {
             if (G.tierToEnd !== 0) {
                 const stack = [
                     {
-                            actionName: "DrawProfitAction",
-                            config: {
-                                name: "upgradeCoin",
-                                stageName: "upgradeCoin",
-                                value: 5,
-                                drawName: "Upgrade coin Warrior distinction",
-                            },
+                        actionName: "DrawProfitAction",
+                        config: {
+                            name: "upgradeCoin",
+                            stageName: "upgradeCoin",
+                            value: 5,
+                            drawName: "Upgrade coin Warrior distinction",
+                        },
                     },
                     {
-                            actionName: "UpgradeCoinAction",
-                            config: {
-                                value: 5,
-                            },
+                        actionName: "UpgradeCoinAction",
+                        config: {
+                            value: 5,
+                        },
                     },
                 ];
                 AddDataToLog(G, "game", `Игрок ${player.nickname} получил по знаку отличия воинов возможность 
@@ -380,12 +380,12 @@ const explorerSuit = {
             if (G.tierToEnd !== 0) {
                 const stack = [
                     {
-                            actionName: "DrawProfitAction",
-                            config: {
-                                name: "explorerDistinction",
-                                stageName: "pickDistinctionCard",
-                                drawName: "Pick card by Explorer distinction",
-                            },
+                        actionName: "DrawProfitAction",
+                        config: {
+                            name: "explorerDistinction",
+                            stageName: "pickDistinctionCard",
+                            drawName: "Pick card by Explorer distinction",
+                        },
                     },
                 ];
                 AddDataToLog(G, "game", `Игрок ${player.nickname} получил по знаку отличия разведчиков 

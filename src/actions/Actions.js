@@ -25,6 +25,7 @@ import {
 } from "./CampActions";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AddDataToLog} from "../Logging";
+
 /**
  * Диспетчер действий при их активации.
  * Применения:
@@ -289,11 +290,11 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
 const PlaceCards = (G, ctx, config, suitId) => {
     const suit = Object.keys(suitsConfig)[suitId],
         olwinDouble = CreateCard({
-        suit,
-        rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
-        points: G.stack[ctx.currentPlayer][0].variants[suit].points,
-        name: "Olwin",
-    });
+            suit,
+            rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
+            points: G.stack[ctx.currentPlayer][0].variants[suit].points,
+            name: "Olwin",
+        });
     AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту Олвин во фракцию 
     ${suitsConfig[suit].suitName}.`);
     AddCardToPlayer(G, ctx, olwinDouble);
@@ -463,14 +464,14 @@ const GetEnlistmentMercenariesAction = (G, ctx, config, cardId) => {
 const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
     const suit = Object.keys(suitsConfig)[suitId],
         mercenaryCard = CreateCard({
-        type: "наёмник",
-        suit,
-        rank: 1,
-        points: G.players[ctx.currentPlayer].pickedCard.stack[0].variants[suit].points,
-        name: G.players[ctx.currentPlayer].pickedCard.name,
-        tier: G.players[ctx.currentPlayer].pickedCard.tier,
-        path: G.players[ctx.currentPlayer].pickedCard.path,
-    });
+            type: "наёмник",
+            suit,
+            rank: 1,
+            points: G.players[ctx.currentPlayer].pickedCard.stack[0].variants[suit].points,
+            name: G.players[ctx.currentPlayer].pickedCard.name,
+            tier: G.players[ctx.currentPlayer].pickedCard.tier,
+            path: G.players[ctx.currentPlayer].pickedCard.path,
+        });
     AddCardToPlayer(G, ctx, mercenaryCard);
     AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} во время фазы 
     Enlistment Mercenaries завербовал наёмника '${mercenaryCard.name}'.`);

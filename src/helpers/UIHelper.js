@@ -348,7 +348,7 @@ export const DrawCoin = (data, playerCells, type, coin, id, player = null, coinC
         }
     }
     playerCells.push(
-        <td key={`${player?.nickname ? `player ${player?.nickname} ` : ""}coin ${id}${coin?.value ? ` ${coin?.value}` 
+        <td key={`${player?.nickname ? `player ${player?.nickname} ` : ""}coin ${id}${coin?.value ? ` ${coin?.value}`
             : " empty"}`}
             className={tdClasses} onClick={() => action?.(...args)}>
             <span style={styles} className={spanClasses}>

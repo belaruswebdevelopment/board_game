@@ -151,6 +151,7 @@ export const Trading = (G, ctx, tradingCoins) => {
  * @constructor
  */
 export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) => {
+    // todo Split into different functions!
     let upgradingCoin;
     if (G.players[ctx.currentPlayer].buffs["upgradeNextCoin"]) {
         delete G.players[ctx.currentPlayer].buffs["upgradeNextCoin"];
@@ -168,7 +169,7 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
                 }
             }
             const minCoinValue = Math.min(...allCoins.filter(coin => coin !== null && !coin.isTriggerTrading)
-                .map(coin => coin.value)),
+                    .map(coin => coin.value)),
                 upgradingCoinInitial = allCoins.find(coin => coin.value === minCoinValue && coin.isInitial);
             if (upgradingCoinInitial) {
                 upgradingCoin = upgradingCoinInitial;

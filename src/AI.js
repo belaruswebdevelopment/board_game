@@ -4,6 +4,7 @@ import {CheckHeuristicsForCoinsPlacement} from "./BotConfig";
 import {CurrentScoring, TotalRank} from "./Score";
 import {moveValidators, moveBy} from "./MoveValidator";
 import {suitsConfig} from "./data/SuitData";
+
 /**
  * Возвращает массив возможных ходов для ботов.
  * Применения:

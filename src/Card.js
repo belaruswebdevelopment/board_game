@@ -76,7 +76,7 @@ export const BuildCards = (deckConfig, data) => {
                 name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 
                 ${deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] ?? 1}, 
                 очков: ${deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] !== undefined ?
-                    deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] + ")" : "нет)" }`,
+                    deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] + ")" : "нет)"}`,
             }));
         }
     }

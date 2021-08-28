@@ -344,7 +344,8 @@ export const DrawProfit = (data, option) => {
                 const suit = Object.keys(suitsConfig)[j];
                 if (suit === data.props.G.players[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit]?.suit) {
                     boardCells.push(
-                        <td className={`${suitsConfig[suit].suitColor} cursor-pointer`} onClick={() => data.OnClickSuitToPlaceMercenary(j)}
+                        <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
+                            onClick={() => data.OnClickSuitToPlaceMercenary(j)}
                             key={`Place ${data.props.G.players[data.props.ctx.currentPlayer].pickedCard.name} ${j} on 
                             ${suitsConfig[suit].suitName}`}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">

@@ -25,13 +25,13 @@ import {AddDataToLog} from "../Logging";
 export const PlaceThrudAction = (G, ctx, config, suitId) => {
     const suit = Object.keys(suitsConfig)[suitId],
         thrudCard = CreateCard({
-        suit,
-        rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
-        points: G.stack[ctx.currentPlayer][0].variants[suit].points,
-        type: "герой",
-        name: "Thrud",
-        game: "base",
-    });
+            suit,
+            rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
+            points: G.stack[ctx.currentPlayer][0].variants[suit].points,
+            type: "герой",
+            name: "Thrud",
+            game: "base",
+        });
     AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту Труд во фракцию 
     ${suitsConfig[suit].suitName}.`);
     AddCardToPlayer(G, ctx, thrudCard);
@@ -54,13 +54,13 @@ export const PlaceThrudAction = (G, ctx, config, suitId) => {
 export const PlaceYludAction = (G, ctx, config, suitId) => {
     const suit = Object.keys(suitsConfig)[suitId],
         yludCard = CreateCard({
-        suit: suit,
-        rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
-        points: G.stack[ctx.currentPlayer][0].variants[suit].points,
-        type: "герой",
-        name: "Ylud",
-        game: "base",
-    });
+            suit: suit,
+            rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
+            points: G.stack[ctx.currentPlayer][0].variants[suit].points,
+            type: "герой",
+            name: "Ylud",
+            game: "base",
+        });
     AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту Илуд во фракцию 
     ${suitsConfig[suit].suitName}.`);
     AddCardToPlayer(G, ctx, yludCard);

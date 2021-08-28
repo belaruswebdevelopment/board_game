@@ -40,7 +40,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                     );
                     if (data.props.G.players[p].boardCoins[coinIndex] === null) {
                         if ((Number(data.props.ctx.currentPlayer) === p &&
-                            data.props.ctx.phase === "placeCoins") ||
+                                data.props.ctx.phase === "placeCoins") ||
                             (Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase === "placeCoinsUline"
                                 && j === data.props.G.currentTavern + 1)) {
                             DrawCoin(data, playerCells, "back-tavern-icon", data.props.G.players[p].boardCoins[coinIndex],
@@ -54,7 +54,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             data.props.G.players[p], null, null, "OnClickBoardCoin", j);
                     } else {
                         if (data.props.G.winner || (data.props.ctx.phase === "placeCoinsUline" &&
-                                data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== "placeCoins"
+                            data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== "placeCoins"
                             && data.props.G.currentTavern >= j)) {
                             DrawCoin(data, playerCells, "coin", data.props.G.players[p].boardCoins[coinIndex],
                                 coinIndex, data.props.G.players[p]);
@@ -292,7 +292,7 @@ export const DrawPlayersBoards = (data) => {
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                     if (data.props.G.players[p].heroes[i] !== undefined && (!data.props.G.players[p].heroes[i].suit &&
                         !((data.props.G.players[p].heroes[i].name === "Ylud" &&
-                            data.props.G.players[p].cards.flat().findIndex(card => card.name === "Ylud") !== -1) ||
+                                data.props.G.players[p].cards.flat().findIndex(card => card.name === "Ylud") !== -1) ||
                             (data.props.G.players[p].heroes[i].name === "Thrud" &&
                                 data.props.G.players[p].cards.flat().findIndex(card => card.name === "Thrud") !== -1)))) {
                         isDrawRow = true;
