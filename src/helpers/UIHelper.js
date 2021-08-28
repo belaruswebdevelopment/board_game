@@ -56,7 +56,8 @@ export const DrawPlayerBoardForCardDiscard = (data) => {
                 if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].type !== "герой") {
                     isDrawRow = true;
                     DrawCard(data, playerCells, data.props.G.players[data.props.ctx.currentPlayer].cards[j][i], id,
-                        data.props.G.players[data.props.ctx.currentPlayer], suit, "OnClickDiscardCardFromPlayerBoard", j, i);
+                        data.props.G.players[data.props.ctx.currentPlayer], suit,
+                        "OnClickDiscardCardFromPlayerBoard", j, i);
                 } else {
                     playerCells.push(
                         <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} empty card ${id}`}>
@@ -121,9 +122,11 @@ export const DrawPlayerBoardForSuitCardDiscard = (data, suitName) => {
                     playerRows[i] = [];
                     const playerCells = [];
                     DrawCard(data, playerCells, data.props.G.players[data.props.ctx.currentPlayer].cards[suitId][i], i,
-                        data.props.G.players[data.props.ctx.currentPlayer], suitName, "OnClickDiscardSuitCardFromPlayerBoard", suitId, i);
+                        data.props.G.players[data.props.ctx.currentPlayer], suitName,
+                        "OnClickDiscardSuitCardFromPlayerBoard", suitId, i);
                     playerRows[i].push(
-                        <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit cardboard row ${i}`}>
+                        <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} discard suit cardboard 
+                        row ${i}`}>
                             {playerCells}
                         </tr>
                     );
@@ -345,7 +348,8 @@ export const DrawCoin = (data, playerCells, type, coin, id, player = null, coinC
         }
     }
     playerCells.push(
-        <td key={`${player?.nickname ? `player ${player?.nickname} ` : ""}coin ${id}${coin?.value ? ` ${coin?.value}` : " empty"}`}
+        <td key={`${player?.nickname ? `player ${player?.nickname} ` : ""}coin ${id}${coin?.value ? ` ${coin?.value}` 
+            : " empty"}`}
             className={tdClasses} onClick={() => action?.(...args)}>
             <span style={styles} className={spanClasses}>
                 {span}

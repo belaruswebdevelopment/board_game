@@ -123,8 +123,8 @@ export const AddCampCardToPlayer = (G, ctx, card) => {
 export const AddCampCardToPlayerCards = (G, ctx, card) => {
     const suitId = GetSuitIndexByName(card.suit);
     G.players[ctx.currentPlayer].cards[suitId].push(card);
-    AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту кэмпа '${card.name}' во фракцию 
-        ${suitsConfig[card.suit].suitName}.`);
+    AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту кэмпа '${card.name}' 
+    во фракцию ${suitsConfig[card.suit].suitName}.`);
 };
 
 /**
@@ -157,8 +157,8 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
 export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
     const suitId = GetSuitIndexByName(hero.suit);
     G.players[ctx.currentPlayer].cards[suitId].push(hero);
-    AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил героя ${hero.name} во фракцию 
-    ${suitsConfig[hero.suit].suitName}.`);
+    AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил героя ${hero.name} во 
+    фракцию ${suitsConfig[hero.suit].suitName}.`);
 };
 
 /**

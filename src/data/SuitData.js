@@ -388,8 +388,8 @@ const explorerSuit = {
                             },
                     },
                 ];
-                AddDataToLog(G, "game", `Игрок ${player.nickname} получил по знаку отличия разведчиков возможность
-                 получить карту из колоды второй эпохи:`);
+                AddDataToLog(G, "game", `Игрок ${player.nickname} получил по знаку отличия разведчиков 
+                возможность получить карту из колоды второй эпохи:`);
                 AddActionsToStack(G, ctx, stack);
                 return StartActionFromStackOrEndActions(G, ctx);
             }

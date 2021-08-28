@@ -89,8 +89,8 @@ export const Trading = (G, ctx, tradingCoins) => {
         upgradingCoin,
         coinMaxIndex,
         coinMinIndex;
-    AddDataToLog(G, "game", `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') игрока 
-    ${G.players[ctx.currentPlayer].nickname}.`);
+    AddDataToLog(G, "game", `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') 
+    игрока ${G.players[ctx.currentPlayer].nickname}.`);
     // TODO trading isInitial first or playerChoose?
     for (let i = 0; i < tradingCoins.length; i++) {
         if (tradingCoins[i].value === coinsMaxValue) {

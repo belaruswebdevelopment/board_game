@@ -242,9 +242,11 @@ export const BoardGame = {
                 const players = G.players.map(player => player),
                     playersIndexes = [];
                 players.sort((nextPlayer, currentPlayer) => {
-                    if (nextPlayer.campCards.filter(card => card.type === "наёмник").length < currentPlayer.campCards.filter(card => card.type === "наёмник").length) {
+                    if (nextPlayer.campCards.filter(card => card.type === "наёмник").length <
+                        currentPlayer.campCards.filter(card => card.type === "наёмник").length) {
                         return 1;
-                    } else if (nextPlayer.campCards.filter(card => card.type === "наёмник").length > currentPlayer.campCards.filter(card => card.type === "наёмник").length) {
+                    } else if (nextPlayer.campCards.filter(card => card.type === "наёмник").length >
+                        currentPlayer.campCards.filter(card => card.type === "наёмник").length) {
                         return -1;
                     }
                     if (nextPlayer.priority.value < currentPlayer.priority.value) {

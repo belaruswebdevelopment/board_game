@@ -58,7 +58,8 @@ export const CheckDistinction = (G, ctx) => {
         G.distinctions[i] = result;
         if (suit === "explorer" && result === undefined) {
             const discardedCard = G.decks[1].splice(0, 1)[0];
-            AddDataToLog(G, "private", `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
+            AddDataToLog(G, "private", `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: 
+            ${discardedCard.name}.`);
         }
         i++;
     }
@@ -183,7 +184,8 @@ export const FinalScoring = (G, ctx, player) => {
         for (let i = 0; i < player.campCards.length; i++) {
             const currentArtefactScore = Object.values(artefactsConfig).find(artefact => artefact.name === player.campCards[i].name)
                 ?.scoringRule(player, G.suitIdForMjollnir) ?? 0;
-            AddDataToLog(G, "private", `Очки за артефакт ${player.campCards[i].name} игрока ${player.nickname}: ${currentArtefactScore}.`);
+            AddDataToLog(G, "private", `Очки за артефакт ${player.campCards[i].name} игрока ${player.nickname}: 
+            ${currentArtefactScore}.`);
             artifactsScore += currentArtefactScore;
         }
         AddDataToLog(G, "public", `Очки за артефакты игрока ${player.nickname}: ${artifactsScore}.`);

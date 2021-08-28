@@ -35,7 +35,8 @@ export const CheckPickCampCard = (G, ctx) => {
  * @constructor
  */
 export const AddCampCardToCards = (G, ctx, config, cardId) => {
-    if (G.expansions.thingvellir.active && ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.playersOrder[0] && ctx.activePlayers === null) {
+    if (G.expansions.thingvellir.active && ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.playersOrder[0]
+        && ctx.activePlayers === null) {
         G.campPicked = true;
     }
     if (G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]) {

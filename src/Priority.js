@@ -79,7 +79,8 @@ export const ChangePlayersPriorities = (G) => {
     }
     for (let i = 0; i < G.exchangeOrder.length; i++) {
         if (G.players[i].priority.value !== tempPriorities[i].value) {
-            AddDataToLog(G, "public", `Игрок ${G.players[i].nickname} получил кристалл с приоритетом ${tempPriorities[i].value}.`);
+            AddDataToLog(G, "public", `Игрок ${G.players[i].nickname} получил кристалл с приоритетом 
+            ${tempPriorities[i].value}.`);
             G.players[i].priority = tempPriorities[i];
         }
     }

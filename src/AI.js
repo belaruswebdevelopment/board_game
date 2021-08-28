@@ -29,7 +29,8 @@ export const enumerate = (G, ctx) => {
             if (ctx.phase === "pickCards" && stage.startsWith("default")) {
                 continue;
             }
-            if (stage.includes(activeStageOfCurrentPlayer) && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
+            if (stage.includes(activeStageOfCurrentPlayer) && (!isAdvancedExist || stage.includes(advancedString) ===
+                enableAdvancedBot)) {
                 const moveName = moveBy[ctx.phase][stage],
                     [minValue, maxValue] = moveValidators[moveName].getRange({G: G, ctx: ctx}),
                     hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
@@ -137,7 +138,8 @@ export const enumerate = (G, ctx) => {
                         handCoins[allCoinsOrder[i][positionForMaxCoin]]?.value).length <= 1;
                 }
                 if (hasPositionForMinCoin) {
-                    isMinCoinsOnPosition = handCoins.filter(item => item?.value < handCoins[allCoinsOrder[i][positionForMinCoin]]?.value).length <= 1;
+                    isMinCoinsOnPosition = handCoins.filter(item => item?.value <
+                        handCoins[allCoinsOrder[i][positionForMinCoin]]?.value).length <= 1;
                 }
                 if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
                     moves.push({move: "BotsPlaceAllCoins", args: [G.botData.allCoinsOrder[i]]});
@@ -260,7 +262,8 @@ export const enumerate = (G, ctx) => {
     }
     if (activeStageOfCurrentPlayer === "addCoinToPouch") {
         for (let j = 0; j < G.players[ctx.currentPlayer].handCoins.length; j++) {
-            if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && G.players[ctx.currentPlayer].handCoins[j] !== null) {
+            if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" &&
+                G.players[ctx.currentPlayer].handCoins[j] !== null) {
                 botMoveArguments.push([j]);
             }
         }
