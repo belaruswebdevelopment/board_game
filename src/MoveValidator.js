@@ -126,6 +126,8 @@ export const moveBy = {
         upgradeCoin: "ClickCoinToUpgrade",
     },
     placeCoinsUline: {},
+    getMjollnirProfit: {},
+    brisingamensEndGame: {},
 };
 
 /**

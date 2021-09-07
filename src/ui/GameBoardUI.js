@@ -314,7 +314,7 @@ export const DrawProfit = (data, option) => {
                         onClick={() => data.OnClickSuitToGetMjollnirProfit(j)}>
                         <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
                             <b className="whitespace-nowrap text-white">
-                                {data.props.G.players[data.props.ctx.currentPlayer].cards[j].reduce(TotalRank, 0)} + 1
+                                {data.props.G.players[data.props.ctx.currentPlayer].cards[j].reduce(TotalRank, 0) * 2}
                             </b>
                         </span>
                     </td>

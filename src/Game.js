@@ -337,7 +337,29 @@ export const BoardGame = {
             },
             moves: {
                 PlaceCard,
+            },
+        },
+        getMjollnirProfit: {
+            turn: {
+                order: {
+                    first: () => 0,
+                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.playersOrder.length,
+                    playOrder: (G) => G.playersOrder,
+                },
+            },
+            moves: {
                 GetMjollnirProfit,
+            },
+        },
+        brisingamensEndGame: {
+            turn: {
+                order: {
+                    first: () => 0,
+                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.playersOrder.length,
+                    playOrder: (G) => G.playersOrder,
+                },
+            },
+            moves: {
                 DiscardCardFromPlayerBoard,
             },
         },

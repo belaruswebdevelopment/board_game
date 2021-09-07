@@ -274,7 +274,7 @@ export const DiscardTradingCoin = (G, ctx) => {
  * @constructor
  */
 export const DiscardAnyCardFromPlayerBoard = (G, ctx, config, suitId, cardId) => {
-    const discardedCard = G.players[ctx.currentPlayer].cards[suitId].filter(card => card.type !== "герой").splice(cardId, 1);
+    const discardedCard = G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1);
     AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} сбросил карту ${discardedCard.name} 
     в дискард.`);
     delete G.players[ctx.currentPlayer].buffs["discardCardEndGame"];

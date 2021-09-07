@@ -8,52 +8,77 @@ import {CheckAndStartUlineActionsOrContinue} from "./HeroHelpers";
 import {ActivateTrading} from "./CoinHelpers";
 
 /**
- * Проверяет завершение фазы EndTier.
+ * Завершает каждую фазу конца игры и проверяет переход к другим фазам или завершает игру.
  * Применения:
- * 1) После каждого экшена в фазе EndTier.
+ * 1) После завершения экшенов в каждой фазе конца игры.
  *
  * @param G
  * @param ctx
  * @constructor
  */
-export const CheckEndTierPhaseEnded = (G, ctx) => {
+export const CheckEndGameLastActions = (G, ctx) => {
     if (G.tierToEnd) {
         ctx.events.setPhase("getDistinctions");
     } else {
-        RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+        if (ctx.phase !== "brisingamensEndGame" && ctx.phase !== "getMjollnirProfit") {
+            RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+        }
+        let isNewPhase = false;
         if (G.expansions.thingvellir.active) {
-            if (G.players[G.playersOrder[1]]?.buffs?.["discardCardEndGame"]) {
-                G.drawProfit = "BrisingamensEndGameAction";
-                G.stack[G.playersOrder[1]] = [
-                    {
-                        actionName: "DrawProfitAction",
-                        config: {
-                            name: "BrisingamensEndGameAction",
-                            drawName: "Brisingamens end game",
-                        },
-                    },
-                    {
-                        actionName: "DiscardAnyCardFromPlayerBoard",
-                    },
-                ];
-                ctx.events.endTurn();
-            } else if (G.players[G.playersOrder[G.playersOrder.length - 1]]?.buffs?.["getMjollnirProfit"]) {
-                G.drawProfit = "getMjollnirProfit";
-                G.stack[G.playersOrder[G.playersOrder.length - 1]] = [
-                    {
-                        actionName: "DrawProfitAction",
-                        config: {
-                            name: "getMjollnirProfit",
-                            drawName: "Mjollnir",
-                        },
-                    },
-                    {
-                        actionName: "GetMjollnirProfitAction",
-                    },
-                ];
-                ctx.events.endTurn();
+            if (ctx.phase !== "brisingamensEndGame" && ctx.phase !== "getMjollnirProfit") {
+                for (let i = 0; i < ctx.numPlayers; i++) {
+                    if (G.players[i].buffs?.["discardCardEndGame"]) {
+                        isNewPhase = true;
+                        G.playersOrder.push(i);
+                        const stack = [
+                            {
+                                actionName: "DrawProfitAction",
+                                playerId: G.playersOrder[0],
+                                config: {
+                                    name: "BrisingamensEndGameAction",
+                                    drawName: "Brisingamens end game",
+                                },
+                            },
+                            {
+                                playerId: G.playersOrder[0],
+                                actionName: "DiscardAnyCardFromPlayerBoard",
+                            },
+                        ];
+                        AddActionsToStack(G, ctx, stack);
+                        G.drawProfit = "BrisingamensEndGameAction";
+                        ctx.events.setPhase("brisingamensEndGame");
+                        break;
+                    }
+                }
             }
-        } else {
+            if (ctx.phase !== "getMjollnirProfit" && !isNewPhase) {
+                for (let i = 0; i < ctx.numPlayers; i++) {
+                    if (G.players[i].buffs?.["getMjollnirProfit"]) {
+                        isNewPhase = true;
+                        G.playersOrder.push(i);
+                        const stack = [
+                            {
+                                actionName: "DrawProfitAction",
+                                playerId: G.playersOrder[0],
+                                config: {
+                                    name: "getMjollnirProfit",
+                                    drawName: "Mjollnir",
+                                },
+                            },
+                            {
+                                playerId: G.playersOrder[0],
+                                actionName: "GetMjollnirProfitAction",
+                            },
+                        ];
+                        AddActionsToStack(G, ctx, stack);
+                        G.drawProfit = "getMjollnirProfit";
+                        ctx.events.setPhase("getMjollnirProfit");
+                        break;
+                    }
+                }
+            }
+        }
+        if (!isNewPhase) {
             ctx.events.endPhase();
             ctx.events.endGame();
         }
@@ -127,8 +152,8 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                 }
             }
         }
-    } else if (ctx.phase === "endTier") {
-        CheckEndTierPhaseEnded(G, ctx);
+    } else if (ctx.phase === "endTier" || ctx.phase === "brisingamensEndGame" || ctx.phase === "getMjollnirProfit") {
+        CheckEndGameLastActions(G, ctx);
     } else if (ctx.phase === "getDistinctions") {
         ctx.events.endTurn();
     } else if (ctx.phase === "enlistmentMercenaries") {
@@ -138,7 +163,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
             (ctx.playOrder[ctx.playOrder.length - 2] !== undefined && (Number(ctx.currentPlayer) ===
                     Number(ctx.playOrder[ctx.playOrder.length - 2])) &&
                 !G.players[ctx.playOrder[ctx.playOrder.length - 1]].campCards.filter(card => card.type === "наёмник").length)) {
-            CheckEndTierActions(G, ctx);
+            StartEndTierActions(G, ctx);
         } else {
             const stack = [
                 {
@@ -158,18 +183,17 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
 };
 
 /**
- * Проверяет завершение экшенов в фазе EndTier.
+ * Начало экшенов в фазе EndTier.
  * Применения:
- * 1) После каждого экшена в фазе EndTier.
+ * 1) При начале фазы EndTier.
  *
  * @param G
  * @param ctx
  * @constructor
  */
-const CheckEndTierActions = (G, ctx) => {
+const StartEndTierActions = (G, ctx) => {
     G.playersOrder = [];
     let ylud = false,
-        brisingamens = false,
         index = -1;
     for (let i = 0; i < G.players.length; i++) {
         index = G.players[i].heroes.findIndex(hero => hero.name === "Ylud");
@@ -190,115 +214,56 @@ const CheckEndTierActions = (G, ctx) => {
             }
         }
     }
-    if (G.expansions.thingvellir.active) {
-        for (let i = 0; i < ctx.numPlayers; i++) {
-            if (G.players[i].buffs?.["discardCardEndGame"]) {
-                G.playersOrder.push(i);
-                brisingamens = true;
-                break;
-            }
-        }
-        for (let i = 0; i < ctx.numPlayers; i++) {
-            if (G.players[i].buffs?.["getMjollnirProfit"]) {
-                G.playersOrder.push(i);
-                break;
-            }
-        }
-    }
-    if (G.playersOrder.length) {
+    if (ylud) {
         ctx.events.setPhase("endTier");
-        if (ylud) {
-            const variants = {
-                blacksmith: {
-                    suit: "blacksmith",
-                    rank: 1,
-                    points: null,
+        const variants = {
+            blacksmith: {
+                suit: "blacksmith",
+                rank: 1,
+                points: null,
+            },
+            hunter: {
+                suit: "hunter",
+                rank: 1,
+                points: null,
+            },
+            explorer: {
+                suit: "explorer",
+                rank: 1,
+                points: 11,
+            },
+            warrior: {
+                suit: "warrior",
+                rank: 1,
+                points: 7,
+            },
+            miner: {
+                suit: "miner",
+                rank: 1,
+                points: 1,
+            },
+        };
+        const stack = [
+            {
+                playerId: G.playersOrder[0],
+                actionName: "DrawProfitAction",
+                variants,
+                config: {
+                    stageName: "placeCards",
+                    drawName: "Ylud",
+                    name: "placeCard",
                 },
-                hunter: {
-                    suit: "hunter",
-                    rank: 1,
-                    points: null,
-                },
-                explorer: {
-                    suit: "explorer",
-                    rank: 1,
-                    points: 11,
-                },
-                warrior: {
-                    suit: "warrior",
-                    rank: 1,
-                    points: 7,
-                },
-                miner: {
-                    suit: "miner",
-                    rank: 1,
-                    points: 1,
-                },
-            };
-            const stack = [
-                {
-                    playerId: G.playersOrder[0],
-                    actionName: "DrawProfitAction",
-                    variants,
-                    config: {
-                        stageName: "placeCards",
-                        drawName: "Ylud",
-                        name: "placeCard",
-                    },
-                },
-                {
-                    playerId: G.playersOrder[0],
-                    actionName: "PlaceYludAction",
-                    variants,
-                },
-            ];
-            AddActionsToStack(G, ctx, stack);
-            G.drawProfit = "placeCards";
-        } else if (G.expansions.thingvellir.active) {
-            if (brisingamens) {
-                const stack = [
-                    {
-                        playerId: G.playersOrder[0],
-                        actionName: "DrawProfitAction",
-                        config: {
-                            name: "BrisingamensEndGameAction",
-                            drawName: "Brisingamens end game",
-                        },
-                    },
-                    {
-                        playerId: G.playersOrder[0],
-                        actionName: "DiscardAnyCardFromPlayerBoard",
-                    },
-                ];
-                AddActionsToStack(G, ctx, stack);
-                G.drawProfit = "BrisingamensEndGameAction";
-            } else {
-                const stack = [
-                    {
-                        playerId: G.playersOrder[0],
-                        actionName: "DrawProfitAction",
-                        config: {
-                            name: "getMjollnirProfit",
-                            drawName: "Mjollnir",
-                        },
-                    },
-                    {
-                        playerId: G.playersOrder[0],
-                        actionName: "GetMjollnirProfitAction",
-                    },
-                ];
-                AddActionsToStack(G, ctx, stack);
-                G.drawProfit = "getMjollnirProfit";
-            }
-        }
+            },
+            {
+                playerId: G.playersOrder[0],
+                actionName: "PlaceYludAction",
+                variants,
+            },
+        ];
+        AddActionsToStack(G, ctx, stack);
+        G.drawProfit = "placeCards";
     } else {
-        if (!G.tierToEnd) {
-            RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
-            ctx.events.endPhase();
-            ctx.events.endGame();
-        } else {
-            ctx.events.setPhase("getDistinctions");
-        }
+        CheckEndGameLastActions(G, ctx);
     }
 };
 
@@ -323,7 +288,7 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
         G.drawProfit = "startOrPassEnlistmentMercenaries";
         ctx.events.setPhase("enlistmentMercenaries");
     } else {
-        CheckEndTierActions(G, ctx);
+        StartEndTierActions(G, ctx);
     }
 };
 
@@ -343,7 +308,7 @@ const AfterLastTavernEmptyActions = (G, ctx) => {
         if (G.expansions.thingvellir.active) {
             CheckEnlistmentMercenaries(G, ctx);
         } else {
-            CheckEndTierActions(G, ctx);
+            StartEndTierActions(G, ctx);
         }
     } else {
         if (G.expansions.thingvellir.active) {

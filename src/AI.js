@@ -154,48 +154,48 @@ export const enumerate = (G, ctx) => {
     }
     // todo Fix it, now just for bot can do RANDOM move
     if (ctx.phase === "endTier") {
-        if (G.drawProfit === "placeCards") {
-            for (let j = 0; j < G.suitsNum; j++) {
-                const suit = Object.keys(suitsConfig)[j];
-                if (suit !== G.players[ctx.currentPlayer].pickedCard?.suit) {
-                    botMoveArguments.push([j]);
-                }
+        for (let j = 0; j < G.suitsNum; j++) {
+            const suit = Object.keys(suitsConfig)[j];
+            if (suit !== G.players[ctx.currentPlayer].pickedCard?.suit) {
+                botMoveArguments.push([j]);
             }
-            moves.push({
-                move: "PlaceCard",
-                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
-            });
-        } else if (G.drawProfit === "getMjollnirProfit") {
-            const totalSuitsRanks = [];
+        }
+        moves.push({
+            move: "PlaceCard",
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
+        });
+    }
+    if (ctx.phase === "getMjollnirProfit") {
+        const totalSuitsRanks = [];
+        for (let j = 0; j < G.suitsNum; j++) {
+            totalSuitsRanks.push(G.players[ctx.currentPlayer].cards[j].reduce(TotalRank, 0));
+        }
+        botMoveArguments.push([totalSuitsRanks.indexOf(Math.max(...totalSuitsRanks))]);
+        moves.push({
+            move: "GetMjollnirProfit",
+            args: [...botMoveArguments[0]]
+        });
+    }
+    if (ctx.phase === "brisingamensEndGame") {
+        for (let i = 0; ; i++) {
+            let isDrawRow = false;
             for (let j = 0; j < G.suitsNum; j++) {
-                totalSuitsRanks.push(G.players[ctx.currentPlayer].cards[j].reduce(TotalRank, 0));
-            }
-            botMoveArguments.push([totalSuitsRanks.indexOf(Math.max(...totalSuitsRanks))]);
-            moves.push({
-                move: "GetMjollnirProfit",
-                args: [...botMoveArguments[0]]
-            });
-        } else if (G.drawProfit === "BrisingamensEndGameAction") {
-            for (let i = 0; ; i++) {
-                let isDrawRow = false;
-                for (let j = 0; j < G.suitsNum; j++) {
-                    if (G.players[ctx.currentPlayer].cards[j] !== undefined &&
-                        G.players[ctx.currentPlayer].cards[j][i] !== undefined) {
-                        isDrawRow = true;
-                        if (G.players[ctx.currentPlayer].cards[j][i].type !== "герой") {
-                            botMoveArguments.push([j, i]);
-                        }
+                if (G.players[ctx.currentPlayer].cards[j] !== undefined &&
+                    G.players[ctx.currentPlayer].cards[j][i] !== undefined) {
+                    isDrawRow = true;
+                    if (G.players[ctx.currentPlayer].cards[j][i].type !== "герой") {
+                        botMoveArguments.push([j, i]);
                     }
                 }
-                if (!isDrawRow) {
-                    break;
-                }
             }
-            moves.push({
-                move: "DiscardCardFromPlayerBoard",
-                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
-            });
+            if (!isDrawRow) {
+                break;
+            }
         }
+        moves.push({
+            move: "DiscardCardFromPlayerBoard",
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
+        });
     }
     if (ctx.phase === "enlistmentMercenaries") {
         if (G.drawProfit === "startOrPassEnlistmentMercenaries") {
