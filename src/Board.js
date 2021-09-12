@@ -19,7 +19,11 @@ import {DrawDebugData} from "./ui/DebugUI";
 import {DrawLogData} from "./ui/LogUI";
 
 /**
- * Отрисовка игрового стола.
+ * <h3>Отрисовка игрового стола.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При отрисовке игрового поля для игроков.</li>
+ * </ol>
  */
 export class GameBoard extends React.Component {
     OnClickDistinctionCard = (cardId) => {

@@ -9,6 +9,11 @@ import {GetSuitIndexByName} from "./helpers/SuitHelpers";
  * values - values for Id.
  */
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param args
@@ -27,6 +32,11 @@ export const IsValidMove = (...args) => {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param obj
@@ -47,6 +57,11 @@ const CheckMove = ({obj, objId, range = [], values = []}) => {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param num
@@ -59,6 +74,11 @@ const ValidateByRange = (num, range) => {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param num
@@ -71,6 +91,11 @@ const ValidateByValues = (num, values) => {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param G
@@ -96,6 +121,11 @@ export const CoinUpgradeValidation = (G, ctx, coinId, type) => {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @type {{placeCoins: {default1: string, default2: string, default_advanced: string}, null: {}, pickCards: {default: string, upgradeCoin: string, defaultPickCampCard: string, pickHero: string}, getDistinctions: {default: string, upgradeCoin: string, pickDistinctionCard: string}}}
@@ -131,6 +161,11 @@ export const moveBy = {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @type {{ClickDistinctionCard: {getRange: (function({G: *}): [number, undefined]), validate: (function({G: *, ctx: *, id: *}): boolean)}, ClickCoinToUpgrade: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G?: *, ctx?: *, id?: *, type?: *}): boolean)}, ClickCardToPickDistinction: {getRange: (function(): number[]), validate: (function(): boolean)}, ClickCampCard: {getRange: (function({G: *}): [number, number]), validate: (function({G: *, ctx: *}))}, ClickHandCoin: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}))}, BotsPlaceAllCoins: {getValue: (function({G: *, ctx: *, id: *}): *), getRange: (function({G: *}): [number, number]), validate: (function(): boolean)}, ClickHeroCard: {getRange: (function({G: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}): boolean)}, ClickBoardCoin: {getRange: (function({G: *, ctx: *}): [number, number]), validate: (function({G: *, ctx: *, id: *}))}}}

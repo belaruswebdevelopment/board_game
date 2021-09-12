@@ -1,7 +1,9 @@
 /**
- * Стилизация при отрисовке всех картинок в игре.
- * Применения:
- * 1) Используется при отрисовке всех картинок в игре.
+ * <h3>Стилизация при отрисовке всех картинок в игре.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при отрисовке всех картинок в игре.</li>
+ * </ol>
  *
  * @type {{Priorities: (function(*): {background: string}), CoinBack: (function(): {background: string}), Taverns: ((function(*): ({background: string}))|*), Priority: (function(): {background: string}), Heroes: ((function(*, *): ({background: string}|undefined))|*), Distinctions: ((function(*): ({background: string}))|*), Suits: (function(*): {background: string}), DistinctionsBack: (function(): {background: string}), HeroBack: (function(): {background: string}), Exchange: (function(): {background: string}), Coin: (function(*, *): {background: string}), CampCards: ((function(*, *): ({background: string}))|*), Camp: (function(): {background: string})}}
  */

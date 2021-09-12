@@ -1,9 +1,11 @@
 import {TotalRank} from "../Score";
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
@@ -34,9 +36,11 @@ const Fafnir_Baleygr = {
 };
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(*)), game: string, stack: [{actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
@@ -58,9 +62,11 @@ const Draupnir = {
 };
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}], tier: number, name: string, description: string, rank: number, suit: string, points: number}} Артефакт.
  */
@@ -83,9 +89,11 @@ const Vegvisir = {
 };
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(*)), game: string, stack: [{actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
@@ -107,9 +115,11 @@ const Svalinn = {
 };
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
@@ -141,9 +151,11 @@ const Megingjord = {
 };
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
@@ -169,9 +181,11 @@ const Vidofnir_Vedrfolnir = {
 };
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}, {config: {number: number, stageName: string, name: string}, actionName: string}, {actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
@@ -217,9 +231,11 @@ const Brisingamens = {
 };
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(*, *)), game: string, stack: [{actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
@@ -250,9 +266,11 @@ const Mjollnir = {
 };
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
@@ -289,9 +307,11 @@ const Hofud = {
 };
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(*)), game: string, stack: [{actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
@@ -313,9 +333,11 @@ const Hrafnsmerki = {
 };
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
@@ -341,9 +363,11 @@ const Jarnglofi = {
 };
 
 /**
- * Данные об артефакте.
- * Применения:
- * 1) Используется при обращении к данным артефакта.
+ * <h3>Данные об артефакте.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным артефакта.</li>
+ * </ol>
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {config: {stageName: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
@@ -372,9 +396,11 @@ const Gjallarhorn = {
 };
 
 /**
- * Конфиг карт наёмников для кэмпа.
- * Применения:
- * 1) Происходит при создании всех карт артефактов для кэмпа при инициализации игры.
+ * <h3>Конфиг карт наёмников для кэмпа.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании всех карт артефактов для кэмпа при инициализации игры.</li>
+ * </ol>
  *
  * @type {([{warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}}, {explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}}, {hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, null]|[{blacksmith: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}}, {warrior: {rank: number, suit: string, points: number}, miner: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: number}}, {warrior: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}}, {explorer: {rank: number, suit: string, points: number}, miner: {rank: number, suit: string, points: number}}, null])[]} Все карты наёмников для кэмпа.
  */
@@ -530,9 +556,11 @@ export const mercenariesConfig = [
 ];
 
 /**
- * Конфиг карт артефактов для кэмпа.
- * Применения:
- * 1) Происходит при создании всех карт артефактов для кэмпа при инициализации игры.
+ * <h3>Конфиг карт артефактов для кэмпа.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании всех карт артефактов для кэмпа при инициализации игры.</li>
+ * </ol>
  *
  * @type {{Svalinn: {scoringRule: (function(*)), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Brisingamens: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string}|{config: {number: number, stageName: string, name: string}, actionName: string}|{config: {number: number, stageName: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Vidofnir_Vedrfolnir: {scoringRule: (function(): number), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Hrafnsmerki: {scoringRule: (function(*)), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Gjallarhorn: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {stageName: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Hofud: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {stageName: string, name: string}, actionName: string}|{config: {suit: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Draupnir: {scoringRule: (function(*)), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Mjollnir: {scoringRule: (function(*, *)), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Jarnglofi: {scoringRule: (function(): number), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Megingjord: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Fafnir_Baleygr: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Vegvisir: {scoringRule: (function(): number), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: number, suit: string, points: number}}} Все карты артефактов для кэмпа.
  */

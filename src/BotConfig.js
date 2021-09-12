@@ -1,6 +1,11 @@
 import {CompareCards, EvaluateCard} from "./Card";
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param permutation
@@ -32,6 +37,11 @@ export const Permute = (permutation) => {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param set
@@ -73,6 +83,11 @@ export const k_combinations = (set, k) => {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param tavernsNum
@@ -96,6 +111,11 @@ export const GetAllPicks = ({tavernsNum, playersNum}) => {
 
 //absolute heuristics
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @type {{heuristic: (function(*): *), weight: number}}
@@ -106,6 +126,11 @@ const isAllCardsEqual = {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @type {{heuristic: (function(*): *), weight: number}}
@@ -117,6 +142,11 @@ const isAllWorse = {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @type {{heuristic: (function(*): *), weight: number}}
@@ -127,6 +157,11 @@ const isAllAverage = {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @type {{heuristic: (function(*): *), weight: number}}
@@ -137,6 +172,11 @@ const isAllBetter = {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @type {{heuristic: (function(*): boolean), weight: number}}
@@ -147,6 +187,11 @@ const isOnlyOneWorse = {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @type {{heuristic: (function(*): *), weight: number}}
@@ -157,6 +202,11 @@ const isOnlyWorseOrBetter = {
 };
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @type {{heuristic: (function(*): *), weight: number}[]}
@@ -172,6 +222,11 @@ console.log(relativeHeuristicsForTradingCoin ? "" : "");
 
 //may be to add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param array
@@ -188,6 +243,11 @@ const GetCharacteristics = (array) => {
 }
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param stat1
@@ -205,6 +265,11 @@ const CompareCharacteristics = (stat1, stat2) => {
 }
 
 /**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param G

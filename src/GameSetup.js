@@ -11,7 +11,11 @@ import {BuildCampCards} from "./Camp";
 import {artefactsConfig, mercenariesConfig} from "./data/CampData";
 
 /**
- * Сетап игры.
+ * <h3>Сетап игры.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Данные используются в игре.</li>
+ * </ol>
  *
  * @param ctx
  * @returns {{suitsNum: number, campNum: number, campPicked: boolean, tavernsNum: number, discardCampCardsDeck: *[], tierToEnd: number, currentTavern: null, marketCoins: *[], drawSize: (number|*), heroes: *[], discardCardsDeck: *[], drawProfit: null, distinctions: any[], decks: *[], expansions: {thingvellir: {active: boolean}}, taverns: *[], exchangeOrder: *[], botData: {}, averageCards: *[], debug: boolean, players: *[], actionsNum: null, camp: T[], winner: null, campDecks: ([{tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, null, null, null, null, null, null, null]|[{tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, null, null, null, null, null, null, null])[], playersOrder: *[], marketCoinsUnique: *[]}}
