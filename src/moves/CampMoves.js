@@ -2,10 +2,9 @@ import {IsValidMove} from "../MoveValidator";
 import {INVALID_MOVE} from "boardgame.io/core";
 import {
     AddActionsToStack,
-    EndActionFromStackAndAddNew,
+    EndActionFromStackAndAddNew, StartActionForChosenPlayer,
     StartActionFromStackOrEndActions
 } from "../helpers/StackHelpers";
-import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 // todo Add logging
 /**
  * <h3>Выбор карты из кэмпа.</h3>
@@ -23,7 +22,7 @@ import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 export const ClickCampCard = (G, ctx, cardId) => {
     const isValidMove = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]})
         && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
-            (!G.campPicked && G.players[ctx.currentPlayer].buffs?.["goCamp"]));
+            (!G.campPicked && G.players[ctx.currentPlayer].buffs["goCamp"]));
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -46,7 +45,7 @@ export const ClickCampCard = (G, ctx, cardId) => {
  */
 export const ClickCampCardHolda = (G, ctx, cardId) => {
     const isValidMove = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]})
-        && G.players[ctx.currentPlayer].buffs?.["goCampOneTime"];
+        && G.players[ctx.currentPlayer].buffs["goCampOneTime"];
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -96,17 +95,17 @@ export const DiscardCardFromPlayerBoard = (G, ctx, suitId, cardId) => {
  * @param G
  * @param ctx
  * @param suitId Id фракции.
+ * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  * @constructor
  */
-export const DiscardSuitCardFromPlayerBoard = (G, ctx, suitId, cardId) => {
-    // todo rework in action
-    G.discardCardsDeck.push(G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0]);
-    if (ctx.activePlayers.length === 0) {
-        ctx.events.endStage();
-        AfterBasicPickCardActions(G, ctx);
+export const DiscardSuitCardFromPlayerBoard = (G, ctx, suitId, playerId, cardId) => {
+    const isValidMove = Number(playerId) !== Number(ctx.currentPlayer) && Number(playerId) ===
+        Number(ctx.playerID);
+    if (!isValidMove) {
+        return INVALID_MOVE;
     }
-    return EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
+    return StartActionForChosenPlayer(G, ctx, playerId, suitId, playerId, cardId);
 };
 
 /**

@@ -29,7 +29,7 @@ export const CheckEndGameLastActions = (G, ctx) => {
         if (G.expansions.thingvellir.active) {
             if (ctx.phase !== "brisingamensEndGame" && ctx.phase !== "getMjollnirProfit") {
                 for (let i = 0; i < ctx.numPlayers; i++) {
-                    if (G.players[i].buffs?.["discardCardEndGame"]) {
+                    if (G.players[i].buffs["discardCardEndGame"]) {
                         isNewPhase = true;
                         G.playersOrder.push(i);
                         const stack = [
@@ -55,7 +55,7 @@ export const CheckEndGameLastActions = (G, ctx) => {
             }
             if (ctx.phase !== "getMjollnirProfit" && !isNewPhase) {
                 for (let i = 0; i < ctx.numPlayers; i++) {
-                    if (G.players[i].buffs?.["getMjollnirProfit"]) {
+                    if (G.players[i].buffs["getMjollnirProfit"]) {
                         isNewPhase = true;
                         G.playersOrder.push(i);
                         const stack = [
@@ -118,7 +118,8 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                     const cardIndex = G.taverns[G.currentTavern].findIndex(card => card !== null);
                     DiscardCardFromTavern(G, cardIndex);
                 }
-                if (G.expansions.thingvellir.active && Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) {
+                if (G.expansions.thingvellir.active && Number(ctx.currentPlayer) ===
+                    Number(ctx.playOrder[ctx.playOrder.length - 1])) {
                     DiscardCardIfCampCardPicked(G);
                 }
                 const isLastTavern = G.tavernsNum - 1 === G.currentTavern,
@@ -133,8 +134,8 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                         ctx.events.setPhase("placeCoinsUline");
                     }
                 } else {
-                    if (Number(ctx.currentPlayer) === Number(ctx.playOrder[0]) && G.campPicked && ctx.numPlayers === 2 &&
-                        G.taverns[G.currentTavern].every(card => card !== null)) {
+                    if (Number(ctx.currentPlayer) === Number(ctx.playOrder[0]) && G.campPicked &&
+                        ctx.numPlayers === 2 && G.taverns[G.currentTavern].every(card => card !== null)) {
                         const stack = [
                             {
                                 actionName: "DrawProfitAction",
@@ -172,7 +173,8 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
             const stack = [
                 {
                     actionName: "DrawProfitAction",
-                    playerId: ctx.playOrder[ctx.playOrder.findIndex(playerIndex => Number(playerIndex) === Number(ctx.currentPlayer)) + 1],
+                    playerId: ctx.playOrder[ctx.playOrder.findIndex(playerIndex => Number(playerIndex) ===
+                        Number(ctx.currentPlayer)) + 1],
                     config: {
                         name: "enlistmentMercenaries",
                         drawName: "Enlistment Mercenaries",

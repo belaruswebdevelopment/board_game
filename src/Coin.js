@@ -40,7 +40,7 @@ export const BuildCoins = (coinConfig, opts) => {
     const coins = [];
     for (let i = 0; i < coinConfig.length; i++) {
         const isMarket = opts.players !== undefined,
-            coinValue = coinConfig[i]?.value ?? coinConfig[i],
+            coinValue = (coinConfig[i] && coinConfig[i].value) !== undefined ? coinConfig[i].value : coinConfig[i],
             count = isMarket ? coinConfig[i].count()[opts.players] : 1;
         if (isMarket) {
             opts.count.push({value: coinValue});
@@ -114,7 +114,7 @@ export const Trading = (G, ctx, tradingCoins) => {
             // }
         }
     }
-    if (G.players[ctx.currentPlayer].buffs?.["upgradeNextCoin"] === "min") {
+    if (G.players[ctx.currentPlayer].buffs["upgradeNextCoin"] === "min") {
         stack = [
             {
                 actionName: "UpgradeCoinAction",
@@ -166,9 +166,9 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
     if (G.players[ctx.currentPlayer].buffs["upgradeNextCoin"]) {
         delete G.players[ctx.currentPlayer].buffs["upgradeNextCoin"];
     }
-    if (config?.coin === "min") {
+    if ((config && config.coin) === "min") {
         // todo Upgrade isInitial min coin or not or User must choose!?
-        if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline") {
+        if (G.players[ctx.currentPlayer].buffs["everyTurn"] === "Uline") {
             const allCoins = [],
                 allHandCoins = G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null);
             for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
@@ -190,19 +190,21 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
         } else {
             const minCoinValue = Math.min(...G.players[ctx.currentPlayer].boardCoins
                 .filter(coin => coin !== null && !coin.isTriggerTrading).map(coin => coin.value));
-            upgradingCoin = G.players[ctx.currentPlayer].boardCoins.find(coin => coin?.value === minCoinValue);
-            upgradingCoinId = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin?.value === upgradingCoin.value);
+            upgradingCoin = G.players[ctx.currentPlayer].boardCoins.find(coin => (coin && coin.value) === minCoinValue);
+            upgradingCoinId = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => (coin && coin.value) ===
+                upgradingCoin.value);
         }
     } else if (type === "hand") {
         const handCoinPosition = G.players[ctx.currentPlayer].boardCoins
             .filter((coin, index) => coin === null && index <= upgradingCoinId).length;
         upgradingCoin = G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null)[handCoinPosition - 1];
-        upgradingCoinId = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin?.value === upgradingCoin.value &&
-            coin?.isInitial === isInitial);
+        upgradingCoinId = G.players[ctx.currentPlayer].handCoins.findIndex(coin => (coin && coin.value) ===
+            upgradingCoin.value && (coin && coin.isInitial) === isInitial);
     } else {
         upgradingCoin = G.players[ctx.currentPlayer].boardCoins[upgradingCoinId];
     }
-    const buffValue = G.players[ctx.currentPlayer].buffs?.["upgradeCoin"] ?? 0,
+    const buffValue = G.players[ctx.currentPlayer].buffs["upgradeCoin"] ?
+            G.players[ctx.currentPlayer].buffs["upgradeCoin"] : 0,
         newValue = upgradingCoin.value + config.value + buffValue;
     let upgradedCoin = null;
     if (G.marketCoins.length) {
@@ -231,11 +233,12 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
         с итоговым значением '${upgradedCoin.value}'.`);
         let handCoinIndex = -1;
         if (G.players[ctx.currentPlayer].boardCoins[upgradingCoinId] === null) {
-            handCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin?.value === upgradingCoin.value);
+            handCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => (coin && coin.value) ===
+                upgradingCoin.value);
         } else {
             G.players[ctx.currentPlayer].boardCoins[upgradingCoinId] = null;
         }
-        if (ctx.activePlayers?.[ctx.currentPlayer] === "placeTradingCoinsUline") {
+        if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline") {
             const emptyCoinIndex = G.players[ctx.currentPlayer].handCoins.indexOf(null);
             G.players[ctx.currentPlayer].handCoins[emptyCoinIndex] = upgradedCoin;
         } else {

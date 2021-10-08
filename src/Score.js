@@ -150,11 +150,11 @@ export const FinalScoring = (G, ctx, player) => {
         coinsValue = 0;
     AddDataToLog(G, "public", `Очки за карты дворфов игрока ${player.nickname}: ${score}`);
     for (let i = 0; i < player.boardCoins.length; i++) {
-        coinsValue += player.boardCoins[i]?.value ?? 0;
+        coinsValue += (player.boardCoins[i] && player.boardCoins[i].value) ? player.boardCoins[i].value : 0;
     }
-    if (player.buffs?.["everyTurn"] === "Uline") {
+    if (player.buffs["everyTurn"] === "Uline") {
         for (let i = 0; i < player.handCoins.length; i++) {
-            coinsValue += player.handCoins[i]?.value ?? 0;
+            coinsValue += (player.handCoins[i] && player.handCoins[i].value) ? player.handCoins[i].value : 0;
         }
     }
     score += coinsValue;
@@ -162,15 +162,19 @@ export const FinalScoring = (G, ctx, player) => {
     const suitWarriorIndex = GetSuitIndexByName("warrior");
     if (suitWarriorIndex !== -1) {
         const warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, "warrior");
-        if (warriorsDistinction !== undefined && G.players.findIndex(p => p.nickname === player.nickname) === warriorsDistinction) {
-            const warriorDistinctionScore = suitsConfig["warrior"].distinction.awarding(G, ctx, player) ?? 0;
+        if (warriorsDistinction !== undefined && G.players.findIndex(p => p.nickname === player.nickname) ===
+            warriorsDistinction) {
+            const warriorDistinctionScore = suitsConfig["warrior"].distinction.awarding(G, ctx, player) ?
+                suitsConfig["warrior"].distinction.awarding(G, ctx, player) : 0;
             score += warriorDistinctionScore;
-            AddDataToLog(G, "public", `Очки за преимущество по воинам игрока ${player.nickname}: ${warriorDistinctionScore}`);
+            AddDataToLog(G, "public", `Очки за преимущество по воинам игрока ${player.nickname}: 
+            ${warriorDistinctionScore}`);
         }
     }
     const suitMinerIndex = GetSuitIndexByName("miner");
     if (suitMinerIndex !== -1) {
-        const minerDistinctionPriorityScore = suitsConfig["miner"].distinction.awarding(G, ctx, player) ?? 0
+        const minerDistinctionPriorityScore = suitsConfig["miner"].distinction.awarding(G, ctx, player) ?
+            suitsConfig["miner"].distinction.awarding(G, ctx, player) : 0;
         score += minerDistinctionPriorityScore;
         if (minerDistinctionPriorityScore) {
             AddDataToLog(G, "public", `Очки за кристалл преимущества по горнякам игрока ${player.nickname}: 
@@ -182,10 +186,14 @@ export const FinalScoring = (G, ctx, player) => {
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
         if (player.heroes[i].name.startsWith("Dwerg")) {
-            dwerg_brothers += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name)?.scoringRule() ?? 0;
+            dwerg_brothers += Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name)
+                .scoringRule(player);
         } else {
-            const currentHeroScore = Object.values(heroesConfig).find(hero => hero.name === player.heroes[i].name)?.scoringRule(player) ?? 0;
-            AddDataToLog(G, "private", `Очки за героя ${player.heroes[i].name} игрока ${player.nickname}: ${currentHeroScore}.`);
+            const currentHeroScore = Object.values(heroesConfig).find(hero => hero.name ===
+                player.heroes[i].name)
+                .scoringRule(player);
+            AddDataToLog(G, "private", `Очки за героя ${player.heroes[i].name} игрока ${player.nickname}: 
+            ${currentHeroScore}.`);
             heroesScore += currentHeroScore;
         }
     }
@@ -197,8 +205,10 @@ export const FinalScoring = (G, ctx, player) => {
     if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
-            const currentArtefactScore = Object.values(artefactsConfig).find(artefact => artefact.name === player.campCards[i].name)
-                ?.scoringRule(player, G.suitIdForMjollnir) ?? 0;
+            const artefact = Object.values(artefactsConfig).find(artefact => artefact.name ===
+                    player.campCards[i].name),
+                currentArtefactScore = (artefact && artefact.scoringRule(player, G.suitIdForMjollnir)) ?
+                    artefact.scoringRule(player, G.suitIdForMjollnir) : 0;
             AddDataToLog(G, "private", `Очки за артефакт ${player.campCards[i].name} игрока ${player.nickname}: 
             ${currentArtefactScore}.`);
             artifactsScore += currentArtefactScore;

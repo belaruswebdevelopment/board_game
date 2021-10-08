@@ -642,8 +642,8 @@ const Astrid = {
             },
         },
     ],
-    scoringRule: (player) => Math.max(...player.boardCoins.filter(coin => coin?.value).map(coin => coin.value),
-        ...player.handCoins.filter(coin => coin?.value).map(coin => coin.value)),
+    scoringRule: (player) => Math.max(...player.boardCoins.filter(coin => coin && coin.value).map(coin => coin.value),
+        ...player.handCoins.filter(coin => coin && coin.value).map(coin => coin.value)),
 };
 
 /**

@@ -84,7 +84,7 @@ export const BuildHeroes = (config) => {
  * @constructor
  */
 export const CheckPickHero = (G, ctx) => {
-    if (!G.players[ctx.currentPlayer].buffs?.["noHero"]) {
+    if (!G.players[ctx.currentPlayer].buffs["noHero"]) {
         const isCanPickHero = Math.min(...G.players[ctx.currentPlayer].cards.map(item => item.reduce(TotalRank, 0)))
             > G.players[ctx.currentPlayer].heroes.length;
         if (isCanPickHero) {

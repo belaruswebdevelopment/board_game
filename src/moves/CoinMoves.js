@@ -60,14 +60,14 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
         player.selectedCoin = undefined;
         if (ctx.phase === "placeCoinsUline") {
             ctx.events.setPhase("pickCards");
-        } else if (ctx.activePlayers?.[ctx.currentPlayer] === "placeTradingCoinsUline") {
+        } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline") {
             G.actionsNum--;
             if (G.actionsNum === 0) {
                 G.actionsNum = null;
             }
             AfterBasicPickCardActions(G, ctx);
         } else {
-            const isEveryPlayersHandCoinsEmpty = G.players.filter(player => player.buffs?.["everyTurn"] !== "Uline")
+            const isEveryPlayersHandCoinsEmpty = G.players.filter(player => player.buffs["everyTurn"] !== "Uline")
                 .every(player => player.handCoins.every(coin => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {
                 if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {

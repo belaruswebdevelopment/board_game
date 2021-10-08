@@ -14,7 +14,8 @@ import {Trading} from "../Coin";
  * @constructor
  */
 export const ActivateTrading = (G, ctx) => {
-    if (G.players[ctx.currentPlayer].boardCoins[G.currentTavern]?.isTriggerTrading) {
+    if (G.players[ctx.currentPlayer].boardCoins[G.currentTavern] &&
+        G.players[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading) {
         const tradingCoins = [];
         for (let i = G.tavernsNum; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
             tradingCoins.push(G.players[ctx.currentPlayer].boardCoins[i]);

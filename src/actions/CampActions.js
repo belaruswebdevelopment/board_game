@@ -1,9 +1,15 @@
-import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
+import {
+    AddActionsToStack,
+    AddActionsToStackAfterCurrent,
+    EndActionForChosenPlayer,
+    EndActionFromStackAndAddNew
+} from "../helpers/StackHelpers";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AddCampCardToPlayer, AddCampCardToPlayerCards} from "../Player";
 import {CheckAndMoveThrudOrPickHeroAction} from "./HeroActions";
 import {AddDataToLog} from "../Logging";
 import {suitsConfig} from "../data/SuitData";
+import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 
 /**
  * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>
@@ -42,8 +48,8 @@ export const AddCampCardToCards = (G, ctx, config, cardId) => {
     if (ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.playersOrder[0] && ctx.activePlayers === null) {
         G.campPicked = true;
     }
-    if (G.players[ctx.currentPlayer].buffs?.["goCampOneTime"]) {
-        delete G.players[ctx.currentPlayer].buffs?.["goCampOneTime"];
+    if (G.players[ctx.currentPlayer].buffs["goCampOneTime"]) {
+        delete G.players[ctx.currentPlayer].buffs["goCampOneTime"];
     }
     const campCard = G.camp[cardId];
     let suitId = null,
@@ -114,7 +120,7 @@ export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
 export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     const number = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length,
         handCoinsNumber = G.players[ctx.currentPlayer].handCoins.length;
-    if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && number > 0 && handCoinsNumber) {
+    if (G.players[ctx.currentPlayer].buffs["everyTurn"] === "Uline" && number > 0 && handCoinsNumber) {
         const stack = [
             {
                 actionName: "DrawProfitAction",
@@ -261,9 +267,9 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
  * @constructor
  */
 export const DiscardTradingCoin = (G, ctx) => {
-    let tradingCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin?.isTriggerTrading);
-    if (G.players[ctx.currentPlayer].buffs?.["everyTurn"] === "Uline" && tradingCoinIndex === -1) {
-        tradingCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin?.isTriggerTrading);
+    let tradingCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin && coin.isTriggerTrading);
+    if (G.players[ctx.currentPlayer].buffs["everyTurn"] === "Uline" && tradingCoinIndex === -1) {
+        tradingCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin && coin.isTriggerTrading);
         G.players[ctx.currentPlayer].handCoins.splice(tradingCoinIndex, 1, null);
     } else {
         G.players[ctx.currentPlayer].boardCoins.splice(tradingCoinIndex, 1, null);
@@ -288,7 +294,7 @@ export const DiscardTradingCoin = (G, ctx) => {
  * @constructor
  */
 export const DiscardAnyCardFromPlayerBoard = (G, ctx, config, suitId, cardId) => {
-    const discardedCard = G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1);
+    const discardedCard = G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0];
     AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} сбросил карту ${discardedCard.name} 
     в дискард.`);
     delete G.players[ctx.currentPlayer].buffs["discardCardEndGame"];
@@ -296,7 +302,7 @@ export const DiscardAnyCardFromPlayerBoard = (G, ctx, config, suitId, cardId) =>
 };
 
 /**
- * <h3>Действия, связанные с дискардом карты из конкретной фракции игрока.</h3>
+ * <h3>Старт действия, связанные с дискардом карты из конкретной фракции игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При выборе карты кэмпа артефакта Hofud.</li>
@@ -304,25 +310,57 @@ export const DiscardAnyCardFromPlayerBoard = (G, ctx, config, suitId, cardId) =>
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий артефакта.
- * @returns {*}
+ * @param config
  * @constructor
  */
-export const DiscardSuitCard = (G, ctx, config) => {
-    // todo FixIt
+export const StartDiscardSuitCard = (G, ctx, config) => {
     const suitId = GetSuitIndexByName(config.suit),
         value = {};
     for (let i = 0; i < ctx.numPlayers; i++) {
         if (i !== Number(ctx.currentPlayer) && G.players[i].cards[suitId].length) {
-            value[i] = "discardSuitCard";
+            value[i] = {
+                stage: "discardSuitCard",
+            };
+            const stack = [
+                {
+                    actionName: "DiscardSuitCard",
+                    playerId: i,
+                    config: {
+                        suit: "warrior",
+                    },
+                },
+            ];
+            AddActionsToStack(G, ctx, stack);
         }
     }
     ctx.events.setActivePlayers({
         value,
-        moveLimit: 1,
     });
-    G.drawProfit = config.name;
-    return EndActionFromStackAndAddNew(G, ctx);
+    G.drawProfit = "HofudAction";
+};
+
+/**
+ * <h3>Действия, связанные с дискардом карты из конкретной фракции игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе карты для дискарда по действию карты кэмпа артефакта Hofud.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий артефакта.
+ * @param suitId Id фракции.
+ * @param playerId Id игрока.
+ * @param cardId Id сбрасываемой карты.
+ * @returns {*}
+ * @constructor
+ */
+export const DiscardSuitCard = (G, ctx, config, suitId, playerId, cardId) => {
+    const discardedCard = G.players[ctx.playerID].cards[suitId].splice(cardId, 1)[0];
+    G.discardCardsDeck.push(discardedCard);
+    AddDataToLog(G, "game", `Игрок ${G.players[ctx.playerID].nickname} сбросил карту ${discardedCard.name} 
+    в дискард.`);
+    EndActionForChosenPlayer(G, ctx, playerId);
 };
 
 /**

@@ -21,7 +21,9 @@ import {
     DiscardSuitCard,
     DiscardTradingCoin,
     GetMjollnirProfitAction,
-    StartVidofnirVedrfolnirAction, UpgradeCoinVidofnirVedrfolnirAction
+    StartDiscardSuitCard,
+    StartVidofnirVedrfolnirAction,
+    UpgradeCoinVidofnirVedrfolnirAction
 } from "./CampActions";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AddDataToLog} from "../Logging";
@@ -108,6 +110,9 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         case "DiscardTradingCoin":
             action = DiscardTradingCoin;
             break;
+        case "StartDiscardSuitCard":
+            action = StartDiscardSuitCard;
+            break;
         case "DiscardSuitCard":
             action = DiscardSuitCard;
             break;
@@ -129,7 +134,7 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         default:
             action = null;
     }
-    return action?.(G, ctx, data.config, ...args);
+    return action && action(G, ctx, data.config, ...args);
 };
 
 /**
@@ -167,11 +172,11 @@ const UpgradeCoinAction = (G, ctx, config, ...args) => {
 const DrawProfitAction = (G, ctx, config) => {
     AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} должен получить преимущества от 
     действия '${config.drawName}'.`);
-    if (G.stack[ctx.currentPlayer][0].config?.stageName) {
+    if (G.stack[ctx.currentPlayer][0].config && G.stack[ctx.currentPlayer][0].config.stageName) {
         AddDataToLog(G, "game", `Начало фазы ${G.stack[ctx.currentPlayer][0].config.stageName}.`);
         ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
     }
-    G.actionsNum = config.number ?? 1;
+    G.actionsNum = config.number ? config.number : 1;
     G.drawProfit = config.name;
 };
 
@@ -281,7 +286,7 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
             }
         }
     }
-    const isValidMove = cardsToDiscard.length >= (config.number ?? 1);
+    const isValidMove = cardsToDiscard.length >= (config.number ? config.number : 1);
     if (!isValidMove) {
         G.stack[ctx.currentPlayer].splice(1);
         return INVALID_MOVE;

@@ -142,6 +142,7 @@ export const moveBy = {
         defaultPickCampCard: "ClickCampCard",
         pickHero: "ClickHeroCard",
         upgradeCoin: "ClickCoinToUpgrade",
+        discardSuitCard: "discardSuitCard"
     },
     getDistinctions: {
         default: "ClickDistinctionCard",
@@ -216,6 +217,6 @@ export const moveValidators = {
     ClickCampCard: {
         getRange: ({G}) => ([0, G.camp.length]),
         validate: ({G, ctx}) => G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
-            (!G.campPicked && G.players[ctx.currentPlayer].buffs?.["goCamp"])),
+            (!G.campPicked && G.players[ctx.currentPlayer].buffs["goCamp"])),
     },
 };

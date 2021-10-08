@@ -58,7 +58,7 @@ const Draupnir = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: player => player.boardCoins.filter(coin => coin?.value >= 15).length * 6,
+    scoringRule: player => player.boardCoins.filter(coin => (coin && coin.value) >= 15).length * 6,
 };
 
 /**
@@ -287,21 +287,12 @@ const Hofud = {
         {
             actionName: "AddCampCardToCards",
         },
-        /*{
-            actionName: "DrawProfitAction",
+        {
+            actionName: "StartDiscardSuitCard",
             config: {
-                stageName: "discardSuitCard",
-                name: "HofudAction",
                 suit: "warrior",
-                drawName: "Hofud",
             },
         },
-        {
-            actionName: "DiscardSuitCard",
-            config: {
-                suit: "warrior",
-            },
-        },*/
     ],
     scoringRule: () => 0,
 };

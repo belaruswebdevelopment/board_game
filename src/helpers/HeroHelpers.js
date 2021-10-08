@@ -113,20 +113,24 @@ export const StartThrudMoving = (G, ctx, card) => {
  */
 export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
     // todo Rework it all!
-    const ulinePlayerIndex = G.players.findIndex(player => player.buffs?.["everyTurn"] === "Uline");
+    const ulinePlayerIndex = G.players.findIndex(player => player.buffs["everyTurn"] === "Uline");
     if (ulinePlayerIndex !== -1) {
-        if (ctx.activePlayers?.[ctx.currentPlayer] !== "placeTradingCoinsUline" && ulinePlayerIndex === Number(ctx.currentPlayer) &&
-            G.players[ctx.currentPlayer].boardCoins[G.currentTavern]?.isTriggerTrading) {
+        if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) !== "placeTradingCoinsUline" &&
+            ulinePlayerIndex === Number(ctx.currentPlayer) &&
+            (G.players[ctx.currentPlayer].boardCoins[G.currentTavern] &&
+                G.players[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading)) {
             if (G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum &&
                 coin === null)) {
                 G.actionsNum = G.suitsNum - G.tavernsNum;
                 ctx.events.setStage("placeTradingCoinsUline");
                 return "placeTradingCoinsUline";
             }
-        } else if (ctx.activePlayers?.[ctx.currentPlayer] === "placeTradingCoinsUline" && !G.actionsNum) {
+        } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline" &&
+            !G.actionsNum) {
             ctx.events.endStage();
             return "endPlaceTradingCoinsUline";
-        } else if (ctx.activePlayers?.[ctx.currentPlayer] === "placeTradingCoinsUline" && G.actionsNum) {
+        } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline" &&
+            G.actionsNum) {
             return "nextPlaceTradingCoinsUline";
         } else {
             return "placeCoinsUline";

@@ -20,7 +20,7 @@ export const BotsPlaceAllCoins = (G, ctx, coinsOrder) => {
             G.players[ctx.currentPlayer].handCoins[coinId] = null;
         }
     }
-    const isEveryPlayersHandCoinsEmpty = G.players.filter(player => player.buffs?.["everyTurn"] !== "Uline")
+    const isEveryPlayersHandCoinsEmpty = G.players.filter(player => player.buffs["everyTurn"] !== "Uline")
         .every(player => player.handCoins.every(coin => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {
         if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {

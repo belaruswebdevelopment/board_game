@@ -17,7 +17,7 @@ import {EndAction} from "./ActionHelper";
 export const AddActionsToStack = (G, ctx, stack) => {
     if (stack.length) {
         for (let i = stack.length - 1; i >= 0; i--) {
-            const playerId = stack[i]["playerId"] ?? ctx.currentPlayer;
+            const playerId = stack[i]["playerId"]!== undefined ? stack[i]["playerId"] : ctx.currentPlayer;
             G.stack[playerId].unshift(stack[i]);
         }
     }
@@ -40,7 +40,7 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
     if (stack.length) {
         let noCurrent = false;
         for (let i = stack.length - 1; i >= 0; i--) {
-            const playerId = stack[i]["playerId"] ?? ctx.currentPlayer;
+            const playerId = stack[i]["playerId"] !== undefined ? stack[i]["playerId"] : ctx.currentPlayer;
             if (i === stack.length - 1 && G.stack[playerId][0] === undefined) {
                 G.stack[playerId].push(stack[i]);
                 noCurrent = true;
@@ -54,7 +54,7 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
 };
 
 /**
- * <h3>Начинает действия из стэка действий конкретного игрока.</h3>
+ * <h3>Начинает действия из стэка действий конкретного игрока или завершает действия при их отсутствии.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Выполняется при необходимости активировать действия в стэке действий.</li>
@@ -76,6 +76,48 @@ export const StartActionFromStackOrEndActions = (G, ctx, isTrading = null, ...ar
 };
 
 /**
+ * <h3>Начинает действия из стэка действий указанного игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Выполняется при необходимости активировать действия в стэке действий указанного игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @param args Дополнительные аргументы.
+ * @returns {*} Выполнение действий.
+ * @constructor
+ */
+export const StartActionForChosenPlayer = (G, ctx, playerId, ...args) => {
+    return ActionDispatcher(G, ctx, G.stack[playerId][0], ...args);
+};
+
+/**
+ * <h3>Завершает действие из стэка действий указанного игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Выполняется при необходимости завершить действие в стэке действий указанного игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @constructor
+ */
+export const EndActionForChosenPlayer = (G, ctx, playerId) => {
+    G.stack[playerId] = [];
+    ctx.events.endStage();
+    let activePlayers = 0;
+    for (const activePlayersKey in ctx.activePlayers) {
+        activePlayers++;
+    }
+    if (activePlayers === 1) {
+        return EndActionFromStackAndAddNew(G, ctx);
+    }
+};
+
+/**
  * <h3>Завершает действие из стэка действий конкретного игрока и добавляет новое по необходимости.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -90,15 +132,16 @@ export const StartActionFromStackOrEndActions = (G, ctx, isTrading = null, ...ar
  * @constructor
  */
 export const EndActionFromStackAndAddNew = (G, ctx, newStack = [], ...args) => {
-    if (G.stack[ctx.currentPlayer][0].config?.name === "explorerDistinction" ||
+    if ((G.stack[ctx.currentPlayer][0].config && G.stack[ctx.currentPlayer][0].config.name) === "explorerDistinction" ||
         G.stack[ctx.currentPlayer][0].actionName !== "DrawProfitAction") {
         G.actionsNum = null;
         G.drawProfit = null;
     }
-    if (ctx.activePlayers?.[ctx.currentPlayer]) {
+    if (ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) {
         ctx.events.endStage();
     }
-    const isTrading = G.stack[ctx.currentPlayer][0].config?.isTrading ?? null;
+    const isTrading = (G.stack[ctx.currentPlayer][0].config &&
+        G.stack[ctx.currentPlayer][0].config.isTrading) ? G.stack[ctx.currentPlayer][0].config.isTrading : null;
     G.stack[ctx.currentPlayer].shift();
     AddActionsToStack(G, ctx, newStack);
     return StartActionFromStackOrEndActions(G, ctx, isTrading, ...args);

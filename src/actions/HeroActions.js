@@ -133,8 +133,8 @@ export const AddHeroToCards = (G, ctx, config) => {
  */
 export const GetClosedCoinIntoPlayerHand = (G, ctx) => {
     const coinsCount = G.players[ctx.currentPlayer].boardCoins.length,
-        tradingBoardCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin?.isTriggerTrading),
-        tradingHandCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin?.isTriggerTrading);
+        tradingBoardCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin && coin.isTriggerTrading),
+        tradingHandCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin && coin.isTriggerTrading);
     for (let i = 0; i < coinsCount; i++) {
         if ((i < G.tavernsNum && G.currentTavern < i) ||
             (i >= G.tavernsNum && tradingHandCoinIndex !== -1) ||

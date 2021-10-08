@@ -72,7 +72,8 @@ const CreateActionCard = ({type = "улучшение монеты", value, stac
 export const BuildCards = (deckConfig, data) => {
     const cards = [];
     for (const suit in suitsConfig) {
-        const count = deckConfig.suits[suit].pointsValues()[data.players][data.tier].length ??
+        const count = Array.isArray(deckConfig.suits[suit].pointsValues()[data.players][data.tier]) ?
+            deckConfig.suits[suit].pointsValues()[data.players][data.tier].length :
             deckConfig.suits[suit].pointsValues()[data.players][data.tier];
         for (let j = 0; j < count; j++) {
             cards.push(CreateCard({
@@ -80,7 +81,8 @@ export const BuildCards = (deckConfig, data) => {
                 rank: deckConfig.suits[suit].ranksValues()[data.players][data.tier][j],
                 points: deckConfig.suits[suit].pointsValues()[data.players][data.tier][j],
                 name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 
-                ${deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] ?? 1}, 
+                ${deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] !== undefined ?
+                    deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] : 1}, 
                 очков: ${deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] !== undefined ?
                     deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] + ")" : "нет)"}`,
             }));
@@ -113,10 +115,14 @@ export const BuildCards = (deckConfig, data) => {
  */
 export const GetAverageSuitCard = (suitConfig, data) => {
     const avgCard = CreateCard({suit: suitConfig.suit, rank: 0, points: 0}),
-        count = suitConfig.pointsValues()[data.players][data.tier]?.length ?? suitConfig.pointsValues()[data.players][data.tier];
+        count = Array.isArray(suitConfig.pointsValues()[data.players][data.tier]) ?
+            suitConfig.pointsValues()[data.players][data.tier].length :
+            suitConfig.pointsValues()[data.players][data.tier];
     for (let i = 0; i < count; i++) {
-        avgCard.rank += suitConfig.ranksValues()[data.players][data.tier][i] ?? 1;
-        avgCard.points += suitConfig.pointsValues()[data.players][data.tier][i] ?? 1;
+        avgCard.rank += suitConfig.ranksValues()[data.players][data.tier][i] !== undefined ?
+            suitConfig.ranksValues()[data.players][data.tier][i] : 1;
+        avgCard.points += suitConfig.pointsValues()[data.players][data.tier][i] !== undefined ?
+            suitConfig.pointsValues()[data.players][data.tier][i] : 1;
     }
     avgCard.rank /= count;
     avgCard.points /= count;
@@ -141,7 +147,8 @@ export const CompareCards = (card1, card2) => {
         return 0;
     }
     if (card1.suit === card2.suit) {
-        const result = (card1.points ?? 1) - (card2.points ?? 1);
+        const result = (card1.points !== undefined && card1.points !== null ? card1.points : 1) -
+            (card2.points !== undefined && card2.points !== null ? card2.points : 1);
         if (result === 0) {
             return result;
         }
@@ -212,8 +219,8 @@ export const PotentialScoring = ({player = {}, card = {}}) => {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
-        score += player.boardCoins[i]?.value ?? 0;
-        score += player.handCoins[i]?.value ?? 0;
+        score += (player.boardCoins[i] && player.boardCoins[i].value) ? player.boardCoins[i].value : 0;
+        score += (player.handCoins[i] && player.handCoins[i].value) ? player.handCoins[i].value : 0;
     }
     return score;
 };

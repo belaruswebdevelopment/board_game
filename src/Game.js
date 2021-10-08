@@ -2,8 +2,11 @@ import {SetupGame} from "./GameSetup";
 import {
     ClickCard,
     ClickCardToPickDistinction,
-    ClickDistinctionCard, GetEnlistmentMercenaries, PassEnlistmentMercenaries,
-    PickDiscardCard, PlaceEnlistmentMercenaries,
+    ClickDistinctionCard,
+    GetEnlistmentMercenaries,
+    PassEnlistmentMercenaries,
+    PickDiscardCard,
+    PlaceEnlistmentMercenaries,
     StartEnlistmentMercenaries,
 } from "./moves/Moves";
 import {ChangePlayersPriorities} from "./Priority";
@@ -25,10 +28,12 @@ import {
     UpgradeCoinVidofnirVedrfolnir
 } from "./moves/CoinMoves";
 import {
-    ClickCampCard, ClickCampCardHolda,
+    ClickCampCard,
+    ClickCampCardHolda,
     DiscardCard2Players,
     DiscardCardFromPlayerBoard,
-    DiscardSuitCardFromPlayerBoard, GetMjollnirProfit
+    DiscardSuitCardFromPlayerBoard,
+    GetMjollnirProfit
 } from "./moves/CampMoves";
 import {AddActionsToStack} from "./helpers/StackHelpers";
 import {BotsPlaceAllCoins} from "./moves/BotMoves";
@@ -69,7 +74,7 @@ export const BoardGame = {
                 }
                 G.playersOrder = [];
                 for (let i = 0; i < ctx.numPlayers; i++) {
-                    if (G.players[i].buffs?.["everyTurn"] !== "Uline") {
+                    if (G.players[i].buffs["everyTurn"] !== "Uline") {
                         G.playersOrder.push(i);
                     }
                 }
@@ -90,7 +95,7 @@ export const BoardGame = {
             onBegin: (G, ctx) => {
                 G.playersOrder = [];
                 for (let i = 0; i < ctx.numPlayers; i++) {
-                    if (G.players[i].buffs?.["everyTurn"] === "Uline") {
+                    if (G.players[i].buffs["everyTurn"] === "Uline") {
                         G.playersOrder.push(i);
                     }
                 }
