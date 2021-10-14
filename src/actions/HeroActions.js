@@ -28,13 +28,13 @@ export const PlaceThrudAction = (G, ctx, config, suitId) => {
     const suit = Object.keys(suitsConfig)[suitId],
         thrudCard = CreateCard({
             suit,
-            rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
-            points: G.stack[ctx.currentPlayer][0].variants[suit].points,
+            rank: G.publicPlayers[ctx.currentPlayer].stack[0].variants[suit].rank,
+            points: G.publicPlayers[ctx.currentPlayer].stack[0].variants[suit].points,
             type: "герой",
             name: "Thrud",
             game: "base",
         });
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту Труд во фракцию 
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} добавил карту Труд во фракцию 
     ${suitsConfig[suit].suitName}.`);
     AddCardToPlayer(G, ctx, thrudCard);
     CheckPickHero(G, ctx);
@@ -59,13 +59,13 @@ export const PlaceYludAction = (G, ctx, config, suitId) => {
     const suit = Object.keys(suitsConfig)[suitId],
         yludCard = CreateCard({
             suit: suit,
-            rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
-            points: G.stack[ctx.currentPlayer][0].variants[suit].points,
+            rank: G.publicPlayers[ctx.currentPlayer].stack[0].variants[suit].rank,
+            points: G.publicPlayers[ctx.currentPlayer].stack[0].variants[suit].points,
             type: "герой",
             name: "Ylud",
             game: "base",
         });
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту Илуд во фракцию 
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} добавил карту Илуд во фракцию 
     ${suitsConfig[suit].suitName}.`);
     AddCardToPlayer(G, ctx, yludCard);
     CheckAndMoveThrudOrPickHeroAction(G, ctx, yludCard);
@@ -132,14 +132,14 @@ export const AddHeroToCards = (G, ctx, config) => {
  * @constructor
  */
 export const GetClosedCoinIntoPlayerHand = (G, ctx) => {
-    const coinsCount = G.players[ctx.currentPlayer].boardCoins.length,
-        tradingBoardCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin && coin.isTriggerTrading),
-        tradingHandCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin && coin.isTriggerTrading);
+    const coinsCount = G.publicPlayers[ctx.currentPlayer].boardCoins.length,
+        tradingBoardCoinIndex = G.publicPlayers[ctx.currentPlayer].boardCoins.findIndex(coin => coin && coin.isTriggerTrading),
+        tradingHandCoinIndex = G.publicPlayers[ctx.currentPlayer].handCoins.findIndex(coin => coin && coin.isTriggerTrading);
     for (let i = 0; i < coinsCount; i++) {
         if ((i < G.tavernsNum && G.currentTavern < i) ||
             (i >= G.tavernsNum && tradingHandCoinIndex !== -1) ||
             (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {
-            ReturnCoinToPlayerHands(G.players[ctx.currentPlayer], i);
+            ReturnCoinToPlayerHands(G.publicPlayers[ctx.currentPlayer], i);
         }
     }
     return EndActionFromStackAndAddNew(G, ctx);
@@ -168,7 +168,7 @@ export const PickHeroWithConditions = (G, ctx, config) => {
                     if (config.conditions[condition].hasOwnProperty(key)) {
                         if (key === "suit") {
                             const suitId = GetSuitIndexByName(config.conditions[condition][key]);
-                            ranks = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0);
+                            ranks = G.publicPlayers[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0);
                         } else if (key === "value") {
                             isValidMove = ranks >= config.conditions[condition][key];
                         }
@@ -178,7 +178,7 @@ export const PickHeroWithConditions = (G, ctx, config) => {
         }
     }
     if (!isValidMove) {
-        G.stack[ctx.currentPlayer].splice(1);
+        G.publicPlayers[ctx.currentPlayer].stack.splice(1);
         return INVALID_MOVE;
     }
     return EndActionFromStackAndAddNew(G, ctx);
@@ -196,6 +196,6 @@ export const PickHeroWithConditions = (G, ctx, config) => {
  * @constructor
  */
 export const PickHero = (G, ctx) => {
-    AddDataToLog(G, "game", `Начало фазы ${G.stack[ctx.currentPlayer][0].config.stageName}.`);
-    ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
+    AddDataToLog(G, "game", `Начало фазы ${G.publicPlayers[ctx.currentPlayer].stack[0].config.stageName}.`);
+    ctx.events.setStage(G.publicPlayers[ctx.currentPlayer].stack[0].config.stageName);
 };

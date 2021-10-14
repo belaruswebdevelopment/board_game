@@ -38,7 +38,7 @@ export const DrawPlayerBoardForCardDiscard = (data) => {
     for (const suit in suitsConfig) {
         playerHeaders.push(
             <th className={`${suitsConfig[suit].suitColor}`}
-                key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} ${suitsConfig[suit].suitName}`}>
+                key={`${data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname} ${suitsConfig[suit].suitName}`}>
                 <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
 
                 </span>
@@ -54,24 +54,24 @@ export const DrawPlayerBoardForCardDiscard = (data) => {
         for (let j = 0; j < data.props.G.suitsNum; j++) {
             const suit = Object.keys(suitsConfig)[j];
             id = i + j;
-            if (data.props.G.players[data.props.ctx.currentPlayer].cards[j] !== undefined &&
-                data.props.G.players[data.props.ctx.currentPlayer].cards[j][i] !== undefined) {
+            if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j] !== undefined &&
+                data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][i] !== undefined) {
                 isExit = false;
-                if (data.props.G.players[data.props.ctx.currentPlayer].cards[j][i].type !== "герой") {
+                if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][i].type !== "герой") {
                     isDrawRow = true;
-                    DrawCard(data, playerCells, data.props.G.players[data.props.ctx.currentPlayer].cards[j][i],
-                        id, data.props.G.players[data.props.ctx.currentPlayer], suit,
+                    DrawCard(data, playerCells, data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][i],
+                        id, data.props.G.publicPlayers[data.props.ctx.currentPlayer], suit,
                         "OnClickDiscardCardFromPlayerBoard", j, i);
                 } else {
                     playerCells.push(
-                        <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} empty card ${id}`}>
+                        <td key={`${data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname} empty card ${id}`}>
 
                         </td>
                     );
                 }
             } else {
                 playerCells.push(
-                    <td key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} empty card ${id}`}>
+                    <td key={`${data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname} empty card ${id}`}>
 
                     </td>
                 );
@@ -79,7 +79,7 @@ export const DrawPlayerBoardForCardDiscard = (data) => {
         }
         if (isDrawRow) {
             playerRows[i].push(
-                <tr key={`${data.props.G.players[data.props.ctx.currentPlayer].nickname} board row ${i}`}>{playerCells}</tr>
+                <tr key={`${data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname} board row ${i}`}>{playerCells}</tr>
             );
         }
         if (isExit) {
@@ -112,12 +112,12 @@ export const DrawPlayersBoardForSuitCardDiscard = (data, suitName) => {
     const playersHeaders = [],
         playersRows = [],
         suitId = GetSuitIndexByName(suitName);
-    for (let p = 0; p < data.props.G.players.length; p++) {
+    for (let p = 0; p < data.props.G.publicPlayers.length; p++) {
         if (p !== Number(data.props.ctx.currentPlayer)) {
-            if (data.props.G.players[p].cards[suitId] !== undefined && data.props.G.players[p].cards[suitId].length) {
+            if (data.props.G.publicPlayers[p].cards[suitId] !== undefined && data.props.G.publicPlayers[p].cards[suitId].length) {
                 playersHeaders.push(
                     <th className={`${suitsConfig[suitName].suitColor} discard suit`}
-                        key={`${data.props.G.players[p].nickname} ${suitsConfig[suitName].suitName}`}>
+                        key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suitName].suitName}`}>
                         <span style={Styles.Suits(suitsConfig[suitName].suitName)} className="bg-suit-icon">
                             {p + 1}
                         </span>
@@ -131,20 +131,20 @@ export const DrawPlayersBoardForSuitCardDiscard = (data, suitName) => {
             isExit = true;
         playersRows[i] = [];
         const playersCells = [];
-        for (let p = 0; p < data.props.G.players.length; p++) {
+        for (let p = 0; p < data.props.G.publicPlayers.length; p++) {
             if (p !== Number(data.props.ctx.currentPlayer)) {
-                if (data.props.G.players[p].cards[suitId] !== undefined && data.props.G.players[p].cards[suitId][i]
+                if (data.props.G.publicPlayers[p].cards[suitId] !== undefined && data.props.G.publicPlayers[p].cards[suitId][i]
                     !== undefined) {
-                    if (data.props.G.players[p].cards[suitId][i].type !== "герой") {
+                    if (data.props.G.publicPlayers[p].cards[suitId][i].type !== "герой") {
                         isExit = false;
                         isDrawRow = true;
-                        DrawCard(data, playersCells, data.props.G.players[p].cards[suitId][i], i,
-                            data.props.G.players[p], suitName, "OnClickDiscardSuitCardFromPlayerBoard",
+                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i], i,
+                            data.props.G.publicPlayers[p], suitName, "OnClickDiscardSuitCardFromPlayerBoard",
                             suitId, p, i);
                     }
                 } else {
                     playersCells.push(
-                        <td key={`${data.props.G.players[p].nickname} discard suit cardboard row ${i}`}>
+                        <td key={`${data.props.G.publicPlayers[p].nickname} discard suit cardboard row ${i}`}>
 
                         </td>
                     );

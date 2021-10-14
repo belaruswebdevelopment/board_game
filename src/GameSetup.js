@@ -1,4 +1,4 @@
-import {BuildPlayer} from "./Player";
+import {BuildPlayer, BuildPublicPlayer} from "./Player";
 import {BuildCards, GetAverageSuitCard} from "./Card";
 import {suitsConfig} from "./data/SuitData";
 import {marketCoinsConfig} from "./data/CoinData";
@@ -18,7 +18,7 @@ import {artefactsConfig, mercenariesConfig} from "./data/CampData";
  * </ol>
  *
  * @param ctx
- * @returns {{suitsNum: number, campNum: number, campPicked: boolean, tavernsNum: number, discardCampCardsDeck: *[], tierToEnd: number, currentTavern: null, marketCoins: *[], drawSize: (number|*), heroes: *[], discardCardsDeck: *[], drawProfit: null, distinctions: any[], decks: *[], expansions: {thingvellir: {active: boolean}}, taverns: *[], exchangeOrder: *[], botData: {}, averageCards: *[], debug: boolean, players: *[], actionsNum: null, camp: T[], winner: null, campDecks: ([{tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, null, null, null, null, null, null, null]|[{tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, {tier: number, name: number, description: string}, null, null, null, null, null, null, null])[], playersOrder: *[], marketCoinsUnique: *[]}}
+ * @returns {{log: boolean, suitsNum: number, campNum: number, campPicked: boolean, tavernsNum: number, discardCampCardsDeck: *[], tierToEnd: number, currentTavern: null, marketCoins: *[], drawSize: (number|*), heroes: *[], suitIdForMjollnir: null, discardCardsDeck: *[], drawProfit: null, logData: *[], distinctions: any[], decks: *[], expansions: {thingvellir: {active: boolean}}, taverns: *[], exchangeOrder: *[], averageCards: *[], botData: {allCoinsOrder: *[], allPicks: FlatArray<*[], 1>, maxIter: number, deckLength}, debug: boolean, players: {}, actionsNum: null, totalScore: *[], camp: *[], winner: null, campDecks: *[], playersOrder: *[], publicPlayers: {}, marketCoinsUnique: *[]}}
  * @constructor
  */
 export const SetupGame = (ctx) => {
@@ -44,16 +44,17 @@ export const SetupGame = (ctx) => {
     let winner = null,
         campPicked = false,
         camp = [],
-        discardCampCardsDeck = [],
-        stack = Array(ctx.numPlayers).fill([]);
+        discardCampCardsDeck = [];
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
+            // todo Camp cards must be hidden from users?
             campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
             campDecks[i] = ctx.random.Shuffle(campDecks[i]);
         }
         camp = campDecks[0].splice(0, campNum);
     }
     for (let i = 0; i < tierToEnd; i++) {
+        // todo Deck cards must be hidden from users?
         decks[i] = BuildCards({suits: suitsConfig, actions: actionCardsConfigArray}, {
             players: ctx.numPlayers,
             tier: i
@@ -72,15 +73,18 @@ export const SetupGame = (ctx) => {
         currentTavern = null,
         drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
+        // todo Taverns cards must be hidden from users?
         taverns[i] = decks[0].splice(0, drawSize);
     }
-    const players = [],
+    const players = {},
+        publicPlayers = [],
         playersOrder = [],
         exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        players[i] = BuildPlayer(ctx.numPlayers, suitsNum, "Dan" + i);
+        players[i] = BuildPlayer();
+        publicPlayers[i] = BuildPublicPlayer(ctx.numPlayers, suitsNum, "Dan" + i);
     }
-    BuildPriorities(players);
+    BuildPriorities(ctx.numPlayers, publicPlayers);
     const marketCoinsUnique = [],
         marketCoins = BuildCoins(marketCoinsConfig, {
             count: marketCoinsUnique,
@@ -89,7 +93,8 @@ export const SetupGame = (ctx) => {
             isTriggerTrading: false,
         });
     const averageCards = [],
-        initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined).map((item, index) => index),
+        initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined)
+            .map((item, index) => index),
         initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
     for (const suit in suitsConfig) {
@@ -123,7 +128,6 @@ export const SetupGame = (ctx) => {
         decks,
         discardCardsDeck,
         discardCampCardsDeck,
-        stack,
         heroes,
         campDecks,
         campPicked,
@@ -131,6 +135,7 @@ export const SetupGame = (ctx) => {
         distinctions,
         taverns,
         players,
+        publicPlayers,
         playersOrder,
         exchangeOrder,
         marketCoins,

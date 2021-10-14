@@ -59,12 +59,13 @@ const prioritiesConfig = {
  * <li>Раздаёт кристаллы после создания всех игроков.</li>
  * </ol>
  *
- * @param players Массив всех игроков.
+ * @param numPlayers Количество игроков.
+ * @param players Объект всех игроков.
  * @constructor
  */
-export const BuildPriorities = (players) => {
-    const priorities = prioritiesConfig[players.length].map(priority => priority);
-    for (let i = 0; i < players.length; i++) {
+export const BuildPriorities = (numPlayers, players) => {
+    const priorities = prioritiesConfig[numPlayers].map(priority => priority);
+    for (let i = 0; i < numPlayers; i++) {
         const randomPriorityIndex = Math.floor(Math.random() * priorities.length),
             priority = priorities.splice(randomPriorityIndex, 1)[0];
         players[i].priority = CreatePriority(priority);
@@ -85,13 +86,13 @@ export const ChangePlayersPriorities = (G) => {
     AddDataToLog(G, "game", "Обмен кристаллами между игроками:");
     const tempPriorities = [];
     for (let i = 0; i < G.exchangeOrder.length; i++) {
-        tempPriorities[i] = G.players[G.exchangeOrder[i]].priority;
+        tempPriorities[i] = G.publicPlayers[G.exchangeOrder[i]].priority;
     }
     for (let i = 0; i < G.exchangeOrder.length; i++) {
-        if (G.players[i].priority.value !== tempPriorities[i].value) {
-            AddDataToLog(G, "public", `Игрок ${G.players[i].nickname} получил кристалл с приоритетом 
+        if (G.publicPlayers[i].priority.value !== tempPriorities[i].value) {
+            AddDataToLog(G, "public", `Игрок ${G.publicPlayers[i].nickname} получил кристалл с приоритетом 
             ${tempPriorities[i].value}.`);
-            G.players[i].priority = tempPriorities[i];
+            G.publicPlayers[i].priority = tempPriorities[i];
         }
     }
 };
@@ -109,7 +110,7 @@ export const ChangePlayersPriorities = (G) => {
  * @constructor
  */
 export const HasLowestPriority = (G, playerId) => {
-    const tempPriorities = G.players.map(player => player.priority.value),
+    const tempPriorities = G.publicPlayers.map(player => player.priority.value),
         minPriority = Math.min(...tempPriorities);
-    return G.players[playerId].priority.value === minPriority;
+    return G.publicPlayers[playerId].priority.value === minPriority;
 };

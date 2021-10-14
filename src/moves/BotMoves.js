@@ -13,14 +13,14 @@ import {CheckAndStartUlineActionsOrContinue} from "../helpers/HeroHelpers";
  * @constructor
  */
 export const BotsPlaceAllCoins = (G, ctx, coinsOrder) => {
-    for (let i = 0; i < G.players[ctx.currentPlayer].boardCoins.length; i++) {
-        const coinId = coinsOrder[i] || G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin !== null);
+    for (let i = 0; i < G.publicPlayers[ctx.currentPlayer].boardCoins.length; i++) {
+        const coinId = coinsOrder[i] || G.publicPlayers[ctx.currentPlayer].handCoins.findIndex(coin => coin !== null);
         if (coinId !== -1) {
-            G.players[ctx.currentPlayer].boardCoins[i] = G.players[ctx.currentPlayer].handCoins[coinId];
-            G.players[ctx.currentPlayer].handCoins[coinId] = null;
+            G.publicPlayers[ctx.currentPlayer].boardCoins[i] = G.publicPlayers[ctx.currentPlayer].handCoins[coinId];
+            G.publicPlayers[ctx.currentPlayer].handCoins[coinId] = null;
         }
     }
-    const isEveryPlayersHandCoinsEmpty = G.players.filter(player => player.buffs["everyTurn"] !== "Uline")
+    const isEveryPlayersHandCoinsEmpty = G.publicPlayers.filter(player => player.buffs["everyTurn"] !== "Uline")
         .every(player => player.handCoins.every(coin => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {
         if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
@@ -29,7 +29,7 @@ export const BotsPlaceAllCoins = (G, ctx, coinsOrder) => {
             ctx.events.setPhase("pickCards");
         }
     } else {
-        if (G.players[ctx.currentPlayer].handCoins.every(coin => coin === null)) {
+        if (G.publicPlayers[ctx.currentPlayer].handCoins.every(coin => coin === null)) {
             ctx.events.endTurn();
         }
     }

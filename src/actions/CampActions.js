@@ -9,7 +9,6 @@ import {AddCampCardToPlayer, AddCampCardToPlayerCards} from "../Player";
 import {CheckAndMoveThrudOrPickHeroAction} from "./HeroActions";
 import {AddDataToLog} from "../Logging";
 import {suitsConfig} from "../data/SuitData";
-import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 
 /**
  * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>
@@ -25,7 +24,7 @@ import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
  */
 export const CheckPickCampCard = (G, ctx) => {
     if (G.camp.length === 0) {
-        G.stack[ctx.currentPlayer].splice(1);
+        G.publicPlayers[ctx.currentPlayer].stack.splice(1);
     }
     return EndActionFromStackAndAddNew(G, ctx);
 };
@@ -45,11 +44,11 @@ export const CheckPickCampCard = (G, ctx) => {
  * @constructor
  */
 export const AddCampCardToCards = (G, ctx, config, cardId) => {
-    if (ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.playersOrder[0] && ctx.activePlayers === null) {
+    if (ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.publicPlayersOrder[0] && ctx.activePlayers === null) {
         G.campPicked = true;
     }
-    if (G.players[ctx.currentPlayer].buffs["goCampOneTime"]) {
-        delete G.players[ctx.currentPlayer].buffs["goCampOneTime"];
+    if (G.publicPlayers[ctx.currentPlayer].buffs["goCampOneTime"]) {
+        delete G.publicPlayers[ctx.currentPlayer].buffs["goCampOneTime"];
     }
     const campCard = G.camp[cardId];
     let suitId = null,
@@ -61,7 +60,8 @@ export const AddCampCardToCards = (G, ctx, config, cardId) => {
         suitId = GetSuitIndexByName(campCard.suit);
     } else {
         AddCampCardToPlayer(G, ctx, campCard);
-        if (ctx.phase === "enlistmentMercenaries" && G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник").length) {
+        if (ctx.phase === "enlistmentMercenaries" && G.publicPlayers[ctx.currentPlayer].campCards
+            .filter(card => card.type === "наёмник").length) {
             stack = [
                 {
                     actionName: "DrawProfitAction",
@@ -90,7 +90,7 @@ export const AddCampCardToCards = (G, ctx, config, cardId) => {
  * @constructor
  */
 export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
-    const player = G.players[ctx.currentPlayer],
+    const player = G.publicPlayers[ctx.currentPlayer],
         tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null),
         stack = [
             {
@@ -99,7 +99,7 @@ export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
         ];
     player.boardCoins[tempId] = player.handCoins[coinId];
     player.handCoins[coinId] = null;
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} положил монету ценностью 
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} положил монету ценностью 
     '${player.boardCoins[tempId]}' в свой кошелёк.`);
     AddActionsToStackAfterCurrent(G, ctx, stack);
     return EndActionFromStackAndAddNew(G, ctx);
@@ -118,9 +118,9 @@ export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
  * @constructor
  */
 export const StartVidofnirVedrfolnirAction = (G, ctx) => {
-    const number = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length,
-        handCoinsNumber = G.players[ctx.currentPlayer].handCoins.length;
-    if (G.players[ctx.currentPlayer].buffs["everyTurn"] === "Uline" && number > 0 && handCoinsNumber) {
+    const number = G.publicPlayers[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length,
+        handCoinsNumber = G.publicPlayers[ctx.currentPlayer].handCoins.length;
+    if (G.publicPlayers[ctx.currentPlayer].buffs["everyTurn"] === "Uline" && number > 0 && handCoinsNumber) {
         const stack = [
             {
                 actionName: "DrawProfitAction",
@@ -139,9 +139,9 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     } else {
         let coinsValue = 0,
             stack = [];
-        for (let j = G.tavernsNum; j < G.players[ctx.currentPlayer].boardCoins.length; j++) {
-            if (G.players[ctx.currentPlayer].boardCoins[j] &&
-                !G.players[ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
+        for (let j = G.tavernsNum; j < G.publicPlayers[ctx.currentPlayer].boardCoins.length; j++) {
+            if (G.publicPlayers[ctx.currentPlayer].boardCoins[j] &&
+                !G.publicPlayers[ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
                 coinsValue++;
             }
         }
@@ -206,7 +206,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type, isInitial) => {
     let stack;
-    if (G.stack[ctx.currentPlayer][0].config.value === 3) {
+    if (G.publicPlayers[ctx.currentPlayer].stack[0].config.value === 3) {
         stack = [
             {
                 actionName: "UpgradeCoinAction",
@@ -231,7 +231,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
                 }
             },
         ];
-    } else if (G.stack[ctx.currentPlayer][0].config.value === 2) {
+    } else if (G.publicPlayers[ctx.currentPlayer].stack[0].config.value === 2) {
         stack = [
             {
                 actionName: "UpgradeCoinAction",
@@ -240,7 +240,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
                 },
             },
         ];
-    } else if (G.stack[ctx.currentPlayer][0].config.value === 5) {
+    } else if (G.publicPlayers[ctx.currentPlayer].stack[0].config.value === 5) {
         stack = [
             {
                 actionName: "UpgradeCoinAction",
@@ -267,14 +267,14 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
  * @constructor
  */
 export const DiscardTradingCoin = (G, ctx) => {
-    let tradingCoinIndex = G.players[ctx.currentPlayer].boardCoins.findIndex(coin => coin && coin.isTriggerTrading);
-    if (G.players[ctx.currentPlayer].buffs["everyTurn"] === "Uline" && tradingCoinIndex === -1) {
-        tradingCoinIndex = G.players[ctx.currentPlayer].handCoins.findIndex(coin => coin && coin.isTriggerTrading);
-        G.players[ctx.currentPlayer].handCoins.splice(tradingCoinIndex, 1, null);
+    let tradingCoinIndex = G.publicPlayers[ctx.currentPlayer].boardCoins.findIndex(coin => coin && coin.isTriggerTrading);
+    if (G.publicPlayers[ctx.currentPlayer].buffs["everyTurn"] === "Uline" && tradingCoinIndex === -1) {
+        tradingCoinIndex = G.publicPlayers[ctx.currentPlayer].handCoins.findIndex(coin => coin && coin.isTriggerTrading);
+        G.publicPlayers[ctx.currentPlayer].handCoins.splice(tradingCoinIndex, 1, null);
     } else {
-        G.players[ctx.currentPlayer].boardCoins.splice(tradingCoinIndex, 1, null);
+        G.publicPlayers[ctx.currentPlayer].boardCoins.splice(tradingCoinIndex, 1, null);
     }
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} сбросил монету активирующую обмен.`);
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} сбросил монету активирующую обмен.`);
     return EndActionFromStackAndAddNew(G, ctx);
 };
 
@@ -294,10 +294,10 @@ export const DiscardTradingCoin = (G, ctx) => {
  * @constructor
  */
 export const DiscardAnyCardFromPlayerBoard = (G, ctx, config, suitId, cardId) => {
-    const discardedCard = G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0];
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} сбросил карту ${discardedCard.name} 
+    const discardedCard = G.publicPlayers[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0];
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} сбросил карту ${discardedCard.name} 
     в дискард.`);
-    delete G.players[ctx.currentPlayer].buffs["discardCardEndGame"];
+    delete G.publicPlayers[ctx.currentPlayer].buffs["discardCardEndGame"];
     return EndActionFromStackAndAddNew(G, ctx);
 };
 
@@ -317,7 +317,7 @@ export const StartDiscardSuitCard = (G, ctx, config) => {
     const suitId = GetSuitIndexByName(config.suit),
         value = {};
     for (let i = 0; i < ctx.numPlayers; i++) {
-        if (i !== Number(ctx.currentPlayer) && G.players[i].cards[suitId].length) {
+        if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[suitId].length) {
             value[i] = {
                 stage: "discardSuitCard",
             };
@@ -356,9 +356,9 @@ export const StartDiscardSuitCard = (G, ctx, config) => {
  * @constructor
  */
 export const DiscardSuitCard = (G, ctx, config, suitId, playerId, cardId) => {
-    const discardedCard = G.players[ctx.playerID].cards[suitId].splice(cardId, 1)[0];
+    const discardedCard = G.publicPlayers[ctx.playerID].cards[suitId].splice(cardId, 1)[0];
     G.discardCardsDeck.push(discardedCard);
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.playerID].nickname} сбросил карту ${discardedCard.name} 
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.playerID].nickname} сбросил карту ${discardedCard.name} 
     в дискард.`);
     EndActionForChosenPlayer(G, ctx, playerId);
 };
@@ -378,9 +378,9 @@ export const DiscardSuitCard = (G, ctx, config, suitId, playerId, cardId) => {
  * @constructor
  */
 export const GetMjollnirProfitAction = (G, ctx, config, suitId) => {
-    delete G.players[ctx.currentPlayer].buffs["getMjollnirProfit"];
+    delete G.publicPlayers[ctx.currentPlayer].buffs["getMjollnirProfit"];
     G.suitIdForMjollnir = suitId;
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал фракцию 
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} выбрал фракцию 
     ${Object.values(suitsConfig)[suitId].suitName} для эффекта артефакта Mjollnir.`);
     return EndActionFromStackAndAddNew(G, ctx);
 };

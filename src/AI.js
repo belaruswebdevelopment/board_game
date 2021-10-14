@@ -60,8 +60,8 @@ export const enumerate = (G, ctx) => {
         if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default") {
             // todo Fix it, now just for bot can do RANDOM move
             let pickCardOrCampCard = "card";
-            if (G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
-                G.players[ctx.currentPlayer].buffs["goCamp"])) {
+            if (G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
+                G.publicPlayers[ctx.currentPlayer].buffs["goCamp"])) {
                 pickCardOrCampCard = Math.floor(Math.random() * 2) ? "card" : "camp";
             }
             if (pickCardOrCampCard === "card") {
@@ -122,7 +122,7 @@ export const enumerate = (G, ctx) => {
                 positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
             }
             const allCoinsOrder = G.botData.allCoinsOrder,
-                handCoins = G.players[ctx.currentPlayer].handCoins;
+                handCoins = G.publicPlayers[ctx.currentPlayer].handCoins;
             for (let i = 0; i < allCoinsOrder.length; i++) {
                 const hasTrading = allCoinsOrder[i].some(coinId => handCoins[coinId] && handCoins[coinId].isTriggerTrading);
                 if (tradingProfit < 0) {
@@ -162,7 +162,7 @@ export const enumerate = (G, ctx) => {
         if (ctx.phase === "endTier") {
             for (let j = 0; j < G.suitsNum; j++) {
                 const suit = Object.keys(suitsConfig)[j];
-                if (suit !== (G.players[ctx.currentPlayer].pickedCard && G.players[ctx.currentPlayer].pickedCard.suit)) {
+                if (suit !== (G.publicPlayers[ctx.currentPlayer].pickedCard && G.publicPlayers[ctx.currentPlayer].pickedCard.suit)) {
                     botMoveArguments.push([j]);
                 }
             }
@@ -174,7 +174,7 @@ export const enumerate = (G, ctx) => {
         if (ctx.phase === "getMjollnirProfit") {
             const totalSuitsRanks = [];
             for (let j = 0; j < G.suitsNum; j++) {
-                totalSuitsRanks.push(G.players[ctx.currentPlayer].cards[j].reduce(TotalRank, 0));
+                totalSuitsRanks.push(G.publicPlayers[ctx.currentPlayer].cards[j].reduce(TotalRank, 0));
             }
             botMoveArguments.push([totalSuitsRanks.indexOf(Math.max(...totalSuitsRanks))]);
             moves.push({
@@ -186,10 +186,10 @@ export const enumerate = (G, ctx) => {
             for (let i = 0; ; i++) {
                 let isDrawRow = false;
                 for (let j = 0; j < G.suitsNum; j++) {
-                    if (G.players[ctx.currentPlayer].cards[j] !== undefined &&
-                        G.players[ctx.currentPlayer].cards[j][i] !== undefined) {
+                    if (G.publicPlayers[ctx.currentPlayer].cards[j] !== undefined &&
+                        G.publicPlayers[ctx.currentPlayer].cards[j][i] !== undefined) {
                         isDrawRow = true;
-                        if (G.players[ctx.currentPlayer].cards[j][i].type !== "герой") {
+                        if (G.publicPlayers[ctx.currentPlayer].cards[j][i].type !== "герой") {
                             botMoveArguments.push([j, i]);
                         }
                     }
@@ -208,7 +208,7 @@ export const enumerate = (G, ctx) => {
                 for (let j = 0; j < 2; j++) {
                     if (j === 0) {
                         botMoveArguments.push([j]);
-                    } else if (G.playersOrder.length > 1) {
+                    } else if (G.publicPlayersOrder.length > 1) {
                         botMoveArguments.push([j]);
                     }
                 }
@@ -218,7 +218,7 @@ export const enumerate = (G, ctx) => {
                     moves.push({move: "PassEnlistmentMercenaries", args: []});
                 }
             } else if (G.drawProfit === "enlistmentMercenaries") {
-                const mercenaries = G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник");
+                const mercenaries = G.publicPlayers[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник");
                 for (let j = 0; j < mercenaries.length; j++) {
                     botMoveArguments.push([j]);
                 }
@@ -229,8 +229,8 @@ export const enumerate = (G, ctx) => {
             } else if (G.drawProfit === "placeEnlistmentMercenaries") {
                 for (let j = 0; j < G.suitsNum; j++) {
                     const suit = Object.keys(suitsConfig)[j];
-                    if (suit === (G.players[ctx.currentPlayer].pickedCard.stack[0].variants[suit] &&
-                        G.players[ctx.currentPlayer].pickedCard.stack[0].variants[suit].suit)) {
+                    if (suit === (G.publicPlayers[ctx.currentPlayer].pickedCard.stack[0].variants[suit] &&
+                        G.publicPlayers[ctx.currentPlayer].pickedCard.stack[0].variants[suit].suit)) {
                         botMoveArguments.push([j]);
                     }
                 }
@@ -241,8 +241,8 @@ export const enumerate = (G, ctx) => {
             }
         }
         if (ctx.phase === "placeCoinsUline") {
-            for (let j = 0; j < G.players[ctx.currentPlayer].handCoins.length; j++) {
-                if (G.players[ctx.currentPlayer].handCoins[j] !== null) {
+            for (let j = 0; j < G.publicPlayers[ctx.currentPlayer].handCoins.length; j++) {
+                if (G.publicPlayers[ctx.currentPlayer].handCoins[j] !== null) {
                     botMoveArguments.push([j]);
                 }
             }
@@ -253,8 +253,8 @@ export const enumerate = (G, ctx) => {
             moves.push({move: "ClickBoardCoin", args: [G.currentTavern + 1]});
         }
         if (activeStageOfCurrentPlayer === "placeTradingCoinsUline") {
-            for (let j = 0; j < G.players[ctx.currentPlayer].handCoins.length; j++) {
-                if (G.players[ctx.currentPlayer].handCoins[j] !== null) {
+            for (let j = 0; j < G.publicPlayers[ctx.currentPlayer].handCoins.length; j++) {
+                if (G.publicPlayers[ctx.currentPlayer].handCoins[j] !== null) {
                     botMoveArguments.push([j]);
                 }
             }
@@ -262,16 +262,16 @@ export const enumerate = (G, ctx) => {
                 move: "ClickHandCoin",
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
             });
-            if (G.players[ctx.currentPlayer].boardCoins[G.tavernsNum]) {
+            if (G.publicPlayers[ctx.currentPlayer].boardCoins[G.tavernsNum]) {
                 moves.push({move: "ClickBoardCoin", args: [G.tavernsNum + 1]});
             } else {
                 moves.push({move: "ClickBoardCoin", args: [G.tavernsNum]});
             }
         }
         if (activeStageOfCurrentPlayer === "addCoinToPouch") {
-            for (let j = 0; j < G.players[ctx.currentPlayer].handCoins.length; j++) {
-                if (G.players[ctx.currentPlayer].buffs["everyTurn"] === "Uline" &&
-                    G.players[ctx.currentPlayer].handCoins[j] !== null) {
+            for (let j = 0; j < G.publicPlayers[ctx.currentPlayer].handCoins.length; j++) {
+                if (G.publicPlayers[ctx.currentPlayer].buffs["everyTurn"] === "Uline" &&
+                    G.publicPlayers[ctx.currentPlayer].handCoins[j] !== null) {
                     botMoveArguments.push([j]);
                 }
             }
@@ -283,10 +283,10 @@ export const enumerate = (G, ctx) => {
         if (activeStageOfCurrentPlayer === "upgradeCoinVidofnirVedrfolnir") {
             let type = "board",
                 isInitial = false;
-            for (let j = G.tavernsNum; j < G.players[ctx.currentPlayer].boardCoins.length; j++) {
-                if (G.players[ctx.currentPlayer].boardCoins[j] && !G.players[ctx.currentPlayer].boardCoins[j].isTriggerTrading &&
-                    G.stack[ctx.currentPlayer][0].config.coinId !== j) {
-                    isInitial = G.players[ctx.currentPlayer].boardCoins[j].isInitial;
+            for (let j = G.tavernsNum; j < G.publicPlayers[ctx.currentPlayer].boardCoins.length; j++) {
+                if (G.publicPlayers[ctx.currentPlayer].boardCoins[j] && !G.publicPlayers[ctx.currentPlayer].boardCoins[j].isTriggerTrading &&
+                    G.publicPlayers[ctx.currentPlayer].stack[0].config.coinId !== j) {
+                    isInitial = G.publicPlayers[ctx.currentPlayer].boardCoins[j].isInitial;
                     botMoveArguments.push([j, type, isInitial]);
                 }
             }
@@ -297,15 +297,16 @@ export const enumerate = (G, ctx) => {
         }
         if (activeStageOfCurrentPlayer === "discardSuitCard") {
             // todo Bot can't do async turns...?
-            const suitId = GetSuitIndexByName(G.stack[ctx.currentPlayer][0].config.suit);
-            for (let p = 0; p < G.players.length; p++) {
+            const suitId = GetSuitIndexByName(G.publicPlayers[ctx.currentPlayer].stack[0].config.suit);
+            for (let p = 0; p < G.publicPlayers.length; p++) {
                 if (p !== Number(ctx.currentPlayer)) {
                     if (Number(ctx.playerID) === p) {
-                        for (let i = 0; i < G.players[p].cards[suitId].length; i++) {
+                        for (let i = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
                             for (let j = 0; j < 1; j++) {
-                                if (G.players[p].cards[suitId] !== undefined && G.players[p].cards[suitId][i] !== undefined) {
-                                    if (G.players[p].cards[suitId][i].type !== "герой") {
-                                        botMoveArguments.push([G.players[ctx.currentPlayer].cards[suitId][i].points]);
+                                if (G.publicPlayers[p].cards[suitId] !== undefined && G.publicPlayers[p].cards[suitId][i]
+                                    !== undefined) {
+                                    if (G.publicPlayers[p].cards[suitId][i].type !== "герой") {
+                                        botMoveArguments.push([G.publicPlayers[ctx.currentPlayer].cards[suitId][i].points]);
                                     }
                                 }
                             }
@@ -316,20 +317,20 @@ export const enumerate = (G, ctx) => {
             const minValue = Math.min(...botMoveArguments);
             moves.push({
                 move: "DiscardSuitCardFromPlayerBoard",
-                args: [suitId, G.players[ctx.currentPlayer].cards[suitId].findIndex(card => card.type !== "герой" &&
+                args: [suitId, G.publicPlayers[ctx.currentPlayer].cards[suitId].findIndex(card => card.type !== "герой" &&
                     card.value === minValue)],
             });
         }
         if (activeStageOfCurrentPlayer === "discardCardFromBoard") {
             for (let j = 0; j < G.suitsNum; j++) {
-                if (G.players[ctx.currentPlayer].cards[j][0] !== undefined &&
-                    suitsConfig[G.players[ctx.currentPlayer].cards[j][0].suit].suit !==
-                    G.stack[ctx.currentPlayer][0].config.suit &&
+                if (G.publicPlayers[ctx.currentPlayer].cards[j][0] !== undefined &&
+                    suitsConfig[G.publicPlayers[ctx.currentPlayer].cards[j][0].suit].suit !==
+                    G.publicPlayers[ctx.currentPlayer].stack[0].config.suit &&
                     !(G.drawProfit === "DagdaAction" && G.actionsNum === 1 &&
-                        suitsConfig[G.players[ctx.currentPlayer].cards[j][0].suit].suit ===
-                        (G.players[ctx.currentPlayer].pickedCard && G.players[ctx.currentPlayer].pickedCard.suit))) {
-                    const last = G.players[ctx.currentPlayer].cards[j].length - 1;
-                    if (G.players[ctx.currentPlayer].cards[j][last].type !== "герой") {
+                        suitsConfig[G.publicPlayers[ctx.currentPlayer].cards[j][0].suit].suit ===
+                        (G.publicPlayers[ctx.currentPlayer].pickedCard && G.publicPlayers[ctx.currentPlayer].pickedCard.suit))) {
+                    const last = G.publicPlayers[ctx.currentPlayer].cards[j].length - 1;
+                    if (G.publicPlayers[ctx.currentPlayer].cards[j][last].type !== "герой") {
                         botMoveArguments.push([j, last]);
                     }
                 }
@@ -362,7 +363,7 @@ export const enumerate = (G, ctx) => {
         if (activeStageOfCurrentPlayer === "placeCards") {
             for (let j = 0; j < G.suitsNum; j++) {
                 const suit = Object.keys(suitsConfig)[j];
-                if (suit !== (G.players[ctx.currentPlayer].pickedCard && G.players[ctx.currentPlayer].pickedCard.suit)) {
+                if (suit !== (G.publicPlayers[ctx.currentPlayer].pickedCard && G.publicPlayers[ctx.currentPlayer].pickedCard.suit)) {
                     botMoveArguments.push([j]);
                 }
             }
@@ -420,7 +421,7 @@ export const objectives = () => ({
             }
             const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(Scoring(G.players[i]));
+                totalScore.push(Scoring(G.publicPlayers[i]));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
             if (totalScore[ctx.currentPlayer] < top2 && top2 < top1) {
@@ -444,7 +445,7 @@ export const objectives = () => ({
             }
             const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(Scoring(G.players[i]));
+                totalScore.push(Scoring(G.publicPlayers[i]));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
             if (totalScore[ctx.currentPlayer] === top2 && top2 < top1) {
@@ -468,7 +469,7 @@ export const objectives = () => ({
             }
             const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(Scoring(G.players[i]));
+                totalScore.push(Scoring(G.publicPlayers[i]));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
             if (totalScore[ctx.currentPlayer] < top2 && top2 === top1) {
@@ -492,7 +493,7 @@ export const objectives = () => ({
             }
             const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(CurrentScoring(G.players[i]));
+                totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
             if (totalScore[ctx.currentPlayer] === top1) {
@@ -515,7 +516,7 @@ export const objectives = () => ({
             }
             const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(CurrentScoring(G.players[i]));
+                totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
             if (totalScore[ctx.currentPlayer] === top1) {

@@ -29,20 +29,20 @@ export const CheckEndGameLastActions = (G, ctx) => {
         if (G.expansions.thingvellir.active) {
             if (ctx.phase !== "brisingamensEndGame" && ctx.phase !== "getMjollnirProfit") {
                 for (let i = 0; i < ctx.numPlayers; i++) {
-                    if (G.players[i].buffs["discardCardEndGame"]) {
+                    if (G.publicPlayers[i].buffs["discardCardEndGame"]) {
                         isNewPhase = true;
-                        G.playersOrder.push(i);
+                        G.publicPlayersOrder.push(i);
                         const stack = [
                             {
                                 actionName: "DrawProfitAction",
-                                playerId: G.playersOrder[0],
+                                playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: "BrisingamensEndGameAction",
                                     drawName: "Brisingamens end game",
                                 },
                             },
                             {
-                                playerId: G.playersOrder[0],
+                                playerId: G.publicPlayersOrder[0],
                                 actionName: "DiscardAnyCardFromPlayerBoard",
                             },
                         ];
@@ -55,20 +55,20 @@ export const CheckEndGameLastActions = (G, ctx) => {
             }
             if (ctx.phase !== "getMjollnirProfit" && !isNewPhase) {
                 for (let i = 0; i < ctx.numPlayers; i++) {
-                    if (G.players[i].buffs["getMjollnirProfit"]) {
+                    if (G.publicPlayers[i].buffs["getMjollnirProfit"]) {
                         isNewPhase = true;
-                        G.playersOrder.push(i);
+                        G.publicPlayersOrder.push(i);
                         const stack = [
                             {
                                 actionName: "DrawProfitAction",
-                                playerId: G.playersOrder[0],
+                                playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: "getMjollnirProfit",
                                     drawName: "Mjollnir",
                                 },
                             },
                             {
-                                playerId: G.playersOrder[0],
+                                playerId: G.publicPlayersOrder[0],
                                 actionName: "GetMjollnirProfitAction",
                             },
                         ];
@@ -104,7 +104,7 @@ export const CheckEndGameLastActions = (G, ctx) => {
  */
 export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
     // todo rework it?
-    G.players[ctx.currentPlayer].pickedCard = null;
+    G.publicPlayers[ctx.currentPlayer].pickedCard = null;
     if (ctx.phase === "pickCards") {
         const isUlinePlaceTradingCoin = CheckAndStartUlineActionsOrContinue(G, ctx);
         if (isUlinePlaceTradingCoin !== "placeTradingCoinsUline" && isUlinePlaceTradingCoin !== "nextPlaceTradingCoinsUline") {
@@ -167,7 +167,8 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                 && Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) ||
             (ctx.playOrder[ctx.playOrder.length - 2] !== undefined && (Number(ctx.currentPlayer) ===
                     Number(ctx.playOrder[ctx.playOrder.length - 2])) &&
-                !G.players[ctx.playOrder[ctx.playOrder.length - 1]].campCards.filter(card => card.type === "наёмник").length)) {
+                !G.publicPlayers[ctx.playOrder[ctx.playOrder.length - 1]].campCards
+                    .filter(card => card.type === "наёмник").length)) {
             StartEndTierActions(G, ctx);
         } else {
             const stack = [
@@ -200,23 +201,23 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
  * @constructor
  */
 const StartEndTierActions = (G, ctx) => {
-    G.playersOrder = [];
+    G.publicPlayersOrder = [];
     let ylud = false,
         index = -1;
-    for (let i = 0; i < G.players.length; i++) {
-        index = G.players[i].heroes.findIndex(hero => hero.name === "Ylud");
+    for (let i = 0; i < G.publicPlayers.length; i++) {
+        index = G.publicPlayers[i].heroes.findIndex(hero => hero.name === "Ylud");
         if (index !== -1) {
             ylud = true;
-            G.playersOrder.push(i);
+            G.publicPlayersOrder.push(i);
         }
     }
     if (!ylud) {
-        for (let i = 0; i < G.players.length; i++) {
+        for (let i = 0; i < G.publicPlayers.length; i++) {
             for (let j = 0; j < G.suitsNum; j++) {
-                index = G.players[i].cards[j].findIndex(card => card.name === "Ylud");
+                index = G.publicPlayers[i].cards[j].findIndex(card => card.name === "Ylud");
                 if (index !== -1) {
-                    G.players[ctx.currentPlayer].cards[i].splice(index, 1);
-                    G.playersOrder.push(i);
+                    G.publicPlayers[ctx.currentPlayer].cards[i].splice(index, 1);
+                    G.publicPlayersOrder.push(i);
                     ylud = true;
                 }
             }
@@ -253,7 +254,7 @@ const StartEndTierActions = (G, ctx) => {
         };
         const stack = [
             {
-                playerId: G.playersOrder[0],
+                playerId: G.publicPlayersOrder[0],
                 actionName: "DrawProfitAction",
                 variants,
                 config: {
@@ -263,7 +264,7 @@ const StartEndTierActions = (G, ctx) => {
                 },
             },
             {
-                playerId: G.playersOrder[0],
+                playerId: G.publicPlayersOrder[0],
                 actionName: "PlaceYludAction",
                 variants,
             },
@@ -288,8 +289,8 @@ const StartEndTierActions = (G, ctx) => {
  */
 const CheckEnlistmentMercenaries = (G, ctx) => {
     let count = false;
-    for (let i = 0; i < G.players.length; i++) {
-        if (G.players[i].campCards.filter(card => card.type === "наёмник").length) {
+    for (let i = 0; i < G.publicPlayers.length; i++) {
+        if (G.publicPlayers[i].campCards.filter(card => card.type === "наёмник").length) {
             count = true;
             break;
         }

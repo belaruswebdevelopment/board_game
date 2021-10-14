@@ -31,9 +31,9 @@ export const GetHeroIndexByName = (heroName) => Object.keys(heroesConfig).indexO
 export const CheckAndMoveThrud = (G, ctx, card) => {
     if (card.suit) {
         const suitId = GetSuitIndexByName(card.suit),
-            index = G.players[ctx.currentPlayer].cards[suitId].findIndex(card => card.name === "Thrud");
+            index = G.publicPlayers[ctx.currentPlayer].cards[suitId].findIndex(card => card.name === "Thrud");
         if (index !== -1) {
-            G.players[ctx.currentPlayer].cards[suitId].splice(index, 1);
+            G.publicPlayers[ctx.currentPlayer].cards[suitId].splice(index, 1);
         }
         return index !== -1;
     }
@@ -113,13 +113,13 @@ export const StartThrudMoving = (G, ctx, card) => {
  */
 export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
     // todo Rework it all!
-    const ulinePlayerIndex = G.players.findIndex(player => player.buffs["everyTurn"] === "Uline");
+    const ulinePlayerIndex = G.publicPlayers.findIndex(player => player.buffs["everyTurn"] === "Uline");
     if (ulinePlayerIndex !== -1) {
         if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) !== "placeTradingCoinsUline" &&
             ulinePlayerIndex === Number(ctx.currentPlayer) &&
-            (G.players[ctx.currentPlayer].boardCoins[G.currentTavern] &&
-                G.players[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading)) {
-            if (G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum &&
+            (G.publicPlayers[ctx.currentPlayer].boardCoins[G.currentTavern] &&
+                G.publicPlayers[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading)) {
+            if (G.publicPlayers[ctx.currentPlayer].boardCoins.filter((coin, index) => index >= G.tavernsNum &&
                 coin === null)) {
                 G.actionsNum = G.suitsNum - G.tavernsNum;
                 ctx.events.setStage("placeTradingCoinsUline");

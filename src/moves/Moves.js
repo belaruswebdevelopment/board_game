@@ -45,7 +45,7 @@ export const ClickCard = (G, ctx, cardId) => {
     } else {
         AddActionsToStack(G, ctx, card.stack);
     }
-    if (G.stack[ctx.currentPlayer].length) {
+    if (G.publicPlayers[ctx.currentPlayer].stack.length) {
         return StartActionFromStackOrEndActions(G, ctx, null, suitId);
     } else {
         AfterBasicPickCardActions(G, ctx);
@@ -71,7 +71,7 @@ export const ClickDistinctionCard = (G, ctx, cardID) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    suitsConfig[Object.keys(suitsConfig)[cardID]].distinction.awarding(G, ctx, G.players[ctx.currentPlayer]);
+    suitsConfig[Object.keys(suitsConfig)[cardID]].distinction.awarding(G, ctx, G.publicPlayers[ctx.currentPlayer]);
 };
 
 /**

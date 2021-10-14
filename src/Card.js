@@ -247,7 +247,7 @@ export const EvaluateCard = (G, ctx, card, cardId, tavern) => {
         return CompareCards(card, G.averageCards[suitId]);
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
-        let temp = tavern.map(item => G.players.map(player => PotentialScoring({player: player, card: item}))),
+        let temp = tavern.map(item => G.publicPlayers.map(player => PotentialScoring({player: player, card: item}))),
             result = temp[cardId][ctx.currentPlayer];
         temp.splice(cardId, 1);
         temp.forEach(player => player.splice(ctx.currentPlayer, 1));

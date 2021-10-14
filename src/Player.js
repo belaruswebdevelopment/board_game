@@ -12,31 +12,56 @@ import {suitsConfig} from "./data/SuitData";
  * <li>Происходит при создании всех игроков при инициализации игры.</li>
  * </ol>
  *
+ * @param handCoins Массив монет в руке.
+ * @param boardCoins Массив монет на столе.
+ * @returns {{handCoins: *[], boardCoins: *[]}} Игрок.
+ * @constructor
+ */
+const CreatePlayer = ({
+                          handCoins = [],
+                          boardCoins = [],
+                      } = {}) => {
+    return {
+        handCoins,
+        boardCoins,
+    };
+};
+
+/**
+ * <h3>Создание игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании всех игроков при инициализации игры.</li>
+ * </ol>
+ *
  * @param nickname Никнейм.
  * @param cards Массив карт.
  * @param heroes Массив героев.
  * @param campCards Массив карт кэмпа.
+ * @param nickname Никнейм.
  * @param handCoins Массив монет в руке.
  * @param boardCoins Массив монет на столе.
+ * @param stack Стэк действий.
  * @param priority Кристалл.
  * @param buffs Бафы.
  * @param selectedCoin Выбранная монета.
  * @param pickedCard Выбранная карта.
- * @returns {{cards: *[], heroes: *[], handCoins: *[], boardCoins: *[], nickname, selectedCoin, buffs: {}, priority, pickedCard, campCards: *[]}} Игрок.
+ * @returns {{nickname: *, handCoins: *[], boardCoins: *[], stack: *[], nickname: *, selectedCoin: *, buffs: {}, priority: *, pickedCard: {}}} Игрок.
  * @constructor
  */
-const CreatePlayer = ({
-                          nickname,
-                          cards = [],
-                          heroes = [],
-                          campCards = [],
-                          handCoins = [],
-                          boardCoins = [],
-                          priority,
-                          buffs = {},
-                          selectedCoin,
-                          pickedCard = {},
-                      } = {}) => {
+const CreatePublicPlayer = ({
+                                nickname,
+                                cards = [],
+                                heroes = [],
+                                campCards = [],
+                                handCoins = [],
+                                boardCoins = [],
+                                stack = [],
+                                priority,
+                                buffs = {},
+                                selectedCoin,
+                                pickedCard = {},
+                            } = {}) => {
     return {
         nickname,
         cards,
@@ -44,6 +69,7 @@ const CreatePlayer = ({
         heroes,
         handCoins,
         boardCoins,
+        stack,
         priority,
         buffs,
         selectedCoin,
@@ -52,7 +78,25 @@ const CreatePlayer = ({
 };
 
 /**
- * <h3>Создаёт всех игроков.</h3>
+ * <h3>Создаёт всех игроков (приватные данные).</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при инициализации игры.</li>
+ * </ol>
+ *
+ * @returns {{handCoins: *[], boardCoins: *[], nickname: *}} Игрок.
+ * @constructor
+ */
+export const BuildPlayer = () => {
+    return CreatePlayer({
+        handCoins: BuildCoins(initialPlayerCoinsConfig,
+            {isInitial: true, isTriggerTrading: false}),
+        boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
+    });
+};
+
+/**
+ * <h3>Создаёт всех игроков (публичные данные).</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит при инициализации игры.</li>
@@ -61,11 +105,11 @@ const CreatePlayer = ({
  * @param playersNum Количество игроков.
  * @param suitsNum Количество фракций.
  * @param nickname Никнейм.
- * @returns {{cards: *[], heroes: *[], handCoins: *[], boardCoins: *[], nickname, selectedCoin, buffs: {}, priority, pickedCard, campCards: *[]}} Игрок.
+ * @returns {{handCoins: *[], boardCoins: *[], nickname: *}} Игрок.
  * @constructor
  */
-export const BuildPlayer = (playersNum, suitsNum, nickname) => {
-    return CreatePlayer({
+export const BuildPublicPlayer = (playersNum, suitsNum, nickname) => {
+    return CreatePublicPlayer({
         nickname,
         cards: Array(suitsNum).fill(Array(0)),
         handCoins: BuildCoins(initialPlayerCoinsConfig,
@@ -90,14 +134,14 @@ export const BuildPlayer = (playersNum, suitsNum, nickname) => {
  * @constructor
  */
 export const AddCardToPlayer = (G, ctx, card) => {
-    G.players[ctx.currentPlayer].pickedCard = card;
+    G.publicPlayers[ctx.currentPlayer].pickedCard = card;
     if (card.type === "улучшение монеты") {
-        AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту '${card.name}'.`);
+        AddDataToLog(G, "public", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} выбрал карту '${card.name}'.`);
         return false;
     }
     const suitIndex = GetSuitIndexByName(card.suit);
-    G.players[ctx.currentPlayer].cards[suitIndex].push(card);
-    AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту '${card.name}'.`);
+    G.publicPlayers[ctx.currentPlayer].cards[suitIndex].push(card);
+    AddDataToLog(G, "public", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} выбрал карту '${card.name}'.`);
     return true;
 };
 
@@ -114,8 +158,8 @@ export const AddCardToPlayer = (G, ctx, card) => {
  * @constructor
  */
 export const AddCampCardToPlayer = (G, ctx, card) => {
-    G.players[ctx.currentPlayer].campCards.push(card);
-    AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту кэмпа ${card.name}.`);
+    G.publicPlayers[ctx.currentPlayer].campCards.push(card);
+    AddDataToLog(G, "public", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} выбрал карту кэмпа ${card.name}.`);
 };
 
 /**
@@ -132,8 +176,8 @@ export const AddCampCardToPlayer = (G, ctx, card) => {
  */
 export const AddCampCardToPlayerCards = (G, ctx, card) => {
     const suitId = GetSuitIndexByName(card.suit);
-    G.players[ctx.currentPlayer].cards[suitId].push(card);
-    AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал карту кэмпа '${card.name}' 
+    G.publicPlayers[ctx.currentPlayer].cards[suitId].push(card);
+    AddDataToLog(G, "private", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} выбрал карту кэмпа '${card.name}' 
     во фракцию ${suitsConfig[card.suit].suitName}.`);
 };
 
@@ -150,10 +194,10 @@ export const AddCampCardToPlayerCards = (G, ctx, card) => {
  * @constructor
  */
 export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
-    G.players[ctx.currentPlayer].pickedCard = hero;
+    G.publicPlayers[ctx.currentPlayer].pickedCard = hero;
     hero.active = false;
-    G.players[ctx.currentPlayer].heroes.push(hero);
-    AddDataToLog(G, "public", `Игрок ${G.players[ctx.currentPlayer].nickname} выбрал героя ${hero.name}.`);
+    G.publicPlayers[ctx.currentPlayer].heroes.push(hero);
+    AddDataToLog(G, "public", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} выбрал героя ${hero.name}.`);
 };
 
 /**
@@ -170,8 +214,8 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
  */
 export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
     const suitId = GetSuitIndexByName(hero.suit);
-    G.players[ctx.currentPlayer].cards[suitId].push(hero);
-    AddDataToLog(G, "private", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил героя ${hero.name} во 
+    G.publicPlayers[ctx.currentPlayer].cards[suitId].push(hero);
+    AddDataToLog(G, "private", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} добавил героя ${hero.name} во 
     фракцию ${suitsConfig[hero.suit].suitName}.`);
 };
 
@@ -205,8 +249,8 @@ export const AddCardToCards = (cards, card) => {
  * @constructor
  */
 export const IsTopPlayer = (G, playerId) => {
-    const score = CurrentScoring(G.players[playerId]);
-    return G.players.every(player => CurrentScoring(player) <= score);
+    const score = CurrentScoring(G.publicPlayers[playerId]);
+    return G.publicPlayers.every(player => CurrentScoring(player) <= score);
 };
 
 /**
@@ -223,8 +267,8 @@ export const IsTopPlayer = (G, playerId) => {
  * @constructor
  */
 export const GetTop1PlayerId = (G, currentPlayerId) => {
-    let top1PlayerId = G.players.findIndex((player, index) => IsTopPlayer(G, index));
-    if (G.playersOrder.indexOf(currentPlayerId) > G.playersOrder.indexOf(top1PlayerId)) {
+    let top1PlayerId = G.publicPlayers.findIndex((player, index) => IsTopPlayer(G, index));
+    if (G.publicPlayersOrder.indexOf(currentPlayerId) > G.publicPlayersOrder.indexOf(top1PlayerId)) {
         top1PlayerId = -1;
     }
     return top1PlayerId;
@@ -244,16 +288,16 @@ export const GetTop1PlayerId = (G, currentPlayerId) => {
  * @constructor
  */
 export const GetTop2PlayerId = (G, top1PlayerId) => {
-    const playersScore = G.players.map(player => CurrentScoring(player)),
+    const playersScore = G.publicPlayers.map(player => CurrentScoring(player)),
         maxScore = Math.max(...playersScore);
     let top2PlayerId, temp;
     if (playersScore.filter(score => score === maxScore).length === 1) {
         temp = playersScore.sort((a, b) => b - a)[1];
-        top2PlayerId = G.players.findIndex(player => CurrentScoring(player) === temp);
+        top2PlayerId = G.publicPlayers.findIndex(player => CurrentScoring(player) === temp);
     } else {
-        top2PlayerId = G.players.findIndex((player, index) => index !== top1PlayerId && IsTopPlayer(G, index));
+        top2PlayerId = G.publicPlayers.findIndex((player, index) => index !== top1PlayerId && IsTopPlayer(G, index));
     }
-    if (G.playersOrder.indexOf(top1PlayerId) > G.playersOrder.indexOf(top2PlayerId)) {
+    if (G.publicPlayersOrder.indexOf(top1PlayerId) > G.publicPlayersOrder.indexOf(top2PlayerId)) {
         top2PlayerId = -1;
     }
     return top2PlayerId;

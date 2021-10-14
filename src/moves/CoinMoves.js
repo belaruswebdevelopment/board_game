@@ -20,14 +20,14 @@ import {CheckAndStartUlineActionsOrContinue} from "../helpers/HeroHelpers";
  */
 export const ClickHandCoin = (G, ctx, coinId) => {
     const isValidMove = IsValidMove({
-        obj: G.players[ctx.currentPlayer].handCoins[coinId],
+        obj: G.publicPlayers[ctx.currentPlayer].handCoins[coinId],
         objId: coinId,
-        range: [0, G.players[ctx.currentPlayer].handCoins.length]
+        range: [0, G.publicPlayers[ctx.currentPlayer].handCoins.length]
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    G.players[ctx.currentPlayer].selectedCoin = coinId;
+    G.publicPlayers[ctx.currentPlayer].selectedCoin = coinId;
 };
 
 /**
@@ -44,7 +44,7 @@ export const ClickHandCoin = (G, ctx, coinId) => {
  * @constructor
  */
 export const ClickBoardCoin = (G, ctx, coinId) => {
-    const player = G.players[ctx.currentPlayer],
+    const player = G.publicPlayers[ctx.currentPlayer],
         isValidMove = IsValidMove({objId: coinId, range: [0, player.boardCoins.length]});
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -67,7 +67,7 @@ export const ClickBoardCoin = (G, ctx, coinId) => {
             }
             AfterBasicPickCardActions(G, ctx);
         } else {
-            const isEveryPlayersHandCoinsEmpty = G.players.filter(player => player.buffs["everyTurn"] !== "Uline")
+            const isEveryPlayersHandCoinsEmpty = G.publicPlayers.filter(player => player.buffs["everyTurn"] !== "Uline")
                 .every(player => player.handCoins.every(coin => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {
                 if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
@@ -133,7 +133,8 @@ export const ClickCoinToUpgrade = (G, ctx, coinId, type, isInitial) => {
  * @constructor
  */
 export const UpgradeCoinVidofnirVedrfolnir = (G, ctx, coinId, type, isInitial) => {
-    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && G.stack[ctx.currentPlayer][0].config["coinId"] !== coinId;
+    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) &&
+        G.publicPlayers[ctx.currentPlayer].stack[0].config["coinId"] !== coinId;
     if (!isValidMove) {
         return INVALID_MOVE;
     }

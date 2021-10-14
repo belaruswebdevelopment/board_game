@@ -40,46 +40,49 @@ export const DrawPlayersBoardsCoins = (data) => {
                             </span>
                         </th>
                     );
-                    if (data.props.G.players[p].boardCoins[coinIndex] === null) {
+                    if (data.props.G.publicPlayers[p].boardCoins[coinIndex] === null) {
                         if ((Number(data.props.ctx.currentPlayer) === p &&
                                 data.props.ctx.phase === "placeCoins") ||
                             (Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase === "placeCoinsUline"
                                 && j === data.props.G.currentTavern + 1)) {
-                            DrawCoin(data, playerCells, "back-tavern-icon", data.props.G.players[p].boardCoins[coinIndex],
-                                coinIndex, data.props.G.players[p], null, j, "OnClickBoardCoin", j);
+                            DrawCoin(data, playerCells, "back-tavern-icon",
+                                data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p],
+                                null, j, "OnClickBoardCoin", j);
                         } else {
-                            DrawCoin(data, playerCells, "back-tavern-icon", data.props.G.players[p].boardCoins[coinIndex],
-                                coinIndex, data.props.G.players[p], null, j);
+                            DrawCoin(data, playerCells, "back-tavern-icon",
+                                data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p],
+                                null, j);
                         }
                     } else if (data.props.ctx.phase === "placeCoins" && Number(data.props.ctx.currentPlayer) === p) {
-                        DrawCoin(data, playerCells, "coin", data.props.G.players[p].boardCoins[coinIndex], coinIndex,
-                            data.props.G.players[p], null, null, "OnClickBoardCoin", j);
+                        DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex],
+                            coinIndex, data.props.G.publicPlayers[p], null, null,
+                            "OnClickBoardCoin", j);
                     } else {
                         if (data.props.G.winner || (data.props.ctx.phase === "placeCoinsUline" &&
                             data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== "placeCoins"
                             && data.props.G.currentTavern >= j)) {
-                            DrawCoin(data, playerCells, "coin", data.props.G.players[p].boardCoins[coinIndex],
-                                coinIndex, data.props.G.players[p]);
+                            DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex],
+                                coinIndex, data.props.G.publicPlayers[p]);
                         } else {
-                            DrawCoin(data, playerCells, "back", data.props.G.players[p].boardCoins[coinIndex],
-                                coinIndex, data.props.G.players[p]);
+                            DrawCoin(data, playerCells, "back", data.props.G.publicPlayers[p].boardCoins[coinIndex],
+                                coinIndex, data.props.G.publicPlayers[p]);
                         }
                     }
                     coinIndex++;
                 }
             } else if (i === 1) {
-                for (let j = data.props.G.tavernsNum; j <= data.props.G.players[p].boardCoins.length; j++) {
-                    if (j === data.props.G.players[p].boardCoins.length) {
+                for (let j = data.props.G.tavernsNum; j <= data.props.G.publicPlayers[p].boardCoins.length; j++) {
+                    if (j === data.props.G.publicPlayers[p].boardCoins.length) {
                         playerFooters[p].push(
-                            <th key={`${data.props.G.players[p].nickname} priority icon`}>
+                            <th key={`${data.props.G.publicPlayers[p].nickname} priority icon`}>
                                 <span style={Styles.Priority()} className="bg-priority-icon">
 
                                 </span>
                             </th>
                         );
                         playerCells.push(
-                            <td key={`${data.props.G.players[p].nickname} priority gem`} className="bg-gray-300">
-                                <span style={Styles.Priorities(data.props.G.players[p].priority.value)}
+                            <td key={`${data.props.G.publicPlayers[p].nickname} priority gem`} className="bg-gray-300">
+                                <span style={Styles.Priorities(data.props.G.publicPlayers[p].priority.value)}
                                       className="bg-priority">
 
                                 </span>
@@ -87,38 +90,39 @@ export const DrawPlayersBoardsCoins = (data) => {
                         );
                     } else {
                         playerFooters[p].push(
-                            <th key={`${data.props.G.players[p].nickname} exchange icon ${j}`}>
+                            <th key={`${data.props.G.publicPlayers[p].nickname} exchange icon ${j}`}>
                                 <span style={Styles.Exchange()} className="bg-small-market-coin">
 
                                 </span>
                             </th>
                         );
-                        if (data.props.G.players[p].boardCoins[coinIndex] === null) {
+                        if (data.props.G.publicPlayers[p].boardCoins[coinIndex] === null) {
                             if (Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase !== "placeCoinsUline" &&
                                 (data.props.ctx.phase === "placeCoins" || (data.props.ctx.activePlayers &&
                                     data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) === "placeTradingCoinsUline")) {
                                 DrawCoin(data, playerCells, "back-small-market-coin",
-                                    data.props.G.players[p].boardCoins[coinIndex], coinIndex, data.props.G.players[p],
+                                    data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p],
                                     null, null, "OnClickBoardCoin", j);
                             } else {
                                 DrawCoin(data, playerCells, "back-small-market-coin",
-                                    data.props.G.players[p].boardCoins[coinIndex], coinIndex, data.props.G.players[p]);
+                                    data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p]);
                             }
                         } else if (Number(data.props.ctx.currentPlayer) === p && (data.props.ctx.phase === "placeCoins" ||
                             (data.props.ctx.activePlayers && data.props.ctx.activePlayers[data.props.ctx.currentPlayer])
                             === "placeTradingCoinsUline")) {
-                            DrawCoin(data, playerCells, "coin", data.props.G.players[p].boardCoins[coinIndex], coinIndex,
-                                data.props.G.players[p], null, null, "OnClickBoardCoin", j);
+                            DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex],
+                                coinIndex, data.props.G.publicPlayers[p], null, null,
+                                "OnClickBoardCoin", j);
                         } else {
                             if (data.props.G.winner || (data.props.ctx.phase !== "placeCoins" &&
                                 Number(data.props.ctx.currentPlayer) === p &&
-                                data.props.G.players[p].boardCoins[data.props.G.currentTavern] &&
-                                data.props.G.players[p].boardCoins[data.props.G.currentTavern].isTriggerTrading)) {
-                                DrawCoin(data, playerCells, "coin", data.props.G.players[p].boardCoins[coinIndex],
-                                    coinIndex, data.props.G.players[p]);
+                                data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern] &&
+                                data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern].isTriggerTrading)) {
+                                DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex],
+                                    coinIndex, data.props.G.publicPlayers[p]);
                             } else {
-                                DrawCoin(data, playerCells, "back", data.props.G.players[p].boardCoins[coinIndex],
-                                    coinIndex, data.props.G.players[p]);
+                                DrawCoin(data, playerCells, "back", data.props.G.publicPlayers[p].boardCoins[coinIndex],
+                                    coinIndex, data.props.G.publicPlayers[p]);
                             }
                         }
                         coinIndex++;
@@ -126,12 +130,12 @@ export const DrawPlayersBoardsCoins = (data) => {
                 }
             }
             playerRows[p][i].push(<tr
-                key={`${data.props.G.players[p].nickname} board coins row ${i}`}>{playerCells}</tr>)
+                key={`${data.props.G.publicPlayers[p].nickname} board coins row ${i}`}>{playerCells}</tr>)
         }
         playersBoardsCoins[p].push(
-            <table className="mx-auto" key={`${data.props.G.players[p].nickname} board coins`}>
+            <table className="mx-auto" key={`${data.props.G.publicPlayers[p].nickname} board coins`}>
                 <caption>
-                    Player {p + 1} ({data.props.G.players[p].nickname}) played coins
+                    Player {p + 1} ({data.props.G.publicPlayers[p].nickname}) played coins
                 </caption>
                 <thead>
                 <tr>{playerHeaders[p]}</tr>
@@ -165,10 +169,10 @@ export const DrawPlayersHandsCoins = (data) => {
         const playerCells = [];
         playersHandsCoins[p] = [];
         for (let i = 0; i < 1; i++) {
-            for (let j = 0; j < data.props.G.players[p].handCoins.length; j++) {
-                if (data.props.G.players[p].handCoins[j] === null) {
+            for (let j = 0; j < data.props.G.publicPlayers[p].handCoins.length; j++) {
+                if (data.props.G.publicPlayers[p].handCoins[j] === null) {
                     playerCells.push(
-                        <td key={`${data.props.G.players[p].nickname} hand coin ${j} empty`} className="bg-yellow-300">
+                        <td key={`${data.props.G.publicPlayers[p].nickname} hand coin ${j} empty`} className="bg-yellow-300">
                             <span className="bg-coin bg-yellow-300 border-2">
 
                             </span>
@@ -177,28 +181,29 @@ export const DrawPlayersHandsCoins = (data) => {
                 } else {
                     if (Number(data.props.ctx.currentPlayer) === p || data.props.G.winner) {
                         let coinClasses = "border-2";
-                        if (data.props.G.players[p].selectedCoin === j) {
+                        if (data.props.G.publicPlayers[p].selectedCoin === j) {
                             coinClasses = "border-2 border-green-400";
                         }
                         if (!data.props.G.winner && (data.props.ctx.phase === "placeCoins" ||
                             data.props.ctx.phase === "placeCoinsUline" || (data.props.ctx.activePlayers &&
                                 data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) === "placeTradingCoinsUline")) {
-                            DrawCoin(data, playerCells, "coin", data.props.G.players[p].handCoins[j], j,
-                                data.props.G.players[p], coinClasses, null, "OnClickHandCoin", j);
+                            DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].handCoins[j],
+                                j, data.props.G.publicPlayers[p], coinClasses, null,
+                                "OnClickHandCoin", j);
                         } else {
-                            DrawCoin(data, playerCells, "coin", data.props.G.players[p].handCoins[j], j,
-                                data.props.G.players[p], coinClasses);
+                            DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].handCoins[j],
+                                j, data.props.G.publicPlayers[p], coinClasses);
                         }
                     } else {
-                        DrawCoin(data, playerCells, "back", data.props.G.players[p].handCoins[j], j,
-                            data.props.G.players[p]);
+                        DrawCoin(data, playerCells, "back", data.props.G.publicPlayers[p].handCoins[j],
+                            j, data.props.G.publicPlayers[p]);
                     }
                 }
             }
         }
         playersHandsCoins[p].push(
-            <table className="mx-auto" key={`${data.props.G.players[p].nickname} hand coins`}>
-                <caption>Player {p + 1} ({data.props.G.players[p].nickname}) coins</caption>
+            <table className="mx-auto" key={`${data.props.G.publicPlayers[p].nickname} hand coins`}>
+                <caption>Player {p + 1} ({data.props.G.publicPlayers[p].nickname}) coins</caption>
                 <tbody>
                 <tr>{playerCells}</tr>
                 </tbody>
@@ -232,7 +237,7 @@ export const DrawPlayersBoards = (data) => {
         for (const suit in suitsConfig) {
             playerHeaders[p].push(
                 <th className={`${suitsConfig[suit].suitColor}`}
-                    key={`${data.props.G.players[p].nickname} ${suitsConfig[suit].suitName}`}>
+                    key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName}`}>
                     <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
 
                     </span>
@@ -240,36 +245,36 @@ export const DrawPlayersBoards = (data) => {
             );
             playerHeadersCount[p].push(
                 <th className={`${suitsConfig[suit].suitColor} text-white`}
-                    key={`${data.props.G.players[p].nickname} ${suitsConfig[suit].suitName} count`}>
-                    <b>{data.props.G.players[p].cards[GetSuitIndexByName(suit)].reduce(TotalRank, 0)}</b>
+                    key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName} count`}>
+                    <b>{data.props.G.publicPlayers[p].cards[GetSuitIndexByName(suit)].reduce(TotalRank, 0)}</b>
                 </th>
             );
         }
         for (let s = 0; s < 1 + data.props.G.expansions.thingvellir.active; s++) {
             if (s === 0) {
                 playerHeaders[p].push(
-                    <th className="bg-gray-600" key={`${data.props.G.players[p].nickname} hero icon`}>
+                    <th className="bg-gray-600" key={`${data.props.G.publicPlayers[p].nickname} hero icon`}>
                         <span style={Styles.HeroBack()} className="bg-hero-icon">
 
                         </span>
                     </th>
                 );
                 playerHeadersCount[p].push(
-                    <th className="bg-gray-600 text-white" key={`${data.props.G.players[p].nickname} hero count`}>
-                        <b>{data.props.G.players[p].heroes.length}</b>
+                    <th className="bg-gray-600 text-white" key={`${data.props.G.publicPlayers[p].nickname} hero count`}>
+                        <b>{data.props.G.publicPlayers[p].heroes.length}</b>
                     </th>
                 );
             } else {
                 playerHeaders[p].push(
-                    <th className="bg-yellow-200" key={`${data.props.G.players[p].nickname} camp icon`}>
+                    <th className="bg-yellow-200" key={`${data.props.G.publicPlayers[p].nickname} camp icon`}>
                         <span style={Styles.Camp()} className="bg-camp-icon">
 
                         </span>
                     </th>
                 );
                 playerHeadersCount[p].push(
-                    <th className="bg-yellow-200 text-white" key={`${data.props.G.players[p].nickname} camp counts`}>
-                        <b>{data.props.G.players[p].campCards.length}</b>
+                    <th className="bg-yellow-200 text-white" key={`${data.props.G.publicPlayers[p].nickname} camp counts`}>
+                        <b>{data.props.G.publicPlayers[p].campCards.length}</b>
                     </th>
                 );
             }
@@ -282,12 +287,14 @@ export const DrawPlayersBoards = (data) => {
             for (let j = 0; j < data.props.G.suitsNum; j++) {
                 const suit = Object.keys(suitsConfig)[j];
                 id = i + j;
-                if (data.props.G.players[p].cards[j] !== undefined && data.props.G.players[p].cards[j][i] !== undefined) {
+                if (data.props.G.publicPlayers[p].cards[j] !== undefined && data.props.G.publicPlayers[p].cards[j][i]
+                    !== undefined) {
                     isDrawRow = true;
-                    DrawCard(data, playerCells, data.props.G.players[p].cards[j][i], id, data.props.G.players[p], suit);
+                    DrawCard(data, playerCells, data.props.G.publicPlayers[p].cards[j][i], id,
+                        data.props.G.publicPlayers[p], suit);
                 } else {
                     playerCells.push(
-                        <td key={`${data.props.G.players[p].nickname} empty card ${id}`}>
+                        <td key={`${data.props.G.publicPlayers[p].nickname} empty card ${id}`}>
 
                         </td>
                     );
@@ -297,27 +304,29 @@ export const DrawPlayersBoards = (data) => {
                 id += k + 1;
                 if (k === 0) {
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
-                    if (data.props.G.players[p].heroes[i] !== undefined && (!data.props.G.players[p].heroes[i].suit &&
-                        !((data.props.G.players[p].heroes[i].name === "Ylud" &&
-                                data.props.G.players[p].cards.flat().findIndex(card => card.name === "Ylud") !== -1) ||
-                            (data.props.G.players[p].heroes[i].name === "Thrud" &&
-                                data.props.G.players[p].cards.flat().findIndex(card => card.name === "Thrud") !== -1)))) {
+                    if (data.props.G.publicPlayers[p].heroes[i] !== undefined && (!data.props.G.publicPlayers[p].heroes[i].suit &&
+                        !((data.props.G.publicPlayers[p].heroes[i].name === "Ylud" &&
+                                data.props.G.publicPlayers[p].cards.flat().findIndex(card => card.name === "Ylud") !== -1) ||
+                            (data.props.G.publicPlayers[p].heroes[i].name === "Thrud" &&
+                                data.props.G.publicPlayers[p].cards.flat().findIndex(card => card.name === "Thrud") !== -1)))) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, data.props.G.players[p].heroes[i], id, data.props.G.players[p]);
+                        DrawCard(data, playerCells, data.props.G.publicPlayers[p].heroes[i], id,
+                            data.props.G.publicPlayers[p]);
                     } else {
                         playerCells.push(
-                            <td key={`${data.props.G.players[p].nickname} hero ${i}`}>
+                            <td key={`${data.props.G.publicPlayers[p].nickname} hero ${i}`}>
 
                             </td>
                         );
                     }
                 } else {
-                    if (data.props.G.players[p].campCards[i] !== undefined) {
+                    if (data.props.G.publicPlayers[p].campCards[i] !== undefined) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, data.props.G.players[p].campCards[i], id, data.props.G.players[p]);
+                        DrawCard(data, playerCells, data.props.G.publicPlayers[p].campCards[i], id,
+                            data.props.G.publicPlayers[p]);
                     } else {
                         playerCells.push(
-                            <td key={`${data.props.G.players[p].nickname} camp card ${i}`}>
+                            <td key={`${data.props.G.publicPlayers[p].nickname} camp card ${i}`}>
 
                             </td>
                         );
@@ -326,16 +335,16 @@ export const DrawPlayersBoards = (data) => {
             }
             if (isDrawRow) {
                 playerRows[p][i].push(
-                    <tr key={`${data.props.G.players[p].nickname} board row ${i}`}>{playerCells}</tr>
+                    <tr key={`${data.props.G.publicPlayers[p].nickname} board row ${i}`}>{playerCells}</tr>
                 );
             } else {
                 break;
             }
         }
         playersBoards[p].push(
-            <table className="mx-auto" key={`${data.props.G.players[p].nickname} board`}>
-                <caption>Player {p + 1} ({data.props.G.players[p].nickname}) cards, {data.props.G.winner !== null ?
-                    `Final: ${data.props.G.totalScore[p]}` : CurrentScoring(data.props.G.players[p])} points
+            <table className="mx-auto" key={`${data.props.G.publicPlayers.nickname} board`}>
+                <caption>Player {p + 1} ({data.props.G.publicPlayers[p].nickname}) cards, {data.props.G.winner !== null ?
+                    `Final: ${data.props.G.totalScore[p]}` : CurrentScoring(data.props.G.publicPlayers[p])} points
                 </caption>
                 <thead>
                 <tr>{playerHeaders[p]}</tr>

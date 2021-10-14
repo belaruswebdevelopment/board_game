@@ -91,14 +91,14 @@ const CheckCurrentSuitDistinction = (G, ctx, suitName) => {
     const playersRanks = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const suitIndex = GetSuitIndexByName(suitName);
-        playersRanks.push(G.players[i].cards[suitIndex].reduce(TotalRank, 0));
+        playersRanks.push(G.publicPlayers[i].cards[suitIndex].reduce(TotalRank, 0));
     }
     const max = Math.max(...playersRanks),
         maxPlayers = playersRanks.filter(count => count === max);
     if (maxPlayers.length === 1) {
         const playerDistinctionIndex = playersRanks.indexOf(maxPlayers[0]);
         AddDataToLog(G, "public", `Преимущество по фракции ${suitsConfig[suitName].suitName} получил игрок: 
-        ${G.players[playerDistinctionIndex].nickname}.`);
+        ${G.publicPlayers[playerDistinctionIndex].nickname}.`);
         return playerDistinctionIndex;
     } else {
         AddDataToLog(G, "public", `Преимущество по фракции ${suitsConfig[suitName].suitName} никто не получил.`);
@@ -162,7 +162,7 @@ export const FinalScoring = (G, ctx, player) => {
     const suitWarriorIndex = GetSuitIndexByName("warrior");
     if (suitWarriorIndex !== -1) {
         const warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, "warrior");
-        if (warriorsDistinction !== undefined && G.players.findIndex(p => p.nickname === player.nickname) ===
+        if (warriorsDistinction !== undefined && G.publicPlayers.findIndex(p => p.nickname === player.nickname) ===
             warriorsDistinction) {
             const warriorDistinctionScore = suitsConfig["warrior"].distinction.awarding(G, ctx, player) ?
                 suitsConfig["warrior"].distinction.awarding(G, ctx, player) : 0;
@@ -235,7 +235,7 @@ export const FinalScoring = (G, ctx, player) => {
 export const ScoreWinner = (G, ctx) => {
     AddDataToLog(G, "game", "Финальные результаты игры:");
     for (let i = 0; i < ctx.numPlayers; i++) {
-        G.totalScore.push(FinalScoring(G, ctx, G.players[i]));
+        G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i]));
     }
     const maxScore = Math.max(...G.totalScore),
         maxPlayers = G.totalScore.filter(score => score === maxScore).length;
@@ -245,7 +245,7 @@ export const ScoreWinner = (G, ctx) => {
         if (maxScore === G.totalScore[i] && maxPlayers > winners) {
             G.winner.push(i);
             winners++;
-            AddDataToLog(G, "game", `Определился победитель: игрок ${G.players[i].nickname}.`);
+            AddDataToLog(G, "game", `Определился победитель: игрок ${G.publicPlayers[i].nickname}.`);
             if (maxPlayers === winners) {
                 break;
             }

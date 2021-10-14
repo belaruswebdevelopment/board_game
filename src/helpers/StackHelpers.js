@@ -18,7 +18,7 @@ export const AddActionsToStack = (G, ctx, stack) => {
     if (stack.length) {
         for (let i = stack.length - 1; i >= 0; i--) {
             const playerId = stack[i]["playerId"]!== undefined ? stack[i]["playerId"] : ctx.currentPlayer;
-            G.stack[playerId].unshift(stack[i]);
+            G.publicPlayers[playerId].stack.unshift(stack[i]);
         }
     }
 };
@@ -41,13 +41,13 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
         let noCurrent = false;
         for (let i = stack.length - 1; i >= 0; i--) {
             const playerId = stack[i]["playerId"] !== undefined ? stack[i]["playerId"] : ctx.currentPlayer;
-            if (i === stack.length - 1 && G.stack[playerId][0] === undefined) {
-                G.stack[playerId].push(stack[i]);
+            if (i === stack.length - 1 && G.publicPlayers[playerId].stack[0] === undefined) {
+                G.publicPlayers[playerId].stack.push(stack[i]);
                 noCurrent = true;
             } else if (!noCurrent) {
-                G.stack[playerId].splice(1, 0, stack[i]);
+                G.publicPlayers[playerId].stack.splice(1, 0, stack[i]);
             } else if (noCurrent) {
-                G.stack[playerId].unshift(stack[i]);
+                G.publicPlayers[playerId].stack.unshift(stack[i]);
             }
         }
     }
@@ -68,8 +68,8 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
  * @constructor
  */
 export const StartActionFromStackOrEndActions = (G, ctx, isTrading = null, ...args) => {
-    if (G.stack[ctx.currentPlayer][0]) {
-        return ActionDispatcher(G, ctx, G.stack[ctx.currentPlayer][0], ...args);
+    if (G.publicPlayers[ctx.currentPlayer].stack[0]) {
+        return ActionDispatcher(G, ctx, G.publicPlayers[ctx.currentPlayer].stack[0], ...args);
     } else {
         EndAction(G, ctx, isTrading);
     }
@@ -90,7 +90,7 @@ export const StartActionFromStackOrEndActions = (G, ctx, isTrading = null, ...ar
  * @constructor
  */
 export const StartActionForChosenPlayer = (G, ctx, playerId, ...args) => {
-    return ActionDispatcher(G, ctx, G.stack[playerId][0], ...args);
+    return ActionDispatcher(G, ctx, G.publicPlayers[playerId].stack[0], ...args);
 };
 
 /**
@@ -106,7 +106,7 @@ export const StartActionForChosenPlayer = (G, ctx, playerId, ...args) => {
  * @constructor
  */
 export const EndActionForChosenPlayer = (G, ctx, playerId) => {
-    G.stack[playerId] = [];
+    G.publicPlayers[playerId].stack = [];
     ctx.events.endStage();
     let activePlayers = 0;
     for (const activePlayersKey in ctx.activePlayers) {
@@ -132,17 +132,17 @@ export const EndActionForChosenPlayer = (G, ctx, playerId) => {
  * @constructor
  */
 export const EndActionFromStackAndAddNew = (G, ctx, newStack = [], ...args) => {
-    if ((G.stack[ctx.currentPlayer][0].config && G.stack[ctx.currentPlayer][0].config.name) === "explorerDistinction" ||
-        G.stack[ctx.currentPlayer][0].actionName !== "DrawProfitAction") {
+    if ((G.publicPlayers[ctx.currentPlayer].stack[0].config && G.publicPlayers[ctx.currentPlayer].stack[0].config.name) === "explorerDistinction" ||
+        G.publicPlayers[ctx.currentPlayer].stack[0].actionName !== "DrawProfitAction") {
         G.actionsNum = null;
         G.drawProfit = null;
     }
     if (ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) {
         ctx.events.endStage();
     }
-    const isTrading = (G.stack[ctx.currentPlayer][0].config &&
-        G.stack[ctx.currentPlayer][0].config.isTrading) ? G.stack[ctx.currentPlayer][0].config.isTrading : null;
-    G.stack[ctx.currentPlayer].shift();
+    const isTrading = (G.publicPlayers[ctx.currentPlayer].stack[0].config &&
+        G.publicPlayers[ctx.currentPlayer].stack[0].config.isTrading) ? G.publicPlayers[ctx.currentPlayer].stack[0].config.isTrading : null;
+    G.publicPlayers[ctx.currentPlayer].stack.shift();
     AddActionsToStack(G, ctx, newStack);
     return StartActionFromStackOrEndActions(G, ctx, isTrading, ...args);
 };

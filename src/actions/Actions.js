@@ -170,11 +170,11 @@ const UpgradeCoinAction = (G, ctx, config, ...args) => {
  * @constructor
  */
 const DrawProfitAction = (G, ctx, config) => {
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} должен получить преимущества от 
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} должен получить преимущества от 
     действия '${config.drawName}'.`);
-    if (G.stack[ctx.currentPlayer][0].config && G.stack[ctx.currentPlayer][0].config.stageName) {
-        AddDataToLog(G, "game", `Начало фазы ${G.stack[ctx.currentPlayer][0].config.stageName}.`);
-        ctx.events.setStage(G.stack[ctx.currentPlayer][0].config.stageName);
+    if (G.publicPlayers[ctx.currentPlayer].stack[0].config && G.publicPlayers[ctx.currentPlayer].stack[0].config.stageName) {
+        AddDataToLog(G, "game", `Начало фазы ${G.publicPlayers[ctx.currentPlayer].stack[0].config.stageName}.`);
+        ctx.events.setStage(G.publicPlayers[ctx.currentPlayer].stack[0].config.stageName);
     }
     G.actionsNum = config.number ? config.number : 1;
     G.drawProfit = config.name;
@@ -194,8 +194,8 @@ const DrawProfitAction = (G, ctx, config) => {
  * @constructor
  */
 const AddBuffToPlayer = (G, ctx, config) => {
-    G.players[ctx.currentPlayer].buffs[config.buff.name] = config.buff.value;
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} получил баф '${config.buff.name}'.`);
+    G.publicPlayers[ctx.currentPlayer].buffs[config.buff.name] = config.buff.value;
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} получил баф '${config.buff.name}'.`);
     return EndActionFromStackAndAddNew(G, ctx);
 };
 
@@ -215,10 +215,10 @@ const AddBuffToPlayer = (G, ctx, config) => {
  * @constructor
  */
 export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId) => {
-    G.players[ctx.currentPlayer].pickedCard = G.players[ctx.currentPlayer].cards[suitId][cardId];
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} отправил в сброс карту 
-    ${G.players[ctx.currentPlayer].pickedCard.name}.`);
-    G.discardCardsDeck.push(G.players[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0]);
+    G.publicPlayers[ctx.currentPlayer].pickedCard = G.publicPlayers[ctx.currentPlayer].cards[suitId][cardId];
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} отправил в сброс карту 
+    ${G.publicPlayers[ctx.currentPlayer].pickedCard.name}.`);
+    G.discardCardsDeck.push(G.publicPlayers[ctx.currentPlayer].cards[suitId].splice(cardId, 1)[0]);
     if (G.actionsNum === 2) {
         const stack = [
             {
@@ -257,7 +257,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId
  * @constructor
  */
 const DiscardCardFromTavernAction = (G, ctx, config, cardId) => {
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} отправил в сброс карту из таверны:`);
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} отправил в сброс карту из таверны:`);
     DiscardCardFromTavern(G, cardId);
     return EndActionFromStackAndAddNew(G, ctx);
 };
@@ -280,15 +280,15 @@ const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
     const cardsToDiscard = [];
     for (let i = 0; i < G.suitsNum; i++) {
         if (config.suit !== Object.keys(suitsConfig)[i]) {
-            const last = G.players[ctx.currentPlayer].cards[i].length - 1;
-            if (last >= 0 && G.players[ctx.currentPlayer].cards[i][last].type !== "герой") {
-                cardsToDiscard.push(G.players[ctx.currentPlayer].cards[i][last]);
+            const last = G.publicPlayers[ctx.currentPlayer].cards[i].length - 1;
+            if (last >= 0 && G.publicPlayers[ctx.currentPlayer].cards[i][last].type !== "герой") {
+                cardsToDiscard.push(G.publicPlayers[ctx.currentPlayer].cards[i][last]);
             }
         }
     }
     const isValidMove = cardsToDiscard.length >= (config.number ? config.number : 1);
     if (!isValidMove) {
-        G.stack[ctx.currentPlayer].splice(1);
+        G.publicPlayers[ctx.currentPlayer].stack.splice(1);
         return INVALID_MOVE;
     }
     return EndActionFromStackAndAddNew(G, ctx);
@@ -312,11 +312,11 @@ const PlaceCards = (G, ctx, config, suitId) => {
     const suit = Object.keys(suitsConfig)[suitId],
         olwinDouble = CreateCard({
             suit,
-            rank: G.stack[ctx.currentPlayer][0].variants[suit].rank,
-            points: G.stack[ctx.currentPlayer][0].variants[suit].points,
+            rank: G.publicPlayers[ctx.currentPlayer].stack[0].variants[suit].rank,
+            points: G.publicPlayers[ctx.currentPlayer].stack[0].variants[suit].points,
             name: "Olwin",
         });
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту Олвин во фракцию 
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} добавил карту Олвин во фракцию 
     ${suitsConfig[suit].suitName}.`);
     AddCardToPlayer(G, ctx, olwinDouble);
     if (G.actionsNum === 2) {
@@ -382,7 +382,7 @@ const PlaceCards = (G, ctx, config, suitId) => {
  */
 const CheckPickDiscardCard = (G, ctx) => {
     if (G.discardCardsDeck.length === 0) {
-        G.stack[ctx.currentPlayer].splice(1);
+        G.publicPlayers[ctx.currentPlayer].stack.splice(1);
     }
     return EndActionFromStackAndAddNew(G, ctx);
 };
@@ -404,7 +404,7 @@ const CheckPickDiscardCard = (G, ctx) => {
 const PickDiscardCard = (G, ctx, config, cardId) => {
     const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
         pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} добавил карту ${pickedCard.name} 
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} добавил карту ${pickedCard.name} 
     из дискарда.`);
     if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
         const stack = [
@@ -444,7 +444,7 @@ const PickDiscardCard = (G, ctx, config, cardId) => {
  * @constructor
  */
 const PassEnlistmentMercenariesAction = (G, ctx) => {
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} пасанул во время фазы 
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} пасанул во время фазы 
     Enlistment Mercenaries.`);
     return EndActionFromStackAndAddNew(G, ctx);
 };
@@ -464,10 +464,10 @@ const PassEnlistmentMercenariesAction = (G, ctx) => {
  * @constructor
  */
 const GetEnlistmentMercenariesAction = (G, ctx, config, cardId) => {
-    G.players[ctx.currentPlayer].pickedCard = G.players[ctx.currentPlayer].campCards
+    G.publicPlayers[ctx.currentPlayer].pickedCard = G.publicPlayers[ctx.currentPlayer].campCards
         .filter(card => card.type === "наёмник")[cardId];
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} во время фазы 
-    Enlistment Mercenaries выбрал наёмника '${G.players[ctx.currentPlayer].pickedCard.name}'.`);
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} во время фазы 
+    Enlistment Mercenaries выбрал наёмника '${G.publicPlayers[ctx.currentPlayer].pickedCard.name}'.`);
     const stack = [
         {
             actionName: "DrawProfitAction",
@@ -500,17 +500,17 @@ const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
             type: "наёмник",
             suit,
             rank: 1,
-            points: G.players[ctx.currentPlayer].pickedCard.stack[0].variants[suit].points,
-            name: G.players[ctx.currentPlayer].pickedCard.name,
-            tier: G.players[ctx.currentPlayer].pickedCard.tier,
-            path: G.players[ctx.currentPlayer].pickedCard.path,
+            points: G.publicPlayers[ctx.currentPlayer].pickedCard.stack[0].variants[suit].points,
+            name: G.publicPlayers[ctx.currentPlayer].pickedCard.name,
+            tier: G.publicPlayers[ctx.currentPlayer].pickedCard.tier,
+            path: G.publicPlayers[ctx.currentPlayer].pickedCard.path,
         });
     AddCardToPlayer(G, ctx, mercenaryCard);
-    AddDataToLog(G, "game", `Игрок ${G.players[ctx.currentPlayer].nickname} во время фазы 
+    AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} во время фазы 
     Enlistment Mercenaries завербовал наёмника '${mercenaryCard.name}'.`);
-    const cardIndex = G.players[ctx.currentPlayer].campCards.findIndex(card => card.name === G.players[ctx.currentPlayer].pickedCard.name);
-    G.players[ctx.currentPlayer].campCards.splice(cardIndex, 1);
-    if (G.players[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник").length) {
+    const cardIndex = G.publicPlayers[ctx.currentPlayer].campCards.findIndex(card => card.name === G.publicPlayers[ctx.currentPlayer].pickedCard.name);
+    G.publicPlayers[ctx.currentPlayer].campCards.splice(cardIndex, 1);
+    if (G.publicPlayers[ctx.currentPlayer].campCards.filter(card => card.type === "наёмник").length) {
         const stack = [
             {
                 actionName: "DrawProfitAction",

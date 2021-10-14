@@ -107,13 +107,13 @@ const ValidateByValues = (num, values) => {
  */
 export const CoinUpgradeValidation = (G, ctx, coinId, type) => {
     if (type === "hand") {
-        const handCoinPosition = G.players[ctx.currentPlayer].boardCoins.filter((coin, index) => coin === null
+        const handCoinPosition = G.publicPlayers[ctx.currentPlayer].boardCoins.filter((coin, index) => coin === null
             && index <= coinId).length;
-        if (!G.players[ctx.currentPlayer].handCoins.filter(coin => coin !== null)[handCoinPosition - 1].isTriggerTrading) {
+        if (!G.publicPlayers[ctx.currentPlayer].handCoins.filter(coin => coin !== null)[handCoinPosition - 1].isTriggerTrading) {
             return true;
         }
     } else {
-        if (G.players[ctx.currentPlayer].boardCoins[coinId] && !G.players[ctx.currentPlayer].boardCoins[coinId].isTriggerTrading) {
+        if (G.publicPlayers[ctx.currentPlayer].boardCoins[coinId] && !G.publicPlayers[ctx.currentPlayer].boardCoins[coinId].isTriggerTrading) {
             return true;
         }
     }
@@ -174,14 +174,14 @@ export const moveBy = {
 export const moveValidators = {
     // todo Add all validators to all moves
     ClickHandCoin: {
-        getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].handCoins.length]),
-        validate: ({G, ctx, id}) => G.players[ctx.currentPlayer].selectedCoin === undefined &&
-            G.players[ctx.currentPlayer].handCoins[id] !== null,
+        getRange: ({G, ctx}) => ([0, G.publicPlayers[ctx.currentPlayer].handCoins.length]),
+        validate: ({G, ctx, id}) => G.publicPlayers[ctx.currentPlayer].selectedCoin === undefined &&
+            G.publicPlayers[ctx.currentPlayer].handCoins[id] !== null,
     },
     ClickBoardCoin: {
-        getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
-        validate: ({G, ctx, id}) => G.players[ctx.currentPlayer].selectedCoin !== undefined &&
-            G.players[ctx.currentPlayer].boardCoins[id] === null,
+        getRange: ({G, ctx}) => ([0, G.publicPlayers[ctx.currentPlayer].boardCoins.length]),
+        validate: ({G, ctx, id}) => G.publicPlayers[ctx.currentPlayer].selectedCoin !== undefined &&
+            G.publicPlayers[ctx.currentPlayer].boardCoins[id] === null,
     },
     BotsPlaceAllCoins: {
         getRange: ({G}) => ([0, G.botData.allCoinsOrder.length]),
@@ -195,7 +195,7 @@ export const moveValidators = {
             // todo Add validators to others heroes
             if (G.heroes[id].name === "Hourya") {
                 const suitId = GetSuitIndexByName(G.heroes[id].stack[0].config.conditions.suitCountMin.suit);
-                isValid = G.players[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0) >=
+                isValid = G.publicPlayers[ctx.currentPlayer].cards[suitId].reduce(TotalRank, 0) >=
                     G.heroes[id].stack[0].config.conditions.suitCountMin.value;
             }
             return isValid;
@@ -203,7 +203,7 @@ export const moveValidators = {
     },
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
     ClickCoinToUpgrade: {
-        getRange: ({G, ctx}) => ([0, G.players[ctx.currentPlayer].boardCoins.length]),
+        getRange: ({G, ctx}) => ([0, G.publicPlayers[ctx.currentPlayer].boardCoins.length]),
         validate: ({G, ctx, id, type}) => CoinUpgradeValidation(G, ctx, id, type),
     },
     ClickCardToPickDistinction: {
@@ -216,7 +216,7 @@ export const moveValidators = {
     },
     ClickCampCard: {
         getRange: ({G}) => ([0, G.camp.length]),
-        validate: ({G, ctx}) => G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
-            (!G.campPicked && G.players[ctx.currentPlayer].buffs["goCamp"])),
+        validate: ({G, ctx}) => G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
+            (!G.campPicked && G.publicPlayers[ctx.currentPlayer].buffs["goCamp"])),
     },
 };

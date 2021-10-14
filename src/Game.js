@@ -38,6 +38,7 @@ import {
 import {AddActionsToStack} from "./helpers/StackHelpers";
 import {BotsPlaceAllCoins} from "./moves/BotMoves";
 import {ResolveBoardCoins} from "./helpers/CoinHelpers";
+import {PlayerView} from "boardgame.io/core";
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
 /**
@@ -51,13 +52,14 @@ import {ResolveBoardCoins} from "./helpers/CoinHelpers";
  */
 export const BoardGame = {
     setup: SetupGame,
+    playerView: PlayerView.STRIP_SECRETS,
     phases: {
         placeCoins: {
             turn: {
                 order: {
                     first: () => 0,
                     next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G) => G.playersOrder,
+                    playOrder: (G) => G.publicPlayersOrder,
                 },
             },
             start: true,
@@ -72,10 +74,10 @@ export const BoardGame = {
                 if (ctx.turn !== 0) {
                     ReturnCoinsToPlayerHands(G);
                 }
-                G.playersOrder = [];
+                G.publicPlayersOrder = [];
                 for (let i = 0; i < ctx.numPlayers; i++) {
-                    if (G.players[i].buffs["everyTurn"] !== "Uline") {
-                        G.playersOrder.push(i);
+                    if (G.publicPlayers[i].buffs["everyTurn"] !== "Uline") {
+                        G.publicPlayersOrder.push(i);
                     }
                 }
             },
@@ -85,7 +87,7 @@ export const BoardGame = {
                 order: {
                     first: () => 0,
                     next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G) => G.playersOrder,
+                    playOrder: (G) => G.publicPlayersOrder,
                 },
             },
             moves: {
@@ -93,10 +95,10 @@ export const BoardGame = {
                 ClickBoardCoin,
             },
             onBegin: (G, ctx) => {
-                G.playersOrder = [];
+                G.publicPlayersOrder = [];
                 for (let i = 0; i < ctx.numPlayers; i++) {
-                    if (G.players[i].buffs["everyTurn"] === "Uline") {
-                        G.playersOrder.push(i);
+                    if (G.publicPlayers[i].buffs["everyTurn"] === "Uline") {
+                        G.publicPlayersOrder.push(i);
                     }
                 }
             },
@@ -106,7 +108,7 @@ export const BoardGame = {
                 order: {
                     first: () => 0,
                     next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G) => G.playersOrder,
+                    playOrder: (G) => G.publicPlayersOrder,
                 },
                 stages: {
                     // Start
@@ -176,7 +178,7 @@ export const BoardGame = {
             onBegin: (G, ctx) => {
                 G.currentTavern++;
                 const {playersOrder, exchangeOrder} = ResolveBoardCoins(G, ctx);
-                [G.playersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
+                [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
             },
             onEnd: (G) => {
                 ChangePlayersPriorities(G);
@@ -186,8 +188,8 @@ export const BoardGame = {
             turn: {
                 order: {
                     first: () => 0,
-                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.playersOrder.length,
-                    playOrder: (G) => G.playersOrder,
+                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
+                    playOrder: (G) => G.publicPlayersOrder,
                 },
                 stages: {
                     // Start
@@ -246,7 +248,7 @@ export const BoardGame = {
                 PlaceEnlistmentMercenaries,
             },
             onBegin: (G, ctx) => {
-                const players = G.players.map(player => player),
+                const players = G.publicPlayers.map(player => player),
                     playersIndexes = [];
                 players.sort((nextPlayer, currentPlayer) => {
                     if (nextPlayer.campCards.filter(card => card.type === "наёмник").length <
@@ -265,17 +267,17 @@ export const BoardGame = {
                 });
                 players.forEach(playerSorted => {
                     if (playerSorted.campCards.filter(card => card.type === "наёмник").length) {
-                        playersIndexes.push(G.players.findIndex(player => player.nickname === playerSorted.nickname));
+                        playersIndexes.push(G.publicPlayers.findIndex(player => player.nickname === playerSorted.nickname));
                     }
                 });
-                G.playersOrder = playersIndexes;
+                G.publicPlayersOrder = playersIndexes;
                 if (playersIndexes.length > 1) {
-                    G.playersOrder.push(playersIndexes[0]);
+                    G.publicPlayersOrder.push(playersIndexes[0]);
                 }
                 const stack = [
                     {
                         actionName: "DrawProfitAction",
-                        playerId: G.playersOrder[0],
+                        playerId: G.publicPlayersOrder[0],
                         config: {
                             name: "startOrPassEnlistmentMercenaries",
                             drawName: "Start or Pass Enlistment Mercenaries",
@@ -289,8 +291,8 @@ export const BoardGame = {
             turn: {
                 order: {
                     first: () => 0,
-                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.playersOrder.length,
-                    playOrder: (G) => G.playersOrder,
+                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
+                    playOrder: (G) => G.publicPlayersOrder,
                 },
                 stages: {
                     // Start
@@ -350,8 +352,8 @@ export const BoardGame = {
             turn: {
                 order: {
                     first: () => 0,
-                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.playersOrder.length,
-                    playOrder: (G) => G.playersOrder,
+                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
+                    playOrder: (G) => G.publicPlayersOrder,
                 },
             },
             moves: {
@@ -362,8 +364,8 @@ export const BoardGame = {
             turn: {
                 order: {
                     first: () => 0,
-                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.playersOrder.length,
-                    playOrder: (G) => G.playersOrder,
+                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
+                    playOrder: (G) => G.publicPlayersOrder,
                 },
             },
             moves: {
@@ -374,8 +376,8 @@ export const BoardGame = {
             turn: {
                 order: {
                     first: () => 0,
-                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.playersOrder.length,
-                    playOrder: (G) => G.playersOrder,
+                    next: (G, ctx) => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
+                    playOrder: (G) => G.publicPlayersOrder,
                 },
                 stages: {
                     pickDistinctionCard: {
@@ -396,7 +398,7 @@ export const BoardGame = {
             },
             onBegin: (G, ctx) => {
                 CheckDistinction(G, ctx);
-                G.playersOrder = G.distinctions.filter(i => i !== undefined);
+                G.publicPlayersOrder = G.distinctions.filter(i => i !== undefined);
             },
             onEnd: (G) => {
                 G.distinctions = Array(G.suitsNum).fill(undefined);

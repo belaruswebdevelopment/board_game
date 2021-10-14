@@ -21,8 +21,8 @@ import {
  */
 export const ClickCampCard = (G, ctx, cardId) => {
     const isValidMove = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]})
-        && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.playersOrder[0] ||
-            (!G.campPicked && G.players[ctx.currentPlayer].buffs["goCamp"]));
+        && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
+            (!G.campPicked && G.publicPlayers[ctx.currentPlayer].buffs["goCamp"]));
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -45,7 +45,7 @@ export const ClickCampCard = (G, ctx, cardId) => {
  */
 export const ClickCampCardHolda = (G, ctx, cardId) => {
     const isValidMove = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]})
-        && G.players[ctx.currentPlayer].buffs["goCampOneTime"];
+        && G.publicPlayers[ctx.currentPlayer].buffs["goCampOneTime"];
     if (!isValidMove) {
         return INVALID_MOVE;
     }
