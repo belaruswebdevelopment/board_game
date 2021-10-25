@@ -1,5 +1,5 @@
-import {TotalRank} from "./Score";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
+import {TotalRank} from "./helpers/ScoreHelpers";
 
 /**
  * Validates arguments inside of move.

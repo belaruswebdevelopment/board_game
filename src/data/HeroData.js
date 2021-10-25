@@ -1,5 +1,5 @@
-import {TotalRank} from "../Score";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
+import {TotalRank} from "../helpers/ScoreHelpers";
 
 /**
  * <h3>Данные о герое.</h3>

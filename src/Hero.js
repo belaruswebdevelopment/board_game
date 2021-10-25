@@ -1,8 +1,8 @@
-import {TotalRank} from "./Score";
 import {heroesConfig} from "./data/HeroData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {AddDataToLog} from "./Logging";
 import {AddActionsToStackAfterCurrent} from "./helpers/StackHelpers";
+import {TotalRank} from "./helpers/ScoreHelpers";
 
 /**
  * <h3>Создание героя.</h3>

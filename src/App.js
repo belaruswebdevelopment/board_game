@@ -45,7 +45,7 @@ const enableLocalPlayer = true,
 
 export default App;*/
 
-import {Client} from "boardgame.io/react";
+/*import {Client} from "boardgame.io/react";
 import {BoardGame} from "./Game";
 import {GameBoard} from "./Board";
 
@@ -56,9 +56,8 @@ const App = Client({
     numPlayers: 5,
 });
 
-export default App;
+export default App;*/
 
-/*
 import React from "react";
 import { render } from "react-dom";
 import {Client} from "boardgame.io/react";
@@ -77,7 +76,7 @@ const BoardGameClient = Client({
 });
 
 class App extends React.Component {
-    state = { playerID: null};
+    state = { playerID: null };
 
     render() {
         if (this.state.playerID === null) {
@@ -93,18 +92,18 @@ class App extends React.Component {
                     <button onClick={() => this.setState({ playerID: "2" })}>
                         Player 3
                     </button>
-                    {/!*<button onClick={() => this.setState({ playerID: "3" })}>
+                    {/*<button onClick={() => this.setState({ playerID: "3" })}>
                         Player 4
                     </button>
                     <button onClick={() => this.setState({ playerID: "4" })}>
                         Player 5
-                    </button>*!/}
+                    </button>*/}
                 </div>
             );
         }
         return (
             <div>
-                <BoardGameClient playerID={this.state.playerID} />
+                <BoardGameClient playerID={ this.state.playerID } />
             </div>
         );
     }
@@ -113,4 +112,3 @@ class App extends React.Component {
 render(<App />, document.getElementById("root"));
 
 export default App;
-*/

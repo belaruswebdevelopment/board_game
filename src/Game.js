@@ -10,7 +10,7 @@ import {
     StartEnlistmentMercenaries,
 } from "./moves/Moves";
 import {ChangePlayersPriorities} from "./Priority";
-import {CheckDistinction, ScoreWinner} from "./Score";
+import {ScoreWinner} from "./Score";
 import {enumerate, iterations, objectives, playoutDepth} from "./AI";
 import {ReturnCoinsToPlayerHands} from "./Coin";
 import {RefillTaverns} from "./Tavern";
@@ -39,6 +39,7 @@ import {AddActionsToStack} from "./helpers/StackHelpers";
 import {BotsPlaceAllCoins} from "./moves/BotMoves";
 import {ResolveBoardCoins} from "./helpers/CoinHelpers";
 import {PlayerView} from "boardgame.io/core";
+import {CheckDistinction} from "./Distiction";
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
 /**

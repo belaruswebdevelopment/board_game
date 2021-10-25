@@ -6,9 +6,9 @@ import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
 import {ReturnCoinToPlayerHands} from "../Coin";
 import {CheckAndMoveThrud, GetHeroIndexByName, StartThrudMoving} from "../helpers/HeroHelpers";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
-import {TotalRank} from "../Score";
 import {INVALID_MOVE} from "boardgame.io/core";
 import {AddDataToLog} from "../Logging";
+import {TotalRank} from "../helpers/ScoreHelpers";
 
 /**
  * <h3>Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.</h3>

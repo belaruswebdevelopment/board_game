@@ -1,10 +1,11 @@
 import {CompareCards, EvaluateCard} from "./Card";
 import {HasLowestPriority} from "./Priority";
 import {CheckHeuristicsForCoinsPlacement} from "./BotConfig";
-import {CurrentScoring, TotalRank} from "./Score";
+import {CurrentScoring} from "./Score";
 import {moveValidators, moveBy} from "./MoveValidator";
 import {suitsConfig} from "./data/SuitData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
+import {TotalRank} from "./helpers/ScoreHelpers";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>

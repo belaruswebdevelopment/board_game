@@ -9,7 +9,7 @@ import {
     DrawPlayerBoardForCardDiscard,
     DrawPlayersBoardForSuitCardDiscard
 } from "../helpers/UIHelper";
-import {TotalRank} from "../Score";
+import {TotalRank} from "../helpers/ScoreHelpers";
 
 /**
  * <h3>Отрисовка игровой информации о текущей эпохе и количестве карт в деках.</h3>

@@ -1,9 +1,9 @@
 import {CreateCoin} from "../Coin";
 import {CreateCard} from "../Card";
-import {ArithmeticSum, TotalPoints, TotalRank} from "../Score";
 import {CreatePriority} from "../Priority";
 import {AddActionsToStack, StartActionFromStackOrEndActions} from "../helpers/StackHelpers";
 import {AddDataToLog} from "../Logging";
+import {ArithmeticSum, TotalPoints, TotalRank} from "../helpers/ScoreHelpers";
 
 /**
  * <h3>Фракция кузнецов.</h3>

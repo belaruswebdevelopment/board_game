@@ -1,10 +1,11 @@
 import React from "react";
 import {suitsConfig} from "../data/SuitData";
 import {tavernsConfig} from "../Tavern";
-import {CurrentScoring, TotalRank} from "../Score";
+import {CurrentScoring} from "../Score";
 import {Styles} from "../data/StyleData";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {DrawCard, DrawCoin} from "../helpers/UIHelper";
+import {TotalRank} from "../helpers/ScoreHelpers";
 
 /**
  * <h3>Отрисовка планшета монет, выложенных игроком на стол.</h3>

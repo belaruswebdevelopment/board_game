@@ -1,4 +1,4 @@
-import {TotalRank} from "../Score";
+import {TotalRank} from "../helpers/ScoreHelpers";
 
 /**
  * <h3>Данные об артефакте.</h3>
