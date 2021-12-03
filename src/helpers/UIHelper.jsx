@@ -1,13 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.DrawButton = exports.DrawCoin = exports.DrawCard = exports.DrawPlayersBoardForSuitCardDiscard = exports.DrawPlayerBoardForCardDiscard = exports.DrawBoard = void 0;
 var SuitHelpers_1 = require("./SuitHelpers");
 var SuitData_1 = require("../data/SuitData");
 var StyleData_1 = require("../data/StyleData");
-var react_1 = __importDefault(require("react"));
+var react_1 = require("react");
 /**
  * <h3>Отрисовка сегмента игрового поля по указанным данным.</h3>
  * <p>Применения:</p>
@@ -38,8 +35,11 @@ exports.DrawBoard = DrawBoard;
 var DrawPlayerBoardForCardDiscard = function (data) {
     var playerHeaders = [], playerRows = [];
     for (var suit in SuitData_1.suitsConfig) {
-        playerHeaders.push(react_1["default"].createElement("th", { className: "".concat(SuitData_1.suitsConfig[suit].suitColor), key: "".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname, " ").concat(SuitData_1.suitsConfig[suit].suitName) },
-            react_1["default"].createElement("span", { style: StyleData_1.Styles.Suits(SuitData_1.suitsConfig[suit].suit), className: "bg-suit-icon" })));
+        playerHeaders.push(<th className={"" + SuitData_1.suitsConfig[suit].suitColor} key={data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname + " " + SuitData_1.suitsConfig[suit].suitName}>
+                <span style={StyleData_1.Styles.Suits(SuitData_1.suitsConfig[suit].suit)} className="bg-suit-icon">
+
+                </span>
+            </th>);
     }
     for (var i = 0;; i++) {
         var playerCells = [];
@@ -56,24 +56,30 @@ var DrawPlayerBoardForCardDiscard = function (data) {
                     (0, exports.DrawCard)(data, playerCells, data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][i], id, data.props.G.publicPlayers[data.props.ctx.currentPlayer], suit, "OnClickDiscardCardFromPlayerBoard", j, i);
                 }
                 else {
-                    playerCells.push(react_1["default"].createElement("td", { key: "".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname, " empty card ").concat(id) }));
+                    playerCells.push(<td key={data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname + " empty card " + id}>
+
+                        </td>);
                 }
             }
             else {
-                playerCells.push(react_1["default"].createElement("td", { key: "".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname, " empty card ").concat(id) }));
+                playerCells.push(<td key={data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname + " empty card " + id}>
+
+                    </td>);
             }
         }
         if (isDrawRow) {
-            playerRows[i].push(react_1["default"].createElement("tr", { key: "".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname, " board row ").concat(i) }, playerCells));
+            playerRows[i].push(<tr key={data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname + " board row " + i}>{playerCells}</tr>);
         }
         if (isExit) {
             break;
         }
     }
-    return (react_1["default"].createElement("table", null,
-        react_1["default"].createElement("thead", null,
-            react_1["default"].createElement("tr", null, playerHeaders)),
-        react_1["default"].createElement("tbody", null, playerRows)));
+    return (<table>
+            <thead>
+            <tr>{playerHeaders}</tr>
+            </thead>
+            <tbody>{playerRows}</tbody>
+        </table>);
 };
 exports.DrawPlayerBoardForCardDiscard = DrawPlayerBoardForCardDiscard;
 /**
@@ -91,11 +97,13 @@ exports.DrawPlayerBoardForCardDiscard = DrawPlayerBoardForCardDiscard;
 var DrawPlayersBoardForSuitCardDiscard = function (data, suitName) {
     var playersHeaders = [], playersRows = [], suitId = (0, SuitHelpers_1.GetSuitIndexByName)(suitName);
     for (var p = 0; p < data.props.G.publicPlayers.length; p++) {
-        if (p !== +data.props.ctx.currentPlayer) {
-            if (data.props.G.publicPlayers[p].cards[suitId] !== undefined &&
-                data.props.G.publicPlayers[p].cards[suitId].length) {
-                playersHeaders.push(react_1["default"].createElement("th", { className: "".concat(SuitData_1.suitsConfig[suitName].suitColor, " discard suit"), key: "".concat(data.props.G.publicPlayers[p].nickname, " ").concat(SuitData_1.suitsConfig[suitName].suitName) },
-                    react_1["default"].createElement("span", { style: StyleData_1.Styles.Suits(SuitData_1.suitsConfig[suitName].suitName), className: "bg-suit-icon" }, p + 1)));
+        if (p !== Number(data.props.ctx.currentPlayer)) {
+            if (data.props.G.publicPlayers[p].cards[suitId] !== undefined && data.props.G.publicPlayers[p].cards[suitId].length) {
+                playersHeaders.push(<th className={SuitData_1.suitsConfig[suitName].suitColor + " discard suit"} key={data.props.G.publicPlayers[p].nickname + " " + SuitData_1.suitsConfig[suitName].suitName}>
+                        <span style={StyleData_1.Styles.Suits(SuitData_1.suitsConfig[suitName].suitName)} className="bg-suit-icon">
+                            {p + 1}
+                        </span>
+                    </th>);
             }
         }
     }
@@ -104,9 +112,9 @@ var DrawPlayersBoardForSuitCardDiscard = function (data, suitName) {
         playersRows[i] = [];
         var playersCells = [];
         for (var p = 0; p < data.props.G.publicPlayers.length; p++) {
-            if (p !== +data.props.ctx.currentPlayer) {
-                if (data.props.G.publicPlayers[p].cards[suitId] !== undefined &&
-                    data.props.G.publicPlayers[p].cards[suitId][i] !== undefined) {
+            if (p !== Number(data.props.ctx.currentPlayer)) {
+                if (data.props.G.publicPlayers[p].cards[suitId] !== undefined && data.props.G.publicPlayers[p].cards[suitId][i]
+                    !== undefined) {
                     if (data.props.G.publicPlayers[p].cards[suitId][i].type !== "герой") {
                         isExit = false;
                         isDrawRow = true;
@@ -114,21 +122,27 @@ var DrawPlayersBoardForSuitCardDiscard = function (data, suitName) {
                     }
                 }
                 else {
-                    playersCells.push(react_1["default"].createElement("td", { key: "".concat(data.props.G.publicPlayers[p].nickname, " discard suit cardboard row ").concat(i) }));
+                    playersCells.push(<td key={data.props.G.publicPlayers[p].nickname + " discard suit cardboard row " + i}>
+
+                        </td>);
                 }
             }
         }
         if (isDrawRow) {
-            playersRows[i].push(react_1["default"].createElement("tr", { key: "Discard suit cardboard row ".concat(i) }, playersCells));
+            playersRows[i].push(<tr key={"Discard suit cardboard row " + i}>
+                    {playersCells}
+                </tr>);
         }
         if (isExit) {
             break;
         }
     }
-    return (react_1["default"].createElement("table", null,
-        react_1["default"].createElement("thead", null,
-            react_1["default"].createElement("tr", null, playersHeaders)),
-        react_1["default"].createElement("tbody", null, playersRows)));
+    return (<table>
+            <thead>
+            <tr>{playersHeaders}</tr>
+            </thead>
+            <tbody>{playersRows}</tbody>
+        </table>);
 };
 exports.DrawPlayersBoardForSuitCardDiscard = DrawPlayersBoardForSuitCardDiscard;
 /**
@@ -298,9 +312,11 @@ var DrawCard = function (data, playerCells, card, id, player, suit, actionName) 
     if (action) {
         tdClasses += " cursor-pointer";
     }
-    playerCells.push(react_1["default"].createElement("td", { key: "".concat((player && player.nickname) ? "player ".concat((player.nickname), " ") : "").concat(suit, " card ").concat(id, " ").concat(card.name), className: tdClasses, onClick: function () { return action && action.apply(void 0, args); } },
-        react_1["default"].createElement("span", { style: styles, title: card.description ? card.description : card.name, className: spanClasses },
-            react_1["default"].createElement("b", null, card.points !== null ? card.points : (card.value !== undefined ? card.value : "")))));
+    playerCells.push(<td key={"" + ((player && player.nickname) ? "player " + (player.nickname) + " " : "") + suit + " card " + id + " " + card.name} className={tdClasses} onClick={function () { return action && action.apply(void 0, args); }}>
+            <span style={styles} title={card.description ? card.description : card.name} className={spanClasses}>
+                <b>{card.points !== null ? card.points : (card.value !== undefined ? card.value : "")}</b>
+            </span>
+        </td>);
 };
 exports.DrawCard = DrawCard;
 /**
@@ -388,12 +404,14 @@ var DrawCoin = function (data, playerCells, type, coin, id, player, coinClasses,
     if (type === "market") {
         styles = StyleData_1.Styles.Coin(coin.value, false);
         spanClasses = "bg-market-coin";
-        span = (react_1["default"].createElement("span", { className: coinClasses }, additionalParam));
+        span = (<span className={coinClasses}>
+            {additionalParam}
+        </span>);
     }
     else {
         spanClasses = "bg-coin";
         if (coinClasses) {
-            spanClasses += " ".concat(coinClasses);
+            spanClasses += " " + coinClasses;
         }
         if (type === "coin") {
             if (coin === undefined) {
@@ -406,16 +424,23 @@ var DrawCoin = function (data, playerCells, type, coin, id, player, coinClasses,
         else {
             styles = StyleData_1.Styles.CoinBack();
             if (type === "back-small-market-coin") {
-                span = (react_1["default"].createElement("span", { style: StyleData_1.Styles.Exchange(), className: "bg-small-market-coin" }));
+                span = (<span style={StyleData_1.Styles.Exchange()} className="bg-small-market-coin">
+
+                </span>);
             }
             else if (type === "back-tavern-icon") {
-                span = (react_1["default"].createElement("span", { style: StyleData_1.Styles.Taverns(additionalParam), className: "bg-tavern-icon" }));
+                span = (<span style={StyleData_1.Styles.Taverns(additionalParam)} className="bg-tavern-icon">
+
+                </span>);
             }
         }
     }
-    playerCells.push(react_1["default"].createElement("td", { key: "".concat((player && player.nickname) ? "player ".concat(player.nickname, " ") : "", "coin ").concat(id).concat(coin ? " ".concat(coin.value)
-            : " empty"), className: tdClasses, onClick: function () { return action && action.apply(void 0, args); } },
-        react_1["default"].createElement("span", { style: styles, className: spanClasses }, span)));
+    playerCells.push(<td key={((player && player.nickname) ? "player " + player.nickname + " " : "") + "coin " + id + (coin ? " " + coin.value
+            : " empty")} className={tdClasses} onClick={function () { return action && action.apply(void 0, args); }}>
+            <span style={styles} className={spanClasses}>
+                {span}
+            </span>
+        </td>);
 };
 exports.DrawCoin = DrawCoin;
 /**
@@ -454,7 +479,10 @@ var DrawButton = function (data, boardCells, key, name, player, actionName) {
         default:
             action = null;
     }
-    boardCells.push(react_1["default"].createElement("td", { key: "".concat((player && player.nickname) ? "Player ".concat(player.nickname, " ") : "").concat(key), className: "cursor-pointer", onClick: function () { return action && action.apply(void 0, args); } },
-        react_1["default"].createElement("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" }, name)));
+    boardCells.push(<td key={"" + ((player && player.nickname) ? "Player " + player.nickname + " " : "") + key} className="cursor-pointer" onClick={function () { return action && action.apply(void 0, args); }}>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                {name}
+            </button>
+        </td>);
 };
 exports.DrawButton = DrawButton;

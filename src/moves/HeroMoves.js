@@ -1,6 +1,9 @@
-import {IsValidMove} from "../MoveValidator";
-import {INVALID_MOVE} from "boardgame.io/core";
-import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
+"use strict";
+exports.__esModule = true;
+exports.DiscardCard = exports.PlaceCard = exports.ClickHeroCard = void 0;
+var MoveValidator_1 = require("../MoveValidator");
+var core_1 = require("boardgame.io/core");
+var StackHelpers_1 = require("../helpers/StackHelpers");
 // todo Add logging
 /**
  * <h3>Выбор героя.</h3>
@@ -15,14 +18,14 @@ import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
  * @returns {string|*}
  * @constructor
  */
-export const ClickHeroCard = (G, ctx, heroId) => {
-    const isValidMove = IsValidMove({obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length]});
+var ClickHeroCard = function (G, ctx, heroId) {
+    var isValidMove = (0, MoveValidator_1.IsValidMove)({ obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length] });
     if (!isValidMove) {
-        return INVALID_MOVE;
+        return core_1.INVALID_MOVE;
     }
-    return EndActionFromStackAndAddNew(G, ctx, G.heroes[heroId].stack);
+    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, G.heroes[heroId].stack);
 };
-
+exports.ClickHeroCard = ClickHeroCard;
 /**
  * <h3>Расположение героя или зависимых карт героя на планшет игрока.</h3>
  * <p>Применения:</p>
@@ -36,10 +39,10 @@ export const ClickHeroCard = (G, ctx, heroId) => {
  * @returns {*}
  * @constructor
  */
-export const PlaceCard = (G, ctx, suitId) => {
-    return EndActionFromStackAndAddNew(G, ctx, [], suitId);
+var PlaceCard = function (G, ctx, suitId) {
+    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], suitId);
 };
-
+exports.PlaceCard = PlaceCard;
 /**
  * <h3>Сброс карты с верха планшета игрока при выборе героя.</h3>
  * <p>Применения:</p>
@@ -54,7 +57,7 @@ export const PlaceCard = (G, ctx, suitId) => {
  * @returns {*}
  * @constructor
  */
-export const DiscardCard = (G, ctx, suitId, cardId) => {
-    return EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
+var DiscardCard = function (G, ctx, suitId, cardId) {
+    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], suitId, cardId);
 };
-
+exports.DiscardCard = DiscardCard;

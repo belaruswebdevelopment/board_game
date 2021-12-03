@@ -1,3 +1,6 @@
+"use strict";
+exports.__esModule = true;
+exports.AddDataToLog = void 0;
 /**
  * <h3>Логирует данные.</h3>
  * <p>Применения:</p>
@@ -10,6 +13,7 @@
  * @param value Значение, заносимое в лог.
  * @constructor
  */
-export const AddDataToLog = (G, type, value) => {
-    G.logData.push({type, value});
+var AddDataToLog = function (G, type, value) {
+    G.logData.push({ type: type, value: value });
 };
+exports.AddDataToLog = AddDataToLog;

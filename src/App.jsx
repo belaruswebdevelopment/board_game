@@ -60,10 +60,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 /*import {Client} from "boardgame.io/react";
 import {BoardGame} from "./Game";
 import {GameBoard} from "./Board";
@@ -136,17 +133,18 @@ render(<App/>, document.getElementById("root"));
 
 export default App;
 */
-var react_1 = __importDefault(require("react"));
-var LobbyClient_1 = __importDefault(require("./LobbyClient"));
+var react_1 = require("react");
+var LobbyClient_1 = require("./LobbyClient");
 var App = /** @class */ (function (_super) {
     __extends(App, _super);
     function App() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     App.prototype.render = function () {
-        return (react_1["default"].createElement("div", null,
-            react_1["default"].createElement(LobbyClient_1["default"], null)));
+        return (<div>
+                <LobbyClient_1.default />
+            </div>);
     };
     return App;
-}(react_1["default"].Component));
-exports["default"] = App;
+}(react_1.default.Component));
+exports.default = App;

@@ -1,22 +1,19 @@
 import React from "react";
 import {
-    DrawTierCards,
-    DrawCurrentPlayerTurn,
-    DrawWinner,
-    DrawMarketCoins,
     DrawCamp,
-    DrawTaverns,
-    DrawHeroes,
+    DrawCurrentPlayerTurn,
     DrawDistinctions,
+    DrawHeroes,
+    DrawMarketCoins,
     DrawProfit,
+    DrawTaverns,
+    DrawTierCards,
+    DrawWinner,
 } from "./ui/GameBoardUI";
-import {
-    DrawPlayersBoardsCoins,
-    DrawPlayersBoards,
-    DrawPlayersHandsCoins,
-} from "./ui/PlayerUI";
+import {DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins,} from "./ui/PlayerUI";
 import {DrawDebugData} from "./ui/DebugUI";
 import {DrawLogData} from "./ui/LogUI";
+import type {BoardProps} from 'boardgame.io/react';
 
 /**
  * <h3>Отрисовка игрового стола.</h3>
@@ -25,38 +22,38 @@ import {DrawLogData} from "./ui/LogUI";
  * <li>При отрисовке игрового поля для игроков.</li>
  * </ol>
  */
-export class GameBoard extends React.Component {
-    OnClickDistinctionCard = (cardId) => {
+export class GameBoard extends React.Component<BoardProps> {
+    OnClickDistinctionCard = (cardId: number): void => {
         this.props.moves.ClickDistinctionCard(cardId);
     };
-    OnClickSuitToPlaceCard = (suitId) => {
+    OnClickSuitToPlaceCard = (suitId: number): void => {
         this.props.moves.PlaceCard(suitId);
     };
-    OnClickSuitToPlaceMercenary = (suitId) => {
+    OnClickSuitToPlaceMercenary = (suitId: number): void => {
         this.props.moves.PlaceEnlistmentMercenaries(suitId);
     };
-    OnClickSuitToGetMjollnirProfit = (suitId) => {
+    OnClickSuitToGetMjollnirProfit = (suitId: number): void => {
         this.props.moves.GetMjollnirProfit(suitId);
     };
 
     render() {
-        const gridClass = "col-span-4",
-            classes = "col-span-4 text-center underline border",
-            tierCardsUI = DrawTierCards(this),
-            currentPlayerTurnUI = DrawCurrentPlayerTurn(this),
-            winnerUI = DrawWinner(this),
-            marketCoinsUI = DrawMarketCoins(this),
-            drawHeroesUI = DrawHeroes(this),
-            drawCampUI = this.props.G.expansions.thingvellir.active ? DrawCamp(this) : null,
-            drawDistinctionsUI = DrawDistinctions(this),
-            drawDistinctionProfitUI = this.props.G.drawProfit ? DrawProfit(this, this.props.G.drawProfit)
-                : this.props.G.drawProfit,
-            tavernsUI = DrawTaverns(this, gridClass),
+        const gridClass: string = "col-span-4",
+            classes: string = "col-span-4 text-center underline border",
+            tierCardsUI: JSX.Element = DrawTierCards(this),
+            currentPlayerTurnUI: JSX.Element = DrawCurrentPlayerTurn(this),
+            winnerUI: JSX.Element = DrawWinner(this),
+            marketCoinsUI: JSX.Element = DrawMarketCoins(this),
+            drawHeroesUI: JSX.Element = DrawHeroes(this),
+            drawCampUI: JSX.Element | null = this.props.G.expansions.thingvellir.active ? DrawCamp(this) : null,
+            drawDistinctionsUI: JSX.Element = DrawDistinctions(this),
+            drawDistinctionProfitUI: JSX.Element | string = this.props.G.drawProfit ?
+                DrawProfit(this, this.props.G.drawProfit) : this.props.G.drawProfit,
+            tavernsUI: JSX.Element[] = DrawTaverns(this, gridClass),
             playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
             playersHandsCoinsUI = DrawPlayersHandsCoins(this),
             playersBoardsUI = DrawPlayersBoards(this),
-            logUI = DrawLogData(this),
-            debugUI = DrawDebugData(this);
+            logUI: JSX.Element | null = DrawLogData(this),
+            debugUI: JSX.Element | null = DrawDebugData(this);
         return (
             <div className="flex">
                 <div className="grid auto-cols-min grid-cols-1 md:grid-cols-12 gap-1">

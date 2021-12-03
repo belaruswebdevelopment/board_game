@@ -1,3 +1,6 @@
+"use strict";
+exports.__esModule = true;
+exports.marketCoinsConfig = exports.initialPlayerCoinsConfig = void 0;
 /**
  * <h3>Конфиг базовых монет игрока.</h3>
  * <p>Применения:</p>
@@ -7,14 +10,13 @@
  *
  * @type {[{isTriggerTrading: boolean, value: number}, number, number, number, number]}
  */
-export const initialPlayerCoinsConfig = [
-    {value: 0, isTriggerTrading: true},
+exports.initialPlayerCoinsConfig = [
+    { value: 0, isTriggerTrading: true },
     2,
     3,
     4,
     5,
 ];
-
 /**
  * <h3>Конфиг монет рынка.</h3>
  * <p>Применения:</p>
@@ -24,236 +26,194 @@ export const initialPlayerCoinsConfig = [
  *
  * @type {[{count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]} Все монеты.
  */
-export const marketCoinsConfig = [
+exports.marketCoinsConfig = [
     {
         value: 5,
-        count: () => {
-            return {
-                2: 2,
-                3: 2,
-                4: 2,
-                5: 2,
-            };
-        },
+        count: function () { return ({
+            2: 2,
+            3: 2,
+            4: 2,
+            5: 2
+        }); }
     },
     {
         value: 6,
-        count: () => {
-            return {
-                2: 2,
-                3: 2,
-                4: 2,
-                5: 2,
-            };
-        },
+        count: function () { return ({
+            2: 2,
+            3: 2,
+            4: 2,
+            5: 2
+        }); }
     },
     {
         value: 7,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 3,
-                5: 3,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 3,
+            5: 3
+        }); }
     },
     {
         value: 8,
-        count: () => {
-            return {
-                2: 2,
-                3: 2,
-                4: 2,
-                5: 2,
-            };
-        },
+        count: function () { return ({
+            2: 2,
+            3: 2,
+            4: 2,
+            5: 2
+        }); }
     },
     {
         value: 9,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 3,
-                5: 3,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 3,
+            5: 3
+        }); }
     },
     {
         value: 10,
-        count: () => {
-            return {
-                2: 2,
-                3: 2,
-                4: 2,
-                5: 2,
-            };
-        },
+        count: function () { return ({
+            2: 2,
+            3: 2,
+            4: 2,
+            5: 2
+        }); }
     },
     {
         value: 11,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 3,
-                5: 3,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 3,
+            5: 3
+        }); }
     },
     {
         value: 12,
-        count: () => {
-            return {
-                2: 2,
-                3: 2,
-                4: 2,
-                5: 2,
-            };
-        },
+        count: function () { return ({
+            2: 2,
+            3: 2,
+            4: 2,
+            5: 2
+        }); }
     },
     {
         value: 13,
-        count: () => {
-            return {
-                2: 2,
-                3: 2,
-                4: 2,
-                5: 2,
-            };
-        },
+        count: function () { return ({
+            2: 2,
+            3: 2,
+            4: 2,
+            5: 2
+        }); }
     },
     {
         value: 14,
-        count: () => {
-            return {
-                2: 2,
-                3: 2,
-                4: 2,
-                5: 2,
-            };
-        },
+        count: function () { return ({
+            2: 2,
+            3: 2,
+            4: 2,
+            5: 2
+        }); }
     },
     {
         value: 15,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1
+        }); }
     },
     {
         value: 16,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1
+        }); }
     },
     {
         value: 17,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1
+        }); }
     },
     {
         value: 18,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1
+        }); }
     },
     {
         value: 19,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1
+        }); }
     },
     {
         value: 20,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1
+        }); }
     },
     {
         value: 21,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1
+        }); }
     },
     {
         value: 22,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1
+        }); }
     },
     {
         value: 23,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1
+        }); }
     },
     {
         value: 24,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1
+        }); }
     },
     {
         value: 25,
-        count: () => {
-            return {
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1,
-            };
-        },
+        count: function () { return ({
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1
+        }); }
     },
 ];

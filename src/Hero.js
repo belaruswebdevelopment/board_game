@@ -1,9 +1,11 @@
-import {heroesConfig} from "./data/HeroData";
-import {GetSuitIndexByName} from "./helpers/SuitHelpers";
-import {AddDataToLog} from "./Logging";
-import {AddActionsToStackAfterCurrent} from "./helpers/StackHelpers";
-import {TotalRank} from "./helpers/ScoreHelpers";
-
+"use strict";
+exports.__esModule = true;
+exports.RemoveThrudFromPlayerBoardAfterGameEnd = exports.CheckPickHero = exports.BuildHeroes = exports.CreateHero = void 0;
+var HeroData_1 = require("./data/HeroData");
+var SuitHelpers_1 = require("./helpers/SuitHelpers");
+var Logging_1 = require("./Logging");
+var StackHelpers_1 = require("./helpers/StackHelpers");
+var ScoreHelpers_1 = require("./helpers/ScoreHelpers");
 /**
  * <h3>Создание героя.</h3>
  * <p>Применения:</p>
@@ -20,23 +22,23 @@ import {TotalRank} from "./helpers/ScoreHelpers";
  * @param points Очки.
  * @param active Взят ли герой.
  * @param stack Действия.
- * @returns {{game, name, description, rank, active: boolean, stack, suit, points}} Герой.
  * @constructor
  */
-export const CreateHero = ({type, name, description, game, suit, rank, points, active = true, stack} = {}) => {
+var CreateHero = function (_a) {
+    var _b = _a === void 0 ? {} : _a, type = _b.type, name = _b.name, description = _b.description, game = _b.game, suit = _b.suit, rank = _b.rank, points = _b.points, _c = _b.active, active = _c === void 0 ? true : _c, stack = _b.stack;
     return {
-        type,
-        name,
-        description,
-        game,
-        suit,
-        rank,
-        points,
-        active,
-        stack,
+        type: type,
+        name: name,
+        description: description,
+        game: game,
+        suit: suit,
+        rank: rank,
+        points: points,
+        active: active,
+        stack: stack
     };
 };
-
+exports.CreateHero = CreateHero;
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -45,28 +47,27 @@ export const CreateHero = ({type, name, description, game, suit, rank, points, a
  * </ol>
  *
  * @param config Конфиг героев.
- * @returns {*[]} Массив героев.
  * @constructor
  */
-export const BuildHeroes = (config) => {
-    const heroes = [];
-    for (const hero in heroesConfig) {
-        if (config.includes(heroesConfig[hero].game)) {
-            heroes.push(CreateHero({
+var BuildHeroes = function (config) {
+    var heroes = [];
+    for (var hero in HeroData_1.heroesConfig) {
+        if (config.includes(HeroData_1.heroesConfig[hero].game)) {
+            heroes.push((0, exports.CreateHero)({
                 type: "герой",
-                name: heroesConfig[hero].name,
-                description: heroesConfig[hero].description,
-                game: heroesConfig[hero].game,
-                suit: heroesConfig[hero].suit,
-                rank: heroesConfig[hero].rank,
-                points: heroesConfig[hero].points,
-                stack: heroesConfig[hero].stack,
+                name: HeroData_1.heroesConfig[hero].name,
+                description: HeroData_1.heroesConfig[hero].description,
+                game: HeroData_1.heroesConfig[hero].game,
+                suit: HeroData_1.heroesConfig[hero].suit,
+                rank: HeroData_1.heroesConfig[hero].rank,
+                points: HeroData_1.heroesConfig[hero].points,
+                stack: HeroData_1.heroesConfig[hero].stack
             }));
         }
     }
     return heroes;
 };
-
+exports.BuildHeroes = BuildHeroes;
 /**
  * <h3>Проверяет возможность взятия нового героя.</h3>
  * <p>Применения:</p>
@@ -80,28 +81,28 @@ export const BuildHeroes = (config) => {
  *
  * @param G
  * @param ctx
- * @returns {boolean} Можно ли взять нового героя.
  * @constructor
  */
-export const CheckPickHero = (G, ctx) => {
-    if (!G.publicPlayers[ctx.currentPlayer].buffs["noHero"]) {
-        const isCanPickHero = Math.min(...G.publicPlayers[ctx.currentPlayer].cards.map(item => item.reduce(TotalRank, 0)))
-            > G.publicPlayers[ctx.currentPlayer].heroes.length;
+var CheckPickHero = function (G, ctx) {
+    if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
+        var isCanPickHero = Math.min.apply(Math, G.publicPlayers[Number(ctx.currentPlayer)].cards
+            .map(function (item) { return item.reduce(ScoreHelpers_1.TotalRank, 0); })) >
+            G.publicPlayers[Number(ctx.currentPlayer)].heroes.length;
         if (isCanPickHero) {
-            const stack = [
+            var stack = [
                 {
                     actionName: "PickHero",
                     config: {
-                        stageName: "pickHero",
-                    },
+                        stageName: "pickHero"
+                    }
                 },
             ];
-            AddDataToLog(G, "game", `Игрок ${G.publicPlayers[ctx.currentPlayer].nickname} должен выбрать нового героя.`);
-            AddActionsToStackAfterCurrent(G, ctx, stack);
+            (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n            \u0434\u043E\u043B\u0436\u0435\u043D \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043D\u043E\u0432\u043E\u0433\u043E \u0433\u0435\u0440\u043E\u044F."));
+            (0, StackHelpers_1.AddActionsToStackAfterCurrent)(G, ctx, stack);
         }
     }
 };
-
+exports.CheckPickHero = CheckPickHero;
 /**
  * <h3>Удаляет Труд в конце игры с поля игрока.</h3>
  * <p>Применения:</p>
@@ -113,15 +114,15 @@ export const CheckPickHero = (G, ctx) => {
  * @param ctx
  * @constructor
  */
-export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        const playerCards = G.publicPlayers[i].cards.flat(),
-            thrud = playerCards.find(card => card.name === "Thrud");
+var RemoveThrudFromPlayerBoardAfterGameEnd = function (G, ctx) {
+    for (var i = 0; i < ctx.numPlayers; i++) {
+        var playerCards = G.publicPlayers[i].cards.flat(), thrud = playerCards.find(function (card) { return card.name === "Thrud"; });
         if (thrud) {
-            const thrudSuit = GetSuitIndexByName(thrud.suit),
-                thrudIndex = G.publicPlayers[i].cards[thrudSuit].findIndex(card => card.name === "Thrud");
+            var thrudSuit = (0, SuitHelpers_1.GetSuitIndexByName)(thrud.suit), thrudIndex = G.publicPlayers[i].cards[thrudSuit]
+                .findIndex(function (card) { return card.name === "Thrud"; });
             G.publicPlayers[i].cards[thrudSuit].splice(thrudIndex, 1);
-            AddDataToLog(G, "game", `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с игрового поля.`);
+            (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0413\u0435\u0440\u043E\u0439 \u0422\u0440\u0443\u0434 \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(G.publicPlayers[i].nickname, " \u0443\u0445\u043E\u0434\u0438\u0442 \u0441 \n            \u0438\u0433\u0440\u043E\u0432\u043E\u0433\u043E \u043F\u043E\u043B\u044F."));
         }
     }
 };
+exports.RemoveThrudFromPlayerBoardAfterGameEnd = RemoveThrudFromPlayerBoardAfterGameEnd;

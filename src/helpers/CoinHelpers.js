@@ -1,6 +1,8 @@
+"use strict";
+exports.__esModule = true;
+exports.ResolveBoardCoins = exports.ActivateTrading = void 0;
 // todo Add logging
-import {Trading} from "../Coin";
-
+var Coin_1 = require("../Coin");
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
@@ -13,20 +15,24 @@ import {Trading} from "../Coin";
  * @returns {boolean} Активировался ли обмен монет.
  * @constructor
  */
-export const ActivateTrading = (G, ctx) => {
-    if (G.publicPlayers[ctx.currentPlayer].boardCoins[G.currentTavern] &&
-        G.publicPlayers[ctx.currentPlayer].boardCoins[G.currentTavern].isTriggerTrading) {
-        const tradingCoins = [];
-        for (let i = G.tavernsNum; i < G.publicPlayers[ctx.currentPlayer].boardCoins.length; i++) {
-            tradingCoins.push(G.publicPlayers[ctx.currentPlayer].boardCoins[i]);
+var ActivateTrading = function (G, ctx) {
+    var _a;
+    if ((_a = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading) {
+        var tradingCoins = [];
+        for (var i = G.tavernsNum; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
+            var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i];
+            if (coin) {
+                tradingCoins.push(coin);
+            }
         }
-        Trading(G, ctx, tradingCoins);
+        (0, Coin_1.Trading)(G, ctx, tradingCoins);
         return true;
-    } else {
+    }
+    else {
         return false;
     }
 };
-
+exports.ActivateTrading = ActivateTrading;
 /**
  * <h3>Определяет по расположению монет игроками порядок ходов и порядок обмена кристаллов приоритета.</h3>
  * <p>Применения:</p>
@@ -39,50 +45,62 @@ export const ActivateTrading = (G, ctx) => {
  * @returns {{playersOrder: *[], exchangeOrder: *[]}} Массив порядка ходов игроков и порядок обмена кристаллов приоритета.
  * @constructor
  */
-export const ResolveBoardCoins = (G, ctx) => {
-    const playersOrder = [],
-        coinValues = [],
-        exchangeOrder = [];
-    for (let i = 0; i < ctx.numPlayers; i++) {
+var ResolveBoardCoins = function (G, ctx) {
+    var _a, _b;
+    var playersOrder = [], coinValues = [], exchangeOrder = [];
+    for (var i = 0; i < ctx.numPlayers; i++) {
         if (G.publicPlayers[i].boardCoins[G.currentTavern]) {
-            coinValues[i] = G.publicPlayers[i].boardCoins[G.currentTavern].value;
+            var coin = G.publicPlayers[i].boardCoins[G.currentTavern];
+            if (coin) {
+                coinValues[i] = coin.value;
+            }
             playersOrder.push(i);
         }
         exchangeOrder.push(i);
-        for (let j = playersOrder.length - 1; j > 0; j--) {
-            if (G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern].value >
-                G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern].value) {
-                [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
-            } else if (G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern].value ===
-                G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern].value) {
-                if (G.publicPlayers[playersOrder[j]].priority.value > G.publicPlayers[playersOrder[j - 1]].priority.value) {
-                    [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+        for (var j = playersOrder.length - 1; j > 0; j--) {
+            var coin = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern], prevCoin = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
+            if (coin && prevCoin) {
+                if (coin.value > prevCoin.value) {
+                    _a = [playersOrder[j - 1], playersOrder[j]], playersOrder[j] = _a[0], playersOrder[j - 1] = _a[1];
                 }
-            } else {
-                break;
+                else if (coin.value === prevCoin.value) {
+                    var priority = G.publicPlayers[playersOrder[j]].priority, prevPriority = G.publicPlayers[playersOrder[j - 1]].priority;
+                    if (priority && prevPriority) {
+                        if (priority.value > prevPriority.value) {
+                            _b = [playersOrder[j - 1], playersOrder[j]], playersOrder[j] = _b[0], playersOrder[j - 1] = _b[1];
+                        }
+                    }
+                }
+                else {
+                    break;
+                }
             }
         }
     }
-    const counts = {};
-    for (let i = 0; i < coinValues.length; i++) {
+    var counts = {};
+    for (var i = 0; i < coinValues.length; i++) {
         counts[coinValues[i]] = 1 + (counts[coinValues[i]] || 0);
     }
-    for (let prop in counts) {
+    var _loop_1 = function (prop) {
         if (counts[prop] <= 1) {
-            continue;
+            return "continue";
         }
-        const tiePlayers = G.publicPlayers.filter(player => player.boardCoins[G.currentTavern] &&
-            player.boardCoins[G.currentTavern].value === Number(prop) && player.priority.isExchangeable);
+        var tiePlayers = G.publicPlayers.filter(function (player) { return player.boardCoins[G.currentTavern] &&
+            player.boardCoins[G.currentTavern].value === Number(prop) && player.priority.isExchangeable; });
+        var _loop_2 = function () {
+            var _c;
+            var tiePlayersPriorities = tiePlayers.map(function (player) { return player.priority.value; }), maxPriority = Math.max.apply(Math, tiePlayersPriorities), minPriority = Math.min.apply(Math, tiePlayersPriorities), maxIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === maxPriority; }), minIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === minPriority; });
+            tiePlayers.splice(tiePlayers.findIndex(function (player) { return player.priority.value === maxPriority; }), 1);
+            tiePlayers.splice(tiePlayers.findIndex(function (player) { return player.priority.value === minPriority; }), 1);
+            _c = [exchangeOrder[maxIndex], exchangeOrder[minIndex]], exchangeOrder[minIndex] = _c[0], exchangeOrder[maxIndex] = _c[1];
+        };
         while (tiePlayers.length > 1) {
-            const tiePlayersPriorities = tiePlayers.map(player => player.priority.value),
-                maxPriority = Math.max(...tiePlayersPriorities),
-                minPriority = Math.min(...tiePlayersPriorities),
-                maxIndex = G.publicPlayers.findIndex(player => player.priority.value === maxPriority),
-                minIndex = G.publicPlayers.findIndex(player => player.priority.value === minPriority);
-            tiePlayers.splice(tiePlayers.findIndex(player => player.priority.value === maxPriority), 1);
-            tiePlayers.splice(tiePlayers.findIndex(player => player.priority.value === minPriority), 1);
-            [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
+            _loop_2();
         }
+    };
+    for (var prop in counts) {
+        _loop_1(prop);
     }
-    return {playersOrder, exchangeOrder};
+    return { playersOrder: playersOrder, exchangeOrder: exchangeOrder };
 };
+exports.ResolveBoardCoins = ResolveBoardCoins;

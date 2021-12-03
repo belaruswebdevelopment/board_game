@@ -1,5 +1,10 @@
-import React from "react";
-
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+exports.__esModule = true;
+exports.DrawLogData = void 0;
+var react_1 = __importDefault(require("react"));
 /**
  * <h3>Отрисовка лог панели.</h3>
  * <p>Применения:</p>
@@ -8,42 +13,28 @@ import React from "react";
  * </ol>
  *
  * @param data Глобальные параметры.
- * @returns {JSX.Element|null}
  * @constructor
  */
-export const DrawLogData = (data) => {
+var DrawLogData = function (data) {
     if (data.props.G.log) {
-        const loggingData = [];
-        for (let i = data.props.G.logData.length - 1; i >= 0; i--) {
-            if (data.props.G.logData[i].type === "private") {
-                loggingData.push(
-                    <li key={`Log ${i}`} className="text-red-500">
-                        {data.props.G.logData[i].value}
-                    </li>
-                );
-            } else if (data.props.G.logData[i].type === "game") {
-                loggingData.push(
-                    <li key={`Log ${i}`} className="text-blue-500">
-                        {data.props.G.logData[i].value}
-                    </li>
-                );
-            } else if (data.props.G.logData[i].type === "public") {
-                loggingData.push(
-                    <li key={`Log ${i}`} className="text-green-500">
-                        {data.props.G.logData[i].value}
-                    </li>
-                );
+        var loggingData = [];
+        for (var i = data.props.G.logData.length - 1; i >= 0; i--) {
+            if (data.props.G.logData[i].type === "private" /* PRIVATE */) {
+                loggingData.push(react_1["default"].createElement("li", { key: "Log ".concat(i), className: "text-red-500" }, data.props.G.logData[i].value));
+            }
+            else if (data.props.G.logData[i].type === "game" /* GAME */) {
+                loggingData.push(react_1["default"].createElement("li", { key: "Log ".concat(i), className: "text-blue-500" }, data.props.G.logData[i].value));
+            }
+            else if (data.props.G.logData[i].type === "public" /* PUBLIC */) {
+                loggingData.push(react_1["default"].createElement("li", { key: "Log ".concat(i), className: "text-green-500" }, data.props.G.logData[i].value));
             }
         }
-        return (
-            <div className="log ml-3 w-1/4 border overflow-y-auto">
-                <h3>Log data:</h3>
-                <ul className="list-none p-0 ml-5">
-                    {loggingData}
-                </ul>
-            </div>
-        );
-    } else {
+        return (react_1["default"].createElement("div", { className: "log ml-3 w-1/4 border overflow-y-auto" },
+            react_1["default"].createElement("h3", null, "Log data:"),
+            react_1["default"].createElement("ul", { className: "list-none p-0 ml-5" }, loggingData)));
+    }
+    else {
         return null;
     }
 };
+exports.DrawLogData = DrawLogData;

@@ -1,5 +1,7 @@
-import {TotalRank} from "../helpers/ScoreHelpers";
-
+"use strict";
+exports.__esModule = true;
+exports.artefactsConfig = exports.mercenariesConfig = void 0;
+var ScoreHelpers_1 = require("../helpers/ScoreHelpers");
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -9,7 +11,7 @@ import {TotalRank} from "../helpers/ScoreHelpers";
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
-const Fafnir_Baleygr = {
+var Fafnir_Baleygr = {
     name: "Fafnir Baleygr",
     description: "After taking possession of it and throughout the game, you can go to the Camp on your turn instead of " +
         "taking a card from the tavern being resolved if the Elvaland that won the bid did not go.",
@@ -20,21 +22,20 @@ const Fafnir_Baleygr = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "goCamp",
-                    value: true,
-                },
-            },
+                    value: true
+                }
+            }
         },
     ],
-    scoringRule: () => 0,
+    scoringRule: function () { return 0; }
 };
-
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -44,7 +45,7 @@ const Fafnir_Baleygr = {
  *
  * @type {{scoringRule: (function(*)), game: string, stack: [{actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
-const Draupnir = {
+var Draupnir = {
     name: "Draupnir",
     description: "At the end of Age 2, when counting points, add to your Final Bravery Value: 6 points per coin of value " +
         "15 or more owned.",
@@ -55,12 +56,11 @@ const Draupnir = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
     ],
-    scoringRule: player => player.boardCoins.filter(coin => (coin && coin.value) >= 15).length * 6,
+    scoringRule: function (player) { return player.boardCoins.filter(function (coin) { return (coin === null || coin === void 0 ? void 0 : coin.value) >= 15; }).length * 6; }
 };
-
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -70,7 +70,7 @@ const Draupnir = {
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}], tier: number, name: string, description: string, rank: number, suit: string, points: number}} Артефакт.
  */
-const Vegvisir = {
+var Vegvisir = {
     name: "Vegvisir",
     description: "Immediately place this Artifact in the Explorer column of your army. Its pose can trigger the " +
         "recruitment of a Hero card if it completes a rank line. This artifact counts as an Explorer rank and adds 13 " +
@@ -82,12 +82,11 @@ const Vegvisir = {
     points: 13,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
     ],
-    scoringRule: () => 0,
+    scoringRule: function () { return 0; }
 };
-
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -97,7 +96,7 @@ const Vegvisir = {
  *
  * @type {{scoringRule: (function(*)), game: string, stack: [{actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
-const Svalinn = {
+var Svalinn = {
     name: "Svalinn",
     description: "At the end of Age 2, when counting points, add to your Final Bravery Value: 5 points per Hero card in " +
         "your possession.",
@@ -108,12 +107,11 @@ const Svalinn = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
     ],
-    scoringRule: player => player.heroes.length * 5,
+    scoringRule: function (player) { return player.heroes.length * 5; }
 };
-
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -123,7 +121,7 @@ const Svalinn = {
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
-const Megingjord = {
+var Megingjord = {
     name: "Megingjord",
     description: "During the rest of the game, you can no longer recruit a Hero card by making rank lines. So making " +
         "rank lines has no effect for you. At the end of Age 2, when counting points, add 28 points to your Final " +
@@ -135,21 +133,20 @@ const Megingjord = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "noHero",
-                    value: true,
-                },
-            },
+                    value: true
+                }
+            }
         },
     ],
-    scoringRule: () => 28,
+    scoringRule: function () { return 28; }
 };
-
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -159,7 +156,7 @@ const Megingjord = {
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
-const Vidofnir_Vedrfolnir = {
+var Vidofnir_Vedrfolnir = {
     name: "Vidofnir Vedrfolnir",
     description: "Immediately reveal the coins from your pouch and transform one of these coins with a +2 and the other " +
         "with a +3. If one of the coins on the trade is the trading coin (the 0 or the Special Hunter 3) then apply a +5 " +
@@ -171,15 +168,14 @@ const Vidofnir_Vedrfolnir = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
         {
-            actionName: "StartVidofnirVedrfolnirAction",
+            actionName: "StartVidofnirVedrfolnirAction"
         },
     ],
-    scoringRule: () => 0,
+    scoringRule: function () { return 0; }
 };
-
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -189,7 +185,7 @@ const Vidofnir_Vedrfolnir = {
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}, {config: {number: number, stageName: string, name: string}, actionName: string}, {actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
-const Brisingamens = {
+var Brisingamens = {
     name: "Brisingamens",
     description: "Immediately look at all cards in the discard pile and choose two (Royal Offering cards and / or Dwarf " +
         "cards). In the order of your choice: - perform coin transformation if you have chosen Royal Offering cards. - " +
@@ -203,16 +199,16 @@ const Brisingamens = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "discardCardEndGame",
-                    value: true,
-                },
-            },
+                    value: true
+                }
+            }
         },
         {
             actionName: "DrawProfitAction",
@@ -220,16 +216,15 @@ const Brisingamens = {
                 stageName: "pickDiscardCard",
                 name: "BrisingamensAction",
                 number: 2,
-                drawName: "Brisingamens",
-            },
+                drawName: "Brisingamens"
+            }
         },
         {
-            actionName: "PickDiscardCard",
+            actionName: "PickDiscardCard"
         },
     ],
-    scoringRule: () => 0,
+    scoringRule: function () { return 0; }
 };
-
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -239,7 +234,7 @@ const Brisingamens = {
  *
  * @type {{scoringRule: (function(*, *)), game: string, stack: [{actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
-const Mjollnir = {
+var Mjollnir = {
     name: "Mjollnir",
     description: "At the end of Age 2, when counting points, add to your Final Bravery Value: 2 points per rank in the " +
         "class of your choice.",
@@ -250,21 +245,20 @@ const Mjollnir = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "getMjollnirProfit",
-                    value: true,
-                },
-            },
+                    value: true
+                }
+            }
         },
     ],
-    scoringRule: (player, suitId) => player.cards[suitId].reduce(TotalRank, 0) * 2,
+    scoringRule: function (player, suitId) { return player.cards[suitId].reduce(ScoreHelpers_1.TotalRank, 0) * 2; }
 };
-
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -274,7 +268,7 @@ const Mjollnir = {
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
-const Hofud = {
+var Hofud = {
     name: "Hofud",
     description: "Immediately, each other Elvaland choose and discards a Warrior card from their army. The discarded " +
         "card can be any card in the Warrior column except a Hero card.",
@@ -285,18 +279,17 @@ const Hofud = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
         {
             actionName: "StartDiscardSuitCard",
             config: {
-                suit: "warrior",
-            },
+                suit: "warrior"
+            }
         },
     ],
-    scoringRule: () => 0,
+    scoringRule: function () { return 0; }
 };
-
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -306,7 +299,7 @@ const Hofud = {
  *
  * @type {{scoringRule: (function(*)), game: string, stack: [{actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
-const Hrafnsmerki = {
+var Hrafnsmerki = {
     name: "Hrafnsmerki",
     description: "At the end of Age 2, when counting points, add to your Final Bravery Value: 5 points per Mercenary " +
         "card in your possession.",
@@ -317,12 +310,12 @@ const Hrafnsmerki = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
     ],
-    scoringRule: player => player.cards.flat().filter(card => card.type === "наёмник").length * 5,
+    scoringRule: function (player) { return player.cards.flat().filter(function (card) { return card.type === "наёмник"; }).length
+        * 5; }
 };
-
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -332,7 +325,7 @@ const Hrafnsmerki = {
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
-const Jarnglofi = {
+var Jarnglofi = {
     name: "Jarnglofi",
     description: "Immediately discard your trading coin (0 or Special Hunter 3). Warning! If this coin was placed on an " +
         "unresolved tavern, your bid not be present when it is resolved, and you will not take any cards. At the end of " +
@@ -344,15 +337,14 @@ const Jarnglofi = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
         {
-            actionName: "DiscardTradingCoin",
+            actionName: "DiscardTradingCoin"
         },
     ],
-    scoringRule: () => 24,
+    scoringRule: function () { return 24; }
 };
-
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -362,7 +354,7 @@ const Jarnglofi = {
  *
  * @type {{scoringRule: (function(): number), game: string, stack: [{actionName: string}, {config: {stageName: string}, actionName: string}], tier: number, name: string, description: string, rank: null, suit: null, points: null}} Артефакт.
  */
-const Gjallarhorn = {
+var Gjallarhorn = {
     name: "Gjallarhorn",
     description: "Immediately recruit a Hero card regardless of your rank line number. To recruit your next Hero card, " +
         "you will need to validate the golden rule: to have a number of rank lines greater than your number of Hero " +
@@ -374,18 +366,17 @@ const Gjallarhorn = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            actionName: "AddCampCardToCards"
         },
         {
             actionName: "PickHero",
             config: {
-                stageName: "pickHero",
-            },
+                stageName: "pickHero"
+            }
         },
     ],
-    scoringRule: () => 0,
+    scoringRule: function () { return 0; }
 };
-
 /**
  * <h3>Конфиг карт наёмников для кэмпа.</h3>
  * <p>Применения:</p>
@@ -395,79 +386,79 @@ const Gjallarhorn = {
  *
  * @type {([{warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}}, {explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}}, {hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, null]|[{blacksmith: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}}, {warrior: {rank: number, suit: string, points: number}, miner: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: number}}, {warrior: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}}, {explorer: {rank: number, suit: string, points: number}, miner: {rank: number, suit: string, points: number}}, null])[]} Все карты наёмников для кэмпа.
  */
-export const mercenariesConfig = [
+exports.mercenariesConfig = [
     [
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 6,
+                points: 6
             },
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 8,
-            },
+                points: 8
+            }
         },
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 6,
+                points: 6
             },
             blacksmith: {
                 suit: "blacksmith",
                 rank: 1,
-                points: null,
-            },
+                points: null
+            }
         },
         {
             hunter: {
                 suit: "hunter",
                 rank: 1,
-                points: null,
+                points: null
             },
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 6,
-            },
+                points: 6
+            }
         },
         {
             hunter: {
                 suit: "hunter",
                 rank: 1,
-                points: null,
+                points: null
             },
             miner: {
                 suit: "miner",
                 rank: 1,
-                points: 1,
-            },
+                points: 1
+            }
         },
         {
             blacksmith: {
                 suit: "blacksmith",
                 rank: 1,
-                points: null,
+                points: null
             },
             miner: {
                 suit: "miner",
                 rank: 1,
-                points: 1,
-            },
+                points: 1
+            }
         },
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 9,
+                points: 9
             },
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 11,
-            },
+                points: 11
+            }
         },
     ],
     [
@@ -475,77 +466,76 @@ export const mercenariesConfig = [
             hunter: {
                 suit: "hunter",
                 rank: 1,
-                points: null,
+                points: null
             },
             blacksmith: {
                 suit: "blacksmith",
                 rank: 1,
-                points: null,
-            },
+                points: null
+            }
         },
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 6,
+                points: 6
             },
             miner: {
                 suit: "miner",
                 rank: 1,
-                points: 1,
-            },
+                points: 1
+            }
         },
         {
             blacksmith: {
                 suit: "blacksmith",
                 rank: 1,
-                points: null,
+                points: null
             },
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 8,
-            },
+                points: 8
+            }
         },
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 6,
+                points: 6
             },
             hunter: {
                 suit: "hunter",
                 rank: 1,
-                points: null,
-            },
+                points: null
+            }
         },
         {
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 8,
+                points: 8
             },
             miner: {
                 suit: "miner",
                 rank: 1,
-                points: 1,
-            },
+                points: 1
+            }
         },
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 9,
+                points: 9
             },
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 11,
-            },
+                points: 11
+            }
         },
     ],
 ];
-
 /**
  * <h3>Конфиг карт артефактов для кэмпа.</h3>
  * <p>Применения:</p>
@@ -555,17 +545,17 @@ export const mercenariesConfig = [
  *
  * @type {{Svalinn: {scoringRule: (function(*)), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Brisingamens: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string}|{config: {number: number, stageName: string, name: string}, actionName: string}|{config: {number: number, stageName: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Vidofnir_Vedrfolnir: {scoringRule: (function(): number), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Hrafnsmerki: {scoringRule: (function(*)), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Gjallarhorn: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {stageName: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Hofud: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {stageName: string, name: string}, actionName: string}|{config: {suit: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Draupnir: {scoringRule: (function(*)), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Mjollnir: {scoringRule: (function(*, *)), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Jarnglofi: {scoringRule: (function(): number), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Megingjord: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Fafnir_Baleygr: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Vegvisir: {scoringRule: (function(): number), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: number, suit: string, points: number}}} Все карты артефактов для кэмпа.
  */
-export const artefactsConfig = {
-    Fafnir_Baleygr,
-    Draupnir,
-    Vegvisir,
-    Svalinn,
-    Megingjord,
-    Vidofnir_Vedrfolnir,
-    Brisingamens,
-    Mjollnir,
-    Hofud,
-    Hrafnsmerki,
-    Jarnglofi,
-    Gjallarhorn
+exports.artefactsConfig = {
+    Fafnir_Baleygr: Fafnir_Baleygr,
+    Draupnir: Draupnir,
+    Vegvisir: Vegvisir,
+    Svalinn: Svalinn,
+    Megingjord: Megingjord,
+    Vidofnir_Vedrfolnir: Vidofnir_Vedrfolnir,
+    Brisingamens: Brisingamens,
+    Mjollnir: Mjollnir,
+    Hofud: Hofud,
+    Hrafnsmerki: Hrafnsmerki,
+    Jarnglofi: Jarnglofi,
+    Gjallarhorn: Gjallarhorn
 };

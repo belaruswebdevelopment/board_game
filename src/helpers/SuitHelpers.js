@@ -1,5 +1,7 @@
-import {suitsConfig} from "../data/SuitData";
-
+"use strict";
+exports.__esModule = true;
+exports.GetSuitIndexByName = void 0;
+var SuitData_1 = require("../data/SuitData");
 /**
  * <h3>Вычисляет индекс указанной фракции.</h3>
  * <p>Применения:</p>
@@ -11,4 +13,5 @@ import {suitsConfig} from "../data/SuitData";
  * @returns {number} Индекс фракции.
  * @constructor
  */
-export const GetSuitIndexByName = (suitName) => Object.keys(suitsConfig).indexOf(suitName);
+var GetSuitIndexByName = function (suitName) { return Object.keys(SuitData_1.suitsConfig).indexOf(suitName); };
+exports.GetSuitIndexByName = GetSuitIndexByName;
