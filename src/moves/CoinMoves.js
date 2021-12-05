@@ -1,11 +1,8 @@
-"use strict";
-exports.__esModule = true;
-exports.AddCoinToPouch = exports.UpgradeCoinVidofnirVedrfolnir = exports.ClickCoinToUpgrade = exports.ClickBoardCoin = exports.ClickHandCoin = void 0;
-var MoveValidator_1 = require("../MoveValidator");
-var core_1 = require("boardgame.io/core");
-var StackHelpers_1 = require("../helpers/StackHelpers");
-var MovesHelpers_1 = require("../helpers/MovesHelpers");
-var HeroHelpers_1 = require("../helpers/HeroHelpers");
+import { CoinUpgradeValidation, IsValidMove } from "../MoveValidator";
+import { INVALID_MOVE } from "boardgame.io/core";
+import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
+import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 // todo Add logging
 /**
  * <h3>Выбор монеты в руке для выкладки монет.</h3>
@@ -20,18 +17,17 @@ var HeroHelpers_1 = require("../helpers/HeroHelpers");
  * @returns {string}
  * @constructor
  */
-var ClickHandCoin = function (G, ctx, coinId) {
-    var isValidMove = (0, MoveValidator_1.IsValidMove)({
+export var ClickHandCoin = function (G, ctx, coinId) {
+    var isValidMove = IsValidMove({
         obj: G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId],
         objId: coinId,
         range: [0, G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length]
     });
     if (!isValidMove) {
-        return core_1.INVALID_MOVE;
+        return INVALID_MOVE;
     }
     G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin = coinId;
 };
-exports.ClickHandCoin = ClickHandCoin;
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>
  * <p>Применения:</p>
@@ -45,10 +41,10 @@ exports.ClickHandCoin = ClickHandCoin;
  * @returns {string}
  * @constructor
  */
-var ClickBoardCoin = function (G, ctx, coinId) {
-    var player = G.publicPlayers[Number(ctx.currentPlayer)], isValidMove = (0, MoveValidator_1.IsValidMove)({ objId: coinId, range: [0, player.boardCoins.length] });
+export var ClickBoardCoin = function (G, ctx, coinId) {
+    var player = G.publicPlayers[Number(ctx.currentPlayer)], isValidMove = IsValidMove({ objId: coinId, range: [0, player.boardCoins.length] });
     if (!isValidMove) {
-        return core_1.INVALID_MOVE;
+        return INVALID_MOVE;
     }
     if (player.boardCoins[coinId] !== null) {
         var tempId = player.handCoins.indexOf(null);
@@ -65,10 +61,7 @@ var ClickBoardCoin = function (G, ctx, coinId) {
         }
         else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline") {
             G.actionsNum--;
-            if (G.actionsNum === 0) {
-                G.actionsNum = null;
-            }
-            (0, MovesHelpers_1.AfterBasicPickCardActions)(G, ctx, false);
+            AfterBasicPickCardActions(G, ctx, false);
         }
         else {
             var isEveryPlayersHandCoinsEmpty = G.publicPlayers.filter(function (player) {
@@ -77,7 +70,7 @@ var ClickBoardCoin = function (G, ctx, coinId) {
                 return player.handCoins.every(function (coin) { return coin === null; });
             });
             if (isEveryPlayersHandCoinsEmpty) {
-                if ((0, HeroHelpers_1.CheckAndStartUlineActionsOrContinue)(G, ctx) === "placeCoinsUline") {
+                if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
                     ctx.events.setPhase("placeCoinsUline");
                 }
                 else {
@@ -92,10 +85,9 @@ var ClickBoardCoin = function (G, ctx, coinId) {
         }
     }
     else {
-        return core_1.INVALID_MOVE;
+        return INVALID_MOVE;
     }
 };
-exports.ClickBoardCoin = ClickBoardCoin;
 /**
  * <h3>Выбор монеты для улучшения.</h3>
  * <p>Применения:</p>
@@ -111,10 +103,10 @@ exports.ClickBoardCoin = ClickBoardCoin;
  * @returns {string|*}
  * @constructor
  */
-var ClickCoinToUpgrade = function (G, ctx, coinId, type, isInitial) {
-    var isValidMove = (0, MoveValidator_1.CoinUpgradeValidation)(G, ctx, coinId, type);
+export var ClickCoinToUpgrade = function (G, ctx, coinId, type, isInitial) {
+    var isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
     if (!isValidMove) {
-        return core_1.INVALID_MOVE;
+        return INVALID_MOVE;
     }
     if (G.distinctions.length) {
         var isDistinction3 = G.distinctions[3] !== undefined;
@@ -125,9 +117,8 @@ var ClickCoinToUpgrade = function (G, ctx, coinId, type, isInitial) {
             delete G.distinctions[4];
         }
     }
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], coinId, type, isInitial);
+    EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
 };
-exports.ClickCoinToUpgrade = ClickCoinToUpgrade;
 /**
  * <h3>Выбор монеты для улучшения по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -143,18 +134,17 @@ exports.ClickCoinToUpgrade = ClickCoinToUpgrade;
  * @returns {string|*}
  * @constructor
  */
-var UpgradeCoinVidofnirVedrfolnir = function (G, ctx, coinId, type, isInitial) {
+export var UpgradeCoinVidofnirVedrfolnir = function (G, ctx, coinId, type, isInitial) {
     var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     var isValidMove = false;
     if (config) {
-        isValidMove = (0, MoveValidator_1.CoinUpgradeValidation)(G, ctx, coinId, type) && config.coinId !== coinId;
+        isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && config.coinId !== coinId;
     }
     if (!isValidMove) {
-        return core_1.INVALID_MOVE;
+        return INVALID_MOVE;
     }
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], coinId, type, isInitial);
+    EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
 };
-exports.UpgradeCoinVidofnirVedrfolnir = UpgradeCoinVidofnirVedrfolnir;
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -168,7 +158,6 @@ exports.UpgradeCoinVidofnirVedrfolnir = UpgradeCoinVidofnirVedrfolnir;
  * @returns {string|*}
  * @constructor
  */
-var AddCoinToPouch = function (G, ctx, coinId) {
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], coinId);
+export var AddCoinToPouch = function (G, ctx, coinId) {
+    EndActionFromStackAndAddNew(G, ctx, [], coinId);
 };
-exports.AddCoinToPouch = AddCoinToPouch;

@@ -1,6 +1,3 @@
-"use strict";
-exports.__esModule = true;
-exports.marketCoinsConfig = exports.initialPlayerCoinsConfig = void 0;
 /**
  * <h3>Конфиг базовых монет игрока.</h3>
  * <p>Применения:</p>
@@ -10,7 +7,7 @@ exports.marketCoinsConfig = exports.initialPlayerCoinsConfig = void 0;
  *
  * @type {[{isTriggerTrading: boolean, value: number}, number, number, number, number]}
  */
-exports.initialPlayerCoinsConfig = [
+export var initialPlayerCoinsConfig = [
     { value: 0, isTriggerTrading: true },
     2,
     3,
@@ -26,15 +23,15 @@ exports.initialPlayerCoinsConfig = [
  *
  * @type {[{count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]} Все монеты.
  */
-exports.marketCoinsConfig = [
+export var marketCoinsConfig = [
     {
         value: 5,
         count: function () { return ({
             2: 2,
             3: 2,
             4: 2,
-            5: 2
-        }); }
+            5: 2,
+        }); },
     },
     {
         value: 6,
@@ -42,8 +39,8 @@ exports.marketCoinsConfig = [
             2: 2,
             3: 2,
             4: 2,
-            5: 2
-        }); }
+            5: 2,
+        }); },
     },
     {
         value: 7,
@@ -51,8 +48,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 3,
-            5: 3
-        }); }
+            5: 3,
+        }); },
     },
     {
         value: 8,
@@ -60,8 +57,8 @@ exports.marketCoinsConfig = [
             2: 2,
             3: 2,
             4: 2,
-            5: 2
-        }); }
+            5: 2,
+        }); },
     },
     {
         value: 9,
@@ -69,8 +66,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 3,
-            5: 3
-        }); }
+            5: 3,
+        }); },
     },
     {
         value: 10,
@@ -78,8 +75,8 @@ exports.marketCoinsConfig = [
             2: 2,
             3: 2,
             4: 2,
-            5: 2
-        }); }
+            5: 2,
+        }); },
     },
     {
         value: 11,
@@ -87,8 +84,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 3,
-            5: 3
-        }); }
+            5: 3,
+        }); },
     },
     {
         value: 12,
@@ -96,8 +93,8 @@ exports.marketCoinsConfig = [
             2: 2,
             3: 2,
             4: 2,
-            5: 2
-        }); }
+            5: 2,
+        }); },
     },
     {
         value: 13,
@@ -105,8 +102,8 @@ exports.marketCoinsConfig = [
             2: 2,
             3: 2,
             4: 2,
-            5: 2
-        }); }
+            5: 2,
+        }); },
     },
     {
         value: 14,
@@ -114,8 +111,8 @@ exports.marketCoinsConfig = [
             2: 2,
             3: 2,
             4: 2,
-            5: 2
-        }); }
+            5: 2,
+        }); },
     },
     {
         value: 15,
@@ -123,8 +120,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 1,
-            5: 1
-        }); }
+            5: 1,
+        }); },
     },
     {
         value: 16,
@@ -132,8 +129,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 1,
-            5: 1
-        }); }
+            5: 1,
+        }); },
     },
     {
         value: 17,
@@ -141,8 +138,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 1,
-            5: 1
-        }); }
+            5: 1,
+        }); },
     },
     {
         value: 18,
@@ -150,8 +147,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 1,
-            5: 1
-        }); }
+            5: 1,
+        }); },
     },
     {
         value: 19,
@@ -159,8 +156,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 1,
-            5: 1
-        }); }
+            5: 1,
+        }); },
     },
     {
         value: 20,
@@ -168,8 +165,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 1,
-            5: 1
-        }); }
+            5: 1,
+        }); },
     },
     {
         value: 21,
@@ -177,8 +174,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 1,
-            5: 1
-        }); }
+            5: 1,
+        }); },
     },
     {
         value: 22,
@@ -186,8 +183,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 1,
-            5: 1
-        }); }
+            5: 1,
+        }); },
     },
     {
         value: 23,
@@ -195,8 +192,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 1,
-            5: 1
-        }); }
+            5: 1,
+        }); },
     },
     {
         value: 24,
@@ -204,8 +201,8 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 1,
-            5: 1
-        }); }
+            5: 1,
+        }); },
     },
     {
         value: 25,
@@ -213,7 +210,7 @@ exports.marketCoinsConfig = [
             2: 1,
             3: 1,
             4: 1,
-            5: 1
-        }); }
+            5: 1,
+        }); },
     },
 ];

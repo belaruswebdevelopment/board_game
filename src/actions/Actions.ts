@@ -27,12 +27,13 @@ import {
 } from "./CampActions";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AddDataToLog, LogTypes} from "../Logging";
-import {MyGameState} from "../GameSetup";
+import {CampDeckCardTypes, DeckCardTypes, MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IArtefactCampCard, IMercenaryCampCard, isArtefactCard} from "../Camp";
 import {IVariants} from "../data/HeroData";
 import {IHero} from "../Hero";
 
+// todo Check my types
 export type ArgsTypes = (string | number | boolean | null | object)[]
 
 /**
@@ -48,10 +49,9 @@ export type ArgsTypes = (string | number | boolean | null | object)[]
  * @param ctx
  * @param data Конфиг действий.
  * @param args Дополнительные аргументы.
- * @returns {*} Вызов действия.
  * @constructor
  */
-export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args: ArgsTypes) => {
+export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args: ArgsTypes): void => {
     let action: Function | null;
     switch (data.actionName) {
         case "DrawProfitAction":
@@ -141,7 +141,7 @@ export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args
         default:
             action = null;
     }
-    return action && action(G, ctx, data.config, ...args);
+    action?.(G, ctx, data.config, ...args);
 };
 
 /**
@@ -156,11 +156,10 @@ export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args
  * @param ctx
  * @param config Конфиг действий героя или карты улучшающей монеты.
  * @param args Дополнительные аргументы.
- * @returns {*}
  * @constructor
  */
 const UpgradeCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
-    UpgradeCoin(G, ctx, config, ...args);
+    UpgradeCoin(G, ctx, config, ...args as [number, string, boolean]);
     EndActionFromStackAndAddNew(G, ctx);
 };
 
@@ -185,7 +184,9 @@ const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
         ctx.events!.setStage!(playerConfig.stageName);
     }
     G.actionsNum = config.number ?? 1;
-    G.drawProfit = config.name as string;
+    if (config.name) {
+        G.drawProfit = config.name;
+    }
 };
 
 /**
@@ -198,7 +199,6 @@ const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
- * @returns {*}
  * @constructor
  */
 const AddBuffToPlayer = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
@@ -222,7 +222,6 @@ const AddBuffToPlayer = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
  * @param config Конфиг действий героя.
  * @param suitId Id фракции.
  * @param cardId Id карты.
- * @returns {*}
  * @constructor
  */
 export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
@@ -268,7 +267,6 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
  * @param ctx
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
- * @returns {*}
  * @constructor
  */
 const DiscardCardFromTavernAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
@@ -288,8 +286,6 @@ const DiscardCardFromTavernAction = (G: MyGameState, ctx: Ctx, config: IConfig, 
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
- * @returns {string} INVALID_MOVE
- * @returns {string|*}
  * @constructor
  */
 const CheckDiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig): string | void => {
@@ -321,7 +317,6 @@ const CheckDiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config
  * @param ctx
  * @param config Конфиг действий героя.
  * @param suitId Id фракции.
- * @returns {*}
  * @constructor
  */
 const PlaceCards = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
@@ -334,8 +329,8 @@ const PlaceCards = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): 
                 points: playerVariants[suit].points,
                 name: "Olwin",
             } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
-    добавил карту Олвин во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту 
+        Олвин во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);
         if (G.actionsNum === 2) {
             const variants: IVariants = {
@@ -396,7 +391,6 @@ const PlaceCards = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): 
  *
  * @param G
  * @param ctx
- * @returns {*}
  * @constructor
  */
 const CheckPickDiscardCard = (G: MyGameState, ctx: Ctx): void => {
@@ -417,12 +411,11 @@ const CheckPickDiscardCard = (G: MyGameState, ctx: Ctx): void => {
  * @param ctx
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
- * @returns {*}
  * @constructor
  */
 const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
     const isAdded: boolean = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
-        pickedCard: ICard | IActionCard = G.discardCardsDeck.splice(cardId, 1)[0];
+        pickedCard: DeckCardTypes = G.discardCardsDeck.splice(cardId, 1)[0];
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
     добавил карту ${pickedCard.name} из дискарда.`);
     if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
@@ -461,7 +454,6 @@ const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: numb
  *
  * @param G
  * @param ctx
- * @returns {*}
  * @constructor
  */
 const PassEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx): void => {
@@ -481,14 +473,12 @@ const PassEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx): void => {
  * @param ctx
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
- * @returns {*}
  * @constructor
  */
 const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].campCards
-        .filter(card => card.type === "наёмник")[cardId];
-    const pickedCard: ICard | IArtefactCampCard | IMercenaryCampCard | IHero | null =
-        G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+        .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")[cardId];
+    const pickedCard: ICard | CampDeckCardTypes | IHero | null = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (isArtefactCard(pickedCard)) {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
         во время фазы Enlistment Mercenaries выбрал наёмника '${pickedCard.name}'.`);
@@ -516,12 +506,11 @@ const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfi
  * @param ctx
  * @param config Конфиг действий героя.
  * @param suitId Id фракции.
- * @returns {*}
  * @constructor
  */
 const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
     const suit: string = Object.keys(suitsConfig)[suitId],
-        pickedCard: ICard | IArtefactCampCard | IMercenaryCampCard | IHero | null =
+        pickedCard: ICard | CampDeckCardTypes | IHero | null =
             G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (isArtefactCard(pickedCard) && pickedCard.stack[0].variants) {
         const mercenaryCard: ICard = CreateCard({

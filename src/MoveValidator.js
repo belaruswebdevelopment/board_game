@@ -1,8 +1,5 @@
-"use strict";
-exports.__esModule = true;
-exports.moveValidators = exports.moveBy = exports.CoinUpgradeValidation = exports.IsValidMove = void 0;
-var SuitHelpers_1 = require("./helpers/SuitHelpers");
-var ScoreHelpers_1 = require("./helpers/ScoreHelpers");
+import { GetSuitIndexByName } from "./helpers/SuitHelpers";
+import { TotalRank } from "./helpers/ScoreHelpers";
 /**
  * Validates arguments inside of move.
  * obj - object to validate.
@@ -18,25 +15,12 @@ var ScoreHelpers_1 = require("./helpers/ScoreHelpers");
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param args
  * @constructor
+ * @param obj
  */
-var IsValidMove = function () {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-    }
-    var isValid = true;
-    for (var _a = 0, args_1 = args; _a < args_1.length; _a++) {
-        var item = args_1[_a];
-        isValid = isValid && CheckMove(item);
-        if (!isValid) {
-            break;
-        }
-    }
-    return isValid;
+export var IsValidMove = function (obj) {
+    return CheckMove(obj);
 };
-exports.IsValidMove = IsValidMove;
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -102,7 +86,7 @@ var ValidateByValues = function (num, values) { return values.includes(num); };
  * @param type
  * @constructor
  */
-var CoinUpgradeValidation = function (G, ctx, coinId, type) {
+export var CoinUpgradeValidation = function (G, ctx, coinId, type) {
     var _a, _b;
     if (type === "hand") {
         var handCoinPosition = G.publicPlayers[Number(ctx.currentPlayer)]
@@ -119,7 +103,6 @@ var CoinUpgradeValidation = function (G, ctx, coinId, type) {
     }
     return false;
 };
-exports.CoinUpgradeValidation = CoinUpgradeValidation;
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -129,35 +112,35 @@ exports.CoinUpgradeValidation = CoinUpgradeValidation;
  *
  * @todo Саше: сделать описание функции и параметров.
  */
-exports.moveBy = {
-    "null": {},
+export var moveBy = {
+    null: {},
     placeCoins: {
         default1: "ClickHandCoin",
         default2: "ClickBoardCoin",
-        default_advanced: "BotsPlaceAllCoins"
+        default_advanced: "BotsPlaceAllCoins",
     },
     pickCards: {
-        "default": "ClickCard",
+        default: "ClickCard",
         defaultPickCampCard: "ClickCampCard",
         pickHero: "ClickHeroCard",
         upgradeCoin: "ClickCoinToUpgrade",
         discardSuitCard: "discardSuitCard"
     },
     getDistinctions: {
-        "default": "ClickDistinctionCard",
+        default: "ClickDistinctionCard",
         pickDistinctionCard: "ClickCardToPickDistinction",
-        upgradeCoin: "ClickCoinToUpgrade"
+        upgradeCoin: "ClickCoinToUpgrade",
     },
     endTier: {
-        pickHero: "ClickHeroCard"
+        pickHero: "ClickHeroCard",
     },
     enlistmentMercenaries: {
         pickHero: "ClickHeroCard",
-        upgradeCoin: "ClickCoinToUpgrade"
+        upgradeCoin: "ClickCoinToUpgrade",
     },
     placeCoinsUline: {},
     getMjollnirProfit: {},
-    brisingamensEndGame: {}
+    brisingamensEndGame: {},
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -168,7 +151,7 @@ exports.moveBy = {
  *
  * @todo Саше: сделать описание функции и параметров.
  */
-exports.moveValidators = {
+export var moveValidators = {
     // todo Add all validators to all moves
     ClickHandCoin: {
         getRange: function (_a) {
@@ -178,8 +161,13 @@ exports.moveValidators = {
         },
         validate: function (_a) {
             var G = _a.G, ctx = _a.ctx, id = _a.id;
-            return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined &&
-                G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id] !== null;
+            if (typeof id !== "undefined") {
+                return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined &&
+                    G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id] !== null;
+            }
+            else {
+                console.log("Param id must be type Number not Undefined");
+            }
         }
     },
     ClickBoardCoin: {
@@ -190,8 +178,13 @@ exports.moveValidators = {
         },
         validate: function (_a) {
             var G = _a.G, ctx = _a.ctx, id = _a.id;
-            return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined &&
-                G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[id] === null;
+            if (typeof id !== "undefined") {
+                return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined &&
+                    G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[id] === null;
+            }
+            else {
+                console.log("Param id must be type Number not Undefined");
+            }
         }
     },
     BotsPlaceAllCoins: {
@@ -200,10 +193,15 @@ exports.moveValidators = {
             return ([0, G.botData.allCoinsOrder.length]);
         },
         getValue: function (_a) {
-            var G = _a.G, ctx = _a.ctx, id = _a.id;
-            return G.botData.allCoinsOrder[id];
+            var G = _a.G, id = _a.id;
+            if (typeof id !== "undefined") {
+                return G.botData.allCoinsOrder[id];
+            }
+            else {
+                console.log("Param id must be type Number not Undefined");
+            }
         },
-        validate: function () { return true; }
+        validate: function () { return true; },
     },
     ClickHeroCard: {
         getRange: function (_a) {
@@ -212,15 +210,23 @@ exports.moveValidators = {
         },
         validate: function (_a) {
             var G = _a.G, ctx = _a.ctx, id = _a.id;
-            var isValid = G.heroes[id].active;
-            // todo Add validators to others heroes
-            if (G.heroes[id].name === "Hourya") {
-                var suitId = (0, SuitHelpers_1.GetSuitIndexByName)(G.heroes[id].stack[0].config.conditions.suitCountMin.suit);
-                isValid = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].reduce(ScoreHelpers_1.TotalRank, 0) >=
-                    G.heroes[id].stack[0].config.conditions.suitCountMin.value;
+            if (typeof id !== "undefined") {
+                var isValid = G.heroes[id].active;
+                // todo Add validators to others heroes
+                if (G.heroes[id].name === "Hourya") {
+                    var config = G.heroes[id].stack[0].config;
+                    if (config && config.conditions) {
+                        var suitId = GetSuitIndexByName(config.conditions.suitCountMin.suit);
+                        isValid = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].reduce(TotalRank, 0) >=
+                            config.conditions.suitCountMin.value;
+                    }
+                }
+                return isValid;
             }
-            return isValid;
-        }
+            else {
+                console.log("Param id must be type Number not Undefined");
+            }
+        },
     },
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
     ClickCoinToUpgrade: {
@@ -231,12 +237,23 @@ exports.moveValidators = {
         },
         validate: function (_a) {
             var G = _a.G, ctx = _a.ctx, id = _a.id, type = _a.type;
-            return (0, exports.CoinUpgradeValidation)(G, ctx, id, type);
+            if (typeof id !== "undefined" && typeof type !== "undefined") {
+                return CoinUpgradeValidation(G, ctx, id, type);
+            }
+            else if (typeof id === "undefined" && typeof type === "undefined") {
+                console.log("Param id must be type Number not Undefined and param type must be type string not Undefined");
+            }
+            else if (typeof id === "undefined") {
+                console.log("Param id must be type Number not Undefined");
+            }
+            else if (typeof type === "undefined") {
+                console.log("Param type must be type string not Undefined");
+            }
         }
     },
     ClickCardToPickDistinction: {
         getRange: function () { return ([0, 3]); },
-        validate: function () { return true; }
+        validate: function () { return true; },
     },
     ClickDistinctionCard: {
         getRange: function (_a) {
@@ -246,7 +263,7 @@ exports.moveValidators = {
         validate: function (_a) {
             var G = _a.G, ctx = _a.ctx, id = _a.id;
             return G.distinctions.indexOf(Number(ctx.currentPlayer)) === id;
-        }
+        },
     },
     ClickCampCard: {
         getRange: function (_a) {
@@ -255,9 +272,8 @@ exports.moveValidators = {
         },
         validate: function (_a) {
             var G = _a.G, ctx = _a.ctx;
-            return G.expansions.thingvellir.active &&
-                (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
-                    (!G.campPicked && G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp));
-        }
-    }
+            return G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
+                (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
+        },
+    },
 };

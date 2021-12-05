@@ -1,18 +1,15 @@
-"use strict";
-exports.__esModule = true;
-exports.SetupGame = void 0;
-var Player_1 = require("./Player");
-var Card_1 = require("./Card");
-var SuitData_1 = require("./data/SuitData");
-var CoinData_1 = require("./data/CoinData");
-var Coin_1 = require("./Coin");
-var BotConfig_1 = require("./BotConfig");
-var Priority_1 = require("./Priority");
-var ActionCardData_1 = require("./data/ActionCardData");
-var Hero_1 = require("./Hero");
-var Camp_1 = require("./Camp");
-var CampData_1 = require("./data/CampData");
-var SuitHelpers_1 = require("./helpers/SuitHelpers");
+import { BuildPlayer, BuildPublicPlayer } from "./Player";
+import { BuildCards, GetAverageSuitCard } from "./Card";
+import { suitsConfig } from "./data/SuitData";
+import { marketCoinsConfig } from "./data/CoinData";
+import { BuildCoins } from "./Coin";
+import { GetAllPicks, k_combinations, Permute } from "./BotConfig";
+import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
+import { actionCardsConfigArray } from "./data/ActionCardData";
+import { BuildHeroes } from "./Hero";
+import { BuildCampCards } from "./Camp";
+import { artefactsConfig, mercenariesConfig } from "./data/CampData";
+import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 /**
  * <h3>Сетап игры.</h3>
  * <p>Применения:</p>
@@ -23,26 +20,26 @@ var SuitHelpers_1 = require("./helpers/SuitHelpers");
  * @param ctx
  * @constructor
  */
-var SetupGame = function (ctx) {
-    var suitsNum = 5, tierToEnd = 2, campNum = 5, actionsNum = null, log = true, debug = false, drawProfit = null, suitIdForMjollnir = null, expansions = {
+export var SetupGame = function (ctx) {
+    var suitsNum = 5, tierToEnd = 2, campNum = 5, actionsNum = 0, log = true, debug = false, drawProfit = "", suitIdForMjollnir = null, expansions = {
         thingvellir: {
-            active: true
-        }
+            active: true,
+        },
     }, totalScore = [], logData = [], decks = [], discardCardsDeck = [], campDecks = [], distinctions = Array(suitsNum).fill(null);
-    var winner = null, campPicked = false, camp = [], discardCampCardsDeck = [];
+    var winner = [], campPicked = false, camp = [], discardCampCardsDeck = [];
     if (expansions.thingvellir.active) {
         for (var i = 0; i < tierToEnd; i++) {
             // todo Camp cards must be hidden from users?
-            campDecks[i] = (0, Camp_1.BuildCampCards)(i, CampData_1.artefactsConfig, CampData_1.mercenariesConfig);
+            campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
             campDecks[i] = ctx.random.Shuffle(campDecks[i]);
         }
         camp = campDecks[0].splice(0, campNum);
     }
     for (var i = 0; i < tierToEnd; i++) {
         // todo Deck cards must be hidden from users?
-        decks[i] = (0, Card_1.BuildCards)({
-            suits: SuitData_1.suitsConfig,
-            actions: ActionCardData_1.actionCardsConfigArray
+        decks[i] = BuildCards({
+            suits: suitsConfig,
+            actions: actionCardsConfigArray
         }, {
             players: ctx.numPlayers,
             tier: i
@@ -55,40 +52,41 @@ var SetupGame = function (ctx) {
             heroesConfigArray.push(expansion);
         }
     }
-    var heroes = (0, Hero_1.BuildHeroes)(heroesConfigArray), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
+    var heroes = BuildHeroes(heroesConfigArray), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (var i = 0; i < tavernsNum; i++) {
         // todo Taverns cards must be hidden from users?
         taverns[i] = decks[0].splice(0, drawSize);
     }
     var players = {}, publicPlayers = [], publicPlayersOrder = [], exchangeOrder = [];
+    var priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
     for (var i = 0; i < ctx.numPlayers; i++) {
-        players[i] = (0, Player_1.BuildPlayer)();
-        publicPlayers[i] = (0, Player_1.BuildPublicPlayer)(ctx.numPlayers, suitsNum, "Dan" + i);
+        var randomPriorityIndex = Math.floor(Math.random() * priorities.length), priority = priorities.splice(randomPriorityIndex, 1)[0];
+        players[i] = BuildPlayer();
+        publicPlayers[i] = BuildPublicPlayer(ctx.numPlayers, suitsNum, "Dan" + i, priority);
     }
-    (0, Priority_1.BuildPriorities)(ctx.numPlayers, publicPlayers);
-    var marketCoinsUnique = [], marketCoins = (0, Coin_1.BuildCoins)(CoinData_1.marketCoinsConfig, {
+    var marketCoinsUnique = [], marketCoins = BuildCoins(marketCoinsConfig, {
         count: marketCoinsUnique,
         players: ctx.numPlayers,
         isInitial: false,
-        isTriggerTrading: false
+        isTriggerTrading: false,
     });
     var averageCards = [], initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined)
-        .map(function (item, index) { return index; }), initCoinsOrder = (0, BotConfig_1.k_combinations)(initHandCoinsId, tavernsNum);
+        .map(function (item, index) { return index; }), initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     var allCoinsOrder = [];
-    for (var suit in SuitData_1.suitsConfig) {
-        averageCards[(0, SuitHelpers_1.GetSuitIndexByName)(suit)] = (0, Card_1.GetAverageSuitCard)(SuitData_1.suitsConfig[suit], {
+    for (var suit in suitsConfig) {
+        averageCards[GetSuitIndexByName(suit)] = GetAverageSuitCard(suitsConfig[suit], {
             players: ctx.numPlayers,
             tier: 0
         });
     }
     for (var i = 0; i < initCoinsOrder.length; i++) {
-        allCoinsOrder = allCoinsOrder.concat((0, BotConfig_1.Permute)(initCoinsOrder[i]));
+        allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
     }
     var botData = {
         allCoinsOrder: allCoinsOrder,
-        allPicks: (0, BotConfig_1.GetAllPicks)({ tavernsNum: tavernsNum, playersNum: ctx.numPlayers }),
+        allPicks: GetAllPicks({ tavernsNum: tavernsNum, playersNum: ctx.numPlayers }),
         maxIter: 1000,
-        deckLength: decks[0].length
+        deckLength: decks[0].length,
     };
     return {
         log: log,
@@ -122,7 +120,6 @@ var SetupGame = function (ctx) {
         marketCoins: marketCoins,
         marketCoinsUnique: marketCoinsUnique,
         averageCards: averageCards,
-        botData: botData
+        botData: botData,
     };
 };
-exports.SetupGame = SetupGame;

@@ -1,5 +1,6 @@
 import React from "react";
 import {LogTypes} from "../Logging";
+import {GameBoard} from "../GameBoard";
 
 /**
  * <h3>Отрисовка лог панели.</h3>
@@ -11,9 +12,9 @@ import {LogTypes} from "../Logging";
  * @param data Глобальные параметры.
  * @constructor
  */
-export const DrawLogData = (data): JSX.Element | null => {
+export const DrawLogData = (data: GameBoard): JSX.Element | null => {
     if (data.props.G.log) {
-        const loggingData = [];
+        const loggingData: JSX.Element[] = [];
         for (let i: number = data.props.G.logData.length - 1; i >= 0; i--) {
             if (data.props.G.logData[i].type === LogTypes.PRIVATE) {
                 loggingData.push(

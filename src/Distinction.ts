@@ -2,9 +2,8 @@ import {AddDataToLog, LogTypes} from "./Logging";
 import {suitsConfig} from "./data/SuitData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {TotalRank} from "./helpers/ScoreHelpers";
-import {MyGameState} from "./GameSetup";
+import {DeckCardTypes, MyGameState} from "./GameSetup";
 import {Ctx} from "boardgame.io";
-import {IActionCard, ICard} from "./Card";
 
 /**
  * <h3>Подсчёт преимуществ по количеству шевронов фракций в конце эпохи.</h3>
@@ -24,7 +23,7 @@ export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
         const result: number | undefined = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[i] = result;
         if (suit === "explorer" && result === undefined) {
-            const discardedCard: ICard | IActionCard = G.decks[1].splice(0, 1)[0];
+            const discardedCard: DeckCardTypes = G.decks[1].splice(0, 1)[0];
             AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков 
             сброшена карта: ${discardedCard.name}.`);
         }

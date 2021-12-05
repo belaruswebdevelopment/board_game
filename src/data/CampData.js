@@ -1,7 +1,4 @@
-"use strict";
-exports.__esModule = true;
-exports.artefactsConfig = exports.mercenariesConfig = void 0;
-var ScoreHelpers_1 = require("../helpers/ScoreHelpers");
+import { TotalRank } from "../helpers/ScoreHelpers";
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -22,19 +19,19 @@ var Fafnir_Baleygr = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "goCamp",
-                    value: true
-                }
-            }
+                    value: true,
+                },
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -56,10 +53,10 @@ var Draupnir = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: function (player) { return player.boardCoins.filter(function (coin) { return (coin === null || coin === void 0 ? void 0 : coin.value) >= 15; }).length * 6; }
+    scoringRule: function (player) { return player.boardCoins.filter(function (coin) { return (coin === null || coin === void 0 ? void 0 : coin.value) >= 15; }).length * 6; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -82,10 +79,10 @@ var Vegvisir = {
     points: 13,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -107,10 +104,10 @@ var Svalinn = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: function (player) { return player.heroes.length * 5; }
+    scoringRule: function (player) { return player.heroes.length * 5; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -133,19 +130,19 @@ var Megingjord = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "noHero",
-                    value: true
-                }
-            }
+                    value: true,
+                },
+            },
         },
     ],
-    scoringRule: function () { return 28; }
+    scoringRule: function () { return 28; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -168,13 +165,13 @@ var Vidofnir_Vedrfolnir = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
         {
-            actionName: "StartVidofnirVedrfolnirAction"
+            actionName: "StartVidofnirVedrfolnirAction",
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -199,16 +196,16 @@ var Brisingamens = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "discardCardEndGame",
-                    value: true
-                }
-            }
+                    value: true,
+                },
+            },
         },
         {
             actionName: "DrawProfitAction",
@@ -216,14 +213,14 @@ var Brisingamens = {
                 stageName: "pickDiscardCard",
                 name: "BrisingamensAction",
                 number: 2,
-                drawName: "Brisingamens"
-            }
+                drawName: "Brisingamens",
+            },
         },
         {
-            actionName: "PickDiscardCard"
+            actionName: "PickDiscardCard",
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -245,19 +242,19 @@ var Mjollnir = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "getMjollnirProfit",
-                    value: true
-                }
-            }
+                    value: true,
+                },
+            },
         },
     ],
-    scoringRule: function (player, suitId) { return player.cards[suitId].reduce(ScoreHelpers_1.TotalRank, 0) * 2; }
+    scoringRule: function (player, suitId) { return player.cards[suitId].reduce(TotalRank, 0) * 2; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -279,16 +276,16 @@ var Hofud = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
         {
             actionName: "StartDiscardSuitCard",
             config: {
-                suit: "warrior"
-            }
+                suit: "warrior",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -310,11 +307,11 @@ var Hrafnsmerki = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
     ],
     scoringRule: function (player) { return player.cards.flat().filter(function (card) { return card.type === "наёмник"; }).length
-        * 5; }
+        * 5; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -337,13 +334,13 @@ var Jarnglofi = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
         {
-            actionName: "DiscardTradingCoin"
+            actionName: "DiscardTradingCoin",
         },
     ],
-    scoringRule: function () { return 24; }
+    scoringRule: function () { return 24; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -366,16 +363,16 @@ var Gjallarhorn = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards"
+            actionName: "AddCampCardToCards",
         },
         {
             actionName: "PickHero",
             config: {
-                stageName: "pickHero"
-            }
+                stageName: "pickHero",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Конфиг карт наёмников для кэмпа.</h3>
@@ -386,79 +383,79 @@ var Gjallarhorn = {
  *
  * @type {([{warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}}, {explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}}, {hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, null]|[{blacksmith: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}}, {warrior: {rank: number, suit: string, points: number}, miner: {rank: number, suit: string, points: number}}, {blacksmith: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: number}}, {warrior: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}}, {explorer: {rank: number, suit: string, points: number}, miner: {rank: number, suit: string, points: number}}, null])[]} Все карты наёмников для кэмпа.
  */
-exports.mercenariesConfig = [
+export var mercenariesConfig = [
     [
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 6
+                points: 6,
             },
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 8
-            }
+                points: 8,
+            },
         },
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 6
+                points: 6,
             },
             blacksmith: {
                 suit: "blacksmith",
                 rank: 1,
-                points: null
-            }
+                points: null,
+            },
         },
         {
             hunter: {
                 suit: "hunter",
                 rank: 1,
-                points: null
+                points: null,
             },
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 6
-            }
+                points: 6,
+            },
         },
         {
             hunter: {
                 suit: "hunter",
                 rank: 1,
-                points: null
+                points: null,
             },
             miner: {
                 suit: "miner",
                 rank: 1,
-                points: 1
-            }
+                points: 1,
+            },
         },
         {
             blacksmith: {
                 suit: "blacksmith",
                 rank: 1,
-                points: null
+                points: null,
             },
             miner: {
                 suit: "miner",
                 rank: 1,
-                points: 1
-            }
+                points: 1,
+            },
         },
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 9
+                points: 9,
             },
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 11
-            }
+                points: 11,
+            },
         },
     ],
     [
@@ -466,73 +463,73 @@ exports.mercenariesConfig = [
             hunter: {
                 suit: "hunter",
                 rank: 1,
-                points: null
+                points: null,
             },
             blacksmith: {
                 suit: "blacksmith",
                 rank: 1,
-                points: null
-            }
+                points: null,
+            },
         },
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 6
+                points: 6,
             },
             miner: {
                 suit: "miner",
                 rank: 1,
-                points: 1
-            }
+                points: 1,
+            },
         },
         {
             blacksmith: {
                 suit: "blacksmith",
                 rank: 1,
-                points: null
+                points: null,
             },
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 8
-            }
+                points: 8,
+            },
         },
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 6
+                points: 6,
             },
             hunter: {
                 suit: "hunter",
                 rank: 1,
-                points: null
-            }
+                points: null,
+            },
         },
         {
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 8
+                points: 8,
             },
             miner: {
                 suit: "miner",
                 rank: 1,
-                points: 1
-            }
+                points: 1,
+            },
         },
         {
             warrior: {
                 suit: "warrior",
                 rank: 1,
-                points: 9
+                points: 9,
             },
             explorer: {
                 suit: "explorer",
                 rank: 1,
-                points: 11
-            }
+                points: 11,
+            },
         },
     ],
 ];
@@ -545,7 +542,7 @@ exports.mercenariesConfig = [
  *
  * @type {{Svalinn: {scoringRule: (function(*)), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Brisingamens: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string}|{config: {number: number, stageName: string, name: string}, actionName: string}|{config: {number: number, stageName: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Vidofnir_Vedrfolnir: {scoringRule: (function(): number), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Hrafnsmerki: {scoringRule: (function(*)), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Gjallarhorn: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {stageName: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Hofud: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {stageName: string, name: string}, actionName: string}|{config: {suit: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Draupnir: {scoringRule: (function(*)), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Mjollnir: {scoringRule: (function(*, *)), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Jarnglofi: {scoringRule: (function(): number), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Megingjord: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Fafnir_Baleygr: {scoringRule: (function(): number), game: string, stack: ({actionName: string}|{config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}, Vegvisir: {scoringRule: (function(): number), game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: number, suit: string, points: number}}} Все карты артефактов для кэмпа.
  */
-exports.artefactsConfig = {
+export var artefactsConfig = {
     Fafnir_Baleygr: Fafnir_Baleygr,
     Draupnir: Draupnir,
     Vegvisir: Vegvisir,

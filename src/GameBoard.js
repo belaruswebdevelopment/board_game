@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,16 +13,23 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
-exports.__esModule = true;
-exports.GameBoard = void 0;
-var react_1 = __importDefault(require("react"));
-var GameBoardUI_1 = require("./ui/GameBoardUI");
-var PlayerUI_1 = require("./ui/PlayerUI");
-var DebugUI_1 = require("./ui/DebugUI");
-var LogUI_1 = require("./ui/LogUI");
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import React from "react";
+import { DrawCamp, DrawCurrentPlayerTurn, DrawDistinctions, DrawHeroes, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner, } from "./ui/GameBoardUI";
+import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins, } from "./ui/PlayerUI";
+import { DrawDebugData } from "./ui/DebugUI";
+import { DrawLogData } from "./ui/LogUI";
 /**
  * <h3>Отрисовка игрового стола.</h3>
  * <p>Применения:</p>
@@ -50,27 +56,10 @@ var GameBoard = /** @class */ (function (_super) {
         return _this;
     }
     GameBoard.prototype.render = function () {
-        var gridClass = "col-span-4", classes = "col-span-4 text-center underline border", tierCardsUI = (0, GameBoardUI_1.DrawTierCards)(this), currentPlayerTurnUI = (0, GameBoardUI_1.DrawCurrentPlayerTurn)(this), winnerUI = (0, GameBoardUI_1.DrawWinner)(this), marketCoinsUI = (0, GameBoardUI_1.DrawMarketCoins)(this), drawHeroesUI = (0, GameBoardUI_1.DrawHeroes)(this), drawCampUI = this.props.G.expansions.thingvellir.active ? (0, GameBoardUI_1.DrawCamp)(this) : null, drawDistinctionsUI = (0, GameBoardUI_1.DrawDistinctions)(this), drawDistinctionProfitUI = this.props.G.drawProfit ?
-            (0, GameBoardUI_1.DrawProfit)(this, this.props.G.drawProfit) : this.props.G.drawProfit, tavernsUI = (0, GameBoardUI_1.DrawTaverns)(this, gridClass), playersBoardsCoinsUI = (0, PlayerUI_1.DrawPlayersBoardsCoins)(this), playersHandsCoinsUI = (0, PlayerUI_1.DrawPlayersHandsCoins)(this), playersBoardsUI = (0, PlayerUI_1.DrawPlayersBoards)(this), logUI = (0, LogUI_1.DrawLogData)(this), debugUI = (0, DebugUI_1.DrawDebugData)(this);
-        return (react_1["default"].createElement("div", { className: "flex" },
-            react_1["default"].createElement("div", { className: "grid auto-cols-min grid-cols-1 md:grid-cols-12 gap-1" },
-                react_1["default"].createElement("div", { className: classes }, tierCardsUI),
-                react_1["default"].createElement("div", { className: classes }, currentPlayerTurnUI),
-                react_1["default"].createElement("div", { className: classes }, winnerUI),
-                react_1["default"].createElement("div", { className: "".concat(gridClass, " justify-self-center") }, marketCoinsUI),
-                react_1["default"].createElement("div", { className: "".concat(gridClass, " justify-self-center") }, drawHeroesUI),
-                react_1["default"].createElement("div", { className: "".concat(gridClass, " justify-self-center h-full flex flex-col justify-evenly") },
-                    drawDistinctionsUI,
-                    drawDistinctionProfitUI,
-                    drawCampUI),
-                tavernsUI,
-                react_1["default"].createElement("div", { className: "col-span-full flex flex-col gap-1" },
-                    react_1["default"].createElement("div", { className: "flex flex-col lg:flex-row gap-1" }, playersBoardsCoinsUI),
-                    react_1["default"].createElement("div", { className: "flex flex-col lg:flex-row gap-1" }, playersHandsCoinsUI),
-                    react_1["default"].createElement("div", { className: "flex items-start flex-col lg:flex-row gap-1" }, playersBoardsUI))),
-            logUI,
-            debugUI));
+        var gridClass = "col-span-4", classes = "col-span-4 text-center underline border", tierCardsUI = DrawTierCards(this), currentPlayerTurnUI = DrawCurrentPlayerTurn(this), winnerUI = DrawWinner(this), marketCoinsUI = DrawMarketCoins(this), drawHeroesUI = DrawHeroes(this), drawCampUI = this.props.G.expansions.thingvellir.active ? DrawCamp(this) : null, drawDistinctionsUI = DrawDistinctions(this), drawDistinctionProfitUI = this.props.G.drawProfit ?
+            DrawProfit(this, this.props.G.drawProfit) : this.props.G.drawProfit, tavernsUI = DrawTaverns(this, gridClass), playersBoardsCoinsUI = DrawPlayersBoardsCoins(this), playersHandsCoinsUI = DrawPlayersHandsCoins(this), playersBoardsUI = DrawPlayersBoards(this), logUI = DrawLogData(this), debugUI = DrawDebugData(this);
+        return (_jsxs("div", __assign({ className: "flex" }, { children: [_jsxs("div", __assign({ className: "grid auto-cols-min grid-cols-1 md:grid-cols-12 gap-1" }, { children: [_jsx("div", __assign({ className: classes }, { children: tierCardsUI }), void 0), _jsx("div", __assign({ className: classes }, { children: currentPlayerTurnUI }), void 0), _jsx("div", __assign({ className: classes }, { children: winnerUI }), void 0), _jsx("div", __assign({ className: "".concat(gridClass, " justify-self-center") }, { children: marketCoinsUI }), void 0), _jsx("div", __assign({ className: "".concat(gridClass, " justify-self-center") }, { children: drawHeroesUI }), void 0), _jsxs("div", __assign({ className: "".concat(gridClass, " justify-self-center h-full flex flex-col justify-evenly") }, { children: [drawDistinctionsUI, drawDistinctionProfitUI, drawCampUI] }), void 0), tavernsUI, _jsxs("div", __assign({ className: "col-span-full flex flex-col gap-1" }, { children: [_jsx("div", __assign({ className: "flex flex-col lg:flex-row gap-1" }, { children: playersBoardsCoinsUI }), void 0), _jsx("div", __assign({ className: "flex flex-col lg:flex-row gap-1" }, { children: playersHandsCoinsUI }), void 0), _jsx("div", __assign({ className: "flex items-start flex-col lg:flex-row gap-1" }, { children: playersBoardsUI }), void 0)] }), void 0)] }), void 0), logUI, debugUI] }), void 0));
     };
     return GameBoard;
-}(react_1["default"].Component));
-exports.GameBoard = GameBoard;
+}(React.Component));
+export { GameBoard };

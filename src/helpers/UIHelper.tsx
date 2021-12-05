@@ -3,6 +3,13 @@ import {suitsConfig} from "../data/SuitData";
 import {IBackground, Styles} from "../data/StyleData";
 import React from "react";
 import {ArgsTypes} from "../actions/Actions";
+import {GameBoard} from "../GameBoard";
+import {ICoin} from "../Coin";
+import {IPublicPlayer} from "../Player";
+import {IActionCard, ICard} from "../Card";
+import {IHero} from "../Hero";
+import {IArtefactCampCard, IMercenaryCampCard} from "../Camp";
+import {CampDeckCardTypes, DeckCardTypes} from "../GameSetup";
 
 /**
  * <h3>Отрисовка сегмента игрового поля по указанным данным.</h3>
@@ -33,9 +40,9 @@ export const DrawBoard = (objectsSize: number): { boardCols: number, lastBoardCo
  * @returns {JSX.Element} Шаблон.
  * @constructor
  */
-export const DrawPlayerBoardForCardDiscard = (data): JSX.Element => {
-    const playerHeaders = [],
-        playerRows = [];
+export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
+    const playerHeaders: JSX.Element[] = [],
+        playerRows: JSX.Element[][] = [];
     for (const suit in suitsConfig) {
         playerHeaders.push(
             <th className={`${suitsConfig[suit].suitColor}`}
@@ -47,7 +54,7 @@ export const DrawPlayerBoardForCardDiscard = (data): JSX.Element => {
         );
     }
     for (let i: number = 0; ; i++) {
-        const playerCells = [];
+        const playerCells: JSX.Element[] = [];
         let isDrawRow: boolean = false,
             isExit: boolean = true,
             id: number = 0;
@@ -112,12 +119,12 @@ export const DrawPlayerBoardForCardDiscard = (data): JSX.Element => {
  * @returns {JSX.Element} Шаблон.
  * @constructor
  */
-export const DrawPlayersBoardForSuitCardDiscard = (data, suitName: string): JSX.Element => {
-    const playersHeaders = [],
-        playersRows = [],
+export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: string): JSX.Element => {
+    const playersHeaders: JSX.Element[] = [],
+        playersRows: JSX.Element[][] = [],
         suitId: number = GetSuitIndexByName(suitName);
     for (let p: number = 0; p < data.props.G.publicPlayers.length; p++) {
-        if (p !== +data.props.ctx.currentPlayer) {
+        if (p !== Number(data.props.ctx.currentPlayer)) {
             if (data.props.G.publicPlayers[p].cards[suitId] !== undefined &&
                 data.props.G.publicPlayers[p].cards[suitId].length) {
                 playersHeaders.push(
@@ -137,7 +144,7 @@ export const DrawPlayersBoardForSuitCardDiscard = (data, suitName: string): JSX.
         playersRows[i] = [];
         const playersCells = [];
         for (let p: number = 0; p < data.props.G.publicPlayers.length; p++) {
-            if (p !== +data.props.ctx.currentPlayer) {
+            if (p !== Number(data.props.ctx.currentPlayer)) {
                 if (data.props.G.publicPlayers[p].cards[suitId] !== undefined &&
                     data.props.G.publicPlayers[p].cards[suitId][i] !== undefined) {
                     if (data.props.G.publicPlayers[p].cards[suitId][i].type !== "герой") {
@@ -194,10 +201,12 @@ export const DrawPlayersBoardForSuitCardDiscard = (data, suitName: string): JSX.
  * @param args Аргументы действия.
  * @constructor
  */
-export const DrawCard = (data, playerCells, card, id: number, player?, suit?: string, actionName?: string, ...args):
+export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: DeckCardTypes | CampDeckCardTypes | IHero,
+                         id: number, player:IPublicPlayer | null, suit?: string | null, actionName?: string,
+                         ...args: ArgsTypes):
     void => {
     let styles: IBackground,
-        tdClasses: string,
+        tdClasses: string = "",
         spanClasses: string,
         action: Function | null;
     switch (actionName) {
@@ -242,7 +251,7 @@ export const DrawCard = (data, playerCells, card, id: number, player?, suit?: st
             };
             break;
         case "OnClickDiscardSuitCardFromPlayerBoard":
-            action = (...args): void => {
+            action = (...args: ArgsTypes): void => {
                 data.props.moves.DiscardSuitCardFromPlayerBoard(...args);
             };
             break;
@@ -315,8 +324,9 @@ export const DrawCard = (data, playerCells, card, id: number, player?, suit?: st
  * @param args Аргументы действия.
  * @constructor
  */
-export const DrawCoin = (data, playerCells, type: string, coin, id: number, player?, coinClasses?: string,
-                         additionalParam?, actionName?: string, ...args): void => {
+export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin:ICoin, id: number,
+                         player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
+                         actionName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground,
         span = null,
         action: Function | null,
@@ -357,9 +367,11 @@ export const DrawCoin = (data, playerCells, type: string, coin, id: number, play
     if (type === "market") {
         styles = Styles.Coin(coin.value, false);
         spanClasses = "bg-market-coin";
-        span = (<span className={coinClasses}>
-            {additionalParam}
-        </span>);
+        if (coinClasses) {
+            span = (<span className={coinClasses}>
+                {additionalParam}
+            </span>);
+        }
     } else {
         spanClasses = "bg-coin";
         if (coinClasses) {
@@ -378,9 +390,11 @@ export const DrawCoin = (data, playerCells, type: string, coin, id: number, play
 
                 </span>);
             } else if (type === "back-tavern-icon") {
-                span = (<span style={Styles.Taverns(additionalParam)} className="bg-tavern-icon">
+                if (typeof additionalParam !== "undefined") {
+                    span = (<span style={Styles.Taverns(additionalParam)} className="bg-tavern-icon">
 
-                </span>)
+                    </span>)
+                }
             }
         }
     }
@@ -410,7 +424,8 @@ export const DrawCoin = (data, playerCells, type: string, coin, id: number, play
  * @param args Аргументы действия.
  * @constructor
  */
-export const DrawButton = (data, boardCells, key, name: string, player?, actionName?: string, ...args): void => {
+export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: string, name: string, player:IPublicPlayer,
+                           actionName?: string, ...args: ArgsTypes): void => {
     let action: Function | null;
     switch (actionName) {
         case "OnClickStartEnlistmentMercenaries":

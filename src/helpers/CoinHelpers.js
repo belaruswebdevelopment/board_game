@@ -1,8 +1,5 @@
-"use strict";
-exports.__esModule = true;
-exports.ResolveBoardCoins = exports.ActivateTrading = void 0;
 // todo Add logging
-var Coin_1 = require("../Coin");
+import { Trading } from "../Coin";
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
@@ -15,7 +12,7 @@ var Coin_1 = require("../Coin");
  * @returns {boolean} Активировался ли обмен монет.
  * @constructor
  */
-var ActivateTrading = function (G, ctx) {
+export var ActivateTrading = function (G, ctx) {
     var _a;
     if ((_a = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading) {
         var tradingCoins = [];
@@ -25,14 +22,13 @@ var ActivateTrading = function (G, ctx) {
                 tradingCoins.push(coin);
             }
         }
-        (0, Coin_1.Trading)(G, ctx, tradingCoins);
+        Trading(G, ctx, tradingCoins);
         return true;
     }
     else {
         return false;
     }
 };
-exports.ActivateTrading = ActivateTrading;
 /**
  * <h3>Определяет по расположению монет игроками порядок ходов и порядок обмена кристаллов приоритета.</h3>
  * <p>Применения:</p>
@@ -45,8 +41,7 @@ exports.ActivateTrading = ActivateTrading;
  * @returns {{playersOrder: *[], exchangeOrder: *[]}} Массив порядка ходов игроков и порядок обмена кристаллов приоритета.
  * @constructor
  */
-var ResolveBoardCoins = function (G, ctx) {
-    var _a, _b;
+export var ResolveBoardCoins = function (G, ctx) {
     var playersOrder = [], coinValues = [], exchangeOrder = [];
     for (var i = 0; i < ctx.numPlayers; i++) {
         if (G.publicPlayers[i].boardCoins[G.currentTavern]) {
@@ -61,14 +56,18 @@ var ResolveBoardCoins = function (G, ctx) {
             var coin = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern], prevCoin = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
             if (coin && prevCoin) {
                 if (coin.value > prevCoin.value) {
-                    _a = [playersOrder[j - 1], playersOrder[j]], playersOrder[j] = _a[0], playersOrder[j - 1] = _a[1];
+                    // [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                    var temp = playersOrder[j - 1];
+                    playersOrder[j - 1] = playersOrder[j];
+                    playersOrder[j] = temp;
                 }
                 else if (coin.value === prevCoin.value) {
                     var priority = G.publicPlayers[playersOrder[j]].priority, prevPriority = G.publicPlayers[playersOrder[j - 1]].priority;
-                    if (priority && prevPriority) {
-                        if (priority.value > prevPriority.value) {
-                            _b = [playersOrder[j - 1], playersOrder[j]], playersOrder[j] = _b[0], playersOrder[j - 1] = _b[1];
-                        }
+                    if (priority.value > prevPriority.value) {
+                        // [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                        var temp = playersOrder[j - 1];
+                        playersOrder[j - 1] = playersOrder[j];
+                        playersOrder[j] = temp;
                     }
                 }
                 else {
@@ -85,14 +84,19 @@ var ResolveBoardCoins = function (G, ctx) {
         if (counts[prop] <= 1) {
             return "continue";
         }
-        var tiePlayers = G.publicPlayers.filter(function (player) { return player.boardCoins[G.currentTavern] &&
-            player.boardCoins[G.currentTavern].value === Number(prop) && player.priority.isExchangeable; });
+        var tiePlayers = G.publicPlayers.filter(function (player) {
+            var _a;
+            return ((_a = player.boardCoins[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.value) === Number(prop)
+                && player.priority.isExchangeable;
+        });
         var _loop_2 = function () {
-            var _c;
             var tiePlayersPriorities = tiePlayers.map(function (player) { return player.priority.value; }), maxPriority = Math.max.apply(Math, tiePlayersPriorities), minPriority = Math.min.apply(Math, tiePlayersPriorities), maxIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === maxPriority; }), minIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === minPriority; });
             tiePlayers.splice(tiePlayers.findIndex(function (player) { return player.priority.value === maxPriority; }), 1);
             tiePlayers.splice(tiePlayers.findIndex(function (player) { return player.priority.value === minPriority; }), 1);
-            _c = [exchangeOrder[maxIndex], exchangeOrder[minIndex]], exchangeOrder[minIndex] = _c[0], exchangeOrder[maxIndex] = _c[1];
+            // [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
+            var temp = exchangeOrder[minIndex];
+            exchangeOrder[minIndex] = exchangeOrder[maxIndex];
+            exchangeOrder[maxIndex] = temp;
         };
         while (tiePlayers.length > 1) {
             _loop_2();
@@ -103,4 +107,3 @@ var ResolveBoardCoins = function (G, ctx) {
     }
     return { playersOrder: playersOrder, exchangeOrder: exchangeOrder };
 };
-exports.ResolveBoardCoins = ResolveBoardCoins;

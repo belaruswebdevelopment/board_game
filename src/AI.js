@@ -1,4 +1,3 @@
-"use strict";
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -8,16 +7,14 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-exports.__esModule = true;
-exports.playoutDepth = exports.iterations = exports.objectives = exports.enumerate = void 0;
-var Card_1 = require("./Card");
-var Priority_1 = require("./Priority");
-var BotConfig_1 = require("./BotConfig");
-var Score_1 = require("./Score");
-var MoveValidator_1 = require("./MoveValidator");
-var SuitData_1 = require("./data/SuitData");
-var SuitHelpers_1 = require("./helpers/SuitHelpers");
-var ScoreHelpers_1 = require("./helpers/ScoreHelpers");
+import { CompareCards, EvaluateCard } from "./Card";
+import { HasLowestPriority } from "./Priority";
+import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
+import { CurrentScoring } from "./Score";
+import { moveBy, moveValidators } from "./MoveValidator";
+import { suitsConfig } from "./data/SuitData";
+import { GetSuitIndexByName } from "./helpers/SuitHelpers";
+import { TotalRank } from "./helpers/ScoreHelpers";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -28,30 +25,30 @@ var ScoreHelpers_1 = require("./helpers/ScoreHelpers");
  * @param G
  * @param ctx
  */
-var enumerate = function (G, ctx) {
+export var enumerate = function (G, ctx) {
     var _a, _b, _c, _d, _e;
     //make false for standard bot
     var enableAdvancedBot = true, uniqueArr = [];
-    var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(MoveValidator_1.moveBy[ctx.phase]).some(function (key) { return key.includes(advancedString); });
+    var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(function (key) { return key.includes(advancedString); });
     var activeStageOfCurrentPlayer = (ctx.activePlayers && ctx.activePlayers[Number(ctx.currentPlayer)])
         ? ctx.activePlayers[Number(ctx.currentPlayer)] : "default";
     // todo Fix it, now just for bot can do RANDOM move
     var botMoveArguments = [];
-    for (var stage in MoveValidator_1.moveBy[ctx.phase]) {
-        if (MoveValidator_1.moveBy[ctx.phase].hasOwnProperty(stage)) {
+    for (var stage in moveBy[ctx.phase]) {
+        if (moveBy[ctx.phase].hasOwnProperty(stage)) {
             if (ctx.phase === "pickCards" && stage.startsWith("default")) {
                 continue;
             }
             if (stage.includes(activeStageOfCurrentPlayer) && (!isAdvancedExist || stage.includes(advancedString) ===
                 enableAdvancedBot)) {
-                var moveName = MoveValidator_1.moveBy[ctx.phase][stage], _f = MoveValidator_1.moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _f[0], maxValue = _f[1], hasGetValue = MoveValidator_1.moveValidators[moveName].hasOwnProperty("getValue");
+                var moveName = moveBy[ctx.phase][stage], _f = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _f[0], maxValue = _f[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
                 var argValue = void 0;
                 for (var i = minValue; i < maxValue; i++) {
-                    if (!MoveValidator_1.moveValidators[moveName].validate({ G: G, ctx: ctx, id: i })) {
+                    if (!moveValidators[moveName].validate({ G: G, ctx: ctx, id: i })) {
                         continue;
                     }
                     if (hasGetValue) {
-                        argValue = MoveValidator_1.moveValidators[moveName].getValue({ G: G, ctx: ctx, id: i });
+                        argValue = moveValidators[moveName].getValue({ G: G, ctx: ctx, id: i });
                     }
                     else {
                         argValue = i;
@@ -77,17 +74,17 @@ var enumerate = function (G, ctx) {
                 if (tavern_1[i] === null) {
                     return "continue";
                 }
-                if (tavern_1.some(function (card) { return (0, Card_1.CompareCards)(tavern_1[i], card) < 0; })) {
+                if (tavern_1.some(function (card) { return CompareCards(tavern_1[i], card) < 0; })) {
                     return "continue";
                 }
-                var isCurrentCardWorse = (0, Card_1.EvaluateCard)(G, ctx, tavern_1[i], i, tavern_1) < 0, isExistCardNotWorse = tavern_1.some(function (card) { return (card !== null) &&
-                    ((0, Card_1.EvaluateCard)(G, ctx, tavern_1[i], i, tavern_1) >= 0); });
+                var isCurrentCardWorse = EvaluateCard(G, ctx, tavern_1[i], i, tavern_1) < 0, isExistCardNotWorse = tavern_1.some(function (card) { return (card !== null) &&
+                    (EvaluateCard(G, ctx, tavern_1[i], i, tavern_1) >= 0); });
                 if (isCurrentCardWorse && isExistCardNotWorse) {
                     return "continue";
                 }
                 var uniqueArrLength = uniqueArr.length;
                 for (var j = 0; j < uniqueArrLength; j++) {
-                    if (tavern_1[i].suit === uniqueArr[j].suit && (0, Card_1.CompareCards)(tavern_1[i], uniqueArr[j])
+                    if (tavern_1[i].suit === uniqueArr[j].suit && CompareCards(tavern_1[i], uniqueArr[j])
                         === 0) {
                         flag = false;
                         break;
@@ -111,14 +108,14 @@ var enumerate = function (G, ctx) {
             }
             moves.push({
                 move: "ClickCampCard",
-                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
             });
         }
     }
     if (enableAdvancedBot && ctx.phase === "placeCoins") {
         moves = [];
-        var hasLowestPriority = (0, Priority_1.HasLowestPriority)(G, Number(ctx.currentPlayer));
-        var resultsForCoins = (0, BotConfig_1.CheckHeuristicsForCoinsPlacement)(G, ctx);
+        var hasLowestPriority = HasLowestPriority(G, Number(ctx.currentPlayer));
+        var resultsForCoins = CheckHeuristicsForCoinsPlacement(G, ctx);
         if (hasLowestPriority) {
             resultsForCoins = resultsForCoins.map(function (num, index) { return index === 0 ? num - 20 : num; });
         }
@@ -176,25 +173,25 @@ var enumerate = function (G, ctx) {
     // todo Fix it, now just for bot can do RANDOM move
     if (ctx.phase === "endTier") {
         for (var j = 0; j < G.suitsNum; j++) {
-            var suit = Object.keys(SuitData_1.suitsConfig)[j];
+            var suit = Object.keys(suitsConfig)[j];
             if (suit !== ((_a = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard) === null || _a === void 0 ? void 0 : _a.suit)) {
                 botMoveArguments.push([j]);
             }
         }
         moves.push({
             move: "PlaceCard",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (ctx.phase === "getMjollnirProfit") {
         var totalSuitsRanks = [];
         for (var j = 0; j < G.suitsNum; j++) {
-            totalSuitsRanks.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[j].reduce(ScoreHelpers_1.TotalRank, 0));
+            totalSuitsRanks.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[j].reduce(TotalRank, 0));
         }
         botMoveArguments.push([totalSuitsRanks.indexOf(Math.max.apply(Math, totalSuitsRanks))]);
         moves.push({
             move: "GetMjollnirProfit",
-            args: __spreadArray([], botMoveArguments[0], true)
+            args: __spreadArray([], botMoveArguments[0], true),
         });
     }
     if (ctx.phase === "brisingamensEndGame") {
@@ -215,7 +212,7 @@ var enumerate = function (G, ctx) {
         }
         moves.push({
             move: "DiscardCardFromPlayerBoard",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (ctx.phase === "enlistmentMercenaries") {
@@ -236,7 +233,7 @@ var enumerate = function (G, ctx) {
             }
         }
         else if (G.drawProfit === "enlistmentMercenaries") {
-            var mercenaries = G.publicPlayers[Number(ctx.currentPlayer)].campCards.filter(function (card) {
+            var mercenaries = G.publicPlayers[Number(ctx.currentPlayer)].campCards.filter(card, function (CampDeckCardTypes) {
                 return card.type === "наёмник";
             });
             for (var j = 0; j < mercenaries.length; j++) {
@@ -244,19 +241,19 @@ var enumerate = function (G, ctx) {
             }
             moves.push({
                 move: "GetEnlistmentMercenaries",
-                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
             });
         }
         else if (G.drawProfit === "placeEnlistmentMercenaries") {
             for (var j = 0; j < G.suitsNum; j++) {
-                var suit = Object.keys(SuitData_1.suitsConfig)[j];
+                var suit = Object.keys(suitsConfig)[j];
                 if (suit === ((_b = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard.stack[0].variants[suit]) === null || _b === void 0 ? void 0 : _b.suit)) {
                     botMoveArguments.push([j]);
                 }
             }
             moves.push({
                 move: "PlaceEnlistmentMercenaries",
-                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
             });
         }
     }
@@ -268,7 +265,7 @@ var enumerate = function (G, ctx) {
         }
         moves.push({
             move: "ClickHandCoin",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
         moves.push({ move: "ClickBoardCoin", args: [G.currentTavern + 1] });
     }
@@ -298,7 +295,7 @@ var enumerate = function (G, ctx) {
         }
         moves.push({
             move: "AddCoinToPouch",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (activeStageOfCurrentPlayer === "upgradeCoinVidofnirVedrfolnir") {
@@ -312,12 +309,12 @@ var enumerate = function (G, ctx) {
         }
         moves.push({
             move: "UpgradeCoinVidofnirVedrfolnir",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (activeStageOfCurrentPlayer === "discardSuitCard") {
         // todo Bot can't do async turns...?
-        var suitId = (0, SuitHelpers_1.GetSuitIndexByName)(G.publicPlayers[Number(ctx.currentPlayer)]
+        var suitId = GetSuitIndexByName(G.publicPlayers[Number(ctx.currentPlayer)]
             .stack[0].config.suit);
         for (var p = 0; p < G.publicPlayers.length; p++) {
             if (p !== Number(ctx.currentPlayer)) {
@@ -340,16 +337,16 @@ var enumerate = function (G, ctx) {
         moves.push({
             move: "DiscardSuitCardFromPlayerBoard",
             args: [suitId, G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-                    .findIndex(function (card) { return card.type !== "герой" && card.value === minValue_1; })]
+                    .findIndex(function (card) { return card.type !== "герой" && card.value === minValue_1; })],
         });
     }
     if (activeStageOfCurrentPlayer === "discardCardFromBoard") {
         for (var j = 0; j < G.suitsNum; j++) {
             if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0] !== undefined &&
-                SuitData_1.suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit !==
+                suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit !==
                     G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config.suit &&
                 !(G.drawProfit === "DagdaAction" && G.actionsNum === 1 &&
-                    SuitData_1.suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit ===
+                    suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit ===
                         ((_d = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard) === null || _d === void 0 ? void 0 : _d.suit))) {
                 var last = G.publicPlayers[Number(ctx.currentPlayer)].cards[j].length - 1;
                 if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].type !== "герой") {
@@ -359,7 +356,7 @@ var enumerate = function (G, ctx) {
         }
         moves.push({
             move: "DiscardCard",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (activeStageOfCurrentPlayer === "pickDiscardCard") {
@@ -368,7 +365,7 @@ var enumerate = function (G, ctx) {
         }
         moves.push({
             move: "PickDiscardCard",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (ctx.numPlayers === 2) {
@@ -378,20 +375,20 @@ var enumerate = function (G, ctx) {
             }
             moves.push({
                 move: "DiscardCard2Players",
-                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
             });
         }
     }
     if (activeStageOfCurrentPlayer === "placeCards") {
         for (var j = 0; j < G.suitsNum; j++) {
-            var suit = Object.keys(SuitData_1.suitsConfig)[j];
+            var suit = Object.keys(suitsConfig)[j];
             if (suit !== ((_e = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard) === null || _e === void 0 ? void 0 : _e.suit)) {
                 botMoveArguments.push([j]);
             }
         }
         moves.push({
             move: "PlaceCard",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (activeStageOfCurrentPlayer === "pickCampCardHolda") {
@@ -402,7 +399,7 @@ var enumerate = function (G, ctx) {
         }
         moves.push({
             move: "ClickCampCardHolda",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (moves.length === 0) {
@@ -411,7 +408,6 @@ var enumerate = function (G, ctx) {
     }
     return moves;
 };
-exports.enumerate = enumerate;
 /**
  * <h3>Возвращает цели игры для ботов.</h3>
  * <p>Применения:</p>
@@ -419,12 +415,12 @@ exports.enumerate = enumerate;
  * <li>Используется ботами для определения целей.</li>
  * </ol>
  */
-var objectives = function () { return ({
+export var objectives = function () { return ({
     isEarlyGame: {
         checker: function (G) {
             return G.decks[0].length > 0;
         },
-        weight: -100.0
+        weight: -100.0,
     },
     /*isWeaker: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
@@ -512,7 +508,7 @@ var objectives = function () { return ({
             }
             var totalScore = [];
             for (var i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push((0, Score_1.CurrentScoring)(G.publicPlayers[i]));
+                totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
             var _a = totalScore.sort(function (a, b) { return b - a; }).slice(0, 2), top1 = _a[0], top2 = _a[1];
             if (totalScore[Number(ctx.currentPlayer)] === top1) {
@@ -520,7 +516,7 @@ var objectives = function () { return ({
             }
             return false;
         },
-        weight: 0.5
+        weight: 0.5,
     },
     isStronger: {
         checker: function (G, ctx) {
@@ -535,7 +531,7 @@ var objectives = function () { return ({
             }
             var totalScore = [];
             for (var i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push((0, Score_1.CurrentScoring)(G.publicPlayers[i]));
+                totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
             var _a = totalScore.sort(function (a, b) { return b - a; }).slice(0, 2), top1 = _a[0], top2 = _a[1];
             if (totalScore[Number(ctx.currentPlayer)] === top1) {
@@ -543,10 +539,9 @@ var objectives = function () { return ({
             }
             return false;
         },
-        weight: 0.5
-    }
+        weight: 0.5,
+    },
 }); };
-exports.objectives = objectives;
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -558,7 +553,7 @@ exports.objectives = objectives;
  * @param G
  * @param ctx
  */
-var iterations = function (G, ctx) {
+export var iterations = function (G, ctx) {
     var maxIter = G.botData.maxIter;
     if (ctx.phase === "pickCards") {
         var currentTavern_1 = G.taverns[G.currentTavern];
@@ -567,7 +562,7 @@ var iterations = function (G, ctx) {
         }
         var cardIndex_1 = currentTavern_1.findIndex(function (card) { return card !== null; });
         if (currentTavern_1.every(function (card) { return (card === null) || (card.suit === currentTavern_1[cardIndex_1].suit &&
-            (0, Card_1.CompareCards)(card, currentTavern_1[cardIndex_1]) === 0); })) {
+            CompareCards(card, currentTavern_1[cardIndex_1]) === 0); })) {
             return 1;
         }
         var efficientMovesCount = 0;
@@ -575,14 +570,14 @@ var iterations = function (G, ctx) {
             if (currentTavern_1[i] === null) {
                 return "continue";
             }
-            if (currentTavern_1.some(function (card) { return (0, Card_1.CompareCards)(currentTavern_1[i], card) === -1; })) {
+            if (currentTavern_1.some(function (card) { return CompareCards(currentTavern_1[i], card) === -1; })) {
                 return "continue";
             }
             if (G.decks[0].length > 18) {
                 var curSuit_1 = currentTavern_1[i].suit;
-                if (((0, Card_1.CompareCards)(currentTavern_1[i], G.averageCards[curSuit_1]) === -1) &&
+                if ((CompareCards(currentTavern_1[i], G.averageCards[curSuit_1]) === -1) &&
                     currentTavern_1.some(function (card) { return (card !== null) &&
-                        ((0, Card_1.CompareCards)(card, G.averageCards[curSuit_1]) > -1); })) {
+                        (CompareCards(card, G.averageCards[curSuit_1]) > -1); })) {
                     return "continue";
                 }
             }
@@ -602,7 +597,6 @@ var iterations = function (G, ctx) {
     }
     return maxIter;
 };
-exports.iterations = iterations;
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -614,10 +608,9 @@ exports.iterations = iterations;
  * @param G
  * @param ctx
  */
-var playoutDepth = function (G, ctx) {
+export var playoutDepth = function (G, ctx) {
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
         return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 20;
     }
     return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 2;
 };
-exports.playoutDepth = playoutDepth;

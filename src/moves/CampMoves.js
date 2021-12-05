@@ -1,9 +1,6 @@
-"use strict";
-exports.__esModule = true;
-exports.GetMjollnirProfit = exports.DiscardSuitCardFromPlayerBoard = exports.DiscardCardFromPlayerBoard = exports.DiscardCard2Players = exports.ClickCampCardHolda = exports.ClickCampCard = void 0;
-var MoveValidator_1 = require("../MoveValidator");
-var core_1 = require("boardgame.io/core");
-var StackHelpers_1 = require("../helpers/StackHelpers");
+import { IsValidMove } from "../MoveValidator";
+import { INVALID_MOVE } from "boardgame.io/core";
+import { AddActionsToStack, EndActionFromStackAndAddNew, StartActionForChosenPlayer, StartActionFromStackOrEndActions, } from "../helpers/StackHelpers";
 // todo Add logging
 /**
  * <h3>Выбор карты из кэмпа.</h3>
@@ -18,21 +15,16 @@ var StackHelpers_1 = require("../helpers/StackHelpers");
  * @returns {string|*} Диспетчер экшенов.
  * @constructor
  */
-var ClickCampCard = function (G, ctx, cardId) {
-    var buff = G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp;
-    var isValidMove = false;
-    if (buff) {
-        isValidMove = (0, MoveValidator_1.IsValidMove)({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
-            && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
-            (!G.campPicked && buff));
-    }
+export var ClickCampCard = function (G, ctx, cardId) {
+    var isValidMove = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
+        && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
+        (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
     if (!isValidMove) {
-        return core_1.INVALID_MOVE;
+        return INVALID_MOVE;
     }
-    (0, StackHelpers_1.AddActionsToStack)(G, ctx, G.camp[cardId].stack);
-    (0, StackHelpers_1.StartActionFromStackOrEndActions)(G, ctx, false, cardId);
+    AddActionsToStack(G, ctx, G.camp[cardId].stack);
+    StartActionFromStackOrEndActions(G, ctx, false, cardId);
 };
-exports.ClickCampCard = ClickCampCard;
 /**
  * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
  * <p>Применения:</p>
@@ -46,21 +38,17 @@ exports.ClickCampCard = ClickCampCard;
  * @returns {string|*} Диспетчер экшенов.
  * @constructor
  */
-var ClickCampCardHolda = function (G, ctx, cardId) {
-    var buff = G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime;
-    var isValidMove = false;
-    if (buff) {
-        isValidMove = (0, MoveValidator_1.IsValidMove)({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] }) && buff;
-    }
+export var ClickCampCardHolda = function (G, ctx, cardId) {
+    var isValidMove = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] }) &&
+        Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
     if (!isValidMove) {
-        return core_1.INVALID_MOVE;
+        return INVALID_MOVE;
     }
     var campCard = G.camp[cardId];
     if (campCard) {
-        (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, campCard.stack, cardId);
+        EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
     }
 };
-exports.ClickCampCardHolda = ClickCampCardHolda;
 /**
  * <h3>Сбрасывает карту из таверны при выборе карты из кэмпа на двоих игроков.</h3>
  * <p>Применения:</p>
@@ -73,10 +61,9 @@ exports.ClickCampCardHolda = ClickCampCardHolda;
  * @param cardId Id сбрасываемой карты.
  * @constructor
  */
-var DiscardCard2Players = function (G, ctx, cardId) {
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], cardId);
+export var DiscardCard2Players = function (G, ctx, cardId) {
+    EndActionFromStackAndAddNew(G, ctx, [], cardId);
 };
-exports.DiscardCard2Players = DiscardCard2Players;
 /**
  * <h3>Сбрасывает карту в дискард в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>
  * <p>Применения:</p>
@@ -90,10 +77,9 @@ exports.DiscardCard2Players = DiscardCard2Players;
  * @param cardId Id сбрасываемой карты.
  * @constructor
  */
-var DiscardCardFromPlayerBoard = function (G, ctx, suitId, cardId) {
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], suitId, cardId);
+export var DiscardCardFromPlayerBoard = function (G, ctx, suitId, cardId) {
+    EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };
-exports.DiscardCardFromPlayerBoard = DiscardCardFromPlayerBoard;
 /**
  * <h3>Сбрасывает карту конкретной фракции в дискард по выбору игрока при действии артефакта Hofud.</h3>
  * <p>Применения:</p>
@@ -108,17 +94,16 @@ exports.DiscardCardFromPlayerBoard = DiscardCardFromPlayerBoard;
  * @param cardId Id сбрасываемой карты.
  * @constructor
  */
-var DiscardSuitCardFromPlayerBoard = function (G, ctx, suitId, playerId, cardId) {
+export var DiscardSuitCardFromPlayerBoard = function (G, ctx, suitId, playerId, cardId) {
     var isValidMove = false;
     if (typeof ctx.playerID === "string") {
         isValidMove = playerId !== Number(ctx.currentPlayer) && playerId === Number(ctx.playerID);
     }
     if (!isValidMove) {
-        return core_1.INVALID_MOVE;
+        return INVALID_MOVE;
     }
-    (0, StackHelpers_1.StartActionForChosenPlayer)(G, ctx, playerId, suitId, playerId, cardId);
+    StartActionForChosenPlayer(G, ctx, playerId, suitId, playerId, cardId);
 };
-exports.DiscardSuitCardFromPlayerBoard = DiscardSuitCardFromPlayerBoard;
 /**
  * <h3>Выбирает фракцию для применения финального эффекта артефакта Mjollnir.</h3>
  * <p>Применения:</p>
@@ -132,7 +117,6 @@ exports.DiscardSuitCardFromPlayerBoard = DiscardSuitCardFromPlayerBoard;
  * @returns {*}
  * @constructor
  */
-var GetMjollnirProfit = function (G, ctx, suitId) {
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], suitId);
+export var GetMjollnirProfit = function (G, ctx, suitId) {
+    EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
-exports.GetMjollnirProfit = GetMjollnirProfit;

@@ -3,7 +3,7 @@ import {heroesConfig, IHeroData} from "./data/HeroData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {AddDataToLog, LogTypes} from "./Logging";
 import {artefactsConfig, IArtefact} from "./data/CampData";
-import {CheckCurrentSuitDistinction} from "./Distiction";
+import {CheckCurrentSuitDistinction} from "./Distinction";
 import {MyGameState} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPublicPlayer} from "./Player";
@@ -148,7 +148,6 @@ export const ScoreWinner = (G: MyGameState, ctx: Ctx): MyGameState | void => {
     const maxScore: number = Math.max(...G.totalScore),
         maxPlayers: number = G.totalScore.filter(score => score === maxScore).length;
     let winners: number = 0;
-    G.winner = [];
     for (let i = ctx.numPlayers - 1; i >= 0; i--) {
         if (maxScore === G.totalScore[i] && maxPlayers > winners) {
             G.winner.push(i);

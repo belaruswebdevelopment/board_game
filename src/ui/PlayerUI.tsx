@@ -6,6 +6,7 @@ import {Styles} from "../data/StyleData";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {DrawCard, DrawCoin} from "../helpers/UIHelper";
 import {TotalRank} from "../helpers/ScoreHelpers";
+import {GameBoard} from "../GameBoard";
 
 /**
  * <h3>Отрисовка планшета монет, выложенных игроком на стол.</h3>
@@ -17,11 +18,11 @@ import {TotalRank} from "../helpers/ScoreHelpers";
  * @param data Глобальные параметры.
  * @constructor
  */
-export const DrawPlayersBoardsCoins = (data) => {
-    const playersBoardsCoins = [],
-        playerHeaders = [],
-        playerFooters = [],
-        playerRows = [];
+export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
+    const playersBoardsCoins: JSX.Element[][] = [],
+        playerHeaders: JSX.Element[][] = [],
+        playerFooters: JSX.Element[][] = [],
+        playerRows: JSX.Element[][][] = [];
     for (let p: number = 0; p < data.props.ctx.numPlayers; p++) {
         let coinIndex: number = 0;
         playersBoardsCoins[p] = [];
@@ -29,7 +30,7 @@ export const DrawPlayersBoardsCoins = (data) => {
         playerFooters[p] = [];
         playerRows[p] = [];
         for (let i: number = 0; i < 2; i++) {
-            const playerCells = [];
+            const playerCells: JSX.Element[] = [];
             playerRows[p][i] = [];
             if (i === 0) {
                 for (let j: number = 0; j < data.props.G.tavernsNum; j++) {
@@ -41,8 +42,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                         </th>
                     );
                     if (data.props.G.publicPlayers[p].boardCoins[coinIndex] === null) {
-                        if ((+data.props.ctx.currentPlayer === p && data.props.ctx.phase === "placeCoins") ||
-                            (+data.props.ctx.currentPlayer === p && data.props.ctx.phase === "placeCoinsUline"
+                        if ((Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase === "placeCoins") ||
+                            (Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase === "placeCoinsUline"
                                 && j === data.props.G.currentTavern + 1)) {
                             DrawCoin(data, playerCells, "back-tavern-icon",
                                 data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
@@ -53,13 +54,13 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                                 data.props.G.publicPlayers[p], null, j);
                         }
-                    } else if (data.props.ctx.phase === "placeCoins" && +data.props.ctx.currentPlayer === p) {
+                    } else if (data.props.ctx.phase === "placeCoins" && Number(data.props.ctx.currentPlayer) === p) {
                         DrawCoin(data, playerCells, "coin",
                             data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                             data.props.G.publicPlayers[p], null, null,
                             "OnClickBoardCoin", j);
                     } else {
-                        if (data.props.G.winner || (data.props.ctx.phase === "placeCoinsUline" &&
+                        if (data.props.G.winner.length || (data.props.ctx.phase === "placeCoinsUline" &&
                             data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== "placeCoins"
                             && data.props.G.currentTavern >= j)) {
                             DrawCoin(data, playerCells, "coin",
@@ -100,7 +101,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             </th>
                         );
                         if (data.props.G.publicPlayers[p].boardCoins[coinIndex] === null) {
-                            if (+data.props.ctx.currentPlayer === p && data.props.ctx.phase !== "placeCoinsUline" &&
+                            if (Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase !== "placeCoinsUline" &&
                                 (data.props.ctx.phase === "placeCoins" || (data.props.ctx.activePlayers &&
                                         data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
                                     "placeTradingCoinsUline")) {
@@ -113,7 +114,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                                     data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                                     data.props.G.publicPlayers[p]);
                             }
-                        } else if (+data.props.ctx.currentPlayer === p && (data.props.ctx.phase === "placeCoins" ||
+                        } else if (Number(data.props.ctx.currentPlayer) === p && (data.props.ctx.phase === "placeCoins" ||
                             (data.props.ctx.activePlayers && data.props.ctx.activePlayers[data.props.ctx.currentPlayer])
                             === "placeTradingCoinsUline")) {
                             DrawCoin(data, playerCells, "coin",
@@ -121,8 +122,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 data.props.G.publicPlayers[p], null, null,
                                 "OnClickBoardCoin", j);
                         } else {
-                            if (data.props.G.winner || (data.props.ctx.phase !== "placeCoins" &&
-                                +data.props.ctx.currentPlayer === p &&
+                            if (data.props.G.winner.length || (data.props.ctx.phase !== "placeCoins" &&
+                                Number(data.props.ctx.currentPlayer) === p &&
                                 data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern] &&
                                 data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern].isTriggerTrading)) {
                                 DrawCoin(data, playerCells, "coin",
@@ -171,10 +172,10 @@ export const DrawPlayersBoardsCoins = (data) => {
  * @param data Глобальные параметры.
  * @constructor
  */
-export const DrawPlayersHandsCoins = (data) => {
-    const playersHandsCoins = [];
+export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
+    const playersHandsCoins: JSX.Element[][] = [];
     for (let p: number = 0; p < data.props.ctx.numPlayers; p++) {
-        const playerCells = [];
+        const playerCells: JSX.Element[] = [];
         playersHandsCoins[p] = [];
         for (let i: number = 0; i < 1; i++) {
             for (let j: number = 0; j < data.props.G.publicPlayers[p].handCoins.length; j++) {
@@ -188,12 +189,12 @@ export const DrawPlayersHandsCoins = (data) => {
                         </td>
                     );
                 } else {
-                    if (+data.props.ctx.currentPlayer === p || data.props.G.winner) {
+                    if (Number(data.props.ctx.currentPlayer) === p || data.props.G.winner.length) {
                         let coinClasses: string = "border-2";
                         if (data.props.G.publicPlayers[p].selectedCoin === j) {
                             coinClasses = "border-2 border-green-400";
                         }
-                        if (!data.props.G.winner && (data.props.ctx.phase === "placeCoins" ||
+                        if (!data.props.G.winner.length && (data.props.ctx.phase === "placeCoins" ||
                             data.props.ctx.phase === "placeCoinsUline" || (data.props.ctx.activePlayers &&
                                 data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) === "placeTradingCoinsUline")) {
                             DrawCoin(data, playerCells, "coin",
@@ -234,11 +235,11 @@ export const DrawPlayersHandsCoins = (data) => {
  * @param data Глобальные параметры.
  * @constructor
  */
-export const DrawPlayersBoards = (data) => {
-    const playersBoards = [],
-        playerHeaders = [],
-        playerHeadersCount = [],
-        playerRows = [];
+export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
+    const playersBoards: JSX.Element[][] = [],
+        playerHeaders: JSX.Element[][] = [],
+        playerHeadersCount: JSX.Element[][] = [],
+        playerRows: JSX.Element[][][] = [];
     for (let p: number = 0; p < data.props.ctx.numPlayers; p++) {
         playersBoards[p] = [];
         playerHeaders[p] = [];
@@ -318,10 +319,11 @@ export const DrawPlayersBoards = (data) => {
                     if (data.props.G.publicPlayers[p].heroes[i] !== undefined &&
                         (!data.props.G.publicPlayers[p].heroes[i].suit &&
                             !((data.props.G.publicPlayers[p].heroes[i].name === "Ylud" &&
-                                    data.props.G.publicPlayers[p].cards.flat().findIndex(card => card.name === "Ylud") !== -1)
+                                    data.props.G.publicPlayers[p].cards.flat().findIndex(
+                                        (card: {name: string}): boolean => card.name === "Ylud") !== -1)
                                 || (data.props.G.publicPlayers[p].heroes[i].name === "Thrud" &&
-                                    data.props.G.publicPlayers[p].cards.flat().findIndex(card => card.name === "Thrud")
-                                    !== -1)))) {
+                                    data.props.G.publicPlayers[p].cards.flat().findIndex(
+                                        (card: {name: string}): boolean => card.name === "Thrud") !== -1)))) {
                         isDrawRow = true;
                         DrawCard(data, playerCells, data.props.G.publicPlayers[p].heroes[i], id,
                             data.props.G.publicPlayers[p]);
@@ -357,8 +359,8 @@ export const DrawPlayersBoards = (data) => {
         playersBoards[p].push(
             <table className="mx-auto" key={`${data.props.G.publicPlayers.nickname} board`}>
                 <caption>Player {p + 1} ({data.props.G.publicPlayers[p].nickname})
-                    cards, {data.props.G.winner !== null ?
-                        `Final: ${data.props.G.totalScore[p]}` : CurrentScoring(data.props.G.publicPlayers[p])} points
+                    cards, {data.props.G.winner.length ? `Final: ${data.props.G.totalScore[p]}` :
+                        CurrentScoring(data.props.G.publicPlayers[p])} points
                 </caption>
                 <thead>
                 <tr>{playerHeaders[p]}</tr>

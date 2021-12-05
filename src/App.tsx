@@ -1,25 +1,25 @@
-/*import React from "react";
+import React from "react";
 import {Client} from "boardgame.io/react";
 import {Local} from "boardgame.io/multiplayer";
 import {MCTSBot, RandomBot} from "boardgame.io/ai";
 import {BoardGame} from "./Game";
-import {GameBoard} from "./Board";
+import {GameBoard} from "./GameBoard";
 
 class CustomMCTSBot extends MCTSBot {
-    constructor(config, ...args) {
+    constructor(config: object, ...args: any[]) {
         super({
                 ...config,
-                objectives: BoardGame.ai.objectives,
-                iterations: BoardGame.ai.iterations,
-                playoutDepth: BoardGame.ai.playoutDepth,
+                objectives: BoardGame.ai!.objectives,
+                iterations: BoardGame.ai!.iterations,
+                playoutDepth: BoardGame.ai!.playoutDepth,
             },
             ...args
         );
     }
 }
 
-const enableLocalPlayer = true,
-    setupBot = {
+const enableLocalPlayer: boolean = true,
+    setupBot: {bots: {}} = {
         bots: {
             // "0": RandomBot,
             // "1": RandomBot,
@@ -38,12 +38,12 @@ const enableLocalPlayer = true,
     App = () => (
         <div>
         <BoardGameClient playerID="0"/>
-        {/!*<BoardGameClient playerID="1"/>*!/}
-        {/!*<BoardGameClient playerID="2"/>*!/}
+        {/*<BoardGameClient playerID="1"/>*/}
+        {/*<BoardGameClient playerID="2"/>*/}
         </div>
     );
 
-export default App;*/
+export default App;
 
 /*import {Client} from "boardgame.io/react";
 import {BoardGame} from "./Game";
@@ -119,7 +119,7 @@ render(<App/>, document.getElementById("root"));
 export default App;
 */
 
-import React from "react";
+/*import React from "react";
 import LobbyClient from "./LobbyClient";
 
 class App extends React.Component {
@@ -132,4 +132,4 @@ class App extends React.Component {
     }
 }
 
-export default App;
+export default App;*/

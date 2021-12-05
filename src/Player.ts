@@ -4,7 +4,7 @@ import {CurrentScoring} from "./Score";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {AddDataToLog, LogTypes} from "./Logging";
 import {suitsConfig} from "./data/SuitData";
-import {MyGameState} from "./GameSetup";
+import {CampDeckCardTypes, DeckCardTypes, MyGameState} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPriority} from "./Priority";
 import {IActionCard, ICard, isCardNotAction} from "./Card";
@@ -55,25 +55,25 @@ export interface IPublicPlayer {
     nickname: string,
     cards: PlayerCardsType[][],
     heroes: IHero[],
-    campCards: (IArtefactCampCard | IMercenaryCampCard)[],
+    campCards: CampDeckCardTypes[],
     handCoins: (null | ICoin)[],
     boardCoins: (null | ICoin)[],
     stack: IStack[],
-    priority?: IPriority,
+    priority: IPriority,
     buffs: IBuffs,
     selectedCoin: undefined | number,
-    pickedCard: null | ICard | IArtefactCampCard | IMercenaryCampCard | IHero,
+    pickedCard: null | DeckCardTypes | CampDeckCardTypes | IHero,
 }
 
 interface ICreatePublicPlayer {
     nickname: string,
     cards: PlayerCardsType[][],
     heroes?: IHero[],
-    campCards?: (IArtefactCampCard | IMercenaryCampCard)[],
+    campCards?: CampDeckCardTypes[],
     handCoins: ICoin[],
     boardCoins: ICoin[],
     stack?: IStack[],
-    priority?: IPriority,
+    priority: IPriority,
     buffs?: IBuffs,
     selectedCoin?: undefined,
     pickedCard?: null,
@@ -168,15 +168,17 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  * @param playersNum Количество игроков.
  * @param suitsNum Количество фракций.
  * @param nickname Никнейм.
+ * @param priority Кристалл.
  * @constructor
  */
-export const BuildPublicPlayer = (playersNum: number, suitsNum: number, nickname: string): IPublicPlayer =>
+export const BuildPublicPlayer = (playersNum: number, suitsNum: number, nickname: string, priority: IPriority): IPublicPlayer =>
     CreatePublicPlayer({
         nickname,
         cards: Array(suitsNum).fill(Array(0)),
         handCoins: BuildCoins(initialPlayerCoinsConfig,
             {isInitial: true, isTriggerTrading: false}),
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
+        priority,
     } as ICreatePublicPlayer);
 
 /**
@@ -214,7 +216,7 @@ export const CheckPlayersBasicOrder = (G: MyGameState, ctx: Ctx): void => {
  * @param card Карта.
  * @constructor
  */
-export const AddCardToPlayer = (G: MyGameState, ctx: Ctx, card: ICard | IActionCard): boolean => {
+export const AddCardToPlayer = (G: MyGameState, ctx: Ctx, card: DeckCardTypes): boolean => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = card;
     if (isCardNotAction(card)) {
         const suitIndex: number = GetSuitIndexByName(card.suit);
@@ -241,7 +243,7 @@ export const AddCardToPlayer = (G: MyGameState, ctx: Ctx, card: ICard | IActionC
  * @param card Карта кэмпа.
  * @constructor
  */
-export const AddCampCardToPlayer = (G: MyGameState, ctx: Ctx, card: IArtefactCampCard | IMercenaryCampCard): void => {
+export const AddCampCardToPlayer = (G: MyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
     G.publicPlayers[Number(ctx.currentPlayer)].campCards.push(card);
     AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
     выбрал карту кэмпа ${card.name}.`);
@@ -319,7 +321,7 @@ export const AddHeroCardToPlayerCards = (G: MyGameState, ctx: Ctx, hero: IHero):
  * @param cards Массив потенциальных карт для ботов.
  * @param card Карта.
  */
-export const AddCardToCards = (cards: (ICard | IActionCard)[][], card: ICard): void => {
+export const AddCardToCards = (cards: PlayerCardsType[][], card: ICard): void => {
     const suitIndex: number = GetSuitIndexByName(card.suit);
     if (suitIndex) {
         cards[suitIndex].push(card);
@@ -340,7 +342,7 @@ export const AddCardToCards = (cards: (ICard | IActionCard)[][], card: ICard): v
  */
 export const IsTopPlayer = (G: MyGameState, playerId: number): boolean => {
     const score: number = CurrentScoring(G.publicPlayers[playerId]);
-    return G.publicPlayers.every(player => CurrentScoring(player) <= score);
+    return G.publicPlayers.every((player: IPublicPlayer): boolean => CurrentScoring(player) <= score);
 };
 
 /**
@@ -356,7 +358,7 @@ export const IsTopPlayer = (G: MyGameState, playerId: number): boolean => {
  * @constructor
  */
 export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number => {
-    let top1PlayerId: number = G.publicPlayers.findIndex((player, index) =>
+    let top1PlayerId: number = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean =>
         IsTopPlayer(G, index));
     if (G.publicPlayersOrder.indexOf(currentPlayerId) > G.publicPlayersOrder.indexOf(top1PlayerId)) {
         top1PlayerId = -1;
@@ -377,7 +379,7 @@ export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number
  * @constructor
  */
 export const GetTop2PlayerId = (G: MyGameState, top1PlayerId: number): number => {
-    const playersScore: number[] = G.publicPlayers.map(player => CurrentScoring(player)),
+    const playersScore: number[] = G.publicPlayers.map((player: IPublicPlayer): number => CurrentScoring(player)),
         maxScore: number = Math.max(...playersScore);
     let top2PlayerId: number,
         temp: number;
@@ -385,8 +387,8 @@ export const GetTop2PlayerId = (G: MyGameState, top1PlayerId: number): number =>
         temp = playersScore.sort((a, b) => b - a)[1];
         top2PlayerId = G.publicPlayers.findIndex(player => CurrentScoring(player) === temp);
     } else {
-        top2PlayerId = G.publicPlayers.findIndex((player, index) => index !== top1PlayerId &&
-            IsTopPlayer(G, index));
+        top2PlayerId = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean => index !== top1PlayerId
+            && IsTopPlayer(G, index));
     }
     if (G.publicPlayersOrder.indexOf(top1PlayerId) > G.publicPlayersOrder.indexOf(top2PlayerId)) {
         top2PlayerId = -1;

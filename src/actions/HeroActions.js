@@ -1,17 +1,14 @@
-"use strict";
-exports.__esModule = true;
-exports.PickHero = exports.PickHeroWithConditions = exports.GetClosedCoinIntoPlayerHand = exports.AddHeroToCards = exports.CheckAndMoveThrudOrPickHeroAction = exports.PlaceYludAction = exports.PlaceThrudAction = void 0;
-var SuitData_1 = require("../data/SuitData");
-var Card_1 = require("../Card");
-var Player_1 = require("../Player");
-var Hero_1 = require("../Hero");
-var StackHelpers_1 = require("../helpers/StackHelpers");
-var Coin_1 = require("../Coin");
-var HeroHelpers_1 = require("../helpers/HeroHelpers");
-var SuitHelpers_1 = require("../helpers/SuitHelpers");
-var core_1 = require("boardgame.io/core");
-var Logging_1 = require("../Logging");
-var ScoreHelpers_1 = require("../helpers/ScoreHelpers");
+import { suitsConfig } from "../data/SuitData";
+import { CreateCard } from "../Card";
+import { AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards } from "../Player";
+import { CheckPickHero } from "../Hero";
+import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { ReturnCoinToPlayerHands } from "../Coin";
+import { CheckAndMoveThrud, GetHeroIndexByName, StartThrudMoving } from "../helpers/HeroHelpers";
+import { GetSuitIndexByName } from "../helpers/SuitHelpers";
+import { INVALID_MOVE } from "boardgame.io/core";
+import { AddDataToLog } from "../Logging";
+import { TotalRank } from "../helpers/ScoreHelpers";
 /**
  * <h3>Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.</h3>
  * <p>Применения:</p>
@@ -23,27 +20,25 @@ var ScoreHelpers_1 = require("../helpers/ScoreHelpers");
  * @param ctx
  * @param config Конфиг действий героя.
  * @param suitId Id фракции.
- * @returns {*}
  * @constructor
  */
-var PlaceThrudAction = function (G, ctx, config, suitId) {
-    var suit = Object.keys(SuitData_1.suitsConfig)[suitId], playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
+export var PlaceThrudAction = function (G, ctx, config, suitId) {
+    var suit = Object.keys(suitsConfig)[suitId], playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
     if (playerVariants) {
-        var thrudCard = (0, Card_1.CreateCard)({
+        var thrudCard = CreateCard({
             suit: suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
             type: "герой",
             name: "Thrud",
-            game: "base"
+            game: "base",
         });
-        (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u0422\u0440\u0443\u0434 \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(SuitData_1.suitsConfig[suit].suitName, "."));
-        (0, Player_1.AddCardToPlayer)(G, ctx, thrudCard);
-        (0, Hero_1.CheckPickHero)(G, ctx);
-        (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx);
+        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u0422\u0440\u0443\u0434 \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
+        AddCardToPlayer(G, ctx, thrudCard);
+        CheckPickHero(G, ctx);
+        EndActionFromStackAndAddNew(G, ctx);
     }
 };
-exports.PlaceThrudAction = PlaceThrudAction;
 /**
  * <h3>Действия, связанные с проверкой расположением героя Илуд на игровом поле игрока.</h3>
  * <p>Применения:</p>
@@ -58,24 +53,23 @@ exports.PlaceThrudAction = PlaceThrudAction;
  * @returns {*}
  * @constructor
  */
-var PlaceYludAction = function (G, ctx, config, suitId) {
-    var suit = Object.keys(SuitData_1.suitsConfig)[suitId], playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
+export var PlaceYludAction = function (G, ctx, config, suitId) {
+    var suit = Object.keys(suitsConfig)[suitId], playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
     if (playerVariants) {
-        var yludCard = (0, Card_1.CreateCard)({
+        var yludCard = CreateCard({
             suit: suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
             type: "герой",
             name: "Ylud",
-            game: "base"
+            game: "base",
         });
-        (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u0418\u043B\u0443\u0434 \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(SuitData_1.suitsConfig[suit].suitName, "."));
-        (0, Player_1.AddCardToPlayer)(G, ctx, yludCard);
-        (0, exports.CheckAndMoveThrudOrPickHeroAction)(G, ctx, yludCard);
-        (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], suitId);
+        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u0418\u043B\u0443\u0434 \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
+        AddCardToPlayer(G, ctx, yludCard);
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, yludCard);
+        EndActionFromStackAndAddNew(G, ctx, [], suitId);
     }
 };
-exports.PlaceYludAction = PlaceYludAction;
 /**
  * <h3>Действия, связанные с проверкой перемещения героя Труд или выбора героя.</h3>
  * <p>Применения:</p>
@@ -88,16 +82,15 @@ exports.PlaceYludAction = PlaceYludAction;
  * @param card Карта, помещающаяся на карту героя Труд.
  * @constructor
  */
-var CheckAndMoveThrudOrPickHeroAction = function (G, ctx, card) {
-    var isMoveThrud = (0, HeroHelpers_1.CheckAndMoveThrud)(G, ctx, card);
+export var CheckAndMoveThrudOrPickHeroAction = function (G, ctx, card) {
+    var isMoveThrud = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
-        (0, HeroHelpers_1.StartThrudMoving)(G, ctx, card);
+        StartThrudMoving(G, ctx, card);
     }
     else {
-        (0, Hero_1.CheckPickHero)(G, ctx);
+        CheckPickHero(G, ctx);
     }
 };
-exports.CheckAndMoveThrudOrPickHeroAction = CheckAndMoveThrudOrPickHeroAction;
 /**
  * <h3>Действия, связанные с добавлением героев в массив карт игрока.</li>
  * <p>Применения:</p>
@@ -111,20 +104,19 @@ exports.CheckAndMoveThrudOrPickHeroAction = CheckAndMoveThrudOrPickHeroAction;
  * @returns {*}
  * @constructor
  */
-var AddHeroToCards = function (G, ctx, config) {
+export var AddHeroToCards = function (G, ctx, config) {
     if (config.drawName) {
-        var heroIndex = (0, HeroHelpers_1.GetHeroIndexByName)(config.drawName), hero = G.heroes[heroIndex];
+        var heroIndex = GetHeroIndexByName(config.drawName), hero = G.heroes[heroIndex];
         var suitId = null;
-        (0, Player_1.AddHeroCardToPlayerHeroCards)(G, ctx, hero);
+        AddHeroCardToPlayerHeroCards(G, ctx, hero);
         if (hero.suit) {
-            (0, Player_1.AddHeroCardToPlayerCards)(G, ctx, hero);
-            (0, exports.CheckAndMoveThrudOrPickHeroAction)(G, ctx, hero);
-            suitId = (0, SuitHelpers_1.GetSuitIndexByName)(hero.suit);
+            AddHeroCardToPlayerCards(G, ctx, hero);
+            CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
+            suitId = GetSuitIndexByName(hero.suit);
         }
-        (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], suitId);
+        EndActionFromStackAndAddNew(G, ctx, [], suitId);
     }
 };
-exports.AddHeroToCards = AddHeroToCards;
 /**
  * <h3>Действия, связанные с возвращением закрытых монет со стола в руку.</h3>
  * <p>Применения:</p>
@@ -137,7 +129,7 @@ exports.AddHeroToCards = AddHeroToCards;
  * @returns {*}
  * @constructor
  */
-var GetClosedCoinIntoPlayerHand = function (G, ctx) {
+export var GetClosedCoinIntoPlayerHand = function (G, ctx) {
     var coinsCount = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length, tradingBoardCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
         .findIndex(function (coin) { return coin && coin.isTriggerTrading; }), tradingHandCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
         .findIndex(function (coin) { return coin && coin.isTriggerTrading; });
@@ -145,12 +137,11 @@ var GetClosedCoinIntoPlayerHand = function (G, ctx) {
         if ((i < G.tavernsNum && G.currentTavern < i) ||
             (i >= G.tavernsNum && tradingHandCoinIndex !== -1) ||
             (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {
-            (0, Coin_1.ReturnCoinToPlayerHands)(G.publicPlayers[Number(ctx.currentPlayer)], i);
+            ReturnCoinToPlayerHands(G.publicPlayers[Number(ctx.currentPlayer)], i);
         }
     }
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx);
+    EndActionFromStackAndAddNew(G, ctx);
 };
-exports.GetClosedCoinIntoPlayerHand = GetClosedCoinIntoPlayerHand;
 /**
  * <h3>Действия, связанные с выбором героев по определённым условиям.</h3>
  * <p>Применения:</p>
@@ -164,7 +155,7 @@ exports.GetClosedCoinIntoPlayerHand = GetClosedCoinIntoPlayerHand;
  * @returns {string|*} INVALID_MOVE
  * @constructor
  */
-var PickHeroWithConditions = function (G, ctx, config) {
+export var PickHeroWithConditions = function (G, ctx, config) {
     var isValidMove = false;
     for (var condition in config.conditions) {
         if (config.conditions.hasOwnProperty(condition)) {
@@ -173,8 +164,8 @@ var PickHeroWithConditions = function (G, ctx, config) {
                 for (var key in config.conditions[condition]) {
                     if (config.conditions[condition].hasOwnProperty(key)) {
                         if (key === "suit") {
-                            var suitId = (0, SuitHelpers_1.GetSuitIndexByName)(config.conditions[condition][key]);
-                            ranks = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].reduce(ScoreHelpers_1.TotalRank, 0);
+                            var suitId = GetSuitIndexByName(config.conditions[condition][key]);
+                            ranks = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].reduce(TotalRank, 0);
                         }
                         else if (key === "value") {
                             isValidMove = ranks >= config.conditions[condition][key];
@@ -186,11 +177,10 @@ var PickHeroWithConditions = function (G, ctx, config) {
     }
     if (!isValidMove) {
         G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
-        return core_1.INVALID_MOVE;
+        return INVALID_MOVE;
     }
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx);
+    EndActionFromStackAndAddNew(G, ctx);
 };
-exports.PickHeroWithConditions = PickHeroWithConditions;
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
  * <p>Применения:</p>
@@ -202,11 +192,10 @@ exports.PickHeroWithConditions = PickHeroWithConditions;
  * @param ctx
  * @constructor
  */
-var PickHero = function (G, ctx) {
+export var PickHero = function (G, ctx) {
     var playerConfig = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (playerConfig) {
-        (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
+        AddDataToLog(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
         ctx.events.setStage(playerConfig.stageName);
     }
 };
-exports.PickHero = PickHero;

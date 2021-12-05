@@ -1,6 +1,3 @@
-"use strict";
-exports.__esModule = true;
-exports.ArithmeticSum = exports.TotalRank = exports.TotalPoints = void 0;
 /**
  * <h3>Высчитывает суммарное количество очков фракции.</h3>
  * <p>Применения:</p>
@@ -13,13 +10,12 @@ exports.ArithmeticSum = exports.TotalRank = exports.TotalPoints = void 0;
  * @returns {*} <i>Суммарное количество очков фракции.</i>
  * @constructor
  */
-var TotalPoints = function (accumulator, currentValue) {
+export var TotalPoints = function (accumulator, currentValue) {
     if (currentValue.points) {
         return accumulator + currentValue.points;
     }
     return accumulator;
 };
-exports.TotalPoints = TotalPoints;
 /**
  * <h3>Высчитывает суммарное количество шевронов фракции.</h3>
  * <p>Применения:</p>
@@ -32,13 +28,12 @@ exports.TotalPoints = TotalPoints;
  * @returns {*} Суммарное количество шевронов фракции.
  * @constructor
  */
-var TotalRank = function (accumulator, currentValue) {
+export var TotalRank = function (accumulator, currentValue) {
     if (currentValue.rank) {
         return accumulator + currentValue.rank;
     }
     return accumulator;
 };
-exports.TotalRank = TotalRank;
 /**
  * <h3>Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.</h3>
  * <p>Применения:</p>
@@ -52,6 +47,5 @@ exports.TotalRank = TotalRank;
  * @returns {number} Суммарное количество очков фракции.
  * @constructor
  */
-var ArithmeticSum = function (startValue, step, ranksCount) { return (2 * startValue + step *
+export var ArithmeticSum = function (startValue, step, ranksCount) { return (2 * startValue + step *
     (ranksCount - 1)) * ranksCount / 2; };
-exports.ArithmeticSum = ArithmeticSum;

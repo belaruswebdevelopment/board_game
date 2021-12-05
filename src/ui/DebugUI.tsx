@@ -1,4 +1,5 @@
 import React from "react";
+import {GameBoard} from "../GameBoard";
 
 /**
  * <h3>Собирает данные в объект для отрисовки дебаг информации.</h3>
@@ -10,9 +11,9 @@ import React from "react";
  * @param data Глобальные параметры.
  * @constructor
  */
-const GetDebugData = (data): { ctx: {}, G: {} } | undefined => {
+const GetDebugData = (data: GameBoard): { ctx: {}, G: {} } | undefined => {
     if (data.props.G.debug) {
-        const debugData: { G: object, ctx: object } = {
+        const debugData: {G: {[key: string]: any}, ctx: {[key: string]: any}} = {
             G: {},
             ctx: {},
         };
@@ -37,8 +38,8 @@ const GetDebugData = (data): { ctx: {}, G: {} } | undefined => {
  * @param obj Информация.
  * @constructor
  */
-const DrawObjectData = (obj): JSX.Element => {
-    const values = [];
+const DrawObjectData = (obj: {G: {[key: string]: any}, ctx: {[key: string]: any}}): JSX.Element => {
+    const values: JSX.Element[] = [];
     for (let [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {
             const data: JSX.Element = DrawObjectData(value);
@@ -94,8 +95,8 @@ const DrawObjectData = (obj): JSX.Element => {
  * @param data Глобальные параметры.
  * @constructor
  */
-export const DrawDebugData = (data): JSX.Element | null => {
-    const debugData: { ctx: {}, G: {} } | undefined = GetDebugData(data);
+export const DrawDebugData = (data: GameBoard): JSX.Element | null => {
+    const debugData: {G: {[key: string]: any}, ctx: {[key: string]: any}} | undefined = GetDebugData(data);
     if (debugData === undefined) {
         return null;
     } else {

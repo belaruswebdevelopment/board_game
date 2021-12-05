@@ -16,7 +16,7 @@ import {
 import {CheckAndMoveThrudOrPickHeroAction} from "./HeroActions";
 import {AddDataToLog, LogTypes} from "../Logging";
 import {suitsConfig} from "../data/SuitData";
-import {MyGameState} from "../GameSetup";
+import {CampDeckCardTypes, MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IArtefactCampCard, IMercenaryCampCard, isArtefactCard} from "../Camp";
 import {ICard} from "../Card";
@@ -30,7 +30,6 @@ import {ICard} from "../Card";
  *
  * @param G
  * @param ctx
- * @returns {*}
  * @constructor
  */
 export const CheckPickCampCard = (G: MyGameState, ctx: Ctx): void => {
@@ -51,7 +50,6 @@ export const CheckPickCampCard = (G: MyGameState, ctx: Ctx): void => {
  * @param ctx
  * @param config Конфиг действий артефакта.
  * @param cardId Id карты.
- * @returns {*}
  * @constructor
  */
 export const AddCampCardToCards = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
@@ -62,7 +60,7 @@ export const AddCampCardToCards = (G: MyGameState, ctx: Ctx, config: IConfig, ca
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime) {
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime;
     }
-    const campCard: IArtefactCampCard | IMercenaryCampCard | null = G.camp[cardId];
+    const campCard: CampDeckCardTypes | null = G.camp[cardId];
     let suitId: number | null = null,
         stack: IStack[] = [];
     G.camp[cardId] = null;
@@ -129,7 +127,6 @@ export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, 
  *
  * @param G
  * @param ctx
- * @returns {*}
  * @constructor
  */
 export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void => {
@@ -216,7 +213,6 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
  * @param coinId Id монеты.
  * @param type Тип монеты.
  * @param isInitial Является ли монета базовой.
- * @returns {*}
  * @constructor
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, config: IConfig, coinId: number,
@@ -282,7 +278,6 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, co
  *
  * @param G
  * @param ctx
- * @returns {*}
  * @constructor
  */
 export const DiscardTradingCoin = (G: MyGameState, ctx: Ctx): void => {
@@ -312,7 +307,6 @@ export const DiscardTradingCoin = (G: MyGameState, ctx: Ctx): void => {
  * @param config Конфиг действий артефакта.
  * @param suitId Id фракции.
  * @param cardId Id карты.
- * @returns {*}
  * @constructor
  */
 export const DiscardAnyCardFromPlayerBoard = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
@@ -378,7 +372,6 @@ export const StartDiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig):
  * @param suitId Id фракции.
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
- * @returns {*}
  * @constructor
  */
 export const DiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number, playerId: number,
@@ -402,7 +395,6 @@ export const DiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
  * @param ctx
  * @param config Конфиг действий артефакта.
  * @param suitId Id фракции.
- * @returns {*}
  * @constructor
  */
 export const GetMjollnirProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {

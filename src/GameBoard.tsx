@@ -49,9 +49,9 @@ export class GameBoard extends React.Component<BoardProps> {
             drawDistinctionProfitUI: JSX.Element | string = this.props.G.drawProfit ?
                 DrawProfit(this, this.props.G.drawProfit) : this.props.G.drawProfit,
             tavernsUI: JSX.Element[] = DrawTaverns(this, gridClass),
-            playersBoardsCoinsUI = DrawPlayersBoardsCoins(this),
-            playersHandsCoinsUI = DrawPlayersHandsCoins(this),
-            playersBoardsUI = DrawPlayersBoards(this),
+            playersBoardsCoinsUI: JSX.Element[][] = DrawPlayersBoardsCoins(this),
+            playersHandsCoinsUI: JSX.Element[][] = DrawPlayersHandsCoins(this),
+            playersBoardsUI: JSX.Element[][] = DrawPlayersBoards(this),
             logUI: JSX.Element | null = DrawLogData(this),
             debugUI: JSX.Element | null = DrawDebugData(this);
         return (

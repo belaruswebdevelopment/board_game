@@ -7,8 +7,7 @@ import {
     StartActionFromStackOrEndActions,
 } from "../helpers/StackHelpers";
 import {Ctx, Move} from "boardgame.io";
-import {MyGameState} from "../GameSetup";
-import {IArtefactCampCard, IMercenaryCampCard} from "../Camp";
+import {CampDeckCardTypes, MyGameState} from "../GameSetup";
 // todo Add logging
 /**
  * <h3>Выбор карты из кэмпа.</h3>
@@ -24,17 +23,13 @@ import {IArtefactCampCard, IMercenaryCampCard} from "../Camp";
  * @constructor
  */
 export const ClickCampCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId): string | void => {
-    const buff: boolean | undefined = G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp;
-    let isValidMove: boolean = false;
-    if (buff) {
-        isValidMove = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]})
-            && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
-                (!G.campPicked && buff));
-    }
+    const isValidMove: boolean = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]})
+        && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
+            (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddActionsToStack(G, ctx, (G.camp[cardId] as IArtefactCampCard | IMercenaryCampCard).stack);
+    AddActionsToStack(G, ctx, G.camp[cardId].stack);
     StartActionFromStackOrEndActions(G, ctx, false, cardId);
 };
 
@@ -52,15 +47,12 @@ export const ClickCampCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardI
  * @constructor
  */
 export const ClickCampCardHolda: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
-    const buff: boolean | undefined = G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime;
-    let isValidMove: boolean = false;
-    if (buff) {
-        isValidMove = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]}) && buff;
-    }
+    const isValidMove: boolean = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]}) &&
+    Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const campCard: IArtefactCampCard | IMercenaryCampCard | null = G.camp[cardId];
+    const campCard: CampDeckCardTypes | null = G.camp[cardId];
     if (campCard) {
         EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
     }

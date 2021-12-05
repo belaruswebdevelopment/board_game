@@ -58,7 +58,7 @@ export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => 
             if (isCardDiscarded) {
                 isCurrentTavernEmpty = true;
             }
-            // fixme else Error Card not discarded
+            // fixme else Error Card not discarded???
         }
     } else {
         isCurrentTavernEmpty = G.taverns[G.currentTavern].every(card => card === null);

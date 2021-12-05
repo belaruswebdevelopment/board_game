@@ -35,7 +35,7 @@ import {AddActionsToStack} from "./helpers/StackHelpers";
 import {BotsPlaceAllCoins} from "./moves/BotMoves";
 import {ResolveBoardCoins} from "./helpers/CoinHelpers";
 import {PlayerView} from "boardgame.io/core";
-import {CheckDistinction} from "./Distiction";
+import {CheckDistinction} from "./Distinction";
 import type {Ctx, Game} from "boardgame.io";
 import {CheckPlayersBasicOrder, IPublicPlayer, IStack} from "./Player";
 // todo Add logging
@@ -167,7 +167,9 @@ export const BoardGame: Game<MyGameState> = {
                 G.currentTavern++;
                 const {playersOrder, exchangeOrder}: { playersOrder: number[], exchangeOrder: number[] } =
                     ResolveBoardCoins(G, ctx);
-                [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
+                // [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
+                G.publicPlayersOrder = playersOrder;
+                G.exchangeOrder = exchangeOrder;
             },
             onEnd: (G) => {
                 ChangePlayersPriorities(G);
@@ -251,12 +253,10 @@ export const BoardGame: Game<MyGameState> = {
                             .length) {
                         return -1;
                     }
-                    if (nextPlayer.priority && currentPlayer.priority) {
-                        if (nextPlayer.priority.value < currentPlayer.priority.value) {
-                            return 1;
-                        } else if (nextPlayer.priority.value > currentPlayer.priority.value) {
-                            return -1;
-                        }
+                    if (nextPlayer.priority.value < currentPlayer.priority.value) {
+                        return 1;
+                    } else if (nextPlayer.priority.value > currentPlayer.priority.value) {
+                        return -1;
                     }
                     return 0;
                 });

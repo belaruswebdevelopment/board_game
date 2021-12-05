@@ -1,8 +1,5 @@
-"use strict";
-exports.__esModule = true;
-exports.ReturnCoinToPlayerHands = exports.ReturnCoinsToPlayerHands = exports.UpgradeCoin = exports.Trading = exports.CountMarketCoins = exports.BuildCoins = exports.CreateCoin = void 0;
-var Logging_1 = require("./Logging");
-var StackHelpers_1 = require("./helpers/StackHelpers");
+import { AddDataToLog } from "./Logging";
+import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
 /**
  * todo Description.
  * @param obj
@@ -21,15 +18,14 @@ var isCoin = function (obj) { return obj.value !== undefined; };
  * @param isTriggerTrading Активирует ли обмен монет.
  * @constructor
  */
-var CreateCoin = function (_a) {
+export var CreateCoin = function (_a) {
     var _b = _a === void 0 ? {} : _a, value = _b.value, _c = _b.isInitial, isInitial = _c === void 0 ? false : _c, _d = _b.isTriggerTrading, isTriggerTrading = _d === void 0 ? false : _d;
     return ({
         value: value,
         isInitial: isInitial,
-        isTriggerTrading: isTriggerTrading
+        isTriggerTrading: isTriggerTrading,
     });
 };
-exports.CreateCoin = CreateCoin;
 /**
  * <h3>Создание всех монет.</h3>
  * <p>Применения:</p>
@@ -42,7 +38,7 @@ exports.CreateCoin = CreateCoin;
  * @param options Опции создания монет.
  * @constructor
  */
-var BuildCoins = function (coinConfig, options) {
+export var BuildCoins = function (coinConfig, options) {
     var _a, _b;
     var coins = [];
     for (var i = 0; i < coinConfig.length; i++) {
@@ -51,16 +47,15 @@ var BuildCoins = function (coinConfig, options) {
             options.count.push({ value: coinValue });
         }
         for (var c = 0; c < count; c++) {
-            coins.push((0, exports.CreateCoin)({
+            coins.push(CreateCoin({
                 value: coinValue,
                 isInitial: options.isInitial,
-                isTriggerTrading: coinConfig[i].isTriggerTrading
+                isTriggerTrading: coinConfig[i].isTriggerTrading,
             }));
         }
     }
     return coins;
 };
-exports.BuildCoins = BuildCoins;
 /**
  * <h3>Вычисляет количество монет каждого номинала на рынке монет.</h3>
  * <p>Применения:</p>
@@ -71,7 +66,7 @@ exports.BuildCoins = BuildCoins;
  * @param G
  * @constructor
  */
-var CountMarketCoins = function (G) {
+export var CountMarketCoins = function (G) {
     var repeated = {};
     var _loop_1 = function (i) {
         var temp = G.marketCoinsUnique[i].value;
@@ -82,7 +77,6 @@ var CountMarketCoins = function (G) {
     }
     return repeated;
 };
-exports.CountMarketCoins = CountMarketCoins;
 /**
  * <h3>Активация обмена монет с рынка.</h3>
  * <p>Применения:</p>
@@ -95,10 +89,10 @@ exports.CountMarketCoins = CountMarketCoins;
  * @param tradingCoins Монеты для обмена.
  * @constructor
  */
-var Trading = function (G, ctx, tradingCoins) {
+export var Trading = function (G, ctx, tradingCoins) {
     var coinsValues = tradingCoins.map(function (coin) { return coin.value; }), coinsMaxValue = Math.max.apply(Math, coinsValues), coinsMinValue = Math.min.apply(Math, coinsValues);
     var stack, upgradingCoinId, upgradingCoin, coinMaxIndex = 0, coinMinIndex = 0;
-    (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0410\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D \u043E\u0431\u043C\u0435\u043D \u043C\u043E\u043D\u0435\u0442 \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E ('".concat(coinsMinValue, "' \u0438 \n    '").concat(coinsMaxValue, "') \u0438\u0433\u0440\u043E\u043A\u0430 ").concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, "."));
+    AddDataToLog(G, "game" /* GAME */, "\u0410\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D \u043E\u0431\u043C\u0435\u043D \u043C\u043E\u043D\u0435\u0442 \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E ('".concat(coinsMinValue, "' \u0438 \n    '").concat(coinsMaxValue, "') \u0438\u0433\u0440\u043E\u043A\u0430 ").concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, "."));
     // TODO trading isInitial first or playerChoose?
     for (var i = 0; i < tradingCoins.length; i++) {
         if (tradingCoins[i].value === coinsMaxValue) {
@@ -121,8 +115,8 @@ var Trading = function (G, ctx, tradingCoins) {
                 config: {
                     number: 1,
                     value: coinsMaxValue,
-                    isTrading: true
-                }
+                    isTrading: true,
+                },
             },
         ];
         upgradingCoinId = G.tavernsNum + coinMinIndex;
@@ -135,17 +129,16 @@ var Trading = function (G, ctx, tradingCoins) {
                 config: {
                     number: 1,
                     value: coinsMinValue,
-                    isTrading: true
-                }
+                    isTrading: true,
+                },
             },
         ];
         upgradingCoinId = G.tavernsNum + coinMaxIndex;
         upgradingCoin = tradingCoins[coinMaxIndex];
     }
-    (0, StackHelpers_1.AddActionsToStack)(G, ctx, stack);
-    (0, StackHelpers_1.StartActionFromStackOrEndActions)(G, ctx, false, upgradingCoinId, "board", upgradingCoin.isInitial);
+    AddActionsToStack(G, ctx, stack);
+    StartActionFromStackOrEndActions(G, ctx, false, upgradingCoinId, "board", upgradingCoin.isInitial);
 };
-exports.Trading = Trading;
 /**
  * <h3>Обмен монеты с рынка.</h3>
  * <p>Применения:</p>
@@ -161,7 +154,7 @@ exports.Trading = Trading;
  * @param isInitial Является ли обменная монета базовой.
  * @constructor
  */
-var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInitial) {
+export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInitial) {
     var _a;
     // todo Split into different functions!
     var upgradingCoin = {}, coin;
@@ -256,9 +249,9 @@ var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInitial) {
                 }
             }
         }
-        (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u0442\u043E \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E \n        '".concat(upgradingCoin.value, "' \u043D\u0430 +").concat(config.value, "."));
+        AddDataToLog(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u0442\u043E \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E \n        '".concat(upgradingCoin.value, "' \u043D\u0430 +").concat(config.value, "."));
         if (upgradedCoin !== null) {
-            (0, Logging_1.AddDataToLog)(G, "private" /* PRIVATE */, "\u041D\u0430\u0447\u0430\u0442\u043E \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B c ID '".concat(upgradingCoinId, "' \u0441 \u0442\u0438\u043F\u043E\u043C \n            '").concat(type, "' \u0441 initial '").concat(isInitial, "' \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '").concat(upgradingCoin.value, "' \u043D\u0430 +").concat(config.value, " \u0441 \n            \u043D\u043E\u0432\u044B\u043C \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u043C '").concat(newValue, "' \u0441 \u0438\u0442\u043E\u0433\u043E\u0432\u044B\u043C \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u043C '").concat(upgradedCoin.value, "'."));
+            AddDataToLog(G, "private" /* PRIVATE */, "\u041D\u0430\u0447\u0430\u0442\u043E \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B c ID '".concat(upgradingCoinId, "' \u0441 \u0442\u0438\u043F\u043E\u043C \n            '").concat(type, "' \u0441 initial '").concat(isInitial, "' \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '").concat(upgradingCoin.value, "' \u043D\u0430 +").concat(config.value, " \u0441 \n            \u043D\u043E\u0432\u044B\u043C \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u043C '").concat(newValue, "' \u0441 \u0438\u0442\u043E\u0433\u043E\u0432\u044B\u043C \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u043C '").concat(upgradedCoin.value, "'."));
             var handCoinIndex = -1;
             if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] === null) {
                 handCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.findIndex(function (coin) {
@@ -275,11 +268,11 @@ var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInitial) {
             else {
                 if (handCoinIndex === -1) {
                     G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = upgradedCoin;
-                    (0, Logging_1.AddDataToLog)(G, "public" /* PUBLIC */, "\u041C\u043E\u043D\u0435\u0442\u0430 \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '".concat(upgradedCoin.value, "' \u0432\u0435\u0440\u043D\u0443\u043B\u0430\u0441\u044C \n                    \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, "."));
+                    AddDataToLog(G, "public" /* PUBLIC */, "\u041C\u043E\u043D\u0435\u0442\u0430 \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '".concat(upgradedCoin.value, "' \u0432\u0435\u0440\u043D\u0443\u043B\u0430\u0441\u044C \n                    \u043D\u0430 \u043F\u043E\u043B\u0435 \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, "."));
                 }
                 else {
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinIndex] = upgradedCoin;
-                    (0, Logging_1.AddDataToLog)(G, "public" /* PUBLIC */, "\u041C\u043E\u043D\u0435\u0442\u0430 \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '".concat(upgradedCoin.value, "' \u0432\u0435\u0440\u043D\u0443\u043B\u0430\u0441\u044C \n                    \u043D\u0430 \u0440\u0443\u043A\u0443 \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, "."));
+                    AddDataToLog(G, "public" /* PUBLIC */, "\u041C\u043E\u043D\u0435\u0442\u0430 \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '".concat(upgradedCoin.value, "' \u0432\u0435\u0440\u043D\u0443\u043B\u0430\u0441\u044C \n                    \u043D\u0430 \u0440\u0443\u043A\u0443 \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, "."));
                 }
             }
             if (!upgradingCoin.isInitial) {
@@ -291,15 +284,14 @@ var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInitial) {
                     }
                 }
                 G.marketCoins.splice(returningIndex, 0, upgradingCoin);
-                (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u041C\u043E\u043D\u0435\u0442\u0430 \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '".concat(upgradingCoin.value, "' \n                \u0432\u0435\u0440\u043D\u0443\u043B\u0430\u0441\u044C \u043D\u0430 \u0440\u044B\u043D\u043E\u043A."));
+                AddDataToLog(G, "game" /* GAME */, "\u041C\u043E\u043D\u0435\u0442\u0430 \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '".concat(upgradingCoin.value, "' \n                \u0432\u0435\u0440\u043D\u0443\u043B\u0430\u0441\u044C \u043D\u0430 \u0440\u044B\u043D\u043E\u043A."));
             }
         }
         else {
-            (0, Logging_1.AddDataToLog)(G, "private" /* PRIVATE */, "На рынке монет нет доступных монет для обмена.");
+            AddDataToLog(G, "private" /* PRIVATE */, "На рынке монет нет доступных монет для обмена.");
         }
     }
 };
-exports.UpgradeCoin = UpgradeCoin;
 /**
  * <h3>Возвращает все монеты со стола в руки игроков в начале фазы выставления монет.</h3>
  * <p>Применения:</p>
@@ -310,18 +302,17 @@ exports.UpgradeCoin = UpgradeCoin;
  * @param G
  * @constructor
  */
-var ReturnCoinsToPlayerHands = function (G) {
+export var ReturnCoinsToPlayerHands = function (G) {
     for (var i = 0; i < G.publicPlayers.length; i++) {
         for (var j = 0; j < G.publicPlayers[i].boardCoins.length; j++) {
-            var isCoinReturned = (0, exports.ReturnCoinToPlayerHands)(G.publicPlayers[i], j);
+            var isCoinReturned = ReturnCoinToPlayerHands(G.publicPlayers[i], j);
             if (!isCoinReturned) {
                 break;
             }
         }
     }
-    (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "Все монеты вернулись в руки игроков.");
+    AddDataToLog(G, "game" /* GAME */, "Все монеты вернулись в руки игроков.");
 };
-exports.ReturnCoinsToPlayerHands = ReturnCoinsToPlayerHands;
 /**
  * <h3>Возвращает указанную монету в руку игрока, если она ещё не в руке.</h3>
  * <p>Применения:</p>
@@ -334,7 +325,7 @@ exports.ReturnCoinsToPlayerHands = ReturnCoinsToPlayerHands;
  * @param coinId Id монеты.
  * @constructor
  */
-var ReturnCoinToPlayerHands = function (player, coinId) {
+export var ReturnCoinToPlayerHands = function (player, coinId) {
     var tempCoinId = player.handCoins.indexOf(null);
     if (tempCoinId === -1) {
         return false;
@@ -343,4 +334,3 @@ var ReturnCoinToPlayerHands = function (player, coinId) {
     player.boardCoins[coinId] = null;
     return true;
 };
-exports.ReturnCoinToPlayerHands = ReturnCoinToPlayerHands;

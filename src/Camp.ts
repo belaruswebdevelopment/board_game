@@ -1,7 +1,7 @@
 import {DiscardCardFromTavern, ICard} from "./Card";
 import {AddDataToLog, LogTypes} from "./Logging";
 import {suitsConfig} from "./data/SuitData";
-import {MyGameState} from "./GameSetup";
+import {CampDeckCardTypes, MyGameState} from "./GameSetup";
 import {IStack} from "./Player";
 import {IArtefactConfig, IMercenaries} from "./data/CampData";
 import {IHero} from "./Hero";
@@ -50,7 +50,7 @@ interface ICreateMercenaryCampCard {
     stack: IStack[],
 }
 
-export const isArtefactCard = (card: ICard | IArtefactCampCard | IMercenaryCampCard | IHero | null): card is
+export const isArtefactCard = (card: ICard | CampDeckCardTypes | IHero | null): card is
     IArtefactCampCard => (card as IArtefactCampCard).suit !== undefined;
 
 /**
@@ -144,8 +144,8 @@ export const CreateMercenaryCampCard = ({
  * @constructor
  */
 export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, mercenariesConfig: IMercenaries[][]):
-    (IArtefactCampCard | IMercenaryCampCard)[] => {
-    const campCards: (IArtefactCampCard | IMercenaryCampCard)[] = [];
+    CampDeckCardTypes[] => {
+    const campCards: CampDeckCardTypes[] = [];
     for (const campArtefactCard in artefactConfig) {
         if (artefactConfig.hasOwnProperty(campArtefactCard)) {
             if (artefactConfig[campArtefactCard].tier === tier) {
@@ -279,7 +279,7 @@ export const RefillCamp = (G: MyGameState): void => {
 const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
     for (let i: number = 0; i < G.camp.length; i++) {
         if (G.camp[i]) {
-            const card: IArtefactCampCard | IMercenaryCampCard | null = G.camp.splice(i, 1, null)[0];
+            const card: CampDeckCardTypes | null = G.camp.splice(i, 1, null)[0];
             if (card) {
                 G.discardCampCardsDeck.push(card);
             }
@@ -304,8 +304,8 @@ const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
  * @param cardIndex Индекс карты.
  * @constructor
  */
-const AddCardToCamp = (G: MyGameState, cardIndex: number) => {
-    const newCampCard: IArtefactCampCard | IMercenaryCampCard = G.campDecks[G.campDecks.length -
+const AddCardToCamp = (G: MyGameState, cardIndex: number): void => {
+    const newCampCard: CampDeckCardTypes = G.campDecks[G.campDecks.length -
     G.tierToEnd].splice(0, 1)[0];
     G.camp.splice(cardIndex, 1, newCampCard);
 };

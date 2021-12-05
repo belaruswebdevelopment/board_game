@@ -6,7 +6,7 @@ import {moveBy, moveValidators} from "./MoveValidator";
 import {suitsConfig} from "./data/SuitData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {TotalRank} from "./helpers/ScoreHelpers";
-import {MyGameState} from "./GameSetup";
+import {CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {ICoin} from "./Coin";
 import {IArtefactCampCard, IMercenaryCampCard} from "./Camp";
@@ -21,11 +21,11 @@ import {IArtefactCampCard, IMercenaryCampCard} from "./Camp";
  * @param G
  * @param ctx
  */
-export const enumerate = (G: MyGameState, ctx: Ctx) => {
+export const enumerate = (G: MyGameState, ctx: Ctx): {move: string, args: number[] | number}[] => {
         //make false for standard bot
         const enableAdvancedBot: boolean = true,
-            uniqueArr = [];
-        let moves = [],
+            uniqueArr: TavernCardTypes[] = [];
+        let moves: {move: string, args: number[] | number}[] = [],
             flag: boolean = true,
             advancedString: string = "advanced",
             isAdvancedExist: boolean = Object.keys(moveBy[ctx.phase]).some(key => key.includes(advancedString));
@@ -43,7 +43,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx) => {
                     const moveName: string = moveBy[ctx.phase][stage],
                         [minValue, maxValue]: [number, number] = moveValidators[moveName].getRange({G: G, ctx: ctx}),
                         hasGetValue: boolean = moveValidators[moveName].hasOwnProperty("getValue");
-                    let argValue: number;
+                    let argValue: number[] | number;
                     for (let i: number = minValue; i < maxValue; i++) {
                         if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
                             continue;
@@ -69,7 +69,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx) => {
                 pickCardOrCampCard = Math.floor(Math.random() * 2) ? "card" : "camp";
             }
             if (pickCardOrCampCard === "card") {
-                const tavern: (ICard | IActionCard | null)[] = G.taverns[G.currentTavern];
+                const tavern: (DeckCardTypes | null)[] = G.taverns[G.currentTavern];
                 for (let i: number = 0; i < tavern.length; i++) {
                     if (tavern[i] === null) {
                         continue;
@@ -222,8 +222,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx) => {
                     moves.push({move: "PassEnlistmentMercenaries", args: []});
                 }
             } else if (G.drawProfit === "enlistmentMercenaries") {
-                const mercenaries: (IArtefactCampCard | IMercenaryCampCard)[] =
-                    G.publicPlayers[Number(ctx.currentPlayer)].campCards.filter(card =>
+                const mercenaries: CampDeckCardTypes[] =
+                    G.publicPlayers[Number(ctx.currentPlayer)].campCards.filter(card: CampDeckCardTypes =>
                         card.type === "наёмник");
                 for (let j: number = 0; j < mercenaries.length; j++) {
                     botMoveArguments.push([j]);
@@ -547,7 +547,7 @@ export const objectives = () => ({
 export const iterations = (G: MyGameState, ctx: Ctx): number => {
     const maxIter: number = G.botData.maxIter;
     if (ctx.phase === "pickCards") {
-        const currentTavern: (ICard | IActionCard | null)[] = G.taverns[G.currentTavern];
+        const currentTavern: (DeckCardTypes | null)[] = G.taverns[G.currentTavern];
         if (currentTavern.filter(card => card !== null).length === 1) {
             return 1;
         }

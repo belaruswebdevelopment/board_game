@@ -25,7 +25,6 @@ import {IConditions, IVariants} from "../data/HeroData";
  * @param ctx
  * @param config Конфиг действий героя.
  * @param suitId Id фракции.
- * @returns {*}
  * @constructor
  */
 export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {

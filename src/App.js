@@ -1,50 +1,3 @@
-"use strict";
-/*import React from "react";
-import {Client} from "boardgame.io/react";
-import {Local} from "boardgame.io/multiplayer";
-import {MCTSBot, RandomBot} from "boardgame.io/ai";
-import {BoardGame} from "./Game";
-import {GameBoard} from "./Board";
-
-class CustomMCTSBot extends MCTSBot {
-    constructor(config, ...args) {
-        super({
-                ...config,
-                objectives: BoardGame.ai.objectives,
-                iterations: BoardGame.ai.iterations,
-                playoutDepth: BoardGame.ai.playoutDepth,
-            },
-            ...args
-        );
-    }
-}
-
-const enableLocalPlayer = true,
-    setupBot = {
-        bots: {
-            // "0": RandomBot,
-            // "1": RandomBot,
-            // "2": RandomBot,
-            // "3": RandomBot,
-            // "4": RandomBot,
-        },
-    },
-    BoardGameClient = Client({
-        debug: true,
-        game: BoardGame,
-        board: GameBoard,
-        numPlayers: 3,
-        multiplayer: enableLocalPlayer ? Local(setupBot) : undefined,
-    }),
-    App = () => (
-        <div>
-        <BoardGameClient playerID="0"/>
-        {/!*<BoardGameClient playerID="1"/>*!/}
-        {/!*<BoardGameClient playerID="2"/>*!/}
-        </div>
-    );
-
-export default App;*/
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -60,93 +13,56 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
-exports.__esModule = true;
-/*import {Client} from "boardgame.io/react";
-import {BoardGame} from "./Game";
-import {GameBoard} from "./Board";
-
-const App = Client({
-    // debug: false,
-    game: BoardGame,
-    board: GameBoard,
-    numPlayers: 5,
-});
-
-export default App;*/
-/*
-import React from "react";
-import {render} from "react-dom";
-import {Client} from "boardgame.io/react";
-import {BoardGame} from "./Game";
-import {GameBoard} from "./Board";
-import {SocketIO} from "boardgame.io/multiplayer";
-
-const BoardGameClient = Client({
-    // debug: false,
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+import { jsx as _jsx } from "react/jsx-runtime";
+import { Client } from "boardgame.io/react";
+import { Local } from "boardgame.io/multiplayer";
+import { MCTSBot } from "boardgame.io/ai";
+import { BoardGame } from "./Game";
+import { GameBoard } from "./GameBoard";
+var CustomMCTSBot = /** @class */ (function (_super) {
+    __extends(CustomMCTSBot, _super);
+    function CustomMCTSBot(config) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        return _super.apply(this, __spreadArray([__assign(__assign({}, config), { objectives: BoardGame.ai.objectives, iterations: BoardGame.ai.iterations, playoutDepth: BoardGame.ai.playoutDepth })], args, false)) || this;
+    }
+    return CustomMCTSBot;
+}(MCTSBot));
+var enableLocalPlayer = true, setupBot = {
+    bots: {
+    // "0": RandomBot,
+    // "1": RandomBot,
+    // "2": RandomBot,
+    // "3": RandomBot,
+    // "4": RandomBot,
+    },
+}, BoardGameClient = Client({
+    debug: true,
     game: BoardGame,
     board: GameBoard,
     numPlayers: 3,
-    multiplayer: SocketIO({
-        server: "localhost:8000",
-    }),
-});
-
-class App extends React.Component {
-    state = {
-        playerID: null,
-    };
-
-    render() {
-        if (this.state.playerID === null) {
-            return (
-                <div>
-                    <p>Play as</p>
-                    <button onClick={() => this.setState({ playerID: "0", })}>
-                        Player 1
-                    </button>
-                    <button onClick={() => this.setState({ playerID: "1", })}>
-                        Player 2
-                    </button>
-                    <button onClick={() => this.setState({ playerID: "2", })}>
-                        Player 3
-                    </button>
-                    {/!*<button onClick={() => this.setState({ playerID: "3", })}>
-                        Player 4
-                    </button>
-                    <button onClick={() => this.setState({ playerID: "4", })}>
-                        Player 5
-                    </button>*!/}
-                </div>
-            );
-        }
-        return (
-            <div>
-                <BoardGameClient
-                    playerID={this.state.playerID}
-                />
-            </div>
-        );
-    }
-}
-
-render(<App/>, document.getElementById("root"));
-
+    multiplayer: enableLocalPlayer ? Local(setupBot) : undefined,
+}), App = function () { return (_jsx("div", { children: _jsx(BoardGameClient, { playerID: "0" }, void 0) }, void 0)); };
 export default App;
-*/
-var react_1 = __importDefault(require("react"));
-var LobbyClient_1 = __importDefault(require("./LobbyClient"));
-var App = /** @class */ (function (_super) {
-    __extends(App, _super);
-    function App() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    App.prototype.render = function () {
-        return (react_1["default"].createElement("div", null,
-            react_1["default"].createElement(LobbyClient_1["default"], null)));
-    };
-    return App;
-}(react_1["default"].Component));
-exports["default"] = App;

@@ -1,4 +1,3 @@
-"use strict";
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -8,10 +7,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-exports.__esModule = true;
-exports.heroesConfig = void 0;
-var SuitHelpers_1 = require("../helpers/SuitHelpers");
-var ScoreHelpers_1 = require("../helpers/ScoreHelpers");
+import { GetSuitIndexByName } from "../helpers/SuitHelpers";
+import { TotalRank } from "../helpers/ScoreHelpers";
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -33,11 +30,11 @@ var Dwerg_Bergelmir = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Dwerg_Bergelmir"
-            }
+                drawName: "Dwerg_Bergelmir",
+            },
         },
     ],
-    scoringRule: function () { return 1; }
+    scoringRule: function () { return 1; },
 };
 // todo rework AddBuff?!
 /**
@@ -73,11 +70,11 @@ var Ylud = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Ylud"
-            }
+                drawName: "Ylud",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -100,11 +97,11 @@ var Dwerg_Jungir = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Dwerg_Jungir"
-            }
+                drawName: "Dwerg_Jungir",
+            },
         },
     ],
-    scoringRule: function () { return 1; }
+    scoringRule: function () { return 1; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -138,23 +135,23 @@ var Uline = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Uline"
-            }
+                drawName: "Uline",
+            },
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "everyTurn",
-                    value: "Uline"
-                }
-            }
+                    value: "Uline",
+                },
+            },
         },
         {
-            actionName: "GetClosedCoinIntoPlayerHand"
+            actionName: "GetClosedCoinIntoPlayerHand",
         },
     ],
-    scoringRule: function () { return 9; }
+    scoringRule: function () { return 9; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -177,12 +174,12 @@ var Idunn = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Idunn"
-            }
+                drawName: "Idunn",
+            },
         },
     ],
-    scoringRule: function (player) { return player.cards[(0, SuitHelpers_1.GetSuitIndexByName)("explorer")]
-        .reduce(ScoreHelpers_1.TotalRank, 0) * 2; }
+    scoringRule: function (player) { return player.cards[GetSuitIndexByName("explorer")]
+        .reduce(TotalRank, 0) * 2; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -204,11 +201,11 @@ var Tarah = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Tarah"
-            }
+                drawName: "Tarah",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -230,11 +227,11 @@ var Kraal = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Kraal"
-            }
+                drawName: "Kraal",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -257,11 +254,11 @@ var Lokdur = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Lokdur"
-            }
+                drawName: "Lokdur",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -284,8 +281,8 @@ var Grid = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Grid"
-            }
+                drawName: "Grid",
+            },
         },
         {
             actionName: "DrawProfitAction",
@@ -293,17 +290,17 @@ var Grid = {
                 stageName: "upgradeCoin",
                 drawName: "Grid",
                 name: "upgradeCoin",
-                value: 7
-            }
+                value: 7,
+            },
         },
         {
             actionName: "UpgradeCoinAction",
             config: {
-                value: 7
-            }
+                value: 7,
+            },
         },
     ],
-    scoringRule: function () { return 7; }
+    scoringRule: function () { return 7; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -332,8 +329,8 @@ var Thrud = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Thrud"
-            }
+                drawName: "Thrud",
+            },
         },
         {
             actionName: "DrawProfitAction",
@@ -341,34 +338,34 @@ var Thrud = {
                 blacksmith: {
                     suit: "blacksmith",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 hunter: {
                     suit: "hunter",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 explorer: {
                     suit: "explorer",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 warrior: {
                     suit: "warrior",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 miner: {
                     suit: "miner",
                     rank: 1,
-                    points: null
-                }
+                    points: null,
+                },
             },
             config: {
                 stageName: "placeCards",
                 name: "placeCards",
-                drawName: "Thrud"
-            }
+                drawName: "Thrud",
+            },
         },
         {
             actionName: "PlaceThrudAction",
@@ -376,32 +373,32 @@ var Thrud = {
                 blacksmith: {
                     suit: "blacksmith",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 hunter: {
                     suit: "hunter",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 explorer: {
                     suit: "explorer",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 warrior: {
                     suit: "warrior",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 miner: {
                     suit: "miner",
                     rank: 1,
-                    points: null
-                }
-            }
+                    points: null,
+                },
+            },
         },
     ],
-    scoringRule: function () { return 13; }
+    scoringRule: function () { return 13; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -424,11 +421,11 @@ var Zoral = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Zoral"
-            }
+                drawName: "Zoral",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -451,11 +448,11 @@ var Dwerg_Aesir = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Dwerg_Aesir"
-            }
+                drawName: "Dwerg_Aesir",
+            },
         },
     ],
-    scoringRule: function () { return 1; }
+    scoringRule: function () { return 1; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -478,8 +475,8 @@ var Bonfur = {
         {
             actionName: "CheckDiscardCardsFromPlayerBoardAction",
             config: {
-                suit: "blacksmith"
-            }
+                suit: "blacksmith",
+            },
         },
         {
             actionName: "DrawProfitAction",
@@ -487,23 +484,23 @@ var Bonfur = {
                 stageName: "discardCardFromBoard",
                 drawName: "Bonfur",
                 name: "BonfurAction",
-                suit: "blacksmith"
-            }
+                suit: "blacksmith",
+            },
         },
         {
             actionName: "DiscardCardsFromPlayerBoardAction",
             config: {
-                suit: "blacksmith"
-            }
+                suit: "blacksmith",
+            },
         },
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Bonfur"
-            }
+                drawName: "Bonfur",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -527,8 +524,8 @@ var Dagda = {
             actionName: "CheckDiscardCardsFromPlayerBoardAction",
             config: {
                 suit: "hunter",
-                number: 2
-            }
+                number: 2,
+            },
         },
         {
             actionName: "DrawProfitAction",
@@ -537,20 +534,20 @@ var Dagda = {
                 drawName: "Dagda",
                 name: "DagdaAction",
                 suit: "hunter",
-                number: 2
-            }
+                number: 2,
+            },
         },
         {
-            actionName: "DiscardCardsFromPlayerBoardAction"
+            actionName: "DiscardCardsFromPlayerBoardAction",
         },
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Dagda"
-            }
+                drawName: "Dagda",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -572,11 +569,11 @@ var Skaa = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Skaa"
-            }
+                drawName: "Skaa",
+            },
         },
     ],
-    scoringRule: function () { return 17; }
+    scoringRule: function () { return 17; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -600,20 +597,20 @@ var Jarika = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Jarika"
-            }
+                drawName: "Jarika",
+            },
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "upgradeCoin",
-                    value: 2
-                }
-            }
+                    value: 2,
+                },
+            },
         },
     ],
-    scoringRule: function () { return 8; }
+    scoringRule: function () { return 8; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -635,12 +632,12 @@ var Astrid = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Astrid"
-            }
+                drawName: "Astrid",
+            },
         },
     ],
     scoringRule: function (player) { return Math.max.apply(Math, __spreadArray(__spreadArray([], player.boardCoins
-        .filter(function (coin) { return coin === null || coin === void 0 ? void 0 : coin.value; }).map(function (coin) { return coin.value; }), false), player.handCoins.filter(function (coin) { return coin === null || coin === void 0 ? void 0 : coin.value; }).map(function (coin) { return coin.value; }), false)); }
+        .filter(function (coin) { return coin === null || coin === void 0 ? void 0 : coin.value; }).map(function (coin) { return coin.value; }), false), player.handCoins.filter(function (coin) { return coin === null || coin === void 0 ? void 0 : coin.value; }).map(function (coin) { return coin.value; }), false)); },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -663,11 +660,11 @@ var Dwerg_Ymir = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Dwerg_Ymir"
-            }
+                drawName: "Dwerg_Ymir",
+            },
         },
     ],
-    scoringRule: function () { return 1; }
+    scoringRule: function () { return 1; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -690,11 +687,11 @@ var Dwerg_Sigmir = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Dwerg_Sigmir"
-            }
+                drawName: "Dwerg_Sigmir",
+            },
         },
     ],
-    scoringRule: function () { return 1; }
+    scoringRule: function () { return 1; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -721,19 +718,19 @@ var Hourya = {
                 conditions: {
                     suitCountMin: {
                         suit: "explorer",
-                        value: 5
-                    }
-                }
-            }
+                        value: 5,
+                    },
+                },
+            },
         },
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Hourya"
-            }
+                drawName: "Hourya",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -755,11 +752,11 @@ var Aegur = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Aegur"
-            }
+                drawName: "Aegur",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -781,11 +778,11 @@ var Aral = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Aral"
-            }
+                drawName: "Aral",
+            },
         },
     ],
-    scoringRule: function () { return 0; }
+    scoringRule: function () { return 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -810,25 +807,25 @@ var Andumia = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Andumia"
-            }
+                drawName: "Andumia",
+            },
         },
         {
-            actionName: "CheckPickDiscardCard"
+            actionName: "CheckPickDiscardCard",
         },
         {
             actionName: "DrawProfitAction",
             config: {
                 stageName: "pickDiscardCard",
                 drawName: "Andumia",
-                name: "AndumiaAction"
-            }
+                name: "AndumiaAction",
+            },
         },
         {
-            actionName: "PickDiscardCard"
+            actionName: "PickDiscardCard",
         },
     ],
-    scoringRule: function () { return 12; }
+    scoringRule: function () { return 12; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -851,31 +848,31 @@ var Holda = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Holda"
-            }
+                drawName: "Holda",
+            },
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "goCampOneTime",
-                    value: true
-                }
-            }
+                    value: true,
+                },
+            },
         },
         {
-            actionName: "CheckPickCampCard"
+            actionName: "CheckPickCampCard",
         },
         {
             actionName: "DrawProfitAction",
             config: {
                 stageName: "pickCampCardHolda",
                 drawName: "Holda",
-                name: "HoldaAction"
-            }
+                name: "HoldaAction",
+            },
         },
     ],
-    scoringRule: function () { return 12; }
+    scoringRule: function () { return 12; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -898,18 +895,18 @@ var Khrad = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Khrad"
-            }
+                drawName: "Khrad",
+            },
         },
         {
             actionName: "UpgradeCoinAction",
             config: {
                 value: 10,
-                coin: "min"
-            }
+                coin: "min",
+            },
         },
     ],
-    scoringRule: function () { return 4; }
+    scoringRule: function () { return 4; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -934,8 +931,8 @@ var Olwin = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Olwin"
-            }
+                drawName: "Olwin",
+            },
         },
         {
             actionName: "DrawProfitAction",
@@ -943,35 +940,35 @@ var Olwin = {
                 blacksmith: {
                     suit: "blacksmith",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 hunter: {
                     suit: "hunter",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 explorer: {
                     suit: "explorer",
                     rank: 1,
-                    points: 0
+                    points: 0,
                 },
                 warrior: {
                     suit: "warrior",
                     rank: 1,
-                    points: 0
+                    points: 0,
                 },
                 miner: {
                     suit: "miner",
                     rank: 1,
-                    points: 0
-                }
+                    points: 0,
+                },
             },
             config: {
                 stageName: "placeCards",
                 drawName: "Olwin",
                 name: "placeCards",
-                number: 2
-            }
+                number: 2,
+            },
         },
         {
             actionName: "PlaceCards",
@@ -979,32 +976,32 @@ var Olwin = {
                 blacksmith: {
                     suit: "blacksmith",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 hunter: {
                     suit: "hunter",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 explorer: {
                     suit: "explorer",
                     rank: 1,
-                    points: 0
+                    points: 0,
                 },
                 warrior: {
                     suit: "warrior",
                     rank: 1,
-                    points: 0
+                    points: 0,
                 },
                 miner: {
                     suit: "miner",
                     rank: 1,
-                    points: 0
-                }
-            }
+                    points: 0,
+                },
+            },
         },
     ],
-    scoringRule: function () { return 9; }
+    scoringRule: function () { return 9; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -1028,20 +1025,20 @@ var Zolkur = {
         {
             actionName: "AddHeroToCards",
             config: {
-                drawName: "Zolkur"
-            }
+                drawName: "Zolkur",
+            },
         },
         {
             actionName: "AddBuffToPlayer",
             config: {
                 buff: {
                     name: "upgradeNextCoin",
-                    value: "min"
-                }
-            }
+                    value: "min",
+                },
+            },
         },
     ],
-    scoringRule: function () { return 10; }
+    scoringRule: function () { return 10; },
 };
 /**
  * <h3>Конфиг героев.</h3>
@@ -1052,7 +1049,7 @@ var Zolkur = {
  *
  * @type {{Zoral: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Aegur: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: null}, Dwerg_Ymir: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Andumia: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {actionName: string}, {config: {stageName: string, name: string, drawName: string}, actionName: string}, {actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Dwerg_Bergelmir: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Grid: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {stageName: string, name: string, drawName: string, value: number}, actionName: string}, {config: {value: number}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Holda: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}, {actionName: string}, {config: {stageName: string, name: string, drawName: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Dwerg_Aesir: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Dagda: {scoringRule: (function(): number), game: string, stack: [{config: {number: number, suit: string}, actionName: string}, {config: {number: number, stageName: string, name: string, suit: string, drawName: string}, actionName: string}, {actionName: string}, {config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}, Zolkur: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: string}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Astrid: {scoringRule: (function(*): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Tarah: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Aral: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: null}, Dwerg_Jungir: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Lokdur: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Dwerg_Sigmir: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Ylud: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Idunn: {scoringRule: (function(*)), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Uline: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: string}}, actionName: string}, {actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Khrad: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {value: number, coin: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Bonfur: {scoringRule: (function(): number), game: string, stack: [{config: {suit: string}, actionName: string}, {config: {stageName: string, name: string, suit: string, drawName: string}, actionName: string}, {config: {suit: string}, actionName: string}, {config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}, Kraal: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Olwin: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, config: {number: number, stageName: string, name: string, drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Jarika: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: number}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Hourya: {scoringRule: (function(): number), game: string, stack: [{config: {conditions: {suitCountMin: {suit: string, value: number}}}, actionName: string}, {config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}, Thrud: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}, config: {stageName: string, name: string, drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Skaa: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: number}}} Все герои.
  */
-exports.heroesConfig = {
+export var heroesConfig = {
     Bonfur: Bonfur,
     Aegur: Aegur,
     Dagda: Dagda,
@@ -1079,5 +1076,5 @@ exports.heroesConfig = {
     Holda: Holda,
     Khrad: Khrad,
     Olwin: Olwin,
-    Zolkur: Zolkur
+    Zolkur: Zolkur,
 };

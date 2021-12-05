@@ -50,7 +50,7 @@ export const CreatePriority = ({value, isExchangeable = true} = {} as ICreatePri
  * <li>Используется в конфиге кристаллов.</li>
  * </ol>
  */
-const priorities = [
+const priorities: IPriority[] = [
     CreatePriority({value: 1} as ICreatePriority),
     CreatePriority({value: 2} as ICreatePriority),
     CreatePriority({value: 3} as ICreatePriority),
@@ -65,7 +65,7 @@ const priorities = [
  * <li>Используется при раздаче кристаллов всем игрокам (в зависимости от количества игроков).</li>
  * </ol>
  */
-const prioritiesConfig: IPrioritiesConfig = {
+export const prioritiesConfig: IPrioritiesConfig = {
     2: priorities.slice(-2),
     3: priorities.slice(-3),
     4: priorities.slice(-4),
@@ -73,24 +73,17 @@ const prioritiesConfig: IPrioritiesConfig = {
 };
 
 /**
- * <h3>Раздать случайные кристаллы по одному каждому игроку.</h3>
+ * <h3>Генерирует кристаллы из конфига кристаллов по количеству игроков.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Раздаёт кристаллы после создания всех игроков.</li>
+ * <li>Происходит при инициализации игры.</li>
  * </ol>
  *
  * @param numPlayers Количество игроков.
- * @param players Объект всех игроков.
  * @constructor
  */
-export const BuildPriorities = (numPlayers: number, players: IPublicPlayer[]): void => {
-    const priorities: IPriority[] = prioritiesConfig[numPlayers].map(priority => priority);
-    for (let i: number = 0; i < numPlayers; i++) {
-        const randomPriorityIndex: number = Math.floor(Math.random() * priorities.length),
-            priority: IPriority = priorities.splice(randomPriorityIndex, 1)[0];
-        players[i].priority = CreatePriority(priority);
-    }
-};
+export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number): IPriority[] => prioritiesConfig[numPlayers]
+    .map((priority: IPriority): IPriority => priority);
 
 /**
  * <h3>Изменяет приоритет игроков для выбора карт из текущей таверны.</h3>
@@ -106,23 +99,16 @@ export const ChangePlayersPriorities = (G: MyGameState): void => {
     AddDataToLog(G, LogTypes.GAME, "Обмен кристаллами между игроками:");
     const tempPriorities: IPriority[] = [];
     for (let i: number = 0; i < G.exchangeOrder.length; i++) {
-        const priority: IPriority | undefined = G.publicPlayers[G.exchangeOrder[i]].priority;
-        if (priority) {
-            tempPriorities[i] = priority;
-        }
+        tempPriorities[i] = G.publicPlayers[G.exchangeOrder[i]].priority;
     }
     for (let i: number = 0; i < G.exchangeOrder.length; i++) {
-        const priority: IPriority | undefined = G.publicPlayers[i].priority;
-        if (priority) {
-            if (priority.value !== tempPriorities[i].value) {
-                AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[i].nickname} получил кристалл с 
+        if (G.publicPlayers[i].priority.value !== tempPriorities[i].value) {
+            AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[i].nickname} получил кристалл с 
                 приоритетом ${tempPriorities[i].value}.`);
-                G.publicPlayers[i].priority = tempPriorities[i];
-            }
+            G.publicPlayers[i].priority = tempPriorities[i];
         }
     }
 };
-
 /**
  * <h3>Определяет наличие у выбранного игрока наименьшего кристалла.</h3>
  * <p>Применения:</p>
@@ -135,11 +121,8 @@ export const ChangePlayersPriorities = (G: MyGameState): void => {
  * @constructor
  */
 export const HasLowestPriority = (G: MyGameState, playerId: number): boolean => {
-    const tempPriorities: number[] = G.publicPlayers.map(player => (player.priority as IPriority).value),
+    const tempPriorities: number[] = G.publicPlayers.map((player: IPublicPlayer) => player.priority.value),
         minPriority: number = Math.min(...tempPriorities),
-        priority: IPriority | undefined = G.publicPlayers[playerId].priority;
-    if (priority) {
-        return priority.value === minPriority;
-    }
-    return false;
+        priority: IPriority = G.publicPlayers[playerId].priority;
+    return priority.value === minPriority;
 };

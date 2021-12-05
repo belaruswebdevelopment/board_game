@@ -1,9 +1,6 @@
-"use strict";
-exports.__esModule = true;
-exports.CheckAndStartUlineActionsOrContinue = exports.StartThrudMoving = exports.CheckAndMoveThrud = exports.GetHeroIndexByName = void 0;
-var HeroData_1 = require("../data/HeroData");
-var SuitHelpers_1 = require("./SuitHelpers");
-var StackHelpers_1 = require("./StackHelpers");
+import { heroesConfig } from "../data/HeroData";
+import { GetSuitIndexByName } from "./SuitHelpers";
+import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
  * <p>Применения:</p>
@@ -15,8 +12,7 @@ var StackHelpers_1 = require("./StackHelpers");
  * @returns {number} Индекс героя.
  * @constructor
  */
-var GetHeroIndexByName = function (heroName) { return Object.keys(HeroData_1.heroesConfig).indexOf(heroName); };
-exports.GetHeroIndexByName = GetHeroIndexByName;
+export var GetHeroIndexByName = function (heroName) { return Object.keys(heroesConfig).indexOf(heroName); };
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>
  * <p>Применения:</p>
@@ -30,9 +26,9 @@ exports.GetHeroIndexByName = GetHeroIndexByName;
  * @returns {boolean} Нужно ли перемещать героя Труд.
  * @constructor
  */
-var CheckAndMoveThrud = function (G, ctx, card) {
+export var CheckAndMoveThrud = function (G, ctx, card) {
     if (card.suit) {
-        var suitId = (0, SuitHelpers_1.GetSuitIndexByName)(card.suit), index = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].findIndex(function (card) {
+        var suitId = GetSuitIndexByName(card.suit), index = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].findIndex(function (card) {
             return card.name === "Thrud";
         });
         if (index !== -1) {
@@ -42,7 +38,6 @@ var CheckAndMoveThrud = function (G, ctx, card) {
     }
     return false;
 };
-exports.CheckAndMoveThrud = CheckAndMoveThrud;
 /**
  * <h3>Перемещение героя Труд.</h3>
  * <p>Применения:</p>
@@ -55,33 +50,33 @@ exports.CheckAndMoveThrud = CheckAndMoveThrud;
  * @param card Карта.
  * @constructor
  */
-var StartThrudMoving = function (G, ctx, card) {
+export var StartThrudMoving = function (G, ctx, card) {
     var variants = {
         blacksmith: {
             suit: "blacksmith",
             rank: 1,
-            points: null
+            points: null,
         },
         hunter: {
             suit: "hunter",
             rank: 1,
-            points: null
+            points: null,
         },
         explorer: {
             suit: "explorer",
             rank: 1,
-            points: null
+            points: null,
         },
         warrior: {
             suit: "warrior",
             rank: 1,
-            points: null
+            points: null,
         },
         miner: {
             suit: "miner",
             rank: 1,
-            points: null
-        }
+            points: null,
+        },
     }, stack = [
         {
             actionName: "DrawProfitAction",
@@ -90,17 +85,16 @@ var StartThrudMoving = function (G, ctx, card) {
                 drawName: "Thrud",
                 name: "placeCards",
                 stageName: "placeCards",
-                suit: card.suit
-            }
+                suit: card.suit,
+            },
         },
         {
             actionName: "PlaceThrudAction",
-            variants: variants
+            variants: variants,
         },
     ];
-    (0, StackHelpers_1.AddActionsToStackAfterCurrent)(G, ctx, stack);
+    AddActionsToStackAfterCurrent(G, ctx, stack);
 };
-exports.StartThrudMoving = StartThrudMoving;
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
  * <p>Применения:</p>
@@ -113,7 +107,7 @@ exports.StartThrudMoving = StartThrudMoving;
  * @returns {string|boolean}
  * @constructor
  */
-var CheckAndStartUlineActionsOrContinue = function (G, ctx) {
+export var CheckAndStartUlineActionsOrContinue = function (G, ctx) {
     // todo Rework it all!
     var ulinePlayerIndex = G.publicPlayers.findIndex(function (player) { return player.buffs.everyTurn === "Uline"; });
     if (ulinePlayerIndex !== -1) {
@@ -150,4 +144,3 @@ var CheckAndStartUlineActionsOrContinue = function (G, ctx) {
     }
     return false;
 };
-exports.CheckAndStartUlineActionsOrContinue = CheckAndStartUlineActionsOrContinue;

@@ -1,7 +1,4 @@
-"use strict";
-exports.__esModule = true;
-exports.CheckHeuristicsForCoinsPlacement = exports.GetAllPicks = exports.k_combinations = exports.Permute = void 0;
-var Card_1 = require("./Card");
+import { CompareCards, EvaluateCard } from "./Card";
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -13,7 +10,7 @@ var Card_1 = require("./Card");
  * @param permutation
  * @constructor
  */
-var Permute = function (permutation) {
+export var Permute = function (permutation) {
     var length = permutation.length, result = [permutation.slice()];
     var c = new Array(length).fill(0), i = 1, k, p;
     while (i < length) {
@@ -33,7 +30,6 @@ var Permute = function (permutation) {
     }
     return result;
 };
-exports.Permute = Permute;
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -45,7 +41,7 @@ exports.Permute = Permute;
  * @param set
  * @param k
  */
-var k_combinations = function (set, k) {
+export var k_combinations = function (set, k) {
     var combs = [], head, tailCombs;
     if (k > set.length || k <= 0) {
         return [];
@@ -63,7 +59,7 @@ var k_combinations = function (set, k) {
         // head is a list that includes only our current element.
         head = set.slice(i, i + 1);
         // We take smaller combinations from the subsequent elements
-        tailCombs = (0, exports.k_combinations)(set.slice(i + 1), k - 1);
+        tailCombs = k_combinations(set.slice(i + 1), k - 1);
         // For each (k-1)-combination we join it with the current
         // and store it to the set of k-combinations.
         for (var j = 0; j < tailCombs.length; j++) {
@@ -72,7 +68,6 @@ var k_combinations = function (set, k) {
     }
     return combs;
 };
-exports.k_combinations = k_combinations;
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -85,7 +80,7 @@ exports.k_combinations = k_combinations;
  * @param playersNum
  * @constructor
  */
-var GetAllPicks = function (_a) {
+export var GetAllPicks = function (_a) {
     var tavernsNum = _a.tavernsNum, playersNum = _a.playersNum;
     var temp = [], cartesian = function () {
         var a = [];
@@ -102,7 +97,6 @@ var GetAllPicks = function (_a) {
     }
     return cartesian(temp);
 };
-exports.GetAllPicks = GetAllPicks;
 //absolute heuristics
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -114,9 +108,10 @@ exports.GetAllPicks = GetAllPicks;
  * @todo Саше: сделать описание функции и параметров.
  */
 var isAllCardsEqual = {
-    heuristic: function (cards) { return cards.every(function (card) { return (card.suit ===
-        cards[0].suit && (0, Card_1.CompareCards)(card, cards[0]) === 0); }); },
-    weight: -100
+    heuristic: function (cards) { return cards.every(function (card) {
+        return (card.suit === cards[0].suit && CompareCards(card, cards[0]) === 0);
+    }); },
+    weight: -100,
 };
 //relative heuristics
 /**
@@ -128,10 +123,14 @@ var isAllCardsEqual = {
  *
  * @todo Саше: сделать описание функции и параметров.
  */
-var isAllWorse = {
-    heuristic: function (array) { return array.every(function (card) { return card === -1; }); },
-    weight: 40
-};
+var isAllWorse, weight;
+{
+    heuristic: (function (array) { return array.every(function (card) { return card === -1; }); },
+        weight);
+    40,
+    ;
+}
+;
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -143,7 +142,7 @@ var isAllWorse = {
  */
 var isAllAverage = {
     heuristic: function (array) { return array.every(function (card) { return card === 0; }); },
-    weight: 20
+    weight: 20,
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -156,7 +155,7 @@ var isAllAverage = {
  */
 var isAllBetter = {
     heuristic: function (array) { return array.every(function (card) { return card === 1; }); },
-    weight: 10
+    weight: 10,
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -169,7 +168,7 @@ var isAllBetter = {
  */
 var isOnlyOneWorse = {
     heuristic: function (array) { return (array.filter(function (card) { return card === -1; }).length === 1); },
-    weight: -100
+    weight: -100,
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -182,7 +181,7 @@ var isOnlyOneWorse = {
  */
 var isOnlyWorseOrBetter = {
     heuristic: function (array) { return array.every(function (card) { return card !== 0; }); },
-    weight: -50
+    weight: -50,
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -222,7 +221,7 @@ var GetCharacteristics = function (array) {
     var mean = array.reduce(function (acc, item) { return acc + item / array.length; }, 0), variation = array.reduce(function (acc, item) { return acc + (Math.pow((item - mean), 2)) / array.length; }, 0);
     return {
         mean: mean,
-        variation: variation
+        variation: variation,
     };
 };
 /**
@@ -256,16 +255,15 @@ var CompareCharacteristics = function (stat1, stat2) {
  * @param ctx
  * @constructor
  */
-var CheckHeuristicsForCoinsPlacement = function (G, ctx) {
+export var CheckHeuristicsForCoinsPlacement = function (G, ctx) {
     var taverns = G.taverns /*,
         averageCards = G.averageCards*/;
     var result = Array(taverns.length).fill(0), temp = taverns.map(function (tavern) { return absoluteHeuristicsForTradingCoin
-        .reduce(function (acc, item) { return acc +
-        (item.heuristic(tavern) ? item.weight : 0); }, 0); });
+        .reduce(function (acc, item) {
+        return acc + (item.heuristic(tavern) ? item.weight : 0);
+    }, 0); });
     result = result.map(function (value, index) { return value + temp[index]; });
-    temp = taverns.map(function (tavern) { return tavern.map(function (card, index, arr) {
-        return (0, Card_1.EvaluateCard)(G, ctx, card, index, arr);
-    }); });
+    temp = taverns.map(function (tavern) { return tavern.map(function (card, index, arr) { return EvaluateCard(G, ctx, card, index, arr); }); });
     temp = temp.map(function (element) { return GetCharacteristics(element); });
     var maxIndex = 0, minIndex = temp.length - 1;
     for (var i = 1; i < temp.length; i++) {
@@ -280,4 +278,3 @@ var CheckHeuristicsForCoinsPlacement = function (G, ctx) {
     result[minIndex] += -10;
     return result;
 };
-exports.CheckHeuristicsForCoinsPlacement = CheckHeuristicsForCoinsPlacement;

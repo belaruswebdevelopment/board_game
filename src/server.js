@@ -1,7 +1,6 @@
-"use strict";
-var Server = require('boardgame.io/server').Server;
-var BoardGame = require('./Game').BoardGame;
+import { Server } from 'boardgame.io/server';
+import { BoardGame } from './Game';
 var server = Server({
-    games: [BoardGame]
+    games: [BoardGame],
 });
 server.run(8000);

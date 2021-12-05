@@ -4,7 +4,7 @@ import {suitsConfig} from "./data/SuitData";
 import {marketCoinsConfig} from "./data/CoinData";
 import {BuildCoins, ICoin} from "./Coin";
 import {GetAllPicks, k_combinations, Permute} from "./BotConfig";
-import {BuildPriorities} from "./Priority";
+import {GeneratePrioritiesForPlayerNumbers, IPriority} from "./Priority";
 import {actionCardsConfigArray} from "./data/ActionCardData";
 import {BuildHeroes, IHero} from "./Hero";
 import {BuildCampCards, IArtefactCampCard, IMercenaryCampCard} from "./Camp";
@@ -70,12 +70,12 @@ export type DistinctionTypes = null | undefined | number;
 export interface MyGameState {
     log: boolean,
     debug: boolean,
-    winner: null | number[],
-    drawProfit: null | string,
+    winner: number[],
+    drawProfit: string,
     suitsNum: number,
     tierToEnd: number,
     campNum: number,
-    actionsNum: null | number,
+    actionsNum: number,
     tavernsNum: number,
     currentTavern: number,
     drawSize: number,
@@ -116,10 +116,10 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
     const suitsNum: number = 5,
         tierToEnd: number = 2,
         campNum: number = 5,
-        actionsNum: null = null,
+        actionsNum: number = 0,
         log: boolean = true,
         debug: boolean = false,
-        drawProfit: null = null,
+        drawProfit: string = "",
         suitIdForMjollnir: null = null,
         expansions: IExpansion = {
             thingvellir: {
@@ -132,7 +132,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         discardCardsDeck: DeckCardTypes[] = [],
         campDecks: CampDeckCardTypes[][] = [],
         distinctions: null[] = Array(suitsNum).fill(null);
-    let winner: null = null,
+    let winner: number[] = [],
         campPicked: boolean = false,
         camp: CampDeckCardTypes[] = [],
         discardCampCardsDeck: CampDeckCardTypes[] = [];
@@ -174,11 +174,14 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         publicPlayers: IPublicPlayer[] = [],
         publicPlayersOrder: number[] = [],
         exchangeOrder: number[] = [];
+    let priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
     for (let i: number = 0; i < ctx.numPlayers; i++) {
+        const randomPriorityIndex: number = Math.floor(Math.random() * priorities.length),
+            priority: IPriority = priorities.splice(randomPriorityIndex, 1)[0];
         players[i] = BuildPlayer();
-        publicPlayers[i] = BuildPublicPlayer(ctx.numPlayers, suitsNum, "Dan" + i);
+        publicPlayers[i] = BuildPublicPlayer(ctx.numPlayers, suitsNum, "Dan" + i,
+            priority);
     }
-    BuildPriorities(ctx.numPlayers, publicPlayers);
     const marketCoinsUnique: ICoin[] = [],
         marketCoins: ICoin[] = BuildCoins(marketCoinsConfig, {
             count: marketCoinsUnique,

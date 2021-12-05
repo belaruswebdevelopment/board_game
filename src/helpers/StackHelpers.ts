@@ -141,8 +141,8 @@ export const EndActionFromStackAndAddNew = (G: MyGameState, ctx: Ctx, newStack: 
     if (config) {
         if (config.name === "explorerDistinction" || G.publicPlayers[Number(ctx.currentPlayer)].stack[0].actionName
             !== "DrawProfitAction") {
-            G.actionsNum = null;
-            G.drawProfit = null;
+            G.actionsNum = 0;
+            G.drawProfit = "";
         }
         if (ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) {
             ctx.events!.endStage!();

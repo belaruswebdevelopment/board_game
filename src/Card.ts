@@ -1,9 +1,17 @@
-import {AddCardToCards, GetTop1PlayerId, GetTop2PlayerId, IPublicPlayer, IStack, IsTopPlayer} from "./Player";
+import {
+    AddCardToCards,
+    GetTop1PlayerId,
+    GetTop2PlayerId,
+    IPublicPlayer,
+    IStack,
+    IsTopPlayer,
+    PlayerCardsType
+} from "./Player";
 import {ISuit, ISuitConfig, suitsConfig} from "./data/SuitData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {AddDataToLog, LogTypes} from "./Logging";
 import {tavernsConfig} from "./Tavern";
-import {MyGameState, TavernCardTypes} from "./GameSetup";
+import {DeckCardTypes, MyGameState, TavernCardTypes} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {IActionCardConfig} from "./data/ActionCardData";
 
@@ -71,7 +79,7 @@ export interface IDeckConfig {
     actions: IActionCardConfig[],
 }
 
-export const isCardNotAction = (card: ICard | IActionCard): card is ICard => (card as ICard).suit !== undefined;
+export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as ICard).suit !== undefined;
 
 /**
  * <h3>Создание карты.</h3>
@@ -138,8 +146,8 @@ const CreateActionCard = ({type = "улучшение монеты", value, stac
  * @param data Данные для создания карт.
  * @constructor
  */
-export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData): (ICard | IActionCard)[] => {
-    const cards: (ICard | IActionCard)[] = [];
+export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData): DeckCardTypes[] => {
+    const cards: DeckCardTypes[] = [];
     for (const suit in suitsConfig) {
         const cardPoints: number | number[] = deckConfig.suits[suit].pointsValues()[data.players][data.tier];
         let count: number = 0;
@@ -221,7 +229,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * @param card2
  * @constructor
  */
-export const CompareCards = (card1: ICard, card2: ICard): number => {
+export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): number => {
     if (!card1 || !card2) {
         return 0;
     }
@@ -275,12 +283,10 @@ export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
  * @param card
  * @constructor
  */
-export const PotentialScoring = ({
-                                     player = {} as IPublicPlayer, card = {} as
-        ICard | IActionCard
-                                 }): number => {
+export const PotentialScoring = ({player = {} as IPublicPlayer, card = {} as
+        PlayerCardsType}): number => {
     let score: number = 0,
-        potentialCards: (ICard | IActionCard)[][] = [];
+        potentialCards: PlayerCardsType[][] = [];
     for (let i: number = 0; i < player.cards.length; i++) {
         potentialCards[i] = [];
         for (let j: number = 0; j < player.cards[i].length; j++) {
@@ -320,7 +326,8 @@ export const PotentialScoring = ({
  * @param tavern
  * @constructor
  */
-export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: ICard, cardId: number, tavern: ICard[]): number => {
+export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: ICard, cardId: number, tavern: TavernCardTypes[]):
+    number => {
     const suitId: number = GetSuitIndexByName(compareCard.suit);
     if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
         return CompareCards(compareCard, G.averageCards[suitId]);
@@ -354,7 +361,7 @@ export const DiscardCardFromTavern = (G: MyGameState, discardCardIndex: number):
     if (discardedCard) {
         G.discardCardsDeck.push(discardedCard);
         G.taverns[G.currentTavern][discardCardIndex] = null;
-        AddDataToLog(G, LogTypes.GAME, `Карта ${(discardedCard as ICard | IActionCard).name} из таверны 
+        AddDataToLog(G, LogTypes.GAME, `Карта ${discardedCard.name} из таверны 
         ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
         return true;
     }

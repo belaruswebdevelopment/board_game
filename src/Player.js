@@ -1,13 +1,10 @@
-"use strict";
-exports.__esModule = true;
-exports.GetTop2PlayerId = exports.GetTop1PlayerId = exports.IsTopPlayer = exports.AddCardToCards = exports.AddHeroCardToPlayerCards = exports.AddHeroCardToPlayerHeroCards = exports.AddCampCardToPlayerCards = exports.AddCampCardToPlayer = exports.AddCardToPlayer = exports.CheckPlayersBasicOrder = exports.BuildPublicPlayer = exports.BuildPlayer = void 0;
-var Coin_1 = require("./Coin");
-var CoinData_1 = require("./data/CoinData");
-var Score_1 = require("./Score");
-var SuitHelpers_1 = require("./helpers/SuitHelpers");
-var Logging_1 = require("./Logging");
-var SuitData_1 = require("./data/SuitData");
-var Card_1 = require("./Card");
+import { BuildCoins } from "./Coin";
+import { initialPlayerCoinsConfig } from "./data/CoinData";
+import { CurrentScoring } from "./Score";
+import { GetSuitIndexByName } from "./helpers/SuitHelpers";
+import { AddDataToLog } from "./Logging";
+import { suitsConfig } from "./data/SuitData";
+import { isCardNotAction } from "./Card";
 /**
  * <h3>Создание игрока.</h3>
  * <p>Применения:</p>
@@ -23,7 +20,7 @@ var CreatePlayer = function (_a) {
     var _b = _a === void 0 ? {} : _a, handCoins = _b.handCoins, boardCoins = _b.boardCoins;
     return ({
         handCoins: handCoins,
-        boardCoins: boardCoins
+        boardCoins: boardCoins,
     });
 };
 /**
@@ -61,7 +58,7 @@ var CreatePublicPlayer = function (_a) {
         priority: priority,
         buffs: buffs,
         selectedCoin: selectedCoin,
-        pickedCard: pickedCard
+        pickedCard: pickedCard,
     });
 };
 /**
@@ -73,11 +70,10 @@ var CreatePublicPlayer = function (_a) {
  *
  * @constructor
  */
-var BuildPlayer = function () { return CreatePlayer({
-    handCoins: (0, Coin_1.BuildCoins)(CoinData_1.initialPlayerCoinsConfig, { isInitial: true, isTriggerTrading: false }),
-    boardCoins: Array(CoinData_1.initialPlayerCoinsConfig.length).fill(null)
+export var BuildPlayer = function () { return CreatePlayer({
+    handCoins: BuildCoins(initialPlayerCoinsConfig, { isInitial: true, isTriggerTrading: false }),
+    boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
 }); };
-exports.BuildPlayer = BuildPlayer;
 /**
  * <h3>Создаёт всех игроков (публичные данные).</h3>
  * <p>Применения:</p>
@@ -88,17 +84,18 @@ exports.BuildPlayer = BuildPlayer;
  * @param playersNum Количество игроков.
  * @param suitsNum Количество фракций.
  * @param nickname Никнейм.
+ * @param priority Кристалл.
  * @constructor
  */
-var BuildPublicPlayer = function (playersNum, suitsNum, nickname) {
+export var BuildPublicPlayer = function (playersNum, suitsNum, nickname, priority) {
     return CreatePublicPlayer({
         nickname: nickname,
         cards: Array(suitsNum).fill(Array(0)),
-        handCoins: (0, Coin_1.BuildCoins)(CoinData_1.initialPlayerCoinsConfig, { isInitial: true, isTriggerTrading: false }),
-        boardCoins: Array(CoinData_1.initialPlayerCoinsConfig.length).fill(null)
+        handCoins: BuildCoins(initialPlayerCoinsConfig, { isInitial: true, isTriggerTrading: false }),
+        boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
+        priority: priority,
     });
 };
-exports.BuildPublicPlayer = BuildPublicPlayer;
 /**
  * <h3>Проверяет базовый порядок хода игроков.</h3>
  * <p>Применения:</p>
@@ -111,7 +108,7 @@ exports.BuildPublicPlayer = BuildPublicPlayer;
  * @param ctx
  * @constructor
  */
-var CheckPlayersBasicOrder = function (G, ctx) {
+export var CheckPlayersBasicOrder = function (G, ctx) {
     G.publicPlayersOrder = [];
     for (var i = 0; i < ctx.numPlayers; i++) {
         if (G.publicPlayers[i].buffs.everyTurn === "Uline") {
@@ -119,7 +116,6 @@ var CheckPlayersBasicOrder = function (G, ctx) {
         }
     }
 };
-exports.CheckPlayersBasicOrder = CheckPlayersBasicOrder;
 /**
  * <h3>Добавляет взятую карту в массив карт игрока.</h3>
  * <p>Применения:</p>
@@ -134,18 +130,17 @@ exports.CheckPlayersBasicOrder = CheckPlayersBasicOrder;
  * @param card Карта.
  * @constructor
  */
-var AddCardToPlayer = function (G, ctx, card) {
+export var AddCardToPlayer = function (G, ctx, card) {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = card;
-    if ((0, Card_1.isCardNotAction)(card)) {
-        var suitIndex = (0, SuitHelpers_1.GetSuitIndexByName)(card.suit);
+    if (isCardNotAction(card)) {
+        var suitIndex = GetSuitIndexByName(card.suit);
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suitIndex].push(card);
-        (0, Logging_1.AddDataToLog)(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 '").concat(card.name, "'."));
+        AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 '").concat(card.name, "'."));
         return true;
     }
-    (0, Logging_1.AddDataToLog)(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 '").concat(card.name, "'."));
+    AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 '").concat(card.name, "'."));
     return false;
 };
-exports.AddCardToPlayer = AddCardToPlayer;
 /**
  * <h3>Добавляет взятую из кэмпа карту в массив карт кэмпа игрока.</h3>
  * <p>Применения:</p>
@@ -158,11 +153,10 @@ exports.AddCardToPlayer = AddCardToPlayer;
  * @param card Карта кэмпа.
  * @constructor
  */
-var AddCampCardToPlayer = function (G, ctx, card) {
+export var AddCampCardToPlayer = function (G, ctx, card) {
     G.publicPlayers[Number(ctx.currentPlayer)].campCards.push(card);
-    (0, Logging_1.AddDataToLog)(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 \u043A\u044D\u043C\u043F\u0430 ").concat(card.name, "."));
+    AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 \u043A\u044D\u043C\u043F\u0430 ").concat(card.name, "."));
 };
-exports.AddCampCardToPlayer = AddCampCardToPlayer;
 /**
  * <h3>Добавляет карту кэмпа в конкретную фракцию игрока.</h3>
  * <p>Применения:</p>
@@ -175,14 +169,13 @@ exports.AddCampCardToPlayer = AddCampCardToPlayer;
  * @param card Карта кэмпа.
  * @constructor
  */
-var AddCampCardToPlayerCards = function (G, ctx, card) {
-    var suitId = (0, SuitHelpers_1.GetSuitIndexByName)(card.suit);
+export var AddCampCardToPlayerCards = function (G, ctx, card) {
+    var suitId = GetSuitIndexByName(card.suit);
     if (suitId !== -1) {
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(card);
-        (0, Logging_1.AddDataToLog)(G, "private" /* PRIVATE */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 \u043A\u044D\u043C\u043F\u0430 '").concat(card.name, "' \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(SuitData_1.suitsConfig[card.suit].suitName, "."));
+        AddDataToLog(G, "private" /* PRIVATE */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 \u043A\u044D\u043C\u043F\u0430 '").concat(card.name, "' \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[card.suit].suitName, "."));
     }
 };
-exports.AddCampCardToPlayerCards = AddCampCardToPlayerCards;
 /**
  * <h3>Добавляет героя в массив героев игрока.</h3>
  * <p>Применения:</p>
@@ -195,13 +188,12 @@ exports.AddCampCardToPlayerCards = AddCampCardToPlayerCards;
  * @param hero Герой.
  * @constructor
  */
-var AddHeroCardToPlayerHeroCards = function (G, ctx, hero) {
+export var AddHeroCardToPlayerHeroCards = function (G, ctx, hero) {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = hero;
     hero.active = false;
     G.publicPlayers[Number(ctx.currentPlayer)].heroes.push(hero);
-    (0, Logging_1.AddDataToLog)(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u0433\u0435\u0440\u043E\u044F ").concat(hero.name, "."));
+    AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u0433\u0435\u0440\u043E\u044F ").concat(hero.name, "."));
 };
-exports.AddHeroCardToPlayerHeroCards = AddHeroCardToPlayerHeroCards;
 /**
  * <h3>Добавляет героя в массив карт игрока.</h3>
  * <p>Применения:</p>
@@ -214,14 +206,13 @@ exports.AddHeroCardToPlayerHeroCards = AddHeroCardToPlayerHeroCards;
  * @param hero Герой.
  * @constructor
  */
-var AddHeroCardToPlayerCards = function (G, ctx, hero) {
-    var suitId = (0, SuitHelpers_1.GetSuitIndexByName)(hero.suit);
+export var AddHeroCardToPlayerCards = function (G, ctx, hero) {
+    var suitId = GetSuitIndexByName(hero.suit);
     if (suitId !== -1) {
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(hero);
-        (0, Logging_1.AddDataToLog)(G, "private" /* PRIVATE */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u0433\u0435\u0440\u043E\u044F ").concat(hero.name, " \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(SuitData_1.suitsConfig[hero.suit].suitName, "."));
+        AddDataToLog(G, "private" /* PRIVATE */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u0433\u0435\u0440\u043E\u044F ").concat(hero.name, " \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[hero.suit].suitName, "."));
     }
 };
-exports.AddHeroCardToPlayerCards = AddHeroCardToPlayerCards;
 /**
  * <h3>Добавляет карту в массив потенциальных карт для ботов.</h3>
  * <p>Применения:</p>
@@ -232,13 +223,12 @@ exports.AddHeroCardToPlayerCards = AddHeroCardToPlayerCards;
  * @param cards Массив потенциальных карт для ботов.
  * @param card Карта.
  */
-var AddCardToCards = function (cards, card) {
-    var suitIndex = (0, SuitHelpers_1.GetSuitIndexByName)(card.suit);
+export var AddCardToCards = function (cards, card) {
+    var suitIndex = GetSuitIndexByName(card.suit);
     if (suitIndex) {
         cards[suitIndex].push(card);
     }
 };
-exports.AddCardToCards = AddCardToCards;
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -251,11 +241,10 @@ exports.AddCardToCards = AddCardToCards;
  * @param playerId
  * @constructor
  */
-var IsTopPlayer = function (G, playerId) {
-    var score = (0, Score_1.CurrentScoring)(G.publicPlayers[playerId]);
-    return G.publicPlayers.every(function (player) { return (0, Score_1.CurrentScoring)(player) <= score; });
+export var IsTopPlayer = function (G, playerId) {
+    var score = CurrentScoring(G.publicPlayers[playerId]);
+    return G.publicPlayers.every(function (player) { return CurrentScoring(player) <= score; });
 };
-exports.IsTopPlayer = IsTopPlayer;
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -268,16 +257,15 @@ exports.IsTopPlayer = IsTopPlayer;
  * @param currentPlayerId Id текущего игрока.
  * @constructor
  */
-var GetTop1PlayerId = function (G, currentPlayerId) {
+export var GetTop1PlayerId = function (G, currentPlayerId) {
     var top1PlayerId = G.publicPlayers.findIndex(function (player, index) {
-        return (0, exports.IsTopPlayer)(G, index);
+        return IsTopPlayer(G, index);
     });
     if (G.publicPlayersOrder.indexOf(currentPlayerId) > G.publicPlayersOrder.indexOf(top1PlayerId)) {
         top1PlayerId = -1;
     }
     return top1PlayerId;
 };
-exports.GetTop1PlayerId = GetTop1PlayerId;
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -290,20 +278,19 @@ exports.GetTop1PlayerId = GetTop1PlayerId;
  * @param top1PlayerId Id текущего игрока.
  * @constructor
  */
-var GetTop2PlayerId = function (G, top1PlayerId) {
-    var playersScore = G.publicPlayers.map(function (player) { return (0, Score_1.CurrentScoring)(player); }), maxScore = Math.max.apply(Math, playersScore);
+export var GetTop2PlayerId = function (G, top1PlayerId) {
+    var playersScore = G.publicPlayers.map(function (player) { return CurrentScoring(player); }), maxScore = Math.max.apply(Math, playersScore);
     var top2PlayerId, temp;
     if (playersScore.filter(function (score) { return score === maxScore; }).length === 1) {
         temp = playersScore.sort(function (a, b) { return b - a; })[1];
-        top2PlayerId = G.publicPlayers.findIndex(function (player) { return (0, Score_1.CurrentScoring)(player) === temp; });
+        top2PlayerId = G.publicPlayers.findIndex(function (player) { return CurrentScoring(player) === temp; });
     }
     else {
-        top2PlayerId = G.publicPlayers.findIndex(function (player, index) { return index !== top1PlayerId &&
-            (0, exports.IsTopPlayer)(G, index); });
+        top2PlayerId = G.publicPlayers.findIndex(function (player, index) { return index !== top1PlayerId
+            && IsTopPlayer(G, index); });
     }
     if (G.publicPlayersOrder.indexOf(top1PlayerId) > G.publicPlayersOrder.indexOf(top2PlayerId)) {
         top2PlayerId = -1;
     }
     return top2PlayerId;
 };
-exports.GetTop2PlayerId = GetTop2PlayerId;

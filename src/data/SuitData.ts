@@ -1,14 +1,12 @@
-import {CreateCoin, ICoin} from "../Coin";
+import {CreateCoin} from "../Coin";
 import {CreateCard, ICard} from "../Card";
-import {CreatePriority, IPriority} from "../Priority";
+import {CreatePriority} from "../Priority";
 import {AddActionsToStack, StartActionFromStackOrEndActions} from "../helpers/StackHelpers";
 import {AddDataToLog, LogTypes} from "../Logging";
 import {ArithmeticSum, TotalPoints, TotalRank} from "../helpers/ScoreHelpers";
 import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
-import {IArtefactCampCard} from "../Camp";
-import {IHero} from "../Hero";
 
 export interface INumberValues {
     [index: number]: number,
@@ -54,7 +52,6 @@ export interface ISuitConfig {
  * </ol>
  *
  * @todo Add may be potential points for hunters and blacksmiths.
- * @type {{scoringRule: (function(*): number), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: blacksmithSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}} Кузнецы.
  */
 const blacksmith: ISuit = {
     suit: "blacksmith",
@@ -125,8 +122,6 @@ const blacksmith: ISuit = {
  * <ol>
  * <li>Используется в конфиге фракций.</li>
  * </ol>
- *
- * @type {{scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: hunterSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}} Охотники.
  */
 const hunter: ISuit = {
     suit: "hunter",
@@ -258,7 +253,7 @@ const miner: ISuit = {
                 свой кристалл на особый кристалл 6.`);
                 ctx.events!.endTurn!();
             } else {
-                if ((player.priority as IPriority).value === 6) {
+                if (player.priority.value === 6) {
                     return 3;
                 }
             }
@@ -440,8 +435,6 @@ const explorer: ISuit = {
  * <ol>
  * <li>Происходит при создании всех карт при инициализации игры.</li>
  * </ol>
- *
- * @type {{blacksmith: {scoringRule: (function(*): number), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: blacksmithSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}, warrior: {scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}, explorer: {scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: explorerSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}, hunter: {scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: hunterSuit.distinction.awarding, description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}})}, miner: {scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}}} Все фракции.
  */
 export const suitsConfig: ISuitConfig = {
     blacksmith,

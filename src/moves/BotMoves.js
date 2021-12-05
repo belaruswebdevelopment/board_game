@@ -1,7 +1,4 @@
-"use strict";
-exports.__esModule = true;
-exports.BotsPlaceAllCoins = void 0;
-var HeroHelpers_1 = require("../helpers/HeroHelpers");
+import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 /**
  * <h3>Выкладка монет ботами.</h3>
  * <p>Применения:</p>
@@ -14,7 +11,7 @@ var HeroHelpers_1 = require("../helpers/HeroHelpers");
  * @param coinsOrder Порядок выкладки монет.
  * @constructor
  */
-var BotsPlaceAllCoins = function (G, ctx, coinsOrder) {
+export var BotsPlaceAllCoins = function (G, ctx, coinsOrder) {
     for (var i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
         var coinId = coinsOrder[i] || G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex(function (coin) { return coin !== null; });
@@ -27,7 +24,7 @@ var BotsPlaceAllCoins = function (G, ctx, coinsOrder) {
     var isEveryPlayersHandCoinsEmpty = G.publicPlayers.filter(function (player) { return player.buffs.everyTurn
         !== "Uline"; }).every(function (player) { return player.handCoins.every(function (coin) { return coin === null; }); });
     if (isEveryPlayersHandCoinsEmpty) {
-        if ((0, HeroHelpers_1.CheckAndStartUlineActionsOrContinue)(G, ctx) === "placeCoinsUline") {
+        if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
             ctx.events.setPhase("placeCoinsUline");
         }
         else {
@@ -40,4 +37,3 @@ var BotsPlaceAllCoins = function (G, ctx, coinsOrder) {
         }
     }
 };
-exports.BotsPlaceAllCoins = BotsPlaceAllCoins;

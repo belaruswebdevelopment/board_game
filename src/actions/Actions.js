@@ -1,4 +1,3 @@
-"use strict";
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -8,19 +7,17 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-exports.__esModule = true;
-exports.DiscardCardsFromPlayerBoardAction = exports.ActionDispatcher = void 0;
-var Coin_1 = require("../Coin");
-var core_1 = require("boardgame.io/core");
-var SuitData_1 = require("../data/SuitData");
-var Player_1 = require("../Player");
-var StackHelpers_1 = require("../helpers/StackHelpers");
-var Card_1 = require("../Card");
-var HeroActions_1 = require("./HeroActions");
-var CampActions_1 = require("./CampActions");
-var SuitHelpers_1 = require("../helpers/SuitHelpers");
-var Logging_1 = require("../Logging");
-var Camp_1 = require("../Camp");
+import { UpgradeCoin } from "../Coin";
+import { INVALID_MOVE } from "boardgame.io/core";
+import { suitsConfig } from "../data/SuitData";
+import { AddCardToPlayer } from "../Player";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { CreateCard, DiscardCardFromTavern, isCardNotAction } from "../Card";
+import { AddHeroToCards, CheckAndMoveThrudOrPickHeroAction, GetClosedCoinIntoPlayerHand, PickHero, PickHeroWithConditions, PlaceThrudAction, PlaceYludAction } from "./HeroActions";
+import { AddCampCardToCards, AddCoinToPouchAction, CheckPickCampCard, DiscardAnyCardFromPlayerBoard, DiscardSuitCard, DiscardTradingCoin, GetMjollnirProfitAction, StartDiscardSuitCard, StartVidofnirVedrfolnirAction, UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
+import { GetSuitIndexByName } from "../helpers/SuitHelpers";
+import { AddDataToLog } from "../Logging";
+import { isArtefactCard } from "../Camp";
 /**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>
@@ -34,10 +31,9 @@ var Camp_1 = require("../Camp");
  * @param ctx
  * @param data Конфиг действий.
  * @param args Дополнительные аргументы.
- * @returns {*} Вызов действия.
  * @constructor
  */
-var ActionDispatcher = function (G, ctx, data) {
+export var ActionDispatcher = function (G, ctx, data) {
     var args = [];
     for (var _i = 3; _i < arguments.length; _i++) {
         args[_i - 3] = arguments[_i];
@@ -51,19 +47,19 @@ var ActionDispatcher = function (G, ctx, data) {
             action = UpgradeCoinAction;
             break;
         case "AddHeroToCards":
-            action = HeroActions_1.AddHeroToCards;
+            action = AddHeroToCards;
             break;
         case "AddBuffToPlayer":
             action = AddBuffToPlayer;
             break;
         case "PickHeroWithConditions":
-            action = HeroActions_1.PickHeroWithConditions;
+            action = PickHeroWithConditions;
             break;
         case "CheckDiscardCardsFromPlayerBoardAction":
             action = CheckDiscardCardsFromPlayerBoardAction;
             break;
         case "DiscardCardsFromPlayerBoardAction":
-            action = exports.DiscardCardsFromPlayerBoardAction;
+            action = DiscardCardsFromPlayerBoardAction;
             break;
         case "DiscardCardFromTavernAction":
             action = DiscardCardFromTavernAction;
@@ -72,7 +68,7 @@ var ActionDispatcher = function (G, ctx, data) {
             action = PlaceCards;
             break;
         case "CheckPickCampCard":
-            action = CampActions_1.CheckPickCampCard;
+            action = CheckPickCampCard;
             break;
         case "CheckPickDiscardCard":
             action = CheckPickDiscardCard;
@@ -81,43 +77,43 @@ var ActionDispatcher = function (G, ctx, data) {
             action = PickDiscardCard;
             break;
         case "GetClosedCoinIntoPlayerHand":
-            action = HeroActions_1.GetClosedCoinIntoPlayerHand;
+            action = GetClosedCoinIntoPlayerHand;
             break;
         case "PlaceThrudAction":
-            action = HeroActions_1.PlaceThrudAction;
+            action = PlaceThrudAction;
             break;
         case "PlaceYludAction":
-            action = HeroActions_1.PlaceYludAction;
+            action = PlaceYludAction;
             break;
         case "AddCampCardToCards":
-            action = CampActions_1.AddCampCardToCards;
+            action = AddCampCardToCards;
             break;
         case "PickHero":
-            action = HeroActions_1.PickHero;
+            action = PickHero;
             break;
         case "AddCoinToPouchAction":
-            action = CampActions_1.AddCoinToPouchAction;
+            action = AddCoinToPouchAction;
             break;
         case "StartVidofnirVedrfolnirAction":
-            action = CampActions_1.StartVidofnirVedrfolnirAction;
+            action = StartVidofnirVedrfolnirAction;
             break;
         case "UpgradeCoinVidofnirVedrfolnirAction":
-            action = CampActions_1.UpgradeCoinVidofnirVedrfolnirAction;
+            action = UpgradeCoinVidofnirVedrfolnirAction;
             break;
         case "DiscardTradingCoin":
-            action = CampActions_1.DiscardTradingCoin;
+            action = DiscardTradingCoin;
             break;
         case "StartDiscardSuitCard":
-            action = CampActions_1.StartDiscardSuitCard;
+            action = StartDiscardSuitCard;
             break;
         case "DiscardSuitCard":
-            action = CampActions_1.DiscardSuitCard;
+            action = DiscardSuitCard;
             break;
         case "DiscardAnyCardFromPlayerBoard":
-            action = CampActions_1.DiscardAnyCardFromPlayerBoard;
+            action = DiscardAnyCardFromPlayerBoard;
             break;
         case "GetMjollnirProfitAction":
-            action = CampActions_1.GetMjollnirProfitAction;
+            action = GetMjollnirProfitAction;
             break;
         case "PassEnlistmentMercenariesAction":
             action = PassEnlistmentMercenariesAction;
@@ -131,9 +127,8 @@ var ActionDispatcher = function (G, ctx, data) {
         default:
             action = null;
     }
-    return action && action.apply(void 0, __spreadArray([G, ctx, data.config], args, false));
+    action === null || action === void 0 ? void 0 : action.apply(void 0, __spreadArray([G, ctx, data.config], args, false));
 };
-exports.ActionDispatcher = ActionDispatcher;
 /**
  * <h3>Действия, связанные с улучшением монет.</h3>
  * <p>Применения:</p>
@@ -146,7 +141,6 @@ exports.ActionDispatcher = ActionDispatcher;
  * @param ctx
  * @param config Конфиг действий героя или карты улучшающей монеты.
  * @param args Дополнительные аргументы.
- * @returns {*}
  * @constructor
  */
 var UpgradeCoinAction = function (G, ctx, config) {
@@ -154,8 +148,8 @@ var UpgradeCoinAction = function (G, ctx, config) {
     for (var _i = 3; _i < arguments.length; _i++) {
         args[_i - 3] = arguments[_i];
     }
-    Coin_1.UpgradeCoin.apply(void 0, __spreadArray([G, ctx, config], args, false));
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx);
+    UpgradeCoin.apply(void 0, __spreadArray([G, ctx, config], args, false));
+    EndActionFromStackAndAddNew(G, ctx);
 };
 /**
  * <h3>Действия, связанные с отрисовкой профита.</h3>
@@ -171,14 +165,16 @@ var UpgradeCoinAction = function (G, ctx, config) {
  */
 var DrawProfitAction = function (G, ctx, config) {
     var _a;
-    (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u043B\u0436\u0435\u043D \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043E\u0442 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F '").concat(config.drawName, "'."));
+    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u043B\u0436\u0435\u043D \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043E\u0442 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F '").concat(config.drawName, "'."));
     var playerConfig = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (playerConfig && playerConfig.stageName) {
-        (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
+        AddDataToLog(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
         ctx.events.setStage(playerConfig.stageName);
     }
     G.actionsNum = (_a = config.number) !== null && _a !== void 0 ? _a : 1;
-    G.drawProfit = config.name;
+    if (config.name) {
+        G.drawProfit = config.name;
+    }
 };
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -190,15 +186,14 @@ var DrawProfitAction = function (G, ctx, config) {
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
- * @returns {*}
  * @constructor
  */
 var AddBuffToPlayer = function (G, ctx, config) {
     if (config.buff) {
         G.publicPlayers[Number(ctx.currentPlayer)].buffs[config.buff.name] = config.buff.value;
-        (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u0431\u0430\u0444 '").concat(config.buff.name, "'."));
+        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u0431\u0430\u0444 '").concat(config.buff.name, "'."));
     }
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx);
+    EndActionFromStackAndAddNew(G, ctx);
 };
 /**
  * <h3>Действия, связанные с дискардом карт с планшета игрока.</h3>
@@ -212,13 +207,12 @@ var AddBuffToPlayer = function (G, ctx, config) {
  * @param config Конфиг действий героя.
  * @param suitId Id фракции.
  * @param cardId Id карты.
- * @returns {*}
  * @constructor
  */
-var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId, cardId) {
+export var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId, cardId) {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = G.publicPlayers[Number(ctx.currentPlayer)]
         .cards[suitId][cardId];
-    (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 \n    ").concat(G.publicPlayers[Number(ctx.currentPlayer)].pickedCard.name, "."));
+    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 \n    ").concat(G.publicPlayers[Number(ctx.currentPlayer)].pickedCard.name, "."));
     G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
         .splice(cardId, 1)[0]);
     if (G.actionsNum === 2) {
@@ -229,21 +223,20 @@ var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId, cardId
                     stageName: "discardCardFromBoard",
                     drawName: "Dagda",
                     name: "DagdaAction",
-                    suit: "hunter"
-                }
+                    suit: "hunter",
+                },
             },
             {
                 actionName: "DiscardCardsFromPlayerBoardAction",
                 config: {
-                    suit: "hunter"
-                }
+                    suit: "hunter",
+                },
             },
         ];
-        (0, StackHelpers_1.AddActionsToStackAfterCurrent)(G, ctx, stack);
+        AddActionsToStackAfterCurrent(G, ctx, stack);
     }
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx);
+    EndActionFromStackAndAddNew(G, ctx);
 };
-exports.DiscardCardsFromPlayerBoardAction = DiscardCardsFromPlayerBoardAction;
 /**
  * <h3>Сбрасывает карту из таверны по выбору игрока.</h3>
  * <p>Применения:</p>
@@ -255,13 +248,12 @@ exports.DiscardCardsFromPlayerBoardAction = DiscardCardsFromPlayerBoardAction;
  * @param ctx
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
- * @returns {*}
  * @constructor
  */
 var DiscardCardFromTavernAction = function (G, ctx, config, cardId) {
-    (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B:"));
-    (0, Card_1.DiscardCardFromTavern)(G, cardId);
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx);
+    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B:"));
+    DiscardCardFromTavern(G, cardId);
+    EndActionFromStackAndAddNew(G, ctx);
 };
 /**
  * <h3>Действия, связанные с возможностью дискарда карт с планшета игрока.</h3>
@@ -273,15 +265,13 @@ var DiscardCardFromTavernAction = function (G, ctx, config, cardId) {
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
- * @returns {string} INVALID_MOVE
- * @returns {string|*}
  * @constructor
  */
 var CheckDiscardCardsFromPlayerBoardAction = function (G, ctx, config) {
     var _a;
     var cardsToDiscard = [];
     for (var i = 0; i < G.suitsNum; i++) {
-        if (config.suit !== Object.keys(SuitData_1.suitsConfig)[i]) {
+        if (config.suit !== Object.keys(suitsConfig)[i]) {
             var last = G.publicPlayers[Number(ctx.currentPlayer)].cards[i].length - 1;
             if (last >= 0 && G.publicPlayers[Number(ctx.currentPlayer)].cards[i][last].type !== "герой") {
                 cardsToDiscard.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[i][last]);
@@ -291,9 +281,9 @@ var CheckDiscardCardsFromPlayerBoardAction = function (G, ctx, config) {
     var isValidMove = cardsToDiscard.length >= ((_a = config.number) !== null && _a !== void 0 ? _a : 1);
     if (!isValidMove) {
         G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
-        return core_1.INVALID_MOVE;
+        return INVALID_MOVE;
     }
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx);
+    EndActionFromStackAndAddNew(G, ctx);
 };
 /**
  * <h3>Действия, связанные с добавлением других карт на планшет игрока.</h3>
@@ -306,47 +296,46 @@ var CheckDiscardCardsFromPlayerBoardAction = function (G, ctx, config) {
  * @param ctx
  * @param config Конфиг действий героя.
  * @param suitId Id фракции.
- * @returns {*}
  * @constructor
  */
 var PlaceCards = function (G, ctx, config, suitId) {
     var playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
     if (playerVariants) {
-        var suit = Object.keys(SuitData_1.suitsConfig)[suitId], olwinDouble = (0, Card_1.CreateCard)({
+        var suit = Object.keys(suitsConfig)[suitId], olwinDouble = CreateCard({
             suit: suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
-            name: "Olwin"
+            name: "Olwin",
         });
-        (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u041E\u043B\u0432\u0438\u043D \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(SuitData_1.suitsConfig[suit].suitName, "."));
-        (0, Player_1.AddCardToPlayer)(G, ctx, olwinDouble);
+        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \n        \u041E\u043B\u0432\u0438\u043D \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
+        AddCardToPlayer(G, ctx, olwinDouble);
         if (G.actionsNum === 2) {
             var variants = {
                 blacksmith: {
                     suit: "blacksmith",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 hunter: {
                     suit: "hunter",
                     rank: 1,
-                    points: null
+                    points: null,
                 },
                 explorer: {
                     suit: "explorer",
                     rank: 1,
-                    points: 0
+                    points: 0,
                 },
                 warrior: {
                     suit: "warrior",
                     rank: 1,
-                    points: 0
+                    points: 0,
                 },
                 miner: {
                     suit: "miner",
                     rank: 1,
-                    points: 0
-                }
+                    points: 0,
+                },
             }, stack = [
                 {
                     actionName: "DrawProfitAction",
@@ -354,18 +343,18 @@ var PlaceCards = function (G, ctx, config, suitId) {
                     config: {
                         name: "placeCards",
                         stageName: "placeCards",
-                        drawName: "Olwin"
-                    }
+                        drawName: "Olwin",
+                    },
                 },
                 {
                     actionName: "PlaceCards",
-                    variants: variants
+                    variants: variants,
                 },
             ];
-            (0, StackHelpers_1.AddActionsToStackAfterCurrent)(G, ctx, stack);
+            AddActionsToStackAfterCurrent(G, ctx, stack);
         }
-        (0, HeroActions_1.CheckAndMoveThrudOrPickHeroAction)(G, ctx, olwinDouble);
-        (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], suitId);
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
+        EndActionFromStackAndAddNew(G, ctx, [], suitId);
     }
 };
 /**
@@ -377,14 +366,13 @@ var PlaceCards = function (G, ctx, config, suitId) {
  *
  * @param G
  * @param ctx
- * @returns {*}
  * @constructor
  */
 var CheckPickDiscardCard = function (G, ctx) {
     if (G.discardCardsDeck.length === 0) {
         G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
     }
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx);
+    EndActionFromStackAndAddNew(G, ctx);
 };
 /**
  * <h3>Действия, связанные с взятием карт из дискарда.</h3>
@@ -397,12 +385,11 @@ var CheckPickDiscardCard = function (G, ctx) {
  * @param ctx
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
- * @returns {*}
  * @constructor
  */
 var PickDiscardCard = function (G, ctx, config, cardId) {
-    var isAdded = (0, Player_1.AddCardToPlayer)(G, ctx, G.discardCardsDeck[cardId]), pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
-    (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(pickedCard.name, " \u0438\u0437 \u0434\u0438\u0441\u043A\u0430\u0440\u0434\u0430."));
+    var isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]), pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
+    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(pickedCard.name, " \u0438\u0437 \u0434\u0438\u0441\u043A\u0430\u0440\u0434\u0430."));
     if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
         var stack = [
             {
@@ -410,25 +397,25 @@ var PickDiscardCard = function (G, ctx, config, cardId) {
                 config: {
                     stageName: "pickDiscardCard",
                     name: "BrisingamensAction",
-                    drawName: "Brisingamens"
-                }
+                    drawName: "Brisingamens",
+                },
             },
             {
-                actionName: "PickDiscardCard"
+                actionName: "PickDiscardCard",
             },
         ];
-        (0, StackHelpers_1.AddActionsToStackAfterCurrent)(G, ctx, stack);
+        AddActionsToStackAfterCurrent(G, ctx, stack);
     }
-    if ((0, Card_1.isCardNotAction)(pickedCard)) {
+    if (isCardNotAction(pickedCard)) {
         if (isAdded) {
-            (0, HeroActions_1.CheckAndMoveThrudOrPickHeroAction)(G, ctx, pickedCard);
+            CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
         }
     }
     else {
-        (0, StackHelpers_1.AddActionsToStackAfterCurrent)(G, ctx, pickedCard.stack);
+        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
-    var suitId = (0, SuitHelpers_1.GetSuitIndexByName)(pickedCard.suit);
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], suitId);
+    var suitId = GetSuitIndexByName(pickedCard.suit);
+    EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 /**
  * <h3>Первый игрок в фазе вербовки наёмников может пасануть, чтобы вербовать последним.</h3>
@@ -439,12 +426,11 @@ var PickDiscardCard = function (G, ctx, config, cardId) {
  *
  * @param G
  * @param ctx
- * @returns {*}
  * @constructor
  */
 var PassEnlistmentMercenariesAction = function (G, ctx) {
-    (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043F\u0430\u0441\u0430\u043D\u0443\u043B \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries."));
-    (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx);
+    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043F\u0430\u0441\u0430\u043D\u0443\u043B \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries."));
+    EndActionFromStackAndAddNew(G, ctx);
 };
 /**
  * <h3>Игрок выбирает наёмника для вербовки.</h3>
@@ -457,25 +443,24 @@ var PassEnlistmentMercenariesAction = function (G, ctx) {
  * @param ctx
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
- * @returns {*}
  * @constructor
  */
 var GetEnlistmentMercenariesAction = function (G, ctx, config, cardId) {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].campCards
         .filter(function (card) { return card.type === "наёмник"; })[cardId];
     var pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-    if ((0, Camp_1.isArtefactCard)(pickedCard)) {
-        (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \u0432\u044B\u0431\u0440\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(pickedCard.name, "'."));
+    if (isArtefactCard(pickedCard)) {
+        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \u0432\u044B\u0431\u0440\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(pickedCard.name, "'."));
         var stack = [
             {
                 actionName: "DrawProfitAction",
                 config: {
                     name: "placeEnlistmentMercenaries",
-                    drawName: "Place Enlistment Mercenaries"
-                }
+                    drawName: "Place Enlistment Mercenaries",
+                },
             },
         ];
-        (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, stack);
+        EndActionFromStackAndAddNew(G, ctx, stack);
     }
 };
 /**
@@ -489,23 +474,22 @@ var GetEnlistmentMercenariesAction = function (G, ctx, config, cardId) {
  * @param ctx
  * @param config Конфиг действий героя.
  * @param suitId Id фракции.
- * @returns {*}
  * @constructor
  */
 var PlaceEnlistmentMercenariesAction = function (G, ctx, config, suitId) {
-    var suit = Object.keys(SuitData_1.suitsConfig)[suitId], pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-    if ((0, Camp_1.isArtefactCard)(pickedCard) && pickedCard.stack[0].variants) {
-        var mercenaryCard = (0, Card_1.CreateCard)({
+    var suit = Object.keys(suitsConfig)[suitId], pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+    if (isArtefactCard(pickedCard) && pickedCard.stack[0].variants) {
+        var mercenaryCard = CreateCard({
             type: "наёмник",
             suit: suit,
             rank: 1,
             points: pickedCard.stack[0].variants[suit].points,
             name: pickedCard.name,
             tier: pickedCard.tier,
-            path: pickedCard.path
+            path: pickedCard.path,
         });
-        (0, Player_1.AddCardToPlayer)(G, ctx, mercenaryCard);
-        (0, Logging_1.AddDataToLog)(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \u0437\u0430\u0432\u0435\u0440\u0431\u043E\u0432\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(mercenaryCard.name, "'."));
+        AddCardToPlayer(G, ctx, mercenaryCard);
+        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \u0437\u0430\u0432\u0435\u0440\u0431\u043E\u0432\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(mercenaryCard.name, "'."));
         var cardIndex = G.publicPlayers[Number(ctx.currentPlayer)].campCards
             .findIndex(function (card) { return card.name === pickedCard.name; });
         G.publicPlayers[Number(ctx.currentPlayer)].campCards.splice(cardIndex, 1);
@@ -517,13 +501,13 @@ var PlaceEnlistmentMercenariesAction = function (G, ctx, config, suitId) {
                     actionName: "DrawProfitAction",
                     config: {
                         name: "enlistmentMercenaries",
-                        drawName: "Enlistment Mercenaries"
-                    }
+                        drawName: "Enlistment Mercenaries",
+                    },
                 },
             ];
-            (0, StackHelpers_1.AddActionsToStackAfterCurrent)(G, ctx, stack);
+            AddActionsToStackAfterCurrent(G, ctx, stack);
         }
-        (0, HeroActions_1.CheckAndMoveThrudOrPickHeroAction)(G, ctx, mercenaryCard);
-        (0, StackHelpers_1.EndActionFromStackAndAddNew)(G, ctx, [], suitId);
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
+        EndActionFromStackAndAddNew(G, ctx, [], suitId);
     }
 };

@@ -1,10 +1,15 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
-exports.__esModule = true;
-exports.DrawLogData = void 0;
-var react_1 = __importDefault(require("react"));
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /**
  * <h3>Отрисовка лог панели.</h3>
  * <p>Применения:</p>
@@ -15,26 +20,23 @@ var react_1 = __importDefault(require("react"));
  * @param data Глобальные параметры.
  * @constructor
  */
-var DrawLogData = function (data) {
+export var DrawLogData = function (data) {
     if (data.props.G.log) {
         var loggingData = [];
         for (var i = data.props.G.logData.length - 1; i >= 0; i--) {
             if (data.props.G.logData[i].type === "private" /* PRIVATE */) {
-                loggingData.push(react_1["default"].createElement("li", { key: "Log ".concat(i), className: "text-red-500" }, data.props.G.logData[i].value));
+                loggingData.push(_jsx("li", __assign({ className: "text-red-500" }, { children: data.props.G.logData[i].value }), "Log ".concat(i)));
             }
             else if (data.props.G.logData[i].type === "game" /* GAME */) {
-                loggingData.push(react_1["default"].createElement("li", { key: "Log ".concat(i), className: "text-blue-500" }, data.props.G.logData[i].value));
+                loggingData.push(_jsx("li", __assign({ className: "text-blue-500" }, { children: data.props.G.logData[i].value }), "Log ".concat(i)));
             }
             else if (data.props.G.logData[i].type === "public" /* PUBLIC */) {
-                loggingData.push(react_1["default"].createElement("li", { key: "Log ".concat(i), className: "text-green-500" }, data.props.G.logData[i].value));
+                loggingData.push(_jsx("li", __assign({ className: "text-green-500" }, { children: data.props.G.logData[i].value }), "Log ".concat(i)));
             }
         }
-        return (react_1["default"].createElement("div", { className: "log ml-3 w-1/4 border overflow-y-auto" },
-            react_1["default"].createElement("h3", null, "Log data:"),
-            react_1["default"].createElement("ul", { className: "list-none p-0 ml-5" }, loggingData)));
+        return (_jsxs("div", __assign({ className: "log ml-3 w-1/4 border overflow-y-auto" }, { children: [_jsx("h3", { children: "Log data:" }, void 0), _jsx("ul", __assign({ className: "list-none p-0 ml-5" }, { children: loggingData }), void 0)] }), void 0));
     }
     else {
         return null;
     }
 };
-exports.DrawLogData = DrawLogData;

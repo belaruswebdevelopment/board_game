@@ -14,6 +14,7 @@ import {
 import {TotalRank} from "../helpers/ScoreHelpers";
 import {GameBoard} from "../GameBoard";
 import {IActionCard, ICard} from "../Card";
+import {CampCardTypes, DeckCardTypes} from "../GameSetup";
 
 /**
  * <h3>Отрисовка игровой информации о текущей эпохе и количестве карт в деках.</h3>
@@ -25,7 +26,7 @@ import {IActionCard, ICard} from "../Card";
  * @param data Глобальные параметры.
  * @constructor
  */
-export const DrawTierCards = (data): JSX.Element => (
+export const DrawTierCards = (data: GameBoard): JSX.Element => (
     <b>Tier: <span className="italic">
             {data.props.G.decks.length - data.props.G.tierToEnd + 1 > data.props.G.decks.length
                 ? data.props.G.decks.length : data.props.G.decks.length - data.props.G.tierToEnd + 1}
@@ -33,7 +34,7 @@ export const DrawTierCards = (data): JSX.Element => (
         ({data.props.G.decks.length - data.props.G.tierToEnd !== 2 ?
         data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0}
         {data.props.G.decks.length - data.props.G.tierToEnd === 0 ? "/"
-            + data.props.G.decks.reduce((count: number, current: (ICard | IActionCard)[][]) => count + current.length, 0)
+            + data.props.G.decks.reduce((count: number, current: DeckCardTypes[][]) => count + current.length, 0)
             : ""} cards left)
         </span></b>
 );
@@ -71,7 +72,7 @@ export const DrawWinner = (data: GameBoard): JSX.Element => {
                 winner = `Winner: Player ${data.props.G.publicPlayers[data.props.G.winner[0]].nickname}`;
             } else {
                 winner = "Winners: ";
-                data.props.G.winner.forEach((playerId, index) => {
+                data.props.G.winner.forEach((playerId: number, index: number): void => {
                     winner += `${index + 1}) Player ${data.props.G.publicPlayers[playerId].nickname}; `;
                 });
             }
@@ -97,12 +98,12 @@ export const DrawWinner = (data: GameBoard): JSX.Element => {
  * @constructor
  */
 export const DrawMarketCoins = (data: GameBoard): JSX.Element => {
-    const boardRows = [],
+    const boardRows: JSX.Element[][] = [],
         drawData: { boardCols: number, lastBoardCol: number, boardRows: number } =
             DrawBoard(data.props.G.marketCoinsUnique.length),
         countMarketCoins: IRepeatedMarketCoins = CountMarketCoins(data.props.G);
     for (let i: number = 0; i < drawData.boardRows; i++) {
-        const boardCells = [];
+        const boardCells: JSX.Element[] = [];
         boardRows[i] = [];
         for (let j: number = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
@@ -145,11 +146,11 @@ export const DrawMarketCoins = (data: GameBoard): JSX.Element => {
  * @constructor
  */
 export const DrawHeroes = (data: GameBoard): JSX.Element => {
-    const boardRows = [],
+    const boardRows: JSX.Element[][] = [],
         drawData: { boardCols: number, lastBoardCol: number, boardRows: number } =
             DrawBoard(data.props.G.heroes.length);
     for (let i: number = 0; i < drawData.boardRows; i++) {
-        const boardCells = [];
+        const boardCells: JSX.Element[] = [];
         boardRows[i] = [];
         for (let j: number = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j;
@@ -188,7 +189,7 @@ export const DrawHeroes = (data: GameBoard): JSX.Element => {
  * @constructor
  */
 export const DrawDistinctions = (data: GameBoard): JSX.Element => {
-    const boardCells = [];
+    const boardCells: JSX.Element[] = [];
     for (let i: number = 0; i < 1; i++) {
         for (let j: number = 0; j < data.props.G.suitsNum; j++) {
             const suit: string = Object.keys(suitsConfig)[j];
@@ -229,7 +230,7 @@ export const DrawDistinctions = (data: GameBoard): JSX.Element => {
  * @constructor
  */
 export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
-    const boardCells = [];
+    const boardCells: JSX.Element[] = [];
     let caption: string = "Get ";
     for (let i: number = 0; i < 1; i++) {
         if (option === "placeCards") {
@@ -475,7 +476,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
  * @constructor
  */
 export const DrawCamp = (data: GameBoard): JSX.Element => {
-    const boardCells = [];
+    const boardCells: JSX.Element[] = [];
     for (let i: number = 0; i < 1; i++) {
         for (let j: number = 0; j < data.props.G.campNum; j++) {
             if (data.props.G.camp[j] === null || data.props.G.camp[j] === undefined) {
@@ -503,7 +504,8 @@ export const DrawCamp = (data: GameBoard): JSX.Element => {
                     ({data.props.G.campDecks.length - data.props.G.tierToEnd !== 2 ?
                         data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0}
                     {data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? "/"
-                        + data.props.G.campDecks.reduce((count, current) => count + current.length, 0) : ""} cards left)
+                        + data.props.G.campDecks.reduce((count: number, current: CampCardTypes[]) => count +
+                            current.length, 0) : ""} cards left)
                 </span>
             </caption>
             <tbody>
@@ -525,10 +527,10 @@ export const DrawCamp = (data: GameBoard): JSX.Element => {
  * @constructor
  */
 export const DrawTaverns = (data: GameBoard, gridClass: string) => {
-    const tavernsBoards = [];
+    const tavernsBoards: JSX.Element[] = [];
     for (let t: number = 0; t < data.props.G.tavernsNum; t++) {
         for (let i: number = 0; i < 1; i++) {
-            const boardCells = [];
+            const boardCells: JSX.Element[] = [];
             for (let j: number = 0; j < data.props.G.drawSize; j++) {
                 if (data.props.G.taverns[t][j] === null) {
                     boardCells.push(

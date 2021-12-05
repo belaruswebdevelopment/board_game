@@ -64,10 +64,7 @@ export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coin
         if (ctx.phase === "placeCoinsUline") {
             ctx.events!.setPhase!("pickCards");
         } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline") {
-            G.actionsNum!--;
-            if (G.actionsNum === 0) {
-                G.actionsNum = null;
-            }
+            G.actionsNum--;
             AfterBasicPickCardActions(G, ctx, false);
         } else {
             const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers.filter(player =>

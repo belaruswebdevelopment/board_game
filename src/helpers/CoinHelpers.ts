@@ -3,6 +3,7 @@ import {ICoin, Trading} from "../Coin";
 import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPriority} from "../Priority";
+import {IPublicPlayer} from "../Player";
 
 /**
  * <h3>Активирует обмен монет.</h3>
@@ -62,14 +63,18 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: num
                 prevCoin: ICoin | null = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
             if (coin && prevCoin) {
                 if (coin.value > prevCoin.value) {
-                    [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                    // [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                    let temp = playersOrder[j - 1];
+                    playersOrder[j - 1] = playersOrder[j];
+                    playersOrder[j] = temp;
                 } else if (coin.value === prevCoin.value) {
-                    const priority: IPriority | undefined = G.publicPlayers[playersOrder[j]].priority,
-                        prevPriority: IPriority | undefined = G.publicPlayers[playersOrder[j - 1]].priority;
-                    if (priority && prevPriority) {
-                        if (priority.value > prevPriority.value) {
-                            [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
-                        }
+                    const priority: IPriority = G.publicPlayers[playersOrder[j]].priority,
+                        prevPriority: IPriority = G.publicPlayers[playersOrder[j - 1]].priority;
+                    if (priority.value > prevPriority.value) {
+                        // [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                        let temp = playersOrder[j - 1];
+                        playersOrder[j - 1] = playersOrder[j];
+                        playersOrder[j] = temp;
                     }
                 } else {
                     break;
@@ -85,8 +90,8 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: num
         if (counts[prop] <= 1) {
             continue;
         }
-        const tiePlayers = G.publicPlayers.filter(player => player.boardCoins[G.currentTavern] &&
-            player.boardCoins[G.currentTavern].value === Number(prop) && player.priority.isExchangeable);
+        const tiePlayers: IPublicPlayer[] = G.publicPlayers.filter(player => player.boardCoins[G.currentTavern]?.value === Number(prop)
+            && player.priority.isExchangeable);
         while (tiePlayers.length > 1) {
             const tiePlayersPriorities: number[] = tiePlayers.map(player => player.priority.value),
                 maxPriority: number = Math.max(...tiePlayersPriorities),
@@ -97,7 +102,10 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: num
                 1);
             tiePlayers.splice(tiePlayers.findIndex(player => player.priority.value === minPriority),
                 1);
-            [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
+            // [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
+            let temp = exchangeOrder[minIndex];
+            exchangeOrder[minIndex] = exchangeOrder[maxIndex];
+            exchangeOrder[maxIndex] = temp;
         }
     }
     return {playersOrder, exchangeOrder};

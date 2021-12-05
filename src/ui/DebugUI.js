@@ -1,10 +1,15 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
-exports.__esModule = true;
-exports.DrawDebugData = void 0;
-var react_1 = __importDefault(require("react"));
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /**
  * <h3>Собирает данные в объект для отрисовки дебаг информации.</h3>
  * <p>Применения:</p>
@@ -19,7 +24,7 @@ var GetDebugData = function (data) {
     if (data.props.G.debug) {
         var debugData = {
             G: {},
-            ctx: {}
+            ctx: {},
         };
         for (var _i = 0, _a = Object.entries(data.props.G); _i < _a.length; _i++) {
             var _b = _a[_i], key = _b[0], value = _b[1];
@@ -50,40 +55,17 @@ var DrawObjectData = function (obj) {
         if (value instanceof Object) {
             var data = DrawObjectData(value);
             if (Array.isArray(value)) {
-                values.push(react_1["default"].createElement("li", { key: key },
-                    react_1["default"].createElement("details", null,
-                        react_1["default"].createElement("summary", null,
-                            react_1["default"].createElement("b", null,
-                                react_1["default"].createElement("span", { className: "text-pink-500" }, key),
-                                ": "),
-                            react_1["default"].createElement("i", null,
-                                "Array(",
-                                value.length,
-                                ")")),
-                        react_1["default"].createElement("ul", { className: "list-none p-0 ml-5" }, data))));
+                values.push(_jsx("li", { children: _jsxs("details", { children: [_jsxs("summary", { children: [_jsxs("b", { children: [_jsx("span", __assign({ className: "text-pink-500" }, { children: key }), void 0), ": "] }, void 0), _jsxs("i", { children: ["Array(", value.length, ")"] }, void 0)] }, void 0), _jsx("ul", __assign({ className: "list-none p-0 ml-5" }, { children: data }), void 0)] }, void 0) }, key));
             }
             else {
-                values.push(react_1["default"].createElement("li", { key: key },
-                    react_1["default"].createElement("details", null,
-                        react_1["default"].createElement("summary", null,
-                            react_1["default"].createElement("b", null,
-                                react_1["default"].createElement("span", { className: "text-pink-500" }, key),
-                                ": "),
-                            react_1["default"].createElement("i", null, "Object")),
-                        react_1["default"].createElement("ul", { className: "list-none p-0 ml-5" }, data))));
+                values.push(_jsx("li", { children: _jsxs("details", { children: [_jsxs("summary", { children: [_jsxs("b", { children: [_jsx("span", __assign({ className: "text-pink-500" }, { children: key }), void 0), ": "] }, void 0), _jsx("i", { children: "Object" }, void 0)] }, void 0), _jsx("ul", __assign({ className: "list-none p-0 ml-5" }, { children: data }), void 0)] }, void 0) }, key));
             }
         }
         else {
-            values.push(react_1["default"].createElement("li", { key: key },
-                react_1["default"].createElement("b", null,
-                    react_1["default"].createElement("span", { className: "text-pink-500" }, key),
-                    ":"),
-                " ",
-                react_1["default"].createElement("span", { className: "text-purple-500" }, value)));
+            values.push(_jsxs("li", { children: [_jsxs("b", { children: [_jsx("span", __assign({ className: "text-pink-500" }, { children: key }), void 0), ":"] }, void 0), " ", _jsx("span", __assign({ className: "text-purple-500" }, { children: value }), void 0)] }, key));
         }
     }
-    return (react_1["default"].createElement("div", null,
-        react_1["default"].createElement("ul", { className: "list-none p-0 ml-5" }, values)));
+    return (_jsx("div", { children: _jsx("ul", __assign({ className: "list-none p-0 ml-5" }, { children: values }), void 0) }, void 0));
 };
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -95,15 +77,12 @@ var DrawObjectData = function (obj) {
  * @param data Глобальные параметры.
  * @constructor
  */
-var DrawDebugData = function (data) {
+export var DrawDebugData = function (data) {
     var debugData = GetDebugData(data);
     if (debugData === undefined) {
         return null;
     }
     else {
-        return (react_1["default"].createElement("div", null,
-            react_1["default"].createElement("h3", null, "Debug info data:"),
-            DrawObjectData(debugData)));
+        return (_jsxs("div", { children: [_jsx("h3", { children: "Debug info data:" }, void 0), DrawObjectData(debugData)] }, void 0));
     }
 };
-exports.DrawDebugData = DrawDebugData;

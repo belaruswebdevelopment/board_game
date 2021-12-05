@@ -12,7 +12,7 @@ import {CheckAndMoveThrudOrPickHeroAction} from "../actions/HeroActions";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 import {Ctx, Move} from "boardgame.io";
-import {MyGameState} from "../GameSetup";
+import {DeckCardTypes, MyGameState} from "../GameSetup";
 import {IActionCard, ICard, isCardNotAction} from "../Card";
 // todo Add logging
 /**
@@ -38,7 +38,7 @@ export const ClickCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: n
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const card: ICard | IActionCard | null = G.taverns[G.currentTavern][cardId];
+    const card: DeckCardTypes | null = G.taverns[G.currentTavern][cardId];
     let suitId: null | number = null;
     G.taverns[G.currentTavern][cardId] = null;
     if (card) {
@@ -97,7 +97,7 @@ export const ClickDistinctionCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx
  */
 export const ClickCardToPickDistinction: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     const isAdded: boolean = AddCardToPlayer(G, ctx, G.decks[1][cardId]),
-        pickedCard: ICard | IActionCard = G.decks[1].splice(cardId, 1)[0];
+        pickedCard: DeckCardTypes = G.decks[1].splice(cardId, 1)[0];
     let suitId: null | number = null;
     G.decks[1] = ctx.random!.Shuffle(G.decks[1]);
     if (isCardNotAction(pickedCard)) {
