@@ -28,9 +28,8 @@ export var GetHeroIndexByName = function (heroName) { return Object.keys(heroesC
  */
 export var CheckAndMoveThrud = function (G, ctx, card) {
     if (card.suit) {
-        var suitId = GetSuitIndexByName(card.suit), index = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].findIndex(function (card) {
-            return card.name === "Thrud";
-        });
+        var suitId = GetSuitIndexByName(card.suit), index = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+            .findIndex(function (card) { return card.name === "Thrud"; });
         if (index !== -1) {
             G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(index, 1);
         }
@@ -109,16 +108,17 @@ export var StartThrudMoving = function (G, ctx, card) {
  */
 export var CheckAndStartUlineActionsOrContinue = function (G, ctx) {
     // todo Rework it all!
-    var ulinePlayerIndex = G.publicPlayers.findIndex(function (player) { return player.buffs.everyTurn === "Uline"; });
+    var ulinePlayerIndex = G.publicPlayers.findIndex(function (player) {
+        return player.buffs.everyTurn === "Uline";
+    });
     if (ulinePlayerIndex !== -1) {
         if (ctx.activePlayers[ctx.currentPlayer] !== "placeTradingCoinsUline" &&
             ulinePlayerIndex === Number(ctx.currentPlayer)) {
             var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
             if (coin) {
                 if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern] && coin.isTriggerTrading) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.filter(function (coin, index) {
-                        return index >= G.tavernsNum && coin === null;
-                    })) {
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+                        .filter(function (coin, index) { return index >= G.tavernsNum && coin === null; })) {
                         G.actionsNum = G.suitsNum - G.tavernsNum;
                         ctx.events.setStage("placeTradingCoinsUline");
                         return "placeTradingCoinsUline";

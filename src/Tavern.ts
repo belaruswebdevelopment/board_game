@@ -1,6 +1,6 @@
 import {DiscardCardFromTavern} from "./Card";
 import {AddDataToLog, LogTypes} from "./Logging";
-import {MyGameState} from "./GameSetup";
+import {MyGameState, TavernCardTypes} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 
 /**
@@ -51,8 +51,10 @@ export const tavernsConfig: ITavernsConfig = {
  */
 export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => {
     let isCurrentTavernEmpty: boolean = false;
-    if (ctx.numPlayers === 2 && G.taverns[G.currentTavern].filter(card => card !== null).length === 1) {
-        const discardCardIndex: number = G.taverns[G.currentTavern].findIndex(card => card !== null);
+    if (ctx.numPlayers === 2 && G.taverns[G.currentTavern].filter((card: TavernCardTypes): boolean => card !== null)
+        .length === 1) {
+        const discardCardIndex: number = G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card
+            !== null);
         if (discardCardIndex !== -1) {
             const isCardDiscarded: boolean = DiscardCardFromTavern(G, discardCardIndex);
             if (isCardDiscarded) {
@@ -61,7 +63,7 @@ export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => 
             // fixme else Error Card not discarded???
         }
     } else {
-        isCurrentTavernEmpty = G.taverns[G.currentTavern].every(card => card === null);
+        isCurrentTavernEmpty = G.taverns[G.currentTavern].every((card: TavernCardTypes): boolean => card === null);
     }
     if (isCurrentTavernEmpty) {
         AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[G.currentTavern].name} пустая.`);

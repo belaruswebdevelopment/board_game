@@ -13,7 +13,7 @@ import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 import {Ctx, Move} from "boardgame.io";
 import {DeckCardTypes, MyGameState} from "../GameSetup";
-import {IActionCard, ICard, isCardNotAction} from "../Card";
+import {isCardNotAction} from "../Card";
 // todo Add logging
 /**
  * <h3>Выбор карты из таверны.</h3>

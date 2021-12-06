@@ -1,6 +1,6 @@
 import React from "react";
-import {CountMarketCoins, IRepeatedMarketCoins} from "../Coin";
-import {suitsConfig} from "../data/SuitData";
+import {CountMarketCoins, ICoin} from "../Coin";
+import {INumberValues, suitsConfig} from "../data/SuitData";
 import {tavernsConfig} from "../Tavern";
 import {Styles} from "../data/StyleData";
 import {
@@ -13,8 +13,7 @@ import {
 } from "../helpers/UIHelper";
 import {TotalRank} from "../helpers/ScoreHelpers";
 import {GameBoard} from "../GameBoard";
-import {IActionCard, ICard} from "../Card";
-import {CampCardTypes, DeckCardTypes} from "../GameSetup";
+import {CampCardTypes, CampDeckCardTypes, DeckCardTypes} from "../GameSetup";
 
 /**
  * <h3>Отрисовка игровой информации о текущей эпохе и количестве карт в деках.</h3>
@@ -101,7 +100,7 @@ export const DrawMarketCoins = (data: GameBoard): JSX.Element => {
     const boardRows: JSX.Element[][] = [],
         drawData: { boardCols: number, lastBoardCol: number, boardRows: number } =
             DrawBoard(data.props.G.marketCoinsUnique.length),
-        countMarketCoins: IRepeatedMarketCoins = CountMarketCoins(data.props.G);
+        countMarketCoins: INumberValues = CountMarketCoins(data.props.G);
     for (let i: number = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
         boardRows[i] = [];
@@ -358,8 +357,8 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
             }
         } else if (option === "enlistmentMercenaries") {
             caption += "mercenary to place it to your player board.";
-            const mercenaries = data.props.G.publicPlayers[data.props.ctx.currentPlayer].campCards.filter(card =>
-                card.type === "наёмник");
+            const mercenaries = data.props.G.publicPlayers[data.props.ctx.currentPlayer].campCards
+                .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник");
             for (let j: number = 0; j < mercenaries.length; j++) {
                 DrawCard(data, boardCells, mercenaries[j], j,
                     data.props.G.publicPlayers[data.props.ctx.currentPlayer], null,
@@ -417,8 +416,8 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                     }
                 }
             } else if (option === "upgradeCoin") {
-                const handCoins = data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins.filter(coin =>
-                    coin !== null);
+                const handCoins = data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins
+                    .filter((coin: ICoin | null): boolean => coin !== null);
                 let handCoinIndex: number = -1;
                 for (let j: number = 0; j < data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                     let type: string = "board",
@@ -428,8 +427,9 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                         handCoinIndex++;
                         isInitial = handCoins[handCoinIndex].isInitial;
                         const handCoinId = data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins
-                            .findIndex(coin => (coin && coin.value) === handCoins[handCoinIndex].value && (coin &&
-                                coin.isInitial) === handCoins[handCoinIndex].isInitial);
+                            .findIndex((coin: ICoin | null): boolean => (coin && coin.value)
+                                === handCoins[handCoinIndex].value && (coin && coin.isInitial) ===
+                                handCoins[handCoinIndex].isInitial);
                         if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[handCoinId] &&
                             !data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[handCoinId].isTriggerTrading) {
                             type = "hand";

@@ -35,8 +35,8 @@ export interface ICard {
 export interface ICreateCard {
     type?: string,
     suit: string,
-    rank?: null | number,
-    points?: null | number,
+    rank: null | number,
+    points: null | number,
     name?: string,
     game?: string,
     tier?: number,
@@ -99,9 +99,9 @@ export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as 
  * @constructor
  */
 export const CreateCard = ({
-                               type = "базовая", suit, rank = 1, points = null, name = "",
-                               game = "", tier = 0, path = ""
-                           } = {} as ICreateCard): ICard => {
+                               type = "базовая", suit, rank, points, name = "", game = "", tier = 0,
+                               path = "",
+                           }: ICreateCard = {} as ICreateCard): ICard => {
     return {
         type,
         suit,
@@ -127,8 +127,9 @@ export const CreateCard = ({
  * @param name Название.
  * @constructor
  */
-const CreateActionCard = ({type = "улучшение монеты", value, stack, name} = {} as
-    ICreateActionCard): IActionCard => ({
+const CreateActionCard = ({
+                              type = "улучшение монеты", value, stack, name,
+                          }: ICreateActionCard = {} as ICreateActionCard): IActionCard => ({
     type,
     value,
     stack,
@@ -157,15 +158,14 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
             count = cardPoints;
         }
         for (let j: number = 0; j < count; j++) {
+            const rank: number | number[] = deckConfig.suits[suit].ranksValues()[data.players][data.tier],
+                points: number | number[] = deckConfig.suits[suit].pointsValues()[data.players][data.tier];
             cards.push(CreateCard({
                 suit: deckConfig.suits[suit].suit,
-                rank: deckConfig.suits[suit].ranksValues()[data.players][data.tier][j],
-                points: deckConfig.suits[suit].pointsValues()[data.players][data.tier][j],
+                rank: Array.isArray(rank) ? rank[j] : null,
+                points: Array.isArray(points) ? points[j] : null,
                 name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 
-                ${deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] !== undefined ?
-                    deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] : 1}, 
-                очков: ${deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] !== undefined ?
-                    deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] + ")" : "нет)"}`,
+                ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + ")" : "нет)"}`,
             } as ICreateCard));
         }
     }
@@ -199,21 +199,17 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
             rank: 0,
             points: 0
         } as ICreateAverageSuitCard),
-        cardPoints = suitConfig.pointsValues()[data.players][data.tier];
-    let count: number = 0;
-    if (Array.isArray(cardPoints)) {
-        count = cardPoints.length;
-    } else {
-        count = cardPoints;
+        rank: number | number[] = suitConfig.ranksValues()[data.players][data.tier],
+        points: number | number[] = suitConfig.pointsValues()[data.players][data.tier];
+    let count: number = Array.isArray(points) ? points.length : points;
+    if (avgCard.rank && avgCard.points) {
+        for (let i: number = 0; i < count; i++) {
+            avgCard.rank += Array.isArray(rank) ? rank[i] : 1;
+            avgCard.points += Array.isArray(points) ? points[i] : 1;
+        }
+        avgCard.rank /= count;
+        avgCard.points /= count;
     }
-    for (let i: number = 0; i < count; i++) {
-        avgCard.rank += suitConfig.ranksValues()[data.players][data.tier][i] !== undefined ?
-            suitConfig.ranksValues()[data.players][data.tier][i] : 1;
-        avgCard.points += suitConfig.pointsValues()[data.players][data.tier][i] !== undefined ?
-            suitConfig.pointsValues()[data.players][data.tier][i] : 1;
-    }
-    avgCard.rank /= count;
-    avgCard.points /= count;
     return avgCard;
 };
 
@@ -233,13 +229,15 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
     if (!card1 || !card2) {
         return 0;
     }
-    if (card1.suit === card2.suit) {
-        const result: number = (card1.points !== undefined && card1.points !== null ? card1.points : 1) -
-            (card2.points !== undefined && card2.points !== null ? card2.points : 1);
-        if (result === 0) {
-            return result;
+    if (isCardNotAction(card1) && isCardNotAction(card2)) {
+        if (card1.suit === card2.suit) {
+            const result: number = (card1.points !== undefined && card1.points !== null ? card1.points : 1) -
+                (card2.points !== undefined && card2.points !== null ? card2.points : 1);
+            if (result === 0) {
+                return result;
+            }
+            return result > 0 ? 1 : -1;
         }
-        return result > 0 ? 1 : -1;
     }
     return 0;
 };
@@ -256,7 +254,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  * @param ctx
  * @constructor
  */
-export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
+/*export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
     if (IsTopPlayer(G, Number(ctx.currentPlayer))) {
         let top2PlayerId: number = GetTop2PlayerId(G, Number(ctx.currentPlayer));
         if (top2PlayerId === -1) {
@@ -269,7 +267,7 @@ export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
         return 0;
     }
     return 0;
-};
+};*/
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -284,7 +282,7 @@ export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
  * @constructor
  */
 export const PotentialScoring = ({player = {} as IPublicPlayer, card = {} as
-        PlayerCardsType}): number => {
+        PlayerCardsType | IActionCard}): number => {
     let score: number = 0,
         potentialCards: PlayerCardsType[][] = [];
     for (let i: number = 0; i < player.cards.length; i++) {
@@ -293,7 +291,7 @@ export const PotentialScoring = ({player = {} as IPublicPlayer, card = {} as
             AddCardToCards(potentialCards, player.cards[i][j]);
         }
     }
-    if (card && card.suit !== undefined) {
+    if (card && "suit" in card) {
         AddCardToCards(potentialCards, CreateCard(card));
     }
     let i: number = 0;
@@ -301,7 +299,7 @@ export const PotentialScoring = ({player = {} as IPublicPlayer, card = {} as
         score += suitsConfig[suit].scoringRule(potentialCards[i]);
         i++;
     }
-    if (card && card.suit === undefined) {
+    if (card && "value" in card) {
         score += card.value;
     }
     for (let i: number = 0; i < player.boardCoins.length; i++) {
@@ -326,19 +324,19 @@ export const PotentialScoring = ({player = {} as IPublicPlayer, card = {} as
  * @param tavern
  * @constructor
  */
-export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: ICard, cardId: number, tavern: TavernCardTypes[]):
-    number => {
+export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: ICard, cardId: number,
+                             tavern: TavernCardTypes[]): number => {
     const suitId: number = GetSuitIndexByName(compareCard.suit);
     if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
         return CompareCards(compareCard, G.averageCards[suitId]);
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
-        let temp: number[][] = tavern.map(card => G.publicPlayers.map(player =>
-                PotentialScoring({player, card}))),
+        let temp: number[][] = tavern.map((card: TavernCardTypes): number[] => G.publicPlayers
+                .map((player: IPublicPlayer): number => PotentialScoring({player, card: card!}))),
             result: number = temp[cardId][Number(ctx.currentPlayer)];
         temp.splice(cardId, 1);
-        temp.forEach(player => player.splice(Number(ctx.currentPlayer), 1));
-        return result - Math.max(...temp.map(player => Math.max(...player)));
+        temp.forEach((player: number[]): number[] => player.splice(Number(ctx.currentPlayer), 1));
+        return result - Math.max(...temp.map((player: number[]): number => Math.max(...player)));
     }
     return CompareCards(compareCard, G.averageCards[suitId]);
 };

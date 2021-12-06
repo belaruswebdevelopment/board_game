@@ -21,8 +21,11 @@ export var BotsPlaceAllCoins = function (G, ctx, coinsOrder) {
             G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId] = null;
         }
     }
-    var isEveryPlayersHandCoinsEmpty = G.publicPlayers.filter(function (player) { return player.buffs.everyTurn
-        !== "Uline"; }).every(function (player) { return player.handCoins.every(function (coin) { return coin === null; }); });
+    var isEveryPlayersHandCoinsEmpty = G.publicPlayers.filter(function (player) {
+        return player.buffs.everyTurn !== "Uline";
+    }).every(function (player) {
+        return player.handCoins.every(function (coin) { return coin === null; });
+    });
     if (isEveryPlayersHandCoinsEmpty) {
         if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
             ctx.events.setPhase("placeCoinsUline");
@@ -32,7 +35,9 @@ export var BotsPlaceAllCoins = function (G, ctx, coinsOrder) {
         }
     }
     else {
-        if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins.every(function (coin) { return coin === null; })) {
+        if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins.every(function (coin) {
+            return coin === null;
+        })) {
             ctx.events.endTurn();
         }
     }

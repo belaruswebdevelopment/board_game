@@ -18,7 +18,7 @@ import {AddDataToLog, LogTypes} from "../Logging";
 import {suitsConfig} from "../data/SuitData";
 import {CampDeckCardTypes, MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
-import {IArtefactCampCard, IMercenaryCampCard, isArtefactCard} from "../Camp";
+import {isArtefactCard} from "../Camp";
 import {ICard} from "../Card";
 
 /**

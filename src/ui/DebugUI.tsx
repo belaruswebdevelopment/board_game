@@ -38,7 +38,7 @@ const GetDebugData = (data: GameBoard): { ctx: {}, G: {} } | undefined => {
  * @param obj Информация.
  * @constructor
  */
-const DrawObjectData = (obj: {G: {[key: string]: any}, ctx: {[key: string]: any}}): JSX.Element => {
+const DrawObjectData = (obj: {[key: string]: any}): JSX.Element => {
     const values: JSX.Element[] = [];
     for (let [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {

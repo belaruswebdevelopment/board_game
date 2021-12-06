@@ -1,6 +1,8 @@
 import {CheckAndStartUlineActionsOrContinue} from "../helpers/HeroHelpers";
 import {Ctx, Move} from "boardgame.io";
 import {MyGameState} from "../GameSetup";
+import {ICoin} from "../Coin";
+import {IPublicPlayer} from "../Player";
 
 /**
  * <h3>Выкладка монет ботами.</h3>
@@ -17,15 +19,16 @@ import {MyGameState} from "../GameSetup";
 export const BotsPlaceAllCoins: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinsOrder: number[]): void => {
     for (let i: number = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
         const coinId: number = coinsOrder[i] || G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex(coin => coin !== null);
+            .findIndex((coin: ICoin | null): boolean => coin !== null);
         if (coinId !== -1) {
             G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i] =
                 G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId];
             G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId] = null;
         }
     }
-    const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers.filter(player => player.buffs.everyTurn
-        !== "Uline").every(player => player.handCoins.every(coin => coin === null));
+    const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers.filter((player: IPublicPlayer): boolean =>
+        player.buffs.everyTurn !== "Uline").every((player: IPublicPlayer): boolean =>
+        player.handCoins.every((coin: ICoin | null): boolean => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {
         if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
             ctx.events!.setPhase!("placeCoinsUline");
@@ -33,7 +36,8 @@ export const BotsPlaceAllCoins: Move<MyGameState> = (G: MyGameState, ctx: Ctx, c
             ctx.events!.setPhase!("pickCards");
         }
     } else {
-        if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins.every(coin => coin === null)) {
+        if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins.every((coin: ICoin | null): boolean =>
+            coin === null)) {
             ctx.events!.endTurn!();
         }
     }

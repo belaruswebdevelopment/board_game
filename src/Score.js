@@ -99,8 +99,9 @@ export var FinalScoring = function (G, ctx, player) {
     if (G.expansions.thingvellir.active) {
         var artifactsScore = 0;
         var _loop_2 = function (i) {
-            var artefact = Object.values(artefactsConfig).find(function (artefact) { return artefact.name ===
-                player.campCards[i].name; });
+            var artefact = Object.values(artefactsConfig).find(function (artefact) {
+                return artefact.name === player.campCards[i].name;
+            });
             var currentArtefactScore = 0;
             if (artefact) {
                 if (typeof G.suitIdForMjollnir === "number") {

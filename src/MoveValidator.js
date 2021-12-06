@@ -165,9 +165,7 @@ export var moveValidators = {
                 return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined &&
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id] !== null;
             }
-            else {
-                console.log("Param id must be type Number not Undefined");
-            }
+            return false;
         }
     },
     ClickBoardCoin: {
@@ -182,9 +180,7 @@ export var moveValidators = {
                 return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined &&
                     G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[id] === null;
             }
-            else {
-                console.log("Param id must be type Number not Undefined");
-            }
+            return false;
         }
     },
     BotsPlaceAllCoins: {
@@ -197,9 +193,7 @@ export var moveValidators = {
             if (typeof id !== "undefined") {
                 return G.botData.allCoinsOrder[id];
             }
-            else {
-                console.log("Param id must be type Number not Undefined");
-            }
+            return [];
         },
         validate: function () { return true; },
     },
@@ -223,9 +217,7 @@ export var moveValidators = {
                 }
                 return isValid;
             }
-            else {
-                console.log("Param id must be type Number not Undefined");
-            }
+            return false;
         },
     },
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
@@ -240,15 +232,7 @@ export var moveValidators = {
             if (typeof id !== "undefined" && typeof type !== "undefined") {
                 return CoinUpgradeValidation(G, ctx, id, type);
             }
-            else if (typeof id === "undefined" && typeof type === "undefined") {
-                console.log("Param id must be type Number not Undefined and param type must be type string not Undefined");
-            }
-            else if (typeof id === "undefined") {
-                console.log("Param id must be type Number not Undefined");
-            }
-            else if (typeof type === "undefined") {
-                console.log("Param type must be type string not Undefined");
-            }
+            return false;
         }
     },
     ClickCardToPickDistinction: {

@@ -6,6 +6,7 @@ import {CheckAndStartUlineActionsOrContinue} from "../helpers/HeroHelpers";
 import {Ctx, Move} from "boardgame.io";
 import {MyGameState} from "../GameSetup";
 import {IConfig, IPublicPlayer} from "../Player";
+import {ICoin} from "../Coin";
 // todo Add logging
 
 /**
@@ -67,9 +68,9 @@ export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coin
             G.actionsNum--;
             AfterBasicPickCardActions(G, ctx, false);
         } else {
-            const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers.filter(player =>
-                player.buffs.everyTurn !== "Uline").every(player =>
-                player.handCoins.every(coin => coin === null));
+            const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers.filter((player: IPublicPlayer): boolean =>
+                player.buffs.everyTurn !== "Uline").every((player: IPublicPlayer): boolean =>
+                player.handCoins.every((coin: ICoin | null): boolean => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {
                 if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
                     ctx.events!.setPhase!("placeCoinsUline");

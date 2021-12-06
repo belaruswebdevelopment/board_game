@@ -4,6 +4,7 @@ import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPriority} from "../Priority";
 import {IPublicPlayer} from "../Player";
+import {INumberValues} from "../data/SuitData";
 
 /**
  * <h3>Активирует обмен монет.</h3>
@@ -82,7 +83,7 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: num
             }
         }
     }
-    const counts: { [index: number]: number } = {};
+    const counts: INumberValues = {};
     for (let i: number = 0; i < coinValues.length; i++) {
         counts[coinValues[i]] = 1 + (counts[coinValues[i]] || 0);
     }
@@ -90,17 +91,21 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: num
         if (counts[prop] <= 1) {
             continue;
         }
-        const tiePlayers: IPublicPlayer[] = G.publicPlayers.filter(player => player.boardCoins[G.currentTavern]?.value === Number(prop)
-            && player.priority.isExchangeable);
+        const tiePlayers: IPublicPlayer[] = G.publicPlayers.filter((player: IPublicPlayer): boolean =>
+            player.boardCoins[G.currentTavern]?.value === Number(prop) && player.priority.isExchangeable);
         while (tiePlayers.length > 1) {
-            const tiePlayersPriorities: number[] = tiePlayers.map(player => player.priority.value),
+            const tiePlayersPriorities: number[] = tiePlayers.map((player: IPublicPlayer): number => player.priority.value),
                 maxPriority: number = Math.max(...tiePlayersPriorities),
                 minPriority: number = Math.min(...tiePlayersPriorities),
-                maxIndex: number = G.publicPlayers.findIndex(player => player.priority.value === maxPriority),
-                minIndex: number = G.publicPlayers.findIndex(player => player.priority.value === minPriority);
-            tiePlayers.splice(tiePlayers.findIndex(player => player.priority.value === maxPriority),
+                maxIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value
+                    === maxPriority),
+                minIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value
+                    === minPriority);
+            tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value
+                    === maxPriority),
                 1);
-            tiePlayers.splice(tiePlayers.findIndex(player => player.priority.value === minPriority),
+            tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value
+                    === minPriority),
                 1);
             // [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
             let temp = exchangeOrder[minIndex];

@@ -6,7 +6,7 @@ import {Ctx} from "boardgame.io";
 import {ICard} from "../Card";
 import {IArtefactCampCard} from "../Camp";
 import {ICoin} from "../Coin";
-import {IStack} from "../Player";
+import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
 import {IHero} from "../Hero";
 
 /**
@@ -38,8 +38,8 @@ export const GetHeroIndexByName = (heroName: string): number => Object.keys(hero
 export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: ICard | IArtefactCampCard | IHero): boolean => {
     if (card.suit) {
         const suitId: number = GetSuitIndexByName(card.suit),
-            index: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].findIndex(card =>
-                card.name === "Thrud");
+            index: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+                .findIndex((card: PlayerCardsType): boolean => card.name === "Thrud");
         if (index !== -1) {
             G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(index, 1);
         }
@@ -121,15 +121,16 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: ICard | IArtefa
  */
 export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): string | boolean => {
     // todo Rework it all!
-    const ulinePlayerIndex: number = G.publicPlayers.findIndex(player => player.buffs.everyTurn === "Uline");
+    const ulinePlayerIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+        player.buffs.everyTurn === "Uline");
     if (ulinePlayerIndex !== -1) {
         if (ctx.activePlayers![ctx.currentPlayer] !== "placeTradingCoinsUline" &&
             ulinePlayerIndex === Number(ctx.currentPlayer)) {
             const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
             if (coin) {
                 if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern] && coin.isTriggerTrading) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.filter((coin, index) =>
-                        index >= G.tavernsNum && coin === null)) {
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+                        .filter((coin: ICoin | null, index: number): boolean => index >= G.tavernsNum && coin === null)) {
                         G.actionsNum = G.suitsNum - G.tavernsNum;
                         ctx.events!.setStage!("placeTradingCoinsUline");
                         return "placeTradingCoinsUline";

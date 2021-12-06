@@ -258,9 +258,8 @@ export var DrawProfit = function (data, option) {
         }
         else if (option === "enlistmentMercenaries") {
             caption += "mercenary to place it to your player board.";
-            var mercenaries = data.props.G.publicPlayers[data.props.ctx.currentPlayer].campCards.filter(function (card) {
-                return card.type === "наёмник";
-            });
+            var mercenaries = data.props.G.publicPlayers[data.props.ctx.currentPlayer].campCards
+                .filter(function (card) { return card.type === "наёмник"; });
             for (var j = 0; j < mercenaries.length; j++) {
                 DrawCard(data, boardCells, mercenaries[j], j, data.props.G.publicPlayers[data.props.ctx.currentPlayer], null, "OnClickGetEnlistmentMercenaries", j);
             }
@@ -304,9 +303,8 @@ export var DrawProfit = function (data, option) {
                 }
             }
             else if (option === "upgradeCoin") {
-                var handCoins_1 = data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins.filter(function (coin) {
-                    return coin !== null;
-                });
+                var handCoins_1 = data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins
+                    .filter(function (coin) { return coin !== null; });
                 var handCoinIndex_1 = -1;
                 for (var j = 0; j < data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                     var type = "board", isInitial = false;
@@ -315,8 +313,9 @@ export var DrawProfit = function (data, option) {
                         handCoinIndex_1++;
                         isInitial = handCoins_1[handCoinIndex_1].isInitial;
                         var handCoinId = data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins
-                            .findIndex(function (coin) { return (coin && coin.value) === handCoins_1[handCoinIndex_1].value && (coin &&
-                            coin.isInitial) === handCoins_1[handCoinIndex_1].isInitial; });
+                            .findIndex(function (coin) { return (coin && coin.value)
+                            === handCoins_1[handCoinIndex_1].value && (coin && coin.isInitial) ===
+                            handCoins_1[handCoinIndex_1].isInitial; });
                         if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[handCoinId] &&
                             !data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[handCoinId].isTriggerTrading) {
                             type = "hand";

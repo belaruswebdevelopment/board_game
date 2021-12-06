@@ -3,7 +3,8 @@ import {AddActionsToStack, StartActionFromStackOrEndActions} from "./helpers/Sta
 import {MyGameState} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {IConfig, IPublicPlayer, IStack} from "./Player";
-import {IInitialTradingCoinConfig, IMarketCoinConfig} from "./data/CoinData";
+import {IInitialTradingCoinConfig, IMarketCoinConfig, isInitialPlayerCoinsConfigNotMarket} from "./data/CoinData";
+import {INumberValues} from "./data/SuitData";
 
 /**
  * <h3>Интерфейс для монеты.</h3>
@@ -34,13 +35,6 @@ export interface IBuildCoinsOptions {
 }
 
 /**
- * <h3>Интерфейс для подсчёта количества одинаковых монет рынка.</h3>
- */
-export interface IRepeatedMarketCoins {
-    [index: number]: number,
-}
-
-/**
  * todo Description.
  * @param obj
  */
@@ -59,7 +53,7 @@ const isCoin = (obj: {} | ICoin): obj is ICoin => (obj as ICoin).value !== undef
  * @param isTriggerTrading Активирует ли обмен монет.
  * @constructor
  */
-export const CreateCoin = ({value, isInitial = false, isTriggerTrading = false} = {} as ICreateCoin):
+export const CreateCoin = ({value, isInitial = false, isTriggerTrading = false}: ICreateCoin = {} as ICreateCoin):
     ICoin => ({
     value,
     isInitial,
@@ -78,21 +72,21 @@ export const CreateCoin = ({value, isInitial = false, isTriggerTrading = false} 
  * @param options Опции создания монет.
  * @constructor
  */
-export const BuildCoins = (coinConfig: IMarketCoinConfig[] | [IInitialTradingCoinConfig, ...number[]],
+export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoinConfig[],
                            options: IBuildCoinsOptions): ICoin[] => {
     const coins: ICoin[] = [];
     for (let i: number = 0; i < coinConfig.length; i++) {
-        const isMarket: boolean = options.players !== undefined,
-            coinValue: number = coinConfig[i]?.value ?? coinConfig[i],
-            count: number = isMarket ? coinConfig[i].count()[options.players] : 1;
-        if (isMarket) {
-            options.count.push({value: coinValue});
+        const config = coinConfig[i],
+            count: number = options.players !== undefined && !isInitialPlayerCoinsConfigNotMarket(config) ?
+                config.count()[options.players] : 1;
+        if (options.players !== undefined && options.count) {
+            options.count.push({value: config.value});
         }
         for (let c: number = 0; c < count; c++) {
             coins.push(CreateCoin({
-                value: coinValue,
+                value: config.value,
                 isInitial: options.isInitial,
-                isTriggerTrading: coinConfig[i].isTriggerTrading,
+                isTriggerTrading: isInitialPlayerCoinsConfigNotMarket(config) ? config.isTriggerTrading : false,
             } as ICreateCoin));
         }
     }
@@ -109,11 +103,11 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | [IInitialTradingCoi
  * @param G
  * @constructor
  */
-export const CountMarketCoins = (G: MyGameState): IRepeatedMarketCoins => {
-    const repeated: IRepeatedMarketCoins = {};
+export const CountMarketCoins = (G: MyGameState): INumberValues => {
+    const repeated: INumberValues = {};
     for (let i: number = 0; i < G.marketCoinsUnique.length; i++) {
         const temp: number = G.marketCoinsUnique[i].value;
-        repeated[temp] = G.marketCoins.filter(coin => coin.value === temp).length;
+        repeated[temp] = G.marketCoins.filter((coin: ICoin): boolean => coin.value === temp).length;
     }
     return repeated;
 };
@@ -131,7 +125,7 @@ export const CountMarketCoins = (G: MyGameState): IRepeatedMarketCoins => {
  * @constructor
  */
 export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
-    const coinsValues: number[] = tradingCoins.map(coin => coin.value),
+    const coinsValues: number[] = tradingCoins.map((coin: ICoin): number => coin.value),
         coinsMaxValue: number = Math.max(...coinsValues),
         coinsMinValue: number = Math.min(...coinsValues);
     let stack: IStack[],
@@ -215,7 +209,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline") {
             const allCoins: (ICoin | null)[] = [],
                 allHandCoins: (ICoin | null)[] = G.publicPlayers[Number(ctx.currentPlayer)]
-                    .handCoins.filter(coin => coin !== null);
+                    .handCoins.filter((coin: ICoin | null): boolean => coin !== null);
             for (let i: number = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
                 if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i] === null) {
                     allCoins.push(allHandCoins.splice(0, 1)[0]);
@@ -223,40 +217,43 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                     allCoins.push(G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i]);
                 }
             }
-            const minCoinValue: number = Math.min(...allCoins.filter(coin => coin !== null &&
-                    !coin.isTriggerTrading).map(coin => coin!.value)),
-                upgradingCoinInitial: ICoin | null | undefined = allCoins.find(coin =>
+            const minCoinValue: number = Math.min(...allCoins.filter((coin: ICoin | null): boolean => coin !== null &&
+                    !coin.isTriggerTrading).map((coin: ICoin | null): number => coin!.value)),
+                upgradingCoinInitial: ICoin | null | undefined = allCoins.find((coin: ICoin | null): boolean | undefined =>
                     coin!.value === minCoinValue && coin!.isInitial);
             if (upgradingCoinInitial) {
                 upgradingCoin = upgradingCoinInitial;
             } else {
-                coin = allCoins.find(coin => coin!.value === minCoinValue && !coin!.isInitial);
+                coin = allCoins.find((coin: ICoin | null): boolean => coin!.value === minCoinValue && !coin!.isInitial);
                 if (coin) {
                     upgradingCoin = coin;
                 }
             }
-            upgradingCoinId = allCoins.findIndex(coin => isCoin(upgradingCoin) && coin!.value ===
+            upgradingCoinId = allCoins.findIndex((coin: ICoin | null): boolean => isCoin(upgradingCoin) && coin!.value ===
                 upgradingCoin.value);
         } else {
             const minCoinValue: number = Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                .filter(coin => coin !== null && !coin.isTriggerTrading).map(coin => coin!.value));
+                .filter((coin: ICoin | null): boolean => coin !== null && !coin.isTriggerTrading)
+                .map((coin: ICoin | null): number => coin!.value));
             coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.find(coin => coin?.value ===
                 minCoinValue);
             if (coin) {
                 upgradingCoin = coin;
-                upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.findIndex(coin =>
-                    isCoin(upgradingCoin) && coin?.value === upgradingCoin.value);
+                upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+                    .findIndex((coin: ICoin | null): boolean => isCoin(upgradingCoin) && coin?.value ===
+                        upgradingCoin.value);
             }
         }
     } else if (type === "hand") {
         const handCoinPosition: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .filter((coin, index) => coin === null && index <= upgradingCoinId).length;
+            .filter((coin: ICoin | null, index: number): boolean => coin === null && index <= upgradingCoinId).length;
         coin = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .filter(coin => coin !== null)[handCoinPosition - 1];
+            .filter((coin: ICoin | null): boolean => coin !== null)[handCoinPosition - 1];
         if (coin) {
             upgradingCoin = coin;
-            upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.findIndex(coin =>
-                isCoin(upgradingCoin) && coin?.value === upgradingCoin.value && coin?.isInitial === isInitial);
+            upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+                .findIndex((coin: ICoin | null): boolean => isCoin(upgradingCoin) && coin?.value ===
+                    upgradingCoin.value && coin?.isInitial === isInitial);
         }
     } else {
         coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId];
@@ -298,8 +295,9 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
             новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
             let handCoinIndex: number = -1;
             if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] === null) {
-                handCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.findIndex(coin =>
-                    isCoin(upgradingCoin) && coin?.value === upgradingCoin.value);
+                handCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+                    .findIndex((coin: ICoin | null): boolean => isCoin(upgradingCoin) && coin?.value ===
+                        upgradingCoin.value);
             } else {
                 G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = null;
             }

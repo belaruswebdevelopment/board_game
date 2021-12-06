@@ -6,9 +6,7 @@ import {ArgsTypes} from "../actions/Actions";
 import {GameBoard} from "../GameBoard";
 import {ICoin} from "../Coin";
 import {IPublicPlayer} from "../Player";
-import {IActionCard, ICard} from "../Card";
 import {IHero} from "../Hero";
-import {IArtefactCampCard, IMercenaryCampCard} from "../Camp";
 import {CampDeckCardTypes, DeckCardTypes} from "../GameSetup";
 
 /**
@@ -202,10 +200,10 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
  * @constructor
  */
 export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: DeckCardTypes | CampDeckCardTypes | IHero,
-                         id: number, player:IPublicPlayer | null, suit?: string | null, actionName?: string,
+                         id: number, player: IPublicPlayer | null, suit?: string | null, actionName?: string,
                          ...args: ArgsTypes):
     void => {
-    let styles: IBackground,
+    let styles: IBackground = {background: ""},
         tdClasses: string = "",
         spanClasses: string,
         action: Function | null;
@@ -271,9 +269,9 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
     if (suit) {
         tdClasses = suitsConfig[suit].suitColor;
     }
-    if (card.type === "герой") {
+    if (card.type === "герой" && "game" in card) {
         styles = Styles.Heroes(card.game, card.name);
-        if (player === null && !card.active) {
+        if (player === null && "active" in card && !card.active) {
             spanClasses = "bg-hero-inactive";
             action = null;
         } else {
@@ -283,23 +281,39 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
             tdClasses = "bg-gray-600";
         }
     } else if (card.type === "наёмник" || card.type === "артефакт") {
-        styles = Styles.CampCards(card.tier, card.path);
+        if ("tier" in card && "path" in card) {
+            styles = Styles.CampCards(card.tier, card.path);
+        }
         spanClasses = "bg-camp";
         if (suit === null) {
             tdClasses = "bg-yellow-200";
         }
     } else {
-        styles = Styles.Cards(card.suit, card.points, card.name);
+        if ("suit" in card && "points" in card) {
+            if (typeof card.points === "number") {
+                styles = Styles.Cards(card.suit, card.points, card.name);
+            }
+        }
         spanClasses = "bg-card";
     }
     if (action) {
         tdClasses += " cursor-pointer";
     }
+    let description: string = "",
+        value: string = "";
+    if ("description" in card) {
+        description = card.description;
+    }
+    if ("points" in card) {
+        value = card.points !== null ? String(card.points) : "";
+    } else if ("value" in card) {
+        value = String(card.value);
+    }
     playerCells.push(
         <td key={`${(player && player.nickname) ? `player ${(player.nickname)} ` : ""}${suit} card ${id} ${card.name}`}
             className={tdClasses} onClick={() => action && action(...args)}>
-            <span style={styles} title={card.description ? card.description : card.name} className={spanClasses}>
-                <b>{card.points !== null ? card.points : (card.value !== undefined ? card.value : "")}</b>
+            <span style={styles} title={description ? description : card.name} className={spanClasses}>
+                <b>{value}</b>
             </span>
         </td>
     );
@@ -324,10 +338,10 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
  * @param args Аргументы действия.
  * @constructor
  */
-export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin:ICoin, id: number,
+export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin: ICoin, id: number,
                          player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
                          actionName?: string, ...args: ArgsTypes): void => {
-    let styles: IBackground,
+    let styles: IBackground = {background: ""},
         span = null,
         action: Function | null,
         tdClasses: string = "bg-yellow-300",
@@ -381,7 +395,9 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
             if (coin === undefined) {
                 styles = Styles.CoinBack();
             } else {
-                styles = Styles.Coin(coin.value, coin.isInitial);
+                if (typeof coin.isInitial !== "undefined") {
+                    styles = Styles.Coin(coin.value, coin.isInitial);
+                }
             }
         } else {
             styles = Styles.CoinBack();
@@ -390,7 +406,7 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
 
                 </span>);
             } else if (type === "back-tavern-icon") {
-                if (typeof additionalParam !== "undefined") {
+                if (typeof additionalParam === "number") {
                     span = (<span style={Styles.Taverns(additionalParam)} className="bg-tavern-icon">
 
                     </span>)
@@ -424,7 +440,7 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
  * @param args Аргументы действия.
  * @constructor
  */
-export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: string, name: string, player:IPublicPlayer,
+export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: string, name: string, player: IPublicPlayer,
                            actionName?: string, ...args: ArgsTypes): void => {
     let action: Function | null;
     switch (actionName) {

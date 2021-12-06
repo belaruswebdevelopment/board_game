@@ -1,5 +1,6 @@
 import {TotalRank} from "../helpers/ScoreHelpers";
 import {IPublicPlayer, IStack} from "../Player";
+import {ICoin} from "../Coin";
 
 export interface IArtefact {
     name: string,
@@ -85,7 +86,8 @@ const Draupnir: IArtefact = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: (player: IPublicPlayer): number => player.boardCoins.filter(coin => coin?.value >= 15).length * 6,
+    scoringRule: (player?: IPublicPlayer): number => player ? player.boardCoins
+        .filter((coin: ICoin | null): boolean => Boolean(coin && coin?.value >= 15)).length * 6 : 0,
 };
 
 /**
@@ -138,7 +140,7 @@ const Svalinn: IArtefact = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: (player: IPublicPlayer): number => player.heroes.length * 5,
+    scoringRule: (player?: IPublicPlayer): number => player ? player.heroes.length * 5 : 0,
 };
 
 /**
@@ -289,7 +291,8 @@ const Mjollnir: IArtefact = {
             },
         },
     ],
-    scoringRule: (player: IPublicPlayer, suitId: number): number => player.cards[suitId].reduce(TotalRank, 0) * 2,
+    scoringRule: (player?: IPublicPlayer, suitId?: number): number => player && typeof suitId === "number" ?
+        player.cards[suitId].reduce(TotalRank, 0) * 2 : 0,
 };
 
 /**
@@ -347,8 +350,8 @@ const Hrafnsmerki: IArtefact = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: (player: IPublicPlayer): number => player.cards.flat().filter(card => card.type === "наёмник").length
-        * 5,
+    scoringRule: (player?: IPublicPlayer): number => player ? player.cards.flat()
+            .filter(card => card.type === "наёмник").length * 5 : 0,
 };
 
 /**

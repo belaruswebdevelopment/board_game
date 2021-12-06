@@ -10,6 +10,9 @@ export interface IMarketCoinConfig {
     count: () => INumberValues,
 }
 
+export const isInitialPlayerCoinsConfigNotMarket = (config: IInitialTradingCoinConfig | IMarketCoinConfig):
+    config is IInitialTradingCoinConfig => (config as IInitialTradingCoinConfig).isTriggerTrading !== undefined;
+
 /**
  * <h3>Конфиг базовых монет игрока.</h3>
  * <p>Применения:</p>
@@ -19,12 +22,27 @@ export interface IMarketCoinConfig {
  *
  * @type {[{isTriggerTrading: boolean, value: number}, number, number, number, number]}
  */
-export const initialPlayerCoinsConfig: [IInitialTradingCoinConfig, ...number[]] = [
-    {value: 0, isTriggerTrading: true},
-    2,
-    3,
-    4,
-    5,
+export const initialPlayerCoinsConfig: IInitialTradingCoinConfig[] = [
+    {
+        value: 0,
+        isTriggerTrading: true,
+    },
+    {
+        value: 2,
+        isTriggerTrading: false,
+    },
+    {
+        value: 3,
+        isTriggerTrading: false,
+    },
+    {
+        value: 4,
+        isTriggerTrading: false,
+    },
+    {
+        value: 5,
+        isTriggerTrading: false,
+    },
 ];
 
 /**

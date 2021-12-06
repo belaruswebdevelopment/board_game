@@ -1,5 +1,6 @@
 import { AddDataToLog } from "./Logging";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
+import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 /**
  * todo Description.
  * @param obj
@@ -39,18 +40,18 @@ export var CreateCoin = function (_a) {
  * @constructor
  */
 export var BuildCoins = function (coinConfig, options) {
-    var _a, _b;
     var coins = [];
     for (var i = 0; i < coinConfig.length; i++) {
-        var isMarket = options.players !== undefined, coinValue = (_b = (_a = coinConfig[i]) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : coinConfig[i], count = isMarket ? coinConfig[i].count()[options.players] : 1;
-        if (isMarket) {
-            options.count.push({ value: coinValue });
+        var config = coinConfig[i], count = options.players !== undefined && !isInitialPlayerCoinsConfigNotMarket(config) ?
+            config.count()[options.players] : 1;
+        if (options.players !== undefined && options.count) {
+            options.count.push({ value: config.value });
         }
         for (var c = 0; c < count; c++) {
             coins.push(CreateCoin({
-                value: coinValue,
+                value: config.value,
                 isInitial: options.isInitial,
-                isTriggerTrading: coinConfig[i].isTriggerTrading,
+                isTriggerTrading: isInitialPlayerCoinsConfigNotMarket(config) ? config.isTriggerTrading : false,
             }));
         }
     }
@@ -192,14 +193,15 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
         }
         else {
             var minCoinValue_2 = Math.min.apply(Math, G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                .filter(function (coin) { return coin !== null && !coin.isTriggerTrading; }).map(function (coin) { return coin.value; }));
+                .filter(function (coin) { return coin !== null && !coin.isTriggerTrading; })
+                .map(function (coin) { return coin.value; }));
             coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.find(function (coin) { return (coin === null || coin === void 0 ? void 0 : coin.value) ===
                 minCoinValue_2; });
             if (coin) {
                 upgradingCoin = coin;
-                upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.findIndex(function (coin) {
-                    return isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value;
-                });
+                upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+                    .findIndex(function (coin) { return isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) ===
+                    upgradingCoin.value; });
             }
         }
     }
@@ -210,9 +212,9 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
             .filter(function (coin) { return coin !== null; })[handCoinPosition - 1];
         if (coin) {
             upgradingCoin = coin;
-            upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.findIndex(function (coin) {
-                return isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === isInitial;
-            });
+            upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+                .findIndex(function (coin) { return isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) ===
+                upgradingCoin.value && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === isInitial; });
         }
     }
     else {
@@ -254,9 +256,9 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
             AddDataToLog(G, "private" /* PRIVATE */, "\u041D\u0430\u0447\u0430\u0442\u043E \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B c ID '".concat(upgradingCoinId, "' \u0441 \u0442\u0438\u043F\u043E\u043C \n            '").concat(type, "' \u0441 initial '").concat(isInitial, "' \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '").concat(upgradingCoin.value, "' \u043D\u0430 +").concat(config.value, " \u0441 \n            \u043D\u043E\u0432\u044B\u043C \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u043C '").concat(newValue, "' \u0441 \u0438\u0442\u043E\u0433\u043E\u0432\u044B\u043C \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u043C '").concat(upgradedCoin.value, "'."));
             var handCoinIndex = -1;
             if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] === null) {
-                handCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.findIndex(function (coin) {
-                    return isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value;
-                });
+                handCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+                    .findIndex(function (coin) { return isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) ===
+                    upgradingCoin.value; });
             }
             else {
                 G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = null;

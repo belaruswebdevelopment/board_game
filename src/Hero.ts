@@ -58,19 +58,17 @@ interface ICreateHero {
 export const CreateHero = ({
                                type, name, description, game, suit, rank,
                                points, active = true, stack
-                           } = {} as ICreateHero): IHero => {
-    return {
-        type,
-        name,
-        description,
-        game,
-        suit,
-        rank,
-        points,
-        active,
-        stack,
-    };
-};
+                           }: ICreateHero = {} as ICreateHero): IHero => ({
+    type,
+    name,
+    description,
+    game,
+    suit,
+    rank,
+    points,
+    active,
+    stack,
+});
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -119,7 +117,7 @@ export const BuildHeroes = (config: string[]): IHero[] => {
 export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
     if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
         const isCanPickHero: boolean = Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].cards
-                .map(item => item.reduce(TotalRank, 0))) >
+                .map((item: PlayerCardsType[]): number => item.reduce(TotalRank, 0))) >
             G.publicPlayers[Number(ctx.currentPlayer)].heroes.length;
         if (isCanPickHero) {
             const stack: IStack[] = [
@@ -151,11 +149,11 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: MyGameState, ctx: Ctx): void => {
     for (let i: number = 0; i < ctx.numPlayers; i++) {
         const playerCards: PlayerCardsType[] = G.publicPlayers[i].cards.flat(),
-            thrud: PlayerCardsType | undefined = playerCards.find(card => card.name === "Thrud");
+            thrud: PlayerCardsType | undefined = playerCards.find((card: PlayerCardsType): boolean => card.name === "Thrud");
         if (thrud) {
             const thrudSuit: number = GetSuitIndexByName(thrud.suit),
                 thrudIndex: number = G.publicPlayers[i].cards[thrudSuit]
-                    .findIndex(card => card.name === "Thrud");
+                    .findIndex((card: PlayerCardsType): boolean => card.name === "Thrud");
             G.publicPlayers[i].cards[thrudSuit].splice(thrudIndex, 1);
             AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с 
             игрового поля.`);

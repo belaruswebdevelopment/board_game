@@ -178,8 +178,8 @@ var Idunn = {
             },
         },
     ],
-    scoringRule: function (player) { return player.cards[GetSuitIndexByName("explorer")]
-        .reduce(TotalRank, 0) * 2; },
+    scoringRule: function (player) { return player ? player.cards[GetSuitIndexByName("explorer")]
+        .reduce(TotalRank, 0) * 2 : 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -636,8 +636,10 @@ var Astrid = {
             },
         },
     ],
-    scoringRule: function (player) { return Math.max.apply(Math, __spreadArray(__spreadArray([], player.boardCoins
-        .filter(function (coin) { return coin === null || coin === void 0 ? void 0 : coin.value; }).map(function (coin) { return coin.value; }), false), player.handCoins.filter(function (coin) { return coin === null || coin === void 0 ? void 0 : coin.value; }).map(function (coin) { return coin.value; }), false)); },
+    scoringRule: function (player) { return player ? Math.max.apply(Math, __spreadArray(__spreadArray([], player.boardCoins
+        .filter(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.value); })
+        .map(function (coin) { return coin.value; }), false), player.handCoins.filter(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.value); })
+        .map(function (coin) { return coin.value; }), false)) : 0; },
 };
 /**
  * <h3>Данные о герое.</h3>

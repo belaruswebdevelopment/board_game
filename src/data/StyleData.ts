@@ -10,7 +10,7 @@ interface IStyles {
     DistinctionsBack: () => IBackground,
     HeroBack: () => IBackground,
     Camp: () => IBackground,
-    CampCards: (tier: 0 | 1, cardPath: string) => IBackground,
+    CampCards: (tier: number, cardPath: string) => IBackground,
     Coin: (value: number, initial: boolean) => IBackground,
     CoinBack: () => IBackground,
     Priority: () => IBackground,

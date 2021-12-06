@@ -7,9 +7,9 @@ import {suitsConfig} from "./data/SuitData";
 import {CampDeckCardTypes, DeckCardTypes, MyGameState} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPriority} from "./Priority";
-import {IActionCard, ICard, isCardNotAction} from "./Card";
+import {ICard, isCardNotAction} from "./Card";
 import {IHero} from "./Hero";
-import {IArtefactCampCard, IMercenaryCampCard} from "./Camp";
+import {IArtefactCampCard} from "./Camp";
 import {IBuff, IConditions, IVariants} from "./data/HeroData";
 
 export type PlayerCardsType = ICard | IArtefactCampCard | IHero;
@@ -90,7 +90,7 @@ interface ICreatePublicPlayer {
  * @param boardCoins Массив монет на столе.
  * @constructor
  */
-const CreatePlayer = ({handCoins, boardCoins} = {} as IPlayer): IPlayer => ({
+const CreatePlayer = ({handCoins, boardCoins}: IPlayer = {} as IPlayer): IPlayer => ({
     handCoins,
     boardCoins,
 });
@@ -129,7 +129,7 @@ const CreatePublicPlayer = ({
                                 buffs = {},
                                 selectedCoin,
                                 pickedCard = null,
-                            } = {} as ICreatePublicPlayer): IPublicPlayer => ({
+                            }: ICreatePublicPlayer = {} as ICreatePublicPlayer): IPublicPlayer => ({
     nickname,
     cards,
     campCards,
@@ -321,7 +321,7 @@ export const AddHeroCardToPlayerCards = (G: MyGameState, ctx: Ctx, hero: IHero):
  * @param cards Массив потенциальных карт для ботов.
  * @param card Карта.
  */
-export const AddCardToCards = (cards: PlayerCardsType[][], card: ICard): void => {
+export const AddCardToCards = (cards: PlayerCardsType[][], card: PlayerCardsType): void => {
     const suitIndex: number = GetSuitIndexByName(card.suit);
     if (suitIndex) {
         cards[suitIndex].push(card);

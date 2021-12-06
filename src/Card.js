@@ -1,4 +1,4 @@
-import { AddCardToCards, GetTop1PlayerId, GetTop2PlayerId, IsTopPlayer } from "./Player";
+import { AddCardToCards } from "./Player";
 import { suitsConfig } from "./data/SuitData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog } from "./Logging";
@@ -22,7 +22,7 @@ export var isCardNotAction = function (card) { return card.suit !== undefined; }
  * @constructor
  */
 export var CreateCard = function (_a) {
-    var _b = _a === void 0 ? {} : _a, _c = _b.type, type = _c === void 0 ? "базовая" : _c, suit = _b.suit, _d = _b.rank, rank = _d === void 0 ? 1 : _d, _e = _b.points, points = _e === void 0 ? null : _e, _f = _b.name, name = _f === void 0 ? "" : _f, _g = _b.game, game = _g === void 0 ? "" : _g, _h = _b.tier, tier = _h === void 0 ? 0 : _h, _j = _b.path, path = _j === void 0 ? "" : _j;
+    var _b = _a === void 0 ? {} : _a, _c = _b.type, type = _c === void 0 ? "базовая" : _c, suit = _b.suit, rank = _b.rank, points = _b.points, _d = _b.name, name = _d === void 0 ? "" : _d, _e = _b.game, game = _e === void 0 ? "" : _e, _f = _b.tier, tier = _f === void 0 ? 0 : _f, _g = _b.path, path = _g === void 0 ? "" : _g;
     return {
         type: type,
         suit: suit,
@@ -79,13 +79,12 @@ export var BuildCards = function (deckConfig, data) {
             count = cardPoints;
         }
         for (var j = 0; j < count; j++) {
+            var rank = deckConfig.suits[suit].ranksValues()[data.players][data.tier], points = deckConfig.suits[suit].pointsValues()[data.players][data.tier];
             cards.push(CreateCard({
                 suit: deckConfig.suits[suit].suit,
-                rank: deckConfig.suits[suit].ranksValues()[data.players][data.tier][j],
-                points: deckConfig.suits[suit].pointsValues()[data.players][data.tier][j],
-                name: "(\u0444\u0440\u0430\u043A\u0446\u0438\u044F: ".concat(suitsConfig[deckConfig.suits[suit].suit].suitName, ", \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432: \n                ").concat(deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] !== undefined ?
-                    deckConfig.suits[suit].ranksValues()[data.players][data.tier][j] : 1, ", \n                \u043E\u0447\u043A\u043E\u0432: ").concat(deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] !== undefined ?
-                    deckConfig.suits[suit].pointsValues()[data.players][data.tier][j] + ")" : "нет)"),
+                rank: Array.isArray(rank) ? rank[j] : null,
+                points: Array.isArray(points) ? points[j] : null,
+                name: "(\u0444\u0440\u0430\u043A\u0446\u0438\u044F: ".concat(suitsConfig[deckConfig.suits[suit].suit].suitName, ", \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432: \n                ").concat(Array.isArray(rank) ? rank[j] : 1, ", \u043E\u0447\u043A\u043E\u0432: ").concat(Array.isArray(points) ? points[j] + ")" : "нет)"),
             }));
         }
     }
@@ -117,22 +116,16 @@ export var GetAverageSuitCard = function (suitConfig, data) {
         suit: suitConfig.suit,
         rank: 0,
         points: 0
-    }), cardPoints = suitConfig.pointsValues()[data.players][data.tier];
-    var count = 0;
-    if (Array.isArray(cardPoints)) {
-        count = cardPoints.length;
+    }), rank = suitConfig.ranksValues()[data.players][data.tier], points = suitConfig.pointsValues()[data.players][data.tier];
+    var count = Array.isArray(points) ? points.length : points;
+    if (avgCard.rank && avgCard.points) {
+        for (var i = 0; i < count; i++) {
+            avgCard.rank += Array.isArray(rank) ? rank[i] : 1;
+            avgCard.points += Array.isArray(points) ? points[i] : 1;
+        }
+        avgCard.rank /= count;
+        avgCard.points /= count;
     }
-    else {
-        count = cardPoints;
-    }
-    for (var i = 0; i < count; i++) {
-        avgCard.rank += suitConfig.ranksValues()[data.players][data.tier][i] !== undefined ?
-            suitConfig.ranksValues()[data.players][data.tier][i] : 1;
-        avgCard.points += suitConfig.pointsValues()[data.players][data.tier][i] !== undefined ?
-            suitConfig.pointsValues()[data.players][data.tier][i] : 1;
-    }
-    avgCard.rank /= count;
-    avgCard.points /= count;
     return avgCard;
 };
 /**
@@ -151,13 +144,15 @@ export var CompareCards = function (card1, card2) {
     if (!card1 || !card2) {
         return 0;
     }
-    if (card1.suit === card2.suit) {
-        var result = (card1.points !== undefined && card1.points !== null ? card1.points : 1) -
-            (card2.points !== undefined && card2.points !== null ? card2.points : 1);
-        if (result === 0) {
-            return result;
+    if (isCardNotAction(card1) && isCardNotAction(card2)) {
+        if (card1.suit === card2.suit) {
+            var result = (card1.points !== undefined && card1.points !== null ? card1.points : 1) -
+                (card2.points !== undefined && card2.points !== null ? card2.points : 1);
+            if (result === 0) {
+                return result;
+            }
+            return result > 0 ? 1 : -1;
         }
-        return result > 0 ? 1 : -1;
     }
     return 0;
 };
@@ -173,20 +168,20 @@ export var CompareCards = function (card1, card2) {
  * @param ctx
  * @constructor
  */
-export var CardProfitForPlayer = function (G, ctx) {
+/*export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
     if (IsTopPlayer(G, Number(ctx.currentPlayer))) {
-        var top2PlayerId = GetTop2PlayerId(G, Number(ctx.currentPlayer));
+        let top2PlayerId: number = GetTop2PlayerId(G, Number(ctx.currentPlayer));
         if (top2PlayerId === -1) {
             return 0;
         }
         return 0;
     }
-    var top1PlayerId = GetTop1PlayerId(G, Number(ctx.currentPlayer));
+    let top1PlayerId: number = GetTop1PlayerId(G, Number(ctx.currentPlayer));
     if (top1PlayerId === -1) {
         return 0;
     }
     return 0;
-};
+};*/
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -209,7 +204,7 @@ export var PotentialScoring = function (_a) {
             AddCardToCards(potentialCards, player.cards[i_1][j]);
         }
     }
-    if (card && card.suit !== undefined) {
+    if (card && "suit" in card) {
         AddCardToCards(potentialCards, CreateCard(card));
     }
     var i = 0;
@@ -217,7 +212,7 @@ export var PotentialScoring = function (_a) {
         score += suitsConfig[suit].scoringRule(potentialCards[i]);
         i++;
     }
-    if (card && card.suit === undefined) {
+    if (card && "value" in card) {
         score += card.value;
     }
     for (var i_2 = 0; i_2 < player.boardCoins.length; i_2++) {
@@ -247,9 +242,8 @@ export var EvaluateCard = function (G, ctx, compareCard, cardId, tavern) {
         return CompareCards(compareCard, G.averageCards[suitId]);
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
-        var temp = tavern.map(function (card) { return G.publicPlayers.map(function (player) {
-            return PotentialScoring({ player: player, card: card });
-        }); }), result = temp[cardId][Number(ctx.currentPlayer)];
+        var temp = tavern.map(function (card) { return G.publicPlayers
+            .map(function (player) { return PotentialScoring({ player: player, card: card }); }); }), result = temp[cardId][Number(ctx.currentPlayer)];
         temp.splice(cardId, 1);
         temp.forEach(function (player) { return player.splice(Number(ctx.currentPlayer), 1); });
         return result - Math.max.apply(Math, temp.map(function (player) { return Math.max.apply(Math, player); }));

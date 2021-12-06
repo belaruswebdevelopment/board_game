@@ -1,4 +1,4 @@
-import { CompareCards, EvaluateCard } from "./Card";
+import { CompareCards, EvaluateCard, isCardNotAction } from "./Card";
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -90,7 +90,9 @@ export var GetAllPicks = function (_a) {
         if (a.length === 1) {
             a = a.flat();
         }
-        return a.reduce(function (a, b) { return a.flatMap(function (d) { return b.map(function (e) { return [d, e].flat(); }); }); });
+        return a.reduce(function (a, b) { return a.flatMap(function (d) {
+            return b.map(function (e) { return [d, e].flat(); });
+        }); });
     };
     for (var i = 0; i < tavernsNum; i++) {
         temp[i] = Array(playersNum).fill(undefined).map(function (item, index) { return index; });
@@ -109,7 +111,8 @@ export var GetAllPicks = function (_a) {
  */
 var isAllCardsEqual = {
     heuristic: function (cards) { return cards.every(function (card) {
-        return (card.suit === cards[0].suit && CompareCards(card, cards[0]) === 0);
+        return (card !== null && isCardNotAction(card) && isCardNotAction(cards[0]) && card.suit === cards[0].suit
+            && CompareCards(card, cards[0]) === 0);
     }); },
     weight: -100,
 };
@@ -123,14 +126,10 @@ var isAllCardsEqual = {
  *
  * @todo Саше: сделать описание функции и параметров.
  */
-var isAllWorse, weight;
-{
-    heuristic: (function (array) { return array.every(function (card) { return card === -1; }); },
-        weight);
-    40,
-    ;
-}
-;
+var isAllWorse = {
+    heuristic: function (array) { return array.every(function (item) { return item === -1; }); },
+    weight: 40,
+};
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -141,7 +140,7 @@ var isAllWorse, weight;
  * @todo Саше: сделать описание функции и параметров.
  */
 var isAllAverage = {
-    heuristic: function (array) { return array.every(function (card) { return card === 0; }); },
+    heuristic: function (array) { return array.every(function (item) { return item === 0; }); },
     weight: 20,
 };
 /**
@@ -154,7 +153,7 @@ var isAllAverage = {
  * @todo Саше: сделать описание функции и параметров.
  */
 var isAllBetter = {
-    heuristic: function (array) { return array.every(function (card) { return card === 1; }); },
+    heuristic: function (array) { return array.every(function (item) { return item === 1; }); },
     weight: 10,
 };
 /**
@@ -167,7 +166,7 @@ var isAllBetter = {
  * @todo Саше: сделать описание функции и параметров.
  */
 var isOnlyOneWorse = {
-    heuristic: function (array) { return (array.filter(function (card) { return card === -1; }).length === 1); },
+    heuristic: function (array) { return (array.filter(function (item) { return item === -1; }).length === 1); },
     weight: -100,
 };
 /**
@@ -180,7 +179,7 @@ var isOnlyOneWorse = {
  * @todo Саше: сделать описание функции и параметров.
  */
 var isOnlyWorseOrBetter = {
-    heuristic: function (array) { return array.every(function (card) { return card !== 0; }); },
+    heuristic: function (array) { return array.every(function (item) { return item !== 0; }); },
     weight: -50,
 };
 /**
@@ -202,8 +201,7 @@ var absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
  *
  * @todo Саше: сделать описание функции и параметров.
  */
-var relativeHeuristicsForTradingCoin = [isAllWorse, isAllAverage, isAllBetter,
-    isOnlyOneWorse, isOnlyWorseOrBetter];
+var relativeHeuristicsForTradingCoin = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
 console.log(relativeHeuristicsForTradingCoin !== null && relativeHeuristicsForTradingCoin !== void 0 ? relativeHeuristicsForTradingCoin : "");
 //may be to add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
 /**
@@ -257,21 +255,25 @@ var CompareCharacteristics = function (stat1, stat2) {
  */
 export var CheckHeuristicsForCoinsPlacement = function (G, ctx) {
     var taverns = G.taverns /*,
-        averageCards = G.averageCards*/;
-    var result = Array(taverns.length).fill(0), temp = taverns.map(function (tavern) { return absoluteHeuristicsForTradingCoin
+        averageCards: ICard[] = G.averageCards*/;
+    var result = Array(taverns.length).fill(0);
+    var temp = taverns.map(function (tavern) { return absoluteHeuristicsForTradingCoin
         .reduce(function (acc, item) {
-        return acc + (item.heuristic(tavern) ? item.weight : 0);
+        return acc + (tavern !== null && item.heuristic(tavern) ? item.weight : 0);
     }, 0); });
     result = result.map(function (value, index) { return value + temp[index]; });
-    temp = taverns.map(function (tavern) { return tavern.map(function (card, index, arr) { return EvaluateCard(G, ctx, card, index, arr); }); });
-    temp = temp.map(function (element) { return GetCharacteristics(element); });
-    var maxIndex = 0, minIndex = temp.length - 1;
+    var tempNumbers = taverns.map(function (tavern) { return tavern
+        .map(function (card, index, arr) {
+        return EvaluateCard(G, ctx, card, index, arr);
+    }); });
+    var tempChars = tempNumbers.map(function (element) { return GetCharacteristics(element); });
+    var maxIndex = 0, minIndex = tempChars.length - 1;
     for (var i = 1; i < temp.length; i++) {
-        if (CompareCharacteristics(temp[maxIndex], temp[i]) < 0) {
+        if (CompareCharacteristics(tempChars[maxIndex], tempChars[i]) < 0) {
             maxIndex = i;
         }
-        if (CompareCharacteristics(temp[minIndex], temp[temp.length - 1 - i]) > 0) {
-            minIndex = temp.length - 1 - i;
+        if (CompareCharacteristics(tempChars[minIndex], tempChars[tempChars.length - 1 - i]) > 0) {
+            minIndex = tempChars.length - 1 - i;
         }
     }
     result[maxIndex] += 10;

@@ -1,3 +1,4 @@
+export var isInitialPlayerCoinsConfigNotMarket = function (config) { return config.isTriggerTrading !== undefined; };
 /**
  * <h3>Конфиг базовых монет игрока.</h3>
  * <p>Применения:</p>
@@ -8,11 +9,26 @@
  * @type {[{isTriggerTrading: boolean, value: number}, number, number, number, number]}
  */
 export var initialPlayerCoinsConfig = [
-    { value: 0, isTriggerTrading: true },
-    2,
-    3,
-    4,
-    5,
+    {
+        value: 0,
+        isTriggerTrading: true,
+    },
+    {
+        value: 2,
+        isTriggerTrading: false,
+    },
+    {
+        value: 3,
+        isTriggerTrading: false,
+    },
+    {
+        value: 4,
+        isTriggerTrading: false,
+    },
+    {
+        value: 5,
+        isTriggerTrading: false,
+    },
 ];
 /**
  * <h3>Конфиг монет рынка.</h3>

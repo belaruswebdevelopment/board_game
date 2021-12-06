@@ -147,7 +147,7 @@ export var DrawCard = function (data, playerCells, card, id, player, suit, actio
     for (var _i = 7; _i < arguments.length; _i++) {
         args[_i - 7] = arguments[_i];
     }
-    var styles, tdClasses = "", spanClasses, action;
+    var styles = { background: "" }, tdClasses = "", spanClasses, action;
     switch (actionName) {
         case "OnClickHeroCard":
             action = function () {
@@ -265,9 +265,9 @@ export var DrawCard = function (data, playerCells, card, id, player, suit, actio
     if (suit) {
         tdClasses = suitsConfig[suit].suitColor;
     }
-    if (card.type === "герой") {
+    if (card.type === "герой" && "game" in card) {
         styles = Styles.Heroes(card.game, card.name);
-        if (player === null && !card.active) {
+        if (player === null && "active" in card && !card.active) {
             spanClasses = "bg-hero-inactive";
             action = null;
         }
@@ -279,20 +279,36 @@ export var DrawCard = function (data, playerCells, card, id, player, suit, actio
         }
     }
     else if (card.type === "наёмник" || card.type === "артефакт") {
-        styles = Styles.CampCards(card.tier, card.path);
+        if ("tier" in card && "path" in card) {
+            styles = Styles.CampCards(card.tier, card.path);
+        }
         spanClasses = "bg-camp";
         if (suit === null) {
             tdClasses = "bg-yellow-200";
         }
     }
     else {
-        styles = Styles.Cards(card.suit, card.points, card.name);
+        if ("suit" in card && "points" in card) {
+            if (typeof card.points === "number") {
+                styles = Styles.Cards(card.suit, card.points, card.name);
+            }
+        }
         spanClasses = "bg-card";
     }
     if (action) {
         tdClasses += " cursor-pointer";
     }
-    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return action && action.apply(void 0, args); } }, { children: _jsx("span", __assign({ style: styles, title: card.description ? card.description : card.name, className: spanClasses }, { children: _jsx("b", { children: card.points !== null ? card.points : (card.value !== undefined ? card.value : "") }, void 0) }), void 0) }), "".concat((player && player.nickname) ? "player ".concat((player.nickname), " ") : "").concat(suit, " card ").concat(id, " ").concat(card.name)));
+    var description = "", value = "";
+    if ("description" in card) {
+        description = card.description;
+    }
+    if ("points" in card) {
+        value = card.points !== null ? String(card.points) : "";
+    }
+    else if ("value" in card) {
+        value = String(card.value);
+    }
+    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return action && action.apply(void 0, args); } }, { children: _jsx("span", __assign({ style: styles, title: description ? description : card.name, className: spanClasses }, { children: _jsx("b", { children: value }, void 0) }), void 0) }), "".concat((player && player.nickname) ? "player ".concat((player.nickname), " ") : "").concat(suit, " card ").concat(id, " ").concat(card.name)));
 };
 /**
  * <h3>Отрисовка монет.</h3>
@@ -318,7 +334,7 @@ export var DrawCoin = function (data, playerCells, type, coin, id, player, coinC
     for (var _i = 9; _i < arguments.length; _i++) {
         args[_i - 9] = arguments[_i];
     }
-    var styles, span = null, action, tdClasses = "bg-yellow-300", spanClasses;
+    var styles = { background: "" }, span = null, action, tdClasses = "bg-yellow-300", spanClasses;
     switch (actionName) {
         case "OnClickBoardCoin":
             action = function () {
@@ -393,7 +409,9 @@ export var DrawCoin = function (data, playerCells, type, coin, id, player, coinC
                 styles = Styles.CoinBack();
             }
             else {
-                styles = Styles.Coin(coin.value, coin.isInitial);
+                if (typeof coin.isInitial !== "undefined") {
+                    styles = Styles.Coin(coin.value, coin.isInitial);
+                }
             }
         }
         else {
@@ -402,7 +420,7 @@ export var DrawCoin = function (data, playerCells, type, coin, id, player, coinC
                 span = (_jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }, void 0));
             }
             else if (type === "back-tavern-icon") {
-                if (typeof additionalParam !== "undefined") {
+                if (typeof additionalParam === "number") {
                     span = (_jsx("span", { style: Styles.Taverns(additionalParam), className: "bg-tavern-icon" }, void 0));
                 }
             }

@@ -56,7 +56,8 @@ var Draupnir = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: function (player) { return player.boardCoins.filter(function (coin) { return (coin === null || coin === void 0 ? void 0 : coin.value) >= 15; }).length * 6; },
+    scoringRule: function (player) { return player ? player.boardCoins
+        .filter(function (coin) { return Boolean(coin && (coin === null || coin === void 0 ? void 0 : coin.value) >= 15); }).length * 6 : 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -107,7 +108,7 @@ var Svalinn = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: function (player) { return player.heroes.length * 5; },
+    scoringRule: function (player) { return player ? player.heroes.length * 5 : 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -254,7 +255,8 @@ var Mjollnir = {
             },
         },
     ],
-    scoringRule: function (player, suitId) { return player.cards[suitId].reduce(TotalRank, 0) * 2; },
+    scoringRule: function (player, suitId) { return player && typeof suitId === "number" ?
+        player.cards[suitId].reduce(TotalRank, 0) * 2 : 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -310,8 +312,8 @@ var Hrafnsmerki = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: function (player) { return player.cards.flat().filter(function (card) { return card.type === "наёмник"; }).length
-        * 5; },
+    scoringRule: function (player) { return player ? player.cards.flat()
+        .filter(function (card) { return card.type === "наёмник"; }).length * 5 : 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>

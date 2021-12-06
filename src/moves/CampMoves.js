@@ -22,8 +22,11 @@ export var ClickCampCard = function (G, ctx, cardId) {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddActionsToStack(G, ctx, G.camp[cardId].stack);
-    StartActionFromStackOrEndActions(G, ctx, false, cardId);
+    var card = G.camp[cardId];
+    if (card) {
+        AddActionsToStack(G, ctx, card.stack);
+        StartActionFromStackOrEndActions(G, ctx, false, cardId);
+    }
 };
 /**
  * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>

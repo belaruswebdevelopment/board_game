@@ -62,7 +62,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     const suitWarriorIndex: number = GetSuitIndexByName("warrior");
     if (suitWarriorIndex !== -1) {
         const warriorsDistinction: number | undefined = CheckCurrentSuitDistinction(G, ctx, "warrior");
-        if (warriorsDistinction !== undefined && G.publicPlayers.findIndex(p => p.nickname ===
+        if (warriorsDistinction !== undefined && G.publicPlayers.findIndex((p: IPublicPlayer): boolean => p.nickname ===
             player.nickname) === warriorsDistinction) {
             const warriorDistinctionScore: number = suitsConfig["warrior"].distinction
                 .awarding(G, ctx, player);
@@ -106,8 +106,8 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     if (G.expansions.thingvellir.active) {
         let artifactsScore: number = 0;
         for (let i: number = 0; i < player.campCards.length; i++) {
-            const artefact: IArtefact | undefined = Object.values(artefactsConfig).find(artefact => artefact.name ===
-                player.campCards[i].name);
+            const artefact: IArtefact | undefined = Object.values(artefactsConfig).find((artefact: IArtefact): boolean =>
+                artefact.name === player.campCards[i].name);
             let currentArtefactScore: number = 0;
             if (artefact) {
                 if (typeof G.suitIdForMjollnir === "number") {
@@ -146,7 +146,7 @@ export const ScoreWinner = (G: MyGameState, ctx: Ctx): MyGameState | void => {
         G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i]));
     }
     const maxScore: number = Math.max(...G.totalScore),
-        maxPlayers: number = G.totalScore.filter(score => score === maxScore).length;
+        maxPlayers: number = G.totalScore.filter((score: number): boolean => score === maxScore).length;
     let winners: number = 0;
     for (let i = ctx.numPlayers - 1; i >= 0; i--) {
         if (maxScore === G.totalScore[i] && maxPlayers > winners) {

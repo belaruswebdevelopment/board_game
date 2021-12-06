@@ -115,7 +115,9 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
             if (!isTradingActivated) {
                 if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && ctx.playOrder.length <
                     Number(ctx.numPlayers)) {
-                    var cardIndex = G.taverns[G.currentTavern].findIndex(function (card) { return card !== null; });
+                    var cardIndex = G.taverns[G.currentTavern].findIndex(function (card) {
+                        return card !== null;
+                    });
                     DiscardCardFromTavern(G, cardIndex);
                 }
                 if (G.expansions.thingvellir.active && Number(ctx.currentPlayer) ===
@@ -181,8 +183,9 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
             var stack = [
                 {
                     actionName: "DrawProfitAction",
-                    playerId: Number(ctx.playOrder[ctx.playOrder.findIndex(function (playerIndex) { return playerIndex ===
-                        ctx.currentPlayer; }) + 1]),
+                    playerId: Number(ctx.playOrder[ctx.playOrder.findIndex(function (playerIndex) {
+                        return playerIndex === ctx.currentPlayer;
+                    }) + 1]),
                     config: {
                         name: "enlistmentMercenaries",
                         drawName: "Enlistment Mercenaries",

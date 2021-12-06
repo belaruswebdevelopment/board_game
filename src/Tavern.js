@@ -33,8 +33,10 @@ export var tavernsConfig = {
  */
 export var CheckIfCurrentTavernEmpty = function (G, ctx) {
     var isCurrentTavernEmpty = false;
-    if (ctx.numPlayers === 2 && G.taverns[G.currentTavern].filter(function (card) { return card !== null; }).length === 1) {
-        var discardCardIndex = G.taverns[G.currentTavern].findIndex(function (card) { return card !== null; });
+    if (ctx.numPlayers === 2 && G.taverns[G.currentTavern].filter(function (card) { return card !== null; })
+        .length === 1) {
+        var discardCardIndex = G.taverns[G.currentTavern].findIndex(function (card) { return card
+            !== null; });
         if (discardCardIndex !== -1) {
             var isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
             if (isCardDiscarded) {

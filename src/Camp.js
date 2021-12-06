@@ -23,7 +23,7 @@ export var isArtefactCard = function (card) { return card.suit !== undefined; };
  */
 export var CreateArtefactCampCard = function (_a) {
     var _b = _a === void 0 ? {} : _a, _c = _b.type, type = _c === void 0 ? "артефакт" : _c, tier = _b.tier, path = _b.path, name = _b.name, description = _b.description, game = _b.game, suit = _b.suit, rank = _b.rank, points = _b.points, stack = _b.stack;
-    return {
+    return ({
         type: type,
         tier: tier,
         path: path,
@@ -34,7 +34,7 @@ export var CreateArtefactCampCard = function (_a) {
         rank: rank,
         points: points,
         stack: stack,
-    };
+    });
 };
 /**
  * <h3>Создание карты наёмника для кэмпа.</h3>
@@ -53,14 +53,14 @@ export var CreateArtefactCampCard = function (_a) {
  */
 export var CreateMercenaryCampCard = function (_a) {
     var _b = _a === void 0 ? {} : _a, _c = _b.type, type = _c === void 0 ? "наёмник" : _c, tier = _b.tier, path = _b.path, name = _b.name, _d = _b.game, game = _d === void 0 ? "thingvellir" : _d, stack = _b.stack;
-    return {
+    return ({
         type: type,
         tier: tier,
         path: path,
         name: name,
         game: game,
         stack: stack,
-    };
+    });
 };
 /**
  * <h3>Создаёт все карты кэмпа из конфига.</h3>
@@ -139,7 +139,9 @@ export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
  * @constructor
  */
 export var DiscardCardIfCampCardPicked = function (G) {
-    var discardCardIndex = G.taverns[G.currentTavern].findIndex(function (card) { return card !== null; });
+    var discardCardIndex = G.taverns[G.currentTavern].findIndex(function (card) {
+        return card !== null;
+    });
     if (G.campPicked && discardCardIndex !== -1) {
         DiscardCardFromTavern(G, discardCardIndex);
         G.campPicked = false;

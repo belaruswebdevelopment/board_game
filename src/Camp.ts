@@ -1,7 +1,7 @@
 import {DiscardCardFromTavern, ICard} from "./Card";
 import {AddDataToLog, LogTypes} from "./Logging";
 import {suitsConfig} from "./data/SuitData";
-import {CampDeckCardTypes, MyGameState} from "./GameSetup";
+import {CampCardTypes, CampDeckCardTypes, MyGameState, TavernCardTypes} from "./GameSetup";
 import {IStack} from "./Player";
 import {IArtefactConfig, IMercenaries} from "./data/CampData";
 import {IHero} from "./Hero";
@@ -83,20 +83,18 @@ export const CreateArtefactCampCard = ({
                                            rank,
                                            points,
                                            stack,
-                                       } = {} as ICreateArtefactCampCard): IArtefactCampCard => {
-    return {
-        type,
-        tier,
-        path,
-        name,
-        description,
-        game,
-        suit,
-        rank,
-        points,
-        stack,
-    };
-};
+                                       }: ICreateArtefactCampCard = {} as ICreateArtefactCampCard): IArtefactCampCard => ({
+    type,
+    tier,
+    path,
+    name,
+    description,
+    game,
+    suit,
+    rank,
+    points,
+    stack,
+});
 
 /**
  * <h3>Создание карты наёмника для кэмпа.</h3>
@@ -120,16 +118,14 @@ export const CreateMercenaryCampCard = ({
                                             name,
                                             game = "thingvellir",
                                             stack
-                                        } = {} as ICreateMercenaryCampCard): IMercenaryCampCard => {
-    return {
-        type,
-        tier,
-        path,
-        name,
-        game,
-        stack,
-    };
-};
+                                        }: ICreateMercenaryCampCard = {} as ICreateMercenaryCampCard): IMercenaryCampCard => ({
+    type,
+    tier,
+    path,
+    name,
+    game,
+    stack,
+});
 
 /**
  * <h3>Создаёт все карты кэмпа из конфига.</h3>
@@ -211,7 +207,8 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
  * @constructor
  */
 export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
-    const discardCardIndex: number = G.taverns[G.currentTavern].findIndex(card => card !== null);
+    const discardCardIndex: number = G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean =>
+        card !== null);
     if (G.campPicked && discardCardIndex !== -1) {
         DiscardCardFromTavern(G, discardCardIndex);
         G.campPicked = false;
@@ -229,7 +226,7 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
  * @constructor
  */
 export const RefillEmptyCampCards = (G: MyGameState): void => {
-    const emptyCampCards: (number | null)[] = G.camp.map((card, index) => {
+    const emptyCampCards: (number | null)[] = G.camp.map((card: CampCardTypes, index: number): number | null => {
         if (card === null) {
             return index;
         }
@@ -238,7 +235,7 @@ export const RefillEmptyCampCards = (G: MyGameState): void => {
     const isEmptyCampCards: boolean = emptyCampCards.length === 0;
     let isEmptyCurrentTierCampDeck: boolean = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
-        emptyCampCards.forEach(cardIndex => {
+        emptyCampCards.forEach((cardIndex: number | null): void => {
             isEmptyCurrentTierCampDeck = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
             if (cardIndex !== null && !isEmptyCurrentTierCampDeck) {
                 AddCardToCamp(G, cardIndex);

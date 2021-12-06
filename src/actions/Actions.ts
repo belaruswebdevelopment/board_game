@@ -1,9 +1,9 @@
 import {UpgradeCoin} from "../Coin";
 import {INVALID_MOVE} from "boardgame.io/core";
 import {suitsConfig} from "../data/SuitData";
-import {AddCardToPlayer, IBuffs, IConfig, IStack} from "../Player";
+import {AddCardToPlayer, IConfig, IStack} from "../Player";
 import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
-import {CreateCard, DiscardCardFromTavern, IActionCard, ICard, ICreateCard, isCardNotAction} from "../Card";
+import {CreateCard, DiscardCardFromTavern, ICard, ICreateCard, isCardNotAction} from "../Card";
 import {
     AddHeroToCards,
     CheckAndMoveThrudOrPickHeroAction,
@@ -29,7 +29,7 @@ import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AddDataToLog, LogTypes} from "../Logging";
 import {CampDeckCardTypes, DeckCardTypes, MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
-import {IArtefactCampCard, IMercenaryCampCard, isArtefactCard} from "../Camp";
+import {isArtefactCard} from "../Camp";
 import {IVariants} from "../data/HeroData";
 import {IHero} from "../Hero";
 

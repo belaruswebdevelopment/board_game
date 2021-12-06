@@ -3,6 +3,7 @@ import {TotalRank} from "./helpers/ScoreHelpers";
 import {MyGameState} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {IConfig} from "./Player";
+import {ICoin} from "./Coin";
 
 interface IMoveValidatorParamsMinimum {
     G: MyGameState,
@@ -32,8 +33,8 @@ interface ICheckMoveParam {
 
 interface IMoveValidator {
     getRange: (params: IMoveValidatorParams) => [number, number],
-    getValue?: (params: IMoveValidatorParams) => number[] | void,
-    validate: (params: IMoveValidatorParams) => boolean | void,
+    getValue?: (params: IMoveValidatorParams) => number[],
+    validate: (params: IMoveValidatorParams) => boolean,
 }
 
 interface IMoveValidators {
@@ -130,9 +131,9 @@ const ValidateByValues = (num: number, values: number[]): boolean => values.incl
 export const CoinUpgradeValidation = (G: MyGameState, ctx: Ctx, coinId: number, type: string): boolean => {
     if (type === "hand") {
         const handCoinPosition: number = G.publicPlayers[Number(ctx.currentPlayer)]
-            .boardCoins.filter((coin, index) => coin === null && index <= coinId).length;
+            .boardCoins.filter((coin: ICoin | null, index: number): boolean => coin === null && index <= coinId).length;
         if (!G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .filter(coin => coin !== null)[handCoinPosition - 1]?.isTriggerTrading) {
+            .filter((coin: ICoin | null): boolean => coin !== null)[handCoinPosition - 1]?.isTriggerTrading) {
             return true;
         }
     } else {
@@ -197,41 +198,38 @@ export const moveValidators: IMoveValidators = {
     ClickHandCoin: {
         getRange: ({G, ctx}: IMoveValidatorParams): [number, number] => ([0,
             G.publicPlayers[Number(ctx!.currentPlayer)].handCoins.length]),
-        validate: ({G, ctx, id}: IMoveValidatorParams): boolean | void => {
+        validate: ({G, ctx, id}: IMoveValidatorParams): boolean => {
             if (typeof id !== "undefined") {
                 return G.publicPlayers[Number(ctx!.currentPlayer)].selectedCoin === undefined &&
                     G.publicPlayers[Number(ctx!.currentPlayer)].handCoins[id] !== null;
-            } else {
-                console.log("Param id must be type Number not Undefined");
             }
+            return false;
         }
     },
     ClickBoardCoin: {
         getRange: ({G, ctx}: IMoveValidatorParams): [number, number] => ([0,
             G.publicPlayers[Number(ctx!.currentPlayer)].boardCoins.length]),
-        validate: ({G, ctx, id}: IMoveValidatorParams): boolean | void => {
+        validate: ({G, ctx, id}: IMoveValidatorParams): boolean => {
             if (typeof id !== "undefined") {
                 return G.publicPlayers[Number(ctx!.currentPlayer)].selectedCoin !== undefined &&
                     G.publicPlayers[Number(ctx!.currentPlayer)].boardCoins[id] === null;
-            } else {
-                console.log("Param id must be type Number not Undefined");
             }
+            return false;
         }
     },
     BotsPlaceAllCoins: {
         getRange: ({G}: IMoveValidatorParamsMinimum): [number, number] => ([0, G.botData.allCoinsOrder.length]),
-        getValue: ({G, id}: IMoveValidatorParams): number[] | void => {
+        getValue: ({G, id}: IMoveValidatorParams): number[] => {
             if (typeof id !== "undefined") {
                 return G.botData.allCoinsOrder[id];
-            } else {
-                console.log("Param id must be type Number not Undefined");
             }
+            return [];
         },
         validate: (): boolean => true,
     },
     ClickHeroCard: {
         getRange: ({G}: IMoveValidatorParamsMinimum): [number, number] => ([0, G.heroes.length]),
-        validate: ({G, ctx, id}: IMoveValidatorParams): boolean | void => {
+        validate: ({G, ctx, id}: IMoveValidatorParams): boolean => {
             if (typeof id !== "undefined") {
                 let isValid: boolean = G.heroes[id].active;
                 // todo Add validators to others heroes
@@ -244,25 +242,19 @@ export const moveValidators: IMoveValidators = {
                     }
                 }
                 return isValid;
-            } else {
-                console.log("Param id must be type Number not Undefined");
             }
+            return false;
         },
     },
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
     ClickCoinToUpgrade: {
         getRange: ({G, ctx}: IMoveValidatorParams): [number, number] => ([0,
             G.publicPlayers[Number(ctx!.currentPlayer)].boardCoins.length]),
-        validate: ({G, ctx, id, type}: IMoveValidatorParams): boolean | void => {
+        validate: ({G, ctx, id, type}: IMoveValidatorParams): boolean => {
             if (typeof id !== "undefined" && typeof type !== "undefined") {
                 return CoinUpgradeValidation(G, ctx!, id, type);
-            } else if (typeof id === "undefined" && typeof type === "undefined") {
-                console.log("Param id must be type Number not Undefined and param type must be type string not Undefined");
-            } else if (typeof id === "undefined") {
-                console.log("Param id must be type Number not Undefined");
-            } else if (typeof type === "undefined") {
-                console.log("Param type must be type string not Undefined");
             }
+            return false;
         }
     },
     ClickCardToPickDistinction: {

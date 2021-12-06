@@ -1,14 +1,14 @@
 // todo Add logging
 import {DiscardCardIfCampCardPicked, RefillEmptyCampCards} from "../Camp";
 import {CheckIfCurrentTavernEmpty, RefillTaverns} from "../Tavern";
-import {RemoveThrudFromPlayerBoardAfterGameEnd} from "../Hero";
+import {IHero, RemoveThrudFromPlayerBoardAfterGameEnd} from "../Hero";
 import {DiscardCardFromTavern} from "../Card";
 import {AddActionsToStack, StartActionFromStackOrEndActions} from "./StackHelpers";
 import {CheckAndStartUlineActionsOrContinue} from "./HeroHelpers";
 import {ActivateTrading} from "./CoinHelpers";
-import {MyGameState} from "../GameSetup";
+import {CampDeckCardTypes, MyGameState, TavernCardTypes} from "../GameSetup";
 import {Ctx} from "boardgame.io";
-import {IStack} from "../Player";
+import {IStack, PlayerCardsType} from "../Player";
 import {IVariants} from "../data/HeroData";
 
 /**
@@ -120,7 +120,8 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
             if (!isTradingActivated) {
                 if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && ctx.playOrder.length <
                     Number(ctx.numPlayers)) {
-                    const cardIndex: number = G.taverns[G.currentTavern].findIndex(card => card !== null);
+                    const cardIndex: number = G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean =>
+                        card !== null);
                     DiscardCardFromTavern(G, cardIndex);
                 }
                 if (G.expansions.thingvellir.active && Number(ctx.currentPlayer) ===
@@ -173,14 +174,14 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
             (ctx.playOrder[ctx.playOrder.length - 2] !== undefined && (ctx.currentPlayer ===
                     ctx.playOrder[ctx.playOrder.length - 2]) &&
                 !G.publicPlayers[Number(ctx.playOrder[ctx.playOrder.length - 1])].campCards
-                    .filter(card => card.type === "наёмник").length)) {
+                    .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length)) {
             StartEndTierActions(G, ctx);
         } else {
             const stack: IStack[] = [
                 {
                     actionName: "DrawProfitAction",
-                    playerId: Number(ctx.playOrder[ctx.playOrder.findIndex(playerIndex => playerIndex ===
-                        ctx.currentPlayer) + 1]),
+                    playerId: Number(ctx.playOrder[ctx.playOrder.findIndex((playerIndex: string): boolean =>
+                        playerIndex === ctx.currentPlayer) + 1]),
                     config: {
                         name: "enlistmentMercenaries",
                         drawName: "Enlistment Mercenaries",
@@ -210,7 +211,7 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
     let ylud: boolean = false,
         index: number = -1;
     for (let i: number = 0; i < G.publicPlayers.length; i++) {
-        index = G.publicPlayers[i].heroes.findIndex(hero => hero.name === "Ylud");
+        index = G.publicPlayers[i].heroes.findIndex((hero: IHero): boolean => hero.name === "Ylud");
         if (index !== -1) {
             ylud = true;
             G.publicPlayersOrder.push(i);
@@ -219,7 +220,7 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
     if (!ylud) {
         for (let i: number = 0; i < G.publicPlayers.length; i++) {
             for (let j: number = 0; j < G.suitsNum; j++) {
-                index = G.publicPlayers[i].cards[j].findIndex(card => card.name === "Ylud");
+                index = G.publicPlayers[i].cards[j].findIndex((card: PlayerCardsType): boolean => card.name === "Ylud");
                 if (index !== -1) {
                     G.publicPlayers[Number(ctx.currentPlayer)].cards[i].splice(index, 1);
                     G.publicPlayersOrder.push(i);
@@ -295,7 +296,7 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
 const CheckEnlistmentMercenaries = (G: MyGameState, ctx: Ctx): void => {
     let count: boolean = false;
     for (let i: number = 0; i < G.publicPlayers.length; i++) {
-        if (G.publicPlayers[i].campCards.filter(card => card.type === "наёмник").length) {
+        if (G.publicPlayers[i].campCards.filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
             count = true;
             break;
         }

@@ -23,7 +23,7 @@ import { TotalRank } from "./helpers/ScoreHelpers";
  */
 export var CreateHero = function (_a) {
     var _b = _a === void 0 ? {} : _a, type = _b.type, name = _b.name, description = _b.description, game = _b.game, suit = _b.suit, rank = _b.rank, points = _b.points, _c = _b.active, active = _c === void 0 ? true : _c, stack = _b.stack;
-    return {
+    return ({
         type: type,
         name: name,
         description: description,
@@ -33,7 +33,7 @@ export var CreateHero = function (_a) {
         points: points,
         active: active,
         stack: stack,
-    };
+    });
 };
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>

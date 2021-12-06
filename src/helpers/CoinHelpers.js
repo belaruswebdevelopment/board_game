@@ -84,15 +84,15 @@ export var ResolveBoardCoins = function (G, ctx) {
         if (counts[prop] <= 1) {
             return "continue";
         }
-        var tiePlayers = G.publicPlayers.filter(function (player) {
-            var _a;
-            return ((_a = player.boardCoins[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.value) === Number(prop)
-                && player.priority.isExchangeable;
-        });
+        var tiePlayers = G.publicPlayers.filter(function (player) { var _a; return ((_a = player.boardCoins[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.value) === Number(prop) && player.priority.isExchangeable; });
         var _loop_2 = function () {
-            var tiePlayersPriorities = tiePlayers.map(function (player) { return player.priority.value; }), maxPriority = Math.max.apply(Math, tiePlayersPriorities), minPriority = Math.min.apply(Math, tiePlayersPriorities), maxIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === maxPriority; }), minIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === minPriority; });
-            tiePlayers.splice(tiePlayers.findIndex(function (player) { return player.priority.value === maxPriority; }), 1);
-            tiePlayers.splice(tiePlayers.findIndex(function (player) { return player.priority.value === minPriority; }), 1);
+            var tiePlayersPriorities = tiePlayers.map(function (player) { return player.priority.value; }), maxPriority = Math.max.apply(Math, tiePlayersPriorities), minPriority = Math.min.apply(Math, tiePlayersPriorities), maxIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value
+                === maxPriority; }), minIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value
+                === minPriority; });
+            tiePlayers.splice(tiePlayers.findIndex(function (player) { return player.priority.value
+                === maxPriority; }), 1);
+            tiePlayers.splice(tiePlayers.findIndex(function (player) { return player.priority.value
+                === minPriority; }), 1);
             // [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
             var temp = exchangeOrder[minIndex];
             exchangeOrder[minIndex] = exchangeOrder[maxIndex];

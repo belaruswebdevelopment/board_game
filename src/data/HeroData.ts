@@ -1,6 +1,7 @@
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {TotalRank} from "../helpers/ScoreHelpers";
 import {IPublicPlayer, IStack} from "../Player";
+import {ICoin} from "../Coin";
 
 export interface IBuff {
     name: string,
@@ -214,8 +215,8 @@ const Idunn: IHeroData = {
             },
         },
     ],
-    scoringRule: (player: IPublicPlayer): number => player.cards[GetSuitIndexByName("explorer")]
-        .reduce(TotalRank, 0) * 2,
+    scoringRule: (player?: IPublicPlayer): number => player ? player.cards[GetSuitIndexByName("explorer")]
+        .reduce(TotalRank, 0) * 2 : 0,
 };
 
 /**
@@ -684,9 +685,11 @@ const Astrid: IHeroData = {
             },
         },
     ],
-    scoringRule: (player: IPublicPlayer): number => Math.max(...player.boardCoins
-            .filter(coin => coin?.value).map(coin => coin!.value),
-        ...player.handCoins.filter(coin => coin?.value).map(coin => coin!.value)),
+    scoringRule: (player?: IPublicPlayer): number => player ? Math.max(...player.boardCoins
+            .filter((coin: ICoin | null): boolean => Boolean(coin?.value))
+            .map((coin: ICoin | null): number => coin!.value),
+        ...player.handCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
+            .map((coin: ICoin | null): number => coin!.value)) : 0,
 };
 
 /**

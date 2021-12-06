@@ -7,7 +7,7 @@ import {
     StartActionFromStackOrEndActions,
 } from "../helpers/StackHelpers";
 import {Ctx, Move} from "boardgame.io";
-import {CampDeckCardTypes, MyGameState} from "../GameSetup";
+import {CampCardTypes, CampDeckCardTypes, MyGameState} from "../GameSetup";
 // todo Add logging
 /**
  * <h3>Выбор карты из кэмпа.</h3>
@@ -22,15 +22,18 @@ import {CampDeckCardTypes, MyGameState} from "../GameSetup";
  * @returns {string|*} Диспетчер экшенов.
  * @constructor
  */
-export const ClickCampCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId): string | void => {
+export const ClickCampCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]})
         && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
             (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddActionsToStack(G, ctx, G.camp[cardId].stack);
-    StartActionFromStackOrEndActions(G, ctx, false, cardId);
+    const card: CampCardTypes | null = G.camp[cardId];
+    if (card) {
+        AddActionsToStack(G, ctx, card.stack);
+        StartActionFromStackOrEndActions(G, ctx, false, cardId);
+    }
 };
 
 /**
