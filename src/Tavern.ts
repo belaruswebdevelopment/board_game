@@ -51,10 +51,10 @@ export const tavernsConfig: ITavernsConfig = {
  */
 export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => {
     let isCurrentTavernEmpty: boolean = false;
-    if (ctx.numPlayers === 2 && G.taverns[G.currentTavern].filter((card: TavernCardTypes): boolean => card !== null)
-        .length === 1) {
-        const discardCardIndex: number = G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card
-            !== null);
+    if (ctx.numPlayers === 2 && G.taverns[G.currentTavern]
+        .filter((card: TavernCardTypes): boolean => card !== null).length === 1) {
+        const discardCardIndex: number = G.taverns[G.currentTavern]
+            .findIndex((card: TavernCardTypes): boolean => card !== null);
         if (discardCardIndex !== -1) {
             const isCardDiscarded: boolean = DiscardCardFromTavern(G, discardCardIndex);
             if (isCardDiscarded) {

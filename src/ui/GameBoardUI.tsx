@@ -242,13 +242,14 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                     data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.suit)) {
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                            key={`Place ${data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.drawName} 
+                            key={`Place 
+                            ${data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.drawName} 
                             on ${suitsConfig[suit].suitName}`}
                             onClick={() => data.OnClickSuitToPlaceCard(j)}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
-                                <b>{data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].variants[suit].points
-                                !== null ? data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].variants[suit].points
-                                    : ""}</b>
+                                <b>{data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].variants[suit]
+                                    .points !== null ? data.props.G.publicPlayers[data.props.ctx.currentPlayer]
+                                    .stack[0].variants[suit].points : ""}</b>
                             </span>
                         </td>
                     );
@@ -377,10 +378,10 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                             key={`Place ${data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.name} ${j} 
                             on ${suitsConfig[suit].suitName}`}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
-                                <b>{data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit].points
-                                !== null ?
-                                    data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit].points
-                                    : ""}</b>
+                                <b>{data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0]
+                                    .variants[suit].points !== null ?
+                                    data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0]
+                                        .variants[suit].points : ""}</b>
                             </span>
                         </td>
                     );
@@ -402,7 +403,8 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
             caption += `coin to upgrade up to 
             ${data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.value}.`;
             if (option === "VidofnirVedrfolnirAction") {
-                for (let j = data.props.G.tavernsNum; j < data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins.length; j++) {
+                for (let j = data.props.G.tavernsNum; j <
+                data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                     let type: string = "board",
                         isInitial: boolean = false;
                     if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j] &&

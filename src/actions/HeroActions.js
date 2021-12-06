@@ -131,8 +131,8 @@ export var AddHeroToCards = function (G, ctx, config) {
  */
 export var GetClosedCoinIntoPlayerHand = function (G, ctx) {
     var coinsCount = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length, tradingBoardCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-        .findIndex(function (coin) { return coin && coin.isTriggerTrading; }), tradingHandCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-        .findIndex(function (coin) { return coin && coin.isTriggerTrading; });
+        .findIndex(function (coin) { return Boolean(coin && coin.isTriggerTrading); }), tradingHandCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+        .findIndex(function (coin) { return Boolean(coin && coin.isTriggerTrading); });
     for (var i = 0; i < coinsCount; i++) {
         if ((i < G.tavernsNum && G.currentTavern < i) ||
             (i >= G.tavernsNum && tradingHandCoinIndex !== -1) ||

@@ -20,6 +20,7 @@ import {CampDeckCardTypes, MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {isArtefactCard} from "../Camp";
 import {ICard} from "../Card";
+import {ICoin} from "../Coin";
 
 /**
  * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>
@@ -103,8 +104,8 @@ export const AddCampCardToCards = (G: MyGameState, ctx: Ctx, config: IConfig, ca
  */
 export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, coinId: number): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        tempId: number = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum
-            && coin === null),
+        tempId: number = player.boardCoins.findIndex((coin: ICoin | null, index: number): boolean =>
+            index >= G.tavernsNum && coin === null),
         stack: IStack[] = [
             {
                 actionName: "StartVidofnirVedrfolnirAction",
@@ -131,7 +132,7 @@ export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, 
  */
 export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void => {
     const number: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .filter((coin, index) => index >= G.tavernsNum && coin === null).length,
+            .filter((coin: ICoin | null, index: number): boolean => index >= G.tavernsNum && coin === null).length,
         handCoinsNumber: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length;
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" && number > 0 && handCoinsNumber) {
         const stack: IStack[] = [
@@ -282,10 +283,10 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, co
  */
 export const DiscardTradingCoin = (G: MyGameState, ctx: Ctx): void => {
     let tradingCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-        .findIndex(coin => coin && coin.isTriggerTrading);
+        .findIndex((coin: ICoin | null): boolean => Boolean(coin?.isTriggerTrading));
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" && tradingCoinIndex === -1) {
         tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex(coin => coin?.isTriggerTrading);
+            .findIndex((coin: ICoin | null): boolean => Boolean(coin?.isTriggerTrading));
         G.publicPlayers[Number(ctx.currentPlayer)].handCoins.splice(tradingCoinIndex, 1, null);
     } else {
         G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.splice(tradingCoinIndex, 1, null);
@@ -379,8 +380,8 @@ export const DiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
     const discardedCard: PlayerCardsType = G.publicPlayers[Number(ctx.playerID as string)].cards[suitId]
         .splice(cardId, 1)[0];
     G.discardCardsDeck.push(discardedCard as ICard);
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.playerID as string)].nickname} сбросил 
-    карту ${discardedCard.name} в дискард.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.playerID as string)].nickname} 
+    сбросил карту ${discardedCard.name} в дискард.`);
     EndActionForChosenPlayer(G, ctx, playerId);
 };
 

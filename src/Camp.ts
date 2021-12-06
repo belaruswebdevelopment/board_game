@@ -1,10 +1,9 @@
-import {DiscardCardFromTavern, ICard} from "./Card";
+import {DiscardCardFromTavern} from "./Card";
 import {AddDataToLog, LogTypes} from "./Logging";
 import {suitsConfig} from "./data/SuitData";
-import {CampCardTypes, CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes} from "./GameSetup";
+import {CampCardTypes, CampDeckCardTypes, MyGameState, TavernCardTypes} from "./GameSetup";
 import {IStack} from "./Player";
 import {IArtefactConfig, IMercenaries} from "./data/CampData";
-import {IHero} from "./Hero";
 
 export interface IArtefactCampCard {
     type: string,
@@ -83,7 +82,8 @@ export const CreateArtefactCampCard = ({
                                            rank,
                                            points,
                                            stack,
-                                       }: ICreateArtefactCampCard = {} as ICreateArtefactCampCard): IArtefactCampCard => ({
+                                       }: ICreateArtefactCampCard = {} as ICreateArtefactCampCard):
+    IArtefactCampCard => ({
     type,
     tier,
     path,
@@ -118,7 +118,8 @@ export const CreateMercenaryCampCard = ({
                                             name,
                                             game = "thingvellir",
                                             stack
-                                        }: ICreateMercenaryCampCard = {} as ICreateMercenaryCampCard): IMercenaryCampCard => ({
+                                        }: ICreateMercenaryCampCard = {} as ICreateMercenaryCampCard):
+    IMercenaryCampCard => ({
     type,
     tier,
     path,
@@ -207,8 +208,8 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
  * @constructor
  */
 export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
-    const discardCardIndex: number = G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean =>
-        card !== null);
+    const discardCardIndex: number = G.taverns[G.currentTavern]
+        .findIndex((card: TavernCardTypes): boolean => card !== null);
     if (G.campPicked && discardCardIndex !== -1) {
         DiscardCardFromTavern(G, discardCardIndex);
         G.campPicked = false;

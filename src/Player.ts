@@ -91,7 +91,10 @@ interface ICreatePublicPlayer {
  * @param boardCoins Массив монет на столе.
  * @constructor
  */
-const CreatePlayer = ({handCoins, boardCoins}: IPlayer = {} as IPlayer): IPlayer => ({
+const CreatePlayer = ({
+                          handCoins,
+                          boardCoins,
+                      }: IPlayer = {} as IPlayer): IPlayer => ({
     handCoins,
     boardCoins,
 });
@@ -172,7 +175,8 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  * @param priority Кристалл.
  * @constructor
  */
-export const BuildPublicPlayer = (playersNum: number, suitsNum: number, nickname: string, priority: IPriority): IPublicPlayer =>
+export const BuildPublicPlayer = (playersNum: number, suitsNum: number, nickname: string, priority: IPriority):
+    IPublicPlayer =>
     CreatePublicPlayer({
         nickname,
         cards: Array(suitsNum).fill(Array(0)),
@@ -358,14 +362,14 @@ export const IsTopPlayer = (G: MyGameState, playerId: number): boolean => {
  * @param currentPlayerId Id текущего игрока.
  * @constructor
  */
-export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number => {
+/*export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number => {
     let top1PlayerId: number = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean =>
         IsTopPlayer(G, index));
     if (G.publicPlayersOrder.indexOf(currentPlayerId) > G.publicPlayersOrder.indexOf(top1PlayerId)) {
         top1PlayerId = -1;
     }
     return top1PlayerId;
-};
+};*/
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -379,7 +383,7 @@ export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number
  * @param top1PlayerId Id текущего игрока.
  * @constructor
  */
-export const GetTop2PlayerId = (G: MyGameState, top1PlayerId: number): number => {
+/*export const GetTop2PlayerId = (G: MyGameState, top1PlayerId: number): number => {
     const playersScore: number[] = G.publicPlayers.map((player: IPublicPlayer): number => CurrentScoring(player)),
         maxScore: number = Math.max(...playersScore);
     let top2PlayerId: number,
@@ -395,4 +399,4 @@ export const GetTop2PlayerId = (G: MyGameState, top1PlayerId: number): number =>
         top2PlayerId = -1;
     }
     return top2PlayerId;
-};
+};*/

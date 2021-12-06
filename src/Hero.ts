@@ -56,8 +56,15 @@ interface ICreateHero {
  * @constructor
  */
 export const CreateHero = ({
-                               type, name, description, game, suit, rank,
-                               points, active = true, stack
+                               type,
+                               name,
+                               description,
+                               game,
+                               suit,
+                               rank,
+                               points,
+                               active = true,
+                               stack
                            }: ICreateHero = {} as ICreateHero): IHero => ({
     type,
     name,
@@ -149,7 +156,8 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: MyGameState, ctx: Ctx): void => {
     for (let i: number = 0; i < ctx.numPlayers; i++) {
         const playerCards: PlayerCardsType[] = G.publicPlayers[i].cards.flat(),
-            thrud: PlayerCardsType | undefined = playerCards.find((card: PlayerCardsType): boolean => card.name === "Thrud");
+            thrud: PlayerCardsType | undefined = playerCards.find((card: PlayerCardsType): boolean =>
+                card.name === "Thrud");
         if (thrud) {
             const thrudSuit: number = GetSuitIndexByName(thrud.suit),
                 thrudIndex: number = G.publicPlayers[i].cards[thrudSuit]

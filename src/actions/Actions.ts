@@ -29,7 +29,6 @@ import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {AddDataToLog, LogTypes} from "../Logging";
 import {CampDeckCardTypes, DeckCardTypes, MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
-import {isArtefactCard} from "../Camp";
 import {IVariants} from "../data/HeroData";
 import {IHero} from "../Hero";
 
@@ -227,7 +226,7 @@ const AddBuffToPlayer = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
 export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
                                                   cardId: number): void => {
     const pickedCard: PlayerCardsType = G.publicPlayers[Number(ctx.currentPlayer)]
-            .cards[suitId][cardId];
+        .cards[suitId][cardId];
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
     if (pickedCard) {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 

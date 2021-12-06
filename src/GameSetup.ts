@@ -191,8 +191,8 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         });
     const averageCards: ICard[] = [],
         initHandCoinsId: number[] = Array(players[0].boardCoins.length).fill(undefined)
-            .map((item, index) => index),
-        initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
+            .map((item: undefined, index: number): number => index),
+        initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder: number[][] = [];
     for (const suit in suitsConfig) {
         averageCards[GetSuitIndexByName(suit)] = GetAverageSuitCard(suitsConfig[suit], {

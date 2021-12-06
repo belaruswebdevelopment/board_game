@@ -31,8 +31,9 @@ export var enumerate = function (G, ctx) {
     var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(function (key) {
         return key.includes(advancedString);
     });
-    var activeStageOfCurrentPlayer = (ctx.activePlayers && ctx.activePlayers[Number(ctx.currentPlayer)])
-        ? ctx.activePlayers[Number(ctx.currentPlayer)] : "default";
+    var activeStageOfCurrentPlayer = (ctx.activePlayers &&
+        ctx.activePlayers[Number(ctx.currentPlayer)]) ? ctx.activePlayers[Number(ctx.currentPlayer)] :
+        "default";
     // todo Fix it, now just for bot can do RANDOM move
     var botMoveArguments = [];
     for (var stage in moveBy[ctx.phase]) {
@@ -83,16 +84,17 @@ export var enumerate = function (G, ctx) {
                 }
                 if (tavernCard && "suit" in tavernCard) {
                     var isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, i, tavern_1) < 0, isExistCardNotWorse = tavern_1.some(function (card) {
-                        return (card !== null) && (EvaluateCard(G, ctx, tavernCard, i, tavern_1)
-                            >= 0);
+                        return (card !== null) &&
+                            (EvaluateCard(G, ctx, tavernCard, i, tavern_1) >= 0);
                     });
                     if (isCurrentCardWorse && isExistCardNotWorse) {
                         return "continue";
                     }
                     var uniqueArrLength = uniqueArr.length;
                     for (var j = 0; j < uniqueArrLength; j++) {
-                        if (tavernCard.suit === uniqueArr[j].suit && CompareCards(tavernCard, uniqueArr[j])
-                            === 0) {
+                        if (tavernCard.suit === uniqueArr[j].suit &&
+                            CompareCards(tavernCard, uniqueArr[j])
+                                === 0) {
                             flag = false;
                             break;
                         }

@@ -156,7 +156,6 @@ export var Trading = function (G, ctx, tradingCoins) {
  * @constructor
  */
 export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInitial) {
-    var _a;
     // todo Split into different functions!
     var upgradingCoin = {}, coin;
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin) {
@@ -175,10 +174,10 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
                     allCoins.push(G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i]);
                 }
             }
-            var minCoinValue_1 = Math.min.apply(Math, allCoins.filter(function (coin) { return coin !== null &&
-                !coin.isTriggerTrading; }).map(function (coin) { return coin.value; })), upgradingCoinInitial = allCoins.find(function (coin) {
-                return coin.value === minCoinValue_1 && coin.isInitial;
-            });
+            var minCoinValue_1 = Math.min.apply(Math, allCoins.filter(function (coin) {
+                return coin !== null && !coin.isTriggerTrading;
+            }).map(function (coin) { return coin.value; })), upgradingCoinInitial = allCoins
+                .find(function (coin) { return coin.value === minCoinValue_1 && coin.isInitial; });
             if (upgradingCoinInitial) {
                 upgradingCoin = upgradingCoinInitial;
             }
@@ -188,15 +187,15 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
                     upgradingCoin = coin;
                 }
             }
-            upgradingCoinId = allCoins.findIndex(function (coin) { return isCoin(upgradingCoin) && coin.value ===
-                upgradingCoin.value; });
+            upgradingCoinId = allCoins.findIndex(function (coin) { return isCoin(upgradingCoin) &&
+                coin.value === upgradingCoin.value; });
         }
         else {
             var minCoinValue_2 = Math.min.apply(Math, G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                 .filter(function (coin) { return coin !== null && !coin.isTriggerTrading; })
                 .map(function (coin) { return coin.value; }));
-            coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.find(function (coin) { return (coin === null || coin === void 0 ? void 0 : coin.value) ===
-                minCoinValue_2; });
+            coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+                .find(function (coin) { return (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue_2; });
             if (coin) {
                 upgradingCoin = coin;
                 upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
@@ -224,7 +223,8 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
         }
     }
     if (isCoin(upgradingCoin)) {
-        var buffValue = (_a = G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin) !== null && _a !== void 0 ? _a : 0;
+        var buffValue = G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin ?
+            G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin : 0;
         var newValue = 0;
         if (typeof config.value === "number") {
             newValue = upgradingCoin.value + config.value + buffValue;

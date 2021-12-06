@@ -1,7 +1,7 @@
 import React from "react";
 import {Client} from "boardgame.io/react";
 import {Local} from "boardgame.io/multiplayer";
-import {MCTSBot, RandomBot} from "boardgame.io/ai";
+import {MCTSBot} from "boardgame.io/ai";
 import {BoardGame} from "./Game";
 import {GameBoard} from "./GameBoard";
 
@@ -13,13 +13,13 @@ class CustomMCTSBot extends MCTSBot {
                 iterations: BoardGame.ai!.iterations,
                 playoutDepth: BoardGame.ai!.playoutDepth,
             },
-            ...args
+            ...args,
         );
     }
 }
 
 const enableLocalPlayer: boolean = true,
-    setupBot: {bots: {}} = {
+    setupBot: { bots: {} } = {
         bots: {
             // "0": RandomBot,
             // "1": RandomBot,
@@ -37,9 +37,9 @@ const enableLocalPlayer: boolean = true,
     }),
     App = () => (
         <div>
-        <BoardGameClient playerID="0"/>
-        {/*<BoardGameClient playerID="1"/>*/}
-        {/*<BoardGameClient playerID="2"/>*/}
+            <BoardGameClient playerID="0"/>
+            {/*<BoardGameClient playerID="1"/>*/}
+            {/*<BoardGameClient playerID="2"/>*/}
         </div>
     );
 

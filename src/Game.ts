@@ -1,4 +1,4 @@
-import {MyGameState, SetupGame} from "./GameSetup";
+import {CampDeckCardTypes, DistinctionTypes, MyGameState, SetupGame} from "./GameSetup";
 import {
     ClickCard,
     ClickCardToPickDistinction,
@@ -57,7 +57,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder.map(order => String(order)),
+                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
+                        .map((order: number): string => String(order)),
                 },
             },
             start: true,
@@ -80,7 +81,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder.map(order => String(order)),
+                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
+                        .map((order: number): string => String(order)),
                 },
             },
             moves: {
@@ -96,7 +98,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder.map(order => String(order)),
+                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
+                        .map((order: number): string => String(order)),
                 },
                 stages: {
                     // Start
@@ -180,7 +183,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder.map(order => String(order)),
+                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
+                        .map((order: number): string => String(order)),
                 },
                 stages: {
                     // Start
@@ -239,17 +243,17 @@ export const BoardGame: Game<MyGameState> = {
                 PlaceEnlistmentMercenaries,
             },
             onBegin: (G: MyGameState, ctx: Ctx): void => {
-                const players: IPublicPlayer[] = G.publicPlayers.map(player => player),
+                const players: IPublicPlayer[] = G.publicPlayers.map((player: IPublicPlayer): IPublicPlayer => player),
                     playersIndexes: number[] = [];
-                players.sort((nextPlayer, currentPlayer) => {
-                    if (nextPlayer.campCards.filter(card => card.type === "наёмник")
+                players.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
+                    if (nextPlayer.campCards.filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")
                             .length <
-                        currentPlayer.campCards.filter(card => card.type === "наёмник")
+                        currentPlayer.campCards.filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")
                             .length) {
                         return 1;
-                    } else if (nextPlayer.campCards.filter(card => card.type === "наёмник")
+                    } else if (nextPlayer.campCards.filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")
                             .length >
-                        currentPlayer.campCards.filter(card => card.type === "наёмник")
+                        currentPlayer.campCards.filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")
                             .length) {
                         return -1;
                     }
@@ -261,10 +265,10 @@ export const BoardGame: Game<MyGameState> = {
                     return 0;
                 });
                 players.forEach(playerSorted => {
-                    if (playerSorted.campCards.filter(card =>
+                    if (playerSorted.campCards.filter((card: CampDeckCardTypes): boolean =>
                         card.type === "наёмник").length) {
-                        playersIndexes.push(G.publicPlayers.findIndex(player => player.nickname ===
-                            playerSorted.nickname));
+                        playersIndexes.push(G.publicPlayers
+                            .findIndex((player: IPublicPlayer): boolean => player.nickname === playerSorted.nickname));
                     }
                 });
                 G.publicPlayersOrder = playersIndexes;
@@ -289,7 +293,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder.map(order => String(order)),
+                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
+                        .map((order: number): string => String(order)),
                 },
                 stages: {
                     // Start
@@ -350,7 +355,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder.map(order => String(order)),
+                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
+                        .map((order: number): string => String(order)),
                 },
             },
             moves: {
@@ -362,7 +368,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder.map(order => String(order)),
+                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
+                        .map((order: number): string => String(order)),
                 },
             },
             moves: {
@@ -374,7 +381,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder.map(order => String(order)),
+                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
+                        .map((order: number): string => String(order)),
                 },
                 stages: {
                     pickDistinctionCard: {
@@ -395,8 +403,10 @@ export const BoardGame: Game<MyGameState> = {
             },
             onBegin: (G: MyGameState, ctx: Ctx): void => {
                 CheckDistinction(G, ctx);
-                const distinctions: (number | null | undefined)[] = G.distinctions.filter(i => i !== undefined);
-                if (distinctions.every(distinction => typeof distinction === "number")) {
+                const distinctions: (number | null | undefined)[] = G.distinctions
+                    .filter((distinction: DistinctionTypes): boolean => distinction !== undefined);
+                if (distinctions.every((distinction: number | null | undefined): boolean =>
+                    typeof distinction === "number")) {
                     G.publicPlayersOrder = distinctions as number[];
                 }
             },
@@ -407,7 +417,8 @@ export const BoardGame: Game<MyGameState> = {
                 }
                 RefillTaverns(G);
             },
-            endIf: (G: MyGameState): boolean => G.distinctions.every(distinction => distinction === undefined),
+            endIf: (G: MyGameState): boolean => G.distinctions
+                .every((distinction: DistinctionTypes): boolean => distinction === undefined),
         },
     },
     onEnd: (G: MyGameState, ctx: Ctx) => {

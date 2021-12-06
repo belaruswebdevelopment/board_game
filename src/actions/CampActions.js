@@ -84,8 +84,9 @@ export var AddCampCardToCards = function (G, ctx, config, cardId) {
  * @constructor
  */
 export var AddCoinToPouchAction = function (G, ctx, config, coinId) {
-    var player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins.findIndex(function (coin, index) { return index >= G.tavernsNum
-        && coin === null; }), stack = [
+    var player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins.findIndex(function (coin, index) {
+        return index >= G.tavernsNum && coin === null;
+    }), stack = [
         {
             actionName: "StartVidofnirVedrfolnirAction",
         },
@@ -260,10 +261,10 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
  */
 export var DiscardTradingCoin = function (G, ctx) {
     var tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-        .findIndex(function (coin) { return coin && coin.isTriggerTrading; });
+        .findIndex(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading); });
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" && tradingCoinIndex === -1) {
         tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex(function (coin) { return coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading; });
+            .findIndex(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading); });
         G.publicPlayers[Number(ctx.currentPlayer)].handCoins.splice(tradingCoinIndex, 1, null);
     }
     else {
@@ -350,7 +351,7 @@ export var DiscardSuitCard = function (G, ctx, config, suitId, playerId, cardId)
     var discardedCard = G.publicPlayers[Number(ctx.playerID)].cards[suitId]
         .splice(cardId, 1)[0];
     G.discardCardsDeck.push(discardedCard);
-    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.playerID)].nickname, " \u0441\u0431\u0440\u043E\u0441\u0438\u043B \n    \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
+    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.playerID)].nickname, " \n    \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
     EndActionForChosenPlayer(G, ctx, playerId);
 };
 /**

@@ -76,7 +76,7 @@ export var ChangePlayersPriorities = function (G) {
     }
     for (var i = 0; i < G.exchangeOrder.length; i++) {
         if (G.publicPlayers[i].priority.value !== tempPriorities[i].value) {
-            AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[i].nickname, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B \u0441 \n                \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043E\u043C ").concat(tempPriorities[i].value, "."));
+            AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[i].nickname, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B \u0441 \n            \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043E\u043C ").concat(tempPriorities[i].value, "."));
             G.publicPlayers[i].priority = tempPriorities[i];
         }
     }

@@ -62,8 +62,8 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     const suitWarriorIndex: number = GetSuitIndexByName("warrior");
     if (suitWarriorIndex !== -1) {
         const warriorsDistinction: number | undefined = CheckCurrentSuitDistinction(G, ctx, "warrior");
-        if (warriorsDistinction !== undefined && G.publicPlayers.findIndex((p: IPublicPlayer): boolean => p.nickname ===
-            player.nickname) === warriorsDistinction) {
+        if (warriorsDistinction !== undefined && G.publicPlayers
+            .findIndex((p: IPublicPlayer): boolean => p.nickname === player.nickname) === warriorsDistinction) {
             const warriorDistinctionScore: number = suitsConfig["warrior"].distinction
                 .awarding(G, ctx, player);
             score += warriorDistinctionScore;
@@ -106,8 +106,8 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     if (G.expansions.thingvellir.active) {
         let artifactsScore: number = 0;
         for (let i: number = 0; i < player.campCards.length; i++) {
-            const artefact: IArtefact | undefined = Object.values(artefactsConfig).find((artefact: IArtefact): boolean =>
-                artefact.name === player.campCards[i].name);
+            const artefact: IArtefact | undefined = Object.values(artefactsConfig)
+                .find((artefact: IArtefact): boolean => artefact.name === player.campCards[i].name);
             let currentArtefactScore: number = 0;
             if (artefact) {
                 if (typeof G.suitIdForMjollnir === "number") {
@@ -118,7 +118,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
             }
             if (currentArtefactScore) {
                 AddDataToLog(G, LogTypes.PRIVATE, `Очки за артефакт ${player.campCards[i].name} игрока 
-                    ${player.nickname}: ${currentArtefactScore}.`);
+                ${player.nickname}: ${currentArtefactScore}.`);
                 artifactsScore += currentArtefactScore;
             }
         }

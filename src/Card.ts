@@ -1,12 +1,4 @@
-import {
-    AddCardToCards,
-    GetTop1PlayerId,
-    GetTop2PlayerId,
-    IPublicPlayer,
-    IStack,
-    IsTopPlayer,
-    PlayerCardsType
-} from "./Player";
+import {AddCardToCards, IPublicPlayer, IStack, PlayerCardsType} from "./Player";
 import {ISuit, ISuitConfig, suitsConfig} from "./data/SuitData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {AddDataToLog, LogTypes} from "./Logging";
@@ -99,7 +91,13 @@ export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as 
  * @constructor
  */
 export const CreateCard = ({
-                               type = "базовая", suit, rank, points, name = "", game = "", tier = 0,
+                               type = "базовая",
+                               suit,
+                               rank,
+                               points,
+                               name = "",
+                               game = "",
+                               tier = 0,
                                path = "",
                            }: ICreateCard = {} as ICreateCard): ICard => {
     return {
@@ -128,7 +126,10 @@ export const CreateCard = ({
  * @constructor
  */
 const CreateActionCard = ({
-                              type = "улучшение монеты", value, stack, name,
+                              type = "улучшение монеты",
+                              value,
+                              stack,
+                              name,
                           }: ICreateActionCard = {} as ICreateActionCard): IActionCard => ({
     type,
     value,
@@ -281,8 +282,10 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  * @param card
  * @constructor
  */
-export const PotentialScoring = ({player = {} as IPublicPlayer, card = {} as
-        PlayerCardsType | IActionCard}): number => {
+export const PotentialScoring = ({
+                                     player = {} as IPublicPlayer,
+                                     card = {} as PlayerCardsType | IActionCard,
+                                 }): number => {
     let score: number = 0,
         potentialCards: PlayerCardsType[][] = [];
     for (let i: number = 0; i < player.cards.length; i++) {

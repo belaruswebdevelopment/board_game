@@ -56,8 +56,8 @@ export var FinalScoring = function (G, ctx, player) {
     var suitWarriorIndex = GetSuitIndexByName("warrior");
     if (suitWarriorIndex !== -1) {
         var warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, "warrior");
-        if (warriorsDistinction !== undefined && G.publicPlayers.findIndex(function (p) { return p.nickname ===
-            player.nickname; }) === warriorsDistinction) {
+        if (warriorsDistinction !== undefined && G.publicPlayers
+            .findIndex(function (p) { return p.nickname === player.nickname; }) === warriorsDistinction) {
             var warriorDistinctionScore = suitsConfig["warrior"].distinction
                 .awarding(G, ctx, player);
             score += warriorDistinctionScore;
@@ -99,9 +99,8 @@ export var FinalScoring = function (G, ctx, player) {
     if (G.expansions.thingvellir.active) {
         var artifactsScore = 0;
         var _loop_2 = function (i) {
-            var artefact = Object.values(artefactsConfig).find(function (artefact) {
-                return artefact.name === player.campCards[i].name;
-            });
+            var artefact = Object.values(artefactsConfig)
+                .find(function (artefact) { return artefact.name === player.campCards[i].name; });
             var currentArtefactScore = 0;
             if (artefact) {
                 if (typeof G.suitIdForMjollnir === "number") {
@@ -112,7 +111,7 @@ export var FinalScoring = function (G, ctx, player) {
                 }
             }
             if (currentArtefactScore) {
-                AddDataToLog(G, "private" /* PRIVATE */, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442 ".concat(player.campCards[i].name, " \u0438\u0433\u0440\u043E\u043A\u0430 \n                    ").concat(player.nickname, ": ").concat(currentArtefactScore, "."));
+                AddDataToLog(G, "private" /* PRIVATE */, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442 ".concat(player.campCards[i].name, " \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(player.nickname, ": ").concat(currentArtefactScore, "."));
                 artifactsScore += currentArtefactScore;
             }
         };

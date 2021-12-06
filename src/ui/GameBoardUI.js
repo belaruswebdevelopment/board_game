@@ -172,9 +172,9 @@ export var DrawProfit = function (data, option) {
                 var suit = Object.keys(suitsConfig)[j];
                 if (suit !== (data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard &&
                     data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.suit)) {
-                    boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToPlaceCard(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", { children: data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].variants[suit].points
-                                    !== null ? data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].variants[suit].points
-                                    : "" }, void 0) }), void 0) }), "Place ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.drawName, " \n                            on ").concat(suitsConfig[suit].suitName)));
+                    boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToPlaceCard(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", { children: data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].variants[suit]
+                                    .points !== null ? data.props.G.publicPlayers[data.props.ctx.currentPlayer]
+                                    .stack[0].variants[suit].points : "" }, void 0) }), void 0) }), "Place \n                            ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.drawName, " \n                            on ").concat(suitsConfig[suit].suitName)));
                 }
             };
             for (var j = 0; j < data.props.G.suitsNum; j++) {
@@ -270,10 +270,10 @@ export var DrawProfit = function (data, option) {
                 var suit = Object.keys(suitsConfig)[j];
                 if (suit === (data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit]
                     && data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit].suit)) {
-                    boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToPlaceMercenary(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", { children: data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit].points
-                                    !== null ?
-                                    data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit].points
-                                    : "" }, void 0) }), void 0) }), "Place ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.name, " ").concat(j, " \n                            on ").concat(suitsConfig[suit].suitName)));
+                    boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToPlaceMercenary(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", { children: data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0]
+                                    .variants[suit].points !== null ?
+                                    data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0]
+                                        .variants[suit].points : "" }, void 0) }), void 0) }), "Place ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.name, " ").concat(j, " \n                            on ").concat(suitsConfig[suit].suitName)));
                 }
             };
             for (var j = 0; j < data.props.G.suitsNum; j++) {
@@ -292,7 +292,8 @@ export var DrawProfit = function (data, option) {
         else {
             caption += "coin to upgrade up to \n            ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.value, ".");
             if (option === "VidofnirVedrfolnirAction") {
-                for (var j = data.props.G.tavernsNum; j < data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins.length; j++) {
+                for (var j = data.props.G.tavernsNum; j <
+                    data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins.length; j++) {
                     var type = "board", isInitial = false;
                     if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j] &&
                         !data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading &&

@@ -73,7 +73,7 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: num
                         prevPriority: IPriority = G.publicPlayers[playersOrder[j - 1]].priority;
                     if (priority.value > prevPriority.value) {
                         // [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
-                        let temp = playersOrder[j - 1];
+                        let temp: number = playersOrder[j - 1];
                         playersOrder[j - 1] = playersOrder[j];
                         playersOrder[j] = temp;
                     }
@@ -108,7 +108,7 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: num
                     === minPriority),
                 1);
             // [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
-            let temp = exchangeOrder[minIndex];
+            let temp: number = exchangeOrder[minIndex];
             exchangeOrder[minIndex] = exchangeOrder[maxIndex];
             exchangeOrder[maxIndex] = temp;
         }

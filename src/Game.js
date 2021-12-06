@@ -34,7 +34,8 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % ctx.numPlayers; },
-                    playOrder: function (G) { return G.publicPlayersOrder.map(function (order) { return String(order); }); },
+                    playOrder: function (G) { return G.publicPlayersOrder
+                        .map(function (order) { return String(order); }); },
                 },
             },
             start: true,
@@ -57,7 +58,8 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % ctx.numPlayers; },
-                    playOrder: function (G) { return G.publicPlayersOrder.map(function (order) { return String(order); }); },
+                    playOrder: function (G) { return G.publicPlayersOrder
+                        .map(function (order) { return String(order); }); },
                 },
             },
             moves: {
@@ -73,7 +75,8 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % ctx.numPlayers; },
-                    playOrder: function (G) { return G.publicPlayersOrder.map(function (order) { return String(order); }); },
+                    playOrder: function (G) { return G.publicPlayersOrder
+                        .map(function (order) { return String(order); }); },
                 },
                 stages: {
                     // Start
@@ -156,7 +159,8 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) { return G.publicPlayersOrder.map(function (order) { return String(order); }); },
+                    playOrder: function (G) { return G.publicPlayersOrder
+                        .map(function (order) { return String(order); }); },
                 },
                 stages: {
                     // Start
@@ -241,8 +245,8 @@ export var BoardGame = {
                     if (playerSorted.campCards.filter(function (card) {
                         return card.type === "наёмник";
                     }).length) {
-                        playersIndexes.push(G.publicPlayers.findIndex(function (player) { return player.nickname ===
-                            playerSorted.nickname; }));
+                        playersIndexes.push(G.publicPlayers
+                            .findIndex(function (player) { return player.nickname === playerSorted.nickname; }));
                     }
                 });
                 G.publicPlayersOrder = playersIndexes;
@@ -267,7 +271,8 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) { return G.publicPlayersOrder.map(function (order) { return String(order); }); },
+                    playOrder: function (G) { return G.publicPlayersOrder
+                        .map(function (order) { return String(order); }); },
                 },
                 stages: {
                     // Start
@@ -328,7 +333,8 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) { return G.publicPlayersOrder.map(function (order) { return String(order); }); },
+                    playOrder: function (G) { return G.publicPlayersOrder
+                        .map(function (order) { return String(order); }); },
                 },
             },
             moves: {
@@ -340,7 +346,8 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) { return G.publicPlayersOrder.map(function (order) { return String(order); }); },
+                    playOrder: function (G) { return G.publicPlayersOrder
+                        .map(function (order) { return String(order); }); },
                 },
             },
             moves: {
@@ -352,7 +359,8 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) { return G.publicPlayersOrder.map(function (order) { return String(order); }); },
+                    playOrder: function (G) { return G.publicPlayersOrder
+                        .map(function (order) { return String(order); }); },
                 },
                 stages: {
                     pickDistinctionCard: {
@@ -373,8 +381,11 @@ export var BoardGame = {
             },
             onBegin: function (G, ctx) {
                 CheckDistinction(G, ctx);
-                var distinctions = G.distinctions.filter(function (i) { return i !== undefined; });
-                if (distinctions.every(function (distinction) { return typeof distinction === "number"; })) {
+                var distinctions = G.distinctions
+                    .filter(function (distinction) { return distinction !== undefined; });
+                if (distinctions.every(function (distinction) {
+                    return typeof distinction === "number";
+                })) {
                     G.publicPlayersOrder = distinctions;
                 }
             },
@@ -385,7 +396,8 @@ export var BoardGame = {
                 }
                 RefillTaverns(G);
             },
-            endIf: function (G) { return G.distinctions.every(function (distinction) { return distinction === undefined; }); },
+            endIf: function (G) { return G.distinctions
+                .every(function (distinction) { return distinction === undefined; }); },
         },
     },
     onEnd: function (G, ctx) {

@@ -38,7 +38,10 @@ interface ICreatePriority {
  * @param isExchangeable Является ли кристалл обменным.
  * @constructor
  */
-export const CreatePriority = ({value, isExchangeable = true}: ICreatePriority = {} as ICreatePriority): IPriority => ({
+export const CreatePriority = ({
+                                   value,
+                                   isExchangeable = true,
+                               }: ICreatePriority = {} as ICreatePriority): IPriority => ({
     value,
     isExchangeable,
 });
@@ -104,7 +107,7 @@ export const ChangePlayersPriorities = (G: MyGameState): void => {
     for (let i: number = 0; i < G.exchangeOrder.length; i++) {
         if (G.publicPlayers[i].priority.value !== tempPriorities[i].value) {
             AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[i].nickname} получил кристалл с 
-                приоритетом ${tempPriorities[i].value}.`);
+            приоритетом ${tempPriorities[i].value}.`);
             G.publicPlayers[i].priority = tempPriorities[i];
         }
     }

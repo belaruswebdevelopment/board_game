@@ -257,15 +257,14 @@ export var IsTopPlayer = function (G, playerId) {
  * @param currentPlayerId Id текущего игрока.
  * @constructor
  */
-export var GetTop1PlayerId = function (G, currentPlayerId) {
-    var top1PlayerId = G.publicPlayers.findIndex(function (player, index) {
-        return IsTopPlayer(G, index);
-    });
+/*export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number => {
+    let top1PlayerId: number = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean =>
+        IsTopPlayer(G, index));
     if (G.publicPlayersOrder.indexOf(currentPlayerId) > G.publicPlayersOrder.indexOf(top1PlayerId)) {
         top1PlayerId = -1;
     }
     return top1PlayerId;
-};
+};*/
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -278,19 +277,20 @@ export var GetTop1PlayerId = function (G, currentPlayerId) {
  * @param top1PlayerId Id текущего игрока.
  * @constructor
  */
-export var GetTop2PlayerId = function (G, top1PlayerId) {
-    var playersScore = G.publicPlayers.map(function (player) { return CurrentScoring(player); }), maxScore = Math.max.apply(Math, playersScore);
-    var top2PlayerId, temp;
-    if (playersScore.filter(function (score) { return score === maxScore; }).length === 1) {
-        temp = playersScore.sort(function (a, b) { return b - a; })[1];
-        top2PlayerId = G.publicPlayers.findIndex(function (player) { return CurrentScoring(player) === temp; });
-    }
-    else {
-        top2PlayerId = G.publicPlayers.findIndex(function (player, index) { return index !== top1PlayerId
-            && IsTopPlayer(G, index); });
+/*export const GetTop2PlayerId = (G: MyGameState, top1PlayerId: number): number => {
+    const playersScore: number[] = G.publicPlayers.map((player: IPublicPlayer): number => CurrentScoring(player)),
+        maxScore: number = Math.max(...playersScore);
+    let top2PlayerId: number,
+        temp: number;
+    if (playersScore.filter(score => score === maxScore).length === 1) {
+        temp = playersScore.sort((a, b) => b - a)[1];
+        top2PlayerId = G.publicPlayers.findIndex(player => CurrentScoring(player) === temp);
+    } else {
+        top2PlayerId = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean => index !== top1PlayerId
+            && IsTopPlayer(G, index));
     }
     if (G.publicPlayersOrder.indexOf(top1PlayerId) > G.publicPlayersOrder.indexOf(top2PlayerId)) {
         top2PlayerId = -1;
     }
     return top2PlayerId;
-};
+};*/

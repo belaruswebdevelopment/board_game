@@ -53,7 +53,11 @@ const isCoin = (obj: {} | ICoin): obj is ICoin => (obj as ICoin).value !== undef
  * @param isTriggerTrading Активирует ли обмен монет.
  * @constructor
  */
-export const CreateCoin = ({value, isInitial = false, isTriggerTrading = false}: ICreateCoin = {} as ICreateCoin):
+export const CreateCoin = ({
+                               value,
+                               isInitial = false,
+                               isTriggerTrading = false,
+                           }: ICreateCoin = {} as ICreateCoin):
     ICoin => ({
     value,
     isInitial,
@@ -217,10 +221,10 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                     allCoins.push(G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i]);
                 }
             }
-            const minCoinValue: number = Math.min(...allCoins.filter((coin: ICoin | null): boolean => coin !== null &&
-                    !coin.isTriggerTrading).map((coin: ICoin | null): number => coin!.value)),
-                upgradingCoinInitial: ICoin | null | undefined = allCoins.find((coin: ICoin | null): boolean | undefined =>
-                    coin!.value === minCoinValue && coin!.isInitial);
+            const minCoinValue: number = Math.min(...allCoins.filter((coin: ICoin | null): boolean =>
+                    coin !== null && !coin.isTriggerTrading).map((coin: ICoin | null): number => coin!.value)),
+                upgradingCoinInitial: ICoin | null | undefined = allCoins
+                    .find((coin: ICoin | null): boolean | undefined => coin!.value === minCoinValue && coin!.isInitial);
             if (upgradingCoinInitial) {
                 upgradingCoin = upgradingCoinInitial;
             } else {
@@ -229,14 +233,14 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                     upgradingCoin = coin;
                 }
             }
-            upgradingCoinId = allCoins.findIndex((coin: ICoin | null): boolean => isCoin(upgradingCoin) && coin!.value ===
-                upgradingCoin.value);
+            upgradingCoinId = allCoins.findIndex((coin: ICoin | null): boolean => isCoin(upgradingCoin) &&
+                coin!.value === upgradingCoin.value);
         } else {
             const minCoinValue: number = Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                 .filter((coin: ICoin | null): boolean => coin !== null && !coin.isTriggerTrading)
                 .map((coin: ICoin | null): number => coin!.value));
-            coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.find(coin => coin?.value ===
-                minCoinValue);
+            coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+                .find((coin: ICoin | null): boolean => coin?.value === minCoinValue);
             if (coin) {
                 upgradingCoin = coin;
                 upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
@@ -262,7 +266,8 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
         }
     }
     if (isCoin(upgradingCoin)) {
-        const buffValue: number = G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin ?? 0;
+        const buffValue: number = G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin ?
+            G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin as number : 0;
         let newValue: number = 0;
         if (typeof config.value === "number") {
             newValue = upgradingCoin.value + config.value + buffValue;

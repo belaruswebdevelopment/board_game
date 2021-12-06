@@ -78,7 +78,7 @@ export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coin
                     ctx.events!.setPhase!("pickCards");
                 }
             } else {
-                if (player.handCoins.every(coin => coin === null)) {
+                if (player.handCoins.every((coin: ICoin | null): boolean => coin === null)) {
                     ctx.events!.endTurn!();
                 }
             }

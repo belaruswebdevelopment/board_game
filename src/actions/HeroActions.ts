@@ -3,7 +3,7 @@ import {CreateCard, ICard, ICreateCard} from "../Card";
 import {AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards, IConfig} from "../Player";
 import {CheckPickHero, IHero} from "../Hero";
 import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
-import {ReturnCoinToPlayerHands} from "../Coin";
+import {ICoin, ReturnCoinToPlayerHands} from "../Coin";
 import {CheckAndMoveThrud, GetHeroIndexByName, StartThrudMoving} from "../helpers/HeroHelpers";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {INVALID_MOVE} from "boardgame.io/core";
@@ -146,9 +146,9 @@ export const AddHeroToCards = (G: MyGameState, ctx: Ctx, config: IConfig): void 
 export const GetClosedCoinIntoPlayerHand = (G: MyGameState, ctx: Ctx): void => {
     const coinsCount: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length,
         tradingBoardCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .findIndex(coin => coin && coin.isTriggerTrading),
+            .findIndex((coin: ICoin | null): boolean => Boolean(coin && coin.isTriggerTrading)),
         tradingHandCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex(coin => coin && coin.isTriggerTrading);
+            .findIndex((coin: ICoin | null): boolean => Boolean(coin && coin.isTriggerTrading));
     for (let i: number = 0; i < coinsCount; i++) {
         if ((i < G.tavernsNum && G.currentTavern < i) ||
             (i >= G.tavernsNum && tradingHandCoinIndex !== -1) ||

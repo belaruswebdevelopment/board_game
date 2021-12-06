@@ -139,9 +139,8 @@ export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
  * @constructor
  */
 export var DiscardCardIfCampCardPicked = function (G) {
-    var discardCardIndex = G.taverns[G.currentTavern].findIndex(function (card) {
-        return card !== null;
-    });
+    var discardCardIndex = G.taverns[G.currentTavern]
+        .findIndex(function (card) { return card !== null; });
     if (G.campPicked && discardCardIndex !== -1) {
         DiscardCardFromTavern(G, discardCardIndex);
         G.campPicked = false;

@@ -110,7 +110,9 @@ export var CheckPickHero = function (G, ctx) {
  */
 export var RemoveThrudFromPlayerBoardAfterGameEnd = function (G, ctx) {
     for (var i = 0; i < ctx.numPlayers; i++) {
-        var playerCards = G.publicPlayers[i].cards.flat(), thrud = playerCards.find(function (card) { return card.name === "Thrud"; });
+        var playerCards = G.publicPlayers[i].cards.flat(), thrud = playerCards.find(function (card) {
+            return card.name === "Thrud";
+        });
         if (thrud) {
             var thrudSuit = GetSuitIndexByName(thrud.suit), thrudIndex = G.publicPlayers[i].cards[thrudSuit]
                 .findIndex(function (card) { return card.name === "Thrud"; });
