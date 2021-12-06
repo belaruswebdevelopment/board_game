@@ -338,7 +338,7 @@ export const Styles: IStyles = {
     Camp: (): IBackground => ({
         background: "url(/img/cards/camp/Camp.png) no-repeat 0px 3px / 24px 18px",
     }),
-    CampCards: (tier: 0 | 1, cardPath: string): IBackground => {
+    CampCards: (tier: number, cardPath: string): IBackground => {
         if (tier === 0) {
             switch (cardPath) {
                 case "Draupnir":

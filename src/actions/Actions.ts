@@ -1,7 +1,7 @@
 import {UpgradeCoin} from "../Coin";
 import {INVALID_MOVE} from "boardgame.io/core";
 import {suitsConfig} from "../data/SuitData";
-import {AddCardToPlayer, IConfig, IStack} from "../Player";
+import {AddCardToPlayer, IConfig, IStack, PlayerCardsType} from "../Player";
 import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
 import {CreateCard, DiscardCardFromTavern, ICard, ICreateCard, isCardNotAction} from "../Card";
 import {
@@ -226,34 +226,36 @@ const AddBuffToPlayer = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
  */
 export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
                                                   cardId: number): void => {
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = G.publicPlayers[Number(ctx.currentPlayer)]
-        .cards[suitId][cardId];
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
-    отправил в сброс карту 
-    ${(G.publicPlayers[Number(ctx.currentPlayer)].pickedCard as ICard).name}.`);
-    G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-        .splice(cardId, 1)[0]);
-    if (G.actionsNum === 2) {
-        const stack: IStack[] = [
-            {
-                actionName: "DrawProfitAction",
-                config: {
-                    stageName: "discardCardFromBoard",
-                    drawName: "Dagda",
-                    name: "DagdaAction",
-                    suit: "hunter",
+    const pickedCard: PlayerCardsType = G.publicPlayers[Number(ctx.currentPlayer)]
+            .cards[suitId][cardId];
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
+    if (pickedCard) {
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+        отправил в сброс карту ${pickedCard.name}.`);
+        G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+            .splice(cardId, 1)[0] as DeckCardTypes);
+        if (G.actionsNum === 2) {
+            const stack: IStack[] = [
+                {
+                    actionName: "DrawProfitAction",
+                    config: {
+                        stageName: "discardCardFromBoard",
+                        drawName: "Dagda",
+                        name: "DagdaAction",
+                        suit: "hunter",
+                    },
                 },
-            },
-            {
-                actionName: "DiscardCardsFromPlayerBoardAction",
-                config: {
-                    suit: "hunter",
+                {
+                    actionName: "DiscardCardsFromPlayerBoardAction",
+                    config: {
+                        suit: "hunter",
+                    },
                 },
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+            ];
+            AddActionsToStackAfterCurrent(G, ctx, stack);
+        }
+        EndActionFromStackAndAddNew(G, ctx);
     }
-    EndActionFromStackAndAddNew(G, ctx);
 };
 
 /**
@@ -478,8 +480,9 @@ const PassEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx): void => {
 const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].campCards
         .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")[cardId];
-    const pickedCard: ICard | CampDeckCardTypes | IHero | null = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-    if (isArtefactCard(pickedCard)) {
+    const pickedCard: DeckCardTypes | CampDeckCardTypes | IHero | null =
+        G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+    if (pickedCard !== null) {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
         во время фазы Enlistment Mercenaries выбрал наёмника '${pickedCard.name}'.`);
         const stack: IStack[] = [
@@ -510,9 +513,10 @@ const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfi
  */
 const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
     const suit: string = Object.keys(suitsConfig)[suitId],
-        pickedCard: ICard | CampDeckCardTypes | IHero | null =
+        pickedCard: DeckCardTypes | CampDeckCardTypes | IHero | null =
             G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-    if (isArtefactCard(pickedCard) && pickedCard.stack[0].variants) {
+    if (pickedCard !== null && "stack" in pickedCard && "tier" in pickedCard && "path" in pickedCard &&
+        pickedCard.stack[0].variants) {
         const mercenaryCard: ICard = CreateCard({
             type: "наёмник",
             suit,

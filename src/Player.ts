@@ -15,14 +15,15 @@ import {IBuff, IConditions, IVariants} from "./data/HeroData";
 export type PlayerCardsType = ICard | IArtefactCampCard | IHero;
 
 export interface IBuffs {
-    everyTurn?: string,
-    upgradeNextCoin?: string,
-    upgradeCoin?: number,
-    goCampOneTime?: boolean,
-    goCamp?: boolean,
-    noHero?: boolean,
-    getMjollnirProfit?: boolean,
-    discardCardEndGame?: boolean,
+    // everyTurn?: string,
+    // upgradeNextCoin?: string,
+    // upgradeCoin?: number,
+    // goCampOneTime?: boolean,
+    // goCamp?: boolean,
+    // noHero?: boolean,
+    // getMjollnirProfit?: boolean,
+    // discardCardEndGame?: boolean,
+    [name: string]: string | number | boolean,
 }
 
 export interface IConfig {

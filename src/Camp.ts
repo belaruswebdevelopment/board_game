@@ -1,7 +1,7 @@
 import {DiscardCardFromTavern, ICard} from "./Card";
 import {AddDataToLog, LogTypes} from "./Logging";
 import {suitsConfig} from "./data/SuitData";
-import {CampCardTypes, CampDeckCardTypes, MyGameState, TavernCardTypes} from "./GameSetup";
+import {CampCardTypes, CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes} from "./GameSetup";
 import {IStack} from "./Player";
 import {IArtefactConfig, IMercenaries} from "./data/CampData";
 import {IHero} from "./Hero";
@@ -50,7 +50,7 @@ interface ICreateMercenaryCampCard {
     stack: IStack[],
 }
 
-export const isArtefactCard = (card: ICard | CampDeckCardTypes | IHero | null): card is
+export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard | null): card is
     IArtefactCampCard => (card as IArtefactCampCard).suit !== undefined;
 
 /**

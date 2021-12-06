@@ -376,10 +376,10 @@ export const StartDiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig):
  */
 export const DiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number, playerId: number,
                                 cardId: number): void => {
-    const discardedCard: PlayerCardsType = G.publicPlayers[+(ctx.playerID as string)].cards[suitId]
+    const discardedCard: PlayerCardsType = G.publicPlayers[Number(ctx.playerID as string)].cards[suitId]
         .splice(cardId, 1)[0];
     G.discardCardsDeck.push(discardedCard as ICard);
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[+(ctx.playerID as string)].nickname} сбросил 
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.playerID as string)].nickname} сбросил 
     карту ${discardedCard.name} в дискард.`);
     EndActionForChosenPlayer(G, ctx, playerId);
 };

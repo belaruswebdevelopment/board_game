@@ -17,7 +17,6 @@ import { AddHeroToCards, CheckAndMoveThrudOrPickHeroAction, GetClosedCoinIntoPla
 import { AddCampCardToCards, AddCoinToPouchAction, CheckPickCampCard, DiscardAnyCardFromPlayerBoard, DiscardSuitCard, DiscardTradingCoin, GetMjollnirProfitAction, StartDiscardSuitCard, StartVidofnirVedrfolnirAction, UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AddDataToLog } from "../Logging";
-import { isArtefactCard } from "../Camp";
 /**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>
@@ -210,32 +209,35 @@ var AddBuffToPlayer = function (G, ctx, config) {
  * @constructor
  */
 export var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId, cardId) {
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = G.publicPlayers[Number(ctx.currentPlayer)]
+    var pickedCard = G.publicPlayers[Number(ctx.currentPlayer)]
         .cards[suitId][cardId];
-    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 \n    ").concat(G.publicPlayers[Number(ctx.currentPlayer)].pickedCard.name, "."));
-    G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-        .splice(cardId, 1)[0]);
-    if (G.actionsNum === 2) {
-        var stack = [
-            {
-                actionName: "DrawProfitAction",
-                config: {
-                    stageName: "discardCardFromBoard",
-                    drawName: "Dagda",
-                    name: "DagdaAction",
-                    suit: "hunter",
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
+    if (pickedCard) {
+        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 ").concat(pickedCard.name, "."));
+        G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+            .splice(cardId, 1)[0]);
+        if (G.actionsNum === 2) {
+            var stack = [
+                {
+                    actionName: "DrawProfitAction",
+                    config: {
+                        stageName: "discardCardFromBoard",
+                        drawName: "Dagda",
+                        name: "DagdaAction",
+                        suit: "hunter",
+                    },
                 },
-            },
-            {
-                actionName: "DiscardCardsFromPlayerBoardAction",
-                config: {
-                    suit: "hunter",
+                {
+                    actionName: "DiscardCardsFromPlayerBoardAction",
+                    config: {
+                        suit: "hunter",
+                    },
                 },
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+            ];
+            AddActionsToStackAfterCurrent(G, ctx, stack);
+        }
+        EndActionFromStackAndAddNew(G, ctx);
     }
-    EndActionFromStackAndAddNew(G, ctx);
 };
 /**
  * <h3>Сбрасывает карту из таверны по выбору игрока.</h3>
@@ -449,7 +451,7 @@ var GetEnlistmentMercenariesAction = function (G, ctx, config, cardId) {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].campCards
         .filter(function (card) { return card.type === "наёмник"; })[cardId];
     var pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-    if (isArtefactCard(pickedCard)) {
+    if (pickedCard !== null) {
         AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \u0432\u044B\u0431\u0440\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(pickedCard.name, "'."));
         var stack = [
             {
@@ -478,7 +480,8 @@ var GetEnlistmentMercenariesAction = function (G, ctx, config, cardId) {
  */
 var PlaceEnlistmentMercenariesAction = function (G, ctx, config, suitId) {
     var suit = Object.keys(suitsConfig)[suitId], pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-    if (isArtefactCard(pickedCard) && pickedCard.stack[0].variants) {
+    if (pickedCard !== null && "stack" in pickedCard && "tier" in pickedCard && "path" in pickedCard &&
+        pickedCard.stack[0].variants) {
         var mercenaryCard = CreateCard({
             type: "наёмник",
             suit: suit,
