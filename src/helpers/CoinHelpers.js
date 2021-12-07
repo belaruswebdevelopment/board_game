@@ -1,5 +1,5 @@
-// todo Add logging
 import { Trading } from "../Coin";
+// todo Add logging
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
@@ -7,8 +7,8 @@ import { Trading } from "../Coin";
  * <li>Когда заканчивается базовый выбор карты.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @returns {boolean} Активировался ли обмен монет.
  * @constructor
  */
@@ -36,9 +36,9 @@ export var ActivateTrading = function (G, ctx) {
  * <li>После выкладки всех монет игроками.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @returns {{playersOrder: *[], exchangeOrder: *[]}} Массив порядка ходов игроков и порядок обмена кристаллов приоритета.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {{playersOrder: number[], exchangeOrder: number[]}} Порядок ходов игроков & порядок изменения ходов игроками.
  * @constructor
  */
 export var ResolveBoardCoins = function (G, ctx) {
@@ -54,7 +54,7 @@ export var ResolveBoardCoins = function (G, ctx) {
         exchangeOrder.push(i);
         for (var j = playersOrder.length - 1; j > 0; j--) {
             var coin = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern], prevCoin = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
-            if (coin && prevCoin) {
+            if (coin !== null && prevCoin !== null) {
                 if (coin.value > prevCoin.value) {
                     // [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
                     var temp = playersOrder[j - 1];
@@ -86,13 +86,13 @@ export var ResolveBoardCoins = function (G, ctx) {
         }
         var tiePlayers = G.publicPlayers.filter(function (player) { var _a; return ((_a = player.boardCoins[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.value) === Number(prop) && player.priority.isExchangeable; });
         var _loop_2 = function () {
-            var tiePlayersPriorities = tiePlayers.map(function (player) { return player.priority.value; }), maxPriority = Math.max.apply(Math, tiePlayersPriorities), minPriority = Math.min.apply(Math, tiePlayersPriorities), maxIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value
-                === maxPriority; }), minIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value
-                === minPriority; });
-            tiePlayers.splice(tiePlayers.findIndex(function (player) { return player.priority.value
-                === maxPriority; }), 1);
-            tiePlayers.splice(tiePlayers.findIndex(function (player) { return player.priority.value
-                === minPriority; }), 1);
+            var tiePlayersPriorities = tiePlayers.map(function (player) { return player.priority.value; }), maxPriority = Math.max.apply(Math, tiePlayersPriorities), minPriority = Math.min.apply(Math, tiePlayersPriorities), maxIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === maxPriority; }), minIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === minPriority; });
+            tiePlayers.splice(tiePlayers.findIndex(function (player) {
+                return player.priority.value === maxPriority;
+            }), 1);
+            tiePlayers.splice(tiePlayers.findIndex(function (player) {
+                return player.priority.value === minPriority;
+            }), 1);
             // [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
             var temp = exchangeOrder[minIndex];
             exchangeOrder[minIndex] = exchangeOrder[maxIndex];

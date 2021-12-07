@@ -23,6 +23,8 @@ import { CheckPlayersBasicOrder } from "./Player";
  * <ol>
  * <li>При инициализации игрового стола.</li>
  * </ol>
+ *
+ * @type {{onEnd: (G: MyGameState, ctx: Ctx) => MyGameState | void, name: string, ai: {playoutDepth: (G: MyGameState, ctx: Ctx) => number, enumerate: (G: MyGameState, ctx: Ctx) => IMoves[], objectives: () => {isEarlyGame: {weight: number, checker: (G: MyGameState) => boolean}, isFirst: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}, isStronger: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}}, iterations: (G: MyGameState, ctx: Ctx) => number}, setup: (ctx: Ctx) => MyGameState, playerView: (G: any, ctx: Ctx, playerID: string) => any, phases: {placeCoins: {next: string, onBegin: (G: MyGameState, ctx: Ctx) => void, moves: {ClickHandCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, BotsPlaceAllCoins: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, ClickBoardCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, start: boolean, turn: {order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, placeCoinsUline: {onBegin: (G: MyGameState, ctx: Ctx) => void, moves: {ClickHandCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, ClickBoardCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, getMjollnirProfit: {moves: {GetMjollnirProfit: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, brisingamensEndGame: {moves: {DiscardCardFromPlayerBoard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, pickCards: {onBegin: (G: MyGameState, ctx: Ctx) => void, onEnd: (G) => void, moves: {ClickCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, ClickCampCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {stages: {upgradeCoinVidofnirVedrfolnir: {moves: {UpgradeCoinVidofnirVedrfolnir: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardCard: {moves: {DiscardCard2Players: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickDiscardCard: {moves: {PickDiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardCardFromBoard: {moves: {DiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardSuitCard: {moves: {DiscardSuitCardFromPlayerBoard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, placeTradingCoinsUline: {moves: {ClickHandCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, ClickBoardCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, upgradeCoin: {moves: {ClickCoinToUpgrade: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickHero: {moves: {ClickHeroCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, addCoinToPouch: {moves: {AddCoinToPouch: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, placeCards: {moves: {PlaceCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickCampCardHolda: {moves: {ClickCampCardHolda: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}}, order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, getDistinctions: {next: string, onBegin: (G: MyGameState, ctx: Ctx) => void, onEnd: (G: MyGameState) => void, moves: {ClickDistinctionCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, endIf: (G: MyGameState) => boolean, turn: {stages: {upgradeCoin: {moves: {ClickCoinToUpgrade: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickDistinctionCard: {moves: {ClickCardToPickDistinction: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}}, order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, enlistmentMercenaries: {onBegin: (G: MyGameState, ctx: Ctx) => void, moves: {PassEnlistmentMercenaries: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, GetEnlistmentMercenaries: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, StartEnlistmentMercenaries: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, PlaceEnlistmentMercenaries: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {stages: {upgradeCoinVidofnirVedrfolnir: {moves: {UpgradeCoinVidofnirVedrfolnir: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickDiscardCard: {moves: {PickDiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardCardFromBoard: {moves: {DiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardSuitCard: {moves: {DiscardSuitCardFromPlayerBoard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, upgradeCoin: {moves: {ClickCoinToUpgrade: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickHero: {moves: {ClickHeroCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, addCoinToPouch: {moves: {AddCoinToPouch: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, placeCards: {moves: {PlaceCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickCampCardHolda: {moves: {ClickCampCardHolda: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}}, order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, endTier: {moves: {PlaceCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {stages: {upgradeCoinVidofnirVedrfolnir: {moves: {UpgradeCoinVidofnirVedrfolnir: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickDiscardCard: {moves: {PickDiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardCardFromBoard: {moves: {DiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardSuitCard: {moves: {DiscardSuitCardFromPlayerBoard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, upgradeCoin: {moves: {ClickCoinToUpgrade: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickHero: {moves: {ClickHeroCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, addCoinToPouch: {moves: {AddCoinToPouch: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, placeCards: {moves: {PlaceCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickCampCardHolda: {moves: {ClickCampCardHolda: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}}, order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}}}}
  */
 export var BoardGame = {
     name: "nidavellir",
@@ -34,8 +36,9 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % ctx.numPlayers; },
-                    playOrder: function (G) { return G.publicPlayersOrder
-                        .map(function (order) { return String(order); }); },
+                    playOrder: function (G) {
+                        return G.publicPlayersOrder.map(function (order) { return String(order); });
+                    },
                 },
             },
             start: true,
@@ -58,8 +61,9 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % ctx.numPlayers; },
-                    playOrder: function (G) { return G.publicPlayersOrder
-                        .map(function (order) { return String(order); }); },
+                    playOrder: function (G) {
+                        return G.publicPlayersOrder.map(function (order) { return String(order); });
+                    },
                 },
             },
             moves: {
@@ -75,8 +79,9 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % ctx.numPlayers; },
-                    playOrder: function (G) { return G.publicPlayersOrder
-                        .map(function (order) { return String(order); }); },
+                    playOrder: function (G) {
+                        return G.publicPlayersOrder.map(function (order) { return String(order); });
+                    },
                 },
                 stages: {
                     // Start
@@ -146,7 +151,7 @@ export var BoardGame = {
             onBegin: function (G, ctx) {
                 G.currentTavern++;
                 var _a = ResolveBoardCoins(G, ctx), playersOrder = _a.playersOrder, exchangeOrder = _a.exchangeOrder;
-                // [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
+                // [G.publicPlayersOrder, G.exchangeOrder]: number[] = [playersOrder, exchangeOrder];
                 G.publicPlayersOrder = playersOrder;
                 G.exchangeOrder = exchangeOrder;
             },
@@ -159,8 +164,9 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) { return G.publicPlayersOrder
-                        .map(function (order) { return String(order); }); },
+                    playOrder: function (G) {
+                        return G.publicPlayersOrder.map(function (order) { return String(order); });
+                    },
                 },
                 stages: {
                     // Start
@@ -221,16 +227,16 @@ export var BoardGame = {
             onBegin: function (G, ctx) {
                 var players = G.publicPlayers.map(function (player) { return player; }), playersIndexes = [];
                 players.sort(function (nextPlayer, currentPlayer) {
-                    if (nextPlayer.campCards.filter(function (card) { return card.type === "наёмник"; })
-                        .length <
-                        currentPlayer.campCards.filter(function (card) { return card.type === "наёмник"; })
-                            .length) {
+                    if (nextPlayer.campCards
+                        .filter(function (card) { return card.type === "наёмник"; }).length <
+                        currentPlayer.campCards
+                            .filter(function (card) { return card.type === "наёмник"; }).length) {
                         return 1;
                     }
-                    else if (nextPlayer.campCards.filter(function (card) { return card.type === "наёмник"; })
-                        .length >
-                        currentPlayer.campCards.filter(function (card) { return card.type === "наёмник"; })
-                            .length) {
+                    else if (nextPlayer.campCards
+                        .filter(function (card) { return card.type === "наёмник"; }).length >
+                        currentPlayer.campCards
+                            .filter(function (card) { return card.type === "наёмник"; }).length) {
                         return -1;
                     }
                     if (nextPlayer.priority.value < currentPlayer.priority.value) {
@@ -242,9 +248,8 @@ export var BoardGame = {
                     return 0;
                 });
                 players.forEach(function (playerSorted) {
-                    if (playerSorted.campCards.filter(function (card) {
-                        return card.type === "наёмник";
-                    }).length) {
+                    if (playerSorted.campCards
+                        .filter(function (card) { return card.type === "наёмник"; }).length) {
                         playersIndexes.push(G.publicPlayers
                             .findIndex(function (player) { return player.nickname === playerSorted.nickname; }));
                     }
@@ -271,8 +276,9 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) { return G.publicPlayersOrder
-                        .map(function (order) { return String(order); }); },
+                    playOrder: function (G) {
+                        return G.publicPlayersOrder.map(function (order) { return String(order); });
+                    },
                 },
                 stages: {
                     // Start
@@ -333,8 +339,9 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) { return G.publicPlayersOrder
-                        .map(function (order) { return String(order); }); },
+                    playOrder: function (G) {
+                        return G.publicPlayersOrder.map(function (order) { return String(order); });
+                    },
                 },
             },
             moves: {
@@ -346,8 +353,9 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) { return G.publicPlayersOrder
-                        .map(function (order) { return String(order); }); },
+                    playOrder: function (G) {
+                        return G.publicPlayersOrder.map(function (order) { return String(order); });
+                    },
                 },
             },
             moves: {
@@ -359,8 +367,9 @@ export var BoardGame = {
                 order: {
                     first: function () { return 0; },
                     next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) { return G.publicPlayersOrder
-                        .map(function (order) { return String(order); }); },
+                    playOrder: function (G) {
+                        return G.publicPlayersOrder.map(function (order) { return String(order); });
+                    },
                 },
                 stages: {
                     pickDistinctionCard: {
@@ -381,11 +390,9 @@ export var BoardGame = {
             },
             onBegin: function (G, ctx) {
                 CheckDistinction(G, ctx);
-                var distinctions = G.distinctions
-                    .filter(function (distinction) { return distinction !== undefined; });
-                if (distinctions.every(function (distinction) {
-                    return typeof distinction === "number";
-                })) {
+                var distinctions = G.distinctions.filter(function (distinction) { return distinction !== undefined; });
+                if (distinctions
+                    .every(function (distinction) { return typeof distinction === "number"; })) {
                     G.publicPlayersOrder = distinctions;
                 }
             },
@@ -396,8 +403,9 @@ export var BoardGame = {
                 }
                 RefillTaverns(G);
             },
-            endIf: function (G) { return G.distinctions
-                .every(function (distinction) { return distinction === undefined; }); },
+            endIf: function (G) {
+                return G.distinctions.every(function (distinction) { return distinction === undefined; });
+            },
         },
     },
     onEnd: function (G, ctx) {

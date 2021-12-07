@@ -11,10 +11,9 @@ import {IConfig, IStack} from "../Player";
  * <li>Выполняется при необходимости добавить действия в стэк действий.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param stack Стэк действий.
- * @returns {*} Старт действий.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IStack[]} stack Стэк действий.
  * @constructor
  */
 export const AddActionsToStack = (G: MyGameState, ctx: Ctx, stack: IStack[]): void => {
@@ -33,10 +32,9 @@ export const AddActionsToStack = (G: MyGameState, ctx: Ctx, stack: IStack[]): vo
  * <li>Выполняется при необходимости добавить действия в стэк действий после текущего.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param stack Стэк действий.
- * @returns {*} Старт действий.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IStack[]} stack Стэк действий.
  * @constructor
  */
 export const AddActionsToStackAfterCurrent = (G: MyGameState, ctx: Ctx, stack: IStack[]): void => {
@@ -63,11 +61,10 @@ export const AddActionsToStackAfterCurrent = (G: MyGameState, ctx: Ctx, stack: I
  * <li>Выполняется при необходимости активировать действия в стэке действий.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param isTrading Является ли действие обменом монет (трейдингом).
- * @param args Дополнительные аргументы.
- * @returns {*} Выполнение действий.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {boolean} isTrading Является ли действие обменом монет (трейдингом).
+ * @param {string | number | boolean | object | null} args Дополнительные аргументы.
  * @constructor
  */
 export const StartActionFromStackOrEndActions = (G: MyGameState, ctx: Ctx, isTrading: boolean, ...args: ArgsTypes):
@@ -86,11 +83,10 @@ export const StartActionFromStackOrEndActions = (G: MyGameState, ctx: Ctx, isTra
  * <li>Выполняется при необходимости активировать действия в стэке действий указанного игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param playerId Id игрока.
- * @param args Дополнительные аргументы.
- * @returns {*} Выполнение действий.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} playerId Id игрока.
+ * @param {string | number | boolean | object | null} args Дополнительные аргументы.
  * @constructor
  */
 export const StartActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: number, ...args: ArgsTypes): void => {
@@ -104,9 +100,9 @@ export const StartActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: n
  * <li>Выполняется при необходимости завершить действие в стэке действий указанного игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param playerId Id игрока.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} playerId Id игрока.
  * @constructor
  */
 export const EndActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: number): void => {
@@ -139,12 +135,12 @@ export const EndActionFromStackAndAddNew = (G: MyGameState, ctx: Ctx, newStack: 
     void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (config) {
-        if (config.name === "explorerDistinction" || G.publicPlayers[Number(ctx.currentPlayer)].stack[0].actionName
-            !== "DrawProfitAction") {
+        if (config.name === "explorerDistinction"
+            || G.publicPlayers[Number(ctx.currentPlayer)].stack[0].actionName !== "DrawProfitAction") {
             G.actionsNum = 0;
             G.drawProfit = "";
         }
-        if (ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) {
+        if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
             ctx.events!.endStage!();
         }
         const isTrading: boolean | undefined = config.isTrading ?? false;

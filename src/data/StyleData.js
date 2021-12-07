@@ -26,15 +26,15 @@ export var Styles = {
         }
         else if (suit) {
             switch (suit) {
-                case "blacksmith":
+                case "blacksmith" /* BLACKSMITH */:
                     return {
                         background: "url(/img/cards/basic/basic0.png) no-repeat 0px 0px / 288px 288px",
                     };
-                case "hunter":
+                case "hunter" /* HUNTER */:
                     return {
                         background: "url(/img/cards/basic/basic0.png) no-repeat -128px 0px / 288px 288px",
                     };
-                case "miner":
+                case "miner" /* MINER */:
                     switch (points) {
                         case 0:
                             return {
@@ -53,7 +53,7 @@ export var Styles = {
                                 background: "",
                             };
                     }
-                case "warrior":
+                case "warrior" /* WARRIOR */:
                     switch (points) {
                         case 3:
                             return {
@@ -92,7 +92,7 @@ export var Styles = {
                                 background: "",
                             };
                     }
-                case "explorer":
+                case "explorer" /* EXPLORER */:
                     switch (points) {
                         case 5:
                             return {
@@ -285,23 +285,23 @@ export var Styles = {
     },
     Distinctions: function (distinction) {
         switch (distinction) {
-            case "blacksmith":
+            case "blacksmith" /* BLACKSMITH */:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -100px / 96px 150px",
                 };
-            case "hunter":
+            case "hunter" /* HUNTER */:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat -64px 0px / 96px 150px",
                 };
-            case "miner":
+            case "miner" /* MINER */:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 96px 150px",
                 };
-            case "warrior":
+            case "warrior" /* WARRIOR */:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 96px 150px",
                 };
-            case "explorer":
+            case "explorer" /* EXPLORER */:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 96px 150px",
                 };

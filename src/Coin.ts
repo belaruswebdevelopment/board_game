@@ -35,8 +35,14 @@ export interface IBuildCoinsOptions {
 }
 
 /**
- * todo Description.
- * @param obj
+ * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функции улучшения монеты.</li>
+ * </ol>
+ *
+ * @param {{} | ICoin} obj Пустой объект или монета.
+ * @returns {obj is ICoin} Является ли объект монетой, а не пустым объектом.
  */
 const isCoin = (obj: {} | ICoin): obj is ICoin => (obj as ICoin).value !== undefined;
 
@@ -47,18 +53,18 @@ const isCoin = (obj: {} | ICoin): obj is ICoin => (obj as ICoin).value !== undef
  * <li>Происходит при создании всех монет при инициализации игры.</li>
  * <li>Вызывается при создании монеты преимущества по охотникам.</li>
  * </ol>
- *
- * @param value Значение.
- * @param isInitial Является ли базовой.
- * @param isTriggerTrading Активирует ли обмен монет.
+ *.
+ * @param {number} value Значение.
+ * @param {boolean | undefined} isInitial Является ли базовой.
+ * @param {boolean | undefined} isTriggerTrading Активирует ли обмен монет.
+ * @returns {ICoin} Монета.
  * @constructor
  */
 export const CreateCoin = ({
                                value,
                                isInitial = false,
                                isTriggerTrading = false,
-                           }: ICreateCoin = {} as ICreateCoin):
-    ICoin => ({
+                           }: ICreateCoin = {} as ICreateCoin): ICoin => ({
     value,
     isInitial,
     isTriggerTrading,
@@ -72,8 +78,9 @@ export const CreateCoin = ({
  * <li>Вызывается при создании всех монет рынка.</li>
  * </ol>
  *
- * @param coinConfig Конфиг монет.
- * @param options Опции создания монет.
+ * @param {IMarketCoinConfig[] | IInitialTradingCoinConfig[]} coinConfig Конфиг монет.
+ * @param {IBuildCoinsOptions} options Опции создания монет.
+ * @returns {ICoin[]} Массив всех монет.
  * @constructor
  */
 export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoinConfig[],
@@ -83,7 +90,7 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
         const config = coinConfig[i],
             count: number = options.players !== undefined && !isInitialPlayerCoinsConfigNotMarket(config) ?
                 config.count()[options.players] : 1;
-        if (options.players !== undefined && options.count) {
+        if (options.players !== undefined && options.count !== undefined) {
             options.count.push({value: config.value});
         }
         for (let c: number = 0; c < count; c++) {
@@ -104,7 +111,8 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
  * <li>Вызывается при отрисовке рынка монет.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
+ * @returns {INumberValues} Количество всех монет на рынке (с повторами).
  * @constructor
  */
 export const CountMarketCoins = (G: MyGameState): INumberValues => {
@@ -123,9 +131,9 @@ export const CountMarketCoins = (G: MyGameState): INumberValues => {
  * <li>Вызывается после выбора базовой карты игроком, если выложены монета, активирующая обмен монет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param tradingCoins Монеты для обмена.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {ICoin[]} tradingCoins Монеты для обмена.
  * @constructor
  */
 export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
@@ -192,12 +200,12 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
  * <li>Вызывается после выбора базовой карты игроком, если выложены монета, активирующая обмен монет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг обмена.
- * @param upgradingCoinId Id обменной монеты.
- * @param type Тип обменной монеты.
- * @param isInitial Является ли обменная монета базовой.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг обмена.
+ * @param {number} upgradingCoinId Id обменной монеты.
+ * @param {string} type Тип обменной монеты.
+ * @param {boolean} isInitial Является ли обменная монета базовой.
  * @constructor
  */
 export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgradingCoinId: number, type: string,
@@ -221,8 +229,9 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                     allCoins.push(G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i]);
                 }
             }
-            const minCoinValue: number = Math.min(...allCoins.filter((coin: ICoin | null): boolean =>
-                    coin !== null && !coin.isTriggerTrading).map((coin: ICoin | null): number => coin!.value)),
+            const minCoinValue: number = Math.min(...allCoins
+                    .filter((coin: ICoin | null): boolean => coin !== null && !coin.isTriggerTrading)
+                    .map((coin: ICoin | null): number => coin!.value)),
                 upgradingCoinInitial: ICoin | null | undefined = allCoins
                     .find((coin: ICoin | null): boolean | undefined => coin!.value === minCoinValue && coin!.isInitial);
             if (upgradingCoinInitial) {
@@ -233,8 +242,8 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                     upgradingCoin = coin;
                 }
             }
-            upgradingCoinId = allCoins.findIndex((coin: ICoin | null): boolean => isCoin(upgradingCoin) &&
-                coin!.value === upgradingCoin.value);
+            upgradingCoinId = allCoins.findIndex((coin: ICoin | null): boolean =>
+                isCoin(upgradingCoin) && coin!.value === upgradingCoin.value);
         } else {
             const minCoinValue: number = Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                 .filter((coin: ICoin | null): boolean => coin !== null && !coin.isTriggerTrading)
@@ -256,8 +265,8 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
         if (coin) {
             upgradingCoin = coin;
             upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                .findIndex((coin: ICoin | null): boolean => isCoin(upgradingCoin) && coin?.value ===
-                    upgradingCoin.value && coin?.isInitial === isInitial);
+                .findIndex((coin: ICoin | null): boolean =>
+                    isCoin(upgradingCoin) && coin?.value === upgradingCoin.value && coin?.isInitial === isInitial);
         }
     } else {
         coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId];
@@ -269,7 +278,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
         const buffValue: number = G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin ?
             G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin as number : 0;
         let newValue: number = 0;
-        if (typeof config.value === "number") {
+        if (config.value !== undefined) {
             newValue = upgradingCoin.value + config.value + buffValue;
         }
         let upgradedCoin = null;
@@ -292,8 +301,8 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                 }
             }
         }
-        AddDataToLog(G, LogTypes.GAME, `Начато обновление монеты с ценностью 
-        '${upgradingCoin.value}' на +${config.value}.`);
+        AddDataToLog(G, LogTypes.GAME, `Начато обновление монеты с ценностью '${upgradingCoin.value}' 
+        на +${config.value}.`);
         if (upgradedCoin !== null) {
             AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом 
             '${type}' с initial '${isInitial}' с ценностью '${upgradingCoin.value}' на +${config.value} с 
@@ -301,8 +310,8 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
             let handCoinIndex: number = -1;
             if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] === null) {
                 handCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                    .findIndex((coin: ICoin | null): boolean => isCoin(upgradingCoin) && coin?.value ===
-                        upgradingCoin.value);
+                    .findIndex((coin: ICoin | null): boolean =>
+                        isCoin(upgradingCoin) && coin?.value === upgradingCoin.value);
             } else {
                 G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = null;
             }
@@ -347,7 +356,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
  * <li>В начале фазы выставления монет.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 export const ReturnCoinsToPlayerHands = (G: MyGameState): void => {
@@ -370,8 +379,9 @@ export const ReturnCoinsToPlayerHands = (G: MyGameState): void => {
  * <li>При возврате монет в руку, когда взят герой Улина.</li>
  * </ol>
  *
- * @param player Игрок.
- * @param coinId Id монеты.
+ * @param {IPublicPlayer} player Игрок.
+ * @param {number} coinId Id монеты.
+ * @returns {boolean} Вернулась ли монета в руку.
  * @constructor
  */
 export const ReturnCoinToPlayerHands = (player: IPublicPlayer, coinId: number): boolean => {
@@ -382,4 +392,4 @@ export const ReturnCoinToPlayerHands = (player: IPublicPlayer, coinId: number): 
     player.handCoins[tempCoinId] = player.boardCoins[coinId];
     player.boardCoins[coinId] = null;
     return true;
-}
+};

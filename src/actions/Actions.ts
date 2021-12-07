@@ -1,7 +1,7 @@
 import {UpgradeCoin} from "../Coin";
 import {INVALID_MOVE} from "boardgame.io/core";
-import {suitsConfig} from "../data/SuitData";
-import {AddCardToPlayer, IConfig, IStack, PlayerCardsType} from "../Player";
+import {SuitNames, suitsConfig} from "../data/SuitData";
+import {AddCardToPlayer, IConfig, IStack, PickedCardType, PlayerCardsType} from "../Player";
 import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
 import {CreateCard, DiscardCardFromTavern, ICard, ICreateCard, isCardNotAction} from "../Card";
 import {
@@ -30,7 +30,6 @@ import {AddDataToLog, LogTypes} from "../Logging";
 import {CampDeckCardTypes, DeckCardTypes, MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IVariants} from "../data/HeroData";
-import {IHero} from "../Hero";
 
 // todo Check my types
 export type ArgsTypes = (string | number | boolean | null | object)[]
@@ -241,13 +240,13 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
                         stageName: "discardCardFromBoard",
                         drawName: "Dagda",
                         name: "DagdaAction",
-                        suit: "hunter",
+                        suit: SuitNames.HUNTER,
                     },
                 },
                 {
                     actionName: "DiscardCardsFromPlayerBoardAction",
                     config: {
-                        suit: "hunter",
+                        suit: SuitNames.HUNTER,
                     },
                 },
             ];
@@ -336,27 +335,27 @@ const PlaceCards = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): 
         if (G.actionsNum === 2) {
             const variants: IVariants = {
                     blacksmith: {
-                        suit: "blacksmith",
+                        suit: SuitNames.BLACKSMITH,
                         rank: 1,
                         points: null,
                     },
                     hunter: {
-                        suit: "hunter",
+                        suit: SuitNames.HUNTER,
                         rank: 1,
                         points: null,
                     },
                     explorer: {
-                        suit: "explorer",
+                        suit: SuitNames.EXPLORER,
                         rank: 1,
                         points: 0,
                     },
                     warrior: {
-                        suit: "warrior",
+                        suit: SuitNames.WARRIOR,
                         rank: 1,
                         points: 0,
                     },
                     miner: {
-                        suit: "miner",
+                        suit: SuitNames.MINER,
                         rank: 1,
                         points: 0,
                     },
@@ -479,8 +478,7 @@ const PassEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx): void => {
 const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].campCards
         .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")[cardId];
-    const pickedCard: DeckCardTypes | CampDeckCardTypes | IHero | null =
-        G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+    const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null) {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
         во время фазы Enlistment Mercenaries выбрал наёмника '${pickedCard.name}'.`);
@@ -512,8 +510,7 @@ const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfi
  */
 const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
     const suit: string = Object.keys(suitsConfig)[suitId],
-        pickedCard: DeckCardTypes | CampDeckCardTypes | IHero | null =
-            G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+        pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null && "stack" in pickedCard && "tier" in pickedCard && "path" in pickedCard &&
         pickedCard.stack[0].variants) {
         const mercenaryCard: ICard = CreateCard({

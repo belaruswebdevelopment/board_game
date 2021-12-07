@@ -15,7 +15,8 @@ import {GameBoard} from "../GameBoard";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {JSX.Element[][]} Игровые поля для пользовательских монет на столе.
  * @constructor
  */
 export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
@@ -42,8 +43,9 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                         </th>
                     );
                     if (data.props.G.publicPlayers[p].boardCoins[coinIndex] === null) {
-                        if ((Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase === "placeCoins") ||
-                            (Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase === "placeCoinsUline"
+                        if ((Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase === "placeCoins")
+                            || (Number(data.props.ctx.currentPlayer) === p
+                                && data.props.ctx.phase === "placeCoinsUline"
                                 && j === data.props.G.currentTavern + 1)) {
                             DrawCoin(data, playerCells, "back-tavern-icon",
                                 data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
@@ -54,7 +56,8 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                                 data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                                 data.props.G.publicPlayers[p], null, j);
                         }
-                    } else if (data.props.ctx.phase === "placeCoins" && Number(data.props.ctx.currentPlayer) === p) {
+                    } else if (data.props.ctx.phase === "placeCoins"
+                        && Number(data.props.ctx.currentPlayer) === p) {
                         DrawCoin(data, playerCells, "coin",
                             data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                             data.props.G.publicPlayers[p], null, null,
@@ -101,9 +104,9 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                             </th>
                         );
                         if (data.props.G.publicPlayers[p].boardCoins[coinIndex] === null) {
-                            if (Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase !==
-                                "placeCoinsUline" && (data.props.ctx.phase === "placeCoins" ||
-                                    (data.props.ctx.activePlayers &&
+                            if (Number(data.props.ctx.currentPlayer) === p
+                                && data.props.ctx.phase !== "placeCoinsUline" && (data.props.ctx.phase === "placeCoins"
+                                    || (data.props.ctx.activePlayers &&
                                         data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
                                     "placeTradingCoinsUline")) {
                                 DrawCoin(data, playerCells, "back-small-market-coin",
@@ -115,19 +118,20 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                                     data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                                     data.props.G.publicPlayers[p]);
                             }
-                        } else if (Number(data.props.ctx.currentPlayer) === p && (data.props.ctx.phase ===
-                            "placeCoins" || (data.props.ctx.activePlayers &&
-                                data.props.ctx.activePlayers[data.props.ctx.currentPlayer])
-                            === "placeTradingCoinsUline")) {
+                        } else if (Number(data.props.ctx.currentPlayer) === p
+                            && (data.props.ctx.phase === "placeCoins" || (data.props.ctx.activePlayers
+                                    && data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
+                                "placeTradingCoinsUline")) {
                             DrawCoin(data, playerCells, "coin",
                                 data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                                 data.props.G.publicPlayers[p], null, null,
                                 "OnClickBoardCoin", j);
                         } else {
-                            if (data.props.G.winner.length || (data.props.ctx.phase !== "placeCoins" &&
-                                Number(data.props.ctx.currentPlayer) === p &&
-                                data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern] &&
-                                data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern].isTriggerTrading)) {
+                            if (data.props.G.winner.length || (data.props.ctx.phase !== "placeCoins"
+                                && Number(data.props.ctx.currentPlayer) === p
+                                && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern]
+                                && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern]
+                                    .isTriggerTrading)) {
                                 DrawCoin(data, playerCells, "coin",
                                     data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                                     data.props.G.publicPlayers[p]);
@@ -142,7 +146,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                 }
             }
             playerRows[p][i].push(<tr
-                key={`${data.props.G.publicPlayers[p].nickname} board coins row ${i}`}>{playerCells}</tr>)
+                key={`${data.props.G.publicPlayers[p].nickname} board coins row ${i}`}>{playerCells}</tr>);
         }
         playersBoardsCoins[p].push(
             <table className="mx-auto" key={`${data.props.G.publicPlayers[p].nickname} board coins`}>
@@ -171,7 +175,8 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {JSX.Element[][]} Игровые поля для пользовательских монет в руке.
  * @constructor
  */
 export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
@@ -196,9 +201,10 @@ export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
                         if (data.props.G.publicPlayers[p].selectedCoin === j) {
                             coinClasses = "border-2 border-green-400";
                         }
-                        if (!data.props.G.winner.length && (data.props.ctx.phase === "placeCoins" ||
-                            data.props.ctx.phase === "placeCoinsUline" || (data.props.ctx.activePlayers &&
-                                data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) === "placeTradingCoinsUline")) {
+                        if (!data.props.G.winner.length && (data.props.ctx.phase === "placeCoins"
+                            || data.props.ctx.phase === "placeCoinsUline" || (data.props.ctx.activePlayers
+                                && data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
+                            "placeTradingCoinsUline")) {
                             DrawCoin(data, playerCells, "coin",
                                 data.props.G.publicPlayers[p].handCoins[j], j,
                                 data.props.G.publicPlayers[p], coinClasses, null,
@@ -234,7 +240,8 @@ export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {JSX.Element[][]} Игровые поля для планшета всех карт игрока.
  * @constructor
  */
 export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
@@ -301,8 +308,8 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
             for (let j: number = 0; j < data.props.G.suitsNum; j++) {
                 const suit: string = Object.keys(suitsConfig)[j];
                 id = i + j;
-                if (data.props.G.publicPlayers[p].cards[j] !== undefined && data.props.G.publicPlayers[p].cards[j][i]
-                    !== undefined) {
+                if (data.props.G.publicPlayers[p].cards[j] !== undefined
+                    && data.props.G.publicPlayers[p].cards[j][i] !== undefined) {
                     isDrawRow = true;
                     DrawCard(data, playerCells, data.props.G.publicPlayers[p].cards[j][i], id,
                         data.props.G.publicPlayers[p], suit);
@@ -320,12 +327,13 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                     if (data.props.G.publicPlayers[p].heroes[i] !== undefined &&
                         (!data.props.G.publicPlayers[p].heroes[i].suit &&
-                            !((data.props.G.publicPlayers[p].heroes[i].name === "Ylud" &&
-                                    data.props.G.publicPlayers[p].cards.flat().findIndex(
-                                        (card: { name: string }): boolean => card.name === "Ylud") !== -1)
-                                || (data.props.G.publicPlayers[p].heroes[i].name === "Thrud" &&
-                                    data.props.G.publicPlayers[p].cards.flat().findIndex(
-                                        (card: { name: string }): boolean => card.name === "Thrud") !== -1)))) {
+                            !((data.props.G.publicPlayers[p].heroes[i].name === "Ylud"
+                                    && data.props.G.publicPlayers[p].cards.flat()
+                                        .findIndex((card: { name: string }): boolean => card.name === "Ylud") !== -1)
+                                || (data.props.G.publicPlayers[p].heroes[i].name === "Thrud"
+                                    && data.props.G.publicPlayers[p].cards.flat()
+                                        .findIndex((card: { name: string }): boolean =>
+                                            card.name === "Thrud") !== -1)))) {
                         isDrawRow = true;
                         DrawCard(data, playerCells, data.props.G.publicPlayers[p].heroes[i], id,
                             data.props.G.publicPlayers[p]);

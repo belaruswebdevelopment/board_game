@@ -1,10 +1,10 @@
-// todo Add logging
 import {ICoin, Trading} from "../Coin";
 import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPriority} from "../Priority";
 import {IPublicPlayer} from "../Player";
 import {INumberValues} from "../data/SuitData";
+// todo Add logging
 
 /**
  * <h3>Активирует обмен монет.</h3>
@@ -13,8 +13,8 @@ import {INumberValues} from "../data/SuitData";
  * <li>Когда заканчивается базовый выбор карты.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @returns {boolean} Активировался ли обмен монет.
  * @constructor
  */
@@ -41,9 +41,9 @@ export const ActivateTrading = (G: MyGameState, ctx: Ctx): boolean => {
  * <li>После выкладки всех монет игроками.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @returns {{playersOrder: *[], exchangeOrder: *[]}} Массив порядка ходов игроков и порядок обмена кристаллов приоритета.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {{playersOrder: number[], exchangeOrder: number[]}} Порядок ходов игроков & порядок изменения ходов игроками.
  * @constructor
  */
 export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: number[], exchangeOrder: number[] } => {
@@ -62,10 +62,10 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: num
         for (let j: number = playersOrder.length - 1; j > 0; j--) {
             const coin: ICoin | null = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern],
                 prevCoin: ICoin | null = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
-            if (coin && prevCoin) {
+            if (coin !== null && prevCoin !== null) {
                 if (coin.value > prevCoin.value) {
                     // [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
-                    let temp = playersOrder[j - 1];
+                    let temp: number = playersOrder[j - 1];
                     playersOrder[j - 1] = playersOrder[j];
                     playersOrder[j] = temp;
                 } else if (coin.value === prevCoin.value) {
@@ -94,18 +94,18 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: num
         const tiePlayers: IPublicPlayer[] = G.publicPlayers.filter((player: IPublicPlayer): boolean =>
             player.boardCoins[G.currentTavern]?.value === Number(prop) && player.priority.isExchangeable);
         while (tiePlayers.length > 1) {
-            const tiePlayersPriorities: number[] = tiePlayers.map((player: IPublicPlayer): number => player.priority.value),
+            const tiePlayersPriorities: number[] =
+                    tiePlayers.map((player: IPublicPlayer): number => player.priority.value),
                 maxPriority: number = Math.max(...tiePlayersPriorities),
                 minPriority: number = Math.min(...tiePlayersPriorities),
-                maxIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value
-                    === maxPriority),
-                minIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value
-                    === minPriority);
-            tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value
-                    === maxPriority),
-                1);
-            tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value
-                    === minPriority),
+                maxIndex: number =
+                    G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value === maxPriority),
+                minIndex: number =
+                    G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value === minPriority);
+            tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
+                player.priority.value === maxPriority), 1);
+            tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
+                    player.priority.value === minPriority),
                 1);
             // [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
             let temp: number = exchangeOrder[minIndex];

@@ -10,7 +10,8 @@ import {Ctx} from "boardgame.io";
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param permutation
+ * @param {number[]} permutation
+ * @returns {number[][]}
  * @constructor
  */
 export const Permute = (permutation: number[]): number[][] => {
@@ -45,8 +46,9 @@ export const Permute = (permutation: number[]): number[][] => {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param set
- * @param k
+ * @param {number[]} set
+ * @param {number} k
+ * @returns {number[][]}
  */
 export const k_combinations = (set: number[], k: number): number[][] => {
     let combs: number[][] = [],
@@ -86,11 +88,12 @@ export const k_combinations = (set: number[], k: number): number[][] => {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param tavernsNum
- * @param playersNum
+ * @param {number} tavernsNum
+ * @param {number} playersNum
+ * @returns {any}
  * @constructor
  */
-export const GetAllPicks = ({tavernsNum, playersNum}: { tavernsNum: number, playersNum: number }) => {
+export const GetAllPicks = ({tavernsNum, playersNum}: { tavernsNum: number, playersNum: number }): any => {
     const temp: number[][] = [],
         cartesian = (...a: any) => {
             if (a.length === 1) {
@@ -114,6 +117,7 @@ export const GetAllPicks = ({tavernsNum, playersNum}: { tavernsNum: number, play
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (cards: DeckCardTypes[]) => boolean, weight: number}}
  */
 const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number } = {
     heuristic: (cards: DeckCardTypes[]): boolean => cards.every((card: DeckCardTypes | null): boolean =>
@@ -121,7 +125,6 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
             && CompareCards(card, cards[0]) === 0)),
     weight: -100,
 };
-
 
 //relative heuristics
 /**
@@ -132,6 +135,7 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number } = {
     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === -1),
@@ -146,6 +150,7 @@ const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number } = 
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number } = {
     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 0),
@@ -160,6 +165,7 @@ const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number } 
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 const isAllBetter: { heuristic: (array: number[]) => boolean, weight: number } = {
     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 1),
@@ -174,6 +180,7 @@ const isAllBetter: { heuristic: (array: number[]) => boolean, weight: number } =
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number } = {
     heuristic: (array: number[]): boolean => (array.filter((item: number): boolean => item === -1).length === 1),
@@ -188,6 +195,7 @@ const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number 
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: number } = {
     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item !== 0),
@@ -202,6 +210,7 @@ const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: nu
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (cards: DeckCardTypes[]) => boolean, weight: number}[]}
  */
 const absoluteHeuristicsForTradingCoin: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number }[] =
     [isAllCardsEqual];
@@ -214,6 +223,7 @@ const absoluteHeuristicsForTradingCoin: { heuristic: (cards: DeckCardTypes[]) =>
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}[]}
  */
 const relativeHeuristicsForTradingCoin: (((array: number[]) => boolean) | {
     heuristic: (array: number[]) => boolean,
@@ -230,17 +240,19 @@ console.log(relativeHeuristicsForTradingCoin ?? "");
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param array
+ * @param {number[]} array
+ * @returns {{mean: number, variation: number}}
  * @constructor
  */
 const GetCharacteristics = (array: number[]): { mean: number, variation: number } => {
     const mean: number = array.reduce((acc: number, item: number): number => acc + item / array.length, 0),
-        variation: number = array.reduce((acc: number, item: number): number => acc + ((item - mean) ** 2) / array.length, 0);
+        variation: number =
+            array.reduce((acc: number, item: number): number => acc + ((item - mean) ** 2) / array.length, 0);
     return {
         mean,
         variation,
-    }
-}
+    };
+};
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -250,8 +262,9 @@ const GetCharacteristics = (array: number[]): { mean: number, variation: number 
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param stat1
- * @param stat2
+ * @param {{variation: number, mean: number}} stat1
+ * @param {{variation: number, mean: number}} stat2
+ * @returns {number}
  * @constructor
  */
 const CompareCharacteristics = (stat1: { variation: number, mean: number }, stat2: { variation: number, mean: number }):
@@ -262,7 +275,7 @@ const CompareCharacteristics = (stat1: { variation: number, mean: number }, stat
         return stat1.mean - stat2.mean;
     }
     return tempVariation;
-}
+};
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -272,8 +285,9 @@ const CompareCharacteristics = (stat1: { variation: number, mean: number }, stat
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {number[]}
  * @constructor
  */
 export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {

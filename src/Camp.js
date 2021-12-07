@@ -1,7 +1,19 @@
 import { DiscardCardFromTavern } from "./Card";
 import { AddDataToLog } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
-export var isArtefactCard = function (card) { return card.suit !== undefined; };
+/**
+ * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param {IArtefactCampCard | IMercenaryCampCard} card Карта.
+ * @returns {card is IArtefactCampCard} Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
+ */
+export var isArtefactCard = function (card) {
+    return card.suit !== undefined;
+};
 /**
  * <h3>Создание карты артефакта для кэмпа.</h3>
  * <p>Применения:</p>
@@ -9,16 +21,17 @@ export var isArtefactCard = function (card) { return card.suit !== undefined; };
  * <li>Происходит при создании всех карт артефактов кэмпа во время инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
- * @param tier Эпоха.
- * @param path URL путь.
- * @param name Название.
- * @param description Описание.
- * @param game Игра/дополнение.
- * @param suit Фракция.
- * @param rank Шевроны.
- * @param points Очки.
- * @param stack Действия.
+ * @param {string | undefined} type Тип.
+ * @param {number} tier Эпоха.
+ * @param {string} path URL путь.
+ * @param {string} name Название.
+ * @param {string} description Описание.
+ * @param {string} game Игра/дополнение.
+ * @param {string} suit Фракция.
+ * @param {number | null} rank Шевроны.
+ * @param {number | null} points Очки.
+ * @param {IStack[]} stack Действия.
+ * @returns {IArtefactCampCard} Карта кэмпа артефакт.
  * @constructor
  */
 export var CreateArtefactCampCard = function (_a) {
@@ -43,12 +56,13 @@ export var CreateArtefactCampCard = function (_a) {
  * <li>Происходит при создании всех карт наёмников кэмпа во время инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
- * @param tier Эпоха.
- * @param path URL путь.
- * @param name Название.
- * @param game Игра/дополнение.
- * @param stack Действия.
+ * @param {string | undefined} type Тип.
+ * @param {number} tier Эпоха.
+ * @param {string} path URL путь.
+ * @param {string} name Название.
+ * @param {string | undefined} game Игра/дополнение.
+ * @param {IStack[]} stack Действия.
+ * @returns {IMercenaryCampCard} Карта кэмпа наёмник.
  * @constructor
  */
 export var CreateMercenaryCampCard = function (_a) {
@@ -69,9 +83,10 @@ export var CreateMercenaryCampCard = function (_a) {
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *
- * @param tier Эпоха.
- * @param artefactConfig Файл конфига карт артефактов.
- * @param mercenariesConfig Файл конфига наёмников.
+ * @param {number} tier Эпоха.
+ * @param {IArtefactConfig} artefactConfig Файл конфига карт артефактов.
+ * @param {IMercenaries[][]} mercenariesConfig Файл конфига наёмников.
+ * @returns {CampDeckCardTypes[]} Все карты кэмпа.
  * @constructor
  */
 export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
@@ -135,7 +150,7 @@ export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
  * <li>Проверяется после каждого выбора карты из таверны, если последний игрок в текущей таверне уже выбрал карту.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 export var DiscardCardIfCampCardPicked = function (G) {
@@ -153,7 +168,7 @@ export var DiscardCardIfCampCardPicked = function (G) {
  * <li>Происходит при начале раунда.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 export var RefillEmptyCampCards = function (G) {
@@ -182,7 +197,7 @@ export var RefillEmptyCampCards = function (G) {
  * <li>Происходит при начале новой эпохи.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 export var RefillCamp = function (G) {
@@ -199,7 +214,7 @@ export var RefillCamp = function (G) {
  * <li>Происходит в конце 1-й эпохи.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 var AddRemainingCampCardsToDiscard = function (G) {
@@ -225,8 +240,8 @@ var AddRemainingCampCardsToDiscard = function (G) {
  * <li>Происходит при заполнении кэмпа картами новой эпохи.</li>
  * </ol>
  *
- * @param G
- * @param cardIndex Индекс карты.
+ * @param {MyGameState} G
+ * @param {number} cardIndex Индекс карты.
  * @constructor
  */
 var AddCardToCamp = function (G, cardIndex) {

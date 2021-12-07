@@ -34,8 +34,9 @@ interface ICreatePriority {
  * <li>Используется при выдаче преимущества в виде кристалла горняков.</li>
  * </ol>
  *
- * @param value Значение кристалла.
- * @param isExchangeable Является ли кристалл обменным.
+ * @param {number} value Значение кристалла.
+ * @param {boolean | undefined} isExchangeable Является ли кристалл обменным.
+ * @returns {IPriority} Кристалл.
  * @constructor
  */
 export const CreatePriority = ({
@@ -52,6 +53,8 @@ export const CreatePriority = ({
  * <ol>
  * <li>Используется в конфиге кристаллов.</li>
  * </ol>
+ *
+ * @type {IPriority[]}
  */
 const priorities: IPriority[] = [
     CreatePriority({value: 1} as ICreatePriority),
@@ -67,6 +70,8 @@ const priorities: IPriority[] = [
  * <ol>
  * <li>Используется при раздаче кристаллов всем игрокам (в зависимости от количества игроков).</li>
  * </ol>
+ *
+ * @type {{"2": IPriority[], "3": IPriority[], "4": IPriority[], "5": IPriority[]}}
  */
 export const prioritiesConfig: IPrioritiesConfig = {
     2: priorities.slice(-2),
@@ -82,11 +87,12 @@ export const prioritiesConfig: IPrioritiesConfig = {
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *
- * @param numPlayers Количество игроков.
+ * @param {number} numPlayers Количество игроков.
+ * @returns {IPriority[]} Массив базовых кристаллов.
  * @constructor
  */
-export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number): IPriority[] => prioritiesConfig[numPlayers]
-    .map((priority: IPriority): IPriority => priority);
+export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number): IPriority[] =>
+    prioritiesConfig[numPlayers].map((priority: IPriority): IPriority => priority);
 
 /**
  * <h3>Изменяет приоритет игроков для выбора карт из текущей таверны.</h3>
@@ -95,7 +101,7 @@ export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number): IPriorit
  * <li>Используется в конце фазы выбора карт.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 export const ChangePlayersPriorities = (G: MyGameState): void => {
@@ -106,12 +112,13 @@ export const ChangePlayersPriorities = (G: MyGameState): void => {
     }
     for (let i: number = 0; i < G.exchangeOrder.length; i++) {
         if (G.publicPlayers[i].priority.value !== tempPriorities[i].value) {
+            G.publicPlayers[i].priority = tempPriorities[i];
             AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[i].nickname} получил кристалл с 
             приоритетом ${tempPriorities[i].value}.`);
-            G.publicPlayers[i].priority = tempPriorities[i];
         }
     }
 };
+
 /**
  * <h3>Определяет наличие у выбранного игрока наименьшего кристалла.</h3>
  * <p>Применения:</p>
@@ -119,8 +126,9 @@ export const ChangePlayersPriorities = (G: MyGameState): void => {
  * <li>Используется для ботов при определении приоритета выставления монет.</li>
  * </ol>
  *
- * @param G
- * @param playerId Id выбранного игрока.
+ * @param {MyGameState} G
+ * @param {number} playerId Id выбранного игрока.
+ * @returns {boolean} Имеет ли игрок наименьший кристалл.
  * @constructor
  */
 export const HasLowestPriority = (G: MyGameState, playerId: number): boolean => {

@@ -2,6 +2,7 @@ import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {TotalRank} from "../helpers/ScoreHelpers";
 import {IPublicPlayer, IStack} from "../Player";
 import {ICoin} from "../Coin";
+import {SuitNames} from "./SuitData";
 
 export interface IBuff {
     name: string,
@@ -204,7 +205,7 @@ const Idunn: IHeroData = {
     description: "Обладает 1 шевроном. Прибавьте 7 очков к показателю храбрости разведчиков плюс по 2 очка за каждый " +
         "шеврон в колонке Разведчиков (включая её собственный).",
     game: "base",
-    suit: "explorer",
+    suit: SuitNames.EXPLORER,
     rank: 1,
     points: 7,
     stack: [
@@ -215,7 +216,7 @@ const Idunn: IHeroData = {
             },
         },
     ],
-    scoringRule: (player?: IPublicPlayer): number => player ? player.cards[GetSuitIndexByName("explorer")]
+    scoringRule: (player?: IPublicPlayer): number => player ? player.cards[GetSuitIndexByName(SuitNames.EXPLORER)]
         .reduce(TotalRank, 0) * 2 : 0,
 };
 
@@ -232,7 +233,7 @@ const Tarah: IHeroData = {
     name: "Tarah",
     description: "Обладает 1 шевроном. Прибавьте 14 очков к показателю храбрости воинов.",
     game: "base",
-    suit: "warrior",
+    suit: SuitNames.WARRIOR,
     rank: 1,
     points: 14,
     stack: [
@@ -259,7 +260,7 @@ const Kraal: IHeroData = {
     name: "Kraal",
     description: "Обладает 2 шевронами. Прибавьте 7 и 0 очков к показателю храбрости воинов.",
     game: "base",
-    suit: "warrior",
+    suit: SuitNames.WARRIOR,
     rank: 2,
     points: 7,
     stack: [
@@ -287,7 +288,7 @@ const Lokdur: IHeroData = {
     description: "Обладает 1 шевроном. Прибавьте 3 к сумме очков храбрости горняков. Локдур увеличивает сумму очков " +
         "храбрости горняков на 3, а сумму шевронов на 1.",
     game: "base",
-    suit: "miner",
+    suit: SuitNames.MINER,
     rank: 1,
     points: 3,
     stack: [
@@ -378,27 +379,27 @@ const Thrud: IHeroData = {
             actionName: "DrawProfitAction",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith",
+                    suit: SuitNames.BLACKSMITH,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter",
+                    suit: SuitNames.HUNTER,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer",
+                    suit: SuitNames.EXPLORER,
                     rank: 1,
                     points: null,
                 },
                 warrior: {
-                    suit: "warrior",
+                    suit: SuitNames.WARRIOR,
                     rank: 1,
                     points: null,
                 },
                 miner: {
-                    suit: "miner",
+                    suit: SuitNames.MINER,
                     rank: 1,
                     points: null,
                 },
@@ -413,27 +414,27 @@ const Thrud: IHeroData = {
             actionName: "PlaceThrudAction",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith",
+                    suit: SuitNames.BLACKSMITH,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter",
+                    suit: SuitNames.HUNTER,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer",
+                    suit: SuitNames.EXPLORER,
                     rank: 1,
                     points: null,
                 },
                 warrior: {
-                    suit: "warrior",
+                    suit: SuitNames.WARRIOR,
                     rank: 1,
                     points: null,
                 },
                 miner: {
-                    suit: "miner",
+                    suit: SuitNames.MINER,
                     rank: 1,
                     points: null,
                 },
@@ -457,7 +458,7 @@ const Zoral: IHeroData = {
     description: "Обладает 3 шевронами. Прибавьте 1, 0 и 0 к сумме очков храбрости горняков. Зорал увеличивает сумму " +
         "очков храбрости горняков на 1, а сумму шевронов – на 3.",
     game: "base",
-    suit: "miner",
+    suit: SuitNames.MINER,
     rank: 3,
     points: 1,
     stack: [
@@ -513,14 +514,14 @@ const Bonfur: IHeroData = {
     description: "Обладает 3 шевронами. Призвав Бонфура, сразу же поместите его карту в колонку кузнецов и отправьте в " +
         "сброс одну нижнюю карту дворфа (не героя) из другой колонки своей армии по своему выбору.",
     game: "base",
-    suit: "blacksmith",
+    suit: SuitNames.BLACKSMITH,
     rank: 3,
     points: null,
     stack: [
         {
             actionName: "CheckDiscardCardsFromPlayerBoardAction",
             config: {
-                suit: "blacksmith",
+                suit: SuitNames.BLACKSMITH,
             },
         },
         {
@@ -529,13 +530,13 @@ const Bonfur: IHeroData = {
                 stageName: "discardCardFromBoard",
                 drawName: "Bonfur",
                 name: "BonfurAction",
-                suit: "blacksmith",
+                suit: SuitNames.BLACKSMITH,
             },
         },
         {
             actionName: "DiscardCardsFromPlayerBoardAction",
             config: {
-                suit: "blacksmith",
+                suit: SuitNames.BLACKSMITH,
             },
         },
         {
@@ -562,14 +563,14 @@ const Dagda: IHeroData = {
     description: "Обладает 3 шевронами. Призвав Дагду, сразу же поместите её карту в колонку охотников и отправьте в " +
         "сброс по одной нижней карте дворфов (не героев) из двух других колонок своей армии по своему выбору.",
     game: "base",
-    suit: "hunter",
+    suit: SuitNames.HUNTER,
     rank: 3,
     points: null,
     stack: [
         {
             actionName: "CheckDiscardCardsFromPlayerBoardAction",
             config: {
-                suit: "hunter",
+                suit: SuitNames.HUNTER,
                 number: 2,
             },
         },
@@ -579,7 +580,7 @@ const Dagda: IHeroData = {
                 stageName: "discardCardFromBoard",
                 drawName: "Dagda",
                 name: "DagdaAction",
-                suit: "hunter",
+                suit: SuitNames.HUNTER,
                 number: 2,
             },
         },
@@ -763,7 +764,7 @@ const Hourya: IHeroData = {
         "игрок должен иметь в своей армии как минимум 5 шевронов в колонке разведчиков. Важно: если Труд и/или Илуд " +
         "расположены в колонке разведчиков, то их шевроны учитываются для призыва Хурии",
     game: "base",
-    suit: "explorer",
+    suit: SuitNames.EXPLORER,
     rank: 1,
     points: 20,
     stack: [
@@ -772,7 +773,7 @@ const Hourya: IHeroData = {
             config: {
                 conditions: {
                     suitCountMin: {
-                        suit: "explorer",
+                        suit: SuitNames.EXPLORER,
                         value: 5,
                     },
                 },
@@ -801,7 +802,7 @@ const Aegur: IHeroData = {
     name: "Aegur",
     description: "Обладает 2 шевронами.",
     game: "base",
-    suit: "blacksmith",
+    suit: SuitNames.BLACKSMITH,
     rank: 2,
     points: null,
     stack: [
@@ -828,7 +829,7 @@ const Aral: IHeroData = {
     name: "Aral",
     description: "Обладает 2 шевронами.",
     game: "base",
-    suit: "hunter",
+    suit: SuitNames.HUNTER,
     rank: 2,
     points: null,
     stack: [
@@ -999,27 +1000,27 @@ const Olwin: IHeroData = {
             actionName: "DrawProfitAction",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith",
+                    suit: SuitNames.BLACKSMITH,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter",
+                    suit: SuitNames.HUNTER,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer",
+                    suit: SuitNames.EXPLORER,
                     rank: 1,
                     points: 0,
                 },
                 warrior: {
-                    suit: "warrior",
+                    suit: SuitNames.WARRIOR,
                     rank: 1,
                     points: 0,
                 },
                 miner: {
-                    suit: "miner",
+                    suit: SuitNames.MINER,
                     rank: 1,
                     points: 0,
                 },
@@ -1035,27 +1036,27 @@ const Olwin: IHeroData = {
             actionName: "PlaceCards",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith",
+                    suit: SuitNames.BLACKSMITH,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter",
+                    suit: SuitNames.HUNTER,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer",
+                    suit: SuitNames.EXPLORER,
                     rank: 1,
                     points: 0,
                 },
                 warrior: {
-                    suit: "warrior",
+                    suit: SuitNames.WARRIOR,
                     rank: 1,
                     points: 0,
                 },
                 miner: {
-                    suit: "miner",
+                    suit: SuitNames.MINER,
                     rank: 1,
                     points: 0,
                 },

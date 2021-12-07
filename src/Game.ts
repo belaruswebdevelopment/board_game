@@ -38,6 +38,7 @@ import {PlayerView} from "boardgame.io/core";
 import {CheckDistinction} from "./Distinction";
 import type {Ctx, Game} from "boardgame.io";
 import {CheckPlayersBasicOrder, IPublicPlayer, IStack} from "./Player";
+
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
 /**
@@ -46,6 +47,8 @@ import {CheckPlayersBasicOrder, IPublicPlayer, IStack} from "./Player";
  * <ol>
  * <li>При инициализации игрового стола.</li>
  * </ol>
+ *
+ * @type {{onEnd: (G: MyGameState, ctx: Ctx) => MyGameState | void, name: string, ai: {playoutDepth: (G: MyGameState, ctx: Ctx) => number, enumerate: (G: MyGameState, ctx: Ctx) => IMoves[], objectives: () => {isEarlyGame: {weight: number, checker: (G: MyGameState) => boolean}, isFirst: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}, isStronger: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}}, iterations: (G: MyGameState, ctx: Ctx) => number}, setup: (ctx: Ctx) => MyGameState, playerView: (G: any, ctx: Ctx, playerID: string) => any, phases: {placeCoins: {next: string, onBegin: (G: MyGameState, ctx: Ctx) => void, moves: {ClickHandCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, BotsPlaceAllCoins: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, ClickBoardCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, start: boolean, turn: {order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, placeCoinsUline: {onBegin: (G: MyGameState, ctx: Ctx) => void, moves: {ClickHandCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, ClickBoardCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, getMjollnirProfit: {moves: {GetMjollnirProfit: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, brisingamensEndGame: {moves: {DiscardCardFromPlayerBoard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, pickCards: {onBegin: (G: MyGameState, ctx: Ctx) => void, onEnd: (G) => void, moves: {ClickCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, ClickCampCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {stages: {upgradeCoinVidofnirVedrfolnir: {moves: {UpgradeCoinVidofnirVedrfolnir: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardCard: {moves: {DiscardCard2Players: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickDiscardCard: {moves: {PickDiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardCardFromBoard: {moves: {DiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardSuitCard: {moves: {DiscardSuitCardFromPlayerBoard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, placeTradingCoinsUline: {moves: {ClickHandCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, ClickBoardCoin: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, upgradeCoin: {moves: {ClickCoinToUpgrade: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickHero: {moves: {ClickHeroCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, addCoinToPouch: {moves: {AddCoinToPouch: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, placeCards: {moves: {PlaceCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickCampCardHolda: {moves: {ClickCampCardHolda: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}}, order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, getDistinctions: {next: string, onBegin: (G: MyGameState, ctx: Ctx) => void, onEnd: (G: MyGameState) => void, moves: {ClickDistinctionCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, endIf: (G: MyGameState) => boolean, turn: {stages: {upgradeCoin: {moves: {ClickCoinToUpgrade: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickDistinctionCard: {moves: {ClickCardToPickDistinction: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}}, order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, enlistmentMercenaries: {onBegin: (G: MyGameState, ctx: Ctx) => void, moves: {PassEnlistmentMercenaries: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, GetEnlistmentMercenaries: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, StartEnlistmentMercenaries: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>, PlaceEnlistmentMercenaries: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {stages: {upgradeCoinVidofnirVedrfolnir: {moves: {UpgradeCoinVidofnirVedrfolnir: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickDiscardCard: {moves: {PickDiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardCardFromBoard: {moves: {DiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardSuitCard: {moves: {DiscardSuitCardFromPlayerBoard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, upgradeCoin: {moves: {ClickCoinToUpgrade: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickHero: {moves: {ClickHeroCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, addCoinToPouch: {moves: {AddCoinToPouch: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, placeCards: {moves: {PlaceCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickCampCardHolda: {moves: {ClickCampCardHolda: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}}, order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}, endTier: {moves: {PlaceCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}, turn: {stages: {upgradeCoinVidofnirVedrfolnir: {moves: {UpgradeCoinVidofnirVedrfolnir: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickDiscardCard: {moves: {PickDiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardCardFromBoard: {moves: {DiscardCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, discardSuitCard: {moves: {DiscardSuitCardFromPlayerBoard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, upgradeCoin: {moves: {ClickCoinToUpgrade: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickHero: {moves: {ClickHeroCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, addCoinToPouch: {moves: {AddCoinToPouch: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, placeCards: {moves: {PlaceCard: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}, pickCampCardHolda: {moves: {ClickCampCardHolda: ((G: MyGameState, ctx: Ctx, ...args: any[]) => any) | LongFormMove<MyGameState, Ctx>}}}, order: {next: (G: MyGameState, ctx: Ctx) => number, first: () => number, playOrder: (G: MyGameState) => string[]}}}}}}
  */
 export const BoardGame: Game<MyGameState> = {
     name: "nidavellir",
@@ -57,8 +60,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
-                        .map((order: number): string => String(order)),
+                    playOrder: (G: MyGameState): string[] =>
+                        G.publicPlayersOrder.map((order: number): string => String(order)),
                 },
             },
             start: true,
@@ -81,8 +84,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
-                        .map((order: number): string => String(order)),
+                    playOrder: (G: MyGameState): string[] =>
+                        G.publicPlayersOrder.map((order: number): string => String(order)),
                 },
             },
             moves: {
@@ -98,8 +101,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
-                        .map((order: number): string => String(order)),
+                    playOrder: (G: MyGameState): string[] =>
+                        G.publicPlayersOrder.map((order: number): string => String(order)),
                 },
                 stages: {
                     // Start
@@ -170,11 +173,11 @@ export const BoardGame: Game<MyGameState> = {
                 G.currentTavern++;
                 const {playersOrder, exchangeOrder}: { playersOrder: number[], exchangeOrder: number[] } =
                     ResolveBoardCoins(G, ctx);
-                // [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
+                // [G.publicPlayersOrder, G.exchangeOrder]: number[] = [playersOrder, exchangeOrder];
                 G.publicPlayersOrder = playersOrder;
                 G.exchangeOrder = exchangeOrder;
             },
-            onEnd: (G) => {
+            onEnd: (G: MyGameState): void => {
                 ChangePlayersPriorities(G);
             },
         },
@@ -183,8 +186,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
-                        .map((order: number): string => String(order)),
+                    playOrder: (G: MyGameState): string[] =>
+                        G.publicPlayersOrder.map((order: number): string => String(order)),
                 },
                 stages: {
                     // Start
@@ -246,15 +249,15 @@ export const BoardGame: Game<MyGameState> = {
                 const players: IPublicPlayer[] = G.publicPlayers.map((player: IPublicPlayer): IPublicPlayer => player),
                     playersIndexes: number[] = [];
                 players.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
-                    if (nextPlayer.campCards.filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")
-                            .length <
-                        currentPlayer.campCards.filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")
-                            .length) {
+                    if (nextPlayer.campCards
+                            .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length <
+                        currentPlayer.campCards
+                            .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
                         return 1;
-                    } else if (nextPlayer.campCards.filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")
-                            .length >
-                        currentPlayer.campCards.filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")
-                            .length) {
+                    } else if (nextPlayer.campCards
+                            .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length >
+                        currentPlayer.campCards
+                            .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
                         return -1;
                     }
                     if (nextPlayer.priority.value < currentPlayer.priority.value) {
@@ -264,9 +267,9 @@ export const BoardGame: Game<MyGameState> = {
                     }
                     return 0;
                 });
-                players.forEach(playerSorted => {
-                    if (playerSorted.campCards.filter((card: CampDeckCardTypes): boolean =>
-                        card.type === "наёмник").length) {
+                players.forEach((playerSorted: IPublicPlayer): void => {
+                    if (playerSorted.campCards
+                        .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
                         playersIndexes.push(G.publicPlayers
                             .findIndex((player: IPublicPlayer): boolean => player.nickname === playerSorted.nickname));
                     }
@@ -293,8 +296,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
-                        .map((order: number): string => String(order)),
+                    playOrder: (G: MyGameState): string[] =>
+                        G.publicPlayersOrder.map((order: number): string => String(order)),
                 },
                 stages: {
                     // Start
@@ -355,8 +358,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
-                        .map((order: number): string => String(order)),
+                    playOrder: (G: MyGameState): string[] =>
+                        G.publicPlayersOrder.map((order: number): string => String(order)),
                 },
             },
             moves: {
@@ -368,8 +371,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
-                        .map((order: number): string => String(order)),
+                    playOrder: (G: MyGameState): string[] =>
+                        G.publicPlayersOrder.map((order: number): string => String(order)),
                 },
             },
             moves: {
@@ -381,8 +384,8 @@ export const BoardGame: Game<MyGameState> = {
                 order: {
                     first: (): number => 0,
                     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] => G.publicPlayersOrder
-                        .map((order: number): string => String(order)),
+                    playOrder: (G: MyGameState): string[] =>
+                        G.publicPlayersOrder.map((order: number): string => String(order)),
                 },
                 stages: {
                     pickDistinctionCard: {
@@ -403,10 +406,10 @@ export const BoardGame: Game<MyGameState> = {
             },
             onBegin: (G: MyGameState, ctx: Ctx): void => {
                 CheckDistinction(G, ctx);
-                const distinctions: (number | null | undefined)[] = G.distinctions
-                    .filter((distinction: DistinctionTypes): boolean => distinction !== undefined);
-                if (distinctions.every((distinction: number | null | undefined): boolean =>
-                    typeof distinction === "number")) {
+                const distinctions: (number | null | undefined)[] =
+                    G.distinctions.filter((distinction: DistinctionTypes): boolean => distinction !== undefined);
+                if (distinctions
+                    .every((distinction: number | null | undefined): boolean => typeof distinction === "number")) {
                     G.publicPlayersOrder = distinctions as number[];
                 }
             },
@@ -417,8 +420,8 @@ export const BoardGame: Game<MyGameState> = {
                 }
                 RefillTaverns(G);
             },
-            endIf: (G: MyGameState): boolean => G.distinctions
-                .every((distinction: DistinctionTypes): boolean => distinction === undefined),
+            endIf: (G: MyGameState): boolean =>
+                G.distinctions.every((distinction: DistinctionTypes): boolean => distinction === undefined),
         },
     },
     onEnd: (G: MyGameState, ctx: Ctx) => {

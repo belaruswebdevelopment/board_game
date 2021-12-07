@@ -8,7 +8,7 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  * <li>Используется повсеместно в проекте для вычисления индекса конкретного героя.</li>
  * </ol>
  *
- * @param heroName Название героя.
+ * @param {string} heroName Название героя.
  * @returns {number} Индекс героя.
  * @constructor
  */
@@ -20,9 +20,9 @@ export var GetHeroIndexByName = function (heroName) { return Object.keys(heroesC
  * <li>При любых действия, когда пикается карта на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param card Карта.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {ICard | IArtefactCampCard | IHero} card Карта.
  * @returns {boolean} Нужно ли перемещать героя Труд.
  * @constructor
  */
@@ -43,36 +43,36 @@ export var CheckAndMoveThrud = function (G, ctx, card) {
  * <ol>
  * <li>При любых действия, когда пикается карта на планшет игрока и требуется переместить героя Труд.</li>
  * </ol>
- *
- * @param G
- * @param ctx
- * @param card Карта.
+ я
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {ICard | IArtefactCampCard | IHero} card Карта.
  * @constructor
  */
 export var StartThrudMoving = function (G, ctx, card) {
     var variants = {
         blacksmith: {
-            suit: "blacksmith",
+            suit: "blacksmith" /* BLACKSMITH */,
             rank: 1,
             points: null,
         },
         hunter: {
-            suit: "hunter",
+            suit: "hunter" /* HUNTER */,
             rank: 1,
             points: null,
         },
         explorer: {
-            suit: "explorer",
+            suit: "explorer" /* EXPLORER */,
             rank: 1,
             points: null,
         },
         warrior: {
-            suit: "warrior",
+            suit: "warrior" /* WARRIOR */,
             rank: 1,
             points: null,
         },
         miner: {
-            suit: "miner",
+            suit: "miner" /* MINER */,
             rank: 1,
             points: null,
         },
@@ -101,24 +101,25 @@ export var StartThrudMoving = function (G, ctx, card) {
  * <li>При наличии героя Улина.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @returns {string|boolean}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {string | boolean} Проверяет нужно ли начать действия по наличию героя Улина.
  * @constructor
  */
 export var CheckAndStartUlineActionsOrContinue = function (G, ctx) {
     // todo Rework it all!
-    var ulinePlayerIndex = G.publicPlayers.findIndex(function (player) {
-        return player.buffs.everyTurn === "Uline";
-    });
+    var ulinePlayerIndex = G.publicPlayers.findIndex(function (player) { return player.buffs.everyTurn === "Uline"; });
     if (ulinePlayerIndex !== -1) {
         if (ctx.activePlayers[ctx.currentPlayer] !== "placeTradingCoinsUline" &&
             ulinePlayerIndex === Number(ctx.currentPlayer)) {
             var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
-            if (coin) {
-                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern] && coin.isTriggerTrading) {
+            if (coin !== null) {
+                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern]
+                    && coin.isTriggerTrading) {
                     if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                        .filter(function (coin, index) { return index >= G.tavernsNum && coin === null; })) {
+                        .filter(function (coin, index) {
+                        return index >= G.tavernsNum && coin === null;
+                    })) {
                         G.actionsNum = G.suitsNum - G.tavernsNum;
                         ctx.events.setStage("placeTradingCoinsUline");
                         return "placeTradingCoinsUline";
@@ -126,13 +127,13 @@ export var CheckAndStartUlineActionsOrContinue = function (G, ctx) {
                 }
             }
         }
-        else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline" &&
-            !G.actionsNum) {
+        else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline"
+            && !G.actionsNum) {
             ctx.events.endStage();
             return "endPlaceTradingCoinsUline";
         }
-        else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline" &&
-            G.actionsNum) {
+        else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline"
+            && G.actionsNum) {
             return "nextPlaceTradingCoinsUline";
         }
         else {

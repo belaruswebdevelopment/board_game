@@ -8,12 +8,13 @@ import {GameBoard} from "../GameBoard";
  * <li>Используется в отрисовке дебаг панели.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {{ctx: {}, G: {}} | undefined} Данные для отрисовки дебаг информации.
  * @constructor
  */
 const GetDebugData = (data: GameBoard): { ctx: {}, G: {} } | undefined => {
     if (data.props.G.debug) {
-        const debugData: {G: {[key: string]: any}, ctx: {[key: string]: any}} = {
+        const debugData: { G: { [key: string]: any }, ctx: { [key: string]: any } } = {
             G: {},
             ctx: {},
         };
@@ -35,10 +36,11 @@ const GetDebugData = (data: GameBoard): { ctx: {}, G: {} } | undefined => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param obj Информация.
+ * @param {{[p: string]: any}} obj Информация.
+ * @returns {JSX.Element}
  * @constructor
  */
-const DrawObjectData = (obj: {[key: string]: any}): JSX.Element => {
+const DrawObjectData = (obj: { [key: string]: any }): JSX.Element => {
     const values: JSX.Element[] = [];
     for (let [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {
@@ -92,11 +94,12 @@ const DrawObjectData = (obj: {[key: string]: any}): JSX.Element => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {JSX.Element | null} Дебаг панель.
  * @constructor
  */
 export const DrawDebugData = (data: GameBoard): JSX.Element | null => {
-    const debugData: {G: {[key: string]: any}, ctx: {[key: string]: any}} | undefined = GetDebugData(data);
+    const debugData: { G: { [key: string]: any }, ctx: { [key: string]: any } } | undefined = GetDebugData(data);
     if (debugData === undefined) {
         return null;
     } else {

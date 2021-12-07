@@ -167,7 +167,7 @@ var Idunn = {
     description: "Обладает 1 шевроном. Прибавьте 7 очков к показателю храбрости разведчиков плюс по 2 очка за каждый " +
         "шеврон в колонке Разведчиков (включая её собственный).",
     game: "base",
-    suit: "explorer",
+    suit: "explorer" /* EXPLORER */,
     rank: 1,
     points: 7,
     stack: [
@@ -178,7 +178,7 @@ var Idunn = {
             },
         },
     ],
-    scoringRule: function (player) { return player ? player.cards[GetSuitIndexByName("explorer")]
+    scoringRule: function (player) { return player ? player.cards[GetSuitIndexByName("explorer" /* EXPLORER */)]
         .reduce(TotalRank, 0) * 2 : 0; },
 };
 /**
@@ -194,7 +194,7 @@ var Tarah = {
     name: "Tarah",
     description: "Обладает 1 шевроном. Прибавьте 14 очков к показателю храбрости воинов.",
     game: "base",
-    suit: "warrior",
+    suit: "warrior" /* WARRIOR */,
     rank: 1,
     points: 14,
     stack: [
@@ -220,7 +220,7 @@ var Kraal = {
     name: "Kraal",
     description: "Обладает 2 шевронами. Прибавьте 7 и 0 очков к показателю храбрости воинов.",
     game: "base",
-    suit: "warrior",
+    suit: "warrior" /* WARRIOR */,
     rank: 2,
     points: 7,
     stack: [
@@ -247,7 +247,7 @@ var Lokdur = {
     description: "Обладает 1 шевроном. Прибавьте 3 к сумме очков храбрости горняков. Локдур увеличивает сумму очков " +
         "храбрости горняков на 3, а сумму шевронов на 1.",
     game: "base",
-    suit: "miner",
+    suit: "miner" /* MINER */,
     rank: 1,
     points: 3,
     stack: [
@@ -336,27 +336,27 @@ var Thrud = {
             actionName: "DrawProfitAction",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith",
+                    suit: "blacksmith" /* BLACKSMITH */,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter",
+                    suit: "hunter" /* HUNTER */,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer",
+                    suit: "explorer" /* EXPLORER */,
                     rank: 1,
                     points: null,
                 },
                 warrior: {
-                    suit: "warrior",
+                    suit: "warrior" /* WARRIOR */,
                     rank: 1,
                     points: null,
                 },
                 miner: {
-                    suit: "miner",
+                    suit: "miner" /* MINER */,
                     rank: 1,
                     points: null,
                 },
@@ -371,27 +371,27 @@ var Thrud = {
             actionName: "PlaceThrudAction",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith",
+                    suit: "blacksmith" /* BLACKSMITH */,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter",
+                    suit: "hunter" /* HUNTER */,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer",
+                    suit: "explorer" /* EXPLORER */,
                     rank: 1,
                     points: null,
                 },
                 warrior: {
-                    suit: "warrior",
+                    suit: "warrior" /* WARRIOR */,
                     rank: 1,
                     points: null,
                 },
                 miner: {
-                    suit: "miner",
+                    suit: "miner" /* MINER */,
                     rank: 1,
                     points: null,
                 },
@@ -414,7 +414,7 @@ var Zoral = {
     description: "Обладает 3 шевронами. Прибавьте 1, 0 и 0 к сумме очков храбрости горняков. Зорал увеличивает сумму " +
         "очков храбрости горняков на 1, а сумму шевронов – на 3.",
     game: "base",
-    suit: "miner",
+    suit: "miner" /* MINER */,
     rank: 3,
     points: 1,
     stack: [
@@ -468,14 +468,14 @@ var Bonfur = {
     description: "Обладает 3 шевронами. Призвав Бонфура, сразу же поместите его карту в колонку кузнецов и отправьте в " +
         "сброс одну нижнюю карту дворфа (не героя) из другой колонки своей армии по своему выбору.",
     game: "base",
-    suit: "blacksmith",
+    suit: "blacksmith" /* BLACKSMITH */,
     rank: 3,
     points: null,
     stack: [
         {
             actionName: "CheckDiscardCardsFromPlayerBoardAction",
             config: {
-                suit: "blacksmith",
+                suit: "blacksmith" /* BLACKSMITH */,
             },
         },
         {
@@ -484,13 +484,13 @@ var Bonfur = {
                 stageName: "discardCardFromBoard",
                 drawName: "Bonfur",
                 name: "BonfurAction",
-                suit: "blacksmith",
+                suit: "blacksmith" /* BLACKSMITH */,
             },
         },
         {
             actionName: "DiscardCardsFromPlayerBoardAction",
             config: {
-                suit: "blacksmith",
+                suit: "blacksmith" /* BLACKSMITH */,
             },
         },
         {
@@ -516,14 +516,14 @@ var Dagda = {
     description: "Обладает 3 шевронами. Призвав Дагду, сразу же поместите её карту в колонку охотников и отправьте в " +
         "сброс по одной нижней карте дворфов (не героев) из двух других колонок своей армии по своему выбору.",
     game: "base",
-    suit: "hunter",
+    suit: "hunter" /* HUNTER */,
     rank: 3,
     points: null,
     stack: [
         {
             actionName: "CheckDiscardCardsFromPlayerBoardAction",
             config: {
-                suit: "hunter",
+                suit: "hunter" /* HUNTER */,
                 number: 2,
             },
         },
@@ -533,7 +533,7 @@ var Dagda = {
                 stageName: "discardCardFromBoard",
                 drawName: "Dagda",
                 name: "DagdaAction",
-                suit: "hunter",
+                suit: "hunter" /* HUNTER */,
                 number: 2,
             },
         },
@@ -710,7 +710,7 @@ var Hourya = {
         "игрок должен иметь в своей армии как минимум 5 шевронов в колонке разведчиков. Важно: если Труд и/или Илуд " +
         "расположены в колонке разведчиков, то их шевроны учитываются для призыва Хурии",
     game: "base",
-    suit: "explorer",
+    suit: "explorer" /* EXPLORER */,
     rank: 1,
     points: 20,
     stack: [
@@ -719,7 +719,7 @@ var Hourya = {
             config: {
                 conditions: {
                     suitCountMin: {
-                        suit: "explorer",
+                        suit: "explorer" /* EXPLORER */,
                         value: 5,
                     },
                 },
@@ -747,7 +747,7 @@ var Aegur = {
     name: "Aegur",
     description: "Обладает 2 шевронами.",
     game: "base",
-    suit: "blacksmith",
+    suit: "blacksmith" /* BLACKSMITH */,
     rank: 2,
     points: null,
     stack: [
@@ -773,7 +773,7 @@ var Aral = {
     name: "Aral",
     description: "Обладает 2 шевронами.",
     game: "base",
-    suit: "hunter",
+    suit: "hunter" /* HUNTER */,
     rank: 2,
     points: null,
     stack: [
@@ -940,27 +940,27 @@ var Olwin = {
             actionName: "DrawProfitAction",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith",
+                    suit: "blacksmith" /* BLACKSMITH */,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter",
+                    suit: "hunter" /* HUNTER */,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer",
+                    suit: "explorer" /* EXPLORER */,
                     rank: 1,
                     points: 0,
                 },
                 warrior: {
-                    suit: "warrior",
+                    suit: "warrior" /* WARRIOR */,
                     rank: 1,
                     points: 0,
                 },
                 miner: {
-                    suit: "miner",
+                    suit: "miner" /* MINER */,
                     rank: 1,
                     points: 0,
                 },
@@ -976,27 +976,27 @@ var Olwin = {
             actionName: "PlaceCards",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith",
+                    suit: "blacksmith" /* BLACKSMITH */,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter",
+                    suit: "hunter" /* HUNTER */,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer",
+                    suit: "explorer" /* EXPLORER */,
                     rank: 1,
                     points: 0,
                 },
                 warrior: {
-                    suit: "warrior",
+                    suit: "warrior" /* WARRIOR */,
                     rank: 1,
                     points: 0,
                 },
                 miner: {
-                    suit: "miner",
+                    suit: "miner" /* MINER */,
                     rank: 1,
                     points: 0,
                 },

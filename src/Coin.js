@@ -2,8 +2,14 @@ import { AddDataToLog } from "./Logging";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 /**
- * todo Description.
- * @param obj
+ * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функции улучшения монеты.</li>
+ * </ol>
+ *
+ * @param {{} | ICoin} obj Пустой объект или монета.
+ * @returns {obj is ICoin} Является ли объект монетой, а не пустым объектом.
  */
 var isCoin = function (obj) { return obj.value !== undefined; };
 /**
@@ -13,10 +19,11 @@ var isCoin = function (obj) { return obj.value !== undefined; };
  * <li>Происходит при создании всех монет при инициализации игры.</li>
  * <li>Вызывается при создании монеты преимущества по охотникам.</li>
  * </ol>
- *
- * @param value Значение.
- * @param isInitial Является ли базовой.
- * @param isTriggerTrading Активирует ли обмен монет.
+ *.
+ * @param {number} value Значение.
+ * @param {boolean | undefined} isInitial Является ли базовой.
+ * @param {boolean | undefined} isTriggerTrading Активирует ли обмен монет.
+ * @returns {ICoin} Монета.
  * @constructor
  */
 export var CreateCoin = function (_a) {
@@ -35,8 +42,9 @@ export var CreateCoin = function (_a) {
  * <li>Вызывается при создании всех монет рынка.</li>
  * </ol>
  *
- * @param coinConfig Конфиг монет.
- * @param options Опции создания монет.
+ * @param {IMarketCoinConfig[] | IInitialTradingCoinConfig[]} coinConfig Конфиг монет.
+ * @param {IBuildCoinsOptions} options Опции создания монет.
+ * @returns {ICoin[]} Массив всех монет.
  * @constructor
  */
 export var BuildCoins = function (coinConfig, options) {
@@ -44,7 +52,7 @@ export var BuildCoins = function (coinConfig, options) {
     for (var i = 0; i < coinConfig.length; i++) {
         var config = coinConfig[i], count = options.players !== undefined && !isInitialPlayerCoinsConfigNotMarket(config) ?
             config.count()[options.players] : 1;
-        if (options.players !== undefined && options.count) {
+        if (options.players !== undefined && options.count !== undefined) {
             options.count.push({ value: config.value });
         }
         for (var c = 0; c < count; c++) {
@@ -64,7 +72,8 @@ export var BuildCoins = function (coinConfig, options) {
  * <li>Вызывается при отрисовке рынка монет.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
+ * @returns {INumberValues} Количество всех монет на рынке (с повторами).
  * @constructor
  */
 export var CountMarketCoins = function (G) {
@@ -85,9 +94,9 @@ export var CountMarketCoins = function (G) {
  * <li>Вызывается после выбора базовой карты игроком, если выложены монета, активирующая обмен монет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param tradingCoins Монеты для обмена.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {ICoin[]} tradingCoins Монеты для обмена.
  * @constructor
  */
 export var Trading = function (G, ctx, tradingCoins) {
@@ -147,12 +156,12 @@ export var Trading = function (G, ctx, tradingCoins) {
  * <li>Вызывается после выбора базовой карты игроком, если выложены монета, активирующая обмен монет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг обмена.
- * @param upgradingCoinId Id обменной монеты.
- * @param type Тип обменной монеты.
- * @param isInitial Является ли обменная монета базовой.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг обмена.
+ * @param {number} upgradingCoinId Id обменной монеты.
+ * @param {string} type Тип обменной монеты.
+ * @param {boolean} isInitial Является ли обменная монета базовой.
  * @constructor
  */
 export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInitial) {
@@ -174,9 +183,9 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
                     allCoins.push(G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i]);
                 }
             }
-            var minCoinValue_1 = Math.min.apply(Math, allCoins.filter(function (coin) {
-                return coin !== null && !coin.isTriggerTrading;
-            }).map(function (coin) { return coin.value; })), upgradingCoinInitial = allCoins
+            var minCoinValue_1 = Math.min.apply(Math, allCoins
+                .filter(function (coin) { return coin !== null && !coin.isTriggerTrading; })
+                .map(function (coin) { return coin.value; })), upgradingCoinInitial = allCoins
                 .find(function (coin) { return coin.value === minCoinValue_1 && coin.isInitial; });
             if (upgradingCoinInitial) {
                 upgradingCoin = upgradingCoinInitial;
@@ -187,8 +196,9 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
                     upgradingCoin = coin;
                 }
             }
-            upgradingCoinId = allCoins.findIndex(function (coin) { return isCoin(upgradingCoin) &&
-                coin.value === upgradingCoin.value; });
+            upgradingCoinId = allCoins.findIndex(function (coin) {
+                return isCoin(upgradingCoin) && coin.value === upgradingCoin.value;
+            });
         }
         else {
             var minCoinValue_2 = Math.min.apply(Math, G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
@@ -212,8 +222,9 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
         if (coin) {
             upgradingCoin = coin;
             upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                .findIndex(function (coin) { return isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) ===
-                upgradingCoin.value && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === isInitial; });
+                .findIndex(function (coin) {
+                return isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === isInitial;
+            });
         }
     }
     else {
@@ -226,7 +237,7 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
         var buffValue = G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin ?
             G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin : 0;
         var newValue = 0;
-        if (typeof config.value === "number") {
+        if (config.value !== undefined) {
             newValue = upgradingCoin.value + config.value + buffValue;
         }
         var upgradedCoin = null;
@@ -251,14 +262,15 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
                 }
             }
         }
-        AddDataToLog(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u0442\u043E \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E \n        '".concat(upgradingCoin.value, "' \u043D\u0430 +").concat(config.value, "."));
+        AddDataToLog(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u0442\u043E \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '".concat(upgradingCoin.value, "' \n        \u043D\u0430 +").concat(config.value, "."));
         if (upgradedCoin !== null) {
             AddDataToLog(G, "private" /* PRIVATE */, "\u041D\u0430\u0447\u0430\u0442\u043E \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B c ID '".concat(upgradingCoinId, "' \u0441 \u0442\u0438\u043F\u043E\u043C \n            '").concat(type, "' \u0441 initial '").concat(isInitial, "' \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '").concat(upgradingCoin.value, "' \u043D\u0430 +").concat(config.value, " \u0441 \n            \u043D\u043E\u0432\u044B\u043C \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u043C '").concat(newValue, "' \u0441 \u0438\u0442\u043E\u0433\u043E\u0432\u044B\u043C \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u043C '").concat(upgradedCoin.value, "'."));
             var handCoinIndex = -1;
             if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] === null) {
                 handCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                    .findIndex(function (coin) { return isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) ===
-                    upgradingCoin.value; });
+                    .findIndex(function (coin) {
+                    return isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value;
+                });
             }
             else {
                 G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = null;
@@ -301,7 +313,7 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
  * <li>В начале фазы выставления монет.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 export var ReturnCoinsToPlayerHands = function (G) {
@@ -323,8 +335,9 @@ export var ReturnCoinsToPlayerHands = function (G) {
  * <li>При возврате монет в руку, когда взят герой Улина.</li>
  * </ol>
  *
- * @param player Игрок.
- * @param coinId Id монеты.
+ * @param {IPublicPlayer} player Игрок.
+ * @param {number} coinId Id монеты.
+ * @returns {boolean} Вернулась ли монета в руку.
  * @constructor
  */
 export var ReturnCoinToPlayerHands = function (player, coinId) {

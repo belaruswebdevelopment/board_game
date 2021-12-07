@@ -9,7 +9,8 @@ import {GameBoard} from "../GameBoard";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {JSX.Element | null} Поле для вывода логов.
  * @constructor
  */
 export const DrawLogData = (data: GameBoard): JSX.Element | null => {

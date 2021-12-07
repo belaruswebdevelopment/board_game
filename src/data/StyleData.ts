@@ -1,3 +1,5 @@
+import {SuitNames} from "./SuitData";
+
 export interface IBackground {
     background: string,
 }
@@ -46,15 +48,15 @@ export const Styles: IStyles = {
             }
         } else if (suit) {
             switch (suit) {
-                case "blacksmith":
+                case SuitNames.BLACKSMITH:
                     return {
                         background: "url(/img/cards/basic/basic0.png) no-repeat 0px 0px / 288px 288px",
                     };
-                case "hunter":
+                case SuitNames.HUNTER:
                     return {
                         background: "url(/img/cards/basic/basic0.png) no-repeat -128px 0px / 288px 288px",
                     };
-                case "miner":
+                case SuitNames.MINER:
                     switch (points) {
                         case 0:
                             return {
@@ -73,7 +75,7 @@ export const Styles: IStyles = {
                                 background: "",
                             };
                     }
-                case "warrior":
+                case SuitNames.WARRIOR:
                     switch (points) {
                         case 3:
                             return {
@@ -112,7 +114,7 @@ export const Styles: IStyles = {
                                 background: "",
                             };
                     }
-                case "explorer":
+                case SuitNames.EXPLORER:
                     switch (points) {
                         case 5:
                             return {
@@ -303,23 +305,23 @@ export const Styles: IStyles = {
     },
     Distinctions: (distinction: string): IBackground => {
         switch (distinction) {
-            case "blacksmith":
+            case SuitNames.BLACKSMITH:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -100px / 96px 150px",
                 };
-            case "hunter":
+            case SuitNames.HUNTER:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat -64px 0px / 96px 150px",
                 };
-            case "miner":
+            case SuitNames.MINER:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 96px 150px",
                 };
-            case "warrior":
+            case SuitNames.WARRIOR:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 96px 150px",
                 };
-            case "explorer":
+            case SuitNames.EXPLORER:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 96px 150px",
                 };

@@ -1,4 +1,4 @@
-import {CompareCards, EvaluateCard, IActionCard, ICard, isCardNotAction} from "./Card";
+import {CompareCards, EvaluateCard, ICard, isCardNotAction} from "./Card";
 import {HasLowestPriority} from "./Priority";
 import {CheckHeuristicsForCoinsPlacement} from "./BotConfig";
 import {CurrentScoring} from "./Score";
@@ -9,10 +9,11 @@ import {TotalRank} from "./helpers/ScoreHelpers";
 import {CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {ICoin} from "./Coin";
-import {IConfig, IStack, PlayerCardsType} from "./Player";
-import {IHero} from "./Hero";
-import {IArtefactCampCard, IMercenaryCampCard} from "./Camp";
+import {IConfig, IStack, PickedCardType, PlayerCardsType} from "./Player";
 
+/**
+ * <h3>Интерфейс для возможных мувов у ботов.</h3>
+ */
 interface IMoves {
     move: string,
     args: number[][] | (string | number | boolean)[] | number,
@@ -25,8 +26,9 @@ interface IMoves {
  * <li>Используется ботами для доступных ходов.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {IMoves[]} Массив возможных мувов у ботов.
  */
 export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         //make false for standard bot
@@ -35,10 +37,10 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         let moves: IMoves[] = [],
             flag: boolean = true,
             advancedString: string = "advanced",
-            isAdvancedExist: boolean = Object.keys(moveBy[ctx.phase]).some((key: string): boolean =>
-                key.includes(advancedString));
-        const activeStageOfCurrentPlayer: string = (ctx.activePlayers &&
-            ctx.activePlayers[Number(ctx.currentPlayer)]) ? ctx.activePlayers[Number(ctx.currentPlayer)] :
+            isAdvancedExist: boolean =
+                Object.keys(moveBy[ctx.phase]).some((key: string): boolean => key.includes(advancedString));
+        const activeStageOfCurrentPlayer: string = (ctx.activePlayers
+            && ctx.activePlayers[Number(ctx.currentPlayer)]) ? ctx.activePlayers[Number(ctx.currentPlayer)] :
             "default";
         // todo Fix it, now just for bot can do RANDOM move
         const botMoveArguments: (number | string | boolean)[][] = [];
@@ -47,10 +49,11 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 if (ctx.phase === "pickCards" && stage.startsWith("default")) {
                     continue;
                 }
-                if (stage.includes(activeStageOfCurrentPlayer) && (!isAdvancedExist || stage.includes(advancedString) ===
-                    enableAdvancedBot)) {
+                if (stage.includes(activeStageOfCurrentPlayer)
+                    && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
                     const moveName: string = moveBy[ctx.phase][stage],
-                        [minValue, maxValue]: [number, number] = moveValidators[moveName].getRange({G: G, ctx: ctx}),
+                        [minValue, maxValue]: [number, number] =
+                            moveValidators[moveName].getRange({G: G, ctx: ctx}),
                         hasGetValue: boolean = moveValidators[moveName].hasOwnProperty("getValue");
                     let argValue: number;
                     let argArray: number[];
@@ -75,8 +78,9 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default") {
             // todo Fix it, now just for bot can do RANDOM move
             let pickCardOrCampCard: string = "card";
-            if (G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
-                G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)) {
+            if (G.expansions.thingvellir.active &&
+                (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+                    || G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)) {
                 pickCardOrCampCard = Math.floor(Math.random() * 2) ? "card" : "camp";
             }
             if (pickCardOrCampCard === "card") {
@@ -90,11 +94,11 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                         continue;
                     }
                     if (tavernCard && "suit" in tavernCard) {
-                        const isCurrentCardWorse: boolean = EvaluateCard(G, ctx, tavernCard, i,
-                                tavern) < 0,
-                            isExistCardNotWorse: boolean = tavern.some((card: TavernCardTypes): boolean =>
-                                (card !== null) &&
-                                (EvaluateCard(G, ctx, tavernCard, i, tavern) >= 0));
+                        const isCurrentCardWorse: boolean =
+                                EvaluateCard(G, ctx, tavernCard, i, tavern) < 0,
+                            isExistCardNotWorse: boolean =
+                                tavern.some((card: TavernCardTypes): boolean => (card !== null) &&
+                                    (EvaluateCard(G, ctx, tavernCard, i, tavern) >= 0));
                         if (isCurrentCardWorse && isExistCardNotWorse) {
                             continue;
                         }
@@ -131,8 +135,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             const hasLowestPriority: boolean = HasLowestPriority(G, Number(ctx.currentPlayer));
             let resultsForCoins: number[] = CheckHeuristicsForCoinsPlacement(G, ctx);
             if (hasLowestPriority) {
-                resultsForCoins = resultsForCoins.map((num: number, index: number): number => index === 0 ? num - 20
-                    : num);
+                resultsForCoins = resultsForCoins.map((num: number, index: number): number =>
+                    index === 0 ? num - 20 : num);
             }
             const minResultForCoins: number = Math.min(...resultsForCoins),
                 maxResultForCoins: number = Math.max(...resultsForCoins),
@@ -147,8 +151,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             const allCoinsOrder: number[][] = G.botData.allCoinsOrder,
                 handCoins: (ICoin | null)[] = G.publicPlayers[Number(ctx.currentPlayer)].handCoins;
             for (let i: number = 0; i < allCoinsOrder.length; i++) {
-                const hasTrading: boolean = allCoinsOrder[i].some((coinId: number): boolean =>
-                    Boolean(handCoins[coinId]?.isTriggerTrading));
+                const hasTrading: boolean =
+                    allCoinsOrder[i].some((coinId: number): boolean => Boolean(handCoins[coinId]?.isTriggerTrading));
                 if (tradingProfit < 0) {
                     if (hasTrading) {
                         continue;
@@ -166,12 +170,14 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                         let isTopCoinsOnPosition: boolean = false,
                             isMinCoinsOnPosition: boolean = false;
                         if (hasPositionForMaxCoin) {
-                            isTopCoinsOnPosition = allCoinsOrder[i].filter((coinIndex: number): boolean =>
-                                handCoins[coinIndex] !== null && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
+                            isTopCoinsOnPosition =
+                                allCoinsOrder[i].filter((coinIndex: number): boolean =>
+                                    handCoins[coinIndex] !== null && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
                         }
                         if (hasPositionForMinCoin) {
-                            isMinCoinsOnPosition = handCoins.filter((coin: ICoin | null): boolean => coin !== null &&
-                                coin!.value < minCoin.value).length <= 1;
+                            isMinCoinsOnPosition =
+                                handCoins.filter((coin: ICoin | null): boolean =>
+                                    coin !== null && coin!.value < minCoin.value).length <= 1;
                         }
                         if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
                             moves.push({move: "BotsPlaceAllCoins", args: [G.botData.allCoinsOrder[i]]});
@@ -188,8 +194,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (ctx.phase === "endTier") {
             for (let j: number = 0; j < G.suitsNum; j++) {
                 const suit: string = Object.keys(suitsConfig)[j],
-                    pickedCard: ICard | IActionCard | IArtefactCampCard | IMercenaryCampCard | IHero | null =
-                        G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+                    pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
                 if (!pickedCard || ("suit" in pickedCard && suit !== pickedCard.suit)) {
                     botMoveArguments.push([j]);
                 }
@@ -247,8 +252,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 }
             } else if (G.drawProfit === "enlistmentMercenaries") {
                 const mercenaries: CampDeckCardTypes[] =
-                    G.publicPlayers[Number(ctx.currentPlayer)].campCards.filter((card: CampDeckCardTypes): boolean =>
-                        card.type === "наёмник");
+                    G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                        .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник");
                 for (let j: number = 0; j < mercenaries.length; j++) {
                     botMoveArguments.push([j]);
                 }
@@ -258,8 +263,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 });
             } else if (G.drawProfit === "placeEnlistmentMercenaries") {
                 for (let j: number = 0; j < G.suitsNum; j++) {
-                    const card: DeckCardTypes | CampDeckCardTypes | IHero | null =
-                        G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+                    const card: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
                     if (card && "stack" in card) {
                         const suit: string = Object.keys(suitsConfig)[j],
                             stack: IStack = card.stack[0];
@@ -306,8 +310,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         }
         if (activeStageOfCurrentPlayer === "addCoinToPouch") {
             for (let j: number = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-                if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" &&
-                    G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
+                if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline"
+                    && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
                     botMoveArguments.push([j]);
                 }
             }
@@ -321,11 +325,12 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             if (config) {
                 let type: string = "board",
                     isInitial: boolean = false;
-                for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
+                for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
+                     j++) {
                     const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
                     if (coin) {
                         if (!coin.isTriggerTrading && config.coinId !== j) {
-                            if (typeof coin.isInitial === "boolean") {
+                            if (coin.isInitial !== undefined) {
                                 isInitial = coin.isInitial;
                             }
                             botMoveArguments.push([j, type, isInitial]);
@@ -348,12 +353,12 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                         if (typeof ctx.playerID === "string" && Number(ctx.playerID) === p) {
                             for (let i: number = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
                                 for (let j: number = 0; j < 1; j++) {
-                                    if (G.publicPlayers[p].cards[suitId] !== undefined &&
-                                        G.publicPlayers[p].cards[suitId][i] !== undefined) {
+                                    if (G.publicPlayers[p].cards[suitId] !== undefined
+                                        && G.publicPlayers[p].cards[suitId][i] !== undefined) {
                                         if (G.publicPlayers[p].cards[suitId][i].type !== "герой") {
-                                            const points: number | null = G.publicPlayers[Number(ctx.currentPlayer)]
-                                                .cards[suitId][i].points;
-                                            if (typeof points === "number") {
+                                            const points: number | null =
+                                                G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][i].points;
+                                            if (points !== null) {
                                                 botMoveArguments.push([points]);
                                             }
                                         }
@@ -373,14 +378,13 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         }
         if (activeStageOfCurrentPlayer === "discardCardFromBoard") {
             const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config,
-                pickedCard: DeckCardTypes | CampDeckCardTypes | IHero | null =
-                    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+                pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
             if (config) {
                 for (let j: number = 0; j < G.suitsNum; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0] !== undefined &&
-                        suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit !==
-                        config.suit && !(G.drawProfit === "DagdaAction" && G.actionsNum === 1 && pickedCard !== null &&
-                            "suit" in pickedCard &&
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0] !== undefined
+                        && suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit !==
+                        config.suit && !(G.drawProfit === "DagdaAction" && G.actionsNum === 1 && pickedCard !== null
+                            && "suit" in pickedCard &&
                             suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit ===
                             pickedCard.suit)) {
                         const last: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[j].length - 1;
@@ -418,8 +422,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (activeStageOfCurrentPlayer === "placeCards") {
             for (let j: number = 0; j < G.suitsNum; j++) {
                 const suit: string = Object.keys(suitsConfig)[j],
-                    pickedCard: DeckCardTypes | CampDeckCardTypes | IHero | null =
-                        G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+                    pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
                 if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
                     botMoveArguments.push([j]);
                 }
@@ -454,8 +457,10 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
  * <ol>
  * <li>Используется ботами для определения целей.</li>
  * </ol>
+ *
+ * @returns {{isEarlyGame: {weight: number, checker: (G: MyGameState) => boolean}, isFirst: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}, isStronger: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}}}
  */
-export const objectives = () => ({
+export const objectives = (): { isEarlyGame: { weight: number; checker: (G: MyGameState) => boolean; }; isFirst: { weight: number; checker: (G: MyGameState, ctx: Ctx) => boolean; }; isStronger: { weight: number; checker: (G: MyGameState, ctx: Ctx) => boolean; }; } => ({
     isEarlyGame: {
         checker: (G: MyGameState): boolean => {
             return G.decks[0].length > 0;
@@ -566,7 +571,7 @@ export const objectives = () => ({
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length)) {
                 return false;
             }
-            if (G.taverns[0].some(card => card === null)) {
+            if (G.taverns[0].some((card: TavernCardTypes): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
@@ -591,8 +596,9 @@ export const objectives = () => ({
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {number}
  */
 export const iterations = (G: MyGameState, ctx: Ctx): number => {
     const maxIter: number = G.botData.maxIter;
@@ -603,9 +609,9 @@ export const iterations = (G: MyGameState, ctx: Ctx): number => {
         }
         const cardIndex: number = currentTavern.findIndex((card: DeckCardTypes | null): boolean => card !== null),
             tavernCard: DeckCardTypes | null = currentTavern[cardIndex];
-        if (currentTavern.every((card: DeckCardTypes | null): boolean => (card === null) ||
-            (isCardNotAction(card) && tavernCard !== null && isCardNotAction(tavernCard) &&
-                card.suit === tavernCard.suit && CompareCards(card, tavernCard) === 0))) {
+        if (currentTavern.every((card: DeckCardTypes | null): boolean =>
+            (card === null) || (isCardNotAction(card) && tavernCard !== null && isCardNotAction(tavernCard)
+                && card.suit === tavernCard.suit && CompareCards(card, tavernCard) === 0))) {
             return 1;
         }
         let efficientMovesCount: number = 0;
@@ -621,9 +627,9 @@ export const iterations = (G: MyGameState, ctx: Ctx): number => {
             if (G.decks[0].length > 18) {
                 if (tavernCard && isCardNotAction(tavernCard)) {
                     const curSuit: number = GetSuitIndexByName(tavernCard.suit);
-                    if ((CompareCards(tavernCard, G.averageCards[curSuit]) === -1) &&
-                        currentTavern.some((card: DeckCardTypes | null): boolean => (card !== null) &&
-                            (CompareCards(card, G.averageCards[curSuit]) > -1))) {
+                    if ((CompareCards(tavernCard, G.averageCards[curSuit]) === -1)
+                        && currentTavern.some((card: DeckCardTypes | null): boolean => (card !== null)
+                            && (CompareCards(card, G.averageCards[curSuit]) > -1))) {
                         continue;
                     }
                 }
@@ -648,8 +654,9 @@ export const iterations = (G: MyGameState, ctx: Ctx): number => {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {number}
  */
 export const playoutDepth = (G: MyGameState, ctx: Ctx): number => {
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {

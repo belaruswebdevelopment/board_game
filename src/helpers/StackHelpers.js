@@ -16,10 +16,9 @@ import { EndAction } from "./ActionHelper";
  * <li>Выполняется при необходимости добавить действия в стэк действий.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param stack Стэк действий.
- * @returns {*} Старт действий.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IStack[]} stack Стэк действий.
  * @constructor
  */
 export var AddActionsToStack = function (G, ctx, stack) {
@@ -38,10 +37,9 @@ export var AddActionsToStack = function (G, ctx, stack) {
  * <li>Выполняется при необходимости добавить действия в стэк действий после текущего.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param stack Стэк действий.
- * @returns {*} Старт действий.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IStack[]} stack Стэк действий.
  * @constructor
  */
 export var AddActionsToStackAfterCurrent = function (G, ctx, stack) {
@@ -70,11 +68,10 @@ export var AddActionsToStackAfterCurrent = function (G, ctx, stack) {
  * <li>Выполняется при необходимости активировать действия в стэке действий.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param isTrading Является ли действие обменом монет (трейдингом).
- * @param args Дополнительные аргументы.
- * @returns {*} Выполнение действий.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {boolean} isTrading Является ли действие обменом монет (трейдингом).
+ * @param {string | number | boolean | object | null} args Дополнительные аргументы.
  * @constructor
  */
 export var StartActionFromStackOrEndActions = function (G, ctx, isTrading) {
@@ -96,11 +93,10 @@ export var StartActionFromStackOrEndActions = function (G, ctx, isTrading) {
  * <li>Выполняется при необходимости активировать действия в стэке действий указанного игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param playerId Id игрока.
- * @param args Дополнительные аргументы.
- * @returns {*} Выполнение действий.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} playerId Id игрока.
+ * @param {string | number | boolean | object | null} args Дополнительные аргументы.
  * @constructor
  */
 export var StartActionForChosenPlayer = function (G, ctx, playerId) {
@@ -117,9 +113,9 @@ export var StartActionForChosenPlayer = function (G, ctx, playerId) {
  * <li>Выполняется при необходимости завершить действие в стэке действий указанного игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param playerId Id игрока.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} playerId Id игрока.
  * @constructor
  */
 export var EndActionForChosenPlayer = function (G, ctx, playerId) {
@@ -156,12 +152,12 @@ export var EndActionFromStackAndAddNew = function (G, ctx, newStack) {
     }
     var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (config) {
-        if (config.name === "explorerDistinction" || G.publicPlayers[Number(ctx.currentPlayer)].stack[0].actionName
-            !== "DrawProfitAction") {
+        if (config.name === "explorerDistinction"
+            || G.publicPlayers[Number(ctx.currentPlayer)].stack[0].actionName !== "DrawProfitAction") {
             G.actionsNum = 0;
             G.drawProfit = "";
         }
-        if (ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) {
+        if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
             ctx.events.endStage();
         }
         var isTrading = (_a = config.isTrading) !== null && _a !== void 0 ? _a : false;

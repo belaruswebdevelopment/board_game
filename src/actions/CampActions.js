@@ -46,8 +46,8 @@ export var AddCampCardToCards = function (G, ctx, config, cardId) {
     var campCard = G.camp[cardId];
     var suitId = null, stack = [];
     G.camp[cardId] = null;
-    if (campCard) {
-        if (isArtefactCard(campCard) && campCard.suit) {
+    if (campCard !== null) {
+        if (isArtefactCard(campCard)) {
             AddCampCardToPlayerCards(G, ctx, campCard);
             CheckAndMoveThrudOrPickHeroAction(G, ctx, campCard);
             suitId = GetSuitIndexByName(campCard.suit);
@@ -84,9 +84,8 @@ export var AddCampCardToCards = function (G, ctx, config, cardId) {
  * @constructor
  */
 export var AddCoinToPouchAction = function (G, ctx, config, coinId) {
-    var player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins.findIndex(function (coin, index) {
-        return index >= G.tavernsNum && coin === null;
-    }), stack = [
+    var player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins
+        .findIndex(function (coin, index) { return index >= G.tavernsNum && coin === null; }), stack = [
         {
             actionName: "StartVidofnirVedrfolnirAction",
         },
@@ -288,8 +287,7 @@ export var DiscardTradingCoin = function (G, ctx) {
  * @constructor
  */
 export var DiscardAnyCardFromPlayerBoard = function (G, ctx, config, suitId, cardId) {
-    var discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-        .splice(cardId, 1)[0];
+    var discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(cardId, 1)[0];
     AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
     delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
     EndActionFromStackAndAddNew(G, ctx);
@@ -307,7 +305,7 @@ export var DiscardAnyCardFromPlayerBoard = function (G, ctx, config, suitId, car
  * @constructor
  */
 export var StartDiscardSuitCard = function (G, ctx, config) {
-    if (config.suit) {
+    if (config.suit !== undefined) {
         var suitId = GetSuitIndexByName(config.suit), value = {};
         for (var i = 0; i < ctx.numPlayers; i++) {
             if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[suitId].length) {
@@ -319,7 +317,7 @@ export var StartDiscardSuitCard = function (G, ctx, config) {
                         actionName: "DiscardSuitCard",
                         playerId: i,
                         config: {
-                            suit: "warrior",
+                            suit: "warrior" /* WARRIOR */,
                         },
                     },
                 ];
@@ -348,11 +346,12 @@ export var StartDiscardSuitCard = function (G, ctx, config) {
  * @constructor
  */
 export var DiscardSuitCard = function (G, ctx, config, suitId, playerId, cardId) {
-    var discardedCard = G.publicPlayers[Number(ctx.playerID)].cards[suitId]
-        .splice(cardId, 1)[0];
-    G.discardCardsDeck.push(discardedCard);
-    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.playerID)].nickname, " \n    \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
-    EndActionForChosenPlayer(G, ctx, playerId);
+    if (ctx.playerID !== undefined) {
+        var discardedCard = G.publicPlayers[Number(ctx.playerID)].cards[suitId].splice(cardId, 1)[0];
+        G.discardCardsDeck.push(discardedCard);
+        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.playerID)].nickname, " \n        \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
+        EndActionForChosenPlayer(G, ctx, playerId);
+    }
 };
 /**
  * <h3>Выбор фракции для применения финального эффекта артефакта Mjollnir.</h3>

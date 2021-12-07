@@ -55,22 +55,41 @@ interface ICreateActionCard {
     name: string,
 }
 
+/**
+ * <h3>Интерфейс для создания "средней" карты фракции.</h3>
+ */
 interface ICreateAverageSuitCard {
     suit: string,
     rank: number,
     points: number,
 }
 
+/**
+ * <h3>Интерфейс "средней" карты фракции.</h3>
+ */
 export interface IAverageSuitCardData {
     players: number,
     tier: number,
 }
 
+/**
+ * <h3>Интерфейс для конфига дек.</h3>
+ */
 export interface IDeckConfig {
     suits: ISuitConfig,
     actions: IActionCardConfig[],
 }
 
+/**
+ * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param {DeckCardTypes} card Карта.
+ * @returns {card is ICard} Является ли объект картой дворфа, а не картой обмена монеты.
+ */
 export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as ICard).suit !== undefined;
 
 /**
@@ -80,14 +99,15 @@ export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as 
  * <li>Происходит при создании всех карт при инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
- * @param suit Фракция.
- * @param rank Шевроны.
- * @param points Очки.
- * @param name Название.
- * @param game Игра/дополнение.
- * @param tier Эпоха.
- * @param path URL путь.
+ * @param {string | undefined} type Тип.
+ * @param {string} suit Фракция.
+ * @param {number | null} rank Шевроны.
+ * @param {number | null} points Очки.
+ * @param {string | undefined} name Название.
+ * @param {string | undefined} game Игра/дополнение.
+ * @param {number | undefined} tier Эпоха.
+ * @param {string | undefined} path URL путь.
+ * @returns {ICard} Карта дворфа.
  * @constructor
  */
 export const CreateCard = ({
@@ -99,18 +119,16 @@ export const CreateCard = ({
                                game = "",
                                tier = 0,
                                path = "",
-                           }: ICreateCard = {} as ICreateCard): ICard => {
-    return {
-        type,
-        suit,
-        rank,
-        points,
-        name,
-        game,
-        tier,
-        path,
-    };
-};
+                           }: ICreateCard = {} as ICreateCard): ICard => ({
+    type,
+    suit,
+    rank,
+    points,
+    name,
+    game,
+    tier,
+    path,
+});
 
 /**
  * <h3>Создание карты улучшения монеты.</h3>
@@ -123,6 +141,11 @@ export const CreateCard = ({
  * @param value Значение.
  * @param action Действие.
  * @param name Название.
+ * @param {string | undefined} type Тип.
+ * @param {number} value Значение.
+ * @param {IStack[]} stack Действие.
+ * @param {string} name Название.
+ * @returns {IActionCard} Карта обмена монеты.
  * @constructor
  */
 const CreateActionCard = ({
@@ -143,9 +166,10 @@ const CreateActionCard = ({
  * <ol>
  * <li>Происходит при инициализации игры.</li>
  * </ol>
- *
- * @param deckConfig Конфиг карт.
- * @param data Данные для создания карт.
+ *.
+ * @param {IDeckConfig} deckConfig Конфиг карт.
+ * @param {IAverageSuitCardData} data Данные для создания карт.
+ * @returns {DeckCardTypes[]} Все карты дворфов и обмена монет.
  * @constructor
  */
 export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData): DeckCardTypes[] => {
@@ -190,8 +214,9 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param suitConfig
- * @param data
+ * @param {ISuit} suitConfig Конфиг карт дворфов.
+ * @param {IAverageSuitCardData} data
+ * @returns {ICard} "Средняя" карта дворфа.
  * @constructor
  */
 export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData): ICard => {
@@ -222,8 +247,9 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param card1
- * @param card2
+ * @param {TavernCardTypes} card1 Первая карта.
+ * @param {TavernCardTypes} card2 Вторая карта.
+ * @returns {number} Сравнительное значение.
  * @constructor
  */
 export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): number => {
@@ -232,8 +258,8 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
     }
     if (isCardNotAction(card1) && isCardNotAction(card2)) {
         if (card1.suit === card2.suit) {
-            const result: number = (card1.points !== undefined && card1.points !== null ? card1.points : 1) -
-                (card2.points !== undefined && card2.points !== null ? card2.points : 1);
+            const result: number = (card1.points !== undefined && card1.points !== null ?
+                card1.points : 1) - (card2.points !== undefined && card2.points !== null ? card2.points : 1);
             if (result === 0) {
                 return result;
             }
@@ -251,8 +277,9 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {number} Профит карты.
  * @constructor
  */
 /*export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
@@ -278,8 +305,9 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param player
- * @param card
+ * @param {IPublicPlayer} player Игрок.
+ * @param {ICard | IArtefactCampCard | IHero | IActionCard} card Карта.
+ * @returns {number} Потенциальное значение.
  * @constructor
  */
 export const PotentialScoring = ({
@@ -320,11 +348,12 @@ export const PotentialScoring = ({
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
- * @param compareCard
- * @param cardId
- * @param tavern
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {ICard} compareCard Карта для сравнения.
+ * @param {number} cardId Id карты.
+ * @param {TavernCardTypes[]} tavern Таверна.
+ * @returns {number} Сравнительное значение.
  * @constructor
  */
 export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: ICard, cardId: number,
@@ -334,8 +363,9 @@ export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: ICard, cardI
         return CompareCards(compareCard, G.averageCards[suitId]);
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
-        let temp: number[][] = tavern.map((card: TavernCardTypes): number[] => G.publicPlayers
-                .map((player: IPublicPlayer): number => PotentialScoring({player, card: card!}))),
+        let temp: number[][] = tavern.map((card: TavernCardTypes): number[] =>
+                G.publicPlayers.map((player: IPublicPlayer): number =>
+                    PotentialScoring({player, card: card!}))),
             result: number = temp[cardId][Number(ctx.currentPlayer)];
         temp.splice(cardId, 1);
         temp.forEach((player: number[]): number[] => player.splice(Number(ctx.currentPlayer), 1));
@@ -353,8 +383,9 @@ export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: ICard, cardI
  * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из кэмпа.</li>
  * </ol>
  *
- * @param G
- * @param discardCardIndex Индекс сбрасываемой карты в таверне.
+ * @param {MyGameState} G
+ * @param {number} discardCardIndex Индекс сбрасываемой карты в таверне.
+ * @returns {boolean} Сброшена ли карта из таверны.
  * @constructor
  */
 export const DiscardCardFromTavern = (G: MyGameState, discardCardIndex: number): boolean => {

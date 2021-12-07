@@ -8,6 +8,7 @@ import {IArtefactCampCard} from "../Camp";
 import {ICoin} from "../Coin";
 import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
 import {IHero} from "../Hero";
+import {SuitNames} from "../data/SuitData";
 
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
@@ -16,7 +17,7 @@ import {IHero} from "../Hero";
  * <li>Используется повсеместно в проекте для вычисления индекса конкретного героя.</li>
  * </ol>
  *
- * @param heroName Название героя.
+ * @param {string} heroName Название героя.
  * @returns {number} Индекс героя.
  * @constructor
  */
@@ -29,9 +30,9 @@ export const GetHeroIndexByName = (heroName: string): number => Object.keys(hero
  * <li>При любых действия, когда пикается карта на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param card Карта.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {ICard | IArtefactCampCard | IHero} card Карта.
  * @returns {boolean} Нужно ли перемещать героя Труд.
  * @constructor
  */
@@ -54,36 +55,36 @@ export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: ICard | IArtef
  * <ol>
  * <li>При любых действия, когда пикается карта на планшет игрока и требуется переместить героя Труд.</li>
  * </ol>
- *
- * @param G
- * @param ctx
- * @param card Карта.
+ я
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {ICard | IArtefactCampCard | IHero} card Карта.
  * @constructor
  */
 export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: ICard | IArtefactCampCard | IHero): void => {
     const variants: IVariants = {
             blacksmith: {
-                suit: "blacksmith",
+                suit: SuitNames.BLACKSMITH,
                 rank: 1,
                 points: null,
             },
             hunter: {
-                suit: "hunter",
+                suit: SuitNames.HUNTER,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: "explorer",
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: null,
             },
             warrior: {
-                suit: "warrior",
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: "miner",
+                suit: SuitNames.MINER,
                 rank: 1,
                 points: null,
             },
@@ -114,35 +115,37 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: ICard | IArtefa
  * <li>При наличии героя Улина.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @returns {string|boolean}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {string | boolean} Проверяет нужно ли начать действия по наличию героя Улина.
  * @constructor
  */
 export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): string | boolean => {
     // todo Rework it all!
-    const ulinePlayerIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-        player.buffs.everyTurn === "Uline");
+    const ulinePlayerIndex: number =
+        G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.buffs.everyTurn === "Uline");
     if (ulinePlayerIndex !== -1) {
         if (ctx.activePlayers![ctx.currentPlayer] !== "placeTradingCoinsUline" &&
             ulinePlayerIndex === Number(ctx.currentPlayer)) {
             const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
-            if (coin) {
-                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern] && coin.isTriggerTrading) {
+            if (coin !== null) {
+                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern]
+                    && coin.isTriggerTrading) {
                     if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                        .filter((coin: ICoin | null, index: number): boolean => index >= G.tavernsNum && coin === null)) {
+                        .filter((coin: ICoin | null, index: number): boolean =>
+                            index >= G.tavernsNum && coin === null)) {
                         G.actionsNum = G.suitsNum - G.tavernsNum;
                         ctx.events!.setStage!("placeTradingCoinsUline");
                         return "placeTradingCoinsUline";
                     }
                 }
             }
-        } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline" &&
-            !G.actionsNum) {
+        } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline"
+            && !G.actionsNum) {
             ctx.events!.endStage!();
             return "endPlaceTradingCoinsUline";
-        } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline" &&
-            G.actionsNum) {
+        } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline"
+            && G.actionsNum) {
             return "nextPlaceTradingCoinsUline";
         } else {
             return "placeCoinsUline";

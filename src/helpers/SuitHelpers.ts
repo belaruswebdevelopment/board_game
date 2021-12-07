@@ -7,7 +7,7 @@ import {suitsConfig} from "../data/SuitData";
  * <li>Используется повсеместно в проекте для вычисления индекса конкретной фракции.</li>
  * </ol>
  *
- * @param suitName Название фракции.
+ * @param {string} suitName Название фракции.
  * @returns {number} Индекс фракции.
  * @constructor
  */

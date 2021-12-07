@@ -22,17 +22,16 @@ import { TotalRank } from "./helpers/ScoreHelpers";
  * <li>Используется ботами для доступных ходов.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {IMoves[]} Массив возможных мувов у ботов.
  */
 export var enumerate = function (G, ctx) {
     //make false for standard bot
     var enableAdvancedBot = true, uniqueArr = [];
-    var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(function (key) {
-        return key.includes(advancedString);
-    });
-    var activeStageOfCurrentPlayer = (ctx.activePlayers &&
-        ctx.activePlayers[Number(ctx.currentPlayer)]) ? ctx.activePlayers[Number(ctx.currentPlayer)] :
+    var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(function (key) { return key.includes(advancedString); });
+    var activeStageOfCurrentPlayer = (ctx.activePlayers
+        && ctx.activePlayers[Number(ctx.currentPlayer)]) ? ctx.activePlayers[Number(ctx.currentPlayer)] :
         "default";
     // todo Fix it, now just for bot can do RANDOM move
     var botMoveArguments = [];
@@ -41,8 +40,8 @@ export var enumerate = function (G, ctx) {
             if (ctx.phase === "pickCards" && stage.startsWith("default")) {
                 continue;
             }
-            if (stage.includes(activeStageOfCurrentPlayer) && (!isAdvancedExist || stage.includes(advancedString) ===
-                enableAdvancedBot)) {
+            if (stage.includes(activeStageOfCurrentPlayer)
+                && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
                 var moveName = moveBy[ctx.phase][stage], _a = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _a[0], maxValue = _a[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
                 var argValue = void 0;
                 var argArray = void 0;
@@ -68,8 +67,9 @@ export var enumerate = function (G, ctx) {
     if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default") {
         // todo Fix it, now just for bot can do RANDOM move
         var pickCardOrCampCard = "card";
-        if (G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
-            G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)) {
+        if (G.expansions.thingvellir.active &&
+            (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+                || G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)) {
             pickCardOrCampCard = Math.floor(Math.random() * 2) ? "card" : "camp";
         }
         if (pickCardOrCampCard === "card") {
@@ -83,10 +83,8 @@ export var enumerate = function (G, ctx) {
                     return "continue";
                 }
                 if (tavernCard && "suit" in tavernCard) {
-                    var isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, i, tavern_1) < 0, isExistCardNotWorse = tavern_1.some(function (card) {
-                        return (card !== null) &&
-                            (EvaluateCard(G, ctx, tavernCard, i, tavern_1) >= 0);
-                    });
+                    var isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, i, tavern_1) < 0, isExistCardNotWorse = tavern_1.some(function (card) { return (card !== null) &&
+                        (EvaluateCard(G, ctx, tavernCard, i, tavern_1) >= 0); });
                     if (isCurrentCardWorse && isExistCardNotWorse) {
                         return "continue";
                     }
@@ -127,8 +125,9 @@ export var enumerate = function (G, ctx) {
         var hasLowestPriority = HasLowestPriority(G, Number(ctx.currentPlayer));
         var resultsForCoins = CheckHeuristicsForCoinsPlacement(G, ctx);
         if (hasLowestPriority) {
-            resultsForCoins = resultsForCoins.map(function (num, index) { return index === 0 ? num - 20
-                : num; });
+            resultsForCoins = resultsForCoins.map(function (num, index) {
+                return index === 0 ? num - 20 : num;
+            });
         }
         var minResultForCoins = Math.min.apply(Math, resultsForCoins), maxResultForCoins = Math.max.apply(Math, resultsForCoins), tradingProfit = G.decks[G.decks.length - 1].length > 9 ? 1 : 0;
         var _b = [-1, -1], positionForMinCoin = _b[0], positionForMaxCoin = _b[1];
@@ -155,13 +154,16 @@ export var enumerate = function (G, ctx) {
                 if (maxCoin_1 && minCoin_1) {
                     var isTopCoinsOnPosition = false, isMinCoinsOnPosition = false;
                     if (hasPositionForMaxCoin) {
-                        isTopCoinsOnPosition = allCoinsOrder[i].filter(function (coinIndex) {
-                            return handCoins_1[coinIndex] !== null && handCoins_1[coinIndex].value > maxCoin_1.value;
-                        }).length <= 1;
+                        isTopCoinsOnPosition =
+                            allCoinsOrder[i].filter(function (coinIndex) {
+                                return handCoins_1[coinIndex] !== null && handCoins_1[coinIndex].value > maxCoin_1.value;
+                            }).length <= 1;
                     }
                     if (hasPositionForMinCoin) {
-                        isMinCoinsOnPosition = handCoins_1.filter(function (coin) { return coin !== null &&
-                            coin.value < minCoin_1.value; }).length <= 1;
+                        isMinCoinsOnPosition =
+                            handCoins_1.filter(function (coin) {
+                                return coin !== null && coin.value < minCoin_1.value;
+                            }).length <= 1;
                     }
                     if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
                         moves.push({ move: "BotsPlaceAllCoins", args: [G.botData.allCoinsOrder[i]] });
@@ -241,9 +243,8 @@ export var enumerate = function (G, ctx) {
             }
         }
         else if (G.drawProfit === "enlistmentMercenaries") {
-            var mercenaries = G.publicPlayers[Number(ctx.currentPlayer)].campCards.filter(function (card) {
-                return card.type === "наёмник";
-            });
+            var mercenaries = G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                .filter(function (card) { return card.type === "наёмник"; });
             for (var j = 0; j < mercenaries.length; j++) {
                 botMoveArguments.push([j]);
             }
@@ -301,8 +302,8 @@ export var enumerate = function (G, ctx) {
     }
     if (activeStageOfCurrentPlayer === "addCoinToPouch") {
         for (var j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-            if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" &&
-                G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
+            if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline"
+                && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
                 botMoveArguments.push([j]);
             }
         }
@@ -319,7 +320,7 @@ export var enumerate = function (G, ctx) {
                 var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
                 if (coin) {
                     if (!coin.isTriggerTrading && config.coinId !== j) {
-                        if (typeof coin.isInitial === "boolean") {
+                        if (coin.isInitial !== undefined) {
                             isInitial = coin.isInitial;
                         }
                         botMoveArguments.push([j, type, isInitial]);
@@ -342,12 +343,11 @@ export var enumerate = function (G, ctx) {
                     if (typeof ctx.playerID === "string" && Number(ctx.playerID) === p) {
                         for (var i = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
                             for (var j = 0; j < 1; j++) {
-                                if (G.publicPlayers[p].cards[suitId] !== undefined &&
-                                    G.publicPlayers[p].cards[suitId][i] !== undefined) {
+                                if (G.publicPlayers[p].cards[suitId] !== undefined
+                                    && G.publicPlayers[p].cards[suitId][i] !== undefined) {
                                     if (G.publicPlayers[p].cards[suitId][i].type !== "герой") {
-                                        var points = G.publicPlayers[Number(ctx.currentPlayer)]
-                                            .cards[suitId][i].points;
-                                        if (typeof points === "number") {
+                                        var points = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][i].points;
+                                        if (points !== null) {
                                             botMoveArguments.push([points]);
                                         }
                                     }
@@ -369,10 +369,10 @@ export var enumerate = function (G, ctx) {
         var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config, pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
         if (config) {
             for (var j = 0; j < G.suitsNum; j++) {
-                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0] !== undefined &&
-                    suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit !==
-                        config.suit && !(G.drawProfit === "DagdaAction" && G.actionsNum === 1 && pickedCard !== null &&
-                    "suit" in pickedCard &&
+                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0] !== undefined
+                    && suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit !==
+                        config.suit && !(G.drawProfit === "DagdaAction" && G.actionsNum === 1 && pickedCard !== null
+                    && "suit" in pickedCard &&
                     suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit ===
                         pickedCard.suit)) {
                     var last = G.publicPlayers[Number(ctx.currentPlayer)].cards[j].length - 1;
@@ -442,6 +442,8 @@ export var enumerate = function (G, ctx) {
  * <ol>
  * <li>Используется ботами для определения целей.</li>
  * </ol>
+ *
+ * @returns {{isEarlyGame: {weight: number, checker: (G: MyGameState) => boolean}, isFirst: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}, isStronger: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}}}
  */
 export var objectives = function () { return ({
     isEarlyGame: {
@@ -578,8 +580,9 @@ export var objectives = function () { return ({
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {number}
  */
 export var iterations = function (G, ctx) {
     var maxIter = G.botData.maxIter;
@@ -589,9 +592,10 @@ export var iterations = function (G, ctx) {
             return 1;
         }
         var cardIndex = currentTavern.findIndex(function (card) { return card !== null; }), tavernCard_1 = currentTavern[cardIndex];
-        if (currentTavern.every(function (card) { return (card === null) ||
-            (isCardNotAction(card) && tavernCard_1 !== null && isCardNotAction(tavernCard_1) &&
-                card.suit === tavernCard_1.suit && CompareCards(card, tavernCard_1) === 0); })) {
+        if (currentTavern.every(function (card) {
+            return (card === null) || (isCardNotAction(card) && tavernCard_1 !== null && isCardNotAction(tavernCard_1)
+                && card.suit === tavernCard_1.suit && CompareCards(card, tavernCard_1) === 0);
+        })) {
             return 1;
         }
         var efficientMovesCount = 0;
@@ -608,9 +612,9 @@ export var iterations = function (G, ctx) {
             if (G.decks[0].length > 18) {
                 if (tavernCard_2 && isCardNotAction(tavernCard_2)) {
                     var curSuit_1 = GetSuitIndexByName(tavernCard_2.suit);
-                    if ((CompareCards(tavernCard_2, G.averageCards[curSuit_1]) === -1) &&
-                        currentTavern.some(function (card) { return (card !== null) &&
-                            (CompareCards(card, G.averageCards[curSuit_1]) > -1); })) {
+                    if ((CompareCards(tavernCard_2, G.averageCards[curSuit_1]) === -1)
+                        && currentTavern.some(function (card) { return (card !== null)
+                            && (CompareCards(card, G.averageCards[curSuit_1]) > -1); })) {
                         return "continue";
                     }
                 }
@@ -639,8 +643,9 @@ export var iterations = function (G, ctx) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {number}
  */
 export var playoutDepth = function (G, ctx) {
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {

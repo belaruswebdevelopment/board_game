@@ -109,7 +109,8 @@ export interface MyGameState {
  * <li>Данные используются в игре.</li>
  * </ol>
  *
- * @param ctx
+ * @param {Ctx} ctx
+ * @returns {MyGameState} Данные игры.
  * @constructor
  */
 export const SetupGame = (ctx: Ctx): MyGameState => {

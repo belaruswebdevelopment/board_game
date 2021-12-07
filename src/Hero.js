@@ -10,15 +10,16 @@ import { TotalRank } from "./helpers/ScoreHelpers";
  * <li>Происходит при создании всех героев при инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
- * @param name Название.
- * @param description Описание.
- * @param game Игра/дополнение.
- * @param suit Фракция.
- * @param rank Шевроны.
- * @param points Очки.
- * @param active Взят ли герой.
- * @param stack Действия.
+ * @param {string} type Тип.
+ * @param {string} name Название.
+ * @param {string} description Описание.
+ * @param {string} game Игра/дополнение.
+ * @param {string} suit Фракция.
+ * @param {number | null} rank Шевроны.
+ * @param {number | null} points Очки.
+ * @param {boolean | undefined} active Взят ли герой.
+ * @param {IStack[]} stack Действия.
+ * @returns {IHero} Герой.
  * @constructor
  */
 export var CreateHero = function (_a) {
@@ -42,7 +43,8 @@ export var CreateHero = function (_a) {
  * <li>Происходит при создании всех героев при инициализации игры.</li>
  * </ol>
  *
- * @param config Конфиг героев.
+ * @param {string[]} config Конфиг героев.
+ * @returns {IHero[]} Массив всех героев.
  * @constructor
  */
 export var BuildHeroes = function (config) {
@@ -74,8 +76,8 @@ export var BuildHeroes = function (config) {
  * <li>Происходит при перемещении на планшете игрока карта героя Труд.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export var CheckPickHero = function (G, ctx) {
@@ -104,15 +106,13 @@ export var CheckPickHero = function (G, ctx) {
  * <li>Происходит в конце матча после всех игровых событий.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export var RemoveThrudFromPlayerBoardAfterGameEnd = function (G, ctx) {
     for (var i = 0; i < ctx.numPlayers; i++) {
-        var playerCards = G.publicPlayers[i].cards.flat(), thrud = playerCards.find(function (card) {
-            return card.name === "Thrud";
-        });
+        var playerCards = G.publicPlayers[i].cards.flat(), thrud = playerCards.find(function (card) { return card.name === "Thrud"; });
         if (thrud) {
             var thrudSuit = GetSuitIndexByName(thrud.suit), thrudIndex = G.publicPlayers[i].cards[thrudSuit]
                 .findIndex(function (card) { return card.name === "Thrud"; });

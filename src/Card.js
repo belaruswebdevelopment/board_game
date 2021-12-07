@@ -3,6 +3,16 @@ import { suitsConfig } from "./data/SuitData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog } from "./Logging";
 import { tavernsConfig } from "./Tavern";
+/**
+ * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param {DeckCardTypes} card Карта.
+ * @returns {card is ICard} Является ли объект картой дворфа, а не картой обмена монеты.
+ */
 export var isCardNotAction = function (card) { return card.suit !== undefined; };
 /**
  * <h3>Создание карты.</h3>
@@ -11,19 +21,20 @@ export var isCardNotAction = function (card) { return card.suit !== undefined; }
  * <li>Происходит при создании всех карт при инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
- * @param suit Фракция.
- * @param rank Шевроны.
- * @param points Очки.
- * @param name Название.
- * @param game Игра/дополнение.
- * @param tier Эпоха.
- * @param path URL путь.
+ * @param {string | undefined} type Тип.
+ * @param {string} suit Фракция.
+ * @param {number | null} rank Шевроны.
+ * @param {number | null} points Очки.
+ * @param {string | undefined} name Название.
+ * @param {string | undefined} game Игра/дополнение.
+ * @param {number | undefined} tier Эпоха.
+ * @param {string | undefined} path URL путь.
+ * @returns {ICard} Карта дворфа.
  * @constructor
  */
 export var CreateCard = function (_a) {
     var _b = _a === void 0 ? {} : _a, _c = _b.type, type = _c === void 0 ? "базовая" : _c, suit = _b.suit, rank = _b.rank, points = _b.points, _d = _b.name, name = _d === void 0 ? "" : _d, _e = _b.game, game = _e === void 0 ? "" : _e, _f = _b.tier, tier = _f === void 0 ? 0 : _f, _g = _b.path, path = _g === void 0 ? "" : _g;
-    return {
+    return ({
         type: type,
         suit: suit,
         rank: rank,
@@ -32,7 +43,7 @@ export var CreateCard = function (_a) {
         game: game,
         tier: tier,
         path: path,
-    };
+    });
 };
 /**
  * <h3>Создание карты улучшения монеты.</h3>
@@ -45,6 +56,11 @@ export var CreateCard = function (_a) {
  * @param value Значение.
  * @param action Действие.
  * @param name Название.
+ * @param {string | undefined} type Тип.
+ * @param {number} value Значение.
+ * @param {IStack[]} stack Действие.
+ * @param {string} name Название.
+ * @returns {IActionCard} Карта обмена монеты.
  * @constructor
  */
 var CreateActionCard = function (_a) {
@@ -62,9 +78,10 @@ var CreateActionCard = function (_a) {
  * <ol>
  * <li>Происходит при инициализации игры.</li>
  * </ol>
- *
- * @param deckConfig Конфиг карт.
- * @param data Данные для создания карт.
+ *.
+ * @param {IDeckConfig} deckConfig Конфиг карт.
+ * @param {IAverageSuitCardData} data Данные для создания карт.
+ * @returns {DeckCardTypes[]} Все карты дворфов и обмена монет.
  * @constructor
  */
 export var BuildCards = function (deckConfig, data) {
@@ -107,8 +124,9 @@ export var BuildCards = function (deckConfig, data) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param suitConfig
- * @param data
+ * @param {ISuit} suitConfig Конфиг карт дворфов.
+ * @param {IAverageSuitCardData} data
+ * @returns {ICard} "Средняя" карта дворфа.
  * @constructor
  */
 export var GetAverageSuitCard = function (suitConfig, data) {
@@ -136,8 +154,9 @@ export var GetAverageSuitCard = function (suitConfig, data) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param card1
- * @param card2
+ * @param {TavernCardTypes} card1 Первая карта.
+ * @param {TavernCardTypes} card2 Вторая карта.
+ * @returns {number} Сравнительное значение.
  * @constructor
  */
 export var CompareCards = function (card1, card2) {
@@ -146,8 +165,8 @@ export var CompareCards = function (card1, card2) {
     }
     if (isCardNotAction(card1) && isCardNotAction(card2)) {
         if (card1.suit === card2.suit) {
-            var result = (card1.points !== undefined && card1.points !== null ? card1.points : 1) -
-                (card2.points !== undefined && card2.points !== null ? card2.points : 1);
+            var result = (card1.points !== undefined && card1.points !== null ?
+                card1.points : 1) - (card2.points !== undefined && card2.points !== null ? card2.points : 1);
             if (result === 0) {
                 return result;
             }
@@ -164,8 +183,9 @@ export var CompareCards = function (card1, card2) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {number} Профит карты.
  * @constructor
  */
 /*export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
@@ -190,8 +210,9 @@ export var CompareCards = function (card1, card2) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param player
- * @param card
+ * @param {IPublicPlayer} player Игрок.
+ * @param {ICard | IArtefactCampCard | IHero | IActionCard} card Карта.
+ * @returns {number} Потенциальное значение.
  * @constructor
  */
 export var PotentialScoring = function (_a) {
@@ -229,11 +250,12 @@ export var PotentialScoring = function (_a) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
- * @param compareCard
- * @param cardId
- * @param tavern
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {ICard} compareCard Карта для сравнения.
+ * @param {number} cardId Id карты.
+ * @param {TavernCardTypes[]} tavern Таверна.
+ * @returns {number} Сравнительное значение.
  * @constructor
  */
 export var EvaluateCard = function (G, ctx, compareCard, cardId, tavern) {
@@ -242,8 +264,11 @@ export var EvaluateCard = function (G, ctx, compareCard, cardId, tavern) {
         return CompareCards(compareCard, G.averageCards[suitId]);
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
-        var temp = tavern.map(function (card) { return G.publicPlayers
-            .map(function (player) { return PotentialScoring({ player: player, card: card }); }); }), result = temp[cardId][Number(ctx.currentPlayer)];
+        var temp = tavern.map(function (card) {
+            return G.publicPlayers.map(function (player) {
+                return PotentialScoring({ player: player, card: card });
+            });
+        }), result = temp[cardId][Number(ctx.currentPlayer)];
         temp.splice(cardId, 1);
         temp.forEach(function (player) { return player.splice(Number(ctx.currentPlayer), 1); });
         return result - Math.max.apply(Math, temp.map(function (player) { return Math.max.apply(Math, player); }));
@@ -259,8 +284,9 @@ export var EvaluateCard = function (G, ctx, compareCard, cardId, tavern) {
  * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из кэмпа.</li>
  * </ol>
  *
- * @param G
- * @param discardCardIndex Индекс сбрасываемой карты в таверне.
+ * @param {MyGameState} G
+ * @param {number} discardCardIndex Индекс сбрасываемой карты в таверне.
+ * @returns {boolean} Сброшена ли карта из таверны.
  * @constructor
  */
 export var DiscardCardFromTavern = function (G, discardCardIndex) {

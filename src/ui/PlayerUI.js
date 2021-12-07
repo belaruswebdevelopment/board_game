@@ -24,7 +24,8 @@ import { TotalRank } from "../helpers/ScoreHelpers";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {JSX.Element[][]} Игровые поля для пользовательских монет на столе.
  * @constructor
  */
 export var DrawPlayersBoardsCoins = function (data) {
@@ -42,8 +43,9 @@ export var DrawPlayersBoardsCoins = function (data) {
                 for (var j = 0; j < data.props.G.tavernsNum; j++) {
                     playerHeaders[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Taverns(j), className: "bg-tavern-icon" }, void 0) }, "Tavern ".concat(tavernsConfig[j].name)));
                     if (data.props.G.publicPlayers[p].boardCoins[coinIndex] === null) {
-                        if ((Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase === "placeCoins") ||
-                            (Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase === "placeCoinsUline"
+                        if ((Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase === "placeCoins")
+                            || (Number(data.props.ctx.currentPlayer) === p
+                                && data.props.ctx.phase === "placeCoinsUline"
                                 && j === data.props.G.currentTavern + 1)) {
                             DrawCoin(data, playerCells, "back-tavern-icon", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, j, "OnClickBoardCoin", j);
                         }
@@ -51,7 +53,8 @@ export var DrawPlayersBoardsCoins = function (data) {
                             DrawCoin(data, playerCells, "back-tavern-icon", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, j);
                         }
                     }
-                    else if (data.props.ctx.phase === "placeCoins" && Number(data.props.ctx.currentPlayer) === p) {
+                    else if (data.props.ctx.phase === "placeCoins"
+                        && Number(data.props.ctx.currentPlayer) === p) {
                         DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
                     }
                     else {
@@ -76,9 +79,9 @@ export var DrawPlayersBoardsCoins = function (data) {
                     else {
                         playerFooters[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }, void 0) }, "".concat(data.props.G.publicPlayers[p].nickname, " exchange icon ").concat(j)));
                         if (data.props.G.publicPlayers[p].boardCoins[coinIndex] === null) {
-                            if (Number(data.props.ctx.currentPlayer) === p && data.props.ctx.phase !==
-                                "placeCoinsUline" && (data.props.ctx.phase === "placeCoins" ||
-                                (data.props.ctx.activePlayers &&
+                            if (Number(data.props.ctx.currentPlayer) === p
+                                && data.props.ctx.phase !== "placeCoinsUline" && (data.props.ctx.phase === "placeCoins"
+                                || (data.props.ctx.activePlayers &&
                                     data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
                                     "placeTradingCoinsUline")) {
                                 DrawCoin(data, playerCells, "back-small-market-coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
@@ -87,17 +90,18 @@ export var DrawPlayersBoardsCoins = function (data) {
                                 DrawCoin(data, playerCells, "back-small-market-coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p]);
                             }
                         }
-                        else if (Number(data.props.ctx.currentPlayer) === p && (data.props.ctx.phase ===
-                            "placeCoins" || (data.props.ctx.activePlayers &&
-                            data.props.ctx.activePlayers[data.props.ctx.currentPlayer])
-                            === "placeTradingCoinsUline")) {
+                        else if (Number(data.props.ctx.currentPlayer) === p
+                            && (data.props.ctx.phase === "placeCoins" || (data.props.ctx.activePlayers
+                                && data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
+                                "placeTradingCoinsUline")) {
                             DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
                         }
                         else {
-                            if (data.props.G.winner.length || (data.props.ctx.phase !== "placeCoins" &&
-                                Number(data.props.ctx.currentPlayer) === p &&
-                                data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern] &&
-                                data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern].isTriggerTrading)) {
+                            if (data.props.G.winner.length || (data.props.ctx.phase !== "placeCoins"
+                                && Number(data.props.ctx.currentPlayer) === p
+                                && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern]
+                                && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern]
+                                    .isTriggerTrading)) {
                                 DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p]);
                             }
                             else {
@@ -121,7 +125,8 @@ export var DrawPlayersBoardsCoins = function (data) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {JSX.Element[][]} Игровые поля для пользовательских монет в руке.
  * @constructor
  */
 export var DrawPlayersHandsCoins = function (data) {
@@ -140,9 +145,10 @@ export var DrawPlayersHandsCoins = function (data) {
                         if (data.props.G.publicPlayers[p].selectedCoin === j) {
                             coinClasses = "border-2 border-green-400";
                         }
-                        if (!data.props.G.winner.length && (data.props.ctx.phase === "placeCoins" ||
-                            data.props.ctx.phase === "placeCoinsUline" || (data.props.ctx.activePlayers &&
-                            data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) === "placeTradingCoinsUline")) {
+                        if (!data.props.G.winner.length && (data.props.ctx.phase === "placeCoins"
+                            || data.props.ctx.phase === "placeCoinsUline" || (data.props.ctx.activePlayers
+                            && data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
+                            "placeTradingCoinsUline")) {
                             DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].handCoins[j], j, data.props.G.publicPlayers[p], coinClasses, null, "OnClickHandCoin", j);
                         }
                         else {
@@ -166,7 +172,8 @@ export var DrawPlayersHandsCoins = function (data) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {JSX.Element[][]} Игровые поля для планшета всех карт игрока.
  * @constructor
  */
 export var DrawPlayersBoards = function (data) {
@@ -197,8 +204,8 @@ export var DrawPlayersBoards = function (data) {
             for (var j = 0; j < data.props.G.suitsNum; j++) {
                 var suit = Object.keys(suitsConfig)[j];
                 id = i + j;
-                if (data.props.G.publicPlayers[p].cards[j] !== undefined && data.props.G.publicPlayers[p].cards[j][i]
-                    !== undefined) {
+                if (data.props.G.publicPlayers[p].cards[j] !== undefined
+                    && data.props.G.publicPlayers[p].cards[j][i] !== undefined) {
                     isDrawRow = true;
                     DrawCard(data, playerCells, data.props.G.publicPlayers[p].cards[j][i], id, data.props.G.publicPlayers[p], suit);
                 }
@@ -212,10 +219,14 @@ export var DrawPlayersBoards = function (data) {
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                     if (data.props.G.publicPlayers[p].heroes[i] !== undefined &&
                         (!data.props.G.publicPlayers[p].heroes[i].suit &&
-                            !((data.props.G.publicPlayers[p].heroes[i].name === "Ylud" &&
-                                data.props.G.publicPlayers[p].cards.flat().findIndex(function (card) { return card.name === "Ylud"; }) !== -1)
-                                || (data.props.G.publicPlayers[p].heroes[i].name === "Thrud" &&
-                                    data.props.G.publicPlayers[p].cards.flat().findIndex(function (card) { return card.name === "Thrud"; }) !== -1)))) {
+                            !((data.props.G.publicPlayers[p].heroes[i].name === "Ylud"
+                                && data.props.G.publicPlayers[p].cards.flat()
+                                    .findIndex(function (card) { return card.name === "Ylud"; }) !== -1)
+                                || (data.props.G.publicPlayers[p].heroes[i].name === "Thrud"
+                                    && data.props.G.publicPlayers[p].cards.flat()
+                                        .findIndex(function (card) {
+                                        return card.name === "Thrud";
+                                    }) !== -1)))) {
                         isDrawRow = true;
                         DrawCard(data, playerCells, data.props.G.publicPlayers[p].heroes[i], id, data.props.G.publicPlayers[p]);
                     }

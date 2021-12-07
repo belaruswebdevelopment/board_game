@@ -7,7 +7,8 @@ import { CompareCards, EvaluateCard, isCardNotAction } from "./Card";
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param permutation
+ * @param {number[]} permutation
+ * @returns {number[][]}
  * @constructor
  */
 export var Permute = function (permutation) {
@@ -38,8 +39,9 @@ export var Permute = function (permutation) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param set
- * @param k
+ * @param {number[]} set
+ * @param {number} k
+ * @returns {number[][]}
  */
 export var k_combinations = function (set, k) {
     var combs = [], head, tailCombs;
@@ -76,8 +78,9 @@ export var k_combinations = function (set, k) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param tavernsNum
- * @param playersNum
+ * @param {number} tavernsNum
+ * @param {number} playersNum
+ * @returns {any}
  * @constructor
  */
 export var GetAllPicks = function (_a) {
@@ -108,6 +111,7 @@ export var GetAllPicks = function (_a) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (cards: DeckCardTypes[]) => boolean, weight: number}}
  */
 var isAllCardsEqual = {
     heuristic: function (cards) { return cards.every(function (card) {
@@ -125,6 +129,7 @@ var isAllCardsEqual = {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 var isAllWorse = {
     heuristic: function (array) { return array.every(function (item) { return item === -1; }); },
@@ -138,6 +143,7 @@ var isAllWorse = {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 var isAllAverage = {
     heuristic: function (array) { return array.every(function (item) { return item === 0; }); },
@@ -151,6 +157,7 @@ var isAllAverage = {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 var isAllBetter = {
     heuristic: function (array) { return array.every(function (item) { return item === 1; }); },
@@ -164,6 +171,7 @@ var isAllBetter = {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 var isOnlyOneWorse = {
     heuristic: function (array) { return (array.filter(function (item) { return item === -1; }).length === 1); },
@@ -177,6 +185,7 @@ var isOnlyOneWorse = {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 var isOnlyWorseOrBetter = {
     heuristic: function (array) { return array.every(function (item) { return item !== 0; }); },
@@ -190,6 +199,7 @@ var isOnlyWorseOrBetter = {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (cards: DeckCardTypes[]) => boolean, weight: number}[]}
  */
 var absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
 /**
@@ -200,6 +210,7 @@ var absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
+ * @type {{heuristic: (array: number[]) => boolean, weight: number}[]}
  */
 var relativeHeuristicsForTradingCoin = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
 console.log(relativeHeuristicsForTradingCoin !== null && relativeHeuristicsForTradingCoin !== void 0 ? relativeHeuristicsForTradingCoin : "");
@@ -212,7 +223,8 @@ console.log(relativeHeuristicsForTradingCoin !== null && relativeHeuristicsForTr
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param array
+ * @param {number[]} array
+ * @returns {{mean: number, variation: number}}
  * @constructor
  */
 var GetCharacteristics = function (array) {
@@ -230,8 +242,9 @@ var GetCharacteristics = function (array) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param stat1
- * @param stat2
+ * @param {{variation: number, mean: number}} stat1
+ * @param {{variation: number, mean: number}} stat2
+ * @returns {number}
  * @constructor
  */
 var CompareCharacteristics = function (stat1, stat2) {
@@ -249,8 +262,9 @@ var CompareCharacteristics = function (stat1, stat2) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {number[]}
  * @constructor
  */
 export var CheckHeuristicsForCoinsPlacement = function (G, ctx) {

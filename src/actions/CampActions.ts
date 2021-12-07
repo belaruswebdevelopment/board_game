@@ -15,7 +15,7 @@ import {
 } from "../Player";
 import {CheckAndMoveThrudOrPickHeroAction} from "./HeroActions";
 import {AddDataToLog, LogTypes} from "../Logging";
-import {suitsConfig} from "../data/SuitData";
+import {SuitNames, suitsConfig} from "../data/SuitData";
 import {CampDeckCardTypes, MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {isArtefactCard} from "../Camp";
@@ -65,15 +65,15 @@ export const AddCampCardToCards = (G: MyGameState, ctx: Ctx, config: IConfig, ca
     let suitId: number | null = null,
         stack: IStack[] = [];
     G.camp[cardId] = null;
-    if (campCard) {
-        if (isArtefactCard(campCard) && campCard.suit) {
+    if (campCard !== null) {
+        if (isArtefactCard(campCard)) {
             AddCampCardToPlayerCards(G, ctx, campCard);
             CheckAndMoveThrudOrPickHeroAction(G, ctx, campCard);
             suitId = GetSuitIndexByName(campCard.suit);
         } else {
             AddCampCardToPlayer(G, ctx, campCard);
             if (ctx.phase === "enlistmentMercenaries" && G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                .filter(card => card.type === "наёмник").length) {
+                .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
                 stack = [
                     {
                         actionName: "DrawProfitAction",
@@ -104,8 +104,8 @@ export const AddCampCardToCards = (G: MyGameState, ctx: Ctx, config: IConfig, ca
  */
 export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, coinId: number): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        tempId: number = player.boardCoins.findIndex((coin: ICoin | null, index: number): boolean =>
-            index >= G.tavernsNum && coin === null),
+        tempId: number = player.boardCoins
+            .findIndex((coin: ICoin | null, index: number): boolean => index >= G.tavernsNum && coin === null),
         stack: IStack[] = [
             {
                 actionName: "StartVidofnirVedrfolnirAction",
@@ -312,8 +312,8 @@ export const DiscardTradingCoin = (G: MyGameState, ctx: Ctx): void => {
  */
 export const DiscardAnyCardFromPlayerBoard = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
                                               cardId: number): void => {
-    const discardedCard: PlayerCardsType = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-        .splice(cardId, 1)[0];
+    const discardedCard: PlayerCardsType =
+        G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(cardId, 1)[0];
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
     сбросил карту ${discardedCard.name} в дискард.`);
     delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
@@ -333,7 +333,7 @@ export const DiscardAnyCardFromPlayerBoard = (G: MyGameState, ctx: Ctx, config: 
  * @constructor
  */
 export const StartDiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-    if (config.suit) {
+    if (config.suit !== undefined) {
         const suitId: number = GetSuitIndexByName(config.suit),
             value: { [index: number]: { stage: string } } = {};
         for (let i: number = 0; i < ctx.numPlayers; i++) {
@@ -346,7 +346,7 @@ export const StartDiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig):
                         actionName: "DiscardSuitCard",
                         playerId: i,
                         config: {
-                            suit: "warrior",
+                            suit: SuitNames.WARRIOR,
                         },
                     },
                 ];
@@ -377,12 +377,14 @@ export const StartDiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig):
  */
 export const DiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number, playerId: number,
                                 cardId: number): void => {
-    const discardedCard: PlayerCardsType = G.publicPlayers[Number(ctx.playerID as string)].cards[suitId]
-        .splice(cardId, 1)[0];
-    G.discardCardsDeck.push(discardedCard as ICard);
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.playerID as string)].nickname} 
-    сбросил карту ${discardedCard.name} в дискард.`);
-    EndActionForChosenPlayer(G, ctx, playerId);
+    if (ctx.playerID !== undefined) {
+        const discardedCard: PlayerCardsType =
+            G.publicPlayers[Number(ctx.playerID)].cards[suitId].splice(cardId, 1)[0];
+        G.discardCardsDeck.push(discardedCard as ICard);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.playerID)].nickname} 
+        сбросил карту ${discardedCard.name} в дискард.`);
+        EndActionForChosenPlayer(G, ctx, playerId);
+    }
 };
 
 /**

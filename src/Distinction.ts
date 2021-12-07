@@ -1,5 +1,5 @@
 import {AddDataToLog, LogTypes} from "./Logging";
-import {suitsConfig} from "./data/SuitData";
+import {SuitNames, suitsConfig} from "./data/SuitData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {TotalRank} from "./helpers/ScoreHelpers";
 import {DeckCardTypes, MyGameState} from "./GameSetup";
@@ -12,8 +12,8 @@ import {Ctx} from "boardgame.io";
  * <li>Отрабатывает в начале фазы получения преимуществ за количество шевронов каждой фракции.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
@@ -22,7 +22,7 @@ export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
     for (const suit in suitsConfig) {
         const result: number | undefined = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[i] = result;
-        if (suit === "explorer" && result === undefined) {
+        if (suit === SuitNames.EXPLORER && result === undefined) {
             const discardedCard: DeckCardTypes = G.decks[1].splice(0, 1)[0];
             AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков 
             сброшена карта: ${discardedCard.name}.`);
@@ -39,9 +39,10 @@ export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
  * <li>Применяется при подсчёте преимуществ по количеству шевронов фракции в конце игры (фракция воинов).</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param suitName Фракция.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {string} suitName Фракция.
+ * @returns {number | undefined} Индекс игрока с преимуществом по фракции, если имеется.
  * @constructor
  */
 export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suitName: string): number | undefined => {
@@ -51,7 +52,7 @@ export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suitName: 
         playersRanks.push(G.publicPlayers[i].cards[suitIndex].reduce(TotalRank, 0));
     }
     const max: number = Math.max(...playersRanks),
-        maxPlayers: number[] = playersRanks.filter(count => count === max);
+        maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max);
     if (maxPlayers.length === 1) {
         const playerDistinctionIndex: number = playersRanks.indexOf(maxPlayers[0]);
         AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suitName].suitName} получил 

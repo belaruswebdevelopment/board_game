@@ -224,13 +224,13 @@ export var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId,
                         stageName: "discardCardFromBoard",
                         drawName: "Dagda",
                         name: "DagdaAction",
-                        suit: "hunter",
+                        suit: "hunter" /* HUNTER */,
                     },
                 },
                 {
                     actionName: "DiscardCardsFromPlayerBoardAction",
                     config: {
-                        suit: "hunter",
+                        suit: "hunter" /* HUNTER */,
                     },
                 },
             ];
@@ -314,27 +314,27 @@ var PlaceCards = function (G, ctx, config, suitId) {
         if (G.actionsNum === 2) {
             var variants = {
                 blacksmith: {
-                    suit: "blacksmith",
+                    suit: "blacksmith" /* BLACKSMITH */,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter",
+                    suit: "hunter" /* HUNTER */,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer",
+                    suit: "explorer" /* EXPLORER */,
                     rank: 1,
                     points: 0,
                 },
                 warrior: {
-                    suit: "warrior",
+                    suit: "warrior" /* WARRIOR */,
                     rank: 1,
                     points: 0,
                 },
                 miner: {
-                    suit: "miner",
+                    suit: "miner" /* MINER */,
                     rank: 1,
                     points: 0,
                 },

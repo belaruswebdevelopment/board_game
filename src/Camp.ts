@@ -5,6 +5,9 @@ import {CampCardTypes, CampDeckCardTypes, MyGameState, TavernCardTypes} from "./
 import {IStack} from "./Player";
 import {IArtefactConfig, IMercenaries} from "./data/CampData";
 
+/**
+ * <h3>Интерфейс для карты кэмпа артефакта.</h3>
+ */
 export interface IArtefactCampCard {
     type: string,
     tier: number,
@@ -18,6 +21,9 @@ export interface IArtefactCampCard {
     stack: IStack[],
 }
 
+/**
+ * <h3>Интерфейс для создания карты кэмпа артефакта.</h3>
+ */
 interface ICreateArtefactCampCard {
     type?: string,
     tier: number,
@@ -31,6 +37,9 @@ interface ICreateArtefactCampCard {
     stack: IStack[],
 }
 
+/**
+ * <h3>Интерфейс для карты кэмпа наёмника.</h3>
+ */
 export interface IMercenaryCampCard {
     type: string,
     tier: number,
@@ -40,6 +49,9 @@ export interface IMercenaryCampCard {
     stack: IStack[],
 }
 
+/**
+ * <h3>Интерфейс для создания карты кэмпа наёмника.</h3>
+ */
 interface ICreateMercenaryCampCard {
     type?: string,
     tier: number,
@@ -49,8 +61,18 @@ interface ICreateMercenaryCampCard {
     stack: IStack[],
 }
 
-export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard | null): card is
-    IArtefactCampCard => (card as IArtefactCampCard).suit !== undefined;
+/**
+ * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param {IArtefactCampCard | IMercenaryCampCard} card Карта.
+ * @returns {card is IArtefactCampCard} Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
+ */
+export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard): card is IArtefactCampCard =>
+    (card as IArtefactCampCard).suit !== undefined;
 
 /**
  * <h3>Создание карты артефакта для кэмпа.</h3>
@@ -59,16 +81,17 @@ export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard | nu
  * <li>Происходит при создании всех карт артефактов кэмпа во время инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
- * @param tier Эпоха.
- * @param path URL путь.
- * @param name Название.
- * @param description Описание.
- * @param game Игра/дополнение.
- * @param suit Фракция.
- * @param rank Шевроны.
- * @param points Очки.
- * @param stack Действия.
+ * @param {string | undefined} type Тип.
+ * @param {number} tier Эпоха.
+ * @param {string} path URL путь.
+ * @param {string} name Название.
+ * @param {string} description Описание.
+ * @param {string} game Игра/дополнение.
+ * @param {string} suit Фракция.
+ * @param {number | null} rank Шевроны.
+ * @param {number | null} points Очки.
+ * @param {IStack[]} stack Действия.
+ * @returns {IArtefactCampCard} Карта кэмпа артефакт.
  * @constructor
  */
 export const CreateArtefactCampCard = ({
@@ -103,12 +126,13 @@ export const CreateArtefactCampCard = ({
  * <li>Происходит при создании всех карт наёмников кэмпа во время инициализации игры.</li>
  * </ol>
  *
- * @param type Тип.
- * @param tier Эпоха.
- * @param path URL путь.
- * @param name Название.
- * @param game Игра/дополнение.
- * @param stack Действия.
+ * @param {string | undefined} type Тип.
+ * @param {number} tier Эпоха.
+ * @param {string} path URL путь.
+ * @param {string} name Название.
+ * @param {string | undefined} game Игра/дополнение.
+ * @param {IStack[]} stack Действия.
+ * @returns {IMercenaryCampCard} Карта кэмпа наёмник.
  * @constructor
  */
 export const CreateMercenaryCampCard = ({
@@ -135,9 +159,10 @@ export const CreateMercenaryCampCard = ({
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *
- * @param tier Эпоха.
- * @param artefactConfig Файл конфига карт артефактов.
- * @param mercenariesConfig Файл конфига наёмников.
+ * @param {number} tier Эпоха.
+ * @param {IArtefactConfig} artefactConfig Файл конфига карт артефактов.
+ * @param {IMercenaries[][]} mercenariesConfig Файл конфига наёмников.
+ * @returns {CampDeckCardTypes[]} Все карты кэмпа.
  * @constructor
  */
 export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, mercenariesConfig: IMercenaries[][]):
@@ -204,7 +229,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
  * <li>Проверяется после каждого выбора карты из таверны, если последний игрок в текущей таверне уже выбрал карту.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
@@ -223,7 +248,7 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
  * <li>Происходит при начале раунда.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 export const RefillEmptyCampCards = (G: MyGameState): void => {
@@ -253,7 +278,7 @@ export const RefillEmptyCampCards = (G: MyGameState): void => {
  * <li>Происходит при начале новой эпохи.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 export const RefillCamp = (G: MyGameState): void => {
@@ -262,7 +287,7 @@ export const RefillCamp = (G: MyGameState): void => {
         AddCardToCamp(G, i);
     }
     AddDataToLog(G, LogTypes.GAME, "Кэмп заполнен новыми картами новой эпохи.");
-}
+};
 
 /**
  * <h3>Перемещает все оставшиеся неиспользованные карты кэмпа в дискард.</h3>
@@ -271,7 +296,7 @@ export const RefillCamp = (G: MyGameState): void => {
  * <li>Происходит в конце 1-й эпохи.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
@@ -298,8 +323,8 @@ const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
  * <li>Происходит при заполнении кэмпа картами новой эпохи.</li>
  * </ol>
  *
- * @param G
- * @param cardIndex Индекс карты.
+ * @param {MyGameState} G
+ * @param {number} cardIndex Индекс карты.
  * @constructor
  */
 const AddCardToCamp = (G: MyGameState, cardIndex: number): void => {

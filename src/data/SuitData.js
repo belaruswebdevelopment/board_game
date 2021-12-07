@@ -14,7 +14,7 @@ import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
  * @todo Add may be potential points for hunters and blacksmiths.
  */
 var blacksmith = {
-    suit: "blacksmith",
+    suit: "blacksmith" /* BLACKSMITH */,
     suitName: "Кузнецы",
     suitColor: 'bg-purple-600',
     description: "Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).",
@@ -61,7 +61,7 @@ var blacksmith = {
         awarding: function (G, ctx, player) {
             if (G.tierToEnd !== 0) {
                 player.cards[0].push(CreateCard({
-                    suit: "blacksmith",
+                    suit: "blacksmith" /* BLACKSMITH */,
                     rank: 2,
                     points: 2,
                 }));
@@ -81,7 +81,7 @@ var blacksmith = {
  * </ol>
  */
 var hunter = {
-    suit: "hunter",
+    suit: "hunter" /* HUNTER */,
     suitName: "Охотники",
     suitColor: "bg-green-600",
     description: "Их показатель храбрости равен квадрату числа карт охотников в армии игрока.",
@@ -150,7 +150,7 @@ var hunter = {
  * @type {{scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*=, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}} Горняки.
  */
 var miner = {
-    suit: "miner",
+    suit: "miner" /* MINER */,
     suitName: "Горняки",
     suitColor: "bg-yellow-600",
     description: "Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии " +
@@ -226,7 +226,7 @@ var miner = {
  * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*=, *=, *): (*))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}} Воины.
  */
 var warrior = {
-    suit: "warrior",
+    suit: "warrior" /* WARRIOR */,
     suitName: "Воины",
     suitColor: "bg-red-600",
     description: "Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, " +
@@ -314,7 +314,7 @@ var warrior = {
  * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*=, *=, *): (*|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}} Разведчики.
  */
 var explorer = {
-    suit: "explorer",
+    suit: "explorer" /* EXPLORER */,
     suitName: "Разведчики",
     suitColor: "bg-blue-500",
     description: "Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.",

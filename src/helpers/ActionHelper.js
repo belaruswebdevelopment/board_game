@@ -6,9 +6,9 @@ import { AfterBasicPickCardActions } from "./MovesHelpers";
  * <li>Срабатывает после завершения каждого экшена.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param isTrading Является ли действие обменом монет (трейдингом).
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {boolean} isTrading Является ли действие обменом монет (трейдингом).
  * @constructor
  */
 export var EndAction = function (G, ctx, isTrading) {

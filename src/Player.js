@@ -6,14 +6,15 @@ import { AddDataToLog } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
 import { isCardNotAction } from "./Card";
 /**
- * <h3>Создание игрока.</h3>
+ * <h3>Создание приватных данных игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит при создании всех игроков при инициализации игры.</li>
  * </ol>
  *
- * @param handCoins Массив монет в руке.
- * @param boardCoins Массив монет на столе.
+ * @param {ICoin[]} handCoins Массив монет в руке.
+ * @param {ICoin[]} boardCoins Массив монет на столе.
+ * @returns {IPlayer} Приватные данные игрока.
  * @constructor
  */
 var CreatePlayer = function (_a) {
@@ -24,25 +25,24 @@ var CreatePlayer = function (_a) {
     });
 };
 /**
- *
- * <h3>Создание игрока.</h3>
+ * <h3>Создание публичных данных игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит при создании всех игроков при инициализации игры.</li>
  * </ol>
  *
- * @param nickname Никнейм.
- * @param cards Массив карт.
- * @param heroes Массив героев.
- * @param campCards Массив карт кэмпа.
- * @param nickname Никнейм.
- * @param handCoins Массив монет в руке.
- * @param boardCoins Массив монет на столе.
- * @param stack Стэк действий.
- * @param priority Кристалл.
- * @param buffs Бафы.
- * @param selectedCoin Выбранная монета.
- * @param pickedCard Выбранная карта.
+ * @param {string} nickname Никнейм.
+ * @param {PlayerCardsType[][]} cards Массив карт.
+ * @param {IHero[] | undefined} heroes Массив героев.
+ * @param {CampDeckCardTypes[] | undefined} campCards Массив карт кэмпа.
+ * @param {ICoin[]} handCoins Массив монет в руке.
+ * @param {ICoin[]} boardCoins Массив монет на столе.
+ * @param {IStack[] | undefined} stack Стэк действий.
+ * @param {IPriority} priority Кристалл.
+ * @param {IBuffs | undefined} buffs Бафы.
+ * @param {any} selectedCoin Выбранная монета.
+ * @param {null | undefined} pickedCard Выбранная карта.
+ * @returns {IPublicPlayer} Публичные данные игрока.
  * @constructor
  */
 var CreatePublicPlayer = function (_a) {
@@ -68,10 +68,14 @@ var CreatePublicPlayer = function (_a) {
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *
+ * @returns {IPlayer} Приватные данные игрока.
  * @constructor
  */
 export var BuildPlayer = function () { return CreatePlayer({
-    handCoins: BuildCoins(initialPlayerCoinsConfig, { isInitial: true, isTriggerTrading: false }),
+    handCoins: BuildCoins(initialPlayerCoinsConfig, {
+        isInitial: true,
+        isTriggerTrading: false,
+    }),
     boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
 }); };
 /**
@@ -81,21 +85,20 @@ export var BuildPlayer = function () { return CreatePlayer({
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *
- * @param playersNum Количество игроков.
- * @param suitsNum Количество фракций.
- * @param nickname Никнейм.
- * @param priority Кристалл.
+ * @param {number} playersNum Количество игроков.
+ * @param {number} suitsNum Количество фракций.
+ * @param {string} nickname Никнейм.
+ * @param {IPriority} priority Кристалл.
+ * @returns {IPublicPlayer} Публичные данные игрока.
  * @constructor
  */
-export var BuildPublicPlayer = function (playersNum, suitsNum, nickname, priority) {
-    return CreatePublicPlayer({
-        nickname: nickname,
-        cards: Array(suitsNum).fill(Array(0)),
-        handCoins: BuildCoins(initialPlayerCoinsConfig, { isInitial: true, isTriggerTrading: false }),
-        boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
-        priority: priority,
-    });
-};
+export var BuildPublicPlayer = function (playersNum, suitsNum, nickname, priority) { return CreatePublicPlayer({
+    nickname: nickname,
+    cards: Array(suitsNum).fill(Array(0)),
+    handCoins: BuildCoins(initialPlayerCoinsConfig, { isInitial: true, isTriggerTrading: false }),
+    boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
+    priority: priority,
+}); };
 /**
  * <h3>Проверяет базовый порядок хода игроков.</h3>
  * <p>Применения:</p>
@@ -104,14 +107,14 @@ export var BuildPublicPlayer = function (playersNum, suitsNum, nickname, priorit
  * <li>Происходит при необходимости выставления монет на игровое поле при наличии героя Улина.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export var CheckPlayersBasicOrder = function (G, ctx) {
     G.publicPlayersOrder = [];
     for (var i = 0; i < ctx.numPlayers; i++) {
-        if (G.publicPlayers[i].buffs.everyTurn === "Uline") {
+        if (G.publicPlayers[i].buffs.everyTurn !== "Uline") {
             G.publicPlayersOrder.push(i);
         }
     }
@@ -125,17 +128,19 @@ export var CheckPlayersBasicOrder = function (G, ctx) {
  * <li>Происходит при взятии карты из сброса при активации героя.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param card Карта.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {DeckCardTypes} card Карта.
+ * @returns {boolean} Добавлена ли карта на планшет игрока.
  * @constructor
  */
 export var AddCardToPlayer = function (G, ctx, card) {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = card;
+    // TODO Not only deckcardtypes but ihero+icampcardtypes?? but they are created as ICard and added to players cards...
     if (isCardNotAction(card)) {
         var suitIndex = GetSuitIndexByName(card.suit);
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suitIndex].push(card);
-        AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 '").concat(card.name, "'."));
+        AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 '").concat(card.name, "' \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[card.suit].suitName, "."));
         return true;
     }
     AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 '").concat(card.name, "'."));
@@ -148,9 +153,9 @@ export var AddCardToPlayer = function (G, ctx, card) {
  * <li>Происходит при взятии карты кэмпа игроком.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param card Карта кэмпа.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {CampDeckCardTypes} card Карта кэмпа.
  * @constructor
  */
 export var AddCampCardToPlayer = function (G, ctx, card) {
@@ -164,9 +169,9 @@ export var AddCampCardToPlayer = function (G, ctx, card) {
  * <li>Происходит при добавлении карты кэмпа в конкретную фракцию игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param card Карта кэмпа.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IArtefactCampCard} card Карта кэмпа.
  * @constructor
  */
 export var AddCampCardToPlayerCards = function (G, ctx, card) {
@@ -183,9 +188,9 @@ export var AddCampCardToPlayerCards = function (G, ctx, card) {
  * <li>Происходит при добавлении героя на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param hero Герой.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IHero} hero Герой.
  * @constructor
  */
 export var AddHeroCardToPlayerHeroCards = function (G, ctx, hero) {
@@ -201,9 +206,9 @@ export var AddHeroCardToPlayerHeroCards = function (G, ctx, hero) {
  * <li>Происходит при добавлении героя на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param hero Герой.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IHero} hero Герой.
  * @constructor
  */
 export var AddHeroCardToPlayerCards = function (G, ctx, hero) {
@@ -220,13 +225,14 @@ export var AddHeroCardToPlayerCards = function (G, ctx, hero) {
  * <li>Происходит при подсчёте потенциального скоринга для ботов.</li>
  * </ol>
  *
- * @param cards Массив потенциальных карт для ботов.
- * @param card Карта.
+ * @param {PlayerCardsType[][]} cards Массив потенциальных карт для ботов.
+ * @param {PlayerCardsType} card Карта.
+ * @constructor
  */
 export var AddCardToCards = function (cards, card) {
-    var suitIndex = GetSuitIndexByName(card.suit);
-    if (suitIndex) {
-        cards[suitIndex].push(card);
+    var suitId = GetSuitIndexByName(card.suit);
+    if (suitId !== -1) {
+        cards[suitId].push(card);
     }
 };
 /**
@@ -237,8 +243,9 @@ export var AddCardToCards = function (cards, card) {
  * </oL>
  *
  * @todo Саше: Добавить описание для функции и параметров.
- * @param G
- * @param playerId
+ * @param {MyGameState} G
+ * @param {number} playerId Id игрока.
+ * @returns {boolean}
  * @constructor
  */
 export var IsTopPlayer = function (G, playerId) {
@@ -253,13 +260,14 @@ export var IsTopPlayer = function (G, playerId) {
  * </oL>
  *
  * @todo Саше: Добавить описание для функции и параметров
- * @param G
- * @param currentPlayerId Id текущего игрока.
+ * @param {MyGameState} G
+ * @param {number} currentPlayerId Id текущего игрока.
+ * @returns {number}
  * @constructor
  */
 /*export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number => {
-    let top1PlayerId: number = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean =>
-        IsTopPlayer(G, index));
+    let top1PlayerId: number =
+        G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean => IsTopPlayer(G, index));
     if (G.publicPlayersOrder.indexOf(currentPlayerId) > G.publicPlayersOrder.indexOf(top1PlayerId)) {
         top1PlayerId = -1;
     }
@@ -273,8 +281,9 @@ export var IsTopPlayer = function (G, playerId) {
  * </oL>
  *
  * @todo Саше: Добавить описание для функции и параметров.
- * @param G
- * @param top1PlayerId Id текущего игрока.
+ * @param {MyGameState} G
+ * @param {number} top1PlayerId Id текущего игрока.
+ * @returns {number}
  * @constructor
  */
 /*export const GetTop2PlayerId = (G: MyGameState, top1PlayerId: number): number => {
@@ -282,12 +291,14 @@ export var IsTopPlayer = function (G, playerId) {
         maxScore: number = Math.max(...playersScore);
     let top2PlayerId: number,
         temp: number;
-    if (playersScore.filter(score => score === maxScore).length === 1) {
-        temp = playersScore.sort((a, b) => b - a)[1];
-        top2PlayerId = G.publicPlayers.findIndex(player => CurrentScoring(player) === temp);
+    if (playersScore.filter((score: number): boolean => score === maxScore).length === 1) {
+        temp = playersScore.sort((a: number, b: number): number => b - a)[1];
+        top2PlayerId =
+            G.publicPlayers.findIndex((player: IPublicPlayer): boolean => CurrentScoring(player) === temp);
     } else {
-        top2PlayerId = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean => index !== top1PlayerId
-            && IsTopPlayer(G, index));
+        top2PlayerId =
+            G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean => index !== top1PlayerId
+                && IsTopPlayer(G, index));
     }
     if (G.publicPlayersOrder.indexOf(top1PlayerId) > G.publicPlayersOrder.indexOf(top2PlayerId)) {
         top2PlayerId = -1;

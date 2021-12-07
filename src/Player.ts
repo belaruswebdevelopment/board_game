@@ -12,8 +12,16 @@ import {IHero} from "./Hero";
 import {IArtefactCampCard} from "./Camp";
 import {IBuff, IConditions, IVariants} from "./data/HeroData";
 
+/**
+ * <h3>Типы данных для карт на планшете игрока.</h3>
+ */
 export type PlayerCardsType = ICard | IArtefactCampCard | IHero;
 
+export type PickedCardType = null | DeckCardTypes | CampDeckCardTypes | IHero;
+
+/**
+ * <h3>Интерфейс для видов бафов у карт.</h3>
+ */
 export interface IBuffs {
     // everyTurn?: string,
     // upgradeNextCoin?: string,
@@ -26,6 +34,9 @@ export interface IBuffs {
     [name: string]: string | number | boolean,
 }
 
+/**
+ * <h3>Интерфейс для конфига у карт.</h3>
+ */
 export interface IConfig {
     conditions?: IConditions,
     buff?: IBuff,
@@ -40,6 +51,9 @@ export interface IConfig {
     name?: string,
 }
 
+/**
+ * <h3>Интерфейс для стэка у карт.</h3>
+ */
 export interface IStack {
     actionName: string,
     variants?: IVariants,
@@ -47,11 +61,18 @@ export interface IStack {
     playerId?: number,
 }
 
+/**
+ * <h3>Интерфейс для приватных данных игрока.</h3>
+ */
 export interface IPlayer {
     handCoins: ICoin[],
     boardCoins: ICoin[],
 }
 
+// TODO Rework cards in object where keys === suits, not number-indexes
+/**
+ * <h3>Интерфейс для публичных данных игрока.</h3>
+ */
 export interface IPublicPlayer {
     nickname: string,
     cards: PlayerCardsType[][],
@@ -63,9 +84,12 @@ export interface IPublicPlayer {
     priority: IPriority,
     buffs: IBuffs,
     selectedCoin: undefined | number,
-    pickedCard: null | DeckCardTypes | CampDeckCardTypes | IHero,
+    pickedCard: PickedCardType,
 }
 
+/**
+ * <h3>Интерфейс для создания публичных данных игрока.</h3>
+ */
 interface ICreatePublicPlayer {
     nickname: string,
     cards: PlayerCardsType[][],
@@ -81,14 +105,15 @@ interface ICreatePublicPlayer {
 }
 
 /**
- * <h3>Создание игрока.</h3>
+ * <h3>Создание приватных данных игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит при создании всех игроков при инициализации игры.</li>
  * </ol>
  *
- * @param handCoins Массив монет в руке.
- * @param boardCoins Массив монет на столе.
+ * @param {ICoin[]} handCoins Массив монет в руке.
+ * @param {ICoin[]} boardCoins Массив монет на столе.
+ * @returns {IPlayer} Приватные данные игрока.
  * @constructor
  */
 const CreatePlayer = ({
@@ -100,25 +125,24 @@ const CreatePlayer = ({
 });
 
 /**
- *
- * <h3>Создание игрока.</h3>
+ * <h3>Создание публичных данных игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит при создании всех игроков при инициализации игры.</li>
  * </ol>
  *
- * @param nickname Никнейм.
- * @param cards Массив карт.
- * @param heroes Массив героев.
- * @param campCards Массив карт кэмпа.
- * @param nickname Никнейм.
- * @param handCoins Массив монет в руке.
- * @param boardCoins Массив монет на столе.
- * @param stack Стэк действий.
- * @param priority Кристалл.
- * @param buffs Бафы.
- * @param selectedCoin Выбранная монета.
- * @param pickedCard Выбранная карта.
+ * @param {string} nickname Никнейм.
+ * @param {PlayerCardsType[][]} cards Массив карт.
+ * @param {IHero[] | undefined} heroes Массив героев.
+ * @param {CampDeckCardTypes[] | undefined} campCards Массив карт кэмпа.
+ * @param {ICoin[]} handCoins Массив монет в руке.
+ * @param {ICoin[]} boardCoins Массив монет на столе.
+ * @param {IStack[] | undefined} stack Стэк действий.
+ * @param {IPriority} priority Кристалл.
+ * @param {IBuffs | undefined} buffs Бафы.
+ * @param {any} selectedCoin Выбранная монета.
+ * @param {null | undefined} pickedCard Выбранная карта.
+ * @returns {IPublicPlayer} Публичные данные игрока.
  * @constructor
  */
 const CreatePublicPlayer = ({
@@ -154,11 +178,14 @@ const CreatePublicPlayer = ({
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *
+ * @returns {IPlayer} Приватные данные игрока.
  * @constructor
  */
 export const BuildPlayer = (): IPlayer => CreatePlayer({
-    handCoins: BuildCoins(initialPlayerCoinsConfig,
-        {isInitial: true, isTriggerTrading: false}),
+    handCoins: BuildCoins(initialPlayerCoinsConfig, {
+        isInitial: true,
+        isTriggerTrading: false,
+    }),
     boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
 } as IPlayer);
 
@@ -169,22 +196,22 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *
- * @param playersNum Количество игроков.
- * @param suitsNum Количество фракций.
- * @param nickname Никнейм.
- * @param priority Кристалл.
+ * @param {number} playersNum Количество игроков.
+ * @param {number} suitsNum Количество фракций.
+ * @param {string} nickname Никнейм.
+ * @param {IPriority} priority Кристалл.
+ * @returns {IPublicPlayer} Публичные данные игрока.
  * @constructor
  */
 export const BuildPublicPlayer = (playersNum: number, suitsNum: number, nickname: string, priority: IPriority):
-    IPublicPlayer =>
-    CreatePublicPlayer({
-        nickname,
-        cards: Array(suitsNum).fill(Array(0)),
-        handCoins: BuildCoins(initialPlayerCoinsConfig,
-            {isInitial: true, isTriggerTrading: false}),
-        boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
-        priority,
-    } as ICreatePublicPlayer);
+    IPublicPlayer => CreatePublicPlayer({
+    nickname,
+    cards: Array(suitsNum).fill(Array(0)),
+    handCoins: BuildCoins(initialPlayerCoinsConfig,
+        {isInitial: true, isTriggerTrading: false}),
+    boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
+    priority,
+} as ICreatePublicPlayer);
 
 /**
  * <h3>Проверяет базовый порядок хода игроков.</h3>
@@ -194,14 +221,14 @@ export const BuildPublicPlayer = (playersNum: number, suitsNum: number, nickname
  * <li>Происходит при необходимости выставления монет на игровое поле при наличии героя Улина.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export const CheckPlayersBasicOrder = (G: MyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i: number = 0; i < ctx.numPlayers; i++) {
-        if (G.publicPlayers[i].buffs.everyTurn === "Uline") {
+        if (G.publicPlayers[i].buffs.everyTurn !== "Uline") {
             G.publicPlayersOrder.push(i);
         }
     }
@@ -216,18 +243,20 @@ export const CheckPlayersBasicOrder = (G: MyGameState, ctx: Ctx): void => {
  * <li>Происходит при взятии карты из сброса при активации героя.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param card Карта.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {DeckCardTypes} card Карта.
+ * @returns {boolean} Добавлена ли карта на планшет игрока.
  * @constructor
  */
 export const AddCardToPlayer = (G: MyGameState, ctx: Ctx, card: DeckCardTypes): boolean => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = card;
+    // TODO Not only deckcardtypes but ihero+icampcardtypes?? but they are created as ICard and added to players cards...
     if (isCardNotAction(card)) {
         const suitIndex: number = GetSuitIndexByName(card.suit);
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suitIndex].push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
-        выбрал карту '${card.name}'.`);
+        выбрал карту '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
         return true;
     }
     AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
@@ -243,9 +272,9 @@ export const AddCardToPlayer = (G: MyGameState, ctx: Ctx, card: DeckCardTypes): 
  * <li>Происходит при взятии карты кэмпа игроком.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param card Карта кэмпа.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {CampDeckCardTypes} card Карта кэмпа.
  * @constructor
  */
 export const AddCampCardToPlayer = (G: MyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
@@ -261,9 +290,9 @@ export const AddCampCardToPlayer = (G: MyGameState, ctx: Ctx, card: CampDeckCard
  * <li>Происходит при добавлении карты кэмпа в конкретную фракцию игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param card Карта кэмпа.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IArtefactCampCard} card Карта кэмпа.
  * @constructor
  */
 export const AddCampCardToPlayerCards = (G: MyGameState, ctx: Ctx, card: IArtefactCampCard): void => {
@@ -282,9 +311,9 @@ export const AddCampCardToPlayerCards = (G: MyGameState, ctx: Ctx, card: IArtefa
  * <li>Происходит при добавлении героя на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param hero Герой.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IHero} hero Герой.
  * @constructor
  */
 export const AddHeroCardToPlayerHeroCards = (G: MyGameState, ctx: Ctx, hero: IHero): void => {
@@ -302,9 +331,9 @@ export const AddHeroCardToPlayerHeroCards = (G: MyGameState, ctx: Ctx, hero: IHe
  * <li>Происходит при добавлении героя на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param hero Герой.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IHero} hero Герой.
  * @constructor
  */
 export const AddHeroCardToPlayerCards = (G: MyGameState, ctx: Ctx, hero: IHero): void => {
@@ -323,13 +352,14 @@ export const AddHeroCardToPlayerCards = (G: MyGameState, ctx: Ctx, hero: IHero):
  * <li>Происходит при подсчёте потенциального скоринга для ботов.</li>
  * </ol>
  *
- * @param cards Массив потенциальных карт для ботов.
- * @param card Карта.
+ * @param {PlayerCardsType[][]} cards Массив потенциальных карт для ботов.
+ * @param {PlayerCardsType} card Карта.
+ * @constructor
  */
 export const AddCardToCards = (cards: PlayerCardsType[][], card: PlayerCardsType): void => {
-    const suitIndex: number = GetSuitIndexByName(card.suit);
-    if (suitIndex) {
-        cards[suitIndex].push(card);
+    const suitId: number = GetSuitIndexByName(card.suit);
+    if (suitId !== -1) {
+        cards[suitId].push(card);
     }
 };
 
@@ -341,8 +371,9 @@ export const AddCardToCards = (cards: PlayerCardsType[][], card: PlayerCardsType
  * </oL>
  *
  * @todo Саше: Добавить описание для функции и параметров.
- * @param G
- * @param playerId
+ * @param {MyGameState} G
+ * @param {number} playerId Id игрока.
+ * @returns {boolean}
  * @constructor
  */
 export const IsTopPlayer = (G: MyGameState, playerId: number): boolean => {
@@ -358,13 +389,14 @@ export const IsTopPlayer = (G: MyGameState, playerId: number): boolean => {
  * </oL>
  *
  * @todo Саше: Добавить описание для функции и параметров
- * @param G
- * @param currentPlayerId Id текущего игрока.
+ * @param {MyGameState} G
+ * @param {number} currentPlayerId Id текущего игрока.
+ * @returns {number}
  * @constructor
  */
 /*export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number => {
-    let top1PlayerId: number = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean =>
-        IsTopPlayer(G, index));
+    let top1PlayerId: number =
+        G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean => IsTopPlayer(G, index));
     if (G.publicPlayersOrder.indexOf(currentPlayerId) > G.publicPlayersOrder.indexOf(top1PlayerId)) {
         top1PlayerId = -1;
     }
@@ -379,8 +411,9 @@ export const IsTopPlayer = (G: MyGameState, playerId: number): boolean => {
  * </oL>
  *
  * @todo Саше: Добавить описание для функции и параметров.
- * @param G
- * @param top1PlayerId Id текущего игрока.
+ * @param {MyGameState} G
+ * @param {number} top1PlayerId Id текущего игрока.
+ * @returns {number}
  * @constructor
  */
 /*export const GetTop2PlayerId = (G: MyGameState, top1PlayerId: number): number => {
@@ -388,12 +421,14 @@ export const IsTopPlayer = (G: MyGameState, playerId: number): boolean => {
         maxScore: number = Math.max(...playersScore);
     let top2PlayerId: number,
         temp: number;
-    if (playersScore.filter(score => score === maxScore).length === 1) {
-        temp = playersScore.sort((a, b) => b - a)[1];
-        top2PlayerId = G.publicPlayers.findIndex(player => CurrentScoring(player) === temp);
+    if (playersScore.filter((score: number): boolean => score === maxScore).length === 1) {
+        temp = playersScore.sort((a: number, b: number): number => b - a)[1];
+        top2PlayerId =
+            G.publicPlayers.findIndex((player: IPublicPlayer): boolean => CurrentScoring(player) === temp);
     } else {
-        top2PlayerId = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean => index !== top1PlayerId
-            && IsTopPlayer(G, index));
+        top2PlayerId =
+            G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean => index !== top1PlayerId
+                && IsTopPlayer(G, index));
     }
     if (G.publicPlayersOrder.indexOf(top1PlayerId) > G.publicPlayersOrder.indexOf(top2PlayerId)) {
         top2PlayerId = -1;

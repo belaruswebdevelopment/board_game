@@ -8,6 +8,17 @@ import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
 
+/**
+ * <h3>Перечисление для названий фракций.</h3>
+ */
+export const enum SuitNames {
+    BLACKSMITH = "blacksmith",
+    HUNTER = "hunter",
+    MINER = "miner",
+    WARRIOR = "warrior",
+    EXPLORER = "explorer",
+}
+
 export interface INumberValues {
     [index: number]: number,
 }
@@ -54,7 +65,7 @@ export interface ISuitConfig {
  * @todo Add may be potential points for hunters and blacksmiths.
  */
 const blacksmith: ISuit = {
-    suit: "blacksmith",
+    suit: SuitNames.BLACKSMITH,
     suitName: "Кузнецы",
     suitColor: 'bg-purple-600',
     description: "Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).",
@@ -102,7 +113,7 @@ const blacksmith: ISuit = {
         awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
             if (G.tierToEnd !== 0) {
                 player.cards[0].push(CreateCard({
-                    suit: "blacksmith",
+                    suit: SuitNames.BLACKSMITH,
                     rank: 2,
                     points: 2,
                 } as ICard));
@@ -124,7 +135,7 @@ const blacksmith: ISuit = {
  * </ol>
  */
 const hunter: ISuit = {
-    suit: "hunter",
+    suit: SuitNames.HUNTER,
     suitName: "Охотники",
     suitColor: "bg-green-600",
     description: "Их показатель храбрости равен квадрату числа карт охотников в армии игрока.",
@@ -195,7 +206,7 @@ const hunter: ISuit = {
  * @type {{scoringRule: (function(*)), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*=, *, *): (number|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}} Горняки.
  */
 const miner: ISuit = {
-    suit: "miner",
+    suit: SuitNames.MINER,
     suitName: "Горняки",
     suitColor: "bg-yellow-600",
     description: "Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии " +
@@ -272,7 +283,7 @@ const miner: ISuit = {
  * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*=, *=, *): (*))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}} Воины.
  */
 const warrior: ISuit = {
-    suit: "warrior",
+    suit: SuitNames.WARRIOR,
     suitName: "Воины",
     suitColor: "bg-red-600",
     description: "Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, " +
@@ -360,7 +371,7 @@ const warrior: ISuit = {
  * @type {{scoringRule: (function(*): *), ranksValues: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), distinction: {awarding: ((function(*=, *=, *): (*|undefined))|*), description: string}, description: string, suitColor: string, suit: string, suitName: string, pointsValues: (function(): {"2": {"0", "1"}, "3": {"0", "1"}, "4": {"0", "1"}, "5": {"0", "1"}})}} Разведчики.
  */
 const explorer: ISuit = {
-    suit: "explorer",
+    suit: SuitNames.EXPLORER,
     suitName: "Разведчики",
     suitColor: "bg-blue-500",
     description: "Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.",

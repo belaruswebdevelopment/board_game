@@ -75,7 +75,7 @@ var Vegvisir = {
         "points to your Explorer Bravery Rating.",
     game: "thingvellir",
     tier: 0,
-    suit: "explorer",
+    suit: "explorer" /* EXPLORER */,
     rank: 1,
     points: 13,
     stack: [
@@ -283,7 +283,7 @@ var Hofud = {
         {
             actionName: "StartDiscardSuitCard",
             config: {
-                suit: "warrior",
+                suit: "warrior" /* WARRIOR */,
             },
         },
     ],
@@ -389,72 +389,72 @@ export var mercenariesConfig = [
     [
         {
             warrior: {
-                suit: "warrior",
+                suit: "warrior" /* WARRIOR */,
                 rank: 1,
                 points: 6,
             },
             explorer: {
-                suit: "explorer",
+                suit: "explorer" /* EXPLORER */,
                 rank: 1,
                 points: 8,
             },
         },
         {
             warrior: {
-                suit: "warrior",
+                suit: "warrior" /* WARRIOR */,
                 rank: 1,
                 points: 6,
             },
             blacksmith: {
-                suit: "blacksmith",
+                suit: "blacksmith" /* BLACKSMITH */,
                 rank: 1,
                 points: null,
             },
         },
         {
             hunter: {
-                suit: "hunter",
+                suit: "hunter" /* HUNTER */,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: "explorer",
+                suit: "explorer" /* EXPLORER */,
                 rank: 1,
                 points: 6,
             },
         },
         {
             hunter: {
-                suit: "hunter",
+                suit: "hunter" /* HUNTER */,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: "miner",
+                suit: "miner" /* MINER */,
                 rank: 1,
                 points: 1,
             },
         },
         {
             blacksmith: {
-                suit: "blacksmith",
+                suit: "blacksmith" /* BLACKSMITH */,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: "miner",
+                suit: "miner" /* MINER */,
                 rank: 1,
                 points: 1,
             },
         },
         {
             warrior: {
-                suit: "warrior",
+                suit: "warrior" /* WARRIOR */,
                 rank: 1,
                 points: 9,
             },
             explorer: {
-                suit: "explorer",
+                suit: "explorer" /* EXPLORER */,
                 rank: 1,
                 points: 11,
             },
@@ -463,72 +463,72 @@ export var mercenariesConfig = [
     [
         {
             hunter: {
-                suit: "hunter",
+                suit: "hunter" /* HUNTER */,
                 rank: 1,
                 points: null,
             },
             blacksmith: {
-                suit: "blacksmith",
+                suit: "blacksmith" /* BLACKSMITH */,
                 rank: 1,
                 points: null,
             },
         },
         {
             warrior: {
-                suit: "warrior",
+                suit: "warrior" /* WARRIOR */,
                 rank: 1,
                 points: 6,
             },
             miner: {
-                suit: "miner",
+                suit: "miner" /* MINER */,
                 rank: 1,
                 points: 1,
             },
         },
         {
             blacksmith: {
-                suit: "blacksmith",
+                suit: "blacksmith" /* BLACKSMITH */,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: "explorer",
+                suit: "explorer" /* EXPLORER */,
                 rank: 1,
                 points: 8,
             },
         },
         {
             warrior: {
-                suit: "warrior",
+                suit: "warrior" /* WARRIOR */,
                 rank: 1,
                 points: 6,
             },
             hunter: {
-                suit: "hunter",
+                suit: "hunter" /* HUNTER */,
                 rank: 1,
                 points: null,
             },
         },
         {
             explorer: {
-                suit: "explorer",
+                suit: "explorer" /* EXPLORER */,
                 rank: 1,
                 points: 8,
             },
             miner: {
-                suit: "miner",
+                suit: "miner" /* MINER */,
                 rank: 1,
                 points: 1,
             },
         },
         {
             warrior: {
-                suit: "warrior",
+                suit: "warrior" /* WARRIOR */,
                 rank: 1,
                 points: 9,
             },
             explorer: {
-                suit: "explorer",
+                suit: "explorer" /* EXPLORER */,
                 rank: 1,
                 points: 11,
             },

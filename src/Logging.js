@@ -5,9 +5,9 @@
  * <li>Используется в выводе данных логов на игровом поле.</li>
  * </ol>
  *
- * @param G
- * @param type Тип лога.
- * @param value Значение, заносимое в лог.
+ * @param {MyGameState} G
+ * @param {LogTypes} type Тип лога.
+ * @param {string} value Значение, заносимое в лог.
  * @constructor
  */
 export var AddDataToLog = function (G, type, value) {

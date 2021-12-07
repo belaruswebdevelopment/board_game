@@ -17,7 +17,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * <li>Используется в отрисовке дебаг панели.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {{ctx: {}, G: {}} | undefined} Данные для отрисовки дебаг информации.
  * @constructor
  */
 var GetDebugData = function (data) {
@@ -45,7 +46,8 @@ var GetDebugData = function (data) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param obj Информация.
+ * @param {{[p: string]: any}} obj Информация.
+ * @returns {JSX.Element}
  * @constructor
  */
 var DrawObjectData = function (obj) {
@@ -74,7 +76,8 @@ var DrawObjectData = function (obj) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {JSX.Element | null} Дебаг панель.
  * @constructor
  */
 export var DrawDebugData = function (data) {

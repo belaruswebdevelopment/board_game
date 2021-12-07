@@ -17,7 +17,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {JSX.Element | null} Поле для вывода логов.
  * @constructor
  */
 export var DrawLogData = function (data) {

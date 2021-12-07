@@ -1,6 +1,7 @@
 import {TotalRank} from "../helpers/ScoreHelpers";
 import {IPublicPlayer, IStack} from "../Player";
 import {ICoin} from "../Coin";
+import {SuitNames} from "./SuitData";
 
 export interface IArtefact {
     name: string,
@@ -106,7 +107,7 @@ const Vegvisir: IArtefact = {
         "points to your Explorer Bravery Rating.",
     game: "thingvellir",
     tier: 0,
-    suit: "explorer",
+    suit: SuitNames.EXPLORER,
     rank: 1,
     points: 13,
     stack: [
@@ -320,7 +321,7 @@ const Hofud: IArtefact = {
         {
             actionName: "StartDiscardSuitCard",
             config: {
-                suit: "warrior",
+                suit: SuitNames.WARRIOR,
             },
         },
     ],
@@ -351,7 +352,7 @@ const Hrafnsmerki: IArtefact = {
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player ? player.cards.flat()
-            .filter(card => card.type === "наёмник").length * 5 : 0,
+        .filter(card => card.type === "наёмник").length * 5 : 0,
 };
 
 /**
@@ -430,72 +431,72 @@ export const mercenariesConfig: IMercenaries[][] = [
     [
         {
             warrior: {
-                suit: "warrior",
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 6,
             },
             explorer: {
-                suit: "explorer",
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 8,
             },
         },
         {
             warrior: {
-                suit: "warrior",
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 6,
             },
             blacksmith: {
-                suit: "blacksmith",
+                suit: SuitNames.BLACKSMITH,
                 rank: 1,
                 points: null,
             },
         },
         {
             hunter: {
-                suit: "hunter",
+                suit: SuitNames.HUNTER,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: "explorer",
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 6,
             },
         },
         {
             hunter: {
-                suit: "hunter",
+                suit: SuitNames.HUNTER,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: "miner",
+                suit: SuitNames.MINER,
                 rank: 1,
                 points: 1,
             },
         },
         {
             blacksmith: {
-                suit: "blacksmith",
+                suit: SuitNames.BLACKSMITH,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: "miner",
+                suit: SuitNames.MINER,
                 rank: 1,
                 points: 1,
             },
         },
         {
             warrior: {
-                suit: "warrior",
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 9,
             },
             explorer: {
-                suit: "explorer",
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 11,
             },
@@ -504,72 +505,72 @@ export const mercenariesConfig: IMercenaries[][] = [
     [
         {
             hunter: {
-                suit: "hunter",
+                suit: SuitNames.HUNTER,
                 rank: 1,
                 points: null,
             },
             blacksmith: {
-                suit: "blacksmith",
+                suit: SuitNames.BLACKSMITH,
                 rank: 1,
                 points: null,
             },
         },
         {
             warrior: {
-                suit: "warrior",
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 6,
             },
             miner: {
-                suit: "miner",
+                suit: SuitNames.MINER,
                 rank: 1,
                 points: 1,
             },
         },
         {
             blacksmith: {
-                suit: "blacksmith",
+                suit: SuitNames.BLACKSMITH,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: "explorer",
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 8,
             },
         },
         {
             warrior: {
-                suit: "warrior",
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 6,
             },
             hunter: {
-                suit: "hunter",
+                suit: SuitNames.HUNTER,
                 rank: 1,
                 points: null,
             },
         },
         {
             explorer: {
-                suit: "explorer",
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 8,
             },
             miner: {
-                suit: "miner",
+                suit: SuitNames.MINER,
                 rank: 1,
                 points: 1,
             },
         },
         {
             warrior: {
-                suit: "warrior",
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 9,
             },
             explorer: {
-                suit: "explorer",
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 11,
             },

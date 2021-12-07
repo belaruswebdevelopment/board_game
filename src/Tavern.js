@@ -27,22 +27,24 @@ export var tavernsConfig = {
  * <li>Проверяет после каждого выбора карты кэмпа из таверны.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @returns {boolean} Пуста ли текущая таверна.
  * @constructor
  */
 export var CheckIfCurrentTavernEmpty = function (G, ctx) {
     var isCurrentTavernEmpty = false;
-    if (ctx.numPlayers === 2 && G.taverns[G.currentTavern]
-        .filter(function (card) { return card !== null; }).length === 1) {
-        var discardCardIndex = G.taverns[G.currentTavern]
-            .findIndex(function (card) { return card !== null; });
+    if (ctx.numPlayers === 2
+        && G.taverns[G.currentTavern].filter(function (card) { return card !== null; }).length === 1) {
+        var discardCardIndex = G.taverns[G.currentTavern].findIndex(function (card) { return card !== null; });
         if (discardCardIndex !== -1) {
             var isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
             if (isCardDiscarded) {
                 isCurrentTavernEmpty = true;
             }
-            // fixme else Error Card not discarded???
+            else {
+                AddDataToLog(G, "error" /* ERROR */, "ОШИБКА: Не удалось сбросить лишнюю карту из таверны.");
+            }
         }
     }
     else {
@@ -61,12 +63,19 @@ export var CheckIfCurrentTavernEmpty = function (G, ctx) {
  * <li>Происходит при начале новой эпохе.</li>
  * </ol>
  *
- * @param G
+ * @param {MyGameState} G
  * @constructor
  */
 export var RefillTaverns = function (G) {
     for (var i = 0; i < G.tavernsNum; i++) {
-        G.taverns[i] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
-        AddDataToLog(G, "game" /* GAME */, "Все таверны заполнены новыми картами.");
+        var refillDeck = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
+        if (refillDeck.length !== G.drawSize) {
+            G.taverns[i] = refillDeck;
+            AddDataToLog(G, "game" /* GAME */, "\u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[i].name, " \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438."));
+        }
+        else {
+            AddDataToLog(G, "error" /* ERROR */, "\u041E\u0428\u0418\u0411\u041A\u0410: \u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[i].name, " \u043D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u043D\u043E\u0432\u044B\u043C\u0438 \n            \u043A\u0430\u0440\u0442\u0430\u043C\u0438 \u0438\u0437-\u0437\u0430 \u0438\u0445 \u043D\u0435\u0445\u0432\u0430\u0442\u043A\u0438 \u0432 \u043A\u043E\u043B\u043E\u0434\u0435."));
+        }
     }
+    AddDataToLog(G, "game" /* GAME */, "Все таверны заполнены новыми картами.");
 };
