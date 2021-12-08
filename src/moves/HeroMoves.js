@@ -9,10 +9,10 @@ import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
  * <li>При необходимости выбора героя.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param heroId Id героя.
- * @returns {string|*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} heroId Id героя.
+ * @returns {string | void}
  * @constructor
  */
 export var ClickHeroCard = function (G, ctx, heroId) {
@@ -29,10 +29,9 @@ export var ClickHeroCard = function (G, ctx, heroId) {
  * <li>При выборе героя со способностью выкладки карт на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} suitId Id фракции.
  * @constructor
  */
 export var PlaceCard = function (G, ctx, suitId) {
@@ -45,11 +44,10 @@ export var PlaceCard = function (G, ctx, suitId) {
  * <li>При выборе героя со способностью сброса карт с планшета игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- * @param cardId Id карты.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} suitId Id фракции.
+ * @param {number} cardId Id карты.
  * @constructor
  */
 export var DiscardCard = function (G, ctx, suitId, cardId) {

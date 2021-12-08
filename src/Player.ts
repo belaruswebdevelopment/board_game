@@ -17,6 +17,9 @@ import {IBuff, IConditions, IVariants} from "./data/HeroData";
  */
 export type PlayerCardsType = ICard | IArtefactCampCard | IHero;
 
+/**
+ * <h3>Типы данных для карт пикнутых игроком.</h3>
+ */
 export type PickedCardType = null | DeckCardTypes | CampDeckCardTypes | IHero;
 
 /**

@@ -1,15 +1,31 @@
 import {INumberValues} from "./SuitData";
 
+/**
+ * <h3>Интерфейс для конфига базовых монет.</h3>
+ */
 export interface IInitialTradingCoinConfig {
     value: number,
     isTriggerTrading: boolean,
 }
 
+/**
+ * <h3>Интерфейс для конфига монет рынка.</h3>
+ */
 export interface IMarketCoinConfig {
     value: number,
     count: () => INumberValues,
 }
 
+/**
+ * <h3>Проверка, является ли объект конфигом базовых монет или конфигом монет рынка.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param {IInitialTradingCoinConfig | IMarketCoinConfig} config Конфиг.
+ * @returns {config is IInitialTradingCoinConfig} Является ли объект конфигом базовых монет или конфигом монет рынка.
+ */
 export const isInitialPlayerCoinsConfigNotMarket = (config: IInitialTradingCoinConfig | IMarketCoinConfig):
     config is IInitialTradingCoinConfig => (config as IInitialTradingCoinConfig).isTriggerTrading !== undefined;
 
@@ -20,7 +36,7 @@ export const isInitialPlayerCoinsConfigNotMarket = (config: IInitialTradingCoinC
  * <li>Происходит при создании всех базовых монет игрока в ходе инициализации игры.</li>
  * </ol>
  *
- * @type {[{isTriggerTrading: boolean, value: number}, number, number, number, number]}
+ * @type {({isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number})[]}
  */
 export const initialPlayerCoinsConfig: IInitialTradingCoinConfig[] = [
     {
@@ -52,7 +68,7 @@ export const initialPlayerCoinsConfig: IInitialTradingCoinConfig[] = [
  * <li>Происходит при создании всех монет рынка в ходе инициализации игры.</li>
  * </ol>
  *
- * @type {[{count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]} Все монеты.
+ * @type {({count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number})[]}
  */
 export const marketCoinsConfig: IMarketCoinConfig[] = [
     {

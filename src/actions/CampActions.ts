@@ -29,8 +29,8 @@ import {ICoin} from "../Coin";
  * <li>При выборе конкретных героев, дающих возможность взять карты из кэмпа.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export const CheckPickCampCard = (G: MyGameState, ctx: Ctx): void => {
@@ -47,15 +47,15 @@ export const CheckPickCampCard = (G: MyGameState, ctx: Ctx): void => {
  * <li>При выборе карт кэмпа, добавляющихся на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий артефакта.
- * @param cardId Id карты.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий артефакта.
+ * @param {number} cardId Id карты.
  * @constructor
  */
 export const AddCampCardToCards = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
-    if (ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.publicPlayersOrder[0] &&
-        ctx.activePlayers === null) {
+    if (ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+        && ctx.activePlayers === null) {
         G.campPicked = true;
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime) {
@@ -72,8 +72,9 @@ export const AddCampCardToCards = (G: MyGameState, ctx: Ctx, config: IConfig, ca
             suitId = GetSuitIndexByName(campCard.suit);
         } else {
             AddCampCardToPlayer(G, ctx, campCard);
-            if (ctx.phase === "enlistmentMercenaries" && G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
+            if (ctx.phase === "enlistmentMercenaries"
+                && G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                    .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
                 stack = [
                     {
                         actionName: "DrawProfitAction",
@@ -96,10 +97,10 @@ export const AddCampCardToCards = (G: MyGameState, ctx: Ctx, config: IConfig, ca
  * <li>При выборе карты кэмпа Vidofnir Vedrfolnir и наличии героя Улина.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий артефакта.
- * @param coinId Id монеты.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий артефакта.
+ * @param {number} coinId Id монеты.
  * @constructor
  */
 export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, coinId: number): void => {
@@ -126,8 +127,8 @@ export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, 
  * <li>При старте способности карты кэмпа артефакта Vidofnir Vedrfolnir.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void => {
@@ -208,19 +209,19 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
  * <li>При старте улучшения монеты карты кэмпа артефакта Vidofnir Vedrfolnir.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий артефакта.
- * @param coinId Id монеты.
- * @param type Тип монеты.
- * @param isInitial Является ли монета базовой.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий артефакта.
+ * @param {number} coinId Id монеты.
+ * @param {string} type Тип монеты.
+ * @param {boolean} isInitial Является ли монета базовой.
  * @constructor
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, config: IConfig, coinId: number,
                                                     type: string, isInitial: boolean): void => {
     const playerConfig: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     let stack: IStack[] = [];
-    if (playerConfig) {
+    if (playerConfig !== undefined) {
         if (playerConfig.value === 3) {
             stack = [
                 {
@@ -277,8 +278,8 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, co
  * <li>При выборе карты кэмпа артефакта Jarnglofi.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export const DiscardTradingCoin = (G: MyGameState, ctx: Ctx): void => {
@@ -303,11 +304,11 @@ export const DiscardTradingCoin = (G: MyGameState, ctx: Ctx): void => {
  * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий артефакта.
- * @param suitId Id фракции.
- * @param cardId Id карты.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий артефакта.
+ * @param {number} suitId Id фракции.
+ * @param {number} cardId Id карты.
  * @constructor
  */
 export const DiscardAnyCardFromPlayerBoard = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
@@ -327,9 +328,9 @@ export const DiscardAnyCardFromPlayerBoard = (G: MyGameState, ctx: Ctx, config: 
  * <li>При выборе карты кэмпа артефакта Hofud.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий артефакта.
  * @constructor
  */
 export const StartDiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
@@ -367,12 +368,12 @@ export const StartDiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig):
  * <li>При выборе карты для дискарда по действию карты кэмпа артефакта Hofud.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий артефакта.
- * @param suitId Id фракции.
- * @param playerId Id игрока.
- * @param cardId Id сбрасываемой карты.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий артефакта.
+ * @param {number} suitId Id фракции.
+ * @param {number} playerId Id игрока.
+ * @param {number} cardId Id сбрасываемой карты.
  * @constructor
  */
 export const DiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number, playerId: number,
@@ -394,10 +395,10 @@ export const DiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
  * <li>В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий артефакта.
- * @param suitId Id фракции.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий артефакта.
+ * @param {number} suitId Id фракции.
  * @constructor
  */
 export const GetMjollnirProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {

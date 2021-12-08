@@ -15,15 +15,15 @@ import { isCardNotAction } from "../Card";
  * <li>При выборе базовой карты из таверны игроком.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param cardId Id карты.
- * @returns {string|*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} cardId Id карты.
+ * @returns {string | void}
  * @constructor
  */
 export var ClickCard = function (G, ctx, cardId) {
-    var isValidMove = IsValidMove({ objId: G.currentTavern, values: [G.currentTavern] }) &&
-        IsValidMove({
+    var isValidMove = IsValidMove({ objId: G.currentTavern, values: [G.currentTavern] })
+        && IsValidMove({
             obj: G.taverns[G.currentTavern][cardId],
             objId: cardId,
             range: [0, G.taverns[G.currentTavern].length],
@@ -34,7 +34,7 @@ export var ClickCard = function (G, ctx, cardId) {
     var card = G.taverns[G.currentTavern][cardId];
     var suitId = null;
     G.taverns[G.currentTavern][cardId] = null;
-    if (card) {
+    if (card !== null) {
         var isAdded = AddCardToPlayer(G, ctx, card);
         if (isCardNotAction(card)) {
             if (isAdded) {
@@ -60,10 +60,10 @@ export var ClickCard = function (G, ctx, cardId) {
  * <li>После определения преимуществ по фракциям в конце первой эпохи.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param cardId Id карты.
- * @returns {string}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} cardId Id карты.
+ * @returns {string | void}
  * @constructor
  */
 export var ClickDistinctionCard = function (G, ctx, cardId) {
@@ -71,7 +71,8 @@ export var ClickDistinctionCard = function (G, ctx, cardId) {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    suitsConfig[Object.keys(suitsConfig)[cardId]].distinction.awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
+    suitsConfig[Object.keys(suitsConfig)[cardId]].distinction
+        .awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
 };
 /**
  * <h3>Выбор базовой карты из новой эпохи по преимуществу по фракции разведчиков.</h3>
@@ -80,10 +81,9 @@ export var ClickDistinctionCard = function (G, ctx, cardId) {
  * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param cardId Id карты.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} cardId Id карты.
  * @constructor
  */
 export var ClickCardToPickDistinction = function (G, ctx, cardId) {
@@ -110,10 +110,9 @@ export var ClickCardToPickDistinction = function (G, ctx, cardId) {
  * <li>Выбор карт из дискарда по действию артефактов.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param cardId Id карты.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} cardId Id карты.
  * @constructor
  */
 export var PickDiscardCard = function (G, ctx, cardId) {
@@ -126,9 +125,8 @@ export var PickDiscardCard = function (G, ctx, cardId) {
  * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export var StartEnlistmentMercenaries = function (G, ctx) {
@@ -150,9 +148,8 @@ export var StartEnlistmentMercenaries = function (G, ctx) {
  * <li>Первый игрок в начале фазы вербовки наёмников пасует для того, чтобы вербовать последним.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export var PassEnlistmentMercenaries = function (G, ctx) {
@@ -170,10 +167,9 @@ export var PassEnlistmentMercenaries = function (G, ctx) {
  * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param cardId Id карты.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} cardId Id карты.
  * @constructor
  */
 export var GetEnlistmentMercenaries = function (G, ctx, cardId) {
@@ -191,10 +187,9 @@ export var GetEnlistmentMercenaries = function (G, ctx, cardId) {
  * <li>При выборе фракции, куда будет завербован наёмник.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} suitId Id фракции.
  * @constructor
  */
 export var PlaceEnlistmentMercenaries = function (G, ctx, suitId) {

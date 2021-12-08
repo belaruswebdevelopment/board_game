@@ -11,10 +11,10 @@ import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
  * <li>При клике по монете в руке.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- * @returns {string}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} coinId Id монеты.
+ * @returns {string | void}
  * @constructor
  */
 export var ClickHandCoin = function (G, ctx, coinId) {
@@ -35,10 +35,10 @@ export var ClickHandCoin = function (G, ctx, coinId) {
  * <li>При клике по месту для монет на столе.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- * @returns {string}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} coinId Id монеты.
+ * @returns {string | void}
  * @constructor
  */
 export var ClickBoardCoin = function (G, ctx, coinId) {
@@ -64,11 +64,10 @@ export var ClickBoardCoin = function (G, ctx, coinId) {
             AfterBasicPickCardActions(G, ctx, false);
         }
         else {
-            var isEveryPlayersHandCoinsEmpty = G.publicPlayers.filter(function (player) {
-                return player.buffs.everyTurn !== "Uline";
-            }).every(function (player) {
-                return player.handCoins.every(function (coin) { return coin === null; });
-            });
+            var isEveryPlayersHandCoinsEmpty = G.publicPlayers
+                .filter(function (player) { return player.buffs.everyTurn !== "Uline"; })
+                .every(function (player) { return player.handCoins
+                .every(function (coin) { return coin === null; }); });
             if (isEveryPlayersHandCoinsEmpty) {
                 if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
                     ctx.events.setPhase("placeCoinsUline");
@@ -95,12 +94,12 @@ export var ClickBoardCoin = function (G, ctx, coinId) {
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- * @param type Тип монеты.
- * @param isInitial Является ли базовой.
- * @returns {string|*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} coinId Id монеты.
+ * @param {string} type Тип монеты.
+ * @param {boolean} isInitial Является ли базовой.
+ * @returns {string | void}
  * @constructor
  */
 export var ClickCoinToUpgrade = function (G, ctx, coinId, type, isInitial) {
@@ -126,12 +125,12 @@ export var ClickCoinToUpgrade = function (G, ctx, coinId, type, isInitial) {
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- * @param type Тип монеты.
- * @param isInitial Является ли базовой.
- * @returns {string|*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} coinId Id монеты.
+ * @param {string} type Тип монеты.
+ * @param {boolean} isInitial Является ли базовой.
+ * @returns {string | void}
  * @constructor
  */
 export var UpgradeCoinVidofnirVedrfolnir = function (G, ctx, coinId, type, isInitial) {
@@ -152,10 +151,9 @@ export var UpgradeCoinVidofnirVedrfolnir = function (G, ctx, coinId, type, isIni
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- * @returns {string|*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} coinId Id монеты.
  * @constructor
  */
 export var AddCoinToPouch = function (G, ctx, coinId) {

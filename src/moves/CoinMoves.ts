@@ -16,10 +16,10 @@ import {ICoin} from "../Coin";
  * <li>При клике по монете в руке.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- * @returns {string}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} coinId Id монеты.
+ * @returns {string | void}
  * @constructor
  */
 export const ClickHandCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
@@ -41,10 +41,10 @@ export const ClickHandCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinI
  * <li>При клике по месту для монет на столе.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- * @returns {string}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} coinId Id монеты.
+ * @returns {string | void}
  * @constructor
  */
 export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
@@ -68,9 +68,10 @@ export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coin
             G.actionsNum--;
             AfterBasicPickCardActions(G, ctx, false);
         } else {
-            const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers.filter((player: IPublicPlayer): boolean =>
-                player.buffs.everyTurn !== "Uline").every((player: IPublicPlayer): boolean =>
-                player.handCoins.every((coin: ICoin | null): boolean => coin === null));
+            const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers
+                .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== "Uline")
+                .every((player: IPublicPlayer): boolean => player.handCoins
+                    .every((coin: ICoin | null): boolean => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {
                 if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
                     ctx.events!.setPhase!("placeCoinsUline");
@@ -95,12 +96,12 @@ export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coin
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- * @param type Тип монеты.
- * @param isInitial Является ли базовой.
- * @returns {string|*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} coinId Id монеты.
+ * @param {string} type Тип монеты.
+ * @param {boolean} isInitial Является ли базовой.
+ * @returns {string | void}
  * @constructor
  */
 export const ClickCoinToUpgrade: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
@@ -127,12 +128,12 @@ export const ClickCoinToUpgrade: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- * @param type Тип монеты.
- * @param isInitial Является ли базовой.
- * @returns {string|*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} coinId Id монеты.
+ * @param {string} type Тип монеты.
+ * @param {boolean} isInitial Является ли базовой.
+ * @returns {string | void}
  * @constructor
  */
 export const UpgradeCoinVidofnirVedrfolnir: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
@@ -155,10 +156,9 @@ export const UpgradeCoinVidofnirVedrfolnir: Move<MyGameState> = (G: MyGameState,
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- * @returns {string|*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} coinId Id монеты.
  * @constructor
  */
 export const AddCoinToPouch: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): void => {

@@ -16,12 +16,11 @@ import { TotalRank } from "../helpers/ScoreHelpers";
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 var Dwerg_Bergelmir = {
     name: "Dwerg Bergelmir",
-    description: "В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: " +
-        "1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.",
+    description: "\u0412 \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043E\u0442 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0430 \u0431\u0440\u0430\u0442\u044C\u0435\u0432, \u043F\u0440\u0438\u0437\u0432\u0430\u043D\u043D\u044B\u0445 \u0438\u0433\u0440\u043E\u043A\u043E\u043C, \u043F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 \u043A \u0438\u0442\u043E\u0433\u043E\u0432\u043E\u043C\u0443 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438: \n    1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.",
     game: "base",
     suit: null,
     rank: null,
@@ -44,24 +43,11 @@ var Dwerg_Bergelmir = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 var Ylud = {
     name: "Ylud",
-    description: "Поместите эту карту в свою командную зону. В эпоху 1, сразу после посещения последней таверны, но до " +
-        "смотра войск, поместите карту Илуд в колонку любого воинского класса вашей армии. При распределении знаков " +
-        "отличий во время смотра войск, шеврон Илуд учитывается в качестве шеврона этого класса. Илуд остаётся в этой " +
-        "колонке до конца эпохи 2. Если вы призвали Илуд во время эпохи 2, поместите её карту в свою командную зону. " +
-        "В эпоху 2, сразу после посещения последней таверны, но до подсчёта итогового показателя храбрости: • если Илуд " +
-        "в командной зоне, то игрок помещает её в колонку любого воинского класса своей армии, • если Илуд в армии, " +
-        "игрок может переместить её в другую колонку воинского класса по своему выбору. Илуд будет учитываться в качестве " +
-        "дворфа того класса, где располагается. В конце эпохи 2, в зависимости от местоположения Илуд, она будет " +
-        "учитываться как кузнец или охотник, разведчик 11, воин 7, горняк 1. Если Илуд в колонке воинов, то её шеврон " +
-        "учитывается в сумме шевронов воинов при определении преимущества. Игрок получает право призвать нового героя, " +
-        "если с помощью карты Илуд завершит новую линию 5 шевронов. Если игрок обладает обеими картами героев Илуд и " +
-        "Труд, то при их активации важно учесть следующий порядок. После посещения последней таверны в эпоху 2 игрок " +
-        "сначала помещает Илуд в свою армию. В этот момент игрок может призвать нового героя, если с помощью Илуд " +
-        "создал линию 5 шевронов. Затем игрок перемещает Труд из армии в свою командную зону.",
+    description: "\u041F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u0435 \u044D\u0442\u0443 \u043A\u0430\u0440\u0442\u0443 \u0432 \u0441\u0432\u043E\u044E \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u0443\u044E \u0437\u043E\u043D\u0443. \u0412 \u044D\u043F\u043E\u0445\u0443 1, \u0441\u0440\u0430\u0437\u0443 \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u044F \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0439 \u0442\u0430\u0432\u0435\u0440\u043D\u044B, \u043D\u043E \u0434\u043E \n    \u0441\u043C\u043E\u0442\u0440\u0430 \u0432\u043E\u0439\u0441\u043A, \u043F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u0435 \u043A\u0430\u0440\u0442\u0443 \u0418\u043B\u0443\u0434 \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0443 \u043B\u044E\u0431\u043E\u0433\u043E \u0432\u043E\u0438\u043D\u0441\u043A\u043E\u0433\u043E \u043A\u043B\u0430\u0441\u0441\u0430 \u0432\u0430\u0448\u0435\u0439 \u0430\u0440\u043C\u0438\u0438. \u041F\u0440\u0438 \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0438 \u0437\u043D\u0430\u043A\u043E\u0432 \u043E\u0442\u043B\u0438\u0447\u0438\u0439 \n    \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0441\u043C\u043E\u0442\u0440\u0430 \u0432\u043E\u0439\u0441\u043A, \u0448\u0435\u0432\u0440\u043E\u043D \u0418\u043B\u0443\u0434 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u0432 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435 \u0448\u0435\u0432\u0440\u043E\u043D\u0430 \u044D\u0442\u043E\u0433\u043E \u043A\u043B\u0430\u0441\u0441\u0430. \u0418\u043B\u0443\u0434 \u043E\u0441\u0442\u0430\u0451\u0442\u0441\u044F \u0432 \u044D\u0442\u043E\u0439 \u043A\u043E\u043B\u043E\u043D\u043A\u0435 \u0434\u043E \n    \u043A\u043E\u043D\u0446\u0430 \u044D\u043F\u043E\u0445\u0438 2. \u0415\u0441\u043B\u0438 \u0432\u044B \u043F\u0440\u0438\u0437\u0432\u0430\u043B\u0438 \u0418\u043B\u0443\u0434 \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u044D\u043F\u043E\u0445\u0438 2, \u043F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u0435 \u0435\u0451 \u043A\u0430\u0440\u0442\u0443 \u0432 \u0441\u0432\u043E\u044E \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u0443\u044E \u0437\u043E\u043D\u0443. \u0412 \u044D\u043F\u043E\u0445\u0443 2, \u0441\u0440\u0430\u0437\u0443 \n    \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u044F \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0439 \u0442\u0430\u0432\u0435\u0440\u043D\u044B, \u043D\u043E \u0434\u043E \u043F\u043E\u0434\u0441\u0447\u0451\u0442\u0430 \u0438\u0442\u043E\u0433\u043E\u0432\u043E\u0433\u043E \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044F \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438: \u2022 \u0435\u0441\u043B\u0438 \u0418\u043B\u0443\u0434 \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u043E\u0439 \u0437\u043E\u043D\u0435, \u0442\u043E \n    \u0438\u0433\u0440\u043E\u043A \u043F\u043E\u043C\u0435\u0449\u0430\u0435\u0442 \u0435\u0451 \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0443 \u043B\u044E\u0431\u043E\u0433\u043E \u0432\u043E\u0438\u043D\u0441\u043A\u043E\u0433\u043E \u043A\u043B\u0430\u0441\u0441\u0430 \u0441\u0432\u043E\u0435\u0439 \u0430\u0440\u043C\u0438\u0438, \u2022 \u0435\u0441\u043B\u0438 \u0418\u043B\u0443\u0434 \u0432 \u0430\u0440\u043C\u0438\u0438, \u0438\u0433\u0440\u043E\u043A \u043C\u043E\u0436\u0435\u0442 \u043F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0435\u0451 \u0432 \n    \u0434\u0440\u0443\u0433\u0443\u044E \u043A\u043E\u043B\u043E\u043D\u043A\u0443 \u0432\u043E\u0438\u043D\u0441\u043A\u043E\u0433\u043E \u043A\u043B\u0430\u0441\u0441\u0430 \u043F\u043E \u0441\u0432\u043E\u0435\u043C\u0443 \u0432\u044B\u0431\u043E\u0440\u0443. \u0418\u043B\u0443\u0434 \u0431\u0443\u0434\u0435\u0442 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0442\u044C\u0441\u044F \u0432 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435 \u0434\u0432\u043E\u0440\u0444\u0430 \u0442\u043E\u0433\u043E \u043A\u043B\u0430\u0441\u0441\u0430, \u0433\u0434\u0435 \n    \u0440\u0430\u0441\u043F\u043E\u043B\u0430\u0433\u0430\u0435\u0442\u0441\u044F. \u0412 \u043A\u043E\u043D\u0446\u0435 \u044D\u043F\u043E\u0445\u0438 2, \u0432 \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043E\u0442 \u043C\u0435\u0441\u0442\u043E\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u0418\u043B\u0443\u0434, \u043E\u043D\u0430 \u0431\u0443\u0434\u0435\u0442 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0442\u044C\u0441\u044F \u043A\u0430\u043A \u043A\u0443\u0437\u043D\u0435\u0446 \u0438\u043B\u0438 \u043E\u0445\u043E\u0442\u043D\u0438\u043A, \n    \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A 11, \u0432\u043E\u0438\u043D 7, \u0433\u043E\u0440\u043D\u044F\u043A 1. \u0415\u0441\u043B\u0438 \u0418\u043B\u0443\u0434 \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0435 \u0432\u043E\u0438\u043D\u043E\u0432, \u0442\u043E \u0435\u0451 \u0448\u0435\u0432\u0440\u043E\u043D \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u0432 \u0441\u0443\u043C\u043C\u0435 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432 \u0432\u043E\u0438\u043D\u043E\u0432 \u043F\u0440\u0438 \n    \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0438 \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430. \u0418\u0433\u0440\u043E\u043A \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u043F\u0440\u0430\u0432\u043E \u043F\u0440\u0438\u0437\u0432\u0430\u0442\u044C \u043D\u043E\u0432\u043E\u0433\u043E \u0433\u0435\u0440\u043E\u044F, \u0435\u0441\u043B\u0438 \u0441 \u043F\u043E\u043C\u043E\u0449\u044C\u044E \u043A\u0430\u0440\u0442\u044B \u0418\u043B\u0443\u0434 \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442 \u043D\u043E\u0432\u0443\u044E \u043B\u0438\u043D\u0438\u044E \n    5 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432. \u0415\u0441\u043B\u0438 \u0438\u0433\u0440\u043E\u043A \u043E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 \u043E\u0431\u0435\u0438\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438 \u0433\u0435\u0440\u043E\u0435\u0432 \u0418\u043B\u0443\u0434 \u0438 \u0422\u0440\u0443\u0434, \u0442\u043E \u043F\u0440\u0438 \u0438\u0445 \u0430\u043A\u0442\u0438\u0432\u0430\u0446\u0438\u0438 \u0432\u0430\u0436\u043D\u043E \u0443\u0447\u0435\u0441\u0442\u044C \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \n    \u043F\u043E\u0440\u044F\u0434\u043E\u043A. \u041F\u043E\u0441\u043B\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u044F \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0439 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \u0432 \u044D\u043F\u043E\u0445\u0443 2 \u0438\u0433\u0440\u043E\u043A \u0441\u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u043E\u043C\u0435\u0449\u0430\u0435\u0442 \u0418\u043B\u0443\u0434 \u0432 \u0441\u0432\u043E\u044E \u0430\u0440\u043C\u0438\u044E. \u0412 \u044D\u0442\u043E\u0442 \u043C\u043E\u043C\u0435\u043D\u0442 \u0438\u0433\u0440\u043E\u043A \n    \u043C\u043E\u0436\u0435\u0442 \u043F\u0440\u0438\u0437\u0432\u0430\u0442\u044C \u043D\u043E\u0432\u043E\u0433\u043E \u0433\u0435\u0440\u043E\u044F, \u0435\u0441\u043B\u0438 \u0441 \u043F\u043E\u043C\u043E\u0449\u044C\u044E \u0418\u043B\u0443\u0434 \u0441\u043E\u0437\u0434\u0430\u043B \u043B\u0438\u043D\u0438\u044E 5 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432. \u0417\u0430\u0442\u0435\u043C \u0438\u0433\u0440\u043E\u043A \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u0435\u0442 \u0422\u0440\u0443\u0434 \u0438\u0437 \u0430\u0440\u043C\u0438\u0438 \u0432 \n    \u0441\u0432\u043E\u044E \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u0443\u044E \u0437\u043E\u043D\u0443.",
     game: "base",
     suit: null,
     rank: null,
@@ -83,12 +69,11 @@ var Ylud = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 var Dwerg_Jungir = {
     name: "Dwerg Jungir",
-    description: "В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: " +
-        "1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.",
+    description: "\u0412 \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043E\u0442 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0430 \u0431\u0440\u0430\u0442\u044C\u0435\u0432, \u043F\u0440\u0438\u0437\u0432\u0430\u043D\u043D\u044B\u0445 \u0438\u0433\u0440\u043E\u043A\u043E\u043C, \u043F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 \u043A \u0438\u0442\u043E\u0433\u043E\u0432\u043E\u043C\u0443 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438: \n    1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.",
     game: "base",
     suit: null,
     rank: null,
@@ -110,23 +95,11 @@ var Dwerg_Jungir = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: string}}, actionName: string}, {actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {buff: {name: string, value: string}}, actionName: string} | {actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 var Uline = {
     name: "Uline",
-    description: "Прибавьте 9 очков к своему итоговому показателю храбрости. Как только вы призвали Улину и положили её " +
-        "карту в свою командную зону, сразу же берите в руку монеты, которые всё ещё лежат лицом вниз на вашем планшете. " +
-        "С этого момента и каждый раз во время подготовки к раунду на этапе «Ставки» игрок не выкладывает свои монеты на " +
-        "планшет, а держит их в своей руке. Во время посещения таверны на этапе «Открытие ставок», игрок ждёт, пока все " +
-        "другие эльвеланды откроют свои ставки и только после этого он выбирает монету из своей руки и кладёт её лицом " +
-        "вверх в область соответствующей таверны на своём планшете. Затем раунд продолжается в порядке, соответствующем " +
-        "ставкам игроков. Если игрок активировал своей ставкой обмен монет, то последним действием своего хода он " +
-        "выбирает из руки две монеты, номиналы которых он суммирует для получения новой монеты. Обмен происходит по " +
-        "обычным правилам, однако новую монету игрок сразу же берёт в руку, а не кладёт в кошель своего планшета. " +
-        "Во время улучшения монеты: • если игрок выбрал монету из руки, то новую монету он берёт так же в руку, • если " +
-        "игрок выбрал монету, лежащую на планшете, то новую монету он кладёт в то же место. Игрок может сделать ставку " +
-        "монетами из руки в таверне, которую посетит в ходе раунда. Монеты, лежащие на планшете, должны оставаться на " +
-        "нём до конца текущего раунда.",
+    description: "\u041F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 9 \u043E\u0447\u043A\u043E\u0432 \u043A \u0441\u0432\u043E\u0435\u043C\u0443 \u0438\u0442\u043E\u0433\u043E\u0432\u043E\u043C\u0443 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438. \u041A\u0430\u043A \u0442\u043E\u043B\u044C\u043A\u043E \u0432\u044B \u043F\u0440\u0438\u0437\u0432\u0430\u043B\u0438 \u0423\u043B\u0438\u043D\u0443 \u0438 \u043F\u043E\u043B\u043E\u0436\u0438\u043B\u0438 \u0435\u0451 \n    \u043A\u0430\u0440\u0442\u0443 \u0432 \u0441\u0432\u043E\u044E \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u0443\u044E \u0437\u043E\u043D\u0443, \u0441\u0440\u0430\u0437\u0443 \u0436\u0435 \u0431\u0435\u0440\u0438\u0442\u0435 \u0432 \u0440\u0443\u043A\u0443 \u043C\u043E\u043D\u0435\u0442\u044B, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0432\u0441\u0451 \u0435\u0449\u0451 \u043B\u0435\u0436\u0430\u0442 \u043B\u0438\u0446\u043E\u043C \u0432\u043D\u0438\u0437 \u043D\u0430 \u0432\u0430\u0448\u0435\u043C \u043F\u043B\u0430\u043D\u0448\u0435\u0442\u0435. \u0421 \n    \u044D\u0442\u043E\u0433\u043E \u043C\u043E\u043C\u0435\u043D\u0442\u0430 \u0438 \u043A\u0430\u0436\u0434\u044B\u0439 \u0440\u0430\u0437 \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438 \u043A \u0440\u0430\u0443\u043D\u0434\u0443 \u043D\u0430 \u044D\u0442\u0430\u043F\u0435 \u00AB\u0421\u0442\u0430\u0432\u043A\u0438\u00BB \u0438\u0433\u0440\u043E\u043A \u043D\u0435 \u0432\u044B\u043A\u043B\u0430\u0434\u044B\u0432\u0430\u0435\u0442 \u0441\u0432\u043E\u0438 \u043C\u043E\u043D\u0435\u0442\u044B \u043D\u0430 \n    \u043F\u043B\u0430\u043D\u0448\u0435\u0442, \u0430 \u0434\u0435\u0440\u0436\u0438\u0442 \u0438\u0445 \u0432 \u0441\u0432\u043E\u0435\u0439 \u0440\u0443\u043A\u0435. \u0412\u043E \u0432\u0440\u0435\u043C\u044F \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u044F \u0442\u0430\u0432\u0435\u0440\u043D\u044B \u043D\u0430 \u044D\u0442\u0430\u043F\u0435 \u00AB\u041E\u0442\u043A\u0440\u044B\u0442\u0438\u0435 \u0441\u0442\u0430\u0432\u043E\u043A\u00BB, \u0438\u0433\u0440\u043E\u043A \u0436\u0434\u0451\u0442, \u043F\u043E\u043A\u0430 \u0432\u0441\u0435 \n    \u0434\u0440\u0443\u0433\u0438\u0435 \u044D\u043B\u044C\u0432\u0435\u043B\u0430\u043D\u0434\u044B \u043E\u0442\u043A\u0440\u043E\u044E\u0442 \u0441\u0432\u043E\u0438 \u0441\u0442\u0430\u0432\u043A\u0438 \u0438 \u0442\u043E\u043B\u044C\u043A\u043E \u043F\u043E\u0441\u043B\u0435 \u044D\u0442\u043E\u0433\u043E \u043E\u043D \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442 \u043C\u043E\u043D\u0435\u0442\u0443 \u0438\u0437 \u0441\u0432\u043E\u0435\u0439 \u0440\u0443\u043A\u0438 \u0438 \u043A\u043B\u0430\u0434\u0451\u0442 \u0435\u0451 \u043B\u0438\u0446\u043E\u043C \u0432\u0432\u0435\u0440\u0445 \n    \u0432 \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E\u0449\u0435\u0439 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \u043D\u0430 \u0441\u0432\u043E\u0451\u043C \u043F\u043B\u0430\u043D\u0448\u0435\u0442\u0435. \u0417\u0430\u0442\u0435\u043C \u0440\u0430\u0443\u043D\u0434 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0435\u0442\u0441\u044F \u0432 \u043F\u043E\u0440\u044F\u0434\u043A\u0435, \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E\u0449\u0435\u043C \u0441\u0442\u0430\u0432\u043A\u0430\u043C \n    \u0438\u0433\u0440\u043E\u043A\u043E\u0432. \u0415\u0441\u043B\u0438 \u0438\u0433\u0440\u043E\u043A \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043B \u0441\u0432\u043E\u0435\u0439 \u0441\u0442\u0430\u0432\u043A\u043E\u0439 \u043E\u0431\u043C\u0435\u043D \u043C\u043E\u043D\u0435\u0442, \u0442\u043E \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u043C \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435\u043C \u0441\u0432\u043E\u0435\u0433\u043E \u0445\u043E\u0434\u0430 \u043E\u043D \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442 \u0438\u0437 \u0440\u0443\u043A\u0438 \n    \u0434\u0432\u0435 \u043C\u043E\u043D\u0435\u0442\u044B, \u043D\u043E\u043C\u0438\u043D\u0430\u043B\u044B \u043A\u043E\u0442\u043E\u0440\u044B\u0445 \u043E\u043D \u0441\u0443\u043C\u043C\u0438\u0440\u0443\u0435\u0442 \u0434\u043B\u044F \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u043D\u043E\u0432\u043E\u0439 \u043C\u043E\u043D\u0435\u0442\u044B. \u041E\u0431\u043C\u0435\u043D \u043F\u0440\u043E\u0438\u0441\u0445\u043E\u0434\u0438\u0442 \u043F\u043E \u043E\u0431\u044B\u0447\u043D\u044B\u043C \u043F\u0440\u0430\u0432\u0438\u043B\u0430\u043C, \u043E\u0434\u043D\u0430\u043A\u043E \n    \u043D\u043E\u0432\u0443\u044E \u043C\u043E\u043D\u0435\u0442\u0443 \u0438\u0433\u0440\u043E\u043A \u0441\u0440\u0430\u0437\u0443 \u0436\u0435 \u0431\u0435\u0440\u0451\u0442 \u0432 \u0440\u0443\u043A\u0443, \u0430 \u043D\u0435 \u043A\u043B\u0430\u0434\u0451\u0442 \u0432 \u043A\u043E\u0448\u0435\u043B\u044C \u0441\u0432\u043E\u0435\u0433\u043E \u043F\u043B\u0430\u043D\u0448\u0435\u0442\u0430. \u0412\u043E \u0432\u0440\u0435\u043C\u044F \u0443\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u044F \u043C\u043E\u043D\u0435\u0442\u044B: \u2022 \u0435\u0441\u043B\u0438 \n    \u0438\u0433\u0440\u043E\u043A \u0432\u044B\u0431\u0440\u0430\u043B \u043C\u043E\u043D\u0435\u0442\u0443 \u0438\u0437 \u0440\u0443\u043A\u0438, \u0442\u043E \u043D\u043E\u0432\u0443\u044E \u043C\u043E\u043D\u0435\u0442\u0443 \u043E\u043D \u0431\u0435\u0440\u0451\u0442 \u0442\u0430\u043A \u0436\u0435 \u0432 \u0440\u0443\u043A\u0443, \u2022 \u0435\u0441\u043B\u0438 \u0438\u0433\u0440\u043E\u043A \u0432\u044B\u0431\u0440\u0430\u043B \u043C\u043E\u043D\u0435\u0442\u0443, \u043B\u0435\u0436\u0430\u0449\u0443\u044E \u043D\u0430 \n    \u043F\u043B\u0430\u043D\u0448\u0435\u0442\u0435, \u0442\u043E \u043D\u043E\u0432\u0443\u044E \u043C\u043E\u043D\u0435\u0442\u0443 \u043E\u043D \u043A\u043B\u0430\u0434\u0451\u0442 \u0432 \u0442\u043E \u0436\u0435 \u043C\u0435\u0441\u0442\u043E. \u0418\u0433\u0440\u043E\u043A \u043C\u043E\u0436\u0435\u0442 \u0441\u0434\u0435\u043B\u0430\u0442\u044C \u0441\u0442\u0430\u0432\u043A\u0443 \u043C\u043E\u043D\u0435\u0442\u0430\u043C\u0438 \u0438\u0437 \u0440\u0443\u043A\u0438 \u0432 \u0442\u0430\u0432\u0435\u0440\u043D\u0435, \u043A\u043E\u0442\u043E\u0440\u0443\u044E \n    \u043F\u043E\u0441\u0435\u0442\u0438\u0442 \u0432 \u0445\u043E\u0434\u0435 \u0440\u0430\u0443\u043D\u0434\u0430. \u041C\u043E\u043D\u0435\u0442\u044B, \u043B\u0435\u0436\u0430\u0449\u0438\u0435 \u043D\u0430 \u043F\u043B\u0430\u043D\u0448\u0435\u0442\u0435, \u0434\u043E\u043B\u0436\u043D\u044B \u043E\u0441\u0442\u0430\u0432\u0430\u0442\u044C\u0441\u044F \u043D\u0430 \u043D\u0451\u043C \u0434\u043E \u043A\u043E\u043D\u0446\u0430 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0430\u0443\u043D\u0434\u0430.",
     game: "base",
     suit: null,
     rank: null,
@@ -160,12 +133,11 @@ var Uline = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(*)), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: (player?: IPublicPlayer) => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 var Idunn = {
     name: "Idunn",
-    description: "Обладает 1 шевроном. Прибавьте 7 очков к показателю храбрости разведчиков плюс по 2 очка за каждый " +
-        "шеврон в колонке Разведчиков (включая её собственный).",
+    description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 1 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u043C. \u041F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 7 \u043E\u0447\u043A\u043E\u0432 \u043A \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432 \u043F\u043B\u044E\u0441 \u043F\u043E 2 \u043E\u0447\u043A\u0430 \u0437\u0430 \u043A\u0430\u0436\u0434\u044B\u0439 \n    \u0448\u0435\u0432\u0440\u043E\u043D \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0435 \u0420\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432 (\u0432\u043A\u043B\u044E\u0447\u0430\u044F \u0435\u0451 \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439).",
     game: "base",
     suit: "explorer" /* EXPLORER */,
     rank: 1,
@@ -188,7 +160,7 @@ var Idunn = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 var Tarah = {
     name: "Tarah",
@@ -214,7 +186,7 @@ var Tarah = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 var Kraal = {
     name: "Kraal",
@@ -240,12 +212,11 @@ var Kraal = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 var Lokdur = {
     name: "Lokdur",
-    description: "Обладает 1 шевроном. Прибавьте 3 к сумме очков храбрости горняков. Локдур увеличивает сумму очков " +
-        "храбрости горняков на 3, а сумму шевронов на 1.",
+    description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 1 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u043C. \u041F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 3 \u043A \u0441\u0443\u043C\u043C\u0435 \u043E\u0447\u043A\u043E\u0432 \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0433\u043E\u0440\u043D\u044F\u043A\u043E\u0432. \u041B\u043E\u043A\u0434\u0443\u0440 \u0443\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442 \u0441\u0443\u043C\u043C\u0443 \u043E\u0447\u043A\u043E\u0432 \n    \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0433\u043E\u0440\u043D\u044F\u043A\u043E\u0432 \u043D\u0430 3, \u0430 \u0441\u0443\u043C\u043C\u0443 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432 \u043D\u0430 1.",
     game: "base",
     suit: "miner" /* MINER */,
     rank: 1,
@@ -267,12 +238,11 @@ var Lokdur = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {stageName: string, name: string, drawName: string, value: number}, actionName: string}, {config: {value: number}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {stageName: string, name: string, drawName: string, value: number}, actionName: string} | {config: {value: number}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 var Grid = {
     name: "Grid",
-    description: "Прибавьте 7 очков к своему итоговому показателю храбрости. Когда вы призвали Грид и положили её карту " +
-        "в свою командную зону, сразу же улучшите на +7 номинал одной из своих монет.",
+    description: "\u041F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 7 \u043E\u0447\u043A\u043E\u0432 \u043A \u0441\u0432\u043E\u0435\u043C\u0443 \u0438\u0442\u043E\u0433\u043E\u0432\u043E\u043C\u0443 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438. \u041A\u043E\u0433\u0434\u0430 \u0432\u044B \u043F\u0440\u0438\u0437\u0432\u0430\u043B\u0438 \u0413\u0440\u0438\u0434 \u0438 \u043F\u043E\u043B\u043E\u0436\u0438\u043B\u0438 \u0435\u0451 \u043A\u0430\u0440\u0442\u0443 \n    \u0432 \u0441\u0432\u043E\u044E \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u0443\u044E \u0437\u043E\u043D\u0443, \u0441\u0440\u0430\u0437\u0443 \u0436\u0435 \u0443\u043B\u0443\u0447\u0448\u0438\u0442\u0435 \u043D\u0430 +7 \u043D\u043E\u043C\u0438\u043D\u0430\u043B \u043E\u0434\u043D\u043E\u0439 \u0438\u0437 \u0441\u0432\u043E\u0438\u0445 \u043C\u043E\u043D\u0435\u0442.",
     game: "base",
     suit: null,
     rank: null,
@@ -309,18 +279,11 @@ var Grid = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}, config: {stageName: string, name: string, drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {variants: {blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, warrior: {rank: number, suit: SuitNames.WARRIOR, points: null}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: null}, hunter: {rank: number, suit: SuitNames.HUNTER, points: null}, miner: {rank: number, suit: SuitNames.MINER, points: null}}, config: {stageName: string, name: string, drawName: string}, actionName: string} | {variants: {blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, warrior: {rank: number, suit: SuitNames.WARRIOR, points: null}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: null}, hunter: {rank: number, suit: SuitNames.HUNTER, points: null}, miner: {rank: number, suit: SuitNames.MINER, points: null}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 var Thrud = {
     name: "Thrud",
-    description: "Призвав этого героя, поместите её карту по своему выбору в любую колонку класса своей армии. На карту " +
-        "Труд нельзя положить никакую другую карту дворфа. Если карта дворфа или героя помещается в колонку, где " +
-        "расположена Труд, то игрок должен взять карту Труд в руку, поместить карту дворфа или героя и затем вернуть " +
-        "карту Труд в армию, в любую колонку по своему выбору. Игрок получает право призвать нового героя, если, " +
-        "разместив карту Труд, создал необходимую для этого новую линию 5 шевронов. В конце эпохи 1, при распределении " +
-        "карт знаков отличия, шеврон Труд учитывается в том воинском классе, где она расположена. В эпоху 2, после " +
-        "посещения последней таверны, но перед подсчётом итогового показателя храбрости, карта Труд перемещается из армии " +
-        "в командную зону. Труд прибавляет 13 очков к итоговому показателю храбрости игрока.",
+    description: "\u041F\u0440\u0438\u0437\u0432\u0430\u0432 \u044D\u0442\u043E\u0433\u043E \u0433\u0435\u0440\u043E\u044F, \u043F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u0435 \u0435\u0451 \u043A\u0430\u0440\u0442\u0443 \u043F\u043E \u0441\u0432\u043E\u0435\u043C\u0443 \u0432\u044B\u0431\u043E\u0440\u0443 \u0432 \u043B\u044E\u0431\u0443\u044E \u043A\u043E\u043B\u043E\u043D\u043A\u0443 \u043A\u043B\u0430\u0441\u0441\u0430 \u0441\u0432\u043E\u0435\u0439 \u0430\u0440\u043C\u0438\u0438. \u041D\u0430 \u043A\u0430\u0440\u0442\u0443 \n    \u0422\u0440\u0443\u0434 \u043D\u0435\u043B\u044C\u0437\u044F \u043F\u043E\u043B\u043E\u0436\u0438\u0442\u044C \u043D\u0438\u043A\u0430\u043A\u0443\u044E \u0434\u0440\u0443\u0433\u0443\u044E \u043A\u0430\u0440\u0442\u0443 \u0434\u0432\u043E\u0440\u0444\u0430. \u0415\u0441\u043B\u0438 \u043A\u0430\u0440\u0442\u0430 \u0434\u0432\u043E\u0440\u0444\u0430 \u0438\u043B\u0438 \u0433\u0435\u0440\u043E\u044F \u043F\u043E\u043C\u0435\u0449\u0430\u0435\u0442\u0441\u044F \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0443, \u0433\u0434\u0435 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0430 \n    \u0422\u0440\u0443\u0434, \u0442\u043E \u0438\u0433\u0440\u043E\u043A \u0434\u043E\u043B\u0436\u0435\u043D \u0432\u0437\u044F\u0442\u044C \u043A\u0430\u0440\u0442\u0443 \u0422\u0440\u0443\u0434 \u0432 \u0440\u0443\u043A\u0443, \u043F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443 \u0434\u0432\u043E\u0440\u0444\u0430 \u0438\u043B\u0438 \u0433\u0435\u0440\u043E\u044F \u0438 \u0437\u0430\u0442\u0435\u043C \u0432\u0435\u0440\u043D\u0443\u0442\u044C \u043A\u0430\u0440\u0442\u0443 \u0422\u0440\u0443\u0434 \u0432 \u0430\u0440\u043C\u0438\u044E, \n    \u0432 \u043B\u044E\u0431\u0443\u044E \u043A\u043E\u043B\u043E\u043D\u043A\u0443 \u043F\u043E \u0441\u0432\u043E\u0435\u043C\u0443 \u0432\u044B\u0431\u043E\u0440\u0443. \u0418\u0433\u0440\u043E\u043A \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u043F\u0440\u0430\u0432\u043E \u043F\u0440\u0438\u0437\u0432\u0430\u0442\u044C \u043D\u043E\u0432\u043E\u0433\u043E \u0433\u0435\u0440\u043E\u044F, \u0435\u0441\u043B\u0438, \u0440\u0430\u0437\u043C\u0435\u0441\u0442\u0438\u0432 \u043A\u0430\u0440\u0442\u0443 \u0422\u0440\u0443\u0434, \u0441\u043E\u0437\u0434\u0430\u043B \n    \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u0443\u044E \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u043D\u043E\u0432\u0443\u044E \u043B\u0438\u043D\u0438\u044E 5 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432. \u0412 \u043A\u043E\u043D\u0446\u0435 \u044D\u043F\u043E\u0445\u0438 1, \u043F\u0440\u0438 \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0438 \u043A\u0430\u0440\u0442 \u0437\u043D\u0430\u043A\u043E\u0432 \u043E\u0442\u043B\u0438\u0447\u0438\u044F, \u0448\u0435\u0432\u0440\u043E\u043D \u0422\u0440\u0443\u0434 \n    \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u0432 \u0442\u043E\u043C \u0432\u043E\u0438\u043D\u0441\u043A\u043E\u043C \u043A\u043B\u0430\u0441\u0441\u0435, \u0433\u0434\u0435 \u043E\u043D\u0430 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0430. \u0412 \u044D\u043F\u043E\u0445\u0443 2, \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u044F \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0439 \u0442\u0430\u0432\u0435\u0440\u043D\u044B, \u043D\u043E \u043F\u0435\u0440\u0435\u0434 \n    \u043F\u043E\u0434\u0441\u0447\u0451\u0442\u043E\u043C \u0438\u0442\u043E\u0433\u043E\u0432\u043E\u0433\u043E \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044F \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438, \u043A\u0430\u0440\u0442\u0430 \u0422\u0440\u0443\u0434 \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u0435\u0442\u0441\u044F \u0438\u0437 \u0430\u0440\u043C\u0438\u0438 \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u0443\u044E \u0437\u043E\u043D\u0443. \u0422\u0440\u0443\u0434 \u043F\u0440\u0438\u0431\u0430\u0432\u043B\u044F\u0435\u0442 13 \n    \u043E\u0447\u043A\u043E\u0432 \u043A \u0438\u0442\u043E\u0433\u043E\u0432\u043E\u043C\u0443 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0438\u0433\u0440\u043E\u043A\u0430.",
     game: "base",
     suit: null,
     rank: null,
@@ -407,12 +370,11 @@ var Thrud = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 var Zoral = {
     name: "Zoral",
-    description: "Обладает 3 шевронами. Прибавьте 1, 0 и 0 к сумме очков храбрости горняков. Зорал увеличивает сумму " +
-        "очков храбрости горняков на 1, а сумму шевронов – на 3.",
+    description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 3 \u0448\u0435\u0432\u0440\u043E\u043D\u0430\u043C\u0438. \u041F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 1, 0 \u0438 0 \u043A \u0441\u0443\u043C\u043C\u0435 \u043E\u0447\u043A\u043E\u0432 \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0433\u043E\u0440\u043D\u044F\u043A\u043E\u0432. \u0417\u043E\u0440\u0430\u043B \u0443\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442 \u0441\u0443\u043C\u043C\u0443 \n    \u043E\u0447\u043A\u043E\u0432 \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0433\u043E\u0440\u043D\u044F\u043A\u043E\u0432 \u043D\u0430 1, \u0430 \u0441\u0443\u043C\u043C\u0443 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432 \u2013 \u043D\u0430 3.",
     game: "base",
     suit: "miner" /* MINER */,
     rank: 3,
@@ -434,12 +396,11 @@ var Zoral = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 var Dwerg_Aesir = {
     name: "Dwerg Aesir",
-    description: "В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: " +
-        "1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.",
+    description: "\u0412 \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043E\u0442 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0430 \u0431\u0440\u0430\u0442\u044C\u0435\u0432, \u043F\u0440\u0438\u0437\u0432\u0430\u043D\u043D\u044B\u0445 \u0438\u0433\u0440\u043E\u043A\u043E\u043C, \u043F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 \u043A \u0438\u0442\u043E\u0433\u043E\u0432\u043E\u043C\u0443 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438: \n    1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.",
     game: "base",
     suit: null,
     rank: null,
@@ -461,12 +422,11 @@ var Dwerg_Aesir = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {suit: string}, actionName: string}, {config: {stageName: string, name: string, suit: string, drawName: string}, actionName: string}, {config: {suit: string}, actionName: string}, {config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {suit: SuitNames.BLACKSMITH}, actionName: string} | {config: {stageName: string, name: string, suit: SuitNames.BLACKSMITH, drawName: string}, actionName: string} | {config: {suit: SuitNames.BLACKSMITH}, actionName: string} | {config: {drawName: string}, actionName: string})[], name: string, description: string, rank: number, suit: SuitNames, points: null}}
  */
 var Bonfur = {
     name: "Bonfur",
-    description: "Обладает 3 шевронами. Призвав Бонфура, сразу же поместите его карту в колонку кузнецов и отправьте в " +
-        "сброс одну нижнюю карту дворфа (не героя) из другой колонки своей армии по своему выбору.",
+    description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 3 \u0448\u0435\u0432\u0440\u043E\u043D\u0430\u043C\u0438. \u041F\u0440\u0438\u0437\u0432\u0430\u0432 \u0411\u043E\u043D\u0444\u0443\u0440\u0430, \u0441\u0440\u0430\u0437\u0443 \u0436\u0435 \u043F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u0435 \u0435\u0433\u043E \u043A\u0430\u0440\u0442\u0443 \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0443 \u043A\u0443\u0437\u043D\u0435\u0446\u043E\u0432 \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u0432 \n    \u0441\u0431\u0440\u043E\u0441 \u043E\u0434\u043D\u0443 \u043D\u0438\u0436\u043D\u044E\u044E \u043A\u0430\u0440\u0442\u0443 \u0434\u0432\u043E\u0440\u0444\u0430 (\u043D\u0435 \u0433\u0435\u0440\u043E\u044F) \u0438\u0437 \u0434\u0440\u0443\u0433\u043E\u0439 \u043A\u043E\u043B\u043E\u043D\u043A\u0438 \u0441\u0432\u043E\u0435\u0439 \u0430\u0440\u043C\u0438\u0438 \u043F\u043E \u0441\u0432\u043E\u0435\u043C\u0443 \u0432\u044B\u0431\u043E\u0440\u0443.",
     game: "base",
     suit: "blacksmith" /* BLACKSMITH */,
     rank: 3,
@@ -509,12 +469,11 @@ var Bonfur = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {number: number, suit: string}, actionName: string}, {config: {number: number, stageName: string, name: string, suit: string, drawName: string}, actionName: string}, {actionName: string}, {config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {number: number, suit: SuitNames.HUNTER}, actionName: string} | {config: {number: number, stageName: string, name: string, suit: SuitNames.HUNTER, drawName: string}, actionName: string} | {actionName: string} | {config: {drawName: string}, actionName: string})[], name: string, description: string, rank: number, suit: SuitNames, points: null}}
  */
 var Dagda = {
     name: "Dagda",
-    description: "Обладает 3 шевронами. Призвав Дагду, сразу же поместите её карту в колонку охотников и отправьте в " +
-        "сброс по одной нижней карте дворфов (не героев) из двух других колонок своей армии по своему выбору.",
+    description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 3 \u0448\u0435\u0432\u0440\u043E\u043D\u0430\u043C\u0438. \u041F\u0440\u0438\u0437\u0432\u0430\u0432 \u0414\u0430\u0433\u0434\u0443, \u0441\u0440\u0430\u0437\u0443 \u0436\u0435 \u043F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u0435 \u0435\u0451 \u043A\u0430\u0440\u0442\u0443 \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0443 \u043E\u0445\u043E\u0442\u043D\u0438\u043A\u043E\u0432 \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u0432 \n    \u0441\u0431\u0440\u043E\u0441 \u043F\u043E \u043E\u0434\u043D\u043E\u0439 \u043D\u0438\u0436\u043D\u0435\u0439 \u043A\u0430\u0440\u0442\u0435 \u0434\u0432\u043E\u0440\u0444\u043E\u0432 (\u043D\u0435 \u0433\u0435\u0440\u043E\u0435\u0432) \u0438\u0437 \u0434\u0432\u0443\u0445 \u0434\u0440\u0443\u0433\u0438\u0445 \u043A\u043E\u043B\u043E\u043D\u043E\u043A \u0441\u0432\u043E\u0435\u0439 \u0430\u0440\u043C\u0438\u0438 \u043F\u043E \u0441\u0432\u043E\u0435\u043C\u0443 \u0432\u044B\u0431\u043E\u0440\u0443.",
     game: "base",
     suit: "hunter" /* HUNTER */,
     rank: 3,
@@ -556,7 +515,7 @@ var Dagda = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 var Skaa = {
     name: "Skaa",
@@ -582,13 +541,11 @@ var Skaa = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: number}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {buff: {name: string, value: number}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 var Jarika = {
     name: "Jarika",
-    description: "Adds 8 points to your Final Bravery Value. As a neutral Hero, place her in your Command Zone. During " +
-        "a coin transformation or a coin trade (Royal Offering, Warrior Distinction, Grid), increase the value of the " +
-        "desired sum by +2.",
+    description: "Adds 8 points to your Final Bravery Value. As a neutral Hero, place her in your Command Zone. During \n    a coin transformation or a coin trade (Royal Offering, Warrior Distinction, Grid), increase the value of the desired \n    sum by +2.",
     game: "base",
     suit: null,
     rank: null,
@@ -619,7 +576,7 @@ var Jarika = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(*): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: (player?: IPublicPlayer) => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 var Astrid = {
     name: "Astrid",
@@ -648,12 +605,11 @@ var Astrid = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 var Dwerg_Ymir = {
     name: "Dwerg Ymir",
-    description: "В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: " +
-        "1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.",
+    description: "\u0412 \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043E\u0442 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0430 \u0431\u0440\u0430\u0442\u044C\u0435\u0432, \u043F\u0440\u0438\u0437\u0432\u0430\u043D\u043D\u044B\u0445 \u0438\u0433\u0440\u043E\u043A\u043E\u043C, \u043F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 \u043A \u0438\u0442\u043E\u0433\u043E\u0432\u043E\u043C\u0443 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438: \n    1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.",
     game: "base",
     suit: null,
     rank: null,
@@ -675,12 +631,11 @@ var Dwerg_Ymir = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: null}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 var Dwerg_Sigmir = {
     name: "Dwerg Sigmir",
-    description: "В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: " +
-        "1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.",
+    description: "\u0412 \u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043E\u0442 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0430 \u0431\u0440\u0430\u0442\u044C\u0435\u0432, \u043F\u0440\u0438\u0437\u0432\u0430\u043D\u043D\u044B\u0445 \u0438\u0433\u0440\u043E\u043A\u043E\u043C, \u043F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 \u043A \u0438\u0442\u043E\u0433\u043E\u0432\u043E\u043C\u0443 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438: \n    1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.",
     game: "base",
     suit: null,
     rank: null,
@@ -702,13 +657,11 @@ var Dwerg_Sigmir = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {conditions: {suitCountMin: {suit: string, value: number}}}, actionName: string}, {config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {conditions: {suitCountMin: {suit: SuitNames.EXPLORER, value: number}}}, actionName: string} | {config: {drawName: string}, actionName: string})[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 var Hourya = {
     name: "Hourya",
-    description: "Обладает 1 шевроном. Прибавьте 20 очков к показателю храбрости разведчиков. Чтобы призвать Хурию, " +
-        "игрок должен иметь в своей армии как минимум 5 шевронов в колонке разведчиков. Важно: если Труд и/или Илуд " +
-        "расположены в колонке разведчиков, то их шевроны учитываются для призыва Хурии",
+    description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 1 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u043C. \u041F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 20 \u043E\u0447\u043A\u043E\u0432 \u043A \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432. \u0427\u0442\u043E\u0431\u044B \u043F\u0440\u0438\u0437\u0432\u0430\u0442\u044C \u0425\u0443\u0440\u0438\u044E, \n    \u0438\u0433\u0440\u043E\u043A \u0434\u043E\u043B\u0436\u0435\u043D \u0438\u043C\u0435\u0442\u044C \u0432 \u0441\u0432\u043E\u0435\u0439 \u0430\u0440\u043C\u0438\u0438 \u043A\u0430\u043A \u043C\u0438\u043D\u0438\u043C\u0443\u043C 5 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432 \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0435 \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432. \u0412\u0430\u0436\u043D\u043E: \u0435\u0441\u043B\u0438 \u0422\u0440\u0443\u0434 \u0438/\u0438\u043B\u0438 \u0418\u043B\u0443\u0434 \n    \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u044B \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0435 \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432, \u0442\u043E \u0438\u0445 \u0448\u0435\u0432\u0440\u043E\u043D\u044B \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u044E\u0442\u0441\u044F \u0434\u043B\u044F \u043F\u0440\u0438\u0437\u044B\u0432\u0430 \u0425\u0443\u0440\u0438\u0438",
     game: "base",
     suit: "explorer" /* EXPLORER */,
     rank: 1,
@@ -741,7 +694,7 @@ var Hourya = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: null}}
  */
 var Aegur = {
     name: "Aegur",
@@ -767,7 +720,7 @@ var Aegur = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: null}}
  */
 var Aral = {
     name: "Aral",
@@ -793,14 +746,11 @@ var Aral = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {actionName: string}, {config: {stageName: string, name: string, drawName: string}, actionName: string}, {actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {actionName: string} | {config: {stageName: string, name: string, drawName: string}, actionName: string} | {actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 var Andumia = {
     name: "Andumia",
-    description: "Adds 12 points to your Final Bravery Value. When you recruit her, immediately look at all the cards in " +
-        "the discard pile and keep one (Royal Offering card or Dwarf card). - If it is a Royal Offering card, its effect " +
-        "is immediately applied, then the card is returned to the discard. - If it is a Dwarf card, place it in your army. " +
-        "Its placement can trigger the recruitment of a Hero card.",
+    description: "Adds 12 points to your Final Bravery Value. When you recruit her, immediately look at all the cards \n    in the discard pile and keep one (Royal Offering card or Dwarf card). - If it is a Royal Offering card, its effect \n    is immediately applied, then the card is returned to the discard. - If it is a Dwarf card, place it in your army. \n    Its placement can trigger the recruitment of a Hero card.",
     game: "thingvellir",
     suit: null,
     rank: null,
@@ -836,12 +786,11 @@ var Andumia = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}, {actionName: string}, {config: {stageName: string, name: string, drawName: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {buff: {name: string, value: boolean}}, actionName: string} | {actionName: string} | {config: {stageName: string, name: string, drawName: string}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 var Holda = {
     name: "Holda",
-    description: "Adds 12 points to your Final Bravery Value. When you recruit her, immediately choose a Mercenary or " +
-        "Artifact card available at the Camp.",
+    description: "Adds 12 points to your Final Bravery Value. When you recruit her, immediately choose a Mercenary or \n    Artifact card available at the Camp.",
     game: "thingvellir",
     suit: null,
     rank: null,
@@ -883,12 +832,11 @@ var Holda = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {value: number, coin: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {value: number, coin: string}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 var Khrad = {
     name: "Khrad",
-    description: "Adds 4 points to your Final Bravery Value. When you recruit him, immediately add +10 to your lowest " +
-        "value coin (except the Trading coin).",
+    description: "Adds 4 points to your Final Bravery Value. When you recruit him, immediately add +10 to your lowest \n    value coin (except the Trading coin).",
     game: "thingvellir",
     suit: null,
     rank: null,
@@ -917,14 +865,11 @@ var Khrad = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, config: {number: number, stageName: string, name: string, drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {variants: {blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, warrior: {rank: number, suit: SuitNames.WARRIOR, points: number}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: number}, hunter: {rank: number, suit: SuitNames.HUNTER, points: null}, miner: {rank: number, suit: SuitNames.MINER, points: number}}, config: {number: number, stageName: string, name: string, drawName: string}, actionName: string} | {variants: {blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, warrior: {rank: number, suit: SuitNames.WARRIOR, points: number}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: number}, hunter: {rank: number, suit: SuitNames.HUNTER, points: null}, miner: {rank: number, suit: SuitNames.MINER, points: number}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 var Olwin = {
     name: "Olwin",
-    description: "Adds 9 points to your Final Bravery Value. When you recruit him, also take his two doubles whose " +
-        "Bravery value is 0 and then place each of these cards in two different columns of your choice. Their placement " +
-        "may result in the recruitment of a Hero card. «Olwin's double» cards are considered Dwarf cards of the class in " +
-        "which they are placed and can be destroyed by the powers of Dagda, Bonfur, Brisingamens, and Hofud.",
+    description: "Adds 9 points to your Final Bravery Value. When you recruit him, also take his two doubles whose \n    Bravery value is 0 and then place each of these cards in two different columns of your choice. Their placement may \n    result in the recruitment of a Hero card. \u00ABOlwin's double\u00BB cards are considered Dwarf cards of the class in which \n    they are placed and can be destroyed by the powers of Dagda, Bonfur, Brisingamens, and Hofud.",
     game: "thingvellir",
     suit: null,
     rank: null,
@@ -1012,13 +957,11 @@ var Olwin = {
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
  *
- * @type {{scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: string}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}} Герой.
+ * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {buff: {name: string, value: string}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 var Zolkur = {
     name: "Zolkur",
-    description: "Adds 10 points to your Final Bravery Value. When you recruit him, immediately place him on the coins " +
-        "of your pouch. During your next trade, you trade the lower value coin instead of the higher as in a standard " +
-        "exchange. Then return Zolkur's card to the Command Zone.",
+    description: "Adds 10 points to your Final Bravery Value. When you recruit him, immediately place him on the coins \n    of your pouch. During your next trade, you trade the lower value coin instead of the higher as in a standard \n    exchange. Then return Zolkur's card to the Command Zone.",
     game: "thingvellir",
     suit: null,
     rank: null,
@@ -1049,7 +992,7 @@ var Zolkur = {
  * <li>Происходит при создании всех героев при инициализации игры.</li>
  * </ol>
  *
- * @type {{Zoral: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Aegur: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: null}, Dwerg_Ymir: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Andumia: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {actionName: string}, {config: {stageName: string, name: string, drawName: string}, actionName: string}, {actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Dwerg_Bergelmir: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Grid: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {stageName: string, name: string, drawName: string, value: number}, actionName: string}, {config: {value: number}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Holda: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: boolean}}, actionName: string}, {actionName: string}, {config: {stageName: string, name: string, drawName: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Dwerg_Aesir: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Dagda: {scoringRule: (function(): number), game: string, stack: [{config: {number: number, suit: string}, actionName: string}, {config: {number: number, stageName: string, name: string, suit: string, drawName: string}, actionName: string}, {actionName: string}, {config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}, Zolkur: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: string}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Astrid: {scoringRule: (function(*): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Tarah: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Aral: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: null}, Dwerg_Jungir: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Lokdur: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Dwerg_Sigmir: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Ylud: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}, Idunn: {scoringRule: (function(*)), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Uline: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: string}}, actionName: string}, {actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Khrad: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {value: number, coin: string}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Bonfur: {scoringRule: (function(): number), game: string, stack: [{config: {suit: string}, actionName: string}, {config: {stageName: string, name: string, suit: string, drawName: string}, actionName: string}, {config: {suit: string}, actionName: string}, {config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: null}, Kraal: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: string, points: number}, Olwin: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, config: {number: number, stageName: string, name: string, drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: number}, explorer: {rank: number, suit: string, points: number}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: number}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Jarika: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {config: {buff: {name: string, value: number}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Hourya: {scoringRule: (function(): number), game: string, stack: [{config: {conditions: {suitCountMin: {suit: string, value: number}}}, actionName: string}, {config: {drawName: string}, actionName: string}], name: string, description: string, rank: number, suit: string, points: number}, Thrud: {scoringRule: (function(): number), game: string, stack: [{config: {drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}, config: {stageName: string, name: string, drawName: string}, actionName: string}, {variants: {blacksmith: {rank: number, suit: string, points: null}, warrior: {rank: number, suit: string, points: null}, explorer: {rank: number, suit: string, points: null}, hunter: {rank: number, suit: string, points: null}, miner: {rank: number, suit: string, points: null}}, actionName: string}], name: string, description: string, rank: null, suit: null, points: number}, Skaa: {scoringRule: (function(): number), game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: number}}} Все герои.
+ * @type {{Zoral: IHeroData, Aegur: IHeroData, Dwerg_Ymir: IHeroData, Andumia: IHeroData, Dwerg_Bergelmir: IHeroData, Grid: IHeroData, Holda: IHeroData, Dwerg_Aesir: IHeroData, Dagda: IHeroData, Zolkur: IHeroData, Astrid: IHeroData, Tarah: IHeroData, Aral: IHeroData, Dwerg_Jungir: IHeroData, Lokdur: IHeroData, Dwerg_Sigmir: IHeroData, Ylud: IHeroData, Idunn: IHeroData, Uline: IHeroData, Khrad: IHeroData, Bonfur: IHeroData, Kraal: IHeroData, Olwin: IHeroData, Jarika: IHeroData, Hourya: IHeroData, Thrud: IHeroData, Skaa: IHeroData}}
  */
 export var heroesConfig = {
     Bonfur: Bonfur,

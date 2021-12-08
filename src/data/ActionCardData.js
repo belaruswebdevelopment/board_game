@@ -5,7 +5,7 @@
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
  *
- * @type {{stack: [{config: {stageName: string, name: string, value: number}, actionName: string}, {config: {value: number}, actionName: string}], amount: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), value: number}} Карта улучшения монеты.
+ * @type {{stack: ({config: {stageName: string, name: string, drawName: string, value: number}, actionName: string} | {config: {value: number}, actionName: string})[], amount: () => IActionCardValues, value: number}}
  */
 var upgradeCoinUpTo3 = {
     value: 3,
@@ -52,7 +52,7 @@ var upgradeCoinUpTo3 = {
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
  *
- * @type {{stack: [{config: {stageName: string, name: string, value: number}, actionName: string}, {config: {value: number}, actionName: string}], amount: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), value: number}} Карта улучшения монеты.
+ * @type {{stack: ({config: {stageName: string, name: string, drawName: string, value: number}, actionName: string} | {config: {value: number}, actionName: string})[], amount: () => IActionCardValues, value: number}}
  */
 var upgradeCoinUpTo5 = {
     value: 5,
@@ -99,6 +99,6 @@ var upgradeCoinUpTo5 = {
  * <li>Происходит при создании всех карт улучшения монет в ходе инициализации игры.</li>
  * </ol>
  *
- * @type {{stack: ({config: {stageName: string, name: string, value: number}, actionName: string}|{config: {value: number}, actionName: string})[], amount: (function(): {"2": {"0": number, "1": number}, "3": {"0": number, "1": number}, "4": {"0": number, "1": number}, "5": {"0": number, "1": number}}), value: number}[]} Массив карт улучшения монеты.
+ * @type {IActionCardConfig[]}
  */
 export var actionCardsConfigArray = [upgradeCoinUpTo3, upgradeCoinUpTo5];

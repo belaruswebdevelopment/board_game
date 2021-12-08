@@ -21,10 +21,10 @@ import {IConditions, IVariants} from "../data/HeroData";
  * <li>При добавлении героя Труд на игровом поле игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param suitId Id фракции.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @param {number} suitId Id фракции.
  * @constructor
  */
 export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
@@ -54,17 +54,16 @@ export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
  * <li>При добавлении героя Илуд на игровом поле игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param suitId Id фракции.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @param {number} suitId Id фракции.
  * @constructor
  */
 export const PlaceYludAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
     const suit: string = Object.keys(suitsConfig)[suitId],
         playerVariants: IVariants | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
-    if (playerVariants) {
+    if (playerVariants !== undefined) {
         const yludCard: ICard = CreateCard({
             suit: suit,
             rank: playerVariants[suit].rank,
@@ -88,9 +87,9 @@ export const PlaceYludAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
  * <li>При добавлении карт, героев или карт кэмпа, помещающихся на карту героя Труд на игровом поле игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param card Карта, помещающаяся на карту героя Труд.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {ICard | IArtefactCampCard | IHero} card Карта, помещающаяся на карту героя Труд.
  * @constructor
  */
 export const CheckAndMoveThrudOrPickHeroAction = (G: MyGameState, ctx: Ctx, card: ICard | IArtefactCampCard | IHero):
@@ -110,10 +109,9 @@ export const CheckAndMoveThrudOrPickHeroAction = (G: MyGameState, ctx: Ctx, card
  * <li>При выборе конкретных героев, добавляющихся в массив карт игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
  * @constructor
  */
 export const AddHeroToCards = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
@@ -138,9 +136,8 @@ export const AddHeroToCards = (G: MyGameState, ctx: Ctx, config: IConfig): void 
  * <li>При выборе конкретных героев, возвращающих закрытые монеты со стола в руку.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export const GetClosedCoinIntoPlayerHand = (G: MyGameState, ctx: Ctx): void => {
@@ -150,9 +147,9 @@ export const GetClosedCoinIntoPlayerHand = (G: MyGameState, ctx: Ctx): void => {
         tradingHandCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin: ICoin | null): boolean => Boolean(coin && coin.isTriggerTrading));
     for (let i: number = 0; i < coinsCount; i++) {
-        if ((i < G.tavernsNum && G.currentTavern < i) ||
-            (i >= G.tavernsNum && tradingHandCoinIndex !== -1) ||
-            (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {
+        if ((i < G.tavernsNum && G.currentTavern < i)
+            || (i >= G.tavernsNum && tradingHandCoinIndex !== -1)
+            || (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {
             ReturnCoinToPlayerHands(G.publicPlayers[Number(ctx.currentPlayer)], i);
         }
     }
@@ -166,10 +163,10 @@ export const GetClosedCoinIntoPlayerHand = (G: MyGameState, ctx: Ctx): void => {
  * <li>При выборе конкретных героев, получаемых по определённым условиям.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @returns {string|*} INVALID_MOVE
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @returns {string | void}
  * @constructor
  */
 export const PickHeroWithConditions = (G: MyGameState, ctx: Ctx, config: IConfig): string | void => {
@@ -205,13 +202,13 @@ export const PickHeroWithConditions = (G: MyGameState, ctx: Ctx, config: IConfig
  * <li>При выборе карт кэмпа, дающих возможность взять карту героя.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export const PickHero = (G: MyGameState, ctx: Ctx): void => {
     const playerConfig: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (playerConfig) {
+    if (playerConfig !== undefined) {
         AddDataToLog(G, LogTypes.GAME, `Начало фазы ${playerConfig.stageName}.`);
         ctx.events!.setStage!(playerConfig.stageName);
     }

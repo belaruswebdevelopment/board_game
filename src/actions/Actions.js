@@ -26,10 +26,10 @@ import { AddDataToLog } from "../Logging";
  * <li>При выборе карт улучшения монет выполняются их действия.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param data Конфиг действий.
- * @param args Дополнительные аргументы.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IStack} data Стэк.
+ * @param {string | number | boolean | object | null} args Дополнительные аргументы.
  * @constructor
  */
 export var ActionDispatcher = function (G, ctx, data) {
@@ -136,10 +136,10 @@ export var ActionDispatcher = function (G, ctx, data) {
  * <li>При выборе карт улучшающих монеты.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя или карты улучшающей монеты.
- * @param args Дополнительные аргументы.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя или карты улучшающей монеты.
+ * @param {string | number | boolean | object | null} args Дополнительные аргументы.
  * @constructor
  */
 var UpgradeCoinAction = function (G, ctx, config) {
@@ -157,21 +157,21 @@ var UpgradeCoinAction = function (G, ctx, config) {
  * <li>При выборе конкретных героев, дающих профит.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
  * @constructor
  */
 var DrawProfitAction = function (G, ctx, config) {
     var _a;
     AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u043B\u0436\u0435\u043D \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043E\u0442 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F '").concat(config.drawName, "'."));
     var playerConfig = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (playerConfig && playerConfig.stageName) {
+    if (playerConfig !== undefined && playerConfig.stageName !== undefined) {
         AddDataToLog(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
         ctx.events.setStage(playerConfig.stageName);
     }
     G.actionsNum = (_a = config.number) !== null && _a !== void 0 ? _a : 1;
-    if (config.name) {
+    if (config.name !== undefined) {
         G.drawProfit = config.name;
     }
 };
@@ -182,13 +182,13 @@ var DrawProfitAction = function (G, ctx, config) {
  * <li>При выборе конкретных героев, добавляющих бафы игроку.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
  * @constructor
  */
 var AddBuffToPlayer = function (G, ctx, config) {
-    if (config.buff) {
+    if (config.buff !== undefined) {
         G.publicPlayers[Number(ctx.currentPlayer)].buffs[config.buff.name] = config.buff.value;
         AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u0431\u0430\u0444 '").concat(config.buff.name, "'."));
     }
@@ -201,16 +201,15 @@ var AddBuffToPlayer = function (G, ctx, config) {
  * <li>При выборе конкретных героев, дискардящих карты с планшета игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param suitId Id фракции.
- * @param cardId Id карты.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @param {number} suitId Id фракции.
+ * @param {number} cardId Id карты.
  * @constructor
  */
 export var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId, cardId) {
-    var pickedCard = G.publicPlayers[Number(ctx.currentPlayer)]
-        .cards[suitId][cardId];
+    var pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
     if (pickedCard) {
         AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 ").concat(pickedCard.name, "."));
@@ -246,10 +245,10 @@ export var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId,
  * <li>Применяется при выборе первым игроком карты из кэмпа.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param cardId Id карты.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @param {number} cardId Id карты.
  * @constructor
  */
 var DiscardCardFromTavernAction = function (G, ctx, config, cardId) {
@@ -264,9 +263,10 @@ var DiscardCardFromTavernAction = function (G, ctx, config, cardId) {
  * <li>При выборе конкретных героев, дающих возможность дискарда карт с планшета игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @returns {string | void}
  * @constructor
  */
 var CheckDiscardCardsFromPlayerBoardAction = function (G, ctx, config) {
@@ -294,22 +294,22 @@ var CheckDiscardCardsFromPlayerBoardAction = function (G, ctx, config) {
  * <li>При выборе конкретных героев, добавляющих другие карты на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param suitId Id фракции.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @param {number} suitId Id фракции.
  * @constructor
  */
 var PlaceCards = function (G, ctx, config, suitId) {
     var playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
-    if (playerVariants) {
+    if (playerVariants !== undefined) {
         var suit = Object.keys(suitsConfig)[suitId], olwinDouble = CreateCard({
             suit: suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
             name: "Olwin",
         });
-        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \n        \u041E\u043B\u0432\u0438\u043D \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
+        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u041E\u043B\u0432\u0438\u043D \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
         AddCardToPlayer(G, ctx, olwinDouble);
         if (G.actionsNum === 2) {
             var variants = {
@@ -366,8 +366,8 @@ var PlaceCards = function (G, ctx, config, suitId) {
  * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 var CheckPickDiscardCard = function (G, ctx) {
@@ -383,10 +383,10 @@ var CheckPickDiscardCard = function (G, ctx) {
  * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param cardId Id карты.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @param {number} cardId Id карты.
  * @constructor
  */
 var PickDiscardCard = function (G, ctx, config, cardId) {
@@ -426,8 +426,8 @@ var PickDiscardCard = function (G, ctx, config, cardId) {
  * <li>Может применятся первым игроком в фазе вербовки наёмников.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 var PassEnlistmentMercenariesAction = function (G, ctx) {
@@ -441,15 +441,16 @@ var PassEnlistmentMercenariesAction = function (G, ctx) {
  * <li>Применяется когда игроку нужно выбрать наёмника для вербовки.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param cardId Id карты.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @param {number} cardId Id карты.
  * @constructor
  */
 var GetEnlistmentMercenariesAction = function (G, ctx, config, cardId) {
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].campCards
-        .filter(function (card) { return card.type === "наёмник"; })[cardId];
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard =
+        G.publicPlayers[Number(ctx.currentPlayer)].campCards
+            .filter(function (card) { return card.type === "наёмник"; })[cardId];
     var pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null) {
         AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \u0432\u044B\u0431\u0440\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(pickedCard.name, "'."));
@@ -472,16 +473,16 @@ var GetEnlistmentMercenariesAction = function (G, ctx, config, cardId) {
  * <li>Применяется когда игроку нужно выбрать фракцию для вербовки наёмника.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param suitId Id фракции.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @param {number} suitId Id фракции.
  * @constructor
  */
 var PlaceEnlistmentMercenariesAction = function (G, ctx, config, suitId) {
     var suit = Object.keys(suitsConfig)[suitId], pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-    if (pickedCard !== null && "stack" in pickedCard && "tier" in pickedCard && "path" in pickedCard &&
-        pickedCard.stack[0].variants) {
+    if (pickedCard !== null && "stack" in pickedCard && "tier" in pickedCard && "path" in pickedCard
+        && pickedCard.stack[0].variants) {
         var mercenaryCard = CreateCard({
             type: "наёмник",
             suit: suit,
@@ -496,9 +497,8 @@ var PlaceEnlistmentMercenariesAction = function (G, ctx, config, suitId) {
         var cardIndex = G.publicPlayers[Number(ctx.currentPlayer)].campCards
             .findIndex(function (card) { return card.name === pickedCard.name; });
         G.publicPlayers[Number(ctx.currentPlayer)].campCards.splice(cardIndex, 1);
-        if (G.publicPlayers[Number(ctx.currentPlayer)].campCards.filter(function (card) {
-            return card.type === "наёмник";
-        }).length) {
+        if (G.publicPlayers[Number(ctx.currentPlayer)].campCards
+            .filter(function (card) { return card.type === "наёмник"; }).length) {
             var stack = [
                 {
                     actionName: "DrawProfitAction",

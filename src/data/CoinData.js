@@ -1,3 +1,13 @@
+/**
+ * <h3>Проверка, является ли объект конфигом базовых монет или конфигом монет рынка.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param {IInitialTradingCoinConfig | IMarketCoinConfig} config Конфиг.
+ * @returns {config is IInitialTradingCoinConfig} Является ли объект конфигом базовых монет или конфигом монет рынка.
+ */
 export var isInitialPlayerCoinsConfigNotMarket = function (config) { return config.isTriggerTrading !== undefined; };
 /**
  * <h3>Конфиг базовых монет игрока.</h3>
@@ -6,7 +16,7 @@ export var isInitialPlayerCoinsConfigNotMarket = function (config) { return conf
  * <li>Происходит при создании всех базовых монет игрока в ходе инициализации игры.</li>
  * </ol>
  *
- * @type {[{isTriggerTrading: boolean, value: number}, number, number, number, number]}
+ * @type {({isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number})[]}
  */
 export var initialPlayerCoinsConfig = [
     {
@@ -37,7 +47,7 @@ export var initialPlayerCoinsConfig = [
  * <li>Происходит при создании всех монет рынка в ходе инициализации игры.</li>
  * </ol>
  *
- * @type {[{count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, {count: (function(): {"2": number, "3": number, "4": number, "5": number}), value: number}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]} Все монеты.
+ * @type {({count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number})[]}
  */
 export var marketCoinsConfig = [
     {

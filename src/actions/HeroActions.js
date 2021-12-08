@@ -16,10 +16,10 @@ import { TotalRank } from "../helpers/ScoreHelpers";
  * <li>При добавлении героя Труд на игровом поле игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param suitId Id фракции.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @param {number} suitId Id фракции.
  * @constructor
  */
 export var PlaceThrudAction = function (G, ctx, config, suitId) {
@@ -46,16 +46,15 @@ export var PlaceThrudAction = function (G, ctx, config, suitId) {
  * <li>При добавлении героя Илуд на игровом поле игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param suitId Id фракции.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @param {number} suitId Id фракции.
  * @constructor
  */
 export var PlaceYludAction = function (G, ctx, config, suitId) {
     var suit = Object.keys(suitsConfig)[suitId], playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
-    if (playerVariants) {
+    if (playerVariants !== undefined) {
         var yludCard = CreateCard({
             suit: suit,
             rank: playerVariants[suit].rank,
@@ -77,9 +76,9 @@ export var PlaceYludAction = function (G, ctx, config, suitId) {
  * <li>При добавлении карт, героев или карт кэмпа, помещающихся на карту героя Труд на игровом поле игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param card Карта, помещающаяся на карту героя Труд.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {ICard | IArtefactCampCard | IHero} card Карта, помещающаяся на карту героя Труд.
  * @constructor
  */
 export var CheckAndMoveThrudOrPickHeroAction = function (G, ctx, card) {
@@ -98,10 +97,9 @@ export var CheckAndMoveThrudOrPickHeroAction = function (G, ctx, card) {
  * <li>При выборе конкретных героев, добавляющихся в массив карт игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
  * @constructor
  */
 export var AddHeroToCards = function (G, ctx, config) {
@@ -124,9 +122,8 @@ export var AddHeroToCards = function (G, ctx, config) {
  * <li>При выборе конкретных героев, возвращающих закрытые монеты со стола в руку.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export var GetClosedCoinIntoPlayerHand = function (G, ctx) {
@@ -134,9 +131,9 @@ export var GetClosedCoinIntoPlayerHand = function (G, ctx) {
         .findIndex(function (coin) { return Boolean(coin && coin.isTriggerTrading); }), tradingHandCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
         .findIndex(function (coin) { return Boolean(coin && coin.isTriggerTrading); });
     for (var i = 0; i < coinsCount; i++) {
-        if ((i < G.tavernsNum && G.currentTavern < i) ||
-            (i >= G.tavernsNum && tradingHandCoinIndex !== -1) ||
-            (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {
+        if ((i < G.tavernsNum && G.currentTavern < i)
+            || (i >= G.tavernsNum && tradingHandCoinIndex !== -1)
+            || (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {
             ReturnCoinToPlayerHands(G.publicPlayers[Number(ctx.currentPlayer)], i);
         }
     }
@@ -149,10 +146,10 @@ export var GetClosedCoinIntoPlayerHand = function (G, ctx) {
  * <li>При выборе конкретных героев, получаемых по определённым условиям.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @returns {string|*} INVALID_MOVE
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {IConfig} config Конфиг действий героя.
+ * @returns {string | void}
  * @constructor
  */
 export var PickHeroWithConditions = function (G, ctx, config) {
@@ -188,13 +185,13 @@ export var PickHeroWithConditions = function (G, ctx, config) {
  * <li>При выборе карт кэмпа, дающих возможность взять карту героя.</li>
  * </ol>
  *
- * @param G
- * @param ctx
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
  * @constructor
  */
 export var PickHero = function (G, ctx) {
     var playerConfig = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (playerConfig) {
+    if (playerConfig !== undefined) {
         AddDataToLog(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
         ctx.events.setStage(playerConfig.stageName);
     }

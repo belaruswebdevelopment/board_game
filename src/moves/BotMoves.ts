@@ -11,9 +11,9 @@ import {IPublicPlayer} from "../Player";
  * <li>Когда ботам нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinsOrder Порядок выкладки монет.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number[]} coinsOrder Порядок выкладки монет.
  * @constructor
  */
 export const BotsPlaceAllCoins: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinsOrder: number[]): void => {
@@ -26,9 +26,10 @@ export const BotsPlaceAllCoins: Move<MyGameState> = (G: MyGameState, ctx: Ctx, c
             G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId] = null;
         }
     }
-    const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers.filter((player: IPublicPlayer): boolean =>
-        player.buffs.everyTurn !== "Uline").every((player: IPublicPlayer): boolean =>
-        player.handCoins.every((coin: ICoin | null): boolean => coin === null));
+    const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers
+        .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== "Uline")
+        .every((player: IPublicPlayer): boolean => player.handCoins
+            .every((coin: ICoin | null): boolean => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {
         if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
             ctx.events!.setPhase!("placeCoinsUline");

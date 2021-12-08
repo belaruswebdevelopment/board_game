@@ -1,9 +1,15 @@
 import {SuitNames} from "./SuitData";
 
+/**
+ * <h3>Интерфейс для отрисовки бэкграунда в стилях.</h3>
+ */
 export interface IBackground {
     background: string,
 }
 
+/**
+ * <h3>Интерфейс для всех стилей.</h3>
+ */
 interface IStyles {
     Suits: (suitName: string) => IBackground,
     Cards: (suit: string, points: number, name: string) => IBackground,
@@ -28,11 +34,11 @@ interface IStyles {
  * <li>Используется при отрисовке всех картинок в игре.</li>
  * </ol>
  *
- * @type {{Priorities: (function(*): {background: string}), CoinBack: (function(): {background: string}), Taverns: ((function(*): ({background: string}))|*), Priority: (function(): {background: string}), Heroes: ((function(*, *): ({background: string}|undefined))|*), Distinctions: ((function(*): ({background: string}))|*), Suits: (function(*): {background: string}), DistinctionsBack: (function(): {background: string}), HeroBack: (function(): {background: string}), Exchange: (function(): {background: string}), Coin: (function(*, *): {background: string}), CampCards: ((function(*, *): ({background: string}))|*), Camp: (function(): {background: string})}}
+ * @type {{Priorities: (priority: number) => IBackground, CoinBack: () => IBackground, Taverns: (tavernId: number) => IBackground, Priority: () => IBackground, Heroes: (game: string, heroName: string) => IBackground, Distinctions: (distinction: string) => IBackground, Suits: (suitName: string) => IBackground, DistinctionsBack: () => IBackground, HeroBack: () => IBackground, Exchange: () => IBackground, Coin: (value: number, initial: boolean) => IBackground, CampCards: (tier: number, cardPath: string) => IBackground, Cards: (suit: string, points: number, name: string) => IBackground, Camp: () => IBackground}}
  */
 export const Styles: IStyles = {
     Suits: (suitName: string): IBackground => ({
-        background: `url(/img/suits/${suitName}.png) no-repeat 0px 0px / 24px 24px`
+        background: `url(/img/suits/${suitName}.png) no-repeat 0px 0px / 24px 24px`,
     }),
     Cards: (suit: string, points: number, name: string): IBackground => {
         if (name === "Olwin") {

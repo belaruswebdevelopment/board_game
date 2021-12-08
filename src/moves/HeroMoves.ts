@@ -4,6 +4,7 @@ import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
 import {Ctx, Move} from "boardgame.io";
 import {MyGameState} from "../GameSetup";
 // todo Add logging
+
 /**
  * <h3>Выбор героя.</h3>
  * <p>Применения:</p>
@@ -11,10 +12,10 @@ import {MyGameState} from "../GameSetup";
  * <li>При необходимости выбора героя.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param heroId Id героя.
- * @returns {string|*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} heroId Id героя.
+ * @returns {string | void}
  * @constructor
  */
 export const ClickHeroCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, heroId: number): string | void => {
@@ -32,10 +33,9 @@ export const ClickHeroCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, heroI
  * <li>При выборе героя со способностью выкладки карт на планшет игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} suitId Id фракции.
  * @constructor
  */
 export const PlaceCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
@@ -49,11 +49,10 @@ export const PlaceCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: n
  * <li>При выборе героя со способностью сброса карт с планшета игрока.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- * @param cardId Id карты.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} suitId Id фракции.
+ * @param {number} cardId Id карты.
  * @constructor
  */
 export const DiscardCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number, cardId: number): void => {

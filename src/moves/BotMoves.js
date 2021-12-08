@@ -6,9 +6,9 @@ import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
  * <li>Когда ботам нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param coinsOrder Порядок выкладки монет.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number[]} coinsOrder Порядок выкладки монет.
  * @constructor
  */
 export var BotsPlaceAllCoins = function (G, ctx, coinsOrder) {
@@ -21,11 +21,10 @@ export var BotsPlaceAllCoins = function (G, ctx, coinsOrder) {
             G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId] = null;
         }
     }
-    var isEveryPlayersHandCoinsEmpty = G.publicPlayers.filter(function (player) {
-        return player.buffs.everyTurn !== "Uline";
-    }).every(function (player) {
-        return player.handCoins.every(function (coin) { return coin === null; });
-    });
+    var isEveryPlayersHandCoinsEmpty = G.publicPlayers
+        .filter(function (player) { return player.buffs.everyTurn !== "Uline"; })
+        .every(function (player) { return player.handCoins
+        .every(function (coin) { return coin === null; }); });
     if (isEveryPlayersHandCoinsEmpty) {
         if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
             ctx.events.setPhase("placeCoinsUline");

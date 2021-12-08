@@ -10,13 +10,13 @@ import {IHero} from "../Hero";
 import {CampDeckCardTypes, DeckCardTypes} from "../GameSetup";
 
 /**
- * <h3>Отрисовка сегмента игрового поля по указанным данным.</h3>
+ * h3>Отрисовка сегмента игрового поля по указанным данным.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Используется для отрисовки некоторых сегментов игрового поля.</li>
  * </ol>
  *
- * @param objectsSize Данные для вычисления параметров отрисовки сегмента игрового поля.
+ * @param {number} objectsSize Данные для вычисления параметров отрисовки сегмента игрового поля.
  * @returns {{boardCols: number, lastBoardCol: number, boardRows: number}} Параметры для отрисовки сегмента игрового поля.
  * @constructor
  */
@@ -34,8 +34,8 @@ export const DrawBoard = (objectsSize: number): { boardCols: number, lastBoardCo
  * <li>Отрисовка планшета конкретного игрока для дискарда карты по действию артефакта Brisingamens.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
- * @returns {JSX.Element} Шаблон.
+ * @param {GameBoard} data Глобальные параметры.
+ * @returns {JSX.Element} Поле для вывода карт для дискарда.
  * @constructor
  */
 export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
@@ -60,8 +60,8 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
         for (let j: number = 0; j < data.props.G.suitsNum; j++) {
             const suit: string = Object.keys(suitsConfig)[j];
             id = i + j;
-            if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j] !== undefined &&
-                data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][i] !== undefined) {
+            if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j] !== undefined
+                && data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][i] !== undefined) {
                 isExit = false;
                 if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][i].type !== "герой") {
                     isDrawRow = true;
@@ -112,9 +112,9 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
  * <li>Отрисовка планшетов конкретных игроков для дискарда карты конкретной фракции по действию артефакта Hofud.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
- * @param suitName Фракция.
- * @returns {JSX.Element} Шаблон.
+ * @param {GameBoard} data Глобальные параметры.
+ * @param {string} suitName Фракция.
+ * @returns {JSX.Element} Поле игрока для дискарда карты фракции.
  * @constructor
  */
 export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: string): JSX.Element => {
@@ -123,8 +123,8 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
         suitId: number = GetSuitIndexByName(suitName);
     for (let p: number = 0; p < data.props.G.publicPlayers.length; p++) {
         if (p !== Number(data.props.ctx.currentPlayer)) {
-            if (data.props.G.publicPlayers[p].cards[suitId] !== undefined &&
-                data.props.G.publicPlayers[p].cards[suitId].length) {
+            if (data.props.G.publicPlayers[p].cards[suitId] !== undefined
+                && data.props.G.publicPlayers[p].cards[suitId].length) {
                 playersHeaders.push(
                     <th className={`${suitsConfig[suitName].suitColor} discard suit`}
                         key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suitName].suitName}`}>
@@ -140,11 +140,11 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
         let isDrawRow: boolean = false,
             isExit: boolean = true;
         playersRows[i] = [];
-        const playersCells = [];
+        const playersCells: JSX.Element[] = [];
         for (let p: number = 0; p < data.props.G.publicPlayers.length; p++) {
             if (p !== Number(data.props.ctx.currentPlayer)) {
-                if (data.props.G.publicPlayers[p].cards[suitId] !== undefined &&
-                    data.props.G.publicPlayers[p].cards[suitId][i] !== undefined) {
+                if (data.props.G.publicPlayers[p].cards[suitId] !== undefined
+                    && data.props.G.publicPlayers[p].cards[suitId][i] !== undefined) {
                     if (data.props.G.publicPlayers[p].cards[suitId][i].type !== "герой") {
                         isExit = false;
                         isDrawRow = true;
@@ -189,14 +189,14 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
  * <li>Отрисовка карт на игровом поле.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
- * @param playerCells Ячейки для отрисовки.
- * @param card Карта.
- * @param id Id карты.
- * @param player Игрок.
- * @param suit Фракция.
- * @param actionName Название действия.
- * @param args Аргументы действия.
+ * @param {GameBoard} data Глобальные параметры.
+ * @param {JSX.Element[]} playerCells Ячейки для отрисовки.
+ * @param {DeckCardTypes | CampDeckCardTypes | IHero} card Карта.
+ * @param {number} id Id карты.
+ * @param {IPublicPlayer | null} player Игрок.
+ * @param {string | null} suit Фракция.
+ * @param {string} actionName Название действия.
+ * @param {string | number | boolean | object | null} args Аргументы действия.
  * @constructor
  */
 export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: DeckCardTypes | CampDeckCardTypes | IHero,
@@ -326,16 +326,16 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
  * <li>Отрисовка монет на игровом поле.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
- * @param playerCells Ячейки для отрисовки.
- * @param type Тип монеты.
- * @param coin Монета.
- * @param id Id монеты.
- * @param player Игрок.
- * @param coinClasses Дополнительный классы для монеты.
- * @param additionalParam Дополнительные параметры.
- * @param actionName Название действия.
- * @param args Аргументы действия.
+ * @param {GameBoard} data Глобальные параметры.
+ * @param {JSX.Element[]} playerCells Ячейки для отрисовки.
+ * @param {string} type Тип монеты.
+ * @param {ICoin} coin Монета.
+ * @param {number} id Id монеты.
+ * @param {IPublicPlayer | null} player Игрок.
+ * @param {string | null} coinClasses Дополнительный классы для монеты.
+ * @param {number | null} additionalParam Дополнительные параметры.
+ * @param {string} actionName Название действия.
+ * @param {string | number | boolean | object | null} args Аргументы действия.
  * @constructor
  */
 export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin: ICoin, id: number,
@@ -431,13 +431,13 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
  * <li>Отрисовка кнопок на игровом поле.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
- * @param boardCells Ячейки для отрисовки.
- * @param key Ключ.
- * @param name Имя кнопки.
- * @param player Игрок.
- * @param actionName
- * @param args Аргументы действия.
+ * @param {GameBoard} data Глобальные параметры.
+ * @param {JSX.Element[]} boardCells Ячейки для отрисовки.
+ * @param {string} key Ключ.
+ * @param {string} name Имя кнопки.
+ * @param {IPublicPlayer} player Игрок.
+ * @param {string} actionName Название действия.
+ * @param {string | number | boolean | object | null} args Аргументы действия.
  * @constructor
  */
 export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: string, name: string, player: IPublicPlayer,

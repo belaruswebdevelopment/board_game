@@ -9,6 +9,7 @@ import {
 import {Ctx, Move} from "boardgame.io";
 import {CampCardTypes, CampDeckCardTypes, MyGameState} from "../GameSetup";
 // todo Add logging
+
 /**
  * <h3>Выбор карты из кэмпа.</h3>
  * <p>Применения:</p>
@@ -16,21 +17,21 @@ import {CampCardTypes, CampDeckCardTypes, MyGameState} from "../GameSetup";
  * <li>Срабатывает при выборе карты из кэмпа.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param cardId Id выбираемой карты из кэмпа.
- * @returns {string|*} Диспетчер экшенов.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} cardId Id выбираемой карты из кэмпа.
+ * @returns {string | void}
  * @constructor
  */
 export const ClickCampCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]})
-        && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0] ||
-            (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
+        && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+            || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const card: CampCardTypes | null = G.camp[cardId];
-    if (card) {
+    if (card !== null) {
         AddActionsToStack(G, ctx, card.stack);
         StartActionFromStackOrEndActions(G, ctx, false, cardId);
     }
@@ -43,20 +44,20 @@ export const ClickCampCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardI
  * <li>Срабатывает при выборе карты из кэмпа по действию персонажа Хольда.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param cardId Id выбираемой карты из кэмпа.
- * @returns {string|*} Диспетчер экшенов.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} cardId Id выбираемой карты из кэмпа.
+ * @returns {string | void}
  * @constructor
  */
 export const ClickCampCardHolda: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
-    const isValidMove: boolean = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]}) &&
-    Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
+    const isValidMove: boolean = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]})
+        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const campCard: CampDeckCardTypes | null = G.camp[cardId];
-    if (campCard) {
+    if (campCard !== null) {
         EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
     }
 };
@@ -68,9 +69,9 @@ export const ClickCampCardHolda: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
  * <li>Применяется при выборе первым игроком карты из кэмпа.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param cardId Id сбрасываемой карты.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} cardId Id сбрасываемой карты.
  * @constructor
  */
 export const DiscardCard2Players: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
@@ -84,10 +85,10 @@ export const DiscardCard2Players: Move<MyGameState> = (G: MyGameState, ctx: Ctx,
  * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- * @param cardId Id сбрасываемой карты.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} suitId Id фракции.
+ * @param {number} cardId Id сбрасываемой карты.
  * @constructor
  */
 export const DiscardCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number, cardId: number):
@@ -102,11 +103,12 @@ export const DiscardCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ct
  * <li>Применяется при сбросе карты конкретной фракции в дискард при взятии артефакта Hofud.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- * @param playerId Id игрока.
- * @param cardId Id сбрасываемой карты.
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} suitId Id фракции.
+ * @param {number} playerId Id игрока.
+ * @param {number} cardId Id сбрасываемой карты.
+ * @returns {string | void}
  * @constructor
  */
 export const DiscardSuitCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
@@ -128,10 +130,9 @@ export const DiscardSuitCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState
  * <li>В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.</li>
  * </ol>
  *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- * @returns {*}
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {number} suitId Id фракции.
  * @constructor
  */
 export const GetMjollnirProfit: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
