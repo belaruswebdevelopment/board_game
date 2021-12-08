@@ -20,29 +20,44 @@ export const enum SuitNames {
 }
 
 /**
- * <h3>Интерфейс для .</h3>
+ * <h3>Интерфейс для числовых индексов и числовых значений.</h3>
  */
 export interface INumberValues {
     [index: number]: number,
 }
 
+/**
+ * <h3>Интерфейс для числовых индексов и массивов числовых значений.</h3>
+ */
 interface IArrayValuesForTiers {
     [index: number]: number[],
 }
 
+/**
+ * <h3>Интерфейс для значений шевронов карт.</h3>
+ */
 interface IRankValues {
     [index: number]: INumberValues,
 }
 
+/**
+ * <h3>Интерфейс для значений очков карт.</h3>
+ */
 interface IPointsValues {
     [index: number]: INumberValues | IArrayValuesForTiers,
 }
 
+/**
+ * <h3>Интерфейс для преимуществ по фракциям.</h3>
+ */
 interface IDistinction {
     description: string,
     awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number,
 }
 
+/**
+ * <h3>Интерфейс для фракций.</h3>
+ */
 export interface ISuit {
     suit: string,
     suitName: string,
@@ -54,6 +69,9 @@ export interface ISuit {
     distinction: IDistinction,
 }
 
+/**
+ * <h3>Интерфейс для конфига фракций.</h3>
+ */
 export interface ISuitConfig {
     [name: string]: ISuit,
 }
