@@ -1,7 +1,7 @@
 import { AddCardToCards } from "./Player";
 import { suitsConfig } from "./data/SuitData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
-import { AddDataToLog } from "./Logging";
+import { AddDataToLog, LogTypes } from "./Logging";
 import { tavernsConfig } from "./Tavern";
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
@@ -87,16 +87,16 @@ var CreateActionCard = function (_a) {
 export var BuildCards = function (deckConfig, data) {
     var cards = [];
     for (var suit in suitsConfig) {
-        var cardPoints = deckConfig.suits[suit].pointsValues()[data.players][data.tier];
+        var points = deckConfig.suits[suit].pointsValues()[data.players][data.tier];
         var count = 0;
-        if (Array.isArray(cardPoints)) {
-            count = cardPoints.length;
+        if (Array.isArray(points)) {
+            count = points.length;
         }
         else {
-            count = cardPoints;
+            count = points;
         }
         for (var j = 0; j < count; j++) {
-            var rank = deckConfig.suits[suit].ranksValues()[data.players][data.tier], points = deckConfig.suits[suit].pointsValues()[data.players][data.tier];
+            var rank = deckConfig.suits[suit].ranksValues()[data.players][data.tier];
             cards.push(CreateCard({
                 suit: deckConfig.suits[suit].suit,
                 rank: Array.isArray(rank) ? rank[j] : null,
@@ -136,7 +136,7 @@ export var GetAverageSuitCard = function (suitConfig, data) {
         points: 0
     }), rank = suitConfig.ranksValues()[data.players][data.tier], points = suitConfig.pointsValues()[data.players][data.tier];
     var count = Array.isArray(points) ? points.length : points;
-    if (avgCard.rank && avgCard.points) {
+    if (avgCard.rank !== null && avgCard.points !== null) {
         for (var i = 0; i < count; i++) {
             avgCard.rank += Array.isArray(rank) ? rank[i] : 1;
             avgCard.points += Array.isArray(points) ? points[i] : 1;
@@ -160,7 +160,7 @@ export var GetAverageSuitCard = function (suitConfig, data) {
  * @constructor
  */
 export var CompareCards = function (card1, card2) {
-    if (!card1 || !card2) {
+    if (card1 === null || card2 === null) {
         return 0;
     }
     if (isCardNotAction(card1) && isCardNotAction(card2)) {
@@ -211,7 +211,7 @@ export var CompareCards = function (card1, card2) {
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param {IPublicPlayer} player Игрок.
- * @param {ICard | IArtefactCampCard | IHero | IActionCard} card Карта.
+ * @param {PlayerCardsType | IActionCard} card Карта.
  * @returns {number} Потенциальное значение.
  * @constructor
  */
@@ -225,7 +225,7 @@ export var PotentialScoring = function (_a) {
             AddCardToCards(potentialCards, player.cards[i_1][j]);
         }
     }
-    if (card && "suit" in card) {
+    if (card !== null && "suit" in card) {
         AddCardToCards(potentialCards, CreateCard(card));
     }
     var i = 0;
@@ -233,7 +233,7 @@ export var PotentialScoring = function (_a) {
         score += suitsConfig[suit].scoringRule(potentialCards[i]);
         i++;
     }
-    if (card && "value" in card) {
+    if (card !== null && "value" in card) {
         score += card.value;
     }
     for (var i_2 = 0; i_2 < player.boardCoins.length; i_2++) {
@@ -291,11 +291,12 @@ export var EvaluateCard = function (G, ctx, compareCard, cardId, tavern) {
  */
 export var DiscardCardFromTavern = function (G, discardCardIndex) {
     var discardedCard = G.taverns[G.currentTavern][discardCardIndex];
-    if (discardedCard) {
+    if (discardedCard !== null) {
         G.discardCardsDeck.push(discardedCard);
         G.taverns[G.currentTavern][discardCardIndex] = null;
-        AddDataToLog(G, "game" /* GAME */, "\u041A\u0430\u0440\u0442\u0430 ".concat(discardedCard.name, " \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \n        ").concat(tavernsConfig[G.currentTavern].name, " \u0443\u0431\u0440\u0430\u043D\u0430 \u0432 \u0441\u0431\u0440\u043E\u0441."));
+        AddDataToLog(G, LogTypes.GAME, "\u041A\u0430\u0440\u0442\u0430 ".concat(discardedCard.name, " \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \n        ").concat(tavernsConfig[G.currentTavern].name, " \u0443\u0431\u0440\u0430\u043D\u0430 \u0432 \u0441\u0431\u0440\u043E\u0441."));
         return true;
     }
+    AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не удалось сбросить лишнюю карту из таверны.");
     return false;
 };

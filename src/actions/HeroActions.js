@@ -7,7 +7,7 @@ import { ReturnCoinToPlayerHands } from "../Coin";
 import { CheckAndMoveThrud, GetHeroIndexByName, StartThrudMoving } from "../helpers/HeroHelpers";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { AddDataToLog } from "../Logging";
+import { AddDataToLog, LogTypes } from "../Logging";
 import { TotalRank } from "../helpers/ScoreHelpers";
 /**
  * <h3>Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.</h3>
@@ -24,7 +24,7 @@ import { TotalRank } from "../helpers/ScoreHelpers";
  */
 export var PlaceThrudAction = function (G, ctx, config, suitId) {
     var suit = Object.keys(suitsConfig)[suitId], playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
-    if (playerVariants) {
+    if (playerVariants !== undefined) {
         var thrudCard = CreateCard({
             suit: suit,
             rank: playerVariants[suit].rank,
@@ -33,7 +33,7 @@ export var PlaceThrudAction = function (G, ctx, config, suitId) {
             name: "Thrud",
             game: "base",
         });
-        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u0422\u0440\u0443\u0434 \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
+        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u0422\u0440\u0443\u0434 \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
         AddCardToPlayer(G, ctx, thrudCard);
         CheckPickHero(G, ctx);
         EndActionFromStackAndAddNew(G, ctx);
@@ -63,7 +63,7 @@ export var PlaceYludAction = function (G, ctx, config, suitId) {
             name: "Ylud",
             game: "base",
         });
-        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u0418\u043B\u0443\u0434 \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
+        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u0418\u043B\u0443\u0434 \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
         AddCardToPlayer(G, ctx, yludCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, yludCard);
         EndActionFromStackAndAddNew(G, ctx, [], suitId);
@@ -78,7 +78,7 @@ export var PlaceYludAction = function (G, ctx, config, suitId) {
  *
  * @param {MyGameState} G
  * @param {Ctx} ctx
- * @param {ICard | IArtefactCampCard | IHero} card Карта, помещающаяся на карту героя Труд.
+ * @param {PlayerCardsType} card Карта, помещающаяся на карту героя Труд.
  * @constructor
  */
 export var CheckAndMoveThrudOrPickHeroAction = function (G, ctx, card) {
@@ -107,7 +107,7 @@ export var AddHeroToCards = function (G, ctx, config) {
         var heroIndex = GetHeroIndexByName(config.drawName), hero = G.heroes[heroIndex];
         var suitId = null;
         AddHeroCardToPlayerHeroCards(G, ctx, hero);
-        if (hero.suit) {
+        if (hero.suit !== null) {
             AddHeroCardToPlayerCards(G, ctx, hero);
             CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
             suitId = GetSuitIndexByName(hero.suit);
@@ -128,8 +128,8 @@ export var AddHeroToCards = function (G, ctx, config) {
  */
 export var GetClosedCoinIntoPlayerHand = function (G, ctx) {
     var coinsCount = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length, tradingBoardCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-        .findIndex(function (coin) { return Boolean(coin && coin.isTriggerTrading); }), tradingHandCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-        .findIndex(function (coin) { return Boolean(coin && coin.isTriggerTrading); });
+        .findIndex(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading); }), tradingHandCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+        .findIndex(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading); });
     for (var i = 0; i < coinsCount; i++) {
         if ((i < G.tavernsNum && G.currentTavern < i)
             || (i >= G.tavernsNum && tradingHandCoinIndex !== -1)
@@ -192,7 +192,7 @@ export var PickHeroWithConditions = function (G, ctx, config) {
 export var PickHero = function (G, ctx) {
     var playerConfig = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (playerConfig !== undefined) {
-        AddDataToLog(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
+        AddDataToLog(G, LogTypes.GAME, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
         ctx.events.setStage(playerConfig.stageName);
     }
 };

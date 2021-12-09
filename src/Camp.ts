@@ -15,7 +15,7 @@ export interface IArtefactCampCard {
     name: string,
     description: string,
     game: string,
-    suit: string,
+    suit: null | string,
     rank: null | number,
     points: null | number,
     stack: IStack[],
@@ -31,7 +31,7 @@ interface ICreateArtefactCampCard {
     name: string,
     description: string,
     game: string,
-    suit: string,
+    suit: null | string,
     rank: null | number,
     points: null | number,
     stack: IStack[],
@@ -301,9 +301,9 @@ export const RefillCamp = (G: MyGameState): void => {
  */
 const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
     for (let i: number = 0; i < G.camp.length; i++) {
-        if (G.camp[i]) {
+        if (G.camp[i] !== null) {
             const card: CampDeckCardTypes | null = G.camp.splice(i, 1, null)[0];
-            if (card) {
+            if (card !== null) {
                 G.discardCampCardsDeck.push(card);
             }
         }

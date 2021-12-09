@@ -299,11 +299,17 @@ export const AddCampCardToPlayer = (G: MyGameState, ctx: Ctx, card: CampDeckCard
  * @constructor
  */
 export const AddCampCardToPlayerCards = (G: MyGameState, ctx: Ctx, card: IArtefactCampCard): void => {
-    const suitId: number = GetSuitIndexByName(card.suit);
-    if (suitId !== -1) {
-        G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(card);
-        AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
-        выбрал карту кэмпа '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
+    if (card.suit !== null) {
+        const suitId: number = GetSuitIndexByName(card.suit);
+        if (suitId !== -1) {
+            G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(card);
+            AddDataToLog(G, LogTypes.PRIVATE, `Игрок 
+            ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту кэмпа '${card.name}' во фракцию 
+            ${suitsConfig[card.suit].suitName}.`);
+        }
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить артефакт ${card.name} на планшет 
+        карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
     }
 };
 
@@ -340,11 +346,17 @@ export const AddHeroCardToPlayerHeroCards = (G: MyGameState, ctx: Ctx, hero: IHe
  * @constructor
  */
 export const AddHeroCardToPlayerCards = (G: MyGameState, ctx: Ctx, hero: IHero): void => {
-    const suitId: number = GetSuitIndexByName(hero.suit);
-    if (suitId !== -1) {
-        G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(hero);
-        AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
-        добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
+    if (hero.suit !== null) {
+        const suitId: number = GetSuitIndexByName(hero.suit);
+        if (suitId !== -1) {
+            G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(hero);
+            AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+            добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
+        }
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.suit} на планшет 
+        карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции или его принадлежности к 
+        нейтралам.`);
     }
 };
 
@@ -360,10 +372,13 @@ export const AddHeroCardToPlayerCards = (G: MyGameState, ctx: Ctx, hero: IHero):
  * @constructor
  */
 export const AddCardToCards = (cards: PlayerCardsType[][], card: PlayerCardsType): void => {
-    const suitId: number = GetSuitIndexByName(card.suit);
-    if (suitId !== -1) {
-        cards[suitId].push(card);
+    if (card.suit !== null) {
+        const suitId: number = GetSuitIndexByName(card.suit);
+        if (suitId !== -1) {
+            cards[suitId].push(card);
+        }
     }
+    // todo Else it can be upgrade coin card here and it is not error, sure?
 };
 
 /**
@@ -379,10 +394,9 @@ export const AddCardToCards = (cards: PlayerCardsType[][], card: PlayerCardsType
  * @returns {boolean}
  * @constructor
  */
-export const IsTopPlayer = (G: MyGameState, playerId: number): boolean => {
-    const score: number = CurrentScoring(G.publicPlayers[playerId]);
-    return G.publicPlayers.every((player: IPublicPlayer): boolean => CurrentScoring(player) <= score);
-};
+export const IsTopPlayer = (G: MyGameState, playerId: number): boolean =>
+    G.publicPlayers.every((player: IPublicPlayer): boolean =>
+        CurrentScoring(player) <= CurrentScoring(G.publicPlayers[playerId]));
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>

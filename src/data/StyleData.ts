@@ -12,7 +12,7 @@ export interface IBackground {
  */
 interface IStyles {
     Suits: (suitName: string) => IBackground,
-    Cards: (suit: string, points: number, name: string) => IBackground,
+    Cards: (suit: string | null, name: string, points: number | null) => IBackground,
     Heroes: (game: string, heroName: string) => IBackground,
     Distinctions: (distinction: string) => IBackground,
     DistinctionsBack: () => IBackground,
@@ -40,7 +40,7 @@ export const Styles: IStyles = {
     Suits: (suitName: string): IBackground => ({
         background: `url(/img/suits/${suitName}.png) no-repeat 0px 0px / 24px 24px`,
     }),
-    Cards: (suit: string, points: number, name: string): IBackground => {
+    Cards: (suit: string | null, name: string, points: number | null): IBackground => {
         if (name === "Olwin") {
             switch (name) {
                 case "Olwin":

@@ -5,6 +5,7 @@ import { DiscardCardFromTavern } from "../Card";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "./StackHelpers";
 import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
 import { ActivateTrading } from "./CoinHelpers";
+import { SuitNames } from "../data/SuitData";
 // todo Add logging
 /**
  * <h3>Завершает каждую фазу конца игры и проверяет переход к другим фазам или завершает игру.</h3>
@@ -234,27 +235,27 @@ var StartEndTierActions = function (G, ctx) {
         ctx.events.setPhase("endTier");
         var variants = {
             blacksmith: {
-                suit: "blacksmith" /* BLACKSMITH */,
+                suit: SuitNames.BLACKSMITH,
                 rank: 1,
                 points: null,
             },
             hunter: {
-                suit: "hunter" /* HUNTER */,
+                suit: SuitNames.HUNTER,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: "explorer" /* EXPLORER */,
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 11,
             },
             warrior: {
-                suit: "warrior" /* WARRIOR */,
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 7,
             },
             miner: {
-                suit: "miner" /* MINER */,
+                suit: SuitNames.MINER,
                 rank: 1,
                 points: 1,
             },

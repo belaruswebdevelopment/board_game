@@ -1,4 +1,5 @@
 import { TotalRank } from "../helpers/ScoreHelpers";
+import { SuitNames } from "./SuitData";
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -55,7 +56,7 @@ var Draupnir = {
         },
     ],
     scoringRule: function (player) { return player ? player.boardCoins
-        .filter(function (coin) { return Boolean(coin && (coin === null || coin === void 0 ? void 0 : coin.value) >= 15); }).length * 6 : 0; },
+        .filter(function (coin) { return Boolean(coin !== null && coin.value >= 15); }).length * 6 : 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -71,7 +72,7 @@ var Vegvisir = {
     description: "Immediately place this Artifact in the Explorer column of your army. Its pose can trigger the \n    recruitment of a Hero card if it completes a rank line. This artifact counts as an Explorer rank and adds 13 points \n    to your Explorer Bravery Rating.",
     game: "thingvellir",
     tier: 0,
-    suit: "explorer" /* EXPLORER */,
+    suit: SuitNames.EXPLORER,
     rank: 1,
     points: 13,
     stack: [
@@ -103,7 +104,7 @@ var Svalinn = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: function (player) { return player ? player.heroes.length * 5 : 0; },
+    scoringRule: function (player) { return player !== undefined ? player.heroes.length * 5 : 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -241,7 +242,7 @@ var Mjollnir = {
             },
         },
     ],
-    scoringRule: function (player, suitId) { return player && typeof suitId === "number" ?
+    scoringRule: function (player, suitId) { return player !== undefined && suitId !== undefined ?
         player.cards[suitId].reduce(TotalRank, 0) * 2 : 0; },
 };
 /**
@@ -268,7 +269,7 @@ var Hofud = {
         {
             actionName: "StartDiscardSuitCard",
             config: {
-                suit: "warrior" /* WARRIOR */,
+                suit: SuitNames.WARRIOR,
             },
         },
     ],
@@ -296,8 +297,8 @@ var Hrafnsmerki = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: function (player) { return player ? player.cards.flat()
-        .filter(function (card) { return card.type === "наёмник"; }).length * 5 : 0; },
+    scoringRule: function (player) { return player !== undefined ?
+        player.cards.flat().filter(function (card) { return card.type === "наёмник"; }).length * 5 : 0; },
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -369,72 +370,72 @@ export var mercenariesConfig = [
     [
         {
             warrior: {
-                suit: "warrior" /* WARRIOR */,
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 6,
             },
             explorer: {
-                suit: "explorer" /* EXPLORER */,
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 8,
             },
         },
         {
             warrior: {
-                suit: "warrior" /* WARRIOR */,
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 6,
             },
             blacksmith: {
-                suit: "blacksmith" /* BLACKSMITH */,
+                suit: SuitNames.BLACKSMITH,
                 rank: 1,
                 points: null,
             },
         },
         {
             hunter: {
-                suit: "hunter" /* HUNTER */,
+                suit: SuitNames.HUNTER,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: "explorer" /* EXPLORER */,
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 6,
             },
         },
         {
             hunter: {
-                suit: "hunter" /* HUNTER */,
+                suit: SuitNames.HUNTER,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: "miner" /* MINER */,
+                suit: SuitNames.MINER,
                 rank: 1,
                 points: 1,
             },
         },
         {
             blacksmith: {
-                suit: "blacksmith" /* BLACKSMITH */,
+                suit: SuitNames.BLACKSMITH,
                 rank: 1,
                 points: null,
             },
             miner: {
-                suit: "miner" /* MINER */,
+                suit: SuitNames.MINER,
                 rank: 1,
                 points: 1,
             },
         },
         {
             warrior: {
-                suit: "warrior" /* WARRIOR */,
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 9,
             },
             explorer: {
-                suit: "explorer" /* EXPLORER */,
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 11,
             },
@@ -443,72 +444,72 @@ export var mercenariesConfig = [
     [
         {
             hunter: {
-                suit: "hunter" /* HUNTER */,
+                suit: SuitNames.HUNTER,
                 rank: 1,
                 points: null,
             },
             blacksmith: {
-                suit: "blacksmith" /* BLACKSMITH */,
+                suit: SuitNames.BLACKSMITH,
                 rank: 1,
                 points: null,
             },
         },
         {
             warrior: {
-                suit: "warrior" /* WARRIOR */,
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 6,
             },
             miner: {
-                suit: "miner" /* MINER */,
+                suit: SuitNames.MINER,
                 rank: 1,
                 points: 1,
             },
         },
         {
             blacksmith: {
-                suit: "blacksmith" /* BLACKSMITH */,
+                suit: SuitNames.BLACKSMITH,
                 rank: 1,
                 points: null,
             },
             explorer: {
-                suit: "explorer" /* EXPLORER */,
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 8,
             },
         },
         {
             warrior: {
-                suit: "warrior" /* WARRIOR */,
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 6,
             },
             hunter: {
-                suit: "hunter" /* HUNTER */,
+                suit: SuitNames.HUNTER,
                 rank: 1,
                 points: null,
             },
         },
         {
             explorer: {
-                suit: "explorer" /* EXPLORER */,
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 8,
             },
             miner: {
-                suit: "miner" /* MINER */,
+                suit: SuitNames.MINER,
                 rank: 1,
                 points: 1,
             },
         },
         {
             warrior: {
-                suit: "warrior" /* WARRIOR */,
+                suit: SuitNames.WARRIOR,
                 rank: 1,
                 points: 9,
             },
             explorer: {
-                suit: "explorer" /* EXPLORER */,
+                suit: SuitNames.EXPLORER,
                 rank: 1,
                 points: 11,
             },

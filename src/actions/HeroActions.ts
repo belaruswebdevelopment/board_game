@@ -1,6 +1,12 @@
 import {suitsConfig} from "../data/SuitData";
 import {CreateCard, ICard, ICreateCard} from "../Card";
-import {AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards, IConfig} from "../Player";
+import {
+    AddCardToPlayer,
+    AddHeroCardToPlayerCards,
+    AddHeroCardToPlayerHeroCards,
+    IConfig,
+    PlayerCardsType
+} from "../Player";
 import {CheckPickHero, IHero} from "../Hero";
 import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
 import {ICoin, ReturnCoinToPlayerHands} from "../Coin";
@@ -11,7 +17,6 @@ import {AddDataToLog, LogTypes} from "../Logging";
 import {TotalRank} from "../helpers/ScoreHelpers";
 import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
-import {IArtefactCampCard} from "../Camp";
 import {IConditions, IVariants} from "../data/HeroData";
 
 /**
@@ -30,7 +35,7 @@ import {IConditions, IVariants} from "../data/HeroData";
 export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
     const suit: string = Object.keys(suitsConfig)[suitId],
         playerVariants: IVariants | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
-    if (playerVariants) {
+    if (playerVariants !== undefined) {
         const thrudCard: ICard = CreateCard({
             suit,
             rank: playerVariants[suit].rank,
@@ -89,10 +94,10 @@ export const PlaceYludAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
  *
  * @param {MyGameState} G
  * @param {Ctx} ctx
- * @param {ICard | IArtefactCampCard | IHero} card Карта, помещающаяся на карту героя Труд.
+ * @param {PlayerCardsType} card Карта, помещающаяся на карту героя Труд.
  * @constructor
  */
-export const CheckAndMoveThrudOrPickHeroAction = (G: MyGameState, ctx: Ctx, card: ICard | IArtefactCampCard | IHero):
+export const CheckAndMoveThrudOrPickHeroAction = (G: MyGameState, ctx: Ctx, card: PlayerCardsType):
     void => {
     const isMoveThrud: boolean = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
@@ -120,7 +125,7 @@ export const AddHeroToCards = (G: MyGameState, ctx: Ctx, config: IConfig): void 
             hero: IHero = G.heroes[heroIndex];
         let suitId: number | null = null;
         AddHeroCardToPlayerHeroCards(G, ctx, hero);
-        if (hero.suit) {
+        if (hero.suit !== null) {
             AddHeroCardToPlayerCards(G, ctx, hero);
             CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
             suitId = GetSuitIndexByName(hero.suit);
@@ -143,9 +148,9 @@ export const AddHeroToCards = (G: MyGameState, ctx: Ctx, config: IConfig): void 
 export const GetClosedCoinIntoPlayerHand = (G: MyGameState, ctx: Ctx): void => {
     const coinsCount: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length,
         tradingBoardCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .findIndex((coin: ICoin | null): boolean => Boolean(coin && coin.isTriggerTrading)),
+            .findIndex((coin: ICoin | null): boolean => Boolean(coin?.isTriggerTrading)),
         tradingHandCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex((coin: ICoin | null): boolean => Boolean(coin && coin.isTriggerTrading));
+            .findIndex((coin: ICoin | null): boolean => Boolean(coin?.isTriggerTrading));
     for (let i: number = 0; i < coinsCount; i++) {
         if ((i < G.tavernsNum && G.currentTavern < i)
             || (i >= G.tavernsNum && tradingHandCoinIndex !== -1)

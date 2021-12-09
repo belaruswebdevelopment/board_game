@@ -1,15 +1,6 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
+import { __assign } from "tslib";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { LogTypes } from "../Logging";
 /**
  * <h3>Отрисовка лог панели.</h3>
  * <p>Применения:</p>
@@ -25,13 +16,13 @@ export var DrawLogData = function (data) {
     if (data.props.G.log) {
         var loggingData = [];
         for (var i = data.props.G.logData.length - 1; i >= 0; i--) {
-            if (data.props.G.logData[i].type === "private" /* PRIVATE */) {
+            if (data.props.G.logData[i].type === LogTypes.PRIVATE) {
                 loggingData.push(_jsx("li", __assign({ className: "text-red-500" }, { children: data.props.G.logData[i].value }), "Log ".concat(i)));
             }
-            else if (data.props.G.logData[i].type === "game" /* GAME */) {
+            else if (data.props.G.logData[i].type === LogTypes.GAME) {
                 loggingData.push(_jsx("li", __assign({ className: "text-blue-500" }, { children: data.props.G.logData[i].value }), "Log ".concat(i)));
             }
-            else if (data.props.G.logData[i].type === "public" /* PUBLIC */) {
+            else if (data.props.G.logData[i].type === LogTypes.PUBLIC) {
                 loggingData.push(_jsx("li", __assign({ className: "text-green-500" }, { children: data.props.G.logData[i].value }), "Log ".concat(i)));
             }
         }

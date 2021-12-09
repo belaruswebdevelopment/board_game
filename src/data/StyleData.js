@@ -1,3 +1,4 @@
+import { SuitNames } from "./SuitData";
 /**
  * <h3>Стилизация при отрисовке всех картинок в игре.</h3>
  * <p>Применения:</p>
@@ -11,7 +12,7 @@ export var Styles = {
     Suits: function (suitName) { return ({
         background: "url(/img/suits/".concat(suitName, ".png) no-repeat 0px 0px / 24px 24px"),
     }); },
-    Cards: function (suit, points, name) {
+    Cards: function (suit, name, points) {
         if (name === "Olwin") {
             switch (name) {
                 case "Olwin":
@@ -26,15 +27,15 @@ export var Styles = {
         }
         else if (suit) {
             switch (suit) {
-                case "blacksmith" /* BLACKSMITH */:
+                case SuitNames.BLACKSMITH:
                     return {
                         background: "url(/img/cards/basic/basic0.png) no-repeat 0px 0px / 288px 288px",
                     };
-                case "hunter" /* HUNTER */:
+                case SuitNames.HUNTER:
                     return {
                         background: "url(/img/cards/basic/basic0.png) no-repeat -128px 0px / 288px 288px",
                     };
-                case "miner" /* MINER */:
+                case SuitNames.MINER:
                     switch (points) {
                         case 0:
                             return {
@@ -53,7 +54,7 @@ export var Styles = {
                                 background: "",
                             };
                     }
-                case "warrior" /* WARRIOR */:
+                case SuitNames.WARRIOR:
                     switch (points) {
                         case 3:
                             return {
@@ -92,7 +93,7 @@ export var Styles = {
                                 background: "",
                             };
                     }
-                case "explorer" /* EXPLORER */:
+                case SuitNames.EXPLORER:
                     switch (points) {
                         case 5:
                             return {
@@ -285,23 +286,23 @@ export var Styles = {
     },
     Distinctions: function (distinction) {
         switch (distinction) {
-            case "blacksmith" /* BLACKSMITH */:
+            case SuitNames.BLACKSMITH:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -100px / 96px 150px",
                 };
-            case "hunter" /* HUNTER */:
+            case SuitNames.HUNTER:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat -64px 0px / 96px 150px",
                 };
-            case "miner" /* MINER */:
+            case SuitNames.MINER:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 96px 150px",
                 };
-            case "warrior" /* WARRIOR */:
+            case SuitNames.WARRIOR:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 96px 150px",
                 };
-            case "explorer" /* EXPLORER */:
+            case SuitNames.EXPLORER:
                 return {
                     background: "url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 96px 150px",
                 };

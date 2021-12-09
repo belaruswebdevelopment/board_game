@@ -1,5 +1,5 @@
 import { DiscardCardFromTavern } from "./Card";
-import { AddDataToLog } from "./Logging";
+import { AddDataToLog, LogTypes } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
@@ -187,7 +187,7 @@ export var RefillEmptyCampCards = function (G) {
                 AddCardToCamp(G, cardIndex);
             }
         });
-        AddDataToLog(G, "game" /* GAME */, "Кэмп заполнен новыми картами.");
+        AddDataToLog(G, LogTypes.GAME, "Кэмп заполнен новыми картами.");
     }
 };
 /**
@@ -205,7 +205,7 @@ export var RefillCamp = function (G) {
     for (var i = 0; i < G.campNum; i++) {
         AddCardToCamp(G, i);
     }
-    AddDataToLog(G, "game" /* GAME */, "Кэмп заполнен новыми картами новой эпохи.");
+    AddDataToLog(G, LogTypes.GAME, "Кэмп заполнен новыми картами новой эпохи.");
 };
 /**
  * <h3>Перемещает все оставшиеся неиспользованные карты кэмпа в дискард.</h3>
@@ -219,9 +219,9 @@ export var RefillCamp = function (G) {
  */
 var AddRemainingCampCardsToDiscard = function (G) {
     for (var i = 0; i < G.camp.length; i++) {
-        if (G.camp[i]) {
+        if (G.camp[i] !== null) {
             var card = G.camp.splice(i, 1, null)[0];
-            if (card) {
+            if (card !== null) {
                 G.discardCampCardsDeck.push(card);
             }
         }
@@ -230,7 +230,7 @@ var AddRemainingCampCardsToDiscard = function (G) {
         G.discardCampCardsDeck = G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]);
         G.campDecks[G.campDecks.length - G.tierToEnd - 1].length = 0;
     }
-    AddDataToLog(G, "game" /* GAME */, "Оставшиеся карты кэмпа сброшены.");
+    AddDataToLog(G, LogTypes.GAME, "Оставшиеся карты кэмпа сброшены.");
 };
 /**
  * <h3>Заполняет кэмп новой картой из карт кэмп деки текущей эпохи.</h3>

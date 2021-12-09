@@ -3,11 +3,8 @@ import {GetSuitIndexByName} from "./SuitHelpers";
 import {AddActionsToStackAfterCurrent} from "./StackHelpers";
 import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
-import {ICard} from "../Card";
-import {IArtefactCampCard} from "../Camp";
 import {ICoin} from "../Coin";
 import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
-import {IHero} from "../Hero";
 import {SuitNames} from "../data/SuitData";
 
 /**
@@ -32,12 +29,12 @@ export const GetHeroIndexByName = (heroName: string): number => Object.keys(hero
  *
  * @param {MyGameState} G
  * @param {Ctx} ctx
- * @param {ICard | IArtefactCampCard | IHero} card Карта.
+ * @param {PlayerCardsType} card Карта.
  * @returns {boolean} Нужно ли перемещать героя Труд.
  * @constructor
  */
-export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: ICard | IArtefactCampCard | IHero): boolean => {
-    if (card.suit) {
+export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: PlayerCardsType): boolean => {
+    if (card.suit !== null) {
         const suitId: number = GetSuitIndexByName(card.suit),
             index: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
                 .findIndex((card: PlayerCardsType): boolean => card.name === "Thrud");
@@ -58,54 +55,56 @@ export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: ICard | IArtef
  я
  * @param {MyGameState} G
  * @param {Ctx} ctx
- * @param {ICard | IArtefactCampCard | IHero} card Карта.
+ * @param {PlayerCardsType} card Карта.
  * @constructor
  */
-export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: ICard | IArtefactCampCard | IHero): void => {
-    const variants: IVariants = {
-            blacksmith: {
-                suit: SuitNames.BLACKSMITH,
-                rank: 1,
-                points: null,
-            },
-            hunter: {
-                suit: SuitNames.HUNTER,
-                rank: 1,
-                points: null,
-            },
-            explorer: {
-                suit: SuitNames.EXPLORER,
-                rank: 1,
-                points: null,
-            },
-            warrior: {
-                suit: SuitNames.WARRIOR,
-                rank: 1,
-                points: null,
-            },
-            miner: {
-                suit: SuitNames.MINER,
-                rank: 1,
-                points: null,
-            },
-        },
-        stack: IStack[] = [
-            {
-                actionName: "DrawProfitAction",
-                variants,
-                config: {
-                    drawName: "Thrud",
-                    name: "placeCards",
-                    stageName: "placeCards",
-                    suit: card.suit,
+export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType): void => {
+    if (card.suit !== null) {
+        const variants: IVariants = {
+                blacksmith: {
+                    suit: SuitNames.BLACKSMITH,
+                    rank: 1,
+                    points: null,
+                },
+                hunter: {
+                    suit: SuitNames.HUNTER,
+                    rank: 1,
+                    points: null,
+                },
+                explorer: {
+                    suit: SuitNames.EXPLORER,
+                    rank: 1,
+                    points: null,
+                },
+                warrior: {
+                    suit: SuitNames.WARRIOR,
+                    rank: 1,
+                    points: null,
+                },
+                miner: {
+                    suit: SuitNames.MINER,
+                    rank: 1,
+                    points: null,
                 },
             },
-            {
-                actionName: "PlaceThrudAction",
-                variants,
-            },
-        ];
-    AddActionsToStackAfterCurrent(G, ctx, stack);
+            stack: IStack[] = [
+                {
+                    actionName: "DrawProfitAction",
+                    variants,
+                    config: {
+                        drawName: "Thrud",
+                        name: "placeCards",
+                        stageName: "placeCards",
+                        suit: card.suit,
+                    },
+                },
+                {
+                    actionName: "PlaceThrudAction",
+                    variants,
+                },
+            ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
+    }
 };
 
 /**
@@ -125,19 +124,15 @@ export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): s
     const ulinePlayerIndex: number =
         G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.buffs.everyTurn === "Uline");
     if (ulinePlayerIndex !== -1) {
-        if (ctx.activePlayers![ctx.currentPlayer] !== "placeTradingCoinsUline" &&
-            ulinePlayerIndex === Number(ctx.currentPlayer)) {
+        if (ctx.activePlayers![ctx.currentPlayer] !== "placeTradingCoinsUline"
+            && ulinePlayerIndex === Number(ctx.currentPlayer)) {
             const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
-            if (coin !== null) {
-                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern]
-                    && coin.isTriggerTrading) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                        .filter((coin: ICoin | null, index: number): boolean =>
-                            index >= G.tavernsNum && coin === null)) {
-                        G.actionsNum = G.suitsNum - G.tavernsNum;
-                        ctx.events!.setStage!("placeTradingCoinsUline");
-                        return "placeTradingCoinsUline";
-                    }
+            if (coin?.isTriggerTrading) {
+                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+                    .filter((coin: ICoin | null, index: number): boolean => index >= G.tavernsNum && coin === null)) {
+                    G.actionsNum = G.suitsNum - G.tavernsNum;
+                    ctx.events!.setStage!("placeTradingCoinsUline");
+                    return "placeTradingCoinsUline";
                 }
             }
         } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline"

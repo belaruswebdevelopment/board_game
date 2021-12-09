@@ -13,7 +13,7 @@ import {PlayerCardsType} from "../Player";
  * @constructor
  */
 export const TotalPoints = (accumulator: number, currentValue: PlayerCardsType): number => {
-    if (currentValue.points) {
+    if (currentValue.points !== null) {
         return accumulator + currentValue.points;
     }
     return accumulator;
@@ -32,7 +32,7 @@ export const TotalPoints = (accumulator: number, currentValue: PlayerCardsType):
  * @constructor
  */
 export const TotalRank = (accumulator: number, currentValue: PlayerCardsType): number => {
-    if (currentValue.rank) {
+    if (currentValue.rank !== null) {
         return accumulator + currentValue.rank;
     }
     return accumulator;

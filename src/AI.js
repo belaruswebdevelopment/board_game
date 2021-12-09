@@ -1,12 +1,4 @@
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
+import { __spreadArray } from "tslib";
 import { CompareCards, EvaluateCard, isCardNotAction } from "./Card";
 import { HasLowestPriority } from "./Priority";
 import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
@@ -45,16 +37,16 @@ export var enumerate = function (G, ctx) {
                 var moveName = moveBy[ctx.phase][stage], _a = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _a[0], maxValue = _a[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
                 var argValue = void 0;
                 var argArray = void 0;
-                for (var i = minValue; i < maxValue; i++) {
-                    if (!moveValidators[moveName].validate({ G: G, ctx: ctx, id: i })) {
+                for (var id = minValue; id < maxValue; id++) {
+                    if (!moveValidators[moveName].validate({ G: G, ctx: ctx, id: id })) {
                         continue;
                     }
                     if (hasGetValue) {
-                        argArray = moveValidators[moveName].getValue({ G: G, ctx: ctx, id: i });
+                        argArray = moveValidators[moveName].getValue({ G: G, ctx: ctx, id: id });
                         moves.push({ move: moveName, args: [argArray] });
                     }
                     else {
-                        argValue = i;
+                        argValue = id;
                         moves.push({ move: moveName, args: [argValue] });
                     }
                 }
@@ -67,9 +59,9 @@ export var enumerate = function (G, ctx) {
     if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default") {
         // todo Fix it, now just for bot can do RANDOM move
         var pickCardOrCampCard = "card";
-        if (G.expansions.thingvellir.active &&
-            (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
-                || G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)) {
+        if (G.expansions.thingvellir.active
+            && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+                || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
             pickCardOrCampCard = Math.floor(Math.random() * 2) ? "card" : "camp";
         }
         if (pickCardOrCampCard === "card") {
@@ -82,7 +74,7 @@ export var enumerate = function (G, ctx) {
                 if (tavern_1.some(function (card) { return CompareCards(tavernCard, card) < 0; })) {
                     return "continue";
                 }
-                if (tavernCard && "suit" in tavernCard) {
+                if ("suit" in tavernCard) {
                     var isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, i, tavern_1) < 0, isExistCardNotWorse = tavern_1.some(function (card) { return (card !== null) &&
                         (EvaluateCard(G, ctx, tavernCard, i, tavern_1) >= 0); });
                     if (isCurrentCardWorse && isExistCardNotWorse) {
@@ -110,7 +102,7 @@ export var enumerate = function (G, ctx) {
         }
         else {
             for (var j = 0; j < G.campNum; j++) {
-                if (G.camp[j]) {
+                if (G.camp[j] !== null) {
                     botMoveArguments.push([j]);
                 }
             }
@@ -256,7 +248,7 @@ export var enumerate = function (G, ctx) {
         else if (G.drawProfit === "placeEnlistmentMercenaries") {
             for (var j = 0; j < G.suitsNum; j++) {
                 var card = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-                if (card && "stack" in card) {
+                if (card !== null && "stack" in card) {
                     var suit = Object.keys(suitsConfig)[j], stack = card.stack[0];
                     if (stack && stack.variants) {
                         if (suit === stack.variants[suit].suit) {
@@ -318,7 +310,7 @@ export var enumerate = function (G, ctx) {
             var type = "board", isInitial = false;
             for (var j = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
                 var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
-                if (coin) {
+                if (coin !== null) {
                     if (!coin.isTriggerTrading && config.coinId !== j) {
                         if (coin.isInitial !== undefined) {
                             isInitial = coin.isInitial;
@@ -336,11 +328,11 @@ export var enumerate = function (G, ctx) {
     if (activeStageOfCurrentPlayer === "discardSuitCard") {
         // todo Bot can't do async turns...?
         var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-        if (config && config.suit) {
+        if (config !== undefined && config.suit !== undefined) {
             var suitId = GetSuitIndexByName(config.suit);
             for (var p = 0; p < G.publicPlayers.length; p++) {
                 if (p !== Number(ctx.currentPlayer)) {
-                    if (typeof ctx.playerID === "string" && Number(ctx.playerID) === p) {
+                    if (ctx.playerID !== undefined && Number(ctx.playerID) === p) {
                         for (var i = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
                             for (var j = 0; j < 1; j++) {
                                 if (G.publicPlayers[p].cards[suitId] !== undefined
@@ -367,14 +359,13 @@ export var enumerate = function (G, ctx) {
     }
     if (activeStageOfCurrentPlayer === "discardCardFromBoard") {
         var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config, pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-        if (config) {
+        if (config !== undefined) {
             for (var j = 0; j < G.suitsNum; j++) {
-                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0] !== undefined
-                    && suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit !==
-                        config.suit && !(G.drawProfit === "DagdaAction" && G.actionsNum === 1 && pickedCard !== null
-                    && "suit" in pickedCard &&
-                    suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit ===
-                        pickedCard.suit)) {
+                var suit = G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit;
+                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0] !== undefined && suit !== null
+                    && suitsConfig[suit].suit !== config.suit && !(G.drawProfit === "DagdaAction"
+                    && G.actionsNum === 1 && pickedCard !== null && "suit" in pickedCard
+                    && suitsConfig[suit].suit === pickedCard.suit)) {
                     var last = G.publicPlayers[Number(ctx.currentPlayer)].cards[j].length - 1;
                     if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].type !== "герой") {
                         botMoveArguments.push([j, last]);

@@ -1,14 +1,4 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
+import { __assign } from "tslib";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { GetSuitIndexByName } from "./SuitHelpers";
 import { suitsConfig } from "../data/SuitData";
@@ -262,7 +252,7 @@ export var DrawCard = function (data, playerCells, card, id, player, suit, actio
         default:
             action = null;
     }
-    if (suit) {
+    if (suit !== null && suit !== undefined) {
         tdClasses = suitsConfig[suit].suitColor;
     }
     if (card.type === "герой" && "game" in card) {
@@ -288,14 +278,15 @@ export var DrawCard = function (data, playerCells, card, id, player, suit, actio
         }
     }
     else {
-        if ("suit" in card && "points" in card) {
-            if (typeof card.points === "number") {
-                styles = Styles.Cards(card.suit, card.points, card.name);
-            }
+        if ("suit" in card && "points" in card && card.suit !== null) {
+            styles = Styles.Cards(card.suit, card.name, card.points);
+        }
+        else {
+            styles = Styles.Cards(null, card.name, null);
         }
         spanClasses = "bg-card";
     }
-    if (action) {
+    if (action !== null) {
         tdClasses += " cursor-pointer";
     }
     var description = "", value = "";
@@ -389,19 +380,19 @@ export var DrawCoin = function (data, playerCells, type, coin, id, player, coinC
         default:
             action = null;
     }
-    if (action) {
+    if (action !== null) {
         tdClasses += " cursor-pointer";
     }
     if (type === "market") {
         styles = Styles.Coin(coin.value, false);
         spanClasses = "bg-market-coin";
-        if (coinClasses) {
+        if (coinClasses !== null && coinClasses !== undefined) {
             span = (_jsx("span", __assign({ className: coinClasses }, { children: additionalParam }), void 0));
         }
     }
     else {
         spanClasses = "bg-coin";
-        if (coinClasses) {
+        if (coinClasses !== null && coinClasses !== undefined) {
             spanClasses += " ".concat(coinClasses);
         }
         if (type === "coin") {
@@ -409,7 +400,7 @@ export var DrawCoin = function (data, playerCells, type, coin, id, player, coinC
                 styles = Styles.CoinBack();
             }
             else {
-                if (typeof coin.isInitial !== "undefined") {
+                if (coin.isInitial !== undefined) {
                     styles = Styles.Coin(coin.value, coin.isInitial);
                 }
             }
@@ -420,7 +411,7 @@ export var DrawCoin = function (data, playerCells, type, coin, id, player, coinC
                 span = (_jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }, void 0));
             }
             else if (type === "back-tavern-icon") {
-                if (typeof additionalParam === "number") {
+                if (additionalParam !== null && additionalParam !== undefined) {
                     span = (_jsx("span", { style: Styles.Taverns(additionalParam), className: "bg-tavern-icon" }, void 0));
                 }
             }

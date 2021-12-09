@@ -135,10 +135,7 @@ export var ClickCoinToUpgrade = function (G, ctx, coinId, type, isInitial) {
  */
 export var UpgradeCoinVidofnirVedrfolnir = function (G, ctx, coinId, type, isInitial) {
     var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    var isValidMove = false;
-    if (config) {
-        isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && config.coinId !== coinId;
-    }
+    var isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && (config === null || config === void 0 ? void 0 : config.coinId) !== coinId;
     if (!isValidMove) {
         return INVALID_MOVE;
     }

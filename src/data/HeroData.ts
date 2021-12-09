@@ -237,8 +237,8 @@ const Idunn: IHeroData = {
             },
         },
     ],
-    scoringRule: (player?: IPublicPlayer): number => player ? player.cards[GetSuitIndexByName(SuitNames.EXPLORER)]
-        .reduce(TotalRank, 0) * 2 : 0,
+    scoringRule: (player?: IPublicPlayer): number => player !== undefined ?
+        player.cards[GetSuitIndexByName(SuitNames.EXPLORER)].reduce(TotalRank, 0) * 2 : 0,
 };
 
 /**

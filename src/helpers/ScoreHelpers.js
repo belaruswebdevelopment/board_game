@@ -11,7 +11,7 @@
  * @constructor
  */
 export var TotalPoints = function (accumulator, currentValue) {
-    if (currentValue.points) {
+    if (currentValue.points !== null) {
         return accumulator + currentValue.points;
     }
     return accumulator;
@@ -29,7 +29,7 @@ export var TotalPoints = function (accumulator, currentValue) {
  * @constructor
  */
 export var TotalRank = function (accumulator, currentValue) {
-    if (currentValue.rank) {
+    if (currentValue.rank !== null) {
         return accumulator + currentValue.rank;
     }
     return accumulator;

@@ -1,6 +1,6 @@
 import { heroesConfig } from "./data/HeroData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
-import { AddDataToLog } from "./Logging";
+import { AddDataToLog, LogTypes } from "./Logging";
 import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
 /**
@@ -94,7 +94,7 @@ export var CheckPickHero = function (G, ctx) {
                     },
                 },
             ];
-            AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n            \u0434\u043E\u043B\u0436\u0435\u043D \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043D\u043E\u0432\u043E\u0433\u043E \u0433\u0435\u0440\u043E\u044F."));
+            AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A \n            ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u0434\u043E\u043B\u0436\u0435\u043D \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043D\u043E\u0432\u043E\u0433\u043E \u0433\u0435\u0440\u043E\u044F."));
             AddActionsToStackAfterCurrent(G, ctx, stack);
         }
     }
@@ -113,11 +113,11 @@ export var CheckPickHero = function (G, ctx) {
 export var RemoveThrudFromPlayerBoardAfterGameEnd = function (G, ctx) {
     for (var i = 0; i < ctx.numPlayers; i++) {
         var playerCards = G.publicPlayers[i].cards.flat(), thrud = playerCards.find(function (card) { return card.name === "Thrud"; });
-        if (thrud) {
+        if (thrud !== undefined && thrud.suit !== null) {
             var thrudSuit = GetSuitIndexByName(thrud.suit), thrudIndex = G.publicPlayers[i].cards[thrudSuit]
                 .findIndex(function (card) { return card.name === "Thrud"; });
             G.publicPlayers[i].cards[thrudSuit].splice(thrudIndex, 1);
-            AddDataToLog(G, "game" /* GAME */, "\u0413\u0435\u0440\u043E\u0439 \u0422\u0440\u0443\u0434 \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(G.publicPlayers[i].nickname, " \u0443\u0445\u043E\u0434\u0438\u0442 \u0441 \n            \u0438\u0433\u0440\u043E\u0432\u043E\u0433\u043E \u043F\u043E\u043B\u044F."));
+            AddDataToLog(G, LogTypes.GAME, "\u0413\u0435\u0440\u043E\u0439 \u0422\u0440\u0443\u0434 \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(G.publicPlayers[i].nickname, " \u0443\u0445\u043E\u0434\u0438\u0442 \u0441 \n            \u0438\u0433\u0440\u043E\u0432\u043E\u0433\u043E \u043F\u043E\u043B\u044F."));
         }
     }
 };

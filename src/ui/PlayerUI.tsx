@@ -270,7 +270,7 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                 </th>
             );
         }
-        for (let s = 0; s < 1 + data.props.G.expansions.thingvellir.active; s++) {
+        for (let s: number = 0; s < 1 + data.props.G.expansions.thingvellir.active; s++) {
             if (s === 0) {
                 playerHeaders[p].push(
                     <th className="bg-gray-600" key={`${data.props.G.publicPlayers[p].nickname} hero icon`}>
@@ -301,7 +301,7 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
             }
         }
         for (let i: number = 0; ; i++) {
-            const playerCells = [];
+            const playerCells: JSX.Element[] = [];
             let isDrawRow: boolean = false,
                 id: number = 0;
             playerRows[p][i] = [];

@@ -1,7 +1,7 @@
-import { suitsConfig } from "./data/SuitData";
+import { SuitNames, suitsConfig } from "./data/SuitData";
 import { heroesConfig } from "./data/HeroData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
-import { AddDataToLog } from "./Logging";
+import { AddDataToLog, LogTypes } from "./Logging";
 import { artefactsConfig } from "./data/CampData";
 import { CheckCurrentSuitDistinction } from "./Distinction";
 /**
@@ -42,9 +42,9 @@ export var CurrentScoring = function (player) {
  */
 export var FinalScoring = function (G, ctx, player) {
     var _a, _b, _c, _d;
-    AddDataToLog(G, "game" /* GAME */, "\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B \u0438\u0433\u0440\u044B \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ":"));
+    AddDataToLog(G, LogTypes.GAME, "\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B \u0438\u0433\u0440\u044B \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ":"));
     var score = CurrentScoring(player), coinsValue = 0;
-    AddDataToLog(G, "public" /* PUBLIC */, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043A\u0430\u0440\u0442\u044B \u0434\u0432\u043E\u0440\u0444\u043E\u0432 \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(score));
+    AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043A\u0430\u0440\u0442\u044B \u0434\u0432\u043E\u0440\u0444\u043E\u0432 \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(score));
     for (var i = 0; i < player.boardCoins.length; i++) {
         coinsValue += (_b = (_a = player.boardCoins[i]) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : 0;
     }
@@ -54,24 +54,23 @@ export var FinalScoring = function (G, ctx, player) {
         }
     }
     score += coinsValue;
-    AddDataToLog(G, "public" /* PUBLIC */, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043C\u043E\u043D\u0435\u0442\u044B \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(coinsValue));
-    var suitWarriorIndex = GetSuitIndexByName("warrior" /* WARRIOR */);
+    AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043C\u043E\u043D\u0435\u0442\u044B \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(coinsValue));
+    var suitWarriorIndex = GetSuitIndexByName(SuitNames.WARRIOR);
     if (suitWarriorIndex !== -1) {
-        var warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, "warrior" /* WARRIOR */);
-        if (warriorsDistinction !== undefined
-            && G.publicPlayers
-                .findIndex(function (p) { return p.nickname === player.nickname; }) === warriorsDistinction) {
-            var warriorDistinctionScore = suitsConfig["warrior" /* WARRIOR */].distinction.awarding(G, ctx, player);
+        var warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, SuitNames.WARRIOR);
+        if (warriorsDistinction !== undefined && G.publicPlayers
+            .findIndex(function (p) { return p.nickname === player.nickname; }) === warriorsDistinction) {
+            var warriorDistinctionScore = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
             score += warriorDistinctionScore;
-            AddDataToLog(G, "public" /* PUBLIC */, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E \u043F\u043E \u0432\u043E\u0438\u043D\u0430\u043C \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": \n            ").concat(warriorDistinctionScore));
+            AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E \u043F\u043E \u0432\u043E\u0438\u043D\u0430\u043C \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": \n            ").concat(warriorDistinctionScore));
         }
     }
-    var suitMinerIndex = GetSuitIndexByName("miner" /* MINER */);
+    var suitMinerIndex = GetSuitIndexByName(SuitNames.MINER);
     if (suitMinerIndex !== -1) {
-        var minerDistinctionPriorityScore = suitsConfig["miner" /* MINER */].distinction.awarding(G, ctx, player);
+        var minerDistinctionPriorityScore = suitsConfig[SuitNames.MINER].distinction.awarding(G, ctx, player);
         score += minerDistinctionPriorityScore;
         if (minerDistinctionPriorityScore) {
-            AddDataToLog(G, "public" /* PUBLIC */, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043F\u043E \u0433\u043E\u0440\u043D\u044F\u043A\u0430\u043C \u0438\u0433\u0440\u043E\u043A\u0430 \n            ".concat(player.nickname, ": ").concat(minerDistinctionPriorityScore));
+            AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043F\u043E \u0433\u043E\u0440\u043D\u044F\u043A\u0430\u043C \u0438\u0433\u0440\u043E\u043A\u0430 \n            ".concat(player.nickname, ": ").concat(minerDistinctionPriorityScore));
         }
     }
     var heroesScore = 0, dwerg_brothers = 0;
@@ -85,8 +84,11 @@ export var FinalScoring = function (G, ctx, player) {
             else {
                 var currentHeroScore = heroData.scoringRule(player);
                 heroesScore += currentHeroScore;
-                AddDataToLog(G, "private" /* PRIVATE */, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0433\u0435\u0440\u043E\u044F ".concat(player.heroes[i].name, " \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(player.nickname, ": ").concat(currentHeroScore, "."));
+                AddDataToLog(G, LogTypes.PRIVATE, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0433\u0435\u0440\u043E\u044F ".concat(player.heroes[i].name, " \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(player.nickname, ": ").concat(currentHeroScore, "."));
             }
+        }
+        else {
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043D\u0430\u0439\u0442\u0438 \u0433\u0435\u0440\u043E\u044F ".concat(player.heroes[i].name, "."));
         }
     };
     for (var i = 0; i < player.heroes.length; i++) {
@@ -94,10 +96,10 @@ export var FinalScoring = function (G, ctx, player) {
     }
     if (dwerg_brothers) {
         heroesScore += dwerg_brothers_scoring[dwerg_brothers];
-        AddDataToLog(G, "private" /* PRIVATE */, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0433\u0435\u0440\u043E\u0435\u0432 \u0431\u0440\u0430\u0442\u044C\u0435\u0432 \u0414\u0432\u0435\u0440\u0433\u043E\u0432 (".concat(dwerg_brothers, " \u0448\u0442.) \u0438\u0433\u0440\u043E\u043A\u0430 \n        ").concat(player.nickname, ": ").concat(dwerg_brothers_scoring[dwerg_brothers], "."));
+        AddDataToLog(G, LogTypes.PRIVATE, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0433\u0435\u0440\u043E\u0435\u0432 \u0431\u0440\u0430\u0442\u044C\u0435\u0432 \u0414\u0432\u0435\u0440\u0433\u043E\u0432 (".concat(dwerg_brothers, " \u0448\u0442.) \u0438\u0433\u0440\u043E\u043A\u0430 \n        ").concat(player.nickname, ": ").concat(dwerg_brothers_scoring[dwerg_brothers], "."));
     }
     score += heroesScore;
-    AddDataToLog(G, "public" /* PUBLIC */, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0433\u0435\u0440\u043E\u0435\u0432 \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(heroesScore, "."));
+    AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0433\u0435\u0440\u043E\u0435\u0432 \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(heroesScore, "."));
     if (G.expansions.thingvellir.active) {
         var artifactsScore = 0;
         var _loop_2 = function (i) {
@@ -112,18 +114,21 @@ export var FinalScoring = function (G, ctx, player) {
                     currentArtefactScore = artefact.scoringRule(player);
                 }
             }
+            else {
+                AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043D\u0430\u0439\u0442\u0438 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442 \n                ".concat(player.campCards[i].name, "."));
+            }
             if (currentArtefactScore) {
                 artifactsScore += currentArtefactScore;
-                AddDataToLog(G, "private" /* PRIVATE */, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442 ".concat(player.campCards[i].name, " \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(player.nickname, ": ").concat(currentArtefactScore, "."));
+                AddDataToLog(G, LogTypes.PRIVATE, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442 ".concat(player.campCards[i].name, " \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(player.nickname, ": ").concat(currentArtefactScore, "."));
             }
         };
         for (var i = 0; i < player.campCards.length; i++) {
             _loop_2(i);
         }
         score += artifactsScore;
-        AddDataToLog(G, "public" /* PUBLIC */, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442\u044B \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(artifactsScore, "."));
+        AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442\u044B \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(artifactsScore, "."));
     }
-    AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0442\u043E\u0433\u043E\u0432\u044B\u0439 \u0441\u0447\u0451\u0442 \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(score, "."));
+    AddDataToLog(G, LogTypes.PUBLIC, "\u0418\u0442\u043E\u0433\u043E\u0432\u044B\u0439 \u0441\u0447\u0451\u0442 \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(score, "."));
     return score;
 };
 /**
@@ -139,7 +144,7 @@ export var FinalScoring = function (G, ctx, player) {
  * @constructor
  */
 export var ScoreWinner = function (G, ctx) {
-    AddDataToLog(G, "game" /* GAME */, "Финальные результаты игры:");
+    AddDataToLog(G, LogTypes.GAME, "Финальные результаты игры:");
     for (var i = 0; i < ctx.numPlayers; i++) {
         G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i]));
     }
@@ -149,7 +154,7 @@ export var ScoreWinner = function (G, ctx) {
         if (maxScore === G.totalScore[i] && maxPlayers > winners) {
             G.winner.push(i);
             winners++;
-            AddDataToLog(G, "game" /* GAME */, "\u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u043B\u0441\u044F \u043F\u043E\u0431\u0435\u0434\u0438\u0442\u0435\u043B\u044C: \u0438\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[i].nickname, "."));
+            AddDataToLog(G, LogTypes.GAME, "\u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u043B\u0441\u044F \u043F\u043E\u0431\u0435\u0434\u0438\u0442\u0435\u043B\u044C: \u0438\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[i].nickname, "."));
             if (maxPlayers === winners) {
                 break;
             }

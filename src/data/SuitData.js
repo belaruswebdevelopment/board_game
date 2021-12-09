@@ -2,8 +2,19 @@ import { CreateCoin } from "../Coin";
 import { CreateCard } from "../Card";
 import { CreatePriority } from "../Priority";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
-import { AddDataToLog } from "../Logging";
+import { AddDataToLog, LogTypes } from "../Logging";
 import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
+/**
+ * <h3>Перечисление для названий фракций.</h3>
+ */
+export var SuitNames;
+(function (SuitNames) {
+    SuitNames["BLACKSMITH"] = "blacksmith";
+    SuitNames["HUNTER"] = "hunter";
+    SuitNames["MINER"] = "miner";
+    SuitNames["WARRIOR"] = "warrior";
+    SuitNames["EXPLORER"] = "explorer";
+})(SuitNames || (SuitNames = {}));
 /**
  * <h3>Фракция кузнецов.</h3>
  * <p>Применения:</p>
@@ -15,7 +26,7 @@ import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
  * @type {{scoringRule: (cards: PlayerCardsType[]) => number, ranksValues: () => IRankValues, distinction: {awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number, description: string}, description: string, suitColor: string, suit: SuitNames.BLACKSMITH, suitName: string, pointsValues: () => IPointsValues}}
  */
 var blacksmith = {
-    suit: "blacksmith" /* BLACKSMITH */,
+    suit: SuitNames.BLACKSMITH,
     suitName: "Кузнецы",
     suitColor: 'bg-purple-600',
     description: "Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).",
@@ -63,12 +74,12 @@ var blacksmith = {
         awarding: function (G, ctx, player) {
             if (G.tierToEnd !== 0) {
                 player.cards[0].push(CreateCard({
-                    suit: "blacksmith" /* BLACKSMITH */,
+                    suit: SuitNames.BLACKSMITH,
                     rank: 2,
                     points: 2,
                 }));
                 delete G.distinctions[0];
-                AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(player.nickname, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u043F\u043E \u0437\u043D\u0430\u043A\u0443 \u043E\u0442\u043B\u0438\u0447\u0438\u044F \u043A\u0443\u0437\u043D\u0435\u0446\u043E\u0432 \n                \u043A\u0430\u0440\u0442\u0443 \u0413\u043B\u0430\u0432\u043D\u043E\u0433\u043E \u043A\u0443\u0437\u043D\u0435\u0446\u0430."));
+                AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(player.nickname, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u043F\u043E \u0437\u043D\u0430\u043A\u0443 \u043E\u0442\u043B\u0438\u0447\u0438\u044F \u043A\u0443\u0437\u043D\u0435\u0446\u043E\u0432 \n                \u043A\u0430\u0440\u0442\u0443 \u0413\u043B\u0430\u0432\u043D\u043E\u0433\u043E \u043A\u0443\u0437\u043D\u0435\u0446\u0430."));
                 ctx.events.endTurn();
             }
             return 0;
@@ -85,7 +96,7 @@ var blacksmith = {
  * @type {{scoringRule: (cards: PlayerCardsType[]) => number, ranksValues: () => IRankValues, distinction: {awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number, description: string}, description: string, suitColor: string, suit: SuitNames.HUNTER, suitName: string, pointsValues: () => IPointsValues}}
  */
 var hunter = {
-    suit: "hunter" /* HUNTER */,
+    suit: SuitNames.HUNTER,
     suitName: "Охотники",
     suitColor: "bg-green-600",
     description: "Их показатель храбрости равен квадрату числа карт охотников в армии игрока.",
@@ -130,13 +141,13 @@ var hunter = {
         description: "\u041F\u043E\u043B\u0443\u0447\u0438\u0432 \u0437\u043D\u0430\u043A \u043E\u0442\u043B\u0438\u0447\u0438\u044F \u043E\u0445\u043E\u0442\u043D\u0438\u043A\u043E\u0432, \u0441\u0440\u0430\u0437\u0443 \u0436\u0435 \u043E\u0431\u043C\u0435\u043D\u044F\u0439\u0442\u0435 \u0441\u0432\u043E\u044E \u043C\u043E\u043D\u0435\u0442\u0443 \u0441 \u043D\u043E\u043C\u0438\u043D\u0430\u043B\u043E\u043C 0 \u043D\u0430 \u043E\u0441\u043E\u0431\u0443\u044E \u043C\u043E\u043D\u0435\u0442\u0443 \u0441 \n        \u043D\u043E\u043C\u0438\u043D\u0430\u043B\u043E\u043C 3. \u042D\u0442\u0430 \u043C\u043E\u043D\u0435\u0442\u0430 \u0442\u0430\u043A\u0436\u0435 \u043F\u043E\u0437\u0432\u043E\u043B\u044F\u0435\u0442 \u043E\u0431\u043C\u0435\u043D\u0438\u0432\u0430\u0442\u044C \u043C\u043E\u043D\u0435\u0442\u044B \u0432 \u043A\u043E\u0448\u0435\u043B\u0435 \u0438 \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u0443\u043B\u0443\u0447\u0448\u0435\u043D\u0430.",
         awarding: function (G, ctx, player) {
             if (G.tierToEnd !== 0) {
-                var tradingCoinIndex = player.boardCoins.findIndex(function (coin) { return (coin && coin.value) === 0; });
+                var tradingCoinIndex = player.boardCoins.findIndex(function (coin) { return (coin === null || coin === void 0 ? void 0 : coin.value) === 0; });
                 player.boardCoins[tradingCoinIndex] = CreateCoin({
                     value: 3,
                     isTriggerTrading: true,
                 });
                 delete G.distinctions[1];
-                AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(player.nickname, " \u043E\u0431\u043C\u0435\u043D\u044F\u043B \u043F\u043E \u0437\u043D\u0430\u043A\u0443 \u043E\u0442\u043B\u0438\u0447\u0438\u044F \u043E\u0445\u043E\u0442\u043D\u0438\u043A\u043E\u0432 \n                \u0441\u0432\u043E\u044E \u043C\u043E\u043D\u0435\u0442\u0443 \u0441 \u043D\u043E\u043C\u0438\u043D\u0430\u043B\u043E\u043C 0 \u043D\u0430 \u043E\u0441\u043E\u0431\u0443\u044E \u043C\u043E\u043D\u0435\u0442\u0443 \u0441 \u043D\u043E\u043C\u0438\u043D\u0430\u043B\u043E\u043C 3."));
+                AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(player.nickname, " \u043E\u0431\u043C\u0435\u043D\u044F\u043B \u043F\u043E \u0437\u043D\u0430\u043A\u0443 \u043E\u0442\u043B\u0438\u0447\u0438\u044F \u043E\u0445\u043E\u0442\u043D\u0438\u043A\u043E\u0432 \n                \u0441\u0432\u043E\u044E \u043C\u043E\u043D\u0435\u0442\u0443 \u0441 \u043D\u043E\u043C\u0438\u043D\u0430\u043B\u043E\u043C 0 \u043D\u0430 \u043E\u0441\u043E\u0431\u0443\u044E \u043C\u043E\u043D\u0435\u0442\u0443 \u0441 \u043D\u043E\u043C\u0438\u043D\u0430\u043B\u043E\u043C 3."));
                 ctx.events.endTurn();
             }
             return 0;
@@ -153,7 +164,7 @@ var hunter = {
  * @type {{scoringRule: (cards: PlayerCardsType[]) => number, ranksValues: () => IRankValues, distinction: {awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number, description: string}, description: string, suitColor: string, suit: SuitNames.MINER, suitName: string, pointsValues: () => IPointsValues}}
  */
 var miner = {
-    suit: "miner" /* MINER */,
+    suit: SuitNames.MINER,
     suitName: "Горняки",
     suitColor: "bg-yellow-600",
     description: "\u0418\u0445 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0440\u0430\u0432\u0435\u043D \u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0434\u0435\u043D\u0438\u044E \u0441\u0443\u043C\u043C\u044B \u043E\u0447\u043A\u043E\u0432 \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u043D\u0430 \u0441\u0443\u043C\u043C\u0443 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432 \u0433\u043E\u0440\u043D\u044F\u043A\u043E\u0432 \u0432 \u0430\u0440\u043C\u0438\u0438 \n    \u0438\u0433\u0440\u043E\u043A\u0430.",
@@ -203,7 +214,7 @@ var miner = {
                     isExchangeable: false,
                 });
                 delete G.distinctions[2];
-                AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(player.nickname, " \u043E\u0431\u043C\u0435\u043D\u044F\u043B \u043F\u043E \u0437\u043D\u0430\u043A\u0443 \u043E\u0442\u043B\u0438\u0447\u0438\u044F \u0433\u043E\u0440\u043D\u044F\u043A\u043E\u0432 \n                \u0441\u0432\u043E\u0439 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B \u043D\u0430 \u043E\u0441\u043E\u0431\u044B\u0439 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B 6."));
+                AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(player.nickname, " \u043E\u0431\u043C\u0435\u043D\u044F\u043B \u043F\u043E \u0437\u043D\u0430\u043A\u0443 \u043E\u0442\u043B\u0438\u0447\u0438\u044F \u0433\u043E\u0440\u043D\u044F\u043A\u043E\u0432 \n                \u0441\u0432\u043E\u0439 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B \u043D\u0430 \u043E\u0441\u043E\u0431\u044B\u0439 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B 6."));
                 ctx.events.endTurn();
             }
             else {
@@ -225,7 +236,7 @@ var miner = {
  * @type {{scoringRule: (cards: PlayerCardsType[]) => number, ranksValues: () => IRankValues, distinction: {awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number, description: string}, description: string, suitColor: string, suit: SuitNames.WARRIOR, suitName: string, pointsValues: () => IPointsValues}}
  */
 var warrior = {
-    suit: "warrior" /* WARRIOR */,
+    suit: SuitNames.WARRIOR,
     suitName: "Воины",
     suitColor: "bg-red-600",
     description: "\u0418\u0445 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0440\u0430\u0432\u0435\u043D \u0441\u0443\u043C\u043C\u0435 \u043E\u0447\u043A\u043E\u0432 \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0432\u0441\u0435\u0445 \u0432\u043E\u0438\u043D\u043E\u0432 \u0432 \u0430\u0440\u043C\u0438\u0438 \u0438\u0433\u0440\u043E\u043A\u0430. \u041E\u0434\u043D\u0430\u043A\u043E \u0438\u0433\u0440\u043E\u043A, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \n    \u043E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 \u043D\u0430\u0438\u0431\u043E\u043B\u044C\u0448\u0438\u043C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E\u043C \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432 \u0432\u043E\u0438\u043D\u043E\u0432, \u0434\u043E\u0431\u0430\u0432\u043B\u044F\u0435\u0442 \u043A \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u043D\u043E\u043C\u0438\u043D\u0430\u043B \u0441\u0432\u043E\u0435\u0439 \u0441\u0430\u043C\u043E\u0439 \u0446\u0435\u043D\u043D\u043E\u0439 \u043C\u043E\u043D\u0435\u0442\u044B. \n    \u0412 \u0441\u043B\u0443\u0447\u0430\u0435 \u0440\u0430\u0432\u043D\u043E\u0433\u043E \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0430 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432 \u0443 \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u0438\u0445 \u0438\u0433\u0440\u043E\u043A\u043E\u0432 \u0432\u0441\u0435 \u044D\u0442\u0438 \u0438\u0433\u0440\u043E\u043A\u0438 \u043F\u0440\u0438\u0431\u0430\u0432\u043B\u044F\u044E\u0442 \u043D\u043E\u043C\u0438\u043D\u0430\u043B \u0441\u0432\u043E\u0435\u0439 \u0441\u0430\u043C\u043E\u0439 \u0446\u0435\u043D\u043D\u043E\u0439 \n    \u043C\u043E\u043D\u0435\u0442\u044B \u043A \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0441\u0432\u043E\u0438\u0445 \u0432\u043E\u0438\u043D\u043E\u0432.",
@@ -287,7 +298,7 @@ var warrior = {
                         },
                     },
                 ];
-                AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(player.nickname, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u043F\u043E \u0437\u043D\u0430\u043A\u0443 \u043E\u0442\u043B\u0438\u0447\u0438\u044F \u0432\u043E\u0438\u043D\u043E\u0432 \n                \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0443\u043B\u0443\u0447\u0448\u0438\u0442\u044C \u043E\u0434\u043D\u0443 \u0438\u0437 \u0441\u0432\u043E\u0438\u0445 \u043C\u043E\u043D\u0435\u0442 \u043D\u0430 +5:"));
+                AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(player.nickname, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u043F\u043E \u0437\u043D\u0430\u043A\u0443 \u043E\u0442\u043B\u0438\u0447\u0438\u044F \u0432\u043E\u0438\u043D\u043E\u0432 \n                \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0443\u043B\u0443\u0447\u0448\u0438\u0442\u044C \u043E\u0434\u043D\u0443 \u0438\u0437 \u0441\u0432\u043E\u0438\u0445 \u043C\u043E\u043D\u0435\u0442 \u043D\u0430 +5:"));
                 AddActionsToStack(G, ctx, stack);
                 StartActionFromStackOrEndActions(G, ctx, false);
             }
@@ -310,7 +321,7 @@ var warrior = {
  * @type {{scoringRule: (cards: PlayerCardsType[]) => number, ranksValues: () => IRankValues, distinction: {awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number, description: string}, description: string, suitColor: string, suit: SuitNames.EXPLORER, suitName: string, pointsValues: () => IPointsValues}}
  */
 var explorer = {
-    suit: "explorer" /* EXPLORER */,
+    suit: SuitNames.EXPLORER,
     suitName: "Разведчики",
     suitColor: "bg-blue-500",
     description: "Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.",
@@ -365,7 +376,7 @@ var explorer = {
                         },
                     },
                 ];
-                AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(player.nickname, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u043F\u043E \u0437\u043D\u0430\u043A\u0443 \u043E\u0442\u043B\u0438\u0447\u0438\u044F \n                \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u043A\u043E\u043B\u043E\u0434\u044B \u0432\u0442\u043E\u0440\u043E\u0439 \u044D\u043F\u043E\u0445\u0438:"));
+                AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(player.nickname, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u043F\u043E \u0437\u043D\u0430\u043A\u0443 \u043E\u0442\u043B\u0438\u0447\u0438\u044F \n                \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u043A\u043E\u043B\u043E\u0434\u044B \u0432\u0442\u043E\u0440\u043E\u0439 \u044D\u043F\u043E\u0445\u0438:"));
                 AddActionsToStack(G, ctx, stack);
                 StartActionFromStackOrEndActions(G, ctx, false);
             }

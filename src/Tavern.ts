@@ -60,8 +60,6 @@ export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => 
             const isCardDiscarded: boolean = DiscardCardFromTavern(G, discardCardIndex);
             if (isCardDiscarded) {
                 isCurrentTavernEmpty = true;
-            } else {
-                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не удалось сбросить лишнюю карту из таверны.");
             }
         }
     } else {

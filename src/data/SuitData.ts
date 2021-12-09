@@ -206,7 +206,7 @@ const hunter: ISuit = {
         awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
             if (G.tierToEnd !== 0) {
                 const tradingCoinIndex: number =
-                    player.boardCoins.findIndex((coin: ICoin | null): boolean => (coin && coin.value) === 0);
+                    player.boardCoins.findIndex((coin: ICoin | null): boolean => coin?.value === 0);
                 player.boardCoins[tradingCoinIndex] = CreateCoin({
                     value: 3,
                     isTriggerTrading: true,

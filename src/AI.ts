@@ -53,19 +53,19 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
                     const moveName: string = moveBy[ctx.phase][stage],
                         [minValue, maxValue]: [number, number] =
-                            moveValidators[moveName].getRange({G: G, ctx: ctx}),
+                            moveValidators[moveName].getRange({G, ctx}),
                         hasGetValue: boolean = moveValidators[moveName].hasOwnProperty("getValue");
                     let argValue: number;
                     let argArray: number[];
-                    for (let i: number = minValue; i < maxValue; i++) {
-                        if (!moveValidators[moveName].validate({G: G, ctx: ctx, id: i})) {
+                    for (let id: number = minValue; id < maxValue; id++) {
+                        if (!moveValidators[moveName].validate({G, ctx, id})) {
                             continue;
                         }
                         if (hasGetValue) {
-                            argArray = moveValidators[moveName].getValue!({G: G, ctx: ctx, id: i});
+                            argArray = moveValidators[moveName].getValue!({G, ctx, id});
                             moves.push({move: moveName, args: [argArray]});
                         } else {
-                            argValue = i;
+                            argValue = id;
                             moves.push({move: moveName, args: [argValue]});
                         }
                     }
@@ -78,9 +78,9 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default") {
             // todo Fix it, now just for bot can do RANDOM move
             let pickCardOrCampCard: string = "card";
-            if (G.expansions.thingvellir.active &&
-                (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
-                    || G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)) {
+            if (G.expansions.thingvellir.active
+                && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+                    || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
                 pickCardOrCampCard = Math.floor(Math.random() * 2) ? "card" : "camp";
             }
             if (pickCardOrCampCard === "card") {
@@ -93,7 +93,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     if (tavern.some((card: TavernCardTypes): boolean => CompareCards(tavernCard, card) < 0)) {
                         continue;
                     }
-                    if (tavernCard && "suit" in tavernCard) {
+                    if ("suit" in tavernCard) {
                         const isCurrentCardWorse: boolean =
                                 EvaluateCard(G, ctx, tavernCard, i, tavern) < 0,
                             isExistCardNotWorse: boolean =
@@ -120,7 +120,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 }
             } else {
                 for (let j: number = 0; j < G.campNum; j++) {
-                    if (G.camp[j]) {
+                    if (G.camp[j] !== null) {
                         botMoveArguments.push([j]);
                     }
                 }
@@ -205,7 +205,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             });
         }
         if (ctx.phase === "getMjollnirProfit") {
-            const totalSuitsRanks = [];
+            const totalSuitsRanks: number[] = [];
             for (let j: number = 0; j < G.suitsNum; j++) {
                 totalSuitsRanks.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[j].reduce(TotalRank, 0));
             }
@@ -264,7 +264,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             } else if (G.drawProfit === "placeEnlistmentMercenaries") {
                 for (let j: number = 0; j < G.suitsNum; j++) {
                     const card: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-                    if (card && "stack" in card) {
+                    if (card !== null && "stack" in card) {
                         const suit: string = Object.keys(suitsConfig)[j],
                             stack: IStack = card.stack[0];
                         if (stack && stack.variants) {
@@ -328,7 +328,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
                      j++) {
                     const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
-                    if (coin) {
+                    if (coin !== null) {
                         if (!coin.isTriggerTrading && config.coinId !== j) {
                             if (coin.isInitial !== undefined) {
                                 isInitial = coin.isInitial;
@@ -346,11 +346,11 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (activeStageOfCurrentPlayer === "discardSuitCard") {
             // todo Bot can't do async turns...?
             const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-            if (config && config.suit) {
+            if (config !== undefined && config.suit !== undefined) {
                 const suitId: number = GetSuitIndexByName(config.suit);
                 for (let p: number = 0; p < G.publicPlayers.length; p++) {
                     if (p !== Number(ctx.currentPlayer)) {
-                        if (typeof ctx.playerID === "string" && Number(ctx.playerID) === p) {
+                        if (ctx.playerID !== undefined && Number(ctx.playerID) === p) {
                             for (let i: number = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
                                 for (let j: number = 0; j < 1; j++) {
                                     if (G.publicPlayers[p].cards[suitId] !== undefined
@@ -379,14 +379,13 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (activeStageOfCurrentPlayer === "discardCardFromBoard") {
             const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config,
                 pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-            if (config) {
+            if (config !== undefined) {
                 for (let j: number = 0; j < G.suitsNum; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0] !== undefined
-                        && suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit !==
-                        config.suit && !(G.drawProfit === "DagdaAction" && G.actionsNum === 1 && pickedCard !== null
-                            && "suit" in pickedCard &&
-                            suitsConfig[G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit].suit ===
-                            pickedCard.suit)) {
+                    const suit: string | null = G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit;
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0] !== undefined && suit !== null
+                        && suitsConfig[suit].suit !== config.suit && !(G.drawProfit === "DagdaAction"
+                            && G.actionsNum === 1 && pickedCard !== null && "suit" in pickedCard
+                            && suitsConfig[suit].suit === pickedCard.suit)) {
                         const last: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[j].length - 1;
                         if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].type !== "герой") {
                             botMoveArguments.push([j, last]);
@@ -460,7 +459,11 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
  *
  * @returns {{isEarlyGame: {weight: number, checker: (G: MyGameState) => boolean}, isFirst: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}, isStronger: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}}}
  */
-export const objectives = (): { isEarlyGame: { weight: number; checker: (G: MyGameState) => boolean; }; isFirst: { weight: number; checker: (G: MyGameState, ctx: Ctx) => boolean; }; isStronger: { weight: number; checker: (G: MyGameState, ctx: Ctx) => boolean; }; } => ({
+export const objectives = (): {
+    isEarlyGame: { weight: number; checker: (G: MyGameState) => boolean; };
+    isFirst: { weight: number; checker: (G: MyGameState, ctx: Ctx) => boolean; };
+    isStronger: { weight: number; checker: (G: MyGameState, ctx: Ctx) => boolean; };
+} => ({
     isEarlyGame: {
         checker: (G: MyGameState): boolean => {
             return G.decks[0].length > 0;

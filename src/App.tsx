@@ -1,7 +1,7 @@
-import React from "react";
+/*import React from "react";
 import {Client} from "boardgame.io/react";
 import {Local} from "boardgame.io/multiplayer";
-import {MCTSBot} from "boardgame.io/ai";
+import {MCTSBot, RandomBot} from "boardgame.io/ai";
 import {BoardGame} from "./Game";
 import {GameBoard} from "./GameBoard";
 
@@ -9,10 +9,14 @@ class CustomMCTSBot extends MCTSBot {
     constructor(config: object, ...args: any[]) {
         super({
                 ...config,
+                //@ts-ignore
                 objectives: BoardGame.ai!.objectives,
+                //@ts-ignore
                 iterations: BoardGame.ai!.iterations,
+                //@ts-ignore
                 playoutDepth: BoardGame.ai!.playoutDepth,
             },
+            //@ts-ignore
             ...args,
         );
     }
@@ -22,10 +26,10 @@ const enableLocalPlayer: boolean = true,
     setupBot: { bots: {} } = {
         bots: {
             // "0": RandomBot,
-            // "1": RandomBot,
-            // "2": RandomBot,
-            // "3": RandomBot,
-            // "4": RandomBot,
+            "1": RandomBot,
+            "2": RandomBot,
+            "3": RandomBot,
+            "4": RandomBot,
         },
     },
     BoardGameClient = Client({
@@ -38,16 +42,16 @@ const enableLocalPlayer: boolean = true,
     App = () => (
         <div>
             <BoardGameClient playerID="0"/>
-            {/*<BoardGameClient playerID="1"/>*/}
-            {/*<BoardGameClient playerID="2"/>*/}
+            {/!*<BoardGameClient playerID="1"/>*!/}
+            {/!*<BoardGameClient playerID="2"/>*!/}
         </div>
     );
 
-export default App;
+export default App;*/
 
-/*import {Client} from "boardgame.io/react";
+import {Client} from "boardgame.io/react";
 import {BoardGame} from "./Game";
-import {GameBoard} from "./Board";
+import {GameBoard} from "./GameBoard";
 
 const App = Client({
     // debug: false,
@@ -56,7 +60,7 @@ const App = Client({
     numPlayers: 5,
 });
 
-export default App;*/
+export default App;
 
 /*
 import React from "react";

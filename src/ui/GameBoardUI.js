@@ -1,14 +1,4 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
+import { __assign } from "tslib";
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
 import { CountMarketCoins } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
@@ -57,7 +47,7 @@ export var DrawCurrentPlayerTurn = function (data) { return (_jsxs("b", { childr
  */
 export var DrawWinner = function (data) {
     var winner;
-    if (data.props.ctx.gameover) {
+    if (data.props.ctx.gameover !== undefined) {
         if (data.props.G.winner !== undefined) {
             if (data.props.G.winner.length === 1) {
                 winner = "Winner: Player ".concat(data.props.G.publicPlayers[data.props.G.winner[0]].nickname);
@@ -322,8 +312,8 @@ export var DrawProfit = function (data, option) {
                         isInitial = handCoins_1[handCoinIndex_1].isInitial;
                         var handCoinId = data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins
                             .findIndex(function (coin) {
-                            return (coin && coin.value) === handCoins_1[handCoinIndex_1].value
-                                && (coin && coin.isInitial) === handCoins_1[handCoinIndex_1].isInitial;
+                            return (coin === null || coin === void 0 ? void 0 : coin.value) === handCoins_1[handCoinIndex_1].value
+                                && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === handCoins_1[handCoinIndex_1].isInitial;
                         });
                         if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[handCoinId]
                             && !data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[handCoinId]

@@ -1,5 +1,6 @@
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
+import { AddDataToLog, LogTypes } from "./Logging";
 /**
  * Validates arguments inside of move.
  * obj - object to validate.
@@ -171,7 +172,10 @@ export var moveValidators = {
                 return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
                     && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id] !== null;
             }
-            return false;
+            else {
+                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
+                return false;
+            }
         }
     },
     ClickBoardCoin: {
@@ -185,7 +189,10 @@ export var moveValidators = {
                 return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined
                     && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[id] === null;
             }
-            return false;
+            else {
+                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
+                return false;
+            }
         }
     },
     BotsPlaceAllCoins: {
@@ -198,7 +205,10 @@ export var moveValidators = {
             if (id !== undefined) {
                 return G.botData.allCoinsOrder[id];
             }
-            return [];
+            else {
+                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
+                return [];
+            }
         },
         validate: function () { return true; },
     },
@@ -214,7 +224,7 @@ export var moveValidators = {
                 // todo Add validators to others heroes
                 if (G.heroes[id].name === "Hourya") {
                     var config = G.heroes[id].stack[0].config;
-                    if (config !== undefined && config.conditions !== undefined) {
+                    if ((config === null || config === void 0 ? void 0 : config.conditions) !== undefined) {
                         var suitId = GetSuitIndexByName(config.conditions.suitCountMin.suit);
                         isValid = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].reduce(TotalRank, 0) >=
                             config.conditions.suitCountMin.value;
@@ -222,7 +232,10 @@ export var moveValidators = {
                 }
                 return isValid;
             }
-            return false;
+            else {
+                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
+                return false;
+            }
         },
     },
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
@@ -236,7 +249,10 @@ export var moveValidators = {
             if (id !== undefined && type !== undefined) {
                 return CoinUpgradeValidation(G, ctx, id, type);
             }
-            return false;
+            else {
+                AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 id \u0438\u043B\u0438 \u043D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \n                \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 type.");
+                return false;
+            }
         }
     },
     ClickCardToPickDistinction: {

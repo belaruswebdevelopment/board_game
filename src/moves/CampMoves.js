@@ -100,7 +100,7 @@ export var DiscardCardFromPlayerBoard = function (G, ctx, suitId, cardId) {
  */
 export var DiscardSuitCardFromPlayerBoard = function (G, ctx, suitId, playerId, cardId) {
     var isValidMove = false;
-    if (typeof ctx.playerID === "string") {
+    if (ctx.playerID !== undefined) {
         isValidMove = playerId !== Number(ctx.currentPlayer) && playerId === Number(ctx.playerID);
     }
     if (!isValidMove) {

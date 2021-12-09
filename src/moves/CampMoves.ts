@@ -114,7 +114,7 @@ export const DiscardCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ct
 export const DiscardSuitCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
                                                                   playerId: number, cardId: number): string | void => {
     let isValidMove: boolean = false;
-    if (typeof ctx.playerID === "string") {
+    if (ctx.playerID !== undefined) {
         isValidMove = playerId !== Number(ctx.currentPlayer) && playerId === Number(ctx.playerID);
     }
     if (!isValidMove) {

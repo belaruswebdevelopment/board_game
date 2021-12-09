@@ -2,7 +2,7 @@ import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { CurrentScoring } from "./Score";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
-import { AddDataToLog } from "./Logging";
+import { AddDataToLog, LogTypes } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
 import { isCardNotAction } from "./Card";
 /**
@@ -140,10 +140,10 @@ export var AddCardToPlayer = function (G, ctx, card) {
     if (isCardNotAction(card)) {
         var suitIndex = GetSuitIndexByName(card.suit);
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suitIndex].push(card);
-        AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 '").concat(card.name, "' \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[card.suit].suitName, "."));
+        AddDataToLog(G, LogTypes.PUBLIC, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 '").concat(card.name, "' \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[card.suit].suitName, "."));
         return true;
     }
-    AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 '").concat(card.name, "'."));
+    AddDataToLog(G, LogTypes.PUBLIC, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 '").concat(card.name, "'."));
     return false;
 };
 /**
@@ -160,7 +160,7 @@ export var AddCardToPlayer = function (G, ctx, card) {
  */
 export var AddCampCardToPlayer = function (G, ctx, card) {
     G.publicPlayers[Number(ctx.currentPlayer)].campCards.push(card);
-    AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 \u043A\u044D\u043C\u043F\u0430 ").concat(card.name, "."));
+    AddDataToLog(G, LogTypes.PUBLIC, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 \u043A\u044D\u043C\u043F\u0430 ").concat(card.name, "."));
 };
 /**
  * <h3>Добавляет карту кэмпа в конкретную фракцию игрока.</h3>
@@ -175,10 +175,15 @@ export var AddCampCardToPlayer = function (G, ctx, card) {
  * @constructor
  */
 export var AddCampCardToPlayerCards = function (G, ctx, card) {
-    var suitId = GetSuitIndexByName(card.suit);
-    if (suitId !== -1) {
-        G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(card);
-        AddDataToLog(G, "private" /* PRIVATE */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 \u043A\u044D\u043C\u043F\u0430 '").concat(card.name, "' \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[card.suit].suitName, "."));
+    if (card.suit !== null) {
+        var suitId = GetSuitIndexByName(card.suit);
+        if (suitId !== -1) {
+            G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(card);
+            AddDataToLog(G, LogTypes.PRIVATE, "\u0418\u0433\u0440\u043E\u043A \n            ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u0432\u044B\u0431\u0440\u0430\u043B \u043A\u0430\u0440\u0442\u0443 \u043A\u044D\u043C\u043F\u0430 '").concat(card.name, "' \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E \n            ").concat(suitsConfig[card.suit].suitName, "."));
+        }
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442 ".concat(card.name, " \u043D\u0430 \u043F\u043B\u0430\u043D\u0448\u0435\u0442 \n        \u043A\u0430\u0440\u0442 \u0444\u0440\u0430\u043A\u0446\u0438\u0439 \u0438\u0433\u0440\u043E\u043A\u0430 \u0438\u0437-\u0437\u0430 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044F \u043F\u0440\u0438\u043D\u0430\u0434\u043B\u0435\u0436\u043D\u043E\u0441\u0442\u0438 \u0435\u0433\u043E \u043A \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0444\u0440\u0430\u043A\u0446\u0438\u0438."));
     }
 };
 /**
@@ -197,7 +202,7 @@ export var AddHeroCardToPlayerHeroCards = function (G, ctx, hero) {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = hero;
     hero.active = false;
     G.publicPlayers[Number(ctx.currentPlayer)].heroes.push(hero);
-    AddDataToLog(G, "public" /* PUBLIC */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u0433\u0435\u0440\u043E\u044F ").concat(hero.name, "."));
+    AddDataToLog(G, LogTypes.PUBLIC, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u0433\u0435\u0440\u043E\u044F ").concat(hero.name, "."));
 };
 /**
  * <h3>Добавляет героя в массив карт игрока.</h3>
@@ -212,10 +217,15 @@ export var AddHeroCardToPlayerHeroCards = function (G, ctx, hero) {
  * @constructor
  */
 export var AddHeroCardToPlayerCards = function (G, ctx, hero) {
-    var suitId = GetSuitIndexByName(hero.suit);
-    if (suitId !== -1) {
-        G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(hero);
-        AddDataToLog(G, "private" /* PRIVATE */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u0433\u0435\u0440\u043E\u044F ").concat(hero.name, " \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[hero.suit].suitName, "."));
+    if (hero.suit !== null) {
+        var suitId = GetSuitIndexByName(hero.suit);
+        if (suitId !== -1) {
+            G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(hero);
+            AddDataToLog(G, LogTypes.PRIVATE, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n            \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u0433\u0435\u0440\u043E\u044F ").concat(hero.name, " \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[hero.suit].suitName, "."));
+        }
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0433\u0435\u0440\u043E\u044F ".concat(hero.suit, " \u043D\u0430 \u043F\u043B\u0430\u043D\u0448\u0435\u0442 \n        \u043A\u0430\u0440\u0442 \u0444\u0440\u0430\u043A\u0446\u0438\u0439 \u0438\u0433\u0440\u043E\u043A\u0430 \u0438\u0437-\u0437\u0430 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044F \u043F\u0440\u0438\u043D\u0430\u0434\u043B\u0435\u0436\u043D\u043E\u0441\u0442\u0438 \u0435\u0433\u043E \u043A \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0444\u0440\u0430\u043A\u0446\u0438\u0438 \u0438\u043B\u0438 \u0435\u0433\u043E \u043F\u0440\u0438\u043D\u0430\u0434\u043B\u0435\u0436\u043D\u043E\u0441\u0442\u0438 \u043A \n        \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u0430\u043C."));
     }
 };
 /**
@@ -230,10 +240,13 @@ export var AddHeroCardToPlayerCards = function (G, ctx, hero) {
  * @constructor
  */
 export var AddCardToCards = function (cards, card) {
-    var suitId = GetSuitIndexByName(card.suit);
-    if (suitId !== -1) {
-        cards[suitId].push(card);
+    if (card.suit !== null) {
+        var suitId = GetSuitIndexByName(card.suit);
+        if (suitId !== -1) {
+            cards[suitId].push(card);
+        }
     }
+    // todo Else it can be upgrade coin card here and it is not error, sure?
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -249,8 +262,9 @@ export var AddCardToCards = function (cards, card) {
  * @constructor
  */
 export var IsTopPlayer = function (G, playerId) {
-    var score = CurrentScoring(G.publicPlayers[playerId]);
-    return G.publicPlayers.every(function (player) { return CurrentScoring(player) <= score; });
+    return G.publicPlayers.every(function (player) {
+        return CurrentScoring(player) <= CurrentScoring(G.publicPlayers[playerId]);
+    });
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>

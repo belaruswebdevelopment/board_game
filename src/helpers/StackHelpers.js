@@ -1,12 +1,4 @@
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
+import { __spreadArray } from "tslib";
 import { ActionDispatcher } from "../actions/Actions";
 import { EndAction } from "./ActionHelper";
 /**
@@ -151,18 +143,16 @@ export var EndActionFromStackAndAddNew = function (G, ctx, newStack) {
         args[_i - 3] = arguments[_i];
     }
     var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (config) {
-        if (config.name === "explorerDistinction"
-            || G.publicPlayers[Number(ctx.currentPlayer)].stack[0].actionName !== "DrawProfitAction") {
-            G.actionsNum = 0;
-            G.drawProfit = "";
-        }
-        if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
-            ctx.events.endStage();
-        }
-        var isTrading = (_a = config.isTrading) !== null && _a !== void 0 ? _a : false;
-        G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
-        AddActionsToStack(G, ctx, newStack);
-        StartActionFromStackOrEndActions.apply(void 0, __spreadArray([G, ctx, isTrading], args, false));
+    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0].actionName !== "DrawProfitAction"
+        || (config === null || config === void 0 ? void 0 : config.name) === "explorerDistinction") {
+        G.actionsNum = 0;
+        G.drawProfit = "";
     }
+    if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
+        ctx.events.endStage();
+    }
+    var isTrading = (_a = config === null || config === void 0 ? void 0 : config.isTrading) !== null && _a !== void 0 ? _a : false;
+    G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
+    AddActionsToStack(G, ctx, newStack);
+    StartActionFromStackOrEndActions.apply(void 0, __spreadArray([G, ctx, isTrading], args, false));
 };

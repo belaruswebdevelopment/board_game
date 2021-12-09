@@ -2,7 +2,7 @@ import {AddDataToLog, LogTypes} from "./Logging";
 import {SuitNames, suitsConfig} from "./data/SuitData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {TotalRank} from "./helpers/ScoreHelpers";
-import {DeckCardTypes, MyGameState} from "./GameSetup";
+import {DeckCardTypes, DistinctionTypes, MyGameState} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 
 /**
@@ -20,7 +20,7 @@ export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
     let i: number = 0;
     AddDataToLog(G, LogTypes.GAME, "Преимущество по фракциям в конце эпохи:");
     for (const suit in suitsConfig) {
-        const result: number | undefined = CheckCurrentSuitDistinction(G, ctx, suit);
+        const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[i] = result;
         if (suit === SuitNames.EXPLORER && result === undefined) {
             const discardedCard: DeckCardTypes = G.decks[1].splice(0, 1)[0];
@@ -45,7 +45,7 @@ export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
  * @returns {number | undefined} Индекс игрока с преимуществом по фракции, если имеется.
  * @constructor
  */
-export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suitName: string): number | undefined => {
+export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suitName: string): DistinctionTypes => {
     const playersRanks: number[] = [];
     for (let i: number = 0; i < ctx.numPlayers; i++) {
         const suitIndex: number = GetSuitIndexByName(suitName);
@@ -61,6 +61,6 @@ export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suitName: 
     } else {
         AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suitName].suitName} никто 
         не получил.`);
-        return undefined;
+        return null;
     }
 };

@@ -139,10 +139,8 @@ export const ClickCoinToUpgrade: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
 export const UpgradeCoinVidofnirVedrfolnir: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
                                                                  isInitial: boolean): string | void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    let isValidMove: boolean = false;
-    if (config) {
-        isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && config.coinId !== coinId;
-    }
+    const isValidMove: boolean =
+        CoinUpgradeValidation(G, ctx, coinId, type) && config?.coinId !== coinId;
     if (!isValidMove) {
         return INVALID_MOVE;
     }

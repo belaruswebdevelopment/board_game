@@ -134,18 +134,16 @@ export const EndActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: num
 export const EndActionFromStackAndAddNew = (G: MyGameState, ctx: Ctx, newStack: IStack[] = [], ...args: ArgsTypes):
     void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (config) {
-        if (config.name === "explorerDistinction"
-            || G.publicPlayers[Number(ctx.currentPlayer)].stack[0].actionName !== "DrawProfitAction") {
-            G.actionsNum = 0;
-            G.drawProfit = "";
-        }
-        if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
-            ctx.events!.endStage!();
-        }
-        const isTrading: boolean | undefined = config.isTrading ?? false;
-        G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
-        AddActionsToStack(G, ctx, newStack);
-        StartActionFromStackOrEndActions(G, ctx, isTrading, ...args);
+    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0].actionName !== "DrawProfitAction"
+        || config?.name === "explorerDistinction") {
+        G.actionsNum = 0;
+        G.drawProfit = "";
     }
+    if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
+        ctx.events!.endStage!();
+    }
+    const isTrading: boolean = config?.isTrading ?? false;
+    G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
+    AddActionsToStack(G, ctx, newStack);
+    StartActionFromStackOrEndActions(G, ctx, isTrading, ...args);
 };

@@ -4,7 +4,7 @@ import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {AddDataToLog, LogTypes} from "./Logging";
 import {artefactsConfig, IArtefact} from "./data/CampData";
 import {CheckCurrentSuitDistinction} from "./Distinction";
-import {MyGameState} from "./GameSetup";
+import {DistinctionTypes, MyGameState} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPublicPlayer} from "./Player";
 
@@ -63,11 +63,10 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за монеты игрока ${player.nickname}: ${coinsValue}`);
     const suitWarriorIndex: number = GetSuitIndexByName(SuitNames.WARRIOR);
     if (suitWarriorIndex !== -1) {
-        const warriorsDistinction: number | undefined =
+        const warriorsDistinction: DistinctionTypes =
             CheckCurrentSuitDistinction(G, ctx, SuitNames.WARRIOR);
-        if (warriorsDistinction !== undefined
-            && G.publicPlayers
-                .findIndex((p: IPublicPlayer): boolean => p.nickname === player.nickname) === warriorsDistinction) {
+        if (warriorsDistinction !== undefined && G.publicPlayers
+            .findIndex((p: IPublicPlayer): boolean => p.nickname === player.nickname) === warriorsDistinction) {
             const warriorDistinctionScore: number =
                 suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
             score += warriorDistinctionScore;
@@ -100,6 +99,8 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
                 AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${player.heroes[i].name} игрока 
                 ${player.nickname}: ${currentHeroScore}.`);
             }
+        } else {
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти героя ${player.heroes[i].name}.`);
         }
     }
     if (dwerg_brothers) {
@@ -122,6 +123,9 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
                 } else {
                     currentArtefactScore = artefact.scoringRule(player);
                 }
+            } else {
+                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти артефакт 
+                ${player.campCards[i].name}.`);
             }
             if (currentArtefactScore) {
                 artifactsScore += currentArtefactScore;
@@ -156,7 +160,7 @@ export const ScoreWinner = (G: MyGameState, ctx: Ctx): MyGameState | void => {
     const maxScore: number = Math.max(...G.totalScore),
         maxPlayers: number = G.totalScore.filter((score: number): boolean => score === maxScore).length;
     let winners: number = 0;
-    for (let i = ctx.numPlayers - 1; i >= 0; i--) {
+    for (let i: number = ctx.numPlayers - 1; i >= 0; i--) {
         if (maxScore === G.totalScore[i] && maxPlayers > winners) {
             G.winner.push(i);
             winners++;

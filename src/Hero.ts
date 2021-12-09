@@ -15,7 +15,7 @@ export interface IHero {
     name: string,
     description: string,
     game: string,
-    suit: string,
+    suit: null | string,
     rank: null | number,
     points: null | number,
     active: boolean,
@@ -30,7 +30,7 @@ interface ICreateHero {
     name: string,
     description: string,
     game: string,
-    suit: string,
+    suit: null | string,
     rank: null | number,
     points: null | number,
     active?: boolean,
@@ -138,8 +138,8 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
                     },
                 },
             ];
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
-            должен выбрать нового героя.`);
+            AddDataToLog(G, LogTypes.GAME, `Игрок 
+            ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен выбрать нового героя.`);
             AddActionsToStackAfterCurrent(G, ctx, stack);
         }
     }
@@ -161,7 +161,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: MyGameState, ctx: Ctx)
         const playerCards: PlayerCardsType[] = G.publicPlayers[i].cards.flat(),
             thrud: PlayerCardsType | undefined =
                 playerCards.find((card: PlayerCardsType): boolean => card.name === "Thrud");
-        if (thrud) {
+        if (thrud !== undefined && thrud.suit !== null) {
             const thrudSuit: number = GetSuitIndexByName(thrud.suit),
                 thrudIndex: number = G.publicPlayers[i].cards[thrudSuit]
                     .findIndex((card: PlayerCardsType): boolean => card.name === "Thrud");

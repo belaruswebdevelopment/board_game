@@ -1,22 +1,14 @@
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
+import { __spreadArray } from "tslib";
 import { UpgradeCoin } from "../Coin";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { suitsConfig } from "../data/SuitData";
+import { SuitNames, suitsConfig } from "../data/SuitData";
 import { AddCardToPlayer } from "../Player";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { CreateCard, DiscardCardFromTavern, isCardNotAction } from "../Card";
 import { AddHeroToCards, CheckAndMoveThrudOrPickHeroAction, GetClosedCoinIntoPlayerHand, PickHero, PickHeroWithConditions, PlaceThrudAction, PlaceYludAction } from "./HeroActions";
 import { AddCampCardToCards, AddCoinToPouchAction, CheckPickCampCard, DiscardAnyCardFromPlayerBoard, DiscardSuitCard, DiscardTradingCoin, GetMjollnirProfitAction, StartDiscardSuitCard, StartVidofnirVedrfolnirAction, UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
-import { AddDataToLog } from "../Logging";
+import { AddDataToLog, LogTypes } from "../Logging";
 /**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>
@@ -164,10 +156,10 @@ var UpgradeCoinAction = function (G, ctx, config) {
  */
 var DrawProfitAction = function (G, ctx, config) {
     var _a;
-    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u043B\u0436\u0435\u043D \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043E\u0442 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F '").concat(config.drawName, "'."));
+    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u043B\u0436\u0435\u043D \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043E\u0442 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F '").concat(config.drawName, "'."));
     var playerConfig = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (playerConfig !== undefined && playerConfig.stageName !== undefined) {
-        AddDataToLog(G, "game" /* GAME */, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
+        AddDataToLog(G, LogTypes.GAME, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
         ctx.events.setStage(playerConfig.stageName);
     }
     G.actionsNum = (_a = config.number) !== null && _a !== void 0 ? _a : 1;
@@ -190,9 +182,9 @@ var DrawProfitAction = function (G, ctx, config) {
 var AddBuffToPlayer = function (G, ctx, config) {
     if (config.buff !== undefined) {
         G.publicPlayers[Number(ctx.currentPlayer)].buffs[config.buff.name] = config.buff.value;
-        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u0431\u0430\u0444 '").concat(config.buff.name, "'."));
+        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u0431\u0430\u0444 '").concat(config.buff.name, "'."));
+        EndActionFromStackAndAddNew(G, ctx);
     }
-    EndActionFromStackAndAddNew(G, ctx);
 };
 /**
  * <h3>Действия, связанные с дискардом карт с планшета игрока.</h3>
@@ -211,32 +203,30 @@ var AddBuffToPlayer = function (G, ctx, config) {
 export var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId, cardId) {
     var pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-    if (pickedCard) {
-        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 ").concat(pickedCard.name, "."));
-        G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-            .splice(cardId, 1)[0]);
-        if (G.actionsNum === 2) {
-            var stack = [
-                {
-                    actionName: "DrawProfitAction",
-                    config: {
-                        stageName: "discardCardFromBoard",
-                        drawName: "Dagda",
-                        name: "DagdaAction",
-                        suit: "hunter" /* HUNTER */,
-                    },
+    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 ").concat(pickedCard.name, "."));
+    G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+        .splice(cardId, 1)[0]);
+    if (G.actionsNum === 2) {
+        var stack = [
+            {
+                actionName: "DrawProfitAction",
+                config: {
+                    stageName: "discardCardFromBoard",
+                    drawName: "Dagda",
+                    name: "DagdaAction",
+                    suit: SuitNames.HUNTER,
                 },
-                {
-                    actionName: "DiscardCardsFromPlayerBoardAction",
-                    config: {
-                        suit: "hunter" /* HUNTER */,
-                    },
+            },
+            {
+                actionName: "DiscardCardsFromPlayerBoardAction",
+                config: {
+                    suit: SuitNames.HUNTER,
                 },
-            ];
-            AddActionsToStackAfterCurrent(G, ctx, stack);
-        }
-        EndActionFromStackAndAddNew(G, ctx);
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
     }
+    EndActionFromStackAndAddNew(G, ctx);
 };
 /**
  * <h3>Сбрасывает карту из таверны по выбору игрока.</h3>
@@ -252,7 +242,7 @@ export var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId,
  * @constructor
  */
 var DiscardCardFromTavernAction = function (G, ctx, config, cardId) {
-    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B:"));
+    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B:"));
     DiscardCardFromTavern(G, cardId);
     EndActionFromStackAndAddNew(G, ctx);
 };
@@ -309,32 +299,32 @@ var PlaceCards = function (G, ctx, config, suitId) {
             points: playerVariants[suit].points,
             name: "Olwin",
         });
-        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u041E\u043B\u0432\u0438\u043D \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
+        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 \u041E\u043B\u0432\u0438\u043D \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
         AddCardToPlayer(G, ctx, olwinDouble);
         if (G.actionsNum === 2) {
             var variants = {
                 blacksmith: {
-                    suit: "blacksmith" /* BLACKSMITH */,
+                    suit: SuitNames.BLACKSMITH,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter" /* HUNTER */,
+                    suit: SuitNames.HUNTER,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer" /* EXPLORER */,
+                    suit: SuitNames.EXPLORER,
                     rank: 1,
                     points: 0,
                 },
                 warrior: {
-                    suit: "warrior" /* WARRIOR */,
+                    suit: SuitNames.WARRIOR,
                     rank: 1,
                     points: 0,
                 },
                 miner: {
-                    suit: "miner" /* MINER */,
+                    suit: SuitNames.MINER,
                     rank: 1,
                     points: 0,
                 },
@@ -391,7 +381,7 @@ var CheckPickDiscardCard = function (G, ctx) {
  */
 var PickDiscardCard = function (G, ctx, config, cardId) {
     var isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]), pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
-    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(pickedCard.name, " \u0438\u0437 \u0434\u0438\u0441\u043A\u0430\u0440\u0434\u0430."));
+    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(pickedCard.name, " \u0438\u0437 \u0434\u0438\u0441\u043A\u0430\u0440\u0434\u0430."));
     if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
         var stack = [
             {
@@ -417,7 +407,9 @@ var PickDiscardCard = function (G, ctx, config, cardId) {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
     var suitId = GetSuitIndexByName(pickedCard.suit);
-    EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    if (suitId !== -1) {
+        EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    }
 };
 /**
  * <h3>Первый игрок в фазе вербовки наёмников может пасануть, чтобы вербовать последним.</h3>
@@ -431,7 +423,7 @@ var PickDiscardCard = function (G, ctx, config, cardId) {
  * @constructor
  */
 var PassEnlistmentMercenariesAction = function (G, ctx) {
-    AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043F\u0430\u0441\u0430\u043D\u0443\u043B \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries."));
+    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043F\u0430\u0441\u0430\u043D\u0443\u043B \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries."));
     EndActionFromStackAndAddNew(G, ctx);
 };
 /**
@@ -453,7 +445,7 @@ var GetEnlistmentMercenariesAction = function (G, ctx, config, cardId) {
             .filter(function (card) { return card.type === "наёмник"; })[cardId];
     var pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null) {
-        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \u0432\u044B\u0431\u0440\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(pickedCard.name, "'."));
+        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \u0432\u044B\u0431\u0440\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(pickedCard.name, "'."));
         var stack = [
             {
                 actionName: "DrawProfitAction",
@@ -493,7 +485,7 @@ var PlaceEnlistmentMercenariesAction = function (G, ctx, config, suitId) {
             path: pickedCard.path,
         });
         AddCardToPlayer(G, ctx, mercenaryCard);
-        AddDataToLog(G, "game" /* GAME */, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \u0437\u0430\u0432\u0435\u0440\u0431\u043E\u0432\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(mercenaryCard.name, "'."));
+        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \u0437\u0430\u0432\u0435\u0440\u0431\u043E\u0432\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(mercenaryCard.name, "'."));
         var cardIndex = G.publicPlayers[Number(ctx.currentPlayer)].campCards
             .findIndex(function (card) { return card.name === pickedCard.name; });
         G.publicPlayers[Number(ctx.currentPlayer)].campCards.splice(cardIndex, 1);

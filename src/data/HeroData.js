@@ -1,14 +1,7 @@
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
+import { __spreadArray } from "tslib";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
+import { SuitNames } from "./SuitData";
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -139,7 +132,7 @@ var Idunn = {
     name: "Idunn",
     description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 1 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u043C. \u041F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 7 \u043E\u0447\u043A\u043E\u0432 \u043A \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432 \u043F\u043B\u044E\u0441 \u043F\u043E 2 \u043E\u0447\u043A\u0430 \u0437\u0430 \u043A\u0430\u0436\u0434\u044B\u0439 \n    \u0448\u0435\u0432\u0440\u043E\u043D \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0435 \u0420\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432 (\u0432\u043A\u043B\u044E\u0447\u0430\u044F \u0435\u0451 \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439).",
     game: "base",
-    suit: "explorer" /* EXPLORER */,
+    suit: SuitNames.EXPLORER,
     rank: 1,
     points: 7,
     stack: [
@@ -150,8 +143,8 @@ var Idunn = {
             },
         },
     ],
-    scoringRule: function (player) { return player ? player.cards[GetSuitIndexByName("explorer" /* EXPLORER */)]
-        .reduce(TotalRank, 0) * 2 : 0; },
+    scoringRule: function (player) { return player !== undefined ?
+        player.cards[GetSuitIndexByName(SuitNames.EXPLORER)].reduce(TotalRank, 0) * 2 : 0; },
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -166,7 +159,7 @@ var Tarah = {
     name: "Tarah",
     description: "Обладает 1 шевроном. Прибавьте 14 очков к показателю храбрости воинов.",
     game: "base",
-    suit: "warrior" /* WARRIOR */,
+    suit: SuitNames.WARRIOR,
     rank: 1,
     points: 14,
     stack: [
@@ -192,7 +185,7 @@ var Kraal = {
     name: "Kraal",
     description: "Обладает 2 шевронами. Прибавьте 7 и 0 очков к показателю храбрости воинов.",
     game: "base",
-    suit: "warrior" /* WARRIOR */,
+    suit: SuitNames.WARRIOR,
     rank: 2,
     points: 7,
     stack: [
@@ -218,7 +211,7 @@ var Lokdur = {
     name: "Lokdur",
     description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 1 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u043C. \u041F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 3 \u043A \u0441\u0443\u043C\u043C\u0435 \u043E\u0447\u043A\u043E\u0432 \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0433\u043E\u0440\u043D\u044F\u043A\u043E\u0432. \u041B\u043E\u043A\u0434\u0443\u0440 \u0443\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442 \u0441\u0443\u043C\u043C\u0443 \u043E\u0447\u043A\u043E\u0432 \n    \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0433\u043E\u0440\u043D\u044F\u043A\u043E\u0432 \u043D\u0430 3, \u0430 \u0441\u0443\u043C\u043C\u0443 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432 \u043D\u0430 1.",
     game: "base",
-    suit: "miner" /* MINER */,
+    suit: SuitNames.MINER,
     rank: 1,
     points: 3,
     stack: [
@@ -299,27 +292,27 @@ var Thrud = {
             actionName: "DrawProfitAction",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith" /* BLACKSMITH */,
+                    suit: SuitNames.BLACKSMITH,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter" /* HUNTER */,
+                    suit: SuitNames.HUNTER,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer" /* EXPLORER */,
+                    suit: SuitNames.EXPLORER,
                     rank: 1,
                     points: null,
                 },
                 warrior: {
-                    suit: "warrior" /* WARRIOR */,
+                    suit: SuitNames.WARRIOR,
                     rank: 1,
                     points: null,
                 },
                 miner: {
-                    suit: "miner" /* MINER */,
+                    suit: SuitNames.MINER,
                     rank: 1,
                     points: null,
                 },
@@ -334,27 +327,27 @@ var Thrud = {
             actionName: "PlaceThrudAction",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith" /* BLACKSMITH */,
+                    suit: SuitNames.BLACKSMITH,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter" /* HUNTER */,
+                    suit: SuitNames.HUNTER,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer" /* EXPLORER */,
+                    suit: SuitNames.EXPLORER,
                     rank: 1,
                     points: null,
                 },
                 warrior: {
-                    suit: "warrior" /* WARRIOR */,
+                    suit: SuitNames.WARRIOR,
                     rank: 1,
                     points: null,
                 },
                 miner: {
-                    suit: "miner" /* MINER */,
+                    suit: SuitNames.MINER,
                     rank: 1,
                     points: null,
                 },
@@ -376,7 +369,7 @@ var Zoral = {
     name: "Zoral",
     description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 3 \u0448\u0435\u0432\u0440\u043E\u043D\u0430\u043C\u0438. \u041F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 1, 0 \u0438 0 \u043A \u0441\u0443\u043C\u043C\u0435 \u043E\u0447\u043A\u043E\u0432 \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0433\u043E\u0440\u043D\u044F\u043A\u043E\u0432. \u0417\u043E\u0440\u0430\u043B \u0443\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442 \u0441\u0443\u043C\u043C\u0443 \n    \u043E\u0447\u043A\u043E\u0432 \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0433\u043E\u0440\u043D\u044F\u043A\u043E\u0432 \u043D\u0430 1, \u0430 \u0441\u0443\u043C\u043C\u0443 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432 \u2013 \u043D\u0430 3.",
     game: "base",
-    suit: "miner" /* MINER */,
+    suit: SuitNames.MINER,
     rank: 3,
     points: 1,
     stack: [
@@ -428,14 +421,14 @@ var Bonfur = {
     name: "Bonfur",
     description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 3 \u0448\u0435\u0432\u0440\u043E\u043D\u0430\u043C\u0438. \u041F\u0440\u0438\u0437\u0432\u0430\u0432 \u0411\u043E\u043D\u0444\u0443\u0440\u0430, \u0441\u0440\u0430\u0437\u0443 \u0436\u0435 \u043F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u0435 \u0435\u0433\u043E \u043A\u0430\u0440\u0442\u0443 \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0443 \u043A\u0443\u0437\u043D\u0435\u0446\u043E\u0432 \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u0432 \n    \u0441\u0431\u0440\u043E\u0441 \u043E\u0434\u043D\u0443 \u043D\u0438\u0436\u043D\u044E\u044E \u043A\u0430\u0440\u0442\u0443 \u0434\u0432\u043E\u0440\u0444\u0430 (\u043D\u0435 \u0433\u0435\u0440\u043E\u044F) \u0438\u0437 \u0434\u0440\u0443\u0433\u043E\u0439 \u043A\u043E\u043B\u043E\u043D\u043A\u0438 \u0441\u0432\u043E\u0435\u0439 \u0430\u0440\u043C\u0438\u0438 \u043F\u043E \u0441\u0432\u043E\u0435\u043C\u0443 \u0432\u044B\u0431\u043E\u0440\u0443.",
     game: "base",
-    suit: "blacksmith" /* BLACKSMITH */,
+    suit: SuitNames.BLACKSMITH,
     rank: 3,
     points: null,
     stack: [
         {
             actionName: "CheckDiscardCardsFromPlayerBoardAction",
             config: {
-                suit: "blacksmith" /* BLACKSMITH */,
+                suit: SuitNames.BLACKSMITH,
             },
         },
         {
@@ -444,13 +437,13 @@ var Bonfur = {
                 stageName: "discardCardFromBoard",
                 drawName: "Bonfur",
                 name: "BonfurAction",
-                suit: "blacksmith" /* BLACKSMITH */,
+                suit: SuitNames.BLACKSMITH,
             },
         },
         {
             actionName: "DiscardCardsFromPlayerBoardAction",
             config: {
-                suit: "blacksmith" /* BLACKSMITH */,
+                suit: SuitNames.BLACKSMITH,
             },
         },
         {
@@ -475,14 +468,14 @@ var Dagda = {
     name: "Dagda",
     description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 3 \u0448\u0435\u0432\u0440\u043E\u043D\u0430\u043C\u0438. \u041F\u0440\u0438\u0437\u0432\u0430\u0432 \u0414\u0430\u0433\u0434\u0443, \u0441\u0440\u0430\u0437\u0443 \u0436\u0435 \u043F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u0435 \u0435\u0451 \u043A\u0430\u0440\u0442\u0443 \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0443 \u043E\u0445\u043E\u0442\u043D\u0438\u043A\u043E\u0432 \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u0432 \n    \u0441\u0431\u0440\u043E\u0441 \u043F\u043E \u043E\u0434\u043D\u043E\u0439 \u043D\u0438\u0436\u043D\u0435\u0439 \u043A\u0430\u0440\u0442\u0435 \u0434\u0432\u043E\u0440\u0444\u043E\u0432 (\u043D\u0435 \u0433\u0435\u0440\u043E\u0435\u0432) \u0438\u0437 \u0434\u0432\u0443\u0445 \u0434\u0440\u0443\u0433\u0438\u0445 \u043A\u043E\u043B\u043E\u043D\u043E\u043A \u0441\u0432\u043E\u0435\u0439 \u0430\u0440\u043C\u0438\u0438 \u043F\u043E \u0441\u0432\u043E\u0435\u043C\u0443 \u0432\u044B\u0431\u043E\u0440\u0443.",
     game: "base",
-    suit: "hunter" /* HUNTER */,
+    suit: SuitNames.HUNTER,
     rank: 3,
     points: null,
     stack: [
         {
             actionName: "CheckDiscardCardsFromPlayerBoardAction",
             config: {
-                suit: "hunter" /* HUNTER */,
+                suit: SuitNames.HUNTER,
                 number: 2,
             },
         },
@@ -492,7 +485,7 @@ var Dagda = {
                 stageName: "discardCardFromBoard",
                 drawName: "Dagda",
                 name: "DagdaAction",
-                suit: "hunter" /* HUNTER */,
+                suit: SuitNames.HUNTER,
                 number: 2,
             },
         },
@@ -663,7 +656,7 @@ var Hourya = {
     name: "Hourya",
     description: "\u041E\u0431\u043B\u0430\u0434\u0430\u0435\u0442 1 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u043C. \u041F\u0440\u0438\u0431\u0430\u0432\u044C\u0442\u0435 20 \u043E\u0447\u043A\u043E\u0432 \u043A \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044E \u0445\u0440\u0430\u0431\u0440\u043E\u0441\u0442\u0438 \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432. \u0427\u0442\u043E\u0431\u044B \u043F\u0440\u0438\u0437\u0432\u0430\u0442\u044C \u0425\u0443\u0440\u0438\u044E, \n    \u0438\u0433\u0440\u043E\u043A \u0434\u043E\u043B\u0436\u0435\u043D \u0438\u043C\u0435\u0442\u044C \u0432 \u0441\u0432\u043E\u0435\u0439 \u0430\u0440\u043C\u0438\u0438 \u043A\u0430\u043A \u043C\u0438\u043D\u0438\u043C\u0443\u043C 5 \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432 \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0435 \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432. \u0412\u0430\u0436\u043D\u043E: \u0435\u0441\u043B\u0438 \u0422\u0440\u0443\u0434 \u0438/\u0438\u043B\u0438 \u0418\u043B\u0443\u0434 \n    \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u044B \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0435 \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432, \u0442\u043E \u0438\u0445 \u0448\u0435\u0432\u0440\u043E\u043D\u044B \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u044E\u0442\u0441\u044F \u0434\u043B\u044F \u043F\u0440\u0438\u0437\u044B\u0432\u0430 \u0425\u0443\u0440\u0438\u0438",
     game: "base",
-    suit: "explorer" /* EXPLORER */,
+    suit: SuitNames.EXPLORER,
     rank: 1,
     points: 20,
     stack: [
@@ -672,7 +665,7 @@ var Hourya = {
             config: {
                 conditions: {
                     suitCountMin: {
-                        suit: "explorer" /* EXPLORER */,
+                        suit: SuitNames.EXPLORER,
                         value: 5,
                     },
                 },
@@ -700,7 +693,7 @@ var Aegur = {
     name: "Aegur",
     description: "Обладает 2 шевронами.",
     game: "base",
-    suit: "blacksmith" /* BLACKSMITH */,
+    suit: SuitNames.BLACKSMITH,
     rank: 2,
     points: null,
     stack: [
@@ -726,7 +719,7 @@ var Aral = {
     name: "Aral",
     description: "Обладает 2 шевронами.",
     game: "base",
-    suit: "hunter" /* HUNTER */,
+    suit: SuitNames.HUNTER,
     rank: 2,
     points: null,
     stack: [
@@ -885,27 +878,27 @@ var Olwin = {
             actionName: "DrawProfitAction",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith" /* BLACKSMITH */,
+                    suit: SuitNames.BLACKSMITH,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter" /* HUNTER */,
+                    suit: SuitNames.HUNTER,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer" /* EXPLORER */,
+                    suit: SuitNames.EXPLORER,
                     rank: 1,
                     points: 0,
                 },
                 warrior: {
-                    suit: "warrior" /* WARRIOR */,
+                    suit: SuitNames.WARRIOR,
                     rank: 1,
                     points: 0,
                 },
                 miner: {
-                    suit: "miner" /* MINER */,
+                    suit: SuitNames.MINER,
                     rank: 1,
                     points: 0,
                 },
@@ -921,27 +914,27 @@ var Olwin = {
             actionName: "PlaceCards",
             variants: {
                 blacksmith: {
-                    suit: "blacksmith" /* BLACKSMITH */,
+                    suit: SuitNames.BLACKSMITH,
                     rank: 1,
                     points: null,
                 },
                 hunter: {
-                    suit: "hunter" /* HUNTER */,
+                    suit: SuitNames.HUNTER,
                     rank: 1,
                     points: null,
                 },
                 explorer: {
-                    suit: "explorer" /* EXPLORER */,
+                    suit: SuitNames.EXPLORER,
                     rank: 1,
                     points: 0,
                 },
                 warrior: {
-                    suit: "warrior" /* WARRIOR */,
+                    suit: SuitNames.WARRIOR,
                     rank: 1,
                     points: 0,
                 },
                 miner: {
-                    suit: "miner" /* MINER */,
+                    suit: SuitNames.MINER,
                     rank: 1,
                     points: 0,
                 },

@@ -11,8 +11,8 @@ import {INumberValues} from "./data/SuitData";
  */
 export interface ICoin {
     value: number,
-    isInitial?: boolean,
-    isTriggerTrading?: boolean,
+    isInitial: boolean,
+    isTriggerTrading: boolean,
 }
 
 /**
@@ -87,11 +87,15 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
                            options: IBuildCoinsOptions): ICoin[] => {
     const coins: ICoin[] = [];
     for (let i: number = 0; i < coinConfig.length; i++) {
-        const config = coinConfig[i],
+        const config: IMarketCoinConfig | IInitialTradingCoinConfig = coinConfig[i],
             count: number = options.players !== undefined && !isInitialPlayerCoinsConfigNotMarket(config) ?
                 config.count()[options.players] : 1;
         if (options.players !== undefined && options.count !== undefined) {
-            options.count.push({value: config.value});
+            options.count.push({
+                value: config.value,
+                isInitial: false,
+                isTriggerTrading: false,
+            });
         }
         for (let c: number = 0; c < count; c++) {
             coins.push(CreateCoin({
@@ -190,7 +194,8 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
         upgradingCoin = tradingCoins[coinMaxIndex];
     }
     AddActionsToStack(G, ctx, stack);
-    StartActionFromStackOrEndActions(G, ctx, false, upgradingCoinId, "board", upgradingCoin.isInitial!);
+    StartActionFromStackOrEndActions(G, ctx, false, upgradingCoinId, "board",
+        upgradingCoin.isInitial);
 };
 
 /**
@@ -211,7 +216,7 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
 export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgradingCoinId: number, type: string,
                             isInitial: boolean): void => {
     // todo Split into different functions!
-    let upgradingCoin: {} = {},
+    let upgradingCoin: {} | ICoin = {},
         coin: ICoin | null | undefined;
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin) {
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin;
@@ -234,11 +239,11 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                     .map((coin: ICoin | null): number => coin!.value)),
                 upgradingCoinInitial: ICoin | null | undefined = allCoins
                     .find((coin: ICoin | null): boolean | undefined => coin!.value === minCoinValue && coin!.isInitial);
-            if (upgradingCoinInitial) {
+            if (upgradingCoinInitial !== null && upgradingCoinInitial !== undefined) {
                 upgradingCoin = upgradingCoinInitial;
             } else {
                 coin = allCoins.find((coin: ICoin | null): boolean => coin!.value === minCoinValue && !coin!.isInitial);
-                if (coin) {
+                if (coin !== null && coin !== undefined) {
                     upgradingCoin = coin;
                 }
             }
@@ -250,7 +255,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                 .map((coin: ICoin | null): number => coin!.value));
             coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                 .find((coin: ICoin | null): boolean => coin?.value === minCoinValue);
-            if (coin) {
+            if (coin !== null && coin !== undefined) {
                 upgradingCoin = coin;
                 upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                     .findIndex((coin: ICoin | null): boolean => isCoin(upgradingCoin) && coin?.value ===
@@ -262,7 +267,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
             .filter((coin: ICoin | null, index: number): boolean => coin === null && index <= upgradingCoinId).length;
         coin = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .filter((coin: ICoin | null): boolean => coin !== null)[handCoinPosition - 1];
-        if (coin) {
+        if (coin !== null && coin !== undefined) {
             upgradingCoin = coin;
             upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
                 .findIndex((coin: ICoin | null): boolean =>
@@ -270,7 +275,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
         }
     } else {
         coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId];
-        if (coin) {
+        if (coin !== null && coin !== undefined) {
             upgradingCoin = coin;
         }
     }
@@ -315,15 +320,15 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
             } else {
                 G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = null;
             }
-            if ((ctx.activePlayers && ctx.activePlayers[Number(ctx.currentPlayer)]) === "placeTradingCoinsUline") {
+            if ((ctx.activePlayers !== null
+                && ctx.activePlayers[Number(ctx.currentPlayer)]) === "placeTradingCoinsUline") {
                 const emptyCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.indexOf(null);
                 G.publicPlayers[Number(ctx.currentPlayer)].handCoins[emptyCoinIndex] = upgradedCoin;
             } else {
                 if (handCoinIndex === -1) {
                     G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = upgradedCoin;
                     AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась 
-                    на поле игрока 
-                ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
+                    на поле игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
                 } else {
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinIndex] = upgradedCoin;
                     AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась 

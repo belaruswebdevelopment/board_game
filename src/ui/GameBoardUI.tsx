@@ -67,7 +67,7 @@ export const DrawCurrentPlayerTurn = (data: GameBoard): JSX.Element => (
  */
 export const DrawWinner = (data: GameBoard): JSX.Element => {
     let winner: string;
-    if (data.props.ctx.gameover) {
+    if (data.props.ctx.gameover !== undefined) {
         if (data.props.G.winner !== undefined) {
             if (data.props.G.winner.length === 1) {
                 winner = `Winner: Player ${data.props.G.publicPlayers[data.props.G.winner[0]].nickname}`;
@@ -435,10 +435,10 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                         && data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j] === null) {
                         handCoinIndex++;
                         isInitial = handCoins[handCoinIndex].isInitial;
-                        const handCoinId = data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins
+                        const handCoinId: number = data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins
                             .findIndex((coin: ICoin | null): boolean =>
-                                (coin && coin.value) === handCoins[handCoinIndex].value
-                                && (coin && coin.isInitial) === handCoins[handCoinIndex].isInitial);
+                                coin?.value === handCoins[handCoinIndex].value
+                                && coin?.isInitial === handCoins[handCoinIndex].isInitial);
                         if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[handCoinId]
                             && !data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[handCoinId]
                                 .isTriggerTrading) {

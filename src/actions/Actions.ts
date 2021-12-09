@@ -207,8 +207,8 @@ const AddBuffToPlayer = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
         G.publicPlayers[Number(ctx.currentPlayer)].buffs[config.buff.name] = config.buff.value;
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
         получил баф '${config.buff.name}'.`);
+        EndActionFromStackAndAddNew(G, ctx);
     }
-    EndActionFromStackAndAddNew(G, ctx);
 };
 
 /**
@@ -230,35 +230,32 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
     const pickedCard: PlayerCardsType =
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-    if (pickedCard) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
         отправил в сброс карту ${pickedCard.name}.`);
-        G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-            .splice(cardId, 1)[0] as DeckCardTypes);
-        if (G.actionsNum === 2) {
-            const stack: IStack[] = [
-                {
-                    actionName: "DrawProfitAction",
-                    config: {
-                        stageName: "discardCardFromBoard",
-                        drawName: "Dagda",
-                        name: "DagdaAction",
-                        suit: SuitNames.HUNTER,
-                    },
+    G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+        .splice(cardId, 1)[0] as DeckCardTypes);
+    if (G.actionsNum === 2) {
+        const stack: IStack[] = [
+            {
+                actionName: "DrawProfitAction",
+                config: {
+                    stageName: "discardCardFromBoard",
+                    drawName: "Dagda",
+                    name: "DagdaAction",
+                    suit: SuitNames.HUNTER,
                 },
-                {
-                    actionName: "DiscardCardsFromPlayerBoardAction",
-                    config: {
-                        suit: SuitNames.HUNTER,
-                    },
+            },
+            {
+                actionName: "DiscardCardsFromPlayerBoardAction",
+                config: {
+                    suit: SuitNames.HUNTER,
                 },
-            ];
-            AddActionsToStackAfterCurrent(G, ctx, stack);
-        }
-        EndActionFromStackAndAddNew(G, ctx);
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
     }
+    EndActionFromStackAndAddNew(G, ctx);
 };
-
 /**
  * <h3>Сбрасывает карту из таверны по выбору игрока.</h3>
  * <p>Применения:</p>
@@ -446,7 +443,9 @@ const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: numb
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
     const suitId: number = GetSuitIndexByName((pickedCard as ICard).suit);
-    EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    if (suitId !== -1) {
+        EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    }
 };
 
 /**

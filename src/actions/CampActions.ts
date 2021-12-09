@@ -66,7 +66,7 @@ export const AddCampCardToCards = (G: MyGameState, ctx: Ctx, config: IConfig, ca
         stack: IStack[] = [];
     G.camp[cardId] = null;
     if (campCard !== null) {
-        if (isArtefactCard(campCard)) {
+        if (isArtefactCard(campCard) && campCard.suit !== null) {
             AddCampCardToPlayerCards(G, ctx, campCard);
             CheckAndMoveThrudOrPickHeroAction(G, ctx, campCard);
             suitId = GetSuitIndexByName(campCard.suit);

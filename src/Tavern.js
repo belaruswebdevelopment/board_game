@@ -1,5 +1,5 @@
 import { DiscardCardFromTavern } from "./Card";
-import { AddDataToLog } from "./Logging";
+import { AddDataToLog, LogTypes } from "./Logging";
 /**
  * <h3>Конфиг таверн.</h3>
  * <p>Применения:</p>
@@ -42,16 +42,13 @@ export var CheckIfCurrentTavernEmpty = function (G, ctx) {
             if (isCardDiscarded) {
                 isCurrentTavernEmpty = true;
             }
-            else {
-                AddDataToLog(G, "error" /* ERROR */, "ОШИБКА: Не удалось сбросить лишнюю карту из таверны.");
-            }
         }
     }
     else {
         isCurrentTavernEmpty = G.taverns[G.currentTavern].every(function (card) { return card === null; });
     }
     if (isCurrentTavernEmpty) {
-        AddDataToLog(G, "game" /* GAME */, "\u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[G.currentTavern].name, " \u043F\u0443\u0441\u0442\u0430\u044F."));
+        AddDataToLog(G, LogTypes.GAME, "\u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[G.currentTavern].name, " \u043F\u0443\u0441\u0442\u0430\u044F."));
     }
     return isCurrentTavernEmpty;
 };
@@ -71,11 +68,11 @@ export var RefillTaverns = function (G) {
         var refillDeck = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
         if (refillDeck.length !== G.drawSize) {
             G.taverns[i] = refillDeck;
-            AddDataToLog(G, "game" /* GAME */, "\u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[i].name, " \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438."));
+            AddDataToLog(G, LogTypes.GAME, "\u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[i].name, " \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438."));
         }
         else {
-            AddDataToLog(G, "error" /* ERROR */, "\u041E\u0428\u0418\u0411\u041A\u0410: \u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[i].name, " \u043D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u043D\u043E\u0432\u044B\u043C\u0438 \n            \u043A\u0430\u0440\u0442\u0430\u043C\u0438 \u0438\u0437-\u0437\u0430 \u0438\u0445 \u043D\u0435\u0445\u0432\u0430\u0442\u043A\u0438 \u0432 \u043A\u043E\u043B\u043E\u0434\u0435."));
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[i].name, " \u043D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u043D\u043E\u0432\u044B\u043C\u0438 \n            \u043A\u0430\u0440\u0442\u0430\u043C\u0438 \u0438\u0437-\u0437\u0430 \u0438\u0445 \u043D\u0435\u0445\u0432\u0430\u0442\u043A\u0438 \u0432 \u043A\u043E\u043B\u043E\u0434\u0435."));
         }
     }
-    AddDataToLog(G, "game" /* GAME */, "Все таверны заполнены новыми картами.");
+    AddDataToLog(G, LogTypes.GAME, "Все таверны заполнены новыми картами.");
 };

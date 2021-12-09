@@ -4,6 +4,7 @@ import {MyGameState} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {IConfig} from "./Player";
 import {ICoin} from "./Coin";
+import {AddDataToLog, LogTypes} from "./Logging";
 
 /**
  * <h3>Интерфейс для параметров валидатора мувов.</h3>
@@ -225,8 +226,10 @@ export const moveValidators: IMoveValidators = {
             if (id !== undefined) {
                 return G.publicPlayers[Number(ctx!.currentPlayer)].selectedCoin === undefined
                     && G.publicPlayers[Number(ctx!.currentPlayer)].handCoins[id] !== null;
+            } else {
+                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
+                return false;
             }
-            return false;
         }
     },
     ClickBoardCoin: {
@@ -236,8 +239,10 @@ export const moveValidators: IMoveValidators = {
             if (id !== undefined) {
                 return G.publicPlayers[Number(ctx!.currentPlayer)].selectedCoin !== undefined
                     && G.publicPlayers[Number(ctx!.currentPlayer)].boardCoins[id] === null;
+            } else {
+                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
+                return false;
             }
-            return false;
         }
     },
     BotsPlaceAllCoins: {
@@ -245,8 +250,10 @@ export const moveValidators: IMoveValidators = {
         getValue: ({G, id}: IMoveValidatorParams): number[] => {
             if (id !== undefined) {
                 return G.botData.allCoinsOrder[id];
+            } else {
+                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
+                return [];
             }
-            return [];
         },
         validate: (): boolean => true,
     },
@@ -258,15 +265,17 @@ export const moveValidators: IMoveValidators = {
                 // todo Add validators to others heroes
                 if (G.heroes[id].name === "Hourya") {
                     const config: IConfig | undefined = G.heroes[id].stack[0].config;
-                    if (config !== undefined && config.conditions !== undefined) {
+                    if (config?.conditions !== undefined) {
                         const suitId: number = GetSuitIndexByName(config.conditions.suitCountMin.suit);
                         isValid = G.publicPlayers[Number(ctx!.currentPlayer)].cards[suitId].reduce(TotalRank, 0) >=
                             config.conditions.suitCountMin.value;
                     }
                 }
                 return isValid;
+            } else {
+                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
+                return false;
             }
-            return false;
         },
     },
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
@@ -276,8 +285,11 @@ export const moveValidators: IMoveValidators = {
         validate: ({G, ctx, id, type}: IMoveValidatorParams): boolean => {
             if (id !== undefined && type !== undefined) {
                 return CoinUpgradeValidation(G, ctx!, id, type);
+            } else {
+                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр id или не передан 
+                обязательный параметр type.`);
+                return false;
             }
-            return false;
         }
     },
     ClickCardToPickDistinction: {

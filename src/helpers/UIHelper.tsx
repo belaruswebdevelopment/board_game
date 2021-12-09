@@ -266,7 +266,7 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
         default:
             action = null;
     }
-    if (suit) {
+    if (suit !== null && suit !== undefined) {
         tdClasses = suitsConfig[suit].suitColor;
     }
     if (card.type === "герой" && "game" in card) {
@@ -289,14 +289,14 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
             tdClasses = "bg-yellow-200";
         }
     } else {
-        if ("suit" in card && "points" in card) {
-            if (typeof card.points === "number") {
-                styles = Styles.Cards(card.suit, card.points, card.name);
-            }
+        if ("suit" in card && "points" in card && card.suit !== null) {
+            styles = Styles.Cards(card.suit, card.name, card.points);
+        } else {
+            styles = Styles.Cards(null, card.name, null);
         }
         spanClasses = "bg-card";
     }
-    if (action) {
+    if (action !== null) {
         tdClasses += " cursor-pointer";
     }
     let description: string = "",
@@ -375,27 +375,27 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
         default:
             action = null;
     }
-    if (action) {
+    if (action !== null) {
         tdClasses += " cursor-pointer";
     }
     if (type === "market") {
         styles = Styles.Coin(coin.value, false);
         spanClasses = "bg-market-coin";
-        if (coinClasses) {
+        if (coinClasses !== null && coinClasses !== undefined) {
             span = (<span className={coinClasses}>
                 {additionalParam}
             </span>);
         }
     } else {
         spanClasses = "bg-coin";
-        if (coinClasses) {
+        if (coinClasses !== null && coinClasses !== undefined) {
             spanClasses += ` ${coinClasses}`;
         }
         if (type === "coin") {
             if (coin === undefined) {
                 styles = Styles.CoinBack();
             } else {
-                if (typeof coin.isInitial !== "undefined") {
+                if (coin.isInitial !== undefined) {
                     styles = Styles.Coin(coin.value, coin.isInitial);
                 }
             }
@@ -406,10 +406,10 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
 
                 </span>);
             } else if (type === "back-tavern-icon") {
-                if (typeof additionalParam === "number") {
+                if (additionalParam !== null && additionalParam !== undefined) {
                     span = (<span style={Styles.Taverns(additionalParam)} className="bg-tavern-icon">
 
-                    </span>)
+                    </span>);
                 }
             }
         }
