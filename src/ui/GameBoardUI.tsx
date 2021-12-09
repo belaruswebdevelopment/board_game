@@ -9,7 +9,8 @@ import {
     DrawCard,
     DrawCoin,
     DrawPlayerBoardForCardDiscard,
-    DrawPlayersBoardForSuitCardDiscard
+    DrawPlayersBoardForSuitCardDiscard,
+    IDrawBoardOptions
 } from "../helpers/UIHelper";
 import {TotalRank} from "../helpers/ScoreHelpers";
 import {GameBoard} from "../GameBoard";
@@ -101,8 +102,7 @@ export const DrawWinner = (data: GameBoard): JSX.Element => {
  */
 export const DrawMarketCoins = (data: GameBoard): JSX.Element => {
     const boardRows: JSX.Element[][] = [],
-        drawData: { boardCols: number, lastBoardCol: number, boardRows: number } =
-            DrawBoard(data.props.G.marketCoinsUnique.length),
+        drawData: IDrawBoardOptions = DrawBoard(data.props.G.marketCoinsUnique.length),
         countMarketCoins: INumberValues = CountMarketCoins(data.props.G);
     for (let i: number = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
@@ -150,8 +150,7 @@ export const DrawMarketCoins = (data: GameBoard): JSX.Element => {
  */
 export const DrawHeroes = (data: GameBoard): JSX.Element => {
     const boardRows: JSX.Element[][] = [],
-        drawData: { boardCols: number, lastBoardCol: number, boardRows: number } =
-            DrawBoard(data.props.G.heroes.length);
+        drawData: IDrawBoardOptions = DrawBoard(data.props.G.heroes.length);
     for (let i: number = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
         boardRows[i] = [];
@@ -244,8 +243,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
             > 1 ? "s" : ""} to ${data.props.G.actionsNum > 1 ? "different" : "that"} suit.`;
             for (let j: number = 0; j < data.props.G.suitsNum; j++) {
                 const suit: string = Object.keys(suitsConfig)[j];
-                if (suit !== (data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard
-                    && data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.suit)) {
+                if (suit !== data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard?.suit) {
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
                             key={`Place 
@@ -254,8 +252,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                             onClick={() => data.OnClickSuitToPlaceCard(j)}>
                             <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
                                 <b>{data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].variants[suit]
-                                    .points !== null ? data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0]
-                                    .variants[suit].points : ""}</b>
+                                    .points ?? ""}</b>
                             </span>
                         </td>
                     );

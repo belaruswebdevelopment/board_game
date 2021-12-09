@@ -152,7 +152,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 handCoins: (ICoin | null)[] = G.publicPlayers[Number(ctx.currentPlayer)].handCoins;
             for (let i: number = 0; i < allCoinsOrder.length; i++) {
                 const hasTrading: boolean =
-                    allCoinsOrder[i].some((coinId: number): boolean => Boolean(handCoins[coinId]?.isTriggerTrading));
+                    allCoinsOrder[i].some((coinId: number): boolean =>
+                        Boolean(handCoins[coinId]?.isTriggerTrading));
                 if (tradingProfit < 0) {
                     if (hasTrading) {
                         continue;
@@ -172,7 +173,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                         if (hasPositionForMaxCoin) {
                             isTopCoinsOnPosition =
                                 allCoinsOrder[i].filter((coinIndex: number): boolean =>
-                                    handCoins[coinIndex] !== null && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
+                                    handCoins[coinIndex] !== null
+                                    && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
                         }
                         if (hasPositionForMinCoin) {
                             isMinCoinsOnPosition =
@@ -267,8 +269,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     if (card !== null && "stack" in card) {
                         const suit: string = Object.keys(suitsConfig)[j],
                             stack: IStack = card.stack[0];
-                        if (stack && stack.variants) {
-                            if (suit === stack.variants[suit].suit) {
+                        if (stack.variants !== undefined) {
+                            if (suit === stack.variants[suit]?.suit) {
                                 botMoveArguments.push([j]);
                             }
                         }
@@ -322,18 +324,14 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         }
         if (activeStageOfCurrentPlayer === "upgradeCoinVidofnirVedrfolnir") {
             const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-            if (config) {
-                let type: string = "board",
-                    isInitial: boolean = false;
+            if (config !== undefined) {
+                let type: string = "board";
                 for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
                      j++) {
                     const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
                     if (coin !== null) {
                         if (!coin.isTriggerTrading && config.coinId !== j) {
-                            if (coin.isInitial !== undefined) {
-                                isInitial = coin.isInitial;
-                            }
-                            botMoveArguments.push([j, type, isInitial]);
+                            botMoveArguments.push([j, type, coin.isInitial]);
                         }
                     }
                 }
@@ -372,7 +370,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 moves.push({
                     move: "DiscardSuitCardFromPlayerBoard",
                     args: [suitId, G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-                        .findIndex((card: PlayerCardsType): boolean => card.type !== "герой" && card.points === minValue)],
+                        .findIndex((card: PlayerCardsType): boolean =>
+                            card.type !== "герой" && card.points === minValue)],
                 });
             }
         }
@@ -613,7 +612,7 @@ export const iterations = (G: MyGameState, ctx: Ctx): number => {
         const cardIndex: number = currentTavern.findIndex((card: DeckCardTypes | null): boolean => card !== null),
             tavernCard: DeckCardTypes | null = currentTavern[cardIndex];
         if (currentTavern.every((card: DeckCardTypes | null): boolean =>
-            (card === null) || (isCardNotAction(card) && tavernCard !== null && isCardNotAction(tavernCard)
+            card === null || (isCardNotAction(card) && tavernCard !== null && isCardNotAction(tavernCard)
                 && card.suit === tavernCard.suit && CompareCards(card, tavernCard) === 0))) {
             return 1;
         }
@@ -630,9 +629,9 @@ export const iterations = (G: MyGameState, ctx: Ctx): number => {
             if (G.decks[0].length > 18) {
                 if (tavernCard && isCardNotAction(tavernCard)) {
                     const curSuit: number = GetSuitIndexByName(tavernCard.suit);
-                    if ((CompareCards(tavernCard, G.averageCards[curSuit]) === -1)
-                        && currentTavern.some((card: DeckCardTypes | null): boolean => (card !== null)
-                            && (CompareCards(card, G.averageCards[curSuit]) > -1))) {
+                    if (CompareCards(tavernCard, G.averageCards[curSuit]) === -1
+                        && currentTavern.some((card: DeckCardTypes | null): boolean => card !== null
+                            && CompareCards(card, G.averageCards[curSuit]) > -1)) {
                         continue;
                     }
                 }

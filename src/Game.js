@@ -149,10 +149,11 @@ export var BoardGame = {
                 ClickCampCard: ClickCampCard,
             },
             onBegin: function (G, ctx) {
-                var _a;
                 G.currentTavern++;
-                var _b = ResolveBoardCoins(G, ctx), playersOrder = _b.playersOrder, exchangeOrder = _b.exchangeOrder;
-                _a = [playersOrder, exchangeOrder], G.publicPlayersOrder = _a[0], G.exchangeOrder = _a[1];
+                var _a = ResolveBoardCoins(G, ctx), playersOrder = _a.playersOrder, exchangeOrder = _a.exchangeOrder;
+                // [G.publicPlayersOrder, G.exchangeOrder]: number[] = [playersOrder, exchangeOrder];
+                G.publicPlayersOrder = playersOrder;
+                G.exchangeOrder = exchangeOrder;
             },
             onEnd: function (G) {
                 ChangePlayersPriorities(G);
@@ -389,7 +390,9 @@ export var BoardGame = {
             },
             onBegin: function (G, ctx) {
                 CheckDistinction(G, ctx);
-                var distinctions = G.distinctions.filter(function (distinction) { return distinction !== undefined; });
+                var distinctions = G.distinctions.filter(function (distinction) {
+                    return distinction !== null && distinction !== undefined;
+                });
                 if (distinctions.every(function (distinction) {
                     return distinction !== null && distinction !== undefined;
                 })) {

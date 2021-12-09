@@ -66,7 +66,7 @@ export var CheckIfCurrentTavernEmpty = function (G, ctx) {
 export var RefillTaverns = function (G) {
     for (var i = 0; i < G.tavernsNum; i++) {
         var refillDeck = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
-        if (refillDeck.length !== G.drawSize) {
+        if (refillDeck.length === G.drawSize) {
             G.taverns[i] = refillDeck;
             AddDataToLog(G, LogTypes.GAME, "\u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[i].name, " \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438."));
         }

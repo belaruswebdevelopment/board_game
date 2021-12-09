@@ -13,7 +13,7 @@ import {IActionCardConfig} from "./data/ActionCardData";
 export interface ICard {
     type: string,
     suit: string,
-    rank: null | number,
+    rank: number,
     points: null | number,
     name: string,
     game: string,
@@ -27,7 +27,7 @@ export interface ICard {
 export interface ICreateCard {
     type?: string,
     suit: string,
-    rank: null | number,
+    rank: number,
     points: null | number,
     name?: string,
     game?: string,
@@ -186,7 +186,7 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
             const rank: number | number[] = deckConfig.suits[suit].ranksValues()[data.players][data.tier];
             cards.push(CreateCard({
                 suit: deckConfig.suits[suit].suit,
-                rank: Array.isArray(rank) ? rank[j] : null,
+                rank: Array.isArray(rank) ? rank[j] : 1,
                 points: Array.isArray(points) ? points[j] : null,
                 name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 
                 ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + ")" : "нет)"}`,
@@ -227,7 +227,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
         rank: number | number[] = suitConfig.ranksValues()[data.players][data.tier],
         points: number | number[] = suitConfig.pointsValues()[data.players][data.tier];
     let count: number = Array.isArray(points) ? points.length : points;
-    if (avgCard.rank !== null && avgCard.points !== null) {
+    if (avgCard.points !== null) {
         for (let i: number = 0; i < count; i++) {
             avgCard.rank += Array.isArray(rank) ? rank[i] : 1;
             avgCard.points += Array.isArray(points) ? points[i] : 1;

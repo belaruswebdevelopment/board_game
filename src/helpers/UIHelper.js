@@ -11,7 +11,7 @@ import { Styles } from "../data/StyleData";
  * </ol>
  *
  * @param {number} objectsSize Данные для вычисления параметров отрисовки сегмента игрового поля.
- * @returns {{boardCols: number, lastBoardCol: number, boardRows: number}} Параметры для отрисовки сегмента игрового поля.
+ * @returns {IDrawBoardOptions} Параметры для отрисовки сегмента игрового поля.
  * @constructor
  */
 export var DrawBoard = function (objectsSize) {
@@ -456,5 +456,5 @@ export var DrawButton = function (data, boardCells, key, name, player, actionNam
         default:
             action = null;
     }
-    boardCells.push(_jsx("td", __assign({ className: "cursor-pointer", onClick: function () { return action && action.apply(void 0, args); } }, { children: _jsx("button", __assign({ className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" }, { children: name }), void 0) }), "".concat((player && player.nickname) ? "Player ".concat(player.nickname, " ") : "").concat(key)));
+    boardCells.push(_jsx("td", __assign({ className: "cursor-pointer", onClick: function () { return action && action.apply(void 0, args); } }, { children: _jsx("button", __assign({ className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" }, { children: name }), void 0) }), "".concat((player === null || player === void 0 ? void 0 : player.nickname) ? "Player ".concat(player.nickname, " ") : "").concat(key)));
 };

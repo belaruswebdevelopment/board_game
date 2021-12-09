@@ -173,7 +173,9 @@ export const BoardGame: Game<MyGameState> = {
                 G.currentTavern++;
                 const {playersOrder, exchangeOrder}: { playersOrder: number[], exchangeOrder: number[] } =
                     ResolveBoardCoins(G, ctx);
-                [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
+                // [G.publicPlayersOrder, G.exchangeOrder]: number[] = [playersOrder, exchangeOrder];
+                G.publicPlayersOrder = playersOrder;
+                G.exchangeOrder = exchangeOrder;
             },
             onEnd: (G: MyGameState): void => {
                 ChangePlayersPriorities(G);
@@ -405,7 +407,8 @@ export const BoardGame: Game<MyGameState> = {
             onBegin: (G: MyGameState, ctx: Ctx): void => {
                 CheckDistinction(G, ctx);
                 const distinctions: DistinctionTypes[] =
-                    G.distinctions.filter((distinction: DistinctionTypes): boolean => distinction !== undefined);
+                    G.distinctions.filter((distinction: DistinctionTypes): boolean =>
+                        distinction !== null && distinction !== undefined);
                 if (distinctions.every((distinction: DistinctionTypes): boolean =>
                     distinction !== null && distinction !== undefined)) {
                     G.publicPlayersOrder = distinctions as number[];

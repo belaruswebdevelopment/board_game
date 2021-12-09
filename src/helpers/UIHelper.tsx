@@ -9,6 +9,12 @@ import {IPublicPlayer} from "../Player";
 import {IHero} from "../Hero";
 import {CampDeckCardTypes, DeckCardTypes} from "../GameSetup";
 
+export interface IDrawBoardOptions {
+    boardCols: number,
+    lastBoardCol: number,
+    boardRows: number,
+}
+
 /**
  * h3>Отрисовка сегмента игрового поля по указанным данным.</h3>
  * <p>Применения:</p>
@@ -17,10 +23,10 @@ import {CampDeckCardTypes, DeckCardTypes} from "../GameSetup";
  * </ol>
  *
  * @param {number} objectsSize Данные для вычисления параметров отрисовки сегмента игрового поля.
- * @returns {{boardCols: number, lastBoardCol: number, boardRows: number}} Параметры для отрисовки сегмента игрового поля.
+ * @returns {IDrawBoardOptions} Параметры для отрисовки сегмента игрового поля.
  * @constructor
  */
-export const DrawBoard = (objectsSize: number): { boardCols: number, lastBoardCol: number, boardRows: number } => {
+export const DrawBoard = (objectsSize: number): IDrawBoardOptions => {
     const boardRows: number = Math.floor(Math.sqrt(objectsSize)),
         boardCols: number = Math.ceil(objectsSize / boardRows),
         lastBoardCol: number = objectsSize % boardCols;
@@ -458,7 +464,7 @@ export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: stri
             action = null;
     }
     boardCells.push(
-        <td key={`${(player && player.nickname) ? `Player ${player.nickname} ` : ""}${key}`}
+        <td key={`${player?.nickname ? `Player ${player.nickname} ` : ""}${key}`}
             className="cursor-pointer" onClick={() => action && action(...args)}>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 {name}

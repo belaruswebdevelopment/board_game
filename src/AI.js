@@ -19,6 +19,7 @@ import { TotalRank } from "./helpers/ScoreHelpers";
  * @returns {IMoves[]} Массив возможных мувов у ботов.
  */
 export var enumerate = function (G, ctx) {
+    var _a;
     //make false for standard bot
     var enableAdvancedBot = true, uniqueArr = [];
     var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(function (key) { return key.includes(advancedString); });
@@ -34,7 +35,7 @@ export var enumerate = function (G, ctx) {
             }
             if (stage.includes(activeStageOfCurrentPlayer)
                 && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
-                var moveName = moveBy[ctx.phase][stage], _a = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _a[0], maxValue = _a[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
+                var moveName = moveBy[ctx.phase][stage], _b = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _b[0], maxValue = _b[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
                 var argValue = void 0;
                 var argArray = void 0;
                 for (var id = minValue; id < maxValue; id++) {
@@ -122,7 +123,7 @@ export var enumerate = function (G, ctx) {
             });
         }
         var minResultForCoins = Math.min.apply(Math, resultsForCoins), maxResultForCoins = Math.max.apply(Math, resultsForCoins), tradingProfit = G.decks[G.decks.length - 1].length > 9 ? 1 : 0;
-        var _b = [-1, -1], positionForMinCoin = _b[0], positionForMaxCoin = _b[1];
+        var _c = [-1, -1], positionForMinCoin = _c[0], positionForMaxCoin = _c[1];
         if (minResultForCoins <= 0) {
             positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
         }
@@ -148,7 +149,8 @@ export var enumerate = function (G, ctx) {
                     if (hasPositionForMaxCoin) {
                         isTopCoinsOnPosition =
                             allCoinsOrder[i].filter(function (coinIndex) {
-                                return handCoins_1[coinIndex] !== null && handCoins_1[coinIndex].value > maxCoin_1.value;
+                                return handCoins_1[coinIndex] !== null
+                                    && handCoins_1[coinIndex].value > maxCoin_1.value;
                             }).length <= 1;
                     }
                     if (hasPositionForMinCoin) {
@@ -250,8 +252,8 @@ export var enumerate = function (G, ctx) {
                 var card = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
                 if (card !== null && "stack" in card) {
                     var suit = Object.keys(suitsConfig)[j], stack = card.stack[0];
-                    if (stack && stack.variants) {
-                        if (suit === stack.variants[suit].suit) {
+                    if (stack.variants !== undefined) {
+                        if (suit === ((_a = stack.variants[suit]) === null || _a === void 0 ? void 0 : _a.suit)) {
                             botMoveArguments.push([j]);
                         }
                     }
@@ -306,16 +308,13 @@ export var enumerate = function (G, ctx) {
     }
     if (activeStageOfCurrentPlayer === "upgradeCoinVidofnirVedrfolnir") {
         var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-        if (config) {
-            var type = "board", isInitial = false;
+        if (config !== undefined) {
+            var type = "board";
             for (var j = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
                 var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
                 if (coin !== null) {
                     if (!coin.isTriggerTrading && config.coinId !== j) {
-                        if (coin.isInitial !== undefined) {
-                            isInitial = coin.isInitial;
-                        }
-                        botMoveArguments.push([j, type, isInitial]);
+                        botMoveArguments.push([j, type, coin.isInitial]);
                     }
                 }
             }
@@ -353,7 +352,9 @@ export var enumerate = function (G, ctx) {
             moves.push({
                 move: "DiscardSuitCardFromPlayerBoard",
                 args: [suitId, G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-                        .findIndex(function (card) { return card.type !== "герой" && card.points === minValue_1; })],
+                        .findIndex(function (card) {
+                        return card.type !== "герой" && card.points === minValue_1;
+                    })],
             });
         }
     }
@@ -584,7 +585,7 @@ export var iterations = function (G, ctx) {
         }
         var cardIndex = currentTavern.findIndex(function (card) { return card !== null; }), tavernCard_1 = currentTavern[cardIndex];
         if (currentTavern.every(function (card) {
-            return (card === null) || (isCardNotAction(card) && tavernCard_1 !== null && isCardNotAction(tavernCard_1)
+            return card === null || (isCardNotAction(card) && tavernCard_1 !== null && isCardNotAction(tavernCard_1)
                 && card.suit === tavernCard_1.suit && CompareCards(card, tavernCard_1) === 0);
         })) {
             return 1;
@@ -603,9 +604,9 @@ export var iterations = function (G, ctx) {
             if (G.decks[0].length > 18) {
                 if (tavernCard_2 && isCardNotAction(tavernCard_2)) {
                     var curSuit_1 = GetSuitIndexByName(tavernCard_2.suit);
-                    if ((CompareCards(tavernCard_2, G.averageCards[curSuit_1]) === -1)
-                        && currentTavern.some(function (card) { return (card !== null)
-                            && (CompareCards(card, G.averageCards[curSuit_1]) > -1); })) {
+                    if (CompareCards(tavernCard_2, G.averageCards[curSuit_1]) === -1
+                        && currentTavern.some(function (card) { return card !== null
+                            && CompareCards(card, G.averageCards[curSuit_1]) > -1; })) {
                         return "continue";
                     }
                 }

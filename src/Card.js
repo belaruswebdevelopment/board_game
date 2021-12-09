@@ -99,7 +99,7 @@ export var BuildCards = function (deckConfig, data) {
             var rank = deckConfig.suits[suit].ranksValues()[data.players][data.tier];
             cards.push(CreateCard({
                 suit: deckConfig.suits[suit].suit,
-                rank: Array.isArray(rank) ? rank[j] : null,
+                rank: Array.isArray(rank) ? rank[j] : 1,
                 points: Array.isArray(points) ? points[j] : null,
                 name: "(\u0444\u0440\u0430\u043A\u0446\u0438\u044F: ".concat(suitsConfig[deckConfig.suits[suit].suit].suitName, ", \u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432: \n                ").concat(Array.isArray(rank) ? rank[j] : 1, ", \u043E\u0447\u043A\u043E\u0432: ").concat(Array.isArray(points) ? points[j] + ")" : "нет)"),
             }));
@@ -136,7 +136,7 @@ export var GetAverageSuitCard = function (suitConfig, data) {
         points: 0
     }), rank = suitConfig.ranksValues()[data.players][data.tier], points = suitConfig.pointsValues()[data.players][data.tier];
     var count = Array.isArray(points) ? points.length : points;
-    if (avgCard.rank !== null && avgCard.points !== null) {
+    if (avgCard.points !== null) {
         for (var i = 0; i < count; i++) {
             avgCard.rank += Array.isArray(rank) ? rank[i] : 1;
             avgCard.points += Array.isArray(points) ? points[i] : 1;

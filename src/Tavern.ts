@@ -85,7 +85,7 @@ export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => 
 export const RefillTaverns = (G: MyGameState): void => {
     for (let i: number = 0; i < G.tavernsNum; i++) {
         const refillDeck: DeckCardTypes[] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
-        if (refillDeck.length !== G.drawSize) {
+        if (refillDeck.length === G.drawSize) {
             G.taverns[i] = refillDeck;
             AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[i].name} заполнена новыми картами.`);
         } else {

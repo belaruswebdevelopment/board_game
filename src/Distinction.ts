@@ -22,7 +22,7 @@ export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
     for (const suit in suitsConfig) {
         const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[i] = result;
-        if (suit === SuitNames.EXPLORER && result === undefined) {
+        if (suit === SuitNames.EXPLORER && result === null) {
             const discardedCard: DeckCardTypes = G.decks[1].splice(0, 1)[0];
             AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков 
             сброшена карта: ${discardedCard.name}.`);
@@ -46,9 +46,9 @@ export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
  * @constructor
  */
 export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suitName: string): DistinctionTypes => {
-    const playersRanks: number[] = [];
+    const playersRanks: number[] = [],
+        suitIndex: number = GetSuitIndexByName(suitName);
     for (let i: number = 0; i < ctx.numPlayers; i++) {
-        const suitIndex: number = GetSuitIndexByName(suitName);
         playersRanks.push(G.publicPlayers[i].cards[suitIndex].reduce(TotalRank, 0));
     }
     const max: number = Math.max(...playersRanks),

@@ -66,12 +66,18 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: num
             // todo Check it
             if (coin !== null && prevCoin !== null) {
                 if (coin.value > prevCoin.value) {
-                    [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                    // [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                    let temp: number = playersOrder[j - 1];
+                    playersOrder[j - 1] = playersOrder[j];
+                    playersOrder[j] = temp;
                 } else if (coin.value === prevCoin.value) {
                     const priority: IPriority = G.publicPlayers[playersOrder[j]].priority,
                         prevPriority: IPriority = G.publicPlayers[playersOrder[j - 1]].priority;
                     if (priority.value > prevPriority.value) {
-                        [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                        // [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                        let temp: number = playersOrder[j - 1];
+                        playersOrder[j - 1] = playersOrder[j];
+                        playersOrder[j] = temp;
                     }
                 } else {
                     break;
@@ -103,7 +109,13 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: num
             tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
                     player.priority.value === minPriority),
                 1);
-            [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
+            tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
+                    player.priority.value === minPriority),
+                1);
+            // [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
+            let temp: number = exchangeOrder[minIndex];
+            exchangeOrder[minIndex] = exchangeOrder[maxIndex];
+            exchangeOrder[maxIndex] = temp;
         }
     }
     return {playersOrder, exchangeOrder};

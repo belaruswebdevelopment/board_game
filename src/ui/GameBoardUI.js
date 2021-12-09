@@ -159,6 +159,7 @@ export var DrawDistinctions = function (data) {
  * @constructor
  */
 export var DrawProfit = function (data, option) {
+    var _a, _b;
     var boardCells = [];
     var caption = "Get ";
     var _loop_2 = function (i) {
@@ -167,11 +168,9 @@ export var DrawProfit = function (data, option) {
                 > 1 ? "s" : "", " to ").concat(data.props.G.actionsNum > 1 ? "different" : "that", " suit.");
             var _loop_3 = function (j) {
                 var suit = Object.keys(suitsConfig)[j];
-                if (suit !== (data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard
-                    && data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.suit)) {
-                    boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToPlaceCard(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", { children: data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].variants[suit]
-                                    .points !== null ? data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0]
-                                    .variants[suit].points : "" }, void 0) }), void 0) }), "Place \n                            ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.drawName, " \n                            on ").concat(suitsConfig[suit].suitName)));
+                if (suit !== ((_a = data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard) === null || _a === void 0 ? void 0 : _a.suit)) {
+                    boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToPlaceCard(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", { children: (_b = data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].variants[suit]
+                                    .points) !== null && _b !== void 0 ? _b : "" }, void 0) }), void 0) }), "Place \n                            ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.drawName, " \n                            on ").concat(suitsConfig[suit].suitName)));
                 }
             };
             for (var j = 0; j < data.props.G.suitsNum; j++) {
