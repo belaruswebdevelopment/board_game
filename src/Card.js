@@ -259,9 +259,13 @@ export var PotentialScoring = function (_a) {
  * @constructor
  */
 export var EvaluateCard = function (G, ctx, compareCard, cardId, tavern) {
-    var suitId = GetSuitIndexByName(compareCard.suit);
-    if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
-        return CompareCards(compareCard, G.averageCards[suitId]);
+    // todo check it and fix -1
+    var suitId = -1;
+    if (compareCard !== null && "suit" in compareCard) {
+        suitId = GetSuitIndexByName(compareCard.suit);
+        if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
+            return CompareCards(compareCard, G.averageCards[suitId]);
+        }
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
         var temp = tavern.map(function (card) {

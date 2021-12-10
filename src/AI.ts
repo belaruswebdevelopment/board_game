@@ -1,4 +1,4 @@
-import {CompareCards, EvaluateCard, ICard, isCardNotAction} from "./Card";
+import {CompareCards, EvaluateCard, isCardNotAction} from "./Card";
 import {HasLowestPriority} from "./Priority";
 import {CheckHeuristicsForCoinsPlacement} from "./BotConfig";
 import {CurrentScoring} from "./Score";
@@ -33,7 +33,7 @@ interface IMoves {
 export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         //make false for standard bot
         const enableAdvancedBot: boolean = true,
-            uniqueArr: ICard[] = [];
+            uniqueArr: DeckCardTypes[] = [];
         let moves: IMoves[] = [],
             flag: boolean = true,
             advancedString: string = "advanced",
@@ -93,30 +93,29 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     if (tavern.some((card: TavernCardTypes): boolean => CompareCards(tavernCard, card) < 0)) {
                         continue;
                     }
-                    if ("suit" in tavernCard) {
-                        const isCurrentCardWorse: boolean =
-                                EvaluateCard(G, ctx, tavernCard, i, tavern) < 0,
-                            isExistCardNotWorse: boolean =
-                                tavern.some((card: TavernCardTypes): boolean => (card !== null) &&
-                                    (EvaluateCard(G, ctx, tavernCard, i, tavern) >= 0));
-                        if (isCurrentCardWorse && isExistCardNotWorse) {
-                            continue;
-                        }
-                        const uniqueArrLength: number = uniqueArr.length;
-                        for (let j: number = 0; j < uniqueArrLength; j++) {
-                            if (tavernCard.suit === uniqueArr[j].suit &&
-                                CompareCards(tavernCard, uniqueArr[j])
-                                === 0) {
-                                flag = false;
-                                break;
-                            }
-                        }
-                        if (flag) {
-                            uniqueArr.push(tavernCard);
-                            moves.push({move: "ClickCard", args: [i]});
-                        }
-                        flag = true;
+                    const isCurrentCardWorse: boolean =
+                            EvaluateCard(G, ctx, tavernCard, i, tavern) < 0,
+                        isExistCardNotWorse: boolean =
+                            tavern.some((card: TavernCardTypes): boolean => (card !== null) &&
+                                (EvaluateCard(G, ctx, tavernCard, i, tavern) >= 0));
+                    if (isCurrentCardWorse && isExistCardNotWorse) {
+                        continue;
                     }
+                    const uniqueArrLength: number = uniqueArr.length;
+                    for (let j: number = 0; j < uniqueArrLength; j++) {
+                        const uniqueCard: DeckCardTypes = uniqueArr[j];
+                        if (isCardNotAction(tavernCard) && isCardNotAction(uniqueCard)
+                            && tavernCard.suit === uniqueCard.suit
+                            && CompareCards(tavernCard, uniqueCard) === 0) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (flag) {
+                        uniqueArr.push(tavernCard);
+                        moves.push({move: "ClickCard", args: [i]});
+                    }
+                    flag = true;
                 }
             } else {
                 for (let j: number = 0; j < G.campNum; j++) {

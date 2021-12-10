@@ -355,11 +355,15 @@ export const PotentialScoring = ({
  * @returns {number} Сравнительное значение.
  * @constructor
  */
-export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: ICard, cardId: number,
+export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: TavernCardTypes, cardId: number,
                              tavern: TavernCardTypes[]): number => {
-    const suitId: number = GetSuitIndexByName(compareCard.suit);
-    if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
-        return CompareCards(compareCard, G.averageCards[suitId]);
+    // todo check it and fix -1
+    let suitId: number = -1;
+    if (compareCard !== null && "suit" in compareCard) {
+        suitId = GetSuitIndexByName(compareCard.suit);
+        if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
+            return CompareCards(compareCard, G.averageCards[suitId]);
+        }
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
         let temp: number[][] = tavern.map((card: TavernCardTypes): number[] =>
@@ -372,7 +376,6 @@ export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: ICard, cardI
     }
     return CompareCards(compareCard, G.averageCards[suitId]);
 };
-
 /**
  * <h3>Убирает карту из таверны в стопку сброса.</h3>
  * <p>Применения:</p>

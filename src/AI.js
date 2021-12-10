@@ -75,27 +75,26 @@ export var enumerate = function (G, ctx) {
                 if (tavern_1.some(function (card) { return CompareCards(tavernCard, card) < 0; })) {
                     return "continue";
                 }
-                if ("suit" in tavernCard) {
-                    var isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, i, tavern_1) < 0, isExistCardNotWorse = tavern_1.some(function (card) { return (card !== null) &&
-                        (EvaluateCard(G, ctx, tavernCard, i, tavern_1) >= 0); });
-                    if (isCurrentCardWorse && isExistCardNotWorse) {
-                        return "continue";
-                    }
-                    var uniqueArrLength = uniqueArr.length;
-                    for (var j = 0; j < uniqueArrLength; j++) {
-                        if (tavernCard.suit === uniqueArr[j].suit &&
-                            CompareCards(tavernCard, uniqueArr[j])
-                                === 0) {
-                            flag = false;
-                            break;
-                        }
-                    }
-                    if (flag) {
-                        uniqueArr.push(tavernCard);
-                        moves.push({ move: "ClickCard", args: [i] });
-                    }
-                    flag = true;
+                var isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, i, tavern_1) < 0, isExistCardNotWorse = tavern_1.some(function (card) { return (card !== null) &&
+                    (EvaluateCard(G, ctx, tavernCard, i, tavern_1) >= 0); });
+                if (isCurrentCardWorse && isExistCardNotWorse) {
+                    return "continue";
                 }
+                var uniqueArrLength = uniqueArr.length;
+                for (var j = 0; j < uniqueArrLength; j++) {
+                    var uniqueCard = uniqueArr[j];
+                    if (isCardNotAction(tavernCard) && isCardNotAction(uniqueCard)
+                        && tavernCard.suit === uniqueCard.suit
+                        && CompareCards(tavernCard, uniqueCard) === 0) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    uniqueArr.push(tavernCard);
+                    moves.push({ move: "ClickCard", args: [i] });
+                }
+                flag = true;
             };
             for (var i = 0; i < tavern_1.length; i++) {
                 _loop_1(i);
