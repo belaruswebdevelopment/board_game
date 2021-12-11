@@ -230,7 +230,7 @@ export const moveValidators: IMoveValidators = {
                 AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
                 return false;
             }
-        }
+        },
     },
     ClickBoardCoin: {
         getRange: ({G, ctx}: IMoveValidatorParams): [number, number] =>
@@ -243,7 +243,7 @@ export const moveValidators: IMoveValidators = {
                 AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
                 return false;
             }
-        }
+        },
     },
     BotsPlaceAllCoins: {
         getRange: ({G}: IMoveValidatorParams): [number, number] => ([0, G.botData.allCoinsOrder.length]),
@@ -290,7 +290,7 @@ export const moveValidators: IMoveValidators = {
                 обязательный параметр type.`);
                 return false;
             }
-        }
+        },
     },
     ClickCardToPickDistinction: {
         getRange: (): [number, number] => ([0, 3]),

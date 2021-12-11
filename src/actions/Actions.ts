@@ -30,6 +30,7 @@ import {AddDataToLog, LogTypes} from "../Logging";
 import {CampDeckCardTypes, DeckCardTypes, MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IVariants} from "../data/HeroData";
+import {StartActionStage} from "../helpers/ActionHelper";
 
 // todo Check my types
 /**
@@ -179,11 +180,7 @@ const UpgradeCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: A
 const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
     должен получить преимущества от действия '${config.drawName}'.`);
-    const playerConfig: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (playerConfig !== undefined && playerConfig.stageName !== undefined) {
-        AddDataToLog(G, LogTypes.GAME, `Начало фазы ${playerConfig.stageName}.`);
-        ctx.events!.setStage!(playerConfig.stageName);
-    }
+    StartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config);
     G.actionsNum = config.number ?? 1;
     if (config.name !== undefined) {
         G.drawProfit = config.name;

@@ -18,6 +18,7 @@ import {TotalRank} from "../helpers/ScoreHelpers";
 import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IConditions, IVariants} from "../data/HeroData";
+import {StartActionStage} from "../helpers/ActionHelper";
 
 /**
  * <h3>Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.</h3>
@@ -212,9 +213,5 @@ export const PickHeroWithConditions = (G: MyGameState, ctx: Ctx, config: IConfig
  * @constructor
  */
 export const PickHero = (G: MyGameState, ctx: Ctx): void => {
-    const playerConfig: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (playerConfig !== undefined) {
-        AddDataToLog(G, LogTypes.GAME, `Начало фазы ${playerConfig.stageName}.`);
-        ctx.events!.setStage!(playerConfig.stageName);
-    }
+    StartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config);
 };
