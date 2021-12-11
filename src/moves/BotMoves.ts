@@ -24,6 +24,8 @@ export const BotsPlaceAllCoins: Move<MyGameState> = (G: MyGameState, ctx: Ctx, c
             G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i] =
                 G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId];
             G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId] = null;
+        } else {
+            // todo LogTypes.ERROR ?
         }
     }
     const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers

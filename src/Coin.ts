@@ -215,6 +215,7 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
  */
 export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgradingCoinId: number, type: string,
                             isInitial: boolean): void => {
+    // todo add LogTypes.ERROR logging
     // todo Split into different functions!
     let upgradingCoin: {} | ICoin = {},
         coin: ICoin | null | undefined;

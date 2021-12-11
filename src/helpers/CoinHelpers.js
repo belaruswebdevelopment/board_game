@@ -1,5 +1,4 @@
 import { Trading } from "../Coin";
-// todo Add logging
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
@@ -45,23 +44,21 @@ export var ResolveBoardCoins = function (G, ctx) {
     var _a, _b;
     var playersOrder = [], coinValues = [], exchangeOrder = [];
     for (var i = 0; i < ctx.numPlayers; i++) {
-        if (G.publicPlayers[i].boardCoins[G.currentTavern]) {
-            var coin = G.publicPlayers[i].boardCoins[G.currentTavern];
-            // todo Check it
-            if (coin !== null) {
-                coinValues[i] = coin.value;
-            }
+        var coin = G.publicPlayers[i].boardCoins[G.currentTavern];
+        // todo Check it
+        if (coin !== null) {
+            coinValues[i] = coin.value;
             playersOrder.push(i);
+            exchangeOrder.push(i);
         }
-        exchangeOrder.push(i);
         for (var j = playersOrder.length - 1; j > 0; j--) {
-            var coin = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern], prevCoin = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
+            var coin_1 = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern], prevCoin = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
             // todo Check it
-            if (coin !== null && prevCoin !== null) {
-                if (coin.value > prevCoin.value) {
+            if (coin_1 !== null && prevCoin !== null) {
+                if (coin_1.value > prevCoin.value) {
                     _a = [playersOrder[j - 1], playersOrder[j]], playersOrder[j] = _a[0], playersOrder[j - 1] = _a[1];
                 }
-                else if (coin.value === prevCoin.value) {
+                else if (coin_1.value === prevCoin.value) {
                     var priority = G.publicPlayers[playersOrder[j]].priority, prevPriority = G.publicPlayers[playersOrder[j - 1]].priority;
                     if (priority.value > prevPriority.value) {
                         _b = [playersOrder[j - 1], playersOrder[j]], playersOrder[j] = _b[0], playersOrder[j - 1] = _b[1];

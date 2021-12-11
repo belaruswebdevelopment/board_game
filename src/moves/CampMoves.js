@@ -1,6 +1,7 @@
 import { IsValidMove } from "../MoveValidator";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddActionsToStack, EndActionFromStackAndAddNew, StartActionForChosenPlayer, StartActionFromStackOrEndActions, } from "../helpers/StackHelpers";
+import { AddDataToLog, LogTypes } from "../Logging";
 // todo Add logging
 /**
  * <h3>Выбор карты из кэмпа.</h3>
@@ -27,6 +28,9 @@ export var ClickCampCard = function (G, ctx, cardId) {
         AddActionsToStack(G, ctx, card.stack);
         StartActionFromStackOrEndActions(G, ctx, false, cardId);
     }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не существует кликнутая карта кэмпа.");
+    }
 };
 /**
  * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
@@ -50,6 +54,9 @@ export var ClickCampCardHolda = function (G, ctx, cardId) {
     var campCard = G.camp[cardId];
     if (campCard !== null) {
         EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не существует кликнутая карта кэмпа.");
     }
 };
 /**
@@ -102,6 +109,9 @@ export var DiscardSuitCardFromPlayerBoard = function (G, ctx, suitId, playerId, 
     var isValidMove = false;
     if (ctx.playerID !== undefined) {
         isValidMove = playerId !== Number(ctx.currentPlayer) && playerId === Number(ctx.playerID);
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.");
     }
     if (!isValidMove) {
         return INVALID_MOVE;

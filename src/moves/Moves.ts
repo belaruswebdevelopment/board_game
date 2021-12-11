@@ -14,6 +14,7 @@ import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
 import {Ctx, Move} from "boardgame.io";
 import {DeckCardTypes, MyGameState} from "../GameSetup";
 import {isCardNotAction} from "../Card";
+import {AddDataToLog, LogTypes} from "../Logging";
 // todo Add logging
 
 /**
@@ -57,6 +58,8 @@ export const ClickCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: n
         } else {
             AfterBasicPickCardActions(G, ctx, false);
         }
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не существует кликнутая карта.");
     }
 };
 

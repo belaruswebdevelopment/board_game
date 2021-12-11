@@ -172,10 +172,8 @@ export var moveValidators = {
                 return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
                     && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id] !== null;
             }
-            else {
-                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
-                return false;
-            }
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            return false;
         },
     },
     ClickBoardCoin: {
@@ -189,10 +187,8 @@ export var moveValidators = {
                 return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined
                     && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[id] === null;
             }
-            else {
-                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
-                return false;
-            }
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            return false;
         },
     },
     BotsPlaceAllCoins: {
@@ -205,10 +201,9 @@ export var moveValidators = {
             if (id !== undefined) {
                 return G.botData.allCoinsOrder[id];
             }
-            else {
-                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
-                return [];
-            }
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            // todo Return []???
+            return [];
         },
         validate: function () { return true; },
     },
@@ -226,16 +221,23 @@ export var moveValidators = {
                     var config = G.heroes[id].stack[0].config;
                     if ((config === null || config === void 0 ? void 0 : config.conditions) !== undefined) {
                         var suitId = GetSuitIndexByName(config.conditions.suitCountMin.suit);
-                        isValid = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].reduce(TotalRank, 0) >=
-                            config.conditions.suitCountMin.value;
+                        if (suitId !== -1) {
+                            isValid =
+                                G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].reduce(TotalRank, 0) >=
+                                    config.conditions.suitCountMin.value;
+                            return isValid;
+                        }
+                        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430 \u043D\u0435\u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0430\u044F \u0444\u0440\u0430\u043A\u0446\u0438\u044F \n                        ".concat(config.conditions.suitCountMin.suit, "."));
                     }
+                    else {
+                        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435\u0442 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 stack[0] \u0443 \n                        \u0433\u0435\u0440\u043E\u044F ".concat(G.heroes[id].name, "."));
+                    }
+                    return false;
                 }
                 return isValid;
             }
-            else {
-                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
-                return false;
-            }
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            return false;
         },
     },
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
@@ -249,10 +251,8 @@ export var moveValidators = {
             if (id !== undefined && type !== undefined) {
                 return CoinUpgradeValidation(G, ctx, id, type);
             }
-            else {
-                AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 id \u0438\u043B\u0438 \u043D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \n                \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 type.");
-                return false;
-            }
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'id' \u0438\u043B\u0438 \u043D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \n            \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'type'.");
+            return false;
         },
     },
     ClickCardToPickDistinction: {
@@ -266,8 +266,12 @@ export var moveValidators = {
         },
         validate: function (_a) {
             var G = _a.G, ctx = _a.ctx, id = _a.id;
-            return G.distinctions.indexOf(Number(ctx.currentPlayer)) === id;
-        },
+            if (id !== undefined) {
+                return G.distinctions.indexOf(Number(ctx.currentPlayer)) === id;
+            }
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'id'.");
+            return false;
+        }
     },
     ClickCampCard: {
         getRange: function (_a) {

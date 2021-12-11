@@ -7,6 +7,7 @@ import { CheckAndMoveThrudOrPickHeroAction } from "../actions/HeroActions";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { isCardNotAction } from "../Card";
+import { AddDataToLog, LogTypes } from "../Logging";
 // todo Add logging
 /**
  * <h3>Выбор карты из таверны.</h3>
@@ -51,6 +52,9 @@ export var ClickCard = function (G, ctx, cardId) {
         else {
             AfterBasicPickCardActions(G, ctx, false);
         }
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не существует кликнутая карта.");
     }
 };
 /**

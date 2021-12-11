@@ -35,10 +35,12 @@ export var enumerate = function (G, ctx) {
             }
             if (stage.includes(activeStageOfCurrentPlayer)
                 && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
+                // todo Sync players and bots validations in one places
                 var moveName = moveBy[ctx.phase][stage], _b = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _b[0], maxValue = _b[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
                 var argValue = void 0;
                 var argArray = void 0;
                 for (var id = minValue; id < maxValue; id++) {
+                    // todo sync bot moves options with profit UI options for players (same logic without UI)
                     var type = undefined;
                     if (stage === "upgradeCoin") {
                         // todo fix for Uline

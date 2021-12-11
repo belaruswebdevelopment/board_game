@@ -9,7 +9,7 @@ import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { StartActionStage } from "../helpers/ActionHelper";
+import { IsStartActionStage } from "../helpers/ActionHelper";
 /**
  * <h3>Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.</h3>
  * <p>Применения:</p>
@@ -38,6 +38,9 @@ export var PlaceThrudAction = function (G, ctx, config, suitId) {
         AddCardToPlayer(G, ctx, thrudCard);
         CheckPickHero(G, ctx);
         EndActionFromStackAndAddNew(G, ctx);
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.");
     }
 };
 /**
@@ -68,6 +71,9 @@ export var PlaceYludAction = function (G, ctx, config, suitId) {
         AddCardToPlayer(G, ctx, yludCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, yludCard);
         EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.");
     }
 };
 /**
@@ -112,8 +118,19 @@ export var AddHeroToCards = function (G, ctx, config) {
             AddHeroCardToPlayerCards(G, ctx, hero);
             CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
             suitId = GetSuitIndexByName(hero.suit);
+            if (suitId !== -1) {
+                EndActionFromStackAndAddNew(G, ctx, [], suitId);
+            }
+            else {
+                AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430 \u043D\u0435\u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0430\u044F \u0444\u0440\u0430\u043A\u0446\u0438\u044F ".concat(hero.suit, "."));
+            }
         }
-        EndActionFromStackAndAddNew(G, ctx, [], suitId);
+        else {
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0433\u0435\u0440\u043E\u044F ".concat(hero.name, " \u0438\u0437-\u0437\u0430 \n            \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044F \u043F\u0440\u0438\u043D\u0430\u0434\u043B\u0435\u0436\u043D\u043E\u0441\u0442\u0438 \u043A \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0444\u0440\u0430\u043A\u0446\u0438\u0438."));
+        }
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.drawName'.");
     }
 };
 /**
@@ -191,5 +208,7 @@ export var PickHeroWithConditions = function (G, ctx, config) {
  * @constructor
  */
 export var PickHero = function (G, ctx) {
-    StartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config);
+    if (!IsStartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config)) {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не стартовал стэйдж 'PickHero'.");
+    }
 };

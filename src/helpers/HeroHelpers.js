@@ -2,6 +2,7 @@ import { heroesConfig } from "../data/HeroData";
 import { GetSuitIndexByName } from "./SuitHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 import { SuitNames } from "../data/SuitData";
+import { AddDataToLog, LogTypes } from "../Logging";
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
  * <p>Применения:</p>
@@ -35,6 +36,9 @@ export var CheckAndMoveThrud = function (G, ctx, card) {
             G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(index, 1);
         }
         return index !== -1;
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'suit'.");
     }
     return false;
 };
@@ -95,6 +99,9 @@ export var StartThrudMoving = function (G, ctx, card) {
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'suit'.");
     }
 };
 /**

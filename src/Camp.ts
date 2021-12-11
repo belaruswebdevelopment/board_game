@@ -236,8 +236,15 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
     const discardCardIndex: number = G.taverns[G.currentTavern]
         .findIndex((card: TavernCardTypes): boolean => card !== null);
     if (G.campPicked && discardCardIndex !== -1) {
-        DiscardCardFromTavern(G, discardCardIndex);
-        G.campPicked = false;
+        const isCardDiscarded: boolean = DiscardCardFromTavern(G, discardCardIndex);
+        if (isCardDiscarded) {
+            G.campPicked = false;
+        } else {
+            // todo LogTypes.ERROR ?
+        }
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора 
+        карты кэмпа в конце пиков из таверны.`);
     }
 };
 
@@ -259,6 +266,7 @@ export const RefillEmptyCampCards = (G: MyGameState): void => {
         return null;
     });
     const isEmptyCampCards: boolean = emptyCampCards.length === 0;
+    // todo Add LogTypes.ERROR logging ?
     let isEmptyCurrentTierCampDeck: boolean = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
         emptyCampCards.forEach((cardIndex: number | null): void => {
@@ -300,6 +308,8 @@ export const RefillCamp = (G: MyGameState): void => {
  * @constructor
  */
 const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
+    // todo Add LogTypes.ERROR logging ?
+    // todo ARE THEY GO TO DISCARD AND CAN BE PICKED FROM IT NOT FOREVER?! CHECK RULES!
     for (let i: number = 0; i < G.camp.length; i++) {
         if (G.camp[i] !== null) {
             const card: CampDeckCardTypes | null = G.camp.splice(i, 1, null)[0];
@@ -328,7 +338,6 @@ const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
  * @constructor
  */
 const AddCardToCamp = (G: MyGameState, cardIndex: number): void => {
-    const newCampCard: CampDeckCardTypes = G.campDecks[G.campDecks.length -
-    G.tierToEnd].splice(0, 1)[0];
+    const newCampCard: CampDeckCardTypes = G.campDecks[G.campDecks.length - G.tierToEnd].splice(0, 1)[0];
     G.camp.splice(cardIndex, 1, newCampCard);
 };

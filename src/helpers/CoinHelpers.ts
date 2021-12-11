@@ -4,7 +4,16 @@ import {Ctx} from "boardgame.io";
 import {IPriority} from "../Priority";
 import {IPublicPlayer} from "../Player";
 import {INumberValues} from "../data/SuitData";
+
 // todo Add logging
+
+/**
+ * <h3>Интерфейс для резолвинга монет на столе.</h3>
+ */
+export interface IResolveBoardCoins {
+    playersOrder: number[],
+    exchangeOrder: number[],
+}
 
 /**
  * <h3>Активирует обмен монет.</h3>
@@ -46,20 +55,18 @@ export const ActivateTrading = (G: MyGameState, ctx: Ctx): boolean => {
  * @returns {{playersOrder: number[], exchangeOrder: number[]}} Порядок ходов игроков & порядок изменения ходов игроками.
  * @constructor
  */
-export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): { playersOrder: number[], exchangeOrder: number[] } => {
+export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins => {
     const playersOrder: number[] = [],
         coinValues: number[] = [],
         exchangeOrder: number[] = [];
     for (let i: number = 0; i < ctx.numPlayers; i++) {
-        if (G.publicPlayers[i].boardCoins[G.currentTavern]) {
-            const coin: ICoin | null = G.publicPlayers[i].boardCoins[G.currentTavern];
-            // todo Check it
-            if (coin !== null) {
-                coinValues[i] = coin.value;
-            }
+        const coin: ICoin | null = G.publicPlayers[i].boardCoins[G.currentTavern];
+        // todo Check it
+        if (coin !== null) {
+            coinValues[i] = coin.value;
             playersOrder.push(i);
+            exchangeOrder.push(i);
         }
-        exchangeOrder.push(i);
         for (let j: number = playersOrder.length - 1; j > 0; j--) {
             const coin: ICoin | null = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern],
                 prevCoin: ICoin | null = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];

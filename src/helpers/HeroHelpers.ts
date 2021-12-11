@@ -6,6 +6,7 @@ import {Ctx} from "boardgame.io";
 import {ICoin} from "../Coin";
 import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
 import {SuitNames} from "../data/SuitData";
+import {AddDataToLog, LogTypes} from "../Logging";
 
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
@@ -42,6 +43,8 @@ export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: PlayerCardsTyp
             G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(index, 1);
         }
         return index !== -1;
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Отсутствует обязательный параметр 'suit'.`);
     }
     return false;
 };
@@ -104,6 +107,8 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
                 },
             ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Отсутствует обязательный параметр 'suit'.`);
     }
 };
 

@@ -64,6 +64,7 @@ export var CheckIfCurrentTavernEmpty = function (G, ctx) {
  * @constructor
  */
 export var RefillTaverns = function (G) {
+    var error = false;
     for (var i = 0; i < G.tavernsNum; i++) {
         var refillDeck = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
         if (refillDeck.length === G.drawSize) {
@@ -71,8 +72,11 @@ export var RefillTaverns = function (G) {
             AddDataToLog(G, LogTypes.GAME, "\u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[i].name, " \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438."));
         }
         else {
+            error = true;
             AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[i].name, " \u043D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u043D\u043E\u0432\u044B\u043C\u0438 \n            \u043A\u0430\u0440\u0442\u0430\u043C\u0438 \u0438\u0437-\u0437\u0430 \u0438\u0445 \u043D\u0435\u0445\u0432\u0430\u0442\u043A\u0438 \u0432 \u043A\u043E\u043B\u043E\u0434\u0435."));
         }
     }
-    AddDataToLog(G, LogTypes.GAME, "Все таверны заполнены новыми картами.");
+    if (!error) {
+        AddDataToLog(G, LogTypes.GAME, "Все таверны заполнены новыми картами.");
+    }
 };

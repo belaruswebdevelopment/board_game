@@ -109,6 +109,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
  */
 export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: boolean): void => {
     // todo rework it?
+    // todo Add LogTypes.ERROR ?
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
     if (ctx.phase === "pickCards") {
         const isUlinePlaceTradingCoin: string | boolean = CheckAndStartUlineActionsOrContinue(G, ctx);

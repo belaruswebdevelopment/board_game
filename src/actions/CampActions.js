@@ -44,13 +44,19 @@ export var AddCampCardToCards = function (G, ctx, config, cardId) {
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime;
     }
     var campCard = G.camp[cardId];
-    var suitId = null, stack = [];
-    G.camp[cardId] = null;
     if (campCard !== null) {
+        var suitId = null, stack = [];
+        G.camp[cardId] = null;
         if (isArtefactCard(campCard) && campCard.suit !== null) {
             AddCampCardToPlayerCards(G, ctx, campCard);
             CheckAndMoveThrudOrPickHeroAction(G, ctx, campCard);
             suitId = GetSuitIndexByName(campCard.suit);
+            if (suitId !== -1) {
+                // todo ???
+            }
+            else {
+                // todo ???
+            }
         }
         else {
             AddCampCardToPlayer(G, ctx, campCard);
@@ -69,6 +75,9 @@ export var AddCampCardToCards = function (G, ctx, config, cardId) {
             }
         }
         EndActionFromStackAndAddNew(G, ctx, stack, suitId);
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не пикнута карта кэмпа.");
     }
 };
 /**
@@ -247,6 +256,9 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
         AddActionsToStackAfterCurrent(G, ctx, stack);
         EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
     }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'stack[0].config'.");
+    }
 };
 /**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
@@ -330,6 +342,9 @@ export var StartDiscardSuitCard = function (G, ctx, config) {
         });
         G.drawProfit = "HofudAction";
     }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.suit'.");
+    }
 };
 /**
  * <h3>Действия, связанные с дискардом карты из конкретной фракции игрока.</h3>
@@ -352,6 +367,9 @@ export var DiscardSuitCard = function (G, ctx, config, suitId, playerId, cardId)
         G.discardCardsDeck.push(discardedCard);
         AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.playerID)].nickname, " \n        \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
         EndActionForChosenPlayer(G, ctx, playerId);
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.");
     }
 };
 /**

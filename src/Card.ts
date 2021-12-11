@@ -7,6 +7,8 @@ import {DeckCardTypes, MyGameState, TavernCardTypes} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {IActionCardConfig} from "./data/ActionCardData";
 
+// todo add LogTypes.ERROR logging to Sasha's functions
+
 /**
  * <h3>Интерфейс для карты дворфа.</h3>
  */

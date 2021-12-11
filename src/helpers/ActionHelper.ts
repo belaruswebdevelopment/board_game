@@ -30,11 +30,20 @@ export const EndAction = (G: MyGameState, ctx: Ctx, isTrading: boolean): void =>
  * @param {MyGameState} G
  * @param {Ctx} ctx
  * @param {IConfig | undefined} config Конфиг действий героя.
+ * @returns {boolean} Стартанул ли стэйдж.
  * @constructor
  */
-export const StartActionStage = (G: MyGameState, ctx: Ctx, config: IConfig | undefined): void => {
-    if (config !== undefined && config.stageName !== undefined) {
-        ctx.events!.setStage!(config.stageName);
-        AddDataToLog(G, LogTypes.GAME, `Начало фазы ${config.stageName}.`);
+export const IsStartActionStage = (G: MyGameState, ctx: Ctx, config: IConfig | undefined): boolean => {
+    if (config !== undefined) {
+        if (config.stageName !== undefined) {
+            ctx.events!.setStage!(config.stageName);
+            AddDataToLog(G, LogTypes.GAME, `Начало фазы ${config.stageName}.`);
+            return true;
+        } else {
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.stageName'.");
+        }
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config'.");
     }
+    return false;
 };

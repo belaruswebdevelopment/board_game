@@ -226,10 +226,9 @@ export const moveValidators: IMoveValidators = {
             if (id !== undefined) {
                 return G.publicPlayers[Number(ctx!.currentPlayer)].selectedCoin === undefined
                     && G.publicPlayers[Number(ctx!.currentPlayer)].handCoins[id] !== null;
-            } else {
-                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
-                return false;
             }
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            return false;
         },
     },
     ClickBoardCoin: {
@@ -239,10 +238,9 @@ export const moveValidators: IMoveValidators = {
             if (id !== undefined) {
                 return G.publicPlayers[Number(ctx!.currentPlayer)].selectedCoin !== undefined
                     && G.publicPlayers[Number(ctx!.currentPlayer)].boardCoins[id] === null;
-            } else {
-                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
-                return false;
             }
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            return false;
         },
     },
     BotsPlaceAllCoins: {
@@ -250,10 +248,10 @@ export const moveValidators: IMoveValidators = {
         getValue: ({G, id}: IMoveValidatorParams): number[] => {
             if (id !== undefined) {
                 return G.botData.allCoinsOrder[id];
-            } else {
-                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
-                return [];
             }
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            // todo Return []???
+            return [];
         },
         validate: (): boolean => true,
     },
@@ -267,15 +265,24 @@ export const moveValidators: IMoveValidators = {
                     const config: IConfig | undefined = G.heroes[id].stack[0].config;
                     if (config?.conditions !== undefined) {
                         const suitId: number = GetSuitIndexByName(config.conditions.suitCountMin.suit);
-                        isValid = G.publicPlayers[Number(ctx!.currentPlayer)].cards[suitId].reduce(TotalRank, 0) >=
-                            config.conditions.suitCountMin.value;
+                        if (suitId !== -1) {
+                            isValid =
+                                G.publicPlayers[Number(ctx!.currentPlayer)].cards[suitId].reduce(TotalRank, 0) >=
+                                config.conditions.suitCountMin.value;
+                            return isValid;
+                        }
+                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция 
+                        ${config.conditions.suitCountMin.suit}.`);
+                    } else {
+                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Нет обязательного параметр stack[0] у 
+                        героя ${G.heroes[id].name}.`);
                     }
+                    return false;
                 }
                 return isValid;
-            } else {
-                AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
-                return false;
             }
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            return false;
         },
     },
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
@@ -285,11 +292,10 @@ export const moveValidators: IMoveValidators = {
         validate: ({G, ctx, id, type}: IMoveValidatorParams): boolean => {
             if (id !== undefined && type !== undefined) {
                 return CoinUpgradeValidation(G, ctx!, id, type);
-            } else {
-                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр id или не передан 
-                обязательный параметр type.`);
-                return false;
             }
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id' или не передан 
+            обязательный параметр 'type'.`);
+            return false;
         },
     },
     ClickCardToPickDistinction: {
@@ -298,8 +304,13 @@ export const moveValidators: IMoveValidators = {
     },
     ClickDistinctionCard: {
         getRange: ({G}: IMoveValidatorParams): [number, number] => ([0, G.distinctions.length]),
-        validate: ({G, ctx, id}: IMoveValidatorParams): boolean =>
-            G.distinctions.indexOf(Number(ctx!.currentPlayer)) === id,
+        validate: ({G, ctx, id}: IMoveValidatorParams): boolean => {
+            if (id !== undefined) {
+                return G.distinctions.indexOf(Number(ctx!.currentPlayer)) === id;
+            }
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
+            return false;
+        }
     },
     ClickCampCard: {
         getRange: ({G}: IMoveValidatorParams): [number, number] => ([0, G.camp.length]),

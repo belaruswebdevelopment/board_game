@@ -465,7 +465,7 @@ export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: stri
     }
     boardCells.push(
         <td key={`${player?.nickname ? `Player ${player.nickname} ` : ""}${key}`}
-            className="cursor-pointer" onClick={() => action && action(...args)}>
+            className="cursor-pointer" onClick={() => action !== null && action(...args)}>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 {name}
             </button>

@@ -83,15 +83,19 @@ export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => 
  * @constructor
  */
 export const RefillTaverns = (G: MyGameState): void => {
+    let error: boolean = false;
     for (let i: number = 0; i < G.tavernsNum; i++) {
         const refillDeck: DeckCardTypes[] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
         if (refillDeck.length === G.drawSize) {
             G.taverns[i] = refillDeck;
             AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[i].name} заполнена новыми картами.`);
         } else {
+            error = true;
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Таверна ${tavernsConfig[i].name} не заполнена новыми 
             картами из-за их нехватки в колоде.`);
         }
     }
-    AddDataToLog(G, LogTypes.GAME, "Все таверны заполнены новыми картами.");
+    if (!error) {
+        AddDataToLog(G, LogTypes.GAME, "Все таверны заполнены новыми картами.");
+    }
 };

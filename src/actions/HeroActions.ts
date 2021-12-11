@@ -18,7 +18,7 @@ import {TotalRank} from "../helpers/ScoreHelpers";
 import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IConditions, IVariants} from "../data/HeroData";
-import {StartActionStage} from "../helpers/ActionHelper";
+import {IsStartActionStage} from "../helpers/ActionHelper";
 
 /**
  * <h3>Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.</h3>
@@ -50,6 +50,8 @@ export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
         AddCardToPlayer(G, ctx, thrudCard);
         CheckPickHero(G, ctx);
         EndActionFromStackAndAddNew(G, ctx);
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.");
     }
 };
 
@@ -83,6 +85,8 @@ export const PlaceYludAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
         AddCardToPlayer(G, ctx, yludCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, yludCard);
         EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.");
     }
 };
 
@@ -130,8 +134,17 @@ export const AddHeroToCards = (G: MyGameState, ctx: Ctx, config: IConfig): void 
             AddHeroCardToPlayerCards(G, ctx, hero);
             CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
             suitId = GetSuitIndexByName(hero.suit);
+            if (suitId !== -1) {
+                EndActionFromStackAndAddNew(G, ctx, [], suitId);
+            } else {
+                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${hero.suit}.`);
+            }
+        } else {
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.name} из-за 
+            отсутствия принадлежности к конкретной фракции.`);
         }
-        EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.drawName'.");
     }
 };
 
@@ -213,5 +226,7 @@ export const PickHeroWithConditions = (G: MyGameState, ctx: Ctx, config: IConfig
  * @constructor
  */
 export const PickHero = (G: MyGameState, ctx: Ctx): void => {
-    StartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config);
+    if (!IsStartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config)) {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не стартовал стэйдж 'PickHero'.");
+    }
 };

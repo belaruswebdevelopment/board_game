@@ -42,17 +42,23 @@ export var CheckDistinction = function (G, ctx) {
  */
 export var CheckCurrentSuitDistinction = function (G, ctx, suitName) {
     var playersRanks = [], suitIndex = GetSuitIndexByName(suitName);
-    for (var i = 0; i < ctx.numPlayers; i++) {
-        playersRanks.push(G.publicPlayers[i].cards[suitIndex].reduce(TotalRank, 0));
-    }
-    var max = Math.max.apply(Math, playersRanks), maxPlayers = playersRanks.filter(function (count) { return count === max; });
-    if (maxPlayers.length === 1) {
-        var playerDistinctionIndex = playersRanks.indexOf(maxPlayers[0]);
-        AddDataToLog(G, LogTypes.PUBLIC, "\u041F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E \u043F\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u0438 ".concat(suitsConfig[suitName].suitName, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \n        \u0438\u0433\u0440\u043E\u043A: ").concat(G.publicPlayers[playerDistinctionIndex].nickname, "."));
-        return playerDistinctionIndex;
+    if (suitIndex !== -1) {
+        for (var i = 0; i < ctx.numPlayers; i++) {
+            playersRanks.push(G.publicPlayers[i].cards[suitIndex].reduce(TotalRank, 0));
+        }
+        var max_1 = Math.max.apply(Math, playersRanks), maxPlayers = playersRanks.filter(function (count) { return count === max_1; });
+        if (maxPlayers.length === 1) {
+            var playerDistinctionIndex = playersRanks.indexOf(maxPlayers[0]);
+            AddDataToLog(G, LogTypes.PUBLIC, "\u041F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E \u043F\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u0438 ".concat(suitsConfig[suitName].suitName, " \n            \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u0438\u0433\u0440\u043E\u043A: ").concat(G.publicPlayers[playerDistinctionIndex].nickname, "."));
+            return playerDistinctionIndex;
+        }
+        else {
+            AddDataToLog(G, LogTypes.PUBLIC, "\u041F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E \u043F\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u0438 ".concat(suitsConfig[suitName].suitName, " \n            \u043D\u0438\u043A\u0442\u043E \u043D\u0435 \u043F\u043E\u043B\u0443\u0447\u0438\u043B."));
+            return undefined;
+        }
     }
     else {
-        AddDataToLog(G, LogTypes.PUBLIC, "\u041F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E \u043F\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u0438 ".concat(suitsConfig[suitName].suitName, " \u043D\u0438\u043A\u0442\u043E \n        \u043D\u0435 \u043F\u043E\u043B\u0443\u0447\u0438\u043B."));
-        return undefined;
+        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430 \u043D\u0435\u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0430\u044F \u0444\u0440\u0430\u043A\u0446\u0438\u044F ".concat(suitName, "."));
+        // todo Must return undefined or something else!?
     }
 };

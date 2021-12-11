@@ -9,7 +9,7 @@ import { AddHeroToCards, CheckAndMoveThrudOrPickHeroAction, GetClosedCoinIntoPla
 import { AddCampCardToCards, AddCoinToPouchAction, CheckPickCampCard, DiscardAnyCardFromPlayerBoard, DiscardSuitCard, DiscardTradingCoin, GetMjollnirProfitAction, StartDiscardSuitCard, StartVidofnirVedrfolnirAction, UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AddDataToLog, LogTypes } from "../Logging";
-import { StartActionStage } from "../helpers/ActionHelper";
+import { IsStartActionStage } from "../helpers/ActionHelper";
 /**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>
@@ -158,10 +158,13 @@ var UpgradeCoinAction = function (G, ctx, config) {
 var DrawProfitAction = function (G, ctx, config) {
     var _a;
     AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u043B\u0436\u0435\u043D \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043E\u0442 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F '").concat(config.drawName, "'."));
-    StartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config);
+    IsStartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config);
     G.actionsNum = (_a = config.number) !== null && _a !== void 0 ? _a : 1;
     if (config.name !== undefined) {
         G.drawProfit = config.name;
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не найден обязательный параметр 'config.name'.");
     }
 };
 /**
@@ -182,6 +185,9 @@ var AddBuffToPlayer = function (G, ctx, config) {
         AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u0431\u0430\u0444 '").concat(config.buff.name, "'."));
         EndActionFromStackAndAddNew(G, ctx);
     }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не найден обязательный параметр 'config.buff'.");
+    }
 };
 /**
  * <h3>Действия, связанные с дискардом карт с планшета игрока.</h3>
@@ -200,7 +206,7 @@ var AddBuffToPlayer = function (G, ctx, config) {
 export var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId, cardId) {
     var pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 ").concat(pickedCard.name, "."));
+    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B \u0432 \u0441\u0431\u0440\u043E\u0441 \u043A\u0430\u0440\u0442\u0443 ").concat(pickedCard.name, "."));
     G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
         .splice(cardId, 1)[0]);
     if (G.actionsNum === 2) {
@@ -345,6 +351,9 @@ var PlaceCards = function (G, ctx, config, suitId) {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
         EndActionFromStackAndAddNew(G, ctx, [], suitId);
     }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не найден обязательный параметр 'stack[0].variants'.");
+    }
 };
 /**
  * <h3>Действия, связанные с возможностью взятия карт из дискарда.</h3>
@@ -398,14 +407,17 @@ var PickDiscardCard = function (G, ctx, config, cardId) {
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
+            var suitId = GetSuitIndexByName(pickedCard.suit);
+            if (suitId !== -1) {
+                EndActionFromStackAndAddNew(G, ctx, [], suitId);
+            }
+            else {
+                AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430 \u043D\u0435\u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0430\u044F \u0444\u0440\u0430\u043A\u0446\u0438\u044F \n                ".concat(pickedCard.suit, "."));
+            }
         }
     }
     else {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
-    }
-    var suitId = GetSuitIndexByName(pickedCard.suit);
-    if (suitId !== -1) {
-        EndActionFromStackAndAddNew(G, ctx, [], suitId);
     }
 };
 /**
@@ -454,6 +466,9 @@ var GetEnlistmentMercenariesAction = function (G, ctx, config, cardId) {
         ];
         EndActionFromStackAndAddNew(G, ctx, stack);
     }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не пикнута карта наёмника.");
+    }
 };
 /**
  * <h3>Игрок выбирает фракцию для вербовки указанного наёмника.</h3>
@@ -470,36 +485,48 @@ var GetEnlistmentMercenariesAction = function (G, ctx, config, cardId) {
  */
 var PlaceEnlistmentMercenariesAction = function (G, ctx, config, suitId) {
     var suit = Object.keys(suitsConfig)[suitId], pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-    if (pickedCard !== null && "stack" in pickedCard && "tier" in pickedCard && "path" in pickedCard
-        && pickedCard.stack[0].variants) {
-        var mercenaryCard = CreateCard({
-            type: "наёмник",
-            suit: suit,
-            rank: 1,
-            points: pickedCard.stack[0].variants[suit].points,
-            name: pickedCard.name,
-            tier: pickedCard.tier,
-            path: pickedCard.path,
-        });
-        AddCardToPlayer(G, ctx, mercenaryCard);
-        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \u0437\u0430\u0432\u0435\u0440\u0431\u043E\u0432\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(mercenaryCard.name, "'."));
-        var cardIndex = G.publicPlayers[Number(ctx.currentPlayer)].campCards
-            .findIndex(function (card) { return card.name === pickedCard.name; });
-        G.publicPlayers[Number(ctx.currentPlayer)].campCards.splice(cardIndex, 1);
-        if (G.publicPlayers[Number(ctx.currentPlayer)].campCards
-            .filter(function (card) { return card.type === "наёмник"; }).length) {
-            var stack = [
-                {
-                    actionName: "DrawProfitAction",
-                    config: {
-                        name: "enlistmentMercenaries",
-                        drawName: "Enlistment Mercenaries",
-                    },
-                },
-            ];
-            AddActionsToStackAfterCurrent(G, ctx, stack);
+    if (pickedCard !== null) {
+        if ("stack" in pickedCard && "tier" in pickedCard && "path" in pickedCard) {
+            if (pickedCard.stack[0].variants !== undefined) {
+                var mercenaryCard = CreateCard({
+                    type: "наёмник",
+                    suit: suit,
+                    rank: 1,
+                    points: pickedCard.stack[0].variants[suit].points,
+                    name: pickedCard.name,
+                    tier: pickedCard.tier,
+                    path: pickedCard.path,
+                });
+                AddCardToPlayer(G, ctx, mercenaryCard);
+                AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A \n                ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B Enlistment Mercenaries \n                \u0437\u0430\u0432\u0435\u0440\u0431\u043E\u0432\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(mercenaryCard.name, "'."));
+                var cardIndex = G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                    .findIndex(function (card) { return card.name === pickedCard.name; });
+                G.publicPlayers[Number(ctx.currentPlayer)].campCards.splice(cardIndex, 1);
+                if (G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                    .filter(function (card) { return card.type === "наёмник"; }).length) {
+                    var stack = [
+                        {
+                            actionName: "DrawProfitAction",
+                            config: {
+                                name: "enlistmentMercenaries",
+                                drawName: "Enlistment Mercenaries",
+                            },
+                        },
+                    ];
+                    AddActionsToStackAfterCurrent(G, ctx, stack);
+                }
+                CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
+                EndActionFromStackAndAddNew(G, ctx, [], suitId);
+            }
+            else {
+                AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 \n                'stack[0].variants'.");
+            }
         }
-        CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
-        EndActionFromStackAndAddNew(G, ctx, [], suitId);
+        else {
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Вместо карты наёмника пикнута карта другого типа.");
+        }
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не пикнута карта наёмника.");
     }
 };

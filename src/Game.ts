@@ -33,7 +33,7 @@ import {
 } from "./moves/CampMoves";
 import {AddActionsToStack} from "./helpers/StackHelpers";
 import {BotsPlaceAllCoins} from "./moves/BotMoves";
-import {ResolveBoardCoins} from "./helpers/CoinHelpers";
+import {IResolveBoardCoins, ResolveBoardCoins} from "./helpers/CoinHelpers";
 import {PlayerView} from "boardgame.io/core";
 import {CheckDistinction} from "./Distinction";
 import type {Ctx, Game} from "boardgame.io";
@@ -171,8 +171,7 @@ export const BoardGame: Game<MyGameState> = {
             },
             onBegin: (G: MyGameState, ctx: Ctx): void => {
                 G.currentTavern++;
-                const {playersOrder, exchangeOrder}: { playersOrder: number[], exchangeOrder: number[] } =
-                    ResolveBoardCoins(G, ctx);
+                const {playersOrder, exchangeOrder}: IResolveBoardCoins = ResolveBoardCoins(G, ctx);
                 [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
             },
             onEnd: (G: MyGameState): void => {

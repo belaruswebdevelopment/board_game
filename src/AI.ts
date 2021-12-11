@@ -51,6 +51,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 }
                 if (stage.includes(activeStageOfCurrentPlayer)
                     && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
+                    // todo Sync players and bots validations in one places
                     const moveName: string = moveBy[ctx.phase][stage],
                         [minValue, maxValue]: [number, number] =
                             moveValidators[moveName].getRange({G, ctx}),
@@ -58,6 +59,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     let argValue: number;
                     let argArray: number[];
                     for (let id: number = minValue; id < maxValue; id++) {
+                        // todo sync bot moves options with profit UI options for players (same logic without UI)
                         let type: undefined | string = undefined;
                         if (stage === "upgradeCoin") {
                             // todo fix for Uline

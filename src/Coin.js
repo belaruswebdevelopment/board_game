@@ -169,6 +169,7 @@ export var Trading = function (G, ctx, tradingCoins) {
  * @constructor
  */
 export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInitial) {
+    // todo add LogTypes.ERROR logging
     // todo Split into different functions!
     var upgradingCoin = {}, coin;
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin) {

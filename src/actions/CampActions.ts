@@ -62,14 +62,19 @@ export const AddCampCardToCards = (G: MyGameState, ctx: Ctx, config: IConfig, ca
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime;
     }
     const campCard: CampDeckCardTypes | null = G.camp[cardId];
-    let suitId: number | null = null,
-        stack: IStack[] = [];
-    G.camp[cardId] = null;
     if (campCard !== null) {
+        let suitId: number | null = null,
+            stack: IStack[] = [];
+        G.camp[cardId] = null;
         if (isArtefactCard(campCard) && campCard.suit !== null) {
             AddCampCardToPlayerCards(G, ctx, campCard);
             CheckAndMoveThrudOrPickHeroAction(G, ctx, campCard);
             suitId = GetSuitIndexByName(campCard.suit);
+            if (suitId !== -1) {
+                // todo ???
+            } else {
+                // todo ???
+            }
         } else {
             AddCampCardToPlayer(G, ctx, campCard);
             if (ctx.phase === "enlistmentMercenaries"
@@ -87,6 +92,8 @@ export const AddCampCardToCards = (G: MyGameState, ctx: Ctx, config: IConfig, ca
             }
         }
         EndActionFromStackAndAddNew(G, ctx, stack, suitId);
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не пикнута карта кэмпа.");
     }
 };
 
@@ -268,6 +275,8 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, co
         }
         AddActionsToStackAfterCurrent(G, ctx, stack);
         EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'stack[0].config'.");
     }
 };
 
@@ -358,6 +367,8 @@ export const StartDiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig):
             value,
         });
         G.drawProfit = "HofudAction";
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.suit'.");
     }
 };
 
@@ -385,6 +396,8 @@ export const DiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.playerID)].nickname} 
         сбросил карту ${discardedCard.name} в дискард.`);
         EndActionForChosenPlayer(G, ctx, playerId);
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.");
     }
 };
 

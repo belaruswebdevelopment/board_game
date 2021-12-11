@@ -20,6 +20,9 @@ export var BotsPlaceAllCoins = function (G, ctx, coinsOrder) {
                 G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId];
             G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId] = null;
         }
+        else {
+            // todo LogTypes.ERROR ?
+        }
     }
     var isEveryPlayersHandCoinsEmpty = G.publicPlayers
         .filter(function (player) { return player.buffs.everyTurn !== "Uline"; })

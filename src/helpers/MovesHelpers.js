@@ -104,6 +104,7 @@ export var CheckEndGameLastActions = function (G, ctx) {
  */
 export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
     // todo rework it?
+    // todo Add LogTypes.ERROR ?
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
     if (ctx.phase === "pickCards") {
         var isUlinePlaceTradingCoin = CheckAndStartUlineActionsOrContinue(G, ctx);

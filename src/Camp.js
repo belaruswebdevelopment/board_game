@@ -157,8 +157,16 @@ export var DiscardCardIfCampCardPicked = function (G) {
     var discardCardIndex = G.taverns[G.currentTavern]
         .findIndex(function (card) { return card !== null; });
     if (G.campPicked && discardCardIndex !== -1) {
-        DiscardCardFromTavern(G, discardCardIndex);
-        G.campPicked = false;
+        var isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
+        if (isCardDiscarded) {
+            G.campPicked = false;
+        }
+        else {
+            // todo LogTypes.ERROR ?
+        }
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043B\u0438\u0448\u043D\u044E\u044E \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \u043F\u043E\u0441\u043B\u0435 \u0432\u044B\u0431\u043E\u0440\u0430 \n        \u043A\u0430\u0440\u0442\u044B \u043A\u044D\u043C\u043F\u0430 \u0432 \u043A\u043E\u043D\u0446\u0435 \u043F\u0438\u043A\u043E\u0432 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B.");
     }
 };
 /**
@@ -179,6 +187,7 @@ export var RefillEmptyCampCards = function (G) {
         return null;
     });
     var isEmptyCampCards = emptyCampCards.length === 0;
+    // todo Add LogTypes.ERROR logging ?
     var isEmptyCurrentTierCampDeck = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
         emptyCampCards.forEach(function (cardIndex) {
@@ -218,6 +227,8 @@ export var RefillCamp = function (G) {
  * @constructor
  */
 var AddRemainingCampCardsToDiscard = function (G) {
+    // todo Add LogTypes.ERROR logging ?
+    // todo ARE THEY GO TO DISCARD AND CAN BE PICKED FROM IT NOT FOREVER?! CHECK RULES!
     for (var i = 0; i < G.camp.length; i++) {
         if (G.camp[i] !== null) {
             var card = G.camp.splice(i, 1, null)[0];
@@ -245,7 +256,6 @@ var AddRemainingCampCardsToDiscard = function (G) {
  * @constructor
  */
 var AddCardToCamp = function (G, cardIndex) {
-    var newCampCard = G.campDecks[G.campDecks.length -
-        G.tierToEnd].splice(0, 1)[0];
+    var newCampCard = G.campDecks[G.campDecks.length - G.tierToEnd].splice(0, 1)[0];
     G.camp.splice(cardIndex, 1, newCampCard);
 };
