@@ -176,7 +176,7 @@ export var moveValidators = {
                 AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
                 return false;
             }
-        }
+        },
     },
     ClickBoardCoin: {
         getRange: function (_a) {
@@ -193,7 +193,7 @@ export var moveValidators = {
                 AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр id.");
                 return false;
             }
-        }
+        },
     },
     BotsPlaceAllCoins: {
         getRange: function (_a) {
@@ -253,7 +253,7 @@ export var moveValidators = {
                 AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 id \u0438\u043B\u0438 \u043D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \n                \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 type.");
                 return false;
             }
-        }
+        },
     },
     ClickCardToPickDistinction: {
         getRange: function () { return ([0, 3]); },

@@ -19,7 +19,7 @@ export var CheckDistinction = function (G, ctx) {
     for (var suit in suitsConfig) {
         var result = CheckCurrentSuitDistinction(G, ctx, suit);
         G.distinctions[i] = result;
-        if (suit === SuitNames.EXPLORER && result === null) {
+        if (suit === SuitNames.EXPLORER && result === undefined) {
             var discardedCard = G.decks[1].splice(0, 1)[0];
             AddDataToLog(G, LogTypes.PRIVATE, "\u0418\u0437-\u0437\u0430 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044F \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043F\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u0438 \u0440\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u043E\u0432 \n            \u0441\u0431\u0440\u043E\u0448\u0435\u043D\u0430 \u043A\u0430\u0440\u0442\u0430: ".concat(discardedCard.name, "."));
         }
@@ -53,6 +53,6 @@ export var CheckCurrentSuitDistinction = function (G, ctx, suitName) {
     }
     else {
         AddDataToLog(G, LogTypes.PUBLIC, "\u041F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E \u043F\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u0438 ".concat(suitsConfig[suitName].suitName, " \u043D\u0438\u043A\u0442\u043E \n        \u043D\u0435 \u043F\u043E\u043B\u0443\u0447\u0438\u043B."));
-        return null;
+        return undefined;
     }
 };

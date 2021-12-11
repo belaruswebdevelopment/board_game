@@ -9,6 +9,7 @@ import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { TotalRank } from "../helpers/ScoreHelpers";
+import { StartActionStage } from "../helpers/ActionHelper";
 /**
  * <h3>Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.</h3>
  * <p>Применения:</p>
@@ -190,9 +191,5 @@ export var PickHeroWithConditions = function (G, ctx, config) {
  * @constructor
  */
 export var PickHero = function (G, ctx) {
-    var playerConfig = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (playerConfig !== undefined) {
-        AddDataToLog(G, LogTypes.GAME, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
-        ctx.events.setStage(playerConfig.stageName);
-    }
+    StartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config);
 };

@@ -9,6 +9,7 @@ import { AddHeroToCards, CheckAndMoveThrudOrPickHeroAction, GetClosedCoinIntoPla
 import { AddCampCardToCards, AddCoinToPouchAction, CheckPickCampCard, DiscardAnyCardFromPlayerBoard, DiscardSuitCard, DiscardTradingCoin, GetMjollnirProfitAction, StartDiscardSuitCard, StartVidofnirVedrfolnirAction, UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AddDataToLog, LogTypes } from "../Logging";
+import { StartActionStage } from "../helpers/ActionHelper";
 /**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>
@@ -157,11 +158,7 @@ var UpgradeCoinAction = function (G, ctx, config) {
 var DrawProfitAction = function (G, ctx, config) {
     var _a;
     AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u043B\u0436\u0435\u043D \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043E\u0442 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F '").concat(config.drawName, "'."));
-    var playerConfig = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (playerConfig !== undefined && playerConfig.stageName !== undefined) {
-        AddDataToLog(G, LogTypes.GAME, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(playerConfig.stageName, "."));
-        ctx.events.setStage(playerConfig.stageName);
-    }
+    StartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config);
     G.actionsNum = (_a = config.number) !== null && _a !== void 0 ? _a : 1;
     if (config.name !== undefined) {
         G.drawProfit = config.name;

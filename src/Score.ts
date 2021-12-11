@@ -4,7 +4,7 @@ import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {AddDataToLog, LogTypes} from "./Logging";
 import {artefactsConfig, IArtefact} from "./data/CampData";
 import {CheckCurrentSuitDistinction} from "./Distinction";
-import {DistinctionTypes, MyGameState} from "./GameSetup";
+import {MyGameState} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPublicPlayer} from "./Player";
 
@@ -63,7 +63,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за монеты игрока ${player.nickname}: ${coinsValue}`);
     const suitWarriorIndex: number = GetSuitIndexByName(SuitNames.WARRIOR);
     if (suitWarriorIndex !== -1) {
-        const warriorsDistinction: DistinctionTypes =
+        const warriorsDistinction: number | undefined =
             CheckCurrentSuitDistinction(G, ctx, SuitNames.WARRIOR);
         if (warriorsDistinction !== undefined && G.publicPlayers
             .findIndex((p: IPublicPlayer): boolean => p.nickname === player.nickname) === warriorsDistinction) {
