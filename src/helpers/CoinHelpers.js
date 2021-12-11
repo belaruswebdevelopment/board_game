@@ -42,6 +42,7 @@ export var ActivateTrading = function (G, ctx) {
  * @constructor
  */
 export var ResolveBoardCoins = function (G, ctx) {
+    var _a, _b;
     var playersOrder = [], coinValues = [], exchangeOrder = [];
     for (var i = 0; i < ctx.numPlayers; i++) {
         if (G.publicPlayers[i].boardCoins[G.currentTavern]) {
@@ -58,18 +59,12 @@ export var ResolveBoardCoins = function (G, ctx) {
             // todo Check it
             if (coin !== null && prevCoin !== null) {
                 if (coin.value > prevCoin.value) {
-                    // [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
-                    var temp = playersOrder[j - 1];
-                    playersOrder[j - 1] = playersOrder[j];
-                    playersOrder[j] = temp;
+                    _a = [playersOrder[j - 1], playersOrder[j]], playersOrder[j] = _a[0], playersOrder[j - 1] = _a[1];
                 }
                 else if (coin.value === prevCoin.value) {
                     var priority = G.publicPlayers[playersOrder[j]].priority, prevPriority = G.publicPlayers[playersOrder[j - 1]].priority;
                     if (priority.value > prevPriority.value) {
-                        // [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
-                        var temp = playersOrder[j - 1];
-                        playersOrder[j - 1] = playersOrder[j];
-                        playersOrder[j] = temp;
+                        _b = [playersOrder[j - 1], playersOrder[j]], playersOrder[j] = _b[0], playersOrder[j - 1] = _b[1];
                     }
                 }
                 else {
@@ -88,6 +83,7 @@ export var ResolveBoardCoins = function (G, ctx) {
         }
         var tiePlayers = G.publicPlayers.filter(function (player) { var _a; return ((_a = player.boardCoins[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.value) === Number(prop) && player.priority.isExchangeable; });
         var _loop_2 = function () {
+            var _c;
             var tiePlayersPriorities = tiePlayers.map(function (player) { return player.priority.value; }), maxPriority = Math.max.apply(Math, tiePlayersPriorities), minPriority = Math.min.apply(Math, tiePlayersPriorities), maxIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === maxPriority; }), minIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === minPriority; });
             tiePlayers.splice(tiePlayers.findIndex(function (player) {
                 return player.priority.value === maxPriority;
@@ -98,10 +94,7 @@ export var ResolveBoardCoins = function (G, ctx) {
             tiePlayers.splice(tiePlayers.findIndex(function (player) {
                 return player.priority.value === minPriority;
             }), 1);
-            // [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
-            var temp = exchangeOrder[minIndex];
-            exchangeOrder[minIndex] = exchangeOrder[maxIndex];
-            exchangeOrder[maxIndex] = temp;
+            _c = [exchangeOrder[maxIndex], exchangeOrder[minIndex]], exchangeOrder[minIndex] = _c[0], exchangeOrder[maxIndex] = _c[1];
         };
         while (tiePlayers.length > 1) {
             _loop_2();

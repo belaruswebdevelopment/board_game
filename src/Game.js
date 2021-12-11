@@ -149,11 +149,10 @@ export var BoardGame = {
                 ClickCampCard: ClickCampCard,
             },
             onBegin: function (G, ctx) {
+                var _a;
                 G.currentTavern++;
-                var _a = ResolveBoardCoins(G, ctx), playersOrder = _a.playersOrder, exchangeOrder = _a.exchangeOrder;
-                // [G.publicPlayersOrder, G.exchangeOrder]: number[] = [playersOrder, exchangeOrder];
-                G.publicPlayersOrder = playersOrder;
-                G.exchangeOrder = exchangeOrder;
+                var _b = ResolveBoardCoins(G, ctx), playersOrder = _b.playersOrder, exchangeOrder = _b.exchangeOrder;
+                _a = [playersOrder, exchangeOrder], G.publicPlayersOrder = _a[0], G.exchangeOrder = _a[1];
             },
             onEnd: function (G) {
                 ChangePlayersPriorities(G);

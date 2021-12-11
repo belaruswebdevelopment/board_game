@@ -173,9 +173,7 @@ export const BoardGame: Game<MyGameState> = {
                 G.currentTavern++;
                 const {playersOrder, exchangeOrder}: { playersOrder: number[], exchangeOrder: number[] } =
                     ResolveBoardCoins(G, ctx);
-                // [G.publicPlayersOrder, G.exchangeOrder]: number[] = [playersOrder, exchangeOrder];
-                G.publicPlayersOrder = playersOrder;
-                G.exchangeOrder = exchangeOrder;
+                [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
             },
             onEnd: (G: MyGameState): void => {
                 ChangePlayersPriorities(G);
