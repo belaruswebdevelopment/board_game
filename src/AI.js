@@ -39,7 +39,12 @@ export var enumerate = function (G, ctx) {
                 var argValue = void 0;
                 var argArray = void 0;
                 for (var id = minValue; id < maxValue; id++) {
-                    if (!moveValidators[moveName].validate({ G: G, ctx: ctx, id: id })) {
+                    var type = undefined;
+                    if (stage === "upgradeCoin") {
+                        // todo fix for Uline
+                        type = "board";
+                    }
+                    if (!moveValidators[moveName].validate({ G: G, ctx: ctx, id: id, type: type })) {
                         continue;
                     }
                     if (hasGetValue) {
@@ -308,6 +313,7 @@ export var enumerate = function (G, ctx) {
     if (activeStageOfCurrentPlayer === "upgradeCoinVidofnirVedrfolnir") {
         var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
         if (config !== undefined) {
+            // todo fix for Uline
             var type = "board";
             for (var j = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
                 var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];

@@ -58,7 +58,12 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     let argValue: number;
                     let argArray: number[];
                     for (let id: number = minValue; id < maxValue; id++) {
-                        if (!moveValidators[moveName].validate({G, ctx, id})) {
+                        let type: undefined | string = undefined;
+                        if (stage === "upgradeCoin") {
+                            // todo fix for Uline
+                            type = "board";
+                        }
+                        if (!moveValidators[moveName].validate({G, ctx, id, type})) {
                             continue;
                         }
                         if (hasGetValue) {
@@ -324,7 +329,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (activeStageOfCurrentPlayer === "upgradeCoinVidofnirVedrfolnir") {
             const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
             if (config !== undefined) {
-                let type: string = "board";
+                // todo fix for Uline
+                const type: string = "board";
                 for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
                      j++) {
                     const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
