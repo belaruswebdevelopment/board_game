@@ -4,7 +4,7 @@ import {tavernsConfig} from "../Tavern";
 import {CurrentScoring} from "../Score";
 import {Styles} from "../data/StyleData";
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
-import {DrawCard, DrawCoin} from "../helpers/UIHelper";
+import {DrawCard, DrawCoin} from "../helpers/UIHelpers";
 import {TotalRank} from "../helpers/ScoreHelpers";
 import {GameBoard} from "../GameBoard";
 import {ICoin} from "../Coin";

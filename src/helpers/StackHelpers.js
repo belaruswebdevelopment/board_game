@@ -1,6 +1,6 @@
 import { __spreadArray } from "tslib";
 import { ActionDispatcher } from "../actions/Actions";
-import { EndAction } from "./ActionHelper";
+import { EndAction } from "./ActionHelpers";
 /**
  * <h3>Добавляет действия в стэк действий конкретного игрока.</li>
  * <p>Применения:</p>

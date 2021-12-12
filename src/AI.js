@@ -7,6 +7,7 @@ import { moveBy, moveValidators } from "./MoveValidator";
 import { suitsConfig } from "./data/SuitData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
+import { DiscardCardProfit, HoldaActionProfit, PickDiscardCardProfit, PlaceCardsProfit } from "./helpers/ProfitHelpers";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -386,9 +387,7 @@ export var enumerate = function (G, ctx) {
         }
     }
     if (activeStageOfCurrentPlayer === "pickDiscardCard") {
-        for (var j = 0; j < G.discardCardsDeck.length; j++) {
-            botMoveArguments.push([j]);
-        }
+        PickDiscardCardProfit(G, ctx, botMoveArguments);
         moves.push({
             move: "PickDiscardCard",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
@@ -396,9 +395,7 @@ export var enumerate = function (G, ctx) {
     }
     if (ctx.numPlayers === 2) {
         if (activeStageOfCurrentPlayer === "discardCard") {
-            for (var j = 0; j < G.drawSize; j++) {
-                botMoveArguments.push([j]);
-            }
+            DiscardCardProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: "DiscardCard2Players",
                 args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
@@ -406,23 +403,14 @@ export var enumerate = function (G, ctx) {
         }
     }
     if (activeStageOfCurrentPlayer === "placeCards") {
-        for (var j = 0; j < G.suitsNum; j++) {
-            var suit = Object.keys(suitsConfig)[j], pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-            if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
-                botMoveArguments.push([j]);
-            }
-        }
+        PlaceCardsProfit(G, ctx, botMoveArguments);
         moves.push({
             move: "PlaceCard",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (activeStageOfCurrentPlayer === "pickCampCardHolda") {
-        for (var j = 0; j < G.campNum; j++) {
-            if (G.camp[j]) {
-                botMoveArguments.push([j]);
-            }
-        }
+        HoldaActionProfit(G, ctx, botMoveArguments);
         moves.push({
             move: "ClickCampCardHolda",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),

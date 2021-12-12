@@ -30,7 +30,7 @@ import {AddDataToLog, LogTypes} from "../Logging";
 import {CampDeckCardTypes, DeckCardTypes, MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IVariants} from "../data/HeroData";
-import {IsStartActionStage} from "../helpers/ActionHelper";
+import {IsStartActionStage} from "../helpers/ActionHelpers";
 
 // todo Check my types
 /**

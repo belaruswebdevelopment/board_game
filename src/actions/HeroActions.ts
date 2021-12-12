@@ -18,7 +18,7 @@ import {TotalRank} from "../helpers/ScoreHelpers";
 import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IConditions, IVariants} from "../data/HeroData";
-import {IsStartActionStage} from "../helpers/ActionHelper";
+import {IsStartActionStage} from "../helpers/ActionHelpers";
 
 /**
  * <h3>Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.</h3>

@@ -10,6 +10,7 @@ import {CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes} from "./
 import {Ctx} from "boardgame.io";
 import {ICoin} from "./Coin";
 import {IConfig, IStack, PickedCardType, PlayerCardsType} from "./Player";
+import {DiscardCardProfit, HoldaActionProfit, PickDiscardCardProfit, PlaceCardsProfit} from "./helpers/ProfitHelpers";
 
 /**
  * <h3>Интерфейс для возможных мувов у ботов.</h3>
@@ -18,6 +19,8 @@ interface IMoves {
     move: string,
     args: number[][] | (string | number | boolean)[] | number,
 }
+
+export type IBotMoveArgumentsTypes = (number | string | boolean)[][];
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -43,7 +46,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             && ctx.activePlayers[Number(ctx.currentPlayer)]) ? ctx.activePlayers[Number(ctx.currentPlayer)] :
             "default";
         // todo Fix it, now just for bot can do RANDOM move
-        const botMoveArguments: (number | string | boolean)[][] = [];
+        const botMoveArguments: IBotMoveArgumentsTypes = [];
         for (const stage in moveBy[ctx.phase]) {
             if (moveBy[ctx.phase].hasOwnProperty(stage)) {
                 if (ctx.phase === "pickCards" && stage.startsWith("default")) {
@@ -405,9 +408,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             }
         }
         if (activeStageOfCurrentPlayer === "pickDiscardCard") {
-            for (let j: number = 0; j < G.discardCardsDeck.length; j++) {
-                botMoveArguments.push([j]);
-            }
+            PickDiscardCardProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: "PickDiscardCard",
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
@@ -415,9 +416,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         }
         if (ctx.numPlayers === 2) {
             if (activeStageOfCurrentPlayer === "discardCard") {
-                for (let j: number = 0; j < G.drawSize; j++) {
-                    botMoveArguments.push([j]);
-                }
+                DiscardCardProfit(G, ctx, botMoveArguments);
                 moves.push({
                     move: "DiscardCard2Players",
                     args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
@@ -425,24 +424,14 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             }
         }
         if (activeStageOfCurrentPlayer === "placeCards") {
-            for (let j: number = 0; j < G.suitsNum; j++) {
-                const suit: string = Object.keys(suitsConfig)[j],
-                    pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-                if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
-                    botMoveArguments.push([j]);
-                }
-            }
+            PlaceCardsProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: "PlaceCard",
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
         if (activeStageOfCurrentPlayer === "pickCampCardHolda") {
-            for (let j: number = 0; j < G.campNum; j++) {
-                if (G.camp[j]) {
-                    botMoveArguments.push([j]);
-                }
-            }
+            HoldaActionProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: "ClickCampCardHolda",
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],

@@ -1,5 +1,5 @@
 import {ActionDispatcher, ArgsTypes} from "../actions/Actions";
-import {EndAction} from "./ActionHelper";
+import {EndAction} from "./ActionHelpers";
 import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IConfig, IStack} from "../Player";

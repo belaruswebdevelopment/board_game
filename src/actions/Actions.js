@@ -9,7 +9,7 @@ import { AddHeroToCards, CheckAndMoveThrudOrPickHeroAction, GetClosedCoinIntoPla
 import { AddCampCardToCards, AddCoinToPouchAction, CheckPickCampCard, DiscardAnyCardFromPlayerBoard, DiscardSuitCard, DiscardTradingCoin, GetMjollnirProfitAction, StartDiscardSuitCard, StartVidofnirVedrfolnirAction, UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AddDataToLog, LogTypes } from "../Logging";
-import { IsStartActionStage } from "../helpers/ActionHelper";
+import { IsStartActionStage } from "../helpers/ActionHelpers";
 /**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>

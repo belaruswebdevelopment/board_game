@@ -9,7 +9,7 @@ import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { IsStartActionStage } from "../helpers/ActionHelper";
+import { IsStartActionStage } from "../helpers/ActionHelpers";
 /**
  * <h3>Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.</h3>
  * <p>Применения:</p>
