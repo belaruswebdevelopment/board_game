@@ -308,7 +308,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             }
             moves.push({
                 move: "ClickHandCoin",
-                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]]
+                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
             if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
                 moves.push({move: "ClickBoardCoin", args: [G.tavernsNum + 1]});

@@ -8,6 +8,7 @@ import {ICoin} from "../Coin";
 import {IPublicPlayer} from "../Player";
 import {IHero} from "../Hero";
 import {CampDeckCardTypes, DeckCardTypes} from "../GameSetup";
+import {AddDataToLog, LogTypes} from "../Logging";
 
 export interface IDrawBoardOptions {
     boardCols: number,
@@ -50,7 +51,8 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
     for (const suit in suitsConfig) {
         playerHeaders.push(
             <th className={`${suitsConfig[suit].suitColor}`}
-                key={`${data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname} ${suitsConfig[suit].suitName}`}>
+                key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} 
+                ${suitsConfig[suit].suitName}`}>
                 <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
 
                 </span>
@@ -66,25 +68,27 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
         for (let j: number = 0; j < data.props.G.suitsNum; j++) {
             const suit: string = Object.keys(suitsConfig)[j];
             id = i + j;
-            if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j] !== undefined
-                && data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][i] !== undefined) {
+            if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j] !== undefined
+                && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i] !== undefined) {
                 isExit = false;
-                if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][i].type !== "герой") {
+                if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i].type !== "герой") {
                     isDrawRow = true;
                     DrawCard(data, playerCells,
-                        data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][i], id,
-                        data.props.G.publicPlayers[data.props.ctx.currentPlayer], suit,
+                        data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i], id,
+                        data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], suit,
                         "OnClickDiscardCardFromPlayerBoard", j, i);
                 } else {
                     playerCells.push(
-                        <td key={`${data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname} empty card ${id}`}>
+                        <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} 
+                        empty card ${id}`}>
 
                         </td>
                     );
                 }
             } else {
                 playerCells.push(
-                    <td key={`${data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname} empty card ${id}`}>
+                    <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} empty 
+                    card ${id}`}>
 
                     </td>
                 );
@@ -92,7 +96,8 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
         }
         if (isDrawRow) {
             playerRows[i].push(
-                <tr key={`${data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname} board row ${i}`}>
+                <tr key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} board row 
+                ${i}`}>
                     {playerCells}
                 </tr>
             );
@@ -344,14 +349,14 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
  * @param {string | number | boolean | object | null} args Аргументы действия.
  * @constructor
  */
-export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin: ICoin, id: number,
+export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin: ICoin | null, id: number,
                          player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
                          actionName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = {background: ""},
         span = null,
         action: Function | null,
         tdClasses: string = "bg-yellow-300",
-        spanClasses: string;
+        spanClasses: string = "";
     switch (actionName) {
         case "OnClickBoardCoin":
             action = (...args: ArgsTypes): void => {
@@ -385,12 +390,16 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
         tdClasses += " cursor-pointer";
     }
     if (type === "market") {
-        styles = Styles.Coin(coin.value, false);
-        spanClasses = "bg-market-coin";
-        if (coinClasses !== null && coinClasses !== undefined) {
-            span = (<span className={coinClasses}>
-                {additionalParam}
-            </span>);
+        if (coin !== null) {
+            styles = Styles.Coin(coin.value, false);
+            spanClasses = "bg-market-coin";
+            if (coinClasses !== null && coinClasses !== undefined) {
+                span = (<span className={coinClasses}>
+                    {additionalParam}
+                </span>);
+            }
+        } else {
+            AddDataToLog(data.props.G, LogTypes.ERROR, `ОШИБКА: Монета на рынке не может быть 'null'.`);
         }
     } else {
         spanClasses = "bg-coin";
@@ -398,7 +407,7 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
             spanClasses += ` ${coinClasses}`;
         }
         if (type === "coin") {
-            if (coin === undefined) {
+            if (coin === null) {
                 styles = Styles.CoinBack();
             } else {
                 if (coin.isInitial !== undefined) {

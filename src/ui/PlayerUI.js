@@ -19,6 +19,7 @@ import { TotalRank } from "../helpers/ScoreHelpers";
  * @constructor
  */
 export var DrawPlayersBoardsCoins = function (data) {
+    var _a;
     var playersBoardsCoins = [], playerHeaders = [], playerFooters = [], playerRows = [];
     for (var p = 0; p < data.props.ctx.numPlayers; p++) {
         var coinIndex = 0;
@@ -68,34 +69,34 @@ export var DrawPlayersBoardsCoins = function (data) {
                     }
                     else {
                         playerFooters[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }, void 0) }, "".concat(data.props.G.publicPlayers[p].nickname, " exchange icon ").concat(j)));
-                        if (data.props.G.publicPlayers[p].boardCoins[coinIndex] === null) {
+                        var coin = data.props.G.publicPlayers[p].boardCoins[coinIndex];
+                        if (coin === null) {
                             if (Number(data.props.ctx.currentPlayer) === p
                                 && data.props.ctx.phase !== "placeCoinsUline" && (data.props.ctx.phase === "placeCoins"
                                 || (data.props.ctx.activePlayers &&
-                                    data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
+                                    data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                                     "placeTradingCoinsUline")) {
-                                DrawCoin(data, playerCells, "back-small-market-coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
+                                DrawCoin(data, playerCells, "back-small-market-coin", coin, coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
                             }
                             else {
-                                DrawCoin(data, playerCells, "back-small-market-coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p]);
+                                DrawCoin(data, playerCells, "back-small-market-coin", coin, coinIndex, data.props.G.publicPlayers[p]);
                             }
                         }
                         else if (Number(data.props.ctx.currentPlayer) === p
                             && (data.props.ctx.phase === "placeCoins" || (data.props.ctx.activePlayers
-                                && data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
+                                && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                                 "placeTradingCoinsUline")) {
-                            DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
+                            DrawCoin(data, playerCells, "coin", coin, coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
                         }
                         else {
                             if (data.props.G.winner.length || (data.props.ctx.phase !== "placeCoins"
                                 && Number(data.props.ctx.currentPlayer) === p
-                                && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern]
-                                && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern]
-                                    .isTriggerTrading)) {
-                                DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p]);
+                                && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern] !== null
+                                && ((_a = data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading))) {
+                                DrawCoin(data, playerCells, "coin", coin, coinIndex, data.props.G.publicPlayers[p]);
                             }
                             else {
-                                DrawCoin(data, playerCells, "back", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p]);
+                                DrawCoin(data, playerCells, "back", coin, coinIndex, data.props.G.publicPlayers[p]);
                             }
                         }
                         coinIndex++;
@@ -137,7 +138,7 @@ export var DrawPlayersHandsCoins = function (data) {
                         }
                         if (!data.props.G.winner.length && (data.props.ctx.phase === "placeCoins"
                             || data.props.ctx.phase === "placeCoinsUline" || (data.props.ctx.activePlayers
-                            && data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
+                            && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                             "placeTradingCoinsUline")) {
                             DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].handCoins[j], j, data.props.G.publicPlayers[p], coinClasses, null, "OnClickHandCoin", j);
                         }
@@ -177,7 +178,7 @@ export var DrawPlayersBoards = function (data) {
             playerHeaders[p].push(_jsx("th", __assign({ className: "".concat(suitsConfig[suit].suitColor) }, { children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, void 0) }), "".concat(data.props.G.publicPlayers[p].nickname, " ").concat(suitsConfig[suit].suitName)));
             playerHeadersCount[p].push(_jsx("th", __assign({ className: "".concat(suitsConfig[suit].suitColor, " text-white") }, { children: _jsx("b", { children: data.props.G.publicPlayers[p].cards[GetSuitIndexByName(suit)].reduce(TotalRank, 0) }, void 0) }), "".concat(data.props.G.publicPlayers[p].nickname, " ").concat(suitsConfig[suit].suitName, " count")));
         }
-        for (var s = 0; s < 1 + data.props.G.expansions.thingvellir.active; s++) {
+        for (var s = 0; s < 1 + Number(data.props.G.expansions.thingvellir.active); s++) {
             if (s === 0) {
                 playerHeaders[p].push(_jsx("th", __assign({ className: "bg-gray-600" }, { children: _jsx("span", { style: Styles.HeroBack(), className: "bg-hero-icon" }, void 0) }), "".concat(data.props.G.publicPlayers[p].nickname, " hero icon")));
                 playerHeadersCount[p].push(_jsx("th", __assign({ className: "bg-gray-600 text-white" }, { children: _jsx("b", { children: data.props.G.publicPlayers[p].heroes.length }, void 0) }), "".concat(data.props.G.publicPlayers[p].nickname, " hero count")));
@@ -203,7 +204,7 @@ export var DrawPlayersBoards = function (data) {
                     playerCells.push(_jsx("td", {}, "".concat(data.props.G.publicPlayers[p].nickname, " empty card ").concat(id)));
                 }
             }
-            for (var k = 0; k < 1 + data.props.G.expansions.thingvellir.active; k++) {
+            for (var k = 0; k < 1 + Number(data.props.G.expansions.thingvellir.active); k++) {
                 id += k + 1;
                 if (k === 0) {
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
@@ -242,7 +243,7 @@ export var DrawPlayersBoards = function (data) {
             }
         }
         playersBoards[p].push(_jsxs("table", __assign({ className: "mx-auto" }, { children: [_jsxs("caption", { children: ["Player ", p + 1, " (", data.props.G.publicPlayers[p].nickname, ") cards, ", data.props.G.winner.length ? "Final: ".concat(data.props.G.totalScore[p]) :
-                            CurrentScoring(data.props.G.publicPlayers[p]), " points"] }, void 0), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders[p] }, void 0), _jsx("tr", { children: playerHeadersCount[p] }, void 0)] }, void 0), _jsx("tbody", { children: playerRows[p] }, void 0)] }), "".concat(data.props.G.publicPlayers.nickname, " board")));
+                            CurrentScoring(data.props.G.publicPlayers[p]), " points"] }, void 0), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders[p] }, void 0), _jsx("tr", { children: playerHeadersCount[p] }, void 0)] }, void 0), _jsx("tbody", { children: playerRows[p] }, void 0)] }), "".concat(data.props.G.publicPlayers[p].nickname, " board")));
     }
     return playersBoards;
 };

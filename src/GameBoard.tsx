@@ -14,6 +14,7 @@ import {DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins,} from 
 import {DrawDebugData} from "./ui/DebugUI";
 import {DrawLogData} from "./ui/LogUI";
 import type {BoardProps} from 'boardgame.io/react';
+import {MyGameState} from "./GameSetup";
 
 /**
  * <h3>Отрисовка игрового стола.</h3>
@@ -22,7 +23,7 @@ import type {BoardProps} from 'boardgame.io/react';
  * <li>При отрисовке игрового поля для игроков.</li>
  * </ol>
  */
-export class GameBoard extends React.Component<BoardProps> {
+export class GameBoard extends React.Component<BoardProps<MyGameState>> {
     OnClickDistinctionCard = (cardId: number): void => {
         this.props.moves.ClickDistinctionCard(cardId);
     };

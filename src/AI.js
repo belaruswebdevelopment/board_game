@@ -291,7 +291,7 @@ export var enumerate = function (G, ctx) {
         }
         moves.push({
             move: "ClickHandCoin",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true)
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
         if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
             moves.push({ move: "ClickBoardCoin", args: [G.tavernsNum + 1] });

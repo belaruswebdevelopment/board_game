@@ -7,6 +7,7 @@ import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {DrawCard, DrawCoin} from "../helpers/UIHelper";
 import {TotalRank} from "../helpers/ScoreHelpers";
 import {GameBoard} from "../GameBoard";
+import {ICoin} from "../Coin";
 
 /**
  * <h3>Отрисовка планшета монет, выложенных игроком на стол.</h3>
@@ -103,42 +104,38 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                                 </span>
                             </th>
                         );
-                        if (data.props.G.publicPlayers[p].boardCoins[coinIndex] === null) {
+                        const coin: ICoin | null = data.props.G.publicPlayers[p].boardCoins[coinIndex];
+                        if (coin === null) {
                             if (Number(data.props.ctx.currentPlayer) === p
                                 && data.props.ctx.phase !== "placeCoinsUline" && (data.props.ctx.phase === "placeCoins"
                                     || (data.props.ctx.activePlayers &&
-                                        data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
+                                        data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                                     "placeTradingCoinsUline")) {
                                 DrawCoin(data, playerCells, "back-small-market-coin",
-                                    data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
-                                    data.props.G.publicPlayers[p], null, null,
-                                    "OnClickBoardCoin", j);
+                                    coin, coinIndex, data.props.G.publicPlayers[p], null,
+                                    null, "OnClickBoardCoin", j);
                             } else {
                                 DrawCoin(data, playerCells, "back-small-market-coin",
-                                    data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
-                                    data.props.G.publicPlayers[p]);
+                                    coin, coinIndex, data.props.G.publicPlayers[p]);
                             }
                         } else if (Number(data.props.ctx.currentPlayer) === p
                             && (data.props.ctx.phase === "placeCoins" || (data.props.ctx.activePlayers
-                                    && data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
+                                    && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                                 "placeTradingCoinsUline")) {
                             DrawCoin(data, playerCells, "coin",
-                                data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
-                                data.props.G.publicPlayers[p], null, null,
-                                "OnClickBoardCoin", j);
+                                coin, coinIndex, data.props.G.publicPlayers[p], null,
+                                null, "OnClickBoardCoin", j);
                         } else {
                             if (data.props.G.winner.length || (data.props.ctx.phase !== "placeCoins"
                                 && Number(data.props.ctx.currentPlayer) === p
+                                && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern] !== null
                                 && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern]
-                                && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern]
-                                    .isTriggerTrading)) {
+                                    ?.isTriggerTrading)) {
                                 DrawCoin(data, playerCells, "coin",
-                                    data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
-                                    data.props.G.publicPlayers[p]);
+                                    coin, coinIndex, data.props.G.publicPlayers[p]);
                             } else {
                                 DrawCoin(data, playerCells, "back",
-                                    data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
-                                    data.props.G.publicPlayers[p]);
+                                    coin, coinIndex, data.props.G.publicPlayers[p]);
                             }
                         }
                         coinIndex++;
@@ -203,7 +200,7 @@ export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
                         }
                         if (!data.props.G.winner.length && (data.props.ctx.phase === "placeCoins"
                             || data.props.ctx.phase === "placeCoinsUline" || (data.props.ctx.activePlayers
-                                && data.props.ctx.activePlayers[data.props.ctx.currentPlayer]) ===
+                                && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                             "placeTradingCoinsUline")) {
                             DrawCoin(data, playerCells, "coin",
                                 data.props.G.publicPlayers[p].handCoins[j], j,
@@ -270,7 +267,7 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                 </th>
             );
         }
-        for (let s: number = 0; s < 1 + data.props.G.expansions.thingvellir.active; s++) {
+        for (let s: number = 0; s < 1 + Number(data.props.G.expansions.thingvellir.active); s++) {
             if (s === 0) {
                 playerHeaders[p].push(
                     <th className="bg-gray-600" key={`${data.props.G.publicPlayers[p].nickname} hero icon`}>
@@ -321,7 +318,7 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                     );
                 }
             }
-            for (let k: number = 0; k < 1 + data.props.G.expansions.thingvellir.active; k++) {
+            for (let k: number = 0; k < 1 + Number(data.props.G.expansions.thingvellir.active); k++) {
                 id += k + 1;
                 if (k === 0) {
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
@@ -367,7 +364,7 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
             }
         }
         playersBoards[p].push(
-            <table className="mx-auto" key={`${data.props.G.publicPlayers.nickname} board`}>
+            <table className="mx-auto" key={`${data.props.G.publicPlayers[p].nickname} board`}>
                 <caption>Player {p + 1} ({data.props.G.publicPlayers[p].nickname})
                     cards, {data.props.G.winner.length ? `Final: ${data.props.G.totalScore[p]}` :
                         CurrentScoring(data.props.G.publicPlayers[p])} points

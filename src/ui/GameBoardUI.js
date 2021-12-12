@@ -6,6 +6,7 @@ import { tavernsConfig } from "../Tavern";
 import { Styles } from "../data/StyleData";
 import { DrawBoard, DrawButton, DrawCard, DrawCoin, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard } from "../helpers/UIHelper";
 import { TotalRank } from "../helpers/ScoreHelpers";
+import { isCardNotAction } from "../Card";
 /**
  * <h3>Отрисовка игровой информации о текущей эпохе и количестве карт в деках.</h3>
  * <p>Применения:</p>
@@ -164,13 +165,13 @@ export var DrawProfit = function (data, option) {
     var caption = "Get ";
     var _loop_2 = function (i) {
         if (option === "placeCards") {
-            caption += "suit to place ".concat(data.props.G.actionsNum ? data.props.G.actionsNum : 1, " \n            ").concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.drawName).concat(data.props.G.actionsNum
+            caption += "suit to place ".concat(data.props.G.actionsNum ? data.props.G.actionsNum : 1, " \n            ").concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].stack[0].config.drawName).concat(data.props.G.actionsNum
                 > 1 ? "s" : "", " to ").concat(data.props.G.actionsNum > 1 ? "different" : "that", " suit.");
             var _loop_3 = function (j) {
                 var suit = Object.keys(suitsConfig)[j];
-                if (suit !== ((_a = data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard) === null || _a === void 0 ? void 0 : _a.suit)) {
-                    boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToPlaceCard(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", { children: (_b = data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].variants[suit]
-                                    .points) !== null && _b !== void 0 ? _b : "" }, void 0) }), void 0) }), "Place \n                            ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.drawName, " \n                            on ").concat(suitsConfig[suit].suitName)));
+                if (suit !== ((_a = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard) === null || _a === void 0 ? void 0 : _a.suit)) {
+                    boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToPlaceCard(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", { children: (_b = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].stack[0].variants[suit]
+                                    .points) !== null && _b !== void 0 ? _b : "" }, void 0) }), void 0) }), "Place \n                            ".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].stack[0].config.drawName, " \n                            on ").concat(suitsConfig[suit].suitName)));
                 }
             };
             for (var j = 0; j < data.props.G.suitsNum; j++) {
@@ -180,22 +181,22 @@ export var DrawProfit = function (data, option) {
         else if (option === "explorerDistinction") {
             caption += "one card to your board.";
             for (var j = 0; j < 3; j++) {
-                DrawCard(data, boardCells, data.props.G.decks[1][j], j, data.props.G.publicPlayers[data.props.ctx.currentPlayer], data.props.G.decks[1][j].suit, "OnClickCardToPickDistinction", j);
+                DrawCard(data, boardCells, data.props.G.decks[1][j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], data.props.G.decks[1][j].suit, "OnClickCardToPickDistinction", j);
             }
         }
         else if (option === "BonfurAction" || option === "DagdaAction") {
             caption += "".concat(data.props.G.actionsNum, " card").concat(data.props.G.actionsNum > 1 ? "s" : "", " to discard from your \n            board.");
             for (var j = 0; j < data.props.G.suitsNum; j++) {
-                if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][0] !== undefined
-                    && suitsConfig[data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][0].suit].suit !==
-                        data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.suit
+                if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][0] !== undefined
+                    && suitsConfig[data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][0].suit].suit !==
+                        data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].stack[0].config.suit
                     && !(option === "DagdaAction" && data.props.G.actionsNum === 1
-                        && suitsConfig[data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][0].suit].suit ===
-                            (data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard
-                                && data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.suit))) {
-                    var last = data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j].length - 1;
-                    if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][last].type !== "герой") {
-                        DrawCard(data, boardCells, data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][last], last, data.props.G.publicPlayers[data.props.ctx.currentPlayer], data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j][last].suit, "OnClickCardToDiscard", j, last);
+                        && suitsConfig[data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][0].suit].suit ===
+                            (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard
+                                && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard.suit))) {
+                    var last = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j].length - 1;
+                    if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][last].type !== "герой") {
+                        DrawCard(data, boardCells, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][last], last, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][last].suit, "OnClickCardToDiscard", j, last);
                     }
                 }
             }
@@ -203,22 +204,22 @@ export var DrawProfit = function (data, option) {
         else if (option === "AndumiaAction" || option === "BrisingamensAction") {
             caption += "".concat(data.props.G.actionsNum, " card").concat(data.props.G.actionsNum > 1 ? "s" : "", " from discard pile to \n            your board.");
             for (var j = 0; j < data.props.G.discardCardsDeck.length; j++) {
-                DrawCard(data, boardCells, data.props.G.discardCardsDeck[j], j, data.props.G.publicPlayers[data.props.ctx.currentPlayer], data.props.G.discardCardsDeck[j].suit, "OnClickCardFromDiscard", j);
+                DrawCard(data, boardCells, data.props.G.discardCardsDeck[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], data.props.G.discardCardsDeck[j].suit, "OnClickCardFromDiscard", j);
             }
         }
         else if (option === "BrisingamensEndGameAction") {
             caption += "one card to discard from your board.";
-            boardCells.push(_jsx("td", { children: DrawPlayerBoardForCardDiscard(data) }, "".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].nickname, " discard card")));
+            boardCells.push(_jsx("td", { children: DrawPlayerBoardForCardDiscard(data) }, "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " discard card")));
         }
         else if (option === "HofudAction") {
             caption += "one warrior card to discard from your board.";
-            boardCells.push(_jsx("td", { children: DrawPlayersBoardForSuitCardDiscard(data, data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.suit) }, "Discard ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.suit, " suit \n                cardboard")));
+            boardCells.push(_jsx("td", { children: DrawPlayersBoardForSuitCardDiscard(data, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].stack[0].config.suit) }, "Discard ".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].stack[0].config.suit, " suit \n                cardboard")));
         }
         else if (option === "HoldaAction") {
             caption += "one card from camp to your board.";
             for (var j = 0; j < data.props.G.campNum; j++) {
                 if (data.props.G.camp[j]) {
-                    DrawCard(data, boardCells, data.props.G.camp[j], j, data.props.G.publicPlayers[data.props.ctx.currentPlayer], null, "OnClickCampCardHolda", j);
+                    DrawCard(data, boardCells, data.props.G.camp[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], null, "OnClickCampCardHolda", j);
                 }
             }
         }
@@ -226,7 +227,7 @@ export var DrawProfit = function (data, option) {
             caption += "one card to discard from current tavern.";
             for (var j = 0; j < data.props.G.drawSize; j++) {
                 if (data.props.G.taverns[data.props.G.currentTavern][j]) {
-                    DrawCard(data, boardCells, data.props.G.taverns[data.props.G.currentTavern][j], j, data.props.G.publicPlayers[data.props.ctx.currentPlayer], data.props.G.taverns[data.props.G.currentTavern][j].suit, "OnClickCardToDiscard2Players", j);
+                    DrawCard(data, boardCells, data.props.G.taverns[data.props.G.currentTavern][j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], data.props.G.taverns[data.props.G.currentTavern][j].suit, "OnClickCardToDiscard2Players", j);
                 }
             }
         }
@@ -234,7 +235,7 @@ export var DrawProfit = function (data, option) {
             caption += "suit to get Mjöllnir profit from ranks on that suit.";
             var _loop_4 = function (j) {
                 var suit = Object.keys(suitsConfig)[j];
-                boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToGetMjollnirProfit(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", __assign({ className: "whitespace-nowrap text-white" }, { children: data.props.G.publicPlayers[data.props.ctx.currentPlayer].cards[j].reduce(TotalRank, 0)
+                boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToGetMjollnirProfit(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", __assign({ className: "whitespace-nowrap text-white" }, { children: data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j].reduce(TotalRank, 0)
                                 * 2 }), void 0) }), void 0) }), "".concat(suit, " suit to get Mj\u00F6llnir profit")));
             };
             for (var j = 0; j < data.props.G.suitsNum; j++) {
@@ -245,31 +246,31 @@ export var DrawProfit = function (data, option) {
             caption = "Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.";
             for (var j = 0; j < 2; j++) {
                 if (j === 0) {
-                    DrawButton(data, boardCells, "start Enlistment Mercenaries", "Start", data.props.G.publicPlayers[data.props.ctx.currentPlayer], "OnClickStartEnlistmentMercenaries");
+                    DrawButton(data, boardCells, "start Enlistment Mercenaries", "Start", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "OnClickStartEnlistmentMercenaries");
                 }
                 else if (data.props.G.publicPlayersOrder.length > 1) {
-                    DrawButton(data, boardCells, "pass Enlistment Mercenaries", "Pass", data.props.G.publicPlayers[data.props.ctx.currentPlayer], "OnClickPassEnlistmentMercenaries");
+                    DrawButton(data, boardCells, "pass Enlistment Mercenaries", "Pass", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "OnClickPassEnlistmentMercenaries");
                 }
             }
         }
         else if (option === "enlistmentMercenaries") {
             caption += "mercenary to place it to your player board.";
-            var mercenaries = data.props.G.publicPlayers[data.props.ctx.currentPlayer].campCards
+            var mercenaries = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].campCards
                 .filter(function (card) { return card.type === "наёмник"; });
             for (var j = 0; j < mercenaries.length; j++) {
-                DrawCard(data, boardCells, mercenaries[j], j, data.props.G.publicPlayers[data.props.ctx.currentPlayer], null, "OnClickGetEnlistmentMercenaries", j);
+                DrawCard(data, boardCells, mercenaries[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], null, "OnClickGetEnlistmentMercenaries", j);
             }
         }
         else if (option === "placeEnlistmentMercenaries") {
-            caption += "suit to place ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.name, " to \n            that suit.");
+            caption += "suit to place ".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard.name, " to \n            that suit.");
             var _loop_5 = function (j) {
                 var suit = Object.keys(suitsConfig)[j];
-                if (suit === (data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit]
-                    && data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0].variants[suit].suit)) {
-                    boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToPlaceMercenary(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", { children: data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0]
+                if (suit === (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard.stack[0].variants[suit]
+                    && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard.stack[0].variants[suit].suit)) {
+                    boardCells.push(_jsx("td", __assign({ className: "".concat(suitsConfig[suit].suitColor, " cursor-pointer"), onClick: function () { return data.OnClickSuitToPlaceMercenary(j); } }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, { children: _jsx("b", { children: data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard.stack[0]
                                     .variants[suit].points !== null ?
-                                    data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.stack[0]
-                                        .variants[suit].points : "" }, void 0) }), void 0) }), "Place ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].pickedCard.name, " ").concat(j, " \n                            on ").concat(suitsConfig[suit].suitName)));
+                                    data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard.stack[0]
+                                        .variants[suit].points : "" }, void 0) }), void 0) }), "Place ".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard.name, " ").concat(j, " \n                            on ").concat(suitsConfig[suit].suitName)));
                 }
             };
             for (var j = 0; j < data.props.G.suitsNum; j++) {
@@ -278,54 +279,54 @@ export var DrawProfit = function (data, option) {
         }
         else if (option === "AddCoinToPouchVidofnirVedrfolnir") {
             caption += "".concat(data.props.G.actionsNum, " coin").concat(data.props.G.actionsNum > 1 ? "s" : "", " to add to your pouch \n            to fill it.");
-            for (var j = 0; j < data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins.length; j++) {
-                if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].buffs.everyTurn === "Uline"
-                    && data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[j] !== null) {
-                    DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[j], j, data.props.G.publicPlayers[data.props.ctx.currentPlayer], "border-2", null, "OnClickCoinToAddToPouch", j);
+            for (var j = 0; j < data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins.length; j++) {
+                if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn === "Uline"
+                    && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins[j] !== null) {
+                    DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToAddToPouch", j);
                 }
             }
         }
         else {
-            caption += "coin to upgrade up to \n            ".concat(data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.value, ".");
+            caption += "coin to upgrade up to \n            ".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].stack[0].config.value, ".");
             if (option === "VidofnirVedrfolnirAction") {
                 for (var j = data.props.G.tavernsNum; j <
-                    data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins.length; j++) {
+                    data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins.length; j++) {
                     var type = "board", isInitial = false;
-                    if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j]
-                        && !data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading
-                        && data.props.G.publicPlayers[data.props.ctx.currentPlayer].stack[0].config.coinId !== j) {
-                        isInitial = data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j].isInitial;
-                        DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j], j, data.props.G.publicPlayers[data.props.ctx.currentPlayer], "border-2", null, "OnClickCoinToUpgradeVidofnirVedrfolnir", j, type, isInitial);
+                    if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
+                        && !data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j].isTriggerTrading
+                        && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].stack[0].config.coinId !== j) {
+                        isInitial = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j].isInitial;
+                        DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgradeVidofnirVedrfolnir", j, type, isInitial);
                     }
                 }
             }
             else if (option === "upgradeCoin") {
-                var handCoins_1 = data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins
+                var handCoins_1 = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins
                     .filter(function (coin) { return coin !== null; });
                 var handCoinIndex_1 = -1;
-                for (var j = 0; j < data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins.length; j++) {
+                for (var j = 0; j < data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins.length; j++) {
                     var type = "board", isInitial = false;
-                    if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].buffs.everyTurn === "Uline"
-                        && data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j] === null) {
+                    if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn === "Uline"
+                        && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j] === null) {
                         handCoinIndex_1++;
                         isInitial = handCoins_1[handCoinIndex_1].isInitial;
-                        var handCoinId = data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins
+                        var handCoinId = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins
                             .findIndex(function (coin) {
                             return (coin === null || coin === void 0 ? void 0 : coin.value) === handCoins_1[handCoinIndex_1].value
                                 && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === handCoins_1[handCoinIndex_1].isInitial;
                         });
-                        if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[handCoinId]
-                            && !data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[handCoinId]
+                        if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins[handCoinId]
+                            && !data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins[handCoinId]
                                 .isTriggerTrading) {
                             type = "hand";
                             isInitial = handCoins_1[handCoinIndex_1].isInitial;
-                            DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[data.props.ctx.currentPlayer].handCoins[handCoinId], j, data.props.G.publicPlayers[data.props.ctx.currentPlayer], "border-2", null, "OnClickCoinToUpgrade", j, type, isInitial);
+                            DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins[handCoinId], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, type, isInitial);
                         }
                     }
-                    else if (data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j]
-                        && !data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j].isTriggerTrading) {
-                        isInitial = data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j].isInitial;
-                        DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[data.props.ctx.currentPlayer].boardCoins[j], j, data.props.G.publicPlayers[data.props.ctx.currentPlayer], "border-2", null, "OnClickCoinToUpgrade", j, type, isInitial);
+                    else if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
+                        && !data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j].isTriggerTrading) {
+                        isInitial = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j].isInitial;
+                        DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, type, isInitial);
                     }
                 }
             }
@@ -351,11 +352,12 @@ export var DrawCamp = function (data) {
     var boardCells = [];
     for (var i = 0; i < 1; i++) {
         for (var j = 0; j < data.props.G.campNum; j++) {
-            if (data.props.G.camp[j] === null || data.props.G.camp[j] === undefined) {
+            var campCard = data.props.G.camp[j];
+            if (campCard === null || data.props.G.camp[j] === undefined) {
                 boardCells.push(_jsx("td", __assign({ className: "bg-yellow-200" }, { children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }, void 0) }), "Camp ".concat(j, " icon")));
             }
             else {
-                DrawCard(data, boardCells, data.props.G.camp[j], j, null, null, "OnClickCampCard", j);
+                DrawCard(data, boardCells, campCard, j, null, null, "OnClickCampCard", j);
             }
         }
     }
@@ -383,15 +385,20 @@ export var DrawTaverns = function (data, gridClass) {
         for (var i = 0; i < 1; i++) {
             var boardCells = [];
             for (var j = 0; j < data.props.G.drawSize; j++) {
-                if (data.props.G.taverns[t][j] === null) {
+                var tavernCard = data.props.G.taverns[t][j];
+                if (tavernCard === null) {
                     boardCells.push(_jsx("td", { children: _jsx("span", { style: Styles.Taverns(t), className: "bg-tavern-icon" }, void 0) }, "".concat(tavernsConfig[t].name, " ").concat(j)));
                 }
                 else {
+                    var tavernCardSuit = null;
+                    if (isCardNotAction(tavernCard)) {
+                        tavernCardSuit = tavernCard.suit;
+                    }
                     if (t === data.props.G.currentTavern) {
-                        DrawCard(data, boardCells, data.props.G.taverns[t][j], j, null, data.props.G.taverns[t][j].suit, "OnClickCard", j);
+                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit, "OnClickCard", j);
                     }
                     else {
-                        DrawCard(data, boardCells, data.props.G.taverns[t][j], j, null, data.props.G.taverns[t][j].suit);
+                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);
                     }
                 }
             }
