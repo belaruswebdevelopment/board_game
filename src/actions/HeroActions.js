@@ -114,20 +114,15 @@ export var AddHeroToCards = function (G, ctx, config) {
         var heroIndex = GetHeroIndexByName(config.drawName), hero = G.heroes[heroIndex];
         var suitId = null;
         AddHeroCardToPlayerHeroCards(G, ctx, hero);
+        AddHeroCardToPlayerCards(G, ctx, hero);
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
         if (hero.suit !== null) {
-            AddHeroCardToPlayerCards(G, ctx, hero);
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
             suitId = GetSuitIndexByName(hero.suit);
-            if (suitId !== -1) {
-                EndActionFromStackAndAddNew(G, ctx, [], suitId);
-            }
-            else {
+            if (suitId === -1) {
                 AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430 \u043D\u0435\u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0430\u044F \u0444\u0440\u0430\u043A\u0446\u0438\u044F ".concat(hero.suit, "."));
             }
         }
-        else {
-            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0433\u0435\u0440\u043E\u044F ".concat(hero.name, " \u0438\u0437-\u0437\u0430 \n            \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044F \u043F\u0440\u0438\u043D\u0430\u0434\u043B\u0435\u0436\u043D\u043E\u0441\u0442\u0438 \u043A \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0444\u0440\u0430\u043A\u0446\u0438\u0438."));
-        }
+        EndActionFromStackAndAddNew(G, ctx, [], suitId);
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.drawName'.");
@@ -205,10 +200,18 @@ export var PickHeroWithConditions = function (G, ctx, config) {
  *
  * @param {MyGameState} G
  * @param {Ctx} ctx
+ * @param config {IConfig} Конфиг действий героя.
  * @constructor
  */
-export var PickHero = function (G, ctx) {
-    if (!IsStartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config)) {
+export var PickHero = function (G, ctx, config) {
+    var isStartPickHero = IsStartActionStage(G, ctx, config);
+    if (isStartPickHero) {
+        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n        \u0434\u043E\u043B\u0436\u0435\u043D \u043F\u0438\u043A\u043D\u0443\u0442\u044C \u0433\u0435\u0440\u043E\u044F."));
+    }
+    else {
+        if (config.stageName === undefined) {
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.stageName'.");
+        }
         AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не стартовал стэйдж 'PickHero'.");
     }
 };

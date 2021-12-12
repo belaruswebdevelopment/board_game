@@ -6,7 +6,6 @@ import {Ctx} from "boardgame.io";
 import {ICoin} from "../Coin";
 import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
 import {SuitNames} from "../data/SuitData";
-import {AddDataToLog, LogTypes} from "../Logging";
 
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
@@ -43,8 +42,6 @@ export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: PlayerCardsTyp
             G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(index, 1);
         }
         return index !== -1;
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Отсутствует обязательный параметр 'suit'.`);
     }
     return false;
 };
@@ -107,8 +104,6 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
                 },
             ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Отсутствует обязательный параметр 'suit'.`);
     }
 };
 
@@ -129,24 +124,24 @@ export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): s
     const ulinePlayerIndex: number =
         G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.buffs.everyTurn === "Uline");
     if (ulinePlayerIndex !== -1) {
-        if (ctx.activePlayers![ctx.currentPlayer] !== "placeTradingCoinsUline"
-            && ulinePlayerIndex === Number(ctx.currentPlayer)) {
-            const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
-            if (coin?.isTriggerTrading) {
-                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                    .filter((coin: ICoin | null, index: number): boolean => index >= G.tavernsNum && coin === null)) {
-                    G.actionsNum = G.suitsNum - G.tavernsNum;
-                    ctx.events!.setStage!("placeTradingCoinsUline");
-                    return "placeTradingCoinsUline";
+        if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer] !== "placeTradingCoinsUline") {
+            if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
+                const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
+                if (coin?.isTriggerTrading) {
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+                        .filter((coin: ICoin | null, index: number): boolean =>
+                            index >= G.tavernsNum && coin === null)) {
+                        G.actionsNum = G.suitsNum - G.tavernsNum;
+                        ctx.events!.setStage!("placeTradingCoinsUline");
+                        return "placeTradingCoinsUline";
+                    }
                 }
+            } else if (!G.actionsNum) {
+                ctx.events!.endStage!();
+                return "endPlaceTradingCoinsUline";
+            } else if (G.actionsNum) {
+                return "nextPlaceTradingCoinsUline";
             }
-        } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline"
-            && !G.actionsNum) {
-            ctx.events!.endStage!();
-            return "endPlaceTradingCoinsUline";
-        } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline"
-            && G.actionsNum) {
-            return "nextPlaceTradingCoinsUline";
         } else {
             return "placeCoinsUline";
         }

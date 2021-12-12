@@ -180,7 +180,7 @@ const UpgradeCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: A
 const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
     должен получить преимущества от действия '${config.drawName}'.`);
-    IsStartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config);
+    IsStartActionStage(G, ctx, config);
     G.actionsNum = config.number ?? 1;
     if (config.name !== undefined) {
         G.drawProfit = config.name;
@@ -420,6 +420,7 @@ const CheckPickDiscardCard = (G: MyGameState, ctx: Ctx): void => {
 const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
     const isAdded: boolean = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
         pickedCard: DeckCardTypes = G.discardCardsDeck.splice(cardId, 1)[0];
+    let suitId: number | null = null;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
     добавил карту ${pickedCard.name} из дискарда.`);
     if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
@@ -441,10 +442,8 @@ const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: numb
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-            const suitId: number = GetSuitIndexByName(pickedCard.suit);
-            if (suitId !== -1) {
-                EndActionFromStackAndAddNew(G, ctx, [], suitId);
-            } else {
+            suitId = GetSuitIndexByName(pickedCard.suit);
+            if (suitId === -1) {
                 AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция 
                 ${pickedCard.suit}.`);
             }
@@ -452,6 +451,7 @@ const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: numb
     } else {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
+    EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 
 /**

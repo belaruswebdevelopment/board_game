@@ -233,18 +233,20 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
  * @constructor
  */
 export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
-    const discardCardIndex: number = G.taverns[G.currentTavern]
-        .findIndex((card: TavernCardTypes): boolean => card !== null);
-    if (G.campPicked && discardCardIndex !== -1) {
-        const isCardDiscarded: boolean = DiscardCardFromTavern(G, discardCardIndex);
-        if (isCardDiscarded) {
-            G.campPicked = false;
+    if (G.campPicked) {
+        const discardCardIndex: number = G.taverns[G.currentTavern]
+            .findIndex((card: TavernCardTypes): boolean => card !== null);
+        if (discardCardIndex !== -1) {
+            const isCardDiscarded: boolean = DiscardCardFromTavern(G, discardCardIndex);
+            if (isCardDiscarded) {
+                G.campPicked = false;
+            } else {
+                // todo LogTypes.ERROR because not => G.campPicked = false; ?
+            }
         } else {
-            // todo LogTypes.ERROR ?
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после 
+            выбора карты кэмпа в конце пиков из таверны.`);
         }
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора 
-        карты кэмпа в конце пиков из таверны.`);
     }
 };
 

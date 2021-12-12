@@ -130,19 +130,15 @@ export const AddHeroToCards = (G: MyGameState, ctx: Ctx, config: IConfig): void 
             hero: IHero = G.heroes[heroIndex];
         let suitId: number | null = null;
         AddHeroCardToPlayerHeroCards(G, ctx, hero);
+        AddHeroCardToPlayerCards(G, ctx, hero);
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
         if (hero.suit !== null) {
-            AddHeroCardToPlayerCards(G, ctx, hero);
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
             suitId = GetSuitIndexByName(hero.suit);
-            if (suitId !== -1) {
-                EndActionFromStackAndAddNew(G, ctx, [], suitId);
-            } else {
+            if (suitId === -1) {
                 AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${hero.suit}.`);
             }
-        } else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.name} из-за 
-            отсутствия принадлежности к конкретной фракции.`);
         }
+        EndActionFromStackAndAddNew(G, ctx, [], suitId);
     } else {
         AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.drawName'.");
     }
@@ -223,10 +219,18 @@ export const PickHeroWithConditions = (G: MyGameState, ctx: Ctx, config: IConfig
  *
  * @param {MyGameState} G
  * @param {Ctx} ctx
+ * @param config {IConfig} Конфиг действий героя.
  * @constructor
  */
-export const PickHero = (G: MyGameState, ctx: Ctx): void => {
-    if (!IsStartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config)) {
+export const PickHero = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+    const isStartPickHero: boolean = IsStartActionStage(G, ctx, config);
+    if (isStartPickHero) {
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+        должен пикнуть героя.`);
+    } else {
+        if (config.stageName === undefined) {
+            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.stageName'.");
+        }
         AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не стартовал стэйдж 'PickHero'.");
     }
 };

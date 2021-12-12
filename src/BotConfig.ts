@@ -225,11 +225,11 @@ const absoluteHeuristicsForTradingCoin: { heuristic: (cards: DeckCardTypes[]) =>
  * @todo Саше: сделать описание функции и параметров.
  * @type {{heuristic: (array: number[]) => boolean, weight: number}[]}
  */
-const relativeHeuristicsForTradingCoin: (((array: number[]) => boolean) | {
-    heuristic: (array: number[]) => boolean,
-    weight: number
-})[] = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
-console.log(relativeHeuristicsForTradingCoin ?? "");
+//const relativeHeuristicsForTradingCoin: (((array: number[]) => boolean) | {
+//    heuristic: (array: number[]) => boolean,
+//    weight: number
+//})[] = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
+//console.log(relativeHeuristicsForTradingCoin ?? "");
 
 //may be to add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
 /**

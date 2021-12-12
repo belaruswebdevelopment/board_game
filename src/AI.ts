@@ -387,11 +387,11 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
             if (config !== undefined) {
                 for (let j: number = 0; j < G.suitsNum; j++) {
-                    const suit: string | null = G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit;
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0] !== undefined && suit !== null
-                        && suitsConfig[suit].suit !== config.suit && !(G.drawProfit === "DagdaAction"
-                            && G.actionsNum === 1 && pickedCard !== null && "suit" in pickedCard
-                            && suitsConfig[suit].suit === pickedCard.suit)) {
+                    const suit: string | null | undefined =
+                        G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0]?.suit;
+                    if (suit !== undefined && suit !== null && suitsConfig[suit].suit !== config.suit
+                        && !(G.drawProfit === "DagdaAction" && G.actionsNum === 1 && pickedCard !== null
+                            && "suit" in pickedCard && suitsConfig[suit].suit === pickedCard.suit)) {
                         const last: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[j].length - 1;
                         if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].type !== "герой") {
                             botMoveArguments.push([j, last]);

@@ -19,7 +19,7 @@ import { TotalRank } from "./helpers/ScoreHelpers";
  * @returns {IMoves[]} Массив возможных мувов у ботов.
  */
 export var enumerate = function (G, ctx) {
-    var _a;
+    var _a, _b;
     //make false for standard bot
     var enableAdvancedBot = true, uniqueArr = [];
     var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(function (key) { return key.includes(advancedString); });
@@ -36,7 +36,7 @@ export var enumerate = function (G, ctx) {
             if (stage.includes(activeStageOfCurrentPlayer)
                 && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
                 // todo Sync players and bots validations in one places
-                var moveName = moveBy[ctx.phase][stage], _b = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _b[0], maxValue = _b[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
+                var moveName = moveBy[ctx.phase][stage], _c = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _c[0], maxValue = _c[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
                 var argValue = void 0;
                 var argArray = void 0;
                 for (var id = minValue; id < maxValue; id++) {
@@ -129,7 +129,7 @@ export var enumerate = function (G, ctx) {
             });
         }
         var minResultForCoins = Math.min.apply(Math, resultsForCoins), maxResultForCoins = Math.max.apply(Math, resultsForCoins), tradingProfit = G.decks[G.decks.length - 1].length > 9 ? 1 : 0;
-        var _c = [-1, -1], positionForMinCoin = _c[0], positionForMaxCoin = _c[1];
+        var _d = [-1, -1], positionForMinCoin = _d[0], positionForMaxCoin = _d[1];
         if (minResultForCoins <= 0) {
             positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
         }
@@ -369,11 +369,10 @@ export var enumerate = function (G, ctx) {
         var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config, pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
         if (config !== undefined) {
             for (var j = 0; j < G.suitsNum; j++) {
-                var suit = G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0].suit;
-                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0] !== undefined && suit !== null
-                    && suitsConfig[suit].suit !== config.suit && !(G.drawProfit === "DagdaAction"
-                    && G.actionsNum === 1 && pickedCard !== null && "suit" in pickedCard
-                    && suitsConfig[suit].suit === pickedCard.suit)) {
+                var suit = (_b = G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0]) === null || _b === void 0 ? void 0 : _b.suit;
+                if (suit !== undefined && suit !== null && suitsConfig[suit].suit !== config.suit
+                    && !(G.drawProfit === "DagdaAction" && G.actionsNum === 1 && pickedCard !== null
+                        && "suit" in pickedCard && suitsConfig[suit].suit === pickedCard.suit)) {
                     var last = G.publicPlayers[Number(ctx.currentPlayer)].cards[j].length - 1;
                     if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].type !== "герой") {
                         botMoveArguments.push([j, last]);

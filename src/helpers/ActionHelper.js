@@ -29,18 +29,10 @@ export var EndAction = function (G, ctx, isTrading) {
  * @constructor
  */
 export var IsStartActionStage = function (G, ctx, config) {
-    if (config !== undefined) {
-        if (config.stageName !== undefined) {
-            ctx.events.setStage(config.stageName);
-            AddDataToLog(G, LogTypes.GAME, "\u041D\u0430\u0447\u0430\u043B\u043E \u0444\u0430\u0437\u044B ".concat(config.stageName, "."));
-            return true;
-        }
-        else {
-            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.stageName'.");
-        }
-    }
-    else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config'.");
+    if (config.stageName !== undefined) {
+        ctx.events.setStage(config.stageName);
+        AddDataToLog(G, LogTypes.GAME, "\u041D\u0430\u0447\u0430\u043B\u043E \u0441\u0442\u044D\u0439\u0434\u0436\u0430 ".concat(config.stageName, "."));
+        return true;
     }
     return false;
 };

@@ -154,19 +154,21 @@ export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
  * @constructor
  */
 export var DiscardCardIfCampCardPicked = function (G) {
-    var discardCardIndex = G.taverns[G.currentTavern]
-        .findIndex(function (card) { return card !== null; });
-    if (G.campPicked && discardCardIndex !== -1) {
-        var isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
-        if (isCardDiscarded) {
-            G.campPicked = false;
+    if (G.campPicked) {
+        var discardCardIndex = G.taverns[G.currentTavern]
+            .findIndex(function (card) { return card !== null; });
+        if (discardCardIndex !== -1) {
+            var isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
+            if (isCardDiscarded) {
+                G.campPicked = false;
+            }
+            else {
+                // todo LogTypes.ERROR because not => G.campPicked = false; ?
+            }
         }
         else {
-            // todo LogTypes.ERROR ?
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043B\u0438\u0448\u043D\u044E\u044E \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \u043F\u043E\u0441\u043B\u0435 \n            \u0432\u044B\u0431\u043E\u0440\u0430 \u043A\u0430\u0440\u0442\u044B \u043A\u044D\u043C\u043F\u0430 \u0432 \u043A\u043E\u043D\u0446\u0435 \u043F\u0438\u043A\u043E\u0432 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B.");
         }
-    }
-    else {
-        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043B\u0438\u0448\u043D\u044E\u044E \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \u043F\u043E\u0441\u043B\u0435 \u0432\u044B\u0431\u043E\u0440\u0430 \n        \u043A\u0430\u0440\u0442\u044B \u043A\u044D\u043C\u043F\u0430 \u0432 \u043A\u043E\u043D\u0446\u0435 \u043F\u0438\u043A\u043E\u0432 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B.");
     }
 };
 /**

@@ -158,7 +158,7 @@ var UpgradeCoinAction = function (G, ctx, config) {
 var DrawProfitAction = function (G, ctx, config) {
     var _a;
     AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u043B\u0436\u0435\u043D \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043E\u0442 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F '").concat(config.drawName, "'."));
-    IsStartActionStage(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config);
+    IsStartActionStage(G, ctx, config);
     G.actionsNum = (_a = config.number) !== null && _a !== void 0 ? _a : 1;
     if (config.name !== undefined) {
         G.drawProfit = config.name;
@@ -387,6 +387,7 @@ var CheckPickDiscardCard = function (G, ctx) {
  */
 var PickDiscardCard = function (G, ctx, config, cardId) {
     var isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]), pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
+    var suitId = null;
     AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(pickedCard.name, " \u0438\u0437 \u0434\u0438\u0441\u043A\u0430\u0440\u0434\u0430."));
     if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
         var stack = [
@@ -407,11 +408,8 @@ var PickDiscardCard = function (G, ctx, config, cardId) {
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-            var suitId = GetSuitIndexByName(pickedCard.suit);
-            if (suitId !== -1) {
-                EndActionFromStackAndAddNew(G, ctx, [], suitId);
-            }
-            else {
+            suitId = GetSuitIndexByName(pickedCard.suit);
+            if (suitId === -1) {
                 AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430 \u043D\u0435\u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0430\u044F \u0444\u0440\u0430\u043A\u0446\u0438\u044F \n                ".concat(pickedCard.suit, "."));
             }
         }
@@ -419,6 +417,7 @@ var PickDiscardCard = function (G, ctx, config, cardId) {
     else {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
+    EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 /**
  * <h3>Первый игрок в фазе вербовки наёмников может пасануть, чтобы вербовать последним.</h3>

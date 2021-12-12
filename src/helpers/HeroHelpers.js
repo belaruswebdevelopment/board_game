@@ -2,7 +2,6 @@ import { heroesConfig } from "../data/HeroData";
 import { GetSuitIndexByName } from "./SuitHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 import { SuitNames } from "../data/SuitData";
-import { AddDataToLog, LogTypes } from "../Logging";
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
  * <p>Применения:</p>
@@ -36,9 +35,6 @@ export var CheckAndMoveThrud = function (G, ctx, card) {
             G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(index, 1);
         }
         return index !== -1;
-    }
-    else {
-        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'suit'.");
     }
     return false;
 };
@@ -100,9 +96,6 @@ export var StartThrudMoving = function (G, ctx, card) {
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
     }
-    else {
-        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'suit'.");
-    }
 };
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
@@ -120,26 +113,27 @@ export var CheckAndStartUlineActionsOrContinue = function (G, ctx) {
     // todo Rework it all!
     var ulinePlayerIndex = G.publicPlayers.findIndex(function (player) { return player.buffs.everyTurn === "Uline"; });
     if (ulinePlayerIndex !== -1) {
-        if (ctx.activePlayers[ctx.currentPlayer] !== "placeTradingCoinsUline"
-            && ulinePlayerIndex === Number(ctx.currentPlayer)) {
-            var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
-            if (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) {
-                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                    .filter(function (coin, index) { return index >= G.tavernsNum && coin === null; })) {
-                    G.actionsNum = G.suitsNum - G.tavernsNum;
-                    ctx.events.setStage("placeTradingCoinsUline");
-                    return "placeTradingCoinsUline";
+        if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer] !== "placeTradingCoinsUline") {
+            if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
+                var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
+                if (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) {
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+                        .filter(function (coin, index) {
+                        return index >= G.tavernsNum && coin === null;
+                    })) {
+                        G.actionsNum = G.suitsNum - G.tavernsNum;
+                        ctx.events.setStage("placeTradingCoinsUline");
+                        return "placeTradingCoinsUline";
+                    }
                 }
             }
-        }
-        else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline"
-            && !G.actionsNum) {
-            ctx.events.endStage();
-            return "endPlaceTradingCoinsUline";
-        }
-        else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline"
-            && G.actionsNum) {
-            return "nextPlaceTradingCoinsUline";
+            else if (!G.actionsNum) {
+                ctx.events.endStage();
+                return "endPlaceTradingCoinsUline";
+            }
+            else if (G.actionsNum) {
+                return "nextPlaceTradingCoinsUline";
+            }
         }
         else {
             return "placeCoinsUline";

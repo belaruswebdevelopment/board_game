@@ -33,17 +33,11 @@ export const EndAction = (G: MyGameState, ctx: Ctx, isTrading: boolean): void =>
  * @returns {boolean} Стартанул ли стэйдж.
  * @constructor
  */
-export const IsStartActionStage = (G: MyGameState, ctx: Ctx, config: IConfig | undefined): boolean => {
-    if (config !== undefined) {
-        if (config.stageName !== undefined) {
-            ctx.events!.setStage!(config.stageName);
-            AddDataToLog(G, LogTypes.GAME, `Начало фазы ${config.stageName}.`);
-            return true;
-        } else {
-            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.stageName'.");
-        }
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config'.");
+export const IsStartActionStage = (G: MyGameState, ctx: Ctx, config: IConfig): boolean => {
+    if (config.stageName !== undefined) {
+        ctx.events!.setStage!(config.stageName);
+        AddDataToLog(G, LogTypes.GAME, `Начало стэйджа ${config.stageName}.`);
+        return true;
     }
     return false;
 };

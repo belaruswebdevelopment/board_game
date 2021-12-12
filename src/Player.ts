@@ -378,10 +378,6 @@ export const AddHeroCardToPlayerCards = (G: MyGameState, ctx: Ctx, hero: IHero):
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.name} из-за 
             несуществующей фракции ${hero.suit}.`);
         }
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.suit} на планшет 
-        карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции или его принадлежности к 
-        нейтралам.`);
     }
 };
 

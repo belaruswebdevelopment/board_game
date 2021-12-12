@@ -19,7 +19,7 @@ export const DrawLogData = (data: GameBoard): JSX.Element | null => {
         for (let i: number = data.props.G.logData.length - 1; i >= 0; i--) {
             if (data.props.G.logData[i].type === LogTypes.PRIVATE) {
                 loggingData.push(
-                    <li key={`Log ${i}`} className="text-red-500">
+                    <li key={`Log ${i}`} className="text-black">
                         {data.props.G.logData[i].value}
                     </li>
                 );
@@ -32,6 +32,12 @@ export const DrawLogData = (data: GameBoard): JSX.Element | null => {
             } else if (data.props.G.logData[i].type === LogTypes.PUBLIC) {
                 loggingData.push(
                     <li key={`Log ${i}`} className="text-green-500">
+                        {data.props.G.logData[i].value}
+                    </li>
+                );
+            } else if (data.props.G.logData[i].type === LogTypes.ERROR) {
+                loggingData.push(
+                    <li key={`Log ${i}`} className="text-red-500">
                         {data.props.G.logData[i].value}
                     </li>
                 );

@@ -212,8 +212,11 @@ var absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
  * @todo Саше: сделать описание функции и параметров.
  * @type {{heuristic: (array: number[]) => boolean, weight: number}[]}
  */
-var relativeHeuristicsForTradingCoin = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
-console.log(relativeHeuristicsForTradingCoin !== null && relativeHeuristicsForTradingCoin !== void 0 ? relativeHeuristicsForTradingCoin : "");
+//const relativeHeuristicsForTradingCoin: (((array: number[]) => boolean) | {
+//    heuristic: (array: number[]) => boolean,
+//    weight: number
+//})[] = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
+//console.log(relativeHeuristicsForTradingCoin ?? "");
 //may be to add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
