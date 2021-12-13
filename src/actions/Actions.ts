@@ -234,7 +234,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
     отправил в сброс карту ${pickedCard.name}.`);
     G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-        .splice(cardId, 1)[0] as DeckCardTypes);
+        .splice(cardId, 1)[0] as ICard);
     if (G.actionsNum === 2) {
         const stack: IStack[] = [
             {

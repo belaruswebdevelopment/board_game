@@ -24,6 +24,7 @@ export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
         G.distinctions[i] = result;
         if (suit === SuitNames.EXPLORER && result === undefined) {
             const discardedCard: DeckCardTypes = G.decks[1].splice(0, 1)[0];
+            G.discardCardsDeck.push(discardedCard);
             AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков 
             сброшена карта: ${discardedCard.name}.`);
         }
@@ -31,6 +32,7 @@ export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
     }
 };
 
+// todo Rework 2 functions in one?
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по шевронам конкретной фракции.</h3>
  * <p>Применения:</p>
@@ -64,6 +66,38 @@ export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suitName: 
             никто не получил.`);
             return undefined;
         }
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${suitName}.`);
+        // todo Must return undefined or something else!?
+    }
+};
+
+/**
+ * <h3>Высчитывает наличие игроков с преимуществом по шевронам конкретной фракции.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Применяется при подсчёте преимуществ по количеству шевронов фракции в конце игры (фракция воинов).</li>
+ * </ol>
+ *
+ * @param {MyGameState} G
+ * @param {Ctx} ctx
+ * @param {string} suitName Фракция.
+ * @returns {number[] | undefined} Индексы игроков с преимуществом по фракции.
+ * @constructor
+ */
+export const CheckCurrentSuitDistinctions = (G: MyGameState, ctx: Ctx, suitName: string): number[] | undefined => {
+    const playersRanks: number[] = [],
+        suitIndex: number = GetSuitIndexByName(suitName);
+    if (suitIndex !== -1) {
+        for (let i: number = 0; i < ctx.numPlayers; i++) {
+            playersRanks.push(G.publicPlayers[i].cards[suitIndex].reduce(TotalRank, 0));
+        }
+        const max: number = Math.max(...playersRanks),
+            maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max);
+        const playerDistinctionIndex: number = playersRanks.indexOf(maxPlayers[0]);
+        AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suitName].suitName} 
+        получил игрок: ${G.publicPlayers[playerDistinctionIndex].nickname}.`);
+        return maxPlayers;
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${suitName}.`);
         // todo Must return undefined or something else!?

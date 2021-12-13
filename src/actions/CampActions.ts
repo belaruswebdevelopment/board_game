@@ -324,6 +324,7 @@ export const DiscardAnyCardFromPlayerBoard = (G: MyGameState, ctx: Ctx, config: 
                                               cardId: number): void => {
     const discardedCard: PlayerCardsType =
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(cardId, 1)[0];
+    G.discardCardsDeck.push(discardedCard as ICard);
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
     сбросил карту ${discardedCard.name} в дискард.`);
     delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;

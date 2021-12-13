@@ -3,7 +3,7 @@ import {heroesConfig, IHeroData} from "./data/HeroData";
 import {GetSuitIndexByName} from "./helpers/SuitHelpers";
 import {AddDataToLog, LogTypes} from "./Logging";
 import {artefactsConfig, IArtefact} from "./data/CampData";
-import {CheckCurrentSuitDistinction} from "./Distinction";
+import {CheckCurrentSuitDistinctions} from "./Distinction";
 import {MyGameState} from "./GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPublicPlayer} from "./Player";
@@ -63,10 +63,11 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за монеты игрока ${player.nickname}: ${coinsValue}`);
     const suitWarriorIndex: number = GetSuitIndexByName(SuitNames.WARRIOR);
     if (suitWarriorIndex !== -1) {
-        const warriorsDistinction: number | undefined =
-            CheckCurrentSuitDistinction(G, ctx, SuitNames.WARRIOR);
-        if (warriorsDistinction !== undefined && G.publicPlayers
-            .findIndex((p: IPublicPlayer): boolean => p.nickname === player.nickname) === warriorsDistinction) {
+        const warriorsDistinction: number[] | undefined =
+                CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR),
+            playerIndex: number = G.publicPlayers
+                .findIndex((p: IPublicPlayer): boolean => p.nickname === player.nickname);
+        if (warriorsDistinction !== undefined && warriorsDistinction.includes(playerIndex)) {
             const warriorDistinctionScore: number =
                 suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
             score += warriorDistinctionScore;

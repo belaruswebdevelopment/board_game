@@ -333,8 +333,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                 } else {
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinIndex] = upgradedCoin;
                     AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась 
-                    на руку игрока 
-                ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
+                    на руку игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
                 }
             }
             if (!upgradingCoin.isInitial) {

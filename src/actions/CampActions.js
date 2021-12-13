@@ -301,6 +301,7 @@ export var DiscardTradingCoin = function (G, ctx) {
  */
 export var DiscardAnyCardFromPlayerBoard = function (G, ctx, config, suitId, cardId) {
     var discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(cardId, 1)[0];
+    G.discardCardsDeck.push(discardedCard);
     AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
     delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
     EndActionFromStackAndAddNew(G, ctx);

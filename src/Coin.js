@@ -292,7 +292,7 @@ export var UpgradeCoin = function (G, ctx, config, upgradingCoinId, type, isInit
                 }
                 else {
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinIndex] = upgradedCoin;
-                    AddDataToLog(G, LogTypes.PUBLIC, "\u041C\u043E\u043D\u0435\u0442\u0430 \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '".concat(upgradedCoin.value, "' \u0432\u0435\u0440\u043D\u0443\u043B\u0430\u0441\u044C \n                    \u043D\u0430 \u0440\u0443\u043A\u0443 \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, "."));
+                    AddDataToLog(G, LogTypes.PUBLIC, "\u041C\u043E\u043D\u0435\u0442\u0430 \u0441 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '".concat(upgradedCoin.value, "' \u0432\u0435\u0440\u043D\u0443\u043B\u0430\u0441\u044C \n                    \u043D\u0430 \u0440\u0443\u043A\u0443 \u0438\u0433\u0440\u043E\u043A\u0430 ").concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, "."));
                 }
             }
             if (!upgradingCoin.isInitial) {

@@ -3,7 +3,7 @@ import { heroesConfig } from "./data/HeroData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { artefactsConfig } from "./data/CampData";
-import { CheckCurrentSuitDistinction } from "./Distinction";
+import { CheckCurrentSuitDistinctions } from "./Distinction";
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
  * <p>Применения:</p>
@@ -57,9 +57,9 @@ export var FinalScoring = function (G, ctx, player) {
     AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043C\u043E\u043D\u0435\u0442\u044B \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(coinsValue));
     var suitWarriorIndex = GetSuitIndexByName(SuitNames.WARRIOR);
     if (suitWarriorIndex !== -1) {
-        var warriorsDistinction = CheckCurrentSuitDistinction(G, ctx, SuitNames.WARRIOR);
-        if (warriorsDistinction !== undefined && G.publicPlayers
-            .findIndex(function (p) { return p.nickname === player.nickname; }) === warriorsDistinction) {
+        var warriorsDistinction = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR), playerIndex = G.publicPlayers
+            .findIndex(function (p) { return p.nickname === player.nickname; });
+        if (warriorsDistinction !== undefined && warriorsDistinction.includes(playerIndex)) {
             var warriorDistinctionScore = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
             score += warriorDistinctionScore;
             AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E \u043F\u043E \u0432\u043E\u0438\u043D\u0430\u043C \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": \n            ").concat(warriorDistinctionScore));
