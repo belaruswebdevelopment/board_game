@@ -4,10 +4,8 @@ import { HasLowestPriority } from "./Priority";
 import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
 import { CurrentScoring } from "./Score";
 import { moveBy, moveValidators } from "./MoveValidator";
-import { suitsConfig } from "./data/SuitData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
-import { TotalRank } from "./helpers/ScoreHelpers";
-import { DiscardCardProfit, HoldaActionProfit, PickDiscardCardProfit, PlaceCardsProfit } from "./helpers/ProfitHelpers";
+import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./helpers/ProfitHelpers";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -20,7 +18,6 @@ import { DiscardCardProfit, HoldaActionProfit, PickDiscardCardProfit, PlaceCards
  * @returns {IMoves[]} Массив возможных мувов у ботов.
  */
 export var enumerate = function (G, ctx) {
-    var _a, _b;
     //make false for standard bot
     var enableAdvancedBot = true, uniqueArr = [];
     var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(function (key) { return key.includes(advancedString); });
@@ -37,7 +34,7 @@ export var enumerate = function (G, ctx) {
             if (stage.includes(activeStageOfCurrentPlayer)
                 && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
                 // todo Sync players and bots validations in one places
-                var moveName = moveBy[ctx.phase][stage], _c = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _c[0], maxValue = _c[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
+                var moveName = moveBy[ctx.phase][stage], _a = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _a[0], maxValue = _a[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
                 var argValue = void 0;
                 var argArray = void 0;
                 for (var id = minValue; id < maxValue; id++) {
@@ -130,7 +127,7 @@ export var enumerate = function (G, ctx) {
             });
         }
         var minResultForCoins = Math.min.apply(Math, resultsForCoins), maxResultForCoins = Math.max.apply(Math, resultsForCoins), tradingProfit = G.decks[G.decks.length - 1].length > 9 ? 1 : 0;
-        var _d = [-1, -1], positionForMinCoin = _d[0], positionForMaxCoin = _d[1];
+        var _b = [-1, -1], positionForMinCoin = _b[0], positionForMaxCoin = _b[1];
         if (minResultForCoins <= 0) {
             positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
         }
@@ -182,13 +179,8 @@ export var enumerate = function (G, ctx) {
         //console.log(moves);
     }
     // todo Fix it, now just for bot can do RANDOM move
-    if (ctx.phase === "endTier") {
-        for (var j = 0; j < G.suitsNum; j++) {
-            var suit = Object.keys(suitsConfig)[j], pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-            if (!pickedCard || ("suit" in pickedCard && suit !== pickedCard.suit)) {
-                botMoveArguments.push([j]);
-            }
-        }
+    if (activeStageOfCurrentPlayer === "placeCards" || ctx.phase === "endTier") {
+        PlaceCardsProfit(G, ctx, botMoveArguments);
         moves.push({
             move: "PlaceCard",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
@@ -196,9 +188,7 @@ export var enumerate = function (G, ctx) {
     }
     if (ctx.phase === "getMjollnirProfit") {
         var totalSuitsRanks = [];
-        for (var j = 0; j < G.suitsNum; j++) {
-            totalSuitsRanks.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[j].reduce(TotalRank, 0));
-        }
+        GetMjollnirProfitProfit(G, ctx, totalSuitsRanks);
         botMoveArguments.push([totalSuitsRanks.indexOf(Math.max.apply(Math, totalSuitsRanks))]);
         moves.push({
             move: "GetMjollnirProfit",
@@ -228,14 +218,7 @@ export var enumerate = function (G, ctx) {
     }
     if (ctx.phase === "enlistmentMercenaries") {
         if (G.drawProfit === "startOrPassEnlistmentMercenaries") {
-            for (var j = 0; j < 2; j++) {
-                if (j === 0) {
-                    botMoveArguments.push([j]);
-                }
-                else if (G.publicPlayersOrder.length > 1) {
-                    botMoveArguments.push([j]);
-                }
-            }
+            StartEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             if (Math.floor(Math.random() * botMoveArguments.length) === 0) {
                 moves.push({ move: "StartEnlistmentMercenaries", args: [] });
             }
@@ -244,28 +227,14 @@ export var enumerate = function (G, ctx) {
             }
         }
         else if (G.drawProfit === "enlistmentMercenaries") {
-            var mercenaries = G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                .filter(function (card) { return card.type === "наёмник"; });
-            for (var j = 0; j < mercenaries.length; j++) {
-                botMoveArguments.push([j]);
-            }
+            GetEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: "GetEnlistmentMercenaries",
                 args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
             });
         }
         else if (G.drawProfit === "placeEnlistmentMercenaries") {
-            for (var j = 0; j < G.suitsNum; j++) {
-                var card = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-                if (card !== null && "stack" in card) {
-                    var suit = Object.keys(suitsConfig)[j], stack = card.stack[0];
-                    if (stack.variants !== undefined) {
-                        if (suit === ((_a = stack.variants[suit]) === null || _a === void 0 ? void 0 : _a.suit)) {
-                            botMoveArguments.push([j]);
-                        }
-                    }
-                }
-            }
+            PlaceEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: "PlaceEnlistmentMercenaries",
                 args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
@@ -302,35 +271,18 @@ export var enumerate = function (G, ctx) {
         }
     }
     if (activeStageOfCurrentPlayer === "addCoinToPouch") {
-        for (var j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-            if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline"
-                && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
-                botMoveArguments.push([j]);
-            }
-        }
+        AddCoinToPouchProfit(G, ctx, botMoveArguments);
         moves.push({
             move: "AddCoinToPouch",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (activeStageOfCurrentPlayer === "upgradeCoinVidofnirVedrfolnir") {
-        var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-        if (config !== undefined) {
-            // todo fix for Uline
-            var type = "board";
-            for (var j = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
-                var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
-                if (coin !== null) {
-                    if (!coin.isTriggerTrading && config.coinId !== j) {
-                        botMoveArguments.push([j, type, coin.isInitial]);
-                    }
-                }
-            }
-            moves.push({
-                move: "UpgradeCoinVidofnirVedrfolnir",
-                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
-            });
-        }
+        UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, botMoveArguments);
+        moves.push({
+            move: "UpgradeCoinVidofnirVedrfolnir",
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+        });
     }
     if (activeStageOfCurrentPlayer === "discardSuitCard") {
         // todo Bot can't do async turns...?
@@ -367,24 +319,11 @@ export var enumerate = function (G, ctx) {
         }
     }
     if (activeStageOfCurrentPlayer === "discardCardFromBoard") {
-        var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config, pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-        if (config !== undefined) {
-            for (var j = 0; j < G.suitsNum; j++) {
-                var suit = (_b = G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0]) === null || _b === void 0 ? void 0 : _b.suit;
-                if (suit !== undefined && suit !== null && suitsConfig[suit].suit !== config.suit
-                    && !(G.drawProfit === "DagdaAction" && G.actionsNum === 1 && pickedCard !== null
-                        && "suit" in pickedCard && suitsConfig[suit].suit === pickedCard.suit)) {
-                    var last = G.publicPlayers[Number(ctx.currentPlayer)].cards[j].length - 1;
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].type !== "герой") {
-                        botMoveArguments.push([j, last]);
-                    }
-                }
-            }
-            moves.push({
-                move: "DiscardCard",
-                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
-            });
-        }
+        DiscardCardFromBoardProfit(G, ctx, botMoveArguments);
+        moves.push({
+            move: "DiscardCard",
+            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+        });
     }
     if (activeStageOfCurrentPlayer === "pickDiscardCard") {
         PickDiscardCardProfit(G, ctx, botMoveArguments);
@@ -402,15 +341,8 @@ export var enumerate = function (G, ctx) {
             });
         }
     }
-    if (activeStageOfCurrentPlayer === "placeCards") {
-        PlaceCardsProfit(G, ctx, botMoveArguments);
-        moves.push({
-            move: "PlaceCard",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
-        });
-    }
     if (activeStageOfCurrentPlayer === "pickCampCardHolda") {
-        HoldaActionProfit(G, ctx, botMoveArguments);
+        PickCampCardHoldaProfit(G, ctx, botMoveArguments);
         moves.push({
             move: "ClickCampCardHolda",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
