@@ -113,7 +113,7 @@ export const DiscardCardFromBoardProfit = (G: MyGameState, ctx: Ctx, data?: Game
                             G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].suit,
                             "OnClickCardToDiscard", j, last);
                     } else if (Array.isArray(data)) {
-                        data.push([j]);
+                        data.push([j, last]);
                     }
                 }
             }
@@ -239,19 +239,22 @@ export const PlaceEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?
                                                  boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < G.suitsNum; j++) {
         const card: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+        console.log(card);
         if (card !== null && "stack" in card) {
             const suit: string = Object.keys(suitsConfig)[j];
+            console.log(suit);
             if (card.stack[0].variants !== undefined) {
-                if (suit === card.stack[0].variants[suit].suit) {
+                console.log(card.stack[0].variants);
+                if (suit === card.stack[0].variants[suit]?.suit) {
                     if (data instanceof GameBoard && boardCells !== undefined) {
                         // todo Move logic to DrawCard?
                         boardCells.push(
                             <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
                                 onClick={() => data.OnClickSuitToPlaceMercenary(j)}
                                 key={`Place ${card.name} ${j} on ${suitsConfig[suit].suitName}`}>
-                            <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
-                                <b>{card.stack[0].variants[suit].points ?? ""}</b>
-                            </span>
+                                <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
+                                    <b>{card.stack[0].variants[suit].points ?? ""}</b>
+                                </span>
                             </td>
                         );
                     } else if (Array.isArray(data)) {
