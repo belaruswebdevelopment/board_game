@@ -94,6 +94,58 @@ export var DiscardCardFromBoardProfit = function (G, ctx, data, boardCells) {
         }
     }
 };
+export var DiscardAnyCardFromPlayerBoardProfit = function (G, ctx, data, playerRows) {
+    var _a;
+    for (var i = 0;; i++) {
+        var playerCells = [];
+        var isDrawRow = false;
+        var isExit = true, id = 0;
+        if (data instanceof GameBoard && playerRows !== undefined) {
+            playerRows[i] = [];
+        }
+        for (var j = 0; j < G.suitsNum; j++) {
+            id = i + j;
+            if (((_a = G.publicPlayers[Number(ctx.currentPlayer)].cards[j]) === null || _a === void 0 ? void 0 : _a[i]) !== undefined) {
+                isExit = false;
+                if (Array.isArray(data)) {
+                    isDrawRow = true;
+                }
+                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][i].type !== "герой") {
+                    if (data instanceof GameBoard && playerRows !== undefined) {
+                        isDrawRow = true;
+                        DrawCard(data, playerCells, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i], id, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], Object.keys(suitsConfig)[j], "OnClickDiscardCardFromPlayerBoard", j, i);
+                    }
+                    else if (Array.isArray(data)) {
+                        data.push([j]);
+                    }
+                }
+                else {
+                    if (data instanceof GameBoard && playerRows !== undefined) {
+                        playerCells.push(_jsx("td", {}, "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " \n                            empty card ").concat(id)));
+                    }
+                }
+            }
+            else {
+                if (data instanceof GameBoard && playerRows !== undefined) {
+                    playerCells.push(_jsx("td", {}, "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " \n                        empty card ").concat(id)));
+                }
+            }
+        }
+        if (data instanceof GameBoard && playerRows !== undefined) {
+            if (isDrawRow) {
+                playerRows[i].push(_jsx("tr", { children: playerCells }, "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " board row \n                ").concat(i)));
+            }
+            if (isExit) {
+                break;
+            }
+        }
+        else if (Array.isArray(data)) {
+            if (!isDrawRow) {
+                break;
+            }
+        }
+    }
+};
 export var DiscardSuitCardFromPlayerBoardProfit = function (G, ctx, data, boardCells) {
 };
 export var UpgradeCoinVidofnirVedrfolnirProfit = function (G, ctx, data, boardCells) {
@@ -163,6 +215,7 @@ export var GetEnlistmentMercenariesProfit = function (G, ctx, data, boardCells) 
     }
 };
 export var StartEnlistmentMercenariesProfit = function (G, ctx, data, boardCells) {
+    // todo Add feature to pick which mercenary will be placed one by one
     for (var j = 0; j < 2; j++) {
         if (j === 0) {
             if (data instanceof GameBoard && boardCells !== undefined) {

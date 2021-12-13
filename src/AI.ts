@@ -10,6 +10,7 @@ import {ICoin} from "./Coin";
 import {IConfig, PlayerCardsType} from "./Player";
 import {
     AddCoinToPouchProfit,
+    DiscardAnyCardFromPlayerBoardProfit,
     DiscardCardFromBoardProfit,
     DiscardCardProfit,
     GetEnlistmentMercenariesProfit,
@@ -229,21 +230,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             });
         }
         if (ctx.phase === "brisingamensEndGame") {
-            for (let i: number = 0; ; i++) {
-                let isDrawRow: boolean = false;
-                for (let j: number = 0; j < G.suitsNum; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j] !== undefined &&
-                        G.publicPlayers[Number(ctx.currentPlayer)].cards[j][i] !== undefined) {
-                        isDrawRow = true;
-                        if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][i].type !== "герой") {
-                            botMoveArguments.push([j, i]);
-                        }
-                    }
-                }
-                if (!isDrawRow) {
-                    break;
-                }
-            }
+            DiscardAnyCardFromPlayerBoardProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: "DiscardCardFromPlayerBoard",
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],

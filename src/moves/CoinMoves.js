@@ -4,6 +4,7 @@ import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 // todo Add logging
+// todo Add Place coins async
 /**
  * <h3>Выбор монеты в руке для выкладки монет.</h3>
  * <p>Применения:</p>

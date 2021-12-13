@@ -9,6 +9,7 @@ import {IPublicPlayer} from "../Player";
 import {IHero} from "../Hero";
 import {CampDeckCardTypes, DeckCardTypes} from "../GameSetup";
 import {AddDataToLog, LogTypes} from "../Logging";
+import {DiscardAnyCardFromPlayerBoardProfit} from "./ProfitHelpers";
 
 export interface IDrawBoardOptions {
     boardCols: number,
@@ -59,53 +60,7 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
             </th>
         );
     }
-    for (let i: number = 0; ; i++) {
-        const playerCells: JSX.Element[] = [];
-        let isDrawRow: boolean = false,
-            isExit: boolean = true,
-            id: number = 0;
-        playerRows[i] = [];
-        for (let j: number = 0; j < data.props.G.suitsNum; j++) {
-            const suit: string = Object.keys(suitsConfig)[j];
-            id = i + j;
-            if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j] !== undefined
-                && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i] !== undefined) {
-                isExit = false;
-                if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i].type !== "герой") {
-                    isDrawRow = true;
-                    DrawCard(data, playerCells,
-                        data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i], id,
-                        data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], suit,
-                        "OnClickDiscardCardFromPlayerBoard", j, i);
-                } else {
-                    playerCells.push(
-                        <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} 
-                        empty card ${id}`}>
-
-                        </td>
-                    );
-                }
-            } else {
-                playerCells.push(
-                    <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} empty 
-                    card ${id}`}>
-
-                    </td>
-                );
-            }
-        }
-        if (isDrawRow) {
-            playerRows[i].push(
-                <tr key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} board row 
-                ${i}`}>
-                    {playerCells}
-                </tr>
-            );
-        }
-        if (isExit) {
-            break;
-        }
-    }
+    DiscardAnyCardFromPlayerBoardProfit(data.props.G, data.props.ctx, data, playerRows);
     return (
         <table>
             <thead>

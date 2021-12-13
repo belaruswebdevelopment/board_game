@@ -4,6 +4,7 @@ import { GetSuitIndexByName } from "./SuitHelpers";
 import { suitsConfig } from "../data/SuitData";
 import { Styles } from "../data/StyleData";
 import { AddDataToLog, LogTypes } from "../Logging";
+import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 /**
  * h3>Отрисовка сегмента игрового поля по указанным данным.</h3>
  * <p>Применения:</p>
@@ -35,35 +36,7 @@ export var DrawPlayerBoardForCardDiscard = function (data) {
     for (var suit in suitsConfig) {
         playerHeaders.push(_jsx("th", __assign({ className: "".concat(suitsConfig[suit].suitColor) }, { children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, void 0) }), "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " \n                ").concat(suitsConfig[suit].suitName)));
     }
-    for (var i = 0;; i++) {
-        var playerCells = [];
-        var isDrawRow = false, isExit = true, id = 0;
-        playerRows[i] = [];
-        for (var j = 0; j < data.props.G.suitsNum; j++) {
-            var suit = Object.keys(suitsConfig)[j];
-            id = i + j;
-            if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j] !== undefined
-                && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i] !== undefined) {
-                isExit = false;
-                if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i].type !== "герой") {
-                    isDrawRow = true;
-                    DrawCard(data, playerCells, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i], id, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], suit, "OnClickDiscardCardFromPlayerBoard", j, i);
-                }
-                else {
-                    playerCells.push(_jsx("td", {}, "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " \n                        empty card ").concat(id)));
-                }
-            }
-            else {
-                playerCells.push(_jsx("td", {}, "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " empty \n                    card ").concat(id)));
-            }
-        }
-        if (isDrawRow) {
-            playerRows[i].push(_jsx("tr", { children: playerCells }, "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " board row \n                ").concat(i)));
-        }
-        if (isExit) {
-            break;
-        }
-    }
+    DiscardAnyCardFromPlayerBoardProfit(data.props.G, data.props.ctx, data, playerRows);
     return (_jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playerHeaders }, void 0) }, void 0), _jsx("tbody", { children: playerRows }, void 0)] }, void 0));
 };
 /**

@@ -5,7 +5,7 @@ import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
 import { CurrentScoring } from "./Score";
 import { moveBy, moveValidators } from "./MoveValidator";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
-import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./helpers/ProfitHelpers";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./helpers/ProfitHelpers";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -196,21 +196,7 @@ export var enumerate = function (G, ctx) {
         });
     }
     if (ctx.phase === "brisingamensEndGame") {
-        for (var i = 0;; i++) {
-            var isDrawRow = false;
-            for (var j = 0; j < G.suitsNum; j++) {
-                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j] !== undefined &&
-                    G.publicPlayers[Number(ctx.currentPlayer)].cards[j][i] !== undefined) {
-                    isDrawRow = true;
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][i].type !== "герой") {
-                        botMoveArguments.push([j, i]);
-                    }
-                }
-            }
-            if (!isDrawRow) {
-                break;
-            }
-        }
+        DiscardAnyCardFromPlayerBoardProfit(G, ctx, botMoveArguments);
         moves.push({
             move: "DiscardCardFromPlayerBoard",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),

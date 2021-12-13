@@ -121,6 +121,74 @@ export const DiscardCardFromBoardProfit = (G: MyGameState, ctx: Ctx, data?: Game
     }
 };
 
+export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
+                                                    playerRows?: JSX.Element[][]): void => {
+    for (let i: number = 0; ; i++) {
+        const playerCells: JSX.Element[] = [];
+        let isDrawRow: boolean = false;
+        let isExit: boolean = true,
+            id: number = 0;
+        if (data instanceof GameBoard && playerRows !== undefined) {
+            playerRows[i] = [];
+        }
+        for (let j: number = 0; j < G.suitsNum; j++) {
+            id = i + j;
+            if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j]?.[i] !== undefined) {
+                isExit = false;
+                if (Array.isArray(data)) {
+                    isDrawRow = true;
+                }
+                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][i].type !== "герой") {
+                    if (data instanceof GameBoard && playerRows !== undefined) {
+                        isDrawRow = true;
+                        DrawCard(data, playerCells,
+                            data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i], id,
+                            data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)],
+                            Object.keys(suitsConfig)[j], "OnClickDiscardCardFromPlayerBoard", j, i);
+                    } else if (Array.isArray(data)) {
+                        data.push([j]);
+                    }
+                } else {
+                    if (data instanceof GameBoard && playerRows !== undefined) {
+                        playerCells.push(
+                            <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} 
+                            empty card ${id}`}>
+
+                            </td>
+                        );
+                    }
+                }
+            } else {
+                if (data instanceof GameBoard && playerRows !== undefined) {
+                    playerCells.push(
+                        <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} 
+                        empty card ${id}`}>
+
+                        </td>
+                    );
+                }
+            }
+        }
+        if (data instanceof GameBoard && playerRows !== undefined) {
+            if (isDrawRow) {
+                playerRows[i].push(
+                    <tr key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} board row 
+                ${i}`}>
+                        {playerCells}
+                    </tr>
+                );
+            }
+            if (isExit) {
+                break;
+            }
+        } else if (Array.isArray(data)) {
+            if (!isDrawRow) {
+                break;
+            }
+        }
+    }
+};
+
 export const DiscardSuitCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
                                                      boardCells?: JSX.Element[]): void => {
 
@@ -213,6 +281,7 @@ export const GetEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: 
 
 export const StartEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
                                                  boardCells?: JSX.Element[]): void => {
+    // todo Add feature to pick which mercenary will be placed one by one
     for (let j: number = 0; j < 2; j++) {
         if (j === 0) {
             if (data instanceof GameBoard && boardCells !== undefined) {

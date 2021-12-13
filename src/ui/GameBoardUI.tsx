@@ -327,8 +327,10 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
             if (config !== undefined) {
                 caption += `coin to upgrade up to ${config.value}.`;
                 if (option === "VidofnirVedrfolnirAction") {
-                    UpgradeCoinVidofnirVedrfolnirProfit(data.props.G, data.props.ctx, data, boardCells);
+                    UpgradeCoinVidofnirVedrfolnirProfit(data.props.G, data.props.ctx, data,
+                        boardCells);
                 } else if (option === "upgradeCoin") {
+                    // todo Move to ProfitHelpers and add logic for bot or just use standard upgrade coins
                     const handCoins = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins
                         .filter((coin: ICoin | null): boolean => coin !== null);
                     let handCoinIndex: number = -1;
@@ -336,22 +338,26 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                         .boardCoins.length;
                          j++) {
                         // todo Check .? for all coins!!! and delete AS
-                        if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn === "Uline"
-                            && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j] === null) {
+                        if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn
+                            === "Uline"
+                            && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
+                            === null) {
                             handCoinIndex++;
-                            const handCoinId: number = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
-                                .handCoins.findIndex((coin: ICoin | null): boolean =>
+                            const handCoinId: number =
+                                data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                    .handCoins.findIndex((coin: ICoin | null): boolean =>
                                     coin?.value === handCoins[handCoinIndex]?.value
                                     && coin?.isInitial === handCoins[handCoinIndex]?.isInitial);
-                            if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins[handCoinId]
-                                && !data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins[handCoinId]
-                                    ?.isTriggerTrading) {
+                            if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                    .handCoins[handCoinId]
+                                && !data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                    .handCoins[handCoinId]?.isTriggerTrading) {
                                 DrawCoin(data, boardCells, "coin",
                                     data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                         .handCoins[handCoinId], j,
                                     data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)],
-                                    "border-2", null, "OnClickCoinToUpgrade", j, "hand",
-                                    handCoins[handCoinIndex]?.isInitial as boolean);
+                                    "border-2", null, "OnClickCoinToUpgrade", j,
+                                    "hand", handCoins[handCoinIndex]?.isInitial as boolean);
                             }
                         } else if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
                             && !data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
@@ -360,7 +366,8 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                                 data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j],
                                 j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)],
                                 "border-2", null, "OnClickCoinToUpgrade", j, "board",
-                                data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]?.isInitial as boolean);
+                                data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                    .boardCoins[j]?.isInitial as boolean);
                         }
                     }
                 }

@@ -8,7 +8,7 @@ import {MyGameState} from "../GameSetup";
 import {IConfig, IPublicPlayer} from "../Player";
 import {ICoin} from "../Coin";
 // todo Add logging
-
+// todo Add Place coins async
 /**
  * <h3>Выбор монеты в руке для выкладки монет.</h3>
  * <p>Применения:</p>

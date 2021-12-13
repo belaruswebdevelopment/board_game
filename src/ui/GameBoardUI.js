@@ -238,14 +238,17 @@ export var DrawProfit = function (data, option) {
                     UpgradeCoinVidofnirVedrfolnirProfit(data.props.G, data.props.ctx, data, boardCells);
                 }
                 else if (option === "upgradeCoin") {
+                    // todo Move to ProfitHelpers and add logic for bot or just use standard upgrade coins
                     var handCoins_1 = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins
                         .filter(function (coin) { return coin !== null; });
                     var handCoinIndex_1 = -1;
                     for (var j = 0; j < data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                         .boardCoins.length; j++) {
                         // todo Check .? for all coins!!! and delete AS
-                        if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn === "Uline"
-                            && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j] === null) {
+                        if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn
+                            === "Uline"
+                            && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
+                                === null) {
                             handCoinIndex_1++;
                             var handCoinId = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                 .handCoins.findIndex(function (coin) {
@@ -253,15 +256,18 @@ export var DrawProfit = function (data, option) {
                                 return (coin === null || coin === void 0 ? void 0 : coin.value) === ((_a = handCoins_1[handCoinIndex_1]) === null || _a === void 0 ? void 0 : _a.value)
                                     && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === ((_b = handCoins_1[handCoinIndex_1]) === null || _b === void 0 ? void 0 : _b.isInitial);
                             });
-                            if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins[handCoinId]
-                                && !((_a = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins[handCoinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
+                            if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                .handCoins[handCoinId]
+                                && !((_a = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                    .handCoins[handCoinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
                                 DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                     .handCoins[handCoinId], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, "hand", (_b = handCoins_1[handCoinIndex_1]) === null || _b === void 0 ? void 0 : _b.isInitial);
                             }
                         }
                         else if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
                             && !((_c = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]) === null || _c === void 0 ? void 0 : _c.isTriggerTrading)) {
-                            DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, "board", (_d = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isInitial);
+                            DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, "board", (_d = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                .boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isInitial);
                         }
                     }
                 }
