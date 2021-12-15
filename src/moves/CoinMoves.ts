@@ -64,7 +64,7 @@ export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coin
         player.selectedCoin = undefined;
         if (ctx.phase === "placeCoinsUline") {
             ctx.events!.setPhase!("pickCards");
-        } else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline") {
+        } else if ((ctx.activePlayers?.[ctx.currentPlayer]) === "placeTradingCoinsUline") {
             G.actionsNum--;
             AfterBasicPickCardActions(G, ctx, false);
         } else {

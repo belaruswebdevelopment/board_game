@@ -43,6 +43,7 @@ export var ClickHandCoin = function (G, ctx, coinId) {
  * @constructor
  */
 export var ClickBoardCoin = function (G, ctx, coinId) {
+    var _a;
     var player = G.publicPlayers[Number(ctx.currentPlayer)], isValidMove = IsValidMove({ objId: coinId, range: [0, player.boardCoins.length] });
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -60,7 +61,7 @@ export var ClickBoardCoin = function (G, ctx, coinId) {
         if (ctx.phase === "placeCoinsUline") {
             ctx.events.setPhase("pickCards");
         }
-        else if ((ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer]) === "placeTradingCoinsUline") {
+        else if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[ctx.currentPlayer]) === "placeTradingCoinsUline") {
             G.actionsNum--;
             AfterBasicPickCardActions(G, ctx, false);
         }

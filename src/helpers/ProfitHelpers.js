@@ -183,12 +183,9 @@ export var PlaceEnlistmentMercenariesProfit = function (G, ctx, data, boardCells
     var _a, _b;
     var _loop_2 = function (j) {
         var card = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-        console.log(card);
         if (card !== null && "stack" in card) {
             var suit = Object.keys(suitsConfig)[j];
-            console.log(suit);
             if (card.stack[0].variants !== undefined) {
-                console.log(card.stack[0].variants);
                 if (suit === ((_a = card.stack[0].variants[suit]) === null || _a === void 0 ? void 0 : _a.suit)) {
                     if (data instanceof GameBoard && boardCells !== undefined) {
                         // todo Move logic to DrawCard?
@@ -218,7 +215,6 @@ export var GetEnlistmentMercenariesProfit = function (G, ctx, data, boardCells) 
     }
 };
 export var StartEnlistmentMercenariesProfit = function (G, ctx, data, boardCells) {
-    // todo Add feature to pick which mercenary will be placed one by one
     for (var j = 0; j < 2; j++) {
         if (j === 0) {
             if (data instanceof GameBoard && boardCells !== undefined) {

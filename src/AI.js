@@ -334,7 +334,7 @@ export var enumerate = function (G, ctx) {
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
-    if (moves.length === 0) {
+    if (moves.length === 0 && ctx.phase !== null) {
         // todo Fix for bot no moves if have artefact with not pick new hero and get artifact with get new hero (he can pick hero by it's action)
         console.log("ALERT: bot has " + moves.length + " moves. Phase: " + ctx.phase);
     }

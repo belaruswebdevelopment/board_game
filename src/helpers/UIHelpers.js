@@ -55,10 +55,7 @@ export var DrawPlayersBoardForSuitCardDiscard = function (data, suitName) {
     var playersHeaders = [], playersRows = [], suitId = GetSuitIndexByName(suitName);
     for (var p = 0; p < data.props.G.publicPlayers.length; p++) {
         if (p !== Number(data.props.ctx.currentPlayer)) {
-            if (data.props.G.publicPlayers[p].cards[suitId] !== undefined
-                && data.props.G.publicPlayers[p].cards[suitId].length) {
-                playersHeaders.push(_jsx("th", __assign({ className: "".concat(suitsConfig[suitName].suitColor, " discard suit") }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suitName].suitName), className: "bg-suit-icon" }, { children: p + 1 }), void 0) }), "".concat(data.props.G.publicPlayers[p].nickname, " ").concat(suitsConfig[suitName].suitName)));
-            }
+            playersHeaders.push(_jsx("th", __assign({ className: "".concat(suitsConfig[suitName].suitColor, " discard suit") }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suitName].suitName), className: "bg-suit-icon" }, { children: p + 1 }), void 0) }), "".concat(data.props.G.publicPlayers[p].nickname, " ").concat(suitsConfig[suitName].suitName)));
         }
     }
     for (var i = 0;; i++) {
@@ -67,8 +64,7 @@ export var DrawPlayersBoardForSuitCardDiscard = function (data, suitName) {
         var playersCells = [];
         for (var p = 0; p < data.props.G.publicPlayers.length; p++) {
             if (p !== Number(data.props.ctx.currentPlayer)) {
-                if (data.props.G.publicPlayers[p].cards[suitId] !== undefined
-                    && data.props.G.publicPlayers[p].cards[suitId][i] !== undefined) {
+                if (data.props.G.publicPlayers[p].cards[suitId][i] !== undefined) {
                     if (data.props.G.publicPlayers[p].cards[suitId][i].type !== "герой") {
                         isExit = false;
                         isDrawRow = true;

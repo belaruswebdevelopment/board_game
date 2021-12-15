@@ -239,12 +239,9 @@ export const PlaceEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?
                                                  boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < G.suitsNum; j++) {
         const card: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-        console.log(card);
         if (card !== null && "stack" in card) {
             const suit: string = Object.keys(suitsConfig)[j];
-            console.log(suit);
             if (card.stack[0].variants !== undefined) {
-                console.log(card.stack[0].variants);
                 if (suit === card.stack[0].variants[suit]?.suit) {
                     if (data instanceof GameBoard && boardCells !== undefined) {
                         // todo Move logic to DrawCard?
@@ -284,7 +281,6 @@ export const GetEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: 
 
 export const StartEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
                                                  boardCells?: JSX.Element[]): void => {
-    // todo Add feature to pick which mercenary will be placed one by one
     for (let j: number = 0; j < 2; j++) {
         if (j === 0) {
             if (data instanceof GameBoard && boardCells !== undefined) {

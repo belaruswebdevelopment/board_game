@@ -115,8 +115,15 @@ export var BuildPublicPlayer = function (playersNum, suitsNum, nickname, priorit
 export var CheckPlayersBasicOrder = function (G, ctx) {
     G.publicPlayersOrder = [];
     for (var i = 0; i < ctx.numPlayers; i++) {
-        if (G.publicPlayers[i].buffs.everyTurn !== "Uline") {
-            G.publicPlayersOrder.push(i);
+        if (ctx.phase !== "placeCoinsUline") {
+            if (G.publicPlayers[i].buffs.everyTurn !== "Uline") {
+                G.publicPlayersOrder.push(i);
+            }
+        }
+        else {
+            if (G.publicPlayers[i].buffs.everyTurn === "Uline") {
+                G.publicPlayersOrder.push(i);
+            }
         }
     }
 };

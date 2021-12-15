@@ -110,29 +110,32 @@ export var StartThrudMoving = function (G, ctx, card) {
  * @constructor
  */
 export var CheckAndStartUlineActionsOrContinue = function (G, ctx) {
+    var _a;
     // todo Rework it all!
     var ulinePlayerIndex = G.publicPlayers.findIndex(function (player) { return player.buffs.everyTurn === "Uline"; });
     if (ulinePlayerIndex !== -1) {
-        if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer] !== "placeTradingCoinsUline") {
-            if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
+        if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
+            if (ctx.phase === "pickCards") {
                 var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
                 if (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) {
                     if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                         .filter(function (coin, index) {
                         return index >= G.tavernsNum && coin === null;
                     })) {
-                        G.actionsNum = G.suitsNum - G.tavernsNum;
-                        ctx.events.setStage("placeTradingCoinsUline");
-                        return "placeTradingCoinsUline";
+                        if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[ctx.currentPlayer]) !== "placeTradingCoinsUline") {
+                            G.actionsNum = G.suitsNum - G.tavernsNum;
+                            ctx.events.setStage("placeTradingCoinsUline");
+                            return "placeTradingCoinsUline";
+                        }
+                        else if (!G.actionsNum) {
+                            ctx.events.endStage();
+                            return "endPlaceTradingCoinsUline";
+                        }
+                        else if (G.actionsNum) {
+                            return "nextPlaceTradingCoinsUline";
+                        }
                     }
                 }
-            }
-            else if (!G.actionsNum) {
-                ctx.events.endStage();
-                return "endPlaceTradingCoinsUline";
-            }
-            else if (G.actionsNum) {
-                return "nextPlaceTradingCoinsUline";
             }
         }
         else {

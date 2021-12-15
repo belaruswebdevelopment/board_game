@@ -89,17 +89,14 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
         suitId: number = GetSuitIndexByName(suitName);
     for (let p: number = 0; p < data.props.G.publicPlayers.length; p++) {
         if (p !== Number(data.props.ctx.currentPlayer)) {
-            if (data.props.G.publicPlayers[p].cards[suitId] !== undefined
-                && data.props.G.publicPlayers[p].cards[suitId].length) {
-                playersHeaders.push(
-                    <th className={`${suitsConfig[suitName].suitColor} discard suit`}
-                        key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suitName].suitName}`}>
-                        <span style={Styles.Suits(suitsConfig[suitName].suitName)} className="bg-suit-icon">
-                            {p + 1}
-                        </span>
-                    </th>
-                );
-            }
+            playersHeaders.push(
+                <th className={`${suitsConfig[suitName].suitColor} discard suit`}
+                    key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suitName].suitName}`}>
+                    <span style={Styles.Suits(suitsConfig[suitName].suitName)} className="bg-suit-icon">
+                        {p + 1}
+                    </span>
+                </th>
+            );
         }
     }
     for (let i: number = 0; ; i++) {
@@ -109,8 +106,7 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
         const playersCells: JSX.Element[] = [];
         for (let p: number = 0; p < data.props.G.publicPlayers.length; p++) {
             if (p !== Number(data.props.ctx.currentPlayer)) {
-                if (data.props.G.publicPlayers[p].cards[suitId] !== undefined
-                    && data.props.G.publicPlayers[p].cards[suitId][i] !== undefined) {
+                if (data.props.G.publicPlayers[p].cards[suitId][i] !== undefined) {
                     if (data.props.G.publicPlayers[p].cards[suitId][i].type !== "герой") {
                         isExit = false;
                         isDrawRow = true;

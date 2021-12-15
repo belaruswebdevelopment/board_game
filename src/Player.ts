@@ -232,8 +232,14 @@ export const BuildPublicPlayer = (playersNum: number, suitsNum: number, nickname
 export const CheckPlayersBasicOrder = (G: MyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i: number = 0; i < ctx.numPlayers; i++) {
-        if (G.publicPlayers[i].buffs.everyTurn !== "Uline") {
-            G.publicPlayersOrder.push(i);
+        if (ctx.phase !== "placeCoinsUline") {
+            if (G.publicPlayers[i].buffs.everyTurn !== "Uline") {
+                G.publicPlayersOrder.push(i);
+            }
+        } else {
+            if (G.publicPlayers[i].buffs.everyTurn === "Uline") {
+                G.publicPlayersOrder.push(i);
+            }
         }
     }
 };

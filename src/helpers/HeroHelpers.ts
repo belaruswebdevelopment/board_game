@@ -124,23 +124,25 @@ export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): s
     const ulinePlayerIndex: number =
         G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.buffs.everyTurn === "Uline");
     if (ulinePlayerIndex !== -1) {
-        if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer] !== "placeTradingCoinsUline") {
-            if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
+        if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
+            if (ctx.phase === "pickCards") {
                 const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
                 if (coin?.isTriggerTrading) {
                     if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                         .filter((coin: ICoin | null, index: number): boolean =>
                             index >= G.tavernsNum && coin === null)) {
-                        G.actionsNum = G.suitsNum - G.tavernsNum;
-                        ctx.events!.setStage!("placeTradingCoinsUline");
-                        return "placeTradingCoinsUline";
+                        if (ctx.activePlayers?.[ctx.currentPlayer] !== "placeTradingCoinsUline") {
+                            G.actionsNum = G.suitsNum - G.tavernsNum;
+                            ctx.events!.setStage!("placeTradingCoinsUline");
+                            return "placeTradingCoinsUline";
+                        } else if (!G.actionsNum) {
+                            ctx.events!.endStage!();
+                            return "endPlaceTradingCoinsUline";
+                        } else if (G.actionsNum) {
+                            return "nextPlaceTradingCoinsUline";
+                        }
                     }
                 }
-            } else if (!G.actionsNum) {
-                ctx.events!.endStage!();
-                return "endPlaceTradingCoinsUline";
-            } else if (G.actionsNum) {
-                return "nextPlaceTradingCoinsUline";
             }
         } else {
             return "placeCoinsUline";
