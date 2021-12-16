@@ -1,5 +1,5 @@
 import {TotalRank} from "../helpers/ScoreHelpers";
-import {IPublicPlayer, IStack} from "../Player";
+import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
 import {ICoin} from "../Coin";
 import {SuitNames} from "./SuitData";
 
@@ -99,7 +99,7 @@ const Draupnir: IArtefact = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: (player?: IPublicPlayer): number => player ? player.boardCoins
+    scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.boardCoins
         .filter((coin: ICoin | null): boolean => Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
 };
 
@@ -364,7 +364,7 @@ const Hrafnsmerki: IArtefact = {
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ?
-        player.cards.flat().filter(card => card.type === "наёмник").length * 5 : 0,
+        player.cards.flat().filter((card: PlayerCardsType): boolean => card.type === "наёмник").length * 5 : 0,
 };
 
 /**

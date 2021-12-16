@@ -269,7 +269,7 @@ export var DrawCard = function (data, playerCells, card, id, player, suit, actio
     else if ("value" in card) {
         value = String(card.value);
     }
-    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return action && action.apply(void 0, args); } }, { children: _jsx("span", __assign({ style: styles, title: description ? description : card.name, className: spanClasses }, { children: _jsx("b", { children: value }, void 0) }), void 0) }), "".concat((player && player.nickname) ? "player ".concat((player.nickname), " ") : "").concat(suit, " card ").concat(id, " ").concat(card.name)));
+    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return action && action.apply(void 0, args); } }, { children: _jsx("span", __assign({ style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses }, { children: _jsx("b", { children: value }, void 0) }), void 0) }), "".concat((player && player.nickname) ? "player ".concat((player.nickname), " ") : "").concat(suit, " card ").concat(id, " ").concat(card.name)));
 };
 /**
  * <h3>Отрисовка монет.</h3>
@@ -392,8 +392,8 @@ export var DrawCoin = function (data, playerCells, type, coin, id, player, coinC
             }
         }
     }
-    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return action && action.apply(void 0, args); } }, { children: _jsx("span", __assign({ style: styles, className: spanClasses }, { children: span }), void 0) }), "".concat((player && player.nickname) ? "player ".concat(player.nickname, " ") : "", "coin ").concat(id).concat(coin ? " ".concat(coin.value)
-        : " empty")));
+    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return action !== null && action.apply(void 0, args); } }, { children: _jsx("span", __assign({ style: styles, className: spanClasses }, { children: span }), void 0) }), "".concat((player !== null && player.nickname) ? "player ".concat(player.nickname, " ") : "", "coin ").concat(id).concat(coin !== null
+        ? " ".concat(coin.value) : " empty")));
 };
 /**
  * <h3>Отрисовка кнопок.</h3>

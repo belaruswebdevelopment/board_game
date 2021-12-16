@@ -55,7 +55,7 @@ var Draupnir = {
             actionName: "AddCampCardToCards",
         },
     ],
-    scoringRule: function (player) { return player ? player.boardCoins
+    scoringRule: function (player) { return player !== undefined ? player.boardCoins
         .filter(function (coin) { return Boolean(coin !== null && coin.value >= 15); }).length * 6 : 0; },
 };
 /**

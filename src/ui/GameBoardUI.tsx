@@ -254,7 +254,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
     for (let i: number = 0; i < 1; i++) {
         if (option === "placeCards") {
             if (config !== undefined) {
-                caption += `suit to place ${data.props.G.actionsNum ? data.props.G.actionsNum : 1} ${config.drawName}
+                caption += `suit to place ${data.props.G.actionsNum ?? 1} ${config.drawName}
                 ${data.props.G.actionsNum > 1 ? "s" : ""} to ${data.props.G.actionsNum > 1 ? "different" : "that"} 
                 suit.`;
                 PlaceCardsProfit(data.props.G, data.props.ctx, data, boardCells);

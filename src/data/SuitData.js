@@ -4,6 +4,7 @@ import { CreatePriority } from "../Priority";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
+import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 /**
  * <h3>Перечисление для названий фракций.</h3>
  */
@@ -303,9 +304,7 @@ var warrior = {
                 StartActionFromStackOrEndActions(G, ctx, false);
             }
             else {
-                return Math.max.apply(Math, player.boardCoins
-                    .filter(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.value); })
-                    .map(function (coin) { return coin.value; }));
+                return GetMaxCoinValue(player);
             }
             return 0;
         },

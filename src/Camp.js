@@ -231,7 +231,6 @@ export var RefillCamp = function (G) {
  */
 var AddRemainingCampCardsToDiscard = function (G) {
     // todo Add LogTypes.ERROR logging ?
-    // todo ARE THEY GO TO DISCARD AND CAN BE PICKED FROM IT NOT FOREVER?! CHECK RULES!
     for (var i = 0; i < G.camp.length; i++) {
         if (G.camp[i] !== null) {
             var card = G.camp.splice(i, 1, null)[0];

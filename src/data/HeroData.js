@@ -1,7 +1,7 @@
-import { __spreadArray } from "tslib";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
+import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -586,10 +586,7 @@ var Astrid = {
             },
         },
     ],
-    scoringRule: function (player) { return player ? Math.max.apply(Math, __spreadArray(__spreadArray([], player.boardCoins
-        .filter(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.value); })
-        .map(function (coin) { return coin.value; }), false), player.handCoins.filter(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.value); })
-        .map(function (coin) { return coin.value; }), false)) : 0; },
+    scoringRule: function (player) { return player !== undefined ? GetMaxCoinValue(player) : 0; },
 };
 /**
  * <h3>Данные о герое.</h3>

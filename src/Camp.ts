@@ -312,7 +312,6 @@ export const RefillCamp = (G: MyGameState): void => {
  */
 const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
     // todo Add LogTypes.ERROR logging ?
-    // todo ARE THEY GO TO DISCARD AND CAN BE PICKED FROM IT NOT FOREVER?! CHECK RULES!
     for (let i: number = 0; i < G.camp.length; i++) {
         if (G.camp[i] !== null) {
             const card: CampDeckCardTypes | null = G.camp.splice(i, 1, null)[0];

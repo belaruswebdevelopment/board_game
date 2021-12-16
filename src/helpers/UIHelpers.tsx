@@ -274,7 +274,7 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
     playerCells.push(
         <td key={`${(player && player.nickname) ? `player ${(player.nickname)} ` : ""}${suit} card ${id} ${card.name}`}
             className={tdClasses} onClick={() => action && action(...args)}>
-            <span style={styles} title={description ? description : card.name} className={spanClasses}>
+            <span style={styles} title={description ?? card.name} className={spanClasses}>
                 <b>{value}</b>
             </span>
         </td>
@@ -381,8 +381,8 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
         }
     }
     playerCells.push(
-        <td key={`${(player && player.nickname) ? `player ${player.nickname} ` : ""}coin ${id}${coin ? ` ${coin.value}`
-            : " empty"}`} className={tdClasses} onClick={() => action && action(...args)}>
+        <td key={`${(player !== null && player.nickname) ? `player ${player.nickname} ` : ""}coin ${id}${coin !== null
+            ? ` ${coin.value}` : " empty"}`} className={tdClasses} onClick={() => action !== null && action(...args)}>
             <span style={styles} className={spanClasses}>
                 {span}
             </span>

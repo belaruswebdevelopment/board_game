@@ -16,6 +16,25 @@ export interface IResolveBoardCoins {
 }
 
 /**
+ * <h3>Находит максимальную монету игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце игры, если пикнут герой Astrid.</li>
+ * <li>В конце игры, если получено преимущество по фракции воинов.</li>
+ * </ol>
+ *
+ * @param {IPublicPlayer} player Игрок.
+ * @returns {number} Максимальная монета игрока.
+ * @constructor
+ */
+export const GetMaxCoinValue = (player: IPublicPlayer): number => {
+    return Math.max(...player.boardCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
+            .map((coin: ICoin | null): number => coin!.value),
+        ...player.handCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
+            .map((coin: ICoin | null): number => coin!.value));
+};
+
+/**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -61,7 +80,6 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins 
         exchangeOrder: number[] = [];
     for (let i: number = 0; i < ctx.numPlayers; i++) {
         const coin: ICoin | null = G.publicPlayers[i].boardCoins[G.currentTavern];
-        // todo Check it
         if (coin !== null) {
             coinValues[i] = coin.value;
             playersOrder.push(i);
@@ -70,7 +88,6 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins 
         for (let j: number = playersOrder.length - 1; j > 0; j--) {
             const coin: ICoin | null = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern],
                 prevCoin: ICoin | null = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
-            // todo Check it
             if (coin !== null && prevCoin !== null) {
                 if (coin.value > prevCoin.value) {
                     [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];

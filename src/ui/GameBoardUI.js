@@ -160,13 +160,13 @@ export var DrawDistinctions = function (data) {
  * @constructor
  */
 export var DrawProfit = function (data, option) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     var boardCells = [], config = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].stack[0].config;
     var caption = "Get ";
     var _loop_2 = function (i) {
         if (option === "placeCards") {
             if (config !== undefined) {
-                caption += "suit to place ".concat(data.props.G.actionsNum ? data.props.G.actionsNum : 1, " ").concat(config.drawName, "\n                ").concat(data.props.G.actionsNum > 1 ? "s" : "", " to ").concat(data.props.G.actionsNum > 1 ? "different" : "that", " \n                suit.");
+                caption += "suit to place ".concat((_a = data.props.G.actionsNum) !== null && _a !== void 0 ? _a : 1, " ").concat(config.drawName, "\n                ").concat(data.props.G.actionsNum > 1 ? "s" : "", " to ").concat(data.props.G.actionsNum > 1 ? "different" : "that", " \n                suit.");
                 PlaceCardsProfit(data.props.G, data.props.ctx, data, boardCells);
             }
         }
@@ -258,16 +258,16 @@ export var DrawProfit = function (data, option) {
                             });
                             if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                 .handCoins[handCoinId]
-                                && !((_a = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
-                                    .handCoins[handCoinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
+                                && !((_b = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                    .handCoins[handCoinId]) === null || _b === void 0 ? void 0 : _b.isTriggerTrading)) {
                                 DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
-                                    .handCoins[handCoinId], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, "hand", (_b = handCoins_1[handCoinIndex_1]) === null || _b === void 0 ? void 0 : _b.isInitial);
+                                    .handCoins[handCoinId], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, "hand", (_c = handCoins_1[handCoinIndex_1]) === null || _c === void 0 ? void 0 : _c.isInitial);
                             }
                         }
                         else if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
-                            && !((_c = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]) === null || _c === void 0 ? void 0 : _c.isTriggerTrading)) {
-                            DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, "board", (_d = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
-                                .boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isInitial);
+                            && !((_d = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isTriggerTrading)) {
+                            DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, "board", (_e = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                .boardCoins[j]) === null || _e === void 0 ? void 0 : _e.isInitial);
                         }
                     }
                 }

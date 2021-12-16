@@ -1,8 +1,8 @@
 import {GetSuitIndexByName} from "../helpers/SuitHelpers";
 import {TotalRank} from "../helpers/ScoreHelpers";
 import {IPublicPlayer, IStack} from "../Player";
-import {ICoin} from "../Coin";
 import {SuitNames} from "./SuitData";
+import {GetMaxCoinValue} from "../helpers/CoinHelpers";
 
 /**
  * <h3>Интерфейс для баффа карты героя.</h3>
@@ -707,11 +707,7 @@ const Astrid: IHeroData = {
             },
         },
     ],
-    scoringRule: (player?: IPublicPlayer): number => player ? Math.max(...player.boardCoins
-            .filter((coin: ICoin | null): boolean => Boolean(coin?.value))
-            .map((coin: ICoin | null): number => coin!.value),
-        ...player.handCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
-            .map((coin: ICoin | null): number => coin!.value)) : 0,
+    scoringRule: (player?: IPublicPlayer): number => player !== undefined ? GetMaxCoinValue(player) : 0,
 };
 
 /**

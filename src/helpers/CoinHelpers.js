@@ -1,4 +1,22 @@
+import { __spreadArray } from "tslib";
 import { Trading } from "../Coin";
+/**
+ * <h3>Находит максимальную монету игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце игры, если пикнут герой Astrid.</li>
+ * <li>В конце игры, если получено преимущество по фракции воинов.</li>
+ * </ol>
+ *
+ * @param {IPublicPlayer} player Игрок.
+ * @returns {number} Максимальная монета игрока.
+ * @constructor
+ */
+export var GetMaxCoinValue = function (player) {
+    return Math.max.apply(Math, __spreadArray(__spreadArray([], player.boardCoins.filter(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.value); })
+        .map(function (coin) { return coin.value; }), false), player.handCoins.filter(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.value); })
+        .map(function (coin) { return coin.value; }), false));
+};
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
@@ -45,7 +63,6 @@ export var ResolveBoardCoins = function (G, ctx) {
     var playersOrder = [], coinValues = [], exchangeOrder = [];
     for (var i = 0; i < ctx.numPlayers; i++) {
         var coin = G.publicPlayers[i].boardCoins[G.currentTavern];
-        // todo Check it
         if (coin !== null) {
             coinValues[i] = coin.value;
             playersOrder.push(i);
@@ -53,7 +70,6 @@ export var ResolveBoardCoins = function (G, ctx) {
         }
         for (var j = playersOrder.length - 1; j > 0; j--) {
             var coin_1 = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern], prevCoin = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
-            // todo Check it
             if (coin_1 !== null && prevCoin !== null) {
                 if (coin_1.value > prevCoin.value) {
                     _a = [playersOrder[j - 1], playersOrder[j]], playersOrder[j] = _a[0], playersOrder[j - 1] = _a[1];

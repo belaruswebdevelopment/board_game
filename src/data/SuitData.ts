@@ -7,6 +7,7 @@ import {ArithmeticSum, TotalPoints, TotalRank} from "../helpers/ScoreHelpers";
 import {MyGameState} from "../GameSetup";
 import {Ctx} from "boardgame.io";
 import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
+import {GetMaxCoinValue} from "../helpers/CoinHelpers";
 
 /**
  * <h3>Перечисление для названий фракций.</h3>
@@ -378,9 +379,7 @@ const warrior: ISuit = {
                 AddActionsToStack(G, ctx, stack);
                 StartActionFromStackOrEndActions(G, ctx, false);
             } else {
-                return Math.max(...player.boardCoins
-                    .filter((coin: ICoin | null): boolean => Boolean(coin?.value))
-                    .map((coin: ICoin | null): number => coin!.value));
+                return GetMaxCoinValue(player);
             }
             return 0;
         },
