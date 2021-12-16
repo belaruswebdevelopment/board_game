@@ -17,6 +17,13 @@ import { CheckDistinction } from "./Distinction";
 import { CheckPlayersBasicOrder } from "./Player";
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
+var order = {
+    first: function () { return 0; },
+    next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
+    playOrder: function (G) {
+        return G.publicPlayersOrder.map(function (order) { return String(order); });
+    },
+};
 /**
  * <h3>Параметры игры.</h3>
  * <p>Применения:</p>
@@ -33,13 +40,7 @@ export var BoardGame = {
     phases: {
         placeCoins: {
             turn: {
-                order: {
-                    first: function () { return 0; },
-                    next: function (G, ctx) { return (ctx.playOrderPos + 1) % ctx.numPlayers; },
-                    playOrder: function (G) {
-                        return G.publicPlayersOrder.map(function (order) { return String(order); });
-                    },
-                },
+                order: order,
             },
             start: true,
             moves: {
@@ -58,13 +59,7 @@ export var BoardGame = {
         },
         placeCoinsUline: {
             turn: {
-                order: {
-                    first: function () { return 0; },
-                    next: function (G, ctx) { return (ctx.playOrderPos + 1) % ctx.numPlayers; },
-                    playOrder: function (G) {
-                        return G.publicPlayersOrder.map(function (order) { return String(order); });
-                    },
-                },
+                order: order,
             },
             moves: {
                 ClickHandCoin: ClickHandCoin,
@@ -76,13 +71,7 @@ export var BoardGame = {
         },
         pickCards: {
             turn: {
-                order: {
-                    first: function () { return 0; },
-                    next: function (G, ctx) { return (ctx.playOrderPos + 1) % ctx.numPlayers; },
-                    playOrder: function (G) {
-                        return G.publicPlayersOrder.map(function (order) { return String(order); });
-                    },
-                },
+                order: order,
                 stages: {
                     // Start
                     discardCardFromBoard: {
@@ -160,13 +149,7 @@ export var BoardGame = {
         },
         enlistmentMercenaries: {
             turn: {
-                order: {
-                    first: function () { return 0; },
-                    next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) {
-                        return G.publicPlayersOrder.map(function (order) { return String(order); });
-                    },
-                },
+                order: order,
                 stages: {
                     // Start
                     discardCardFromBoard: {
@@ -272,13 +255,7 @@ export var BoardGame = {
         },
         endTier: {
             turn: {
-                order: {
-                    first: function () { return 0; },
-                    next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) {
-                        return G.publicPlayersOrder.map(function (order) { return String(order); });
-                    },
-                },
+                order: order,
                 stages: {
                     // Start
                     discardCardFromBoard: {
@@ -335,13 +312,7 @@ export var BoardGame = {
         },
         getMjollnirProfit: {
             turn: {
-                order: {
-                    first: function () { return 0; },
-                    next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) {
-                        return G.publicPlayersOrder.map(function (order) { return String(order); });
-                    },
-                },
+                order: order,
             },
             moves: {
                 GetMjollnirProfit: GetMjollnirProfit,
@@ -349,13 +320,7 @@ export var BoardGame = {
         },
         brisingamensEndGame: {
             turn: {
-                order: {
-                    first: function () { return 0; },
-                    next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) {
-                        return G.publicPlayersOrder.map(function (order) { return String(order); });
-                    },
-                },
+                order: order,
             },
             moves: {
                 DiscardCardFromPlayerBoard: DiscardCardFromPlayerBoard,
@@ -363,13 +328,7 @@ export var BoardGame = {
         },
         getDistinctions: {
             turn: {
-                order: {
-                    first: function () { return 0; },
-                    next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-                    playOrder: function (G) {
-                        return G.publicPlayersOrder.map(function (order) { return String(order); });
-                    },
-                },
+                order: order,
                 stages: {
                     pickDistinctionCard: {
                         moves: {

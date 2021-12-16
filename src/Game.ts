@@ -39,8 +39,24 @@ import {CheckDistinction} from "./Distinction";
 import type {Ctx, Game} from "boardgame.io";
 import {CheckPlayersBasicOrder, IPublicPlayer, IStack} from "./Player";
 
+/**
+ * <h3>Интерфейс для порядка ходов.</h3>
+ */
+interface IOrder {
+    next: (G: MyGameState, ctx: Ctx) => number;
+    first: () => number;
+    playOrder: (G: MyGameState) => string[];
+}
+
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
+const order: IOrder = {
+    first: (): number => 0,
+    next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
+    playOrder: (G: MyGameState): string[] =>
+        G.publicPlayersOrder.map((order: number): string => String(order)),
+};
+
 /**
  * <h3>Параметры игры.</h3>
  * <p>Применения:</p>
@@ -57,12 +73,7 @@ export const BoardGame: Game<MyGameState> = {
     phases: {
         placeCoins: {
             turn: {
-                order: {
-                    first: (): number => 0,
-                    next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G: MyGameState): string[] =>
-                        G.publicPlayersOrder.map((order: number): string => String(order)),
-                },
+                order,
             },
             start: true,
             moves: {
@@ -81,12 +92,7 @@ export const BoardGame: Game<MyGameState> = {
         },
         placeCoinsUline: {
             turn: {
-                order: {
-                    first: (): number => 0,
-                    next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G: MyGameState): string[] =>
-                        G.publicPlayersOrder.map((order: number): string => String(order)),
-                },
+                order,
             },
             moves: {
                 ClickHandCoin,
@@ -98,12 +104,7 @@ export const BoardGame: Game<MyGameState> = {
         },
         pickCards: {
             turn: {
-                order: {
-                    first: (): number => 0,
-                    next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % ctx.numPlayers,
-                    playOrder: (G: MyGameState): string[] =>
-                        G.publicPlayersOrder.map((order: number): string => String(order)),
-                },
+                order,
                 stages: {
                     // Start
                     discardCardFromBoard: {
@@ -180,12 +181,7 @@ export const BoardGame: Game<MyGameState> = {
         },
         enlistmentMercenaries: {
             turn: {
-                order: {
-                    first: (): number => 0,
-                    next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] =>
-                        G.publicPlayersOrder.map((order: number): string => String(order)),
-                },
+                order,
                 stages: {
                     // Start
                     discardCardFromBoard: {
@@ -290,12 +286,7 @@ export const BoardGame: Game<MyGameState> = {
         },
         endTier: {
             turn: {
-                order: {
-                    first: (): number => 0,
-                    next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] =>
-                        G.publicPlayersOrder.map((order: number): string => String(order)),
-                },
+                order,
                 stages: {
                     // Start
                     discardCardFromBoard: {
@@ -352,12 +343,7 @@ export const BoardGame: Game<MyGameState> = {
         },
         getMjollnirProfit: {
             turn: {
-                order: {
-                    first: (): number => 0,
-                    next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] =>
-                        G.publicPlayersOrder.map((order: number): string => String(order)),
-                },
+                order,
             },
             moves: {
                 GetMjollnirProfit,
@@ -365,12 +351,7 @@ export const BoardGame: Game<MyGameState> = {
         },
         brisingamensEndGame: {
             turn: {
-                order: {
-                    first: (): number => 0,
-                    next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] =>
-                        G.publicPlayersOrder.map((order: number): string => String(order)),
-                },
+                order,
             },
             moves: {
                 DiscardCardFromPlayerBoard,
@@ -378,12 +359,7 @@ export const BoardGame: Game<MyGameState> = {
         },
         getDistinctions: {
             turn: {
-                order: {
-                    first: (): number => 0,
-                    next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-                    playOrder: (G: MyGameState): string[] =>
-                        G.publicPlayersOrder.map((order: number): string => String(order)),
-                },
+                order,
                 stages: {
                     pickDistinctionCard: {
                         moves: {
