@@ -1,7 +1,7 @@
-import {DiscardCardFromTavern} from "./Card";
 import {AddDataToLog, LogTypes} from "./Logging";
 import {DeckCardTypes, MyGameState, TavernCardTypes} from "./GameSetup";
 import {Ctx} from "boardgame.io";
+import {DiscardCardFromTavern} from "./Card";
 
 /**
  * <h3>Интерфейс для конфига конкретной таверны.</h3>
@@ -52,21 +52,21 @@ export const tavernsConfig: ITavernsConfig = {
  */
 export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => {
     let isCurrentTavernEmpty: boolean = false;
-    if (ctx.numPlayers === 2
-        && G.taverns[G.currentTavern].filter((card: TavernCardTypes): boolean => card !== null).length === 1) {
-        const discardCardIndex: number =
-            G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
-        if (discardCardIndex !== -1) {
-            const isCardDiscarded: boolean = DiscardCardFromTavern(G, discardCardIndex);
-            if (isCardDiscarded) {
-                isCurrentTavernEmpty = true;
+    if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
+        isCurrentTavernEmpty = G.taverns[G.currentTavern].every((card: TavernCardTypes): boolean => card === null);
+        if (!isCurrentTavernEmpty) {
+            const discardCardIndex: number =
+                G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
+            if (discardCardIndex !== -1) {
+                const isCardDiscarded: boolean = DiscardCardFromTavern(G, discardCardIndex);
+                if (isCardDiscarded) {
+                    isCurrentTavernEmpty = true;
+                }
             }
         }
-    } else {
-        isCurrentTavernEmpty = G.taverns[G.currentTavern].every((card: TavernCardTypes): boolean => card === null);
-    }
-    if (isCurrentTavernEmpty) {
-        AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[G.currentTavern].name} пустая.`);
+        if (isCurrentTavernEmpty) {
+            AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[G.currentTavern].name} пустая.`);
+        }
     }
     return isCurrentTavernEmpty;
 };

@@ -1,5 +1,5 @@
-import { DiscardCardFromTavern } from "./Card";
 import { AddDataToLog, LogTypes } from "./Logging";
+import { DiscardCardFromTavern } from "./Card";
 /**
  * <h3>Конфиг таверн.</h3>
  * <p>Применения:</p>
@@ -34,21 +34,20 @@ export var tavernsConfig = {
  */
 export var CheckIfCurrentTavernEmpty = function (G, ctx) {
     var isCurrentTavernEmpty = false;
-    if (ctx.numPlayers === 2
-        && G.taverns[G.currentTavern].filter(function (card) { return card !== null; }).length === 1) {
-        var discardCardIndex = G.taverns[G.currentTavern].findIndex(function (card) { return card !== null; });
-        if (discardCardIndex !== -1) {
-            var isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
-            if (isCardDiscarded) {
-                isCurrentTavernEmpty = true;
+    if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
+        isCurrentTavernEmpty = G.taverns[G.currentTavern].every(function (card) { return card === null; });
+        if (!isCurrentTavernEmpty) {
+            var discardCardIndex = G.taverns[G.currentTavern].findIndex(function (card) { return card !== null; });
+            if (discardCardIndex !== -1) {
+                var isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
+                if (isCardDiscarded) {
+                    isCurrentTavernEmpty = true;
+                }
             }
         }
-    }
-    else {
-        isCurrentTavernEmpty = G.taverns[G.currentTavern].every(function (card) { return card === null; });
-    }
-    if (isCurrentTavernEmpty) {
-        AddDataToLog(G, LogTypes.GAME, "\u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[G.currentTavern].name, " \u043F\u0443\u0441\u0442\u0430\u044F."));
+        if (isCurrentTavernEmpty) {
+            AddDataToLog(G, LogTypes.GAME, "\u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[G.currentTavern].name, " \u043F\u0443\u0441\u0442\u0430\u044F."));
+        }
     }
     return isCurrentTavernEmpty;
 };
