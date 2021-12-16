@@ -118,7 +118,8 @@ export const DiscardCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ct
  */
 export const DiscardSuitCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
                                                                   playerId: number, cardId: number): string | void => {
-    let isValidMove: boolean = false;
+    // TODO Uncomment it for players and fix it for bots
+    /*let isValidMove: boolean = false;
     if (ctx.playerID !== undefined) {
         isValidMove = playerId !== Number(ctx.currentPlayer) && playerId === Number(ctx.playerID);
     } else {
@@ -126,7 +127,7 @@ export const DiscardSuitCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState
     }
     if (!isValidMove) {
         return INVALID_MOVE;
-    }
+    }*/
     StartActionForChosenPlayer(G, ctx, playerId, suitId, playerId, cardId);
 };
 

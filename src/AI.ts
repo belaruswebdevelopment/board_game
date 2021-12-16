@@ -53,9 +53,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             advancedString: string = "advanced",
             isAdvancedExist: boolean =
                 Object.keys(moveBy[ctx.phase]).some((key: string): boolean => key.includes(advancedString));
-        const activeStageOfCurrentPlayer: string = (ctx.activePlayers
-            && ctx.activePlayers[Number(ctx.currentPlayer)]) ? ctx.activePlayers[Number(ctx.currentPlayer)] :
-            "default";
+        const activeStageOfCurrentPlayer: string = ctx.activePlayers?.[Number(ctx.currentPlayer)] ?? "default";
         // todo Fix it, now just for bot can do RANDOM move
         const botMoveArguments: IBotMoveArgumentsTypes = [];
         for (const stage in moveBy[ctx.phase]) {
@@ -96,7 +94,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (moves.length > 0) {
             return moves;
         }
-        if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default") {
+        if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default" && ctx.activePlayers === null) {
             // todo Fix it, now just for bot can do RANDOM move
             let pickCardOrCampCard: string = "card";
             if (G.expansions.thingvellir.active
@@ -300,38 +298,42 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
-        if (activeStageOfCurrentPlayer === "discardSuitCard") {
+        // TODO FIX It's not activeStageOfCurrentPlayer it' for Other players!!!
+//        if (activeStageOfCurrentPlayer === "discardSuitCard") {
+        if (ctx.phase === "pickCards" && ctx.activePlayers !== null && activeStageOfCurrentPlayer === "default") {
+            // TODO Fix this (only for quick bot actions)
             // todo Bot can't do async turns...?
             const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
             if (config !== undefined && config.suit !== undefined) {
                 const suitId: number = GetSuitIndexByName(config.suit);
                 for (let p: number = 0; p < G.publicPlayers.length; p++) {
-                    if (p !== Number(ctx.currentPlayer)) {
-                        if (ctx.playerID !== undefined && Number(ctx.playerID) === p) {
-                            for (let i: number = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
-                                for (let j: number = 0; j < 1; j++) {
-                                    if (G.publicPlayers[p].cards[suitId] !== undefined
-                                        && G.publicPlayers[p].cards[suitId][i] !== undefined) {
-                                        if (G.publicPlayers[p].cards[suitId][i].type !== "герой") {
-                                            const points: number | null =
-                                                G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][i].points;
-                                            if (points !== null) {
-                                                botMoveArguments.push([points]);
-                                            }
+                    if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
+                        for (let i: number = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
+                            for (let j: number = 0; j < 1; j++) {
+                                if (G.publicPlayers[p].cards[suitId][i] !== undefined) {
+                                    if (G.publicPlayers[p].cards[suitId][i].type !== "герой") {
+                                        const points: number | null =
+                                            G.publicPlayers[p].cards[suitId][i].points;
+                                        if (points !== null) {
+                                            botMoveArguments.push([points]);
                                         }
                                     }
                                 }
                             }
                         }
                     }
+                    const minValue: number = Math.min(...botMoveArguments as unknown as number[]);
+                    const minCardIndex: number = G.publicPlayers[p].cards[suitId].findIndex((card: PlayerCardsType): boolean =>
+                        card.type !== "герой" && card.points === minValue);
+                    if (minCardIndex !== -1) {
+                        moves.push({
+                            move: "DiscardSuitCardFromPlayerBoard",
+                            args: [suitId, p, G.publicPlayers[p].cards[suitId]
+                                .findIndex((card: PlayerCardsType): boolean =>
+                                    card.type !== "герой" && card.points === minValue)],
+                        });
+                    }
                 }
-                const minValue: number = Math.min(...botMoveArguments as unknown as number[]);
-                moves.push({
-                    move: "DiscardSuitCardFromPlayerBoard",
-                    args: [suitId, G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-                        .findIndex((card: PlayerCardsType): boolean =>
-                            card.type !== "герой" && card.points === minValue)],
-                });
             }
         }
         if (activeStageOfCurrentPlayer === "discardCardFromBoard") {

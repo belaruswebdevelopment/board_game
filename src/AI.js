@@ -18,12 +18,11 @@ import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardF
  * @returns {IMoves[]} Массив возможных мувов у ботов.
  */
 export var enumerate = function (G, ctx) {
+    var _a, _b;
     //make false for standard bot
     var enableAdvancedBot = true, uniqueArr = [];
     var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(function (key) { return key.includes(advancedString); });
-    var activeStageOfCurrentPlayer = (ctx.activePlayers
-        && ctx.activePlayers[Number(ctx.currentPlayer)]) ? ctx.activePlayers[Number(ctx.currentPlayer)] :
-        "default";
+    var activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : "default";
     // todo Fix it, now just for bot can do RANDOM move
     var botMoveArguments = [];
     for (var stage in moveBy[ctx.phase]) {
@@ -34,7 +33,7 @@ export var enumerate = function (G, ctx) {
             if (stage.includes(activeStageOfCurrentPlayer)
                 && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
                 // todo Sync players and bots validations in one places
-                var moveName = moveBy[ctx.phase][stage], _a = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _a[0], maxValue = _a[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
+                var moveName = moveBy[ctx.phase][stage], _c = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _c[0], maxValue = _c[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
                 var argValue = void 0;
                 var argArray = void 0;
                 for (var id = minValue; id < maxValue; id++) {
@@ -62,7 +61,7 @@ export var enumerate = function (G, ctx) {
     if (moves.length > 0) {
         return moves;
     }
-    if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default") {
+    if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default" && ctx.activePlayers === null) {
         // todo Fix it, now just for bot can do RANDOM move
         var pickCardOrCampCard = "card";
         if (G.expansions.thingvellir.active
@@ -127,7 +126,7 @@ export var enumerate = function (G, ctx) {
             });
         }
         var minResultForCoins = Math.min.apply(Math, resultsForCoins), maxResultForCoins = Math.max.apply(Math, resultsForCoins), tradingProfit = G.decks[G.decks.length - 1].length > 9 ? 1 : 0;
-        var _b = [-1, -1], positionForMinCoin = _b[0], positionForMaxCoin = _b[1];
+        var _d = [-1, -1], positionForMinCoin = _d[0], positionForMaxCoin = _d[1];
         if (minResultForCoins <= 0) {
             positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
         }
@@ -270,38 +269,46 @@ export var enumerate = function (G, ctx) {
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
-    if (activeStageOfCurrentPlayer === "discardSuitCard") {
+    // TODO FIX It's not activeStageOfCurrentPlayer it' for Other players!!!
+    //        if (activeStageOfCurrentPlayer === "discardSuitCard") {
+    if (ctx.phase === "pickCards" && ctx.activePlayers !== null && activeStageOfCurrentPlayer === "default") {
+        // TODO Fix this (only for quick bot actions)
         // todo Bot can't do async turns...?
         var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
         if (config !== undefined && config.suit !== undefined) {
             var suitId = GetSuitIndexByName(config.suit);
-            for (var p = 0; p < G.publicPlayers.length; p++) {
-                if (p !== Number(ctx.currentPlayer)) {
-                    if (ctx.playerID !== undefined && Number(ctx.playerID) === p) {
-                        for (var i = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
-                            for (var j = 0; j < 1; j++) {
-                                if (G.publicPlayers[p].cards[suitId] !== undefined
-                                    && G.publicPlayers[p].cards[suitId][i] !== undefined) {
-                                    if (G.publicPlayers[p].cards[suitId][i].type !== "герой") {
-                                        var points = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][i].points;
-                                        if (points !== null) {
-                                            botMoveArguments.push([points]);
-                                        }
+            var _loop_3 = function (p) {
+                if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
+                    for (var i = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
+                        for (var j = 0; j < 1; j++) {
+                            if (G.publicPlayers[p].cards[suitId][i] !== undefined) {
+                                if (G.publicPlayers[p].cards[suitId][i].type !== "герой") {
+                                    var points = G.publicPlayers[p].cards[suitId][i].points;
+                                    if (points !== null) {
+                                        botMoveArguments.push([points]);
                                     }
                                 }
                             }
                         }
                     }
                 }
+                var minValue = Math.min.apply(Math, botMoveArguments);
+                var minCardIndex = G.publicPlayers[p].cards[suitId].findIndex(function (card) {
+                    return card.type !== "герой" && card.points === minValue;
+                });
+                if (minCardIndex !== -1) {
+                    moves.push({
+                        move: "DiscardSuitCardFromPlayerBoard",
+                        args: [suitId, p, G.publicPlayers[p].cards[suitId]
+                                .findIndex(function (card) {
+                                return card.type !== "герой" && card.points === minValue;
+                            })],
+                    });
+                }
+            };
+            for (var p = 0; p < G.publicPlayers.length; p++) {
+                _loop_3(p);
             }
-            var minValue_1 = Math.min.apply(Math, botMoveArguments);
-            moves.push({
-                move: "DiscardSuitCardFromPlayerBoard",
-                args: [suitId, G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-                        .findIndex(function (card) {
-                        return card.type !== "герой" && card.points === minValue_1;
-                    })],
-            });
         }
     }
     if (activeStageOfCurrentPlayer === "discardCardFromBoard") {
@@ -503,7 +510,7 @@ export var iterations = function (G, ctx) {
             return 1;
         }
         var efficientMovesCount = 0;
-        var _loop_3 = function (i) {
+        var _loop_4 = function (i) {
             var tavernCard_2 = currentTavern[i];
             if (tavernCard_2 === null) {
                 return "continue";
@@ -529,7 +536,7 @@ export var iterations = function (G, ctx) {
             }
         };
         for (var i = 0; i < currentTavern.length; i++) {
-            var state_1 = _loop_3(i);
+            var state_1 = _loop_4(i);
             if (typeof state_1 === "object")
                 return state_1.value;
         }

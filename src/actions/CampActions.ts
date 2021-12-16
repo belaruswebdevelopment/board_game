@@ -390,13 +390,24 @@ export const StartDiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig):
  */
 export const DiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number, playerId: number,
                                 cardId: number): void => {
+    // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
+        // TODO Rework it for players and fix it for bots
+        /*if (ctx.playerID !== ctx.currentPlayer) {
+            const discardedCard: PlayerCardsType =
+                G.publicPlayers[Number(ctx.playerID)].cards[suitId].splice(cardId, 1)[0];
+            G.discardCardsDeck.push(discardedCard as ICard);
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.playerID)].nickname}
+            сбросил карту ${discardedCard.name} в дискард.`);
+            EndActionForChosenPlayer(G, ctx, playerId);
+        } else {*/
         const discardedCard: PlayerCardsType =
-            G.publicPlayers[Number(ctx.playerID)].cards[suitId].splice(cardId, 1)[0];
+            G.publicPlayers[playerId].cards[suitId].splice(cardId, 1)[0];
         G.discardCardsDeck.push(discardedCard as ICard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.playerID)].nickname} 
-        сбросил карту ${discardedCard.name} в дискард.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} 
+            сбросил карту ${discardedCard.name} в дискард.`);
         EndActionForChosenPlayer(G, ctx, playerId);
+//        }
     } else {
         AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.");
     }

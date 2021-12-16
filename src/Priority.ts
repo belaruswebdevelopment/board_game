@@ -105,17 +105,21 @@ export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number): IPriorit
  * @constructor
  */
 export const ChangePlayersPriorities = (G: MyGameState): void => {
-    const tempPriorities: IPriority[] = [];
+    const tempPriorities: (IPriority | undefined)[] = [];
     for (let i: number = 0; i < G.exchangeOrder.length; i++) {
-        tempPriorities[i] = G.publicPlayers[G.exchangeOrder[i]].priority;
+        const exchangeOrder: number | undefined = G.exchangeOrder[i];
+        if (exchangeOrder !== undefined) {
+            tempPriorities[i] = G.publicPlayers[exchangeOrder].priority;
+        }
     }
     if (tempPriorities.length) {
         AddDataToLog(G, LogTypes.GAME, "Обмен кристаллами между игроками:");
         for (let i: number = 0; i < G.exchangeOrder.length; i++) {
-            if (G.publicPlayers[i].priority.value !== tempPriorities[i].value) {
-                G.publicPlayers[i].priority = tempPriorities[i];
+            const tempPriority: IPriority | undefined = tempPriorities[i];
+            if (tempPriority !== undefined && G.publicPlayers[i].priority.value !== tempPriority.value) {
+                G.publicPlayers[i].priority = tempPriority;
                 AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[i].nickname} получил кристалл с 
-                приоритетом ${tempPriorities[i].value}.`);
+                приоритетом ${tempPriority.value}.`);
             }
         }
     }

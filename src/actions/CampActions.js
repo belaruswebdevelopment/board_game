@@ -363,11 +363,22 @@ export var StartDiscardSuitCard = function (G, ctx, config) {
  * @constructor
  */
 export var DiscardSuitCard = function (G, ctx, config, suitId, playerId, cardId) {
+    // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
-        var discardedCard = G.publicPlayers[Number(ctx.playerID)].cards[suitId].splice(cardId, 1)[0];
+        // TODO Rework it for players and fix it for bots
+        /*if (ctx.playerID !== ctx.currentPlayer) {
+            const discardedCard: PlayerCardsType =
+                G.publicPlayers[Number(ctx.playerID)].cards[suitId].splice(cardId, 1)[0];
+            G.discardCardsDeck.push(discardedCard as ICard);
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.playerID)].nickname}
+            сбросил карту ${discardedCard.name} в дискард.`);
+            EndActionForChosenPlayer(G, ctx, playerId);
+        } else {*/
+        var discardedCard = G.publicPlayers[playerId].cards[suitId].splice(cardId, 1)[0];
         G.discardCardsDeck.push(discardedCard);
-        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.playerID)].nickname, " \n        \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
+        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[playerId].nickname, " \n            \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
         EndActionForChosenPlayer(G, ctx, playerId);
+        //        }
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.");

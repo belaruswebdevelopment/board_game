@@ -399,6 +399,13 @@ export const DiscardCardFromTavern = (G: MyGameState, discardCardIndex: number):
         G.taverns[G.currentTavern][discardCardIndex] = null;
         AddDataToLog(G, LogTypes.GAME, `Карта ${discardedCard.name} из таверны 
         ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
+        const additionalDiscardCardIndex: number =
+            G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
+        if (additionalDiscardCardIndex !== -1) {
+            AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны 
+            ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
+            DiscardCardFromTavern(G, additionalDiscardCardIndex);
+        }
         return true;
     }
     AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не удалось сбросить лишнюю карту из таверны.");

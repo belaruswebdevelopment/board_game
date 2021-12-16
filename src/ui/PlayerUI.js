@@ -168,7 +168,6 @@ export var DrawPlayersHandsCoins = function (data) {
  * @constructor
  */
 export var DrawPlayersBoards = function (data) {
-    var _a;
     var playersBoards = [], playerHeaders = [], playerHeadersCount = [], playerRows = [];
     for (var p = 0; p < data.props.ctx.numPlayers; p++) {
         playersBoards[p] = [];
@@ -196,7 +195,7 @@ export var DrawPlayersBoards = function (data) {
             for (var j = 0; j < data.props.G.suitsNum; j++) {
                 var suit = Object.keys(suitsConfig)[j];
                 id = i + j;
-                if (((_a = data.props.G.publicPlayers[p].cards[j]) === null || _a === void 0 ? void 0 : _a[i]) !== undefined) {
+                if (data.props.G.publicPlayers[p].cards[j][i] !== undefined) {
                     isDrawRow = true;
                     DrawCard(data, playerCells, data.props.G.publicPlayers[p].cards[j][i], id, data.props.G.publicPlayers[p], suit);
                 }

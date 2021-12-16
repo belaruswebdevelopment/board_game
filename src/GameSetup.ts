@@ -95,7 +95,7 @@ export interface MyGameState {
     players: IPlayers,
     publicPlayers: IPublicPlayer[],
     publicPlayersOrder: number[],
-    exchangeOrder: number[],
+    exchangeOrder: (number | undefined)[],
     marketCoins: ICoin[],
     marketCoinsUnique: ICoin[],
     averageCards: ICard[],

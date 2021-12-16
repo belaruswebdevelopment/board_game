@@ -305,7 +305,7 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
             for (let j: number = 0; j < data.props.G.suitsNum; j++) {
                 const suit: string = Object.keys(suitsConfig)[j];
                 id = i + j;
-                if (data.props.G.publicPlayers[p].cards[j]?.[i] !== undefined) {
+                if (data.props.G.publicPlayers[p].cards[j][i] !== undefined) {
                     isDrawRow = true;
                     DrawCard(data, playerCells, data.props.G.publicPlayers[p].cards[j][i], id,
                         data.props.G.publicPlayers[p], suit);

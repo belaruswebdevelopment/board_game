@@ -299,6 +299,11 @@ export var DiscardCardFromTavern = function (G, discardCardIndex) {
         G.discardCardsDeck.push(discardedCard);
         G.taverns[G.currentTavern][discardCardIndex] = null;
         AddDataToLog(G, LogTypes.GAME, "\u041A\u0430\u0440\u0442\u0430 ".concat(discardedCard.name, " \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \n        ").concat(tavernsConfig[G.currentTavern].name, " \u0443\u0431\u0440\u0430\u043D\u0430 \u0432 \u0441\u0431\u0440\u043E\u0441."));
+        var additionalDiscardCardIndex = G.taverns[G.currentTavern].findIndex(function (card) { return card !== null; });
+        if (additionalDiscardCardIndex !== -1) {
+            AddDataToLog(G, LogTypes.GAME, "\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u0430 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \n            ".concat(tavernsConfig[G.currentTavern].name, " \u0434\u043E\u043B\u0436\u043D\u0430 \u0431\u044B\u0442\u044C \u0443\u0431\u0440\u0430\u043D\u0430 \u0432 \u0441\u0431\u0440\u043E\u0441 \u0438\u0437-\u0437\u0430 \u043F\u0438\u043A\u0430 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442\u0430 Jarnglofi."));
+            DiscardCardFromTavern(G, additionalDiscardCardIndex);
+        }
         return true;
     }
     AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не удалось сбросить лишнюю карту из таверны.");

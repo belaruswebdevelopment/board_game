@@ -106,16 +106,16 @@ export var DiscardCardFromPlayerBoard = function (G, ctx, suitId, cardId) {
  * @constructor
  */
 export var DiscardSuitCardFromPlayerBoard = function (G, ctx, suitId, playerId, cardId) {
-    var isValidMove = false;
+    // TODO Uncomment it for players and fix it for bots
+    /*let isValidMove: boolean = false;
     if (ctx.playerID !== undefined) {
         isValidMove = playerId !== Number(ctx.currentPlayer) && playerId === Number(ctx.playerID);
-    }
-    else {
+    } else {
         AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.");
     }
     if (!isValidMove) {
         return INVALID_MOVE;
-    }
+    }*/
     StartActionForChosenPlayer(G, ctx, playerId, suitId, playerId, cardId);
 };
 /**
