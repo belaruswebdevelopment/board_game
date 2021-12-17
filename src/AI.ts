@@ -321,17 +321,16 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                             }
                         }
                     }
-                }
-                const minValue: number = Math.min(...botMoveArguments as unknown as number[]);
-                const minCardIndex: number = G.publicPlayers[p].cards[suitId].findIndex((card: PlayerCardsType): boolean =>
-                    card.type !== "герой" && card.points === minValue);
-                if (minCardIndex !== -1) {
-                    moves.push({
-                        move: "DiscardSuitCardFromPlayerBoard",
-                        args: [suitId, p, G.publicPlayers[p].cards[suitId]
-                            .findIndex((card: PlayerCardsType): boolean =>
-                                card.type !== "герой" && card.points === minValue)],
-                    });
+                    const minValue: number = Math.min(...botMoveArguments as unknown as number[]);
+                    const minCardIndex: number =
+                        G.publicPlayers[p].cards[suitId].findIndex((card: PlayerCardsType): boolean =>
+                            card.type !== "герой" && card.points === minValue);
+                    if (minCardIndex !== -1) {
+                        moves.push({
+                            move: "DiscardSuitCardFromPlayerBoard",
+                            args: [suitId, p, minCardIndex],
+                        });
+                    }
                 }
             }
         }
