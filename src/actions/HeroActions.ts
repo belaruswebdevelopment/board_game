@@ -1,5 +1,5 @@
-import {suitsConfig} from "../data/SuitData";
-import {CreateCard, ICard, ICreateCard} from "../Card";
+import { suitsConfig } from "../data/SuitData";
+import { CreateCard, ICard, ICreateCard } from "../Card";
 import {
     AddCardToPlayer,
     AddHeroCardToPlayerCards,
@@ -7,18 +7,18 @@ import {
     IConfig,
     PlayerCardsType
 } from "../Player";
-import {CheckPickHero, IHero} from "../Hero";
-import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
-import {ICoin, ReturnCoinToPlayerHands} from "../Coin";
-import {CheckAndMoveThrud, GetHeroIndexByName, StartThrudMoving} from "../helpers/HeroHelpers";
-import {GetSuitIndexByName} from "../helpers/SuitHelpers";
-import {INVALID_MOVE} from "boardgame.io/core";
-import {AddDataToLog, LogTypes} from "../Logging";
-import {TotalRank} from "../helpers/ScoreHelpers";
-import {MyGameState} from "../GameSetup";
-import {Ctx} from "boardgame.io";
-import {IConditions, IVariants} from "../data/HeroData";
-import {IsStartActionStage} from "../helpers/ActionHelpers";
+import { CheckPickHero, IHero } from "../Hero";
+import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { ICoin, ReturnCoinToPlayerHands } from "../Coin";
+import { CheckAndMoveThrud, GetHeroIndexByName, StartThrudMoving } from "../helpers/HeroHelpers";
+import { GetSuitIndexByName } from "../helpers/SuitHelpers";
+import { INVALID_MOVE } from "boardgame.io/core";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { TotalRank } from "../helpers/ScoreHelpers";
+import { MyGameState } from "../GameSetup";
+import { Ctx } from "boardgame.io";
+import { IConditions, IVariants } from "../data/HeroData";
+import { IsStartActionStage } from "../helpers/ActionHelpers";
 
 /**
  * <h3>Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.</h3>

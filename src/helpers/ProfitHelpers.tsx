@@ -1,18 +1,18 @@
-import {CampCardTypes, CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes} from "../GameSetup";
-import {Ctx} from "boardgame.io";
-import {DrawButton, DrawCard, DrawCoin} from "./UIHelpers";
-import {GameBoard} from "../GameBoard";
-import {IBotMoveArgumentsTypes} from "../AI";
-import {suitsConfig} from "../data/SuitData";
-import {IConfig, PickedCardType} from "../Player";
-import {Styles} from "../data/StyleData";
+import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes } from "../GameSetup";
+import { Ctx } from "boardgame.io";
+import { DrawButton, DrawCard, DrawCoin } from "./UIHelpers";
+import { GameBoard } from "../GameBoard";
+import { IBotMoveArgumentsTypes } from "../AI";
+import { suitsConfig } from "../data/SuitData";
+import { IConfig, PickedCardType } from "../Player";
+import { Styles } from "../data/StyleData";
 import React from "react";
-import {isCardNotAction} from "../Card";
-import {ICoin} from "../Coin";
-import {TotalRank} from "./ScoreHelpers";
+import { isCardNotAction } from "../Card";
+import { ICoin } from "../Coin";
+import { TotalRank } from "./ScoreHelpers";
 
 export const PickCampCardHoldaProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                        boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < G.campNum; j++) {
         const card: CampCardTypes = G.camp[j];
         if (card !== null) {
@@ -28,7 +28,7 @@ export const PickCampCardHoldaProfit = (G: MyGameState, ctx: Ctx, data?: GameBoa
 };
 
 export const PlaceCardsProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                 boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < G.suitsNum; j++) {
         const suit: string = Object.keys(suitsConfig)[j],
             pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
@@ -56,7 +56,7 @@ export const PlaceCardsProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IB
 };
 
 export const DiscardCardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                  boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < G.drawSize; j++) {
         const card: TavernCardTypes = G.taverns[G.currentTavern][j];
         if (card !== null) {
@@ -76,7 +76,7 @@ export const DiscardCardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | I
 };
 
 export const PickDiscardCardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                      boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < G.discardCardsDeck.length; j++) {
         if (data instanceof GameBoard && boardCells !== undefined) {
             const card: DeckCardTypes = G.discardCardsDeck[j];
@@ -94,7 +94,7 @@ export const PickDiscardCardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard
 };
 
 export const DiscardCardFromBoardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                           boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config,
         pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (config !== undefined) {
@@ -122,7 +122,7 @@ export const DiscardCardFromBoardProfit = (G: MyGameState, ctx: Ctx, data?: Game
 };
 
 export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                                    playerRows?: JSX.Element[][]): void => {
+    playerRows?: JSX.Element[][]): void => {
     for (let i: number = 0; ; i++) {
         const playerCells: JSX.Element[] = [];
         let isDrawRow: boolean = false;
@@ -190,16 +190,16 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, da
 };
 
 export const DiscardSuitCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                                     boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
 
 };
 
 export const UpgradeCoinVidofnirVedrfolnirProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                                    boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (config !== undefined) {
         for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
-             j++) {
+            j++) {
             const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
             if (coin !== null) {
                 if (!coin.isTriggerTrading && config.coinId !== j) {
@@ -219,7 +219,7 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G: MyGameState, ctx: Ctx, da
 };
 
 export const AddCoinToPouchProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                     boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline"
             && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
@@ -236,7 +236,7 @@ export const AddCoinToPouchProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard 
 };
 
 export const PlaceEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                                 boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < G.suitsNum; j++) {
         const card: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
         if (card !== null && "stack" in card) {
@@ -264,7 +264,7 @@ export const PlaceEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?
 };
 
 export const GetEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                               boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
     const mercenaries: CampDeckCardTypes[] =
         G.publicPlayers[Number(ctx.currentPlayer)].campCards
             .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник");
@@ -280,7 +280,7 @@ export const GetEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: 
 };
 
 export const StartEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-                                                 boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < 2; j++) {
         if (j === 0) {
             if (data instanceof GameBoard && boardCells !== undefined) {
@@ -301,7 +301,7 @@ export const StartEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?
 };
 
 export const GetMjollnirProfitProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | number[],
-                                        boardCells?: JSX.Element[]): void => {
+    boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < G.suitsNum; j++) {
         if (data instanceof GameBoard && boardCells !== undefined) {
             const suit: string = Object.keys(suitsConfig)[j];
@@ -310,11 +310,11 @@ export const GetMjollnirProfitProfit = (G: MyGameState, ctx: Ctx, data?: GameBoa
                 <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
                     key={`${suit} suit to get Mjöllnir profit`}
                     onClick={() => data.OnClickSuitToGetMjollnirProfit(j)}>
-                        <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
-                            <b className="whitespace-nowrap text-white">
-                                {G.publicPlayers[Number(ctx.currentPlayer)].cards[j].reduce(TotalRank, 0) * 2}
-                            </b>
-                        </span>
+                    <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
+                        <b className="whitespace-nowrap text-white">
+                            {G.publicPlayers[Number(ctx.currentPlayer)].cards[j].reduce(TotalRank, 0) * 2}
+                        </b>
+                    </span>
                 </td>
             );
         } else if (Array.isArray(data)) {

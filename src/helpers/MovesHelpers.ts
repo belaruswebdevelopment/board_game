@@ -1,15 +1,15 @@
-import {DiscardCardIfCampCardPicked, RefillEmptyCampCards} from "../Camp";
-import {CheckIfCurrentTavernEmpty, RefillTaverns} from "../Tavern";
-import {IHero, RemoveThrudFromPlayerBoardAfterGameEnd} from "../Hero";
-import {DiscardCardFromTavern} from "../Card";
-import {AddActionsToStack, StartActionFromStackOrEndActions} from "./StackHelpers";
-import {CheckAndStartUlineActionsOrContinue} from "./HeroHelpers";
-import {ActivateTrading} from "./CoinHelpers";
-import {CampDeckCardTypes, MyGameState, TavernCardTypes} from "../GameSetup";
-import {Ctx} from "boardgame.io";
-import {IStack, PlayerCardsType} from "../Player";
-import {IVariants} from "../data/HeroData";
-import {SuitNames} from "../data/SuitData";
+import { DiscardCardIfCampCardPicked, RefillEmptyCampCards } from "../Camp";
+import { CheckIfCurrentTavernEmpty, RefillTaverns } from "../Tavern";
+import { IHero, RemoveThrudFromPlayerBoardAfterGameEnd } from "../Hero";
+import { DiscardCardFromTavern } from "../Card";
+import { AddActionsToStack, StartActionFromStackOrEndActions } from "./StackHelpers";
+import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
+import { ActivateTrading } from "./CoinHelpers";
+import { CampDeckCardTypes, MyGameState, TavernCardTypes } from "../GameSetup";
+import { Ctx } from "boardgame.io";
+import { IStack, PlayerCardsType } from "../Player";
+import { IVariants } from "../data/HeroData";
+import { SuitNames } from "../data/SuitData";
 // todo Add logging
 
 /**
@@ -171,7 +171,7 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
         ctx.events!.endTurn!();
     } else if (ctx.phase === "enlistmentMercenaries") {
         if (((ctx.playOrderPos === 0 && ctx.playOrder.length === 1)
-                && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1])
+            && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1])
             || ((ctx.playOrderPos !== 0 && ctx.playOrder.length > 1)
                 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1])
             || (ctx.playOrder[ctx.playOrder.length - 2] !== undefined

@@ -49,9 +49,9 @@ const enableLocalPlayer: boolean = true,
 
 export default App;*/
 
-import {Client} from "boardgame.io/react";
-import {BoardGame} from "./Game";
-import {GameBoard} from "./GameBoard";
+import { Client } from "boardgame.io/react";
+import { BoardGame } from "./Game";
+import { GameBoard } from "./GameBoard";
 
 const App = Client({
     // debug: false,

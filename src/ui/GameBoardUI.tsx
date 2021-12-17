@@ -1,8 +1,8 @@
 import React from "react";
-import {CountMarketCoins, ICoin} from "../Coin";
-import {INumberValues, suitsConfig} from "../data/SuitData";
-import {tavernsConfig} from "../Tavern";
-import {Styles} from "../data/StyleData";
+import { CountMarketCoins, ICoin } from "../Coin";
+import { INumberValues, suitsConfig } from "../data/SuitData";
+import { tavernsConfig } from "../Tavern";
+import { Styles } from "../data/StyleData";
 import {
     DrawBoard,
     DrawCard,
@@ -11,9 +11,9 @@ import {
     DrawPlayersBoardForSuitCardDiscard,
     IDrawBoardOptions
 } from "../helpers/UIHelpers";
-import {GameBoard} from "../GameBoard";
-import {CampCardTypes, DeckCardTypes, TavernCardTypes} from "../GameSetup";
-import {isCardNotAction} from "../Card";
+import { GameBoard } from "../GameBoard";
+import { CampCardTypes, DeckCardTypes, TavernCardTypes } from "../GameSetup";
+import { isCardNotAction } from "../Card";
 import {
     AddCoinToPouchProfit,
     DiscardCardFromBoardProfit,
@@ -27,7 +27,7 @@ import {
     StartEnlistmentMercenariesProfit,
     UpgradeCoinVidofnirVedrfolnirProfit
 } from "../helpers/ProfitHelpers";
-import {IConfig, PickedCardType} from "../Player";
+import { IConfig, PickedCardType } from "../Player";
 
 /**
  * <h3>Отрисовка игровой информации о текущей эпохе и количестве карт в деках.</h3>
@@ -42,14 +42,14 @@ import {IConfig, PickedCardType} from "../Player";
  */
 export const DrawTierCards = (data: GameBoard): JSX.Element => (
     <b>Tier: <span className="italic">
-            {data.props.G.decks.length - data.props.G.tierToEnd + 1 > data.props.G.decks.length ?
-                data.props.G.decks.length : data.props.G.decks.length - data.props.G.tierToEnd + 1}
+        {data.props.G.decks.length - data.props.G.tierToEnd + 1 > data.props.G.decks.length ?
+            data.props.G.decks.length : data.props.G.decks.length - data.props.G.tierToEnd + 1}
         /{data.props.G.decks.length} ({data.props.G.decks.length - data.props.G.tierToEnd !== 2 ?
-        data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0}
+            data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0}
         {data.props.G.decks.length - data.props.G.tierToEnd === 0 ? "/"
             + data.props.G.decks.reduce((count: number, current: DeckCardTypes[]) => count + current.length, 0)
             : ""} cards left)
-        </span></b>
+    </span></b>
 );
 
 /**
@@ -144,7 +144,7 @@ export const DrawMarketCoins = (data: GameBoard): JSX.Element => {
                     </span> Market coins ({data.props.G.marketCoins.length} left)</span>
             </caption>
             <tbody>
-            {boardRows}
+                {boardRows}
             </tbody>
         </table>
     );
@@ -187,7 +187,7 @@ export const DrawHeroes = (data: GameBoard): JSX.Element => {
                 </span> <span>Heroes ({data.props.G.heroes.length} left)</span>
             </caption>
             <tbody>
-            {boardRows}
+                {boardRows}
             </tbody>
         </table>
     );
@@ -228,7 +228,7 @@ export const DrawDistinctions = (data: GameBoard): JSX.Element => {
                 </span> <span>Distinctions</span>
             </caption>
             <tbody>
-            <tr>{boardCells}</tr>
+                <tr>{boardCells}</tr>
             </tbody>
         </table>
     );
@@ -336,7 +336,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                     let handCoinIndex: number = -1;
                     for (let j: number = 0; j < data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                         .boardCoins.length;
-                         j++) {
+                        j++) {
                         // todo Check .? for all coins!!! and delete AS
                         if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn
                             === "Uline"
@@ -346,10 +346,10 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                             const handCoinId: number =
                                 data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                     .handCoins.findIndex((coin: ICoin | null): boolean =>
-                                    coin?.value === handCoins[handCoinIndex]?.value
-                                    && coin?.isInitial === handCoins[handCoinIndex]?.isInitial);
+                                        coin?.value === handCoins[handCoinIndex]?.value
+                                        && coin?.isInitial === handCoins[handCoinIndex]?.isInitial);
                             if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
-                                    .handCoins[handCoinId]
+                                .handCoins[handCoinId]
                                 && !data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                     .handCoins[handCoinId]?.isTriggerTrading) {
                                 DrawCoin(data, boardCells, "coin",
@@ -382,7 +382,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                 </span> <span>{caption}</span>
             </caption>
             <tbody>
-            <tr>{boardCells}</tr>
+                <tr>{boardCells}</tr>
             </tbody>
         </table>
     );
@@ -434,7 +434,7 @@ export const DrawCamp = (data: GameBoard): JSX.Element => {
                 </span>
             </caption>
             <tbody>
-            <tr>{boardCells}</tr>
+                <tr>{boardCells}</tr>
             </tbody>
         </table>
     );
@@ -488,7 +488,7 @@ export const DrawTaverns = (data: GameBoard, gridClass: string) => {
                         </span> <b>{tavernsConfig[t].name}</b>
                     </caption>
                     <tbody>
-                    <tr>{boardCells}</tr>
+                        <tr>{boardCells}</tr>
                     </tbody>
                 </table>
             );

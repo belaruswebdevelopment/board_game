@@ -1,12 +1,12 @@
-import {SuitNames, suitsConfig} from "./data/SuitData";
-import {heroesConfig, IHeroData} from "./data/HeroData";
-import {GetSuitIndexByName} from "./helpers/SuitHelpers";
-import {AddDataToLog, LogTypes} from "./Logging";
-import {artefactsConfig, IArtefact} from "./data/CampData";
-import {CheckCurrentSuitDistinctions} from "./Distinction";
-import {MyGameState} from "./GameSetup";
-import {Ctx} from "boardgame.io";
-import {IPublicPlayer} from "./Player";
+import { SuitNames, suitsConfig } from "./data/SuitData";
+import { heroesConfig, IHeroData } from "./data/HeroData";
+import { GetSuitIndexByName } from "./helpers/SuitHelpers";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { artefactsConfig, IArtefact } from "./data/CampData";
+import { CheckCurrentSuitDistinctions } from "./Distinction";
+import { MyGameState } from "./GameSetup";
+import { Ctx } from "boardgame.io";
+import { IPublicPlayer } from "./Player";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -64,7 +64,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     const suitWarriorIndex: number = GetSuitIndexByName(SuitNames.WARRIOR);
     if (suitWarriorIndex !== -1) {
         const warriorsDistinction: number[] | undefined =
-                CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR),
+            CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR),
             playerIndex: number = G.publicPlayers
                 .findIndex((p: IPublicPlayer): boolean => p.nickname === player.nickname);
         if (warriorsDistinction !== undefined && warriorsDistinction.includes(playerIndex)) {

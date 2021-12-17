@@ -1,10 +1,10 @@
-import {AddDataToLog, LogTypes} from "./Logging";
-import {AddActionsToStack, StartActionFromStackOrEndActions} from "./helpers/StackHelpers";
-import {MyGameState} from "./GameSetup";
-import {Ctx} from "boardgame.io";
-import {IConfig, IPublicPlayer, IStack} from "./Player";
-import {IInitialTradingCoinConfig, IMarketCoinConfig, isInitialPlayerCoinsConfigNotMarket} from "./data/CoinData";
-import {INumberValues} from "./data/SuitData";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
+import { MyGameState } from "./GameSetup";
+import { Ctx } from "boardgame.io";
+import { IConfig, IPublicPlayer, IStack } from "./Player";
+import { IInitialTradingCoinConfig, IMarketCoinConfig, isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
+import { INumberValues } from "./data/SuitData";
 
 /**
  * <h3>Интерфейс для монеты.</h3>
@@ -61,10 +61,10 @@ const isCoin = (obj: {} | ICoin): obj is ICoin => (obj as ICoin).value !== undef
  * @constructor
  */
 export const CreateCoin = ({
-                               value,
-                               isInitial = false,
-                               isTriggerTrading = false,
-                           }: ICreateCoin = {} as ICreateCoin): ICoin => ({
+    value,
+    isInitial = false,
+    isTriggerTrading = false,
+}: ICreateCoin = {} as ICreateCoin): ICoin => ({
     value,
     isInitial,
     isTriggerTrading,
@@ -84,7 +84,7 @@ export const CreateCoin = ({
  * @constructor
  */
 export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoinConfig[],
-                           options: IBuildCoinsOptions): ICoin[] => {
+    options: IBuildCoinsOptions): ICoin[] => {
     const coins: ICoin[] = [];
     for (let i: number = 0; i < coinConfig.length; i++) {
         const config: IMarketCoinConfig | IInitialTradingCoinConfig = coinConfig[i],
@@ -214,7 +214,7 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
  * @constructor
  */
 export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgradingCoinId: number, type: string,
-                            isInitial: boolean): void => {
+    isInitial: boolean): void => {
     // todo add LogTypes.ERROR logging
     // todo Split into different functions!
     let upgradingCoin: {} | ICoin = {},
@@ -236,8 +236,8 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                 }
             }
             const minCoinValue: number = Math.min(...allCoins
-                    .filter((coin: ICoin | null): boolean => coin !== null && !coin.isTriggerTrading)
-                    .map((coin: ICoin | null): number => coin!.value)),
+                .filter((coin: ICoin | null): boolean => coin !== null && !coin.isTriggerTrading)
+                .map((coin: ICoin | null): number => coin!.value)),
                 upgradingCoinInitial: ICoin | null | undefined = allCoins
                     .find((coin: ICoin | null): boolean | undefined => coin!.value === minCoinValue && coin!.isInitial);
             if (upgradingCoinInitial !== null && upgradingCoinInitial !== undefined) {

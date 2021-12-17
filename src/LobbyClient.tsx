@@ -1,7 +1,6 @@
-import {BoardGame} from "./Game";
-import {GameBoard} from "./GameBoard";
-import {Lobby} from 'boardgame.io/react';
-import React from "react";
+import { BoardGame } from "./Game";
+import { GameBoard } from "./GameBoard";
+import { Lobby } from 'boardgame.io/react';
 
 const LobbyClient = (): JSX.Element => <Lobby
     gameServer={`http://${window.location.hostname}:8000`}

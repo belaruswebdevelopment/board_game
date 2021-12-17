@@ -1,6 +1,6 @@
-import {CompareCards, EvaluateCard, IActionCard, ICard, isCardNotAction} from "./Card";
-import {DeckCardTypes, MyGameState} from "./GameSetup";
-import {Ctx} from "boardgame.io";
+import { CompareCards, EvaluateCard, IActionCard, ICard, isCardNotAction } from "./Card";
+import { DeckCardTypes, MyGameState } from "./GameSetup";
+import { Ctx } from "boardgame.io";
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -93,7 +93,7 @@ export const k_combinations = (set: number[], k: number): number[][] => {
  * @returns {any}
  * @constructor
  */
-export const GetAllPicks = ({tavernsNum, playersNum}: { tavernsNum: number, playersNum: number }): any => {
+export const GetAllPicks = ({ tavernsNum, playersNum }: { tavernsNum: number, playersNum: number }): any => {
     const temp: number[][] = [],
         cartesian = (...a: any) => {
             if (a.length === 1) {
@@ -121,8 +121,8 @@ export const GetAllPicks = ({tavernsNum, playersNum}: { tavernsNum: number, play
  */
 const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number } = {
     heuristic: (cards: DeckCardTypes[]): boolean => cards.every((card: DeckCardTypes | null): boolean =>
-        (card !== null && isCardNotAction(card) && isCardNotAction(cards[0]) && card.suit === cards[0].suit
-            && CompareCards(card, cards[0]) === 0)),
+    (card !== null && isCardNotAction(card) && isCardNotAction(cards[0]) && card.suit === cards[0].suit
+        && CompareCards(card, cards[0]) === 0)),
     weight: -100,
 };
 
@@ -301,8 +301,7 @@ export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
     const tempNumbers: number[][] = taverns.map((tavern: (DeckCardTypes | null)[]): number[] => tavern
         .map((card: ICard | IActionCard | null, index: number, arr: (DeckCardTypes | null)[]): number =>
             EvaluateCard(G, ctx, card as ICard, index, arr)));
-    const tempChars: { mean: number; variation: number }[] = tempNumbers.map((element: number[]):
-    { mean: number, variation: number } => GetCharacteristics(element));
+    const tempChars: { mean: number; variation: number }[] = tempNumbers.map((element: number[]): { mean: number, variation: number } => GetCharacteristics(element));
     let maxIndex: number = 0,
         minIndex: number = tempChars.length - 1;
     for (let i: number = 1; i < temp.length; i++) {

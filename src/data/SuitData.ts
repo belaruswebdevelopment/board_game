@@ -1,13 +1,13 @@
-import {CreateCoin, ICoin} from "../Coin";
-import {CreateCard, ICard} from "../Card";
-import {CreatePriority} from "../Priority";
-import {AddActionsToStack, StartActionFromStackOrEndActions} from "../helpers/StackHelpers";
-import {AddDataToLog, LogTypes} from "../Logging";
-import {ArithmeticSum, TotalPoints, TotalRank} from "../helpers/ScoreHelpers";
-import {MyGameState} from "../GameSetup";
-import {Ctx} from "boardgame.io";
-import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
-import {GetMaxCoinValue} from "../helpers/CoinHelpers";
+import { CreateCoin, ICoin } from "../Coin";
+import { CreateCard, ICard } from "../Card";
+import { CreatePriority } from "../Priority";
+import { AddActionsToStack, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
+import { MyGameState } from "../GameSetup";
+import { Ctx } from "boardgame.io";
+import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
+import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 
 /**
  * <h3>Перечисление для названий фракций.</h3>

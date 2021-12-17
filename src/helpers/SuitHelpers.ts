@@ -1,4 +1,4 @@
-import {suitsConfig} from "../data/SuitData";
+import { suitsConfig } from "../data/SuitData";
 
 /**
  * <h3>Вычисляет индекс указанной фракции.</h3>

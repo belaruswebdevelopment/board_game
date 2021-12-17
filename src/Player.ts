@@ -1,16 +1,16 @@
-import {BuildCoins, ICoin} from "./Coin";
-import {initialPlayerCoinsConfig} from "./data/CoinData";
-import {CurrentScoring} from "./Score";
-import {GetSuitIndexByName} from "./helpers/SuitHelpers";
-import {AddDataToLog, LogTypes} from "./Logging";
-import {suitsConfig} from "./data/SuitData";
-import {CampDeckCardTypes, DeckCardTypes, MyGameState} from "./GameSetup";
-import {Ctx} from "boardgame.io";
-import {IPriority} from "./Priority";
-import {ICard, isCardNotAction} from "./Card";
-import {IHero} from "./Hero";
-import {IArtefactCampCard, isArtefactCard} from "./Camp";
-import {IBuff, IConditions, IVariants} from "./data/HeroData";
+import { BuildCoins, ICoin } from "./Coin";
+import { initialPlayerCoinsConfig } from "./data/CoinData";
+import { CurrentScoring } from "./Score";
+import { GetSuitIndexByName } from "./helpers/SuitHelpers";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { suitsConfig } from "./data/SuitData";
+import { CampDeckCardTypes, DeckCardTypes, MyGameState } from "./GameSetup";
+import { Ctx } from "boardgame.io";
+import { IPriority } from "./Priority";
+import { ICard, isCardNotAction } from "./Card";
+import { IHero } from "./Hero";
+import { IArtefactCampCard, isArtefactCard } from "./Camp";
+import { IBuff, IConditions, IVariants } from "./data/HeroData";
 
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>
@@ -121,9 +121,9 @@ interface ICreatePublicPlayer {
  * @constructor
  */
 const CreatePlayer = ({
-                          handCoins,
-                          boardCoins,
-                      }: IPlayer = {} as IPlayer): IPlayer => ({
+    handCoins,
+    boardCoins,
+}: IPlayer = {} as IPlayer): IPlayer => ({
     handCoins,
     boardCoins,
 });
@@ -150,18 +150,18 @@ const CreatePlayer = ({
  * @constructor
  */
 const CreatePublicPlayer = ({
-                                nickname,
-                                cards,
-                                heroes = [],
-                                campCards = [],
-                                handCoins,
-                                boardCoins,
-                                stack = [],
-                                priority,
-                                buffs = {},
-                                selectedCoin,
-                                pickedCard = null,
-                            }: ICreatePublicPlayer = {} as ICreatePublicPlayer): IPublicPlayer => ({
+    nickname,
+    cards,
+    heroes = [],
+    campCards = [],
+    handCoins,
+    boardCoins,
+    stack = [],
+    priority,
+    buffs = {},
+    selectedCoin,
+    pickedCard = null,
+}: ICreatePublicPlayer = {} as ICreatePublicPlayer): IPublicPlayer => ({
     nickname,
     cards,
     campCards,
@@ -209,13 +209,13 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  */
 export const BuildPublicPlayer = (playersNum: number, suitsNum: number, nickname: string, priority: IPriority):
     IPublicPlayer => CreatePublicPlayer({
-    nickname,
-    cards: Array(suitsNum).fill(Array(0)),
-    handCoins: BuildCoins(initialPlayerCoinsConfig,
-        {isInitial: true, isTriggerTrading: false}),
-    boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
-    priority,
-} as ICreatePublicPlayer);
+        nickname,
+        cards: Array(suitsNum).fill(Array(0)),
+        handCoins: BuildCoins(initialPlayerCoinsConfig,
+            { isInitial: true, isTriggerTrading: false }),
+        boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
+        priority,
+    } as ICreatePublicPlayer);
 
 /**
  * <h3>Проверяет базовый порядок хода игроков.</h3>

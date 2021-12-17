@@ -1,4 +1,4 @@
-import {SuitNames} from "./SuitData";
+import { SuitNames } from "./SuitData";
 
 /**
  * <h3>Интерфейс для отрисовки бэкграунда в стилях.</h3>

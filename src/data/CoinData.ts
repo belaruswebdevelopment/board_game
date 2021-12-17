@@ -1,4 +1,4 @@
-import {INumberValues} from "./SuitData";
+import { INumberValues } from "./SuitData";
 
 /**
  * <h3>Интерфейс для конфига базовых монет.</h3>

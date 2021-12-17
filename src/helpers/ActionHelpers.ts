@@ -1,8 +1,8 @@
-import {AfterBasicPickCardActions} from "./MovesHelpers";
-import {MyGameState} from "../GameSetup";
-import {Ctx} from "boardgame.io";
-import {IConfig} from "../Player";
-import {AddDataToLog, LogTypes} from "../Logging";
+import { AfterBasicPickCardActions } from "./MovesHelpers";
+import { MyGameState } from "../GameSetup";
+import { Ctx } from "boardgame.io";
+import { IConfig } from "../Player";
+import { AddDataToLog, LogTypes } from "../Logging";
 
 /**
  * <h3>Завершение текущего экшена.</h3>

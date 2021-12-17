@@ -1,15 +1,15 @@
-import {GetSuitIndexByName} from "./SuitHelpers";
-import {suitsConfig} from "../data/SuitData";
-import {IBackground, Styles} from "../data/StyleData";
+import { GetSuitIndexByName } from "./SuitHelpers";
+import { suitsConfig } from "../data/SuitData";
+import { IBackground, Styles } from "../data/StyleData";
 import React from "react";
-import {ArgsTypes} from "../actions/Actions";
-import {GameBoard} from "../GameBoard";
-import {ICoin} from "../Coin";
-import {IPublicPlayer} from "../Player";
-import {IHero} from "../Hero";
-import {CampDeckCardTypes, DeckCardTypes} from "../GameSetup";
-import {AddDataToLog, LogTypes} from "../Logging";
-import {DiscardAnyCardFromPlayerBoardProfit} from "./ProfitHelpers";
+import { ArgsTypes } from "../actions/Actions";
+import { GameBoard } from "../GameBoard";
+import { ICoin } from "../Coin";
+import { IPublicPlayer } from "../Player";
+import { IHero } from "../Hero";
+import { CampDeckCardTypes, DeckCardTypes } from "../GameSetup";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 
 export interface IDrawBoardOptions {
     boardCols: number,
@@ -32,7 +32,7 @@ export const DrawBoard = (objectsSize: number): IDrawBoardOptions => {
     const boardRows: number = Math.floor(Math.sqrt(objectsSize)),
         boardCols: number = Math.ceil(objectsSize / boardRows),
         lastBoardCol: number = objectsSize % boardCols;
-    return {boardRows, boardCols, lastBoardCol};
+    return { boardRows, boardCols, lastBoardCol };
 };
 
 /**
@@ -64,7 +64,7 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
     return (
         <table>
             <thead>
-            <tr>{playerHeaders}</tr>
+                <tr>{playerHeaders}</tr>
             </thead>
             <tbody>{playerRows}</tbody>
         </table>
@@ -137,7 +137,7 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
     return (
         <table>
             <thead>
-            <tr>{playersHeaders}</tr>
+                <tr>{playersHeaders}</tr>
             </thead>
             <tbody>{playersRows}</tbody>
         </table>
@@ -162,10 +162,10 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
  * @constructor
  */
 export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: DeckCardTypes | CampDeckCardTypes | IHero,
-                         id: number, player: IPublicPlayer | null, suit?: string | null, actionName?: string,
-                         ...args: ArgsTypes):
+    id: number, player: IPublicPlayer | null, suit?: string | null, actionName?: string,
+    ...args: ArgsTypes):
     void => {
-    let styles: IBackground = {background: ""},
+    let styles: IBackground = { background: "" },
         tdClasses: string = "",
         spanClasses: string,
         action: Function | null;
@@ -301,9 +301,9 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
  * @constructor
  */
 export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin: ICoin | null, id: number,
-                         player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
-                         actionName?: string, ...args: ArgsTypes): void => {
-    let styles: IBackground = {background: ""},
+    player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
+    actionName?: string, ...args: ArgsTypes): void => {
+    let styles: IBackground = { background: "" },
         span = null,
         action: Function | null,
         tdClasses: string = "bg-yellow-300",
@@ -407,7 +407,7 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
  * @constructor
  */
 export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: string, name: string, player: IPublicPlayer,
-                           actionName?: string, ...args: ArgsTypes): void => {
+    actionName?: string, ...args: ArgsTypes): void => {
     let action: Function | null;
     switch (actionName) {
         case "OnClickStartEnlistmentMercenaries":

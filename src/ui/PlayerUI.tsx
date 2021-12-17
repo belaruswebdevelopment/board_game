@@ -1,13 +1,13 @@
 import React from "react";
-import {suitsConfig} from "../data/SuitData";
-import {tavernsConfig} from "../Tavern";
-import {CurrentScoring} from "../Score";
-import {Styles} from "../data/StyleData";
-import {GetSuitIndexByName} from "../helpers/SuitHelpers";
-import {DrawCard, DrawCoin} from "../helpers/UIHelpers";
-import {TotalRank} from "../helpers/ScoreHelpers";
-import {GameBoard} from "../GameBoard";
-import {ICoin} from "../Coin";
+import { suitsConfig } from "../data/SuitData";
+import { tavernsConfig } from "../Tavern";
+import { CurrentScoring } from "../Score";
+import { Styles } from "../data/StyleData";
+import { GetSuitIndexByName } from "../helpers/SuitHelpers";
+import { DrawCard, DrawCoin } from "../helpers/UIHelpers";
+import { TotalRank } from "../helpers/ScoreHelpers";
+import { GameBoard } from "../GameBoard";
+import { ICoin } from "../Coin";
 
 /**
  * <h3>Отрисовка планшета монет, выложенных игроком на стол.</h3>
@@ -66,7 +66,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                     } else {
                         if (data.props.G.winner.length || (data.props.ctx.phase === "placeCoinsUline" &&
                             data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== "placeCoins"
-                            && data.props.G.currentTavern >= j)) {
+                                && data.props.G.currentTavern >= j)) {
                             DrawCoin(data, playerCells, "coin",
                                 data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                                 data.props.G.publicPlayers[p]);
@@ -91,7 +91,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                         playerCells.push(
                             <td key={`${data.props.G.publicPlayers[p].nickname} priority gem`} className="bg-gray-300">
                                 <span style={Styles.Priorities(data.props.G.publicPlayers[p].priority.value)}
-                                      className="bg-priority">
+                                    className="bg-priority">
 
                                 </span>
                             </td>
@@ -120,7 +120,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                             }
                         } else if (Number(data.props.ctx.currentPlayer) === p
                             && (data.props.ctx.phase === "placeCoins" || (data.props.ctx.activePlayers
-                                    && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
+                                && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                                 "placeTradingCoinsUline")) {
                             DrawCoin(data, playerCells, "coin",
                                 coin, coinIndex, data.props.G.publicPlayers[p], null,
@@ -151,13 +151,13 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                     Player {p + 1} ({data.props.G.publicPlayers[p].nickname}) played coins
                 </caption>
                 <thead>
-                <tr>{playerHeaders[p]}</tr>
+                    <tr>{playerHeaders[p]}</tr>
                 </thead>
                 <tbody>
-                {playerRows[p]}
+                    {playerRows[p]}
                 </tbody>
                 <tfoot>
-                <tr>{playerFooters[p]}</tr>
+                    <tr>{playerFooters[p]}</tr>
                 </tfoot>
             </table>
         );
@@ -222,7 +222,7 @@ export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
             <table className="mx-auto" key={`${data.props.G.publicPlayers[p].nickname} hand coins`}>
                 <caption>Player {p + 1} ({data.props.G.publicPlayers[p].nickname}) coins</caption>
                 <tbody>
-                <tr>{playerCells}</tr>
+                    <tr>{playerCells}</tr>
                 </tbody>
             </table>
         );
@@ -324,8 +324,8 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                     if (data.props.G.publicPlayers[p].heroes[i] !== undefined &&
                         (!data.props.G.publicPlayers[p].heroes[i].suit &&
                             !((data.props.G.publicPlayers[p].heroes[i].name === "Ylud"
-                                    && data.props.G.publicPlayers[p].cards.flat()
-                                        .findIndex((card: { name: string }): boolean => card.name === "Ylud") !== -1)
+                                && data.props.G.publicPlayers[p].cards.flat()
+                                    .findIndex((card: { name: string }): boolean => card.name === "Ylud") !== -1)
                                 || (data.props.G.publicPlayers[p].heroes[i].name === "Thrud"
                                     && data.props.G.publicPlayers[p].cards.flat()
                                         .findIndex((card: { name: string }): boolean =>
@@ -369,8 +369,8 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                         CurrentScoring(data.props.G.publicPlayers[p])} points
                 </caption>
                 <thead>
-                <tr>{playerHeaders[p]}</tr>
-                <tr>{playerHeadersCount[p]}</tr>
+                    <tr>{playerHeaders[p]}</tr>
+                    <tr>{playerHeadersCount[p]}</tr>
                 </thead>
                 <tbody>{playerRows[p]}</tbody>
             </table>

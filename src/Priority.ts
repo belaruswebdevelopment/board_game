@@ -1,6 +1,6 @@
-import {AddDataToLog, LogTypes} from "./Logging";
-import {MyGameState} from "./GameSetup";
-import {IPublicPlayer} from "./Player";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { MyGameState } from "./GameSetup";
+import { IPublicPlayer } from "./Player";
 
 /**
  * <h3>Интерфейс для кристалла.</h3>
@@ -40,9 +40,9 @@ interface ICreatePriority {
  * @constructor
  */
 export const CreatePriority = ({
-                                   value,
-                                   isExchangeable = true,
-                               }: ICreatePriority = {} as ICreatePriority): IPriority => ({
+    value,
+    isExchangeable = true,
+}: ICreatePriority = {} as ICreatePriority): IPriority => ({
     value,
     isExchangeable,
 });
@@ -57,11 +57,11 @@ export const CreatePriority = ({
  * @type {IPriority[]}
  */
 const priorities: IPriority[] = [
-    CreatePriority({value: 1} as ICreatePriority),
-    CreatePriority({value: 2} as ICreatePriority),
-    CreatePriority({value: 3} as ICreatePriority),
-    CreatePriority({value: 4} as ICreatePriority),
-    CreatePriority({value: 5} as ICreatePriority),
+    CreatePriority({ value: 1 } as ICreatePriority),
+    CreatePriority({ value: 2 } as ICreatePriority),
+    CreatePriority({ value: 3 } as ICreatePriority),
+    CreatePriority({ value: 4 } as ICreatePriority),
+    CreatePriority({ value: 5 } as ICreatePriority),
 ];
 
 /**

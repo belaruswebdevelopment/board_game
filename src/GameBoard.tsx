@@ -10,11 +10,11 @@ import {
     DrawTierCards,
     DrawWinner,
 } from "./ui/GameBoardUI";
-import {DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins,} from "./ui/PlayerUI";
-import {DrawDebugData} from "./ui/DebugUI";
-import {DrawLogData} from "./ui/LogUI";
-import type {BoardProps} from 'boardgame.io/react';
-import {MyGameState} from "./GameSetup";
+import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins, } from "./ui/PlayerUI";
+import { DrawDebugData } from "./ui/DebugUI";
+import { DrawLogData } from "./ui/LogUI";
+import type { BoardProps } from 'boardgame.io/react';
+import { MyGameState } from "./GameSetup";
 
 /**
  * <h3>Отрисовка игрового стола.</h3>

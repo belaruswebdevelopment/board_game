@@ -1,7 +1,7 @@
-import {TotalRank} from "../helpers/ScoreHelpers";
-import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
-import {ICoin} from "../Coin";
-import {SuitNames} from "./SuitData";
+import { TotalRank } from "../helpers/ScoreHelpers";
+import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
+import { ICoin } from "../Coin";
+import { SuitNames } from "./SuitData";
 
 /**
  * <h3>Интерфейс для данных карт кэмпа артефакт.</h3>

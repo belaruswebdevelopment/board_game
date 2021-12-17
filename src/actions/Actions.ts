@@ -1,9 +1,9 @@
-import {UpgradeCoin} from "../Coin";
-import {INVALID_MOVE} from "boardgame.io/core";
-import {SuitNames, suitsConfig} from "../data/SuitData";
-import {AddCardToPlayer, IConfig, IStack, PickedCardType, PlayerCardsType} from "../Player";
-import {AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
-import {CreateCard, DiscardCardFromTavern, ICard, ICreateCard, isCardNotAction} from "../Card";
+import { UpgradeCoin } from "../Coin";
+import { INVALID_MOVE } from "boardgame.io/core";
+import { SuitNames, suitsConfig } from "../data/SuitData";
+import { AddCardToPlayer, IConfig, IStack, PickedCardType, PlayerCardsType } from "../Player";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { CreateCard, DiscardCardFromTavern, ICard, ICreateCard, isCardNotAction } from "../Card";
 import {
     AddHeroToCards,
     CheckAndMoveThrudOrPickHeroAction,
@@ -25,12 +25,12 @@ import {
     StartVidofnirVedrfolnirAction,
     UpgradeCoinVidofnirVedrfolnirAction
 } from "./CampActions";
-import {GetSuitIndexByName} from "../helpers/SuitHelpers";
-import {AddDataToLog, LogTypes} from "../Logging";
-import {CampDeckCardTypes, DeckCardTypes, MyGameState} from "../GameSetup";
-import {Ctx} from "boardgame.io";
-import {IVariants} from "../data/HeroData";
-import {IsStartActionStage} from "../helpers/ActionHelpers";
+import { GetSuitIndexByName } from "../helpers/SuitHelpers";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { CampDeckCardTypes, DeckCardTypes, MyGameState } from "../GameSetup";
+import { Ctx } from "boardgame.io";
+import { IVariants } from "../data/HeroData";
+import { IsStartActionStage } from "../helpers/ActionHelpers";
 
 // todo Check my types
 /**
@@ -227,7 +227,7 @@ const AddBuffToPlayer = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
  * @constructor
  */
 export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
-                                                  cardId: number): void => {
+    cardId: number): void => {
     const pickedCard: PlayerCardsType =
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
@@ -336,32 +336,32 @@ const PlaceCards = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): 
         AddCardToPlayer(G, ctx, olwinDouble);
         if (G.actionsNum === 2) {
             const variants: IVariants = {
-                    blacksmith: {
-                        suit: SuitNames.BLACKSMITH,
-                        rank: 1,
-                        points: null,
-                    },
-                    hunter: {
-                        suit: SuitNames.HUNTER,
-                        rank: 1,
-                        points: null,
-                    },
-                    explorer: {
-                        suit: SuitNames.EXPLORER,
-                        rank: 1,
-                        points: 0,
-                    },
-                    warrior: {
-                        suit: SuitNames.WARRIOR,
-                        rank: 1,
-                        points: 0,
-                    },
-                    miner: {
-                        suit: SuitNames.MINER,
-                        rank: 1,
-                        points: 0,
-                    },
+                blacksmith: {
+                    suit: SuitNames.BLACKSMITH,
+                    rank: 1,
+                    points: null,
                 },
+                hunter: {
+                    suit: SuitNames.HUNTER,
+                    rank: 1,
+                    points: null,
+                },
+                explorer: {
+                    suit: SuitNames.EXPLORER,
+                    rank: 1,
+                    points: 0,
+                },
+                warrior: {
+                    suit: SuitNames.WARRIOR,
+                    rank: 1,
+                    points: 0,
+                },
+                miner: {
+                    suit: SuitNames.MINER,
+                    rank: 1,
+                    points: 0,
+                },
+            },
                 stack: IStack[] = [
                     {
                         actionName: "DrawProfitAction",

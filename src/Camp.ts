@@ -1,9 +1,9 @@
-import {DiscardCardFromTavern} from "./Card";
-import {AddDataToLog, LogTypes} from "./Logging";
-import {suitsConfig} from "./data/SuitData";
-import {CampCardTypes, CampDeckCardTypes, MyGameState, TavernCardTypes} from "./GameSetup";
-import {IStack} from "./Player";
-import {IArtefactConfig, IMercenaries} from "./data/CampData";
+import { DiscardCardFromTavern } from "./Card";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { suitsConfig } from "./data/SuitData";
+import { CampCardTypes, CampDeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
+import { IStack } from "./Player";
+import { IArtefactConfig, IMercenaries } from "./data/CampData";
 
 /**
  * <h3>Интерфейс для карты кэмпа артефакта.</h3>
@@ -95,19 +95,7 @@ export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard): ca
  * @constructor
  */
 export const CreateArtefactCampCard = ({
-                                           type = "артефакт",
-                                           tier,
-                                           path,
-                                           name,
-                                           description,
-                                           game,
-                                           suit,
-                                           rank,
-                                           points,
-                                           stack,
-                                       }: ICreateArtefactCampCard = {} as ICreateArtefactCampCard):
-    IArtefactCampCard => ({
-    type,
+    type = "артефакт",
     tier,
     path,
     name,
@@ -117,7 +105,19 @@ export const CreateArtefactCampCard = ({
     rank,
     points,
     stack,
-});
+}: ICreateArtefactCampCard = {} as ICreateArtefactCampCard):
+    IArtefactCampCard => ({
+        type,
+        tier,
+        path,
+        name,
+        description,
+        game,
+        suit,
+        rank,
+        points,
+        stack,
+    });
 
 /**
  * <h3>Создание карты наёмника для кэмпа.</h3>
@@ -136,21 +136,21 @@ export const CreateArtefactCampCard = ({
  * @constructor
  */
 export const CreateMercenaryCampCard = ({
-                                            type = "наёмник",
-                                            tier,
-                                            path,
-                                            name,
-                                            game = "thingvellir",
-                                            stack
-                                        }: ICreateMercenaryCampCard = {} as ICreateMercenaryCampCard):
-    IMercenaryCampCard => ({
-    type,
+    type = "наёмник",
     tier,
     path,
     name,
-    game,
-    stack,
-});
+    game = "thingvellir",
+    stack
+}: ICreateMercenaryCampCard = {} as ICreateMercenaryCampCard):
+    IMercenaryCampCard => ({
+        type,
+        tier,
+        path,
+        name,
+        game,
+        stack,
+    });
 
 /**
  * <h3>Создаёт все карты кэмпа из конфига.</h3>

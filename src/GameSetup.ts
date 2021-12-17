@@ -1,17 +1,17 @@
-import {BuildPlayer, BuildPublicPlayer, IPlayer, IPublicPlayer} from "./Player";
-import {BuildCards, GetAverageSuitCard, IActionCard, IAverageSuitCardData, ICard, IDeckConfig} from "./Card";
-import {suitsConfig} from "./data/SuitData";
-import {marketCoinsConfig} from "./data/CoinData";
-import {BuildCoins, ICoin} from "./Coin";
-import {GetAllPicks, k_combinations, Permute} from "./BotConfig";
-import {GeneratePrioritiesForPlayerNumbers, IPriority} from "./Priority";
-import {actionCardsConfigArray} from "./data/ActionCardData";
-import {BuildHeroes, IHero} from "./Hero";
-import {BuildCampCards, IArtefactCampCard, IMercenaryCampCard} from "./Camp";
-import {artefactsConfig, mercenariesConfig} from "./data/CampData";
-import {Ctx} from "boardgame.io";
-import {ILogData} from "./Logging";
-import {GetSuitIndexByName} from "./helpers/SuitHelpers";
+import { BuildPlayer, BuildPublicPlayer, IPlayer, IPublicPlayer } from "./Player";
+import { BuildCards, GetAverageSuitCard, IActionCard, IAverageSuitCardData, ICard, IDeckConfig } from "./Card";
+import { suitsConfig } from "./data/SuitData";
+import { marketCoinsConfig } from "./data/CoinData";
+import { BuildCoins, ICoin } from "./Coin";
+import { GetAllPicks, k_combinations, Permute } from "./BotConfig";
+import { GeneratePrioritiesForPlayerNumbers, IPriority } from "./Priority";
+import { actionCardsConfigArray } from "./data/ActionCardData";
+import { BuildHeroes, IHero } from "./Hero";
+import { BuildCampCards, IArtefactCampCard, IMercenaryCampCard } from "./Camp";
+import { artefactsConfig, mercenariesConfig } from "./data/CampData";
+import { Ctx } from "boardgame.io";
+import { ILogData } from "./Logging";
+import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 
 /**
  * <h3>Интерфейс для дополнений к игре.</h3>
@@ -206,7 +206,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
     }
     const botData: IBotData = {
         allCoinsOrder,
-        allPicks: GetAllPicks({tavernsNum, playersNum: ctx.numPlayers}),
+        allPicks: GetAllPicks({ tavernsNum, playersNum: ctx.numPlayers }),
         maxIter: 1000,
         deckLength: decks[0].length,
     };

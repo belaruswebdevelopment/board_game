@@ -1,5 +1,5 @@
-import {IStack} from "../Player";
-import {INumberValues} from "./SuitData";
+import { IStack } from "../Player";
+import { INumberValues } from "./SuitData";
 
 /**
  * <h3>Интерфейс для значения, на которое обновляется монета.</h3>

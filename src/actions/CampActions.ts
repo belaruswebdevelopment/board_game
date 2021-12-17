@@ -4,7 +4,7 @@ import {
     EndActionForChosenPlayer,
     EndActionFromStackAndAddNew
 } from "../helpers/StackHelpers";
-import {GetSuitIndexByName} from "../helpers/SuitHelpers";
+import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import {
     AddCampCardToPlayer,
     AddCampCardToPlayerCards,
@@ -13,14 +13,14 @@ import {
     IStack,
     PlayerCardsType
 } from "../Player";
-import {CheckAndMoveThrudOrPickHeroAction} from "./HeroActions";
-import {AddDataToLog, LogTypes} from "../Logging";
-import {SuitNames, suitsConfig} from "../data/SuitData";
-import {CampDeckCardTypes, MyGameState} from "../GameSetup";
-import {Ctx} from "boardgame.io";
-import {isArtefactCard} from "../Camp";
-import {ICard} from "../Card";
-import {ICoin} from "../Coin";
+import { CheckAndMoveThrudOrPickHeroAction } from "./HeroActions";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { SuitNames, suitsConfig } from "../data/SuitData";
+import { CampDeckCardTypes, MyGameState } from "../GameSetup";
+import { Ctx } from "boardgame.io";
+import { isArtefactCard } from "../Camp";
+import { ICard } from "../Card";
+import { ICoin } from "../Coin";
 
 /**
  * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>
@@ -140,7 +140,7 @@ export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, 
  */
 export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void => {
     const number: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .filter((coin: ICoin | null, index: number): boolean => index >= G.tavernsNum && coin === null).length,
+        .filter((coin: ICoin | null, index: number): boolean => index >= G.tavernsNum && coin === null).length,
         handCoinsNumber: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length;
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" && number > 0 && handCoinsNumber) {
         const stack: IStack[] = [
@@ -225,7 +225,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
  * @constructor
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, config: IConfig, coinId: number,
-                                                    type: string, isInitial: boolean): void => {
+    type: string, isInitial: boolean): void => {
     const playerConfig: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     let stack: IStack[] = [];
     if (playerConfig !== undefined) {
@@ -321,7 +321,7 @@ export const DiscardTradingCoin = (G: MyGameState, ctx: Ctx): void => {
  * @constructor
  */
 export const DiscardAnyCardFromPlayerBoard = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
-                                              cardId: number): void => {
+    cardId: number): void => {
     const discardedCard: PlayerCardsType =
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(cardId, 1)[0];
     G.discardCardsDeck.push(discardedCard as ICard);
@@ -389,7 +389,7 @@ export const StartDiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig):
  * @constructor
  */
 export const DiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number, playerId: number,
-                                cardId: number): void => {
+    cardId: number): void => {
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         // TODO Rework it for players and fix it for bots
@@ -407,7 +407,7 @@ export const DiscardSuitCard = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} 
             сбросил карту ${discardedCard.name} в дискард.`);
         EndActionForChosenPlayer(G, ctx, playerId);
-//        }
+        //        }
     } else {
         AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.");
     }

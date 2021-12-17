@@ -1,11 +1,11 @@
-import {heroesConfig, IVariants} from "../data/HeroData";
-import {GetSuitIndexByName} from "./SuitHelpers";
-import {AddActionsToStackAfterCurrent} from "./StackHelpers";
-import {MyGameState} from "../GameSetup";
-import {Ctx} from "boardgame.io";
-import {ICoin} from "../Coin";
-import {IPublicPlayer, IStack, PlayerCardsType} from "../Player";
-import {SuitNames} from "../data/SuitData";
+import { heroesConfig, IVariants } from "../data/HeroData";
+import { GetSuitIndexByName } from "./SuitHelpers";
+import { AddActionsToStackAfterCurrent } from "./StackHelpers";
+import { MyGameState } from "../GameSetup";
+import { Ctx } from "boardgame.io";
+import { ICoin } from "../Coin";
+import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
+import { SuitNames } from "../data/SuitData";
 
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
@@ -61,32 +61,32 @@ export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: PlayerCardsTyp
 export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType): void => {
     if (card.suit !== null) {
         const variants: IVariants = {
-                blacksmith: {
-                    suit: SuitNames.BLACKSMITH,
-                    rank: 1,
-                    points: null,
-                },
-                hunter: {
-                    suit: SuitNames.HUNTER,
-                    rank: 1,
-                    points: null,
-                },
-                explorer: {
-                    suit: SuitNames.EXPLORER,
-                    rank: 1,
-                    points: null,
-                },
-                warrior: {
-                    suit: SuitNames.WARRIOR,
-                    rank: 1,
-                    points: null,
-                },
-                miner: {
-                    suit: SuitNames.MINER,
-                    rank: 1,
-                    points: null,
-                },
+            blacksmith: {
+                suit: SuitNames.BLACKSMITH,
+                rank: 1,
+                points: null,
             },
+            hunter: {
+                suit: SuitNames.HUNTER,
+                rank: 1,
+                points: null,
+            },
+            explorer: {
+                suit: SuitNames.EXPLORER,
+                rank: 1,
+                points: null,
+            },
+            warrior: {
+                suit: SuitNames.WARRIOR,
+                rank: 1,
+                points: null,
+            },
+            miner: {
+                suit: SuitNames.MINER,
+                rank: 1,
+                points: null,
+            },
+        },
             stack: IStack[] = [
                 {
                     actionName: "DrawProfitAction",

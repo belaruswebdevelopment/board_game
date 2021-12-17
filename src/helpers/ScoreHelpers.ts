@@ -1,4 +1,4 @@
-import {PlayerCardsType} from "../Player";
+import { PlayerCardsType } from "../Player";
 
 /**
  * <h3>Высчитывает суммарное количество очков фракции.</h3>

@@ -1,8 +1,8 @@
-import {GetSuitIndexByName} from "../helpers/SuitHelpers";
-import {TotalRank} from "../helpers/ScoreHelpers";
-import {IPublicPlayer, IStack} from "../Player";
-import {SuitNames} from "./SuitData";
-import {GetMaxCoinValue} from "../helpers/CoinHelpers";
+import { GetSuitIndexByName } from "../helpers/SuitHelpers";
+import { TotalRank } from "../helpers/ScoreHelpers";
+import { IPublicPlayer, IStack } from "../Player";
+import { SuitNames } from "./SuitData";
+import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 
 /**
  * <h3>Интерфейс для баффа карты героя.</h3>

@@ -1,4 +1,4 @@
-import {MyGameState} from "./GameSetup";
+import { MyGameState } from "./GameSetup";
 
 /**
  * <h3>Перечисление для типов логов.</h3>
@@ -31,5 +31,5 @@ export interface ILogData {
  * @constructor
  */
 export const AddDataToLog = (G: MyGameState, type: LogTypes, value: string): void => {
-    G.logData.push({type, value});
+    G.logData.push({ type, value });
 };

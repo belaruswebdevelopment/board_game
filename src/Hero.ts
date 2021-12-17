@@ -1,11 +1,11 @@
-import {heroesConfig} from "./data/HeroData";
-import {GetSuitIndexByName} from "./helpers/SuitHelpers";
-import {AddDataToLog, LogTypes} from "./Logging";
-import {AddActionsToStackAfterCurrent} from "./helpers/StackHelpers";
-import {TotalRank} from "./helpers/ScoreHelpers";
-import {MyGameState} from "./GameSetup";
-import {Ctx} from "boardgame.io";
-import {IStack, PlayerCardsType} from "./Player";
+import { heroesConfig } from "./data/HeroData";
+import { GetSuitIndexByName } from "./helpers/SuitHelpers";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
+import { TotalRank } from "./helpers/ScoreHelpers";
+import { MyGameState } from "./GameSetup";
+import { Ctx } from "boardgame.io";
+import { IStack, PlayerCardsType } from "./Player";
 
 /**
  * <h3>Интерфейс для героя.</h3>
@@ -57,16 +57,16 @@ interface ICreateHero {
  * @constructor
  */
 export const CreateHero = ({
-                               type,
-                               name,
-                               description,
-                               game,
-                               suit,
-                               rank,
-                               points,
-                               active = true,
-                               stack
-                           }: ICreateHero = {} as ICreateHero): IHero => ({
+    type,
+    name,
+    description,
+    game,
+    suit,
+    rank,
+    points,
+    active = true,
+    stack
+}: ICreateHero = {} as ICreateHero): IHero => ({
     type,
     name,
     description,

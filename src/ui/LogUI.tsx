@@ -1,6 +1,6 @@
 import React from "react";
-import {LogTypes} from "../Logging";
-import {GameBoard} from "../GameBoard";
+import { LogTypes } from "../Logging";
+import { GameBoard } from "../GameBoard";
 
 /**
  * <h3>Отрисовка лог панели.</h3>

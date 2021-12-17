@@ -1,4 +1,4 @@
-import {CampDeckCardTypes, DistinctionTypes, MyGameState, SetupGame} from "./GameSetup";
+import { CampDeckCardTypes, DistinctionTypes, MyGameState, SetupGame } from "./GameSetup";
 import {
     ClickCard,
     ClickCardToPickDistinction,
@@ -9,13 +9,13 @@ import {
     PlaceEnlistmentMercenaries,
     StartEnlistmentMercenaries,
 } from "./moves/Moves";
-import {ChangePlayersPriorities} from "./Priority";
-import {ScoreWinner} from "./Score";
-import {enumerate, iterations, objectives, playoutDepth} from "./AI";
-import {ReturnCoinsToPlayerHands} from "./Coin";
-import {RefillTaverns} from "./Tavern";
-import {RefillCamp} from "./Camp";
-import {ClickHeroCard, DiscardCard, PlaceCard,} from "./moves/HeroMoves";
+import { ChangePlayersPriorities } from "./Priority";
+import { ScoreWinner } from "./Score";
+import { enumerate, iterations, objectives, playoutDepth } from "./AI";
+import { ReturnCoinsToPlayerHands } from "./Coin";
+import { RefillTaverns } from "./Tavern";
+import { RefillCamp } from "./Camp";
+import { ClickHeroCard, DiscardCard, PlaceCard, } from "./moves/HeroMoves";
 import {
     AddCoinToPouch,
     ClickBoardCoin,
@@ -31,13 +31,13 @@ import {
     DiscardSuitCardFromPlayerBoard,
     GetMjollnirProfit
 } from "./moves/CampMoves";
-import {AddActionsToStack} from "./helpers/StackHelpers";
-import {BotsPlaceAllCoins} from "./moves/BotMoves";
-import {IResolveBoardCoins, ResolveBoardCoins} from "./helpers/CoinHelpers";
-import {PlayerView} from "boardgame.io/core";
-import {CheckDistinction} from "./Distinction";
-import type {Ctx, Game} from "boardgame.io";
-import {CheckPlayersBasicOrder, IPublicPlayer, IStack} from "./Player";
+import { AddActionsToStack } from "./helpers/StackHelpers";
+import { BotsPlaceAllCoins } from "./moves/BotMoves";
+import { IResolveBoardCoins, ResolveBoardCoins } from "./helpers/CoinHelpers";
+import { PlayerView } from "boardgame.io/core";
+import { CheckDistinction } from "./Distinction";
+import type { Ctx, Game } from "boardgame.io";
+import { CheckPlayersBasicOrder, IPublicPlayer, IStack } from "./Player";
 
 /**
  * <h3>Интерфейс для порядка ходов.</h3>
@@ -172,7 +172,7 @@ export const BoardGame: Game<MyGameState> = {
             },
             onBegin: (G: MyGameState, ctx: Ctx): void => {
                 G.currentTavern++;
-                const {playersOrder, exchangeOrder}: IResolveBoardCoins = ResolveBoardCoins(G, ctx);
+                const { playersOrder, exchangeOrder }: IResolveBoardCoins = ResolveBoardCoins(G, ctx);
                 [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
             },
             onEnd: (G: MyGameState): void => {
@@ -243,12 +243,12 @@ export const BoardGame: Game<MyGameState> = {
                     playersIndexes: number[] = [];
                 players.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
                     if (nextPlayer.campCards
-                            .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length <
+                        .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length <
                         currentPlayer.campCards
                             .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
                         return 1;
                     } else if (nextPlayer.campCards
-                            .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length >
+                        .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length >
                         currentPlayer.campCards
                             .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
                         return -1;

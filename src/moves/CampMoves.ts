@@ -1,14 +1,14 @@
-import {IsValidMove} from "../MoveValidator";
-import {INVALID_MOVE} from "boardgame.io/core";
+import { IsValidMove } from "../MoveValidator";
+import { INVALID_MOVE } from "boardgame.io/core";
 import {
     AddActionsToStack,
     EndActionFromStackAndAddNew,
     StartActionForChosenPlayer,
     StartActionFromStackOrEndActions,
 } from "../helpers/StackHelpers";
-import {Ctx, Move} from "boardgame.io";
-import {CampCardTypes, CampDeckCardTypes, MyGameState} from "../GameSetup";
-import {AddDataToLog, LogTypes} from "../Logging";
+import { Ctx, Move } from "boardgame.io";
+import { CampCardTypes, CampDeckCardTypes, MyGameState } from "../GameSetup";
+import { AddDataToLog, LogTypes } from "../Logging";
 // todo Add logging
 
 /**
@@ -25,7 +25,7 @@ import {AddDataToLog, LogTypes} from "../Logging";
  * @constructor
  */
 export const ClickCampCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
-    const isValidMove: boolean = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]})
+    const isValidMove: boolean = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
         && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
             || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
     if (!isValidMove) {
@@ -54,7 +54,7 @@ export const ClickCampCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardI
  * @constructor
  */
 export const ClickCampCardHolda: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
-    const isValidMove: boolean = IsValidMove({obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length]})
+    const isValidMove: boolean = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
         && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -117,7 +117,7 @@ export const DiscardCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ct
  * @constructor
  */
 export const DiscardSuitCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
-                                                                  playerId: number, cardId: number): string | void => {
+    playerId: number, cardId: number): string | void => {
     // TODO Uncomment it for players and fix it for bots
     /*let isValidMove: boolean = false;
     if (ctx.playerID !== undefined) {

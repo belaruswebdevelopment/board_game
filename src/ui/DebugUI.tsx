@@ -1,5 +1,4 @@
-import React from "react";
-import {GameBoard} from "../GameBoard";
+import { GameBoard } from "../GameBoard";
 
 /**
  * <h3>Собирает данные в объект для отрисовки дебаг информации.</h3>
@@ -73,7 +72,7 @@ const DrawObjectData = (obj: { [key: string]: any }): JSX.Element => {
             values.push(
                 <li key={key}>
                     <b><span className="text-pink-500">{key}</span>:</b> <span
-                    className="text-purple-500">{value}</span>
+                        className="text-purple-500">{value}</span>
                 </li>
             );
         }

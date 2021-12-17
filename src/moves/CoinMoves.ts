@@ -1,12 +1,12 @@
-import {CoinUpgradeValidation, IsValidMove} from "../MoveValidator";
-import {INVALID_MOVE} from "boardgame.io/core";
-import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
-import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
-import {CheckAndStartUlineActionsOrContinue} from "../helpers/HeroHelpers";
-import {Ctx, Move} from "boardgame.io";
-import {MyGameState} from "../GameSetup";
-import {IConfig, IPublicPlayer} from "../Player";
-import {ICoin} from "../Coin";
+import { CoinUpgradeValidation, IsValidMove } from "../MoveValidator";
+import { INVALID_MOVE } from "boardgame.io/core";
+import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
+import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
+import { Ctx, Move } from "boardgame.io";
+import { MyGameState } from "../GameSetup";
+import { IConfig, IPublicPlayer } from "../Player";
+import { ICoin } from "../Coin";
 // todo Add logging
 // todo Add Place coins async
 /**
@@ -49,7 +49,7 @@ export const ClickHandCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinI
  */
 export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        isValidMove: boolean = IsValidMove({objId: coinId, range: [0, player.boardCoins.length]});
+        isValidMove: boolean = IsValidMove({ objId: coinId, range: [0, player.boardCoins.length] });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -105,7 +105,7 @@ export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coin
  * @constructor
  */
 export const ClickCoinToUpgrade: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
-                                                      isInitial: boolean): string | void => {
+    isInitial: boolean): string | void => {
     const isValidMove: boolean = CoinUpgradeValidation(G, ctx, coinId, type);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -137,7 +137,7 @@ export const ClickCoinToUpgrade: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
  * @constructor
  */
 export const UpgradeCoinVidofnirVedrfolnir: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
-                                                                 isInitial: boolean): string | void => {
+    isInitial: boolean): string | void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     const isValidMove: boolean =
         CoinUpgradeValidation(G, ctx, coinId, type) && config?.coinId !== coinId;

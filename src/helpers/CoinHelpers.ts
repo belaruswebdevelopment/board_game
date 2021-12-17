@@ -1,9 +1,9 @@
-import {ICoin, Trading} from "../Coin";
-import {MyGameState} from "../GameSetup";
-import {Ctx} from "boardgame.io";
-import {IPriority} from "../Priority";
-import {IPublicPlayer} from "../Player";
-import {INumberValues} from "../data/SuitData";
+import { ICoin, Trading } from "../Coin";
+import { MyGameState } from "../GameSetup";
+import { Ctx } from "boardgame.io";
+import { IPriority } from "../Priority";
+import { IPublicPlayer } from "../Player";
+import { INumberValues } from "../data/SuitData";
 
 // todo Add logging
 
@@ -29,7 +29,7 @@ export interface IResolveBoardCoins {
  */
 export const GetMaxCoinValue = (player: IPublicPlayer): number => {
     return Math.max(...player.boardCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
-            .map((coin: ICoin | null): number => coin!.value),
+        .map((coin: ICoin | null): number => coin!.value),
         ...player.handCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
             .map((coin: ICoin | null): number => coin!.value));
 };
@@ -115,7 +115,7 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins 
             player.boardCoins[G.currentTavern]?.value === Number(prop) && player.priority.isExchangeable);
         while (tiePlayers.length > 1) {
             const tiePlayersPriorities: number[] =
-                    tiePlayers.map((player: IPublicPlayer): number => player.priority.value),
+                tiePlayers.map((player: IPublicPlayer): number => player.priority.value),
                 maxPriority: number = Math.max(...tiePlayersPriorities),
                 minPriority: number = Math.min(...tiePlayersPriorities),
                 maxIndex: number =
@@ -125,13 +125,13 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins 
             tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
                 player.priority.value === maxPriority), 1);
             tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
-                    player.priority.value === minPriority),
+                player.priority.value === minPriority),
                 1);
             tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
-                    player.priority.value === minPriority),
+                player.priority.value === minPriority),
                 1);
             [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
         }
     }
-    return {playersOrder, exchangeOrder};
+    return { playersOrder, exchangeOrder };
 };

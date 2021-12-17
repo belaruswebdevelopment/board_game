@@ -1,20 +1,20 @@
-import {INVALID_MOVE} from "boardgame.io/core";
-import {AddCardToPlayer, IStack} from "../Player";
-import {suitsConfig} from "../data/SuitData";
-import {IsValidMove} from "../MoveValidator";
+import { INVALID_MOVE } from "boardgame.io/core";
+import { AddCardToPlayer, IStack } from "../Player";
+import { suitsConfig } from "../data/SuitData";
+import { IsValidMove } from "../MoveValidator";
 import {
     AddActionsToStack,
     AddActionsToStackAfterCurrent,
     EndActionFromStackAndAddNew,
     StartActionFromStackOrEndActions
 } from "../helpers/StackHelpers";
-import {CheckAndMoveThrudOrPickHeroAction} from "../actions/HeroActions";
-import {GetSuitIndexByName} from "../helpers/SuitHelpers";
-import {AfterBasicPickCardActions} from "../helpers/MovesHelpers";
-import {Ctx, Move} from "boardgame.io";
-import {DeckCardTypes, MyGameState} from "../GameSetup";
-import {isCardNotAction} from "../Card";
-import {AddDataToLog, LogTypes} from "../Logging";
+import { CheckAndMoveThrudOrPickHeroAction } from "../actions/HeroActions";
+import { GetSuitIndexByName } from "../helpers/SuitHelpers";
+import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
+import { Ctx, Move } from "boardgame.io";
+import { DeckCardTypes, MyGameState } from "../GameSetup";
+import { isCardNotAction } from "../Card";
+import { AddDataToLog, LogTypes } from "../Logging";
 // todo Add logging
 
 /**
@@ -31,7 +31,7 @@ import {AddDataToLog, LogTypes} from "../Logging";
  * @constructor
  */
 export const ClickCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
-    const isValidMove: boolean = IsValidMove({objId: G.currentTavern, values: [G.currentTavern]})
+    const isValidMove: boolean = IsValidMove({ objId: G.currentTavern, values: [G.currentTavern] })
         && IsValidMove({
             obj: G.taverns[G.currentTavern][cardId],
             objId: cardId,
@@ -78,7 +78,7 @@ export const ClickCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: n
  */
 export const ClickDistinctionCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
     const index: number = G.distinctions.indexOf(Number(ctx.currentPlayer)),
-        isValidMove: boolean = IsValidMove({objId: cardId, values: [index]});
+        isValidMove: boolean = IsValidMove({ objId: cardId, values: [index] });
     if (!isValidMove) {
         return INVALID_MOVE;
     }

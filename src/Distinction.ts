@@ -1,9 +1,9 @@
-import {AddDataToLog, LogTypes} from "./Logging";
-import {SuitNames, suitsConfig} from "./data/SuitData";
-import {GetSuitIndexByName} from "./helpers/SuitHelpers";
-import {TotalRank} from "./helpers/ScoreHelpers";
-import {DeckCardTypes, DistinctionTypes, MyGameState} from "./GameSetup";
-import {Ctx} from "boardgame.io";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { SuitNames, suitsConfig } from "./data/SuitData";
+import { GetSuitIndexByName } from "./helpers/SuitHelpers";
+import { TotalRank } from "./helpers/ScoreHelpers";
+import { DeckCardTypes, DistinctionTypes, MyGameState } from "./GameSetup";
+import { Ctx } from "boardgame.io";
 
 /**
  * <h3>Подсчёт преимуществ по количеству шевронов фракций в конце эпохи.</h3>

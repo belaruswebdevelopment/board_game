@@ -1,8 +1,8 @@
-import {IsValidMove} from "../MoveValidator";
-import {INVALID_MOVE} from "boardgame.io/core";
-import {EndActionFromStackAndAddNew} from "../helpers/StackHelpers";
-import {Ctx, Move} from "boardgame.io";
-import {MyGameState} from "../GameSetup";
+import { IsValidMove } from "../MoveValidator";
+import { INVALID_MOVE } from "boardgame.io/core";
+import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { Ctx, Move } from "boardgame.io";
+import { MyGameState } from "../GameSetup";
 // todo Add logging
 
 /**
@@ -19,7 +19,7 @@ import {MyGameState} from "../GameSetup";
  * @constructor
  */
 export const ClickHeroCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, heroId: number): string | void => {
-    const isValidMove: boolean = IsValidMove({obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length]});
+    const isValidMove: boolean = IsValidMove({ obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length] });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
