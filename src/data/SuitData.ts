@@ -131,7 +131,7 @@ const blacksmith: ISuit = {
     scoringRule: (cards: PlayerCardsType[]): number =>
         ArithmeticSum(3, 1, cards.reduce(TotalRank, 0)),
     distinction: {
-        description: `Получив знак отличия кузнецов, сразу же призовите Главного кузнеца с двумя шевронами в свою армию. 
+        description: `Получив знак отличия кузнецов, сразу же призовите Главного кузнеца с двумя шевронами в свою армию.
         Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов.`,
         awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
             if (G.tierToEnd !== 0) {
@@ -141,7 +141,7 @@ const blacksmith: ISuit = {
                     points: 2,
                 } as ICard));
                 delete G.distinctions[0];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов 
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов
                 карту Главного кузнеца.`);
                 ctx.events!.endTurn!();
             }
@@ -202,7 +202,7 @@ const hunter: ISuit = {
     }),
     scoringRule: (cards: PlayerCardsType[]): number => cards.reduce(TotalRank, 0) ** 2,
     distinction: {
-        description: `Получив знак отличия охотников, сразу же обменяйте свою монету с номиналом 0 на особую монету с 
+        description: `Получив знак отличия охотников, сразу же обменяйте свою монету с номиналом 0 на особую монету с
         номиналом 3. Эта монета также позволяет обменивать монеты в кошеле и не может быть улучшена.`,
         awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
             if (G.tierToEnd !== 0) {
@@ -213,7 +213,7 @@ const hunter: ISuit = {
                     isTriggerTrading: true,
                 });
                 delete G.distinctions[1];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников 
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников
                 свою монету с номиналом 0 на особую монету с номиналом 3.`);
                 ctx.events!.endTurn!();
             }
@@ -235,7 +235,7 @@ const miner: ISuit = {
     suit: SuitNames.MINER,
     suitName: "Горняки",
     suitColor: "bg-yellow-600",
-    description: `Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии 
+    description: `Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии
     игрока.`,
     ranksValues: (): IRankValues => ({
         2: {
@@ -275,9 +275,9 @@ const miner: ISuit = {
     }),
     scoringRule: (cards: PlayerCardsType[]): number => cards.reduce(TotalRank, 0) * cards.reduce(TotalPoints, 0),
     distinction: {
-        description: `Получив знак отличия горняков, сразу же положите особый кристалл 6 поверх вашего текущего 
-        кристалла (тот остаётся скрытым до конца игры). В конце игры обладатель этого кристалла прибавит +3 очка к 
-        итоговому показателю храбрости своей армии. Этот кристалл позволяет победить во всех спорах при равенстве ставок 
+        description: `Получив знак отличия горняков, сразу же положите особый кристалл 6 поверх вашего текущего
+        кристалла (тот остаётся скрытым до конца игры). В конце игры обладатель этого кристалла прибавит +3 очка к
+        итоговому показателю храбрости своей армии. Этот кристалл позволяет победить во всех спорах при равенстве ставок
         и никогда не обменивается.`,
         awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
             if (G.tierToEnd !== 0) {
@@ -286,7 +286,7 @@ const miner: ISuit = {
                     isExchangeable: false,
                 });
                 delete G.distinctions[2];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия горняков 
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия горняков
                 свой кристалл на особый кристалл 6.`);
                 ctx.events!.endTurn!();
             } else {
@@ -312,9 +312,9 @@ const warrior: ISuit = {
     suit: SuitNames.WARRIOR,
     suitName: "Воины",
     suitColor: "bg-red-600",
-    description: `Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который 
-    обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты. 
-    В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной 
+    description: `Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который
+    обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты.
+    В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной
     монеты к показателю храбрости своих воинов.`,
     ranksValues: (): IRankValues => ({
         2: {
@@ -374,7 +374,7 @@ const warrior: ISuit = {
                         },
                     },
                 ];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия воинов 
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия воинов
                 возможность улучшить одну из своих монет на +5:`);
                 AddActionsToStack(G, ctx, stack);
                 StartActionFromStackOrEndActions(G, ctx, false);
@@ -438,10 +438,10 @@ const explorer: ISuit = {
     }),
     scoringRule: (cards: PlayerCardsType[]): number => cards.reduce(TotalPoints, 0),
     distinction: {
-        description: `Получив знак отличия разведчиков, сразу же возьмите 3 карты из колоды эпохи 2 и сохраните у себя 
-        одну из этих карт. Если это карта дворфа, сразу же поместите его в свою армию. Игрок получает право призвать 
-        нового героя, если в этот момент завершил линию 5 шевронов. Если это карта королевская награда, то улучшите одну 
-        из своих монет. Две оставшиеся карты возвращаются в колоду эпохи 2. Положите карту знак отличия разведчиков в 
+        description: `Получив знак отличия разведчиков, сразу же возьмите 3 карты из колоды эпохи 2 и сохраните у себя
+        одну из этих карт. Если это карта дворфа, сразу же поместите его в свою армию. Игрок получает право призвать
+        нового героя, если в этот момент завершил линию 5 шевронов. Если это карта королевская награда, то улучшите одну
+        из своих монет. Две оставшиеся карты возвращаются в колоду эпохи 2. Положите карту знак отличия разведчиков в
         командную зону рядом с вашим планшетом.`,
         awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
             if (G.tierToEnd !== 0) {
@@ -455,7 +455,7 @@ const explorer: ISuit = {
                         },
                     },
                 ];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия 
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия
                 разведчиков возможность получить карту из колоды второй эпохи:`);
                 AddActionsToStack(G, ctx, stack);
                 StartActionFromStackOrEndActions(G, ctx, false);

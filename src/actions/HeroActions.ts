@@ -45,7 +45,7 @@ export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
             name: "Thrud",
             game: "base",
         } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
         добавил карту Труд во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, thrudCard);
         CheckPickHero(G, ctx);
@@ -80,7 +80,7 @@ export const PlaceYludAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
             name: "Ylud",
             game: "base",
         } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
         добавил карту Илуд во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, yludCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, yludCard);
@@ -225,7 +225,7 @@ export const PickHeroWithConditions = (G: MyGameState, ctx: Ctx, config: IConfig
 export const PickHero = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
     const isStartPickHero: boolean = IsStartActionStage(G, ctx, config);
     if (isStartPickHero) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
         должен пикнуть героя.`);
     } else {
         if (config.stageName === undefined) {

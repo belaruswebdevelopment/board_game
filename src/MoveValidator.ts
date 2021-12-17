@@ -271,10 +271,10 @@ export const moveValidators: IMoveValidators = {
                                 config.conditions.suitCountMin.value;
                             return isValid;
                         }
-                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция 
+                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция
                         ${config.conditions.suitCountMin.suit}.`);
                     } else {
-                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Нет обязательного параметр stack[0] у 
+                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Нет обязательного параметр stack[0] у
                         героя ${G.heroes[id].name}.`);
                     }
                     return false;
@@ -293,7 +293,7 @@ export const moveValidators: IMoveValidators = {
             if (id !== undefined && type !== undefined) {
                 return CoinUpgradeValidation(G, ctx!, id, type);
             }
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id' или не передан 
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id' или не передан
             обязательный параметр 'type'.`);
             return false;
         },

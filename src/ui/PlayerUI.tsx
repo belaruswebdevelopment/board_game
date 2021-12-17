@@ -1,4 +1,3 @@
-import React from "react";
 import { suitsConfig } from "../data/SuitData";
 import { tavernsConfig } from "../Tavern";
 import { CurrentScoring } from "../Score";

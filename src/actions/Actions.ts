@@ -178,7 +178,7 @@ const UpgradeCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: A
  * @constructor
  */
 const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
     должен получить преимущества от действия '${config.drawName}'.`);
     IsStartActionStage(G, ctx, config);
     G.actionsNum = config.number ?? 1;
@@ -204,7 +204,7 @@ const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
 const AddBuffToPlayer = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
     if (config.buff !== undefined) {
         G.publicPlayers[Number(ctx.currentPlayer)].buffs[config.buff.name] = config.buff.value;
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
         получил баф '${config.buff.name}'.`);
         EndActionFromStackAndAddNew(G, ctx);
     } else {
@@ -231,7 +231,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
     const pickedCard: PlayerCardsType =
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
     отправил в сброс карту ${pickedCard.name}.`);
     G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
         .splice(cardId, 1)[0] as ICard);
@@ -271,7 +271,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
  * @constructor
  */
 const DiscardCardFromTavernAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
     отправил в сброс карту из таверны:`);
     DiscardCardFromTavern(G, cardId);
     EndActionFromStackAndAddNew(G, ctx);
@@ -331,7 +331,7 @@ const PlaceCards = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): 
                 points: playerVariants[suit].points,
                 name: "Olwin",
             } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
         добавил карту Олвин во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);
         if (G.actionsNum === 2) {
@@ -421,7 +421,7 @@ const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: numb
     const isAdded: boolean = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
         pickedCard: DeckCardTypes = G.discardCardsDeck.splice(cardId, 1)[0];
     let suitId: number | null = null;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
     добавил карту ${pickedCard.name} из дискарда.`);
     if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
         const stack: IStack[] = [
@@ -444,7 +444,7 @@ const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: numb
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
             suitId = GetSuitIndexByName(pickedCard.suit);
             if (suitId === -1) {
-                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция 
+                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция
                 ${pickedCard.suit}.`);
             }
         }
@@ -466,7 +466,7 @@ const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: numb
  * @constructor
  */
 const PassEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx): void => {
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
     пасанул во время фазы Enlistment Mercenaries.`);
     EndActionFromStackAndAddNew(G, ctx);
 };
@@ -490,7 +490,7 @@ const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfi
             .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник")[cardId];
     const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} 
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
         во время фазы Enlistment Mercenaries выбрал наёмника '${pickedCard.name}'.`);
         const stack: IStack[] = [
             {
@@ -536,8 +536,8 @@ const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: ICon
                     path: pickedCard.path,
                 } as ICreateCard);
                 AddCardToPlayer(G, ctx, mercenaryCard);
-                AddDataToLog(G, LogTypes.GAME, `Игрок 
-                ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы Enlistment Mercenaries 
+                AddDataToLog(G, LogTypes.GAME, `Игрок
+                ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы Enlistment Mercenaries
                 завербовал наёмника '${mercenaryCard.name}'.`);
                 const cardIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].campCards
                     .findIndex((card: CampDeckCardTypes): boolean => card.name === pickedCard.name);
@@ -558,7 +558,7 @@ const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: ICon
                 CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
                 EndActionFromStackAndAddNew(G, ctx, [], suitId);
             } else {
-                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 
+                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр
                 'stack[0].variants'.`);
             }
         } else {

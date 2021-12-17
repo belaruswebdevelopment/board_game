@@ -52,7 +52,7 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
     for (const suit in suitsConfig) {
         playerHeaders.push(
             <th className={`${suitsConfig[suit].suitColor}`}
-                key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} 
+                key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname}
                 ${suitsConfig[suit].suitName}`}>
                 <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
 

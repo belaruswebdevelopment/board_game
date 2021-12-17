@@ -245,7 +245,7 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
             }
         } else {
             // todo Fix this error sometimes shown...
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после 
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после
             выбора карты кэмпа в конце пиков из таверны.`);
         }
     }

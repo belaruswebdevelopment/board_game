@@ -1,4 +1,3 @@
-import React from "react";
 import { LogTypes } from "../Logging";
 import { GameBoard } from "../GameBoard";
 

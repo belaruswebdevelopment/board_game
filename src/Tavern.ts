@@ -91,7 +91,7 @@ export const RefillTaverns = (G: MyGameState): void => {
             AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[i].name} заполнена новыми картами.`);
         } else {
             error = true;
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Таверна ${tavernsConfig[i].name} не заполнена новыми 
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Таверна ${tavernsConfig[i].name} не заполнена новыми
             картами из-за их нехватки в колоде.`);
         }
     }

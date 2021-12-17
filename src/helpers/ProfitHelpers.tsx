@@ -151,7 +151,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, da
                 } else {
                     if (data instanceof GameBoard && playerRows !== undefined) {
                         playerCells.push(
-                            <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} 
+                            <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname}
                             empty card ${id}`}>
 
                             </td>
@@ -161,7 +161,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, da
             } else {
                 if (data instanceof GameBoard && playerRows !== undefined) {
                     playerCells.push(
-                        <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} 
+                        <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname}
                         empty card ${id}`}>
 
                         </td>
@@ -172,7 +172,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, da
         if (data instanceof GameBoard && playerRows !== undefined) {
             if (isDrawRow) {
                 playerRows[i].push(
-                    <tr key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} board row 
+                    <tr key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} board row
                 ${i}`}>
                         {playerCells}
                     </tr>

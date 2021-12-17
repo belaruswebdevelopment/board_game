@@ -1,4 +1,3 @@
-import React from "react";
 import { CountMarketCoins, ICoin } from "../Coin";
 import { INumberValues, suitsConfig } from "../data/SuitData";
 import { tavernsConfig } from "../Tavern";
@@ -255,7 +254,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
         if (option === "placeCards") {
             if (config !== undefined) {
                 caption += `suit to place ${data.props.G.actionsNum ?? 1} ${config.drawName}
-                ${data.props.G.actionsNum > 1 ? "s" : ""} to ${data.props.G.actionsNum > 1 ? "different" : "that"} 
+                ${data.props.G.actionsNum > 1 ? "s" : ""} to ${data.props.G.actionsNum > 1 ? "different" : "that"}
                 suit.`;
                 PlaceCardsProfit(data.props.G, data.props.ctx, data, boardCells);
             }
@@ -273,17 +272,17 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                     "OnClickCardToPickDistinction", j);
             }
         } else if (option === "BonfurAction" || option === "DagdaAction") {
-            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} to discard from your 
+            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} to discard from your
             board.`;
             DiscardCardFromBoardProfit(data.props.G, data.props.ctx, data, boardCells);
         } else if (option === "AndumiaAction" || option === "BrisingamensAction") {
-            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} from discard pile to 
+            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} from discard pile to
             your board.`;
             PickDiscardCardProfit(data.props.G, data.props.ctx, data, boardCells);
         } else if (option === "BrisingamensEndGameAction") {
             caption += "one card to discard from your board.";
             boardCells.push(
-                <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} discard 
+                <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} discard
                 card`}>
                     {DrawPlayerBoardForCardDiscard(data)}
                 </td>
@@ -320,7 +319,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                 PlaceEnlistmentMercenariesProfit(data.props.G, data.props.ctx, data, boardCells);
             }
         } else if (option === "AddCoinToPouchVidofnirVedrfolnir") {
-            caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch 
+            caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch
             to fill it.`;
             AddCoinToPouchProfit(data.props.G, data.props.ctx, data, boardCells);
         } else {

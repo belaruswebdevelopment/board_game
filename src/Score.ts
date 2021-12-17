@@ -71,7 +71,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
             const warriorDistinctionScore: number =
                 suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
             score += warriorDistinctionScore;
-            AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока ${player.nickname}: 
+            AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока ${player.nickname}:
             ${warriorDistinctionScore}`);
         }
     }
@@ -81,7 +81,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
             suitsConfig[SuitNames.MINER].distinction.awarding(G, ctx, player);
         score += minerDistinctionPriorityScore;
         if (minerDistinctionPriorityScore) {
-            AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока 
+            AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока
             ${player.nickname}: ${minerDistinctionPriorityScore}`);
         }
     }
@@ -97,7 +97,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
             } else {
                 const currentHeroScore: number = heroData.scoringRule(player);
                 heroesScore += currentHeroScore;
-                AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${player.heroes[i].name} игрока 
+                AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${player.heroes[i].name} игрока
                 ${player.nickname}: ${currentHeroScore}.`);
             }
         } else {
@@ -106,7 +106,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     }
     if (dwerg_brothers) {
         heroesScore += dwerg_brothers_scoring[dwerg_brothers];
-        AddDataToLog(G, LogTypes.PRIVATE, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) игрока 
+        AddDataToLog(G, LogTypes.PRIVATE, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) игрока
         ${player.nickname}: ${dwerg_brothers_scoring[dwerg_brothers]}.`);
     }
     score += heroesScore;
@@ -125,12 +125,12 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
                     currentArtefactScore = artefact.scoringRule(player);
                 }
             } else {
-                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти артефакт 
+                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти артефакт
                 ${player.campCards[i].name}.`);
             }
             if (currentArtefactScore) {
                 artifactsScore += currentArtefactScore;
-                AddDataToLog(G, LogTypes.PRIVATE, `Очки за артефакт ${player.campCards[i].name} игрока 
+                AddDataToLog(G, LogTypes.PRIVATE, `Очки за артефакт ${player.campCards[i].name} игрока
                 ${player.nickname}: ${currentArtefactScore}.`);
             }
         }

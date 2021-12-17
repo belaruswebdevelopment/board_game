@@ -149,7 +149,7 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
         upgradingCoin: ICoin,
         coinMaxIndex: number = 0,
         coinMinIndex: number = 0;
-    AddDataToLog(G, LogTypes.GAME, `Активирован обмен монет с ценностью ('${coinsMinValue}' и 
+    AddDataToLog(G, LogTypes.GAME, `Активирован обмен монет с ценностью ('${coinsMinValue}' и
     '${coinsMaxValue}') игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
     // TODO trading isInitial first or playerChoose?
     for (let i: number = 0; i < tradingCoins.length; i++) {
@@ -307,11 +307,11 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                 }
             }
         }
-        AddDataToLog(G, LogTypes.GAME, `Начато обновление монеты с ценностью '${upgradingCoin.value}' 
+        AddDataToLog(G, LogTypes.GAME, `Начато обновление монеты с ценностью '${upgradingCoin.value}'
         на +${config.value}.`);
         if (upgradedCoin !== null) {
-            AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом 
-            '${type}' с initial '${isInitial}' с ценностью '${upgradingCoin.value}' на +${config.value} с 
+            AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом
+            '${type}' с initial '${isInitial}' с ценностью '${upgradingCoin.value}' на +${config.value} с
             новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
             let handCoinIndex: number = -1;
             if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] === null) {
@@ -328,11 +328,11 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
             } else {
                 if (handCoinIndex === -1) {
                     G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = upgradedCoin;
-                    AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась 
+                    AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась
                     на поле игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
                 } else {
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinIndex] = upgradedCoin;
-                    AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась 
+                    AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась
                     на руку игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
                 }
             }
@@ -345,7 +345,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                     }
                 }
                 G.marketCoins.splice(returningIndex, 0, upgradingCoin);
-                AddDataToLog(G, LogTypes.GAME, `Монета с ценностью '${upgradingCoin.value}' 
+                AddDataToLog(G, LogTypes.GAME, `Монета с ценностью '${upgradingCoin.value}'
                 вернулась на рынок.`);
             }
         } else {
