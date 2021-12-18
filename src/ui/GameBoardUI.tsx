@@ -45,7 +45,8 @@ export const DrawTierCards = (data: GameBoard): JSX.Element => (
         /{data.props.G.decks.length} ({data.props.G.decks.length - data.props.G.tierToEnd !== 2 ?
             data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0}
         {data.props.G.decks.length - data.props.G.tierToEnd === 0 ? `/`
-            + data.props.G.decks.reduce((count: number, current: DeckCardTypes[]) => count + current.length, 0) : ``}
+            + data.props.G.decks.reduce((count: number, current: DeckCardTypes[]) =>
+                count + current.length, 0) : ``}
         cards left)
     </span></b>
 );
@@ -119,8 +120,9 @@ export const DrawMarketCoins = (data: GameBoard): JSX.Element => {
             const increment: number = i * drawData.boardCols + j,
                 tempCoinValue = data.props.G.marketCoinsUnique[increment].value,
                 coinClassName: string = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
-            DrawCoin(data, boardCells, `market`, data.props.G.marketCoinsUnique[increment], increment, null,
-                coinClassName, countMarketCoins[tempCoinValue], `OnClickHandCoin`, j);
+            DrawCoin(data, boardCells, `market`, data.props.G.marketCoinsUnique[increment],
+                increment, null, coinClassName, countMarketCoins[tempCoinValue],
+                `OnClickHandCoin`, j);
             if (increment + 1 === data.props.G.marketCoinsUnique.length) {
                 break;
             }
@@ -162,8 +164,8 @@ export const DrawHeroes = (data: GameBoard): JSX.Element => {
         boardRows[i] = [];
         for (let j: number = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j;
-            DrawCard(data, boardCells, data.props.G.heroes[increment], increment, null, null, `OnClickHeroCard`,
-                increment);
+            DrawCard(data, boardCells, data.props.G.heroes[increment], increment, null,
+                null, `OnClickHeroCard`, increment);
             if (increment + 1 === data.props.G.heroes.length) {
                 break;
             }
@@ -245,9 +247,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
     for (let i: number = 0; i < 1; i++) {
         if (option === "placeCards") {
             if (config !== undefined) {
-                caption += `suit to place ${data.props.G.actionsNum ?? 1} ${config.drawName}
-                ${data.props.G.actionsNum > 1 ? `s` : ``} to ${data.props.G.actionsNum > 1 ? `different` : `that`}
-                suit.`;
+                caption += `suit to place ${data.props.G.actionsNum ?? 1} ${config.drawName} ${data.props.G.actionsNum > 1 ? `s` : ``} to ${data.props.G.actionsNum > 1 ? `different` : `that`} suit.`;
                 PlaceCardsProfit(data.props.G, data.props.ctx, data, boardCells);
             }
         } else if (option === `explorerDistinction`) {
@@ -264,12 +264,10 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                     `OnClickCardToPickDistinction`, j);
             }
         } else if (option === `BonfurAction` || option === `DagdaAction`) {
-            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? `s` : ``} to discard from your
-            board.`;
+            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? `s` : ``} to discard from your board.`;
             DiscardCardFromBoardProfit(data.props.G, data.props.ctx, data, boardCells);
         } else if (option === `AndumiaAction` || option === `BrisingamensAction`) {
-            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} from discard pile to
-            your board.`;
+            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} from discard pile to your board.`;
             PickDiscardCardProfit(data.props.G, data.props.ctx, data, boardCells);
         } else if (option === `BrisingamensEndGameAction`) {
             caption += `one card to discard from your board.`;
@@ -303,14 +301,14 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
             caption += `mercenary to place it to your player board.`;
             GetEnlistmentMercenariesProfit(data.props.G, data.props.ctx, data, boardCells);
         } else if (option === `placeEnlistmentMercenaries`) {
-            const card: PickedCardType = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard;
+            const card: PickedCardType =
+                data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard;
             if (card !== null) {
                 caption += `suit to place ${card.name} to that suit.`;
                 PlaceEnlistmentMercenariesProfit(data.props.G, data.props.ctx, data, boardCells);
             }
         } else if (option === `AddCoinToPouchVidofnirVedrfolnir`) {
-            caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch
-            to fill it.`;
+            caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch to fill it.`;
             AddCoinToPouchProfit(data.props.G, data.props.ctx, data, boardCells);
         } else {
             if (config !== undefined) {
@@ -322,9 +320,8 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                     const handCoins = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins
                         .filter((coin: ICoin | null): boolean => coin !== null);
                     let handCoinIndex: number = -1;
-                    for (let j: number = 0; j < data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
-                        .boardCoins.length;
-                        j++) {
+                    for (let j: number = 0; j <
+                        data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins.length; j++) {
                         // todo Check .? for all coins!!! and delete AS
                         if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn === `Uline`
                             && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
@@ -342,16 +339,19 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                                 DrawCoin(data, boardCells, `coin`,
                                     data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                         .handCoins[handCoinId], j,
-                                    data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], `border-2`, null,
-                                    `OnClickCoinToUpgrade`, j, `hand`, handCoins[handCoinIndex]?.isInitial as boolean);
+                                    data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)],
+                                    `border-2`, null, `OnClickCoinToUpgrade`,
+                                    j, `hand`, handCoins[handCoinIndex]?.isInitial as boolean);
                             }
                         } else if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
                             && !data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
                                 ?.isTriggerTrading) {
                             DrawCoin(data, boardCells, `coin`,
-                                data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j], j,
-                                data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], `border-2`, null,
-                                `OnClickCoinToUpgrade`, j, `board`,
+                                data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                    .boardCoins[j], j,
+                                data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)],
+                                `border-2`, null, `OnClickCoinToUpgrade`,
+                                j, `board`,
                                 data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                     .boardCoins[j]?.isInitial as boolean);
                         }
@@ -398,7 +398,8 @@ export const DrawCamp = (data: GameBoard): JSX.Element => {
                     </td>
                 );
             } else {
-                DrawCard(data, boardCells, campCard, j, null, null, `OnClickCampCard`, j);
+                DrawCard(data, boardCells, campCard, j, null, null,
+                    `OnClickCampCard`, j);
             }
         }
     }
@@ -414,7 +415,8 @@ export const DrawCamp = (data: GameBoard): JSX.Element => {
                         data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0}
                     {data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? `/`
                         + data.props.G.campDecks
-                            .reduce((count: number, current: CampCardTypes[]) => count + current.length, 0) : ""} cards
+                            .reduce((count: number, current: CampCardTypes[]) =>
+                                count + current.length, 0) : ""} cards
                     left)
                 </span>
             </caption>
@@ -457,14 +459,16 @@ export const DrawTaverns = (data: GameBoard, gridClass: string) => {
                         tavernCardSuit = tavernCard.suit;
                     }
                     if (t === data.props.G.currentTavern) {
-                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit, `OnClickCard`, j);
+                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit,
+                            `OnClickCard`, j);
                     } else {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);
                     }
                 }
             }
             tavernsBoards.push(
-                <table className={`${gridClass} justify-self-center`} key={`Tavern ${tavernsConfig[t].name} board`}>
+                <table className={`${gridClass} justify-self-center`}
+                    key={`Tavern ${tavernsConfig[t].name} board`}>
                     <caption className="whitespace-nowrap">
                         <span style={Styles.Taverns(t)} className="bg-top-tavern-icon">
 

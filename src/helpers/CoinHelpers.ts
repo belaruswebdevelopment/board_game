@@ -27,7 +27,8 @@ export interface IResolveBoardCoins {
  * @returns Максимальная монета игрока.
  */
 export const GetMaxCoinValue = (player: IPublicPlayer): number => {
-    return Math.max(...player.boardCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
+    return Math.max(...player.boardCoins
+        .filter((coin: ICoin | null): boolean => Boolean(coin?.value))
         .map((coin: ICoin | null): number => coin!.value),
         ...player.handCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
             .map((coin: ICoin | null): number => coin!.value));
@@ -116,17 +117,17 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins 
                 maxPriority: number = Math.max(...tiePlayersPriorities),
                 minPriority: number = Math.min(...tiePlayersPriorities),
                 maxIndex: number =
-                    G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value === maxPriority),
+                    G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+                        player.priority.value === maxPriority),
                 minIndex: number =
-                    G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.priority.value === minPriority);
+                    G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+                        player.priority.value === minPriority);
             tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
                 player.priority.value === maxPriority), 1);
             tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
-                player.priority.value === minPriority),
-                1);
+                player.priority.value === minPriority), 1);
             tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
-                player.priority.value === minPriority),
-                1);
+                player.priority.value === minPriority), 1);
             [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
         }
     }

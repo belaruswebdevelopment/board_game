@@ -146,9 +146,8 @@ const ValidateByValues = (num: number, values: number[]): boolean => values.incl
  */
 export const CoinUpgradeValidation = (G: MyGameState, ctx: Ctx, coinId: number, type: string): boolean => {
     if (type === "hand") {
-        const handCoinPosition: number =
-            G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                .filter((coin: ICoin | null, index: number): boolean => coin === null && index <= coinId).length;
+        const handCoinPosition: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+            .filter((coin: ICoin | null, index: number): boolean => coin === null && index <= coinId).length;
         if (!G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .filter((coin: ICoin | null): boolean => coin !== null)[handCoinPosition - 1]?.isTriggerTrading) {
             return true;
@@ -252,21 +251,18 @@ export const moveValidators: IMoveValidators = {
             if (id !== undefined) {
                 let isValid: boolean = G.heroes[id].active;
                 // todo Add validators to others heroes
-                if (G.heroes[id].name === "Hourya") {
+                if (G.heroes[id].name === `Hourya`) {
                     const config: IConfig | undefined = G.heroes[id].stack[0].config;
                     if (config?.conditions !== undefined) {
                         const suitId: number = GetSuitIndexByName(config.conditions.suitCountMin.suit);
                         if (suitId !== -1) {
-                            isValid =
-                                G.publicPlayers[Number(ctx!.currentPlayer)].cards[suitId].reduce(TotalRank, 0) >=
-                                config.conditions.suitCountMin.value;
+                            isValid = G.publicPlayers[Number(ctx!.currentPlayer)].cards[suitId]
+                                .reduce(TotalRank, 0) >= config.conditions.suitCountMin.value;
                             return isValid;
                         }
-                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция
-                        ${config.conditions.suitCountMin.suit}.`);
+                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${config.conditions.suitCountMin.suit}.`);
                     } else {
-                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Нет обязательного параметр stack[0] у героя
-                        ${G.heroes[id].name}.`);
+                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Нет обязательного параметр stack[0] у героя ${G.heroes[id].name}.`);
                     }
                     return false;
                 }
@@ -284,8 +280,7 @@ export const moveValidators: IMoveValidators = {
             if (id !== undefined && type !== undefined) {
                 return CoinUpgradeValidation(G, ctx!, id, type);
             }
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id' или не передан обязательный
-            параметр 'type'.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id' или не передан обязательный параметр 'type'.`);
             return false;
         },
     },
@@ -305,8 +300,8 @@ export const moveValidators: IMoveValidators = {
     },
     ClickCampCard: {
         getRange: ({ G }: IMoveValidatorParams): [number, number] => ([0, G.camp.length]),
-        validate: ({ G, ctx }: IMoveValidatorParams): boolean => G.expansions.thingvellir.active
-            && (Number(ctx!.currentPlayer) === G.publicPlayersOrder[0]
+        validate: ({ G, ctx }: IMoveValidatorParams): boolean =>
+            G.expansions.thingvellir.active && (Number(ctx!.currentPlayer) === G.publicPlayersOrder[0]
                 || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx!.currentPlayer)].buffs.goCamp))),
     },
 };

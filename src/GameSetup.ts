@@ -179,8 +179,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         const randomPriorityIndex: number = Math.floor(Math.random() * priorities.length),
             priority: IPriority = priorities.splice(randomPriorityIndex, 1)[0];
         players[i] = BuildPlayer();
-        publicPlayers[i] = BuildPublicPlayer(ctx.numPlayers, suitsNum, "Dan" + i,
-            priority);
+        publicPlayers[i] = BuildPublicPlayer(ctx.numPlayers, suitsNum, "Dan" + i, priority);
     }
     const marketCoinsUnique: ICoin[] = [],
         marketCoins: ICoin[] = BuildCoins(marketCoinsConfig, {

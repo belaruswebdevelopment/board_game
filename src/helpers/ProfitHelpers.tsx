@@ -18,7 +18,9 @@ export const PickCampCardHoldaProfit = (G: MyGameState, ctx: Ctx, data?: GameBoa
         const card: CampCardTypes = G.camp[j];
         if (card !== null) {
             if (data instanceof GameBoard && boardCells !== undefined) {
-                DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)], null, `OnClickCampCardHolda`, j);
+                DrawCard(data, boardCells, card, j,
+                    G.publicPlayers[Number(ctx.currentPlayer)], null,
+                    `OnClickCampCardHolda`, j);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }
@@ -83,7 +85,8 @@ export const PickDiscardCardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard
                 suit = card.suit;
             }
             DrawCard(data, boardCells, card, j,
-                G.publicPlayers[Number(ctx.currentPlayer)], suit, `OnClickCardFromDiscard`, j);
+                G.publicPlayers[Number(ctx.currentPlayer)], suit, `OnClickCardFromDiscard`,
+                j);
         } else if (Array.isArray(data)) {
             data.push([j]);
         }
@@ -106,8 +109,8 @@ export const DiscardCardFromBoardProfit = (G: MyGameState, ctx: Ctx, data?: Game
                         DrawCard(data, boardCells,
                             G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last], last,
                             G.publicPlayers[Number(ctx.currentPlayer)],
-                            G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].suit, `OnClickCardToDiscard`, j,
-                            last);
+                            G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].suit,
+                            `OnClickCardToDiscard`, j, last);
                     } else if (Array.isArray(data)) {
                         data.push([j, last]);
                     }
@@ -140,14 +143,16 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, da
                         DrawCard(data, playerCells,
                             data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i], id,
                             data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)],
-                            Object.keys(suitsConfig)[j], `OnClickDiscardCardFromPlayerBoard`, j, i);
+                            Object.keys(suitsConfig)[j], `OnClickDiscardCardFromPlayerBoard`,
+                            j, i);
                     } else if (Array.isArray(data)) {
                         data.push([j]);
                     }
                 } else {
                     if (data instanceof GameBoard && playerRows !== undefined) {
                         playerCells.push(
-                            <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname}
+                            <td key={`
+                            ${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname}
                             empty card ${id}`}>
 
                             </td>
@@ -157,8 +162,9 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, da
             } else {
                 if (data instanceof GameBoard && playerRows !== undefined) {
                     playerCells.push(
-                        <td key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname}
-                        empty card ${id}`}>
+                        <td key={`
+                        ${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} empty card
+                        ${id}`}>
 
                         </td>
                     );
@@ -168,8 +174,8 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, da
         if (data instanceof GameBoard && playerRows !== undefined) {
             if (isDrawRow) {
                 playerRows[i].push(
-                    <tr key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} board row
-                    ${i}`}>
+                    <tr key={`
+                    ${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} board row ${i}`}>
                         {playerCells}
                     </tr>
                 );
@@ -185,8 +191,8 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, da
     }
 };
 
-export const DiscardSuitCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
-    boardCells?: JSX.Element[]): void => {
+export const DiscardSuitCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx,
+    data?: GameBoard | IBotMoveArgumentsTypes, boardCells?: JSX.Element[]): void => {
 
 };
 
@@ -199,9 +205,11 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G: MyGameState, ctx: Ctx, da
             if (coin !== null) {
                 if (!coin.isTriggerTrading && config.coinId !== j) {
                     if (data instanceof GameBoard && boardCells !== undefined) {
-                        DrawCoin(data, boardCells, `coin`, G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j], j,
-                            G.publicPlayers[Number(ctx.currentPlayer)], `border-2`, null,
-                            `OnClickCoinToUpgradeVidofnirVedrfolnir`, j, `board`, coin.isInitial);
+                        DrawCoin(data, boardCells, `coin`,
+                            G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j], j,
+                            G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
+                            null, `OnClickCoinToUpgradeVidofnirVedrfolnir`, j,
+                            `board`, coin.isInitial);
                     } else if (Array.isArray(data)) {
                         data.push([j, `board`, coin.isInitial]);
                     }
@@ -217,7 +225,8 @@ export const AddCoinToPouchProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard 
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === `Uline`
             && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
             if (data instanceof GameBoard && boardCells !== undefined) {
-                DrawCoin(data, boardCells, `coin`, G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j], j,
+                DrawCoin(data, boardCells, `coin`,
+                    G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j], j,
                     G.publicPlayers[Number(ctx.currentPlayer)], `border-2`, null, `OnClickCoinToAddToPouch`, j);
             } else if (Array.isArray(data)) {
                 data.push([j]);
@@ -261,7 +270,8 @@ export const GetEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: 
             .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`);
     for (let j: number = 0; j < mercenaries.length; j++) {
         if (data instanceof GameBoard && boardCells !== undefined) {
-            DrawCard(data, boardCells, mercenaries[j], j, G.publicPlayers[Number(ctx.currentPlayer)], null,
+            DrawCard(data, boardCells, mercenaries[j], j,
+                G.publicPlayers[Number(ctx.currentPlayer)], null,
                 `OnClickGetEnlistmentMercenaries`, j);
         } else if (Array.isArray(data)) {
             data.push([j]);
@@ -275,14 +285,16 @@ export const StartEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?
         if (j === 0) {
             if (data instanceof GameBoard && boardCells !== undefined) {
                 DrawButton(data, boardCells, `start Enlistment Mercenaries`, `Start`,
-                    G.publicPlayers[Number(ctx.currentPlayer)], `OnClickStartEnlistmentMercenaries`);
+                    G.publicPlayers[Number(ctx.currentPlayer)],
+                    `OnClickStartEnlistmentMercenaries`);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }
         } else if (G.publicPlayersOrder.length > 1) {
             if (data instanceof GameBoard && boardCells !== undefined) {
                 DrawButton(data, boardCells, `pass Enlistment Mercenaries`, `Pass`,
-                    G.publicPlayers[Number(ctx.currentPlayer)], `OnClickPassEnlistmentMercenaries`);
+                    G.publicPlayers[Number(ctx.currentPlayer)],
+                    `OnClickPassEnlistmentMercenaries`);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }
@@ -302,13 +314,15 @@ export const GetMjollnirProfitProfit = (G: MyGameState, ctx: Ctx, data?: GameBoa
                     onClick={() => data.OnClickSuitToGetMjollnirProfit(j)}>
                     <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
                         <b className="whitespace-nowrap text-white">
-                            {G.publicPlayers[Number(ctx.currentPlayer)].cards[j].reduce(TotalRank, 0) * 2}
+                            {G.publicPlayers[Number(ctx.currentPlayer)].cards[j]
+                                .reduce(TotalRank, 0) * 2}
                         </b>
                     </span>
                 </td>
             );
         } else if (Array.isArray(data)) {
-            data.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[j].reduce(TotalRank, 0));
+            data.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[j]
+                .reduce(TotalRank, 0));
         }
     }
 };

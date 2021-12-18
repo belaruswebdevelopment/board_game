@@ -124,7 +124,8 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
                 if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                     && ctx.playOrder.length < Number(ctx.numPlayers)) {
                     const cardIndex: number =
-                        G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
+                        G.taverns[G.currentTavern]
+                            .findIndex((card: TavernCardTypes): boolean => card !== null);
                     DiscardCardFromTavern(G, cardIndex);
                 }
                 if (G.expansions.thingvellir.active
@@ -184,8 +185,8 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
             const stack: IStack[] = [
                 {
                     action: DrawProfitAction,
-                    playerId: Number(ctx.playOrder[ctx.playOrder.findIndex((playerIndex: string): boolean =>
-                        playerIndex === ctx.currentPlayer) + 1]),
+                    playerId: Number(ctx.playOrder[ctx.playOrder
+                        .findIndex((playerIndex: string): boolean => playerIndex === ctx.currentPlayer) + 1]),
                     config: {
                         name: `enlistmentMercenaries`,
                         drawName: `Enlistment Mercenaries`,
@@ -223,7 +224,8 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
     if (!ylud) {
         for (let i: number = 0; i < G.publicPlayers.length; i++) {
             for (let j: number = 0; j < G.suitsNum; j++) {
-                index = G.publicPlayers[i].cards[j].findIndex((card: PlayerCardsType): boolean => card.name === `Ylud`);
+                index = G.publicPlayers[i].cards[j]
+                    .findIndex((card: PlayerCardsType): boolean => card.name === `Ylud`);
                 if (index !== -1) {
                     G.publicPlayers[Number(ctx.currentPlayer)].cards[i].splice(index, 1);
                     G.publicPlayersOrder.push(i);
@@ -298,7 +300,8 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
 const CheckEnlistmentMercenaries = (G: MyGameState, ctx: Ctx): void => {
     let count: boolean = false;
     for (let i: number = 0; i < G.publicPlayers.length; i++) {
-        if (G.publicPlayers[i].campCards.filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
+        if (G.publicPlayers[i].campCards
+            .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
             count = true;
             break;
         }

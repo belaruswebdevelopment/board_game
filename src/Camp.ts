@@ -241,8 +241,7 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
             }
         } else {
             // todo Fix this error sometimes shown...
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора карты
-            кэмпа в конце пиков из таверны.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
         }
     }
 };
@@ -257,12 +256,13 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
  * @param G
  */
 export const RefillEmptyCampCards = (G: MyGameState): void => {
-    const emptyCampCards: (number | null)[] = G.camp.map((card: CampCardTypes, index: number): number | null => {
-        if (card === null) {
-            return index;
-        }
-        return null;
-    });
+    const emptyCampCards: (number | null)[] =
+        G.camp.map((card: CampCardTypes, index: number): number | null => {
+            if (card === null) {
+                return index;
+            }
+            return null;
+        });
     const isEmptyCampCards: boolean = emptyCampCards.length === 0;
     // todo Add LogTypes.ERROR logging ?
     let isEmptyCurrentTierCampDeck: boolean = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
@@ -314,7 +314,8 @@ const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
         }
     }
     if (G.campDecks[G.campDecks.length - G.tierToEnd - 1].length) {
-        G.discardCampCardsDeck = G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]);
+        G.discardCampCardsDeck =
+            G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]);
         G.campDecks[G.campDecks.length - G.tierToEnd - 1].length = 0;
     }
     AddDataToLog(G, LogTypes.GAME, `Оставшиеся карты кэмпа сброшены.`);
@@ -332,6 +333,7 @@ const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
  * @param cardIndex Индекс карты.
  */
 const AddCardToCamp = (G: MyGameState, cardIndex: number): void => {
-    const newCampCard: CampDeckCardTypes = G.campDecks[G.campDecks.length - G.tierToEnd].splice(0, 1)[0];
+    const newCampCard: CampDeckCardTypes =
+        G.campDecks[G.campDecks.length - G.tierToEnd].splice(0, 1)[0];
     G.camp.splice(cardIndex, 1, newCampCard);
 };

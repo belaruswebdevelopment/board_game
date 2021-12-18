@@ -52,7 +52,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         flag: boolean = true,
         advancedString: string = `advanced`,
         isAdvancedExist: boolean =
-            Object.keys(moveBy[ctx.phase]).some((key: string): boolean => key.includes(advancedString));
+            Object.keys(moveBy[ctx.phase])
+                .some((key: string): boolean => key.includes(advancedString));
     const activeStageOfCurrentPlayer: string = ctx.activePlayers?.[Number(ctx.currentPlayer)] ?? `default`;
     // todo Fix it, now just for bot can do RANDOM move
     const botMoveArguments: IBotMoveArgumentsTypes = [];
@@ -108,14 +109,15 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 if (tavernCard === null) {
                     continue;
                 }
-                if (tavern.some((card: TavernCardTypes): boolean => CompareCards(tavernCard, card) < 0)) {
+                if (tavern.some((card: TavernCardTypes): boolean =>
+                    CompareCards(tavernCard, card) < 0)) {
                     continue;
                 }
                 const isCurrentCardWorse: boolean =
                     EvaluateCard(G, ctx, tavernCard, i, tavern) < 0,
                     isExistCardNotWorse: boolean =
-                        tavern.some((card: TavernCardTypes): boolean => (card !== null) &&
-                            (EvaluateCard(G, ctx, tavernCard, i, tavern) >= 0));
+                        tavern.some((card: TavernCardTypes): boolean => (card !== null)
+                            && (EvaluateCard(G, ctx, tavernCard, i, tavern) >= 0));
                 if (isCurrentCardWorse && isExistCardNotWorse) {
                     continue;
                 }
@@ -189,8 +191,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                         isMinCoinsOnPosition: boolean = false;
                     if (hasPositionForMaxCoin) {
                         isTopCoinsOnPosition =
-                            allCoinsOrder[i].filter((coinIndex: number): boolean => handCoins[coinIndex] !== null
-                                && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
+                            allCoinsOrder[i].filter((coinIndex: number): boolean =>
+                                handCoins[coinIndex] !== null && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
                     }
                     if (hasPositionForMinCoin) {
                         isMinCoinsOnPosition = handCoins.filter((coin: ICoin | null): boolean => coin !== null
@@ -308,7 +310,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     for (let i: number = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
                         for (let j: number = 0; j < 1; j++) {
                             if (G.publicPlayers[p].cards[suitId][i] !== undefined) {
-                                if (G.publicPlayers[p].cards[suitId][i].type !== "герой") {
+                                if (G.publicPlayers[p].cards[suitId][i].type !== `герой`) {
                                     const points: number | null = G.publicPlayers[p].cards[suitId][i].points;
                                     if (points !== null) {
                                         botMoveArguments.push([points]);
@@ -477,7 +479,8 @@ export const objectives = (): {
             for (let i: number = 0; i < ctx.numPlayers; i++) {
                 totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
-            const [top1, top2]: number[] = totalScore.sort((a: number, b: number): number => b - a).slice(0, 2);
+            const [top1, top2]: number[] =
+                totalScore.sort((a: number, b: number): number => b - a).slice(0, 2);
             if (totalScore[Number(ctx.currentPlayer)] === top1) {
                 return totalScore[Number(ctx.currentPlayer)] >= Math.floor(1.05 * top2);
             }
@@ -500,7 +503,8 @@ export const objectives = (): {
             for (let i: number = 0; i < ctx.numPlayers; i++) {
                 totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
-            const [top1, top2]: number[] = totalScore.sort((a: number, b: number): number => b - a).slice(0, 2);
+            const [top1, top2]: number[] =
+                totalScore.sort((a: number, b: number): number => b - a).slice(0, 2);
             if (totalScore[Number(ctx.currentPlayer)] === top1) {
                 return totalScore[Number(ctx.currentPlayer)] >= Math.floor(1.10 * top2);
             }
@@ -529,7 +533,8 @@ export const iterations = (G: MyGameState, ctx: Ctx): number => {
         if (currentTavern.filter((card: DeckCardTypes | null): boolean => card !== null).length === 1) {
             return 1;
         }
-        const cardIndex: number = currentTavern.findIndex((card: DeckCardTypes | null): boolean => card !== null),
+        const cardIndex: number =
+            currentTavern.findIndex((card: DeckCardTypes | null): boolean => card !== null),
             tavernCard: DeckCardTypes | null = currentTavern[cardIndex];
         if (currentTavern.every((card: DeckCardTypes | null): boolean =>
             card === null || (isCardNotAction(card) && tavernCard !== null && isCardNotAction(tavernCard)

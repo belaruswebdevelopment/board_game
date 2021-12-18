@@ -107,9 +107,9 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
                     if (data.props.G.publicPlayers[p].cards[suitId][i].type !== `герой`) {
                         isExit = false;
                         isDrawRow = true;
-                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i], i,
-                            data.props.G.publicPlayers[p], suitName, "OnClickDiscardSuitCardFromPlayerBoard", suitId, p,
-                            i);
+                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i],
+                            i, data.props.G.publicPlayers[p], suitName,
+                            "OnClickDiscardSuitCardFromPlayerBoard", suitId, p, i);
                     }
                 } else {
                     playersCells.push(
@@ -268,8 +268,8 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
         value = String(card.value);
     }
     playerCells.push(
-        <td key={`${(player && player.nickname) ? `player ${(player.nickname)} ` : ``}${suit} card ${id} ${card.name}`}
-            className={tdClasses} onClick={() => action && action(...args)}>
+        <td key={`${(player && player.nickname) ? `player ${(player.nickname)} ` :
+            ``}${suit} card ${id} ${card.name}`} className={tdClasses} onClick={() => action && action(...args)}>
             <span style={styles} title={description ?? card.name} className={spanClasses}>
                 <b>{value}</b>
             </span>
@@ -376,8 +376,8 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
         }
     }
     playerCells.push(
-        <td key={`${(player !== null && player.nickname) ? `player ${player.nickname} ` : ``}coin ${id}${coin !== null
-            ? ` ${coin.value}` : ` empty`}`} className={tdClasses} onClick={() => action !== null && action(...args)}>
+        <td key={`${player?.nickname ? `player ${player.nickname} ` : ``}coin ${id}${coin !== null ? `
+        ${coin.value}` : ` empty`}`} className={tdClasses} onClick={() => action !== null && action(...args)}>
             <span style={styles} className={spanClasses}>
                 {span}
             </span>

@@ -52,7 +52,8 @@ export const tavernsConfig: ITavernsConfig = {
 export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => {
     let isCurrentTavernEmpty: boolean = false;
     if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        isCurrentTavernEmpty = G.taverns[G.currentTavern].every((card: TavernCardTypes): boolean => card === null);
+        isCurrentTavernEmpty =
+            G.taverns[G.currentTavern].every((card: TavernCardTypes): boolean => card === null);
         if (!isCurrentTavernEmpty) {
             const discardCardIndex: number =
                 G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
@@ -83,14 +84,14 @@ export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => 
 export const RefillTaverns = (G: MyGameState): void => {
     let error: boolean = false;
     for (let i: number = 0; i < G.tavernsNum; i++) {
-        const refillDeck: DeckCardTypes[] = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
+        const refillDeck: DeckCardTypes[] =
+            G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
         if (refillDeck.length === G.drawSize) {
             G.taverns[i] = refillDeck;
             AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[i].name} заполнена новыми картами.`);
         } else {
             error = true;
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Таверна ${tavernsConfig[i].name} не заполнена новыми картами из-за
-            их нехватки в колоде.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Таверна ${tavernsConfig[i].name} не заполнена новыми картами из-за их нехватки в колоде.`);
         }
     }
     if (!error) {

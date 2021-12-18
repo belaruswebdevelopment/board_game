@@ -125,7 +125,8 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
     if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
         const isCanPickHero: boolean =
             Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].cards
-                .map((item: PlayerCardsType[]): number => item.reduce(TotalRank, 0))) >
+                .map((item: PlayerCardsType[]): number =>
+                    item.reduce(TotalRank, 0))) >
             G.publicPlayers[Number(ctx.currentPlayer)].heroes.length;
         if (isCanPickHero) {
             const stack: IStack[] = [
@@ -136,8 +137,7 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
                     },
                 },
             ];
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен выбрать
-            нового героя.`);
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен выбрать нового героя.`);
             AddActionsToStackAfterCurrent(G, ctx, stack);
         }
     }

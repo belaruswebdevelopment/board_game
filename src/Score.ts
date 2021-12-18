@@ -63,24 +63,20 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     if (suitWarriorIndex !== -1) {
         const warriorsDistinction: number[] | undefined =
             CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR),
-            playerIndex: number = G.publicPlayers
-                .findIndex((p: IPublicPlayer): boolean => p.nickname === player.nickname);
+            playerIndex: number =
+                G.publicPlayers.findIndex((p: IPublicPlayer): boolean => p.nickname === player.nickname);
         if (warriorsDistinction !== undefined && warriorsDistinction.includes(playerIndex)) {
-            const warriorDistinctionScore: number =
-                suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
+            const warriorDistinctionScore: number = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
             score += warriorDistinctionScore;
-            AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока ${player.nickname}:
-            ${warriorDistinctionScore}`);
+            AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока ${player.nickname}: ${warriorDistinctionScore}`);
         }
     }
     const suitMinerIndex: number = GetSuitIndexByName(SuitNames.MINER);
     if (suitMinerIndex !== -1) {
-        const minerDistinctionPriorityScore: number =
-            suitsConfig[SuitNames.MINER].distinction.awarding(G, ctx, player);
+        const minerDistinctionPriorityScore: number = suitsConfig[SuitNames.MINER].distinction.awarding(G, ctx, player);
         score += minerDistinctionPriorityScore;
         if (minerDistinctionPriorityScore) {
-            AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока ${player.nickname}:
-            ${minerDistinctionPriorityScore}`);
+            AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока ${player.nickname}: ${minerDistinctionPriorityScore}`);
         }
     }
     let heroesScore: number = 0,
@@ -95,8 +91,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
             } else {
                 const currentHeroScore: number = heroData.scoringRule(player);
                 heroesScore += currentHeroScore;
-                AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${player.heroes[i].name} игрока ${player.nickname}:
-                ${currentHeroScore}.`);
+                AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${player.heroes[i].name} игрока ${player.nickname}: ${currentHeroScore}.`);
             }
         } else {
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти героя ${player.heroes[i].name}.`);
@@ -104,8 +99,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     }
     if (dwerg_brothers) {
         heroesScore += dwerg_brothers_scoring[dwerg_brothers];
-        AddDataToLog(G, LogTypes.PRIVATE, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) игрока
-        ${player.nickname}: ${dwerg_brothers_scoring[dwerg_brothers]}.`);
+        AddDataToLog(G, LogTypes.PRIVATE, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) игрока ${player.nickname}: ${dwerg_brothers_scoring[dwerg_brothers]}.`);
     }
     score += heroesScore;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за героев игрока ${player.nickname}: ${heroesScore}.`);
@@ -127,8 +121,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
             }
             if (currentArtefactScore) {
                 artifactsScore += currentArtefactScore;
-                AddDataToLog(G, LogTypes.PRIVATE, `Очки за артефакт ${player.campCards[i].name} игрока
-                ${player.nickname}: ${currentArtefactScore}.`);
+                AddDataToLog(G, LogTypes.PRIVATE, `Очки за артефакт ${player.campCards[i].name} игрока ${player.nickname}: ${currentArtefactScore}.`);
             }
         }
         score += artifactsScore;

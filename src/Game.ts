@@ -238,18 +238,19 @@ export const BoardGame: Game<MyGameState> = {
                 PlaceEnlistmentMercenaries,
             },
             onBegin: (G: MyGameState, ctx: Ctx): void => {
-                const players: IPublicPlayer[] = G.publicPlayers.map((player: IPublicPlayer): IPublicPlayer => player),
+                const players: IPublicPlayer[] =
+                    G.publicPlayers.map((player: IPublicPlayer): IPublicPlayer => player),
                     playersIndexes: number[] = [];
                 players.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
                     if (nextPlayer.campCards
-                        .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length <
+                        .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length <
                         currentPlayer.campCards
-                            .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
+                            .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
                         return 1;
                     } else if (nextPlayer.campCards
-                        .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length >
+                        .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length >
                         currentPlayer.campCards
-                            .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
+                            .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
                         return -1;
                     }
                     if (nextPlayer.priority.value < currentPlayer.priority.value) {
@@ -261,9 +262,10 @@ export const BoardGame: Game<MyGameState> = {
                 });
                 players.forEach((playerSorted: IPublicPlayer): void => {
                     if (playerSorted.campCards
-                        .filter((card: CampDeckCardTypes): boolean => card.type === "наёмник").length) {
+                        .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
                         playersIndexes.push(G.publicPlayers
-                            .findIndex((player: IPublicPlayer): boolean => player.nickname === playerSorted.nickname));
+                            .findIndex((player: IPublicPlayer): boolean =>
+                                player.nickname === playerSorted.nickname));
                     }
                 });
                 G.publicPlayersOrder = playersIndexes;
@@ -275,8 +277,8 @@ export const BoardGame: Game<MyGameState> = {
                         action: DrawProfitAction,
                         playerId: G.publicPlayersOrder[0],
                         config: {
-                            name: "startOrPassEnlistmentMercenaries",
-                            drawName: "Start or Pass Enlistment Mercenaries",
+                            name: `startOrPassEnlistmentMercenaries`,
+                            drawName: `Start or Pass Enlistment Mercenaries`,
                         },
                     },
                 ];
@@ -372,7 +374,7 @@ export const BoardGame: Game<MyGameState> = {
                     },
                 },
             },
-            next: "placeCoins",
+            next: `placeCoins`,
             moves: {
                 ClickDistinctionCard,
             },

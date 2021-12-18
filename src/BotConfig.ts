@@ -91,17 +91,19 @@ export const k_combinations = (set: number[], k: number): number[][] => {
  * @param playersNum
  * @returns
  */
-export const GetAllPicks = ({ tavernsNum, playersNum }: { tavernsNum: number, playersNum: number }): any => {
+export const GetAllPicks = ({ tavernsNum, playersNum }: { tavernsNum: number, playersNum: number; }): any => {
     const temp: number[][] = [],
         cartesian = (...a: any) => {
             if (a.length === 1) {
                 a = a.flat();
             }
-            return a.reduce((a: number[][], b: number[][]): number[][] => a.flatMap((d: number[]): number[][] =>
-                b.map((e: number[]): number[] => [d, e].flat())));
+            return a.reduce((a: number[][], b: number[][]): number[][] =>
+                a.flatMap((d: number[]): number[][] => b.map((e: number[]): number[] =>
+                    [d, e].flat())));
         };
     for (let i: number = 0; i < tavernsNum; i++) {
-        temp[i] = Array(playersNum).fill(undefined).map((item: number, index: number): number => index);
+        temp[i] = Array(playersNum).fill(undefined)
+            .map((item: number, index: number): number => index);
     }
     return cartesian(temp);
 };
@@ -115,7 +117,7 @@ export const GetAllPicks = ({ tavernsNum, playersNum }: { tavernsNum: number, pl
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number } = {
+const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number; } = {
     heuristic: (cards: DeckCardTypes[]): boolean => cards.every((card: DeckCardTypes | null): boolean =>
     (card !== null && isCardNotAction(card) && isCardNotAction(cards[0]) && card.suit === cards[0].suit
         && CompareCards(card, cards[0]) === 0)),
@@ -131,7 +133,7 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number } = {
+const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === -1),
     weight: 40,
 };
@@ -144,7 +146,7 @@ const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number } = 
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number } = {
+const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number; } = {
     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 0),
     weight: 20,
 };
@@ -157,7 +159,7 @@ const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number } 
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isAllBetter: { heuristic: (array: number[]) => boolean, weight: number } = {
+const isAllBetter: { heuristic: (array: number[]) => boolean, weight: number; } = {
     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 1),
     weight: 10,
 };
@@ -170,8 +172,9 @@ const isAllBetter: { heuristic: (array: number[]) => boolean, weight: number } =
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number } = {
-    heuristic: (array: number[]): boolean => (array.filter((item: number): boolean => item === -1).length === 1),
+const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
+    heuristic: (array: number[]): boolean =>
+        (array.filter((item: number): boolean => item === -1).length === 1),
     weight: -100,
 };
 
@@ -183,7 +186,7 @@ const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number 
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: number } = {
+const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: number; } = {
     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item !== 0),
     weight: -50,
 };
@@ -196,7 +199,7 @@ const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: nu
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const absoluteHeuristicsForTradingCoin: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number }[] =
+const absoluteHeuristicsForTradingCoin: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number; }[] =
     [isAllCardsEqual];
 
 /**
@@ -225,10 +228,10 @@ const absoluteHeuristicsForTradingCoin: { heuristic: (cards: DeckCardTypes[]) =>
  * @param array
  * @returns
  */
-const GetCharacteristics = (array: number[]): { mean: number, variation: number } => {
+const GetCharacteristics = (array: number[]): { mean: number, variation: number; } => {
     const mean: number = array.reduce((acc: number, item: number): number => acc + item / array.length, 0),
-        variation: number =
-            array.reduce((acc: number, item: number): number => acc + ((item - mean) ** 2) / array.length, 0);
+        variation: number = array.reduce((acc: number, item: number): number =>
+            acc + ((item - mean) ** 2) / array.length, 0);
     return {
         mean,
         variation,
@@ -247,7 +250,7 @@ const GetCharacteristics = (array: number[]): { mean: number, variation: number 
  * @param stat2
  * @returns
  */
-const CompareCharacteristics = (stat1: { variation: number, mean: number }, stat2: { variation: number, mean: number }):
+const CompareCharacteristics = (stat1: { variation: number, mean: number; }, stat2: { variation: number, mean: number; }):
     number => {
     const eps: number = 0.0001,
         tempVariation: number = stat1.variation - stat2.variation;
@@ -274,14 +277,19 @@ export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
         averageCards: ICard[] = G.averageCards*/;
     let result: number[] = Array(taverns.length).fill(0);
     const temp: number[] = taverns.map((tavern: (DeckCardTypes | null)[]): number => absoluteHeuristicsForTradingCoin
-        .reduce((acc: number, item: { heuristic: (cards: DeckCardTypes[]) => boolean; weight: number }): number =>
-            acc + (tavern !== null && item.heuristic(tavern as DeckCardTypes[]) ? item.weight : 0), 0));
+        .reduce((acc: number, item: {
+            heuristic: (cards: DeckCardTypes[]) =>
+                boolean; weight: number;
+        }): number =>
+            acc + (tavern !== null && item.heuristic(tavern as DeckCardTypes[]) ? item.weight : 0),
+            0));
     result = result.map((value: number, index: number) => value + temp[index]);
     const tempNumbers: number[][] = taverns.map((tavern: (DeckCardTypes | null)[]): number[] => tavern
         .map((card: ICard | IActionCard | null, index: number, arr: (DeckCardTypes | null)[]): number =>
             EvaluateCard(G, ctx, card as ICard, index, arr)));
-    const tempChars: { mean: number; variation: number }[] =
-        tempNumbers.map((element: number[]): { mean: number, variation: number } => GetCharacteristics(element));
+    const tempChars: { mean: number; variation: number; }[] =
+        tempNumbers.map((element: number[]): { mean: number, variation: number; } =>
+            GetCharacteristics(element));
     let maxIndex: number = 0,
         minIndex: number = tempChars.length - 1;
     for (let i: number = 1; i < temp.length; i++) {

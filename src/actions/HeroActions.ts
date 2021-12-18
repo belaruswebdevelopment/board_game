@@ -43,8 +43,7 @@ export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
             name: `Thrud`,
             game: `base`,
         } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Труд
-        во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Труд во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, thrudCard);
         CheckPickHero(G, ctx);
         EndActionFromStackAndAddNew(G, ctx);
@@ -77,8 +76,7 @@ export const PlaceYludAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
             name: `Ylud`,
             game: `base`,
         } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Илуд
-        во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Илуд во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, yludCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, yludCard);
         EndActionFromStackAndAddNew(G, ctx, [], suitId);
@@ -165,7 +163,8 @@ export const PickHeroWithConditionsAction = (G: MyGameState, ctx: Ctx, config: I
                     if (config.conditions[condition].hasOwnProperty(key)) {
                         if (key === `suit`) {
                             const suitId: number = GetSuitIndexByName(config.conditions[condition][key]);
-                            ranks = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].reduce(TotalRank, 0);
+                            ranks = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+                                .reduce(TotalRank, 0);
                         } else if (key === `value`) {
                             isValidMove = ranks >= config.conditions[condition][key];
                         }
@@ -195,8 +194,7 @@ export const PickHeroWithConditionsAction = (G: MyGameState, ctx: Ctx, config: I
 export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
     const isStartPickHero: boolean = IsStartActionStage(G, ctx, config);
     if (isStartPickHero) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен пикнуть
-        героя.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен пикнуть героя.`);
     } else {
         if (config.stageName === undefined) {
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.stageName'.`);
