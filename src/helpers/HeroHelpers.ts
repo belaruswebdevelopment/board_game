@@ -6,6 +6,8 @@ import { Ctx } from "boardgame.io";
 import { ICoin } from "../Coin";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { SuitNames } from "../data/SuitData";
+import { DrawProfitAction } from "../actions/Actions";
+import { PlaceThrudAction } from "../actions/HeroActions";
 
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
@@ -14,9 +16,8 @@ import { SuitNames } from "../data/SuitData";
  * <li>Используется повсеместно в проекте для вычисления индекса конкретного героя.</li>
  * </ol>
  *
- * @param {string} heroName Название героя.
- * @returns {number} Индекс героя.
- * @constructor
+ * @param heroName Название героя.
+ * @returns Индекс героя.
  */
 export const GetHeroIndexByName = (heroName: string): number => Object.keys(heroesConfig).indexOf(heroName);
 
@@ -27,11 +28,10 @@ export const GetHeroIndexByName = (heroName: string): number => Object.keys(hero
  * <li>При любых действия, когда пикается карта на планшет игрока.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {PlayerCardsType} card Карта.
- * @returns {boolean} Нужно ли перемещать героя Труд.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param card Карта.
+ * @returns Нужно ли перемещать героя Труд.
  */
 export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: PlayerCardsType): boolean => {
     if (card.suit !== null) {
@@ -53,10 +53,9 @@ export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: PlayerCardsTyp
  * <li>При любых действия, когда пикается карта на планшет игрока и требуется переместить героя Труд.</li>
  * </ol>
  я
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {PlayerCardsType} card Карта.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param card Карта.
  */
 export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType): void => {
     if (card.suit !== null) {
@@ -89,7 +88,7 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
         },
             stack: IStack[] = [
                 {
-                    actionName: "DrawProfitAction",
+                    action: DrawProfitAction,
                     variants,
                     config: {
                         drawName: "Thrud",
@@ -99,7 +98,7 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
                     },
                 },
                 {
-                    actionName: "PlaceThrudAction",
+                    action: PlaceThrudAction,
                     variants,
                 },
             ];
@@ -114,10 +113,9 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
  * <li>При наличии героя Улина.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {string | boolean} Проверяет нужно ли начать действия по наличию героя Улина.
- * @constructor
+ * @param G
+ * @param ctx
+ * @returns Проверяет нужно ли начать действия по наличию героя Улина.
  */
 export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): string | boolean => {
     // todo Rework it all!

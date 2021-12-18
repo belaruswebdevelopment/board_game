@@ -8,9 +8,8 @@ import { GameBoard } from "../GameBoard";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element | null} Поле для вывода логов.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле для вывода логов.
  */
 export const DrawLogData = (data: GameBoard): JSX.Element | null => {
     if (data.props.G.log) {

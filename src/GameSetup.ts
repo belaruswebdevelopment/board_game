@@ -109,9 +109,8 @@ export interface MyGameState {
  * <li>Данные используются в игре.</li>
  * </ol>
  *
- * @param {Ctx} ctx
- * @returns {MyGameState} Данные игры.
- * @constructor
+ * @param ctx
+ * @returns Данные игры.
  */
 export const SetupGame = (ctx: Ctx): MyGameState => {
     const suitsNum: number = 5,
@@ -152,7 +151,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
             actions: actionCardsConfigArray
         } as IDeckConfig, {
             players: ctx.numPlayers,
-            tier: i
+            tier: i,
         } as IAverageSuitCardData);
         decks[i] = ctx.random!.Shuffle(decks[i]);
     }
@@ -198,7 +197,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
     for (const suit in suitsConfig) {
         averageCards[GetSuitIndexByName(suit)] = GetAverageSuitCard(suitsConfig[suit], {
             players: ctx.numPlayers,
-            tier: 0
+            tier: 0,
         } as IAverageSuitCardData);
     }
     for (let i: number = 0; i < initCoinsOrder.length; i++) {

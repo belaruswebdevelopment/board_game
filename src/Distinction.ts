@@ -12,9 +12,8 @@ import { Ctx } from "boardgame.io";
  * <li>Отрабатывает в начале фазы получения преимуществ за количество шевронов каждой фракции.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
     let i: number = 0;
@@ -41,11 +40,10 @@ export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
  * <li>Применяется при подсчёте преимуществ по количеству шевронов фракции в конце игры (фракция воинов).</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {string} suitName Фракция.
- * @returns {number | undefined} Индекс игрока с преимуществом по фракции, если имеется.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param suitName Фракция.
+ * @returns Индекс игрока с преимуществом по фракции, если имеется.
  */
 export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suitName: string): number | undefined => {
     const playersRanks: number[] = [],
@@ -79,11 +77,10 @@ export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suitName: 
  * <li>Применяется при подсчёте преимуществ по количеству шевронов фракции в конце игры (фракция воинов).</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {string} suitName Фракция.
- * @returns {number[] | undefined} Индексы игроков с преимуществом по фракции.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param suitName Фракция.
+ * @returns Индексы игроков с преимуществом по фракции.
  */
 export const CheckCurrentSuitDistinctions = (G: MyGameState, ctx: Ctx, suitName: string): number[] | undefined => {
     const playersRanks: number[] = [],

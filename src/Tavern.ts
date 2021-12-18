@@ -45,10 +45,9 @@ export const tavernsConfig: ITavernsConfig = {
  * <li>Проверяет после каждого выбора карты кэмпа из таверны.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {boolean} Пуста ли текущая таверна.
- * @constructor
+ * @param G
+ * @param ctx
+ * @returns Пуста ли текущая таверна.
  */
 export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => {
     let isCurrentTavernEmpty: boolean = false;
@@ -79,8 +78,7 @@ export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => 
  * <li>Происходит при начале новой эпохе.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @constructor
+ * @param G
  */
 export const RefillTaverns = (G: MyGameState): void => {
     let error: boolean = false;

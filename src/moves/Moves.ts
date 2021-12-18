@@ -15,6 +15,7 @@ import { Ctx, Move } from "boardgame.io";
 import { DeckCardTypes, MyGameState } from "../GameSetup";
 import { isCardNotAction } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
+import { DrawProfitAction, GetEnlistmentMercenariesAction, PassEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 // todo Add logging
 
 /**
@@ -24,11 +25,10 @@ import { AddDataToLog, LogTypes } from "../Logging";
  * <li>При выборе базовой карты из таверны игроком.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} cardId Id карты.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ * @returns
  */
 export const ClickCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean = IsValidMove({ objId: G.currentTavern, values: [G.currentTavern] })
@@ -70,11 +70,10 @@ export const ClickCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: n
  * <li>После определения преимуществ по фракциям в конце первой эпохи.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} cardId Id карты.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ * @returns
  */
 export const ClickDistinctionCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
     const index: number = G.distinctions.indexOf(Number(ctx.currentPlayer)),
@@ -93,10 +92,9 @@ export const ClickDistinctionCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx
  * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} cardId Id карты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
  */
 export const ClickCardToPickDistinction: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     const isAdded: boolean = AddCardToPlayer(G, ctx, G.decks[1][cardId]),
@@ -123,10 +121,9 @@ export const ClickCardToPickDistinction: Move<MyGameState> = (G: MyGameState, ct
  * <li>Выбор карт из дискарда по действию артефактов.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} cardId Id карты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
  */
 export const PickDiscardCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
@@ -139,14 +136,13 @@ export const PickDiscardCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, car
  * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 export const StartEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
     const stack: IStack[] = [
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 name: "enlistmentMercenaries",
                 drawName: "Enlistment Mercenaries",
@@ -163,14 +159,13 @@ export const StartEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ct
  * <li>Первый игрок в начале фазы вербовки наёмников пасует для того, чтобы вербовать последним.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 export const PassEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
     const stack: IStack[] = [
         {
-            actionName: "PassEnlistmentMercenariesAction",
+            action: PassEnlistmentMercenariesAction,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack);
@@ -183,15 +178,14 @@ export const PassEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx
  * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} cardId Id карты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
  */
 export const GetEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     const stack: IStack[] = [
         {
-            actionName: "GetEnlistmentMercenariesAction",
+            action: GetEnlistmentMercenariesAction,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack, cardId);
@@ -204,15 +198,14 @@ export const GetEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx:
  * <li>При выборе фракции, куда будет завербован наёмник.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} suitId Id фракции.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param suitId Id фракции.
  */
 export const PlaceEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
     const stack: IStack[] = [
         {
-            actionName: "PlaceEnlistmentMercenariesAction",
+            action: PlaceEnlistmentMercenariesAction,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack, suitId);

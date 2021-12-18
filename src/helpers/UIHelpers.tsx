@@ -24,9 +24,8 @@ export interface IDrawBoardOptions {
  * <li>Используется для отрисовки некоторых сегментов игрового поля.</li>
  * </ol>
  *
- * @param {number} objectsSize Данные для вычисления параметров отрисовки сегмента игрового поля.
- * @returns {IDrawBoardOptions} Параметры для отрисовки сегмента игрового поля.
- * @constructor
+ * @param objectsSize Данные для вычисления параметров отрисовки сегмента игрового поля.
+ * @returns Параметры для отрисовки сегмента игрового поля.
  */
 export const DrawBoard = (objectsSize: number): IDrawBoardOptions => {
     const boardRows: number = Math.floor(Math.sqrt(objectsSize)),
@@ -42,9 +41,8 @@ export const DrawBoard = (objectsSize: number): IDrawBoardOptions => {
  * <li>Отрисовка планшета конкретного игрока для дискарда карты по действию артефакта Brisingamens.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле для вывода карт для дискарда.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле для вывода карт для дискарда.
  */
 export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
     const playerHeaders: JSX.Element[] = [],
@@ -78,10 +76,9 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
  * <li>Отрисовка планшетов конкретных игроков для дискарда карты конкретной фракции по действию артефакта Hofud.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @param {string} suitName Фракция.
- * @returns {JSX.Element} Поле игрока для дискарда карты фракции.
- * @constructor
+ * @param data Глобальные параметры.
+ * @param suitName Фракция.
+ * @returns Поле игрока для дискарда карты фракции.
  */
 export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: string): JSX.Element => {
     const playersHeaders: JSX.Element[] = [],
@@ -151,15 +148,14 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
  * <li>Отрисовка карт на игровом поле.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @param {JSX.Element[]} playerCells Ячейки для отрисовки.
- * @param {DeckCardTypes | CampDeckCardTypes | IHero} card Карта.
- * @param {number} id Id карты.
- * @param {IPublicPlayer | null} player Игрок.
- * @param {string | null} suit Фракция.
- * @param {string} actionName Название действия.
- * @param {string | number | boolean | object | null} args Аргументы действия.
- * @constructor
+ * @param data Глобальные параметры.
+ * @param playerCells Ячейки для отрисовки.
+ * @param card Карта.
+ * @param id Id карты.
+ * @param player Игрок.
+ * @param suit Фракция.
+ * @param actionName Название действия.
+ * @param args Аргументы действия.
  */
 export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: DeckCardTypes | CampDeckCardTypes | IHero,
     id: number, player: IPublicPlayer | null, suit?: string | null, actionName?: string,
@@ -288,17 +284,16 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
  * <li>Отрисовка монет на игровом поле.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @param {JSX.Element[]} playerCells Ячейки для отрисовки.
- * @param {string} type Тип монеты.
- * @param {ICoin} coin Монета.
- * @param {number} id Id монеты.
- * @param {IPublicPlayer | null} player Игрок.
- * @param {string | null} coinClasses Дополнительный классы для монеты.
- * @param {number | null} additionalParam Дополнительные параметры.
- * @param {string} actionName Название действия.
- * @param {string | number | boolean | object | null} args Аргументы действия.
- * @constructor
+ * @param data Глобальные параметры.
+ * @param playerCells Ячейки для отрисовки.
+ * @param type Тип монеты.
+ * @param coin Монета.
+ * @param id Id монеты.
+ * @param player Игрок.
+ * @param coinClasses Дополнительный классы для монеты.
+ * @param additionalParam Дополнительные параметры.
+ * @param actionName Название действия.
+ * @param args Аргументы действия.
  */
 export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin: ICoin | null, id: number,
     player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
@@ -397,14 +392,13 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
  * <li>Отрисовка кнопок на игровом поле.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @param {JSX.Element[]} boardCells Ячейки для отрисовки.
- * @param {string} key Ключ.
- * @param {string} name Имя кнопки.
- * @param {IPublicPlayer} player Игрок.
- * @param {string} actionName Название действия.
- * @param {string | number | boolean | object | null} args Аргументы действия.
- * @constructor
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @param key Ключ.
+ * @param name Имя кнопки.
+ * @param player Игрок.
+ * @param actionName Название действия.
+ * @param args Аргументы действия.
  */
 export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: string, name: string, player: IPublicPlayer,
     actionName?: string, ...args: ArgsTypes): void => {

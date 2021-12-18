@@ -23,9 +23,8 @@ export interface IResolveBoardCoins {
  * <li>В конце игры, если получено преимущество по фракции воинов.</li>
  * </ol>
  *
- * @param {IPublicPlayer} player Игрок.
- * @returns {number} Максимальная монета игрока.
- * @constructor
+ * @param player Игрок.
+ * @returns Максимальная монета игрока.
  */
 export const GetMaxCoinValue = (player: IPublicPlayer): number => {
     return Math.max(...player.boardCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
@@ -41,10 +40,9 @@ export const GetMaxCoinValue = (player: IPublicPlayer): number => {
  * <li>Когда заканчивается базовый выбор карты.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {boolean} Активировался ли обмен монет.
- * @constructor
+ * @param G
+ * @param ctx
+ * @returns Активировался ли обмен монет.
  */
 export const ActivateTrading = (G: MyGameState, ctx: Ctx): boolean => {
     if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern]?.isTriggerTrading) {
@@ -69,10 +67,9 @@ export const ActivateTrading = (G: MyGameState, ctx: Ctx): boolean => {
  * <li>После выкладки всех монет игроками.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {{playersOrder: number[], exchangeOrder: number[]}} Порядок ходов игроков & порядок изменения ходов игроками.
- * @constructor
+ * @param G
+ * @param ctx
+ * @returns Порядок ходов игроков & порядок изменения ходов игроками.
  */
 export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins => {
     const playersOrder: number[] = [],

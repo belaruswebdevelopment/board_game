@@ -71,9 +71,8 @@ interface IMoveValidators {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {ICheckMoveParam} obj Параметры валидации мува.
- * @returns {boolean} Валидный ли мув.
- * @constructor
+ * @param obj Параметры валидации мува.
+ * @returns Валидный ли мув.
  */
 export const IsValidMove = (obj: ICheckMoveParam): boolean => {
     return CheckMove(obj);
@@ -87,12 +86,11 @@ export const IsValidMove = (obj: ICheckMoveParam): boolean => {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {object | null | undefined} obj
- * @param {number} objId
- * @param {number[] | undefined} range
- * @param {number[] | undefined} values
- * @returns {boolean} Валидный ли мув.
- * @constructor
+ * @param obj
+ * @param objId
+ * @param range
+ * @param values
+ * @returns Валидный ли мув.
  */
 const CheckMove = ({ obj, objId, range = [], values = [] }: ICheckMoveParam): boolean => {
     let isValid: boolean = obj !== null;
@@ -112,10 +110,9 @@ const CheckMove = ({ obj, objId, range = [], values = [] }: ICheckMoveParam): bo
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {number} num
- * @param {number[]} range
- * @returns {boolean}
- * @constructor
+ * @param num
+ * @param range
+ * @returns
  */
 const ValidateByRange = (num: number, range: number[]): boolean => range[0] <= num && num < range[1];
 
@@ -127,10 +124,9 @@ const ValidateByRange = (num: number, range: number[]): boolean => range[0] <= n
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {number} num
- * @param {number[]} values
- * @returns {boolean}
- * @constructor
+ * @param num
+ * @param values
+ * @returns
  */
 const ValidateByValues = (num: number, values: number[]): boolean => values.includes(num);
 
@@ -142,12 +138,11 @@ const ValidateByValues = (num: number, values: number[]): boolean => values.incl
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId
- * @param {string} type
- * @returns {boolean}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId
+ * @param type
+ * @returns
  */
 export const CoinUpgradeValidation = (G: MyGameState, ctx: Ctx, coinId: number, type: string): boolean => {
     if (type === "hand") {
@@ -172,9 +167,7 @@ export const CoinUpgradeValidation = (G: MyGameState, ctx: Ctx, coinId: number, 
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{placeCoins: {default1: string, default2: string, default_advanced: string}, placeCoinsUline: {}, getMjollnirProfit: {}, null: {}, brisingamensEndGame: {}, pickCards: {default: string, discardSuitCard: string, upgradeCoin: string, defaultPickCampCard: string, pickHero: string}, getDistinctions: {default: string, upgradeCoin: string, pickDistinctionCard: string}, endTier: {pickHero: string}, enlistmentMercenaries: {upgradeCoin: string, pickHero: string}}}
  */
 export const moveBy: IMoveBy = {
     null: {},
@@ -213,9 +206,7 @@ export const moveBy: IMoveBy = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{ClickDistinctionCard: {getRange: ({G}: IMoveValidatorParams) => [number, number], validate: ({G, ctx, id}: IMoveValidatorParams) => boolean}, ClickCoinToUpgrade: {getRange: ({G, ctx}: IMoveValidatorParams) => [number, number], validate: ({G, ctx, id, type}: IMoveValidatorParams) => boolean}, ClickCardToPickDistinction: {getRange: () => [number, number], validate: () => boolean}, ClickCampCard: {getRange: ({G}: IMoveValidatorParams) => [number, number], validate: ({G, ctx}: IMoveValidatorParams) => boolean}, ClickHandCoin: {getRange: ({G, ctx}: IMoveValidatorParams) => [number, number], validate: ({G, ctx, id}: IMoveValidatorParams) => boolean}, BotsPlaceAllCoins: {getValue: ({G, id}: IMoveValidatorParams) => number[], getRange: ({G}: IMoveValidatorParams) => [number, number], validate: () => boolean}, ClickHeroCard: {getRange: ({G}: IMoveValidatorParams) => [number, number], validate: ({G, ctx, id}: IMoveValidatorParams) => boolean}, ClickBoardCoin: {getRange: ({G, ctx}: IMoveValidatorParams) => [number, number], validate: ({G, ctx, id}: IMoveValidatorParams) => boolean}}}
  */
 export const moveValidators: IMoveValidators = {
     // todo Add all validators to all moves

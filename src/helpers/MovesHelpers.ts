@@ -10,6 +10,9 @@ import { Ctx } from "boardgame.io";
 import { IStack, PlayerCardsType } from "../Player";
 import { IVariants } from "../data/HeroData";
 import { SuitNames } from "../data/SuitData";
+import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
+import { DiscardAnyCardFromPlayerBoardAction, GetMjollnirProfitAction } from "../actions/CampActions";
+import { PlaceYludAction } from "../actions/HeroActions";
 // todo Add logging
 
 /**
@@ -19,9 +22,8 @@ import { SuitNames } from "../data/SuitData";
  * <li>После завершения экшенов в каждой фазе конца игры.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
     if (G.tierToEnd) {
@@ -39,7 +41,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                         G.publicPlayersOrder.push(i);
                         const stack: IStack[] = [
                             {
-                                actionName: "DrawProfitAction",
+                                action: DrawProfitAction,
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: "BrisingamensEndGameAction",
@@ -48,7 +50,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                             },
                             {
                                 playerId: G.publicPlayersOrder[0],
-                                actionName: "DiscardAnyCardFromPlayerBoard",
+                                action: DiscardAnyCardFromPlayerBoardAction,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -65,7 +67,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                         G.publicPlayersOrder.push(i);
                         const stack: IStack[] = [
                             {
-                                actionName: "DrawProfitAction",
+                                action: DrawProfitAction,
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: "getMjollnirProfit",
@@ -74,7 +76,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                             },
                             {
                                 playerId: G.publicPlayersOrder[0],
-                                actionName: "GetMjollnirProfitAction",
+                                action: GetMjollnirProfitAction,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -102,10 +104,9 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
  * <li>После выбора героев.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {boolean} isTrading Является ли действие обменом монет (трейдингом).
- * @constructor
+ * @param G
+ * @param ctx
+ * @param isTrading Является ли действие обменом монет (трейдингом).
  */
 export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: boolean): void => {
     // todo rework it?
@@ -146,7 +147,7 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
                         && G.taverns[G.currentTavern].every(card => card !== null)) {
                         const stack: IStack[] = [
                             {
-                                actionName: "DrawProfitAction",
+                                action: DrawProfitAction,
                                 config: {
                                     stageName: "discardCard",
                                     name: "discardCard",
@@ -154,7 +155,7 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
                                 },
                             },
                             {
-                                actionName: "DiscardCardFromTavernAction",
+                                action: DiscardCardFromTavernAction,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -182,7 +183,7 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
         } else {
             const stack: IStack[] = [
                 {
-                    actionName: "DrawProfitAction",
+                    action: DrawProfitAction,
                     playerId: Number(ctx.playOrder[ctx.playOrder.findIndex((playerIndex: string): boolean =>
                         playerIndex === ctx.currentPlayer) + 1]),
                     config: {
@@ -205,9 +206,8 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
  * <li>При начале фазы EndTier.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
@@ -264,7 +264,7 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
         const stack: IStack[] = [
             {
                 playerId: G.publicPlayersOrder[0],
-                actionName: "DrawProfitAction",
+                action: DrawProfitAction,
                 variants,
                 config: {
                     stageName: "placeCards",
@@ -274,7 +274,7 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
             },
             {
                 playerId: G.publicPlayersOrder[0],
-                actionName: "PlaceYludAction",
+                action: PlaceYludAction,
                 variants,
             },
         ];
@@ -292,9 +292,8 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
  * <li>При наличии у игроков наёмников в конце текущей эпохи.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 const CheckEnlistmentMercenaries = (G: MyGameState, ctx: Ctx): void => {
     let count: boolean = false;
@@ -320,9 +319,8 @@ const CheckEnlistmentMercenaries = (G: MyGameState, ctx: Ctx): void => {
  * </oL>
  *
  * @todo Refill taverns only on the beginning of the round (Add phase Round?)!
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 const AfterLastTavernEmptyActions = (G: MyGameState, ctx: Ctx): void => {
     if (G.decks[G.decks.length - G.tierToEnd].length === 0) {

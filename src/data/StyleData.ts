@@ -33,8 +33,6 @@ interface IStyles {
  * <ol>
  * <li>Используется при отрисовке всех картинок в игре.</li>
  * </ol>
- *
- * @type {{Priorities: (priority: number) => IBackground, CoinBack: () => IBackground, Taverns: (tavernId: number) => IBackground, Priority: () => IBackground, Heroes: (game: string, heroName: string) => IBackground, Distinctions: (distinction: string) => IBackground, Suits: (suitName: string) => IBackground, DistinctionsBack: () => IBackground, HeroBack: () => IBackground, Exchange: () => IBackground, Coin: (value: number, initial: boolean) => IBackground, CampCards: (tier: number, cardPath: string) => IBackground, Cards: (suit: string, points: number, name: string) => IBackground, Camp: () => IBackground}}
  */
 export const Styles: IStyles = {
     Suits: (suitName: string): IBackground => ({

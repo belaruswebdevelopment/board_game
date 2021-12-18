@@ -25,10 +25,9 @@ export interface ILogData {
  * <li>Используется в выводе данных логов на игровом поле.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {LogTypes} type Тип лога.
- * @param {string} value Значение, заносимое в лог.
- * @constructor
+ * @param G
+ * @param type Тип лога.
+ * @param value Значение, заносимое в лог.
  */
 export const AddDataToLog = (G: MyGameState, type: LogTypes, value: string): void => {
     G.logData.push({ type, value });

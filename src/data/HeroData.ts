@@ -3,6 +3,9 @@ import { TotalRank } from "../helpers/ScoreHelpers";
 import { IPublicPlayer, IStack } from "../Player";
 import { SuitNames } from "./SuitData";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
+import { AddHeroToCardsAction, GetClosedCoinIntoPlayerHandAction, PickHeroWithConditionsAction, PlaceThrudAction } from "../actions/HeroActions";
+import { AddBuffToPlayerAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickDiscardCardAction, DiscardCardsFromPlayerBoardAction, DrawProfitAction, PickDiscardCardAction, PlaceCardsAction, UpgradeCoinAction } from "../actions/Actions";
+import { CheckPickCampCardAction } from "../actions/CampActions";
 
 /**
  * <h3>Интерфейс для баффа карты героя.</h3>
@@ -33,7 +36,6 @@ export interface IVariants {
  */
 interface ICondition {
     suit: string,
-
     [name: string]: string | number | boolean,
 }
 
@@ -71,8 +73,6 @@ interface IHeroConfig {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Dwerg_Bergelmir: IHeroData = {
     name: "Dwerg Bergelmir",
@@ -84,7 +84,7 @@ const Dwerg_Bergelmir: IHeroData = {
     points: null,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Dwerg_Bergelmir",
             },
@@ -100,8 +100,6 @@ const Dwerg_Bergelmir: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Ylud: IHeroData = {
     name: "Ylud",
@@ -125,7 +123,7 @@ const Ylud: IHeroData = {
     points: null,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Ylud",
             },
@@ -140,8 +138,6 @@ const Ylud: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Dwerg_Jungir: IHeroData = {
     name: "Dwerg Jungir",
@@ -153,7 +149,7 @@ const Dwerg_Jungir: IHeroData = {
     points: null,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Dwerg_Jungir",
             },
@@ -168,8 +164,6 @@ const Dwerg_Jungir: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {buff: {name: string, value: string}}, actionName: string} | {actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 const Uline: IHeroData = {
     name: "Uline",
@@ -191,13 +185,13 @@ const Uline: IHeroData = {
     points: 9,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Uline",
             },
         },
         {
-            actionName: "AddBuffToPlayer",
+            action: AddBuffToPlayerAction,
             config: {
                 buff: {
                     name: "everyTurn",
@@ -206,7 +200,7 @@ const Uline: IHeroData = {
             },
         },
         {
-            actionName: "GetClosedCoinIntoPlayerHand",
+            action: GetClosedCoinIntoPlayerHandAction,
         },
     ],
     scoringRule: (): number => 9,
@@ -218,8 +212,6 @@ const Uline: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: (player?: IPublicPlayer) => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 const Idunn: IHeroData = {
     name: "Idunn",
@@ -231,7 +223,7 @@ const Idunn: IHeroData = {
     points: 7,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Idunn",
             },
@@ -247,8 +239,6 @@ const Idunn: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 const Tarah: IHeroData = {
     name: "Tarah",
@@ -259,7 +249,7 @@ const Tarah: IHeroData = {
     points: 14,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Tarah",
             },
@@ -274,8 +264,6 @@ const Tarah: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 const Kraal: IHeroData = {
     name: "Kraal",
@@ -286,7 +274,7 @@ const Kraal: IHeroData = {
     points: 7,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Kraal",
             },
@@ -301,8 +289,6 @@ const Kraal: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 const Lokdur: IHeroData = {
     name: "Lokdur",
@@ -314,7 +300,7 @@ const Lokdur: IHeroData = {
     points: 3,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Lokdur",
             },
@@ -329,8 +315,6 @@ const Lokdur: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {stageName: string, name: string, drawName: string, value: number}, actionName: string} | {config: {value: number}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 const Grid: IHeroData = {
     name: "Grid",
@@ -342,13 +326,13 @@ const Grid: IHeroData = {
     points: 7,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Grid",
             },
         },
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 stageName: "upgradeCoin",
                 drawName: "Grid",
@@ -357,7 +341,7 @@ const Grid: IHeroData = {
             },
         },
         {
-            actionName: "UpgradeCoinAction",
+            action: UpgradeCoinAction,
             config: {
                 value: 7,
             },
@@ -372,8 +356,6 @@ const Grid: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {variants: {blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, warrior: {rank: number, suit: SuitNames.WARRIOR, points: null}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: null}, hunter: {rank: number, suit: SuitNames.HUNTER, points: null}, miner: {rank: number, suit: SuitNames.MINER, points: null}}, config: {stageName: string, name: string, drawName: string}, actionName: string} | {variants: {blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, warrior: {rank: number, suit: SuitNames.WARRIOR, points: null}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: null}, hunter: {rank: number, suit: SuitNames.HUNTER, points: null}, miner: {rank: number, suit: SuitNames.MINER, points: null}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 const Thrud: IHeroData = {
     name: "Thrud",
@@ -391,13 +373,13 @@ const Thrud: IHeroData = {
     points: 13,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Thrud",
             },
         },
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -432,7 +414,7 @@ const Thrud: IHeroData = {
             },
         },
         {
-            actionName: "PlaceThrudAction",
+            action: PlaceThrudAction,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -471,8 +453,6 @@ const Thrud: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 const Zoral: IHeroData = {
     name: "Zoral",
@@ -484,7 +464,7 @@ const Zoral: IHeroData = {
     points: 1,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Zoral",
             },
@@ -499,8 +479,6 @@ const Zoral: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Dwerg_Aesir: IHeroData = {
     name: "Dwerg Aesir",
@@ -512,7 +490,7 @@ const Dwerg_Aesir: IHeroData = {
     points: null,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Dwerg_Aesir",
             },
@@ -527,8 +505,6 @@ const Dwerg_Aesir: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {suit: SuitNames.BLACKSMITH}, actionName: string} | {config: {stageName: string, name: string, suit: SuitNames.BLACKSMITH, drawName: string}, actionName: string} | {config: {suit: SuitNames.BLACKSMITH}, actionName: string} | {config: {drawName: string}, actionName: string})[], name: string, description: string, rank: number, suit: SuitNames, points: null}}
  */
 const Bonfur: IHeroData = {
     name: "Bonfur",
@@ -540,13 +516,13 @@ const Bonfur: IHeroData = {
     points: null,
     stack: [
         {
-            actionName: "CheckDiscardCardsFromPlayerBoardAction",
+            action: CheckDiscardCardsFromPlayerBoardAction,
             config: {
                 suit: SuitNames.BLACKSMITH,
             },
         },
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 stageName: "discardCardFromBoard",
                 drawName: "Bonfur",
@@ -555,13 +531,13 @@ const Bonfur: IHeroData = {
             },
         },
         {
-            actionName: "DiscardCardsFromPlayerBoardAction",
+            action: DiscardCardsFromPlayerBoardAction,
             config: {
                 suit: SuitNames.BLACKSMITH,
             },
         },
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Bonfur",
             },
@@ -576,8 +552,6 @@ const Bonfur: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {number: number, suit: SuitNames.HUNTER}, actionName: string} | {config: {number: number, stageName: string, name: string, suit: SuitNames.HUNTER, drawName: string}, actionName: string} | {actionName: string} | {config: {drawName: string}, actionName: string})[], name: string, description: string, rank: number, suit: SuitNames, points: null}}
  */
 const Dagda: IHeroData = {
     name: "Dagda",
@@ -589,14 +563,14 @@ const Dagda: IHeroData = {
     points: null,
     stack: [
         {
-            actionName: "CheckDiscardCardsFromPlayerBoardAction",
+            action: CheckDiscardCardsFromPlayerBoardAction,
             config: {
                 suit: SuitNames.HUNTER,
                 number: 2,
             },
         },
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 stageName: "discardCardFromBoard",
                 drawName: "Dagda",
@@ -606,10 +580,10 @@ const Dagda: IHeroData = {
             },
         },
         {
-            actionName: "DiscardCardsFromPlayerBoardAction",
+            action: DiscardCardsFromPlayerBoardAction,
         },
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Dagda",
             },
@@ -624,8 +598,6 @@ const Dagda: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 const Skaa: IHeroData = {
     name: "Skaa",
@@ -636,7 +608,7 @@ const Skaa: IHeroData = {
     points: 17,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Skaa",
             },
@@ -651,8 +623,6 @@ const Skaa: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {buff: {name: string, value: number}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 const Jarika: IHeroData = {
     name: "Jarika",
@@ -665,13 +635,13 @@ const Jarika: IHeroData = {
     points: 8,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Jarika",
             },
         },
         {
-            actionName: "AddBuffToPlayer",
+            action: AddBuffToPlayerAction,
             config: {
                 buff: {
                     name: "upgradeCoin",
@@ -689,8 +659,6 @@ const Jarika: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: (player?: IPublicPlayer) => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Astrid: IHeroData = {
     name: "Astrid",
@@ -701,7 +669,7 @@ const Astrid: IHeroData = {
     points: null,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Astrid",
             },
@@ -716,8 +684,6 @@ const Astrid: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Dwerg_Ymir: IHeroData = {
     name: "Dwerg Ymir",
@@ -729,7 +695,7 @@ const Dwerg_Ymir: IHeroData = {
     points: null,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Dwerg_Ymir",
             },
@@ -744,8 +710,6 @@ const Dwerg_Ymir: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Dwerg_Sigmir: IHeroData = {
     name: "Dwerg Sigmir",
@@ -757,7 +721,7 @@ const Dwerg_Sigmir: IHeroData = {
     points: null,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Dwerg_Sigmir",
             },
@@ -772,8 +736,6 @@ const Dwerg_Sigmir: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {conditions: {suitCountMin: {suit: SuitNames.EXPLORER, value: number}}}, actionName: string} | {config: {drawName: string}, actionName: string})[], name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 const Hourya: IHeroData = {
     name: "Hourya",
@@ -786,7 +748,7 @@ const Hourya: IHeroData = {
     points: 20,
     stack: [
         {
-            actionName: "PickHeroWithConditions",
+            action: PickHeroWithConditionsAction,
             config: {
                 conditions: {
                     suitCountMin: {
@@ -797,7 +759,7 @@ const Hourya: IHeroData = {
             },
         },
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Hourya",
             },
@@ -812,8 +774,6 @@ const Hourya: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: null}}
  */
 const Aegur: IHeroData = {
     name: "Aegur",
@@ -824,7 +784,7 @@ const Aegur: IHeroData = {
     points: null,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Aegur",
             },
@@ -839,8 +799,6 @@ const Aegur: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {config: {drawName: string}, actionName: string}[], name: string, description: string, rank: number, suit: SuitNames, points: null}}
  */
 const Aral: IHeroData = {
     name: "Aral",
@@ -851,7 +809,7 @@ const Aral: IHeroData = {
     points: null,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Aral",
             },
@@ -866,8 +824,6 @@ const Aral: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {actionName: string} | {config: {stageName: string, name: string, drawName: string}, actionName: string} | {actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 const Andumia: IHeroData = {
     name: "Andumia",
@@ -881,16 +837,16 @@ const Andumia: IHeroData = {
     points: 12,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Andumia",
             },
         },
         {
-            actionName: "CheckPickDiscardCard",
+            action: CheckPickDiscardCardAction,
         },
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 stageName: "pickDiscardCard",
                 drawName: "Andumia",
@@ -898,7 +854,7 @@ const Andumia: IHeroData = {
             },
         },
         {
-            actionName: "PickDiscardCard",
+            action: PickDiscardCardAction,
         },
     ],
     scoringRule: (): number => 12,
@@ -910,8 +866,6 @@ const Andumia: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {buff: {name: string, value: boolean}}, actionName: string} | {actionName: string} | {config: {stageName: string, name: string, drawName: string}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 const Holda: IHeroData = {
     name: "Holda",
@@ -923,13 +877,13 @@ const Holda: IHeroData = {
     points: 12,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Holda",
             },
         },
         {
-            actionName: "AddBuffToPlayer",
+            action: AddBuffToPlayerAction,
             config: {
                 buff: {
                     name: "goCampOneTime",
@@ -938,10 +892,10 @@ const Holda: IHeroData = {
             },
         },
         {
-            actionName: "CheckPickCampCard",
+            action: CheckPickCampCardAction,
         },
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 stageName: "pickCampCardHolda",
                 drawName: "Holda",
@@ -958,8 +912,6 @@ const Holda: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {value: number, coin: string}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 const Khrad: IHeroData = {
     name: "Khrad",
@@ -971,13 +923,13 @@ const Khrad: IHeroData = {
     points: 4,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Khrad",
             },
         },
         {
-            actionName: "UpgradeCoinAction",
+            action: UpgradeCoinAction,
             config: {
                 value: 10,
                 coin: "min",
@@ -993,8 +945,6 @@ const Khrad: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {variants: {blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, warrior: {rank: number, suit: SuitNames.WARRIOR, points: number}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: number}, hunter: {rank: number, suit: SuitNames.HUNTER, points: null}, miner: {rank: number, suit: SuitNames.MINER, points: number}}, config: {number: number, stageName: string, name: string, drawName: string}, actionName: string} | {variants: {blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, warrior: {rank: number, suit: SuitNames.WARRIOR, points: number}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: number}, hunter: {rank: number, suit: SuitNames.HUNTER, points: null}, miner: {rank: number, suit: SuitNames.MINER, points: number}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 const Olwin: IHeroData = {
     name: "Olwin",
@@ -1008,13 +958,13 @@ const Olwin: IHeroData = {
     points: 9,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Olwin",
             },
         },
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -1050,7 +1000,7 @@ const Olwin: IHeroData = {
             },
         },
         {
-            actionName: "PlaceCards",
+            action: PlaceCardsAction,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -1089,8 +1039,6 @@ const Olwin: IHeroData = {
  * <ol>
  * <li>Используется при обращении к данным героя.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({config: {drawName: string}, actionName: string} | {config: {buff: {name: string, value: string}}, actionName: string})[], name: string, description: string, rank: null, suit: null, points: number}}
  */
 const Zolkur: IHeroData = {
     name: "Zolkur",
@@ -1103,13 +1051,13 @@ const Zolkur: IHeroData = {
     points: 10,
     stack: [
         {
-            actionName: "AddHeroToCards",
+            action: AddHeroToCardsAction,
             config: {
                 drawName: "Zolkur",
             },
         },
         {
-            actionName: "AddBuffToPlayer",
+            action: AddBuffToPlayerAction,
             config: {
                 buff: {
                     name: "upgradeNextCoin",
@@ -1127,8 +1075,6 @@ const Zolkur: IHeroData = {
  * <ol>
  * <li>Происходит при создании всех героев при инициализации игры.</li>
  * </ol>
- *
- * @type {{Zoral: IHeroData, Aegur: IHeroData, Dwerg_Ymir: IHeroData, Andumia: IHeroData, Dwerg_Bergelmir: IHeroData, Grid: IHeroData, Holda: IHeroData, Dwerg_Aesir: IHeroData, Dagda: IHeroData, Zolkur: IHeroData, Astrid: IHeroData, Tarah: IHeroData, Aral: IHeroData, Dwerg_Jungir: IHeroData, Lokdur: IHeroData, Dwerg_Sigmir: IHeroData, Ylud: IHeroData, Idunn: IHeroData, Uline: IHeroData, Khrad: IHeroData, Bonfur: IHeroData, Kraal: IHeroData, Olwin: IHeroData, Jarika: IHeroData, Hourya: IHeroData, Thrud: IHeroData, Skaa: IHeroData}}
  */
 export const heroesConfig: IHeroConfig = {
     Bonfur,

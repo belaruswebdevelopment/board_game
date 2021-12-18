@@ -4,6 +4,7 @@ import { suitsConfig } from "./data/SuitData";
 import { CampCardTypes, CampDeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
 import { IStack } from "./Player";
 import { IArtefactConfig, IMercenaries } from "./data/CampData";
+import { AddCampCardToCardsAction } from "./actions/CampActions";
 
 /**
  * <h3>Интерфейс для карты кэмпа артефакта.</h3>
@@ -68,8 +69,8 @@ interface ICreateMercenaryCampCard {
  * <li>При проверках в функциях.</li>
  * </ol>
  *
- * @param {IArtefactCampCard | IMercenaryCampCard} card Карта.
- * @returns {card is IArtefactCampCard} Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
+ * @param card Карта.
+ * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
  */
 export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard): card is IArtefactCampCard =>
     (card as IArtefactCampCard).suit !== undefined;
@@ -81,18 +82,17 @@ export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard): ca
  * <li>Происходит при создании всех карт артефактов кэмпа во время инициализации игры.</li>
  * </ol>
  *
- * @param {string | undefined} type Тип.
- * @param {number} tier Эпоха.
- * @param {string} path URL путь.
- * @param {string} name Название.
- * @param {string} description Описание.
- * @param {string} game Игра/дополнение.
- * @param {string} suit Фракция.
- * @param {number | null} rank Шевроны.
- * @param {number | null} points Очки.
- * @param {IStack[]} stack Действия.
- * @returns {IArtefactCampCard} Карта кэмпа артефакт.
- * @constructor
+ * @param type Тип.
+ * @param tier Эпоха.
+ * @param path URL путь.
+ * @param name Название.
+ * @param description Описание.
+ * @param game Игра/дополнение.
+ * @param suit Фракция.
+ * @param rank Шевроны.
+ * @param points Очки.
+ * @param stack Действия.
+ * @returns Карта кэмпа артефакт.
  */
 export const CreateArtefactCampCard = ({
     type = "артефакт",
@@ -126,14 +126,13 @@ export const CreateArtefactCampCard = ({
  * <li>Происходит при создании всех карт наёмников кэмпа во время инициализации игры.</li>
  * </ol>
  *
- * @param {string | undefined} type Тип.
- * @param {number} tier Эпоха.
- * @param {string} path URL путь.
- * @param {string} name Название.
- * @param {string | undefined} game Игра/дополнение.
- * @param {IStack[]} stack Действия.
- * @returns {IMercenaryCampCard} Карта кэмпа наёмник.
- * @constructor
+ * @param type Тип.
+ * @param tier Эпоха.
+ * @param path URL путь.
+ * @param name Название.
+ * @param game Игра/дополнение.
+ * @param stack Действия.
+ * @returns Карта кэмпа наёмник.
  */
 export const CreateMercenaryCampCard = ({
     type = "наёмник",
@@ -159,11 +158,10 @@ export const CreateMercenaryCampCard = ({
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *
- * @param {number} tier Эпоха.
- * @param {IArtefactConfig} artefactConfig Файл конфига карт артефактов.
- * @param {IMercenaries[][]} mercenariesConfig Файл конфига наёмников.
- * @returns {CampDeckCardTypes[]} Все карты кэмпа.
- * @constructor
+ * @param tier Эпоха.
+ * @param artefactConfig Файл конфига карт артефактов.
+ * @param mercenariesConfig Файл конфига наёмников.
+ * @returns Все карты кэмпа.
  */
 export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, mercenariesConfig: IMercenaries[][]):
     CampDeckCardTypes[] => {
@@ -213,7 +211,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
             name: name.trim(),
             stack: [
                 {
-                    actionName: "AddCampCardToCards",
+                    action: AddCampCardToCardsAction,
                     variants: mercenariesConfig[tier][i],
                 },
             ],
@@ -229,8 +227,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
  * <li>Проверяется после каждого выбора карты из таверны, если последний игрок в текущей таверне уже выбрал карту.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @constructor
+ * @param G
  */
 export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
     if (G.campPicked) {
@@ -258,8 +255,7 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
  * <li>Происходит при начале раунда.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @constructor
+ * @param G
  */
 export const RefillEmptyCampCards = (G: MyGameState): void => {
     const emptyCampCards: (number | null)[] = G.camp.map((card: CampCardTypes, index: number): number | null => {
@@ -289,8 +285,7 @@ export const RefillEmptyCampCards = (G: MyGameState): void => {
  * <li>Происходит при начале новой эпохи.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @constructor
+ * @param G
  */
 export const RefillCamp = (G: MyGameState): void => {
     AddRemainingCampCardsToDiscard(G);
@@ -307,8 +302,7 @@ export const RefillCamp = (G: MyGameState): void => {
  * <li>Происходит в конце 1-й эпохи.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @constructor
+ * @param G
  */
 const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
     // todo Add LogTypes.ERROR logging ?
@@ -335,9 +329,8 @@ const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
  * <li>Происходит при заполнении кэмпа картами новой эпохи.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {number} cardIndex Индекс карты.
- * @constructor
+ * @param G
+ * @param cardIndex Индекс карты.
  */
 const AddCardToCamp = (G: MyGameState, cardIndex: number): void => {
     const newCampCard: CampDeckCardTypes = G.campDecks[G.campDecks.length - G.tierToEnd].splice(0, 1)[0];

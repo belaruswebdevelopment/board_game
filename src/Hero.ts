@@ -6,6 +6,7 @@ import { TotalRank } from "./helpers/ScoreHelpers";
 import { MyGameState } from "./GameSetup";
 import { Ctx } from "boardgame.io";
 import { IStack, PlayerCardsType } from "./Player";
+import { PickHeroAction } from "./actions/HeroActions";
 
 /**
  * <h3>Интерфейс для героя.</h3>
@@ -44,17 +45,16 @@ interface ICreateHero {
  * <li>Происходит при создании всех героев при инициализации игры.</li>
  * </ol>
  *
- * @param {string} type Тип.
- * @param {string} name Название.
- * @param {string} description Описание.
- * @param {string} game Игра/дополнение.
- * @param {string} suit Фракция.
- * @param {number | null} rank Шевроны.
- * @param {number | null} points Очки.
- * @param {boolean | undefined} active Взят ли герой.
- * @param {IStack[]} stack Действия.
- * @returns {IHero} Герой.
- * @constructor
+ * @param type Тип.
+ * @param name Название.
+ * @param description Описание.
+ * @param game Игра/дополнение.
+ * @param suit Фракция.
+ * @param rank Шевроны.
+ * @param points Очки.
+ * @param active Взят ли герой.
+ * @param stack Действия.
+ * @returns Герой.
  */
 export const CreateHero = ({
     type,
@@ -85,9 +85,8 @@ export const CreateHero = ({
  * <li>Происходит при создании всех героев при инициализации игры.</li>
  * </ol>
  *
- * @param {string[]} config Конфиг героев.
- * @returns {IHero[]} Массив всех героев.
- * @constructor
+ * @param config Конфиг героев.
+ * @returns Массив всех героев.
  */
 export const BuildHeroes = (config: string[]): IHero[] => {
     const heroes: IHero[] = [];
@@ -119,9 +118,8 @@ export const BuildHeroes = (config: string[]): IHero[] => {
  * <li>Происходит при перемещении на планшете игрока карта героя Труд.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
     if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
@@ -132,7 +130,7 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
         if (isCanPickHero) {
             const stack: IStack[] = [
                 {
-                    actionName: "PickHero",
+                    action: PickHeroAction,
                     config: {
                         stageName: "pickHero",
                     },
@@ -152,9 +150,8 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
  * <li>Происходит в конце матча после всех игровых событий.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: MyGameState, ctx: Ctx): void => {
     for (let i: number = 0; i < ctx.numPlayers; i++) {

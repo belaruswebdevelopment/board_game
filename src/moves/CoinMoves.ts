@@ -16,11 +16,10 @@ import { ICoin } from "../Coin";
  * <li>При клике по монете в руке.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId Id монеты.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @returns
  */
 export const ClickHandCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
     const isValidMove: boolean = IsValidMove({
@@ -41,11 +40,10 @@ export const ClickHandCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinI
  * <li>При клике по месту для монет на столе.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId Id монеты.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @returns
  */
 export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
@@ -96,13 +94,12 @@ export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coin
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId Id монеты.
- * @param {string} type Тип монеты.
- * @param {boolean} isInitial Является ли базовой.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @param type Тип монеты.
+ * @param isInitial Является ли базовой.
+ * @returns
  */
 export const ClickCoinToUpgrade: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
     isInitial: boolean): string | void => {
@@ -128,13 +125,12 @@ export const ClickCoinToUpgrade: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId Id монеты.
- * @param {string} type Тип монеты.
- * @param {boolean} isInitial Является ли базовой.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @param type Тип монеты.
+ * @param isInitial Является ли базовой.
+ * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnir: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
     isInitial: boolean): string | void => {
@@ -154,10 +150,9 @@ export const UpgradeCoinVidofnirVedrfolnir: Move<MyGameState> = (G: MyGameState,
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId Id монеты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
  */
 export const AddCoinToPouch: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], coinId);

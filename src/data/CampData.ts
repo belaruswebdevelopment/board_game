@@ -2,6 +2,9 @@ import { TotalRank } from "../helpers/ScoreHelpers";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { ICoin } from "../Coin";
 import { SuitNames } from "./SuitData";
+import { AddCampCardToCardsAction, DiscardTradingCoinAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
+import { AddBuffToPlayerAction, DrawProfitAction, PickDiscardCardAction } from "../actions/Actions";
+import { PickHeroAction } from "../actions/HeroActions";
 
 /**
  * <h3>Интерфейс для данных карт кэмпа артефакт.</h3>
@@ -47,8 +50,6 @@ export interface IArtefactConfig {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({actionName: string} | {config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Fafnir_Baleygr: IArtefact = {
     name: "Fafnir Baleygr",
@@ -61,10 +62,10 @@ const Fafnir_Baleygr: IArtefact = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
         {
-            actionName: "AddBuffToPlayer",
+            action: AddBuffToPlayerAction,
             config: {
                 buff: {
                     name: "goCamp",
@@ -82,8 +83,6 @@ const Fafnir_Baleygr: IArtefact = {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: (player?: IPublicPlayer) => number, game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Draupnir: IArtefact = {
     name: "Draupnir",
@@ -96,7 +95,7 @@ const Draupnir: IArtefact = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.boardCoins
@@ -109,8 +108,6 @@ const Draupnir: IArtefact = {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: number, suit: SuitNames, points: number}}
  */
 const Vegvisir: IArtefact = {
     name: "Vegvisir",
@@ -124,7 +121,7 @@ const Vegvisir: IArtefact = {
     points: 13,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
     ],
     scoringRule: (): number => 0,
@@ -136,8 +133,6 @@ const Vegvisir: IArtefact = {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: (player?: IPublicPlayer) => number, game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Svalinn: IArtefact = {
     name: "Svalinn",
@@ -150,7 +145,7 @@ const Svalinn: IArtefact = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.heroes.length * 5 : 0,
@@ -162,8 +157,6 @@ const Svalinn: IArtefact = {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({actionName: string} | {config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Megingjord: IArtefact = {
     name: "Megingjord",
@@ -177,10 +170,10 @@ const Megingjord: IArtefact = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
         {
-            actionName: "AddBuffToPlayer",
+            action: AddBuffToPlayerAction,
             config: {
                 buff: {
                     name: "noHero",
@@ -198,8 +191,6 @@ const Megingjord: IArtefact = {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({actionName: string} | {actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Vidofnir_Vedrfolnir: IArtefact = {
     name: "Vidofnir Vedrfolnir",
@@ -213,10 +204,10 @@ const Vidofnir_Vedrfolnir: IArtefact = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
         {
-            actionName: "StartVidofnirVedrfolnirAction",
+            action: StartVidofnirVedrfolnirAction,
         },
     ],
     scoringRule: (): number => 0,
@@ -228,8 +219,6 @@ const Vidofnir_Vedrfolnir: IArtefact = {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({actionName: string} | {config: {buff: {name: string, value: boolean}}, actionName: string} | {config: {number: number, stageName: string, name: string, drawName: string}, actionName: string} | {actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Brisingamens: IArtefact = {
     name: "Brisingamens",
@@ -245,10 +234,10 @@ const Brisingamens: IArtefact = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
         {
-            actionName: "AddBuffToPlayer",
+            action: AddBuffToPlayerAction,
             config: {
                 buff: {
                     name: "discardCardEndGame",
@@ -257,7 +246,7 @@ const Brisingamens: IArtefact = {
             },
         },
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 stageName: "pickDiscardCard",
                 name: "BrisingamensAction",
@@ -266,7 +255,7 @@ const Brisingamens: IArtefact = {
             },
         },
         {
-            actionName: "PickDiscardCard",
+            action: PickDiscardCardAction,
         },
     ],
     scoringRule: (): number => 0,
@@ -278,8 +267,6 @@ const Brisingamens: IArtefact = {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: (player?: IPublicPlayer, suitId?: number) => number, game: string, stack: ({actionName: string} | {config: {buff: {name: string, value: boolean}}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Mjollnir: IArtefact = {
     name: "Mjollnir",
@@ -292,10 +279,10 @@ const Mjollnir: IArtefact = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
         {
-            actionName: "AddBuffToPlayer",
+            action: AddBuffToPlayerAction,
             config: {
                 buff: {
                     name: "getMjollnirProfit",
@@ -314,8 +301,6 @@ const Mjollnir: IArtefact = {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({actionName: string} | {config: {suit: SuitNames.WARRIOR}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Hofud: IArtefact = {
     name: "Hofud",
@@ -328,10 +313,10 @@ const Hofud: IArtefact = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
         {
-            actionName: "StartDiscardSuitCard",
+            action: StartDiscardSuitCardAction,
             config: {
                 suit: SuitNames.WARRIOR,
             },
@@ -346,8 +331,6 @@ const Hofud: IArtefact = {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: (player?: IPublicPlayer) => number, game: string, stack: {actionName: string}[], tier: number, name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Hrafnsmerki: IArtefact = {
     name: "Hrafnsmerki",
@@ -360,7 +343,7 @@ const Hrafnsmerki: IArtefact = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ?
@@ -373,8 +356,6 @@ const Hrafnsmerki: IArtefact = {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({actionName: string} | {actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Jarnglofi: IArtefact = {
     name: "Jarnglofi",
@@ -388,10 +369,10 @@ const Jarnglofi: IArtefact = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
         {
-            actionName: "DiscardTradingCoin",
+            action: DiscardTradingCoinAction,
         },
     ],
     scoringRule: (): number => 24,
@@ -403,8 +384,6 @@ const Jarnglofi: IArtefact = {
  * <ol>
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
- *
- * @type {{scoringRule: () => number, game: string, stack: ({actionName: string} | {config: {stageName: string}, actionName: string})[], tier: number, name: string, description: string, rank: null, suit: null, points: null}}
  */
 const Gjallarhorn: IArtefact = {
     name: "Gjallarhorn",
@@ -418,10 +397,10 @@ const Gjallarhorn: IArtefact = {
     points: null,
     stack: [
         {
-            actionName: "AddCampCardToCards",
+            action: AddCampCardToCardsAction,
         },
         {
-            actionName: "PickHero",
+            action: PickHeroAction,
             config: {
                 stageName: "pickHero",
             },
@@ -436,8 +415,6 @@ const Gjallarhorn: IArtefact = {
  * <ol>
  * <li>Происходит при создании всех карт артефактов для кэмпа при инициализации игры.</li>
  * </ol>
- *
- * @type {(({warrior: {rank: number, suit: SuitNames.WARRIOR, points: number}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: number}} | {blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, warrior: {rank: number, suit: SuitNames.WARRIOR, points: number}} | {explorer: {rank: number, suit: SuitNames.EXPLORER, points: number}, hunter: {rank: number, suit: SuitNames.HUNTER, points: null}} | {hunter: {rank: number, suit: SuitNames.HUNTER, points: null}, miner: {rank: number, suit: SuitNames.MINER, points: number}} | {blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, miner: {rank: number, suit: SuitNames.MINER, points: number}} | {warrior: {rank: number, suit: SuitNames.WARRIOR, points: number}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: number}})[] | ({blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, hunter: {rank: number, suit: SuitNames.HUNTER, points: null}} | {warrior: {rank: number, suit: SuitNames.WARRIOR, points: number}, miner: {rank: number, suit: SuitNames.MINER, points: number}} | {blacksmith: {rank: number, suit: SuitNames.BLACKSMITH, points: null}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: number}} | {warrior: {rank: number, suit: SuitNames.WARRIOR, points: number}, hunter: {rank: number, suit: SuitNames.HUNTER, points: null}} | {explorer: {rank: number, suit: SuitNames.EXPLORER, points: number}, miner: {rank: number, suit: SuitNames.MINER, points: number}} | {warrior: {rank: number, suit: SuitNames.WARRIOR, points: number}, explorer: {rank: number, suit: SuitNames.EXPLORER, points: number}})[])[]}
  */
 export const mercenariesConfig: IMercenaries[][] = [
     [
@@ -596,8 +573,6 @@ export const mercenariesConfig: IMercenaries[][] = [
  * <ol>
  * <li>Происходит при создании всех карт артефактов для кэмпа при инициализации игры.</li>
  * </ol>
- *
- * @type {{Svalinn: IArtefact, Brisingamens: IArtefact, Vidofnir_Vedrfolnir: IArtefact, Hrafnsmerki: IArtefact, Gjallarhorn: IArtefact, Hofud: IArtefact, Draupnir: IArtefact, Mjollnir: IArtefact, Jarnglofi: IArtefact, Megingjord: IArtefact, Fafnir_Baleygr: IArtefact, Vegvisir: IArtefact}}
  */
 export const artefactsConfig: IArtefactConfig = {
     Fafnir_Baleygr,

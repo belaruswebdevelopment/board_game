@@ -40,9 +40,9 @@ export type IBotMoveArgumentsTypes = (number | string | boolean)[][];
  * <li>Используется ботами для доступных ходов.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {IMoves[]} Массив возможных мувов у ботов.
+ * @param G
+ * @param ctx
+ * @returns Массив возможных мувов у ботов.
  */
 export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     //make false for standard bot
@@ -380,7 +380,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
  * <li>Используется ботами для определения целей.</li>
  * </ol>
  *
- * @returns {{isEarlyGame: {weight: number, checker: (G: MyGameState) => boolean}, isFirst: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}, isStronger: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}}}
+ * @returns
  */
 export const objectives = (): {
     isEarlyGame: { weight: number; checker: (G: MyGameState) => boolean; };
@@ -522,9 +522,9 @@ export const objectives = (): {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {number}
+ * @param G
+ * @param ctx
+ * @returns
  */
 export const iterations = (G: MyGameState, ctx: Ctx): number => {
     const maxIter: number = G.botData.maxIter;
@@ -580,9 +580,9 @@ export const iterations = (G: MyGameState, ctx: Ctx): number => {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {number}
+ * @param G
+ * @param ctx
+ * @returns
  */
 export const playoutDepth = (G: MyGameState, ctx: Ctx): number => {
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {

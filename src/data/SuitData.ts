@@ -8,6 +8,7 @@ import { MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
+import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
 
 /**
  * <h3>Перечисление для названий фракций.</h3>
@@ -83,9 +84,7 @@ export interface ISuitConfig {
  * <ol>
  * <li>Используется в конфиге фракций.</li>
  * </ol>
- *
  * @todo Add may be potential points for hunters and blacksmiths.
- * @type {{scoringRule: (cards: PlayerCardsType[]) => number, ranksValues: () => IRankValues, distinction: {awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number, description: string}, description: string, suitColor: string, suit: SuitNames.BLACKSMITH, suitName: string, pointsValues: () => IPointsValues}}
  */
 const blacksmith: ISuit = {
     suit: SuitNames.BLACKSMITH,
@@ -156,8 +155,6 @@ const blacksmith: ISuit = {
  * <ol>
  * <li>Используется в конфиге фракций.</li>
  * </ol>
- *
- * @type {{scoringRule: (cards: PlayerCardsType[]) => number, ranksValues: () => IRankValues, distinction: {awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number, description: string}, description: string, suitColor: string, suit: SuitNames.HUNTER, suitName: string, pointsValues: () => IPointsValues}}
  */
 const hunter: ISuit = {
     suit: SuitNames.HUNTER,
@@ -228,8 +225,6 @@ const hunter: ISuit = {
  * <ol>
  * <li>Используется в конфиге фракций.</li>
  * </ol>
- *
- * @type {{scoringRule: (cards: PlayerCardsType[]) => number, ranksValues: () => IRankValues, distinction: {awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number, description: string}, description: string, suitColor: string, suit: SuitNames.MINER, suitName: string, pointsValues: () => IPointsValues}}
  */
 const miner: ISuit = {
     suit: SuitNames.MINER,
@@ -305,8 +300,6 @@ const miner: ISuit = {
  * <ol>
  * <li>Используется в конфиге фракций.</li>
  * </ol>
- *
- * @type {{scoringRule: (cards: PlayerCardsType[]) => number, ranksValues: () => IRankValues, distinction: {awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number, description: string}, description: string, suitColor: string, suit: SuitNames.WARRIOR, suitName: string, pointsValues: () => IPointsValues}}
  */
 const warrior: ISuit = {
     suit: SuitNames.WARRIOR,
@@ -359,7 +352,7 @@ const warrior: ISuit = {
             if (G.tierToEnd !== 0) {
                 const stack: IStack[] = [
                     {
-                        actionName: "DrawProfitAction",
+                        action: DrawProfitAction,
                         config: {
                             name: "upgradeCoin",
                             stageName: "upgradeCoin",
@@ -368,7 +361,7 @@ const warrior: ISuit = {
                         },
                     },
                     {
-                        actionName: "UpgradeCoinAction",
+                        action: UpgradeCoinAction,
                         config: {
                             value: 5,
                         },
@@ -447,7 +440,7 @@ const explorer: ISuit = {
             if (G.tierToEnd !== 0) {
                 const stack: IStack[] = [
                     {
-                        actionName: "DrawProfitAction",
+                        action: DrawProfitAction,
                         config: {
                             name: "explorerDistinction",
                             stageName: "pickDistinctionCard",

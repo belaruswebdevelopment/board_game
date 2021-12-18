@@ -11,6 +11,7 @@ import { isCardNotAction } from "../Card";
 import { ICoin } from "../Coin";
 import { TotalRank } from "./ScoreHelpers";
 
+// todo Add functions docbloocks
 export const PickCampCardHoldaProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
     boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < G.campNum; j++) {

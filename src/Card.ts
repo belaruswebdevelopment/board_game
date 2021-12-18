@@ -89,8 +89,8 @@ export interface IDeckConfig {
  * <li>При проверках в функциях.</li>
  * </ol>
  *
- * @param {DeckCardTypes} card Карта.
- * @returns {card is ICard} Является ли объект картой дворфа, а не картой обмена монеты.
+ * @param card Карта.
+ * @returns Является ли объект картой дворфа, а не картой обмена монеты.
  */
 export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as ICard).suit !== undefined;
 
@@ -101,16 +101,15 @@ export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as 
  * <li>Происходит при создании всех карт при инициализации игры.</li>
  * </ol>
  *
- * @param {string | undefined} type Тип.
- * @param {string} suit Фракция.
- * @param {number | null} rank Шевроны.
- * @param {number | null} points Очки.
- * @param {string | undefined} name Название.
- * @param {string | undefined} game Игра/дополнение.
- * @param {number | undefined} tier Эпоха.
- * @param {string | undefined} path URL путь.
- * @returns {ICard} Карта дворфа.
- * @constructor
+ * @param type Тип.
+ * @param suit Фракция.
+ * @param rank Шевроны.
+ * @param points Очки.
+ * @param name Название.
+ * @param game Игра/дополнение.
+ * @param tier Эпоха.
+ * @param path URL путь.
+ * @returns Карта дворфа.
  */
 export const CreateCard = ({
     type = "базовая",
@@ -143,12 +142,11 @@ export const CreateCard = ({
  * @param value Значение.
  * @param action Действие.
  * @param name Название.
- * @param {string | undefined} type Тип.
- * @param {number} value Значение.
- * @param {IStack[]} stack Действие.
- * @param {string} name Название.
- * @returns {IActionCard} Карта обмена монеты.
- * @constructor
+ * @param type Тип.
+ * @param value Значение.
+ * @param stack Действие.
+ * @param name Название.
+ * @returns Карта обмена монеты.
  */
 const CreateActionCard = ({
     type = "улучшение монеты",
@@ -169,10 +167,9 @@ const CreateActionCard = ({
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *.
- * @param {IDeckConfig} deckConfig Конфиг карт.
- * @param {IAverageSuitCardData} data Данные для создания карт.
- * @returns {DeckCardTypes[]} Все карты дворфов и обмена монет.
- * @constructor
+ * @param deckConfig Конфиг карт.
+ * @param data Данные для создания карт.
+ * @returns Все карты дворфов и обмена монет.
  */
 export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData): DeckCardTypes[] => {
     const cards: DeckCardTypes[] = [];
@@ -215,10 +212,9 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {ISuit} suitConfig Конфиг карт дворфов.
- * @param {IAverageSuitCardData} data
- * @returns {ICard} "Средняя" карта дворфа.
- * @constructor
+ * @param suitConfig Конфиг карт дворфов.
+ * @param data
+ * @returns "Средняя" карта дворфа.
  */
 export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData): ICard => {
     const avgCard: ICard = CreateCard({
@@ -248,10 +244,9 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {TavernCardTypes} card1 Первая карта.
- * @param {TavernCardTypes} card2 Вторая карта.
- * @returns {number} Сравнительное значение.
- * @constructor
+ * @param card1 Первая карта.
+ * @param card2 Вторая карта.
+ * @returns Сравнительное значение.
  */
 export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): number => {
     if (card1 === null || card2 === null) {
@@ -278,10 +273,9 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {number} Профит карты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @returns Профит карты.
  */
 /*export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
     if (IsTopPlayer(G, Number(ctx.currentPlayer))) {
@@ -306,10 +300,9 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {IPublicPlayer} player Игрок.
- * @param {PlayerCardsType | IActionCard} card Карта.
- * @returns {number} Потенциальное значение.
- * @constructor
+ * @param player Игрок.
+ * @param card Карта.
+ * @returns Потенциальное значение.
  */
 export const PotentialScoring = ({
     player = {} as IPublicPlayer,
@@ -349,13 +342,12 @@ export const PotentialScoring = ({
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {ICard} compareCard Карта для сравнения.
- * @param {number} cardId Id карты.
- * @param {TavernCardTypes[]} tavern Таверна.
- * @returns {number} Сравнительное значение.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param compareCard Карта для сравнения.
+ * @param cardId Id карты.
+ * @param tavern Таверна.
+ * @returns Сравнительное значение.
  */
 export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: TavernCardTypes, cardId: number,
     tavern: TavernCardTypes[]): number => {
@@ -378,6 +370,7 @@ export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: TavernCardTy
     }
     return CompareCards(compareCard, G.averageCards[suitId]);
 };
+
 /**
  * <h3>Убирает карту из таверны в стопку сброса.</h3>
  * <p>Применения:</p>
@@ -387,10 +380,9 @@ export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: TavernCardTy
  * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из кэмпа.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {number} discardCardIndex Индекс сбрасываемой карты в таверне.
- * @returns {boolean} Сброшена ли карта из таверны.
- * @constructor
+ * @param G
+ * @param discardCardIndex Индекс сбрасываемой карты в таверне.
+ * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavern = (G: MyGameState, discardCardIndex: number): boolean => {
     const discardedCard: TavernCardTypes = G.taverns[G.currentTavern][discardCardIndex];

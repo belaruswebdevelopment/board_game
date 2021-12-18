@@ -5,6 +5,7 @@ import { Ctx } from "boardgame.io";
 import { IConfig, IPublicPlayer, IStack } from "./Player";
 import { IInitialTradingCoinConfig, IMarketCoinConfig, isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { INumberValues } from "./data/SuitData";
+import { UpgradeCoinAction } from "./actions/Actions";
 
 /**
  * <h3>Интерфейс для монеты.</h3>
@@ -41,8 +42,8 @@ export interface IBuildCoinsOptions {
  * <li>При проверках в функции улучшения монеты.</li>
  * </ol>
  *
- * @param {{} | ICoin} obj Пустой объект или монета.
- * @returns {obj is ICoin} Является ли объект монетой, а не пустым объектом.
+ * @param obj Пустой объект или монета.
+ * @returns Является ли объект монетой, а не пустым объектом.
  */
 const isCoin = (obj: {} | ICoin): obj is ICoin => (obj as ICoin).value !== undefined;
 
@@ -54,11 +55,10 @@ const isCoin = (obj: {} | ICoin): obj is ICoin => (obj as ICoin).value !== undef
  * <li>Вызывается при создании монеты преимущества по охотникам.</li>
  * </ol>
  *.
- * @param {number} value Значение.
- * @param {boolean | undefined} isInitial Является ли базовой.
- * @param {boolean | undefined} isTriggerTrading Активирует ли обмен монет.
- * @returns {ICoin} Монета.
- * @constructor
+ * @param value Значение.
+ * @param isInitial Является ли базовой.
+ * @param isTriggerTrading Активирует ли обмен монет.
+ * @returns Монета.
  */
 export const CreateCoin = ({
     value,
@@ -78,10 +78,9 @@ export const CreateCoin = ({
  * <li>Вызывается при создании всех монет рынка.</li>
  * </ol>
  *
- * @param {IMarketCoinConfig[] | IInitialTradingCoinConfig[]} coinConfig Конфиг монет.
- * @param {IBuildCoinsOptions} options Опции создания монет.
- * @returns {ICoin[]} Массив всех монет.
- * @constructor
+ * @param coinConfig Конфиг монет.
+ * @param options Опции создания монет.
+ * @returns Массив всех монет.
  */
 export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoinConfig[],
     options: IBuildCoinsOptions): ICoin[] => {
@@ -115,9 +114,8 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
  * <li>Вызывается при отрисовке рынка монет.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @returns {INumberValues} Количество всех монет на рынке (с повторами).
- * @constructor
+ * @param G
+ * @returns Количество всех монет на рынке (с повторами).
  */
 export const CountMarketCoins = (G: MyGameState): INumberValues => {
     const repeated: INumberValues = {};
@@ -135,10 +133,9 @@ export const CountMarketCoins = (G: MyGameState): INumberValues => {
  * <li>Вызывается после выбора базовой карты игроком, если выложены монета, активирующая обмен монет.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {ICoin[]} tradingCoins Монеты для обмена.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param tradingCoins Монеты для обмена.
  */
 export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
     const coinsValues: number[] = tradingCoins.map((coin: ICoin): number => coin.value),
@@ -169,7 +166,7 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin === "min") {
         stack = [
             {
-                actionName: "UpgradeCoinAction",
+                action: UpgradeCoinAction,
                 config: {
                     number: 1,
                     value: coinsMaxValue,
@@ -182,7 +179,7 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
     } else {
         stack = [
             {
-                actionName: "UpgradeCoinAction",
+                action: UpgradeCoinAction,
                 config: {
                     number: 1,
                     value: coinsMinValue,
@@ -205,13 +202,12 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
  * <li>Вызывается после выбора базовой карты игроком, если выложены монета, активирующая обмен монет.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг обмена.
- * @param {number} upgradingCoinId Id обменной монеты.
- * @param {string} type Тип обменной монеты.
- * @param {boolean} isInitial Является ли обменная монета базовой.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг обмена.
+ * @param upgradingCoinId Id обменной монеты.
+ * @param type Тип обменной монеты.
+ * @param isInitial Является ли обменная монета базовой.
  */
 export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgradingCoinId: number, type: string,
     isInitial: boolean): void => {
@@ -361,8 +357,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
  * <li>В начале фазы выставления монет.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @constructor
+ * @param G
  */
 export const ReturnCoinsToPlayerHands = (G: MyGameState): void => {
     for (let i: number = 0; i < G.publicPlayers.length; i++) {
@@ -384,10 +379,9 @@ export const ReturnCoinsToPlayerHands = (G: MyGameState): void => {
  * <li>При возврате монет в руку, когда взят герой Улина.</li>
  * </ol>
  *
- * @param {IPublicPlayer} player Игрок.
- * @param {number} coinId Id монеты.
- * @returns {boolean} Вернулась ли монета в руку.
- * @constructor
+ * @param player Игрок.
+ * @param coinId Id монеты.
+ * @returns Вернулась ли монета в руку.
  */
 export const ReturnCoinToPlayerHands = (player: IPublicPlayer, coinId: number): boolean => {
     const tempCoinId: number = player.handCoins.indexOf(null);

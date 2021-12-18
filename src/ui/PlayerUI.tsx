@@ -15,8 +15,8 @@ import { ICoin } from "../Coin";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element[][]} Игровые поля для пользовательских монет на столе.
+ * @param data Глобальные параметры.
+ * @returns Игровые поля для пользовательских монет на столе.
  * @constructor
  */
 export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
@@ -171,8 +171,8 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element[][]} Игровые поля для пользовательских монет в руке.
+ * @param data Глобальные параметры.
+ * @returns Игровые поля для пользовательских монет в руке.
  * @constructor
  */
 export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
@@ -236,8 +236,8 @@ export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element[][]} Игровые поля для планшета всех карт игрока.
+ * @param data Глобальные параметры.
+ * @returns Игровые поля для планшета всех карт игрока.
  * @constructor
  */
 export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {

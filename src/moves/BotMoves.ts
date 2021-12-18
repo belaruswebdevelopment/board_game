@@ -11,10 +11,9 @@ import { IPublicPlayer } from "../Player";
  * <li>Когда ботам нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number[]} coinsOrder Порядок выкладки монет.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinsOrder Порядок выкладки монет.
  */
 export const BotsPlaceAllCoins: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinsOrder: number[]): void => {
     for (let i: number = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {

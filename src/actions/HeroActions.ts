@@ -27,11 +27,10 @@ import { IsStartActionStage } from "../helpers/ActionHelpers";
  * <li>При добавлении героя Труд на игровом поле игрока.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг действий героя.
- * @param {number} suitId Id фракции.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @param suitId Id фракции.
  */
 export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
     const suit: string = Object.keys(suitsConfig)[suitId],
@@ -62,11 +61,10 @@ export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
  * <li>При добавлении героя Илуд на игровом поле игрока.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг действий героя.
- * @param {number} suitId Id фракции.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @param suitId Id фракции.
  */
 export const PlaceYludAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
     const suit: string = Object.keys(suitsConfig)[suitId],
@@ -97,10 +95,9 @@ export const PlaceYludAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
  * <li>При добавлении карт, героев или карт кэмпа, помещающихся на карту героя Труд на игровом поле игрока.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {PlayerCardsType} card Карта, помещающаяся на карту героя Труд.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param card Карта, помещающаяся на карту героя Труд.
  */
 export const CheckAndMoveThrudOrPickHeroAction = (G: MyGameState, ctx: Ctx, card: PlayerCardsType):
     void => {
@@ -119,12 +116,11 @@ export const CheckAndMoveThrudOrPickHeroAction = (G: MyGameState, ctx: Ctx, card
  * <li>При выборе конкретных героев, добавляющихся в массив карт игрока.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг действий героя.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
  */
-export const AddHeroToCards = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const AddHeroToCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
     if (config.drawName) {
         const heroIndex: number = GetHeroIndexByName(config.drawName),
             hero: IHero = G.heroes[heroIndex];
@@ -151,11 +147,10 @@ export const AddHeroToCards = (G: MyGameState, ctx: Ctx, config: IConfig): void 
  * <li>При выборе конкретных героев, возвращающих закрытые монеты со стола в руку.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
-export const GetClosedCoinIntoPlayerHand = (G: MyGameState, ctx: Ctx): void => {
+export const GetClosedCoinIntoPlayerHandAction = (G: MyGameState, ctx: Ctx): void => {
     const coinsCount: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length,
         tradingBoardCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
             .findIndex((coin: ICoin | null): boolean => Boolean(coin?.isTriggerTrading)),
@@ -178,13 +173,12 @@ export const GetClosedCoinIntoPlayerHand = (G: MyGameState, ctx: Ctx): void => {
  * <li>При выборе конкретных героев, получаемых по определённым условиям.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг действий героя.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @returns
  */
-export const PickHeroWithConditions = (G: MyGameState, ctx: Ctx, config: IConfig): string | void => {
+export const PickHeroWithConditionsAction = (G: MyGameState, ctx: Ctx, config: IConfig): string | void => {
     let isValidMove: boolean = false;
     for (const condition in config.conditions) {
         if (config.conditions.hasOwnProperty(condition)) {
@@ -217,12 +211,11 @@ export const PickHeroWithConditions = (G: MyGameState, ctx: Ctx, config: IConfig
  * <li>При выборе карт кэмпа, дающих возможность взять карту героя.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param config {IConfig} Конфиг действий героя.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
  */
-export const PickHero = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
     const isStartPickHero: boolean = IsStartActionStage(G, ctx, config);
     if (isStartPickHero) {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}

@@ -35,9 +35,8 @@ import { IConfig, PickedCardType } from "../Player";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле информации о количестве карт по эпохам.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле информации о количестве карт по эпохам.
  */
 export const DrawTierCards = (data: GameBoard): JSX.Element => (
     <b>Tier: <span className="italic">
@@ -58,9 +57,8 @@ export const DrawTierCards = (data: GameBoard): JSX.Element => (
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле информации о текущем ходу.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле информации о текущем ходу.
  */
 export const DrawCurrentPlayerTurn = (data: GameBoard): JSX.Element => (
     <b>Current player: <span className="italic">Player {Number(data.props.ctx.currentPlayer) + 1}</span> |
@@ -74,9 +72,8 @@ export const DrawCurrentPlayerTurn = (data: GameBoard): JSX.Element => (
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле информации о ходе/победителях игры.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле информации о ходе/победителях игры.
  */
 export const DrawWinner = (data: GameBoard): JSX.Element => {
     let winner: string;
@@ -108,9 +105,8 @@ export const DrawWinner = (data: GameBoard): JSX.Element => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле рынка монет.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле рынка монет.
  */
 export const DrawMarketCoins = (data: GameBoard): JSX.Element => {
     const boardRows: JSX.Element[][] = [],
@@ -156,9 +152,8 @@ export const DrawMarketCoins = (data: GameBoard): JSX.Element => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле героев.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле героев.
  */
 export const DrawHeroes = (data: GameBoard): JSX.Element => {
     const boardRows: JSX.Element[][] = [],
@@ -199,9 +194,8 @@ export const DrawHeroes = (data: GameBoard): JSX.Element => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле преимуществ в конце эпохи.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле преимуществ в конце эпохи.
  */
 export const DrawDistinctions = (data: GameBoard): JSX.Element => {
     const boardCells: JSX.Element[] = [];
@@ -240,10 +234,9 @@ export const DrawDistinctions = (data: GameBoard): JSX.Element => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @param {string} option Опция отрисовки конкретного профита.
- * @returns {JSX.Element} Поле профита.
- * @constructor
+ * @param data Глобальные параметры.
+ * @param option Опция отрисовки конкретного профита.
+ * @returns Поле профита.
  */
 export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
     const boardCells: JSX.Element[] = [],
@@ -394,9 +387,8 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле кэмпа.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле кэмпа.
  */
 export const DrawCamp = (data: GameBoard): JSX.Element => {
     const boardCells: JSX.Element[] = [];
@@ -446,10 +438,9 @@ export const DrawCamp = (data: GameBoard): JSX.Element => {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @param {string} gridClass Класс для отрисовки таверны.
- * @returns {JSX.Element[]} Поле таверн.
- * @constructor
+ * @param data Глобальные параметры.
+ * @param gridClass Класс для отрисовки таверны.
+ * @returns Поле таверн.
  */
 export const DrawTaverns = (data: GameBoard, gridClass: string) => {
     const tavernsBoards: JSX.Element[] = [];

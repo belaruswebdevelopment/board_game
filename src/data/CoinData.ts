@@ -24,7 +24,7 @@ export interface IMarketCoinConfig {
  * </ol>
  *
  * @param {IInitialTradingCoinConfig | IMarketCoinConfig} config Конфиг.
- * @returns {config is IInitialTradingCoinConfig} Является ли объект конфигом базовых монет или конфигом монет рынка.
+ * @returns Является ли объект конфигом базовых монет или конфигом монет рынка.
  */
 export const isInitialPlayerCoinsConfigNotMarket = (config: IInitialTradingCoinConfig | IMarketCoinConfig):
     config is IInitialTradingCoinConfig => (config as IInitialTradingCoinConfig).isTriggerTrading !== undefined;
@@ -35,8 +35,6 @@ export const isInitialPlayerCoinsConfigNotMarket = (config: IInitialTradingCoinC
  * <ol>
  * <li>Происходит при создании всех базовых монет игрока в ходе инициализации игры.</li>
  * </ol>
- *
- * @type {({isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number})[]}
  */
 export const initialPlayerCoinsConfig: IInitialTradingCoinConfig[] = [
     {
@@ -67,8 +65,6 @@ export const initialPlayerCoinsConfig: IInitialTradingCoinConfig[] = [
  * <ol>
  * <li>Происходит при создании всех монет рынка в ходе инициализации игры.</li>
  * </ol>
- *
- * @type {({count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number})[]}
  */
 export const marketCoinsConfig: IMarketCoinConfig[] = [
     {

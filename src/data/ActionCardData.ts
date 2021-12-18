@@ -1,3 +1,4 @@
+import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
 import { IStack } from "../Player";
 import { INumberValues } from "./SuitData";
 
@@ -23,14 +24,12 @@ export interface IActionCardConfig {
  * <ol>
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
- *
- * @type {{stack: ({config: {stageName: string, name: string, drawName: string, value: number}, actionName: string} | {config: {value: number}, actionName: string})[], amount: () => IActionCardValues, value: number}}
  */
 const upgradeCoinUpTo3: IActionCardConfig = {
     value: 3,
     stack: [
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 name: "upgradeCoin",
                 stageName: "upgradeCoin",
@@ -39,7 +38,7 @@ const upgradeCoinUpTo3: IActionCardConfig = {
             },
         },
         {
-            actionName: "UpgradeCoinAction",
+            action: UpgradeCoinAction,
             config: {
                 value: 3,
             },
@@ -71,14 +70,12 @@ const upgradeCoinUpTo3: IActionCardConfig = {
  * <ol>
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
- *
- * @type {{stack: ({config: {stageName: string, name: string, drawName: string, value: number}, actionName: string} | {config: {value: number}, actionName: string})[], amount: () => IActionCardValues, value: number}}
  */
 const upgradeCoinUpTo5: IActionCardConfig = {
     value: 5,
     stack: [
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 name: "upgradeCoin",
                 stageName: "upgradeCoin",
@@ -87,7 +84,7 @@ const upgradeCoinUpTo5: IActionCardConfig = {
             },
         },
         {
-            actionName: "UpgradeCoinAction",
+            action: UpgradeCoinAction,
             config: {
                 value: 5,
             },
@@ -119,7 +116,5 @@ const upgradeCoinUpTo5: IActionCardConfig = {
  * <ol>
  * <li>Происходит при создании всех карт улучшения монет в ходе инициализации игры.</li>
  * </ol>
- *
- * @type {IActionCardConfig[]}
  */
 export const actionCardsConfigArray: IActionCardConfig[] = [upgradeCoinUpTo3, upgradeCoinUpTo5];

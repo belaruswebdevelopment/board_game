@@ -17,9 +17,8 @@ import { IPublicPlayer } from "./Player";
  * <li>Подсчёт очков игроков для анализа ботами.</li>
  * </ol>
  *
- * @param {IPublicPlayer} player Игрок.
- * @returns {number} Текущий счёт указанного игрока.
- * @constructor
+ * @param player Игрок.
+ * @returns Текущий счёт указанного игрока.
  */
 export const CurrentScoring = (player: IPublicPlayer): number => {
     let score: number = 0,
@@ -40,11 +39,10 @@ export const CurrentScoring = (player: IPublicPlayer): number => {
  * <li>Подсчёт и вывод на игровое поле финальное количество очков каждого игрока.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IPublicPlayer} player Игрок.
- * @returns {number} Финальный счёт указанного игрока.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param player Игрок.
+ * @returns Финальный счёт указанного игрока.
  */
 export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     AddDataToLog(G, LogTypes.GAME, `Результаты игры игрока ${player.nickname}:`);
@@ -148,10 +146,9 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
  * <li>Используется в конце игры для определения победителя для вывода данных на игровое поле.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {MyGameState | void} Финальные данные о победителях, если закончилась игра.
- * @constructor
+ * @param G
+ * @param ctx
+ * @returns Финальные данные о победителях, если закончилась игра.
  */
 export const ScoreWinner = (G: MyGameState, ctx: Ctx): MyGameState | void => {
     AddDataToLog(G, LogTypes.GAME, "Финальные результаты игры:");
