@@ -66,7 +66,7 @@ const order: IOrder = {
  * </ol>
  */
 export const BoardGame: Game<MyGameState> = {
-    name: "nidavellir",
+    name: `nidavellir`,
     setup: SetupGame,
     playerView: PlayerView.STRIP_SECRETS,
     phases: {
@@ -80,7 +80,7 @@ export const BoardGame: Game<MyGameState> = {
                 ClickBoardCoin,
                 BotsPlaceAllCoins,
             },
-            next: "pickCards",
+            next: `pickCards`,
             onBegin: (G: MyGameState, ctx: Ctx): void => {
                 G.currentTavern = -1;
                 if (ctx.turn !== 0) {

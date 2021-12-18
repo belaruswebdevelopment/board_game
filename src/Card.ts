@@ -112,14 +112,14 @@ export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as 
  * @returns Карта дворфа.
  */
 export const CreateCard = ({
-    type = "базовая",
+    type = `базовая`,
     suit,
     rank,
     points,
-    name = "",
-    game = "",
+    name = ``,
+    game = ``,
     tier = 0,
-    path = "",
+    path = ``,
 }: ICreateCard = {} as ICreateCard): ICard => ({
     type,
     suit,
@@ -149,7 +149,7 @@ export const CreateCard = ({
  * @returns Карта обмена монеты.
  */
 const CreateActionCard = ({
-    type = "улучшение монеты",
+    type = `улучшение монеты`,
     value,
     stack,
     name,
@@ -188,7 +188,7 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
                 rank: Array.isArray(rank) ? rank[j] : 1,
                 points: Array.isArray(points) ? points[j] : null,
                 name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов:
-                ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + ")" : "нет)"}`,
+                ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
             } as ICreateCard));
         }
     }
@@ -316,7 +316,7 @@ export const PotentialScoring = ({
             AddCardToCards(potentialCards, player.cards[i][j]);
         }
     }
-    if (card !== null && "suit" in card) {
+    if (card !== null && `suit` in card) {
         AddCardToCards(potentialCards, CreateCard(card));
     }
     let i: number = 0;
@@ -324,7 +324,7 @@ export const PotentialScoring = ({
         score += suitsConfig[suit].scoringRule(potentialCards[i]);
         i++;
     }
-    if (card !== null && "value" in card) {
+    if (card !== null && `value` in card) {
         score += card.value;
     }
     for (let i: number = 0; i < player.boardCoins.length; i++) {
@@ -394,12 +394,12 @@ export const DiscardCardFromTavern = (G: MyGameState, discardCardIndex: number):
         const additionalDiscardCardIndex: number =
             G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
         if (additionalDiscardCardIndex !== -1) {
-            AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны
-            ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
+            AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${tavernsConfig[G.currentTavern].name}
+            должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
             DiscardCardFromTavern(G, additionalDiscardCardIndex);
         }
         return true;
     }
-    AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не удалось сбросить лишнюю карту из таверны.");
+    AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны.`);
     return false;
 };

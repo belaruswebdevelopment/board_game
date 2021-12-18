@@ -62,19 +62,19 @@ export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coin
         player.selectedCoin = undefined;
         if (ctx.phase === "placeCoinsUline") {
             ctx.events!.setPhase!("pickCards");
-        } else if ((ctx.activePlayers?.[ctx.currentPlayer]) === "placeTradingCoinsUline") {
+        } else if ((ctx.activePlayers?.[ctx.currentPlayer]) === `placeTradingCoinsUline`) {
             G.actionsNum--;
             AfterBasicPickCardActions(G, ctx, false);
         } else {
             const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers
-                .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== "Uline")
+                .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== `Uline`)
                 .every((player: IPublicPlayer): boolean => player.handCoins
                     .every((coin: ICoin | null): boolean => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {
-                if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
-                    ctx.events!.setPhase!("placeCoinsUline");
+                if (CheckAndStartUlineActionsOrContinue(G, ctx) === `placeCoinsUline`) {
+                    ctx.events!.setPhase!(`placeCoinsUline`);
                 } else {
-                    ctx.events!.setPhase!("pickCards");
+                    ctx.events!.setPhase!(`pickCards`);
                 }
             } else {
                 if (player.handCoins.every((coin: ICoin | null): boolean => coin === null)) {
@@ -135,8 +135,7 @@ export const ClickCoinToUpgrade: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
 export const UpgradeCoinVidofnirVedrfolnir: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
     isInitial: boolean): string | void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    const isValidMove: boolean =
-        CoinUpgradeValidation(G, ctx, coinId, type) && config?.coinId !== coinId;
+    const isValidMove: boolean = CoinUpgradeValidation(G, ctx, coinId, type) && config?.coinId !== coinId;
     if (!isValidMove) {
         return INVALID_MOVE;
     }

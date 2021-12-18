@@ -132,12 +132,12 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
                 {
                     action: PickHeroAction,
                     config: {
-                        stageName: "pickHero",
+                        stageName: `pickHero`,
                     },
                 },
             ];
-            AddDataToLog(G, LogTypes.GAME, `Игрок
-            ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен выбрать нового героя.`);
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен выбрать
+            нового героя.`);
             AddActionsToStackAfterCurrent(G, ctx, stack);
         }
     }
@@ -157,14 +157,13 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: MyGameState, ctx: Ctx)
     for (let i: number = 0; i < ctx.numPlayers; i++) {
         const playerCards: PlayerCardsType[] = G.publicPlayers[i].cards.flat(),
             thrud: PlayerCardsType | undefined =
-                playerCards.find((card: PlayerCardsType): boolean => card.name === "Thrud");
+                playerCards.find((card: PlayerCardsType): boolean => card.name === `Thrud`);
         if (thrud !== undefined && thrud.suit !== null) {
             const thrudSuit: number = GetSuitIndexByName(thrud.suit),
                 thrudIndex: number = G.publicPlayers[i].cards[thrudSuit]
-                    .findIndex((card: PlayerCardsType): boolean => card.name === "Thrud");
+                    .findIndex((card: PlayerCardsType): boolean => card.name === `Thrud`);
             G.publicPlayers[i].cards[thrudSuit].splice(thrudIndex, 1);
-            AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с
-            игрового поля.`);
+            AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с игрового поля.`);
         }
     }
 };

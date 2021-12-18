@@ -119,7 +119,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         actionsNum: number = 0,
         log: boolean = true,
         debug: boolean = false,
-        drawProfit: string = "",
+        drawProfit: string = ``,
         suitIdForMjollnir: null = null,
         expansions: IExpansion = {
             thingvellir: {

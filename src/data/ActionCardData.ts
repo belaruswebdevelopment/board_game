@@ -31,10 +31,10 @@ const upgradeCoinUpTo3: IActionCardConfig = {
         {
             action: DrawProfitAction,
             config: {
-                name: "upgradeCoin",
-                stageName: "upgradeCoin",
+                name: `upgradeCoin`,
+                stageName: `upgradeCoin`,
                 value: 3,
-                drawName: "Upgrade coin",
+                drawName: `Upgrade coin`,
             },
         },
         {
@@ -77,10 +77,10 @@ const upgradeCoinUpTo5: IActionCardConfig = {
         {
             action: DrawProfitAction,
             config: {
-                name: "upgradeCoin",
-                stageName: "upgradeCoin",
+                name: `upgradeCoin`,
+                stageName: `upgradeCoin`,
                 value: 5,
-                drawName: "Upgrade coin",
+                drawName: `Upgrade coin`,
             },
         },
         {

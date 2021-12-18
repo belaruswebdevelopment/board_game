@@ -35,7 +35,7 @@ export const ClickCampCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardI
         AddActionsToStack(G, ctx, card.stack);
         StartActionFromStackOrEndActions(G, ctx, false, cardId);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не существует кликнутая карта кэмпа.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
     }
 };
 
@@ -61,7 +61,7 @@ export const ClickCampCardHolda: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
     if (campCard !== null) {
         EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не существует кликнутая карта кэмпа.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
     }
 };
 
@@ -118,7 +118,7 @@ export const DiscardSuitCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState
     if (ctx.playerID !== undefined) {
         isValidMove = playerId !== Number(ctx.currentPlayer) && playerId === Number(ctx.playerID);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.`);
     }
     if (!isValidMove) {
         return INVALID_MOVE;

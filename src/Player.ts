@@ -227,12 +227,12 @@ export const BuildPublicPlayer = (playersNum: number, suitsNum: number, nickname
 export const CheckPlayersBasicOrder = (G: MyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i: number = 0; i < ctx.numPlayers; i++) {
-        if (ctx.phase !== "placeCoinsUline") {
-            if (G.publicPlayers[i].buffs.everyTurn !== "Uline") {
+        if (ctx.phase !== `placeCoinsUline`) {
+            if (G.publicPlayers[i].buffs.everyTurn !== `Uline`) {
                 G.publicPlayersOrder.push(i);
             }
         } else {
-            if (G.publicPlayers[i].buffs.everyTurn === "Uline") {
+            if (G.publicPlayers[i].buffs.everyTurn === `Uline`) {
                 G.publicPlayersOrder.push(i);
             }
         }
@@ -260,18 +260,17 @@ export const AddCardToPlayer = (G: MyGameState, ctx: Ctx, card: DeckCardTypes): 
         const suitIndex: number = GetSuitIndexByName(card.suit);
         if (suitIndex !== -1) {
             G.publicPlayers[Number(ctx.currentPlayer)].cards[suitIndex].push(card);
-            AddDataToLog(G, LogTypes.PUBLIC, `Игрок
-            ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту '${card.name}' во фракцию
-            ${suitsConfig[card.suit].suitName}.`);
+            AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту
+            '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
             return true;
         } else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить карту ${card.name} из-за
-            несуществующей фракции ${card.suit}.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить карту ${card.name} из-за несуществующей фракции
+            ${card.suit}.`);
             // todo ERROR must not return false!
         }
     }
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
-    выбрал карту '${card.name}'.`);
+    AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту
+    '${card.name}'.`);
     return false;
 
 };
@@ -290,11 +289,11 @@ export const AddCardToPlayer = (G: MyGameState, ctx: Ctx, card: DeckCardTypes): 
 export const AddCampCardToPlayer = (G: MyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
     if (!isArtefactCard(card) || (isArtefactCard(card) && card.suit === null)) {
         G.publicPlayers[Number(ctx.currentPlayer)].campCards.push(card);
-        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
-        выбрал карту кэмпа ${card.name}.`);
+        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту
+        кэмпа ${card.name}.`);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить карту артефакта ${card.name} в массив
-        карт кэмпа игрока из-за её принадлежности к фракции ${card.suit}.`);
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить карту артефакта ${card.name} в массив карт кэмпа
+        игрока из-за её принадлежности к фракции ${card.suit}.`);
     }
 };
 
@@ -314,16 +313,16 @@ export const AddCampCardToPlayerCards = (G: MyGameState, ctx: Ctx, card: IArtefa
         const suitId: number = GetSuitIndexByName(card.suit);
         if (suitId !== -1) {
             G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(card);
-            AddDataToLog(G, LogTypes.PRIVATE, `Игрок
-            ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту кэмпа '${card.name}' во фракцию
+            AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту
+            кэмпа '${card.name}' во фракцию
             ${suitsConfig[card.suit].suitName}.`);
         } else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить карту ${card.name} из-за
-            несуществующей фракции ${card.suit}.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить карту ${card.name} из-за несуществующей фракции
+            ${card.suit}.`);
         }
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить артефакт ${card.name} на планшет
-        карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить артефакт ${card.name} на планшет карт фракций
+        игрока из-за отсутствия принадлежности его к конкретной фракции.`);
     }
 };
 
@@ -343,11 +342,11 @@ export const AddHeroCardToPlayerHeroCards = (G: MyGameState, ctx: Ctx, hero: IHe
     if (hero.active) {
         hero.active = false;
         G.publicPlayers[Number(ctx.currentPlayer)].heroes.push(hero);
-        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
-        выбрал героя ${hero.name}.`);
+        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал героя
+        ${hero.name}.`);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.name} из-за того, что он
-        был уже выбран другим игроком.`);
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.name} из-за того, что он был уже
+        выбран другим игроком.`);
     }
 };
 
@@ -367,12 +366,11 @@ export const AddHeroCardToPlayerCards = (G: MyGameState, ctx: Ctx, hero: IHero):
         const suitId: number = GetSuitIndexByName(hero.suit);
         if (suitId !== -1) {
             G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].push(hero);
-            AddDataToLog(G, LogTypes.PRIVATE, `Игрок
-            ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил героя ${hero.name} во фракцию
-            ${suitsConfig[hero.suit].suitName}.`);
+            AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил
+            героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
         } else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.name} из-за
-            несуществующей фракции ${hero.suit}.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.name} из-за несуществующей фракции
+            ${hero.suit}.`);
         }
     }
 };

@@ -135,21 +135,20 @@ export const CreateArtefactCampCard = ({
  * @returns Карта кэмпа наёмник.
  */
 export const CreateMercenaryCampCard = ({
-    type = "наёмник",
+    type = `наёмник`,
     tier,
     path,
     name,
-    game = "thingvellir",
+    game = `thingvellir`,
     stack
-}: ICreateMercenaryCampCard = {} as ICreateMercenaryCampCard):
-    IMercenaryCampCard => ({
-        type,
-        tier,
-        path,
-        name,
-        game,
-        stack,
-    });
+}: ICreateMercenaryCampCard = {} as ICreateMercenaryCampCard): IMercenaryCampCard => ({
+    type,
+    tier,
+    path,
+    name,
+    game,
+    stack,
+});
 
 /**
  * <h3>Создаёт все карты кэмпа из конфига.</h3>
@@ -184,22 +183,22 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
         }
     }
     for (let i: number = 0; i < mercenariesConfig[tier].length; i++) {
-        let name: string = "",
-            path: string = "";
+        let name: string = ``,
+            path: string = ``;
         for (const campMercenarySuit in mercenariesConfig[tier][i]) {
             if (mercenariesConfig[tier][i].hasOwnProperty(campMercenarySuit)) {
-                path += campMercenarySuit + " ";
+                path += campMercenarySuit + ` `;
                 name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
                 for (const campMercenaryCardProperty in mercenariesConfig[tier][i][campMercenarySuit]) {
                     if (mercenariesConfig[tier][i][campMercenarySuit].hasOwnProperty(campMercenaryCardProperty)) {
-                        if (campMercenaryCardProperty === "rank") {
+                        if (campMercenaryCardProperty === `rank`) {
                             name += `шевронов: ${mercenariesConfig[tier][i][campMercenarySuit].rank}, `;
                         }
-                        if (campMercenaryCardProperty === "points") {
+                        if (campMercenaryCardProperty === `points`) {
                             path += mercenariesConfig[tier][i][campMercenarySuit].points ?
-                                mercenariesConfig[tier][i][campMercenarySuit].points + " " : "";
+                                mercenariesConfig[tier][i][campMercenarySuit].points + ` ` : ``;
                             name += `очков: ${mercenariesConfig[tier][i][campMercenarySuit].points ?
-                                mercenariesConfig[tier][i][campMercenarySuit].points + ") " : "нет) "}`;
+                                mercenariesConfig[tier][i][campMercenarySuit].points + `) ` : `нет) `}`;
                         }
                     }
                 }
@@ -242,8 +241,8 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
             }
         } else {
             // todo Fix this error sometimes shown...
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после
-            выбора карты кэмпа в конце пиков из таверны.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора карты
+            кэмпа в конце пиков из таверны.`);
         }
     }
 };
@@ -274,7 +273,7 @@ export const RefillEmptyCampCards = (G: MyGameState): void => {
                 AddCardToCamp(G, cardIndex);
             }
         });
-        AddDataToLog(G, LogTypes.GAME, "Кэмп заполнен новыми картами.");
+        AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами.`);
     }
 };
 
@@ -292,7 +291,7 @@ export const RefillCamp = (G: MyGameState): void => {
     for (let i: number = 0; i < G.campNum; i++) {
         AddCardToCamp(G, i);
     }
-    AddDataToLog(G, LogTypes.GAME, "Кэмп заполнен новыми картами новой эпохи.");
+    AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами новой эпохи.`);
 };
 
 /**
@@ -318,7 +317,7 @@ const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
         G.discardCampCardsDeck = G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]);
         G.campDecks[G.campDecks.length - G.tierToEnd - 1].length = 0;
     }
-    AddDataToLog(G, LogTypes.GAME, "Оставшиеся карты кэмпа сброшены.");
+    AddDataToLog(G, LogTypes.GAME, `Оставшиеся карты кэмпа сброшены.`);
 };
 
 /**

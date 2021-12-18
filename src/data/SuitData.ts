@@ -14,11 +14,11 @@ import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
  * <h3>Перечисление для названий фракций.</h3>
  */
 export const enum SuitNames {
-    BLACKSMITH = "blacksmith",
-    HUNTER = "hunter",
-    MINER = "miner",
-    WARRIOR = "warrior",
-    EXPLORER = "explorer",
+    BLACKSMITH = `blacksmith`,
+    HUNTER = `hunter`,
+    MINER = `miner`,
+    WARRIOR = `warrior`,
+    EXPLORER = `explorer`,
 }
 
 /**
@@ -88,9 +88,9 @@ export interface ISuitConfig {
  */
 const blacksmith: ISuit = {
     suit: SuitNames.BLACKSMITH,
-    suitName: "Кузнецы",
-    suitColor: 'bg-purple-600',
-    description: "Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).",
+    suitName: `Кузнецы`,
+    suitColor: `bg-purple-600`,
+    description: `Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).`,
     ranksValues: (): IRankValues => ({
         2: {
             0: 8,
@@ -140,8 +140,8 @@ const blacksmith: ISuit = {
                     points: 2,
                 } as ICard));
                 delete G.distinctions[0];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов
-                карту Главного кузнеца.`);
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту
+                Главного кузнеца.`);
                 ctx.events!.endTurn!();
             }
             return 0;
@@ -158,9 +158,9 @@ const blacksmith: ISuit = {
  */
 const hunter: ISuit = {
     suit: SuitNames.HUNTER,
-    suitName: "Охотники",
-    suitColor: "bg-green-600",
-    description: "Их показатель храбрости равен квадрату числа карт охотников в армии игрока.",
+    suitName: `Охотники`,
+    suitColor: `bg-green-600`,
+    description: `Их показатель храбрости равен квадрату числа карт охотников в армии игрока.`,
     ranksValues: (): IRankValues => ({
         2: {
             0: 6,
@@ -210,8 +210,8 @@ const hunter: ISuit = {
                     isTriggerTrading: true,
                 });
                 delete G.distinctions[1];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников
-                свою монету с номиналом 0 на особую монету с номиналом 3.`);
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету
+                с номиналом 0 на особую монету с номиналом 3.`);
                 ctx.events!.endTurn!();
             }
             return 0;
@@ -228,8 +228,8 @@ const hunter: ISuit = {
  */
 const miner: ISuit = {
     suit: SuitNames.MINER,
-    suitName: "Горняки",
-    suitColor: "bg-yellow-600",
+    suitName: `Горняки`,
+    suitColor: `bg-yellow-600`,
     description: `Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии
     игрока.`,
     ranksValues: (): IRankValues => ({
@@ -281,8 +281,8 @@ const miner: ISuit = {
                     isExchangeable: false,
                 });
                 delete G.distinctions[2];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия горняков
-                свой кристалл на особый кристалл 6.`);
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия горняков свой кристалл
+                на особый кристалл 6.`);
                 ctx.events!.endTurn!();
             } else {
                 if (player.priority.value === 6) {
@@ -303,8 +303,8 @@ const miner: ISuit = {
  */
 const warrior: ISuit = {
     suit: SuitNames.WARRIOR,
-    suitName: "Воины",
-    suitColor: "bg-red-600",
+    suitName: `Воины`,
+    suitColor: `bg-red-600`,
     description: `Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который
     обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты.
     В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной
@@ -347,17 +347,17 @@ const warrior: ISuit = {
     }),
     scoringRule: (cards: PlayerCardsType[]): number => cards.reduce(TotalPoints, 0),
     distinction: {
-        description: "Получив знак отличия воинов, сразу же улучшите одну из своих монет, добавив к её номиналу +5.",
+        description: `Получив знак отличия воинов, сразу же улучшите одну из своих монет, добавив к её номиналу +5.`,
         awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
             if (G.tierToEnd !== 0) {
                 const stack: IStack[] = [
                     {
                         action: DrawProfitAction,
                         config: {
-                            name: "upgradeCoin",
-                            stageName: "upgradeCoin",
+                            name: `upgradeCoin`,
+                            stageName: `upgradeCoin`,
                             value: 5,
-                            drawName: "Upgrade coin Warrior distinction",
+                            drawName: `Upgrade coin Warrior distinction`,
                         },
                     },
                     {
@@ -367,8 +367,8 @@ const warrior: ISuit = {
                         },
                     },
                 ];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия воинов
-                возможность улучшить одну из своих монет на +5:`);
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия воинов возможность
+                улучшить одну из своих монет на +5:`);
                 AddActionsToStack(G, ctx, stack);
                 StartActionFromStackOrEndActions(G, ctx, false);
             } else {
@@ -390,9 +390,9 @@ const warrior: ISuit = {
  */
 const explorer: ISuit = {
     suit: SuitNames.EXPLORER,
-    suitName: "Разведчики",
-    suitColor: "bg-blue-500",
-    description: "Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.",
+    suitName: `Разведчики`,
+    suitColor: `bg-blue-500`,
+    description: `Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.`,
     ranksValues: (): IRankValues => ({
         2: {
             0: 7,
@@ -442,14 +442,14 @@ const explorer: ISuit = {
                     {
                         action: DrawProfitAction,
                         config: {
-                            name: "explorerDistinction",
-                            stageName: "pickDistinctionCard",
-                            drawName: "Pick card by Explorer distinction",
+                            name: `explorerDistinction`,
+                            stageName: `pickDistinctionCard`,
+                            drawName: `Pick card by Explorer distinction`,
                         },
                     },
                 ];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия
-                разведчиков возможность получить карту из колоды второй эпохи:`);
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия разведчиков
+                возможность получить карту из колоды второй эпохи:`);
                 AddActionsToStack(G, ctx, stack);
                 StartActionFromStackOrEndActions(G, ctx, false);
             }

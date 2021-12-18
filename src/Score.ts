@@ -52,7 +52,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     for (let i: number = 0; i < player.boardCoins.length; i++) {
         coinsValue += player.boardCoins[i]?.value ?? 0;
     }
-    if (player.buffs.everyTurn === "Uline") {
+    if (player.buffs.everyTurn === `Uline`) {
         for (let i: number = 0; i < player.handCoins.length; i++) {
             coinsValue += player.handCoins[i]?.value ?? 0;
         }
@@ -79,8 +79,8 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
             suitsConfig[SuitNames.MINER].distinction.awarding(G, ctx, player);
         score += minerDistinctionPriorityScore;
         if (minerDistinctionPriorityScore) {
-            AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока
-            ${player.nickname}: ${minerDistinctionPriorityScore}`);
+            AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока ${player.nickname}:
+            ${minerDistinctionPriorityScore}`);
         }
     }
     let heroesScore: number = 0,
@@ -90,13 +90,13 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
         const heroData: IHeroData | undefined =
             Object.values(heroesConfig).find((hero: IHeroData): boolean => hero.name === player.heroes[i].name);
         if (heroData !== undefined) {
-            if (player.heroes[i].name.startsWith("Dwerg")) {
+            if (player.heroes[i].name.startsWith(`Dwerg`)) {
                 dwerg_brothers += heroData.scoringRule(player);
             } else {
                 const currentHeroScore: number = heroData.scoringRule(player);
                 heroesScore += currentHeroScore;
-                AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${player.heroes[i].name} игрока
-                ${player.nickname}: ${currentHeroScore}.`);
+                AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${player.heroes[i].name} игрока ${player.nickname}:
+                ${currentHeroScore}.`);
             }
         } else {
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти героя ${player.heroes[i].name}.`);
@@ -123,8 +123,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
                     currentArtefactScore = artefact.scoringRule(player);
                 }
             } else {
-                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти артефакт
-                ${player.campCards[i].name}.`);
+                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти артефакт ${player.campCards[i].name}.`);
             }
             if (currentArtefactScore) {
                 artifactsScore += currentArtefactScore;
@@ -151,7 +150,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
  * @returns Финальные данные о победителях, если закончилась игра.
  */
 export const ScoreWinner = (G: MyGameState, ctx: Ctx): MyGameState | void => {
-    AddDataToLog(G, LogTypes.GAME, "Финальные результаты игры:");
+    AddDataToLog(G, LogTypes.GAME, `Финальные результаты игры:`);
     for (let i: number = 0; i < ctx.numPlayers; i++) {
         G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i]));
     }

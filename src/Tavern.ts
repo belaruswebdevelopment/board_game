@@ -26,13 +26,13 @@ interface ITavernsConfig {
  */
 export const tavernsConfig: ITavernsConfig = {
     0: {
-        name: "«Весёлый гоблин»",
+        name: `«Весёлый гоблин»`,
     },
     1: {
-        name: "«Парящий дракон»",
+        name: `«Парящий дракон»`,
     },
     2: {
-        name: "«Гарцующий конь»",
+        name: `«Гарцующий конь»`,
     },
 };
 
@@ -89,11 +89,11 @@ export const RefillTaverns = (G: MyGameState): void => {
             AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[i].name} заполнена новыми картами.`);
         } else {
             error = true;
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Таверна ${tavernsConfig[i].name} не заполнена новыми
-            картами из-за их нехватки в колоде.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Таверна ${tavernsConfig[i].name} не заполнена новыми картами из-за
+            их нехватки в колоде.`);
         }
     }
     if (!error) {
-        AddDataToLog(G, LogTypes.GAME, "Все таверны заполнены новыми картами.");
+        AddDataToLog(G, LogTypes.GAME, `Все таверны заполнены новыми картами.`);
     }
 };

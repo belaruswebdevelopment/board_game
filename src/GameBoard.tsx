@@ -38,8 +38,8 @@ export class GameBoard extends React.Component<BoardProps<MyGameState>> {
     };
 
     render() {
-        const gridClass: string = "col-span-4",
-            classes: string = "col-span-4 text-center underline border",
+        const gridClass: string = `col-span-4`,
+            classes: string = `col-span-4 text-center underline border`,
             tierCardsUI: JSX.Element = DrawTierCards(this),
             currentPlayerTurnUI: JSX.Element = DrawCurrentPlayerTurn(this),
             winnerUI: JSX.Element = DrawWinner(this),

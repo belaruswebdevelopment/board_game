@@ -172,28 +172,28 @@ export const CoinUpgradeValidation = (G: MyGameState, ctx: Ctx, coinId: number, 
 export const moveBy: IMoveBy = {
     null: {},
     placeCoins: {
-        default1: "ClickHandCoin",
-        default2: "ClickBoardCoin",
-        default_advanced: "BotsPlaceAllCoins",
+        default1: `ClickHandCoin`,
+        default2: `ClickBoardCoin`,
+        default_advanced: `BotsPlaceAllCoins`,
     },
     pickCards: {
-        default: "ClickCard",
-        defaultPickCampCard: "ClickCampCard",
-        pickHero: "ClickHeroCard",
-        upgradeCoin: "ClickCoinToUpgrade",
-        discardSuitCard: "discardSuitCard"
+        default: `ClickCard`,
+        defaultPickCampCard: `ClickCampCard`,
+        pickHero: `ClickHeroCard`,
+        upgradeCoin: `ClickCoinToUpgrade`,
+        discardSuitCard: `discardSuitCard`,
     },
     getDistinctions: {
-        default: "ClickDistinctionCard",
-        pickDistinctionCard: "ClickCardToPickDistinction",
-        upgradeCoin: "ClickCoinToUpgrade",
+        default: `ClickDistinctionCard`,
+        pickDistinctionCard: `ClickCardToPickDistinction`,
+        upgradeCoin: `ClickCoinToUpgrade`,
     },
     endTier: {
-        pickHero: "ClickHeroCard",
+        pickHero: `ClickHeroCard`,
     },
     enlistmentMercenaries: {
-        pickHero: "ClickHeroCard",
-        upgradeCoin: "ClickCoinToUpgrade",
+        pickHero: `ClickHeroCard`,
+        upgradeCoin: `ClickCoinToUpgrade`,
     },
     placeCoinsUline: {},
     getMjollnirProfit: {},
@@ -218,7 +218,7 @@ export const moveValidators: IMoveValidators = {
                 return G.publicPlayers[Number(ctx!.currentPlayer)].selectedCoin === undefined
                     && G.publicPlayers[Number(ctx!.currentPlayer)].handCoins[id] !== null;
             }
-            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
         },
     },
@@ -230,7 +230,7 @@ export const moveValidators: IMoveValidators = {
                 return G.publicPlayers[Number(ctx!.currentPlayer)].selectedCoin !== undefined
                     && G.publicPlayers[Number(ctx!.currentPlayer)].boardCoins[id] === null;
             }
-            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
         },
     },
@@ -240,7 +240,7 @@ export const moveValidators: IMoveValidators = {
             if (id !== undefined) {
                 return G.botData.allCoinsOrder[id];
             }
-            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             // todo Return []???
             return [];
         },
@@ -265,14 +265,14 @@ export const moveValidators: IMoveValidators = {
                         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция
                         ${config.conditions.suitCountMin.suit}.`);
                     } else {
-                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Нет обязательного параметр stack[0] у
-                        героя ${G.heroes[id].name}.`);
+                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Нет обязательного параметр stack[0] у героя
+                        ${G.heroes[id].name}.`);
                     }
                     return false;
                 }
                 return isValid;
             }
-            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
         },
     },
@@ -284,8 +284,8 @@ export const moveValidators: IMoveValidators = {
             if (id !== undefined && type !== undefined) {
                 return CoinUpgradeValidation(G, ctx!, id, type);
             }
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id' или не передан
-            обязательный параметр 'type'.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id' или не передан обязательный
+            параметр 'type'.`);
             return false;
         },
     },

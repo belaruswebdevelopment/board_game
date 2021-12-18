@@ -64,7 +64,7 @@ export const ClickCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: n
             AfterBasicPickCardActions(G, ctx, false);
         }
     } else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не существует кликнутая карта.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта.`);
     }
 };
 
@@ -149,8 +149,8 @@ export const StartEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ct
         {
             action: DrawProfitAction,
             config: {
-                name: "enlistmentMercenaries",
-                drawName: "Enlistment Mercenaries",
+                name: `enlistmentMercenaries`,
+                drawName: `Enlistment Mercenaries`,
             },
         },
     ];

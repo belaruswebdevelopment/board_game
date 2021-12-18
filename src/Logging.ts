@@ -4,10 +4,10 @@ import { MyGameState } from "./GameSetup";
  * <h3>Перечисление для типов логов.</h3>
  */
 export const enum LogTypes {
-    PUBLIC = "public",
-    PRIVATE = "private",
-    GAME = "game",
-    ERROR = "error",
+    PUBLIC = `public`,
+    PRIVATE = `private`,
+    GAME = `game`,
+    ERROR = `error`,
 }
 
 /**

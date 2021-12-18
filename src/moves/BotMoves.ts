@@ -28,18 +28,18 @@ export const BotsPlaceAllCoins: Move<MyGameState> = (G: MyGameState, ctx: Ctx, c
         }
     }
     const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers
-        .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== "Uline")
+        .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== `Uline`)
         .every((player: IPublicPlayer): boolean => player.handCoins
             .every((coin: ICoin | null): boolean => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {
-        if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
+        if (CheckAndStartUlineActionsOrContinue(G, ctx) === `placeCoinsUline`) {
             ctx.events!.setPhase!("placeCoinsUline");
         } else {
-            ctx.events!.setPhase!("pickCards");
+            ctx.events!.setPhase!(`pickCards`);
         }
     } else {
-        if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins.every((coin: ICoin | null): boolean =>
-            coin === null)) {
+        if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+            .every((coin: ICoin | null): boolean => coin === null)) {
             ctx.events!.endTurn!();
         }
     }

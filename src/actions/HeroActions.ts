@@ -39,17 +39,17 @@ export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
             suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
-            type: "герой",
-            name: "Thrud",
-            game: "base",
+            type: `герой`,
+            name: `Thrud`,
+            game: `base`,
         } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
-        добавил карту Труд во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Труд
+        во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, thrudCard);
         CheckPickHero(G, ctx);
         EndActionFromStackAndAddNew(G, ctx);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
     }
 };
 
@@ -73,17 +73,17 @@ export const PlaceYludAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
             suit: suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
-            type: "герой",
-            name: "Ylud",
-            game: "base",
+            type: `герой`,
+            name: `Ylud`,
+            game: `base`,
         } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
-        добавил карту Илуд во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Илуд
+        во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, yludCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, yludCard);
         EndActionFromStackAndAddNew(G, ctx, [], suitId);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
     }
 };
 
@@ -114,7 +114,7 @@ export const AddHeroToCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig):
         }
         EndActionFromStackAndAddNew(G, ctx, [], suitId);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.drawName'.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.drawName'.`);
     }
 };
 
@@ -135,8 +135,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G: MyGameState, ctx: Ctx): voi
         tradingHandCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin: ICoin | null): boolean => Boolean(coin?.isTriggerTrading));
     for (let i: number = 0; i < coinsCount; i++) {
-        if ((i < G.tavernsNum && G.currentTavern < i)
-            || (i >= G.tavernsNum && tradingHandCoinIndex !== -1)
+        if ((i < G.tavernsNum && G.currentTavern < i) || (i >= G.tavernsNum && tradingHandCoinIndex !== -1)
             || (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {
             ReturnCoinToPlayerHands(G.publicPlayers[Number(ctx.currentPlayer)], i);
         }
@@ -160,14 +159,14 @@ export const PickHeroWithConditionsAction = (G: MyGameState, ctx: Ctx, config: I
     let isValidMove: boolean = false;
     for (const condition in config.conditions) {
         if (config.conditions.hasOwnProperty(condition)) {
-            if (condition === "suitCountMin") {
+            if (condition === `suitCountMin`) {
                 let ranks: number = 0;
                 for (const key in (config.conditions as IConditions)[condition]) {
                     if (config.conditions[condition].hasOwnProperty(key)) {
-                        if (key === "suit") {
+                        if (key === `suit`) {
                             const suitId: number = GetSuitIndexByName(config.conditions[condition][key]);
                             ranks = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].reduce(TotalRank, 0);
-                        } else if (key === "value") {
+                        } else if (key === `value`) {
                             isValidMove = ranks >= config.conditions[condition][key];
                         }
                     }
@@ -196,12 +195,12 @@ export const PickHeroWithConditionsAction = (G: MyGameState, ctx: Ctx, config: I
 export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
     const isStartPickHero: boolean = IsStartActionStage(G, ctx, config);
     if (isStartPickHero) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}
-        должен пикнуть героя.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен пикнуть
+        героя.`);
     } else {
         if (config.stageName === undefined) {
-            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.stageName'.");
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.stageName'.`);
         }
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не стартовал стэйдж 'PickHero'.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не стартовал стэйдж 'PickHero'.`);
     }
 };

@@ -280,7 +280,8 @@ export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
     const tempNumbers: number[][] = taverns.map((tavern: (DeckCardTypes | null)[]): number[] => tavern
         .map((card: ICard | IActionCard | null, index: number, arr: (DeckCardTypes | null)[]): number =>
             EvaluateCard(G, ctx, card as ICard, index, arr)));
-    const tempChars: { mean: number; variation: number }[] = tempNumbers.map((element: number[]): { mean: number, variation: number } => GetCharacteristics(element));
+    const tempChars: { mean: number; variation: number }[] =
+        tempNumbers.map((element: number[]): { mean: number, variation: number } => GetCharacteristics(element));
     let maxIndex: number = 0,
         minIndex: number = tempChars.length - 1;
     for (let i: number = 1; i < temp.length; i++) {
