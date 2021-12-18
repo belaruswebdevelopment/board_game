@@ -4,13 +4,12 @@ import {
     AddCardToPlayer,
     AddHeroCardToPlayerCards,
     AddHeroCardToPlayerHeroCards,
-    IConfig,
-    PlayerCardsType
+    IConfig
 } from "../Player";
 import { CheckPickHero, IHero } from "../Hero";
 import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { ICoin, ReturnCoinToPlayerHands } from "../Coin";
-import { CheckAndMoveThrud, GetHeroIndexByName, StartThrudMoving } from "../helpers/HeroHelpers";
+import { CheckAndMoveThrudOrPickHeroAction, GetHeroIndexByName } from "../helpers/HeroHelpers";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddDataToLog, LogTypes } from "../Logging";
@@ -85,27 +84,6 @@ export const PlaceYludAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitI
         EndActionFromStackAndAddNew(G, ctx, [], suitId);
     } else {
         AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.");
-    }
-};
-
-/**
- * <h3>Действия, связанные с проверкой перемещения героя Труд или выбора героя.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При добавлении карт, героев или карт кэмпа, помещающихся на карту героя Труд на игровом поле игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param card Карта, помещающаяся на карту героя Труд.
- */
-export const CheckAndMoveThrudOrPickHeroAction = (G: MyGameState, ctx: Ctx, card: PlayerCardsType):
-    void => {
-    const isMoveThrud: boolean = CheckAndMoveThrud(G, ctx, card);
-    if (isMoveThrud) {
-        StartThrudMoving(G, ctx, card);
-    } else {
-        CheckPickHero(G, ctx);
     }
 };
 

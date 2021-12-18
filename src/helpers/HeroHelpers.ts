@@ -8,6 +8,7 @@ import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { SuitNames } from "../data/SuitData";
 import { DrawProfitAction } from "../actions/Actions";
 import { PlaceThrudAction } from "../actions/HeroActions";
+import { CheckPickHero } from "../Hero";
 
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
@@ -20,6 +21,27 @@ import { PlaceThrudAction } from "../actions/HeroActions";
  * @returns Индекс героя.
  */
 export const GetHeroIndexByName = (heroName: string): number => Object.keys(heroesConfig).indexOf(heroName);
+
+/**
+ * <h3>Действия, связанные с проверкой перемещения героя Труд или выбора героя.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При добавлении карт, героев или карт кэмпа, помещающихся на карту героя Труд на игровом поле игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param card Карта, помещающаяся на карту героя Труд.
+ */
+
+export const CheckAndMoveThrudOrPickHeroAction = (G: MyGameState, ctx: Ctx, card: PlayerCardsType): void => {
+    const isMoveThrud: boolean = CheckAndMoveThrud(G, ctx, card);
+    if (isMoveThrud) {
+        StartThrudMoving(G, ctx, card);
+    } else {
+        CheckPickHero(G, ctx);
+    }
+};
 
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>

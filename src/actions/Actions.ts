@@ -4,34 +4,13 @@ import { SuitNames, suitsConfig } from "../data/SuitData";
 import { AddCardToPlayer, IConfig, IStack, PickedCardType, PlayerCardsType } from "../Player";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { CreateCard, DiscardCardFromTavern, ICard, ICreateCard, isCardNotAction } from "../Card";
-import {
-    AddHeroToCardsAction,
-    CheckAndMoveThrudOrPickHeroAction,
-    GetClosedCoinIntoPlayerHandAction,
-    PickHeroAction,
-    PickHeroWithConditionsAction,
-    PlaceThrudAction,
-    PlaceYludAction
-} from "./HeroActions";
-import {
-    AddCampCardToCardsAction,
-    AddCoinToPouchAction,
-    CheckPickCampCard,
-    CheckPickCampCardAction,
-    DiscardAnyCardFromPlayerBoardAction,
-    DiscardSuitCardAction,
-    DiscardTradingCoinAction,
-    GetMjollnirProfitAction,
-    StartDiscardSuitCardAction,
-    StartVidofnirVedrfolnirAction,
-    UpgradeCoinVidofnirVedrfolnirAction
-} from "./CampActions";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { CampDeckCardTypes, DeckCardTypes, MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
 import { IVariants } from "../data/HeroData";
 import { IsStartActionStage } from "../helpers/ActionHelpers";
+import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 
 // todo Check my types
 /**

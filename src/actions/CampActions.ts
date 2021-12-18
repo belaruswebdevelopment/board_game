@@ -13,7 +13,6 @@ import {
     IStack,
     PlayerCardsType
 } from "../Player";
-import { CheckAndMoveThrudOrPickHeroAction } from "./HeroActions";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { SuitNames, suitsConfig } from "../data/SuitData";
 import { CampDeckCardTypes, MyGameState } from "../GameSetup";
@@ -22,6 +21,7 @@ import { isArtefactCard } from "../Camp";
 import { ICard } from "../Card";
 import { ICoin } from "../Coin";
 import { DrawProfitAction, UpgradeCoinAction } from "./Actions";
+import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 
 /**
  * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>

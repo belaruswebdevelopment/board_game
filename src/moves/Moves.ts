@@ -8,14 +8,19 @@ import {
     EndActionFromStackAndAddNew,
     StartActionFromStackOrEndActions
 } from "../helpers/StackHelpers";
-import { CheckAndMoveThrudOrPickHeroAction } from "../actions/HeroActions";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { Ctx, Move } from "boardgame.io";
 import { DeckCardTypes, MyGameState } from "../GameSetup";
 import { isCardNotAction } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
-import { DrawProfitAction, GetEnlistmentMercenariesAction, PassEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
+import {
+    DrawProfitAction,
+    GetEnlistmentMercenariesAction,
+    PassEnlistmentMercenariesAction,
+    PlaceEnlistmentMercenariesAction
+} from "../actions/Actions";
+import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 // todo Add logging
 
 /**
