@@ -1,6 +1,6 @@
 import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes } from "../GameSetup";
 import { Ctx } from "boardgame.io";
-import { DrawButton, DrawCard, DrawCoin } from "./UIHelpers";
+import { DrawButton, DrawCard, DrawCoin, OnClickCampCardHolda, OnClickCardFromDiscard, OnClickCardToDiscard, OnClickCardToDiscard2Players, OnClickCoinToAddToPouch, OnClickCoinToUpgradeVidofnirVedrfolnir, OnClickDiscardCardFromPlayerBoard, OnClickGetEnlistmentMercenaries, OnClickPassEnlistmentMercenaries, OnClickStartEnlistmentMercenaries } from "./UIHelpers";
 import { GameBoard } from "../GameBoard";
 import { IBotMoveArgumentsTypes } from "../AI";
 import { suitsConfig } from "../data/SuitData";
@@ -20,7 +20,7 @@ export const PickCampCardHoldaProfit = (G: MyGameState, ctx: Ctx, data?: GameBoa
             if (data instanceof GameBoard && boardCells !== undefined) {
                 DrawCard(data, boardCells, card, j,
                     G.publicPlayers[Number(ctx.currentPlayer)], null,
-                    `OnClickCampCardHolda`, j);
+                    OnClickCampCardHolda, j);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }
@@ -67,7 +67,7 @@ export const DiscardCardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | I
                     suit = card.suit;
                 }
                 DrawCard(data, boardCells, card, j,
-                    G.publicPlayers[Number(ctx.currentPlayer)], suit, `OnClickCardToDiscard2Players`, j);
+                    G.publicPlayers[Number(ctx.currentPlayer)], suit, OnClickCardToDiscard2Players, j);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }
@@ -85,7 +85,7 @@ export const PickDiscardCardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard
                 suit = card.suit;
             }
             DrawCard(data, boardCells, card, j,
-                G.publicPlayers[Number(ctx.currentPlayer)], suit, `OnClickCardFromDiscard`,
+                G.publicPlayers[Number(ctx.currentPlayer)], suit, OnClickCardFromDiscard,
                 j);
         } else if (Array.isArray(data)) {
             data.push([j]);
@@ -110,7 +110,7 @@ export const DiscardCardFromBoardProfit = (G: MyGameState, ctx: Ctx, data?: Game
                             G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last], last,
                             G.publicPlayers[Number(ctx.currentPlayer)],
                             G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].suit,
-                            `OnClickCardToDiscard`, j, last);
+                            OnClickCardToDiscard, j, last);
                     } else if (Array.isArray(data)) {
                         data.push([j, last]);
                     }
@@ -143,7 +143,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, da
                         DrawCard(data, playerCells,
                             data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i], id,
                             data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)],
-                            Object.keys(suitsConfig)[j], `OnClickDiscardCardFromPlayerBoard`,
+                            Object.keys(suitsConfig)[j], OnClickDiscardCardFromPlayerBoard,
                             j, i);
                     } else if (Array.isArray(data)) {
                         data.push([j]);
@@ -208,7 +208,7 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G: MyGameState, ctx: Ctx, da
                         DrawCoin(data, boardCells, `coin`,
                             G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j], j,
                             G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
-                            null, `OnClickCoinToUpgradeVidofnirVedrfolnir`, j,
+                            null, OnClickCoinToUpgradeVidofnirVedrfolnir, j,
                             `board`, coin.isInitial);
                     } else if (Array.isArray(data)) {
                         data.push([j, `board`, coin.isInitial]);
@@ -227,7 +227,7 @@ export const AddCoinToPouchProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard 
             if (data instanceof GameBoard && boardCells !== undefined) {
                 DrawCoin(data, boardCells, `coin`,
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j], j,
-                    G.publicPlayers[Number(ctx.currentPlayer)], `border-2`, null, `OnClickCoinToAddToPouch`, j);
+                    G.publicPlayers[Number(ctx.currentPlayer)], `border-2`, null, OnClickCoinToAddToPouch, j);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }
@@ -272,7 +272,7 @@ export const GetEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: 
         if (data instanceof GameBoard && boardCells !== undefined) {
             DrawCard(data, boardCells, mercenaries[j], j,
                 G.publicPlayers[Number(ctx.currentPlayer)], null,
-                `OnClickGetEnlistmentMercenaries`, j);
+                OnClickGetEnlistmentMercenaries, j);
         } else if (Array.isArray(data)) {
             data.push([j]);
         }
@@ -286,7 +286,7 @@ export const StartEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?
             if (data instanceof GameBoard && boardCells !== undefined) {
                 DrawButton(data, boardCells, `start Enlistment Mercenaries`, `Start`,
                     G.publicPlayers[Number(ctx.currentPlayer)],
-                    `OnClickStartEnlistmentMercenaries`);
+                    OnClickStartEnlistmentMercenaries);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }
@@ -294,7 +294,7 @@ export const StartEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?
             if (data instanceof GameBoard && boardCells !== undefined) {
                 DrawButton(data, boardCells, `pass Enlistment Mercenaries`, `Pass`,
                     G.publicPlayers[Number(ctx.currentPlayer)],
-                    `OnClickPassEnlistmentMercenaries`);
+                    OnClickPassEnlistmentMercenaries);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }

@@ -11,11 +11,264 @@ import { CampDeckCardTypes, DeckCardTypes } from "../GameSetup";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 
+/**
+ * <h3>Интерфейс для параметров отрисовки игрового поля.</h3>
+ */
 export interface IDrawBoardOptions {
     boardCols: number,
     lastBoardCol: number,
     boardRows: number,
 }
+
+/**
+ * <h3>Активация мува при клике на карту героя.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретного героя выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickHeroCard = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.ClickHeroCard(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на карту кэмпа.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной карты кэмпа выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickCampCard = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.ClickCampCard(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на карту таверны.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной карты таверны выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickCard = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.ClickCard(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на карту преимущества.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной карты преимущества выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickCardToPickDistinction = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.ClickCardToPickDistinction(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на карты для дискарда.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретнойкарты для дискарда выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickCardToDiscard = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.DiscardCard(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на карты из дискарда.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной карты из дискарда выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickCardFromDiscard = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.PickDiscardCard(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на карту таверны для дискарда.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной карты таверны при 2-х игроках выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickCardToDiscard2Players = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.DiscardCard2Players(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на карту на планшете игрока для дискарда.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретную карту на планшете игрока для дискарда выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickDiscardCardFromPlayerBoard = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.DiscardCardFromPlayerBoard(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на карту на планшете определённой фракции игрока для дискарда.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретную карту на планшете определённой фракции игрока для дискарда выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+const OnClickDiscardSuitCardFromPlayerBoard = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.DiscardSuitCardFromPlayerBoard(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на карту кэмпа по действию героя Хольда.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной карты кэмпа по действию героя Хольда выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickCampCardHolda = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.ClickCampCardHolda(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на карту наёмника.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной карты наёмника выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickGetEnlistmentMercenaries = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.GetEnlistmentMercenaries(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на монету на игровом столе.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной монеты на игровом столе выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickBoardCoin = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.ClickBoardCoin(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на монету в руке игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной монеты в руке игрока выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickHandCoin = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.ClickHandCoin(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на монету для её улучшения.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной монеты для её улучшения выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickCoinToUpgrade = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.ClickCoinToUpgrade(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на монету для добавления её в кошелёк.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной монеты для добавления её в кошелёк выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickCoinToAddToPouch = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.AddCoinToPouch(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на монету для её улучшения по действию артефакта 'VidofnirVedrfolnir'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной монеты для её улучшения о действию артефакта 'VidofnirVedrfolnir' выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param args Дополнительные аргументы.
+ */
+export const OnClickCoinToUpgradeVidofnirVedrfolnir = (data: GameBoard, ...args: ArgsTypes): void => {
+    data.props.moves.UpgradeCoinVidofnirVedrfolnir(...args);
+};
+
+/**
+ * <h3>Активация мува при клике на кнопку старта действия 'EnlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной кнопки старта действия 'EnlistmentMercenaries' выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ */
+export const OnClickStartEnlistmentMercenaries = (data: GameBoard): void => {
+    data.props.moves.StartEnlistmentMercenaries();
+};
+
+/**
+ * <h3>Активация мува при клике на кнопку паса действия 'EnlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретной кнопки паса действия 'EnlistmentMercenaries' выполняются мув.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ */
+export const OnClickPassEnlistmentMercenaries = (data: GameBoard): void => {
+    data.props.moves.PassEnlistmentMercenaries();
+};
 
 /**
  * h3>Отрисовка сегмента игрового поля по указанным данным.</h3>
@@ -109,7 +362,7 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
                         isDrawRow = true;
                         DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i],
                             i, data.props.G.publicPlayers[p], suitName,
-                            "OnClickDiscardSuitCardFromPlayerBoard", suitId, p, i);
+                            OnClickDiscardSuitCardFromPlayerBoard, suitId, p, i);
                     }
                 } else {
                     playersCells.push(
@@ -158,72 +411,12 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
  * @param args Аргументы действия.
  */
 export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: DeckCardTypes | CampDeckCardTypes | IHero,
-    id: number, player: IPublicPlayer | null, suit?: string | null, actionName?: string,
+    id: number, player: IPublicPlayer | null, suit?: string | null, actionName?: Function,
     ...args: ArgsTypes):
     void => {
     let styles: IBackground = { background: `` },
         tdClasses: string = ``,
-        spanClasses: string,
-        action: Function | null;
-    switch (actionName) {
-        case `OnClickHeroCard`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.ClickHeroCard(...args);
-            };
-            break;
-        case `OnClickCampCard`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.ClickCampCard(...args);
-            };
-            break;
-        case `OnClickCard`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.ClickCard(...args);
-            };
-            break;
-        case `OnClickCardToPickDistinction`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.ClickCardToPickDistinction(...args);
-            };
-            break;
-        case `OnClickCardToDiscard`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.DiscardCard(...args);
-            };
-            break;
-        case `OnClickCardFromDiscard`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.PickDiscardCard(...args);
-            };
-            break;
-        case `OnClickCardToDiscard2Players`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.DiscardCard2Players(...args);
-            };
-            break;
-        case `OnClickDiscardCardFromPlayerBoard`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.DiscardCardFromPlayerBoard(...args);
-            };
-            break;
-        case `OnClickDiscardSuitCardFromPlayerBoard`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.DiscardSuitCardFromPlayerBoard(...args);
-            };
-            break;
-        case `OnClickCampCardHolda`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.ClickCampCardHolda(...args);
-            };
-            break;
-        case `OnClickGetEnlistmentMercenaries`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.GetEnlistmentMercenaries(...args);
-            };
-            break;
-        default:
-            action = null;
-    }
+        spanClasses: string;
     if (suit !== null && suit !== undefined) {
         tdClasses = suitsConfig[suit].suitColor;
     }
@@ -231,7 +424,6 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
         styles = Styles.Heroes(card.game, card.name);
         if (player === null && `active` in card && !card.active) {
             spanClasses = `bg-hero-inactive`;
-            action = null;
         } else {
             spanClasses = `bg-hero`;
         }
@@ -254,7 +446,7 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
         }
         spanClasses = `bg-card`;
     }
-    if (action !== null) {
+    if (actionName !== undefined) {
         tdClasses += ` cursor-pointer`;
     }
     let description: string = ``,
@@ -269,7 +461,7 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
     }
     playerCells.push(
         <td key={`${(player && player.nickname) ? `player ${(player.nickname)} ` :
-            ``}${suit} card ${id} ${card.name}`} className={tdClasses} onClick={() => action && action(...args)}>
+            ``}${suit} card ${id} ${card.name}`} className={tdClasses} onClick={() => actionName?.(...args)}>
             <span style={styles} title={description ?? card.name} className={spanClasses}>
                 <b>{value}</b>
             </span>
@@ -297,42 +489,12 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
  */
 export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin: ICoin | null, id: number,
     player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
-    actionName?: string, ...args: ArgsTypes): void => {
+    actionName?: Function, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         span = null,
-        action: Function | null,
         tdClasses: string = `bg-yellow-300`,
         spanClasses: string = ``;
-    switch (actionName) {
-        case `OnClickBoardCoin`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.ClickBoardCoin(...args);
-            };
-            break;
-        case `OnClickHandCoin`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.ClickHandCoin(...args);
-            };
-            break;
-        case `OnClickCoinToUpgrade`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.ClickCoinToUpgrade(...args);
-            };
-            break;
-        case `OnClickCoinToAddToPouch`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.AddCoinToPouch(...args);
-            };
-            break;
-        case `OnClickCoinToUpgradeVidofnirVedrfolnir`:
-            action = (...args: ArgsTypes): void => {
-                data.props.moves.UpgradeCoinVidofnirVedrfolnir(...args);
-            };
-            break;
-        default:
-            action = null;
-    }
-    if (action !== null) {
+    if (actionName !== undefined) {
         tdClasses += ` cursor-pointer`;
     }
     if (type === `market`) {
@@ -377,7 +539,7 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
     }
     playerCells.push(
         <td key={`${player?.nickname ? `player ${player.nickname} ` : ``}coin ${id}${coin !== null ? `
-        ${coin.value}` : ` empty`}`} className={tdClasses} onClick={() => action !== null && action(...args)}>
+        ${coin.value}` : ` empty`}`} className={tdClasses} onClick={() => actionName?.(...args)}>
             <span style={styles} className={spanClasses}>
                 {span}
             </span>
@@ -401,25 +563,10 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
  * @param args Аргументы действия.
  */
 export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: string, name: string, player: IPublicPlayer,
-    actionName?: string, ...args: ArgsTypes): void => {
-    let action: Function | null;
-    switch (actionName) {
-        case `OnClickStartEnlistmentMercenaries`:
-            action = (): void => {
-                data.props.moves.StartEnlistmentMercenaries();
-            };
-            break;
-        case `OnClickPassEnlistmentMercenaries`:
-            action = (): void => {
-                data.props.moves.PassEnlistmentMercenaries();
-            };
-            break;
-        default:
-            action = null;
-    }
+    actionName?: Function, ...args: ArgsTypes): void => {
     boardCells.push(
         <td key={`${player?.nickname ? `Player ${player.nickname} ` : ``}${key}`}
-            className="cursor-pointer" onClick={() => action !== null && action(...args)}>
+            className="cursor-pointer" onClick={() => actionName?.(...args)}>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 {name}
             </button>
