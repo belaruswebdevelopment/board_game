@@ -13,9 +13,8 @@ import { CheckCurrentSuitDistinctions } from "./Distinction";
  * <li>Подсчёт очков игроков для анализа ботами.</li>
  * </ol>
  *
- * @param {IPublicPlayer} player Игрок.
- * @returns {number} Текущий счёт указанного игрока.
- * @constructor
+ * @param player Игрок.
+ * @returns Текущий счёт указанного игрока.
  */
 export var CurrentScoring = function (player) {
     var score = 0, index = 0;
@@ -34,11 +33,10 @@ export var CurrentScoring = function (player) {
  * <li>Подсчёт и вывод на игровое поле финальное количество очков каждого игрока.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IPublicPlayer} player Игрок.
- * @returns {number} Финальный счёт указанного игрока.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param player Игрок.
+ * @returns Финальный счёт указанного игрока.
  */
 export var FinalScoring = function (G, ctx, player) {
     var _a, _b, _c, _d;
@@ -57,12 +55,11 @@ export var FinalScoring = function (G, ctx, player) {
     AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043C\u043E\u043D\u0435\u0442\u044B \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(coinsValue));
     var suitWarriorIndex = GetSuitIndexByName(SuitNames.WARRIOR);
     if (suitWarriorIndex !== -1) {
-        var warriorsDistinction = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR), playerIndex = G.publicPlayers
-            .findIndex(function (p) { return p.nickname === player.nickname; });
+        var warriorsDistinction = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR), playerIndex = G.publicPlayers.findIndex(function (p) { return p.nickname === player.nickname; });
         if (warriorsDistinction !== undefined && warriorsDistinction.includes(playerIndex)) {
             var warriorDistinctionScore = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
             score += warriorDistinctionScore;
-            AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E \u043F\u043E \u0432\u043E\u0438\u043D\u0430\u043C \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": \n            ").concat(warriorDistinctionScore));
+            AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E \u043F\u043E \u0432\u043E\u0438\u043D\u0430\u043C \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(warriorDistinctionScore));
         }
     }
     var suitMinerIndex = GetSuitIndexByName(SuitNames.MINER);
@@ -70,7 +67,7 @@ export var FinalScoring = function (G, ctx, player) {
         var minerDistinctionPriorityScore = suitsConfig[SuitNames.MINER].distinction.awarding(G, ctx, player);
         score += minerDistinctionPriorityScore;
         if (minerDistinctionPriorityScore) {
-            AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043F\u043E \u0433\u043E\u0440\u043D\u044F\u043A\u0430\u043C \u0438\u0433\u0440\u043E\u043A\u0430 \n            ".concat(player.nickname, ": ").concat(minerDistinctionPriorityScore));
+            AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u043F\u043E \u0433\u043E\u0440\u043D\u044F\u043A\u0430\u043C \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(minerDistinctionPriorityScore));
         }
     }
     var heroesScore = 0, dwerg_brothers = 0;
@@ -84,7 +81,7 @@ export var FinalScoring = function (G, ctx, player) {
             else {
                 var currentHeroScore = heroData.scoringRule(player);
                 heroesScore += currentHeroScore;
-                AddDataToLog(G, LogTypes.PRIVATE, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0433\u0435\u0440\u043E\u044F ".concat(player.heroes[i].name, " \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(player.nickname, ": ").concat(currentHeroScore, "."));
+                AddDataToLog(G, LogTypes.PRIVATE, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0433\u0435\u0440\u043E\u044F ".concat(player.heroes[i].name, " \u0438\u0433\u0440\u043E\u043A\u0430 ").concat(player.nickname, ": ").concat(currentHeroScore, "."));
             }
         }
         else {
@@ -96,7 +93,7 @@ export var FinalScoring = function (G, ctx, player) {
     }
     if (dwerg_brothers) {
         heroesScore += dwerg_brothers_scoring[dwerg_brothers];
-        AddDataToLog(G, LogTypes.PRIVATE, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0433\u0435\u0440\u043E\u0435\u0432 \u0431\u0440\u0430\u0442\u044C\u0435\u0432 \u0414\u0432\u0435\u0440\u0433\u043E\u0432 (".concat(dwerg_brothers, " \u0448\u0442.) \u0438\u0433\u0440\u043E\u043A\u0430 \n        ").concat(player.nickname, ": ").concat(dwerg_brothers_scoring[dwerg_brothers], "."));
+        AddDataToLog(G, LogTypes.PRIVATE, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0433\u0435\u0440\u043E\u0435\u0432 \u0431\u0440\u0430\u0442\u044C\u0435\u0432 \u0414\u0432\u0435\u0440\u0433\u043E\u0432 (".concat(dwerg_brothers, " \u0448\u0442.) \u0438\u0433\u0440\u043E\u043A\u0430 ").concat(player.nickname, ": ").concat(dwerg_brothers_scoring[dwerg_brothers], "."));
     }
     score += heroesScore;
     AddDataToLog(G, LogTypes.PUBLIC, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0433\u0435\u0440\u043E\u0435\u0432 \u0438\u0433\u0440\u043E\u043A\u0430 ".concat(player.nickname, ": ").concat(heroesScore, "."));
@@ -115,11 +112,11 @@ export var FinalScoring = function (G, ctx, player) {
                 }
             }
             else {
-                AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043D\u0430\u0439\u0442\u0438 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442 \n                ".concat(player.campCards[i].name, "."));
+                AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043D\u0430\u0439\u0442\u0438 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442 ".concat(player.campCards[i].name, "."));
             }
             if (currentArtefactScore) {
                 artifactsScore += currentArtefactScore;
-                AddDataToLog(G, LogTypes.PRIVATE, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442 ".concat(player.campCards[i].name, " \u0438\u0433\u0440\u043E\u043A\u0430 \n                ").concat(player.nickname, ": ").concat(currentArtefactScore, "."));
+                AddDataToLog(G, LogTypes.PRIVATE, "\u041E\u0447\u043A\u0438 \u0437\u0430 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442 ".concat(player.campCards[i].name, " \u0438\u0433\u0440\u043E\u043A\u0430 ").concat(player.nickname, ": ").concat(currentArtefactScore, "."));
             }
         };
         for (var i = 0; i < player.campCards.length; i++) {
@@ -138,13 +135,12 @@ export var FinalScoring = function (G, ctx, player) {
  * <li>Используется в конце игры для определения победителя для вывода данных на игровое поле.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {MyGameState | void} Финальные данные о победителях, если закончилась игра.
- * @constructor
+ * @param G
+ * @param ctx
+ * @returns Финальные данные о победителях, если закончилась игра.
  */
 export var ScoreWinner = function (G, ctx) {
-    AddDataToLog(G, LogTypes.GAME, "Финальные результаты игры:");
+    AddDataToLog(G, LogTypes.GAME, "\u0424\u0438\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B \u0438\u0433\u0440\u044B:");
     for (var i = 0; i < ctx.numPlayers; i++) {
         G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i]));
     }

@@ -8,9 +8,8 @@ import { LogTypes } from "../Logging";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element | null} Поле для вывода логов.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле для вывода логов.
  */
 export var DrawLogData = function (data) {
     if (data.props.G.log) {

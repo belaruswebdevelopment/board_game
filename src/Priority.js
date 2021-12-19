@@ -8,10 +8,9 @@ import { AddDataToLog, LogTypes } from "./Logging";
  * <li>Используется при выдаче преимущества в виде кристалла горняков.</li>
  * </ol>
  *
- * @param {number} value Значение кристалла.
- * @param {boolean | undefined} isExchangeable Является ли кристалл обменным.
- * @returns {IPriority} Кристалл.
- * @constructor
+ * @param value Значение кристалла.
+ * @param isExchangeable Является ли кристалл обменным.
+ * @returns Кристалл.
  */
 export var CreatePriority = function (_a) {
     var _b = _a === void 0 ? {} : _a, value = _b.value, _c = _b.isExchangeable, isExchangeable = _c === void 0 ? true : _c;
@@ -26,8 +25,6 @@ export var CreatePriority = function (_a) {
  * <ol>
  * <li>Используется в конфиге кристаллов.</li>
  * </ol>
- *
- * @type {IPriority[]}
  */
 var priorities = [
     CreatePriority({ value: 1 }),
@@ -42,8 +39,6 @@ var priorities = [
  * <ol>
  * <li>Используется при раздаче кристаллов всем игрокам (в зависимости от количества игроков).</li>
  * </ol>
- *
- * @type {{"2": IPriority[], "3": IPriority[], "4": IPriority[], "5": IPriority[]}}
  */
 export var prioritiesConfig = {
     2: priorities.slice(-2),
@@ -58,9 +53,8 @@ export var prioritiesConfig = {
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *
- * @param {number} numPlayers Количество игроков.
- * @returns {IPriority[]} Массив базовых кристаллов.
- * @constructor
+ * @param numPlayers Количество игроков.
+ * @returns Массив базовых кристаллов.
  */
 export var GeneratePrioritiesForPlayerNumbers = function (numPlayers) {
     return prioritiesConfig[numPlayers].map(function (priority) { return priority; });
@@ -72,8 +66,7 @@ export var GeneratePrioritiesForPlayerNumbers = function (numPlayers) {
  * <li>Используется в конце фазы выбора карт.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @constructor
+ * @param G
  */
 export var ChangePlayersPriorities = function (G) {
     var tempPriorities = [];
@@ -84,12 +77,12 @@ export var ChangePlayersPriorities = function (G) {
         }
     }
     if (tempPriorities.length) {
-        AddDataToLog(G, LogTypes.GAME, "Обмен кристаллами между игроками:");
+        AddDataToLog(G, LogTypes.GAME, "\u041E\u0431\u043C\u0435\u043D \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B\u0430\u043C\u0438 \u043C\u0435\u0436\u0434\u0443 \u0438\u0433\u0440\u043E\u043A\u0430\u043C\u0438:");
         for (var i = 0; i < G.exchangeOrder.length; i++) {
             var tempPriority = tempPriorities[i];
             if (tempPriority !== undefined && G.publicPlayers[i].priority.value !== tempPriority.value) {
                 G.publicPlayers[i].priority = tempPriority;
-                AddDataToLog(G, LogTypes.PUBLIC, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[i].nickname, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B \u0441 \n                \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043E\u043C ").concat(tempPriority.value, "."));
+                AddDataToLog(G, LogTypes.PUBLIC, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[i].nickname, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B \u0441 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043E\u043C ").concat(tempPriority.value, "."));
             }
         }
     }
@@ -101,10 +94,9 @@ export var ChangePlayersPriorities = function (G) {
  * <li>Используется для ботов при определении приоритета выставления монет.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {number} playerId Id выбранного игрока.
- * @returns {boolean} Имеет ли игрок наименьший кристалл.
- * @constructor
+ * @param G
+ * @param playerId Id выбранного игрока.
+ * @returns Имеет ли игрок наименьший кристалл.
  */
 export var HasLowestPriority = function (G, playerId) {
     var tempPriorities = G.publicPlayers.map(function (player) { return player.priority.value; }), minPriority = Math.min.apply(Math, tempPriorities), priority = G.publicPlayers[playerId].priority;

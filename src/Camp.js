@@ -1,6 +1,7 @@
 import { DiscardCardFromTavern } from "./Card";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
+import { AddCampCardToCardsAction } from "./actions/CampActions";
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>
@@ -8,8 +9,8 @@ import { suitsConfig } from "./data/SuitData";
  * <li>При проверках в функциях.</li>
  * </ol>
  *
- * @param {IArtefactCampCard | IMercenaryCampCard} card Карта.
- * @returns {card is IArtefactCampCard} Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
+ * @param card Карта.
+ * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
  */
 export var isArtefactCard = function (card) {
     return card.suit !== undefined;
@@ -21,18 +22,17 @@ export var isArtefactCard = function (card) {
  * <li>Происходит при создании всех карт артефактов кэмпа во время инициализации игры.</li>
  * </ol>
  *
- * @param {string | undefined} type Тип.
- * @param {number} tier Эпоха.
- * @param {string} path URL путь.
- * @param {string} name Название.
- * @param {string} description Описание.
- * @param {string} game Игра/дополнение.
- * @param {string} suit Фракция.
- * @param {number | null} rank Шевроны.
- * @param {number | null} points Очки.
- * @param {IStack[]} stack Действия.
- * @returns {IArtefactCampCard} Карта кэмпа артефакт.
- * @constructor
+ * @param type Тип.
+ * @param tier Эпоха.
+ * @param path URL путь.
+ * @param name Название.
+ * @param description Описание.
+ * @param game Игра/дополнение.
+ * @param suit Фракция.
+ * @param rank Шевроны.
+ * @param points Очки.
+ * @param stack Действия.
+ * @returns Карта кэмпа артефакт.
  */
 export var CreateArtefactCampCard = function (_a) {
     var _b = _a === void 0 ? {} : _a, _c = _b.type, type = _c === void 0 ? "артефакт" : _c, tier = _b.tier, path = _b.path, name = _b.name, description = _b.description, game = _b.game, suit = _b.suit, rank = _b.rank, points = _b.points, stack = _b.stack;
@@ -56,17 +56,16 @@ export var CreateArtefactCampCard = function (_a) {
  * <li>Происходит при создании всех карт наёмников кэмпа во время инициализации игры.</li>
  * </ol>
  *
- * @param {string | undefined} type Тип.
- * @param {number} tier Эпоха.
- * @param {string} path URL путь.
- * @param {string} name Название.
- * @param {string | undefined} game Игра/дополнение.
- * @param {IStack[]} stack Действия.
- * @returns {IMercenaryCampCard} Карта кэмпа наёмник.
- * @constructor
+ * @param type Тип.
+ * @param tier Эпоха.
+ * @param path URL путь.
+ * @param name Название.
+ * @param game Игра/дополнение.
+ * @param stack Действия.
+ * @returns Карта кэмпа наёмник.
  */
 export var CreateMercenaryCampCard = function (_a) {
-    var _b = _a === void 0 ? {} : _a, _c = _b.type, type = _c === void 0 ? "наёмник" : _c, tier = _b.tier, path = _b.path, name = _b.name, _d = _b.game, game = _d === void 0 ? "thingvellir" : _d, stack = _b.stack;
+    var _b = _a === void 0 ? {} : _a, _c = _b.type, type = _c === void 0 ? "\u043D\u0430\u0451\u043C\u043D\u0438\u043A" : _c, tier = _b.tier, path = _b.path, name = _b.name, _d = _b.game, game = _d === void 0 ? "thingvellir" : _d, stack = _b.stack;
     return ({
         type: type,
         tier: tier,
@@ -83,11 +82,10 @@ export var CreateMercenaryCampCard = function (_a) {
  * <li>Происходит при инициализации игры.</li>
  * </ol>
  *
- * @param {number} tier Эпоха.
- * @param {IArtefactConfig} artefactConfig Файл конфига карт артефактов.
- * @param {IMercenaries[][]} mercenariesConfig Файл конфига наёмников.
- * @returns {CampDeckCardTypes[]} Все карты кэмпа.
- * @constructor
+ * @param tier Эпоха.
+ * @param artefactConfig Файл конфига карт артефактов.
+ * @param mercenariesConfig Файл конфига наёмников.
+ * @returns Все карты кэмпа.
  */
 export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
     var campCards = [];
@@ -123,7 +121,7 @@ export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
                             path += mercenariesConfig[tier][i][campMercenarySuit].points ?
                                 mercenariesConfig[tier][i][campMercenarySuit].points + " " : "";
                             name_1 += "\u043E\u0447\u043A\u043E\u0432: ".concat(mercenariesConfig[tier][i][campMercenarySuit].points ?
-                                mercenariesConfig[tier][i][campMercenarySuit].points + ") " : "нет) ");
+                                mercenariesConfig[tier][i][campMercenarySuit].points + ") " : "\u043D\u0435\u0442) ");
                         }
                     }
                 }
@@ -135,7 +133,7 @@ export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
             name: name_1.trim(),
             stack: [
                 {
-                    actionName: "AddCampCardToCards",
+                    action: AddCampCardToCardsAction,
                     variants: mercenariesConfig[tier][i],
                 },
             ],
@@ -150,8 +148,7 @@ export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
  * <li>Проверяется после каждого выбора карты из таверны, если последний игрок в текущей таверне уже выбрал карту.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @constructor
+ * @param G
  */
 export var DiscardCardIfCampCardPicked = function (G) {
     if (G.campPicked) {
@@ -168,7 +165,7 @@ export var DiscardCardIfCampCardPicked = function (G) {
         }
         else {
             // todo Fix this error sometimes shown...
-            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043B\u0438\u0448\u043D\u044E\u044E \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \u043F\u043E\u0441\u043B\u0435 \n            \u0432\u044B\u0431\u043E\u0440\u0430 \u043A\u0430\u0440\u0442\u044B \u043A\u044D\u043C\u043F\u0430 \u0432 \u043A\u043E\u043D\u0446\u0435 \u043F\u0438\u043A\u043E\u0432 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B.");
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043B\u0438\u0448\u043D\u044E\u044E \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \u043F\u043E\u0441\u043B\u0435 \u0432\u044B\u0431\u043E\u0440\u0430 \u043A\u0430\u0440\u0442\u044B \u043A\u044D\u043C\u043F\u0430 \u0432 \u043A\u043E\u043D\u0446\u0435 \u043F\u0438\u043A\u043E\u0432 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B.");
         }
     }
 };
@@ -179,8 +176,7 @@ export var DiscardCardIfCampCardPicked = function (G) {
  * <li>Происходит при начале раунда.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @constructor
+ * @param G
  */
 export var RefillEmptyCampCards = function (G) {
     var emptyCampCards = G.camp.map(function (card, index) {
@@ -199,7 +195,7 @@ export var RefillEmptyCampCards = function (G) {
                 AddCardToCamp(G, cardIndex);
             }
         });
-        AddDataToLog(G, LogTypes.GAME, "Кэмп заполнен новыми картами.");
+        AddDataToLog(G, LogTypes.GAME, "\u041A\u044D\u043C\u043F \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438.");
     }
 };
 /**
@@ -209,15 +205,14 @@ export var RefillEmptyCampCards = function (G) {
  * <li>Происходит при начале новой эпохи.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @constructor
+ * @param G
  */
 export var RefillCamp = function (G) {
     AddRemainingCampCardsToDiscard(G);
     for (var i = 0; i < G.campNum; i++) {
         AddCardToCamp(G, i);
     }
-    AddDataToLog(G, LogTypes.GAME, "Кэмп заполнен новыми картами новой эпохи.");
+    AddDataToLog(G, LogTypes.GAME, "\u041A\u044D\u043C\u043F \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438 \u043D\u043E\u0432\u043E\u0439 \u044D\u043F\u043E\u0445\u0438.");
 };
 /**
  * <h3>Перемещает все оставшиеся неиспользованные карты кэмпа в дискард.</h3>
@@ -226,8 +221,7 @@ export var RefillCamp = function (G) {
  * <li>Происходит в конце 1-й эпохи.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @constructor
+ * @param G
  */
 var AddRemainingCampCardsToDiscard = function (G) {
     // todo Add LogTypes.ERROR logging ?
@@ -240,10 +234,11 @@ var AddRemainingCampCardsToDiscard = function (G) {
         }
     }
     if (G.campDecks[G.campDecks.length - G.tierToEnd - 1].length) {
-        G.discardCampCardsDeck = G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]);
+        G.discardCampCardsDeck =
+            G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]);
         G.campDecks[G.campDecks.length - G.tierToEnd - 1].length = 0;
     }
-    AddDataToLog(G, LogTypes.GAME, "Оставшиеся карты кэмпа сброшены.");
+    AddDataToLog(G, LogTypes.GAME, "\u041E\u0441\u0442\u0430\u0432\u0448\u0438\u0435\u0441\u044F \u043A\u0430\u0440\u0442\u044B \u043A\u044D\u043C\u043F\u0430 \u0441\u0431\u0440\u043E\u0448\u0435\u043D\u044B.");
 };
 /**
  * <h3>Заполняет кэмп новой картой из карт кэмп деки текущей эпохи.</h3>
@@ -253,9 +248,8 @@ var AddRemainingCampCardsToDiscard = function (G) {
  * <li>Происходит при заполнении кэмпа картами новой эпохи.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {number} cardIndex Индекс карты.
- * @constructor
+ * @param G
+ * @param cardIndex Индекс карты.
  */
 var AddCardToCamp = function (G, cardIndex) {
     var newCampCard = G.campDecks[G.campDecks.length - G.tierToEnd].splice(0, 1)[0];

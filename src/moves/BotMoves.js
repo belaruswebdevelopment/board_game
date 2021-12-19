@@ -6,12 +6,11 @@ import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
  * <li>Когда ботам нужно выложить все монеты на игровой планшет.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number[]} coinsOrder Порядок выкладки монет.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinsOrder Порядок выкладки монет.
  */
-export var BotsPlaceAllCoins = function (G, ctx, coinsOrder) {
+export var BotsPlaceAllCoinsMove = function (G, ctx, coinsOrder) {
     for (var i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
         var coinId = coinsOrder[i] || G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex(function (coin) { return coin !== null; });
@@ -37,9 +36,8 @@ export var BotsPlaceAllCoins = function (G, ctx, coinsOrder) {
         }
     }
     else {
-        if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins.every(function (coin) {
-            return coin === null;
-        })) {
+        if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+            .every(function (coin) { return coin === null; })) {
             ctx.events.endTurn();
         }
     }

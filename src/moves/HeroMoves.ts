@@ -17,7 +17,7 @@ import { MyGameState } from "../GameSetup";
  * @param heroId Id героя.
  * @returns
  */
-export const ClickHeroCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, heroId: number): string | void => {
+export const ClickHeroCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, heroId: number): string | void => {
     const isValidMove: boolean = IsValidMove({ obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length] });
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -36,7 +36,7 @@ export const ClickHeroCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, heroI
  * @param ctx
  * @param suitId Id фракции.
  */
-export const PlaceCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
+export const PlaceCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 
@@ -52,6 +52,6 @@ export const PlaceCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: n
  * @param suitId Id фракции.
  * @param cardId Id карты.
  */
-export const DiscardCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number, cardId: number): void => {
+export const DiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number, cardId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };

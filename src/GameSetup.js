@@ -10,6 +10,15 @@ import { BuildHeroes } from "./Hero";
 import { BuildCampCards } from "./Camp";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
+/* export class Test {
+    constructor(public test: string) {
+
+    }
+
+    public testFunc = () => {
+        console.log(this.test + " !!!");
+    };
+} */
 /**
  * <h3>Сетап игры.</h3>
  * <p>Применения:</p>
@@ -17,9 +26,8 @@ import { GetSuitIndexByName } from "./helpers/SuitHelpers";
  * <li>Данные используются в игре.</li>
  * </ol>
  *
- * @param {Ctx} ctx
- * @returns {MyGameState} Данные игры.
- * @constructor
+ * @param ctx
+ * @returns Данные игры.
  */
 export var SetupGame = function (ctx) {
     var suitsNum = 5, tierToEnd = 2, campNum = 5, actionsNum = 0, log = true, debug = false, drawProfit = "", suitIdForMjollnir = null, expansions = {
@@ -28,6 +36,8 @@ export var SetupGame = function (ctx) {
         },
     }, totalScore = [], logData = [], decks = [], discardCardsDeck = [], campDecks = [], distinctions = Array(suitsNum).fill(null);
     var winner = [], campPicked = false, camp = [], discardCampCardsDeck = [];
+    // const test: Test = new Test("Dima&Sasha");
+    var x = 123;
     if (expansions.thingvellir.active) {
         for (var i = 0; i < tierToEnd; i++) {
             // todo Camp cards must be hidden from users?
@@ -43,7 +53,7 @@ export var SetupGame = function (ctx) {
             actions: actionCardsConfigArray
         }, {
             players: ctx.numPlayers,
-            tier: i
+            tier: i,
         });
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
@@ -77,7 +87,7 @@ export var SetupGame = function (ctx) {
     for (var suit in suitsConfig) {
         averageCards[GetSuitIndexByName(suit)] = GetAverageSuitCard(suitsConfig[suit], {
             players: ctx.numPlayers,
-            tier: 0
+            tier: 0,
         });
     }
     for (var i = 0; i < initCoinsOrder.length; i++) {
@@ -90,6 +100,8 @@ export var SetupGame = function (ctx) {
         deckLength: decks[0].length,
     };
     return {
+        // test,
+        x: x,
         log: log,
         debug: debug,
         winner: winner,

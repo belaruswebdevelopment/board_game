@@ -133,7 +133,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 }
                 if (flag) {
                     uniqueArr.push(tavernCard);
-                    moves.push({ move: `ClickCard`, args: [i] });
+                    moves.push({ move: `ClickCardMove`, args: [i] });
                 }
                 flag = true;
             }
@@ -144,7 +144,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 }
             }
             moves.push({
-                move: `ClickCampCard`,
+                move: `ClickCampCardMove`,
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
@@ -177,7 +177,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 if (hasTrading) {
                     continue;
                 }
-                moves.push({ move: `BotsPlaceAllCoins`, args: [allCoinsOrder[i]] });
+                moves.push({ move: `BotsPlaceAllCoinsMove`, args: [allCoinsOrder[i]] });
             } else if (tradingProfit > 0) {
                 if (!hasTrading) {
                     continue;
@@ -200,12 +200,12 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                             && coin!.value < minCoin.value).length <= 1;
                     }
                     if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
-                        moves.push({ move: "BotsPlaceAllCoins", args: [G.botData.allCoinsOrder[i]] });
+                        moves.push({ move: "BotsPlaceAllCoinsMove", args: [G.botData.allCoinsOrder[i]] });
                         //console.log(`#` + i.toString().padStart(2) + `:     ` + allCoinsOrder[i].map(item => handCoins[item].value));
                     }
                 }
             } else {
-                moves.push({ move: "BotsPlaceAllCoins", args: [allCoinsOrder[i]] });
+                moves.push({ move: "BotsPlaceAllCoinsMove", args: [allCoinsOrder[i]] });
             }
         }
         //console.log(moves);
@@ -214,7 +214,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     if (activeStageOfCurrentPlayer === `placeCards` || ctx.phase === `endTier`) {
         PlaceCardsProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `PlaceCard`,
+            move: `PlaceCardMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
@@ -223,14 +223,14 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         GetMjollnirProfitProfit(G, ctx, totalSuitsRanks);
         botMoveArguments.push([totalSuitsRanks.indexOf(Math.max(...totalSuitsRanks))]);
         moves.push({
-            move: `GetMjollnirProfit`,
+            move: `GetMjollnirProfitMove`,
             args: [...botMoveArguments[0]],
         });
     }
     if (ctx.phase === `brisingamensEndGame`) {
         DiscardAnyCardFromPlayerBoardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `DiscardCardFromPlayerBoard`,
+            move: `DiscardCardFromPlayerBoardMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
@@ -238,9 +238,9 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (G.drawProfit === `startOrPassEnlistmentMercenaries`) {
             StartEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             if (Math.floor(Math.random() * botMoveArguments.length) === 0) {
-                moves.push({ move: `StartEnlistmentMercenaries`, args: [] });
+                moves.push({ move: `StartEnlistmentMercenariesMove`, args: [] });
             } else {
-                moves.push({ move: `PassEnlistmentMercenaries`, args: [] });
+                moves.push({ move: `PassEnlistmentMercenariesMove`, args: [] });
             }
         } else if (G.drawProfit === `enlistmentMercenaries`) {
             GetEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
@@ -251,7 +251,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         } else if (G.drawProfit === `placeEnlistmentMercenaries`) {
             PlaceEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: `PlaceEnlistmentMercenaries`,
+                move: `PlaceEnlistmentMercenariesMove`,
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
@@ -266,7 +266,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             move: `ClickHandCoin`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
-        moves.push({ move: `ClickBoardCoin`, args: [G.currentTavern + 1] });
+        moves.push({ move: `ClickBoardCoinMove`, args: [G.currentTavern + 1] });
     }
     if (activeStageOfCurrentPlayer === `placeTradingCoinsUline`) {
         for (let j: number = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
@@ -279,22 +279,22 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
         if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
-            moves.push({ move: `ClickBoardCoin`, args: [G.tavernsNum + 1] });
+            moves.push({ move: `ClickBoardCoinMove`, args: [G.tavernsNum + 1] });
         } else {
-            moves.push({ move: `ClickBoardCoin`, args: [G.tavernsNum] });
+            moves.push({ move: `ClickBoardCoinMove`, args: [G.tavernsNum] });
         }
     }
     if (activeStageOfCurrentPlayer === `addCoinToPouch`) {
         AddCoinToPouchProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `AddCoinToPouch`,
+            move: `AddCoinToPouchMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
     if (activeStageOfCurrentPlayer === `upgradeCoinVidofnirVedrfolnir`) {
         UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `UpgradeCoinVidofnirVedrfolnir`,
+            move: `UpgradeCoinVidofnirVedrfolnirMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
@@ -326,7 +326,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                             card.type !== "герой" && card.points === minValue);
                     if (minCardIndex !== -1) {
                         moves.push({
-                            move: `DiscardSuitCardFromPlayerBoard`,
+                            move: `DiscardSuitCardFromPlayerBoardMove`,
                             args: [suitId, p, minCardIndex],
                         });
                     }
@@ -337,14 +337,14 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     if (activeStageOfCurrentPlayer === `discardCardFromBoard`) {
         DiscardCardFromBoardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `DiscardCard`,
+            move: `DiscardCardMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
     if (activeStageOfCurrentPlayer === `pickDiscardCard`) {
         PickDiscardCardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `PickDiscardCard`,
+            move: `PickDiscardCardMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
@@ -352,7 +352,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (activeStageOfCurrentPlayer === `discardCard`) {
             DiscardCardProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: `DiscardCard2Players`,
+                move: `DiscardCard2PlayersMove`,
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
@@ -360,7 +360,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     if (activeStageOfCurrentPlayer === `pickCampCardHolda`) {
         PickCampCardHoldaProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `ClickCampCardHolda`,
+            move: `ClickCampCardHoldaMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }

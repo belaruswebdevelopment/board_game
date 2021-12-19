@@ -1,10 +1,11 @@
 import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AddCampCardToPlayer, AddCampCardToPlayerCards } from "../Player";
-import { CheckAndMoveThrudOrPickHeroAction } from "./HeroActions";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { SuitNames, suitsConfig } from "../data/SuitData";
 import { isArtefactCard } from "../Camp";
+import { DrawProfitAction, UpgradeCoinAction } from "./Actions";
+import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 /**
  * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>
  * <p>Применения:</p>
@@ -12,11 +13,10 @@ import { isArtefactCard } from "../Camp";
  * <li>При выборе конкретных героев, дающих возможность взять карты из кэмпа.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
-export var CheckPickCampCard = function (G, ctx) {
+export var CheckPickCampCardAction = function (G, ctx) {
     if (G.camp.length === 0) {
         G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
     }
@@ -29,13 +29,12 @@ export var CheckPickCampCard = function (G, ctx) {
  * <li>При выборе карт кэмпа, добавляющихся на планшет игрока.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг действий артефакта.
- * @param {number} cardId Id карты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий артефакта.
+ * @param cardId Id карты.
  */
-export var AddCampCardToCards = function (G, ctx, config, cardId) {
+export var AddCampCardToCardsAction = function (G, ctx, config, cardId) {
     if (ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
         && ctx.activePlayers === null) {
         G.campPicked = true;
@@ -60,12 +59,11 @@ export var AddCampCardToCards = function (G, ctx, config, cardId) {
         }
         else {
             AddCampCardToPlayer(G, ctx, campCard);
-            if (ctx.phase === "enlistmentMercenaries"
-                && G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                    .filter(function (card) { return card.type === "наёмник"; }).length) {
+            if (ctx.phase === "enlistmentMercenaries" && G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length) {
                 stack = [
                     {
-                        actionName: "DrawProfitAction",
+                        action: DrawProfitAction,
                         config: {
                             name: "enlistmentMercenaries",
                             drawName: "Enlistment Mercenaries",
@@ -77,7 +75,7 @@ export var AddCampCardToCards = function (G, ctx, config, cardId) {
         EndActionFromStackAndAddNew(G, ctx, stack, suitId);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не пикнута карта кэмпа.");
+        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0438\u043A\u043D\u0443\u0442\u0430 \u043A\u0430\u0440\u0442\u0430 \u043A\u044D\u043C\u043F\u0430.");
     }
 };
 /**
@@ -87,22 +85,23 @@ export var AddCampCardToCards = function (G, ctx, config, cardId) {
  * <li>При выборе карты кэмпа Vidofnir Vedrfolnir и наличии героя Улина.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг действий артефакта.
- * @param {number} coinId Id монеты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий артефакта.
+ * @param coinId Id монеты.
  */
 export var AddCoinToPouchAction = function (G, ctx, config, coinId) {
     var player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins
-        .findIndex(function (coin, index) { return index >= G.tavernsNum && coin === null; }), stack = [
+        .findIndex(function (coin, index) {
+        return index >= G.tavernsNum && coin === null;
+    }), stack = [
         {
-            actionName: "StartVidofnirVedrfolnirAction",
+            action: StartVidofnirVedrfolnirAction,
         },
     ];
     player.boardCoins[tempId] = player.handCoins[coinId];
     player.handCoins[coinId] = null;
-    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u043F\u043E\u043B\u043E\u0436\u0438\u043B \u043C\u043E\u043D\u0435\u0442\u0443 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '").concat(player.boardCoins[tempId], "' \u0432 \u0441\u0432\u043E\u0439 \u043A\u043E\u0448\u0435\u043B\u0451\u043A."));
+    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u043F\u043E\u043B\u043E\u0436\u0438\u043B \u043C\u043E\u043D\u0435\u0442\u0443 \u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C\u044E '").concat(player.boardCoins[tempId], "' \u0432 \u0441\u0432\u043E\u0439 \u043A\u043E\u0448\u0435\u043B\u0451\u043A."));
     AddActionsToStackAfterCurrent(G, ctx, stack);
     EndActionFromStackAndAddNew(G, ctx);
 };
@@ -113,18 +112,19 @@ export var AddCoinToPouchAction = function (G, ctx, config, coinId) {
  * <li>При старте способности карты кэмпа артефакта Vidofnir Vedrfolnir.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 export var StartVidofnirVedrfolnirAction = function (G, ctx) {
     var _a;
     var number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-        .filter(function (coin, index) { return index >= G.tavernsNum && coin === null; }).length, handCoinsNumber = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length;
+        .filter(function (coin, index) {
+        return index >= G.tavernsNum && coin === null;
+    }).length, handCoinsNumber = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length;
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" && number > 0 && handCoinsNumber) {
         var stack = [
             {
-                actionName: "DrawProfitAction",
+                action: DrawProfitAction,
                 config: {
                     name: "AddCoinToPouchVidofnirVedrfolnir",
                     stageName: "addCoinToPouch",
@@ -133,7 +133,7 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
                 },
             },
             {
-                actionName: "AddCoinToPouchAction",
+                action: AddCoinToPouchAction,
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
@@ -148,7 +148,7 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
         if (coinsValue === 1) {
             stack = [
                 {
-                    actionName: "DrawProfitAction",
+                    action: DrawProfitAction,
                     config: {
                         name: "VidofnirVedrfolnirAction",
                         stageName: "upgradeCoinVidofnirVedrfolnir",
@@ -157,7 +157,7 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
                     },
                 },
                 {
-                    actionName: "UpgradeCoinVidofnirVedrfolnirAction",
+                    action: UpgradeCoinVidofnirVedrfolnirAction,
                     config: {
                         value: 5,
                     }
@@ -167,7 +167,7 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
         else if (coinsValue === 2) {
             stack = [
                 {
-                    actionName: "DrawProfitAction",
+                    action: DrawProfitAction,
                     config: {
                         name: "VidofnirVedrfolnirAction",
                         stageName: "upgradeCoinVidofnirVedrfolnir",
@@ -177,7 +177,7 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
                     },
                 },
                 {
-                    actionName: "UpgradeCoinVidofnirVedrfolnirAction",
+                    action: UpgradeCoinVidofnirVedrfolnirAction,
                     config: {
                         value: 3,
                     }
@@ -195,13 +195,12 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
  * <li>При старте улучшения монеты карты кэмпа артефакта Vidofnir Vedrfolnir.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг действий артефакта.
- * @param {number} coinId Id монеты.
- * @param {string} type Тип монеты.
- * @param {boolean} isInitial Является ли монета базовой.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий артефакта.
+ * @param coinId Id монеты.
+ * @param type Тип монеты.
+ * @param isInitial Является ли монета базовой.
  */
 export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinId, type, isInitial) {
     var playerConfig = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
@@ -210,13 +209,13 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
         if (playerConfig.value === 3) {
             stack = [
                 {
-                    actionName: "UpgradeCoinAction",
+                    action: UpgradeCoinAction,
                     config: {
                         value: 3,
                     },
                 },
                 {
-                    actionName: "DrawProfitAction",
+                    action: DrawProfitAction,
                     config: {
                         coinId: coinId,
                         name: "VidofnirVedrfolnirAction",
@@ -226,7 +225,7 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
                     },
                 },
                 {
-                    actionName: "UpgradeCoinVidofnirVedrfolnirAction",
+                    action: UpgradeCoinVidofnirVedrfolnirAction,
                     config: {
                         value: 2,
                     }
@@ -236,7 +235,7 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
         else if (playerConfig.value === 2) {
             stack = [
                 {
-                    actionName: "UpgradeCoinAction",
+                    action: UpgradeCoinAction,
                     config: {
                         value: 2,
                     },
@@ -246,7 +245,7 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
         else if (playerConfig.value === 5) {
             stack = [
                 {
-                    actionName: "UpgradeCoinAction",
+                    action: UpgradeCoinAction,
                     config: {
                         value: 5,
                     },
@@ -257,7 +256,7 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
         EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'stack[0].config'.");
+        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'stack[0].config'.");
     }
 };
 /**
@@ -267,22 +266,23 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
  * <li>При выборе карты кэмпа артефакта Jarnglofi.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
-export var DiscardTradingCoin = function (G, ctx) {
+export var DiscardTradingCoinAction = function (G, ctx) {
     var tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
         .findIndex(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading); });
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" && tradingCoinIndex === -1) {
         tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading); });
-        G.publicPlayers[Number(ctx.currentPlayer)].handCoins.splice(tradingCoinIndex, 1, null);
+        G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+            .splice(tradingCoinIndex, 1, null);
     }
     else {
-        G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.splice(tradingCoinIndex, 1, null);
+        G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+            .splice(tradingCoinIndex, 1, null);
     }
-    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043C\u043E\u043D\u0435\u0442\u0443 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u0443\u044E\u0449\u0443\u044E \u043E\u0431\u043C\u0435\u043D."));
+    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043C\u043E\u043D\u0435\u0442\u0443 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u0443\u044E\u0449\u0443\u044E \u043E\u0431\u043C\u0435\u043D."));
     EndActionFromStackAndAddNew(G, ctx);
 };
 /**
@@ -292,17 +292,16 @@ export var DiscardTradingCoin = function (G, ctx) {
  * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг действий артефакта.
- * @param {number} suitId Id фракции.
- * @param {number} cardId Id карты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий артефакта.
+ * @param suitId Id фракции.
+ * @param cardId Id карты.
  */
-export var DiscardAnyCardFromPlayerBoard = function (G, ctx, config, suitId, cardId) {
+export var DiscardAnyCardFromPlayerBoardAction = function (G, ctx, config, suitId, cardId) {
     var discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(cardId, 1)[0];
     G.discardCardsDeck.push(discardedCard);
-    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
+    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
     delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
     EndActionFromStackAndAddNew(G, ctx);
 };
@@ -313,12 +312,11 @@ export var DiscardAnyCardFromPlayerBoard = function (G, ctx, config, suitId, car
  * <li>При выборе карты кэмпа артефакта Hofud.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг действий артефакта.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий артефакта.
  */
-export var StartDiscardSuitCard = function (G, ctx, config) {
+export var StartDiscardSuitCardAction = function (G, ctx, config) {
     if (config.suit !== undefined) {
         var suitId = GetSuitIndexByName(config.suit), value = {};
         for (var i = 0; i < ctx.numPlayers; i++) {
@@ -328,7 +326,7 @@ export var StartDiscardSuitCard = function (G, ctx, config) {
                 };
                 var stack = [
                     {
-                        actionName: "DiscardSuitCard",
+                        action: DiscardSuitCardAction,
                         playerId: i,
                         config: {
                             suit: SuitNames.WARRIOR,
@@ -338,13 +336,11 @@ export var StartDiscardSuitCard = function (G, ctx, config) {
                 AddActionsToStack(G, ctx, stack);
             }
         }
-        ctx.events.setActivePlayers({
-            value: value,
-        });
+        ctx.events.setActivePlayers({ value: value });
         G.drawProfit = "HofudAction";
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'config.suit'.");
+        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'config.suit'.");
     }
 };
 /**
@@ -354,15 +350,14 @@ export var StartDiscardSuitCard = function (G, ctx, config) {
  * <li>При выборе карты для дискарда по действию карты кэмпа артефакта Hofud.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг действий артефакта.
- * @param {number} suitId Id фракции.
- * @param {number} playerId Id игрока.
- * @param {number} cardId Id сбрасываемой карты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий артефакта.
+ * @param suitId Id фракции.
+ * @param playerId Id игрока.
+ * @param cardId Id сбрасываемой карты.
  */
-export var DiscardSuitCard = function (G, ctx, config, suitId, playerId, cardId) {
+export var DiscardSuitCardAction = function (G, ctx, config, suitId, playerId, cardId) {
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         // TODO Rework it for players and fix it for bots
@@ -376,12 +371,12 @@ export var DiscardSuitCard = function (G, ctx, config, suitId, playerId, cardId)
         } else {*/
         var discardedCard = G.publicPlayers[playerId].cards[suitId].splice(cardId, 1)[0];
         G.discardCardsDeck.push(discardedCard);
-        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[playerId].nickname, " \n            \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
+        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[playerId].nickname, " \u0441\u0431\u0440\u043E\u0441\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(discardedCard.name, " \u0432 \u0434\u0438\u0441\u043A\u0430\u0440\u0434."));
         EndActionForChosenPlayer(G, ctx, playerId);
         //        }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.");
+        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'ctx.playerID'.");
     }
 };
 /**
@@ -391,15 +386,14 @@ export var DiscardSuitCard = function (G, ctx, config, suitId, playerId, cardId)
  * <li>В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig} config Конфиг действий артефакта.
- * @param {number} suitId Id фракции.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий артефакта.
+ * @param suitId Id фракции.
  */
 export var GetMjollnirProfitAction = function (G, ctx, config, suitId) {
     delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.getMjollnirProfit;
     G.suitIdForMjollnir = suitId;
-    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \n    \u0432\u044B\u0431\u0440\u0430\u043B \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(Object.values(suitsConfig)[suitId].suitName, " \u0434\u043B\u044F \u044D\u0444\u0444\u0435\u043A\u0442\u0430 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442\u0430 Mjollnir."));
+    AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u0432\u044B\u0431\u0440\u0430\u043B \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(Object.values(suitsConfig)[suitId].suitName, " \u0434\u043B\u044F \u044D\u0444\u0444\u0435\u043A\u0442\u0430 \u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442\u0430 Mjollnir."));
     EndActionFromStackAndAddNew(G, ctx);
 };

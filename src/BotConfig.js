@@ -7,9 +7,8 @@ import { CompareCards, EvaluateCard, isCardNotAction } from "./Card";
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {number[]} permutation
- * @returns {number[][]}
- * @constructor
+ * @param permutation
+ * @returns
  */
 export var Permute = function (permutation) {
     var length = permutation.length, result = [permutation.slice()];
@@ -39,9 +38,9 @@ export var Permute = function (permutation) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {number[]} set
- * @param {number} k
- * @returns {number[][]}
+ * @param set
+ * @param k
+ * @returns
  */
 export var k_combinations = function (set, k) {
     var combs = [], head, tailCombs;
@@ -78,10 +77,9 @@ export var k_combinations = function (set, k) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {number} tavernsNum
- * @param {number} playersNum
- * @returns {any}
- * @constructor
+ * @param tavernsNum
+ * @param playersNum
+ * @returns
  */
 export var GetAllPicks = function (_a) {
     var tavernsNum = _a.tavernsNum, playersNum = _a.playersNum;
@@ -93,12 +91,15 @@ export var GetAllPicks = function (_a) {
         if (a.length === 1) {
             a = a.flat();
         }
-        return a.reduce(function (a, b) { return a.flatMap(function (d) {
-            return b.map(function (e) { return [d, e].flat(); });
-        }); });
+        return a.reduce(function (a, b) {
+            return a.flatMap(function (d) { return b.map(function (e) {
+                return [d, e].flat();
+            }); });
+        });
     };
     for (var i = 0; i < tavernsNum; i++) {
-        temp[i] = Array(playersNum).fill(undefined).map(function (item, index) { return index; });
+        temp[i] = Array(playersNum).fill(undefined)
+            .map(function (item, index) { return index; });
     }
     return cartesian(temp);
 };
@@ -109,9 +110,7 @@ export var GetAllPicks = function (_a) {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{heuristic: (cards: DeckCardTypes[]) => boolean, weight: number}}
  */
 var isAllCardsEqual = {
     heuristic: function (cards) { return cards.every(function (card) {
@@ -127,9 +126,7 @@ var isAllCardsEqual = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 var isAllWorse = {
     heuristic: function (array) { return array.every(function (item) { return item === -1; }); },
@@ -141,9 +138,7 @@ var isAllWorse = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 var isAllAverage = {
     heuristic: function (array) { return array.every(function (item) { return item === 0; }); },
@@ -155,9 +150,7 @@ var isAllAverage = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 var isAllBetter = {
     heuristic: function (array) { return array.every(function (item) { return item === 1; }); },
@@ -169,12 +162,12 @@ var isAllBetter = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 var isOnlyOneWorse = {
-    heuristic: function (array) { return (array.filter(function (item) { return item === -1; }).length === 1); },
+    heuristic: function (array) {
+        return (array.filter(function (item) { return item === -1; }).length === 1);
+    },
     weight: -100,
 };
 /**
@@ -183,9 +176,7 @@ var isOnlyOneWorse = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{heuristic: (array: number[]) => boolean, weight: number}}
  */
 var isOnlyWorseOrBetter = {
     heuristic: function (array) { return array.every(function (item) { return item !== 0; }); },
@@ -197,9 +188,7 @@ var isOnlyWorseOrBetter = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{heuristic: (cards: DeckCardTypes[]) => boolean, weight: number}[]}
  */
 var absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
 /**
@@ -208,9 +197,7 @@ var absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{heuristic: (array: number[]) => boolean, weight: number}[]}
  */
 //const relativeHeuristicsForTradingCoin: (((array: number[]) => boolean) | {
 //    heuristic: (array: number[]) => boolean,
@@ -226,12 +213,15 @@ var absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {number[]} array
- * @returns {{mean: number, variation: number}}
- * @constructor
+ * @param array
+ * @returns
  */
 var GetCharacteristics = function (array) {
-    var mean = array.reduce(function (acc, item) { return acc + item / array.length; }, 0), variation = array.reduce(function (acc, item) { return acc + (Math.pow((item - mean), 2)) / array.length; }, 0);
+    var mean = array.reduce(function (acc, item) {
+        return acc + item / array.length;
+    }, 0), variation = array.reduce(function (acc, item) {
+        return acc + (Math.pow((item - mean), 2)) / array.length;
+    }, 0);
     return {
         mean: mean,
         variation: variation,
@@ -245,10 +235,9 @@ var GetCharacteristics = function (array) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {{variation: number, mean: number}} stat1
- * @param {{variation: number, mean: number}} stat2
- * @returns {number}
- * @constructor
+ * @param stat1
+ * @param stat2
+ * @returns
  */
 var CompareCharacteristics = function (stat1, stat2) {
     var eps = 0.0001, tempVariation = stat1.variation - stat2.variation;
@@ -265,25 +254,27 @@ var CompareCharacteristics = function (stat1, stat2) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {number[]}
- * @constructor
+ * @param G
+ * @param ctx
+ * @returns
  */
 export var CheckHeuristicsForCoinsPlacement = function (G, ctx) {
     var taverns = G.taverns /*,
         averageCards: ICard[] = G.averageCards*/;
     var result = Array(taverns.length).fill(0);
-    var temp = taverns.map(function (tavern) { return absoluteHeuristicsForTradingCoin
-        .reduce(function (acc, item) {
-        return acc + (tavern !== null && item.heuristic(tavern) ? item.weight : 0);
-    }, 0); });
+    var temp = taverns.map(function (tavern) {
+        return absoluteHeuristicsForTradingCoin.reduce(function (acc, item) {
+            return acc + (tavern !== null && item.heuristic(tavern) ? item.weight : 0);
+        }, 0);
+    });
     result = result.map(function (value, index) { return value + temp[index]; });
     var tempNumbers = taverns.map(function (tavern) { return tavern
         .map(function (card, index, arr) {
         return EvaluateCard(G, ctx, card, index, arr);
     }); });
-    var tempChars = tempNumbers.map(function (element) { return GetCharacteristics(element); });
+    var tempChars = tempNumbers.map(function (element) {
+        return GetCharacteristics(element);
+    });
     var maxIndex = 0, minIndex = tempChars.length - 1;
     for (var i = 1; i < temp.length; i++) {
         if (CompareCharacteristics(tempChars[maxIndex], tempChars[i]) < 0) {

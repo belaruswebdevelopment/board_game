@@ -6,7 +6,7 @@
  * </ol>
  *
  * @param {IInitialTradingCoinConfig | IMarketCoinConfig} config Конфиг.
- * @returns {config is IInitialTradingCoinConfig} Является ли объект конфигом базовых монет или конфигом монет рынка.
+ * @returns Является ли объект конфигом базовых монет или конфигом монет рынка.
  */
 export var isInitialPlayerCoinsConfigNotMarket = function (config) { return config.isTriggerTrading !== undefined; };
 /**
@@ -15,8 +15,6 @@ export var isInitialPlayerCoinsConfigNotMarket = function (config) { return conf
  * <ol>
  * <li>Происходит при создании всех базовых монет игрока в ходе инициализации игры.</li>
  * </ol>
- *
- * @type {({isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number} | {isTriggerTrading: boolean, value: number})[]}
  */
 export var initialPlayerCoinsConfig = [
     {
@@ -46,8 +44,6 @@ export var initialPlayerCoinsConfig = [
  * <ol>
  * <li>Происходит при создании всех монет рынка в ходе инициализации игры.</li>
  * </ol>
- *
- * @type {({count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number} | {count: () => INumberValues, value: number})[]}
  */
 export var marketCoinsConfig = [
     {

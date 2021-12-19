@@ -13,15 +13,16 @@ import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardF
  * <li>Используется ботами для доступных ходов.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {IMoves[]} Массив возможных мувов у ботов.
+ * @param G
+ * @param ctx
+ * @returns Массив возможных мувов у ботов.
  */
 export var enumerate = function (G, ctx) {
     var _a, _b;
     //make false for standard bot
     var enableAdvancedBot = true, uniqueArr = [];
-    var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(moveBy[ctx.phase]).some(function (key) { return key.includes(advancedString); });
+    var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(moveBy[ctx.phase])
+        .some(function (key) { return key.includes(advancedString); });
     var activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : "default";
     // todo Fix it, now just for bot can do RANDOM move
     var botMoveArguments = [];
@@ -76,11 +77,13 @@ export var enumerate = function (G, ctx) {
                 if (tavernCard === null) {
                     return "continue";
                 }
-                if (tavern_1.some(function (card) { return CompareCards(tavernCard, card) < 0; })) {
+                if (tavern_1.some(function (card) {
+                    return CompareCards(tavernCard, card) < 0;
+                })) {
                     return "continue";
                 }
-                var isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, i, tavern_1) < 0, isExistCardNotWorse = tavern_1.some(function (card) { return (card !== null) &&
-                    (EvaluateCard(G, ctx, tavernCard, i, tavern_1) >= 0); });
+                var isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, i, tavern_1) < 0, isExistCardNotWorse = tavern_1.some(function (card) { return (card !== null)
+                    && (EvaluateCard(G, ctx, tavernCard, i, tavern_1) >= 0); });
                 if (isCurrentCardWorse && isExistCardNotWorse) {
                     return "continue";
                 }
@@ -96,7 +99,7 @@ export var enumerate = function (G, ctx) {
                 }
                 if (flag) {
                     uniqueArr.push(tavernCard);
-                    moves.push({ move: "ClickCard", args: [i] });
+                    moves.push({ move: "ClickCardMove", args: [i] });
                 }
                 flag = true;
             };
@@ -111,7 +114,7 @@ export var enumerate = function (G, ctx) {
                 }
             }
             moves.push({
-                move: "ClickCampCard",
+                move: "ClickCampCardMove",
                 args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
             });
         }
@@ -140,7 +143,7 @@ export var enumerate = function (G, ctx) {
                 if (hasTrading) {
                     return "continue";
                 }
-                moves.push({ move: "BotsPlaceAllCoins", args: [allCoinsOrder[i]] });
+                moves.push({ move: "BotsPlaceAllCoinsMove", args: [allCoinsOrder[i]] });
             }
             else if (tradingProfit > 0) {
                 if (!hasTrading) {
@@ -157,19 +160,17 @@ export var enumerate = function (G, ctx) {
                             }).length <= 1;
                     }
                     if (hasPositionForMinCoin) {
-                        isMinCoinsOnPosition =
-                            handCoins_1.filter(function (coin) {
-                                return coin !== null && coin.value < minCoin_1.value;
-                            }).length <= 1;
+                        isMinCoinsOnPosition = handCoins_1.filter(function (coin) { return coin !== null
+                            && coin.value < minCoin_1.value; }).length <= 1;
                     }
                     if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
-                        moves.push({ move: "BotsPlaceAllCoins", args: [G.botData.allCoinsOrder[i]] });
-                        //console.log("#" + i.toString().padStart(2) + ":     " + allCoinsOrder[i].map(item => handCoins[item].value));
+                        moves.push({ move: "BotsPlaceAllCoinsMove", args: [G.botData.allCoinsOrder[i]] });
+                        //console.log(`#` + i.toString().padStart(2) + `:     ` + allCoinsOrder[i].map(item => handCoins[item].value));
                     }
                 }
             }
             else {
-                moves.push({ move: "BotsPlaceAllCoins", args: [allCoinsOrder[i]] });
+                moves.push({ move: "BotsPlaceAllCoinsMove", args: [allCoinsOrder[i]] });
             }
         };
         for (var i = 0; i < allCoinsOrder.length; i++) {
@@ -181,7 +182,7 @@ export var enumerate = function (G, ctx) {
     if (activeStageOfCurrentPlayer === "placeCards" || ctx.phase === "endTier") {
         PlaceCardsProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "PlaceCard",
+            move: "PlaceCardMove",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
@@ -190,14 +191,14 @@ export var enumerate = function (G, ctx) {
         GetMjollnirProfitProfit(G, ctx, totalSuitsRanks);
         botMoveArguments.push([totalSuitsRanks.indexOf(Math.max.apply(Math, totalSuitsRanks))]);
         moves.push({
-            move: "GetMjollnirProfit",
+            move: "GetMjollnirProfitMove",
             args: __spreadArray([], botMoveArguments[0], true),
         });
     }
     if (ctx.phase === "brisingamensEndGame") {
         DiscardAnyCardFromPlayerBoardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "DiscardCardFromPlayerBoard",
+            move: "DiscardCardFromPlayerBoardMove",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
@@ -205,10 +206,10 @@ export var enumerate = function (G, ctx) {
         if (G.drawProfit === "startOrPassEnlistmentMercenaries") {
             StartEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             if (Math.floor(Math.random() * botMoveArguments.length) === 0) {
-                moves.push({ move: "StartEnlistmentMercenaries", args: [] });
+                moves.push({ move: "StartEnlistmentMercenariesMove", args: [] });
             }
             else {
-                moves.push({ move: "PassEnlistmentMercenaries", args: [] });
+                moves.push({ move: "PassEnlistmentMercenariesMove", args: [] });
             }
         }
         else if (G.drawProfit === "enlistmentMercenaries") {
@@ -221,7 +222,7 @@ export var enumerate = function (G, ctx) {
         else if (G.drawProfit === "placeEnlistmentMercenaries") {
             PlaceEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: "PlaceEnlistmentMercenaries",
+                move: "PlaceEnlistmentMercenariesMove",
                 args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
             });
         }
@@ -236,7 +237,7 @@ export var enumerate = function (G, ctx) {
             move: "ClickHandCoin",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
-        moves.push({ move: "ClickBoardCoin", args: [G.currentTavern + 1] });
+        moves.push({ move: "ClickBoardCoinMove", args: [G.currentTavern + 1] });
     }
     if (activeStageOfCurrentPlayer === "placeTradingCoinsUline") {
         for (var j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
@@ -249,28 +250,28 @@ export var enumerate = function (G, ctx) {
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
         if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
-            moves.push({ move: "ClickBoardCoin", args: [G.tavernsNum + 1] });
+            moves.push({ move: "ClickBoardCoinMove", args: [G.tavernsNum + 1] });
         }
         else {
-            moves.push({ move: "ClickBoardCoin", args: [G.tavernsNum] });
+            moves.push({ move: "ClickBoardCoinMove", args: [G.tavernsNum] });
         }
     }
     if (activeStageOfCurrentPlayer === "addCoinToPouch") {
         AddCoinToPouchProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "AddCoinToPouch",
+            move: "AddCoinToPouchMove",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (activeStageOfCurrentPlayer === "upgradeCoinVidofnirVedrfolnir") {
         UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "UpgradeCoinVidofnirVedrfolnir",
+            move: "UpgradeCoinVidofnirVedrfolnirMove",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     // TODO FIX It's not activeStageOfCurrentPlayer it' for Other players!!!
-    //        if (activeStageOfCurrentPlayer === "discardSuitCard") {
+    // if (activeStageOfCurrentPlayer === "discardSuitCard") {
     if (ctx.phase === "pickCards" && ctx.activePlayers !== null && activeStageOfCurrentPlayer === "default") {
         // TODO Fix this (only for quick bot actions)
         // todo Bot can't do async turns...?
@@ -282,7 +283,7 @@ export var enumerate = function (G, ctx) {
                     for (var i = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
                         for (var j = 0; j < 1; j++) {
                             if (G.publicPlayers[p].cards[suitId][i] !== undefined) {
-                                if (G.publicPlayers[p].cards[suitId][i].type !== "герой") {
+                                if (G.publicPlayers[p].cards[suitId][i].type !== "\u0433\u0435\u0440\u043E\u0439") {
                                     var points = G.publicPlayers[p].cards[suitId][i].points;
                                     if (points !== null) {
                                         botMoveArguments.push([points]);
@@ -291,19 +292,16 @@ export var enumerate = function (G, ctx) {
                             }
                         }
                     }
-                }
-                var minValue = Math.min.apply(Math, botMoveArguments);
-                var minCardIndex = G.publicPlayers[p].cards[suitId].findIndex(function (card) {
-                    return card.type !== "герой" && card.points === minValue;
-                });
-                if (minCardIndex !== -1) {
-                    moves.push({
-                        move: "DiscardSuitCardFromPlayerBoard",
-                        args: [suitId, p, G.publicPlayers[p].cards[suitId]
-                                .findIndex(function (card) {
-                                return card.type !== "герой" && card.points === minValue;
-                            })],
+                    var minValue_1 = Math.min.apply(Math, botMoveArguments);
+                    var minCardIndex = G.publicPlayers[p].cards[suitId].findIndex(function (card) {
+                        return card.type !== "герой" && card.points === minValue_1;
                     });
+                    if (minCardIndex !== -1) {
+                        moves.push({
+                            move: "DiscardSuitCardFromPlayerBoardMove",
+                            args: [suitId, p, minCardIndex],
+                        });
+                    }
                 }
             };
             for (var p = 0; p < G.publicPlayers.length; p++) {
@@ -314,14 +312,14 @@ export var enumerate = function (G, ctx) {
     if (activeStageOfCurrentPlayer === "discardCardFromBoard") {
         DiscardCardFromBoardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "DiscardCard",
+            move: "DiscardCardMove",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (activeStageOfCurrentPlayer === "pickDiscardCard") {
         PickDiscardCardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "PickDiscardCard",
+            move: "PickDiscardCardMove",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
@@ -329,7 +327,7 @@ export var enumerate = function (G, ctx) {
         if (activeStageOfCurrentPlayer === "discardCard") {
             DiscardCardProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: "DiscardCard2Players",
+                move: "DiscardCard2PlayersMove",
                 args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
             });
         }
@@ -337,13 +335,13 @@ export var enumerate = function (G, ctx) {
     if (activeStageOfCurrentPlayer === "pickCampCardHolda") {
         PickCampCardHoldaProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "ClickCampCardHolda",
+            move: "ClickCampCardHoldaMove",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
     }
     if (moves.length === 0 && ctx.phase !== null) {
         // todo Fix for bot no moves if have artefact with not pick new hero and get artifact with get new hero (he can pick hero by it's action)
-        console.log("ALERT: bot has " + moves.length + " moves. Phase: " + ctx.phase);
+        console.log("ALERT: bot has ".concat(moves.length, " moves. Phase: ").concat(ctx.phase));
     }
     return moves;
 };
@@ -354,7 +352,7 @@ export var enumerate = function (G, ctx) {
  * <li>Используется ботами для определения целей.</li>
  * </ol>
  *
- * @returns {{isEarlyGame: {weight: number, checker: (G: MyGameState) => boolean}, isFirst: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}, isStronger: {weight: number, checker: (G: MyGameState, ctx: Ctx) => boolean}}}
+ * @returns
  */
 export var objectives = function () { return ({
     isEarlyGame: {
@@ -365,7 +363,7 @@ export var objectives = function () { return ({
     },
     /*isWeaker: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== "placeCoins") {
+            if (ctx.phase !== `placeCoins`) {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
@@ -389,7 +387,7 @@ export var objectives = function () { return ({
     },*/
     /*isSecond: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== "placeCoins") {
+            if (ctx.phase !== `placeCoins`) {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
@@ -413,7 +411,7 @@ export var objectives = function () { return ({
     },*/
     /*isEqual: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== "placeCoins") {
+            if (ctx.phase !== `placeCoins`) {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
@@ -491,9 +489,9 @@ export var objectives = function () { return ({
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {number}
+ * @param G
+ * @param ctx
+ * @returns
  */
 export var iterations = function (G, ctx) {
     var maxIter = G.botData.maxIter;
@@ -554,9 +552,9 @@ export var iterations = function (G, ctx) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {number}
+ * @param G
+ * @param ctx
+ * @returns
  */
 export var playoutDepth = function (G, ctx) {
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {

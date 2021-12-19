@@ -100,7 +100,19 @@ export interface MyGameState {
     marketCoinsUnique: ICoin[],
     averageCards: ICard[],
     botData: IBotData,
+    // test: Test,
+    x: number,
 }
+
+/* export class Test {
+    constructor(public test: string) {
+
+    }
+
+    public testFunc = () => {
+        console.log(this.test + " !!!");
+    };
+} */
 
 /**
  * <h3>Сетап игры.</h3>
@@ -136,6 +148,8 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         campPicked: boolean = false,
         camp: CampDeckCardTypes[] = [],
         discardCampCardsDeck: CampDeckCardTypes[] = [];
+    // const test: Test = new Test("Dima&Sasha");
+    const x: number = 123;
     if (expansions.thingvellir.active) {
         for (let i: number = 0; i < tierToEnd; i++) {
             // todo Camp cards must be hidden from users?
@@ -209,6 +223,8 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         deckLength: decks[0].length,
     };
     return {
+        // test,
+        x,
         log,
         debug,
         winner,

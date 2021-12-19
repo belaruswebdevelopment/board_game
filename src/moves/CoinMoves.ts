@@ -21,7 +21,7 @@ import { ICoin } from "../Coin";
  * @param coinId Id монеты.
  * @returns
  */
-export const ClickHandCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
+export const ClickHandCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
     const isValidMove: boolean = IsValidMove({
         obj: G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId],
         objId: coinId,
@@ -45,7 +45,7 @@ export const ClickHandCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinI
  * @param coinId Id монеты.
  * @returns
  */
-export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
+export const ClickBoardCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         isValidMove: boolean = IsValidMove({ objId: coinId, range: [0, player.boardCoins.length] });
     if (!isValidMove) {
@@ -101,7 +101,7 @@ export const ClickBoardCoin: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coin
  * @param isInitial Является ли базовой.
  * @returns
  */
-export const ClickCoinToUpgrade: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
+export const ClickCoinToUpgradeMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
     isInitial: boolean): string | void => {
     const isValidMove: boolean = CoinUpgradeValidation(G, ctx, coinId, type);
     if (!isValidMove) {
@@ -132,8 +132,8 @@ export const ClickCoinToUpgrade: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
  * @param isInitial Является ли базовой.
  * @returns
  */
-export const UpgradeCoinVidofnirVedrfolnir: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
-    isInitial: boolean): string | void => {
+export const UpgradeCoinVidofnirVedrfolnirMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number,
+    type: string, isInitial: boolean): string | void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     const isValidMove: boolean = CoinUpgradeValidation(G, ctx, coinId, type) && config?.coinId !== coinId;
     if (!isValidMove) {
@@ -153,6 +153,6 @@ export const UpgradeCoinVidofnirVedrfolnir: Move<MyGameState> = (G: MyGameState,
  * @param ctx
  * @param coinId Id монеты.
  */
-export const AddCoinToPouch: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): void => {
+export const AddCoinToPouchMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], coinId);
 };

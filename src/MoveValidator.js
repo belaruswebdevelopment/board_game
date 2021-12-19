@@ -16,9 +16,8 @@ import { AddDataToLog, LogTypes } from "./Logging";
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {ICheckMoveParam} obj Параметры валидации мува.
- * @returns {boolean} Валидный ли мув.
- * @constructor
+ * @param obj Параметры валидации мува.
+ * @returns Валидный ли мув.
  */
 export var IsValidMove = function (obj) {
     return CheckMove(obj);
@@ -31,12 +30,11 @@ export var IsValidMove = function (obj) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {object | null | undefined} obj
- * @param {number} objId
- * @param {number[] | undefined} range
- * @param {number[] | undefined} values
- * @returns {boolean} Валидный ли мув.
- * @constructor
+ * @param obj
+ * @param objId
+ * @param range
+ * @param values
+ * @returns Валидный ли мув.
  */
 var CheckMove = function (_a) {
     var obj = _a.obj, objId = _a.objId, _b = _a.range, range = _b === void 0 ? [] : _b, _c = _a.values, values = _c === void 0 ? [] : _c;
@@ -57,10 +55,9 @@ var CheckMove = function (_a) {
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {number} num
- * @param {number[]} range
- * @returns {boolean}
- * @constructor
+ * @param num
+ * @param range
+ * @returns
  */
 var ValidateByRange = function (num, range) { return range[0] <= num && num < range[1]; };
 /**
@@ -71,10 +68,9 @@ var ValidateByRange = function (num, range) { return range[0] <= num && num < ra
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {number} num
- * @param {number[]} values
- * @returns {boolean}
- * @constructor
+ * @param num
+ * @param values
+ * @returns
  */
 var ValidateByValues = function (num, values) { return values.includes(num); };
 /**
@@ -85,12 +81,11 @@ var ValidateByValues = function (num, values) { return values.includes(num); };
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId
- * @param {string} type
- * @returns {boolean}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId
+ * @param type
+ * @returns
  */
 export var CoinUpgradeValidation = function (G, ctx, coinId, type) {
     var _a, _b;
@@ -115,9 +110,7 @@ export var CoinUpgradeValidation = function (G, ctx, coinId, type) {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{placeCoins: {default1: string, default2: string, default_advanced: string}, placeCoinsUline: {}, getMjollnirProfit: {}, null: {}, brisingamensEndGame: {}, pickCards: {default: string, discardSuitCard: string, upgradeCoin: string, defaultPickCampCard: string, pickHero: string}, getDistinctions: {default: string, upgradeCoin: string, pickDistinctionCard: string}, endTier: {pickHero: string}, enlistmentMercenaries: {upgradeCoin: string, pickHero: string}}}
  */
 export var moveBy = {
     null: {},
@@ -131,7 +124,7 @@ export var moveBy = {
         defaultPickCampCard: "ClickCampCard",
         pickHero: "ClickHeroCard",
         upgradeCoin: "ClickCoinToUpgrade",
-        discardSuitCard: "discardSuitCard"
+        discardSuitCard: "discardSuitCard",
     },
     getDistinctions: {
         default: "ClickDistinctionCard",
@@ -155,9 +148,7 @@ export var moveBy = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- *
  * @todo Саше: сделать описание функции и параметров.
- * @type {{ClickDistinctionCard: {getRange: ({G}: IMoveValidatorParams) => [number, number], validate: ({G, ctx, id}: IMoveValidatorParams) => boolean}, ClickCoinToUpgrade: {getRange: ({G, ctx}: IMoveValidatorParams) => [number, number], validate: ({G, ctx, id, type}: IMoveValidatorParams) => boolean}, ClickCardToPickDistinction: {getRange: () => [number, number], validate: () => boolean}, ClickCampCard: {getRange: ({G}: IMoveValidatorParams) => [number, number], validate: ({G, ctx}: IMoveValidatorParams) => boolean}, ClickHandCoin: {getRange: ({G, ctx}: IMoveValidatorParams) => [number, number], validate: ({G, ctx, id}: IMoveValidatorParams) => boolean}, BotsPlaceAllCoins: {getValue: ({G, id}: IMoveValidatorParams) => number[], getRange: ({G}: IMoveValidatorParams) => [number, number], validate: () => boolean}, ClickHeroCard: {getRange: ({G}: IMoveValidatorParams) => [number, number], validate: ({G, ctx, id}: IMoveValidatorParams) => boolean}, ClickBoardCoin: {getRange: ({G, ctx}: IMoveValidatorParams) => [number, number], validate: ({G, ctx, id}: IMoveValidatorParams) => boolean}}}
  */
 export var moveValidators = {
     // todo Add all validators to all moves
@@ -172,7 +163,7 @@ export var moveValidators = {
                 return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
                     && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id] !== null;
             }
-            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'id'.");
             return false;
         },
     },
@@ -187,7 +178,7 @@ export var moveValidators = {
                 return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined
                     && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[id] === null;
             }
-            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'id'.");
             return false;
         },
     },
@@ -201,7 +192,7 @@ export var moveValidators = {
             if (id !== undefined) {
                 return G.botData.allCoinsOrder[id];
             }
-            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'id'.");
             // todo Return []???
             return [];
         },
@@ -222,21 +213,20 @@ export var moveValidators = {
                     if ((config === null || config === void 0 ? void 0 : config.conditions) !== undefined) {
                         var suitId = GetSuitIndexByName(config.conditions.suitCountMin.suit);
                         if (suitId !== -1) {
-                            isValid =
-                                G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].reduce(TotalRank, 0) >=
-                                    config.conditions.suitCountMin.value;
+                            isValid = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+                                .reduce(TotalRank, 0) >= config.conditions.suitCountMin.value;
                             return isValid;
                         }
-                        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430 \u043D\u0435\u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0430\u044F \u0444\u0440\u0430\u043A\u0446\u0438\u044F \n                        ".concat(config.conditions.suitCountMin.suit, "."));
+                        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430 \u043D\u0435\u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0430\u044F \u0444\u0440\u0430\u043A\u0446\u0438\u044F ".concat(config.conditions.suitCountMin.suit, "."));
                     }
                     else {
-                        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435\u0442 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 stack[0] \u0443 \n                        \u0433\u0435\u0440\u043E\u044F ".concat(G.heroes[id].name, "."));
+                        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435\u0442 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 stack[0] \u0443 \u0433\u0435\u0440\u043E\u044F ".concat(G.heroes[id].name, "."));
                     }
                     return false;
                 }
                 return isValid;
             }
-            AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не передан обязательный параметр 'id'.");
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'id'.");
             return false;
         },
     },
@@ -251,7 +241,7 @@ export var moveValidators = {
             if (id !== undefined && type !== undefined) {
                 return CoinUpgradeValidation(G, ctx, id, type);
             }
-            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'id' \u0438\u043B\u0438 \u043D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \n            \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'type'.");
+            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'id' \u0438\u043B\u0438 \u043D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'type'.");
             return false;
         },
     },
@@ -280,9 +270,8 @@ export var moveValidators = {
         },
         validate: function (_a) {
             var G = _a.G, ctx = _a.ctx;
-            return G.expansions.thingvellir.active
-                && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
-                    || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
+            return G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+                || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
         },
     },
 };

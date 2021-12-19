@@ -8,15 +8,13 @@ import { Trading } from "../Coin";
  * <li>В конце игры, если получено преимущество по фракции воинов.</li>
  * </ol>
  *
- * @param {IPublicPlayer} player Игрок.
- * @returns {number} Максимальная монета игрока.
- * @constructor
+ * @param player Игрок.
+ * @returns Максимальная монета игрока.
  */
-export var GetMaxCoinValue = function (player) {
-    return Math.max.apply(Math, __spreadArray(__spreadArray([], player.boardCoins.filter(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.value); })
-        .map(function (coin) { return coin.value; }), false), player.handCoins.filter(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.value); })
-        .map(function (coin) { return coin.value; }), false));
-};
+export var GetMaxCoinValue = function (player) { return (Math.max.apply(Math, __spreadArray(__spreadArray([], player.boardCoins
+    .filter(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.value); })
+    .map(function (coin) { return coin.value; }), false), player.handCoins.filter(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.value); })
+    .map(function (coin) { return coin.value; }), false))); };
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
@@ -24,10 +22,9 @@ export var GetMaxCoinValue = function (player) {
  * <li>Когда заканчивается базовый выбор карты.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {boolean} Активировался ли обмен монет.
- * @constructor
+ * @param G
+ * @param ctx
+ * @returns Активировался ли обмен монет.
  */
 export var ActivateTrading = function (G, ctx) {
     var _a;
@@ -53,10 +50,9 @@ export var ActivateTrading = function (G, ctx) {
  * <li>После выкладки всех монет игроками.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {{playersOrder: number[], exchangeOrder: number[]}} Порядок ходов игроков & порядок изменения ходов игроками.
- * @constructor
+ * @param G
+ * @param ctx
+ * @returns Порядок ходов игроков & порядок изменения ходов игроками.
  */
 export var ResolveBoardCoins = function (G, ctx) {
     var _a, _b;
@@ -97,7 +93,11 @@ export var ResolveBoardCoins = function (G, ctx) {
         var tiePlayers = G.publicPlayers.filter(function (player) { var _a; return ((_a = player.boardCoins[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.value) === Number(prop) && player.priority.isExchangeable; });
         var _loop_2 = function () {
             var _c;
-            var tiePlayersPriorities = tiePlayers.map(function (player) { return player.priority.value; }), maxPriority = Math.max.apply(Math, tiePlayersPriorities), minPriority = Math.min.apply(Math, tiePlayersPriorities), maxIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === maxPriority; }), minIndex = G.publicPlayers.findIndex(function (player) { return player.priority.value === minPriority; });
+            var tiePlayersPriorities = tiePlayers.map(function (player) { return player.priority.value; }), maxPriority = Math.max.apply(Math, tiePlayersPriorities), minPriority = Math.min.apply(Math, tiePlayersPriorities), maxIndex = G.publicPlayers.findIndex(function (player) {
+                return player.priority.value === maxPriority;
+            }), minIndex = G.publicPlayers.findIndex(function (player) {
+                return player.priority.value === minPriority;
+            });
             tiePlayers.splice(tiePlayers.findIndex(function (player) {
                 return player.priority.value === maxPriority;
             }), 1);

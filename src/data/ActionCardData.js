@@ -1,17 +1,16 @@
+import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
 /**
  * <h3>Карта улучшения монеты на +3.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
- *
- * @type {{stack: ({config: {stageName: string, name: string, drawName: string, value: number}, actionName: string} | {config: {value: number}, actionName: string})[], amount: () => IActionCardValues, value: number}}
  */
 var upgradeCoinUpTo3 = {
     value: 3,
     stack: [
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 name: "upgradeCoin",
                 stageName: "upgradeCoin",
@@ -20,7 +19,7 @@ var upgradeCoinUpTo3 = {
             },
         },
         {
-            actionName: "UpgradeCoinAction",
+            action: UpgradeCoinAction,
             config: {
                 value: 3,
             },
@@ -51,14 +50,12 @@ var upgradeCoinUpTo3 = {
  * <ol>
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
- *
- * @type {{stack: ({config: {stageName: string, name: string, drawName: string, value: number}, actionName: string} | {config: {value: number}, actionName: string})[], amount: () => IActionCardValues, value: number}}
  */
 var upgradeCoinUpTo5 = {
     value: 5,
     stack: [
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 name: "upgradeCoin",
                 stageName: "upgradeCoin",
@@ -67,7 +64,7 @@ var upgradeCoinUpTo5 = {
             },
         },
         {
-            actionName: "UpgradeCoinAction",
+            action: UpgradeCoinAction,
             config: {
                 value: 5,
             },
@@ -98,7 +95,5 @@ var upgradeCoinUpTo5 = {
  * <ol>
  * <li>Происходит при создании всех карт улучшения монет в ходе инициализации игры.</li>
  * </ol>
- *
- * @type {IActionCardConfig[]}
  */
 export var actionCardsConfigArray = [upgradeCoinUpTo3, upgradeCoinUpTo5];

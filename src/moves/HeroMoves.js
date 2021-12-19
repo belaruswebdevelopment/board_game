@@ -9,13 +9,12 @@ import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
  * <li>При необходимости выбора героя.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} heroId Id героя.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param heroId Id героя.
+ * @returns
  */
-export var ClickHeroCard = function (G, ctx, heroId) {
+export var ClickHeroCardMove = function (G, ctx, heroId) {
     var isValidMove = IsValidMove({ obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length] });
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -29,12 +28,11 @@ export var ClickHeroCard = function (G, ctx, heroId) {
  * <li>При выборе героя со способностью выкладки карт на планшет игрока.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} suitId Id фракции.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param suitId Id фракции.
  */
-export var PlaceCard = function (G, ctx, suitId) {
+export var PlaceCardMove = function (G, ctx, suitId) {
     EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 /**
@@ -44,12 +42,11 @@ export var PlaceCard = function (G, ctx, suitId) {
  * <li>При выборе героя со способностью сброса карт с планшета игрока.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} suitId Id фракции.
- * @param {number} cardId Id карты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param suitId Id фракции.
+ * @param cardId Id карты.
  */
-export var DiscardCard = function (G, ctx, suitId, cardId) {
+export var DiscardCardMove = function (G, ctx, suitId, cardId) {
     EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };

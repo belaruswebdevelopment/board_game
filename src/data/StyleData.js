@@ -5,8 +5,6 @@ import { SuitNames } from "./SuitData";
  * <ol>
  * <li>Используется при отрисовке всех картинок в игре.</li>
  * </ol>
- *
- * @type {{Priorities: (priority: number) => IBackground, CoinBack: () => IBackground, Taverns: (tavernId: number) => IBackground, Priority: () => IBackground, Heroes: (game: string, heroName: string) => IBackground, Distinctions: (distinction: string) => IBackground, Suits: (suitName: string) => IBackground, DistinctionsBack: () => IBackground, HeroBack: () => IBackground, Exchange: () => IBackground, Coin: (value: number, initial: boolean) => IBackground, CampCards: (tier: number, cardPath: string) => IBackground, Cards: (suit: string, points: number, name: string) => IBackground, Camp: () => IBackground}}
  */
 export var Styles = {
     Suits: function (suitName) { return ({
@@ -140,11 +138,11 @@ export var Styles = {
         }
         else {
             switch (name) {
-                case "улучшение монеты на +3":
+                case "\u0443\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B \u043D\u0430 +3":
                     return {
                         background: "url(/img/cards/basic/basic0.png) no-repeat -128px -240px / 288px 288px",
                     };
-                case "улучшение монеты на +5":
+                case "\u0443\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B \u043D\u0430 +5":
                     return {
                         background: "url(/img/cards/basic/basic1.png) no-repeat -128px -240px / 288px 288px",
                     };
@@ -326,51 +324,51 @@ export var Styles = {
             switch (cardPath) {
                 case "Draupnir":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat 0px 0px / 128px 144px"),
+                        background: "url(/ img / cards / camp / Camp".concat(tier, ".png) no- repeat 0px 0px / 128px 144px"),
                     };
                 case "Fafnir Baleygr":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -32px 0px  / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 32px 0px / 128px 144px"),
                     };
                 case "Svalinn":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -64px 0px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 64px 0px / 128px 144px"),
                     };
                 case "Megingjord":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -96px 0px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 96px 0px / 128px 144px"),
                     };
                 case "Vegvisir":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat 0px -48px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat 0px - 48px / 128px 144px"),
                     };
                 case "Vidofnir Vedrfolnir":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -32px -48px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 32px - 48px / 128px 144px"),
                     };
                 case "hunter explorer 6":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -64px -48px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 64px - 48px / 128px 144px"),
                     };
                 case "hunter miner 1":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -96px -48px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 96px - 48px / 128px 144px"),
                     };
                 case "blacksmith miner 1":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat 0px -96px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat 0px - 96px / 128px 144px"),
                     };
                 case "warrior 6 blacksmith":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -32px -96px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 32px - 96px / 128px 144px"),
                     };
                 case "warrior 6 explorer 8":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -64px -96px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 64px - 96px / 128px 144px"),
                     };
                 case "warrior 9 explorer 11":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -96px -96px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 96px - 96px / 128px 144px"),
                     };
                 default:
                     return {
@@ -382,51 +380,51 @@ export var Styles = {
             switch (cardPath) {
                 case "Mjollnir":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat 0px 0px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat 0px 0px / 128px 144px"),
                     };
                 case "Hofud":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -32px 0px  / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 32px 0px / 128px 144px"),
                     };
                 case "Brisingamens":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -64px 0px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 64px 0px / 128px 144px"),
                     };
                 case "Hrafnsmerki":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -96px 0px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 96px 0px / 128px 144px"),
                     };
                 case "Gjallarhorn":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat 0px -48px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat 0px - 48px / 128px 144px"),
                     };
                 case "Jarnglofi":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -32px -48px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 32px - 48px / 128px 144px"),
                     };
                 case "hunter blacksmith":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -64px -48px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 64px - 48px / 128px 144px"),
                     };
                 case "warrior 9 explorer 11":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -96px -48px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 96px - 48px / 128px 144px"),
                     };
                 case "blacksmith explorer 8":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat 0px -96px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat 0px - 96px / 128px 144px"),
                     };
                 case "warrior 6 miner 1":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -32px -96px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 32px - 96px / 128px 144px"),
                     };
                 case "explorer 8 miner 1":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -64px -96px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 64px - 96px / 128px 144px"),
                     };
                 case "warrior 6 hunter":
                     return {
-                        background: "url(/img/cards/camp/Camp".concat(tier, ".png) no-repeat -96px -96px / 128px 144px"),
+                        background: "url(/img/cards / camp / Camp".concat(tier, ".png) no - repeat - 96px - 96px / 128px 144px"),
                     };
                 default:
                     return {
@@ -439,7 +437,7 @@ export var Styles = {
         };
     },
     Coin: function (value, initial) { return ({
-        background: "url(/img/coins/Coin".concat(value).concat(initial ? "Initial" : "", ".jpg) no-repeat 0px 0px / 40px 40px"),
+        background: "url(/img/coins / Coin".concat(value).concat(initial ? "Initial" : "", ".jpg) no - repeat 0px 0px / 40px 40px"),
     }); },
     CoinBack: function () { return ({
         background: "url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px",
@@ -448,7 +446,7 @@ export var Styles = {
         background: "url(/img/priorities/Priority.png) no-repeat -34px -7px / 66px 36px",
     }); },
     Priorities: function (priority) { return ({
-        background: "url(/img/priorities/Priority".concat(priority, ".png) no-repeat 0px 0px / 28px 38px"),
+        background: "url(/img/priorities / Priority".concat(priority, ".png) no - repeat 0px 0px / 28px 38px"),
     }); },
     Exchange: function () { return ({
         background: "url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px",

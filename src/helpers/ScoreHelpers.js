@@ -5,10 +5,9 @@
  * <li>Применяется при подсчёте очков фракций, не зависящих от количества шевронов.</li>
  * </ol>
  *
- * @param {number} accumulator Аккумулятивное значение очков.
- * @param {PlayerCardsType} currentValue Текущее значение очков.
- * @returns {number} Суммарное количество очков фракции.
- * @constructor
+ * @param accumulator Аккумулятивное значение очков.
+ * @param currentValue Текущее значение очков.
+ * @returns Суммарное количество очков фракции.
  */
 export var TotalPoints = function (accumulator, currentValue) {
     if (currentValue.points !== null) {
@@ -23,10 +22,9 @@ export var TotalPoints = function (accumulator, currentValue) {
  * <li>Применяется при подсчёте шевронов фракций, не зависящих от количества очков.</li>
  * </ol>
  *
- * @param {number} accumulator Аккумулятивное значение шевронов.
- * @param {PlayerCardsType} currentValue Текущее значение шевронов.
- * @returns {number} Суммарное количество шевронов фракции.
- * @constructor
+ * @param accumulator Аккумулятивное значение шевронов.
+ * @param currentValue Текущее значение шевронов.
+ * @returns Суммарное количество шевронов фракции.
  */
 export var TotalRank = function (accumulator, currentValue) {
     if (currentValue.rank !== null) {
@@ -41,11 +39,10 @@ export var TotalRank = function (accumulator, currentValue) {
  * <li>Применяется для подсчёта очков фракции, зависящих от арифметической прогрессии очков по количеству шевронов (фракция кузнецов).</li>
  * </ol>
  *
- * @param {number} startValue Стартовое значение очков.
- * @param {number} step Шаг.
- * @param {number} ranksCount Суммарное количество шевронов.
- * @returns {number} Суммарное количество очков фракции.
- * @constructor
+ * @param startValue Стартовое значение очков.
+ * @param step Шаг.
+ * @param ranksCount Суммарное количество шевронов.
+ * @returns Суммарное количество очков фракции.
  */
 export var ArithmeticSum = function (startValue, step, ranksCount) {
     return (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;

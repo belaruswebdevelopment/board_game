@@ -4,7 +4,7 @@ import { CountMarketCoins } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { tavernsConfig } from "../Tavern";
 import { Styles } from "../data/StyleData";
-import { DrawBoard, DrawCard, DrawCoin, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard } from "../helpers/UIHelpers";
+import { DrawBoard, DrawCard, DrawCoin, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard, OnClickCampCard, OnClickCard, OnClickCardToPickDistinction, OnClickCoinToUpgrade, OnClickHandCoin, OnClickHeroCard } from "../helpers/UIHelpers";
 import { isCardNotAction } from "../Card";
 import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
 /**
@@ -14,15 +14,15 @@ import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, Ge
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле информации о количестве карт по эпохам.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле информации о количестве карт по эпохам.
  */
 export var DrawTierCards = function (data) { return (_jsxs("b", { children: ["Tier: ", _jsxs("span", __assign({ className: "italic" }, { children: [data.props.G.decks.length - data.props.G.tierToEnd + 1 > data.props.G.decks.length ?
                     data.props.G.decks.length : data.props.G.decks.length - data.props.G.tierToEnd + 1, "/", data.props.G.decks.length, " (", data.props.G.decks.length - data.props.G.tierToEnd !== 2 ?
                     data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0, data.props.G.decks.length - data.props.G.tierToEnd === 0 ? "/"
-                    + data.props.G.decks.reduce(function (count, current) { return count + current.length; }, 0)
-                    : "", " cards left)"] }), void 0)] }, void 0)); };
+                    + data.props.G.decks.reduce(function (count, current) {
+                        return count + current.length;
+                    }, 0) : "", "cards left)"] }), void 0)] }, void 0)); };
 /**
  * <h3>Отрисовка игровой информации о текущем игроке и текущем ходе.</h3>
  * <p>Применения:</p>
@@ -30,9 +30,8 @@ export var DrawTierCards = function (data) { return (_jsxs("b", { children: ["Ti
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле информации о текущем ходу.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле информации о текущем ходу.
  */
 export var DrawCurrentPlayerTurn = function (data) { return (_jsxs("b", { children: ["Current player: ", _jsxs("span", __assign({ className: "italic" }, { children: ["Player ", Number(data.props.ctx.currentPlayer) + 1] }), void 0), " | Turn: ", _jsx("span", __assign({ className: "italic" }, { children: data.props.ctx.turn }), void 0)] }, void 0)); };
 /**
@@ -42,9 +41,8 @@ export var DrawCurrentPlayerTurn = function (data) { return (_jsxs("b", { childr
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле информации о ходе/победителях игры.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле информации о ходе/победителях игры.
  */
 export var DrawWinner = function (data) {
     var winner;
@@ -76,9 +74,8 @@ export var DrawWinner = function (data) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле рынка монет.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле рынка монет.
  */
 export var DrawMarketCoins = function (data) {
     var boardRows = [], drawData = DrawBoard(data.props.G.marketCoinsUnique.length), countMarketCoins = CountMarketCoins(data.props.G);
@@ -87,7 +84,7 @@ export var DrawMarketCoins = function (data) {
         boardRows[i] = [];
         for (var j = 0; j < drawData.boardCols; j++) {
             var increment = i * drawData.boardCols + j, tempCoinValue = data.props.G.marketCoinsUnique[increment].value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? "text-red-500" : "text-blue-500";
-            DrawCoin(data, boardCells, "market", data.props.G.marketCoinsUnique[increment], increment, null, coinClassName, countMarketCoins[tempCoinValue], "OnClickHandCoin", j);
+            DrawCoin(data, boardCells, "market", data.props.G.marketCoinsUnique[increment], increment, null, coinClassName, countMarketCoins[tempCoinValue], OnClickHandCoin, j);
             if (increment + 1 === data.props.G.marketCoinsUnique.length) {
                 break;
             }
@@ -103,9 +100,8 @@ export var DrawMarketCoins = function (data) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле героев.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле героев.
  */
 export var DrawHeroes = function (data) {
     var boardRows = [], drawData = DrawBoard(data.props.G.heroes.length);
@@ -114,7 +110,7 @@ export var DrawHeroes = function (data) {
         boardRows[i] = [];
         for (var j = 0; j < drawData.boardCols; j++) {
             var increment = i * drawData.boardCols + j;
-            DrawCard(data, boardCells, data.props.G.heroes[increment], increment, null, null, "OnClickHeroCard", increment);
+            DrawCard(data, boardCells, data.props.G.heroes[increment], increment, null, null, OnClickHeroCard, increment);
             if (increment + 1 === data.props.G.heroes.length) {
                 break;
             }
@@ -130,9 +126,8 @@ export var DrawHeroes = function (data) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле преимуществ в конце эпохи.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле преимуществ в конце эпохи.
  */
 export var DrawDistinctions = function (data) {
     var boardCells = [];
@@ -154,10 +149,9 @@ export var DrawDistinctions = function (data) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @param {string} option Опция отрисовки конкретного профита.
- * @returns {JSX.Element} Поле профита.
- * @constructor
+ * @param data Глобальные параметры.
+ * @param option Опция отрисовки конкретного профита.
+ * @returns Поле профита.
  */
 export var DrawProfit = function (data, option) {
     var _a, _b, _c, _d, _e;
@@ -166,7 +160,7 @@ export var DrawProfit = function (data, option) {
     var _loop_2 = function (i) {
         if (option === "placeCards") {
             if (config !== undefined) {
-                caption += "suit to place ".concat((_a = data.props.G.actionsNum) !== null && _a !== void 0 ? _a : 1, " ").concat(config.drawName, "\n                ").concat(data.props.G.actionsNum > 1 ? "s" : "", " to ").concat(data.props.G.actionsNum > 1 ? "different" : "that", " \n                suit.");
+                caption += "suit to place ".concat((_a = data.props.G.actionsNum) !== null && _a !== void 0 ? _a : 1, " ").concat(config.drawName, " ").concat(data.props.G.actionsNum > 1 ? "s" : "", " to ").concat(data.props.G.actionsNum > 1 ? "different" : "that", " suit.");
                 PlaceCardsProfit(data.props.G, data.props.ctx, data, boardCells);
             }
         }
@@ -179,20 +173,22 @@ export var DrawProfit = function (data, option) {
                 if (isCardNotAction(card)) {
                     suit = card.suit;
                 }
-                DrawCard(data, boardCells, data.props.G.decks[1][j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], suit, "OnClickCardToPickDistinction", j);
+                DrawCard(data, boardCells, data.props.G.decks[1][j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], suit, OnClickCardToPickDistinction, j);
             }
         }
         else if (option === "BonfurAction" || option === "DagdaAction") {
-            caption += "".concat(data.props.G.actionsNum, " card").concat(data.props.G.actionsNum > 1 ? "s" : "", " to discard from your \n            board.");
+            caption +=
+                "".concat(data.props.G.actionsNum, " card").concat(data.props.G.actionsNum > 1 ? "s" : "", " to discard from your board.");
             DiscardCardFromBoardProfit(data.props.G, data.props.ctx, data, boardCells);
         }
         else if (option === "AndumiaAction" || option === "BrisingamensAction") {
-            caption += "".concat(data.props.G.actionsNum, " card").concat(data.props.G.actionsNum > 1 ? "s" : "", " from discard pile to \n            your board.");
+            caption +=
+                "".concat(data.props.G.actionsNum, " card").concat(data.props.G.actionsNum > 1 ? "s" : "", " from discard pile to your board.");
             PickDiscardCardProfit(data.props.G, data.props.ctx, data, boardCells);
         }
         else if (option === "BrisingamensEndGameAction") {
             caption += "one card to discard from your board.";
-            boardCells.push(_jsx("td", { children: DrawPlayerBoardForCardDiscard(data) }, "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " discard \n                card")));
+            boardCells.push(_jsx("td", { children: DrawPlayerBoardForCardDiscard(data) }, "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " discard card")));
         }
         else if (option === "HofudAction") {
             caption += "one warrior card to discard from your board.";
@@ -209,7 +205,7 @@ export var DrawProfit = function (data, option) {
             DiscardCardProfit(data.props.G, data.props.ctx, data, boardCells);
         }
         else if (option === "getMjollnirProfit") {
-            caption += "suit to get Mjöllnir profit from ranks on that suit.";
+            caption += "suit to get Mj\u00F6llnir profit from ranks on that suit.";
             GetMjollnirProfitProfit(data.props.G, data.props.ctx, data, boardCells);
         }
         else if (option === "startOrPassEnlistmentMercenaries") {
@@ -228,7 +224,8 @@ export var DrawProfit = function (data, option) {
             }
         }
         else if (option === "AddCoinToPouchVidofnirVedrfolnir") {
-            caption += "".concat(data.props.G.actionsNum, " coin").concat(data.props.G.actionsNum > 1 ? "s" : "", " to add to your pouch \n            to fill it.");
+            caption +=
+                "".concat(data.props.G.actionsNum, " coin").concat(data.props.G.actionsNum > 1 ? "s" : "", " to add to your pouch to fill it.");
             AddCoinToPouchProfit(data.props.G, data.props.ctx, data, boardCells);
         }
         else {
@@ -242,13 +239,12 @@ export var DrawProfit = function (data, option) {
                     var handCoins_1 = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins
                         .filter(function (coin) { return coin !== null; });
                     var handCoinIndex_1 = -1;
-                    for (var j = 0; j < data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
-                        .boardCoins.length; j++) {
+                    for (var j = 0; j <
+                        data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins.length; j++) {
                         // todo Check .? for all coins!!! and delete AS
-                        if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn
-                            === "Uline"
-                            && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
-                                === null) {
+                        if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn ===
+                            "Uline" && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
+                            === null) {
                             handCoinIndex_1++;
                             var handCoinId = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                 .handCoins.findIndex(function (coin) {
@@ -261,12 +257,13 @@ export var DrawProfit = function (data, option) {
                                 && !((_b = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                     .handCoins[handCoinId]) === null || _b === void 0 ? void 0 : _b.isTriggerTrading)) {
                                 DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
-                                    .handCoins[handCoinId], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, "hand", (_c = handCoins_1[handCoinIndex_1]) === null || _c === void 0 ? void 0 : _c.isInitial);
+                                    .handCoins[handCoinId], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, OnClickCoinToUpgrade, j, "hand", (_c = handCoins_1[handCoinIndex_1]) === null || _c === void 0 ? void 0 : _c.isInitial);
                             }
                         }
                         else if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
                             && !((_d = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isTriggerTrading)) {
-                            DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, "board", (_e = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                            DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                .boardCoins[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, OnClickCoinToUpgrade, j, "board", (_e = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                 .boardCoins[j]) === null || _e === void 0 ? void 0 : _e.isInitial);
                         }
                     }
@@ -286,9 +283,8 @@ export var DrawProfit = function (data, option) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element} Поле кэмпа.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Поле кэмпа.
  */
 export var DrawCamp = function (data) {
     var boardCells = [];
@@ -299,15 +295,17 @@ export var DrawCamp = function (data) {
                 boardCells.push(_jsx("td", __assign({ className: "bg-yellow-200" }, { children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }, void 0) }), "Camp ".concat(j, " icon")));
             }
             else {
-                DrawCard(data, boardCells, campCard, j, null, null, "OnClickCampCard", j);
+                DrawCard(data, boardCells, campCard, j, null, null, OnClickCampCard, j);
             }
         }
     }
     return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }, void 0), _jsxs("span", { children: ["Camp ", data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length ?
                                 data.props.G.campDecks.length : data.props.G.campDecks.length - data.props.G.tierToEnd + 1, "(", data.props.G.campDecks.length - data.props.G.tierToEnd !== 2 ?
                                 data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0, data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? "/"
-                                + data.props.G.campDecks.reduce(function (count, current) { return count +
-                                    current.length; }, 0) : "", " cards left)"] }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));
+                                + data.props.G.campDecks
+                                    .reduce(function (count, current) {
+                                    return count + current.length;
+                                }, 0) : "", " cards left)"] }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));
 };
 /**
  * <h3>Отрисовка карт таверн.</h3>
@@ -316,10 +314,9 @@ export var DrawCamp = function (data) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @param {string} gridClass Класс для отрисовки таверны.
- * @returns {JSX.Element[]} Поле таверн.
- * @constructor
+ * @param data Глобальные параметры.
+ * @param gridClass Класс для отрисовки таверны.
+ * @returns Поле таверн.
  */
 export var DrawTaverns = function (data, gridClass) {
     var tavernsBoards = [];
@@ -337,7 +334,7 @@ export var DrawTaverns = function (data, gridClass) {
                         tavernCardSuit = tavernCard.suit;
                     }
                     if (t === data.props.G.currentTavern) {
-                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit, "OnClickCard", j);
+                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit, OnClickCard, j);
                     }
                     else {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);

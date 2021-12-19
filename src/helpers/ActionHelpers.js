@@ -7,10 +7,9 @@ import { AddDataToLog, LogTypes } from "../Logging";
  * <li>Срабатывает после завершения каждого экшена.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {boolean} isTrading Является ли действие обменом монет (трейдингом).
- * @constructor
+ * @param G
+ * @param ctx
+ * @param isTrading Является ли действие обменом монет (трейдингом).
  */
 export var EndAction = function (G, ctx, isTrading) {
     AfterBasicPickCardActions(G, ctx, isTrading);
@@ -22,11 +21,10 @@ export var EndAction = function (G, ctx, isTrading) {
  * <li>При начале экшенов, требующих старта стэйджа.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {IConfig | undefined} config Конфиг действий героя.
- * @returns {boolean} Стартанул ли стэйдж.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @returns Стартанул ли стэйдж.
  */
 export var IsStartActionStage = function (G, ctx, config) {
     if (config.stageName !== undefined) {

@@ -3,11 +3,12 @@ import { AddCardToPlayer } from "../Player";
 import { suitsConfig } from "../data/SuitData";
 import { IsValidMove } from "../MoveValidator";
 import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
-import { CheckAndMoveThrudOrPickHeroAction } from "../actions/HeroActions";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { isCardNotAction } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
+import { DrawProfitAction, GetEnlistmentMercenariesAction, PassEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
+import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 // todo Add logging
 /**
  * <h3>Выбор карты из таверны.</h3>
@@ -16,13 +17,12 @@ import { AddDataToLog, LogTypes } from "../Logging";
  * <li>При выборе базовой карты из таверны игроком.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} cardId Id карты.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ * @returns
  */
-export var ClickCard = function (G, ctx, cardId) {
+export var ClickCardMove = function (G, ctx, cardId) {
     var isValidMove = IsValidMove({ objId: G.currentTavern, values: [G.currentTavern] })
         && IsValidMove({
             obj: G.taverns[G.currentTavern][cardId],
@@ -54,7 +54,7 @@ export var ClickCard = function (G, ctx, cardId) {
         }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, "ОШИБКА: Не существует кликнутая карта.");
+        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043B\u0438\u043A\u043D\u0443\u0442\u0430\u044F \u043A\u0430\u0440\u0442\u0430.");
     }
 };
 /**
@@ -64,13 +64,12 @@ export var ClickCard = function (G, ctx, cardId) {
  * <li>После определения преимуществ по фракциям в конце первой эпохи.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} cardId Id карты.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ * @returns
  */
-export var ClickDistinctionCard = function (G, ctx, cardId) {
+export var ClickDistinctionCardMove = function (G, ctx, cardId) {
     var index = G.distinctions.indexOf(Number(ctx.currentPlayer)), isValidMove = IsValidMove({ objId: cardId, values: [index] });
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -85,12 +84,11 @@ export var ClickDistinctionCard = function (G, ctx, cardId) {
  * <li>При выборе базовой карты из новой эпохи по преимуществу по фракции разведчиков.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} cardId Id карты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
  */
-export var ClickCardToPickDistinction = function (G, ctx, cardId) {
+export var ClickCardToPickDistinctionMove = function (G, ctx, cardId) {
     var isAdded = AddCardToPlayer(G, ctx, G.decks[1][cardId]), pickedCard = G.decks[1].splice(cardId, 1)[0];
     var suitId = null;
     G.decks[1] = ctx.random.Shuffle(G.decks[1]);
@@ -114,12 +112,11 @@ export var ClickCardToPickDistinction = function (G, ctx, cardId) {
  * <li>Выбор карт из дискарда по действию артефактов.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} cardId Id карты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
  */
-export var PickDiscardCard = function (G, ctx, cardId) {
+export var PickDiscardCardMove = function (G, ctx, cardId) {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
 };
 /**
@@ -129,14 +126,13 @@ export var PickDiscardCard = function (G, ctx, cardId) {
  * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
-export var StartEnlistmentMercenaries = function (G, ctx) {
+export var StartEnlistmentMercenariesMove = function (G, ctx) {
     var stack = [
         {
-            actionName: "DrawProfitAction",
+            action: DrawProfitAction,
             config: {
                 name: "enlistmentMercenaries",
                 drawName: "Enlistment Mercenaries",
@@ -152,14 +148,13 @@ export var StartEnlistmentMercenaries = function (G, ctx) {
  * <li>Первый игрок в начале фазы вербовки наёмников пасует для того, чтобы вербовать последним.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
-export var PassEnlistmentMercenaries = function (G, ctx) {
+export var PassEnlistmentMercenariesMove = function (G, ctx) {
     var stack = [
         {
-            actionName: "PassEnlistmentMercenariesAction",
+            action: PassEnlistmentMercenariesAction,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack);
@@ -171,15 +166,14 @@ export var PassEnlistmentMercenaries = function (G, ctx) {
  * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} cardId Id карты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
  */
-export var GetEnlistmentMercenaries = function (G, ctx, cardId) {
+export var GetEnlistmentMercenariesMove = function (G, ctx, cardId) {
     var stack = [
         {
-            actionName: "GetEnlistmentMercenariesAction",
+            action: GetEnlistmentMercenariesAction,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack, cardId);
@@ -191,15 +185,14 @@ export var GetEnlistmentMercenaries = function (G, ctx, cardId) {
  * <li>При выборе фракции, куда будет завербован наёмник.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} suitId Id фракции.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param suitId Id фракции.
  */
-export var PlaceEnlistmentMercenaries = function (G, ctx, suitId) {
+export var PlaceEnlistmentMercenariesMove = function (G, ctx, suitId) {
     var stack = [
         {
-            actionName: "PlaceEnlistmentMercenariesAction",
+            action: PlaceEnlistmentMercenariesAction,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack, suitId);

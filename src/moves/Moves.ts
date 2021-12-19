@@ -35,7 +35,7 @@ import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
  * @param cardId Id карты.
  * @returns
  */
-export const ClickCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
+export const ClickCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean = IsValidMove({ objId: G.currentTavern, values: [G.currentTavern] })
         && IsValidMove({
             obj: G.taverns[G.currentTavern][cardId],
@@ -80,7 +80,8 @@ export const ClickCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: n
  * @param cardId Id карты.
  * @returns
  */
-export const ClickDistinctionCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
+export const ClickDistinctionCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number):
+    string | void => {
     const index: number = G.distinctions.indexOf(Number(ctx.currentPlayer)),
         isValidMove: boolean = IsValidMove({ objId: cardId, values: [index] });
     if (!isValidMove) {
@@ -101,7 +102,7 @@ export const ClickDistinctionCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx
  * @param ctx
  * @param cardId Id карты.
  */
-export const ClickCardToPickDistinction: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
+export const ClickCardToPickDistinctionMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     const isAdded: boolean = AddCardToPlayer(G, ctx, G.decks[1][cardId]),
         pickedCard: DeckCardTypes = G.decks[1].splice(cardId, 1)[0];
     let suitId: null | number = null;
@@ -130,7 +131,7 @@ export const ClickCardToPickDistinction: Move<MyGameState> = (G: MyGameState, ct
  * @param ctx
  * @param cardId Id карты.
  */
-export const PickDiscardCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
+export const PickDiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
 };
 
@@ -144,7 +145,7 @@ export const PickDiscardCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, car
  * @param G
  * @param ctx
  */
-export const StartEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
+export const StartEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
     const stack: IStack[] = [
         {
             action: DrawProfitAction,
@@ -167,7 +168,7 @@ export const StartEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ct
  * @param G
  * @param ctx
  */
-export const PassEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
+export const PassEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
     const stack: IStack[] = [
         {
             action: PassEnlistmentMercenariesAction,
@@ -187,7 +188,7 @@ export const PassEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx
  * @param ctx
  * @param cardId Id карты.
  */
-export const GetEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
+export const GetEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     const stack: IStack[] = [
         {
             action: GetEnlistmentMercenariesAction,
@@ -207,7 +208,7 @@ export const GetEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx:
  * @param ctx
  * @param suitId Id фракции.
  */
-export const PlaceEnlistmentMercenaries: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
+export const PlaceEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
     const stack: IStack[] = [
         {
             action: PlaceEnlistmentMercenariesAction,

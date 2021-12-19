@@ -12,13 +12,12 @@ import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
  * <li>При клике по монете в руке.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId Id монеты.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @returns
  */
-export var ClickHandCoin = function (G, ctx, coinId) {
+export var ClickHandCoinMove = function (G, ctx, coinId) {
     var isValidMove = IsValidMove({
         obj: G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId],
         objId: coinId,
@@ -36,13 +35,12 @@ export var ClickHandCoin = function (G, ctx, coinId) {
  * <li>При клике по месту для монет на столе.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId Id монеты.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @returns
  */
-export var ClickBoardCoin = function (G, ctx, coinId) {
+export var ClickBoardCoinMove = function (G, ctx, coinId) {
     var _a;
     var player = G.publicPlayers[Number(ctx.currentPlayer)], isValidMove = IsValidMove({ objId: coinId, range: [0, player.boardCoins.length] });
     if (!isValidMove) {
@@ -96,15 +94,14 @@ export var ClickBoardCoin = function (G, ctx, coinId) {
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId Id монеты.
- * @param {string} type Тип монеты.
- * @param {boolean} isInitial Является ли базовой.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @param type Тип монеты.
+ * @param isInitial Является ли базовой.
+ * @returns
  */
-export var ClickCoinToUpgrade = function (G, ctx, coinId, type, isInitial) {
+export var ClickCoinToUpgradeMove = function (G, ctx, coinId, type, isInitial) {
     var isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -127,15 +124,14 @@ export var ClickCoinToUpgrade = function (G, ctx, coinId, type, isInitial) {
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId Id монеты.
- * @param {string} type Тип монеты.
- * @param {boolean} isInitial Является ли базовой.
- * @returns {string | void}
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @param type Тип монеты.
+ * @param isInitial Является ли базовой.
+ * @returns
  */
-export var UpgradeCoinVidofnirVedrfolnir = function (G, ctx, coinId, type, isInitial) {
+export var UpgradeCoinVidofnirVedrfolnirMove = function (G, ctx, coinId, type, isInitial) {
     var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     var isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && (config === null || config === void 0 ? void 0 : config.coinId) !== coinId;
     if (!isValidMove) {
@@ -150,11 +146,10 @@ export var UpgradeCoinVidofnirVedrfolnir = function (G, ctx, coinId, type, isIni
  * <li>При клике по монете.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {number} coinId Id монеты.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
  */
-export var AddCoinToPouch = function (G, ctx, coinId) {
+export var AddCoinToPouchMove = function (G, ctx, coinId) {
     EndActionFromStackAndAddNew(G, ctx, [], coinId);
 };

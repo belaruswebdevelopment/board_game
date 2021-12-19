@@ -15,7 +15,7 @@ import { IPublicPlayer } from "../Player";
  * @param ctx
  * @param coinsOrder Порядок выкладки монет.
  */
-export const BotsPlaceAllCoins: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinsOrder: number[]): void => {
+export const BotsPlaceAllCoinsMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinsOrder: number[]): void => {
     for (let i: number = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
         const coinId: number = coinsOrder[i] || G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin: ICoin | null): boolean => coin !== null);

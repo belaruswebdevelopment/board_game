@@ -2,6 +2,9 @@ import { heroesConfig } from "../data/HeroData";
 import { GetSuitIndexByName } from "./SuitHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 import { SuitNames } from "../data/SuitData";
+import { DrawProfitAction } from "../actions/Actions";
+import { PlaceHeroAction } from "../actions/HeroActions";
+import { CheckPickHero } from "../Hero";
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
  * <p>Применения:</p>
@@ -9,11 +12,32 @@ import { SuitNames } from "../data/SuitData";
  * <li>Используется повсеместно в проекте для вычисления индекса конкретного героя.</li>
  * </ol>
  *
- * @param {string} heroName Название героя.
- * @returns {number} Индекс героя.
- * @constructor
+ * @param heroName Название героя.
+ * @returns Индекс героя.
  */
-export var GetHeroIndexByName = function (heroName) { return Object.keys(heroesConfig).indexOf(heroName); };
+export var GetHeroIndexByName = function (heroName) {
+    return Object.keys(heroesConfig).indexOf(heroName);
+};
+/**
+ * <h3>Действия, связанные с проверкой перемещения героя Труд или выбора героя.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При добавлении карт, героев или карт кэмпа, помещающихся на карту героя Труд на игровом поле игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param card Карта, помещающаяся на карту героя Труд.
+ */
+export var CheckAndMoveThrudOrPickHeroAction = function (G, ctx, card) {
+    var isMoveThrud = CheckAndMoveThrud(G, ctx, card);
+    if (isMoveThrud) {
+        StartThrudMoving(G, ctx, card);
+    }
+    else {
+        CheckPickHero(G, ctx);
+    }
+};
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>
  * <p>Применения:</p>
@@ -21,11 +45,10 @@ export var GetHeroIndexByName = function (heroName) { return Object.keys(heroesC
  * <li>При любых действия, когда пикается карта на планшет игрока.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {PlayerCardsType} card Карта.
- * @returns {boolean} Нужно ли перемещать героя Труд.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param card Карта.
+ * @returns Нужно ли перемещать героя Труд.
  */
 export var CheckAndMoveThrud = function (G, ctx, card) {
     if (card.suit !== null) {
@@ -45,10 +68,9 @@ export var CheckAndMoveThrud = function (G, ctx, card) {
  * <li>При любых действия, когда пикается карта на планшет игрока и требуется переместить героя Труд.</li>
  * </ol>
  я
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {PlayerCardsType} card Карта.
- * @constructor
+ * @param G
+ * @param ctx
+ * @param card Карта.
  */
 export var StartThrudMoving = function (G, ctx, card) {
     if (card.suit !== null) {
@@ -80,7 +102,7 @@ export var StartThrudMoving = function (G, ctx, card) {
             },
         }, stack = [
             {
-                actionName: "DrawProfitAction",
+                action: DrawProfitAction,
                 variants: variants,
                 config: {
                     drawName: "Thrud",
@@ -90,8 +112,11 @@ export var StartThrudMoving = function (G, ctx, card) {
                 },
             },
             {
-                actionName: "PlaceThrudAction",
+                action: PlaceHeroAction,
                 variants: variants,
+                config: {
+                    name: "Thrud",
+                },
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
@@ -104,10 +129,9 @@ export var StartThrudMoving = function (G, ctx, card) {
  * <li>При наличии героя Улина.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @returns {string | boolean} Проверяет нужно ли начать действия по наличию героя Улина.
- * @constructor
+ * @param G
+ * @param ctx
+ * @returns Проверяет нужно ли начать действия по наличию героя Улина.
  */
 export var CheckAndStartUlineActionsOrContinue = function (G, ctx) {
     var _a;

@@ -7,9 +7,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * <li>Используется в отрисовке дебаг панели.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {{ctx: {}, G: {}} | undefined} Данные для отрисовки дебаг информации.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Данные для отрисовки дебаг информации.
  */
 var GetDebugData = function (data) {
     if (data.props.G.debug) {
@@ -36,9 +35,8 @@ var GetDebugData = function (data) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {{[p: string]: any}} obj Информация.
- * @returns {JSX.Element}
- * @constructor
+ * @param obj Информация.
+ * @returns
  */
 var DrawObjectData = function (obj) {
     var values = [];
@@ -66,9 +64,8 @@ var DrawObjectData = function (obj) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element | null} Дебаг панель.
- * @constructor
+ * @param data Глобальные параметры.
+ * @returns Дебаг панель.
  */
 export var DrawDebugData = function (data) {
     var debugData = GetDebugData(data);

@@ -5,7 +5,7 @@ import { tavernsConfig } from "../Tavern";
 import { CurrentScoring } from "../Score";
 import { Styles } from "../data/StyleData";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
-import { DrawCard, DrawCoin } from "../helpers/UIHelpers";
+import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 /**
  * <h3>Отрисовка планшета монет, выложенных игроком на стол.</h3>
@@ -14,8 +14,8 @@ import { TotalRank } from "../helpers/ScoreHelpers";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element[][]} Игровые поля для пользовательских монет на столе.
+ * @param data Глобальные параметры.
+ * @returns Игровые поля для пользовательских монет на столе.
  * @constructor
  */
 export var DrawPlayersBoardsCoins = function (data) {
@@ -38,7 +38,7 @@ export var DrawPlayersBoardsCoins = function (data) {
                             || (Number(data.props.ctx.currentPlayer) === p
                                 && data.props.ctx.phase === "placeCoinsUline"
                                 && j === data.props.G.currentTavern + 1)) {
-                            DrawCoin(data, playerCells, "back-tavern-icon", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, j, "OnClickBoardCoin", j);
+                            DrawCoin(data, playerCells, "back-tavern-icon", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, j, OnClickBoardCoin, j);
                         }
                         else {
                             DrawCoin(data, playerCells, "back-tavern-icon", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, j);
@@ -46,11 +46,11 @@ export var DrawPlayersBoardsCoins = function (data) {
                     }
                     else if (data.props.ctx.phase === "placeCoins"
                         && Number(data.props.ctx.currentPlayer) === p) {
-                        DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
+                        DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, null, OnClickBoardCoin, j);
                     }
                     else {
-                        if (data.props.G.winner.length || (data.props.ctx.phase === "placeCoinsUline" &&
-                            data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== "placeCoins"
+                        if (data.props.G.winner.length || (data.props.ctx.phase === "placeCoinsUline"
+                            && data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== "placeCoins"
                             && data.props.G.currentTavern >= j)) {
                             DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p]);
                         }
@@ -73,10 +73,10 @@ export var DrawPlayersBoardsCoins = function (data) {
                         if (coin === null) {
                             if (Number(data.props.ctx.currentPlayer) === p
                                 && data.props.ctx.phase !== "placeCoinsUline" && (data.props.ctx.phase === "placeCoins"
-                                || (data.props.ctx.activePlayers &&
-                                    data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
+                                || (data.props.ctx.activePlayers
+                                    && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                                     "placeTradingCoinsUline")) {
-                                DrawCoin(data, playerCells, "back-small-market-coin", coin, coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
+                                DrawCoin(data, playerCells, "back-small-market-coin", coin, coinIndex, data.props.G.publicPlayers[p], null, null, OnClickBoardCoin, j);
                             }
                             else {
                                 DrawCoin(data, playerCells, "back-small-market-coin", coin, coinIndex, data.props.G.publicPlayers[p]);
@@ -86,7 +86,7 @@ export var DrawPlayersBoardsCoins = function (data) {
                             && (data.props.ctx.phase === "placeCoins" || (data.props.ctx.activePlayers
                                 && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                                 "placeTradingCoinsUline")) {
-                            DrawCoin(data, playerCells, "coin", coin, coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
+                            DrawCoin(data, playerCells, "coin", coin, coinIndex, data.props.G.publicPlayers[p], null, null, OnClickBoardCoin, j);
                         }
                         else {
                             if (data.props.G.winner.length || (data.props.ctx.phase !== "placeCoins"
@@ -116,8 +116,8 @@ export var DrawPlayersBoardsCoins = function (data) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element[][]} Игровые поля для пользовательских монет в руке.
+ * @param data Глобальные параметры.
+ * @returns Игровые поля для пользовательских монет в руке.
  * @constructor
  */
 export var DrawPlayersHandsCoins = function (data) {
@@ -140,7 +140,7 @@ export var DrawPlayersHandsCoins = function (data) {
                             || data.props.ctx.phase === "placeCoinsUline" || (data.props.ctx.activePlayers
                             && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                             "placeTradingCoinsUline")) {
-                            DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].handCoins[j], j, data.props.G.publicPlayers[p], coinClasses, null, "OnClickHandCoin", j);
+                            DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].handCoins[j], j, data.props.G.publicPlayers[p], coinClasses, null, OnClickHandCoin, j);
                         }
                         else {
                             DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].handCoins[j], j, data.props.G.publicPlayers[p], coinClasses);
@@ -163,8 +163,8 @@ export var DrawPlayersHandsCoins = function (data) {
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param {GameBoard} data Глобальные параметры.
- * @returns {JSX.Element[][]} Игровые поля для планшета всех карт игрока.
+ * @param data Глобальные параметры.
+ * @returns Игровые поля для планшета всех карт игрока.
  * @constructor
  */
 export var DrawPlayersBoards = function (data) {
@@ -176,7 +176,8 @@ export var DrawPlayersBoards = function (data) {
         playerRows[p] = [];
         for (var suit in suitsConfig) {
             playerHeaders[p].push(_jsx("th", __assign({ className: "".concat(suitsConfig[suit].suitColor) }, { children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, void 0) }), "".concat(data.props.G.publicPlayers[p].nickname, " ").concat(suitsConfig[suit].suitName)));
-            playerHeadersCount[p].push(_jsx("th", __assign({ className: "".concat(suitsConfig[suit].suitColor, " text-white") }, { children: _jsx("b", { children: data.props.G.publicPlayers[p].cards[GetSuitIndexByName(suit)].reduce(TotalRank, 0) }, void 0) }), "".concat(data.props.G.publicPlayers[p].nickname, " ").concat(suitsConfig[suit].suitName, " count")));
+            playerHeadersCount[p].push(_jsx("th", __assign({ className: "".concat(suitsConfig[suit].suitColor, " text-white") }, { children: _jsx("b", { children: data.props.G.publicPlayers[p].cards[GetSuitIndexByName(suit)]
+                        .reduce(TotalRank, 0) }, void 0) }), "".concat(data.props.G.publicPlayers[p].nickname, " ").concat(suitsConfig[suit].suitName, " count")));
         }
         for (var s = 0; s < 1 + Number(data.props.G.expansions.thingvellir.active); s++) {
             if (s === 0) {
@@ -211,7 +212,9 @@ export var DrawPlayersBoards = function (data) {
                         (!data.props.G.publicPlayers[p].heroes[i].suit &&
                             !((data.props.G.publicPlayers[p].heroes[i].name === "Ylud"
                                 && data.props.G.publicPlayers[p].cards.flat()
-                                    .findIndex(function (card) { return card.name === "Ylud"; }) !== -1)
+                                    .findIndex(function (card) {
+                                    return card.name === "Ylud";
+                                }) !== -1)
                                 || (data.props.G.publicPlayers[p].heroes[i].name === "Thrud"
                                     && data.props.G.publicPlayers[p].cards.flat()
                                         .findIndex(function (card) {

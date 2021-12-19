@@ -6,8 +6,9 @@ import { suitsConfig } from "../data/SuitData";
  * <li>Используется повсеместно в проекте для вычисления индекса конкретной фракции.</li>
  * </ol>
  *
- * @param {string} suitName Название фракции.
- * @returns {number} Индекс фракции.
- * @constructor
+ * @param suitName Название фракции.
+ * @returns Индекс фракции.
  */
-export var GetSuitIndexByName = function (suitName) { return Object.keys(suitsConfig).indexOf(suitName); };
+export var GetSuitIndexByName = function (suitName) {
+    return Object.keys(suitsConfig).indexOf(suitName);
+};

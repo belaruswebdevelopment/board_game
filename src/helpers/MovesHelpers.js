@@ -6,6 +6,9 @@ import { AddActionsToStack, StartActionFromStackOrEndActions } from "./StackHelp
 import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
 import { ActivateTrading } from "./CoinHelpers";
 import { SuitNames } from "../data/SuitData";
+import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
+import { DiscardAnyCardFromPlayerBoardAction, GetMjollnirProfitAction } from "../actions/CampActions";
+import { PlaceHeroAction } from "../actions/HeroActions";
 // todo Add logging
 /**
  * <h3>Завершает каждую фазу конца игры и проверяет переход к другим фазам или завершает игру.</h3>
@@ -14,9 +17,8 @@ import { SuitNames } from "../data/SuitData";
  * <li>После завершения экшенов в каждой фазе конца игры.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 export var CheckEndGameLastActions = function (G, ctx) {
     if (G.tierToEnd) {
@@ -35,7 +37,7 @@ export var CheckEndGameLastActions = function (G, ctx) {
                         G.publicPlayersOrder.push(i);
                         var stack = [
                             {
-                                actionName: "DrawProfitAction",
+                                action: DrawProfitAction,
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: "BrisingamensEndGameAction",
@@ -44,7 +46,7 @@ export var CheckEndGameLastActions = function (G, ctx) {
                             },
                             {
                                 playerId: G.publicPlayersOrder[0],
-                                actionName: "DiscardAnyCardFromPlayerBoard",
+                                action: DiscardAnyCardFromPlayerBoardAction,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -61,7 +63,7 @@ export var CheckEndGameLastActions = function (G, ctx) {
                         G.publicPlayersOrder.push(i);
                         var stack = [
                             {
-                                actionName: "DrawProfitAction",
+                                action: DrawProfitAction,
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: "getMjollnirProfit",
@@ -70,7 +72,7 @@ export var CheckEndGameLastActions = function (G, ctx) {
                             },
                             {
                                 playerId: G.publicPlayersOrder[0],
-                                actionName: "GetMjollnirProfitAction",
+                                action: GetMjollnirProfitAction,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -97,10 +99,9 @@ export var CheckEndGameLastActions = function (G, ctx) {
  * <li>После выбора героев.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @param {boolean} isTrading Является ли действие обменом монет (трейдингом).
- * @constructor
+ * @param G
+ * @param ctx
+ * @param isTrading Является ли действие обменом монет (трейдингом).
  */
 export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
     // todo rework it?
@@ -117,7 +118,8 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
             if (!isTradingActivated) {
                 if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                     && ctx.playOrder.length < Number(ctx.numPlayers)) {
-                    var cardIndex = G.taverns[G.currentTavern].findIndex(function (card) { return card !== null; });
+                    var cardIndex = G.taverns[G.currentTavern]
+                        .findIndex(function (card) { return card !== null; });
                     DiscardCardFromTavern(G, cardIndex);
                 }
                 if (G.expansions.thingvellir.active
@@ -142,7 +144,7 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
                         && G.taverns[G.currentTavern].every(function (card) { return card !== null; })) {
                         var stack = [
                             {
-                                actionName: "DrawProfitAction",
+                                action: DrawProfitAction,
                                 config: {
                                     stageName: "discardCard",
                                     name: "discardCard",
@@ -150,7 +152,7 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
                                 },
                             },
                             {
-                                actionName: "DiscardCardFromTavernAction",
+                                action: DiscardCardFromTavernAction,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -177,16 +179,15 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
             || (ctx.playOrder[ctx.playOrder.length - 2] !== undefined
                 && (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 2])
                 && !G.publicPlayers[Number(ctx.playOrder[ctx.playOrder.length - 1])].campCards
-                    .filter(function (card) { return card.type === "наёмник"; }).length)) {
+                    .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length)) {
             StartEndTierActions(G, ctx);
         }
         else {
             var stack = [
                 {
-                    actionName: "DrawProfitAction",
-                    playerId: Number(ctx.playOrder[ctx.playOrder.findIndex(function (playerIndex) {
-                        return playerIndex === ctx.currentPlayer;
-                    }) + 1]),
+                    action: DrawProfitAction,
+                    playerId: Number(ctx.playOrder[ctx.playOrder
+                        .findIndex(function (playerIndex) { return playerIndex === ctx.currentPlayer; }) + 1]),
                     config: {
                         name: "enlistmentMercenaries",
                         drawName: "Enlistment Mercenaries",
@@ -206,9 +207,8 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
  * <li>При начале фазы EndTier.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 var StartEndTierActions = function (G, ctx) {
     G.publicPlayersOrder = [];
@@ -223,7 +223,8 @@ var StartEndTierActions = function (G, ctx) {
     if (!ylud) {
         for (var i = 0; i < G.publicPlayers.length; i++) {
             for (var j = 0; j < G.suitsNum; j++) {
-                index = G.publicPlayers[i].cards[j].findIndex(function (card) { return card.name === "Ylud"; });
+                index = G.publicPlayers[i].cards[j]
+                    .findIndex(function (card) { return card.name === "Ylud"; });
                 if (index !== -1) {
                     G.publicPlayers[Number(ctx.currentPlayer)].cards[i].splice(index, 1);
                     G.publicPlayersOrder.push(i);
@@ -264,7 +265,7 @@ var StartEndTierActions = function (G, ctx) {
         var stack = [
             {
                 playerId: G.publicPlayersOrder[0],
-                actionName: "DrawProfitAction",
+                action: DrawProfitAction,
                 variants: variants,
                 config: {
                     stageName: "placeCards",
@@ -274,8 +275,11 @@ var StartEndTierActions = function (G, ctx) {
             },
             {
                 playerId: G.publicPlayersOrder[0],
-                actionName: "PlaceYludAction",
+                action: PlaceHeroAction,
                 variants: variants,
+                config: {
+                    name: "Ylud",
+                },
             },
         ];
         AddActionsToStack(G, ctx, stack);
@@ -292,14 +296,14 @@ var StartEndTierActions = function (G, ctx) {
  * <li>При наличии у игроков наёмников в конце текущей эпохи.</li>
  * </ol>
  *
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 var CheckEnlistmentMercenaries = function (G, ctx) {
     var count = false;
     for (var i = 0; i < G.publicPlayers.length; i++) {
-        if (G.publicPlayers[i].campCards.filter(function (card) { return card.type === "наёмник"; }).length) {
+        if (G.publicPlayers[i].campCards
+            .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length) {
             count = true;
             break;
         }
@@ -320,9 +324,8 @@ var CheckEnlistmentMercenaries = function (G, ctx) {
  * </oL>
  *
  * @todo Refill taverns only on the beginning of the round (Add phase Round?)!
- * @param {MyGameState} G
- * @param {Ctx} ctx
- * @constructor
+ * @param G
+ * @param ctx
  */
 var AfterLastTavernEmptyActions = function (G, ctx) {
     if (G.decks[G.decks.length - G.tierToEnd].length === 0) {

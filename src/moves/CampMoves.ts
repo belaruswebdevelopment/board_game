@@ -23,7 +23,7 @@ import { AddDataToLog, LogTypes } from "../Logging";
  * @param cardId Id выбираемой карты из кэмпа.
  * @returns
  */
-export const ClickCampCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
+export const ClickCampCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
         && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
             || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
@@ -51,7 +51,7 @@ export const ClickCampCard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardI
  * @param cardId Id выбираемой карты из кэмпа.
  * @returns
  */
-export const ClickCampCardHolda: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
+export const ClickCampCardHoldaMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
         && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
     if (!isValidMove) {
@@ -76,7 +76,7 @@ export const ClickCampCardHolda: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
  * @param ctx
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardCard2Players: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
+export const DiscardCard2PlayersMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
 };
 
@@ -92,7 +92,7 @@ export const DiscardCard2Players: Move<MyGameState> = (G: MyGameState, ctx: Ctx,
  * @param suitId Id фракции.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
+export const DiscardCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
     cardId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };
@@ -111,7 +111,7 @@ export const DiscardCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ct
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
-export const DiscardSuitCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
+export const DiscardSuitCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
     playerId: number, cardId: number): string | void => {
     // TODO Uncomment it for players and fix it for bots
     /*let isValidMove: boolean = false;
@@ -137,6 +137,6 @@ export const DiscardSuitCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState
  * @param ctx
  * @param suitId Id фракции.
  */
-export const GetMjollnirProfit: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
+export const GetMjollnirProfitMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
