@@ -1,7 +1,6 @@
 import { GetSuitIndexByName } from "./SuitHelpers";
 import { suitsConfig } from "../data/SuitData";
 import { IBackground, Styles } from "../data/StyleData";
-import React from "react";
 import { ArgsTypes } from "../actions/Actions";
 import { GameBoard } from "../GameBoard";
 import { ICoin } from "../Coin";

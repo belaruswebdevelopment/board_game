@@ -1,12 +1,25 @@
 import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes } from "../GameSetup";
 import { Ctx } from "boardgame.io";
-import { DrawButton, DrawCard, DrawCoin, OnClickCampCardHolda, OnClickCardFromDiscard, OnClickCardToDiscard, OnClickCardToDiscard2Players, OnClickCoinToAddToPouch, OnClickCoinToUpgradeVidofnirVedrfolnir, OnClickDiscardCardFromPlayerBoard, OnClickGetEnlistmentMercenaries, OnClickPassEnlistmentMercenaries, OnClickStartEnlistmentMercenaries } from "./UIHelpers";
+import {
+    DrawButton,
+    DrawCard,
+    DrawCoin,
+    OnClickCampCardHolda,
+    OnClickCardFromDiscard,
+    OnClickCardToDiscard,
+    OnClickCardToDiscard2Players,
+    OnClickCoinToAddToPouch,
+    OnClickCoinToUpgradeVidofnirVedrfolnir,
+    OnClickDiscardCardFromPlayerBoard,
+    OnClickGetEnlistmentMercenaries,
+    OnClickPassEnlistmentMercenaries,
+    OnClickStartEnlistmentMercenaries
+} from "./UIHelpers";
 import { GameBoard } from "../GameBoard";
 import { IBotMoveArgumentsTypes } from "../AI";
 import { suitsConfig } from "../data/SuitData";
 import { IConfig, PickedCardType } from "../Player";
 import { Styles } from "../data/StyleData";
-import React from "react";
 import { isCardNotAction } from "../Card";
 import { ICoin } from "../Coin";
 import { TotalRank } from "./ScoreHelpers";

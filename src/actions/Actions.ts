@@ -115,6 +115,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
     const pickedCard: PlayerCardsType = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
+    // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
     G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
         .splice(cardId, 1)[0] as ICard);
     if (G.actionsNum === 2) {

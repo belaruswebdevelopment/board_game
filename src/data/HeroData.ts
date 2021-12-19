@@ -3,8 +3,22 @@ import { TotalRank } from "../helpers/ScoreHelpers";
 import { IPublicPlayer, IStack } from "../Player";
 import { SuitNames } from "./SuitData";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { AddHeroToCardsAction, GetClosedCoinIntoPlayerHandAction, PickHeroWithConditionsAction, PlaceThrudAction } from "../actions/HeroActions";
-import { AddBuffToPlayerAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickDiscardCardAction, DiscardCardsFromPlayerBoardAction, DrawProfitAction, PickDiscardCardAction, PlaceCardsAction, UpgradeCoinAction } from "../actions/Actions";
+import {
+    AddHeroToCardsAction,
+    GetClosedCoinIntoPlayerHandAction,
+    PickHeroWithConditionsAction,
+    PlaceThrudAction
+} from "../actions/HeroActions";
+import {
+    AddBuffToPlayerAction,
+    CheckDiscardCardsFromPlayerBoardAction,
+    CheckPickDiscardCardAction,
+    DiscardCardsFromPlayerBoardAction,
+    DrawProfitAction,
+    PickDiscardCardAction,
+    PlaceCardsAction,
+    UpgradeCoinAction
+} from "../actions/Actions";
 import { CheckPickCampCardAction } from "../actions/CampActions";
 
 /**

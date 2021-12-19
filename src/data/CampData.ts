@@ -2,7 +2,12 @@ import { TotalRank } from "../helpers/ScoreHelpers";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { ICoin } from "../Coin";
 import { SuitNames } from "./SuitData";
-import { AddCampCardToCardsAction, DiscardTradingCoinAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
+import {
+    AddCampCardToCardsAction,
+    DiscardTradingCoinAction,
+    StartDiscardSuitCardAction,
+    StartVidofnirVedrfolnirAction
+} from "../actions/CampActions";
 import { AddBuffToPlayerAction, DrawProfitAction, PickDiscardCardAction } from "../actions/Actions";
 import { PickHeroAction } from "../actions/HeroActions";
 
