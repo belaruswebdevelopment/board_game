@@ -1,8 +1,5 @@
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
-import { AddCampCardToCardsAction, DiscardTradingCoinAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
-import { AddBuffToPlayerAction, DrawProfitAction, PickDiscardCardAction } from "../actions/Actions";
-import { PickHeroAction } from "../actions/HeroActions";
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -20,10 +17,10 @@ var Fafnir_Baleygr = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
         {
-            action: AddBuffToPlayerAction,
+            action: "AddBuffToPlayerAction",
             config: {
                 buff: {
                     name: "goCamp",
@@ -51,7 +48,7 @@ var Draupnir = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
     ],
     scoringRule: function (player) { return player !== undefined ? player.boardCoins
@@ -76,7 +73,7 @@ var Vegvisir = {
     points: 13,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
     ],
     scoringRule: function () { return 0; },
@@ -98,7 +95,7 @@ var Svalinn = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
     ],
     scoringRule: function (player) { return player !== undefined ? player.heroes.length * 5 : 0; },
@@ -120,10 +117,10 @@ var Megingjord = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
         {
-            action: AddBuffToPlayerAction,
+            action: "AddBuffToPlayerAction",
             config: {
                 buff: {
                     name: "noHero",
@@ -151,10 +148,10 @@ var Vidofnir_Vedrfolnir = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
         {
-            action: StartVidofnirVedrfolnirAction,
+            action: "StartVidofnirVedrfolnirAction",
         },
     ],
     scoringRule: function () { return 0; },
@@ -176,10 +173,10 @@ var Brisingamens = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
         {
-            action: AddBuffToPlayerAction,
+            action: "AddBuffToPlayerAction",
             config: {
                 buff: {
                     name: "discardCardEndGame",
@@ -188,7 +185,7 @@ var Brisingamens = {
             },
         },
         {
-            action: DrawProfitAction,
+            action: "DrawProfitAction",
             config: {
                 stageName: "pickDiscardCard",
                 name: "BrisingamensAction",
@@ -197,7 +194,7 @@ var Brisingamens = {
             },
         },
         {
-            action: PickDiscardCardAction,
+            action: "PickDiscardCardAction",
         },
     ],
     scoringRule: function () { return 0; },
@@ -219,10 +216,10 @@ var Mjollnir = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
         {
-            action: AddBuffToPlayerAction,
+            action: "AddBuffToPlayerAction",
             config: {
                 buff: {
                     name: "getMjollnirProfit",
@@ -251,10 +248,10 @@ var Hofud = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
         {
-            action: StartDiscardSuitCardAction,
+            action: "StartDiscardSuitCardAction",
             config: {
                 suit: SuitNames.WARRIOR,
             },
@@ -279,7 +276,7 @@ var Hrafnsmerki = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
     ],
     scoringRule: function (player) { return player !== undefined ?
@@ -304,10 +301,10 @@ var Jarnglofi = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
         {
-            action: DiscardTradingCoinAction,
+            action: "DiscardTradingCoinAction",
         },
     ],
     scoringRule: function () { return 24; },
@@ -329,10 +326,10 @@ var Gjallarhorn = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction,
+            action: "AddCampCardToCardsAction",
         },
         {
-            action: PickHeroAction,
+            action: "PickHeroAction",
             config: {
                 stageName: "pickHero",
             },

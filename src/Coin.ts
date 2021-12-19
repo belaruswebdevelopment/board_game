@@ -5,7 +5,6 @@ import { Ctx } from "boardgame.io";
 import { IConfig, IPublicPlayer, IStack } from "./Player";
 import { IInitialTradingCoinConfig, IMarketCoinConfig, isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { INumberValues } from "./data/SuitData";
-import { UpgradeCoinAction } from "./actions/Actions";
 
 /**
  * <h3>Интерфейс для монеты.</h3>
@@ -165,7 +164,7 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin === `min`) {
         stack = [
             {
-                action: UpgradeCoinAction,
+                action: `UpgradeCoinAction`,
                 config: {
                     number: 1,
                     value: coinsMaxValue,
@@ -178,7 +177,7 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
     } else {
         stack = [
             {
-                action: UpgradeCoinAction,
+                action: `UpgradeCoinAction`,
                 config: {
                     number: 1,
                     value: coinsMinValue,
@@ -248,9 +247,10 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
             upgradingCoinId = allCoins.findIndex((coin: ICoin | null): boolean =>
                 isCoin(upgradingCoin) && coin!.value === upgradingCoin.value);
         } else {
-            const minCoinValue: number = Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                .filter((coin: ICoin | null): boolean => coin !== null && !coin.isTriggerTrading)
-                .map((coin: ICoin | null): number => coin!.value));
+            const minCoinValue: number =
+                Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+                    .filter((coin: ICoin | null): boolean => coin !== null && !coin.isTriggerTrading)
+                    .map((coin: ICoin | null): number => coin!.value));
             coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                 .find((coin: ICoin | null): boolean => coin?.value === minCoinValue);
             if (coin !== null && coin !== undefined) {

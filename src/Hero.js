@@ -3,7 +3,6 @@ import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
-import { PickHeroAction } from "./actions/HeroActions";
 /**
  * <h3>Создание героя.</h3>
  * <p>Применения:</p>
@@ -88,7 +87,7 @@ export var CheckPickHero = function (G, ctx) {
         if (isCanPickHero) {
             var stack = [
                 {
-                    action: PickHeroAction,
+                    action: "PickHeroAction",
                     config: {
                         stageName: "pickHero",
                     },

@@ -5,7 +5,6 @@ import { AddActionsToStack, StartActionFromStackOrEndActions } from "../helpers/
 import { AddDataToLog, LogTypes } from "../Logging";
 import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
 /**
  * <h3>Перечисление для названий фракций.</h3>
  */
@@ -279,7 +278,7 @@ var warrior = {
             if (G.tierToEnd !== 0) {
                 var stack = [
                     {
-                        action: DrawProfitAction,
+                        action: "DrawProfitAction",
                         config: {
                             name: "upgradeCoin",
                             stageName: "upgradeCoin",
@@ -288,7 +287,7 @@ var warrior = {
                         },
                     },
                     {
-                        action: UpgradeCoinAction,
+                        action: "UpgradeCoinAction",
                         config: {
                             value: 5,
                         },
@@ -360,7 +359,7 @@ var explorer = {
             if (G.tierToEnd !== 0) {
                 var stack = [
                     {
-                        action: DrawProfitAction,
+                        action: "DrawProfitAction",
                         config: {
                             name: "explorerDistinction",
                             stageName: "pickDistinctionCard",

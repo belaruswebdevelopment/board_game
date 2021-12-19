@@ -1,11 +1,6 @@
 import { suitsConfig } from "../data/SuitData";
 import { CreateCard, ICard, ICreateCard } from "../Card";
-import {
-    AddCardToPlayer,
-    AddHeroCardToPlayerCards,
-    AddHeroCardToPlayerHeroCards,
-    IConfig
-} from "../Player";
+import { AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards, IConfig } from "../Player";
 import { CheckPickHero, IHero } from "../Hero";
 import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { ICoin, ReturnCoinToPlayerHands } from "../Coin";

@@ -7,7 +7,6 @@ import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { isCardNotAction } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
-import { DrawProfitAction, GetEnlistmentMercenariesAction, PassEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 // todo Add logging
 /**
@@ -132,7 +131,7 @@ export var PickDiscardCardMove = function (G, ctx, cardId) {
 export var StartEnlistmentMercenariesMove = function (G, ctx) {
     var stack = [
         {
-            action: DrawProfitAction,
+            action: "DrawProfitAction",
             config: {
                 name: "enlistmentMercenaries",
                 drawName: "Enlistment Mercenaries",
@@ -154,7 +153,7 @@ export var StartEnlistmentMercenariesMove = function (G, ctx) {
 export var PassEnlistmentMercenariesMove = function (G, ctx) {
     var stack = [
         {
-            action: PassEnlistmentMercenariesAction,
+            action: "PassEnlistmentMercenariesAction",
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack);
@@ -173,7 +172,7 @@ export var PassEnlistmentMercenariesMove = function (G, ctx) {
 export var GetEnlistmentMercenariesMove = function (G, ctx, cardId) {
     var stack = [
         {
-            action: GetEnlistmentMercenariesAction,
+            action: "GetEnlistmentMercenariesAction",
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack, cardId);
@@ -192,7 +191,7 @@ export var GetEnlistmentMercenariesMove = function (G, ctx, cardId) {
 export var PlaceEnlistmentMercenariesMove = function (G, ctx, suitId) {
     var stack = [
         {
-            action: PlaceEnlistmentMercenariesAction,
+            action: "PlaceEnlistmentMercenariesAction",
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack, suitId);

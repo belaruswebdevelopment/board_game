@@ -2,9 +2,6 @@ import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { AddHeroToCardsAction, GetClosedCoinIntoPlayerHandAction, PickHeroWithConditionsAction, PlaceHeroAction } from "../actions/HeroActions";
-import { AddBuffToPlayerAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickDiscardCardAction, DiscardCardsFromPlayerBoardAction, DrawProfitAction, PickDiscardCardAction, PlaceCardsAction, UpgradeCoinAction } from "../actions/Actions";
-import { CheckPickCampCardAction } from "../actions/CampActions";
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -21,7 +18,7 @@ var Dwerg_Bergelmir = {
     points: null,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Dwerg_Bergelmir",
             },
@@ -46,7 +43,7 @@ var Ylud = {
     points: null,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Ylud",
             },
@@ -70,7 +67,7 @@ var Dwerg_Jungir = {
     points: null,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Dwerg_Jungir",
             },
@@ -94,13 +91,13 @@ var Uline = {
     points: 9,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Uline",
             },
         },
         {
-            action: AddBuffToPlayerAction,
+            action: "AddBuffToPlayerAction",
             config: {
                 buff: {
                     name: "everyTurn",
@@ -109,7 +106,7 @@ var Uline = {
             },
         },
         {
-            action: GetClosedCoinIntoPlayerHandAction,
+            action: "GetClosedCoinIntoPlayerHandAction",
         },
     ],
     scoringRule: function () { return 9; },
@@ -130,7 +127,7 @@ var Idunn = {
     points: 7,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Idunn",
             },
@@ -156,7 +153,7 @@ var Tarah = {
     points: 14,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Tarah",
             },
@@ -180,7 +177,7 @@ var Kraal = {
     points: 7,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Kraal",
             },
@@ -204,7 +201,7 @@ var Lokdur = {
     points: 3,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Lokdur",
             },
@@ -228,13 +225,13 @@ var Grid = {
     points: 7,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Grid",
             },
         },
         {
-            action: DrawProfitAction,
+            action: "DrawProfitAction",
             config: {
                 stageName: "upgradeCoin",
                 drawName: "Grid",
@@ -243,7 +240,7 @@ var Grid = {
             },
         },
         {
-            action: UpgradeCoinAction,
+            action: "UpgradeCoinAction",
             config: {
                 value: 7,
             },
@@ -267,13 +264,13 @@ var Thrud = {
     points: 13,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Thrud",
             },
         },
         {
-            action: DrawProfitAction,
+            action: "DrawProfitAction",
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -308,7 +305,7 @@ var Thrud = {
             },
         },
         {
-            action: PlaceHeroAction,
+            action: "PlaceHeroAction",
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -359,7 +356,7 @@ var Zoral = {
     points: 1,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Zoral",
             },
@@ -383,7 +380,7 @@ var Dwerg_Aesir = {
     points: null,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Dwerg_Aesir",
             },
@@ -407,13 +404,13 @@ var Bonfur = {
     points: null,
     stack: [
         {
-            action: CheckDiscardCardsFromPlayerBoardAction,
+            action: "CheckDiscardCardsFromPlayerBoardAction",
             config: {
                 suit: SuitNames.BLACKSMITH,
             },
         },
         {
-            action: DrawProfitAction,
+            action: "DrawProfitAction",
             config: {
                 stageName: "discardCardFromBoard",
                 drawName: "Bonfur",
@@ -422,13 +419,13 @@ var Bonfur = {
             },
         },
         {
-            action: DiscardCardsFromPlayerBoardAction,
+            action: "DiscardCardsFromPlayerBoardAction",
             config: {
                 suit: SuitNames.BLACKSMITH,
             },
         },
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Bonfur",
             },
@@ -452,14 +449,14 @@ var Dagda = {
     points: null,
     stack: [
         {
-            action: CheckDiscardCardsFromPlayerBoardAction,
+            action: "CheckDiscardCardsFromPlayerBoardAction",
             config: {
                 suit: SuitNames.HUNTER,
                 number: 2,
             },
         },
         {
-            action: DrawProfitAction,
+            action: "DrawProfitAction",
             config: {
                 stageName: "discardCardFromBoard",
                 drawName: "Dagda",
@@ -469,10 +466,10 @@ var Dagda = {
             },
         },
         {
-            action: DiscardCardsFromPlayerBoardAction,
+            action: "DiscardCardsFromPlayerBoardAction",
         },
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Dagda",
             },
@@ -496,7 +493,7 @@ var Skaa = {
     points: 17,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Skaa",
             },
@@ -520,13 +517,13 @@ var Jarika = {
     points: 8,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Jarika",
             },
         },
         {
-            action: AddBuffToPlayerAction,
+            action: "AddBuffToPlayerAction",
             config: {
                 buff: {
                     name: "upgradeCoin",
@@ -553,7 +550,7 @@ var Astrid = {
     points: null,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Astrid",
             },
@@ -577,7 +574,7 @@ var Dwerg_Ymir = {
     points: null,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Dwerg_Ymir",
             },
@@ -601,7 +598,7 @@ var Dwerg_Sigmir = {
     points: null,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Dwerg_Sigmir",
             },
@@ -625,7 +622,7 @@ var Hourya = {
     points: 20,
     stack: [
         {
-            action: PickHeroWithConditionsAction,
+            action: "PickHeroWithConditionsAction",
             config: {
                 conditions: {
                     suitCountMin: {
@@ -636,7 +633,7 @@ var Hourya = {
             },
         },
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Hourya",
             },
@@ -660,7 +657,7 @@ var Aegur = {
     points: null,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Aegur",
             },
@@ -684,7 +681,7 @@ var Aral = {
     points: null,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Aral",
             },
@@ -708,16 +705,16 @@ var Andumia = {
     points: 12,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Andumia",
             },
         },
         {
-            action: CheckPickDiscardCardAction,
+            action: "CheckPickDiscardCardAction",
         },
         {
-            action: DrawProfitAction,
+            action: "DrawProfitAction",
             config: {
                 stageName: "pickDiscardCard",
                 drawName: "Andumia",
@@ -725,7 +722,7 @@ var Andumia = {
             },
         },
         {
-            action: PickDiscardCardAction,
+            action: "PickDiscardCardAction",
         },
     ],
     scoringRule: function () { return 12; },
@@ -746,13 +743,13 @@ var Holda = {
     points: 12,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Holda",
             },
         },
         {
-            action: AddBuffToPlayerAction,
+            action: "AddBuffToPlayerAction",
             config: {
                 buff: {
                     name: "goCampOneTime",
@@ -761,10 +758,10 @@ var Holda = {
             },
         },
         {
-            action: CheckPickCampCardAction,
+            action: "CheckPickCampCardAction",
         },
         {
-            action: DrawProfitAction,
+            action: "DrawProfitAction",
             config: {
                 stageName: "pickCampCardHolda",
                 drawName: "Holda",
@@ -790,13 +787,13 @@ var Khrad = {
     points: 4,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Khrad",
             },
         },
         {
-            action: UpgradeCoinAction,
+            action: "UpgradeCoinAction",
             config: {
                 value: 10,
                 coin: "min",
@@ -821,13 +818,13 @@ var Olwin = {
     points: 9,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Olwin",
             },
         },
         {
-            action: DrawProfitAction,
+            action: "DrawProfitAction",
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -863,7 +860,7 @@ var Olwin = {
             },
         },
         {
-            action: PlaceCardsAction,
+            action: "PlaceCardsAction",
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -911,13 +908,13 @@ var Zolkur = {
     points: 10,
     stack: [
         {
-            action: AddHeroToCardsAction,
+            action: "AddHeroToCardsAction",
             config: {
                 drawName: "Zolkur",
             },
         },
         {
-            action: AddBuffToPlayerAction,
+            action: "AddBuffToPlayerAction",
             config: {
                 buff: {
                     name: "upgradeNextCoin",

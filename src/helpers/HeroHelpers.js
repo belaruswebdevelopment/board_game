@@ -2,8 +2,6 @@ import { heroesConfig } from "../data/HeroData";
 import { GetSuitIndexByName } from "./SuitHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 import { SuitNames } from "../data/SuitData";
-import { DrawProfitAction } from "../actions/Actions";
-import { PlaceHeroAction } from "../actions/HeroActions";
 import { CheckPickHero } from "../Hero";
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
@@ -102,7 +100,7 @@ export var StartThrudMoving = function (G, ctx, card) {
             },
         }, stack = [
             {
-                action: DrawProfitAction,
+                action: "DrawProfitAction",
                 variants: variants,
                 config: {
                     drawName: "Thrud",
@@ -112,7 +110,7 @@ export var StartThrudMoving = function (G, ctx, card) {
                 },
             },
             {
-                action: PlaceHeroAction,
+                action: "PlaceHeroAction",
                 variants: variants,
                 config: {
                     name: "Thrud",

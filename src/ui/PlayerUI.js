@@ -5,7 +5,7 @@ import { tavernsConfig } from "../Tavern";
 import { CurrentScoring } from "../Score";
 import { Styles } from "../data/StyleData";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
-import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
+import { DrawCard, DrawCoin } from "../helpers/UIHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 /**
  * <h3>Отрисовка планшета монет, выложенных игроком на стол.</h3>
@@ -38,7 +38,7 @@ export var DrawPlayersBoardsCoins = function (data) {
                             || (Number(data.props.ctx.currentPlayer) === p
                                 && data.props.ctx.phase === "placeCoinsUline"
                                 && j === data.props.G.currentTavern + 1)) {
-                            DrawCoin(data, playerCells, "back-tavern-icon", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, j, OnClickBoardCoin, j);
+                            DrawCoin(data, playerCells, "back-tavern-icon", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, j, "OnClickBoardCoin", j);
                         }
                         else {
                             DrawCoin(data, playerCells, "back-tavern-icon", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, j);
@@ -46,7 +46,7 @@ export var DrawPlayersBoardsCoins = function (data) {
                     }
                     else if (data.props.ctx.phase === "placeCoins"
                         && Number(data.props.ctx.currentPlayer) === p) {
-                        DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, null, OnClickBoardCoin, j);
+                        DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
                     }
                     else {
                         if (data.props.G.winner.length || (data.props.ctx.phase === "placeCoinsUline"
@@ -76,7 +76,7 @@ export var DrawPlayersBoardsCoins = function (data) {
                                 || (data.props.ctx.activePlayers
                                     && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                                     "placeTradingCoinsUline")) {
-                                DrawCoin(data, playerCells, "back-small-market-coin", coin, coinIndex, data.props.G.publicPlayers[p], null, null, OnClickBoardCoin, j);
+                                DrawCoin(data, playerCells, "back-small-market-coin", coin, coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
                             }
                             else {
                                 DrawCoin(data, playerCells, "back-small-market-coin", coin, coinIndex, data.props.G.publicPlayers[p]);
@@ -86,7 +86,7 @@ export var DrawPlayersBoardsCoins = function (data) {
                             && (data.props.ctx.phase === "placeCoins" || (data.props.ctx.activePlayers
                                 && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                                 "placeTradingCoinsUline")) {
-                            DrawCoin(data, playerCells, "coin", coin, coinIndex, data.props.G.publicPlayers[p], null, null, OnClickBoardCoin, j);
+                            DrawCoin(data, playerCells, "coin", coin, coinIndex, data.props.G.publicPlayers[p], null, null, "OnClickBoardCoin", j);
                         }
                         else {
                             if (data.props.G.winner.length || (data.props.ctx.phase !== "placeCoins"
@@ -140,7 +140,7 @@ export var DrawPlayersHandsCoins = function (data) {
                             || data.props.ctx.phase === "placeCoinsUline" || (data.props.ctx.activePlayers
                             && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
                             "placeTradingCoinsUline")) {
-                            DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].handCoins[j], j, data.props.G.publicPlayers[p], coinClasses, null, OnClickHandCoin, j);
+                            DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].handCoins[j], j, data.props.G.publicPlayers[p], coinClasses, null, "OnClickHandCoin", j);
                         }
                         else {
                             DrawCoin(data, playerCells, "coin", data.props.G.publicPlayers[p].handCoins[j], j, data.props.G.publicPlayers[p], coinClasses);

@@ -1,8 +1,8 @@
 import { __assign, __extends } from "tslib";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
-import { DrawCamp, DrawCurrentPlayerTurn, DrawDistinctions, DrawHeroes, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner, } from "./ui/GameBoardUI";
-import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins, } from "./ui/PlayerUI";
+import { DrawCamp, DrawCurrentPlayerTurn, DrawDistinctions, DrawHeroes, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
+import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { DrawDebugData } from "./ui/DebugUI";
 import { DrawLogData } from "./ui/LogUI";
 /**

@@ -1,4 +1,4 @@
-import { __assign } from "tslib";
+import { __assign, __spreadArray } from "tslib";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { GetSuitIndexByName } from "./SuitHelpers";
 import { suitsConfig } from "../data/SuitData";
@@ -344,7 +344,7 @@ export var DrawBoard = function (objectsSize) {
 export var DrawPlayerBoardForCardDiscard = function (data) {
     var playerHeaders = [], playerRows = [];
     for (var suit in suitsConfig) {
-        playerHeaders.push(_jsx("th", __assign({ className: "".concat(suitsConfig[suit].suitColor) }, { children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, void 0) }), "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, "\n                ").concat(suitsConfig[suit].suitName)));
+        playerHeaders.push(_jsx("th", __assign({ className: "".concat(suitsConfig[suit].suitColor) }, { children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, void 0) }), "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " ").concat(suitsConfig[suit].suitName)));
     }
     DiscardAnyCardFromPlayerBoardProfit(data.props.G, data.props.ctx, data, playerRows);
     return (_jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playerHeaders }, void 0) }, void 0), _jsx("tbody", { children: playerRows }, void 0)] }, void 0));
@@ -377,7 +377,7 @@ export var DrawPlayersBoardForSuitCardDiscard = function (data, suitName) {
                     if (data.props.G.publicPlayers[p].cards[suitId][i].type !== "\u0433\u0435\u0440\u043E\u0439") {
                         isExit = false;
                         isDrawRow = true;
-                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i], i, data.props.G.publicPlayers[p], suitName, OnClickDiscardSuitCardFromPlayerBoard, suitId, p, i);
+                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i], i, data.props.G.publicPlayers[p], suitName, "OnClickDiscardSuitCardFromPlayerBoard", suitId, p, i);
                     }
                 }
                 else {
@@ -415,7 +415,44 @@ export var DrawCard = function (data, playerCells, card, id, player, suit, actio
     for (var _i = 7; _i < arguments.length; _i++) {
         args[_i - 7] = arguments[_i];
     }
-    var styles = { background: "" }, tdClasses = "", spanClasses;
+    var styles = { background: "" }, tdClasses = "", spanClasses = "", action = null;
+    switch (actionName) {
+        case "OnClickHeroCard":
+            action = OnClickHeroCard;
+            break;
+        case "OnClickCampCard":
+            action = OnClickCampCard;
+            break;
+        case "OnClickCard":
+            action = OnClickCard;
+            break;
+        case "OnClickCardToPickDistinction":
+            action = OnClickCardToPickDistinction;
+            break;
+        case "OnClickCardToDiscard":
+            action = OnClickCardToDiscard;
+            break;
+        case "OnClickCardFromDiscard":
+            action = OnClickCardFromDiscard;
+            break;
+        case "OnClickCardToDiscard2Players":
+            action = OnClickCardToDiscard2Players;
+            break;
+        case "OnClickDiscardCardFromPlayerBoard":
+            action = OnClickDiscardCardFromPlayerBoard;
+            break;
+        case "OnClickDiscardSuitCardFromPlayerBoard":
+            action = OnClickDiscardSuitCardFromPlayerBoard;
+            break;
+        case "OnClickCampCardHolda":
+            action = OnClickCampCardHolda;
+            break;
+        case "OnClickGetEnlistmentMercenaries":
+            action = OnClickGetEnlistmentMercenaries;
+            break;
+        default:
+            action = null;
+    }
     if (suit !== null && suit !== undefined) {
         tdClasses = suitsConfig[suit].suitColor;
     }
@@ -449,7 +486,7 @@ export var DrawCard = function (data, playerCells, card, id, player, suit, actio
         }
         spanClasses = "bg-card";
     }
-    if (actionName !== undefined) {
+    if (actionName !== null) {
         tdClasses += " cursor-pointer";
     }
     var description = "", value = "";
@@ -462,8 +499,7 @@ export var DrawCard = function (data, playerCells, card, id, player, suit, actio
     else if ("value" in card) {
         value = String(card.value);
     }
-    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return actionName === null || actionName === void 0 ? void 0 : actionName.apply(void 0, args); } }, { children: _jsx("span", __assign({ style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses }, { children: _jsx("b", { children: value }, void 0) }), void 0) }), "".concat((player && player.nickname) ? "player ".concat((player.nickname), " ") :
-        "").concat(suit, " card ").concat(id, " ").concat(card.name)));
+    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return action === null || action === void 0 ? void 0 : action.apply(void 0, __spreadArray([data], args, false)); } }, { children: _jsx("span", __assign({ style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses }, { children: _jsx("b", { children: value }, void 0) }), void 0) }), "".concat((player && player.nickname) ? "player ".concat((player.nickname), " ") : "").concat(suit, " card ").concat(id, " ").concat(card.name)));
 };
 /**
  * <h3>Отрисовка монет.</h3>
@@ -488,8 +524,27 @@ export var DrawCoin = function (data, playerCells, type, coin, id, player, coinC
     for (var _i = 9; _i < arguments.length; _i++) {
         args[_i - 9] = arguments[_i];
     }
-    var styles = { background: "" }, span = null, tdClasses = "bg-yellow-300", spanClasses = "";
-    if (actionName !== undefined) {
+    var styles = { background: "" }, span = null, tdClasses = "bg-yellow-300", spanClasses = "", action = null;
+    switch (actionName) {
+        case "OnClickBoardCoin":
+            action = OnClickBoardCoin;
+            break;
+        case "OnClickHandCoin":
+            action = OnClickHandCoin;
+            break;
+        case "OnClickCoinToUpgrade":
+            action = OnClickCoinToUpgrade;
+            break;
+        case "OnClickCoinToAddToPouch":
+            action = OnClickCoinToAddToPouch;
+            break;
+        case "OnClickCoinToUpgradeVidofnirVedrfolnir":
+            action = OnClickCoinToUpgradeVidofnirVedrfolnir;
+            break;
+        default:
+            action = null;
+    }
+    if (actionName !== null) {
         tdClasses += " cursor-pointer";
     }
     if (type === "market") {
@@ -531,7 +586,7 @@ export var DrawCoin = function (data, playerCells, type, coin, id, player, coinC
             }
         }
     }
-    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return actionName === null || actionName === void 0 ? void 0 : actionName.apply(void 0, args); } }, { children: _jsx("span", __assign({ style: styles, className: spanClasses }, { children: span }), void 0) }), "".concat((player === null || player === void 0 ? void 0 : player.nickname) ? "player ".concat(player.nickname, " ") : "", "coin ").concat(id).concat(coin !== null ? "\n        ".concat(coin.value) : " empty")));
+    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return action === null || action === void 0 ? void 0 : action.apply(void 0, __spreadArray([data], args, false)); } }, { children: _jsx("span", __assign({ style: styles, className: spanClasses }, { children: span }), void 0) }), "".concat((player === null || player === void 0 ? void 0 : player.nickname) ? "player ".concat(player.nickname, " ") : "", "coin ").concat(id).concat(coin !== null ? " ".concat(coin.value) : " empty")));
 };
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -553,5 +608,16 @@ export var DrawButton = function (data, boardCells, key, name, player, actionNam
     for (var _i = 6; _i < arguments.length; _i++) {
         args[_i - 6] = arguments[_i];
     }
-    boardCells.push(_jsx("td", __assign({ className: "cursor-pointer", onClick: function () { return actionName === null || actionName === void 0 ? void 0 : actionName.apply(void 0, args); } }, { children: _jsx("button", __assign({ className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" }, { children: name }), void 0) }), "".concat((player === null || player === void 0 ? void 0 : player.nickname) ? "Player ".concat(player.nickname, " ") : "").concat(key)));
+    var action = null;
+    switch (actionName) {
+        case "OnClickStartEnlistmentMercenaries":
+            action = OnClickStartEnlistmentMercenaries;
+            break;
+        case "OnClickPassEnlistmentMercenaries":
+            action = OnClickPassEnlistmentMercenaries;
+            break;
+        default:
+            action = null;
+    }
+    boardCells.push(_jsx("td", __assign({ className: "cursor-pointer", onClick: function () { return action === null || action === void 0 ? void 0 : action.apply(void 0, __spreadArray([data], args, false)); } }, { children: _jsx("button", __assign({ className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" }, { children: name }), void 0) }), "".concat((player === null || player === void 0 ? void 0 : player.nickname) ? "Player ".concat(player.nickname, " ") : "").concat(key)));
 };

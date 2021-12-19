@@ -6,8 +6,6 @@ import { Ctx } from "boardgame.io";
 import { ICoin } from "../Coin";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { SuitNames } from "../data/SuitData";
-import { DrawProfitAction } from "../actions/Actions";
-import { PlaceHeroAction } from "../actions/HeroActions";
 import { CheckPickHero } from "../Hero";
 
 /**
@@ -111,7 +109,7 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
         },
             stack: IStack[] = [
                 {
-                    action: DrawProfitAction,
+                    action: `DrawProfitAction`,
                     variants,
                     config: {
                         drawName: `Thrud`,
@@ -121,7 +119,7 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
                     },
                 },
                 {
-                    action: PlaceHeroAction,
+                    action: `PlaceHeroAction`,
                     variants,
                     config: {
                         name: `Thrud`,

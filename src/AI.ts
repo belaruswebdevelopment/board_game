@@ -245,7 +245,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         } else if (G.drawProfit === `enlistmentMercenaries`) {
             GetEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: `GetEnlistmentMercenaries`,
+                move: `GetEnlistmentMercenariesMove`,
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         } else if (G.drawProfit === `placeEnlistmentMercenaries`) {
@@ -263,7 +263,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             }
         }
         moves.push({
-            move: `ClickHandCoin`,
+            move: `ClickHandCoinMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
         moves.push({ move: `ClickBoardCoinMove`, args: [G.currentTavern + 1] });
@@ -275,7 +275,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             }
         }
         moves.push({
-            move: `ClickHandCoin`,
+            move: `ClickHandCoinMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
         if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {

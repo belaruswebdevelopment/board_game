@@ -4,7 +4,7 @@ import { CountMarketCoins } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { tavernsConfig } from "../Tavern";
 import { Styles } from "../data/StyleData";
-import { DrawBoard, DrawCard, DrawCoin, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard, OnClickCampCard, OnClickCard, OnClickCardToPickDistinction, OnClickCoinToUpgrade, OnClickHandCoin, OnClickHeroCard } from "../helpers/UIHelpers";
+import { DrawBoard, DrawCard, DrawCoin, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard } from "../helpers/UIHelpers";
 import { isCardNotAction } from "../Card";
 import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
 /**
@@ -22,7 +22,7 @@ export var DrawTierCards = function (data) { return (_jsxs("b", { children: ["Ti
                     data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0, data.props.G.decks.length - data.props.G.tierToEnd === 0 ? "/"
                     + data.props.G.decks.reduce(function (count, current) {
                         return count + current.length;
-                    }, 0) : "", "cards left)"] }), void 0)] }, void 0)); };
+                    }, 0) : "", " cards left)"] }), void 0)] }, void 0)); };
 /**
  * <h3>Отрисовка игровой информации о текущем игроке и текущем ходе.</h3>
  * <p>Применения:</p>
@@ -84,7 +84,7 @@ export var DrawMarketCoins = function (data) {
         boardRows[i] = [];
         for (var j = 0; j < drawData.boardCols; j++) {
             var increment = i * drawData.boardCols + j, tempCoinValue = data.props.G.marketCoinsUnique[increment].value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? "text-red-500" : "text-blue-500";
-            DrawCoin(data, boardCells, "market", data.props.G.marketCoinsUnique[increment], increment, null, coinClassName, countMarketCoins[tempCoinValue], OnClickHandCoin, j);
+            DrawCoin(data, boardCells, "market", data.props.G.marketCoinsUnique[increment], increment, null, coinClassName, countMarketCoins[tempCoinValue], "OnClickHandCoin", j);
             if (increment + 1 === data.props.G.marketCoinsUnique.length) {
                 break;
             }
@@ -110,7 +110,7 @@ export var DrawHeroes = function (data) {
         boardRows[i] = [];
         for (var j = 0; j < drawData.boardCols; j++) {
             var increment = i * drawData.boardCols + j;
-            DrawCard(data, boardCells, data.props.G.heroes[increment], increment, null, null, OnClickHeroCard, increment);
+            DrawCard(data, boardCells, data.props.G.heroes[increment], increment, null, null, "OnClickHeroCard", increment);
             if (increment + 1 === data.props.G.heroes.length) {
                 break;
             }
@@ -173,17 +173,15 @@ export var DrawProfit = function (data, option) {
                 if (isCardNotAction(card)) {
                     suit = card.suit;
                 }
-                DrawCard(data, boardCells, data.props.G.decks[1][j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], suit, OnClickCardToPickDistinction, j);
+                DrawCard(data, boardCells, data.props.G.decks[1][j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], suit, "OnClickCardToPickDistinction", j);
             }
         }
         else if (option === "BonfurAction" || option === "DagdaAction") {
-            caption +=
-                "".concat(data.props.G.actionsNum, " card").concat(data.props.G.actionsNum > 1 ? "s" : "", " to discard from your board.");
+            caption += "".concat(data.props.G.actionsNum, " card").concat(data.props.G.actionsNum > 1 ? "s" : "", " to discard from your board.");
             DiscardCardFromBoardProfit(data.props.G, data.props.ctx, data, boardCells);
         }
         else if (option === "AndumiaAction" || option === "BrisingamensAction") {
-            caption +=
-                "".concat(data.props.G.actionsNum, " card").concat(data.props.G.actionsNum > 1 ? "s" : "", " from discard pile to your board.");
+            caption += "".concat(data.props.G.actionsNum, " card").concat(data.props.G.actionsNum > 1 ? "s" : "", " from discard pile to your board.");
             PickDiscardCardProfit(data.props.G, data.props.ctx, data, boardCells);
         }
         else if (option === "BrisingamensEndGameAction") {
@@ -224,8 +222,7 @@ export var DrawProfit = function (data, option) {
             }
         }
         else if (option === "AddCoinToPouchVidofnirVedrfolnir") {
-            caption +=
-                "".concat(data.props.G.actionsNum, " coin").concat(data.props.G.actionsNum > 1 ? "s" : "", " to add to your pouch to fill it.");
+            caption += "".concat(data.props.G.actionsNum, " coin").concat(data.props.G.actionsNum > 1 ? "s" : "", " to add to your pouch to fill it.");
             AddCoinToPouchProfit(data.props.G, data.props.ctx, data, boardCells);
         }
         else {
@@ -257,13 +254,13 @@ export var DrawProfit = function (data, option) {
                                 && !((_b = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                     .handCoins[handCoinId]) === null || _b === void 0 ? void 0 : _b.isTriggerTrading)) {
                                 DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
-                                    .handCoins[handCoinId], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, OnClickCoinToUpgrade, j, "hand", (_c = handCoins_1[handCoinIndex_1]) === null || _c === void 0 ? void 0 : _c.isInitial);
+                                    .handCoins[handCoinId], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, "hand", (_c = handCoins_1[handCoinIndex_1]) === null || _c === void 0 ? void 0 : _c.isInitial);
                             }
                         }
                         else if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
                             && !((_d = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isTriggerTrading)) {
                             DrawCoin(data, boardCells, "coin", data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
-                                .boardCoins[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, OnClickCoinToUpgrade, j, "board", (_e = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                .boardCoins[j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], "border-2", null, "OnClickCoinToUpgrade", j, "board", (_e = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                 .boardCoins[j]) === null || _e === void 0 ? void 0 : _e.isInitial);
                         }
                     }
@@ -295,7 +292,7 @@ export var DrawCamp = function (data) {
                 boardCells.push(_jsx("td", __assign({ className: "bg-yellow-200" }, { children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }, void 0) }), "Camp ".concat(j, " icon")));
             }
             else {
-                DrawCard(data, boardCells, campCard, j, null, null, OnClickCampCard, j);
+                DrawCard(data, boardCells, campCard, j, null, null, "OnClickCampCard", j);
             }
         }
     }
@@ -334,7 +331,7 @@ export var DrawTaverns = function (data, gridClass) {
                         tavernCardSuit = tavernCard.suit;
                     }
                     if (t === data.props.G.currentTavern) {
-                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit, OnClickCard, j);
+                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit, "OnClickCard", j);
                     }
                     else {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);

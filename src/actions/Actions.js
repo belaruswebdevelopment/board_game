@@ -9,6 +9,8 @@ import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { IsStartActionStage } from "../helpers/ActionHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
+import { AddHeroToCardsAction, GetClosedCoinIntoPlayerHandAction, PickHeroAction, PickHeroWithConditionsAction, PlaceHeroAction } from "./HeroActions";
+import { AddCampCardToCardsAction, AddCoinToPouchAction, CheckPickCampCardAction, DiscardAnyCardFromPlayerBoardAction, DiscardSuitCardAction, DiscardTradingCoinAction, GetMjollnirProfitAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
 /**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>
@@ -24,12 +26,97 @@ import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
  * @param args Дополнительные аргументы.
  */
 export var ActionDispatcher = function (G, ctx, data) {
-    var _a;
     var args = [];
     for (var _i = 3; _i < arguments.length; _i++) {
         args[_i - 3] = arguments[_i];
     }
-    (_a = data.action) === null || _a === void 0 ? void 0 : _a.call.apply(_a, __spreadArray([data, G, ctx, data.config], args, false));
+    var action;
+    switch (data.action) {
+        case "DrawProfitAction":
+            action = DrawProfitAction;
+            break;
+        case "UpgradeCoinAction":
+            action = UpgradeCoinAction;
+            break;
+        case "AddHeroToCardsAction":
+            action = AddHeroToCardsAction;
+            break;
+        case "AddBuffToPlayerAction":
+            action = AddBuffToPlayerAction;
+            break;
+        case "PickHeroWithConditionsAction":
+            action = PickHeroWithConditionsAction;
+            break;
+        case "CheckDiscardCardsFromPlayerBoardAction":
+            action = CheckDiscardCardsFromPlayerBoardAction;
+            break;
+        case "DiscardCardsFromPlayerBoardAction":
+            action = DiscardCardsFromPlayerBoardAction;
+            break;
+        case "DiscardCardFromTavernAction":
+            action = DiscardCardFromTavernAction;
+            break;
+        case "PlaceCardsAction":
+            action = PlaceCardsAction;
+            break;
+        case "CheckPickCampCardAction":
+            action = CheckPickCampCardAction;
+            break;
+        case "CheckPickDiscardCardAction":
+            action = CheckPickDiscardCardAction;
+            break;
+        case "PickDiscardCardAction":
+            action = PickDiscardCardAction;
+            break;
+        case "GetClosedCoinIntoPlayerHandAction":
+            action = GetClosedCoinIntoPlayerHandAction;
+            break;
+        case "PlaceHeroAction":
+            action = PlaceHeroAction;
+            break;
+        case "AddCampCardToCardsAction":
+            action = AddCampCardToCardsAction;
+            break;
+        case "PickHeroAction":
+            action = PickHeroAction;
+            break;
+        case "AddCoinToPouchAction":
+            action = AddCoinToPouchAction;
+            break;
+        case "StartVidofnirVedrfolnirAction":
+            action = StartVidofnirVedrfolnirAction;
+            break;
+        case "UpgradeCoinVidofnirVedrfolnirAction":
+            action = UpgradeCoinVidofnirVedrfolnirAction;
+            break;
+        case "DiscardTradingCoinAction":
+            action = DiscardTradingCoinAction;
+            break;
+        case "StartDiscardSuitCardAction":
+            action = StartDiscardSuitCardAction;
+            break;
+        case "DiscardSuitCardAction":
+            action = DiscardSuitCardAction;
+            break;
+        case "DiscardAnyCardFromPlayerBoardAction":
+            action = DiscardAnyCardFromPlayerBoardAction;
+            break;
+        case "GetMjollnirProfitAction":
+            action = GetMjollnirProfitAction;
+            break;
+        case "PassEnlistmentMercenariesAction":
+            action = PassEnlistmentMercenariesAction;
+            break;
+        case "GetEnlistmentMercenariesAction":
+            action = GetEnlistmentMercenariesAction;
+            break;
+        case "PlaceEnlistmentMercenariesAction":
+            action = PlaceEnlistmentMercenariesAction;
+            break;
+        default:
+            action = null;
+    }
+    action === null || action === void 0 ? void 0 : action.apply(void 0, __spreadArray([G, ctx, data.config], args, false));
 };
 /**
  * <h3>Действия, связанные с улучшением монет.</h3>
@@ -119,7 +206,7 @@ export var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId,
     if (G.actionsNum === 2) {
         var stack = [
             {
-                action: DrawProfitAction,
+                action: "DrawProfitAction",
                 config: {
                     stageName: "discardCardFromBoard",
                     drawName: "Dagda",
@@ -128,7 +215,7 @@ export var DiscardCardsFromPlayerBoardAction = function (G, ctx, config, suitId,
                 },
             },
             {
-                action: DiscardCardsFromPlayerBoardAction,
+                action: "DiscardCardsFromPlayerBoardAction",
                 config: {
                     suit: SuitNames.HUNTER,
                 },
@@ -237,7 +324,7 @@ export var PlaceCardsAction = function (G, ctx, config, suitId) {
                 },
             }, stack = [
                 {
-                    action: DrawProfitAction,
+                    action: "DrawProfitAction",
                     variants: variants,
                     config: {
                         name: "placeCards",
@@ -246,7 +333,7 @@ export var PlaceCardsAction = function (G, ctx, config, suitId) {
                     },
                 },
                 {
-                    action: PlaceCardsAction,
+                    action: "PlaceCardsAction",
                     variants: variants,
                 },
             ];
@@ -294,7 +381,7 @@ export var PickDiscardCardAction = function (G, ctx, config, cardId) {
     if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
         var stack = [
             {
-                action: DrawProfitAction,
+                action: "DrawProfitAction",
                 config: {
                     stageName: "pickDiscardCard",
                     name: "BrisingamensAction",
@@ -302,7 +389,7 @@ export var PickDiscardCardAction = function (G, ctx, config, cardId) {
                 },
             },
             {
-                action: PickDiscardCardAction,
+                action: "PickDiscardCardAction",
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
@@ -356,7 +443,7 @@ export var GetEnlistmentMercenariesAction = function (G, ctx, config, cardId) {
         AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0444\u0430\u0437\u044B 'Enlistment Mercenaries' \u0432\u044B\u0431\u0440\u0430\u043B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 '").concat(pickedCard.name, "'."));
         var stack = [
             {
-                action: DrawProfitAction,
+                action: "DrawProfitAction",
                 config: {
                     name: "placeEnlistmentMercenaries",
                     drawName: "Place Enlistment Mercenaries",
@@ -404,7 +491,7 @@ export var PlaceEnlistmentMercenariesAction = function (G, ctx, config, suitId) 
                     .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length) {
                     var stack = [
                         {
-                            action: DrawProfitAction,
+                            action: "DrawProfitAction",
                             config: {
                                 name: "enlistmentMercenaries",
                                 drawName: "Enlistment Mercenaries",

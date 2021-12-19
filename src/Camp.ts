@@ -4,7 +4,6 @@ import { suitsConfig } from "./data/SuitData";
 import { CampCardTypes, CampDeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
 import { IStack } from "./Player";
 import { IArtefactConfig, IMercenaries } from "./data/CampData";
-import { AddCampCardToCardsAction } from "./actions/CampActions";
 
 /**
  * <h3>Интерфейс для карты кэмпа артефакта.</h3>
@@ -210,7 +209,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
             name: name.trim(),
             stack: [
                 {
-                    action: AddCampCardToCardsAction,
+                    action: `AddCampCardToCardsAction`,
                     variants: mercenariesConfig[tier][i],
                 },
             ],

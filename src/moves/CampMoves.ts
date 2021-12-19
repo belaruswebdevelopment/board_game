@@ -4,7 +4,7 @@ import {
     AddActionsToStack,
     EndActionFromStackAndAddNew,
     StartActionForChosenPlayer,
-    StartActionFromStackOrEndActions,
+    StartActionFromStackOrEndActions
 } from "../helpers/StackHelpers";
 import { Ctx, Move } from "boardgame.io";
 import { CampCardTypes, CampDeckCardTypes, MyGameState } from "../GameSetup";

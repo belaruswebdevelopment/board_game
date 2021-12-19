@@ -128,7 +128,7 @@ export const EndActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: num
 export const EndActionFromStackAndAddNew = (G: MyGameState, ctx: Ctx, newStack: IStack[] = [], ...args: ArgsTypes):
     void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0].action.name !== `DrawProfitAction`
+    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0].action !== `DrawProfitAction`
         || config?.name === `explorerDistinction`) {
         G.actionsNum = 0;
         G.drawProfit = ``;

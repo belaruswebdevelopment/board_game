@@ -20,7 +20,6 @@ import { Ctx } from "boardgame.io";
 import { isArtefactCard } from "../Camp";
 import { ICard } from "../Card";
 import { ICoin } from "../Coin";
-import { DrawProfitAction, UpgradeCoinAction } from "./Actions";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 
 /**
@@ -80,7 +79,7 @@ export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConf
                 .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
                 stack = [
                     {
-                        action: DrawProfitAction,
+                        action: `DrawProfitAction`,
                         config: {
                             name: `enlistmentMercenaries`,
                             drawName: `Enlistment Mercenaries`,
@@ -114,7 +113,7 @@ export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, 
                 index >= G.tavernsNum && coin === null),
         stack: IStack[] = [
             {
-                action: StartVidofnirVedrfolnirAction,
+                action: `StartVidofnirVedrfolnirAction`,
             },
         ];
     player.boardCoins[tempId] = player.handCoins[coinId];
@@ -142,7 +141,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" && number > 0 && handCoinsNumber) {
         const stack: IStack[] = [
             {
-                action: DrawProfitAction,
+                action: `DrawProfitAction`,
                 config: {
                     name: `AddCoinToPouchVidofnirVedrfolnir`,
                     stageName: `addCoinToPouch`,
@@ -151,7 +150,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
                 },
             },
             {
-                action: AddCoinToPouchAction,
+                action: `AddCoinToPouchAction`,
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
@@ -166,7 +165,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
         if (coinsValue === 1) {
             stack = [
                 {
-                    action: DrawProfitAction,
+                    action: `DrawProfitAction`,
                     config: {
                         name: `VidofnirVedrfolnirAction`,
                         stageName: `upgradeCoinVidofnirVedrfolnir`,
@@ -175,7 +174,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
                     },
                 },
                 {
-                    action: UpgradeCoinVidofnirVedrfolnirAction,
+                    action: `UpgradeCoinVidofnirVedrfolnirAction`,
                     config: {
                         value: 5,
                     }
@@ -184,7 +183,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
         } else if (coinsValue === 2) {
             stack = [
                 {
-                    action: DrawProfitAction,
+                    action: `DrawProfitAction`,
                     config: {
                         name: `VidofnirVedrfolnirAction`,
                         stageName: `upgradeCoinVidofnirVedrfolnir`,
@@ -194,7 +193,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
                     },
                 },
                 {
-                    action: UpgradeCoinVidofnirVedrfolnirAction,
+                    action: `UpgradeCoinVidofnirVedrfolnirAction`,
                     config: {
                         value: 3,
                     }
@@ -228,13 +227,13 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, co
         if (playerConfig.value === 3) {
             stack = [
                 {
-                    action: UpgradeCoinAction,
+                    action: `UpgradeCoinAction`,
                     config: {
                         value: 3,
                     },
                 },
                 {
-                    action: DrawProfitAction,
+                    action: `DrawProfitAction`,
                     config: {
                         coinId,
                         name: `VidofnirVedrfolnirAction`,
@@ -244,7 +243,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, co
                     },
                 },
                 {
-                    action: UpgradeCoinVidofnirVedrfolnirAction,
+                    action: `UpgradeCoinVidofnirVedrfolnirAction`,
                     config: {
                         value: 2,
                     }
@@ -253,7 +252,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, co
         } else if (playerConfig.value === 2) {
             stack = [
                 {
-                    action: UpgradeCoinAction,
+                    action: `UpgradeCoinAction`,
                     config: {
                         value: 2,
                     },
@@ -262,7 +261,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, co
         } else if (playerConfig.value === 5) {
             stack = [
                 {
-                    action: UpgradeCoinAction,
+                    action: `UpgradeCoinAction`,
                     config: {
                         value: 5,
                     },
@@ -347,7 +346,7 @@ export const StartDiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: ICo
                 };
                 const stack: IStack[] = [
                     {
-                        action: DiscardSuitCardAction,
+                        action: `DiscardSuitCardAction`,
                         playerId: i,
                         config: {
                             suit: SuitNames.WARRIOR,

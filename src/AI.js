@@ -215,7 +215,7 @@ export var enumerate = function (G, ctx) {
         else if (G.drawProfit === "enlistmentMercenaries") {
             GetEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: "GetEnlistmentMercenaries",
+                move: "GetEnlistmentMercenariesMove",
                 args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
             });
         }
@@ -234,7 +234,7 @@ export var enumerate = function (G, ctx) {
             }
         }
         moves.push({
-            move: "ClickHandCoin",
+            move: "ClickHandCoinMove",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
         moves.push({ move: "ClickBoardCoinMove", args: [G.currentTavern + 1] });
@@ -246,7 +246,7 @@ export var enumerate = function (G, ctx) {
             }
         }
         moves.push({
-            move: "ClickHandCoin",
+            move: "ClickHandCoinMove",
             args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
         });
         if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {

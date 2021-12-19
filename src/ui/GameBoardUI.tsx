@@ -8,13 +8,7 @@ import {
     DrawCoin,
     DrawPlayerBoardForCardDiscard,
     DrawPlayersBoardForSuitCardDiscard,
-    IDrawBoardOptions,
-    OnClickCampCard,
-    OnClickCard,
-    OnClickCardToPickDistinction,
-    OnClickCoinToUpgrade,
-    OnClickHandCoin,
-    OnClickHeroCard
+    IDrawBoardOptions
 } from "../helpers/UIHelpers";
 import { GameBoard } from "../GameBoard";
 import { CampCardTypes, DeckCardTypes, TavernCardTypes } from "../GameSetup";
@@ -52,8 +46,7 @@ export const DrawTierCards = (data: GameBoard): JSX.Element => (
             data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0}
         {data.props.G.decks.length - data.props.G.tierToEnd === 0 ? `/`
             + data.props.G.decks.reduce((count: number, current: DeckCardTypes[]) =>
-                count + current.length, 0) : ``}
-        cards left)
+                count + current.length, 0) : ``} cards left)
     </span></b>
 );
 
@@ -128,7 +121,7 @@ export const DrawMarketCoins = (data: GameBoard): JSX.Element => {
                 coinClassName: string = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
             DrawCoin(data, boardCells, `market`, data.props.G.marketCoinsUnique[increment],
                 increment, null, coinClassName, countMarketCoins[tempCoinValue],
-                OnClickHandCoin, j);
+                `OnClickHandCoin`, j);
             if (increment + 1 === data.props.G.marketCoinsUnique.length) {
                 break;
             }
@@ -171,7 +164,7 @@ export const DrawHeroes = (data: GameBoard): JSX.Element => {
         for (let j: number = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j;
             DrawCard(data, boardCells, data.props.G.heroes[increment], increment, null,
-                null, OnClickHeroCard, increment);
+                null, `OnClickHeroCard`, increment);
             if (increment + 1 === data.props.G.heroes.length) {
                 break;
             }
@@ -267,15 +260,13 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                 }
                 DrawCard(data, boardCells, data.props.G.decks[1][j], j,
                     data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], suit,
-                    OnClickCardToPickDistinction, j);
+                    `OnClickCardToPickDistinction`, j);
             }
         } else if (option === `BonfurAction` || option === `DagdaAction`) {
-            caption +=
-                `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? `s` : ``} to discard from your board.`;
+            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? `s` : ``} to discard from your board.`;
             DiscardCardFromBoardProfit(data.props.G, data.props.ctx, data, boardCells);
         } else if (option === `AndumiaAction` || option === `BrisingamensAction`) {
-            caption +=
-                `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} from discard pile to your board.`;
+            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} from discard pile to your board.`;
             PickDiscardCardProfit(data.props.G, data.props.ctx, data, boardCells);
         } else if (option === `BrisingamensEndGameAction`) {
             caption += `one card to discard from your board.`;
@@ -317,8 +308,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                 PlaceEnlistmentMercenariesProfit(data.props.G, data.props.ctx, data, boardCells);
             }
         } else if (option === `AddCoinToPouchVidofnirVedrfolnir`) {
-            caption +=
-                `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch to fill it.`;
+            caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch to fill it.`;
             AddCoinToPouchProfit(data.props.G, data.props.ctx, data, boardCells);
         } else {
             if (config !== undefined) {
@@ -350,7 +340,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                                     data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                         .handCoins[handCoinId], j,
                                     data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)],
-                                    `border-2`, null, OnClickCoinToUpgrade,
+                                    `border-2`, null, `OnClickCoinToUpgrade`,
                                     j, `hand`, handCoins[handCoinIndex]?.isInitial as boolean);
                             }
                         } else if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
@@ -360,7 +350,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                                 data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                     .boardCoins[j], j,
                                 data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)],
-                                `border-2`, null, OnClickCoinToUpgrade,
+                                `border-2`, null, `OnClickCoinToUpgrade`,
                                 j, `board`,
                                 data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                     .boardCoins[j]?.isInitial as boolean);
@@ -409,7 +399,7 @@ export const DrawCamp = (data: GameBoard): JSX.Element => {
                 );
             } else {
                 DrawCard(data, boardCells, campCard, j, null, null,
-                    OnClickCampCard, j);
+                    `OnClickCampCard`, j);
             }
         }
     }
@@ -426,8 +416,7 @@ export const DrawCamp = (data: GameBoard): JSX.Element => {
                     {data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? `/`
                         + data.props.G.campDecks
                             .reduce((count: number, current: CampCardTypes[]) =>
-                                count + current.length, 0) : ""} cards
-                    left)
+                                count + current.length, 0) : ""} cards left)
                 </span>
             </caption>
             <tbody>
@@ -470,7 +459,7 @@ export const DrawTaverns = (data: GameBoard, gridClass: string) => {
                     }
                     if (t === data.props.G.currentTavern) {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit,
-                            OnClickCard, j);
+                            `OnClickCard`, j);
                     } else {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);
                     }

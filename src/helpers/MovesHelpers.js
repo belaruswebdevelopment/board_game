@@ -6,9 +6,6 @@ import { AddActionsToStack, StartActionFromStackOrEndActions } from "./StackHelp
 import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
 import { ActivateTrading } from "./CoinHelpers";
 import { SuitNames } from "../data/SuitData";
-import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
-import { DiscardAnyCardFromPlayerBoardAction, GetMjollnirProfitAction } from "../actions/CampActions";
-import { PlaceHeroAction } from "../actions/HeroActions";
 // todo Add logging
 /**
  * <h3>Завершает каждую фазу конца игры и проверяет переход к другим фазам или завершает игру.</h3>
@@ -37,7 +34,7 @@ export var CheckEndGameLastActions = function (G, ctx) {
                         G.publicPlayersOrder.push(i);
                         var stack = [
                             {
-                                action: DrawProfitAction,
+                                action: "DrawProfitAction",
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: "BrisingamensEndGameAction",
@@ -46,7 +43,7 @@ export var CheckEndGameLastActions = function (G, ctx) {
                             },
                             {
                                 playerId: G.publicPlayersOrder[0],
-                                action: DiscardAnyCardFromPlayerBoardAction,
+                                action: "DiscardAnyCardFromPlayerBoardAction",
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -63,7 +60,7 @@ export var CheckEndGameLastActions = function (G, ctx) {
                         G.publicPlayersOrder.push(i);
                         var stack = [
                             {
-                                action: DrawProfitAction,
+                                action: "DrawProfitAction",
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: "getMjollnirProfit",
@@ -72,7 +69,7 @@ export var CheckEndGameLastActions = function (G, ctx) {
                             },
                             {
                                 playerId: G.publicPlayersOrder[0],
-                                action: GetMjollnirProfitAction,
+                                action: "GetMjollnirProfitAction",
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -144,7 +141,7 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
                         && G.taverns[G.currentTavern].every(function (card) { return card !== null; })) {
                         var stack = [
                             {
-                                action: DrawProfitAction,
+                                action: "DrawProfitAction",
                                 config: {
                                     stageName: "discardCard",
                                     name: "discardCard",
@@ -152,7 +149,7 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
                                 },
                             },
                             {
-                                action: DiscardCardFromTavernAction,
+                                action: "DiscardCardFromTavernAction",
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -185,7 +182,7 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
         else {
             var stack = [
                 {
-                    action: DrawProfitAction,
+                    action: "DrawProfitAction",
                     playerId: Number(ctx.playOrder[ctx.playOrder
                         .findIndex(function (playerIndex) { return playerIndex === ctx.currentPlayer; }) + 1]),
                     config: {
@@ -265,7 +262,7 @@ var StartEndTierActions = function (G, ctx) {
         var stack = [
             {
                 playerId: G.publicPlayersOrder[0],
-                action: DrawProfitAction,
+                action: "DrawProfitAction",
                 variants: variants,
                 config: {
                     stageName: "placeCards",
@@ -275,7 +272,7 @@ var StartEndTierActions = function (G, ctx) {
             },
             {
                 playerId: G.publicPlayersOrder[0],
-                action: PlaceHeroAction,
+                action: "PlaceHeroAction",
                 variants: variants,
                 config: {
                     name: "Ylud",

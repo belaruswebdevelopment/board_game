@@ -171,28 +171,28 @@ export const CoinUpgradeValidation = (G: MyGameState, ctx: Ctx, coinId: number, 
 export const moveBy: IMoveBy = {
     null: {},
     placeCoins: {
-        default1: `ClickHandCoin`,
-        default2: `ClickBoardCoin`,
-        default_advanced: `BotsPlaceAllCoins`,
+        default1: `ClickHandCoinMove`,
+        default2: `ClickBoardCoinMove`,
+        default_advanced: `BotsPlaceAllCoinsMove`,
     },
     pickCards: {
-        default: `ClickCard`,
-        defaultPickCampCard: `ClickCampCard`,
-        pickHero: `ClickHeroCard`,
-        upgradeCoin: `ClickCoinToUpgrade`,
-        discardSuitCard: `discardSuitCard`,
+        default: `ClickCardMove`,
+        defaultPickCampCard: `ClickCampCardMove`,
+        pickHero: `ClickHeroCardMove`,
+        upgradeCoin: `ClickCoinToUpgradeMove`,
+        discardSuitCard: `discardSuitCardMove`,
     },
     getDistinctions: {
-        default: `ClickDistinctionCard`,
-        pickDistinctionCard: `ClickCardToPickDistinction`,
-        upgradeCoin: `ClickCoinToUpgrade`,
+        default: `ClickDistinctionCardMove`,
+        pickDistinctionCard: `ClickCardToPickDistinctionMove`,
+        upgradeCoin: `ClickCoinToUpgradeMove`,
     },
     endTier: {
-        pickHero: `ClickHeroCard`,
+        pickHero: `ClickHeroCardMove`,
     },
     enlistmentMercenaries: {
-        pickHero: `ClickHeroCard`,
-        upgradeCoin: `ClickCoinToUpgrade`,
+        pickHero: `ClickHeroCardMove`,
+        upgradeCoin: `ClickCoinToUpgradeMove`,
     },
     placeCoinsUline: {},
     getMjollnirProfit: {},
@@ -209,7 +209,7 @@ export const moveBy: IMoveBy = {
  */
 export const moveValidators: IMoveValidators = {
     // todo Add all validators to all moves
-    ClickHandCoin: {
+    ClickHandCoinMove: {
         getRange: ({ G, ctx }: IMoveValidatorParams): [number, number] =>
             ([0, G.publicPlayers[Number(ctx!.currentPlayer)].handCoins.length]),
         validate: ({ G, ctx, id }: IMoveValidatorParams): boolean => {
@@ -221,7 +221,7 @@ export const moveValidators: IMoveValidators = {
             return false;
         },
     },
-    ClickBoardCoin: {
+    ClickBoardCoinMove: {
         getRange: ({ G, ctx }: IMoveValidatorParams): [number, number] =>
             ([0, G.publicPlayers[Number(ctx!.currentPlayer)].boardCoins.length]),
         validate: ({ G, ctx, id }: IMoveValidatorParams): boolean => {
@@ -233,7 +233,7 @@ export const moveValidators: IMoveValidators = {
             return false;
         },
     },
-    BotsPlaceAllCoins: {
+    BotsPlaceAllCoinsMove: {
         getRange: ({ G }: IMoveValidatorParams): [number, number] => ([0, G.botData.allCoinsOrder.length]),
         getValue: ({ G, id }: IMoveValidatorParams): number[] => {
             if (id !== undefined) {
@@ -245,7 +245,7 @@ export const moveValidators: IMoveValidators = {
         },
         validate: (): boolean => true,
     },
-    ClickHeroCard: {
+    ClickHeroCardMove: {
         getRange: ({ G }: IMoveValidatorParams): [number, number] => ([0, G.heroes.length]),
         validate: ({ G, ctx, id }: IMoveValidatorParams): boolean => {
             if (id !== undefined) {
@@ -273,7 +273,7 @@ export const moveValidators: IMoveValidators = {
         },
     },
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
-    ClickCoinToUpgrade: {
+    ClickCoinToUpgradeMove: {
         getRange: ({ G, ctx }: IMoveValidatorParams): [number, number] =>
             ([0, G.publicPlayers[Number(ctx!.currentPlayer)].boardCoins.length]),
         validate: ({ G, ctx, id, type }: IMoveValidatorParams): boolean => {
@@ -284,11 +284,11 @@ export const moveValidators: IMoveValidators = {
             return false;
         },
     },
-    ClickCardToPickDistinction: {
+    ClickCardToPickDistinctionMove: {
         getRange: (): [number, number] => ([0, 3]),
         validate: (): boolean => true,
     },
-    ClickDistinctionCard: {
+    ClickDistinctionCardMove: {
         getRange: ({ G }: IMoveValidatorParams): [number, number] => ([0, G.distinctions.length]),
         validate: ({ G, ctx, id }: IMoveValidatorParams): boolean => {
             if (id !== undefined) {
@@ -298,7 +298,7 @@ export const moveValidators: IMoveValidators = {
             return false;
         }
     },
-    ClickCampCard: {
+    ClickCampCardMove: {
         getRange: ({ G }: IMoveValidatorParams): [number, number] => ([0, G.camp.length]),
         validate: ({ G, ctx }: IMoveValidatorParams): boolean =>
             G.expansions.thingvellir.active && (Number(ctx!.currentPlayer) === G.publicPlayersOrder[0]

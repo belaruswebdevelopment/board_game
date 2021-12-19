@@ -137,7 +137,7 @@ export var EndActionFromStackAndAddNew = function (G, ctx, newStack) {
         args[_i - 3] = arguments[_i];
     }
     var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0].action.name !== "DrawProfitAction"
+    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0].action !== "DrawProfitAction"
         || (config === null || config === void 0 ? void 0 : config.name) === "explorerDistinction") {
         G.actionsNum = 0;
         G.drawProfit = "";

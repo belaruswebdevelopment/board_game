@@ -58,7 +58,7 @@ export interface IConfig {
  * <h3>Интерфейс для стэка у карт.</h3>
  */
 export interface IStack {
-    action: Function,
+    action: string,
     variants?: IVariants,
     config?: IConfig,
     playerId?: number,

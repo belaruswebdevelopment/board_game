@@ -4,7 +4,6 @@ import { AddCampCardToPlayer, AddCampCardToPlayerCards } from "../Player";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { SuitNames, suitsConfig } from "../data/SuitData";
 import { isArtefactCard } from "../Camp";
-import { DrawProfitAction, UpgradeCoinAction } from "./Actions";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 /**
  * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>
@@ -63,7 +62,7 @@ export var AddCampCardToCardsAction = function (G, ctx, config, cardId) {
                 .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length) {
                 stack = [
                     {
-                        action: DrawProfitAction,
+                        action: "DrawProfitAction",
                         config: {
                             name: "enlistmentMercenaries",
                             drawName: "Enlistment Mercenaries",
@@ -96,7 +95,7 @@ export var AddCoinToPouchAction = function (G, ctx, config, coinId) {
         return index >= G.tavernsNum && coin === null;
     }), stack = [
         {
-            action: StartVidofnirVedrfolnirAction,
+            action: "StartVidofnirVedrfolnirAction",
         },
     ];
     player.boardCoins[tempId] = player.handCoins[coinId];
@@ -124,7 +123,7 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" && number > 0 && handCoinsNumber) {
         var stack = [
             {
-                action: DrawProfitAction,
+                action: "DrawProfitAction",
                 config: {
                     name: "AddCoinToPouchVidofnirVedrfolnir",
                     stageName: "addCoinToPouch",
@@ -133,7 +132,7 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
                 },
             },
             {
-                action: AddCoinToPouchAction,
+                action: "AddCoinToPouchAction",
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
@@ -148,7 +147,7 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
         if (coinsValue === 1) {
             stack = [
                 {
-                    action: DrawProfitAction,
+                    action: "DrawProfitAction",
                     config: {
                         name: "VidofnirVedrfolnirAction",
                         stageName: "upgradeCoinVidofnirVedrfolnir",
@@ -157,7 +156,7 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
                     },
                 },
                 {
-                    action: UpgradeCoinVidofnirVedrfolnirAction,
+                    action: "UpgradeCoinVidofnirVedrfolnirAction",
                     config: {
                         value: 5,
                     }
@@ -167,7 +166,7 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
         else if (coinsValue === 2) {
             stack = [
                 {
-                    action: DrawProfitAction,
+                    action: "DrawProfitAction",
                     config: {
                         name: "VidofnirVedrfolnirAction",
                         stageName: "upgradeCoinVidofnirVedrfolnir",
@@ -177,7 +176,7 @@ export var StartVidofnirVedrfolnirAction = function (G, ctx) {
                     },
                 },
                 {
-                    action: UpgradeCoinVidofnirVedrfolnirAction,
+                    action: "UpgradeCoinVidofnirVedrfolnirAction",
                     config: {
                         value: 3,
                     }
@@ -209,13 +208,13 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
         if (playerConfig.value === 3) {
             stack = [
                 {
-                    action: UpgradeCoinAction,
+                    action: "UpgradeCoinAction",
                     config: {
                         value: 3,
                     },
                 },
                 {
-                    action: DrawProfitAction,
+                    action: "DrawProfitAction",
                     config: {
                         coinId: coinId,
                         name: "VidofnirVedrfolnirAction",
@@ -225,7 +224,7 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
                     },
                 },
                 {
-                    action: UpgradeCoinVidofnirVedrfolnirAction,
+                    action: "UpgradeCoinVidofnirVedrfolnirAction",
                     config: {
                         value: 2,
                     }
@@ -235,7 +234,7 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
         else if (playerConfig.value === 2) {
             stack = [
                 {
-                    action: UpgradeCoinAction,
+                    action: "UpgradeCoinAction",
                     config: {
                         value: 2,
                     },
@@ -245,7 +244,7 @@ export var UpgradeCoinVidofnirVedrfolnirAction = function (G, ctx, config, coinI
         else if (playerConfig.value === 5) {
             stack = [
                 {
-                    action: UpgradeCoinAction,
+                    action: "UpgradeCoinAction",
                     config: {
                         value: 5,
                     },
@@ -326,7 +325,7 @@ export var StartDiscardSuitCardAction = function (G, ctx, config) {
                 };
                 var stack = [
                     {
-                        action: DiscardSuitCardAction,
+                        action: "DiscardSuitCardAction",
                         playerId: i,
                         config: {
                             suit: SuitNames.WARRIOR,

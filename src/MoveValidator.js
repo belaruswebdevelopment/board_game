@@ -115,28 +115,28 @@ export var CoinUpgradeValidation = function (G, ctx, coinId, type) {
 export var moveBy = {
     null: {},
     placeCoins: {
-        default1: "ClickHandCoin",
-        default2: "ClickBoardCoin",
-        default_advanced: "BotsPlaceAllCoins",
+        default1: "ClickHandCoinMove",
+        default2: "ClickBoardCoinMove",
+        default_advanced: "BotsPlaceAllCoinsMove",
     },
     pickCards: {
-        default: "ClickCard",
-        defaultPickCampCard: "ClickCampCard",
-        pickHero: "ClickHeroCard",
-        upgradeCoin: "ClickCoinToUpgrade",
-        discardSuitCard: "discardSuitCard",
+        default: "ClickCardMove",
+        defaultPickCampCard: "ClickCampCardMove",
+        pickHero: "ClickHeroCardMove",
+        upgradeCoin: "ClickCoinToUpgradeMove",
+        discardSuitCard: "discardSuitCardMove",
     },
     getDistinctions: {
-        default: "ClickDistinctionCard",
-        pickDistinctionCard: "ClickCardToPickDistinction",
-        upgradeCoin: "ClickCoinToUpgrade",
+        default: "ClickDistinctionCardMove",
+        pickDistinctionCard: "ClickCardToPickDistinctionMove",
+        upgradeCoin: "ClickCoinToUpgradeMove",
     },
     endTier: {
-        pickHero: "ClickHeroCard",
+        pickHero: "ClickHeroCardMove",
     },
     enlistmentMercenaries: {
-        pickHero: "ClickHeroCard",
-        upgradeCoin: "ClickCoinToUpgrade",
+        pickHero: "ClickHeroCardMove",
+        upgradeCoin: "ClickCoinToUpgradeMove",
     },
     placeCoinsUline: {},
     getMjollnirProfit: {},
@@ -152,7 +152,7 @@ export var moveBy = {
  */
 export var moveValidators = {
     // todo Add all validators to all moves
-    ClickHandCoin: {
+    ClickHandCoinMove: {
         getRange: function (_a) {
             var G = _a.G, ctx = _a.ctx;
             return ([0, G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length]);
@@ -167,7 +167,7 @@ export var moveValidators = {
             return false;
         },
     },
-    ClickBoardCoin: {
+    ClickBoardCoinMove: {
         getRange: function (_a) {
             var G = _a.G, ctx = _a.ctx;
             return ([0, G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length]);
@@ -182,7 +182,7 @@ export var moveValidators = {
             return false;
         },
     },
-    BotsPlaceAllCoins: {
+    BotsPlaceAllCoinsMove: {
         getRange: function (_a) {
             var G = _a.G;
             return ([0, G.botData.allCoinsOrder.length]);
@@ -198,7 +198,7 @@ export var moveValidators = {
         },
         validate: function () { return true; },
     },
-    ClickHeroCard: {
+    ClickHeroCardMove: {
         getRange: function (_a) {
             var G = _a.G;
             return ([0, G.heroes.length]);
@@ -231,7 +231,7 @@ export var moveValidators = {
         },
     },
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
-    ClickCoinToUpgrade: {
+    ClickCoinToUpgradeMove: {
         getRange: function (_a) {
             var G = _a.G, ctx = _a.ctx;
             return ([0, G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length]);
@@ -245,11 +245,11 @@ export var moveValidators = {
             return false;
         },
     },
-    ClickCardToPickDistinction: {
+    ClickCardToPickDistinctionMove: {
         getRange: function () { return ([0, 3]); },
         validate: function () { return true; },
     },
-    ClickDistinctionCard: {
+    ClickDistinctionCardMove: {
         getRange: function (_a) {
             var G = _a.G;
             return ([0, G.distinctions.length]);
@@ -263,7 +263,7 @@ export var moveValidators = {
             return false;
         }
     },
-    ClickCampCard: {
+    ClickCampCardMove: {
         getRange: function (_a) {
             var G = _a.G;
             return ([0, G.camp.length]);

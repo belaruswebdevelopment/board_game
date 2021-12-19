@@ -10,15 +10,6 @@ import { BuildHeroes } from "./Hero";
 import { BuildCampCards } from "./Camp";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
-/* export class Test {
-    constructor(public test: string) {
-
-    }
-
-    public testFunc = () => {
-        console.log(this.test + " !!!");
-    };
-} */
 /**
  * <h3>Сетап игры.</h3>
  * <p>Применения:</p>
@@ -36,8 +27,6 @@ export var SetupGame = function (ctx) {
         },
     }, totalScore = [], logData = [], decks = [], discardCardsDeck = [], campDecks = [], distinctions = Array(suitsNum).fill(null);
     var winner = [], campPicked = false, camp = [], discardCampCardsDeck = [];
-    // const test: Test = new Test("Dima&Sasha");
-    var x = 123;
     if (expansions.thingvellir.active) {
         for (var i = 0; i < tierToEnd; i++) {
             // todo Camp cards must be hidden from users?
@@ -100,8 +89,6 @@ export var SetupGame = function (ctx) {
         deckLength: decks[0].length,
     };
     return {
-        // test,
-        x: x,
         log: log,
         debug: debug,
         winner: winner,

@@ -8,9 +8,9 @@ import {
     DrawProfit,
     DrawTaverns,
     DrawTierCards,
-    DrawWinner,
+    DrawWinner
 } from "./ui/GameBoardUI";
-import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins, } from "./ui/PlayerUI";
+import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { DrawDebugData } from "./ui/DebugUI";
 import { DrawLogData } from "./ui/LogUI";
 import type { BoardProps } from 'boardgame.io/react';

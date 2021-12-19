@@ -302,8 +302,7 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
     for (const suit in suitsConfig) {
         playerHeaders.push(
             <th className={`${suitsConfig[suit].suitColor}`}
-                key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname}
-                ${suitsConfig[suit].suitName}`}>
+                key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`}>
                 <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
 
                 </span>
@@ -361,7 +360,7 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
                         isDrawRow = true;
                         DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i],
                             i, data.props.G.publicPlayers[p], suitName,
-                            OnClickDiscardSuitCardFromPlayerBoard, suitId, p, i);
+                            `OnClickDiscardSuitCardFromPlayerBoard`, suitId, p, i);
                     }
                 } else {
                     playersCells.push(
@@ -410,12 +409,49 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
  * @param args Аргументы действия.
  */
 export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: DeckCardTypes | CampDeckCardTypes | IHero,
-    id: number, player: IPublicPlayer | null, suit?: string | null, actionName?: Function,
-    ...args: ArgsTypes):
+    id: number, player: IPublicPlayer | null, suit?: string | null, actionName?: string, ...args: ArgsTypes):
     void => {
     let styles: IBackground = { background: `` },
         tdClasses: string = ``,
-        spanClasses: string;
+        spanClasses: string = ``,
+        action: Function | null = null;
+    switch (actionName) {
+        case `OnClickHeroCard`:
+            action = OnClickHeroCard;
+            break;
+        case `OnClickCampCard`:
+            action = OnClickCampCard;
+            break;
+        case `OnClickCard`:
+            action = OnClickCard;
+            break;
+        case `OnClickCardToPickDistinction`:
+            action = OnClickCardToPickDistinction;
+            break;
+        case `OnClickCardToDiscard`:
+            action = OnClickCardToDiscard;
+            break;
+        case `OnClickCardFromDiscard`:
+            action = OnClickCardFromDiscard;
+            break;
+        case `OnClickCardToDiscard2Players`:
+            action = OnClickCardToDiscard2Players;
+            break;
+        case `OnClickDiscardCardFromPlayerBoard`:
+            action = OnClickDiscardCardFromPlayerBoard;
+            break;
+        case `OnClickDiscardSuitCardFromPlayerBoard`:
+            action = OnClickDiscardSuitCardFromPlayerBoard;
+            break;
+        case `OnClickCampCardHolda`:
+            action = OnClickCampCardHolda;
+            break;
+        case `OnClickGetEnlistmentMercenaries`:
+            action = OnClickGetEnlistmentMercenaries;
+            break;
+        default:
+            action = null;
+    }
     if (suit !== null && suit !== undefined) {
         tdClasses = suitsConfig[suit].suitColor;
     }
@@ -445,7 +481,7 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
         }
         spanClasses = `bg-card`;
     }
-    if (actionName !== undefined) {
+    if (actionName !== null) {
         tdClasses += ` cursor-pointer`;
     }
     let description: string = ``,
@@ -459,8 +495,8 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
         value = String(card.value);
     }
     playerCells.push(
-        <td key={`${(player && player.nickname) ? `player ${(player.nickname)} ` :
-            ``}${suit} card ${id} ${card.name}`} className={tdClasses} onClick={() => actionName?.(...args)}>
+        <td className={tdClasses} onClick={() => action?.(data, ...args)}
+            key={`${(player && player.nickname) ? `player ${(player.nickname)} ` : ``}${suit} card ${id} ${card.name}`}>
             <span style={styles} title={description ?? card.name} className={spanClasses}>
                 <b>{value}</b>
             </span>
@@ -488,12 +524,32 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
  */
 export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin: ICoin | null, id: number,
     player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
-    actionName?: Function, ...args: ArgsTypes): void => {
+    actionName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
-        span = null,
+        span: JSX.Element | number | null = null,
         tdClasses: string = `bg-yellow-300`,
-        spanClasses: string = ``;
-    if (actionName !== undefined) {
+        spanClasses: string = ``,
+        action: Function | null = null;
+    switch (actionName) {
+        case `OnClickBoardCoin`:
+            action = OnClickBoardCoin;
+            break;
+        case `OnClickHandCoin`:
+            action = OnClickHandCoin;
+            break;
+        case `OnClickCoinToUpgrade`:
+            action = OnClickCoinToUpgrade;
+            break;
+        case `OnClickCoinToAddToPouch`:
+            action = OnClickCoinToAddToPouch;
+            break;
+        case `OnClickCoinToUpgradeVidofnirVedrfolnir`:
+            action = OnClickCoinToUpgradeVidofnirVedrfolnir;
+            break;
+        default:
+            action = null;
+    }
+    if (actionName !== null) {
         tdClasses += ` cursor-pointer`;
     }
     if (type === `market`) {
@@ -537,8 +593,8 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
         }
     }
     playerCells.push(
-        <td key={`${player?.nickname ? `player ${player.nickname} ` : ``}coin ${id}${coin !== null ? `
-        ${coin.value}` : ` empty`}`} className={tdClasses} onClick={() => actionName?.(...args)}>
+        <td className={tdClasses} onClick={() => action?.(data, ...args)}
+            key={`${player?.nickname ? `player ${player.nickname} ` : ``}coin ${id}${coin !== null ? ` ${coin.value}` : ` empty`}`}>
             <span style={styles} className={spanClasses}>
                 {span}
             </span>
@@ -562,10 +618,21 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
  * @param args Аргументы действия.
  */
 export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: string, name: string, player: IPublicPlayer,
-    actionName?: Function, ...args: ArgsTypes): void => {
+    actionName?: string, ...args: ArgsTypes): void => {
+    let action: Function | null = null;
+    switch (actionName) {
+        case `OnClickStartEnlistmentMercenaries`:
+            action = OnClickStartEnlistmentMercenaries;
+            break;
+        case `OnClickPassEnlistmentMercenaries`:
+            action = OnClickPassEnlistmentMercenaries;
+            break;
+        default:
+            action = null;
+    }
     boardCells.push(
-        <td key={`${player?.nickname ? `Player ${player.nickname} ` : ``}${key}`}
-            className="cursor-pointer" onClick={() => actionName?.(...args)}>
+        <td className="cursor-pointer" onClick={() => action?.(data, ...args)}
+            key={`${player?.nickname ? `Player ${player.nickname} ` : ``}${key}`}>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 {name}
             </button>

@@ -1,7 +1,6 @@
 import { DiscardCardFromTavern } from "./Card";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
-import { AddCampCardToCardsAction } from "./actions/CampActions";
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>
@@ -133,7 +132,7 @@ export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
             name: name_1.trim(),
             stack: [
                 {
-                    action: AddCampCardToCardsAction,
+                    action: "AddCampCardToCardsAction",
                     variants: mercenariesConfig[tier][i],
                 },
             ],

@@ -1,5 +1,5 @@
 import { SetupGame } from "./GameSetup";
-import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, GetEnlistmentMercenariesMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove, } from "./moves/Moves";
+import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, GetEnlistmentMercenariesMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
 import { ChangePlayersPriorities } from "./Priority";
 import { ScoreWinner } from "./Score";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
@@ -15,7 +15,6 @@ import { ResolveBoardCoins } from "./helpers/CoinHelpers";
 import { PlayerView } from "boardgame.io/core";
 import { CheckDistinction } from "./Distinction";
 import { CheckPlayersBasicOrder } from "./Player";
-import { DrawProfitAction } from "./actions/Actions";
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
 var order = {
@@ -43,13 +42,12 @@ export var BoardGame = {
             },
             start: true,
             moves: {
-                ClickHandCoin: ClickHandCoinMove,
-                ClickBoardCoin: ClickBoardCoinMove,
-                BotsPlaceAllCoins: BotsPlaceAllCoinsMove,
+                ClickHandCoinMove: ClickHandCoinMove,
+                ClickBoardCoinMove: ClickBoardCoinMove,
+                BotsPlaceAllCoinsMove: BotsPlaceAllCoinsMove,
             },
             next: "pickCards",
             onBegin: function (G, ctx) {
-                // G.test.testFunc();
                 G.currentTavern = -1;
                 if (ctx.turn !== 0) {
                     ReturnCoinsToPlayerHands(G);
@@ -62,8 +60,8 @@ export var BoardGame = {
                 order: order,
             },
             moves: {
-                ClickHandCoin: ClickHandCoinMove,
-                ClickBoardCoin: ClickBoardCoinMove,
+                ClickHandCoinMove: ClickHandCoinMove,
+                ClickBoardCoinMove: ClickBoardCoinMove,
             },
             onBegin: function (G, ctx) {
                 CheckPlayersBasicOrder(G, ctx);
@@ -76,66 +74,66 @@ export var BoardGame = {
                     // Start
                     discardCardFromBoard: {
                         moves: {
-                            DiscardCard: DiscardCardMove,
+                            DiscardCardMove: DiscardCardMove,
                         },
                     },
                     placeCards: {
                         moves: {
-                            PlaceCard: PlaceCardMove,
+                            PlaceCardMove: PlaceCardMove,
                         },
                     },
                     pickCampCardHolda: {
                         moves: {
-                            ClickCampCardHolda: ClickCampCardHoldaMove,
+                            ClickCampCardHoldaMove: ClickCampCardHoldaMove,
                         },
                     },
                     pickDiscardCard: {
                         moves: {
-                            PickDiscardCard: PickDiscardCardMove,
+                            PickDiscardCardMove: PickDiscardCardMove,
                         },
                     },
                     addCoinToPouch: {
                         moves: {
-                            AddCoinToPouch: AddCoinToPouchMove,
+                            AddCoinToPouchMove: AddCoinToPouchMove,
                         },
                     },
                     upgradeCoinVidofnirVedrfolnir: {
                         moves: {
-                            UpgradeCoinVidofnirVedrfolnir: UpgradeCoinVidofnirVedrfolnirMove,
+                            UpgradeCoinVidofnirVedrfolnirMove: UpgradeCoinVidofnirVedrfolnirMove,
                         },
                     },
                     discardSuitCard: {
                         moves: {
-                            DiscardSuitCardFromPlayerBoard: DiscardSuitCardFromPlayerBoardMove,
+                            DiscardSuitCardFromPlayerBoardMove: DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
                     upgradeCoin: {
                         moves: {
-                            ClickCoinToUpgrade: ClickCoinToUpgradeMove,
+                            ClickCoinToUpgradeMove: ClickCoinToUpgradeMove,
                         },
                     },
                     pickHero: {
                         moves: {
-                            ClickHeroCard: ClickHeroCardMove,
+                            ClickHeroCardMove: ClickHeroCardMove,
                         },
                     },
                     // End
                     discardCard: {
                         moves: {
-                            DiscardCard2Players: DiscardCard2PlayersMove,
+                            DiscardCard2PlayersMove: DiscardCard2PlayersMove,
                         },
                     },
                     placeTradingCoinsUline: {
                         moves: {
-                            ClickHandCoin: ClickHandCoinMove,
-                            ClickBoardCoin: ClickBoardCoinMove,
+                            ClickHandCoinMove: ClickHandCoinMove,
+                            ClickBoardCoinMove: ClickBoardCoinMove,
                         },
                     },
                 },
             },
             moves: {
-                ClickCard: ClickCardMove,
-                ClickCampCard: ClickCampCardMove,
+                ClickCardMove: ClickCardMove,
+                ClickCampCardMove: ClickCampCardMove,
             },
             onBegin: function (G, ctx) {
                 var _a;
@@ -154,57 +152,57 @@ export var BoardGame = {
                     // Start
                     discardCardFromBoard: {
                         moves: {
-                            DiscardCard: DiscardCardMove,
+                            DiscardCardMove: DiscardCardMove,
                         },
                     },
                     placeCards: {
                         moves: {
-                            PlaceCard: PlaceCardMove,
+                            PlaceCardMove: PlaceCardMove,
                         },
                     },
                     pickCampCardHolda: {
                         moves: {
-                            ClickCampCardHolda: ClickCampCardHoldaMove,
+                            ClickCampCardHoldaMove: ClickCampCardHoldaMove,
                         },
                     },
                     pickDiscardCard: {
                         moves: {
-                            PickDiscardCard: PickDiscardCardMove,
+                            PickDiscardCardMove: PickDiscardCardMove,
                         },
                     },
                     addCoinToPouch: {
                         moves: {
-                            AddCoinToPouch: AddCoinToPouchMove,
+                            AddCoinToPouchMove: AddCoinToPouchMove,
                         },
                     },
                     upgradeCoinVidofnirVedrfolnir: {
                         moves: {
-                            UpgradeCoinVidofnirVedrfolnir: UpgradeCoinVidofnirVedrfolnirMove,
+                            UpgradeCoinVidofnirVedrfolnirMove: UpgradeCoinVidofnirVedrfolnirMove,
                         },
                     },
                     discardSuitCard: {
                         moves: {
-                            DiscardSuitCardFromPlayerBoard: DiscardSuitCardFromPlayerBoardMove,
+                            DiscardSuitCardFromPlayerBoardMove: DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
                     upgradeCoin: {
                         moves: {
-                            ClickCoinToUpgrade: ClickCoinToUpgradeMove,
+                            ClickCoinToUpgradeMove: ClickCoinToUpgradeMove,
                         },
                     },
                     pickHero: {
                         moves: {
-                            ClickHeroCard: ClickHeroCardMove,
+                            ClickHeroCardMove: ClickHeroCardMove,
                         },
                     },
                     // End
                 },
             },
             moves: {
-                StartEnlistmentMercenaries: StartEnlistmentMercenariesMove,
-                PassEnlistmentMercenaries: PassEnlistmentMercenariesMove,
-                GetEnlistmentMercenaries: GetEnlistmentMercenariesMove,
-                PlaceEnlistmentMercenaries: PlaceEnlistmentMercenariesMove,
+                StartEnlistmentMercenariesMove: StartEnlistmentMercenariesMove,
+                PassEnlistmentMercenariesMove: PassEnlistmentMercenariesMove,
+                GetEnlistmentMercenariesMove: GetEnlistmentMercenariesMove,
+                PlaceEnlistmentMercenariesMove: PlaceEnlistmentMercenariesMove,
             },
             onBegin: function (G, ctx) {
                 var players = G.publicPlayers.map(function (player) { return player; }), playersIndexes = [];
@@ -244,7 +242,7 @@ export var BoardGame = {
                 }
                 var stack = [
                     {
-                        action: DrawProfitAction,
+                        action: "DrawProfitAction",
                         playerId: G.publicPlayersOrder[0],
                         config: {
                             name: "startOrPassEnlistmentMercenaries",
@@ -262,54 +260,54 @@ export var BoardGame = {
                     // Start
                     discardCardFromBoard: {
                         moves: {
-                            DiscardCard: DiscardCardMove,
+                            DiscardCardMove: DiscardCardMove,
                         },
                     },
                     placeCards: {
                         moves: {
-                            PlaceCard: PlaceCardMove,
+                            PlaceCardMove: PlaceCardMove,
                         },
                     },
                     pickCampCardHolda: {
                         moves: {
-                            ClickCampCardHolda: ClickCampCardHoldaMove,
+                            ClickCampCardHoldaMove: ClickCampCardHoldaMove,
                         },
                     },
                     pickDiscardCard: {
                         moves: {
-                            PickDiscardCard: PickDiscardCardMove,
+                            PickDiscardCardMove: PickDiscardCardMove,
                         },
                     },
                     addCoinToPouch: {
                         moves: {
-                            AddCoinToPouch: AddCoinToPouchMove,
+                            AddCoinToPouchMove: AddCoinToPouchMove,
                         },
                     },
                     upgradeCoinVidofnirVedrfolnir: {
                         moves: {
-                            UpgradeCoinVidofnirVedrfolnir: UpgradeCoinVidofnirVedrfolnirMove,
+                            UpgradeCoinVidofnirVedrfolnirMove: UpgradeCoinVidofnirVedrfolnirMove,
                         },
                     },
                     discardSuitCard: {
                         moves: {
-                            DiscardSuitCardFromPlayerBoard: DiscardSuitCardFromPlayerBoardMove,
+                            DiscardSuitCardFromPlayerBoardMove: DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
                     upgradeCoin: {
                         moves: {
-                            ClickCoinToUpgrade: ClickCoinToUpgradeMove,
+                            ClickCoinToUpgradeMove: ClickCoinToUpgradeMove,
                         },
                     },
                     pickHero: {
                         moves: {
-                            ClickHeroCard: ClickHeroCardMove,
+                            ClickHeroCardMove: ClickHeroCardMove,
                         },
                     },
                     // End
                 },
             },
             moves: {
-                PlaceCard: PlaceCardMove,
+                PlaceCardMove: PlaceCardMove,
             },
         },
         getMjollnirProfit: {
@@ -317,7 +315,7 @@ export var BoardGame = {
                 order: order,
             },
             moves: {
-                GetMjollnirProfit: GetMjollnirProfitMove,
+                GetMjollnirProfitMove: GetMjollnirProfitMove,
             },
         },
         brisingamensEndGame: {
@@ -325,7 +323,7 @@ export var BoardGame = {
                 order: order,
             },
             moves: {
-                DiscardCardFromPlayerBoard: DiscardCardFromPlayerBoardMove,
+                DiscardCardFromPlayerBoardMove: DiscardCardFromPlayerBoardMove,
             },
         },
         getDistinctions: {
@@ -334,19 +332,19 @@ export var BoardGame = {
                 stages: {
                     pickDistinctionCard: {
                         moves: {
-                            ClickCardToPickDistinction: ClickCardToPickDistinctionMove,
+                            ClickCardToPickDistinctionMove: ClickCardToPickDistinctionMove,
                         },
                     },
                     upgradeCoin: {
                         moves: {
-                            ClickCoinToUpgrade: ClickCoinToUpgradeMove,
+                            ClickCoinToUpgradeMove: ClickCoinToUpgradeMove,
                         },
                     },
                 },
             },
             next: "placeCoins",
             moves: {
-                ClickDistinctionCard: ClickDistinctionCardMove,
+                ClickDistinctionCardMove: ClickDistinctionCardMove,
             },
             onBegin: function (G, ctx) {
                 CheckDistinction(G, ctx);

@@ -10,9 +10,6 @@ import { Ctx } from "boardgame.io";
 import { IStack, PlayerCardsType } from "../Player";
 import { IVariants } from "../data/HeroData";
 import { SuitNames } from "../data/SuitData";
-import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
-import { DiscardAnyCardFromPlayerBoardAction, GetMjollnirProfitAction } from "../actions/CampActions";
-import { PlaceHeroAction } from "../actions/HeroActions";
 // todo Add logging
 
 /**
@@ -41,7 +38,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                         G.publicPlayersOrder.push(i);
                         const stack: IStack[] = [
                             {
-                                action: DrawProfitAction,
+                                action: `DrawProfitAction`,
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: `BrisingamensEndGameAction`,
@@ -50,7 +47,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                             },
                             {
                                 playerId: G.publicPlayersOrder[0],
-                                action: DiscardAnyCardFromPlayerBoardAction,
+                                action: `DiscardAnyCardFromPlayerBoardAction`,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -67,7 +64,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                         G.publicPlayersOrder.push(i);
                         const stack: IStack[] = [
                             {
-                                action: DrawProfitAction,
+                                action: `DrawProfitAction`,
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: `getMjollnirProfit`,
@@ -76,7 +73,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                             },
                             {
                                 playerId: G.publicPlayersOrder[0],
-                                action: GetMjollnirProfitAction,
+                                action: `GetMjollnirProfitAction`,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -148,7 +145,7 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
                         && G.taverns[G.currentTavern].every(card => card !== null)) {
                         const stack: IStack[] = [
                             {
-                                action: DrawProfitAction,
+                                action: `DrawProfitAction`,
                                 config: {
                                     stageName: `discardCard`,
                                     name: `discardCard`,
@@ -156,7 +153,7 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
                                 },
                             },
                             {
-                                action: DiscardCardFromTavernAction,
+                                action: `DiscardCardFromTavernAction`,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -184,7 +181,7 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
         } else {
             const stack: IStack[] = [
                 {
-                    action: DrawProfitAction,
+                    action: `DrawProfitAction`,
                     playerId: Number(ctx.playOrder[ctx.playOrder
                         .findIndex((playerIndex: string): boolean => playerIndex === ctx.currentPlayer) + 1]),
                     config: {
@@ -266,7 +263,7 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
         const stack: IStack[] = [
             {
                 playerId: G.publicPlayersOrder[0],
-                action: DrawProfitAction,
+                action: `DrawProfitAction`,
                 variants,
                 config: {
                     stageName: `placeCards`,
@@ -276,7 +273,7 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
             },
             {
                 playerId: G.publicPlayersOrder[0],
-                action: PlaceHeroAction,
+                action: `PlaceHeroAction`,
                 variants,
                 config: {
                     name: `Ylud`,
