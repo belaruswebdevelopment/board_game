@@ -7,7 +7,7 @@ import { ICoin } from "../Coin";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { SuitNames } from "../data/SuitData";
 import { DrawProfitAction } from "../actions/Actions";
-import { PlaceThrudAction } from "../actions/HeroActions";
+import { PlaceHeroAction } from "../actions/HeroActions";
 import { CheckPickHero } from "../Hero";
 
 /**
@@ -120,8 +120,11 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
                     },
                 },
                 {
-                    action: PlaceThrudAction,
+                    action: PlaceHeroAction,
                     variants,
+                    config: {
+                        name: `Thrud`,
+                    },
                 },
             ];
         AddActionsToStackAfterCurrent(G, ctx, stack);

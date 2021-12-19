@@ -20,42 +20,10 @@ import { IConditions, IVariants } from "../data/HeroData";
 import { IsStartActionStage } from "../helpers/ActionHelpers";
 
 /**
- * <h3>Действия, связанные с проверкой расположением героя Труд на игровом поле игрока.</h3>
+ * <h3>Действия, связанные с проверкой расположением конкретного героя на игровом поле игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При добавлении героя Труд на игровом поле игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param suitId Id фракции.
- */
-export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
-    const suit: string = Object.keys(suitsConfig)[suitId],
-        playerVariants: IVariants | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
-    if (playerVariants !== undefined) {
-        const thrudCard: ICard = CreateCard({
-            suit,
-            rank: playerVariants[suit].rank,
-            points: playerVariants[suit].points,
-            type: `герой`,
-            name: `Thrud`,
-            game: `base`,
-        } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Труд во фракцию ${suitsConfig[suit].suitName}.`);
-        AddCardToPlayer(G, ctx, thrudCard);
-        CheckPickHero(G, ctx);
-        EndActionFromStackAndAddNew(G, ctx);
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
-    }
-};
-
-/**
- * <h3>Действия, связанные с проверкой расположением героя Илуд на игровом поле игрока.</h3>
- * <p>Применения:</p>
- * <ol>
  * <li>При добавлении героя Илуд на игровом поле игрока.</li>
  * </ol>
  *
@@ -64,24 +32,24 @@ export const PlaceThrudAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
  * @param config Конфиг действий героя.
  * @param suitId Id фракции.
  */
-export const PlaceYludAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
+export const PlaceHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
     const suit: string = Object.keys(suitsConfig)[suitId],
         playerVariants: IVariants | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
-    if (playerVariants !== undefined) {
-        const yludCard: ICard = CreateCard({
-            suit: suit,
+    if (playerVariants !== undefined && config.name !== undefined) {
+        const heroCard: ICard = CreateCard({
+            suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
             type: `герой`,
-            name: `Ylud`,
+            name: config.name,
             game: `base`,
         } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Илуд во фракцию ${suitsConfig[suit].suitName}.`);
-        AddCardToPlayer(G, ctx, yludCard);
-        CheckAndMoveThrudOrPickHeroAction(G, ctx, yludCard);
-        EndActionFromStackAndAddNew(G, ctx, [], suitId);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${config.name} во фракцию ${suitsConfig[suit].suitName}.`);
+        AddCardToPlayer(G, ctx, heroCard);
+        CheckPickHero(G, ctx);
+        EndActionFromStackAndAddNew(G, ctx);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants' или не передан обязательный параметр 'stack[0].config.name'.`);
     }
 };
 

@@ -7,7 +7,7 @@ import {
     AddHeroToCardsAction,
     GetClosedCoinIntoPlayerHandAction,
     PickHeroWithConditionsAction,
-    PlaceThrudAction
+    PlaceHeroAction
 } from "../actions/HeroActions";
 import {
     AddBuffToPlayerAction,
@@ -392,7 +392,7 @@ const Thrud: IHeroData = {
             },
         },
         {
-            action: PlaceThrudAction,
+            action: PlaceHeroAction,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -419,6 +419,9 @@ const Thrud: IHeroData = {
                     rank: 1,
                     points: null,
                 },
+            },
+            config: {
+                name: `Thrud`,
             },
         },
     ],

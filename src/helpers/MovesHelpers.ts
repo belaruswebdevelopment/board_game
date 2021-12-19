@@ -12,7 +12,7 @@ import { IVariants } from "../data/HeroData";
 import { SuitNames } from "../data/SuitData";
 import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
 import { DiscardAnyCardFromPlayerBoardAction, GetMjollnirProfitAction } from "../actions/CampActions";
-import { PlaceYludAction } from "../actions/HeroActions";
+import { PlaceHeroAction } from "../actions/HeroActions";
 // todo Add logging
 
 /**
@@ -276,8 +276,11 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
             },
             {
                 playerId: G.publicPlayersOrder[0],
-                action: PlaceYludAction,
+                action: PlaceHeroAction,
                 variants,
+                config: {
+                    name: `Ylud`,
+                },
             },
         ];
         AddActionsToStack(G, ctx, stack);
