@@ -373,8 +373,6 @@ const warrior: ISuit = {
  * <ol>
  * <li>Используется в конфиге фракций.</li>
  * </ol>
- *
- * @type {{scoringRule: (cards: PlayerCardsType[]) => number, ranksValues: () => IRankValues, distinction: {awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number, description: string}, description: string, suitColor: string, suit: SuitNames.EXPLORER, suitName: string, pointsValues: () => IPointsValues}}
  */
 const explorer: ISuit = {
     suit: SuitNames.EXPLORER,

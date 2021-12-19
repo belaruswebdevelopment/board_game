@@ -229,7 +229,8 @@ const absoluteHeuristicsForTradingCoin: { heuristic: (cards: DeckCardTypes[]) =>
  * @returns
  */
 const GetCharacteristics = (array: number[]): { mean: number, variation: number; } => {
-    const mean: number = array.reduce((acc: number, item: number): number => acc + item / array.length, 0),
+    const mean: number = array.reduce((acc: number, item: number): number =>
+        acc + item / array.length, 0),
         variation: number = array.reduce((acc: number, item: number): number =>
             acc + ((item - mean) ** 2) / array.length, 0);
     return {
@@ -250,8 +251,8 @@ const GetCharacteristics = (array: number[]): { mean: number, variation: number;
  * @param stat2
  * @returns
  */
-const CompareCharacteristics = (stat1: { variation: number, mean: number; }, stat2: { variation: number, mean: number; }):
-    number => {
+const CompareCharacteristics = (stat1: { variation: number, mean: number; },
+    stat2: { variation: number, mean: number; }): number => {
     const eps: number = 0.0001,
         tempVariation: number = stat1.variation - stat2.variation;
     if (Math.abs(tempVariation) < eps) {
@@ -276,10 +277,9 @@ export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
     const taverns: (DeckCardTypes | null)[][] = G.taverns/*,
         averageCards: ICard[] = G.averageCards*/;
     let result: number[] = Array(taverns.length).fill(0);
-    const temp: number[] = taverns.map((tavern: (DeckCardTypes | null)[]): number => absoluteHeuristicsForTradingCoin
-        .reduce((acc: number, item: {
-            heuristic: (cards: DeckCardTypes[]) =>
-                boolean; weight: number;
+    const temp: number[] = taverns.map((tavern: (DeckCardTypes | null)[]): number =>
+        absoluteHeuristicsForTradingCoin.reduce((acc: number, item: {
+            heuristic: (cards: DeckCardTypes[]) => boolean; weight: number;
         }): number =>
             acc + (tavern !== null && item.heuristic(tavern as DeckCardTypes[]) ? item.weight : 0),
             0));

@@ -20,7 +20,8 @@ import { CheckPickHero } from "../Hero";
  * @param heroName Название героя.
  * @returns Индекс героя.
  */
-export const GetHeroIndexByName = (heroName: string): number => Object.keys(heroesConfig).indexOf(heroName);
+export const GetHeroIndexByName = (heroName: string): number =>
+    Object.keys(heroesConfig).indexOf(heroName);
 
 /**
  * <h3>Действия, связанные с проверкой перемещения героя Труд или выбора героя.</h3>

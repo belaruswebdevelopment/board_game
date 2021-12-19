@@ -92,8 +92,8 @@ export const DiscardCard2Players: Move<MyGameState> = (G: MyGameState, ctx: Ctx,
  * @param suitId Id фракции.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number, cardId: number):
-    void => {
+export const DiscardCardFromPlayerBoard: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
+    cardId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };
 

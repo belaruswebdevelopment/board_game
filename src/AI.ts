@@ -192,7 +192,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     if (hasPositionForMaxCoin) {
                         isTopCoinsOnPosition =
                             allCoinsOrder[i].filter((coinIndex: number): boolean =>
-                                handCoins[coinIndex] !== null && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
+                                handCoins[coinIndex] !== null
+                                && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
                     }
                     if (hasPositionForMinCoin) {
                         isMinCoinsOnPosition = handCoins.filter((coin: ICoin | null): boolean => coin !== null

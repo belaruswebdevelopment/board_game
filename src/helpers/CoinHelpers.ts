@@ -26,13 +26,11 @@ export interface IResolveBoardCoins {
  * @param player Игрок.
  * @returns Максимальная монета игрока.
  */
-export const GetMaxCoinValue = (player: IPublicPlayer): number => {
-    return Math.max(...player.boardCoins
-        .filter((coin: ICoin | null): boolean => Boolean(coin?.value))
-        .map((coin: ICoin | null): number => coin!.value),
-        ...player.handCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
-            .map((coin: ICoin | null): number => coin!.value));
-};
+export const GetMaxCoinValue = (player: IPublicPlayer): number => (Math.max(...player.boardCoins
+    .filter((coin: ICoin | null): boolean => Boolean(coin?.value))
+    .map((coin: ICoin | null): number => coin!.value),
+    ...player.handCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
+        .map((coin: ICoin | null): number => coin!.value)));
 
 /**
  * <h3>Активирует обмен монет.</h3>

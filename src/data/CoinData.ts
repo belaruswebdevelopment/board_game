@@ -26,9 +26,8 @@ export interface IMarketCoinConfig {
  * @param {IInitialTradingCoinConfig | IMarketCoinConfig} config Конфиг.
  * @returns Является ли объект конфигом базовых монет или конфигом монет рынка.
  */
-export const isInitialPlayerCoinsConfigNotMarket =
-    (config: IInitialTradingCoinConfig | IMarketCoinConfig): config is IInitialTradingCoinConfig =>
-        (config as IInitialTradingCoinConfig).isTriggerTrading !== undefined;
+export const isInitialPlayerCoinsConfigNotMarket = (config: IInitialTradingCoinConfig | IMarketCoinConfig):
+    config is IInitialTradingCoinConfig => (config as IInitialTradingCoinConfig).isTriggerTrading !== undefined;
 
 /**
  * <h3>Конфиг базовых монет игрока.</h3>

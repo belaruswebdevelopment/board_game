@@ -276,7 +276,8 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                     </th>
                 );
                 playerHeadersCount[p].push(
-                    <th className="bg-gray-600 text-white" key={`${data.props.G.publicPlayers[p].nickname} hero count`}>
+                    <th className="bg-gray-600 text-white"
+                        key={`${data.props.G.publicPlayers[p].nickname} hero count`}>
                         <b>{data.props.G.publicPlayers[p].heroes.length}</b>
                     </th>
                 );
