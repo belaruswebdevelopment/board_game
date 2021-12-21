@@ -38,7 +38,8 @@ import {
     // UpgradeCoinCampAction,
     UpgradeCoinVidofnirVedrfolnirAction
 } from "./CampActions";
-// import { DrawCurrentProfit, PickCurrentHero } from "../helpers/ActionHelpers";
+import { PickCurrentHero } from "../helpers/ActionHelpers";
+// import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 // import { UpgradeCoinAction } from "./CoinActions";
 
 // todo Check my types
@@ -198,9 +199,9 @@ export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, confi
  * @param ctx
  * @param config Конфиг действий героя.
  */
-// export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-//     PickCurrentHero(G, ctx, config);
-// };
+export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+    PickCurrentHero(G, ctx, config);
+};
 
 /**
  * <h3>Диспетчер действий при их активации.</h3>
@@ -282,9 +283,9 @@ export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args
         case AddCampCardToCardsAction.name:
             action = AddCampCardToCardsAction;
             break;
-        // case PickHeroAction.name:
-        //     action = PickHeroAction;
-        //     break;
+        case PickHeroAction.name:
+            action = PickHeroAction;
+            break;
         case PickHeroCampAction.name:
             action = PickHeroCampAction;
             break;

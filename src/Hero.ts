@@ -6,7 +6,7 @@ import { TotalRank } from "./helpers/ScoreHelpers";
 import { MyGameState } from "./GameSetup";
 import { Ctx } from "boardgame.io";
 import { IStack, PlayerCardsType } from "./Player";
-// import { PickHeroAction } from "./actions/Actions";
+import { PickHeroAction } from "./actions/Actions";
 
 /**
  * <h3>Интерфейс для героя.</h3>
@@ -132,8 +132,7 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
         if (isCanPickHero) {
             const stack: IStack[] = [
                 {
-                    // action: PickHeroAction.name,
-                    action: `PickHeroAction`,
+                    action: PickHeroAction.name,
                     config: {
                         stageName: `pickHero`,
                     },

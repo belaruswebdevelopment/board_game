@@ -13,6 +13,7 @@ GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithCondit
 import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, AddCoinToPouchAction, CheckPickDiscardCardCampAction, DiscardAnyCardFromPlayerBoardAction, DiscardSuitCardAction, DiscardTradingCoinAction, DrawProfitCampAction, GetMjollnirProfitAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, 
 // UpgradeCoinCampAction,
 UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
+import { PickCurrentHero } from "../helpers/ActionHelpers";
 /**
  * <h3>Действия, связанные с отрисовкой профита от игровых моментов.</h3>
  * <p>Применения:</p>
@@ -162,9 +163,9 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
  * @param ctx
  * @param config Конфиг действий героя.
  */
-// export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-//     PickCurrentHero(G, ctx, config);
-// };
+export const PickHeroAction = (G, ctx, config) => {
+    PickCurrentHero(G, ctx, config);
+};
 /**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>
@@ -245,9 +246,9 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         case AddCampCardToCardsAction.name:
             action = AddCampCardToCardsAction;
             break;
-        // case PickHeroAction.name:
-        //     action = PickHeroAction;
-        //     break;
+        case PickHeroAction.name:
+            action = PickHeroAction;
+            break;
         case PickHeroCampAction.name:
             action = PickHeroCampAction;
             break;
