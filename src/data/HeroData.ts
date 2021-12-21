@@ -3,6 +3,21 @@ import { TotalRank } from "../helpers/ScoreHelpers";
 import { IPublicPlayer, IStack } from "../Player";
 import { SuitNames } from "./SuitData";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
+import {
+    AddHeroBuffToPlayerAction,
+    AddHeroToCardsAction,
+    CheckDiscardCardsFromPlayerBoardAction,
+    CheckPickCampCardAction,
+    CheckPickDiscardCardHeroAction,
+    DiscardCardsFromPlayerBoardAction,
+    DrawProfitHeroAction,
+    GetClosedCoinIntoPlayerHandAction,
+    PickDiscardCardHeroAction,
+    PickHeroWithConditionsAction,
+    PlaceCardsAction,
+    PlaceHeroAction,
+    UpgradeCoinHeroAction
+} from "../actions/HeroActions";
 
 /**
  * <h3>Интерфейс для баффа карты героя.</h3>
@@ -60,7 +75,7 @@ export interface IHeroData {
 /**
  * <h3>Интерфейс для конфига карт героев.</h3>
  */
-interface IHeroConfig {
+export interface IHeroConfig {
     [name: string]: IHeroData,
 }
 
@@ -80,7 +95,7 @@ const Dwerg_Bergelmir: IHeroData = {
     points: null,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Dwerg_Bergelmir`,
             },
@@ -106,7 +121,7 @@ const Ylud: IHeroData = {
     points: null,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Ylud`,
             },
@@ -131,7 +146,7 @@ const Dwerg_Jungir: IHeroData = {
     points: null,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Dwerg_Jungir`,
             },
@@ -156,13 +171,13 @@ const Uline: IHeroData = {
     points: 9,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Uline`,
             },
         },
         {
-            action: `AddBuffToPlayerAction`,
+            action: AddHeroBuffToPlayerAction.name,
             config: {
                 buff: {
                     name: `everyTurn`,
@@ -171,7 +186,7 @@ const Uline: IHeroData = {
             },
         },
         {
-            action: `GetClosedCoinIntoPlayerHandAction`,
+            action: GetClosedCoinIntoPlayerHandAction.name,
         },
     ],
     scoringRule: (): number => 9,
@@ -193,7 +208,7 @@ const Idunn: IHeroData = {
     points: 7,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Idunn`,
             },
@@ -220,7 +235,7 @@ const Tarah: IHeroData = {
     points: 14,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Tarah`,
             },
@@ -245,7 +260,7 @@ const Kraal: IHeroData = {
     points: 7,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Kraal`,
             },
@@ -270,7 +285,7 @@ const Lokdur: IHeroData = {
     points: 3,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Lokdur`,
             },
@@ -295,13 +310,13 @@ const Grid: IHeroData = {
     points: 7,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Grid`,
             },
         },
         {
-            action: `DrawProfitAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `upgradeCoin`,
                 drawName: `Grid`,
@@ -310,7 +325,7 @@ const Grid: IHeroData = {
             },
         },
         {
-            action: `UpgradeCoinAction`,
+            action: UpgradeCoinHeroAction.name,
             config: {
                 value: 7,
             },
@@ -335,13 +350,13 @@ const Thrud: IHeroData = {
     points: 13,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Thrud`,
             },
         },
         {
-            action: `DrawProfitAction`,
+            action: DrawProfitHeroAction.name,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -376,7 +391,7 @@ const Thrud: IHeroData = {
             },
         },
         {
-            action: `PlaceHeroAction`,
+            action: PlaceHeroAction.name,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -428,7 +443,7 @@ const Zoral: IHeroData = {
     points: 1,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Zoral`,
             },
@@ -453,7 +468,7 @@ const Dwerg_Aesir: IHeroData = {
     points: null,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Dwerg_Aesir`,
             },
@@ -478,13 +493,13 @@ const Bonfur: IHeroData = {
     points: null,
     stack: [
         {
-            action: `CheckDiscardCardsFromPlayerBoardAction`,
+            action: CheckDiscardCardsFromPlayerBoardAction.name,
             config: {
                 suit: SuitNames.BLACKSMITH,
             },
         },
         {
-            action: `DrawProfitAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `discardCardFromBoard`,
                 drawName: `Bonfur`,
@@ -493,13 +508,13 @@ const Bonfur: IHeroData = {
             },
         },
         {
-            action: `DiscardCardsFromPlayerBoardAction`,
+            action: DiscardCardsFromPlayerBoardAction.name,
             config: {
                 suit: SuitNames.BLACKSMITH,
             },
         },
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Bonfur`,
             },
@@ -524,14 +539,14 @@ const Dagda: IHeroData = {
     points: null,
     stack: [
         {
-            action: `CheckDiscardCardsFromPlayerBoardAction`,
+            action: CheckDiscardCardsFromPlayerBoardAction.name,
             config: {
                 suit: SuitNames.HUNTER,
                 number: 2,
             },
         },
         {
-            action: `DrawProfitAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `discardCardFromBoard`,
                 drawName: `Dagda`,
@@ -541,10 +556,10 @@ const Dagda: IHeroData = {
             },
         },
         {
-            action: `DiscardCardsFromPlayerBoardAction`,
+            action: DiscardCardsFromPlayerBoardAction.name,
         },
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Dagda`,
             },
@@ -569,7 +584,7 @@ const Skaa: IHeroData = {
     points: 17,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Skaa`,
             },
@@ -594,13 +609,13 @@ const Jarika: IHeroData = {
     points: 8,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Jarika`,
             },
         },
         {
-            action: `AddBuffToPlayerAction`,
+            action: AddHeroBuffToPlayerAction.name,
             config: {
                 buff: {
                     name: `upgradeCoin`,
@@ -628,7 +643,7 @@ const Astrid: IHeroData = {
     points: null,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Astrid`,
             },
@@ -653,7 +668,7 @@ const Dwerg_Ymir: IHeroData = {
     points: null,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Dwerg_Ymir`,
             },
@@ -678,7 +693,7 @@ const Dwerg_Sigmir: IHeroData = {
     points: null,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Dwerg_Sigmir`,
             },
@@ -703,7 +718,7 @@ const Hourya: IHeroData = {
     points: 20,
     stack: [
         {
-            action: `PickHeroWithConditionsAction`,
+            action: PickHeroWithConditionsAction.name,
             config: {
                 conditions: {
                     suitCountMin: {
@@ -714,7 +729,7 @@ const Hourya: IHeroData = {
             },
         },
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Hourya`,
             },
@@ -739,7 +754,7 @@ const Aegur: IHeroData = {
     points: null,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Aegur`,
             },
@@ -764,7 +779,7 @@ const Aral: IHeroData = {
     points: null,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Aral`,
             },
@@ -789,16 +804,16 @@ const Andumia: IHeroData = {
     points: 12,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Andumia`,
             },
         },
         {
-            action: `CheckPickDiscardCardAction`,
+            action: CheckPickDiscardCardHeroAction.name,
         },
         {
-            action: `DrawProfitAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `pickDiscardCard`,
                 drawName: `Andumia`,
@@ -806,7 +821,7 @@ const Andumia: IHeroData = {
             },
         },
         {
-            action: `PickDiscardCardAction`,
+            action: PickDiscardCardHeroAction.name,
         },
     ],
     scoringRule: (): number => 12,
@@ -828,13 +843,13 @@ const Holda: IHeroData = {
     points: 12,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Holda`,
             },
         },
         {
-            action: `AddBuffToPlayerAction`,
+            action: AddHeroBuffToPlayerAction.name,
             config: {
                 buff: {
                     name: `goCampOneTime`,
@@ -843,10 +858,10 @@ const Holda: IHeroData = {
             },
         },
         {
-            action: `CheckPickCampCardAction`,
+            action: CheckPickCampCardAction.name,
         },
         {
-            action: `DrawProfitAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `pickCampCardHolda`,
                 drawName: `Holda`,
@@ -873,13 +888,13 @@ const Khrad: IHeroData = {
     points: 4,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Khrad`,
             },
         },
         {
-            action: `UpgradeCoinAction`,
+            action: UpgradeCoinHeroAction.name,
             config: {
                 value: 10,
                 coin: `min`,
@@ -905,13 +920,13 @@ const Olwin: IHeroData = {
     points: 9,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Olwin`,
             },
         },
         {
-            action: `DrawProfitAction`,
+            action: DrawProfitHeroAction.name,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -947,7 +962,7 @@ const Olwin: IHeroData = {
             },
         },
         {
-            action: `PlaceCardsAction`,
+            action: PlaceCardsAction.name,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -996,13 +1011,13 @@ const Zolkur: IHeroData = {
     points: 10,
     stack: [
         {
-            action: `AddHeroToCardsAction`,
+            action: AddHeroToCardsAction.name,
             config: {
                 drawName: `Zolkur`,
             },
         },
         {
-            action: `AddBuffToPlayerAction`,
+            action: AddHeroBuffToPlayerAction.name,
             config: {
                 buff: {
                     name: `upgradeNextCoin`,

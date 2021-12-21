@@ -10,9 +10,9 @@ import { CompareCards, EvaluateCard, isCardNotAction } from "./Card";
  * @param permutation
  * @returns
  */
-export var Permute = function (permutation) {
-    var length = permutation.length, result = [permutation.slice()];
-    var c = new Array(length).fill(0), i = 1, k, p;
+export const Permute = (permutation) => {
+    const length = permutation.length, result = [permutation.slice()];
+    let c = new Array(length).fill(0), i = 1, k, p;
     while (i < length) {
         if (c[i] < i) {
             k = i % 2 && c[i];
@@ -42,8 +42,8 @@ export var Permute = function (permutation) {
  * @param k
  * @returns
  */
-export var k_combinations = function (set, k) {
-    var combs = [], head, tailCombs;
+export const k_combinations = (set, k) => {
+    let combs = [], head, tailCombs;
     if (k > set.length || k <= 0) {
         return [];
     }
@@ -51,19 +51,19 @@ export var k_combinations = function (set, k) {
         return [set];
     }
     if (k === 1) {
-        for (var i = 0; i < set.length; i++) {
+        for (let i = 0; i < set.length; i++) {
             combs.push([set[i]]);
         }
         return combs;
     }
-    for (var i = 0; i < set.length - k + 1; i++) {
+    for (let i = 0; i < set.length - k + 1; i++) {
         // head is a list that includes only our current element.
         head = set.slice(i, i + 1);
         // We take smaller combinations from the subsequent elements
         tailCombs = k_combinations(set.slice(i + 1), k - 1);
         // For each (k-1)-combination we join it with the current
         // and store it to the set of k-combinations.
-        for (var j = 0; j < tailCombs.length; j++) {
+        for (let j = 0; j < tailCombs.length; j++) {
             combs.push(head.concat(tailCombs[j]));
         }
     }
@@ -81,25 +81,16 @@ export var k_combinations = function (set, k) {
  * @param playersNum
  * @returns
  */
-export var GetAllPicks = function (_a) {
-    var tavernsNum = _a.tavernsNum, playersNum = _a.playersNum;
-    var temp = [], cartesian = function () {
-        var a = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            a[_i] = arguments[_i];
-        }
+export const GetAllPicks = ({ tavernsNum, playersNum }) => {
+    const temp = [], cartesian = (...a) => {
         if (a.length === 1) {
             a = a.flat();
         }
-        return a.reduce(function (a, b) {
-            return a.flatMap(function (d) { return b.map(function (e) {
-                return [d, e].flat();
-            }); });
-        });
+        return a.reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
     };
-    for (var i = 0; i < tavernsNum; i++) {
+    for (let i = 0; i < tavernsNum; i++) {
         temp[i] = Array(playersNum).fill(undefined)
-            .map(function (item, index) { return index; });
+            .map((item, index) => index);
     }
     return cartesian(temp);
 };
@@ -112,11 +103,9 @@ export var GetAllPicks = function (_a) {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-var isAllCardsEqual = {
-    heuristic: function (cards) { return cards.every(function (card) {
-        return (card !== null && isCardNotAction(card) && isCardNotAction(cards[0]) && card.suit === cards[0].suit
-            && CompareCards(card, cards[0]) === 0);
-    }); },
+const isAllCardsEqual = {
+    heuristic: (cards) => cards.every((card) => (card !== null && isCardNotAction(card) && isCardNotAction(cards[0]) && card.suit === cards[0].suit
+        && CompareCards(card, cards[0]) === 0)),
     weight: -100,
 };
 //relative heuristics
@@ -128,8 +117,8 @@ var isAllCardsEqual = {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-var isAllWorse = {
-    heuristic: function (array) { return array.every(function (item) { return item === -1; }); },
+const isAllWorse = {
+    heuristic: (array) => array.every((item) => item === -1),
     weight: 40,
 };
 /**
@@ -140,8 +129,8 @@ var isAllWorse = {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-var isAllAverage = {
-    heuristic: function (array) { return array.every(function (item) { return item === 0; }); },
+const isAllAverage = {
+    heuristic: (array) => array.every((item) => item === 0),
     weight: 20,
 };
 /**
@@ -152,8 +141,8 @@ var isAllAverage = {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-var isAllBetter = {
-    heuristic: function (array) { return array.every(function (item) { return item === 1; }); },
+const isAllBetter = {
+    heuristic: (array) => array.every((item) => item === 1),
     weight: 10,
 };
 /**
@@ -164,10 +153,8 @@ var isAllBetter = {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-var isOnlyOneWorse = {
-    heuristic: function (array) {
-        return (array.filter(function (item) { return item === -1; }).length === 1);
-    },
+const isOnlyOneWorse = {
+    heuristic: (array) => (array.filter((item) => item === -1).length === 1),
     weight: -100,
 };
 /**
@@ -178,8 +165,8 @@ var isOnlyOneWorse = {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-var isOnlyWorseOrBetter = {
-    heuristic: function (array) { return array.every(function (item) { return item !== 0; }); },
+const isOnlyWorseOrBetter = {
+    heuristic: (array) => array.every((item) => item !== 0),
     weight: -50,
 };
 /**
@@ -190,7 +177,7 @@ var isOnlyWorseOrBetter = {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-var absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
+const absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -216,15 +203,11 @@ var absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
  * @param array
  * @returns
  */
-var GetCharacteristics = function (array) {
-    var mean = array.reduce(function (acc, item) {
-        return acc + item / array.length;
-    }, 0), variation = array.reduce(function (acc, item) {
-        return acc + (Math.pow((item - mean), 2)) / array.length;
-    }, 0);
+const GetCharacteristics = (array) => {
+    const mean = array.reduce((acc, item) => acc + item / array.length, 0), variation = array.reduce((acc, item) => acc + ((item - mean) ** 2) / array.length, 0);
     return {
-        mean: mean,
-        variation: variation,
+        mean,
+        variation,
     };
 };
 /**
@@ -239,8 +222,8 @@ var GetCharacteristics = function (array) {
  * @param stat2
  * @returns
  */
-var CompareCharacteristics = function (stat1, stat2) {
-    var eps = 0.0001, tempVariation = stat1.variation - stat2.variation;
+const CompareCharacteristics = (stat1, stat2) => {
+    const eps = 0.0001, tempVariation = stat1.variation - stat2.variation;
     if (Math.abs(tempVariation) < eps) {
         return stat1.mean - stat2.mean;
     }
@@ -258,25 +241,17 @@ var CompareCharacteristics = function (stat1, stat2) {
  * @param ctx
  * @returns
  */
-export var CheckHeuristicsForCoinsPlacement = function (G, ctx) {
-    var taverns = G.taverns /*,
+export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
+    const taverns = G.taverns /*,
         averageCards: ICard[] = G.averageCards*/;
-    var result = Array(taverns.length).fill(0);
-    var temp = taverns.map(function (tavern) {
-        return absoluteHeuristicsForTradingCoin.reduce(function (acc, item) {
-            return acc + (tavern !== null && item.heuristic(tavern) ? item.weight : 0);
-        }, 0);
-    });
-    result = result.map(function (value, index) { return value + temp[index]; });
-    var tempNumbers = taverns.map(function (tavern) { return tavern
-        .map(function (card, index, arr) {
-        return EvaluateCard(G, ctx, card, index, arr);
-    }); });
-    var tempChars = tempNumbers.map(function (element) {
-        return GetCharacteristics(element);
-    });
-    var maxIndex = 0, minIndex = tempChars.length - 1;
-    for (var i = 1; i < temp.length; i++) {
+    let result = Array(taverns.length).fill(0);
+    const temp = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (tavern !== null && item.heuristic(tavern) ? item.weight : 0), 0));
+    result = result.map((value, index) => value + temp[index]);
+    const tempNumbers = taverns.map((tavern) => tavern
+        .map((card, index, arr) => EvaluateCard(G, ctx, card, index, arr)));
+    const tempChars = tempNumbers.map((element) => GetCharacteristics(element));
+    let maxIndex = 0, minIndex = tempChars.length - 1;
+    for (let i = 1; i < temp.length; i++) {
         if (CompareCharacteristics(tempChars[maxIndex], tempChars[i]) < 0) {
             maxIndex = i;
         }

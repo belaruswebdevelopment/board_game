@@ -1,8 +1,26 @@
 import { heroesConfig } from "../data/HeroData";
 import { GetSuitIndexByName } from "./SuitHelpers";
-import { AddActionsToStackAfterCurrent } from "./StackHelpers";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 import { SuitNames } from "../data/SuitData";
 import { CheckPickHero } from "../Hero";
+import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
+/**
+ * <h3>Действия, связанные с возможностью взятия карт из дискарда.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
+ * <li>При выборе конкретных карт кэмпа, дающих возможность взять карты из дискарда.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const CheckPickDiscardCard = (G, ctx) => {
+    if (G.discardCardsDeck.length === 0) {
+        G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
+    }
+    EndActionFromStackAndAddNew(G, ctx);
+};
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
  * <p>Применения:</p>
@@ -13,9 +31,7 @@ import { CheckPickHero } from "../Hero";
  * @param heroName Название героя.
  * @returns Индекс героя.
  */
-export var GetHeroIndexByName = function (heroName) {
-    return Object.keys(heroesConfig).indexOf(heroName);
-};
+export const GetHeroIndexByName = (heroName) => Object.keys(heroesConfig).indexOf(heroName);
 /**
  * <h3>Действия, связанные с проверкой перемещения героя Труд или выбора героя.</h3>
  * <p>Применения:</p>
@@ -27,8 +43,8 @@ export var GetHeroIndexByName = function (heroName) {
  * @param ctx
  * @param card Карта, помещающаяся на карту героя Труд.
  */
-export var CheckAndMoveThrudOrPickHeroAction = function (G, ctx, card) {
-    var isMoveThrud = CheckAndMoveThrud(G, ctx, card);
+export const CheckAndMoveThrudOrPickHeroAction = (G, ctx, card) => {
+    const isMoveThrud = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
         StartThrudMoving(G, ctx, card);
     }
@@ -48,10 +64,10 @@ export var CheckAndMoveThrudOrPickHeroAction = function (G, ctx, card) {
  * @param card Карта.
  * @returns Нужно ли перемещать героя Труд.
  */
-export var CheckAndMoveThrud = function (G, ctx, card) {
+export const CheckAndMoveThrud = (G, ctx, card) => {
     if (card.suit !== null) {
-        var suitId = GetSuitIndexByName(card.suit), index = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-            .findIndex(function (card) { return card.name === "Thrud"; });
+        const suitId = GetSuitIndexByName(card.suit), index = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+            .findIndex((card) => card.name === `Thrud`);
         if (index !== -1) {
             G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(index, 1);
         }
@@ -70,9 +86,9 @@ export var CheckAndMoveThrud = function (G, ctx, card) {
  * @param ctx
  * @param card Карта.
  */
-export var StartThrudMoving = function (G, ctx, card) {
+export const StartThrudMoving = (G, ctx, card) => {
     if (card.suit !== null) {
-        var variants = {
+        const variants = {
             blacksmith: {
                 suit: SuitNames.BLACKSMITH,
                 rank: 1,
@@ -100,20 +116,20 @@ export var StartThrudMoving = function (G, ctx, card) {
             },
         }, stack = [
             {
-                action: "DrawProfitAction",
-                variants: variants,
+                action: DrawProfitHeroAction.name,
+                variants,
                 config: {
-                    drawName: "Thrud",
-                    name: "placeCards",
-                    stageName: "placeCards",
+                    drawName: `Thrud`,
+                    name: `placeCards`,
+                    stageName: `placeCards`,
                     suit: card.suit,
                 },
             },
             {
-                action: "PlaceHeroAction",
-                variants: variants,
+                action: PlaceHeroAction.name,
+                variants,
                 config: {
-                    name: "Thrud",
+                    name: `Thrud`,
                 },
             },
         ];
@@ -131,41 +147,39 @@ export var StartThrudMoving = function (G, ctx, card) {
  * @param ctx
  * @returns Проверяет нужно ли начать действия по наличию героя Улина.
  */
-export var CheckAndStartUlineActionsOrContinue = function (G, ctx) {
+export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
     var _a;
     // todo Rework it all!
-    var ulinePlayerIndex = G.publicPlayers.findIndex(function (player) { return player.buffs.everyTurn === "Uline"; });
+    const ulinePlayerIndex = G.publicPlayers.findIndex((player) => player.buffs.everyTurn === `Uline`);
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-            if (ctx.phase === "pickCards") {
-                var coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
+            if (ctx.phase === `pickCards`) {
+                const coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
                 if (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) {
                     if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                        .filter(function (coin, index) {
-                        return index >= G.tavernsNum && coin === null;
-                    })) {
-                        if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[ctx.currentPlayer]) !== "placeTradingCoinsUline") {
+                        .filter((coin, index) => index >= G.tavernsNum && coin === null)) {
+                        if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[ctx.currentPlayer]) !== `placeTradingCoinsUline`) {
                             G.actionsNum = G.suitsNum - G.tavernsNum;
-                            ctx.events.setStage("placeTradingCoinsUline");
-                            return "placeTradingCoinsUline";
+                            ctx.events.setStage(`placeTradingCoinsUline`);
+                            return `placeTradingCoinsUline`;
                         }
                         else if (!G.actionsNum) {
                             ctx.events.endStage();
-                            return "endPlaceTradingCoinsUline";
+                            return `endPlaceTradingCoinsUline`;
                         }
                         else if (G.actionsNum) {
-                            return "nextPlaceTradingCoinsUline";
+                            return `nextPlaceTradingCoinsUline`;
                         }
                     }
                 }
             }
         }
         else {
-            return "placeCoinsUline";
+            return `placeCoinsUline`;
         }
     }
-    else if (ctx.phase !== "pickCards") {
-        ctx.events.setPhase("pickCards");
+    else if (ctx.phase !== `pickCards`) {
+        ctx.events.setPhase(`pickCards`);
     }
     return false;
 };

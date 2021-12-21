@@ -1,4 +1,3 @@
-import { __spreadArray } from "tslib";
 import { ActionDispatcher } from "../actions/Actions";
 import { EndAction } from "./ActionHelpers";
 /**
@@ -12,11 +11,11 @@ import { EndAction } from "./ActionHelpers";
  * @param ctx
  * @param stack Стэк действий.
  */
-export var AddActionsToStack = function (G, ctx, stack) {
+export const AddActionsToStack = (G, ctx, stack) => {
     var _a;
     if (stack.length) {
-        for (var i = stack.length - 1; i >= 0; i--) {
-            var playerId = (_a = stack[i].playerId) !== null && _a !== void 0 ? _a : Number(ctx.currentPlayer);
+        for (let i = stack.length - 1; i >= 0; i--) {
+            const playerId = (_a = stack[i].playerId) !== null && _a !== void 0 ? _a : Number(ctx.currentPlayer);
             G.publicPlayers[playerId].stack.unshift(stack[i]);
         }
     }
@@ -32,12 +31,12 @@ export var AddActionsToStack = function (G, ctx, stack) {
  * @param ctx
  * @param stack Стэк действий.
  */
-export var AddActionsToStackAfterCurrent = function (G, ctx, stack) {
+export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
     var _a;
     if (stack.length) {
-        var noCurrent = false;
-        for (var i = stack.length - 1; i >= 0; i--) {
-            var playerId = (_a = stack[i].playerId) !== null && _a !== void 0 ? _a : Number(ctx.currentPlayer);
+        let noCurrent = false;
+        for (let i = stack.length - 1; i >= 0; i--) {
+            const playerId = (_a = stack[i].playerId) !== null && _a !== void 0 ? _a : Number(ctx.currentPlayer);
             if (i === stack.length - 1 && G.publicPlayers[playerId].stack[0] === undefined) {
                 G.publicPlayers[playerId].stack.push(stack[i]);
                 noCurrent = true;
@@ -63,13 +62,9 @@ export var AddActionsToStackAfterCurrent = function (G, ctx, stack) {
  * @param isTrading Является ли действие обменом монет (трейдингом).
  * @param args Дополнительные аргументы.
  */
-export var StartActionFromStackOrEndActions = function (G, ctx, isTrading) {
-    var args = [];
-    for (var _i = 3; _i < arguments.length; _i++) {
-        args[_i - 3] = arguments[_i];
-    }
+export const StartActionFromStackOrEndActions = (G, ctx, isTrading, ...args) => {
     if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) {
-        ActionDispatcher.apply(void 0, __spreadArray([G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]], args, false));
+        ActionDispatcher(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0], ...args);
     }
     else {
         EndAction(G, ctx, isTrading);
@@ -87,12 +82,8 @@ export var StartActionFromStackOrEndActions = function (G, ctx, isTrading) {
  * @param playerId Id игрока.
  * @param args Дополнительные аргументы.
  */
-export var StartActionForChosenPlayer = function (G, ctx, playerId) {
-    var args = [];
-    for (var _i = 3; _i < arguments.length; _i++) {
-        args[_i - 3] = arguments[_i];
-    }
-    ActionDispatcher.apply(void 0, __spreadArray([G, ctx, G.publicPlayers[playerId].stack[0]], args, false));
+export const StartActionForChosenPlayer = (G, ctx, playerId, ...args) => {
+    ActionDispatcher(G, ctx, G.publicPlayers[playerId].stack[0], ...args);
 };
 /**
  * <h3>Завершает действие из стэка действий указанного игрока.</h3>
@@ -105,11 +96,11 @@ export var StartActionForChosenPlayer = function (G, ctx, playerId) {
  * @param ctx
  * @param playerId Id игрока.
  */
-export var EndActionForChosenPlayer = function (G, ctx, playerId) {
+export const EndActionForChosenPlayer = (G, ctx, playerId) => {
     G.publicPlayers[playerId].stack = [];
     ctx.events.endStage();
-    var activePlayers = 0;
-    for (var activePlayersKey in ctx.activePlayers) {
+    let activePlayers = 0;
+    for (const activePlayersKey in ctx.activePlayers) {
         activePlayers++;
     }
     if (activePlayers === 1) {
@@ -129,24 +120,18 @@ export var EndActionForChosenPlayer = function (G, ctx, playerId) {
  * @param args Дополнительные аргументы.
  * @returns Выполнение действий.
  */
-export var EndActionFromStackAndAddNew = function (G, ctx, newStack) {
+export const EndActionFromStackAndAddNew = (G, ctx, newStack = [], ...args) => {
     var _a;
-    if (newStack === void 0) { newStack = []; }
-    var args = [];
-    for (var _i = 3; _i < arguments.length; _i++) {
-        args[_i - 3] = arguments[_i];
-    }
-    var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0].action !== "DrawProfitAction"
-        || (config === null || config === void 0 ? void 0 : config.name) === "explorerDistinction") {
+    const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
+    if (G.drawProfit !== `` || (config === null || config === void 0 ? void 0 : config.name) === `explorerDistinction`) {
         G.actionsNum = 0;
-        G.drawProfit = "";
+        G.drawProfit = ``;
     }
     if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
         ctx.events.endStage();
     }
-    var isTrading = (_a = config === null || config === void 0 ? void 0 : config.isTrading) !== null && _a !== void 0 ? _a : false;
+    const isTrading = (_a = config === null || config === void 0 ? void 0 : config.isTrading) !== null && _a !== void 0 ? _a : false;
     G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
     AddActionsToStack(G, ctx, newStack);
-    StartActionFromStackOrEndActions.apply(void 0, __spreadArray([G, ctx, isTrading], args, false));
+    StartActionFromStackOrEndActions(G, ctx, isTrading, ...args);
 };

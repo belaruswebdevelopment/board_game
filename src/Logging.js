@@ -19,6 +19,6 @@ export var LogTypes;
  * @param type Тип лога.
  * @param value Значение, заносимое в лог.
  */
-export var AddDataToLog = function (G, type, value) {
-    G.logData.push({ type: type, value: value });
+export const AddDataToLog = (G, type, value) => {
+    G.logData.push({ type, value });
 };

@@ -15,20 +15,20 @@ import { AddDataToLog, LogTypes } from "../Logging";
  * @param cardId Id выбираемой карты из кэмпа.
  * @returns
  */
-export var ClickCampCardMove = function (G, ctx, cardId) {
-    var isValidMove = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
+export const ClickCampCardMove = (G, ctx, cardId) => {
+    const isValidMove = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
         && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
         || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    var card = G.camp[cardId];
+    const card = G.camp[cardId];
     if (card !== null) {
         AddActionsToStack(G, ctx, card.stack);
         StartActionFromStackOrEndActions(G, ctx, false, cardId);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043B\u0438\u043A\u043D\u0443\u0442\u0430\u044F \u043A\u0430\u0440\u0442\u0430 \u043A\u044D\u043C\u043F\u0430.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
     }
 };
 /**
@@ -43,18 +43,18 @@ export var ClickCampCardMove = function (G, ctx, cardId) {
  * @param cardId Id выбираемой карты из кэмпа.
  * @returns
  */
-export var ClickCampCardHoldaMove = function (G, ctx, cardId) {
-    var isValidMove = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
+export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
+    const isValidMove = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
         && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    var campCard = G.camp[cardId];
+    const campCard = G.camp[cardId];
     if (campCard !== null) {
         EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043B\u0438\u043A\u043D\u0443\u0442\u0430\u044F \u043A\u0430\u0440\u0442\u0430 \u043A\u044D\u043C\u043F\u0430.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
     }
 };
 /**
@@ -68,7 +68,7 @@ export var ClickCampCardHoldaMove = function (G, ctx, cardId) {
  * @param ctx
  * @param cardId Id сбрасываемой карты.
  */
-export var DiscardCard2PlayersMove = function (G, ctx, cardId) {
+export const DiscardCard2PlayersMove = (G, ctx, cardId) => {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
 };
 /**
@@ -83,7 +83,7 @@ export var DiscardCard2PlayersMove = function (G, ctx, cardId) {
  * @param suitId Id фракции.
  * @param cardId Id сбрасываемой карты.
  */
-export var DiscardCardFromPlayerBoardMove = function (G, ctx, suitId, cardId) {
+export const DiscardCardFromPlayerBoardMove = (G, ctx, suitId, cardId) => {
     EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };
 /**
@@ -100,7 +100,7 @@ export var DiscardCardFromPlayerBoardMove = function (G, ctx, suitId, cardId) {
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
-export var DiscardSuitCardFromPlayerBoardMove = function (G, ctx, suitId, playerId, cardId) {
+export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suitId, playerId, cardId) => {
     // TODO Uncomment it for players and fix it for bots
     /*let isValidMove: boolean = false;
     if (ctx.playerID !== undefined) {
@@ -124,6 +124,6 @@ export var DiscardSuitCardFromPlayerBoardMove = function (G, ctx, suitId, player
  * @param ctx
  * @param suitId Id фракции.
  */
-export var GetMjollnirProfitMove = function (G, ctx, suitId) {
+export const GetMjollnirProfitMove = (G, ctx, suitId) => {
     EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };

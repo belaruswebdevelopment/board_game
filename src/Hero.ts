@@ -1,4 +1,4 @@
-import { heroesConfig } from "./data/HeroData";
+import { IHeroConfig } from "./data/HeroData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
@@ -6,6 +6,7 @@ import { TotalRank } from "./helpers/ScoreHelpers";
 import { MyGameState } from "./GameSetup";
 import { Ctx } from "boardgame.io";
 import { IStack, PlayerCardsType } from "./Player";
+import { PickHeroAction } from "./actions/HeroActions";
 
 /**
  * <h3>Интерфейс для героя.</h3>
@@ -84,13 +85,14 @@ export const CreateHero = ({
  * <li>Происходит при создании всех героев при инициализации игры.</li>
  * </ol>
  *
- * @param config Конфиг героев.
+ * @param configOptions Конфиг опций героев.
+ * @param heroesConfig Конфиг героев.
  * @returns Массив всех героев.
  */
-export const BuildHeroes = (config: string[]): IHero[] => {
+export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig): IHero[] => {
     const heroes: IHero[] = [];
     for (const hero in heroesConfig) {
-        if (config.includes(heroesConfig[hero].game)) {
+        if (configOptions.includes(heroesConfig[hero].game)) {
             heroes.push(CreateHero({
                 type: "герой",
                 name: heroesConfig[hero].name,
@@ -130,7 +132,7 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
         if (isCanPickHero) {
             const stack: IStack[] = [
                 {
-                    action: `PickHeroAction`,
+                    action: PickHeroAction.name,
                     config: {
                         stageName: `pickHero`,
                     },

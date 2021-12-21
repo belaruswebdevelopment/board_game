@@ -38,6 +38,7 @@ import { PlayerView } from "boardgame.io/core";
 import { CheckDistinction } from "./Distinction";
 import type { Ctx, Game } from "boardgame.io";
 import { CheckPlayersBasicOrder, IPublicPlayer, IStack } from "./Player";
+import { DrawProfitCampAction } from "./actions/CampActions";
 
 /**
  * <h3>Интерфейс для порядка ходов.</h3>
@@ -273,7 +274,7 @@ export const BoardGame: Game<MyGameState> = {
                 }
                 const stack: IStack[] = [
                     {
-                        action: `DrawProfitAction`,
+                        action: DrawProfitCampAction.name,
                         playerId: G.publicPlayersOrder[0],
                         config: {
                             name: `startOrPassEnlistmentMercenaries`,

@@ -15,14 +15,13 @@ import { ResolveBoardCoins } from "./helpers/CoinHelpers";
 import { PlayerView } from "boardgame.io/core";
 import { CheckDistinction } from "./Distinction";
 import { CheckPlayersBasicOrder } from "./Player";
+import { DrawProfitCampAction } from "./actions/CampActions";
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
-var order = {
-    first: function () { return 0; },
-    next: function (G, ctx) { return (ctx.playOrderPos + 1) % G.publicPlayersOrder.length; },
-    playOrder: function (G) {
-        return G.publicPlayersOrder.map(function (order) { return String(order); });
-    },
+const order = {
+    first: () => 0,
+    next: (G, ctx) => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
+    playOrder: (G) => G.publicPlayersOrder.map((order) => String(order)),
 };
 /**
  * <h3>Параметры игры.</h3>
@@ -31,23 +30,23 @@ var order = {
  * <li>При инициализации игрового стола.</li>
  * </ol>
  */
-export var BoardGame = {
-    name: "nidavellir",
+export const BoardGame = {
+    name: `nidavellir`,
     setup: SetupGame,
     playerView: PlayerView.STRIP_SECRETS,
     phases: {
         placeCoins: {
             turn: {
-                order: order,
+                order,
             },
             start: true,
             moves: {
-                ClickHandCoinMove: ClickHandCoinMove,
-                ClickBoardCoinMove: ClickBoardCoinMove,
-                BotsPlaceAllCoinsMove: BotsPlaceAllCoinsMove,
+                ClickHandCoinMove,
+                ClickBoardCoinMove,
+                BotsPlaceAllCoinsMove,
             },
-            next: "pickCards",
-            onBegin: function (G, ctx) {
+            next: `pickCards`,
+            onBegin: (G, ctx) => {
                 G.currentTavern = -1;
                 if (ctx.turn !== 0) {
                     ReturnCoinsToPlayerHands(G);
@@ -57,166 +56,165 @@ export var BoardGame = {
         },
         placeCoinsUline: {
             turn: {
-                order: order,
+                order,
             },
             moves: {
-                ClickHandCoinMove: ClickHandCoinMove,
-                ClickBoardCoinMove: ClickBoardCoinMove,
+                ClickHandCoinMove,
+                ClickBoardCoinMove,
             },
-            onBegin: function (G, ctx) {
+            onBegin: (G, ctx) => {
                 CheckPlayersBasicOrder(G, ctx);
             },
         },
         pickCards: {
             turn: {
-                order: order,
+                order,
                 stages: {
                     // Start
                     discardCardFromBoard: {
                         moves: {
-                            DiscardCardMove: DiscardCardMove,
+                            DiscardCardMove,
                         },
                     },
                     placeCards: {
                         moves: {
-                            PlaceCardMove: PlaceCardMove,
+                            PlaceCardMove,
                         },
                     },
                     pickCampCardHolda: {
                         moves: {
-                            ClickCampCardHoldaMove: ClickCampCardHoldaMove,
+                            ClickCampCardHoldaMove,
                         },
                     },
                     pickDiscardCard: {
                         moves: {
-                            PickDiscardCardMove: PickDiscardCardMove,
+                            PickDiscardCardMove,
                         },
                     },
                     addCoinToPouch: {
                         moves: {
-                            AddCoinToPouchMove: AddCoinToPouchMove,
+                            AddCoinToPouchMove,
                         },
                     },
                     upgradeCoinVidofnirVedrfolnir: {
                         moves: {
-                            UpgradeCoinVidofnirVedrfolnirMove: UpgradeCoinVidofnirVedrfolnirMove,
+                            UpgradeCoinVidofnirVedrfolnirMove,
                         },
                     },
                     discardSuitCard: {
                         moves: {
-                            DiscardSuitCardFromPlayerBoardMove: DiscardSuitCardFromPlayerBoardMove,
+                            DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
                     upgradeCoin: {
                         moves: {
-                            ClickCoinToUpgradeMove: ClickCoinToUpgradeMove,
+                            ClickCoinToUpgradeMove,
                         },
                     },
                     pickHero: {
                         moves: {
-                            ClickHeroCardMove: ClickHeroCardMove,
+                            ClickHeroCardMove,
                         },
                     },
                     // End
                     discardCard: {
                         moves: {
-                            DiscardCard2PlayersMove: DiscardCard2PlayersMove,
+                            DiscardCard2PlayersMove,
                         },
                     },
                     placeTradingCoinsUline: {
                         moves: {
-                            ClickHandCoinMove: ClickHandCoinMove,
-                            ClickBoardCoinMove: ClickBoardCoinMove,
+                            ClickHandCoinMove,
+                            ClickBoardCoinMove,
                         },
                     },
                 },
             },
             moves: {
-                ClickCardMove: ClickCardMove,
-                ClickCampCardMove: ClickCampCardMove,
+                ClickCardMove,
+                ClickCampCardMove,
             },
-            onBegin: function (G, ctx) {
-                var _a;
+            onBegin: (G, ctx) => {
                 G.currentTavern++;
-                var _b = ResolveBoardCoins(G, ctx), playersOrder = _b.playersOrder, exchangeOrder = _b.exchangeOrder;
-                _a = [playersOrder, exchangeOrder], G.publicPlayersOrder = _a[0], G.exchangeOrder = _a[1];
+                const { playersOrder, exchangeOrder } = ResolveBoardCoins(G, ctx);
+                [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
             },
-            onEnd: function (G) {
+            onEnd: (G) => {
                 ChangePlayersPriorities(G);
             },
         },
         enlistmentMercenaries: {
             turn: {
-                order: order,
+                order,
                 stages: {
                     // Start
                     discardCardFromBoard: {
                         moves: {
-                            DiscardCardMove: DiscardCardMove,
+                            DiscardCardMove,
                         },
                     },
                     placeCards: {
                         moves: {
-                            PlaceCardMove: PlaceCardMove,
+                            PlaceCardMove,
                         },
                     },
                     pickCampCardHolda: {
                         moves: {
-                            ClickCampCardHoldaMove: ClickCampCardHoldaMove,
+                            ClickCampCardHoldaMove,
                         },
                     },
                     pickDiscardCard: {
                         moves: {
-                            PickDiscardCardMove: PickDiscardCardMove,
+                            PickDiscardCardMove,
                         },
                     },
                     addCoinToPouch: {
                         moves: {
-                            AddCoinToPouchMove: AddCoinToPouchMove,
+                            AddCoinToPouchMove,
                         },
                     },
                     upgradeCoinVidofnirVedrfolnir: {
                         moves: {
-                            UpgradeCoinVidofnirVedrfolnirMove: UpgradeCoinVidofnirVedrfolnirMove,
+                            UpgradeCoinVidofnirVedrfolnirMove,
                         },
                     },
                     discardSuitCard: {
                         moves: {
-                            DiscardSuitCardFromPlayerBoardMove: DiscardSuitCardFromPlayerBoardMove,
+                            DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
                     upgradeCoin: {
                         moves: {
-                            ClickCoinToUpgradeMove: ClickCoinToUpgradeMove,
+                            ClickCoinToUpgradeMove,
                         },
                     },
                     pickHero: {
                         moves: {
-                            ClickHeroCardMove: ClickHeroCardMove,
+                            ClickHeroCardMove,
                         },
                     },
                     // End
                 },
             },
             moves: {
-                StartEnlistmentMercenariesMove: StartEnlistmentMercenariesMove,
-                PassEnlistmentMercenariesMove: PassEnlistmentMercenariesMove,
-                GetEnlistmentMercenariesMove: GetEnlistmentMercenariesMove,
-                PlaceEnlistmentMercenariesMove: PlaceEnlistmentMercenariesMove,
+                StartEnlistmentMercenariesMove,
+                PassEnlistmentMercenariesMove,
+                GetEnlistmentMercenariesMove,
+                PlaceEnlistmentMercenariesMove,
             },
-            onBegin: function (G, ctx) {
-                var players = G.publicPlayers.map(function (player) { return player; }), playersIndexes = [];
-                players.sort(function (nextPlayer, currentPlayer) {
+            onBegin: (G, ctx) => {
+                const players = G.publicPlayers.map((player) => player), playersIndexes = [];
+                players.sort((nextPlayer, currentPlayer) => {
                     if (nextPlayer.campCards
-                        .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length <
+                        .filter((card) => card.type === `наёмник`).length <
                         currentPlayer.campCards
-                            .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length) {
+                            .filter((card) => card.type === `наёмник`).length) {
                         return 1;
                     }
                     else if (nextPlayer.campCards
-                        .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length >
+                        .filter((card) => card.type === `наёмник`).length >
                         currentPlayer.campCards
-                            .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length) {
+                            .filter((card) => card.type === `наёмник`).length) {
                         return -1;
                     }
                     if (nextPlayer.priority.value < currentPlayer.priority.value) {
@@ -227,26 +225,24 @@ export var BoardGame = {
                     }
                     return 0;
                 });
-                players.forEach(function (playerSorted) {
+                players.forEach((playerSorted) => {
                     if (playerSorted.campCards
-                        .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length) {
+                        .filter((card) => card.type === `наёмник`).length) {
                         playersIndexes.push(G.publicPlayers
-                            .findIndex(function (player) {
-                            return player.nickname === playerSorted.nickname;
-                        }));
+                            .findIndex((player) => player.nickname === playerSorted.nickname));
                     }
                 });
                 G.publicPlayersOrder = playersIndexes;
                 if (playersIndexes.length > 1) {
                     G.publicPlayersOrder.push(playersIndexes[0]);
                 }
-                var stack = [
+                const stack = [
                     {
-                        action: "DrawProfitAction",
+                        action: DrawProfitCampAction.name,
                         playerId: G.publicPlayersOrder[0],
                         config: {
-                            name: "startOrPassEnlistmentMercenaries",
-                            drawName: "Start or Pass Enlistment Mercenaries",
+                            name: `startOrPassEnlistmentMercenaries`,
+                            drawName: `Start or Pass Enlistment Mercenaries`,
                         },
                     },
                 ];
@@ -255,109 +251,105 @@ export var BoardGame = {
         },
         endTier: {
             turn: {
-                order: order,
+                order,
                 stages: {
                     // Start
                     discardCardFromBoard: {
                         moves: {
-                            DiscardCardMove: DiscardCardMove,
+                            DiscardCardMove,
                         },
                     },
                     placeCards: {
                         moves: {
-                            PlaceCardMove: PlaceCardMove,
+                            PlaceCardMove,
                         },
                     },
                     pickCampCardHolda: {
                         moves: {
-                            ClickCampCardHoldaMove: ClickCampCardHoldaMove,
+                            ClickCampCardHoldaMove,
                         },
                     },
                     pickDiscardCard: {
                         moves: {
-                            PickDiscardCardMove: PickDiscardCardMove,
+                            PickDiscardCardMove,
                         },
                     },
                     addCoinToPouch: {
                         moves: {
-                            AddCoinToPouchMove: AddCoinToPouchMove,
+                            AddCoinToPouchMove,
                         },
                     },
                     upgradeCoinVidofnirVedrfolnir: {
                         moves: {
-                            UpgradeCoinVidofnirVedrfolnirMove: UpgradeCoinVidofnirVedrfolnirMove,
+                            UpgradeCoinVidofnirVedrfolnirMove,
                         },
                     },
                     discardSuitCard: {
                         moves: {
-                            DiscardSuitCardFromPlayerBoardMove: DiscardSuitCardFromPlayerBoardMove,
+                            DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
                     upgradeCoin: {
                         moves: {
-                            ClickCoinToUpgradeMove: ClickCoinToUpgradeMove,
+                            ClickCoinToUpgradeMove,
                         },
                     },
                     pickHero: {
                         moves: {
-                            ClickHeroCardMove: ClickHeroCardMove,
+                            ClickHeroCardMove,
                         },
                     },
                     // End
                 },
             },
             moves: {
-                PlaceCardMove: PlaceCardMove,
+                PlaceCardMove,
             },
         },
         getMjollnirProfit: {
             turn: {
-                order: order,
+                order,
             },
             moves: {
-                GetMjollnirProfitMove: GetMjollnirProfitMove,
+                GetMjollnirProfitMove,
             },
         },
         brisingamensEndGame: {
             turn: {
-                order: order,
+                order,
             },
             moves: {
-                DiscardCardFromPlayerBoardMove: DiscardCardFromPlayerBoardMove,
+                DiscardCardFromPlayerBoardMove,
             },
         },
         getDistinctions: {
             turn: {
-                order: order,
+                order,
                 stages: {
                     pickDistinctionCard: {
                         moves: {
-                            ClickCardToPickDistinctionMove: ClickCardToPickDistinctionMove,
+                            ClickCardToPickDistinctionMove,
                         },
                     },
                     upgradeCoin: {
                         moves: {
-                            ClickCoinToUpgradeMove: ClickCoinToUpgradeMove,
+                            ClickCoinToUpgradeMove,
                         },
                     },
                 },
             },
-            next: "placeCoins",
+            next: `placeCoins`,
             moves: {
-                ClickDistinctionCardMove: ClickDistinctionCardMove,
+                ClickDistinctionCardMove,
             },
-            onBegin: function (G, ctx) {
+            onBegin: (G, ctx) => {
                 CheckDistinction(G, ctx);
-                var distinctions = G.distinctions.filter(function (distinction) {
-                    return distinction !== null && distinction !== undefined;
-                });
-                if (distinctions.every(function (distinction) {
-                    return distinction !== null && distinction !== undefined;
-                })) {
+                const distinctions = G.distinctions.filter((distinction) => distinction !== null && distinction !== undefined);
+                if (distinctions.every((distinction) => distinction !== null && distinction !== undefined)) {
                     G.publicPlayersOrder = distinctions;
                 }
             },
-            onEnd: function (G) {
+            onEnd: (G) => {
                 // todo Useless action because all distinctions are undefined?
                 G.distinctions = Array(G.suitsNum).fill(undefined);
                 if (G.expansions.thingvellir.active) {
@@ -365,19 +357,17 @@ export var BoardGame = {
                 }
                 RefillTaverns(G);
             },
-            endIf: function (G) {
-                return G.distinctions.every(function (distinction) { return distinction === undefined; });
-            },
+            endIf: (G) => G.distinctions.every((distinction) => distinction === undefined),
         },
     },
-    onEnd: function (G, ctx) {
+    onEnd: (G, ctx) => {
         return ScoreWinner(G, ctx);
     },
     ai: {
         //@ts-ignore
-        enumerate: enumerate,
-        objectives: objectives,
-        iterations: iterations,
-        playoutDepth: playoutDepth,
+        enumerate,
+        objectives,
+        iterations,
+        playoutDepth,
     },
 };

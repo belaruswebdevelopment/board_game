@@ -9,6 +9,4 @@ import { suitsConfig } from "../data/SuitData";
  * @param suitName Название фракции.
  * @returns Индекс фракции.
  */
-export var GetSuitIndexByName = function (suitName) {
-    return Object.keys(suitsConfig).indexOf(suitName);
-};
+export const GetSuitIndexByName = (suitName) => Object.keys(suitsConfig).indexOf(suitName);

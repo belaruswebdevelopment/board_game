@@ -1,15 +1,206 @@
-import { suitsConfig } from "../data/SuitData";
+import { SuitNames, suitsConfig } from "../data/SuitData";
 import { CreateCard } from "../Card";
 import { AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards } from "../Player";
 import { CheckPickHero } from "../Hero";
-import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { ReturnCoinToPlayerHands } from "../Coin";
-import { CheckAndMoveThrudOrPickHeroAction, GetHeroIndexByName } from "../helpers/HeroHelpers";
+import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, GetHeroIndexByName } from "../helpers/HeroHelpers";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { IsStartActionStage } from "../helpers/ActionHelpers";
+import { AddBuffToPlayer, DrawCurrentProfit, IsStartActionStage, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+/**
+ * <h3>Действия, связанные с улучшением монет от героев.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, улучшающих монеты.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя или карты улучшающей монеты.
+ * @param args Дополнительные аргументы.
+ */
+export const UpgradeCoinHeroAction = (G, ctx, config, ...args) => {
+    UpgradeCurrentCoin(G, ctx, config, ...args);
+};
+/**
+ * <h3>Действия, связанные с возможностью дискарда карт с планшета игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, дающих возможность дискарда карт с планшета игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @returns
+ */
+export const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
+    var _a;
+    const cardsToDiscard = [];
+    for (let i = 0; i < G.suitsNum; i++) {
+        if (config.suit !== Object.keys(suitsConfig)[i]) {
+            const last = G.publicPlayers[Number(ctx.currentPlayer)].cards[i].length - 1;
+            if (last >= 0 && G.publicPlayers[Number(ctx.currentPlayer)].cards[i][last].type !== `герой`) {
+                cardsToDiscard.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[i][last]);
+            }
+        }
+    }
+    const isValidMove = cardsToDiscard.length >= ((_a = config.number) !== null && _a !== void 0 ? _a : 1);
+    if (!isValidMove) {
+        G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
+        return INVALID_MOVE;
+    }
+    EndActionFromStackAndAddNew(G, ctx);
+};
+/**
+ * <h3>Действия, связанные с дискардом карт с планшета игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, дискардящих карты с планшета игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @param suitId Id фракции.
+ * @param cardId Id карты.
+ */
+export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId) => {
+    const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
+    // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
+    G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+        .splice(cardId, 1)[0]);
+    if (G.actionsNum === 2) {
+        const stack = [
+            {
+                action: DrawProfitHeroAction.name,
+                config: {
+                    stageName: `discardCardFromBoard`,
+                    drawName: `Dagda`,
+                    name: `DagdaAction`,
+                    suit: SuitNames.HUNTER,
+                },
+            },
+            {
+                action: DiscardCardsFromPlayerBoardAction.name,
+                config: {
+                    suit: SuitNames.HUNTER,
+                },
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
+    }
+    EndActionFromStackAndAddNew(G, ctx);
+};
+/**
+ * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, дающих возможность взять карты из кэмпа.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const CheckPickCampCardAction = (G, ctx) => {
+    if (G.camp.length === 0) {
+        G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
+    }
+    EndActionFromStackAndAddNew(G, ctx);
+};
+/**
+ * <h3>Действия, связанные с отрисовкой профита от героев.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, дающих профит.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ */
+export const DrawProfitHeroAction = (G, ctx, config) => {
+    DrawCurrentProfit(G, ctx, config);
+};
+/**
+ * <h3>Действия, связанные с добавлением других карт на планшет игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, добавляющих другие карты на планшет игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @param suitId Id фракции.
+ */
+export const PlaceCardsAction = (G, ctx, config, suitId) => {
+    const playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
+    if (playerVariants !== undefined) {
+        const suit = Object.keys(suitsConfig)[suitId], olwinDouble = CreateCard({
+            suit,
+            rank: playerVariants[suit].rank,
+            points: playerVariants[suit].points,
+            name: `Olwin`,
+        });
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Олвин во фракцию ${suitsConfig[suit].suitName}.`);
+        AddCardToPlayer(G, ctx, olwinDouble);
+        if (G.actionsNum === 2) {
+            const variants = {
+                blacksmith: {
+                    suit: SuitNames.BLACKSMITH,
+                    rank: 1,
+                    points: null,
+                },
+                hunter: {
+                    suit: SuitNames.HUNTER,
+                    rank: 1,
+                    points: null,
+                },
+                explorer: {
+                    suit: SuitNames.EXPLORER,
+                    rank: 1,
+                    points: 0,
+                },
+                warrior: {
+                    suit: SuitNames.WARRIOR,
+                    rank: 1,
+                    points: 0,
+                },
+                miner: {
+                    suit: SuitNames.MINER,
+                    rank: 1,
+                    points: 0,
+                },
+            }, stack = [
+                {
+                    action: DrawProfitHeroAction.name,
+                    variants,
+                    config: {
+                        name: `placeCards`,
+                        stageName: `placeCards`,
+                        drawName: `Olwin`,
+                    },
+                },
+                {
+                    action: PlaceCardsAction.name,
+                    variants,
+                },
+            ];
+            AddActionsToStackAfterCurrent(G, ctx, stack);
+        }
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
+        EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найден обязательный параметр 'stack[0].variants'.`);
+    }
+};
 /**
  * <h3>Действия, связанные с проверкой расположением конкретного героя на игровом поле игрока.</h3>
  * <p>Применения:</p>
@@ -23,25 +214,67 @@ import { IsStartActionStage } from "../helpers/ActionHelpers";
  * @param config Конфиг действий героя.
  * @param suitId Id фракции.
  */
-export var PlaceHeroAction = function (G, ctx, config, suitId) {
-    var suit = Object.keys(suitsConfig)[suitId], playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
+export const PlaceHeroAction = (G, ctx, config, suitId) => {
+    const suit = Object.keys(suitsConfig)[suitId], playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
     if (playerVariants !== undefined && config.name !== undefined) {
-        var heroCard = CreateCard({
-            suit: suit,
+        const heroCard = CreateCard({
+            suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
-            type: "\u0433\u0435\u0440\u043E\u0439",
+            type: `герой`,
             name: config.name,
-            game: "base",
+            game: `base`,
         });
-        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u0434\u043E\u0431\u0430\u0432\u0438\u043B \u043A\u0430\u0440\u0442\u0443 ").concat(config.name, " \u0432\u043E \u0444\u0440\u0430\u043A\u0446\u0438\u044E ").concat(suitsConfig[suit].suitName, "."));
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${config.name} во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, heroCard);
         CheckPickHero(G, ctx);
         EndActionFromStackAndAddNew(G, ctx);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'stack[0].variants' \u0438\u043B\u0438 \u043D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'stack[0].config.name'.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants' или не передан обязательный параметр 'stack[0].config.name'.`);
     }
+};
+/**
+ * <h3>Действия, связанные с возможностью взятия карт из дискарда от героев.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const CheckPickDiscardCardHeroAction = (G, ctx) => {
+    CheckPickDiscardCard(G, ctx);
+};
+/**
+ * <h3>Действия, связанные с взятием карт из дискарда от героев.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @param cardId Id карты.
+ */
+export const PickDiscardCardHeroAction = (G, ctx, config, cardId) => {
+    PickDiscardCard(G, ctx, config, cardId);
+};
+/**
+ * <h3>Действия, связанные с добавлением бафов от героев игроку.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, добавляющих бафы игроку.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ */
+export const AddHeroBuffToPlayerAction = (G, ctx, config) => {
+    AddBuffToPlayer(G, ctx, config);
 };
 /**
  * <h3>Действия, связанные с добавлением героев в массив карт игрока.</li>
@@ -54,23 +287,23 @@ export var PlaceHeroAction = function (G, ctx, config, suitId) {
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export var AddHeroToCardsAction = function (G, ctx, config) {
+export const AddHeroToCardsAction = (G, ctx, config) => {
     if (config.drawName) {
-        var heroIndex = GetHeroIndexByName(config.drawName), hero = G.heroes[heroIndex];
-        var suitId = null;
+        const heroIndex = GetHeroIndexByName(config.drawName), hero = G.heroes[heroIndex];
+        let suitId = null;
         AddHeroCardToPlayerHeroCards(G, ctx, hero);
         AddHeroCardToPlayerCards(G, ctx, hero);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
         if (hero.suit !== null) {
             suitId = GetSuitIndexByName(hero.suit);
             if (suitId === -1) {
-                AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430 \u043D\u0435\u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0430\u044F \u0444\u0440\u0430\u043A\u0446\u0438\u044F ".concat(hero.suit, "."));
+                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${hero.suit}.`);
             }
         }
         EndActionFromStackAndAddNew(G, ctx, [], suitId);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'config.drawName'.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.drawName'.`);
     }
 };
 /**
@@ -83,11 +316,11 @@ export var AddHeroToCardsAction = function (G, ctx, config) {
  * @param G
  * @param ctx
  */
-export var GetClosedCoinIntoPlayerHandAction = function (G, ctx) {
-    var coinsCount = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length, tradingBoardCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-        .findIndex(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading); }), tradingHandCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-        .findIndex(function (coin) { return Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading); });
-    for (var i = 0; i < coinsCount; i++) {
+export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
+    const coinsCount = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length, tradingBoardCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+        .findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading)), tradingHandCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+        .findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading));
+    for (let i = 0; i < coinsCount; i++) {
         if ((i < G.tavernsNum && G.currentTavern < i) || (i >= G.tavernsNum && tradingHandCoinIndex !== -1)
             || (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {
             ReturnCoinToPlayerHands(G.publicPlayers[Number(ctx.currentPlayer)], i);
@@ -107,20 +340,20 @@ export var GetClosedCoinIntoPlayerHandAction = function (G, ctx) {
  * @param config Конфиг действий героя.
  * @returns
  */
-export var PickHeroWithConditionsAction = function (G, ctx, config) {
-    var isValidMove = false;
-    for (var condition in config.conditions) {
+export const PickHeroWithConditionsAction = (G, ctx, config) => {
+    let isValidMove = false;
+    for (const condition in config.conditions) {
         if (config.conditions.hasOwnProperty(condition)) {
-            if (condition === "suitCountMin") {
-                var ranks = 0;
-                for (var key in config.conditions[condition]) {
+            if (condition === `suitCountMin`) {
+                let ranks = 0;
+                for (const key in config.conditions[condition]) {
                     if (config.conditions[condition].hasOwnProperty(key)) {
-                        if (key === "suit") {
-                            var suitId = GetSuitIndexByName(config.conditions[condition][key]);
+                        if (key === `suit`) {
+                            const suitId = GetSuitIndexByName(config.conditions[condition][key]);
                             ranks = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
                                 .reduce(TotalRank, 0);
                         }
-                        else if (key === "value") {
+                        else if (key === `value`) {
                             isValidMove = ranks >= config.conditions[condition][key];
                         }
                     }
@@ -145,15 +378,15 @@ export var PickHeroWithConditionsAction = function (G, ctx, config) {
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export var PickHeroAction = function (G, ctx, config) {
-    var isStartPickHero = IsStartActionStage(G, ctx, config);
+export const PickHeroAction = (G, ctx, config) => {
+    const isStartPickHero = IsStartActionStage(G, ctx, config);
     if (isStartPickHero) {
-        AddDataToLog(G, LogTypes.GAME, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[Number(ctx.currentPlayer)].nickname, " \u0434\u043E\u043B\u0436\u0435\u043D \u043F\u0438\u043A\u043D\u0443\u0442\u044C \u0433\u0435\u0440\u043E\u044F."));
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен пикнуть героя.`);
     }
     else {
         if (config.stageName === undefined) {
-            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 'config.stageName'.");
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.stageName'.`);
         }
-        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0441\u0442\u0430\u0440\u0442\u043E\u0432\u0430\u043B \u0441\u0442\u044D\u0439\u0434\u0436 'PickHero'.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не стартовал стэйдж 'PickHero'.`);
     }
 };

@@ -6,6 +6,9 @@ import { AddActionsToStack, StartActionFromStackOrEndActions } from "./StackHelp
 import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
 import { ActivateTrading } from "./CoinHelpers";
 import { SuitNames } from "../data/SuitData";
+import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
+import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
+import { DiscardAnyCardFromPlayerBoardAction, DrawProfitCampAction, GetMjollnirProfitAction } from "../actions/CampActions";
 // todo Add logging
 /**
  * <h3>Завершает каждую фазу конца игры и проверяет переход к другим фазам или завершает игру.</h3>
@@ -17,64 +20,64 @@ import { SuitNames } from "../data/SuitData";
  * @param G
  * @param ctx
  */
-export var CheckEndGameLastActions = function (G, ctx) {
+export const CheckEndGameLastActions = (G, ctx) => {
     if (G.tierToEnd) {
-        ctx.events.setPhase("getDistinctions");
+        ctx.events.setPhase(`getDistinctions`);
     }
     else {
-        if (ctx.phase !== "brisingamensEndGame" && ctx.phase !== "getMjollnirProfit") {
+        if (ctx.phase !== `brisingamensEndGame` && ctx.phase !== `getMjollnirProfit`) {
             RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
         }
-        var isNewPhase = false;
+        let isNewPhase = false;
         if (G.expansions.thingvellir.active) {
-            if (ctx.phase !== "brisingamensEndGame" && ctx.phase !== "getMjollnirProfit") {
-                for (var i = 0; i < ctx.numPlayers; i++) {
+            if (ctx.phase !== `brisingamensEndGame` && ctx.phase !== `getMjollnirProfit`) {
+                for (let i = 0; i < ctx.numPlayers; i++) {
                     if (G.publicPlayers[i].buffs.discardCardEndGame) {
                         isNewPhase = true;
                         G.publicPlayersOrder.push(i);
-                        var stack = [
+                        const stack = [
                             {
-                                action: "DrawProfitAction",
+                                action: DrawProfitCampAction.name,
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
-                                    name: "BrisingamensEndGameAction",
-                                    drawName: "Brisingamens end game",
+                                    name: `BrisingamensEndGameAction`,
+                                    drawName: `Brisingamens end game`,
                                 },
                             },
                             {
+                                action: DiscardAnyCardFromPlayerBoardAction.name,
                                 playerId: G.publicPlayersOrder[0],
-                                action: "DiscardAnyCardFromPlayerBoardAction",
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
-                        G.drawProfit = "BrisingamensEndGameAction";
-                        ctx.events.setPhase("brisingamensEndGame");
+                        G.drawProfit = `BrisingamensEndGameAction`;
+                        ctx.events.setPhase(`brisingamensEndGame`);
                         break;
                     }
                 }
             }
-            if (ctx.phase !== "getMjollnirProfit" && !isNewPhase) {
-                for (var i = 0; i < ctx.numPlayers; i++) {
+            if (ctx.phase !== `getMjollnirProfit` && !isNewPhase) {
+                for (let i = 0; i < ctx.numPlayers; i++) {
                     if (G.publicPlayers[i].buffs.getMjollnirProfit) {
                         isNewPhase = true;
                         G.publicPlayersOrder.push(i);
-                        var stack = [
+                        const stack = [
                             {
-                                action: "DrawProfitAction",
+                                action: DrawProfitCampAction.name,
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
-                                    name: "getMjollnirProfit",
-                                    drawName: "Mjollnir",
+                                    name: `getMjollnirProfit`,
+                                    drawName: `Mjollnir`,
                                 },
                             },
                             {
+                                action: GetMjollnirProfitAction.name,
                                 playerId: G.publicPlayersOrder[0],
-                                action: "GetMjollnirProfitAction",
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
-                        G.drawProfit = "getMjollnirProfit";
-                        ctx.events.setPhase("getMjollnirProfit");
+                        G.drawProfit = `getMjollnirProfit`;
+                        ctx.events.setPhase(`getMjollnirProfit`);
                         break;
                     }
                 }
@@ -100,56 +103,56 @@ export var CheckEndGameLastActions = function (G, ctx) {
  * @param ctx
  * @param isTrading Является ли действие обменом монет (трейдингом).
  */
-export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
+export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
     // todo rework it?
     // todo Add LogTypes.ERROR ?
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
-    if (ctx.phase === "pickCards") {
-        var isUlinePlaceTradingCoin = CheckAndStartUlineActionsOrContinue(G, ctx);
-        if (isUlinePlaceTradingCoin !== "placeTradingCoinsUline"
-            && isUlinePlaceTradingCoin !== "nextPlaceTradingCoinsUline") {
-            var isTradingActivated = false;
+    if (ctx.phase === `pickCards`) {
+        const isUlinePlaceTradingCoin = CheckAndStartUlineActionsOrContinue(G, ctx);
+        if (isUlinePlaceTradingCoin !== `placeTradingCoinsUline`
+            && isUlinePlaceTradingCoin !== `nextPlaceTradingCoinsUline`) {
+            let isTradingActivated = false;
             if (!isTrading) {
                 isTradingActivated = ActivateTrading(G, ctx);
             }
             if (!isTradingActivated) {
                 if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                     && ctx.playOrder.length < Number(ctx.numPlayers)) {
-                    var cardIndex = G.taverns[G.currentTavern]
-                        .findIndex(function (card) { return card !== null; });
+                    const cardIndex = G.taverns[G.currentTavern]
+                        .findIndex((card) => card !== null);
                     DiscardCardFromTavern(G, cardIndex);
                 }
                 if (G.expansions.thingvellir.active
                     && Number(ctx.currentPlayer) === Number(ctx.playOrder[ctx.playOrder.length - 1])) {
                     DiscardCardIfCampCardPicked(G);
                 }
-                var isLastTavern = G.tavernsNum - 1 === G.currentTavern, isCurrentTavernEmpty = CheckIfCurrentTavernEmpty(G, ctx);
+                const isLastTavern = G.tavernsNum - 1 === G.currentTavern, isCurrentTavernEmpty = CheckIfCurrentTavernEmpty(G, ctx);
                 if (isCurrentTavernEmpty && isLastTavern) {
                     AfterLastTavernEmptyActions(G, ctx);
                 }
                 else if (isCurrentTavernEmpty) {
-                    var isPlaceCoinsUline = CheckAndStartUlineActionsOrContinue(G, ctx);
-                    if (isPlaceCoinsUline !== "endPlaceTradingCoinsUline" && isPlaceCoinsUline !== "placeCoinsUline") {
-                        ctx.events.setPhase("pickCards");
+                    const isPlaceCoinsUline = CheckAndStartUlineActionsOrContinue(G, ctx);
+                    if (isPlaceCoinsUline !== `endPlaceTradingCoinsUline` && isPlaceCoinsUline !== `placeCoinsUline`) {
+                        ctx.events.setPhase(`pickCards`);
                     }
                     else {
-                        ctx.events.setPhase("placeCoinsUline");
+                        ctx.events.setPhase(`placeCoinsUline`);
                     }
                 }
                 else {
                     if (ctx.currentPlayer === ctx.playOrder[0] && G.campPicked && ctx.numPlayers === 2
-                        && G.taverns[G.currentTavern].every(function (card) { return card !== null; })) {
-                        var stack = [
+                        && G.taverns[G.currentTavern].every(card => card !== null)) {
+                        const stack = [
                             {
-                                action: "DrawProfitAction",
+                                action: DrawProfitAction.name,
                                 config: {
-                                    stageName: "discardCard",
-                                    name: "discardCard",
-                                    drawName: "Discard tavern card",
+                                    stageName: `discardCard`,
+                                    name: `discardCard`,
+                                    drawName: `Discard tavern card`,
                                 },
                             },
                             {
-                                action: "DiscardCardFromTavernAction",
+                                action: DiscardCardFromTavernAction.name,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -162,13 +165,13 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
             }
         }
     }
-    else if (ctx.phase === "endTier" || ctx.phase === "brisingamensEndGame" || ctx.phase === "getMjollnirProfit") {
+    else if (ctx.phase === `endTier` || ctx.phase === `brisingamensEndGame` || ctx.phase === `getMjollnirProfit`) {
         CheckEndGameLastActions(G, ctx);
     }
-    else if (ctx.phase === "getDistinctions") {
+    else if (ctx.phase === `getDistinctions`) {
         ctx.events.endTurn();
     }
-    else if (ctx.phase === "enlistmentMercenaries") {
+    else if (ctx.phase === `enlistmentMercenaries`) {
         if (((ctx.playOrderPos === 0 && ctx.playOrder.length === 1)
             && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1])
             || ((ctx.playOrderPos !== 0 && ctx.playOrder.length > 1)
@@ -176,24 +179,24 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
             || (ctx.playOrder[ctx.playOrder.length - 2] !== undefined
                 && (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 2])
                 && !G.publicPlayers[Number(ctx.playOrder[ctx.playOrder.length - 1])].campCards
-                    .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length)) {
+                    .filter((card) => card.type === `наёмник`).length)) {
             StartEndTierActions(G, ctx);
         }
         else {
-            var stack = [
+            const stack = [
                 {
-                    action: "DrawProfitAction",
+                    action: DrawProfitCampAction.name,
                     playerId: Number(ctx.playOrder[ctx.playOrder
-                        .findIndex(function (playerIndex) { return playerIndex === ctx.currentPlayer; }) + 1]),
+                        .findIndex((playerIndex) => playerIndex === ctx.currentPlayer) + 1]),
                     config: {
-                        name: "enlistmentMercenaries",
-                        drawName: "Enlistment Mercenaries",
+                        name: `enlistmentMercenaries`,
+                        drawName: `Enlistment Mercenaries`,
                     },
                 },
             ];
             ctx.events.endTurn();
             AddActionsToStack(G, ctx, stack);
-            G.drawProfit = "enlistmentMercenaries";
+            G.drawProfit = `enlistmentMercenaries`;
         }
     }
 };
@@ -207,21 +210,21 @@ export var AfterBasicPickCardActions = function (G, ctx, isTrading) {
  * @param G
  * @param ctx
  */
-var StartEndTierActions = function (G, ctx) {
+const StartEndTierActions = (G, ctx) => {
     G.publicPlayersOrder = [];
-    var ylud = false, index = -1;
-    for (var i = 0; i < G.publicPlayers.length; i++) {
-        index = G.publicPlayers[i].heroes.findIndex(function (hero) { return hero.name === "Ylud"; });
+    let ylud = false, index = -1;
+    for (let i = 0; i < G.publicPlayers.length; i++) {
+        index = G.publicPlayers[i].heroes.findIndex((hero) => hero.name === `Ylud`);
         if (index !== -1) {
             ylud = true;
             G.publicPlayersOrder.push(i);
         }
     }
     if (!ylud) {
-        for (var i = 0; i < G.publicPlayers.length; i++) {
-            for (var j = 0; j < G.suitsNum; j++) {
+        for (let i = 0; i < G.publicPlayers.length; i++) {
+            for (let j = 0; j < G.suitsNum; j++) {
                 index = G.publicPlayers[i].cards[j]
-                    .findIndex(function (card) { return card.name === "Ylud"; });
+                    .findIndex((card) => card.name === `Ylud`);
                 if (index !== -1) {
                     G.publicPlayers[Number(ctx.currentPlayer)].cards[i].splice(index, 1);
                     G.publicPlayersOrder.push(i);
@@ -231,8 +234,8 @@ var StartEndTierActions = function (G, ctx) {
         }
     }
     if (ylud) {
-        ctx.events.setPhase("endTier");
-        var variants = {
+        ctx.events.setPhase(`endTier`);
+        const variants = {
             blacksmith: {
                 suit: SuitNames.BLACKSMITH,
                 rank: 1,
@@ -259,28 +262,28 @@ var StartEndTierActions = function (G, ctx) {
                 points: 1,
             },
         };
-        var stack = [
+        const stack = [
             {
+                action: DrawProfitHeroAction.name,
                 playerId: G.publicPlayersOrder[0],
-                action: "DrawProfitAction",
-                variants: variants,
+                variants,
                 config: {
-                    stageName: "placeCards",
-                    drawName: "Ylud",
-                    name: "placeCard",
+                    stageName: `placeCards`,
+                    drawName: `Ylud`,
+                    name: `placeCard`,
                 },
             },
             {
+                action: PlaceHeroAction.name,
                 playerId: G.publicPlayersOrder[0],
-                action: "PlaceHeroAction",
-                variants: variants,
+                variants,
                 config: {
-                    name: "Ylud",
+                    name: `Ylud`,
                 },
             },
         ];
         AddActionsToStack(G, ctx, stack);
-        G.drawProfit = "placeCards";
+        G.drawProfit = `placeCards`;
     }
     else {
         CheckEndGameLastActions(G, ctx);
@@ -296,18 +299,18 @@ var StartEndTierActions = function (G, ctx) {
  * @param G
  * @param ctx
  */
-var CheckEnlistmentMercenaries = function (G, ctx) {
-    var count = false;
-    for (var i = 0; i < G.publicPlayers.length; i++) {
+const CheckEnlistmentMercenaries = (G, ctx) => {
+    let count = false;
+    for (let i = 0; i < G.publicPlayers.length; i++) {
         if (G.publicPlayers[i].campCards
-            .filter(function (card) { return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A"; }).length) {
+            .filter((card) => card.type === `наёмник`).length) {
             count = true;
             break;
         }
     }
     if (count) {
-        G.drawProfit = "startOrPassEnlistmentMercenaries";
-        ctx.events.setPhase("enlistmentMercenaries");
+        G.drawProfit = `startOrPassEnlistmentMercenaries`;
+        ctx.events.setPhase(`enlistmentMercenaries`);
     }
     else {
         StartEndTierActions(G, ctx);
@@ -324,7 +327,7 @@ var CheckEnlistmentMercenaries = function (G, ctx) {
  * @param G
  * @param ctx
  */
-var AfterLastTavernEmptyActions = function (G, ctx) {
+const AfterLastTavernEmptyActions = (G, ctx) => {
     if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
         G.tierToEnd--;
         if (G.expansions.thingvellir.active) {
@@ -339,6 +342,6 @@ var AfterLastTavernEmptyActions = function (G, ctx) {
             RefillEmptyCampCards(G);
         }
         RefillTaverns(G);
-        ctx.events.setPhase("placeCoins");
+        ctx.events.setPhase(`placeCoins`);
     }
 };

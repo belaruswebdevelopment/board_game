@@ -360,7 +360,7 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
                         isDrawRow = true;
                         DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i],
                             i, data.props.G.publicPlayers[p], suitName,
-                            `OnClickDiscardSuitCardFromPlayerBoard`, suitId, p, i);
+                            OnClickDiscardSuitCardFromPlayerBoard.name, suitId, p, i);
                     }
                 } else {
                     playersCells.push(
@@ -416,37 +416,37 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
         spanClasses: string = ``,
         action: Function | null = null;
     switch (actionName) {
-        case `OnClickHeroCard`:
+        case OnClickHeroCard.name:
             action = OnClickHeroCard;
             break;
-        case `OnClickCampCard`:
+        case OnClickCampCard.name:
             action = OnClickCampCard;
             break;
-        case `OnClickCard`:
+        case OnClickCard.name:
             action = OnClickCard;
             break;
-        case `OnClickCardToPickDistinction`:
+        case OnClickCardToPickDistinction.name:
             action = OnClickCardToPickDistinction;
             break;
-        case `OnClickCardToDiscard`:
+        case OnClickCardToDiscard.name:
             action = OnClickCardToDiscard;
             break;
-        case `OnClickCardFromDiscard`:
+        case OnClickCardFromDiscard.name:
             action = OnClickCardFromDiscard;
             break;
-        case `OnClickCardToDiscard2Players`:
+        case OnClickCardToDiscard2Players.name:
             action = OnClickCardToDiscard2Players;
             break;
-        case `OnClickDiscardCardFromPlayerBoard`:
+        case OnClickDiscardCardFromPlayerBoard.name:
             action = OnClickDiscardCardFromPlayerBoard;
             break;
-        case `OnClickDiscardSuitCardFromPlayerBoard`:
+        case OnClickDiscardSuitCardFromPlayerBoard.name:
             action = OnClickDiscardSuitCardFromPlayerBoard;
             break;
-        case `OnClickCampCardHolda`:
+        case OnClickCampCardHolda.name:
             action = OnClickCampCardHolda;
             break;
-        case `OnClickGetEnlistmentMercenaries`:
+        case OnClickGetEnlistmentMercenaries.name:
             action = OnClickGetEnlistmentMercenaries;
             break;
         default:
@@ -531,19 +531,19 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
         spanClasses: string = ``,
         action: Function | null = null;
     switch (actionName) {
-        case `OnClickBoardCoin`:
+        case OnClickBoardCoin.name:
             action = OnClickBoardCoin;
             break;
-        case `OnClickHandCoin`:
+        case OnClickHandCoin.name:
             action = OnClickHandCoin;
             break;
-        case `OnClickCoinToUpgrade`:
+        case OnClickCoinToUpgrade.name:
             action = OnClickCoinToUpgrade;
             break;
-        case `OnClickCoinToAddToPouch`:
+        case OnClickCoinToAddToPouch.name:
             action = OnClickCoinToAddToPouch;
             break;
-        case `OnClickCoinToUpgradeVidofnirVedrfolnir`:
+        case OnClickCoinToUpgradeVidofnirVedrfolnir.name:
             action = OnClickCoinToUpgradeVidofnirVedrfolnir;
             break;
         default:
@@ -621,10 +621,10 @@ export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: stri
     actionName?: string, ...args: ArgsTypes): void => {
     let action: Function | null = null;
     switch (actionName) {
-        case `OnClickStartEnlistmentMercenaries`:
+        case OnClickStartEnlistmentMercenaries.name:
             action = OnClickStartEnlistmentMercenaries;
             break;
-        case `OnClickPassEnlistmentMercenaries`:
+        case OnClickPassEnlistmentMercenaries.name:
             action = OnClickPassEnlistmentMercenaries;
             break;
         default:

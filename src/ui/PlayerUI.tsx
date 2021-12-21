@@ -3,7 +3,7 @@ import { tavernsConfig } from "../Tavern";
 import { CurrentScoring } from "../Score";
 import { Styles } from "../data/StyleData";
 import { GetSuitIndexByName } from "../helpers/SuitHelpers";
-import { DrawCard, DrawCoin } from "../helpers/UIHelpers";
+import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { GameBoard } from "../GameBoard";
 import { ICoin } from "../Coin";
@@ -50,7 +50,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                             DrawCoin(data, playerCells, `back-tavern-icon`,
                                 data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                                 data.props.G.publicPlayers[p], null, j,
-                                `OnClickBoardCoin`, j);
+                                OnClickBoardCoin.name, j);
                         } else {
                             DrawCoin(data, playerCells, `back-tavern-icon`,
                                 data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
@@ -61,7 +61,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                         DrawCoin(data, playerCells, `coin`,
                             data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                             data.props.G.publicPlayers[p], null, null,
-                            `OnClickBoardCoin`, j);
+                            OnClickBoardCoin.name, j);
                     } else {
                         if (data.props.G.winner.length || (data.props.ctx.phase === `placeCoinsUline`
                             && data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== `placeCoins`
@@ -113,7 +113,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                                     `placeTradingCoinsUline`)) {
                                 DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex,
                                     data.props.G.publicPlayers[p], null, null,
-                                    `OnClickBoardCoin`, j);
+                                    OnClickBoardCoin.name, j);
                             } else {
                                 DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex,
                                     data.props.G.publicPlayers[p]);
@@ -124,7 +124,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                                 `placeTradingCoinsUline`)) {
                             DrawCoin(data, playerCells, `coin`, coin, coinIndex,
                                 data.props.G.publicPlayers[p], null, null,
-                                `OnClickBoardCoin`, j);
+                                OnClickBoardCoin.name, j);
                         } else {
                             if (data.props.G.winner.length || (data.props.ctx.phase !== `placeCoins`
                                 && Number(data.props.ctx.currentPlayer) === p
@@ -204,7 +204,7 @@ export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
                             `placeTradingCoinsUline`)) {
                             DrawCoin(data, playerCells, `coin`, data.props.G.publicPlayers[p].handCoins[j],
                                 j, data.props.G.publicPlayers[p], coinClasses, null,
-                                `OnClickHandCoin`, j);
+                                OnClickHandCoin.name, j);
                         } else {
                             DrawCoin(data, playerCells, `coin`, data.props.G.publicPlayers[p].handCoins[j],
                                 j, data.props.G.publicPlayers[p], coinClasses);

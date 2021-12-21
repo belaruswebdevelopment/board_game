@@ -8,7 +8,7 @@
  * @param {IInitialTradingCoinConfig | IMarketCoinConfig} config Конфиг.
  * @returns Является ли объект конфигом базовых монет или конфигом монет рынка.
  */
-export var isInitialPlayerCoinsConfigNotMarket = function (config) { return config.isTriggerTrading !== undefined; };
+export const isInitialPlayerCoinsConfigNotMarket = (config) => config.isTriggerTrading !== undefined;
 /**
  * <h3>Конфиг базовых монет игрока.</h3>
  * <p>Применения:</p>
@@ -16,7 +16,7 @@ export var isInitialPlayerCoinsConfigNotMarket = function (config) { return conf
  * <li>Происходит при создании всех базовых монет игрока в ходе инициализации игры.</li>
  * </ol>
  */
-export var initialPlayerCoinsConfig = [
+export const initialPlayerCoinsConfig = [
     {
         value: 0,
         isTriggerTrading: true,
@@ -45,194 +45,194 @@ export var initialPlayerCoinsConfig = [
  * <li>Происходит при создании всех монет рынка в ходе инициализации игры.</li>
  * </ol>
  */
-export var marketCoinsConfig = [
+export const marketCoinsConfig = [
     {
         value: 5,
-        count: function () { return ({
+        count: () => ({
             2: 2,
             3: 2,
             4: 2,
             5: 2,
-        }); },
+        }),
     },
     {
         value: 6,
-        count: function () { return ({
+        count: () => ({
             2: 2,
             3: 2,
             4: 2,
             5: 2,
-        }); },
+        }),
     },
     {
         value: 7,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 3,
             5: 3,
-        }); },
+        }),
     },
     {
         value: 8,
-        count: function () { return ({
+        count: () => ({
             2: 2,
             3: 2,
             4: 2,
             5: 2,
-        }); },
+        }),
     },
     {
         value: 9,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 3,
             5: 3,
-        }); },
+        }),
     },
     {
         value: 10,
-        count: function () { return ({
+        count: () => ({
             2: 2,
             3: 2,
             4: 2,
             5: 2,
-        }); },
+        }),
     },
     {
         value: 11,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 3,
             5: 3,
-        }); },
+        }),
     },
     {
         value: 12,
-        count: function () { return ({
+        count: () => ({
             2: 2,
             3: 2,
             4: 2,
             5: 2,
-        }); },
+        }),
     },
     {
         value: 13,
-        count: function () { return ({
+        count: () => ({
             2: 2,
             3: 2,
             4: 2,
             5: 2,
-        }); },
+        }),
     },
     {
         value: 14,
-        count: function () { return ({
+        count: () => ({
             2: 2,
             3: 2,
             4: 2,
             5: 2,
-        }); },
+        }),
     },
     {
         value: 15,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 1,
             5: 1,
-        }); },
+        }),
     },
     {
         value: 16,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 1,
             5: 1,
-        }); },
+        }),
     },
     {
         value: 17,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 1,
             5: 1,
-        }); },
+        }),
     },
     {
         value: 18,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 1,
             5: 1,
-        }); },
+        }),
     },
     {
         value: 19,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 1,
             5: 1,
-        }); },
+        }),
     },
     {
         value: 20,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 1,
             5: 1,
-        }); },
+        }),
     },
     {
         value: 21,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 1,
             5: 1,
-        }); },
+        }),
     },
     {
         value: 22,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 1,
             5: 1,
-        }); },
+        }),
     },
     {
         value: 23,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 1,
             5: 1,
-        }); },
+        }),
     },
     {
         value: 24,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 1,
             5: 1,
-        }); },
+        }),
     },
     {
         value: 25,
-        count: function () { return ({
+        count: () => ({
             2: 1,
             3: 1,
             4: 1,
             5: 1,
-        }); },
+        }),
     },
 ];

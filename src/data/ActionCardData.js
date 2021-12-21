@@ -1,3 +1,4 @@
+import { DrawCoinProfitAction, UpgradeCoinAction } from "../actions/CoinActions";
 /**
  * <h3>Карта улучшения монеты на +3.</h3>
  * <p>Применения:</p>
@@ -5,26 +6,26 @@
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
  */
-var upgradeCoinUpTo3 = {
+const upgradeCoinUpTo3 = {
     value: 3,
     stack: [
         {
-            action: "DrawProfitAction",
+            action: DrawCoinProfitAction.name,
             config: {
-                name: "upgradeCoin",
-                stageName: "upgradeCoin",
+                name: `upgradeCoin`,
+                stageName: `upgradeCoin`,
                 value: 3,
-                drawName: "Upgrade coin",
+                drawName: `Upgrade coin`,
             },
         },
         {
-            action: "UpgradeCoinAction",
+            action: UpgradeCoinAction.name,
             config: {
                 value: 3,
             },
         },
     ],
-    amount: function () { return ({
+    amount: () => ({
         2: {
             0: 1,
             1: 0,
@@ -41,7 +42,7 @@ var upgradeCoinUpTo3 = {
             0: 2,
             1: 0,
         },
-    }); },
+    }),
 };
 /**
  * <h3>Карта улучшения монеты на +5.</h3>
@@ -50,26 +51,26 @@ var upgradeCoinUpTo3 = {
  * <li>Используется в конфиге карт улучшения монет.</li>
  * </ol>
  */
-var upgradeCoinUpTo5 = {
+const upgradeCoinUpTo5 = {
     value: 5,
     stack: [
         {
-            action: "DrawProfitAction",
+            action: DrawCoinProfitAction.name,
             config: {
-                name: "upgradeCoin",
-                stageName: "upgradeCoin",
+                name: `upgradeCoin`,
+                stageName: `upgradeCoin`,
                 value: 5,
-                drawName: "Upgrade coin",
+                drawName: `Upgrade coin`,
             },
         },
         {
-            action: "UpgradeCoinAction",
+            action: UpgradeCoinAction.name,
             config: {
                 value: 5,
             },
         },
     ],
-    amount: function () { return ({
+    amount: () => ({
         2: {
             0: 0,
             1: 2,
@@ -86,7 +87,7 @@ var upgradeCoinUpTo5 = {
             0: 0,
             1: 3,
         },
-    }); },
+    }),
 };
 /**
  * <h3>Конфиг карт улучшения монет.</h3>
@@ -95,4 +96,4 @@ var upgradeCoinUpTo5 = {
  * <li>Происходит при создании всех карт улучшения монет в ходе инициализации игры.</li>
  * </ol>
  */
-export var actionCardsConfigArray = [upgradeCoinUpTo3, upgradeCoinUpTo5];
+export const actionCardsConfigArray = [upgradeCoinUpTo3, upgradeCoinUpTo5];

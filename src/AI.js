@@ -1,4 +1,3 @@
-import { __spreadArray } from "tslib";
 import { CompareCards, EvaluateCard, isCardNotAction } from "./Card";
 import { HasLowestPriority } from "./Priority";
 import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
@@ -17,38 +16,38 @@ import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardF
  * @param ctx
  * @returns Массив возможных мувов у ботов.
  */
-export var enumerate = function (G, ctx) {
+export const enumerate = (G, ctx) => {
     var _a, _b;
     //make false for standard bot
-    var enableAdvancedBot = true, uniqueArr = [];
-    var moves = [], flag = true, advancedString = "advanced", isAdvancedExist = Object.keys(moveBy[ctx.phase])
-        .some(function (key) { return key.includes(advancedString); });
-    var activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : "default";
+    const enableAdvancedBot = true, uniqueArr = [];
+    let moves = [], flag = true, advancedString = `advanced`, isAdvancedExist = Object.keys(moveBy[ctx.phase])
+        .some((key) => key.includes(advancedString));
+    const activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : `default`;
     // todo Fix it, now just for bot can do RANDOM move
-    var botMoveArguments = [];
-    for (var stage in moveBy[ctx.phase]) {
+    const botMoveArguments = [];
+    for (const stage in moveBy[ctx.phase]) {
         if (moveBy[ctx.phase].hasOwnProperty(stage)) {
-            if (ctx.phase === "pickCards" && stage.startsWith("default")) {
+            if (ctx.phase === `pickCards` && stage.startsWith(`default`)) {
                 continue;
             }
             if (stage.includes(activeStageOfCurrentPlayer)
                 && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
                 // todo Sync players and bots validations in one places
-                var moveName = moveBy[ctx.phase][stage], _c = moveValidators[moveName].getRange({ G: G, ctx: ctx }), minValue = _c[0], maxValue = _c[1], hasGetValue = moveValidators[moveName].hasOwnProperty("getValue");
-                var argValue = void 0;
-                var argArray = void 0;
-                for (var id = minValue; id < maxValue; id++) {
+                const moveName = moveBy[ctx.phase][stage], [minValue, maxValue] = moveValidators[moveName].getRange({ G, ctx }), hasGetValue = moveValidators[moveName].hasOwnProperty(`getValue`);
+                let argValue;
+                let argArray;
+                for (let id = minValue; id < maxValue; id++) {
                     // todo sync bot moves options with profit UI options for players (same logic without UI)
-                    var type = undefined;
-                    if (stage === "upgradeCoin") {
+                    let type = undefined;
+                    if (stage === `upgradeCoin`) {
                         // todo fix for Uline
-                        type = "board";
+                        type = `board`;
                     }
-                    if (!moveValidators[moveName].validate({ G: G, ctx: ctx, id: id, type: type })) {
+                    if (!moveValidators[moveName].validate({ G, ctx, id, type })) {
                         continue;
                     }
                     if (hasGetValue) {
-                        argArray = moveValidators[moveName].getValue({ G: G, ctx: ctx, id: id });
+                        argArray = moveValidators[moveName].getValue({ G, ctx, id });
                         moves.push({ move: moveName, args: [argArray] });
                     }
                     else {
@@ -62,34 +61,32 @@ export var enumerate = function (G, ctx) {
     if (moves.length > 0) {
         return moves;
     }
-    if (ctx.phase === "pickCards" && activeStageOfCurrentPlayer === "default" && ctx.activePlayers === null) {
+    if (ctx.phase === `pickCards` && activeStageOfCurrentPlayer === `default` && ctx.activePlayers === null) {
         // todo Fix it, now just for bot can do RANDOM move
-        var pickCardOrCampCard = "card";
+        let pickCardOrCampCard = `card`;
         if (G.expansions.thingvellir.active
             && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
                 || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
-            pickCardOrCampCard = Math.floor(Math.random() * 2) ? "card" : "camp";
+            pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
         }
-        if (pickCardOrCampCard === "card") {
-            var tavern_1 = G.taverns[G.currentTavern];
-            var _loop_1 = function (i) {
-                var tavernCard = tavern_1[i];
+        if (pickCardOrCampCard === `card`) {
+            const tavern = G.taverns[G.currentTavern];
+            for (let i = 0; i < tavern.length; i++) {
+                const tavernCard = tavern[i];
                 if (tavernCard === null) {
-                    return "continue";
+                    continue;
                 }
-                if (tavern_1.some(function (card) {
-                    return CompareCards(tavernCard, card) < 0;
-                })) {
-                    return "continue";
+                if (tavern.some((card) => CompareCards(tavernCard, card) < 0)) {
+                    continue;
                 }
-                var isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, i, tavern_1) < 0, isExistCardNotWorse = tavern_1.some(function (card) { return (card !== null)
-                    && (EvaluateCard(G, ctx, tavernCard, i, tavern_1) >= 0); });
+                const isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, i, tavern) < 0, isExistCardNotWorse = tavern.some((card) => (card !== null)
+                    && (EvaluateCard(G, ctx, tavernCard, i, tavern) >= 0));
                 if (isCurrentCardWorse && isExistCardNotWorse) {
-                    return "continue";
+                    continue;
                 }
-                var uniqueArrLength = uniqueArr.length;
-                for (var j = 0; j < uniqueArrLength; j++) {
-                    var uniqueCard = uniqueArr[j];
+                const uniqueArrLength = uniqueArr.length;
+                for (let j = 0; j < uniqueArrLength; j++) {
+                    const uniqueCard = uniqueArr[j];
                     if (isCardNotAction(tavernCard) && isCardNotAction(uniqueCard)
                         && tavernCard.suit === uniqueCard.suit
                         && CompareCards(tavernCard, uniqueCard) === 0) {
@@ -99,69 +96,62 @@ export var enumerate = function (G, ctx) {
                 }
                 if (flag) {
                     uniqueArr.push(tavernCard);
-                    moves.push({ move: "ClickCardMove", args: [i] });
+                    moves.push({ move: `ClickCardMove`, args: [i] });
                 }
                 flag = true;
-            };
-            for (var i = 0; i < tavern_1.length; i++) {
-                _loop_1(i);
             }
         }
         else {
-            for (var j = 0; j < G.campNum; j++) {
+            for (let j = 0; j < G.campNum; j++) {
                 if (G.camp[j] !== null) {
                     botMoveArguments.push([j]);
                 }
             }
             moves.push({
-                move: "ClickCampCardMove",
-                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+                move: `ClickCampCardMove`,
+                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
     }
-    if (enableAdvancedBot && ctx.phase === "placeCoins") {
+    if (enableAdvancedBot && ctx.phase === `placeCoins`) {
         moves = [];
-        var hasLowestPriority = HasLowestPriority(G, Number(ctx.currentPlayer));
-        var resultsForCoins = CheckHeuristicsForCoinsPlacement(G, ctx);
+        const hasLowestPriority = HasLowestPriority(G, Number(ctx.currentPlayer));
+        let resultsForCoins = CheckHeuristicsForCoinsPlacement(G, ctx);
         if (hasLowestPriority) {
-            resultsForCoins = resultsForCoins.map(function (num, index) {
-                return index === 0 ? num - 20 : num;
-            });
+            resultsForCoins = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
         }
-        var minResultForCoins = Math.min.apply(Math, resultsForCoins), maxResultForCoins = Math.max.apply(Math, resultsForCoins), tradingProfit = G.decks[G.decks.length - 1].length > 9 ? 1 : 0;
-        var _d = [-1, -1], positionForMinCoin = _d[0], positionForMaxCoin = _d[1];
+        const minResultForCoins = Math.min(...resultsForCoins), maxResultForCoins = Math.max(...resultsForCoins), tradingProfit = G.decks[G.decks.length - 1].length > 9 ? 1 : 0;
+        let [positionForMinCoin, positionForMaxCoin] = [-1, -1];
         if (minResultForCoins <= 0) {
             positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
         }
         if (maxResultForCoins >= 0) {
             positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
         }
-        var allCoinsOrder = G.botData.allCoinsOrder, handCoins_1 = G.publicPlayers[Number(ctx.currentPlayer)].handCoins;
-        var _loop_2 = function (i) {
-            var hasTrading = allCoinsOrder[i].some(function (coinId) { var _a; return Boolean((_a = handCoins_1[coinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading); });
+        const allCoinsOrder = G.botData.allCoinsOrder, handCoins = G.publicPlayers[Number(ctx.currentPlayer)].handCoins;
+        for (let i = 0; i < allCoinsOrder.length; i++) {
+            const hasTrading = allCoinsOrder[i].some((coinId) => { var _a; return Boolean((_a = handCoins[coinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading); });
             if (tradingProfit < 0) {
                 if (hasTrading) {
-                    return "continue";
+                    continue;
                 }
-                moves.push({ move: "BotsPlaceAllCoinsMove", args: [allCoinsOrder[i]] });
+                moves.push({ move: `BotsPlaceAllCoinsMove`, args: [allCoinsOrder[i]] });
             }
             else if (tradingProfit > 0) {
                 if (!hasTrading) {
-                    return "continue";
+                    continue;
                 }
-                var hasPositionForMaxCoin = positionForMaxCoin !== -1, hasPositionForMinCoin = positionForMinCoin !== -1, maxCoin_1 = handCoins_1[allCoinsOrder[i][positionForMaxCoin]], minCoin_1 = handCoins_1[allCoinsOrder[i][positionForMinCoin]];
-                if (maxCoin_1 && minCoin_1) {
-                    var isTopCoinsOnPosition = false, isMinCoinsOnPosition = false;
+                const hasPositionForMaxCoin = positionForMaxCoin !== -1, hasPositionForMinCoin = positionForMinCoin !== -1, maxCoin = handCoins[allCoinsOrder[i][positionForMaxCoin]], minCoin = handCoins[allCoinsOrder[i][positionForMinCoin]];
+                if (maxCoin && minCoin) {
+                    let isTopCoinsOnPosition = false, isMinCoinsOnPosition = false;
                     if (hasPositionForMaxCoin) {
                         isTopCoinsOnPosition =
-                            allCoinsOrder[i].filter(function (coinIndex) {
-                                return handCoins_1[coinIndex] !== null
-                                    && handCoins_1[coinIndex].value > maxCoin_1.value;
-                            }).length <= 1;
+                            allCoinsOrder[i].filter((coinIndex) => handCoins[coinIndex] !== null
+                                && handCoins[coinIndex].value > maxCoin.value).length <= 1;
                     }
                     if (hasPositionForMinCoin) {
-                        isMinCoinsOnPosition = handCoins_1.filter(function (coin) { return coin !== null
-                            && coin.value < minCoin_1.value; }).length <= 1;
+                        isMinCoinsOnPosition = handCoins.filter((coin) => coin !== null
+                            && coin.value < minCoin.value).length <= 1;
                     }
                     if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
                         moves.push({ move: "BotsPlaceAllCoinsMove", args: [G.botData.allCoinsOrder[i]] });
@@ -172,119 +162,116 @@ export var enumerate = function (G, ctx) {
             else {
                 moves.push({ move: "BotsPlaceAllCoinsMove", args: [allCoinsOrder[i]] });
             }
-        };
-        for (var i = 0; i < allCoinsOrder.length; i++) {
-            _loop_2(i);
         }
         //console.log(moves);
     }
     // todo Fix it, now just for bot can do RANDOM move
-    if (activeStageOfCurrentPlayer === "placeCards" || ctx.phase === "endTier") {
+    if (activeStageOfCurrentPlayer === `placeCards` || ctx.phase === `endTier`) {
         PlaceCardsProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "PlaceCardMove",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+            move: `PlaceCardMove`,
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
-    if (ctx.phase === "getMjollnirProfit") {
-        var totalSuitsRanks = [];
+    if (ctx.phase === `getMjollnirProfit`) {
+        const totalSuitsRanks = [];
         GetMjollnirProfitProfit(G, ctx, totalSuitsRanks);
-        botMoveArguments.push([totalSuitsRanks.indexOf(Math.max.apply(Math, totalSuitsRanks))]);
+        botMoveArguments.push([totalSuitsRanks.indexOf(Math.max(...totalSuitsRanks))]);
         moves.push({
-            move: "GetMjollnirProfitMove",
-            args: __spreadArray([], botMoveArguments[0], true),
+            move: `GetMjollnirProfitMove`,
+            args: [...botMoveArguments[0]],
         });
     }
-    if (ctx.phase === "brisingamensEndGame") {
+    if (ctx.phase === `brisingamensEndGame`) {
         DiscardAnyCardFromPlayerBoardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "DiscardCardFromPlayerBoardMove",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+            move: `DiscardCardFromPlayerBoardMove`,
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
-    if (ctx.phase === "enlistmentMercenaries") {
-        if (G.drawProfit === "startOrPassEnlistmentMercenaries") {
+    if (ctx.phase === `enlistmentMercenaries`) {
+        if (G.drawProfit === `startOrPassEnlistmentMercenaries`) {
             StartEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             if (Math.floor(Math.random() * botMoveArguments.length) === 0) {
-                moves.push({ move: "StartEnlistmentMercenariesMove", args: [] });
+                moves.push({ move: `StartEnlistmentMercenariesMove`, args: [] });
             }
             else {
-                moves.push({ move: "PassEnlistmentMercenariesMove", args: [] });
+                moves.push({ move: `PassEnlistmentMercenariesMove`, args: [] });
             }
         }
-        else if (G.drawProfit === "enlistmentMercenaries") {
+        else if (G.drawProfit === `enlistmentMercenaries`) {
             GetEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: "GetEnlistmentMercenariesMove",
-                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+                move: `GetEnlistmentMercenariesMove`,
+                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
-        else if (G.drawProfit === "placeEnlistmentMercenaries") {
+        else if (G.drawProfit === `placeEnlistmentMercenaries`) {
             PlaceEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: "PlaceEnlistmentMercenariesMove",
-                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+                move: `PlaceEnlistmentMercenariesMove`,
+                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
     }
-    if (ctx.phase === "placeCoinsUline") {
-        for (var j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
+    if (ctx.phase === `placeCoinsUline`) {
+        for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
             if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
                 botMoveArguments.push([j]);
             }
         }
         moves.push({
-            move: "ClickHandCoinMove",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+            move: `ClickHandCoinMove`,
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
-        moves.push({ move: "ClickBoardCoinMove", args: [G.currentTavern + 1] });
+        moves.push({ move: `ClickBoardCoinMove`, args: [G.currentTavern + 1] });
     }
-    if (activeStageOfCurrentPlayer === "placeTradingCoinsUline") {
-        for (var j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
+    if (activeStageOfCurrentPlayer === `placeTradingCoinsUline`) {
+        for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
             if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
                 botMoveArguments.push([j]);
             }
         }
         moves.push({
-            move: "ClickHandCoinMove",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+            move: `ClickHandCoinMove`,
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
         if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
-            moves.push({ move: "ClickBoardCoinMove", args: [G.tavernsNum + 1] });
+            moves.push({ move: `ClickBoardCoinMove`, args: [G.tavernsNum + 1] });
         }
         else {
-            moves.push({ move: "ClickBoardCoinMove", args: [G.tavernsNum] });
+            moves.push({ move: `ClickBoardCoinMove`, args: [G.tavernsNum] });
         }
     }
-    if (activeStageOfCurrentPlayer === "addCoinToPouch") {
+    if (activeStageOfCurrentPlayer === `addCoinToPouch`) {
         AddCoinToPouchProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "AddCoinToPouchMove",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+            move: `AddCoinToPouchMove`,
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
-    if (activeStageOfCurrentPlayer === "upgradeCoinVidofnirVedrfolnir") {
+    if (activeStageOfCurrentPlayer === `upgradeCoinVidofnirVedrfolnir`) {
         UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "UpgradeCoinVidofnirVedrfolnirMove",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+            move: `UpgradeCoinVidofnirVedrfolnirMove`,
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
     // TODO FIX It's not activeStageOfCurrentPlayer it' for Other players!!!
     // if (activeStageOfCurrentPlayer === "discardSuitCard") {
-    if (ctx.phase === "pickCards" && ctx.activePlayers !== null && activeStageOfCurrentPlayer === "default") {
+    if (ctx.phase === `pickCards` && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default`) {
         // TODO Fix this (only for quick bot actions)
         // todo Bot can't do async turns...?
-        var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
+        const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
         if (config !== undefined && config.suit !== undefined) {
-            var suitId = GetSuitIndexByName(config.suit);
-            var _loop_3 = function (p) {
+            const suitId = GetSuitIndexByName(config.suit);
+            for (let p = 0; p < G.publicPlayers.length; p++) {
                 if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
-                    for (var i = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
-                        for (var j = 0; j < 1; j++) {
+                    for (let i = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
+                        for (let j = 0; j < 1; j++) {
                             if (G.publicPlayers[p].cards[suitId][i] !== undefined) {
-                                if (G.publicPlayers[p].cards[suitId][i].type !== "\u0433\u0435\u0440\u043E\u0439") {
-                                    var points = G.publicPlayers[p].cards[suitId][i].points;
+                                if (G.publicPlayers[p].cards[suitId][i].type !== `герой`) {
+                                    const points = G.publicPlayers[p].cards[suitId][i].points;
                                     if (points !== null) {
                                         botMoveArguments.push([points]);
                                     }
@@ -292,56 +279,51 @@ export var enumerate = function (G, ctx) {
                             }
                         }
                     }
-                    var minValue_1 = Math.min.apply(Math, botMoveArguments);
-                    var minCardIndex = G.publicPlayers[p].cards[suitId].findIndex(function (card) {
-                        return card.type !== "герой" && card.points === minValue_1;
-                    });
+                    const minValue = Math.min(...botMoveArguments);
+                    const minCardIndex = G.publicPlayers[p].cards[suitId].findIndex((card) => card.type !== "герой" && card.points === minValue);
                     if (minCardIndex !== -1) {
                         moves.push({
-                            move: "DiscardSuitCardFromPlayerBoardMove",
+                            move: `DiscardSuitCardFromPlayerBoardMove`,
                             args: [suitId, p, minCardIndex],
                         });
                     }
                 }
-            };
-            for (var p = 0; p < G.publicPlayers.length; p++) {
-                _loop_3(p);
             }
         }
     }
-    if (activeStageOfCurrentPlayer === "discardCardFromBoard") {
+    if (activeStageOfCurrentPlayer === `discardCardFromBoard`) {
         DiscardCardFromBoardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "DiscardCardMove",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+            move: `DiscardCardMove`,
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
-    if (activeStageOfCurrentPlayer === "pickDiscardCard") {
+    if (activeStageOfCurrentPlayer === `pickDiscardCard`) {
         PickDiscardCardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "PickDiscardCardMove",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+            move: `PickDiscardCardMove`,
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
     if (ctx.numPlayers === 2) {
-        if (activeStageOfCurrentPlayer === "discardCard") {
+        if (activeStageOfCurrentPlayer === `discardCard`) {
             DiscardCardProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: "DiscardCard2PlayersMove",
-                args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+                move: `DiscardCard2PlayersMove`,
+                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
     }
-    if (activeStageOfCurrentPlayer === "pickCampCardHolda") {
+    if (activeStageOfCurrentPlayer === `pickCampCardHolda`) {
         PickCampCardHoldaProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: "ClickCampCardHoldaMove",
-            args: __spreadArray([], botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)], true),
+            move: `ClickCampCardHoldaMove`,
+            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
     if (moves.length === 0 && ctx.phase !== null) {
         // todo Fix for bot no moves if have artefact with not pick new hero and get artifact with get new hero (he can pick hero by it's action)
-        console.log("ALERT: bot has ".concat(moves.length, " moves. Phase: ").concat(ctx.phase));
+        console.log(`ALERT: bot has ${moves.length} moves. Phase: ${ctx.phase}`);
     }
     return moves;
 };
@@ -354,9 +336,9 @@ export var enumerate = function (G, ctx) {
  *
  * @returns
  */
-export var objectives = function () { return ({
+export const objectives = () => ({
     isEarlyGame: {
-        checker: function (G) {
+        checker: (G) => {
             return G.decks[0].length > 0;
         },
         weight: -100.0,
@@ -435,21 +417,21 @@ export var objectives = function () { return ({
         weight: 0.1,
     },*/
     isFirst: {
-        checker: function (G, ctx) {
-            if (ctx.phase !== "pickCards") {
+        checker: (G, ctx) => {
+            if (ctx.phase !== `pickCards`) {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length)) {
                 return false;
             }
-            if (G.taverns[0].some(function (card) { return card === null; })) {
+            if (G.taverns[0].some((card) => card === null)) {
                 return false;
             }
-            var totalScore = [];
-            for (var i = 0; i < ctx.numPlayers; i++) {
+            const totalScore = [];
+            for (let i = 0; i < ctx.numPlayers; i++) {
                 totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
-            var _a = totalScore.sort(function (a, b) { return b - a; }).slice(0, 2), top1 = _a[0], top2 = _a[1];
+            const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
             if (totalScore[Number(ctx.currentPlayer)] === top1) {
                 return totalScore[Number(ctx.currentPlayer)] >= Math.floor(1.05 * top2);
             }
@@ -458,21 +440,21 @@ export var objectives = function () { return ({
         weight: 0.5,
     },
     isStronger: {
-        checker: function (G, ctx) {
-            if (ctx.phase !== "pickCards") {
+        checker: (G, ctx) => {
+            if (ctx.phase !== `pickCards`) {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length)) {
                 return false;
             }
-            if (G.taverns[0].some(function (card) { return card === null; })) {
+            if (G.taverns[0].some((card) => card === null)) {
                 return false;
             }
-            var totalScore = [];
-            for (var i = 0; i < ctx.numPlayers; i++) {
+            const totalScore = [];
+            for (let i = 0; i < ctx.numPlayers; i++) {
                 totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
-            var _a = totalScore.sort(function (a, b) { return b - a; }).slice(0, 2), top1 = _a[0], top2 = _a[1];
+            const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
             if (totalScore[Number(ctx.currentPlayer)] === top1) {
                 return totalScore[Number(ctx.currentPlayer)] >= Math.floor(1.10 * top2);
             }
@@ -480,7 +462,7 @@ export var objectives = function () { return ({
         },
         weight: 0.5,
     },
-}); };
+});
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -493,50 +475,41 @@ export var objectives = function () { return ({
  * @param ctx
  * @returns
  */
-export var iterations = function (G, ctx) {
-    var maxIter = G.botData.maxIter;
-    if (ctx.phase === "pickCards") {
-        var currentTavern = G.taverns[G.currentTavern];
-        if (currentTavern.filter(function (card) { return card !== null; }).length === 1) {
+export const iterations = (G, ctx) => {
+    const maxIter = G.botData.maxIter;
+    if (ctx.phase === `pickCards`) {
+        const currentTavern = G.taverns[G.currentTavern];
+        if (currentTavern.filter((card) => card !== null).length === 1) {
             return 1;
         }
-        var cardIndex = currentTavern.findIndex(function (card) { return card !== null; }), tavernCard_1 = currentTavern[cardIndex];
-        if (currentTavern.every(function (card) {
-            return card === null || (isCardNotAction(card) && tavernCard_1 !== null && isCardNotAction(tavernCard_1)
-                && card.suit === tavernCard_1.suit && CompareCards(card, tavernCard_1) === 0);
-        })) {
+        const cardIndex = currentTavern.findIndex((card) => card !== null), tavernCard = currentTavern[cardIndex];
+        if (currentTavern.every((card) => card === null || (isCardNotAction(card) && tavernCard !== null && isCardNotAction(tavernCard)
+            && card.suit === tavernCard.suit && CompareCards(card, tavernCard) === 0))) {
             return 1;
         }
-        var efficientMovesCount = 0;
-        var _loop_4 = function (i) {
-            var tavernCard_2 = currentTavern[i];
-            if (tavernCard_2 === null) {
-                return "continue";
+        let efficientMovesCount = 0;
+        for (let i = 0; i < currentTavern.length; i++) {
+            const tavernCard = currentTavern[i];
+            if (tavernCard === null) {
+                continue;
             }
-            if (currentTavern.some(function (card) {
-                return CompareCards(tavernCard_2, card) === -1;
-            })) {
-                return "continue";
+            if (currentTavern.some((card) => CompareCards(tavernCard, card) === -1)) {
+                continue;
             }
             if (G.decks[0].length > 18) {
-                if (tavernCard_2 && isCardNotAction(tavernCard_2)) {
-                    var curSuit_1 = GetSuitIndexByName(tavernCard_2.suit);
-                    if (CompareCards(tavernCard_2, G.averageCards[curSuit_1]) === -1
-                        && currentTavern.some(function (card) { return card !== null
-                            && CompareCards(card, G.averageCards[curSuit_1]) > -1; })) {
-                        return "continue";
+                if (tavernCard && isCardNotAction(tavernCard)) {
+                    const curSuit = GetSuitIndexByName(tavernCard.suit);
+                    if (CompareCards(tavernCard, G.averageCards[curSuit]) === -1
+                        && currentTavern.some((card) => card !== null
+                            && CompareCards(card, G.averageCards[curSuit]) > -1)) {
+                        continue;
                     }
                 }
             }
             efficientMovesCount++;
             if (efficientMovesCount > 1) {
-                return { value: maxIter };
+                return maxIter;
             }
-        };
-        for (var i = 0; i < currentTavern.length; i++) {
-            var state_1 = _loop_4(i);
-            if (typeof state_1 === "object")
-                return state_1.value;
         }
         if (efficientMovesCount === 1) {
             return 1;
@@ -556,7 +529,7 @@ export var iterations = function (G, ctx) {
  * @param ctx
  * @returns
  */
-export var playoutDepth = function (G, ctx) {
+export const playoutDepth = (G, ctx) => {
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
         return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 20;
     }

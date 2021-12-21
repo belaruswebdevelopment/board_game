@@ -1,6 +1,7 @@
 import { DiscardCardFromTavern } from "./Card";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
+import { AddCampCardToCardsAction } from "./actions/CampActions";
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>
@@ -11,9 +12,7 @@ import { suitsConfig } from "./data/SuitData";
  * @param card Карта.
  * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
  */
-export var isArtefactCard = function (card) {
-    return card.suit !== undefined;
-};
+export const isArtefactCard = (card) => card.suit !== undefined;
 /**
  * <h3>Создание карты артефакта для кэмпа.</h3>
  * <p>Применения:</p>
@@ -33,21 +32,18 @@ export var isArtefactCard = function (card) {
  * @param stack Действия.
  * @returns Карта кэмпа артефакт.
  */
-export var CreateArtefactCampCard = function (_a) {
-    var _b = _a === void 0 ? {} : _a, _c = _b.type, type = _c === void 0 ? "артефакт" : _c, tier = _b.tier, path = _b.path, name = _b.name, description = _b.description, game = _b.game, suit = _b.suit, rank = _b.rank, points = _b.points, stack = _b.stack;
-    return ({
-        type: type,
-        tier: tier,
-        path: path,
-        name: name,
-        description: description,
-        game: game,
-        suit: suit,
-        rank: rank,
-        points: points,
-        stack: stack,
-    });
-};
+export const CreateArtefactCampCard = ({ type = "артефакт", tier, path, name, description, game, suit, rank, points, stack, } = {}) => ({
+    type,
+    tier,
+    path,
+    name,
+    description,
+    game,
+    suit,
+    rank,
+    points,
+    stack,
+});
 /**
  * <h3>Создание карты наёмника для кэмпа.</h3>
  * <p>Применения:</p>
@@ -63,17 +59,14 @@ export var CreateArtefactCampCard = function (_a) {
  * @param stack Действия.
  * @returns Карта кэмпа наёмник.
  */
-export var CreateMercenaryCampCard = function (_a) {
-    var _b = _a === void 0 ? {} : _a, _c = _b.type, type = _c === void 0 ? "\u043D\u0430\u0451\u043C\u043D\u0438\u043A" : _c, tier = _b.tier, path = _b.path, name = _b.name, _d = _b.game, game = _d === void 0 ? "thingvellir" : _d, stack = _b.stack;
-    return ({
-        type: type,
-        tier: tier,
-        path: path,
-        name: name,
-        game: game,
-        stack: stack,
-    });
-};
+export const CreateMercenaryCampCard = ({ type = `наёмник`, tier, path, name, game = `thingvellir`, stack } = {}) => ({
+    type,
+    tier,
+    path,
+    name,
+    game,
+    stack,
+});
 /**
  * <h3>Создаёт все карты кэмпа из конфига.</h3>
  * <p>Применения:</p>
@@ -86,13 +79,13 @@ export var CreateMercenaryCampCard = function (_a) {
  * @param mercenariesConfig Файл конфига наёмников.
  * @returns Все карты кэмпа.
  */
-export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
-    var campCards = [];
-    for (var campArtefactCard in artefactConfig) {
+export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
+    const campCards = [];
+    for (const campArtefactCard in artefactConfig) {
         if (artefactConfig.hasOwnProperty(campArtefactCard)) {
             if (artefactConfig[campArtefactCard].tier === tier) {
                 campCards.push(CreateArtefactCampCard({
-                    tier: tier,
+                    tier,
                     path: artefactConfig[campArtefactCard].name,
                     name: artefactConfig[campArtefactCard].name,
                     description: artefactConfig[campArtefactCard].description,
@@ -105,34 +98,34 @@ export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
             }
         }
     }
-    for (var i = 0; i < mercenariesConfig[tier].length; i++) {
-        var name_1 = "", path = "";
-        for (var campMercenarySuit in mercenariesConfig[tier][i]) {
+    for (let i = 0; i < mercenariesConfig[tier].length; i++) {
+        let name = ``, path = ``;
+        for (const campMercenarySuit in mercenariesConfig[tier][i]) {
             if (mercenariesConfig[tier][i].hasOwnProperty(campMercenarySuit)) {
-                path += campMercenarySuit + " ";
-                name_1 += "(\u0444\u0440\u0430\u043A\u0446\u0438\u044F: ".concat(suitsConfig[campMercenarySuit].suitName, ", ");
-                for (var campMercenaryCardProperty in mercenariesConfig[tier][i][campMercenarySuit]) {
+                path += campMercenarySuit + ` `;
+                name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
+                for (const campMercenaryCardProperty in mercenariesConfig[tier][i][campMercenarySuit]) {
                     if (mercenariesConfig[tier][i][campMercenarySuit].hasOwnProperty(campMercenaryCardProperty)) {
-                        if (campMercenaryCardProperty === "rank") {
-                            name_1 += "\u0448\u0435\u0432\u0440\u043E\u043D\u043E\u0432: ".concat(mercenariesConfig[tier][i][campMercenarySuit].rank, ", ");
+                        if (campMercenaryCardProperty === `rank`) {
+                            name += `шевронов: ${mercenariesConfig[tier][i][campMercenarySuit].rank}, `;
                         }
-                        if (campMercenaryCardProperty === "points") {
+                        if (campMercenaryCardProperty === `points`) {
                             path += mercenariesConfig[tier][i][campMercenarySuit].points ?
-                                mercenariesConfig[tier][i][campMercenarySuit].points + " " : "";
-                            name_1 += "\u043E\u0447\u043A\u043E\u0432: ".concat(mercenariesConfig[tier][i][campMercenarySuit].points ?
-                                mercenariesConfig[tier][i][campMercenarySuit].points + ") " : "\u043D\u0435\u0442) ");
+                                mercenariesConfig[tier][i][campMercenarySuit].points + ` ` : ``;
+                            name += `очков: ${mercenariesConfig[tier][i][campMercenarySuit].points ?
+                                mercenariesConfig[tier][i][campMercenarySuit].points + `) ` : `нет) `}`;
                         }
                     }
                 }
             }
         }
         campCards.push(CreateMercenaryCampCard({
-            tier: tier,
+            tier,
             path: path.trim(),
-            name: name_1.trim(),
+            name: name.trim(),
             stack: [
                 {
-                    action: "AddCampCardToCardsAction",
+                    action: AddCampCardToCardsAction.name,
                     variants: mercenariesConfig[tier][i],
                 },
             ],
@@ -149,12 +142,12 @@ export var BuildCampCards = function (tier, artefactConfig, mercenariesConfig) {
  *
  * @param G
  */
-export var DiscardCardIfCampCardPicked = function (G) {
+export const DiscardCardIfCampCardPicked = (G) => {
     if (G.campPicked) {
-        var discardCardIndex = G.taverns[G.currentTavern]
-            .findIndex(function (card) { return card !== null; });
+        const discardCardIndex = G.taverns[G.currentTavern]
+            .findIndex((card) => card !== null);
         if (discardCardIndex !== -1) {
-            var isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
+            const isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
             if (isCardDiscarded) {
                 G.campPicked = false;
             }
@@ -164,7 +157,7 @@ export var DiscardCardIfCampCardPicked = function (G) {
         }
         else {
             // todo Fix this error sometimes shown...
-            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043B\u0438\u0448\u043D\u044E\u044E \u043A\u0430\u0440\u0442\u0443 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \u043F\u043E\u0441\u043B\u0435 \u0432\u044B\u0431\u043E\u0440\u0430 \u043A\u0430\u0440\u0442\u044B \u043A\u044D\u043C\u043F\u0430 \u0432 \u043A\u043E\u043D\u0446\u0435 \u043F\u0438\u043A\u043E\u0432 \u0438\u0437 \u0442\u0430\u0432\u0435\u0440\u043D\u044B.");
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
         }
     }
 };
@@ -177,24 +170,24 @@ export var DiscardCardIfCampCardPicked = function (G) {
  *
  * @param G
  */
-export var RefillEmptyCampCards = function (G) {
-    var emptyCampCards = G.camp.map(function (card, index) {
+export const RefillEmptyCampCards = (G) => {
+    const emptyCampCards = G.camp.map((card, index) => {
         if (card === null) {
             return index;
         }
         return null;
     });
-    var isEmptyCampCards = emptyCampCards.length === 0;
+    const isEmptyCampCards = emptyCampCards.length === 0;
     // todo Add LogTypes.ERROR logging ?
-    var isEmptyCurrentTierCampDeck = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
+    let isEmptyCurrentTierCampDeck = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
-        emptyCampCards.forEach(function (cardIndex) {
+        emptyCampCards.forEach((cardIndex) => {
             isEmptyCurrentTierCampDeck = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
             if (cardIndex !== null && !isEmptyCurrentTierCampDeck) {
                 AddCardToCamp(G, cardIndex);
             }
         });
-        AddDataToLog(G, LogTypes.GAME, "\u041A\u044D\u043C\u043F \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438.");
+        AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами.`);
     }
 };
 /**
@@ -206,12 +199,12 @@ export var RefillEmptyCampCards = function (G) {
  *
  * @param G
  */
-export var RefillCamp = function (G) {
+export const RefillCamp = (G) => {
     AddRemainingCampCardsToDiscard(G);
-    for (var i = 0; i < G.campNum; i++) {
+    for (let i = 0; i < G.campNum; i++) {
         AddCardToCamp(G, i);
     }
-    AddDataToLog(G, LogTypes.GAME, "\u041A\u044D\u043C\u043F \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438 \u043D\u043E\u0432\u043E\u0439 \u044D\u043F\u043E\u0445\u0438.");
+    AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами новой эпохи.`);
 };
 /**
  * <h3>Перемещает все оставшиеся неиспользованные карты кэмпа в дискард.</h3>
@@ -222,11 +215,11 @@ export var RefillCamp = function (G) {
  *
  * @param G
  */
-var AddRemainingCampCardsToDiscard = function (G) {
+const AddRemainingCampCardsToDiscard = (G) => {
     // todo Add LogTypes.ERROR logging ?
-    for (var i = 0; i < G.camp.length; i++) {
+    for (let i = 0; i < G.camp.length; i++) {
         if (G.camp[i] !== null) {
-            var card = G.camp.splice(i, 1, null)[0];
+            const card = G.camp.splice(i, 1, null)[0];
             if (card !== null) {
                 G.discardCampCardsDeck.push(card);
             }
@@ -237,7 +230,7 @@ var AddRemainingCampCardsToDiscard = function (G) {
             G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]);
         G.campDecks[G.campDecks.length - G.tierToEnd - 1].length = 0;
     }
-    AddDataToLog(G, LogTypes.GAME, "\u041E\u0441\u0442\u0430\u0432\u0448\u0438\u0435\u0441\u044F \u043A\u0430\u0440\u0442\u044B \u043A\u044D\u043C\u043F\u0430 \u0441\u0431\u0440\u043E\u0448\u0435\u043D\u044B.");
+    AddDataToLog(G, LogTypes.GAME, `Оставшиеся карты кэмпа сброшены.`);
 };
 /**
  * <h3>Заполняет кэмп новой картой из карт кэмп деки текущей эпохи.</h3>
@@ -250,7 +243,7 @@ var AddRemainingCampCardsToDiscard = function (G) {
  * @param G
  * @param cardIndex Индекс карты.
  */
-var AddCardToCamp = function (G, cardIndex) {
-    var newCampCard = G.campDecks[G.campDecks.length - G.tierToEnd].splice(0, 1)[0];
+const AddCardToCamp = (G, cardIndex) => {
+    const newCampCard = G.campDecks[G.campDecks.length - G.tierToEnd].splice(0, 1)[0];
     G.camp.splice(cardIndex, 1, newCampCard);
 };

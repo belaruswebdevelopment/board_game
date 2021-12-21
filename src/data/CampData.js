@@ -1,5 +1,7 @@
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
+import { AddArtefactBuffToPlayerAction, AddCampCardToCardsAction, CheckPickDiscardCardCampAction, DiscardTradingCoinAction, DrawProfitCampAction, PickDiscardCardCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
+import { PickHeroAction } from "../actions/HeroActions";
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -7,29 +9,29 @@ import { SuitNames } from "./SuitData";
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Fafnir_Baleygr = {
-    name: "Fafnir Baleygr",
-    description: "After taking possession of it and throughout the game, you can go to the Camp on your turn instead of taking a card from the tavern being resolved if the Elvaland that won the bid did not go.",
-    game: "thingvellir",
+const Fafnir_Baleygr = {
+    name: `Fafnir Baleygr`,
+    description: `After taking possession of it and throughout the game, you can go to the Camp on your turn instead of taking a card from the tavern being resolved if the Elvaland that won the bid did not go.`,
+    game: `thingvellir`,
     tier: 0,
     suit: null,
     rank: null,
     points: null,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: "AddBuffToPlayerAction",
+            action: AddArtefactBuffToPlayerAction.name,
             config: {
                 buff: {
-                    name: "goCamp",
+                    name: `goCamp`,
                     value: true,
                 },
             },
         },
     ],
-    scoringRule: function () { return 0; },
+    scoringRule: () => 0,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -38,23 +40,21 @@ var Fafnir_Baleygr = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Draupnir = {
-    name: "Draupnir",
-    description: "At the end of Age 2, when counting points, add to your Final Bravery Value: 6 points per coin of value 15 or more owned.",
-    game: "thingvellir",
+const Draupnir = {
+    name: `Draupnir`,
+    description: `At the end of Age 2, when counting points, add to your Final Bravery Value: 6 points per coin of value 15 or more owned.`,
+    game: `thingvellir`,
     tier: 0,
     suit: null,
     rank: null,
     points: null,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
     ],
-    scoringRule: function (player) { return player !== undefined ? player.boardCoins
-        .filter(function (coin) {
-        return Boolean(coin !== null && coin.value >= 15);
-    }).length * 6 : 0; },
+    scoringRule: (player) => player !== undefined ? player.boardCoins
+        .filter((coin) => Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -63,20 +63,20 @@ var Draupnir = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Vegvisir = {
-    name: "Vegvisir",
-    description: "Immediately place this Artifact in the Explorer column of your army. Its pose can trigger the recruitment of a Hero card if it completes a rank line. This artifact counts as an Explorer rank and adds 13 points to your Explorer Bravery Rating.",
-    game: "thingvellir",
+const Vegvisir = {
+    name: `Vegvisir`,
+    description: `Immediately place this Artifact in the Explorer column of your army. Its pose can trigger the recruitment of a Hero card if it completes a rank line. This artifact counts as an Explorer rank and adds 13 points to your Explorer Bravery Rating.`,
+    game: `thingvellir`,
     tier: 0,
     suit: SuitNames.EXPLORER,
     rank: 1,
     points: 13,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
     ],
-    scoringRule: function () { return 0; },
+    scoringRule: () => 0,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -85,20 +85,20 @@ var Vegvisir = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Svalinn = {
-    name: "Svalinn",
-    description: "At the end of Age 2, when counting points, add to your Final Bravery Value: 5 points per Hero card in your possession.",
-    game: "thingvellir",
+const Svalinn = {
+    name: `Svalinn`,
+    description: `At the end of Age 2, when counting points, add to your Final Bravery Value: 5 points per Hero card in your possession.`,
+    game: `thingvellir`,
     tier: 0,
     suit: null,
     rank: null,
     points: null,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
     ],
-    scoringRule: function (player) { return player !== undefined ? player.heroes.length * 5 : 0; },
+    scoringRule: (player) => player !== undefined ? player.heroes.length * 5 : 0,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -107,29 +107,29 @@ var Svalinn = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Megingjord = {
-    name: "Megingjord",
-    description: "During the rest of the game, you can no longer recruit a Hero card by making rank lines. So making rank lines has no effect for you. At the end of Age 2, when counting points, add 28 points to your Final Bravery Value.",
-    game: "thingvellir",
+const Megingjord = {
+    name: `Megingjord`,
+    description: `During the rest of the game, you can no longer recruit a Hero card by making rank lines. So making rank lines has no effect for you. At the end of Age 2, when counting points, add 28 points to your Final Bravery Value.`,
+    game: `thingvellir`,
     tier: 0,
     suit: null,
     rank: null,
     points: null,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: "AddBuffToPlayerAction",
+            action: AddArtefactBuffToPlayerAction.name,
             config: {
                 buff: {
-                    name: "noHero",
+                    name: `noHero`,
                     value: true,
                 },
             },
         },
     ],
-    scoringRule: function () { return 28; },
+    scoringRule: () => 28,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -138,23 +138,23 @@ var Megingjord = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Vidofnir_Vedrfolnir = {
-    name: "Vidofnir Vedrfolnir",
-    description: "Immediately reveal the coins from your pouch and transform one of these coins with a +2 and the other with a +3. If one of the coins on the trade is the trading coin (the 0 or the Special Hunter 3) then apply a +5 transform to the other coin. Perform coin transformations in any order you want.",
-    game: "thingvellir",
+const Vidofnir_Vedrfolnir = {
+    name: `Vidofnir Vedrfolnir`,
+    description: `Immediately reveal the coins from your pouch and transform one of these coins with a +2 and the other with a +3. If one of the coins on the trade is the trading coin (the 0 or the Special Hunter 3) then apply a +5 transform to the other coin. Perform coin transformations in any order you want.`,
+    game: `thingvellir`,
     tier: 0,
     suit: null,
     rank: null,
     points: null,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: "StartVidofnirVedrfolnirAction",
+            action: StartVidofnirVedrfolnirAction.name,
         },
     ],
-    scoringRule: function () { return 0; },
+    scoringRule: () => 0,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -163,41 +163,44 @@ var Vidofnir_Vedrfolnir = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Brisingamens = {
-    name: "Brisingamens",
-    description: "Immediately look at all cards in the discard pile and choose two (Royal Offering cards and / or Dwarf cards). In the order of your choice: - perform coin transformation if you have chosen Royal Offering cards. - place the Dwarf cards in your army. This can result in a Hero card being recruited. At the end of Age 2, before counting points, discard a Dwarf card of your choice from your army. This card can be taken anywhere, in any column, but it cannot be a Hero card.",
-    game: "thingvellir",
+const Brisingamens = {
+    name: `Brisingamens`,
+    description: `Immediately look at all cards in the discard pile and choose two (Royal Offering cards and / or Dwarf cards). In the order of your choice: - perform coin transformation if you have chosen Royal Offering cards. - place the Dwarf cards in your army. This can result in a Hero card being recruited. At the end of Age 2, before counting points, discard a Dwarf card of your choice from your army. This card can be taken anywhere, in any column, but it cannot be a Hero card.`,
+    game: `thingvellir`,
     tier: 1,
     suit: null,
     rank: null,
     points: null,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: "AddBuffToPlayerAction",
+            action: AddArtefactBuffToPlayerAction.name,
             config: {
                 buff: {
-                    name: "discardCardEndGame",
+                    name: `discardCardEndGame`,
                     value: true,
                 },
             },
         },
         {
-            action: "DrawProfitAction",
+            action: CheckPickDiscardCardCampAction.name,
+        },
+        {
+            action: DrawProfitCampAction.name,
             config: {
-                stageName: "pickDiscardCard",
-                name: "BrisingamensAction",
+                stageName: `pickDiscardCard`,
+                name: `BrisingamensAction`,
                 number: 2,
-                drawName: "Brisingamens",
+                drawName: `Brisingamens`,
             },
         },
         {
-            action: "PickDiscardCardAction",
+            action: PickDiscardCardCampAction.name,
         },
     ],
-    scoringRule: function () { return 0; },
+    scoringRule: () => 0,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -206,30 +209,30 @@ var Brisingamens = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Mjollnir = {
-    name: "Mjollnir",
-    description: "At the end of Age 2, when counting points, add to your Final Bravery Value: 2 points per rank in the class of your choice.",
-    game: "thingvellir",
+const Mjollnir = {
+    name: `Mjollnir`,
+    description: `At the end of Age 2, when counting points, add to your Final Bravery Value: 2 points per rank in the class of your choice.`,
+    game: `thingvellir`,
     tier: 1,
     suit: null,
     rank: null,
     points: null,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: "AddBuffToPlayerAction",
+            action: AddArtefactBuffToPlayerAction.name,
             config: {
                 buff: {
-                    name: "getMjollnirProfit",
+                    name: `getMjollnirProfit`,
                     value: true,
                 },
             },
         },
     ],
-    scoringRule: function (player, suitId) { return player !== undefined && suitId !== undefined ?
-        player.cards[suitId].reduce(TotalRank, 0) * 2 : 0; },
+    scoringRule: (player, suitId) => player !== undefined && suitId !== undefined ?
+        player.cards[suitId].reduce(TotalRank, 0) * 2 : 0,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -238,26 +241,26 @@ var Mjollnir = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Hofud = {
-    name: "Hofud",
-    description: "Immediately, each other Elvaland choose and discards a Warrior card from their army. The discarded card can be any card in the Warrior column except a Hero card.",
-    game: "thingvellir",
+const Hofud = {
+    name: `Hofud`,
+    description: `Immediately, each other Elvaland choose and discards a Warrior card from their army. The discarded card can be any card in the Warrior column except a Hero card.`,
+    game: `thingvellir`,
     tier: 1,
     suit: null,
     rank: null,
     points: null,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: "StartDiscardSuitCardAction",
+            action: StartDiscardSuitCardAction.name,
             config: {
                 suit: SuitNames.WARRIOR,
             },
         },
     ],
-    scoringRule: function () { return 0; },
+    scoringRule: () => 0,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -266,23 +269,21 @@ var Hofud = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Hrafnsmerki = {
-    name: "Hrafnsmerki",
-    description: "At the end of Age 2, when counting points, add to your Final Bravery Value: 5 points per Mercenary card in your possession.",
-    game: "thingvellir",
+const Hrafnsmerki = {
+    name: `Hrafnsmerki`,
+    description: `At the end of Age 2, when counting points, add to your Final Bravery Value: 5 points per Mercenary card in your possession.`,
+    game: `thingvellir`,
     tier: 1,
     suit: null,
     rank: null,
     points: null,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
     ],
-    scoringRule: function (player) { return player !== undefined ?
-        player.cards.flat().filter(function (card) {
-            return card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A";
-        }).length * 5 : 0; },
+    scoringRule: (player) => player !== undefined ?
+        player.cards.flat().filter((card) => card.type === `наёмник`).length * 5 : 0,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -291,23 +292,23 @@ var Hrafnsmerki = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Jarnglofi = {
-    name: "Jarnglofi",
-    description: "Immediately discard your trading coin (0 or Special Hunter 3). Warning! If this coin was placed on an unresolved tavern, your bid not be present when it is resolved, and you will not take any cards. At the end of Age 2, when counting points, add 24 points to your Final Bravery Value.",
-    game: "thingvellir",
+const Jarnglofi = {
+    name: `Jarnglofi`,
+    description: `Immediately discard your trading coin (0 or Special Hunter 3). Warning! If this coin was placed on an unresolved tavern, your bid not be present when it is resolved, and you will not take any cards. At the end of Age 2, when counting points, add 24 points to your Final Bravery Value.`,
+    game: `thingvellir`,
     tier: 1,
     suit: null,
     rank: null,
     points: null,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: "DiscardTradingCoinAction",
+            action: DiscardTradingCoinAction.name,
         },
     ],
-    scoringRule: function () { return 24; },
+    scoringRule: () => 24,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -316,26 +317,26 @@ var Jarnglofi = {
  * <li>Используется при обращении к данным артефакта.</li>
  * </ol>
  */
-var Gjallarhorn = {
-    name: "Gjallarhorn",
-    description: "Immediately recruit a Hero card regardless of your rank line number. To recruit your next Hero card, you will need to validate the golden rule: to have a number of rank lines greater than your number of Hero cards owned.",
-    game: "thingvellir",
+const Gjallarhorn = {
+    name: `Gjallarhorn`,
+    description: `Immediately recruit a Hero card regardless of your rank line number. To recruit your next Hero card, you will need to validate the golden rule: to have a number of rank lines greater than your number of Hero cards owned.`,
+    game: `thingvellir`,
     tier: 1,
     suit: null,
     rank: null,
     points: null,
     stack: [
         {
-            action: "AddCampCardToCardsAction",
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: "PickHeroAction",
+            action: PickHeroAction.name,
             config: {
-                stageName: "pickHero",
+                stageName: `pickHero`,
             },
         },
     ],
-    scoringRule: function () { return 0; },
+    scoringRule: () => 0,
 };
 /**
  * <h3>Конфиг карт наёмников для кэмпа.</h3>
@@ -344,7 +345,7 @@ var Gjallarhorn = {
  * <li>Происходит при создании всех карт артефактов для кэмпа при инициализации игры.</li>
  * </ol>
  */
-export var mercenariesConfig = [
+export const mercenariesConfig = [
     [
         {
             warrior: {
@@ -501,17 +502,17 @@ export var mercenariesConfig = [
  * <li>Происходит при создании всех карт артефактов для кэмпа при инициализации игры.</li>
  * </ol>
  */
-export var artefactsConfig = {
-    Fafnir_Baleygr: Fafnir_Baleygr,
-    Draupnir: Draupnir,
-    Vegvisir: Vegvisir,
-    Svalinn: Svalinn,
-    Megingjord: Megingjord,
-    Vidofnir_Vedrfolnir: Vidofnir_Vedrfolnir,
-    Brisingamens: Brisingamens,
-    Mjollnir: Mjollnir,
-    Hofud: Hofud,
-    Hrafnsmerki: Hrafnsmerki,
-    Jarnglofi: Jarnglofi,
-    Gjallarhorn: Gjallarhorn
+export const artefactsConfig = {
+    Fafnir_Baleygr,
+    Draupnir,
+    Vegvisir,
+    Svalinn,
+    Megingjord,
+    Vidofnir_Vedrfolnir,
+    Brisingamens,
+    Mjollnir,
+    Hofud,
+    Hrafnsmerki,
+    Jarnglofi,
+    Gjallarhorn
 };

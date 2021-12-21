@@ -17,8 +17,8 @@ import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
  * @param coinId Id монеты.
  * @returns
  */
-export var ClickHandCoinMove = function (G, ctx, coinId) {
-    var isValidMove = IsValidMove({
+export const ClickHandCoinMove = (G, ctx, coinId) => {
+    const isValidMove = IsValidMove({
         obj: G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId],
         objId: coinId,
         range: [0, G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length]
@@ -40,44 +40,44 @@ export var ClickHandCoinMove = function (G, ctx, coinId) {
  * @param coinId Id монеты.
  * @returns
  */
-export var ClickBoardCoinMove = function (G, ctx, coinId) {
+export const ClickBoardCoinMove = (G, ctx, coinId) => {
     var _a;
-    var player = G.publicPlayers[Number(ctx.currentPlayer)], isValidMove = IsValidMove({ objId: coinId, range: [0, player.boardCoins.length] });
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], isValidMove = IsValidMove({ objId: coinId, range: [0, player.boardCoins.length] });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     if (player.boardCoins[coinId] !== null) {
-        var tempId = player.handCoins.indexOf(null);
+        const tempId = player.handCoins.indexOf(null);
         player.handCoins[tempId] = player.boardCoins[coinId];
         player.boardCoins[coinId] = null;
     }
     else if (player.selectedCoin !== undefined) {
-        var tempId = player.selectedCoin;
+        const tempId = player.selectedCoin;
         player.boardCoins[coinId] = player.handCoins[tempId];
         player.handCoins[tempId] = null;
         player.selectedCoin = undefined;
         if (ctx.phase === "placeCoinsUline") {
             ctx.events.setPhase("pickCards");
         }
-        else if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[ctx.currentPlayer]) === "placeTradingCoinsUline") {
+        else if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[ctx.currentPlayer]) === `placeTradingCoinsUline`) {
             G.actionsNum--;
             AfterBasicPickCardActions(G, ctx, false);
         }
         else {
-            var isEveryPlayersHandCoinsEmpty = G.publicPlayers
-                .filter(function (player) { return player.buffs.everyTurn !== "Uline"; })
-                .every(function (player) { return player.handCoins
-                .every(function (coin) { return coin === null; }); });
+            const isEveryPlayersHandCoinsEmpty = G.publicPlayers
+                .filter((player) => player.buffs.everyTurn !== `Uline`)
+                .every((player) => player.handCoins
+                .every((coin) => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {
-                if (CheckAndStartUlineActionsOrContinue(G, ctx) === "placeCoinsUline") {
-                    ctx.events.setPhase("placeCoinsUline");
+                if (CheckAndStartUlineActionsOrContinue(G, ctx) === `placeCoinsUline`) {
+                    ctx.events.setPhase(`placeCoinsUline`);
                 }
                 else {
-                    ctx.events.setPhase("pickCards");
+                    ctx.events.setPhase(`pickCards`);
                 }
             }
             else {
-                if (player.handCoins.every(function (coin) { return coin === null; })) {
+                if (player.handCoins.every((coin) => coin === null)) {
                     ctx.events.endTurn();
                 }
             }
@@ -101,13 +101,13 @@ export var ClickBoardCoinMove = function (G, ctx, coinId) {
  * @param isInitial Является ли базовой.
  * @returns
  */
-export var ClickCoinToUpgradeMove = function (G, ctx, coinId, type, isInitial) {
-    var isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
+export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
+    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     if (G.distinctions.length) {
-        var isDistinction3 = G.distinctions[3] !== undefined;
+        const isDistinction3 = G.distinctions[3] !== undefined;
         if (isDistinction3) {
             delete G.distinctions[3];
         }
@@ -131,9 +131,9 @@ export var ClickCoinToUpgradeMove = function (G, ctx, coinId, type, isInitial) {
  * @param isInitial Является ли базовой.
  * @returns
  */
-export var UpgradeCoinVidofnirVedrfolnirMove = function (G, ctx, coinId, type, isInitial) {
-    var config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    var isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && (config === null || config === void 0 ? void 0 : config.coinId) !== coinId;
+export const UpgradeCoinVidofnirVedrfolnirMove = (G, ctx, coinId, type, isInitial) => {
+    const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
+    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && (config === null || config === void 0 ? void 0 : config.coinId) !== coinId;
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -150,6 +150,6 @@ export var UpgradeCoinVidofnirVedrfolnirMove = function (G, ctx, coinId, type, i
  * @param ctx
  * @param coinId Id монеты.
  */
-export var AddCoinToPouchMove = function (G, ctx, coinId) {
+export const AddCoinToPouchMove = (G, ctx, coinId) => {
     EndActionFromStackAndAddNew(G, ctx, [], coinId);
 };

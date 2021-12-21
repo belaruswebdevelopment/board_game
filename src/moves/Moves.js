@@ -8,6 +8,8 @@ import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { isCardNotAction } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
+import { GetEnlistmentMercenariesAction, PassEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
+import { DrawProfitCampAction } from "../actions/CampActions";
 // todo Add logging
 /**
  * <h3>Выбор карты из таверны.</h3>
@@ -21,8 +23,8 @@ import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
  * @param cardId Id карты.
  * @returns
  */
-export var ClickCardMove = function (G, ctx, cardId) {
-    var isValidMove = IsValidMove({ objId: G.currentTavern, values: [G.currentTavern] })
+export const ClickCardMove = (G, ctx, cardId) => {
+    const isValidMove = IsValidMove({ objId: G.currentTavern, values: [G.currentTavern] })
         && IsValidMove({
             obj: G.taverns[G.currentTavern][cardId],
             objId: cardId,
@@ -31,11 +33,11 @@ export var ClickCardMove = function (G, ctx, cardId) {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    var card = G.taverns[G.currentTavern][cardId];
-    var suitId = null;
+    const card = G.taverns[G.currentTavern][cardId];
+    let suitId = null;
     G.taverns[G.currentTavern][cardId] = null;
     if (card !== null) {
-        var isAdded = AddCardToPlayer(G, ctx, card);
+        const isAdded = AddCardToPlayer(G, ctx, card);
         if (isCardNotAction(card)) {
             if (isAdded) {
                 CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
@@ -53,7 +55,7 @@ export var ClickCardMove = function (G, ctx, cardId) {
         }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041D\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043B\u0438\u043A\u043D\u0443\u0442\u0430\u044F \u043A\u0430\u0440\u0442\u0430.");
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта.`);
     }
 };
 /**
@@ -68,8 +70,8 @@ export var ClickCardMove = function (G, ctx, cardId) {
  * @param cardId Id карты.
  * @returns
  */
-export var ClickDistinctionCardMove = function (G, ctx, cardId) {
-    var index = G.distinctions.indexOf(Number(ctx.currentPlayer)), isValidMove = IsValidMove({ objId: cardId, values: [index] });
+export const ClickDistinctionCardMove = (G, ctx, cardId) => {
+    const index = G.distinctions.indexOf(Number(ctx.currentPlayer)), isValidMove = IsValidMove({ objId: cardId, values: [index] });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -87,9 +89,9 @@ export var ClickDistinctionCardMove = function (G, ctx, cardId) {
  * @param ctx
  * @param cardId Id карты.
  */
-export var ClickCardToPickDistinctionMove = function (G, ctx, cardId) {
-    var isAdded = AddCardToPlayer(G, ctx, G.decks[1][cardId]), pickedCard = G.decks[1].splice(cardId, 1)[0];
-    var suitId = null;
+export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
+    const isAdded = AddCardToPlayer(G, ctx, G.decks[1][cardId]), pickedCard = G.decks[1].splice(cardId, 1)[0];
+    let suitId = null;
     G.decks[1] = ctx.random.Shuffle(G.decks[1]);
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {
@@ -115,7 +117,7 @@ export var ClickCardToPickDistinctionMove = function (G, ctx, cardId) {
  * @param ctx
  * @param cardId Id карты.
  */
-export var PickDiscardCardMove = function (G, ctx, cardId) {
+export const PickDiscardCardMove = (G, ctx, cardId) => {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
 };
 /**
@@ -128,13 +130,13 @@ export var PickDiscardCardMove = function (G, ctx, cardId) {
  * @param G
  * @param ctx
  */
-export var StartEnlistmentMercenariesMove = function (G, ctx) {
-    var stack = [
+export const StartEnlistmentMercenariesMove = (G, ctx) => {
+    const stack = [
         {
-            action: "DrawProfitAction",
+            action: DrawProfitCampAction.name,
             config: {
-                name: "enlistmentMercenaries",
-                drawName: "Enlistment Mercenaries",
+                name: `enlistmentMercenaries`,
+                drawName: `Enlistment Mercenaries`,
             },
         },
     ];
@@ -150,10 +152,10 @@ export var StartEnlistmentMercenariesMove = function (G, ctx) {
  * @param G
  * @param ctx
  */
-export var PassEnlistmentMercenariesMove = function (G, ctx) {
-    var stack = [
+export const PassEnlistmentMercenariesMove = (G, ctx) => {
+    const stack = [
         {
-            action: "PassEnlistmentMercenariesAction",
+            action: PassEnlistmentMercenariesAction.name,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack);
@@ -169,10 +171,10 @@ export var PassEnlistmentMercenariesMove = function (G, ctx) {
  * @param ctx
  * @param cardId Id карты.
  */
-export var GetEnlistmentMercenariesMove = function (G, ctx, cardId) {
-    var stack = [
+export const GetEnlistmentMercenariesMove = (G, ctx, cardId) => {
+    const stack = [
         {
-            action: "GetEnlistmentMercenariesAction",
+            action: GetEnlistmentMercenariesAction.name,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack, cardId);
@@ -188,10 +190,10 @@ export var GetEnlistmentMercenariesMove = function (G, ctx, cardId) {
  * @param ctx
  * @param suitId Id фракции.
  */
-export var PlaceEnlistmentMercenariesMove = function (G, ctx, suitId) {
-    var stack = [
+export const PlaceEnlistmentMercenariesMove = (G, ctx, suitId) => {
+    const stack = [
         {
-            action: "PlaceEnlistmentMercenariesAction",
+            action: PlaceEnlistmentMercenariesAction.name,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack, suitId);

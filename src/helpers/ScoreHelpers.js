@@ -9,7 +9,7 @@
  * @param currentValue Текущее значение очков.
  * @returns Суммарное количество очков фракции.
  */
-export var TotalPoints = function (accumulator, currentValue) {
+export const TotalPoints = (accumulator, currentValue) => {
     if (currentValue.points !== null) {
         return accumulator + currentValue.points;
     }
@@ -26,7 +26,7 @@ export var TotalPoints = function (accumulator, currentValue) {
  * @param currentValue Текущее значение шевронов.
  * @returns Суммарное количество шевронов фракции.
  */
-export var TotalRank = function (accumulator, currentValue) {
+export const TotalRank = (accumulator, currentValue) => {
     if (currentValue.rank !== null) {
         return accumulator + currentValue.rank;
     }
@@ -44,6 +44,4 @@ export var TotalRank = function (accumulator, currentValue) {
  * @param ranksCount Суммарное количество шевронов.
  * @returns Суммарное количество очков фракции.
  */
-export var ArithmeticSum = function (startValue, step, ranksCount) {
-    return (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;
-};
+export const ArithmeticSum = (startValue, step, ranksCount) => (2 * startValue + step * (ranksCount - 1)) * ranksCount / 2;

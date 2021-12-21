@@ -12,6 +12,7 @@ import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { Ctx } from "boardgame.io";
 import { ILogData } from "./Logging";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
+import { heroesConfig } from "./data/HeroData";
 
 /**
  * <h3>Интерфейс для дополнений к игре.</h3>
@@ -155,13 +156,13 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         } as IAverageSuitCardData);
         decks[i] = ctx.random!.Shuffle(decks[i]);
     }
-    const heroesConfigArray: string[] = ["base"];
+    const heroesConfigOptions: string[] = ["base"];
     for (const expansion in expansions) {
         if (expansions[expansion].active) {
-            heroesConfigArray.push(expansion);
+            heroesConfigOptions.push(expansion);
         }
     }
-    const heroes: IHero[] = BuildHeroes(heroesConfigArray),
+    const heroes: IHero[] = BuildHeroes(heroesConfigOptions, heroesConfig),
         taverns: DeckCardTypes[][] = [],
         tavernsNum: number = 3,
         currentTavern: number = -1,

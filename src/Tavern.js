@@ -7,15 +7,15 @@ import { DiscardCardFromTavern } from "./Card";
  * <li>Применяется для описания таверн (+для ключей).</li>
  * </ol>
  */
-export var tavernsConfig = {
+export const tavernsConfig = {
     0: {
-        name: "\u00AB\u0412\u0435\u0441\u0451\u043B\u044B\u0439 \u0433\u043E\u0431\u043B\u0438\u043D\u00BB",
+        name: `«Весёлый гоблин»`,
     },
     1: {
-        name: "\u00AB\u041F\u0430\u0440\u044F\u0449\u0438\u0439 \u0434\u0440\u0430\u043A\u043E\u043D\u00BB",
+        name: `«Парящий дракон»`,
     },
     2: {
-        name: "\u00AB\u0413\u0430\u0440\u0446\u0443\u044E\u0449\u0438\u0439 \u043A\u043E\u043D\u044C\u00BB",
+        name: `«Гарцующий конь»`,
     },
 };
 /**
@@ -31,22 +31,22 @@ export var tavernsConfig = {
  * @param ctx
  * @returns Пуста ли текущая таверна.
  */
-export var CheckIfCurrentTavernEmpty = function (G, ctx) {
-    var isCurrentTavernEmpty = false;
+export const CheckIfCurrentTavernEmpty = (G, ctx) => {
+    let isCurrentTavernEmpty = false;
     if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         isCurrentTavernEmpty =
-            G.taverns[G.currentTavern].every(function (card) { return card === null; });
+            G.taverns[G.currentTavern].every((card) => card === null);
         if (!isCurrentTavernEmpty) {
-            var discardCardIndex = G.taverns[G.currentTavern].findIndex(function (card) { return card !== null; });
+            const discardCardIndex = G.taverns[G.currentTavern].findIndex((card) => card !== null);
             if (discardCardIndex !== -1) {
-                var isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
+                const isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
                 if (isCardDiscarded) {
                     isCurrentTavernEmpty = true;
                 }
             }
         }
         if (isCurrentTavernEmpty) {
-            AddDataToLog(G, LogTypes.GAME, "\u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[G.currentTavern].name, " \u043F\u0443\u0441\u0442\u0430\u044F."));
+            AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[G.currentTavern].name} пустая.`);
         }
     }
     return isCurrentTavernEmpty;
@@ -61,20 +61,20 @@ export var CheckIfCurrentTavernEmpty = function (G, ctx) {
  *
  * @param G
  */
-export var RefillTaverns = function (G) {
-    var error = false;
-    for (var i = 0; i < G.tavernsNum; i++) {
-        var refillDeck = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
+export const RefillTaverns = (G) => {
+    let error = false;
+    for (let i = 0; i < G.tavernsNum; i++) {
+        const refillDeck = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
         if (refillDeck.length === G.drawSize) {
             G.taverns[i] = refillDeck;
-            AddDataToLog(G, LogTypes.GAME, "\u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[i].name, " \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438."));
+            AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[i].name} заполнена новыми картами.`);
         }
         else {
             error = true;
-            AddDataToLog(G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u0422\u0430\u0432\u0435\u0440\u043D\u0430 ".concat(tavernsConfig[i].name, " \u043D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438 \u0438\u0437-\u0437\u0430 \u0438\u0445 \u043D\u0435\u0445\u0432\u0430\u0442\u043A\u0438 \u0432 \u043A\u043E\u043B\u043E\u0434\u0435."));
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Таверна ${tavernsConfig[i].name} не заполнена новыми картами из-за их нехватки в колоде.`);
         }
     }
     if (!error) {
-        AddDataToLog(G, LogTypes.GAME, "\u0412\u0441\u0435 \u0442\u0430\u0432\u0435\u0440\u043D\u044B \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u044B \u043D\u043E\u0432\u044B\u043C\u0438 \u043A\u0430\u0440\u0442\u0430\u043C\u0438.");
+        AddDataToLog(G, LogTypes.GAME, `Все таверны заполнены новыми картами.`);
     }
 };

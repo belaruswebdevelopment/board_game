@@ -1,12 +1,31 @@
 import { heroesConfig, IVariants } from "../data/HeroData";
 import { GetSuitIndexByName } from "./SuitHelpers";
-import { AddActionsToStackAfterCurrent } from "./StackHelpers";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 import { MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
 import { ICoin } from "../Coin";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { SuitNames } from "../data/SuitData";
 import { CheckPickHero } from "../Hero";
+import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
+
+/**
+ * <h3>Действия, связанные с возможностью взятия карт из дискарда.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
+ * <li>При выборе конкретных карт кэмпа, дающих возможность взять карты из дискарда.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const CheckPickDiscardCard = (G: MyGameState, ctx: Ctx): void => {
+    if (G.discardCardsDeck.length === 0) {
+        G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
+    }
+    EndActionFromStackAndAddNew(G, ctx);
+};
 
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
@@ -109,7 +128,7 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
         },
             stack: IStack[] = [
                 {
-                    action: `DrawProfitAction`,
+                    action: DrawProfitHeroAction.name,
                     variants,
                     config: {
                         drawName: `Thrud`,
@@ -119,7 +138,7 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
                     },
                 },
                 {
-                    action: `PlaceHeroAction`,
+                    action: PlaceHeroAction.name,
                     variants,
                     config: {
                         name: `Thrud`,

@@ -5,6 +5,7 @@ import { Ctx } from "boardgame.io";
 import { IConfig, IPublicPlayer, IStack } from "./Player";
 import { IInitialTradingCoinConfig, IMarketCoinConfig, isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { INumberValues } from "./data/SuitData";
+import { UpgradeCoinAction } from "./actions/CoinActions";
 
 /**
  * <h3>Интерфейс для монеты.</h3>
@@ -164,7 +165,7 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin === `min`) {
         stack = [
             {
-                action: `UpgradeCoinAction`,
+                action: UpgradeCoinAction.name,
                 config: {
                     number: 1,
                     value: coinsMaxValue,
@@ -177,7 +178,7 @@ export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void =
     } else {
         stack = [
             {
-                action: `UpgradeCoinAction`,
+                action: UpgradeCoinAction.name,
                 config: {
                     number: 1,
                     value: coinsMinValue,

@@ -51,7 +51,7 @@ export default App;*/
 import { Client } from "boardgame.io/react";
 import { BoardGame } from "./Game";
 import { GameBoard } from "./GameBoard";
-var App = Client({
+const App = Client({
     // debug: false,
     game: BoardGame,
     board: GameBoard,

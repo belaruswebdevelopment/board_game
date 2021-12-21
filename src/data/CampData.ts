@@ -2,6 +2,17 @@ import { TotalRank } from "../helpers/ScoreHelpers";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { ICoin } from "../Coin";
 import { SuitNames } from "./SuitData";
+import {
+    AddArtefactBuffToPlayerAction,
+    AddCampCardToCardsAction,
+    CheckPickDiscardCardCampAction,
+    DiscardTradingCoinAction,
+    DrawProfitCampAction,
+    PickDiscardCardCampAction,
+    StartDiscardSuitCardAction,
+    StartVidofnirVedrfolnirAction
+} from "../actions/CampActions";
+import { PickHeroAction } from "../actions/HeroActions";
 
 /**
  * <h3>Интерфейс для данных карт кэмпа артефакт.</h3>
@@ -58,10 +69,10 @@ const Fafnir_Baleygr: IArtefact = {
     points: null,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: `AddBuffToPlayerAction`,
+            action: AddArtefactBuffToPlayerAction.name,
             config: {
                 buff: {
                     name: `goCamp`,
@@ -90,7 +101,7 @@ const Draupnir: IArtefact = {
     points: null,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.boardCoins
@@ -115,7 +126,7 @@ const Vegvisir: IArtefact = {
     points: 13,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
     ],
     scoringRule: (): number => 0,
@@ -138,7 +149,7 @@ const Svalinn: IArtefact = {
     points: null,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.heroes.length * 5 : 0,
@@ -161,10 +172,10 @@ const Megingjord: IArtefact = {
     points: null,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: `AddBuffToPlayerAction`,
+            action: AddArtefactBuffToPlayerAction.name,
             config: {
                 buff: {
                     name: `noHero`,
@@ -193,10 +204,10 @@ const Vidofnir_Vedrfolnir: IArtefact = {
     points: null,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: `StartVidofnirVedrfolnirAction`,
+            action: StartVidofnirVedrfolnirAction.name,
         },
     ],
     scoringRule: (): number => 0,
@@ -219,10 +230,10 @@ const Brisingamens: IArtefact = {
     points: null,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: `AddBuffToPlayerAction`,
+            action: AddArtefactBuffToPlayerAction.name,
             config: {
                 buff: {
                     name: `discardCardEndGame`,
@@ -231,7 +242,10 @@ const Brisingamens: IArtefact = {
             },
         },
         {
-            action: `DrawProfitAction`,
+            action: CheckPickDiscardCardCampAction.name,
+        },
+        {
+            action: DrawProfitCampAction.name,
             config: {
                 stageName: `pickDiscardCard`,
                 name: `BrisingamensAction`,
@@ -240,7 +254,7 @@ const Brisingamens: IArtefact = {
             },
         },
         {
-            action: `PickDiscardCardAction`,
+            action: PickDiscardCardCampAction.name,
         },
     ],
     scoringRule: (): number => 0,
@@ -263,10 +277,10 @@ const Mjollnir: IArtefact = {
     points: null,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: `AddBuffToPlayerAction`,
+            action: AddArtefactBuffToPlayerAction.name,
             config: {
                 buff: {
                     name: `getMjollnirProfit`,
@@ -296,10 +310,10 @@ const Hofud: IArtefact = {
     points: null,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: `StartDiscardSuitCardAction`,
+            action: StartDiscardSuitCardAction.name,
             config: {
                 suit: SuitNames.WARRIOR,
             },
@@ -325,7 +339,7 @@ const Hrafnsmerki: IArtefact = {
     points: null,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ?
@@ -350,10 +364,10 @@ const Jarnglofi: IArtefact = {
     points: null,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: `DiscardTradingCoinAction`,
+            action: DiscardTradingCoinAction.name,
         },
     ],
     scoringRule: (): number => 24,
@@ -376,10 +390,10 @@ const Gjallarhorn: IArtefact = {
     points: null,
     stack: [
         {
-            action: `AddCampCardToCardsAction`,
+            action: AddCampCardToCardsAction.name,
         },
         {
-            action: `PickHeroAction`,
+            action: PickHeroAction.name,
             config: {
                 stageName: `pickHero`,
             },

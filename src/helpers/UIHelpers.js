@@ -1,4 +1,3 @@
-import { __assign, __spreadArray } from "tslib";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { GetSuitIndexByName } from "./SuitHelpers";
 import { suitsConfig } from "../data/SuitData";
@@ -15,13 +14,8 @@ import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickHeroCard = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).ClickHeroCard.apply(_a, args);
+export const OnClickHeroCard = (data, ...args) => {
+    data.props.moves.ClickHeroCard(...args);
 };
 /**
  * <h3>Активация мува при клике на карту кэмпа.</h3>
@@ -33,13 +27,8 @@ export var OnClickHeroCard = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickCampCard = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).ClickCampCard.apply(_a, args);
+export const OnClickCampCard = (data, ...args) => {
+    data.props.moves.ClickCampCard(...args);
 };
 /**
  * <h3>Активация мува при клике на карту таверны.</h3>
@@ -51,13 +40,8 @@ export var OnClickCampCard = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickCard = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).ClickCard.apply(_a, args);
+export const OnClickCard = (data, ...args) => {
+    data.props.moves.ClickCard(...args);
 };
 /**
  * <h3>Активация мува при клике на карту преимущества.</h3>
@@ -69,13 +53,8 @@ export var OnClickCard = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickCardToPickDistinction = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).ClickCardToPickDistinction.apply(_a, args);
+export const OnClickCardToPickDistinction = (data, ...args) => {
+    data.props.moves.ClickCardToPickDistinction(...args);
 };
 /**
  * <h3>Активация мува при клике на карты для дискарда.</h3>
@@ -87,13 +66,8 @@ export var OnClickCardToPickDistinction = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickCardToDiscard = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).DiscardCard.apply(_a, args);
+export const OnClickCardToDiscard = (data, ...args) => {
+    data.props.moves.DiscardCard(...args);
 };
 /**
  * <h3>Активация мува при клике на карты из дискарда.</h3>
@@ -105,13 +79,8 @@ export var OnClickCardToDiscard = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickCardFromDiscard = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).PickDiscardCard.apply(_a, args);
+export const OnClickCardFromDiscard = (data, ...args) => {
+    data.props.moves.PickDiscardCard(...args);
 };
 /**
  * <h3>Активация мува при клике на карту таверны для дискарда.</h3>
@@ -123,13 +92,8 @@ export var OnClickCardFromDiscard = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickCardToDiscard2Players = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).DiscardCard2Players.apply(_a, args);
+export const OnClickCardToDiscard2Players = (data, ...args) => {
+    data.props.moves.DiscardCard2Players(...args);
 };
 /**
  * <h3>Активация мува при клике на карту на планшете игрока для дискарда.</h3>
@@ -141,13 +105,8 @@ export var OnClickCardToDiscard2Players = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickDiscardCardFromPlayerBoard = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).DiscardCardFromPlayerBoard.apply(_a, args);
+export const OnClickDiscardCardFromPlayerBoard = (data, ...args) => {
+    data.props.moves.DiscardCardFromPlayerBoard(...args);
 };
 /**
  * <h3>Активация мува при клике на карту на планшете определённой фракции игрока для дискарда.</h3>
@@ -159,13 +118,8 @@ export var OnClickDiscardCardFromPlayerBoard = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-var OnClickDiscardSuitCardFromPlayerBoard = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).DiscardSuitCardFromPlayerBoard.apply(_a, args);
+const OnClickDiscardSuitCardFromPlayerBoard = (data, ...args) => {
+    data.props.moves.DiscardSuitCardFromPlayerBoard(...args);
 };
 /**
  * <h3>Активация мува при клике на карту кэмпа по действию героя Хольда.</h3>
@@ -177,13 +131,8 @@ var OnClickDiscardSuitCardFromPlayerBoard = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickCampCardHolda = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).ClickCampCardHolda.apply(_a, args);
+export const OnClickCampCardHolda = (data, ...args) => {
+    data.props.moves.ClickCampCardHolda(...args);
 };
 /**
  * <h3>Активация мува при клике на карту наёмника.</h3>
@@ -195,13 +144,8 @@ export var OnClickCampCardHolda = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickGetEnlistmentMercenaries = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).GetEnlistmentMercenaries.apply(_a, args);
+export const OnClickGetEnlistmentMercenaries = (data, ...args) => {
+    data.props.moves.GetEnlistmentMercenaries(...args);
 };
 /**
  * <h3>Активация мува при клике на монету на игровом столе.</h3>
@@ -213,13 +157,8 @@ export var OnClickGetEnlistmentMercenaries = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickBoardCoin = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).ClickBoardCoin.apply(_a, args);
+export const OnClickBoardCoin = (data, ...args) => {
+    data.props.moves.ClickBoardCoin(...args);
 };
 /**
  * <h3>Активация мува при клике на монету в руке игрока.</h3>
@@ -231,13 +170,8 @@ export var OnClickBoardCoin = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickHandCoin = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).ClickHandCoin.apply(_a, args);
+export const OnClickHandCoin = (data, ...args) => {
+    data.props.moves.ClickHandCoin(...args);
 };
 /**
  * <h3>Активация мува при клике на монету для её улучшения.</h3>
@@ -249,13 +183,8 @@ export var OnClickHandCoin = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickCoinToUpgrade = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).ClickCoinToUpgrade.apply(_a, args);
+export const OnClickCoinToUpgrade = (data, ...args) => {
+    data.props.moves.ClickCoinToUpgrade(...args);
 };
 /**
  * <h3>Активация мува при клике на монету для добавления её в кошелёк.</h3>
@@ -267,13 +196,8 @@ export var OnClickCoinToUpgrade = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickCoinToAddToPouch = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).AddCoinToPouch.apply(_a, args);
+export const OnClickCoinToAddToPouch = (data, ...args) => {
+    data.props.moves.AddCoinToPouch(...args);
 };
 /**
  * <h3>Активация мува при клике на монету для её улучшения по действию артефакта 'VidofnirVedrfolnir'.</h3>
@@ -285,13 +209,8 @@ export var OnClickCoinToAddToPouch = function (data) {
  * @param data Глобальные параметры.
  * @param args Дополнительные аргументы.
  */
-export var OnClickCoinToUpgradeVidofnirVedrfolnir = function (data) {
-    var _a;
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    (_a = data.props.moves).UpgradeCoinVidofnirVedrfolnir.apply(_a, args);
+export const OnClickCoinToUpgradeVidofnirVedrfolnir = (data, ...args) => {
+    data.props.moves.UpgradeCoinVidofnirVedrfolnir(...args);
 };
 /**
  * <h3>Активация мува при клике на кнопку старта действия 'EnlistmentMercenaries'.</h3>
@@ -302,7 +221,7 @@ export var OnClickCoinToUpgradeVidofnirVedrfolnir = function (data) {
  *
  * @param data Глобальные параметры.
  */
-export var OnClickStartEnlistmentMercenaries = function (data) {
+export const OnClickStartEnlistmentMercenaries = (data) => {
     data.props.moves.StartEnlistmentMercenaries();
 };
 /**
@@ -314,7 +233,7 @@ export var OnClickStartEnlistmentMercenaries = function (data) {
  *
  * @param data Глобальные параметры.
  */
-export var OnClickPassEnlistmentMercenaries = function (data) {
+export const OnClickPassEnlistmentMercenaries = (data) => {
     data.props.moves.PassEnlistmentMercenaries();
 };
 /**
@@ -327,9 +246,9 @@ export var OnClickPassEnlistmentMercenaries = function (data) {
  * @param objectsSize Данные для вычисления параметров отрисовки сегмента игрового поля.
  * @returns Параметры для отрисовки сегмента игрового поля.
  */
-export var DrawBoard = function (objectsSize) {
-    var boardRows = Math.floor(Math.sqrt(objectsSize)), boardCols = Math.ceil(objectsSize / boardRows), lastBoardCol = objectsSize % boardCols;
-    return { boardRows: boardRows, boardCols: boardCols, lastBoardCol: lastBoardCol };
+export const DrawBoard = (objectsSize) => {
+    const boardRows = Math.floor(Math.sqrt(objectsSize)), boardCols = Math.ceil(objectsSize / boardRows), lastBoardCol = objectsSize % boardCols;
+    return { boardRows, boardCols, lastBoardCol };
 };
 /**
  * <h3>Отрисовка планшета конкретного игрока для дискарда карты.</h3>
@@ -341,10 +260,10 @@ export var DrawBoard = function (objectsSize) {
  * @param data Глобальные параметры.
  * @returns Поле для вывода карт для дискарда.
  */
-export var DrawPlayerBoardForCardDiscard = function (data) {
-    var playerHeaders = [], playerRows = [];
-    for (var suit in suitsConfig) {
-        playerHeaders.push(_jsx("th", __assign({ className: "".concat(suitsConfig[suit].suitColor) }, { children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, void 0) }), "".concat(data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname, " ").concat(suitsConfig[suit].suitName)));
+export const DrawPlayerBoardForCardDiscard = (data) => {
+    const playerHeaders = [], playerRows = [];
+    for (const suit in suitsConfig) {
+        playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, void 0) }, `${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`));
     }
     DiscardAnyCardFromPlayerBoardProfit(data.props.G, data.props.ctx, data, playerRows);
     return (_jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playerHeaders }, void 0) }, void 0), _jsx("tbody", { children: playerRows }, void 0)] }, void 0));
@@ -360,33 +279,33 @@ export var DrawPlayerBoardForCardDiscard = function (data) {
  * @param suitName Фракция.
  * @returns Поле игрока для дискарда карты фракции.
  */
-export var DrawPlayersBoardForSuitCardDiscard = function (data, suitName) {
-    var playersHeaders = [], playersRows = [], suitId = GetSuitIndexByName(suitName);
-    for (var p = 0; p < data.props.G.publicPlayers.length; p++) {
+export const DrawPlayersBoardForSuitCardDiscard = (data, suitName) => {
+    const playersHeaders = [], playersRows = [], suitId = GetSuitIndexByName(suitName);
+    for (let p = 0; p < data.props.G.publicPlayers.length; p++) {
         if (p !== Number(data.props.ctx.currentPlayer)) {
-            playersHeaders.push(_jsx("th", __assign({ className: "".concat(suitsConfig[suitName].suitColor, " discard suit") }, { children: _jsx("span", __assign({ style: Styles.Suits(suitsConfig[suitName].suitName), className: "bg-suit-icon" }, { children: p + 1 }), void 0) }), "".concat(data.props.G.publicPlayers[p].nickname, " ").concat(suitsConfig[suitName].suitName)));
+            playersHeaders.push(_jsx("th", { className: `${suitsConfig[suitName].suitColor} discard suit`, children: _jsx("span", { style: Styles.Suits(suitsConfig[suitName].suitName), className: "bg-suit-icon", children: p + 1 }, void 0) }, `${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suitName].suitName}`));
         }
     }
-    for (var i = 0;; i++) {
-        var isDrawRow = false, isExit = true;
+    for (let i = 0;; i++) {
+        let isDrawRow = false, isExit = true;
         playersRows[i] = [];
-        var playersCells = [];
-        for (var p = 0; p < data.props.G.publicPlayers.length; p++) {
+        const playersCells = [];
+        for (let p = 0; p < data.props.G.publicPlayers.length; p++) {
             if (p !== Number(data.props.ctx.currentPlayer)) {
                 if (data.props.G.publicPlayers[p].cards[suitId][i] !== undefined) {
-                    if (data.props.G.publicPlayers[p].cards[suitId][i].type !== "\u0433\u0435\u0440\u043E\u0439") {
+                    if (data.props.G.publicPlayers[p].cards[suitId][i].type !== `герой`) {
                         isExit = false;
                         isDrawRow = true;
-                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i], i, data.props.G.publicPlayers[p], suitName, "OnClickDiscardSuitCardFromPlayerBoard", suitId, p, i);
+                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i], i, data.props.G.publicPlayers[p], suitName, OnClickDiscardSuitCardFromPlayerBoard.name, suitId, p, i);
                     }
                 }
                 else {
-                    playersCells.push(_jsx("td", {}, "".concat(data.props.G.publicPlayers[p].nickname, " discard suit cardboard row ").concat(i)));
+                    playersCells.push(_jsx("td", {}, `${data.props.G.publicPlayers[p].nickname} discard suit cardboard row ${i}`));
                 }
             }
         }
         if (isDrawRow) {
-            playersRows[i].push(_jsx("tr", { children: playersCells }, "Discard suit cardboard row ".concat(i)));
+            playersRows[i].push(_jsx("tr", { children: playersCells }, `Discard suit cardboard row ${i}`));
         }
         if (isExit) {
             break;
@@ -410,44 +329,40 @@ export var DrawPlayersBoardForSuitCardDiscard = function (data, suitName) {
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
-export var DrawCard = function (data, playerCells, card, id, player, suit, actionName) {
-    var args = [];
-    for (var _i = 7; _i < arguments.length; _i++) {
-        args[_i - 7] = arguments[_i];
-    }
-    var styles = { background: "" }, tdClasses = "", spanClasses = "", action = null;
+export const DrawCard = (data, playerCells, card, id, player, suit, actionName, ...args) => {
+    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, action = null;
     switch (actionName) {
-        case "OnClickHeroCard":
+        case OnClickHeroCard.name:
             action = OnClickHeroCard;
             break;
-        case "OnClickCampCard":
+        case OnClickCampCard.name:
             action = OnClickCampCard;
             break;
-        case "OnClickCard":
+        case OnClickCard.name:
             action = OnClickCard;
             break;
-        case "OnClickCardToPickDistinction":
+        case OnClickCardToPickDistinction.name:
             action = OnClickCardToPickDistinction;
             break;
-        case "OnClickCardToDiscard":
+        case OnClickCardToDiscard.name:
             action = OnClickCardToDiscard;
             break;
-        case "OnClickCardFromDiscard":
+        case OnClickCardFromDiscard.name:
             action = OnClickCardFromDiscard;
             break;
-        case "OnClickCardToDiscard2Players":
+        case OnClickCardToDiscard2Players.name:
             action = OnClickCardToDiscard2Players;
             break;
-        case "OnClickDiscardCardFromPlayerBoard":
+        case OnClickDiscardCardFromPlayerBoard.name:
             action = OnClickDiscardCardFromPlayerBoard;
             break;
-        case "OnClickDiscardSuitCardFromPlayerBoard":
+        case OnClickDiscardSuitCardFromPlayerBoard.name:
             action = OnClickDiscardSuitCardFromPlayerBoard;
             break;
-        case "OnClickCampCardHolda":
+        case OnClickCampCardHolda.name:
             action = OnClickCampCardHolda;
             break;
-        case "OnClickGetEnlistmentMercenaries":
+        case OnClickGetEnlistmentMercenaries.name:
             action = OnClickGetEnlistmentMercenaries;
             break;
         default:
@@ -456,50 +371,50 @@ export var DrawCard = function (data, playerCells, card, id, player, suit, actio
     if (suit !== null && suit !== undefined) {
         tdClasses = suitsConfig[suit].suitColor;
     }
-    if (card.type === "\u0433\u0435\u0440\u043E\u0439" && "game" in card) {
+    if (card.type === `герой` && `game` in card) {
         styles = Styles.Heroes(card.game, card.name);
-        if (player === null && "active" in card && !card.active) {
-            spanClasses = "bg-hero-inactive";
+        if (player === null && `active` in card && !card.active) {
+            spanClasses = `bg-hero-inactive`;
         }
         else {
-            spanClasses = "bg-hero";
+            spanClasses = `bg-hero`;
         }
         if (suit === null) {
-            tdClasses = "bg-gray-600";
+            tdClasses = `bg-gray-600`;
         }
     }
-    else if (card.type === "\u043D\u0430\u0451\u043C\u043D\u0438\u043A" || card.type === "\u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442") {
-        if ("tier" in card && "path" in card) {
+    else if (card.type === `наёмник` || card.type === `артефакт`) {
+        if (`tier` in card && `path` in card) {
             styles = Styles.CampCards(card.tier, card.path);
         }
-        spanClasses = "bg-camp";
+        spanClasses = `bg-camp`;
         if (suit === null) {
-            tdClasses = "bg-yellow-200";
+            tdClasses = `bg-yellow-200`;
         }
     }
     else {
-        if ("suit" in card && "points" in card && card.suit !== null) {
+        if (`suit` in card && `points` in card && card.suit !== null) {
             styles = Styles.Cards(card.suit, card.name, card.points);
         }
         else {
             styles = Styles.Cards(null, card.name, null);
         }
-        spanClasses = "bg-card";
+        spanClasses = `bg-card`;
     }
     if (actionName !== null) {
-        tdClasses += " cursor-pointer";
+        tdClasses += ` cursor-pointer`;
     }
-    var description = "", value = "";
-    if ("description" in card) {
+    let description = ``, value = ``;
+    if (`description` in card) {
         description = card.description;
     }
-    if ("points" in card) {
-        value = card.points !== null ? String(card.points) : "";
+    if (`points` in card) {
+        value = card.points !== null ? String(card.points) : ``;
     }
-    else if ("value" in card) {
+    else if (`value` in card) {
         value = String(card.value);
     }
-    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return action === null || action === void 0 ? void 0 : action.apply(void 0, __spreadArray([data], args, false)); } }, { children: _jsx("span", __assign({ style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses }, { children: _jsx("b", { children: value }, void 0) }), void 0) }), "".concat((player && player.nickname) ? "player ".concat((player.nickname), " ") : "").concat(suit, " card ").concat(id, " ").concat(card.name)));
+    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(data, ...args), children: _jsx("span", { style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses, children: _jsx("b", { children: value }, void 0) }, void 0) }, `${(player && player.nickname) ? `player ${(player.nickname)} ` : ``}${suit} card ${id} ${card.name}`));
 };
 /**
  * <h3>Отрисовка монет.</h3>
@@ -519,52 +434,48 @@ export var DrawCard = function (data, playerCells, card, id, player, suit, actio
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
-export var DrawCoin = function (data, playerCells, type, coin, id, player, coinClasses, additionalParam, actionName) {
-    var args = [];
-    for (var _i = 9; _i < arguments.length; _i++) {
-        args[_i - 9] = arguments[_i];
-    }
-    var styles = { background: "" }, span = null, tdClasses = "bg-yellow-300", spanClasses = "", action = null;
+export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses, additionalParam, actionName, ...args) => {
+    let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action = null;
     switch (actionName) {
-        case "OnClickBoardCoin":
+        case OnClickBoardCoin.name:
             action = OnClickBoardCoin;
             break;
-        case "OnClickHandCoin":
+        case OnClickHandCoin.name:
             action = OnClickHandCoin;
             break;
-        case "OnClickCoinToUpgrade":
+        case OnClickCoinToUpgrade.name:
             action = OnClickCoinToUpgrade;
             break;
-        case "OnClickCoinToAddToPouch":
+        case OnClickCoinToAddToPouch.name:
             action = OnClickCoinToAddToPouch;
             break;
-        case "OnClickCoinToUpgradeVidofnirVedrfolnir":
+        case OnClickCoinToUpgradeVidofnirVedrfolnir.name:
             action = OnClickCoinToUpgradeVidofnirVedrfolnir;
             break;
         default:
             action = null;
     }
     if (actionName !== null) {
-        tdClasses += " cursor-pointer";
+        tdClasses += ` cursor-pointer`;
     }
-    if (type === "market") {
+    if (type === `market`) {
         if (coin !== null) {
             styles = Styles.Coin(coin.value, false);
-            spanClasses = "bg-market-coin";
+            spanClasses = `bg-market-coin`;
             if (coinClasses !== null && coinClasses !== undefined) {
-                span = (_jsx("span", __assign({ className: coinClasses }, { children: additionalParam }), void 0));
+                span = (_jsx("span", { className: coinClasses, children: additionalParam }, void 0));
             }
         }
         else {
-            AddDataToLog(data.props.G, LogTypes.ERROR, "\u041E\u0428\u0418\u0411\u041A\u0410: \u041C\u043E\u043D\u0435\u0442\u0430 \u043D\u0430 \u0440\u044B\u043D\u043A\u0435 \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C 'null'.");
+            AddDataToLog(data.props.G, LogTypes.ERROR, `ОШИБКА: Монета на рынке не может быть 'null'.`);
         }
     }
     else {
-        spanClasses = "bg-coin";
+        spanClasses = `bg-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
-            spanClasses += " ".concat(coinClasses);
+            spanClasses += ` ${coinClasses}`;
         }
-        if (type === "coin") {
+        if (type === `coin`) {
             if (coin === null) {
                 styles = Styles.CoinBack();
             }
@@ -576,17 +487,17 @@ export var DrawCoin = function (data, playerCells, type, coin, id, player, coinC
         }
         else {
             styles = Styles.CoinBack();
-            if (type === "back-small-market-coin") {
+            if (type === `back-small-market-coin`) {
                 span = (_jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }, void 0));
             }
-            else if (type === "back-tavern-icon") {
+            else if (type === `back-tavern-icon`) {
                 if (additionalParam !== null && additionalParam !== undefined) {
                     span = (_jsx("span", { style: Styles.Taverns(additionalParam), className: "bg-tavern-icon" }, void 0));
                 }
             }
         }
     }
-    playerCells.push(_jsx("td", __assign({ className: tdClasses, onClick: function () { return action === null || action === void 0 ? void 0 : action.apply(void 0, __spreadArray([data], args, false)); } }, { children: _jsx("span", __assign({ style: styles, className: spanClasses }, { children: span }), void 0) }), "".concat((player === null || player === void 0 ? void 0 : player.nickname) ? "player ".concat(player.nickname, " ") : "", "coin ").concat(id).concat(coin !== null ? " ".concat(coin.value) : " empty")));
+    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(data, ...args), children: _jsx("span", { style: styles, className: spanClasses, children: span }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}coin ${id}${coin !== null ? ` ${coin.value}` : ` empty`}`));
 };
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -603,21 +514,17 @@ export var DrawCoin = function (data, playerCells, type, coin, id, player, coinC
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
-export var DrawButton = function (data, boardCells, key, name, player, actionName) {
-    var args = [];
-    for (var _i = 6; _i < arguments.length; _i++) {
-        args[_i - 6] = arguments[_i];
-    }
-    var action = null;
+export const DrawButton = (data, boardCells, key, name, player, actionName, ...args) => {
+    let action = null;
     switch (actionName) {
-        case "OnClickStartEnlistmentMercenaries":
+        case OnClickStartEnlistmentMercenaries.name:
             action = OnClickStartEnlistmentMercenaries;
             break;
-        case "OnClickPassEnlistmentMercenaries":
+        case OnClickPassEnlistmentMercenaries.name:
             action = OnClickPassEnlistmentMercenaries;
             break;
         default:
             action = null;
     }
-    boardCells.push(_jsx("td", __assign({ className: "cursor-pointer", onClick: function () { return action === null || action === void 0 ? void 0 : action.apply(void 0, __spreadArray([data], args, false)); } }, { children: _jsx("button", __assign({ className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" }, { children: name }), void 0) }), "".concat((player === null || player === void 0 ? void 0 : player.nickname) ? "Player ".concat(player.nickname, " ") : "").concat(key)));
+    boardCells.push(_jsx("td", { className: "cursor-pointer", onClick: () => action === null || action === void 0 ? void 0 : action(data, ...args), children: _jsx("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded", children: name }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `Player ${player.nickname} ` : ``}${key}`));
 };

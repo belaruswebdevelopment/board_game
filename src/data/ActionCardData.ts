@@ -1,3 +1,4 @@
+import { DrawCoinProfitAction, UpgradeCoinAction } from "../actions/CoinActions";
 import { IStack } from "../Player";
 import { INumberValues } from "./SuitData";
 
@@ -28,7 +29,7 @@ const upgradeCoinUpTo3: IActionCardConfig = {
     value: 3,
     stack: [
         {
-            action: `DrawProfitAction`,
+            action: DrawCoinProfitAction.name,
             config: {
                 name: `upgradeCoin`,
                 stageName: `upgradeCoin`,
@@ -37,7 +38,7 @@ const upgradeCoinUpTo3: IActionCardConfig = {
             },
         },
         {
-            action: `UpgradeCoinAction`,
+            action: UpgradeCoinAction.name,
             config: {
                 value: 3,
             },
@@ -74,7 +75,7 @@ const upgradeCoinUpTo5: IActionCardConfig = {
     value: 5,
     stack: [
         {
-            action: `DrawProfitAction`,
+            action: DrawCoinProfitAction.name,
             config: {
                 name: `upgradeCoin`,
                 stageName: `upgradeCoin`,
@@ -83,7 +84,7 @@ const upgradeCoinUpTo5: IActionCardConfig = {
             },
         },
         {
-            action: `UpgradeCoinAction`,
+            action: UpgradeCoinAction.name,
             config: {
                 value: 5,
             },

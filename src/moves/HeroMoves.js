@@ -14,8 +14,8 @@ import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
  * @param heroId Id героя.
  * @returns
  */
-export var ClickHeroCardMove = function (G, ctx, heroId) {
-    var isValidMove = IsValidMove({ obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length] });
+export const ClickHeroCardMove = (G, ctx, heroId) => {
+    const isValidMove = IsValidMove({ obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length] });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -32,7 +32,7 @@ export var ClickHeroCardMove = function (G, ctx, heroId) {
  * @param ctx
  * @param suitId Id фракции.
  */
-export var PlaceCardMove = function (G, ctx, suitId) {
+export const PlaceCardMove = (G, ctx, suitId) => {
     EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 /**
@@ -47,6 +47,6 @@ export var PlaceCardMove = function (G, ctx, suitId) {
  * @param suitId Id фракции.
  * @param cardId Id карты.
  */
-export var DiscardCardMove = function (G, ctx, suitId, cardId) {
+export const DiscardCardMove = (G, ctx, suitId, cardId) => {
     EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };

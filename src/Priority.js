@@ -12,13 +12,10 @@ import { AddDataToLog, LogTypes } from "./Logging";
  * @param isExchangeable Является ли кристалл обменным.
  * @returns Кристалл.
  */
-export var CreatePriority = function (_a) {
-    var _b = _a === void 0 ? {} : _a, value = _b.value, _c = _b.isExchangeable, isExchangeable = _c === void 0 ? true : _c;
-    return ({
-        value: value,
-        isExchangeable: isExchangeable,
-    });
-};
+export const CreatePriority = ({ value, isExchangeable = true, } = {}) => ({
+    value,
+    isExchangeable,
+});
 /**
  * <h3>Массив кристаллов приоритетов.</h3>
  * <p>Применения:</p>
@@ -26,7 +23,7 @@ export var CreatePriority = function (_a) {
  * <li>Используется в конфиге кристаллов.</li>
  * </ol>
  */
-var priorities = [
+const priorities = [
     CreatePriority({ value: 1 }),
     CreatePriority({ value: 2 }),
     CreatePriority({ value: 3 }),
@@ -40,7 +37,7 @@ var priorities = [
  * <li>Используется при раздаче кристаллов всем игрокам (в зависимости от количества игроков).</li>
  * </ol>
  */
-export var prioritiesConfig = {
+export const prioritiesConfig = {
     2: priorities.slice(-2),
     3: priorities.slice(-3),
     4: priorities.slice(-4),
@@ -56,9 +53,7 @@ export var prioritiesConfig = {
  * @param numPlayers Количество игроков.
  * @returns Массив базовых кристаллов.
  */
-export var GeneratePrioritiesForPlayerNumbers = function (numPlayers) {
-    return prioritiesConfig[numPlayers].map(function (priority) { return priority; });
-};
+export const GeneratePrioritiesForPlayerNumbers = (numPlayers) => prioritiesConfig[numPlayers].map((priority) => priority);
 /**
  * <h3>Изменяет приоритет игроков для выбора карт из текущей таверны.</h3>
  * <p>Применения:</p>
@@ -68,21 +63,21 @@ export var GeneratePrioritiesForPlayerNumbers = function (numPlayers) {
  *
  * @param G
  */
-export var ChangePlayersPriorities = function (G) {
-    var tempPriorities = [];
-    for (var i = 0; i < G.exchangeOrder.length; i++) {
-        var exchangeOrder = G.exchangeOrder[i];
+export const ChangePlayersPriorities = (G) => {
+    const tempPriorities = [];
+    for (let i = 0; i < G.exchangeOrder.length; i++) {
+        const exchangeOrder = G.exchangeOrder[i];
         if (exchangeOrder !== undefined) {
             tempPriorities[i] = G.publicPlayers[exchangeOrder].priority;
         }
     }
     if (tempPriorities.length) {
-        AddDataToLog(G, LogTypes.GAME, "\u041E\u0431\u043C\u0435\u043D \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B\u0430\u043C\u0438 \u043C\u0435\u0436\u0434\u0443 \u0438\u0433\u0440\u043E\u043A\u0430\u043C\u0438:");
-        for (var i = 0; i < G.exchangeOrder.length; i++) {
-            var tempPriority = tempPriorities[i];
+        AddDataToLog(G, LogTypes.GAME, `Обмен кристаллами между игроками:`);
+        for (let i = 0; i < G.exchangeOrder.length; i++) {
+            const tempPriority = tempPriorities[i];
             if (tempPriority !== undefined && G.publicPlayers[i].priority.value !== tempPriority.value) {
                 G.publicPlayers[i].priority = tempPriority;
-                AddDataToLog(G, LogTypes.PUBLIC, "\u0418\u0433\u0440\u043E\u043A ".concat(G.publicPlayers[i].nickname, " \u043F\u043E\u043B\u0443\u0447\u0438\u043B \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u043B \u0441 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043E\u043C ").concat(tempPriority.value, "."));
+                AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[i].nickname} получил кристалл с приоритетом ${tempPriority.value}.`);
             }
         }
     }
@@ -98,7 +93,7 @@ export var ChangePlayersPriorities = function (G) {
  * @param playerId Id выбранного игрока.
  * @returns Имеет ли игрок наименьший кристалл.
  */
-export var HasLowestPriority = function (G, playerId) {
-    var tempPriorities = G.publicPlayers.map(function (player) { return player.priority.value; }), minPriority = Math.min.apply(Math, tempPriorities), priority = G.publicPlayers[playerId].priority;
+export const HasLowestPriority = (G, playerId) => {
+    const tempPriorities = G.publicPlayers.map((player) => player.priority.value), minPriority = Math.min(...tempPriorities), priority = G.publicPlayers[playerId].priority;
     return priority.value === minPriority;
 };

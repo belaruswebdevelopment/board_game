@@ -15,6 +15,12 @@ import { DeckCardTypes, MyGameState } from "../GameSetup";
 import { isCardNotAction } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
+import {
+    GetEnlistmentMercenariesAction,
+    PassEnlistmentMercenariesAction,
+    PlaceEnlistmentMercenariesAction
+} from "../actions/Actions";
+import { DrawProfitCampAction } from "../actions/CampActions";
 // todo Add logging
 
 /**
@@ -142,7 +148,7 @@ export const PickDiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx,
 export const StartEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
     const stack: IStack[] = [
         {
-            action: `DrawProfitAction`,
+            action: DrawProfitCampAction.name,
             config: {
                 name: `enlistmentMercenaries`,
                 drawName: `Enlistment Mercenaries`,
@@ -165,7 +171,7 @@ export const StartEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState
 export const PassEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
     const stack: IStack[] = [
         {
-            action: `PassEnlistmentMercenariesAction`,
+            action: PassEnlistmentMercenariesAction.name,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack);
@@ -185,7 +191,7 @@ export const PassEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState,
 export const GetEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     const stack: IStack[] = [
         {
-            action: `GetEnlistmentMercenariesAction`,
+            action: GetEnlistmentMercenariesAction.name,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack, cardId);
@@ -205,7 +211,7 @@ export const GetEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, 
 export const PlaceEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
     const stack: IStack[] = [
         {
-            action: `PlaceEnlistmentMercenariesAction`,
+            action: PlaceEnlistmentMercenariesAction.name,
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack, suitId);

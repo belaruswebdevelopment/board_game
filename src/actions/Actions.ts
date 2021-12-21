@@ -1,35 +1,45 @@
-import { UpgradeCoin } from "../Coin";
-import { INVALID_MOVE } from "boardgame.io/core";
-import { SuitNames, suitsConfig } from "../data/SuitData";
-import { AddCardToPlayer, IConfig, IStack, PickedCardType, PlayerCardsType } from "../Player";
+import { suitsConfig } from "../data/SuitData";
+import { AddCardToPlayer, IConfig, IStack, PickedCardType } from "../Player";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { CreateCard, DiscardCardFromTavern, ICard, ICreateCard, isCardNotAction } from "../Card";
-import { GetSuitIndexByName } from "../helpers/SuitHelpers";
+import { CreateCard, DiscardCardFromTavern, ICard, ICreateCard } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
-import { CampDeckCardTypes, DeckCardTypes, MyGameState } from "../GameSetup";
+import { CampDeckCardTypes, MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
-import { IVariants } from "../data/HeroData";
-import { IsStartActionStage } from "../helpers/ActionHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import {
+    AddHeroBuffToPlayerAction,
     AddHeroToCardsAction,
+    CheckDiscardCardsFromPlayerBoardAction,
+    CheckPickCampCardAction,
+    CheckPickDiscardCardHeroAction,
+    DiscardCardsFromPlayerBoardAction,
+    DrawProfitHeroAction,
     GetClosedCoinIntoPlayerHandAction,
+    PickDiscardCardHeroAction,
     PickHeroAction,
     PickHeroWithConditionsAction,
-    PlaceHeroAction
+    PlaceCardsAction,
+    PlaceHeroAction,
+    UpgradeCoinHeroAction
 } from "./HeroActions";
 import {
+    AddArtefactBuffToPlayerAction,
     AddCampCardToCardsAction,
     AddCoinToPouchAction,
-    CheckPickCampCardAction,
+    CheckPickDiscardCardCampAction,
     DiscardAnyCardFromPlayerBoardAction,
     DiscardSuitCardAction,
     DiscardTradingCoinAction,
+    DrawProfitCampAction,
     GetMjollnirProfitAction,
+    PickDiscardCardCampAction,
     StartDiscardSuitCardAction,
     StartVidofnirVedrfolnirAction,
+    UpgradeCoinCampAction,
     UpgradeCoinVidofnirVedrfolnirAction
 } from "./CampActions";
+import { DrawCurrentProfit } from "../helpers/ActionHelpers";
+import { UpgradeCoinAction } from "./CoinActions";
 
 // todo Check my types
 /**
@@ -38,132 +48,10 @@ import {
 export type ArgsTypes = (string | number | boolean | null | object)[];
 
 /**
- * <h3>Диспетчер действий при их активации.</h3>
+ * <h3>Действия, связанные с отрисовкой профита от игровых моментов.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе конкретных героев выполняются последовательно их действия.</li>
- * <li>При выборе конкретных карт кэмпа выполняются последовательно их действия.</li>
- * <li>При выборе карт улучшения монет выполняются их действия.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param data Стэк.
- * @param args Дополнительные аргументы.
- */
-export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args: ArgsTypes): void => {
-    let action: Function | null;
-    switch (data.action) {
-        case "DrawProfitAction":
-            action = DrawProfitAction;
-            break;
-        case "UpgradeCoinAction":
-            action = UpgradeCoinAction;
-            break;
-        case "AddHeroToCardsAction":
-            action = AddHeroToCardsAction;
-            break;
-        case "AddBuffToPlayerAction":
-            action = AddBuffToPlayerAction;
-            break;
-        case "PickHeroWithConditionsAction":
-            action = PickHeroWithConditionsAction;
-            break;
-        case "CheckDiscardCardsFromPlayerBoardAction":
-            action = CheckDiscardCardsFromPlayerBoardAction;
-            break;
-        case "DiscardCardsFromPlayerBoardAction":
-            action = DiscardCardsFromPlayerBoardAction;
-            break;
-        case "DiscardCardFromTavernAction":
-            action = DiscardCardFromTavernAction;
-            break;
-        case "PlaceCardsAction":
-            action = PlaceCardsAction;
-            break;
-        case "CheckPickCampCardAction":
-            action = CheckPickCampCardAction;
-            break;
-        case "CheckPickDiscardCardAction":
-            action = CheckPickDiscardCardAction;
-            break;
-        case "PickDiscardCardAction":
-            action = PickDiscardCardAction;
-            break;
-        case "GetClosedCoinIntoPlayerHandAction":
-            action = GetClosedCoinIntoPlayerHandAction;
-            break;
-        case "PlaceHeroAction":
-            action = PlaceHeroAction;
-            break;
-        case "AddCampCardToCardsAction":
-            action = AddCampCardToCardsAction;
-            break;
-        case "PickHeroAction":
-            action = PickHeroAction;
-            break;
-        case "AddCoinToPouchAction":
-            action = AddCoinToPouchAction;
-            break;
-        case "StartVidofnirVedrfolnirAction":
-            action = StartVidofnirVedrfolnirAction;
-            break;
-        case "UpgradeCoinVidofnirVedrfolnirAction":
-            action = UpgradeCoinVidofnirVedrfolnirAction;
-            break;
-        case "DiscardTradingCoinAction":
-            action = DiscardTradingCoinAction;
-            break;
-        case "StartDiscardSuitCardAction":
-            action = StartDiscardSuitCardAction;
-            break;
-        case "DiscardSuitCardAction":
-            action = DiscardSuitCardAction;
-            break;
-        case "DiscardAnyCardFromPlayerBoardAction":
-            action = DiscardAnyCardFromPlayerBoardAction;
-            break;
-        case "GetMjollnirProfitAction":
-            action = GetMjollnirProfitAction;
-            break;
-        case "PassEnlistmentMercenariesAction":
-            action = PassEnlistmentMercenariesAction;
-            break;
-        case "GetEnlistmentMercenariesAction":
-            action = GetEnlistmentMercenariesAction;
-            break;
-        case "PlaceEnlistmentMercenariesAction":
-            action = PlaceEnlistmentMercenariesAction;
-            break;
-        default:
-            action = null;
-    }
-    action?.(G, ctx, data.config, ...args);
-};
-
-/**
- * <h3>Действия, связанные с улучшением монет.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, улучшающих монеты.</li>
- * <li>При выборе карт улучшающих монеты.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя или карты улучшающей монеты.
- * @param args Дополнительные аргументы.
- */
-export const UpgradeCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
-    UpgradeCoin(G, ctx, config, ...args as [number, string, boolean]);
-    EndActionFromStackAndAddNew(G, ctx);
-};
-
-/**
- * <h3>Действия, связанные с отрисовкой профита.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, дающих профит.</li>
+ * <li>При игровых моментах, дающих профит.</li>
  * </ol>
  *
  * @param G
@@ -171,79 +59,7 @@ export const UpgradeCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...
  * @param config Конфиг действий героя.
  */
 export const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен получить преимущества от действия '${config.drawName}'.`);
-    IsStartActionStage(G, ctx, config);
-    G.actionsNum = config.number ?? 1;
-    if (config.name !== undefined) {
-        G.drawProfit = config.name;
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найден обязательный параметр 'config.name'.`);
-    }
-};
-
-/**
- * <h3>Действия, связанные с добавлением бафов игроку.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, добавляющих бафы игроку.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- */
-export const AddBuffToPlayerAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-    if (config.buff !== undefined) {
-        G.publicPlayers[Number(ctx.currentPlayer)].buffs[config.buff.name] = config.buff.value;
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} получил баф '${config.buff.name}'.`);
-        EndActionFromStackAndAddNew(G, ctx);
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найден обязательный параметр 'config.buff'.`);
-    }
-};
-
-/**
- * <h3>Действия, связанные с дискардом карт с планшета игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, дискардящих карты с планшета игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param suitId Id фракции.
- * @param cardId Id карты.
- */
-export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
-    cardId: number): void => {
-    const pickedCard: PlayerCardsType = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
-    // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
-    G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-        .splice(cardId, 1)[0] as ICard);
-    if (G.actionsNum === 2) {
-        const stack: IStack[] = [
-            {
-                action: `DrawProfitAction`,
-                config: {
-                    stageName: `discardCardFromBoard`,
-                    drawName: `Dagda`,
-                    name: `DagdaAction`,
-                    suit: SuitNames.HUNTER,
-                },
-            },
-            {
-                action: `DiscardCardsFromPlayerBoardAction`,
-                config: {
-                    suit: SuitNames.HUNTER,
-                },
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
-    }
-    EndActionFromStackAndAddNew(G, ctx);
+    DrawCurrentProfit(G, ctx, config);
 };
 
 /**
@@ -262,176 +78,6 @@ export const DiscardCardFromTavernAction = (G: MyGameState, ctx: Ctx, config: IC
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
     DiscardCardFromTavern(G, cardId);
     EndActionFromStackAndAddNew(G, ctx);
-};
-
-/**
- * <h3>Действия, связанные с возможностью дискарда карт с планшета игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, дающих возможность дискарда карт с планшета игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @returns
- */
-export const CheckDiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig): string | void => {
-    const cardsToDiscard: PlayerCardsType[] = [];
-    for (let i: number = 0; i < G.suitsNum; i++) {
-        if (config.suit !== Object.keys(suitsConfig)[i]) {
-            const last: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[i].length - 1;
-            if (last >= 0 && G.publicPlayers[Number(ctx.currentPlayer)].cards[i][last].type !== `герой`) {
-                cardsToDiscard.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[i][last]);
-            }
-        }
-    }
-    const isValidMove: boolean = cardsToDiscard.length >= (config.number ?? 1);
-    if (!isValidMove) {
-        G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
-        return INVALID_MOVE;
-    }
-    EndActionFromStackAndAddNew(G, ctx);
-};
-
-/**
- * <h3>Действия, связанные с добавлением других карт на планшет игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, добавляющих другие карты на планшет игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param suitId Id фракции.
- */
-export const PlaceCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
-    const playerVariants: IVariants | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
-    if (playerVariants !== undefined) {
-        const suit: string = Object.keys(suitsConfig)[suitId],
-            olwinDouble: ICard = CreateCard({
-                suit,
-                rank: playerVariants[suit].rank,
-                points: playerVariants[suit].points,
-                name: `Olwin`,
-            } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Олвин во фракцию ${suitsConfig[suit].suitName}.`);
-        AddCardToPlayer(G, ctx, olwinDouble);
-        if (G.actionsNum === 2) {
-            const variants: IVariants = {
-                blacksmith: {
-                    suit: SuitNames.BLACKSMITH,
-                    rank: 1,
-                    points: null,
-                },
-                hunter: {
-                    suit: SuitNames.HUNTER,
-                    rank: 1,
-                    points: null,
-                },
-                explorer: {
-                    suit: SuitNames.EXPLORER,
-                    rank: 1,
-                    points: 0,
-                },
-                warrior: {
-                    suit: SuitNames.WARRIOR,
-                    rank: 1,
-                    points: 0,
-                },
-                miner: {
-                    suit: SuitNames.MINER,
-                    rank: 1,
-                    points: 0,
-                },
-            },
-                stack: IStack[] = [
-                    {
-                        action: `DrawProfitAction`,
-                        variants,
-                        config: {
-                            name: `placeCards`,
-                            stageName: `placeCards`,
-                            drawName: `Olwin`,
-                        },
-                    },
-                    {
-                        action: `PlaceCardsAction`,
-                        variants,
-                    },
-                ];
-            AddActionsToStackAfterCurrent(G, ctx, stack);
-        }
-        CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
-        EndActionFromStackAndAddNew(G, ctx, [], suitId);
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найден обязательный параметр 'stack[0].variants'.`);
-    }
-};
-
-/**
- * <h3>Действия, связанные с возможностью взятия карт из дискарда.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckPickDiscardCardAction = (G: MyGameState, ctx: Ctx): void => {
-    if (G.discardCardsDeck.length === 0) {
-        G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
-    }
-    EndActionFromStackAndAddNew(G, ctx);
-};
-
-/**
- * <h3>Действия, связанные с взятием карт из дискарда.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param cardId Id карты.
- */
-export const PickDiscardCardAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
-    const isAdded: boolean = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
-        pickedCard: DeckCardTypes = G.discardCardsDeck.splice(cardId, 1)[0];
-    let suitId: number | null = null;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
-    if (G.actionsNum === 2 && G.discardCardsDeck.length > 0) {
-        const stack: IStack[] = [
-            {
-                action: `DrawProfitAction`,
-                config: {
-                    stageName: `pickDiscardCard`,
-                    name: `BrisingamensAction`,
-                    drawName: `Brisingamens`,
-                },
-            },
-            {
-                action: `PickDiscardCardAction`,
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
-    }
-    if (isCardNotAction(pickedCard)) {
-        if (isAdded) {
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-            suitId = GetSuitIndexByName(pickedCard.suit);
-            if (suitId === -1) {
-                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${pickedCard.suit}.`);
-            }
-        }
-    } else {
-        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
-    }
-    EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 
 /**
@@ -470,7 +116,7 @@ export const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config:
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы 'Enlistment Mercenaries' выбрал наёмника '${pickedCard.name}'.`);
         const stack: IStack[] = [
             {
-                action: `DrawProfitAction`,
+                action: DrawProfitCampAction.name,
                 config: {
                     name: `placeEnlistmentMercenaries`,
                     drawName: `Place Enlistment Mercenaries`,
@@ -519,7 +165,7 @@ export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, confi
                     .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
                     const stack: IStack[] = [
                         {
-                            action: `DrawProfitAction`,
+                            action: DrawProfitCampAction.name,
                             config: {
                                 name: `enlistmentMercenaries`,
                                 drawName: `Enlistment Mercenaries`,
@@ -539,4 +185,126 @@ export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, confi
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не пикнута карта наёмника.`);
     }
+};
+
+/**
+ * <h3>Диспетчер действий при их активации.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев выполняются последовательно их действия.</li>
+ * <li>При выборе конкретных карт кэмпа выполняются последовательно их действия.</li>
+ * <li>При выборе карт улучшения монет выполняются их действия.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param data Стэк.
+ * @param args Дополнительные аргументы.
+ */
+export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args: ArgsTypes): void => {
+    let action: Function | null;
+    switch (data.action) {
+        case DrawProfitHeroAction.name:
+            action = DrawProfitHeroAction;
+            break;
+        case DrawProfitCampAction.name:
+            action = DrawProfitCampAction;
+            break;
+        case UpgradeCoinHeroAction.name:
+            action = UpgradeCoinHeroAction;
+            break;
+        case UpgradeCoinCampAction.name:
+            action = UpgradeCoinCampAction;
+            break;
+        case UpgradeCoinAction.name:
+            action = UpgradeCoinAction;
+            break;
+        case AddHeroToCardsAction.name:
+            action = AddHeroToCardsAction;
+            break;
+        case AddHeroBuffToPlayerAction.name:
+            action = AddHeroBuffToPlayerAction;
+            break;
+        case AddArtefactBuffToPlayerAction.name:
+            action = AddArtefactBuffToPlayerAction;
+            break;
+        case PickHeroWithConditionsAction.name:
+            action = PickHeroWithConditionsAction;
+            break;
+        case CheckDiscardCardsFromPlayerBoardAction.name:
+            action = CheckDiscardCardsFromPlayerBoardAction;
+            break;
+        case DiscardCardsFromPlayerBoardAction.name:
+            action = DiscardCardsFromPlayerBoardAction;
+            break;
+        case DiscardCardFromTavernAction.name:
+            action = DiscardCardFromTavernAction;
+            break;
+        case PlaceCardsAction.name:
+            action = PlaceCardsAction;
+            break;
+        case CheckPickCampCardAction.name:
+            action = CheckPickCampCardAction;
+            break;
+        case CheckPickDiscardCardHeroAction.name:
+            action = CheckPickDiscardCardHeroAction;
+            break;
+        case CheckPickDiscardCardCampAction.name:
+            action = CheckPickDiscardCardCampAction;
+            break;
+        case PickDiscardCardHeroAction.name:
+            action = PickDiscardCardHeroAction;
+            break;
+        case PickDiscardCardCampAction.name:
+            action = PickDiscardCardCampAction;
+            break;
+        case GetClosedCoinIntoPlayerHandAction.name:
+            action = GetClosedCoinIntoPlayerHandAction;
+            break;
+        case PlaceHeroAction.name:
+            action = PlaceHeroAction;
+            break;
+        case AddCampCardToCardsAction.name:
+            action = AddCampCardToCardsAction;
+            break;
+        case PickHeroAction.name:
+            action = PickHeroAction;
+            break;
+        case AddCoinToPouchAction.name:
+            action = AddCoinToPouchAction;
+            break;
+        case StartVidofnirVedrfolnirAction.name:
+            action = StartVidofnirVedrfolnirAction;
+            break;
+        case UpgradeCoinVidofnirVedrfolnirAction.name:
+            action = UpgradeCoinVidofnirVedrfolnirAction;
+            break;
+        case DiscardTradingCoinAction.name:
+            action = DiscardTradingCoinAction;
+            break;
+        case StartDiscardSuitCardAction.name:
+            action = StartDiscardSuitCardAction;
+            break;
+        case DiscardSuitCardAction.name:
+            action = DiscardSuitCardAction;
+            break;
+        case DiscardAnyCardFromPlayerBoardAction.name:
+            action = DiscardAnyCardFromPlayerBoardAction;
+            break;
+        case GetMjollnirProfitAction.name:
+            action = GetMjollnirProfitAction;
+            break;
+        case PassEnlistmentMercenariesAction.name:
+            action = PassEnlistmentMercenariesAction;
+            break;
+        case GetEnlistmentMercenariesAction.name:
+            action = GetEnlistmentMercenariesAction;
+            break;
+        case PlaceEnlistmentMercenariesAction.name:
+            action = PlaceEnlistmentMercenariesAction;
+            break;
+        default:
+            action = null;
+    }
+    action?.(G, ctx, data.config, ...args);
 };
