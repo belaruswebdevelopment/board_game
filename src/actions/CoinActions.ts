@@ -15,9 +15,9 @@ import { ArgsTypes } from "./Actions";
  * @param ctx
  * @param config Конфиг действий героя.
  */
-// export const DrawProfitCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-//     DrawCurrentProfit(G, ctx, config);
-// };
+export const DrawProfitCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+    DrawCurrentProfit(G, ctx, config);
+};
 
 /**
  * <h3>Действия, связанные с улучшением монет от карт улучшения монет.</h3>
