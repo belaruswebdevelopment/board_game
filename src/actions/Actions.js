@@ -1,7 +1,7 @@
 import { suitsConfig } from "../data/SuitData";
 import { AddCardToPlayer } from "../Player";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { CreateCard } from "../Card";
+import { CreateCard, DiscardCardFromTavern } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, 
@@ -40,11 +40,11 @@ import { PickCurrentHero } from "../helpers/ActionHelpers";
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
  */
-// export const DiscardCardFromTavernAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
-//     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
-//     DiscardCardFromTavern(G, cardId);
-//     EndActionFromStackAndAddNew(G, ctx);
-// };
+export const DiscardCardFromTavernAction = (G, ctx, config, cardId) => {
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
+    DiscardCardFromTavern(G, cardId);
+    EndActionFromStackAndAddNew(G, ctx);
+};
 /**
  * <h3>Первый игрок в фазе вербовки наёмников может пасануть, чтобы вербовать последним.</h3>
  * <p>Применения:</p>
@@ -216,9 +216,9 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         // case DiscardCardsFromPlayerBoardAction.name:
         //     action = DiscardCardsFromPlayerBoardAction;
         //     break;
-        // case DiscardCardFromTavernAction.name:
-        //     action = DiscardCardFromTavernAction;
-        //     break;
+        case DiscardCardFromTavernAction.name:
+            action = DiscardCardFromTavernAction;
+            break;
         case PlaceCardsAction.name:
             action = PlaceCardsAction;
             break;

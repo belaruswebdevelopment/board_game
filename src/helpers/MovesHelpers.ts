@@ -11,12 +11,13 @@ import { IStack, PlayerCardsType } from "../Player";
 import { IVariants } from "../data/HeroData";
 import { SuitNames } from "../data/SuitData";
 import { /* DrawProfitHeroAction, */ PlaceHeroAction } from "../actions/HeroActions";
-// import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
+// import { DrawProfitAction } from "../actions/Actions";
 import {
     DiscardAnyCardFromPlayerBoardAction,
     DrawProfitCampAction,
     GetMjollnirProfitAction
 } from "../actions/CampActions";
+import { DiscardCardFromTavernAction } from "../actions/Actions";
 // todo Add logging
 
 /**
@@ -161,8 +162,7 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
                                 },
                             },
                             {
-                                // action: DiscardCardFromTavernAction.name,
-                                action: `DiscardCardFromTavernAction`,
+                                action: DiscardCardFromTavernAction.name,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);

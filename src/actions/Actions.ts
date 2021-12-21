@@ -75,11 +75,11 @@ export type ArgsTypes = (string | number | boolean | null | object)[];
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
  */
-// export const DiscardCardFromTavernAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
-//     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
-//     DiscardCardFromTavern(G, cardId);
-//     EndActionFromStackAndAddNew(G, ctx);
-// };
+export const DiscardCardFromTavernAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
+    DiscardCardFromTavern(G, cardId);
+    EndActionFromStackAndAddNew(G, ctx);
+};
 
 /**
  * <h3>Первый игрок в фазе вербовки наёмников может пасануть, чтобы вербовать последним.</h3>
@@ -253,9 +253,9 @@ export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args
         // case DiscardCardsFromPlayerBoardAction.name:
         //     action = DiscardCardsFromPlayerBoardAction;
         //     break;
-        // case DiscardCardFromTavernAction.name:
-        //     action = DiscardCardFromTavernAction;
-        //     break;
+        case DiscardCardFromTavernAction.name:
+            action = DiscardCardFromTavernAction;
+            break;
         case PlaceCardsAction.name:
             action = PlaceCardsAction;
             break;

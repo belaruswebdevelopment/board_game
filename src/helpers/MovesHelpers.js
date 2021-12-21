@@ -7,8 +7,9 @@ import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
 import { ActivateTrading } from "./CoinHelpers";
 import { SuitNames } from "../data/SuitData";
 import { /* DrawProfitHeroAction, */ PlaceHeroAction } from "../actions/HeroActions";
-// import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
+// import { DrawProfitAction } from "../actions/Actions";
 import { DiscardAnyCardFromPlayerBoardAction, DrawProfitCampAction, GetMjollnirProfitAction } from "../actions/CampActions";
+import { DiscardCardFromTavernAction } from "../actions/Actions";
 // todo Add logging
 /**
  * <h3>Завершает каждую фазу конца игры и проверяет переход к другим фазам или завершает игру.</h3>
@@ -153,8 +154,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                                 },
                             },
                             {
-                                // action: DiscardCardFromTavernAction.name,
-                                action: `DiscardCardFromTavernAction`,
+                                action: DiscardCardFromTavernAction.name,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
