@@ -16,20 +16,6 @@ import { AddDataToLog, LogTypes } from "./Logging";
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param obj Параметры валидации мува.
- * @returns Валидный ли мув.
- */
-export const IsValidMove = (obj) => {
-    return CheckMove(obj);
-};
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: сделать описание функции и параметров.
  * @param obj
  * @param objId
  * @param range
@@ -46,32 +32,6 @@ const CheckMove = ({ obj, objId, range = [], values = [] }) => {
     }
     return isValid;
 };
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: сделать описание функции и параметров.
- * @param num
- * @param range
- * @returns
- */
-const ValidateByRange = (num, range) => range[0] <= num && num < range[1];
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: сделать описание функции и параметров.
- * @param num
- * @param values
- * @returns
- */
-const ValidateByValues = (num, values) => values.includes(num);
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -102,6 +62,20 @@ export const CoinUpgradeValidation = (G, ctx, coinId, type) => {
         }
     }
     return false;
+};
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @param obj Параметры валидации мува.
+ * @returns Валидный ли мув.
+ */
+export const IsValidMove = (obj) => {
+    return CheckMove(obj);
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -244,3 +218,29 @@ export const moveValidators = {
             || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp))),
     },
 };
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @param num
+ * @param range
+ * @returns
+ */
+const ValidateByRange = (num, range) => range[0] <= num && num < range[1];
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @param num
+ * @param values
+ * @returns
+ */
+const ValidateByValues = (num, values) => values.includes(num);

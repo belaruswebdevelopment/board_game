@@ -369,8 +369,66 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         console.log(`ALERT: bot has ${moves.length} moves. Phase: ${ctx.phase}`);
     }
     return moves;
-}
-    ;
+};
+
+/**
+* <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+* </oL>
+*
+* @todo Саше: сделать описание функции и параметров.
+* @param G
+* @param ctx
+* @returns
+*/
+export const iterations = (G: MyGameState, ctx: Ctx): number => {
+    const maxIter: number = G.botData.maxIter;
+    if (ctx.phase === `pickCards`) {
+        const currentTavern: (DeckCardTypes | null)[] = G.taverns[G.currentTavern];
+        if (currentTavern.filter((card: DeckCardTypes | null): boolean => card !== null).length === 1) {
+            return 1;
+        }
+        const cardIndex: number =
+            currentTavern.findIndex((card: DeckCardTypes | null): boolean => card !== null),
+            tavernCard: DeckCardTypes | null = currentTavern[cardIndex];
+        if (currentTavern.every((card: DeckCardTypes | null): boolean =>
+            card === null || (isCardNotAction(card) && tavernCard !== null && isCardNotAction(tavernCard)
+                && card.suit === tavernCard.suit && CompareCards(card, tavernCard) === 0))) {
+            return 1;
+        }
+        let efficientMovesCount: number = 0;
+        for (let i: number = 0; i < currentTavern.length; i++) {
+            const tavernCard: DeckCardTypes | null = currentTavern[i];
+            if (tavernCard === null) {
+                continue;
+            }
+            if (currentTavern.some((card: DeckCardTypes | null): boolean =>
+                CompareCards(tavernCard, card) === -1)) {
+                continue;
+            }
+            if (G.decks[0].length > 18) {
+                if (tavernCard && isCardNotAction(tavernCard)) {
+                    const curSuit: number = GetSuitIndexByName(tavernCard.suit);
+                    if (CompareCards(tavernCard, G.averageCards[curSuit]) === -1
+                        && currentTavern.some((card: DeckCardTypes | null): boolean => card !== null
+                            && CompareCards(card, G.averageCards[curSuit]) > -1)) {
+                        continue;
+                    }
+                }
+            }
+            efficientMovesCount++;
+            if (efficientMovesCount > 1) {
+                return maxIter;
+            }
+        }
+        if (efficientMovesCount === 1) {
+            return 1;
+        }
+    }
+    return maxIter;
+};
 
 /**
  * <h3>Возвращает цели игры для ботов.</h3>
@@ -514,65 +572,6 @@ export const objectives = (): {
         weight: 0.5,
     },
 });
-
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
- * @returns
- */
-export const iterations = (G: MyGameState, ctx: Ctx): number => {
-    const maxIter: number = G.botData.maxIter;
-    if (ctx.phase === `pickCards`) {
-        const currentTavern: (DeckCardTypes | null)[] = G.taverns[G.currentTavern];
-        if (currentTavern.filter((card: DeckCardTypes | null): boolean => card !== null).length === 1) {
-            return 1;
-        }
-        const cardIndex: number =
-            currentTavern.findIndex((card: DeckCardTypes | null): boolean => card !== null),
-            tavernCard: DeckCardTypes | null = currentTavern[cardIndex];
-        if (currentTavern.every((card: DeckCardTypes | null): boolean =>
-            card === null || (isCardNotAction(card) && tavernCard !== null && isCardNotAction(tavernCard)
-                && card.suit === tavernCard.suit && CompareCards(card, tavernCard) === 0))) {
-            return 1;
-        }
-        let efficientMovesCount: number = 0;
-        for (let i: number = 0; i < currentTavern.length; i++) {
-            const tavernCard: DeckCardTypes | null = currentTavern[i];
-            if (tavernCard === null) {
-                continue;
-            }
-            if (currentTavern.some((card: DeckCardTypes | null): boolean =>
-                CompareCards(tavernCard, card) === -1)) {
-                continue;
-            }
-            if (G.decks[0].length > 18) {
-                if (tavernCard && isCardNotAction(tavernCard)) {
-                    const curSuit: number = GetSuitIndexByName(tavernCard.suit);
-                    if (CompareCards(tavernCard, G.averageCards[curSuit]) === -1
-                        && currentTavern.some((card: DeckCardTypes | null): boolean => card !== null
-                            && CompareCards(card, G.averageCards[curSuit]) > -1)) {
-                        continue;
-                    }
-                }
-            }
-            efficientMovesCount++;
-            if (efficientMovesCount > 1) {
-                return maxIter;
-            }
-        }
-        if (efficientMovesCount === 1) {
-            return 1;
-        }
-    }
-    return maxIter;
-};
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>

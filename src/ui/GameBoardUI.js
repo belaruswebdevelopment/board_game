@@ -1,4 +1,4 @@
-import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { CountMarketCoins } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { tavernsConfig } from "../Tavern";
@@ -7,19 +7,34 @@ import { DrawBoard, DrawCard, DrawCoin, DrawPlayerBoardForCardDiscard, DrawPlaye
 import { isCardNotAction } from "../Card";
 import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
 /**
- * <h3>Отрисовка игровой информации о текущей эпохе и количестве карт в деках.</h3>
+ * <h3>Отрисовка карт кэмпа.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
  * @param data Глобальные параметры.
- * @returns Поле информации о количестве карт по эпохам.
+ * @returns Поле кэмпа.
  */
-export const DrawTierCards = (data) => (_jsxs("b", { children: ["Tier: ", _jsxs("span", { className: "italic", children: [data.props.G.decks.length - data.props.G.tierToEnd + 1 > data.props.G.decks.length ?
-                    data.props.G.decks.length : data.props.G.decks.length - data.props.G.tierToEnd + 1, "/", data.props.G.decks.length, " (", data.props.G.decks.length - data.props.G.tierToEnd !== 2 ?
-                    data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0, data.props.G.decks.length - data.props.G.tierToEnd === 0 ? `/`
-                    + data.props.G.decks.reduce((count, current) => count + current.length, 0) : ``, " cards left)"] }, void 0)] }, void 0));
+export const DrawCamp = (data) => {
+    const boardCells = [];
+    for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < data.props.G.campNum; j++) {
+            const campCard = data.props.G.camp[j];
+            if (campCard === null || data.props.G.camp[j] === undefined) {
+                boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }, void 0) }, `Camp ${j} icon`));
+            }
+            else {
+                DrawCard(data, boardCells, campCard, j, null, null, OnClickCampCard.name, j);
+            }
+        }
+    }
+    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }, void 0), _jsxs("span", { children: ["Camp ", data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length ?
+                                data.props.G.campDecks.length : data.props.G.campDecks.length - data.props.G.tierToEnd + 1, "(", data.props.G.campDecks.length - data.props.G.tierToEnd !== 2 ?
+                                data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0, data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? `/`
+                                + data.props.G.campDecks
+                                    .reduce((count, current) => count + current.length, 0) : "", " cards left)"] }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));
+};
 /**
  * <h3>Отрисовка игровой информации о текущем игроке и текущем ходе.</h3>
  * <p>Применения:</p>
@@ -32,63 +47,24 @@ export const DrawTierCards = (data) => (_jsxs("b", { children: ["Tier: ", _jsxs(
  */
 export const DrawCurrentPlayerTurn = (data) => (_jsxs("b", { children: ["Current player: ", _jsxs("span", { className: "italic", children: ["Player ", Number(data.props.ctx.currentPlayer) + 1] }, void 0), " | Turn: ", _jsx("span", { className: "italic", children: data.props.ctx.turn }, void 0)] }, void 0));
 /**
- * <h3>Отрисовка игровой информации о текущем статусе игры.</h3>
+ * <h3>Отрисовка преимуществ по фракциям в конце эпохи.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
  * @param data Глобальные параметры.
- * @returns Поле информации о ходе/победителях игры.
+ * @returns Поле преимуществ в конце эпохи.
  */
-export const DrawWinner = (data) => {
-    let winner;
-    if (data.props.ctx.gameover !== undefined) {
-        if (data.props.G.winner !== undefined) {
-            if (data.props.G.winner.length === 1) {
-                winner = `Winner: Player ${data.props.G.publicPlayers[data.props.G.winner[0]].nickname}`;
-            }
-            else {
-                winner = "Winners: ";
-                data.props.G.winner.forEach((playerId, index) => {
-                    winner += `${index + 1}) Player ${data.props.G.publicPlayers[playerId].nickname}; `;
-                });
-            }
-        }
-        else {
-            winner = `Draw!`;
+export const DrawDistinctions = (data) => {
+    const boardCells = [];
+    for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < data.props.G.suitsNum; j++) {
+            const suit = Object.keys(suitsConfig)[j];
+            boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => data.OnClickDistinctionCard(j), title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }, void 0) }, `Distinction ${suit} card`));
         }
     }
-    else {
-        winner = `Game is started`;
-    }
-    return (_jsxs("b", { children: ["Game status: ", _jsx("span", { className: "italic", children: winner.trim() }, void 0)] }, void 0));
-};
-/**
- * <h3>Отрисовка рынка монет.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Отрисовка игрового поля.</li>
- * </ol>
- *
- * @param data Глобальные параметры.
- * @returns Поле рынка монет.
- */
-export const DrawMarketCoins = (data) => {
-    const boardRows = [], drawData = DrawBoard(data.props.G.marketCoinsUnique.length), countMarketCoins = CountMarketCoins(data.props.G);
-    for (let i = 0; i < drawData.boardRows; i++) {
-        const boardCells = [];
-        boardRows[i] = [];
-        for (let j = 0; j < drawData.boardCols; j++) {
-            const increment = i * drawData.boardCols + j, tempCoinValue = data.props.G.marketCoinsUnique[increment].value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
-            DrawCoin(data, boardCells, `market`, data.props.G.marketCoinsUnique[increment], increment, null, coinClassName, countMarketCoins[tempCoinValue], OnClickHandCoin.name, j);
-            if (increment + 1 === data.props.G.marketCoinsUnique.length) {
-                break;
-            }
-        }
-        boardRows[i].push(_jsx("tr", { children: boardCells }, `Market coins row ${i}`));
-    }
-    return (_jsxs("table", { children: [_jsx("caption", { children: _jsxs("span", { className: "block", children: [_jsx("span", { style: Styles.Exchange(), className: "bg-top-market-coin-icon" }, void 0), " Market coins (", data.props.G.marketCoins.length, " left)"] }, void 0) }, void 0), _jsx("tbody", { children: boardRows }, void 0)] }, void 0));
+    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }, void 0), " ", _jsx("span", { children: "Distinctions" }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));
 };
 /**
  * <h3>Отрисовка всех героев.</h3>
@@ -117,24 +93,30 @@ export const DrawHeroes = (data) => {
     return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }, void 0), " ", _jsxs("span", { children: ["Heroes (", data.props.G.heroes.length, " left)"] }, void 0)] }, void 0), _jsx("tbody", { children: boardRows }, void 0)] }, void 0));
 };
 /**
- * <h3>Отрисовка преимуществ по фракциям в конце эпохи.</h3>
+ * <h3>Отрисовка рынка монет.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
  * @param data Глобальные параметры.
- * @returns Поле преимуществ в конце эпохи.
+ * @returns Поле рынка монет.
  */
-export const DrawDistinctions = (data) => {
-    const boardCells = [];
-    for (let i = 0; i < 1; i++) {
-        for (let j = 0; j < data.props.G.suitsNum; j++) {
-            const suit = Object.keys(suitsConfig)[j];
-            boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => data.OnClickDistinctionCard(j), title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }, void 0) }, `Distinction ${suit} card`));
+export const DrawMarketCoins = (data) => {
+    const boardRows = [], drawData = DrawBoard(data.props.G.marketCoinsUnique.length), countMarketCoins = CountMarketCoins(data.props.G);
+    for (let i = 0; i < drawData.boardRows; i++) {
+        const boardCells = [];
+        boardRows[i] = [];
+        for (let j = 0; j < drawData.boardCols; j++) {
+            const increment = i * drawData.boardCols + j, tempCoinValue = data.props.G.marketCoinsUnique[increment].value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
+            DrawCoin(data, boardCells, `market`, data.props.G.marketCoinsUnique[increment], increment, null, coinClassName, countMarketCoins[tempCoinValue], OnClickHandCoin.name, j);
+            if (increment + 1 === data.props.G.marketCoinsUnique.length) {
+                break;
+            }
         }
+        boardRows[i].push(_jsx("tr", { children: boardCells }, `Market coins row ${i}`));
     }
-    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }, void 0), " ", _jsx("span", { children: "Distinctions" }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));
+    return (_jsxs("table", { children: [_jsx("caption", { children: _jsxs("span", { className: "block", children: [_jsx("span", { style: Styles.Exchange(), className: "bg-top-market-coin-icon" }, void 0), " Market coins (", data.props.G.marketCoins.length, " left)"] }, void 0) }, void 0), _jsx("tbody", { children: boardRows }, void 0)] }, void 0));
 };
 /**
  * <h3>Отрисовка профита от карт и героев.</h3>
@@ -265,35 +247,6 @@ export const DrawProfit = (data, option) => {
     return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }, void 0), " ", _jsx("span", { children: caption }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));
 };
 /**
- * <h3>Отрисовка карт кэмпа.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Отрисовка игрового поля.</li>
- * </ol>
- *
- * @param data Глобальные параметры.
- * @returns Поле кэмпа.
- */
-export const DrawCamp = (data) => {
-    const boardCells = [];
-    for (let i = 0; i < 1; i++) {
-        for (let j = 0; j < data.props.G.campNum; j++) {
-            const campCard = data.props.G.camp[j];
-            if (campCard === null || data.props.G.camp[j] === undefined) {
-                boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }, void 0) }, `Camp ${j} icon`));
-            }
-            else {
-                DrawCard(data, boardCells, campCard, j, null, null, OnClickCampCard.name, j);
-            }
-        }
-    }
-    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }, void 0), _jsxs("span", { children: ["Camp ", data.props.G.campDecks.length - data.props.G.tierToEnd + 1 > data.props.G.campDecks.length ?
-                                data.props.G.campDecks.length : data.props.G.campDecks.length - data.props.G.tierToEnd + 1, "(", data.props.G.campDecks.length - data.props.G.tierToEnd !== 2 ?
-                                data.props.G.campDecks[data.props.G.campDecks.length - data.props.G.tierToEnd].length : 0, data.props.G.campDecks.length - data.props.G.tierToEnd === 0 ? `/`
-                                + data.props.G.campDecks
-                                    .reduce((count, current) => count + current.length, 0) : "", " cards left)"] }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));
-};
-/**
  * <h3>Отрисовка карт таверн.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -331,4 +284,51 @@ export const DrawTaverns = (data, gridClass) => {
         }
     }
     return tavernsBoards;
+};
+/**
+ * <h3>Отрисовка игровой информации о текущей эпохе и количестве карт в деках.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @returns Поле информации о количестве карт по эпохам.
+ */
+export const DrawTierCards = (data) => (_jsxs("b", { children: ["Tier: ", _jsxs("span", { className: "italic", children: [data.props.G.decks.length - data.props.G.tierToEnd + 1 > data.props.G.decks.length ?
+                    data.props.G.decks.length : data.props.G.decks.length - data.props.G.tierToEnd + 1, "/", data.props.G.decks.length, " (", data.props.G.decks.length - data.props.G.tierToEnd !== 2 ?
+                    data.props.G.decks[data.props.G.decks.length - data.props.G.tierToEnd].length : 0, data.props.G.decks.length - data.props.G.tierToEnd === 0 ? `/`
+                    + data.props.G.decks.reduce((count, current) => count + current.length, 0) : ``, " cards left)"] }, void 0)] }, void 0));
+/**
+ * <h3>Отрисовка игровой информации о текущем статусе игры.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @returns Поле информации о ходе/победителях игры.
+ */
+export const DrawWinner = (data) => {
+    let winner;
+    if (data.props.ctx.gameover !== undefined) {
+        if (data.props.G.winner !== undefined) {
+            if (data.props.G.winner.length === 1) {
+                winner = `Winner: Player ${data.props.G.publicPlayers[data.props.G.winner[0]].nickname}`;
+            }
+            else {
+                winner = "Winners: ";
+                data.props.G.winner.forEach((playerId, index) => {
+                    winner += `${index + 1}) Player ${data.props.G.publicPlayers[playerId].nickname}; `;
+                });
+            }
+        }
+        else {
+            winner = `Draw!`;
+        }
+    }
+    else {
+        winner = `Game is started`;
+    }
+    return (_jsxs("b", { children: ["Game status: ", _jsx("span", { className: "italic", children: winner.trim() }, void 0)] }, void 0));
 };

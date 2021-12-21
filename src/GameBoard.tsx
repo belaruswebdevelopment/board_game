@@ -27,14 +27,14 @@ export class GameBoard extends React.Component<BoardProps<MyGameState>> {
     OnClickDistinctionCard = (cardId: number): void => {
         this.props.moves.ClickDistinctionCard(cardId);
     };
+    OnClickSuitToGetMjollnirProfit = (suitId: number): void => {
+        this.props.moves.GetMjollnirProfit(suitId);
+    };
     OnClickSuitToPlaceCard = (suitId: number): void => {
         this.props.moves.PlaceCard(suitId);
     };
     OnClickSuitToPlaceMercenary = (suitId: number): void => {
         this.props.moves.PlaceEnlistmentMercenaries(suitId);
-    };
-    OnClickSuitToGetMjollnirProfit = (suitId: number): void => {
-        this.props.moves.GetMjollnirProfit(suitId);
     };
 
     render() {

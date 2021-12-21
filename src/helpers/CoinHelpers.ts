@@ -16,23 +16,6 @@ export interface IResolveBoardCoins {
 }
 
 /**
- * <h3>Находит максимальную монету игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>В конце игры, если пикнут герой Astrid.</li>
- * <li>В конце игры, если получено преимущество по фракции воинов.</li>
- * </ol>
- *
- * @param player Игрок.
- * @returns Максимальная монета игрока.
- */
-export const GetMaxCoinValue = (player: IPublicPlayer): number => (Math.max(...player.boardCoins
-    .filter((coin: ICoin | null): boolean => Boolean(coin?.value))
-    .map((coin: ICoin | null): number => coin!.value),
-    ...player.handCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
-        .map((coin: ICoin | null): number => coin!.value)));
-
-/**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -58,6 +41,23 @@ export const ActivateTrading = (G: MyGameState, ctx: Ctx): boolean => {
         return false;
     }
 };
+
+/**
+ * <h3>Находит максимальную монету игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце игры, если пикнут герой Astrid.</li>
+ * <li>В конце игры, если получено преимущество по фракции воинов.</li>
+ * </ol>
+ *
+ * @param player Игрок.
+ * @returns Максимальная монета игрока.
+ */
+export const GetMaxCoinValue = (player: IPublicPlayer): number => (Math.max(...player.boardCoins
+    .filter((coin: ICoin | null): boolean => Boolean(coin?.value))
+    .map((coin: ICoin | null): number => coin!.value),
+    ...player.handCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
+        .map((coin: ICoin | null): number => coin!.value)));
 
 /**
  * <h3>Определяет по расположению монет игроками порядок ходов и порядок обмена кристаллов приоритета.</h3>

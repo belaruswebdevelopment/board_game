@@ -39,46 +39,6 @@ interface ICreateHero {
 }
 
 /**
- * <h3>Создание героя.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при создании всех героев при инициализации игры.</li>
- * </ol>
- *
- * @param type Тип.
- * @param name Название.
- * @param description Описание.
- * @param game Игра/дополнение.
- * @param suit Фракция.
- * @param rank Шевроны.
- * @param points Очки.
- * @param active Взят ли герой.
- * @param stack Действия.
- * @returns Герой.
- */
-export const CreateHero = ({
-    type,
-    name,
-    description,
-    game,
-    suit,
-    rank,
-    points,
-    active = true,
-    stack
-}: ICreateHero = {} as ICreateHero): IHero => ({
-    type,
-    name,
-    description,
-    game,
-    suit,
-    rank,
-    points,
-    active,
-    stack,
-});
-
-/**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -143,6 +103,46 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
         }
     }
 };
+
+/**
+ * <h3>Создание героя.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании всех героев при инициализации игры.</li>
+ * </ol>
+ *
+ * @param type Тип.
+ * @param name Название.
+ * @param description Описание.
+ * @param game Игра/дополнение.
+ * @param suit Фракция.
+ * @param rank Шевроны.
+ * @param points Очки.
+ * @param active Взят ли герой.
+ * @param stack Действия.
+ * @returns Герой.
+ */
+export const CreateHero = ({
+    type,
+    name,
+    description,
+    game,
+    suit,
+    rank,
+    points,
+    active = true,
+    stack
+}: ICreateHero = {} as ICreateHero): IHero => ({
+    type,
+    name,
+    description,
+    game,
+    suit,
+    rank,
+    points,
+    active,
+    stack,
+});
 
 /**
  * <h3>Удаляет Труд в конце игры с поля игрока.</h3>

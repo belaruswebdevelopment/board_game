@@ -12,85 +12,6 @@ import { DiscardAnyCardFromPlayerBoardAction, DrawProfitCampAction, GetMjollnirP
 import { DiscardCardFromTavernAction } from "../actions/Actions";
 // todo Add logging
 /**
- * <h3>Завершает каждую фазу конца игры и проверяет переход к другим фазам или завершает игру.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>После завершения экшенов в каждой фазе конца игры.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckEndGameLastActions = (G, ctx) => {
-    if (G.tierToEnd) {
-        ctx.events.setPhase(`getDistinctions`);
-    }
-    else {
-        if (ctx.phase !== `brisingamensEndGame` && ctx.phase !== `getMjollnirProfit`) {
-            RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
-        }
-        let isNewPhase = false;
-        if (G.expansions.thingvellir.active) {
-            if (ctx.phase !== `brisingamensEndGame` && ctx.phase !== `getMjollnirProfit`) {
-                for (let i = 0; i < ctx.numPlayers; i++) {
-                    if (G.publicPlayers[i].buffs.discardCardEndGame) {
-                        isNewPhase = true;
-                        G.publicPlayersOrder.push(i);
-                        const stack = [
-                            {
-                                action: DrawProfitCampAction.name,
-                                playerId: G.publicPlayersOrder[0],
-                                config: {
-                                    name: `BrisingamensEndGameAction`,
-                                    drawName: `Brisingamens end game`,
-                                },
-                            },
-                            {
-                                action: DiscardAnyCardFromPlayerBoardAction.name,
-                                playerId: G.publicPlayersOrder[0],
-                            },
-                        ];
-                        AddActionsToStack(G, ctx, stack);
-                        G.drawProfit = `BrisingamensEndGameAction`;
-                        ctx.events.setPhase(`brisingamensEndGame`);
-                        break;
-                    }
-                }
-            }
-            if (ctx.phase !== `getMjollnirProfit` && !isNewPhase) {
-                for (let i = 0; i < ctx.numPlayers; i++) {
-                    if (G.publicPlayers[i].buffs.getMjollnirProfit) {
-                        isNewPhase = true;
-                        G.publicPlayersOrder.push(i);
-                        const stack = [
-                            {
-                                action: DrawProfitCampAction.name,
-                                playerId: G.publicPlayersOrder[0],
-                                config: {
-                                    name: `getMjollnirProfit`,
-                                    drawName: `Mjollnir`,
-                                },
-                            },
-                            {
-                                action: GetMjollnirProfitAction.name,
-                                playerId: G.publicPlayersOrder[0],
-                            },
-                        ];
-                        AddActionsToStack(G, ctx, stack);
-                        G.drawProfit = `getMjollnirProfit`;
-                        ctx.events.setPhase(`getMjollnirProfit`);
-                        break;
-                    }
-                }
-            }
-        }
-        if (!isNewPhase) {
-            ctx.events.endPhase();
-            ctx.events.endGame();
-        }
-    }
-};
-/**
  * <h3>Выполняет основные действия после выбора базовых карт.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -198,6 +119,114 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
             ctx.events.endTurn();
             AddActionsToStack(G, ctx, stack);
             G.drawProfit = `enlistmentMercenaries`;
+        }
+    }
+};
+/**
+ * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>После того как опустела последняя таверна.</li>
+ * </oL>
+ *
+ * @todo Refill taverns only on the beginning of the round (Add phase Round?)!
+ * @param G
+ * @param ctx
+ */
+const AfterLastTavernEmptyActions = (G, ctx) => {
+    if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
+        G.tierToEnd--;
+        if (G.expansions.thingvellir.active) {
+            CheckEnlistmentMercenaries(G, ctx);
+        }
+        else {
+            StartEndTierActions(G, ctx);
+        }
+    }
+    else {
+        if (G.expansions.thingvellir.active) {
+            RefillEmptyCampCards(G);
+        }
+        RefillTaverns(G);
+        ctx.events.setPhase(`placeCoins`);
+    }
+};
+/**
+ * <h3>Завершает каждую фазу конца игры и проверяет переход к другим фазам или завершает игру.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>После завершения экшенов в каждой фазе конца игры.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const CheckEndGameLastActions = (G, ctx) => {
+    if (G.tierToEnd) {
+        ctx.events.setPhase(`getDistinctions`);
+    }
+    else {
+        if (ctx.phase !== `brisingamensEndGame` && ctx.phase !== `getMjollnirProfit`) {
+            RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+        }
+        let isNewPhase = false;
+        if (G.expansions.thingvellir.active) {
+            if (ctx.phase !== `brisingamensEndGame` && ctx.phase !== `getMjollnirProfit`) {
+                for (let i = 0; i < ctx.numPlayers; i++) {
+                    if (G.publicPlayers[i].buffs.discardCardEndGame) {
+                        isNewPhase = true;
+                        G.publicPlayersOrder.push(i);
+                        const stack = [
+                            {
+                                action: DrawProfitCampAction.name,
+                                playerId: G.publicPlayersOrder[0],
+                                config: {
+                                    name: `BrisingamensEndGameAction`,
+                                    drawName: `Brisingamens end game`,
+                                },
+                            },
+                            {
+                                action: DiscardAnyCardFromPlayerBoardAction.name,
+                                playerId: G.publicPlayersOrder[0],
+                            },
+                        ];
+                        AddActionsToStack(G, ctx, stack);
+                        G.drawProfit = `BrisingamensEndGameAction`;
+                        ctx.events.setPhase(`brisingamensEndGame`);
+                        break;
+                    }
+                }
+            }
+            if (ctx.phase !== `getMjollnirProfit` && !isNewPhase) {
+                for (let i = 0; i < ctx.numPlayers; i++) {
+                    if (G.publicPlayers[i].buffs.getMjollnirProfit) {
+                        isNewPhase = true;
+                        G.publicPlayersOrder.push(i);
+                        const stack = [
+                            {
+                                action: DrawProfitCampAction.name,
+                                playerId: G.publicPlayersOrder[0],
+                                config: {
+                                    name: `getMjollnirProfit`,
+                                    drawName: `Mjollnir`,
+                                },
+                            },
+                            {
+                                action: GetMjollnirProfitAction.name,
+                                playerId: G.publicPlayersOrder[0],
+                            },
+                        ];
+                        AddActionsToStack(G, ctx, stack);
+                        G.drawProfit = `getMjollnirProfit`;
+                        ctx.events.setPhase(`getMjollnirProfit`);
+                        break;
+                    }
+                }
+            }
+        }
+        if (!isNewPhase) {
+            ctx.events.endPhase();
+            ctx.events.endGame();
         }
     }
 };
@@ -315,34 +344,5 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
     }
     else {
         StartEndTierActions(G, ctx);
-    }
-};
-/**
- * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>После того как опустела последняя таверна.</li>
- * </oL>
- *
- * @todo Refill taverns only on the beginning of the round (Add phase Round?)!
- * @param G
- * @param ctx
- */
-const AfterLastTavernEmptyActions = (G, ctx) => {
-    if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
-        G.tierToEnd--;
-        if (G.expansions.thingvellir.active) {
-            CheckEnlistmentMercenaries(G, ctx);
-        }
-        else {
-            StartEndTierActions(G, ctx);
-        }
-    }
-    else {
-        if (G.expansions.thingvellir.active) {
-            RefillEmptyCampCards(G);
-        }
-        RefillTaverns(G);
-        ctx.events.setPhase(`placeCoins`);
     }
 };

@@ -406,8 +406,8 @@ export const BoardGame: Game<MyGameState> = {
     ai: {
         //@ts-ignore
         enumerate,
-        objectives,
         iterations,
+        objectives,
         playoutDepth,
     },
 };

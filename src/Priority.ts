@@ -26,69 +26,6 @@ interface ICreatePriority {
 }
 
 /**
- * <h3>Создание кристаллов.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Используется в массиве всех кристаллов.</li>
- * <li>Используется при раздаче кристаллов игрокам.</li>
- * <li>Используется при выдаче преимущества в виде кристалла горняков.</li>
- * </ol>
- *
- * @param value Значение кристалла.
- * @param isExchangeable Является ли кристалл обменным.
- * @returns Кристалл.
- */
-export const CreatePriority = ({
-    value,
-    isExchangeable = true,
-}: ICreatePriority = {} as ICreatePriority): IPriority => ({
-    value,
-    isExchangeable,
-});
-
-/**
- * <h3>Массив кристаллов приоритетов.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Используется в конфиге кристаллов.</li>
- * </ol>
- */
-const priorities: IPriority[] = [
-    CreatePriority({ value: 1 } as ICreatePriority),
-    CreatePriority({ value: 2 } as ICreatePriority),
-    CreatePriority({ value: 3 } as ICreatePriority),
-    CreatePriority({ value: 4 } as ICreatePriority),
-    CreatePriority({ value: 5 } as ICreatePriority),
-];
-
-/**
- * <h3>Конфиг кристаллов.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Используется при раздаче кристаллов всем игрокам (в зависимости от количества игроков).</li>
- * </ol>
- */
-export const prioritiesConfig: IPrioritiesConfig = {
-    2: priorities.slice(-2),
-    3: priorities.slice(-3),
-    4: priorities.slice(-4),
-    5: priorities.slice(-5),
-};
-
-/**
- * <h3>Генерирует кристаллы из конфига кристаллов по количеству игроков.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при инициализации игры.</li>
- * </ol>
- *
- * @param numPlayers Количество игроков.
- * @returns Массив базовых кристаллов.
- */
-export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number): IPriority[] =>
-    prioritiesConfig[numPlayers].map((priority: IPriority): IPriority => priority);
-
-/**
  * <h3>Изменяет приоритет игроков для выбора карт из текущей таверны.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -118,6 +55,40 @@ export const ChangePlayersPriorities = (G: MyGameState): void => {
 };
 
 /**
+ * <h3>Создание кристаллов.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется в массиве всех кристаллов.</li>
+ * <li>Используется при раздаче кристаллов игрокам.</li>
+ * <li>Используется при выдаче преимущества в виде кристалла горняков.</li>
+ * </ol>
+ *
+ * @param value Значение кристалла.
+ * @param isExchangeable Является ли кристалл обменным.
+ * @returns Кристалл.
+ */
+export const CreatePriority = ({
+    value,
+    isExchangeable = true,
+}: ICreatePriority = {} as ICreatePriority): IPriority => ({
+    value,
+    isExchangeable,
+});
+
+/**
+ * <h3>Генерирует кристаллы из конфига кристаллов по количеству игроков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при инициализации игры.</li>
+ * </ol>
+ *
+ * @param numPlayers Количество игроков.
+ * @returns Массив базовых кристаллов.
+ */
+export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number): IPriority[] =>
+    prioritiesConfig[numPlayers].map((priority: IPriority): IPriority => priority);
+
+/**
  * <h3>Определяет наличие у выбранного игрока наименьшего кристалла.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -134,4 +105,33 @@ export const HasLowestPriority = (G: MyGameState, playerId: number): boolean => 
         minPriority: number = Math.min(...tempPriorities),
         priority: IPriority = G.publicPlayers[playerId].priority;
     return priority.value === minPriority;
+};
+
+/**
+ * <h3>Массив кристаллов приоритетов.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется в конфиге кристаллов.</li>
+ * </ol>
+ */
+const priorities: IPriority[] = [
+    CreatePriority({ value: 1 } as ICreatePriority),
+    CreatePriority({ value: 2 } as ICreatePriority),
+    CreatePriority({ value: 3 } as ICreatePriority),
+    CreatePriority({ value: 4 } as ICreatePriority),
+    CreatePriority({ value: 5 } as ICreatePriority),
+];
+
+/**
+ * <h3>Конфиг кристаллов.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при раздаче кристаллов всем игрокам (в зависимости от количества игроков).</li>
+ * </ol>
+ */
+export const prioritiesConfig: IPrioritiesConfig = {
+    2: priorities.slice(-2),
+    3: priorities.slice(-3),
+    4: priorities.slice(-4),
+    5: priorities.slice(-5),
 };

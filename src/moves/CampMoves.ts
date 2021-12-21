@@ -9,7 +9,33 @@ import {
 import { Ctx, Move } from "boardgame.io";
 import { CampCardTypes, CampDeckCardTypes, MyGameState } from "../GameSetup";
 import { AddDataToLog, LogTypes } from "../Logging";
+
 // todo Add logging
+/**
+ * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Срабатывает при выборе карты из кэмпа по действию персонажа Хольда.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id выбираемой карты из кэмпа.
+ * @returns
+ */
+export const ClickCampCardHoldaMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
+    const isValidMove: boolean = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
+        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    const campCard: CampDeckCardTypes | null = G.camp[cardId];
+    if (campCard !== null) {
+        EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
+    }
+};
 
 /**
  * <h3>Выбор карты из кэмпа.</h3>
@@ -40,29 +66,20 @@ export const ClickCampCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, c
 };
 
 /**
- * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
+ * <h3>Сбрасывает карту в дискард в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Срабатывает при выборе карты из кэмпа по действию персонажа Хольда.</li>
+ * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param cardId Id выбираемой карты из кэмпа.
- * @returns
+ * @param suitId Id фракции.
+ * @param cardId Id сбрасываемой карты.
  */
-export const ClickCampCardHoldaMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
-    const isValidMove: boolean = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
-        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
-    if (!isValidMove) {
-        return INVALID_MOVE;
-    }
-    const campCard: CampDeckCardTypes | null = G.camp[cardId];
-    if (campCard !== null) {
-        EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
-    }
+export const DiscardCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
+    cardId: number): void => {
+    EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };
 
 /**
@@ -78,23 +95,6 @@ export const ClickCampCardHoldaMove: Move<MyGameState> = (G: MyGameState, ctx: C
  */
 export const DiscardCard2PlayersMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
-};
-
-/**
- * <h3>Сбрасывает карту в дискард в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- * @param cardId Id сбрасываемой карты.
- */
-export const DiscardCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
-    cardId: number): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };
 
 /**

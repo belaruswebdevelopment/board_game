@@ -1,29 +1,22 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /**
- * <h3>Собирает данные в объект для отрисовки дебаг информации.</h3>
+ * <h3>Отрисовка дебаг панели.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Используется в отрисовке дебаг панели.</li>
+ * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
  * @param data Глобальные параметры.
- * @returns Данные для отрисовки дебаг информации.
+ * @returns Дебаг панель.
  */
-const GetDebugData = (data) => {
-    if (data.props.G.debug) {
-        const debugData = {
-            G: {},
-            ctx: {},
-        };
-        for (let [key, value] of Object.entries(data.props.G)) {
-            debugData.G[key] = value;
-        }
-        for (let [key, value] of Object.entries(data.props.ctx)) {
-            debugData.ctx[key] = value;
-        }
-        return debugData;
+export const DrawDebugData = (data) => {
+    const debugData = GetDebugData(data);
+    if (debugData === undefined) {
+        return null;
     }
-    return undefined;
+    else {
+        return (_jsxs("div", { children: [_jsx("h3", { children: "Debug info data:" }, void 0), DrawObjectData(debugData)] }, void 0));
+    }
 };
 /**
  * <h3>Отрисовка информации в дебаг панели.</h3>
@@ -54,21 +47,28 @@ const DrawObjectData = (obj) => {
     return (_jsx("div", { children: _jsx("ul", { className: "list-none p-0 ml-5", children: values }, void 0) }, void 0));
 };
 /**
- * <h3>Отрисовка дебаг панели.</h3>
+ * <h3>Собирает данные в объект для отрисовки дебаг информации.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Отрисовка игрового поля.</li>
+ * <li>Используется в отрисовке дебаг панели.</li>
  * </ol>
  *
  * @param data Глобальные параметры.
- * @returns Дебаг панель.
+ * @returns Данные для отрисовки дебаг информации.
  */
-export const DrawDebugData = (data) => {
-    const debugData = GetDebugData(data);
-    if (debugData === undefined) {
-        return null;
+const GetDebugData = (data) => {
+    if (data.props.G.debug) {
+        const debugData = {
+            G: {},
+            ctx: {},
+        };
+        for (let [key, value] of Object.entries(data.props.G)) {
+            debugData.G[key] = value;
+        }
+        for (let [key, value] of Object.entries(data.props.ctx)) {
+            debugData.ctx[key] = value;
+        }
+        return debugData;
     }
-    else {
-        return (_jsxs("div", { children: [_jsx("h3", { children: "Debug info data:" }, void 0), DrawObjectData(debugData)] }, void 0));
-    }
+    return undefined;
 };

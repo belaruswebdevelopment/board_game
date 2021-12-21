@@ -53,43 +53,6 @@ export const AddActionsToStackAfterCurrent = (G: MyGameState, ctx: Ctx, stack: I
 };
 
 /**
- * <h3>Начинает действия из стэка действий конкретного игрока или завершает действия при их отсутствии.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Выполняется при необходимости активировать действия в стэке действий.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param isTrading Является ли действие обменом монет (трейдингом).
- * @param args Дополнительные аргументы.
- */
-export const StartActionFromStackOrEndActions = (G: MyGameState, ctx: Ctx, isTrading: boolean, ...args: ArgsTypes):
-    void => {
-    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) {
-        ActionDispatcher(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0], ...args);
-    } else {
-        EndAction(G, ctx, isTrading);
-    }
-};
-
-/**
- * <h3>Начинает действия из стэка действий указанного игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Выполняется при необходимости активировать действия в стэке действий указанного игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param playerId Id игрока.
- * @param args Дополнительные аргументы.
- */
-export const StartActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: number, ...args: ArgsTypes): void => {
-    ActionDispatcher(G, ctx, G.publicPlayers[playerId].stack[0], ...args);
-};
-
-/**
  * <h3>Завершает действие из стэка действий указанного игрока.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -139,4 +102,41 @@ export const EndActionFromStackAndAddNew = (G: MyGameState, ctx: Ctx, newStack: 
     G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
     AddActionsToStack(G, ctx, newStack);
     StartActionFromStackOrEndActions(G, ctx, isTrading, ...args);
+};
+
+/**
+ * <h3>Начинает действия из стэка действий указанного игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Выполняется при необходимости активировать действия в стэке действий указанного игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @param args Дополнительные аргументы.
+ */
+export const StartActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: number, ...args: ArgsTypes): void => {
+    ActionDispatcher(G, ctx, G.publicPlayers[playerId].stack[0], ...args);
+};
+
+/**
+ * <h3>Начинает действия из стэка действий конкретного игрока или завершает действия при их отсутствии.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Выполняется при необходимости активировать действия в стэке действий.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param isTrading Является ли действие обменом монет (трейдингом).
+ * @param args Дополнительные аргументы.
+ */
+export const StartActionFromStackOrEndActions = (G: MyGameState, ctx: Ctx, isTrading: boolean, ...args: ArgsTypes):
+    void => {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) {
+        ActionDispatcher(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0], ...args);
+    } else {
+        EndAction(G, ctx, isTrading);
+    }
 };

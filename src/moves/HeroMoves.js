@@ -22,20 +22,6 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
     EndActionFromStackAndAddNew(G, ctx, G.heroes[heroId].stack);
 };
 /**
- * <h3>Расположение героя или зависимых карт героя на планшет игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе героя со способностью выкладки карт на планшет игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- */
-export const PlaceCardMove = (G, ctx, suitId) => {
-    EndActionFromStackAndAddNew(G, ctx, [], suitId);
-};
-/**
  * <h3>Сброс карты с верха планшета игрока при выборе героя.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -49,4 +35,18 @@ export const PlaceCardMove = (G, ctx, suitId) => {
  */
 export const DiscardCardMove = (G, ctx, suitId, cardId) => {
     EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
+};
+/**
+ * <h3>Расположение героя или зависимых карт героя на планшет игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе героя со способностью выкладки карт на планшет игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param suitId Id фракции.
+ */
+export const PlaceCardMove = (G, ctx, suitId) => {
+    EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };

@@ -2,30 +2,6 @@ import { AddDataToLog, LogTypes } from "./Logging";
 import { SuitNames, suitsConfig } from "./data/SuitData";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
-/**
- * <h3>Подсчёт преимуществ по количеству шевронов фракций в конце эпохи.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Отрабатывает в начале фазы получения преимуществ за количество шевронов каждой фракции.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckDistinction = (G, ctx) => {
-    let i = 0;
-    AddDataToLog(G, LogTypes.GAME, "Преимущество по фракциям в конце эпохи:");
-    for (const suit in suitsConfig) {
-        const result = CheckCurrentSuitDistinction(G, ctx, suit);
-        G.distinctions[i] = result;
-        if (suit === SuitNames.EXPLORER && result === undefined) {
-            const discardedCard = G.decks[1].splice(0, 1)[0];
-            G.discardCardsDeck.push(discardedCard);
-            AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
-        }
-        i++;
-    }
-};
 // todo Rework 2 functions in one?
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по шевронам конкретной фракции.</h3>
@@ -90,5 +66,29 @@ export const CheckCurrentSuitDistinctions = (G, ctx, suitName) => {
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${suitName}.`);
         // todo Must return undefined or something else!?
+    }
+};
+/**
+ * <h3>Подсчёт преимуществ по количеству шевронов фракций в конце эпохи.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрабатывает в начале фазы получения преимуществ за количество шевронов каждой фракции.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const CheckDistinction = (G, ctx) => {
+    let i = 0;
+    AddDataToLog(G, LogTypes.GAME, "Преимущество по фракциям в конце эпохи:");
+    for (const suit in suitsConfig) {
+        const result = CheckCurrentSuitDistinction(G, ctx, suit);
+        G.distinctions[i] = result;
+        if (suit === SuitNames.EXPLORER && result === undefined) {
+            const discardedCard = G.decks[1].splice(0, 1)[0];
+            G.discardCardsDeck.push(discardedCard);
+            AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
+        }
+        i++;
     }
 };

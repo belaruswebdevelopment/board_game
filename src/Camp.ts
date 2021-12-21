@@ -76,6 +76,119 @@ export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard): ca
     (card as IArtefactCampCard).suit !== undefined;
 
 /**
+* <h3>Заполняет кэмп новой картой из карт кэмп деки текущей эпохи.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>Происходит при заполнении кэмпа недостающими картами.</li>
+* <li>Происходит при заполнении кэмпа картами новой эпохи.</li>
+* </ol>
+*
+* @param G
+* @param cardIndex Индекс карты.
+*/
+const AddCardToCamp = (G: MyGameState, cardIndex: number): void => {
+    const newCampCard: CampDeckCardTypes =
+        G.campDecks[G.campDecks.length - G.tierToEnd].splice(0, 1)[0];
+    G.camp.splice(cardIndex, 1, newCampCard);
+};
+
+/**
+ * <h3>Перемещает все оставшиеся неиспользованные карты кэмпа в дискард.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит в конце 1-й эпохи.</li>
+ * </ol>
+ *
+ * @param G
+ */
+const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
+    // todo Add LogTypes.ERROR logging ?
+    for (let i: number = 0; i < G.camp.length; i++) {
+        if (G.camp[i] !== null) {
+            const card: CampDeckCardTypes | null = G.camp.splice(i, 1, null)[0];
+            if (card !== null) {
+                G.discardCampCardsDeck.push(card);
+            }
+        }
+    }
+    if (G.campDecks[G.campDecks.length - G.tierToEnd - 1].length) {
+        G.discardCampCardsDeck =
+            G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]);
+        G.campDecks[G.campDecks.length - G.tierToEnd - 1].length = 0;
+    }
+    AddDataToLog(G, LogTypes.GAME, `Оставшиеся карты кэмпа сброшены.`);
+};
+
+/**
+ * <h3>Создаёт все карты кэмпа из конфига.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при инициализации игры.</li>
+ * </ol>
+ *
+ * @param tier Эпоха.
+ * @param artefactConfig Файл конфига карт артефактов.
+ * @param mercenariesConfig Файл конфига наёмников.
+ * @returns Все карты кэмпа.
+ */
+export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, mercenariesConfig: IMercenaries[][]):
+    CampDeckCardTypes[] => {
+    const campCards: CampDeckCardTypes[] = [];
+    for (const campArtefactCard in artefactConfig) {
+        if (artefactConfig.hasOwnProperty(campArtefactCard)) {
+            if (artefactConfig[campArtefactCard].tier === tier) {
+                campCards.push(CreateArtefactCampCard({
+                    tier,
+                    path: artefactConfig[campArtefactCard].name,
+                    name: artefactConfig[campArtefactCard].name,
+                    description: artefactConfig[campArtefactCard].description,
+                    game: artefactConfig[campArtefactCard].game,
+                    suit: artefactConfig[campArtefactCard].suit,
+                    rank: artefactConfig[campArtefactCard].rank,
+                    points: artefactConfig[campArtefactCard].points,
+                    stack: artefactConfig[campArtefactCard].stack,
+                } as ICreateArtefactCampCard));
+            }
+        }
+    }
+    for (let i: number = 0; i < mercenariesConfig[tier].length; i++) {
+        let name: string = ``,
+            path: string = ``;
+        for (const campMercenarySuit in mercenariesConfig[tier][i]) {
+            if (mercenariesConfig[tier][i].hasOwnProperty(campMercenarySuit)) {
+                path += campMercenarySuit + ` `;
+                name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
+                for (const campMercenaryCardProperty in mercenariesConfig[tier][i][campMercenarySuit]) {
+                    if (mercenariesConfig[tier][i][campMercenarySuit].hasOwnProperty(campMercenaryCardProperty)) {
+                        if (campMercenaryCardProperty === `rank`) {
+                            name += `шевронов: ${mercenariesConfig[tier][i][campMercenarySuit].rank}, `;
+                        }
+                        if (campMercenaryCardProperty === `points`) {
+                            path += mercenariesConfig[tier][i][campMercenarySuit].points ?
+                                mercenariesConfig[tier][i][campMercenarySuit].points + ` ` : ``;
+                            name += `очков: ${mercenariesConfig[tier][i][campMercenarySuit].points ?
+                                mercenariesConfig[tier][i][campMercenarySuit].points + `) ` : `нет) `}`;
+                        }
+                    }
+                }
+            }
+        }
+        campCards.push(CreateMercenaryCampCard({
+            tier,
+            path: path.trim(),
+            name: name.trim(),
+            stack: [
+                {
+                    action: AddCampCardToCardsAction.name,
+                    variants: mercenariesConfig[tier][i],
+                },
+            ],
+        } as ICreateMercenaryCampCard));
+    }
+    return campCards;
+};
+
+/**
  * <h3>Создание карты артефакта для кэмпа.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -151,75 +264,6 @@ export const CreateMercenaryCampCard = ({
 });
 
 /**
- * <h3>Создаёт все карты кэмпа из конфига.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при инициализации игры.</li>
- * </ol>
- *
- * @param tier Эпоха.
- * @param artefactConfig Файл конфига карт артефактов.
- * @param mercenariesConfig Файл конфига наёмников.
- * @returns Все карты кэмпа.
- */
-export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, mercenariesConfig: IMercenaries[][]):
-    CampDeckCardTypes[] => {
-    const campCards: CampDeckCardTypes[] = [];
-    for (const campArtefactCard in artefactConfig) {
-        if (artefactConfig.hasOwnProperty(campArtefactCard)) {
-            if (artefactConfig[campArtefactCard].tier === tier) {
-                campCards.push(CreateArtefactCampCard({
-                    tier,
-                    path: artefactConfig[campArtefactCard].name,
-                    name: artefactConfig[campArtefactCard].name,
-                    description: artefactConfig[campArtefactCard].description,
-                    game: artefactConfig[campArtefactCard].game,
-                    suit: artefactConfig[campArtefactCard].suit,
-                    rank: artefactConfig[campArtefactCard].rank,
-                    points: artefactConfig[campArtefactCard].points,
-                    stack: artefactConfig[campArtefactCard].stack,
-                } as ICreateArtefactCampCard));
-            }
-        }
-    }
-    for (let i: number = 0; i < mercenariesConfig[tier].length; i++) {
-        let name: string = ``,
-            path: string = ``;
-        for (const campMercenarySuit in mercenariesConfig[tier][i]) {
-            if (mercenariesConfig[tier][i].hasOwnProperty(campMercenarySuit)) {
-                path += campMercenarySuit + ` `;
-                name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
-                for (const campMercenaryCardProperty in mercenariesConfig[tier][i][campMercenarySuit]) {
-                    if (mercenariesConfig[tier][i][campMercenarySuit].hasOwnProperty(campMercenaryCardProperty)) {
-                        if (campMercenaryCardProperty === `rank`) {
-                            name += `шевронов: ${mercenariesConfig[tier][i][campMercenarySuit].rank}, `;
-                        }
-                        if (campMercenaryCardProperty === `points`) {
-                            path += mercenariesConfig[tier][i][campMercenarySuit].points ?
-                                mercenariesConfig[tier][i][campMercenarySuit].points + ` ` : ``;
-                            name += `очков: ${mercenariesConfig[tier][i][campMercenarySuit].points ?
-                                mercenariesConfig[tier][i][campMercenarySuit].points + `) ` : `нет) `}`;
-                        }
-                    }
-                }
-            }
-        }
-        campCards.push(CreateMercenaryCampCard({
-            tier,
-            path: path.trim(),
-            name: name.trim(),
-            stack: [
-                {
-                    action: AddCampCardToCardsAction.name,
-                    variants: mercenariesConfig[tier][i],
-                },
-            ],
-        } as ICreateMercenaryCampCard));
-    }
-    return campCards;
-};
-
-/**
  * <h3>Автоматически убирает оставшуюся карту таверны в стопку сброса при выборе карты из кэмпа.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -244,6 +288,23 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
         }
     }
+};
+
+/**
+ * <h3>Автоматически заполняет кэмп картами новой эпохи.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при начале новой эпохи.</li>
+ * </ol>
+ *
+ * @param G
+ */
+export const RefillCamp = (G: MyGameState): void => {
+    AddRemainingCampCardsToDiscard(G);
+    for (let i: number = 0; i < G.campNum; i++) {
+        AddCardToCamp(G, i);
+    }
+    AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами новой эпохи.`);
 };
 
 /**
@@ -275,65 +336,4 @@ export const RefillEmptyCampCards = (G: MyGameState): void => {
         });
         AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами.`);
     }
-};
-
-/**
- * <h3>Автоматически заполняет кэмп картами новой эпохи.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при начале новой эпохи.</li>
- * </ol>
- *
- * @param G
- */
-export const RefillCamp = (G: MyGameState): void => {
-    AddRemainingCampCardsToDiscard(G);
-    for (let i: number = 0; i < G.campNum; i++) {
-        AddCardToCamp(G, i);
-    }
-    AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами новой эпохи.`);
-};
-
-/**
- * <h3>Перемещает все оставшиеся неиспользованные карты кэмпа в дискард.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит в конце 1-й эпохи.</li>
- * </ol>
- *
- * @param G
- */
-const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
-    // todo Add LogTypes.ERROR logging ?
-    for (let i: number = 0; i < G.camp.length; i++) {
-        if (G.camp[i] !== null) {
-            const card: CampDeckCardTypes | null = G.camp.splice(i, 1, null)[0];
-            if (card !== null) {
-                G.discardCampCardsDeck.push(card);
-            }
-        }
-    }
-    if (G.campDecks[G.campDecks.length - G.tierToEnd - 1].length) {
-        G.discardCampCardsDeck =
-            G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]);
-        G.campDecks[G.campDecks.length - G.tierToEnd - 1].length = 0;
-    }
-    AddDataToLog(G, LogTypes.GAME, `Оставшиеся карты кэмпа сброшены.`);
-};
-
-/**
- * <h3>Заполняет кэмп новой картой из карт кэмп деки текущей эпохи.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при заполнении кэмпа недостающими картами.</li>
- * <li>Происходит при заполнении кэмпа картами новой эпохи.</li>
- * </ol>
- *
- * @param G
- * @param cardIndex Индекс карты.
- */
-const AddCardToCamp = (G: MyGameState, cardIndex: number): void => {
-    const newCampCard: CampDeckCardTypes =
-        G.campDecks[G.campDecks.length - G.tierToEnd].splice(0, 1)[0];
-    G.camp.splice(cardIndex, 1, newCampCard);
 };

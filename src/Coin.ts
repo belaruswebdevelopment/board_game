@@ -48,29 +48,6 @@ export interface IBuildCoinsOptions {
 const isCoin = (obj: {} | ICoin): obj is ICoin => (obj as ICoin).value !== undefined;
 
 /**
- * <h3>Создание монеты.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при создании всех монет при инициализации игры.</li>
- * <li>Вызывается при создании монеты преимущества по охотникам.</li>
- * </ol>
- *.
- * @param value Значение.
- * @param isInitial Является ли базовой.
- * @param isTriggerTrading Активирует ли обмен монет.
- * @returns Монета.
- */
-export const CreateCoin = ({
-    value,
-    isInitial = false,
-    isTriggerTrading = false,
-}: ICreateCoin = {} as ICreateCoin): ICoin => ({
-    value,
-    isInitial,
-    isTriggerTrading,
-});
-
-/**
  * <h3>Создание всех монет.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -124,6 +101,72 @@ export const CountMarketCoins = (G: MyGameState): INumberValues => {
         repeated[temp] = G.marketCoins.filter((coin: ICoin): boolean => coin.value === temp).length;
     }
     return repeated;
+};
+
+/**
+ * <h3>Создание монеты.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании всех монет при инициализации игры.</li>
+ * <li>Вызывается при создании монеты преимущества по охотникам.</li>
+ * </ol>
+ *.
+ * @param value Значение.
+ * @param isInitial Является ли базовой.
+ * @param isTriggerTrading Активирует ли обмен монет.
+ * @returns Монета.
+ */
+export const CreateCoin = ({
+    value,
+    isInitial = false,
+    isTriggerTrading = false,
+}: ICreateCoin = {} as ICreateCoin): ICoin => ({
+    value,
+    isInitial,
+    isTriggerTrading,
+});
+
+/**
+ * <h3>Возвращает все монеты со стола в руки игроков в начале фазы выставления монет.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В начале фазы выставления монет.</li>
+ * </ol>
+ *
+ * @param G
+ */
+export const ReturnCoinsToPlayerHands = (G: MyGameState): void => {
+    for (let i: number = 0; i < G.publicPlayers.length; i++) {
+        for (let j: number = 0; j < G.publicPlayers[i].boardCoins.length; j++) {
+            const isCoinReturned: boolean = ReturnCoinToPlayerHands(G.publicPlayers[i], j);
+            if (!isCoinReturned) {
+                break;
+            }
+        }
+    }
+    AddDataToLog(G, LogTypes.GAME, `Все монеты вернулись в руки игроков.`);
+};
+
+/**
+ * <h3>Возвращает указанную монету в руку игрока, если она ещё не в руке.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При возврате всех монет в руку в начале фазы выставления монет.</li>
+ * <li>При возврате монет в руку, когда взят герой Улина.</li>
+ * </ol>
+ *
+ * @param player Игрок.
+ * @param coinId Id монеты.
+ * @returns Вернулась ли монета в руку.
+ */
+export const ReturnCoinToPlayerHands = (player: IPublicPlayer, coinId: number): boolean => {
+    const tempCoinId: number = player.handCoins.indexOf(null);
+    if (tempCoinId === -1) {
+        return false;
+    }
+    player.handCoins[tempCoinId] = player.boardCoins[coinId];
+    player.boardCoins[coinId] = null;
+    return true;
 };
 
 /**
@@ -346,47 +389,4 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
             AddDataToLog(G, LogTypes.PRIVATE, `На рынке монет нет доступных монет для обмена.`);
         }
     }
-};
-
-/**
- * <h3>Возвращает все монеты со стола в руки игроков в начале фазы выставления монет.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>В начале фазы выставления монет.</li>
- * </ol>
- *
- * @param G
- */
-export const ReturnCoinsToPlayerHands = (G: MyGameState): void => {
-    for (let i: number = 0; i < G.publicPlayers.length; i++) {
-        for (let j: number = 0; j < G.publicPlayers[i].boardCoins.length; j++) {
-            const isCoinReturned: boolean = ReturnCoinToPlayerHands(G.publicPlayers[i], j);
-            if (!isCoinReturned) {
-                break;
-            }
-        }
-    }
-    AddDataToLog(G, LogTypes.GAME, `Все монеты вернулись в руки игроков.`);
-};
-
-/**
- * <h3>Возвращает указанную монету в руку игрока, если она ещё не в руке.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При возврате всех монет в руку в начале фазы выставления монет.</li>
- * <li>При возврате монет в руку, когда взят герой Улина.</li>
- * </ol>
- *
- * @param player Игрок.
- * @param coinId Id монеты.
- * @returns Вернулась ли монета в руку.
- */
-export const ReturnCoinToPlayerHands = (player: IPublicPlayer, coinId: number): boolean => {
-    const tempCoinId: number = player.handCoins.indexOf(null);
-    if (tempCoinId === -1) {
-        return false;
-    }
-    player.handCoins[tempCoinId] = player.boardCoins[coinId];
-    player.boardCoins[coinId] = null;
-    return true;
 };

@@ -15,10 +15,10 @@ import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
  */
 export const enum SuitNames {
     BLACKSMITH = `blacksmith`,
+    EXPLORER = `explorer`,
     HUNTER = `hunter`,
     MINER = `miner`,
     WARRIOR = `warrior`,
-    EXPLORER = `explorer`,
 }
 
 /**
@@ -141,6 +141,79 @@ const blacksmith: ISuit = {
                 delete G.distinctions[0];
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
                 ctx.events!.endTurn!();
+            }
+            return 0;
+        },
+    },
+};
+
+/**
+ * <h3>Фракция разведчиков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется в конфиге фракций.</li>
+ * </ol>
+ */
+const explorer: ISuit = {
+    suit: SuitNames.EXPLORER,
+    suitName: `Разведчики`,
+    suitColor: `bg-blue-500`,
+    description: `Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.`,
+    ranksValues: (): IRankValues => ({
+        2: {
+            0: 7,
+            1: 7,
+        },
+        3: {
+            0: 7,
+            1: 7,
+        },
+        4: {
+            0: 7,
+            1: 7,
+        },
+        5: {
+            0: 8,
+            1: 8,
+        },
+    }),
+    pointsValues: (): IPointsValues => ({
+        2: {
+            0: [5, 6, 7, 8, 9, 10, 11],
+            1: [5, 6, 7, 8, 9, 10, 11],
+        },
+        3: {
+            0: [5, 6, 7, 8, 9, 10, 11],
+            1: [5, 6, 7, 8, 9, 10, 11],
+        },
+        4: {
+            0: [5, 6, 7, 8, 9, 10, 11],
+            1: [5, 6, 7, 8, 9, 10, 11],
+        },
+        5: {
+            0: [5, 6, 7, 8, 9, 10, 11, 12],
+            1: [5, 6, 7, 8, 9, 10, 11, 12],
+        },
+    }),
+    scoringRule: (cards: PlayerCardsType[]): number => cards.reduce(TotalPoints, 0),
+    distinction: {
+        description: `Получив знак отличия разведчиков, сразу же возьмите 3 карты из колоды эпохи 2 и сохраните у себя одну из этих карт. Если это карта дворфа, сразу же поместите его в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов. Если это карта королевская награда, то улучшите одну из своих монет. Две оставшиеся карты возвращаются в колоду эпохи 2. Положите карту знак отличия разведчиков в командную зону рядом с вашим планшетом.`,
+        awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+            if (G.tierToEnd !== 0) {
+                const stack: IStack[] = [
+                    {
+                        // action: DrawProfitHeroAction.name,
+                        action: `DrawProfitHeroAction`,
+                        config: {
+                            name: `explorerDistinction`,
+                            stageName: `pickDistinctionCard`,
+                            drawName: `Pick card by Explorer distinction`,
+                        },
+                    },
+                ];
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
+                AddActionsToStack(G, ctx, stack);
+                StartActionFromStackOrEndActions(G, ctx, false);
             }
             return 0;
         },
@@ -368,79 +441,6 @@ const warrior: ISuit = {
 };
 
 /**
- * <h3>Фракция разведчиков.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Используется в конфиге фракций.</li>
- * </ol>
- */
-const explorer: ISuit = {
-    suit: SuitNames.EXPLORER,
-    suitName: `Разведчики`,
-    suitColor: `bg-blue-500`,
-    description: `Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.`,
-    ranksValues: (): IRankValues => ({
-        2: {
-            0: 7,
-            1: 7,
-        },
-        3: {
-            0: 7,
-            1: 7,
-        },
-        4: {
-            0: 7,
-            1: 7,
-        },
-        5: {
-            0: 8,
-            1: 8,
-        },
-    }),
-    pointsValues: (): IPointsValues => ({
-        2: {
-            0: [5, 6, 7, 8, 9, 10, 11],
-            1: [5, 6, 7, 8, 9, 10, 11],
-        },
-        3: {
-            0: [5, 6, 7, 8, 9, 10, 11],
-            1: [5, 6, 7, 8, 9, 10, 11],
-        },
-        4: {
-            0: [5, 6, 7, 8, 9, 10, 11],
-            1: [5, 6, 7, 8, 9, 10, 11],
-        },
-        5: {
-            0: [5, 6, 7, 8, 9, 10, 11, 12],
-            1: [5, 6, 7, 8, 9, 10, 11, 12],
-        },
-    }),
-    scoringRule: (cards: PlayerCardsType[]): number => cards.reduce(TotalPoints, 0),
-    distinction: {
-        description: `Получив знак отличия разведчиков, сразу же возьмите 3 карты из колоды эпохи 2 и сохраните у себя одну из этих карт. Если это карта дворфа, сразу же поместите его в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов. Если это карта королевская награда, то улучшите одну из своих монет. Две оставшиеся карты возвращаются в колоду эпохи 2. Положите карту знак отличия разведчиков в командную зону рядом с вашим планшетом.`,
-        awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
-            if (G.tierToEnd !== 0) {
-                const stack: IStack[] = [
-                    {
-                        // action: DrawProfitHeroAction.name,
-                        action: `DrawProfitHeroAction`,
-                        config: {
-                            name: `explorerDistinction`,
-                            stageName: `pickDistinctionCard`,
-                            drawName: `Pick card by Explorer distinction`,
-                        },
-                    },
-                ];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
-                AddActionsToStack(G, ctx, stack);
-                StartActionFromStackOrEndActions(G, ctx, false);
-            }
-            return 0;
-        },
-    },
-};
-
-/**
  * <h3>Конфиг фракций.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -449,8 +449,8 @@ const explorer: ISuit = {
  */
 export const suitsConfig: ISuitConfig = {
     blacksmith,
+    explorer,
     hunter,
     miner,
     warrior,
-    explorer,
 };

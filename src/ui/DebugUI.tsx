@@ -1,30 +1,27 @@
 import { GameBoard } from "../GameBoard";
 
 /**
- * <h3>Собирает данные в объект для отрисовки дебаг информации.</h3>
+ * <h3>Отрисовка дебаг панели.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Используется в отрисовке дебаг панели.</li>
+ * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
  * @param data Глобальные параметры.
- * @returns Данные для отрисовки дебаг информации.
+ * @returns Дебаг панель.
  */
-const GetDebugData = (data: GameBoard): { ctx: {}, G: {} } | undefined => {
-    if (data.props.G.debug) {
-        const debugData: { G: { [key: string]: any }, ctx: { [key: string]: any } } = {
-            G: {},
-            ctx: {},
-        };
-        for (let [key, value] of Object.entries(data.props.G)) {
-            debugData.G[key] = value;
-        }
-        for (let [key, value] of Object.entries(data.props.ctx)) {
-            debugData.ctx[key] = value;
-        }
-        return debugData;
+export const DrawDebugData = (data: GameBoard): JSX.Element | null => {
+    const debugData: { G: { [key: string]: any; }, ctx: { [key: string]: any; }; } | undefined = GetDebugData(data);
+    if (debugData === undefined) {
+        return null;
+    } else {
+        return (
+            <div>
+                <h3>Debug info data:</h3>
+                {DrawObjectData(debugData)}
+            </div>
+        );
     }
-    return undefined;
 };
 
 /**
@@ -37,7 +34,7 @@ const GetDebugData = (data: GameBoard): { ctx: {}, G: {} } | undefined => {
  * @param obj Информация.
  * @returns
  */
-const DrawObjectData = (obj: { [key: string]: any }): JSX.Element => {
+const DrawObjectData = (obj: { [key: string]: any; }): JSX.Element => {
     const values: JSX.Element[] = [];
     for (let [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {
@@ -85,25 +82,28 @@ const DrawObjectData = (obj: { [key: string]: any }): JSX.Element => {
 };
 
 /**
- * <h3>Отрисовка дебаг панели.</h3>
+ * <h3>Собирает данные в объект для отрисовки дебаг информации.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Отрисовка игрового поля.</li>
+ * <li>Используется в отрисовке дебаг панели.</li>
  * </ol>
  *
  * @param data Глобальные параметры.
- * @returns Дебаг панель.
+ * @returns Данные для отрисовки дебаг информации.
  */
-export const DrawDebugData = (data: GameBoard): JSX.Element | null => {
-    const debugData: { G: { [key: string]: any }, ctx: { [key: string]: any } } | undefined = GetDebugData(data);
-    if (debugData === undefined) {
-        return null;
-    } else {
-        return (
-            <div>
-                <h3>Debug info data:</h3>
-                {DrawObjectData(debugData)}
-            </div>
-        );
+const GetDebugData = (data: GameBoard): { ctx: {}, G: {}; } | undefined => {
+    if (data.props.G.debug) {
+        const debugData: { G: { [key: string]: any; }, ctx: { [key: string]: any; }; } = {
+            G: {},
+            ctx: {},
+        };
+        for (let [key, value] of Object.entries(data.props.G)) {
+            debugData.G[key] = value;
+        }
+        for (let [key, value] of Object.entries(data.props.ctx)) {
+            debugData.ctx[key] = value;
+        }
+        return debugData;
     }
+    return undefined;
 };

@@ -59,26 +59,6 @@ export const ClickCardMove = (G, ctx, cardId) => {
     }
 };
 /**
- * <h3>Выбор конкретного преимущества по фракциям в конце первой эпохи.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>После определения преимуществ по фракциям в конце первой эпохи.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param cardId Id карты.
- * @returns
- */
-export const ClickDistinctionCardMove = (G, ctx, cardId) => {
-    const index = G.distinctions.indexOf(Number(ctx.currentPlayer)), isValidMove = IsValidMove({ objId: cardId, values: [index] });
-    if (!isValidMove) {
-        return INVALID_MOVE;
-    }
-    suitsConfig[Object.keys(suitsConfig)[cardId]].distinction
-        .awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
-};
-/**
  * <h3>Выбор базовой карты из новой эпохи по преимуществу по фракции разведчиков.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -106,6 +86,63 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     EndActionFromStackAndAddNew(G, ctx, [], suitId);
 };
 /**
+ * <h3>Выбор конкретного преимущества по фракциям в конце первой эпохи.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>После определения преимуществ по фракциям в конце первой эпохи.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ * @returns
+ */
+export const ClickDistinctionCardMove = (G, ctx, cardId) => {
+    const index = G.distinctions.indexOf(Number(ctx.currentPlayer)), isValidMove = IsValidMove({ objId: cardId, values: [index] });
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    suitsConfig[Object.keys(suitsConfig)[cardId]].distinction
+        .awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
+};
+/**
+ * <h3>Выбор игроком карты наёмника для вербовки.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ */
+export const GetEnlistmentMercenariesMove = (G, ctx, cardId) => {
+    const stack = [
+        {
+            action: GetEnlistmentMercenariesAction.name,
+        },
+    ];
+    EndActionFromStackAndAddNew(G, ctx, stack, cardId);
+};
+/**
+ * <h3>Пасс первого игрока в начале фазы вербовки наёмников.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Первый игрок в начале фазы вербовки наёмников пасует для того, чтобы вербовать последним.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const PassEnlistmentMercenariesMove = (G, ctx) => {
+    const stack = [
+        {
+            action: PassEnlistmentMercenariesAction.name,
+        },
+    ];
+    EndActionFromStackAndAddNew(G, ctx, stack);
+};
+/**
  * <h3>Выбор карт из дискарда.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -119,6 +156,25 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
  */
 export const PickDiscardCardMove = (G, ctx, cardId) => {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
+};
+/**
+ * <h3>Выбор фракции куда будет завербован наёмник.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе фракции, куда будет завербован наёмник.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param suitId Id фракции.
+ */
+export const PlaceEnlistmentMercenariesMove = (G, ctx, suitId) => {
+    const stack = [
+        {
+            action: PlaceEnlistmentMercenariesAction.name,
+        },
+    ];
+    EndActionFromStackAndAddNew(G, ctx, stack, suitId);
 };
 /**
  * <h3>Начало вербовки наёмников.</li>
@@ -141,60 +197,4 @@ export const StartEnlistmentMercenariesMove = (G, ctx) => {
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack);
-};
-/**
- * <h3>Пасс первого игрока в начале фазы вербовки наёмников.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Первый игрок в начале фазы вербовки наёмников пасует для того, чтобы вербовать последним.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const PassEnlistmentMercenariesMove = (G, ctx) => {
-    const stack = [
-        {
-            action: PassEnlistmentMercenariesAction.name,
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack);
-};
-/**
- * <h3>Выбор игроком карты наёмника для вербовки.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param cardId Id карты.
- */
-export const GetEnlistmentMercenariesMove = (G, ctx, cardId) => {
-    const stack = [
-        {
-            action: GetEnlistmentMercenariesAction.name,
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack, cardId);
-};
-/**
- * <h3>Выбор фракции куда будет завербован наёмник.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе фракции, куда будет завербован наёмник.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- */
-export const PlaceEnlistmentMercenariesMove = (G, ctx, suitId) => {
-    const stack = [
-        {
-            action: PlaceEnlistmentMercenariesAction.name,
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack, suitId);
 };

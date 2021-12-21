@@ -7,6 +7,95 @@ import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 /**
+ * <h3>Отрисовка планшета всех карт игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @returns Игровые поля для планшета всех карт игрока.
+ * @constructor
+ */
+export const DrawPlayersBoards = (data) => {
+    const playersBoards = [], playerHeaders = [], playerHeadersCount = [], playerRows = [];
+    for (let p = 0; p < data.props.ctx.numPlayers; p++) {
+        playersBoards[p] = [];
+        playerHeaders[p] = [];
+        playerHeadersCount[p] = [];
+        playerRows[p] = [];
+        for (const suit in suitsConfig) {
+            playerHeaders[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, void 0) }, `${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName}`));
+            playerHeadersCount[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor} text-white`, children: _jsx("b", { children: data.props.G.publicPlayers[p].cards[GetSuitIndexByName(suit)]
+                        .reduce(TotalRank, 0) }, void 0) }, `${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName} count`));
+        }
+        for (let s = 0; s < 1 + Number(data.props.G.expansions.thingvellir.active); s++) {
+            if (s === 0) {
+                playerHeaders[p].push(_jsx("th", { className: "bg-gray-600", children: _jsx("span", { style: Styles.HeroBack(), className: "bg-hero-icon" }, void 0) }, `${data.props.G.publicPlayers[p].nickname} hero icon`));
+                playerHeadersCount[p].push(_jsx("th", { className: "bg-gray-600 text-white", children: _jsx("b", { children: data.props.G.publicPlayers[p].heroes.length }, void 0) }, `${data.props.G.publicPlayers[p].nickname} hero count`));
+            }
+            else {
+                playerHeaders[p].push(_jsx("th", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }, void 0) }, `${data.props.G.publicPlayers[p].nickname} camp icon`));
+                playerHeadersCount[p].push(_jsx("th", { className: "bg-yellow-200 text-white", children: _jsx("b", { children: data.props.G.publicPlayers[p].campCards.length }, void 0) }, `${data.props.G.publicPlayers[p].nickname} camp counts`));
+            }
+        }
+        for (let i = 0;; i++) {
+            const playerCells = [];
+            let isDrawRow = false, id = 0;
+            playerRows[p][i] = [];
+            for (let j = 0; j < data.props.G.suitsNum; j++) {
+                const suit = Object.keys(suitsConfig)[j];
+                id = i + j;
+                if (data.props.G.publicPlayers[p].cards[j][i] !== undefined) {
+                    isDrawRow = true;
+                    DrawCard(data, playerCells, data.props.G.publicPlayers[p].cards[j][i], id, data.props.G.publicPlayers[p], suit);
+                }
+                else {
+                    playerCells.push(_jsx("td", {}, `${data.props.G.publicPlayers[p].nickname} empty card ${id}`));
+                }
+            }
+            for (let k = 0; k < 1 + Number(data.props.G.expansions.thingvellir.active); k++) {
+                id += k + 1;
+                if (k === 0) {
+                    // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
+                    if (data.props.G.publicPlayers[p].heroes[i] !== undefined &&
+                        (!data.props.G.publicPlayers[p].heroes[i].suit &&
+                            !((data.props.G.publicPlayers[p].heroes[i].name === `Ylud`
+                                && data.props.G.publicPlayers[p].cards.flat()
+                                    .findIndex((card) => card.name === `Ylud`) !== -1)
+                                || (data.props.G.publicPlayers[p].heroes[i].name === `Thrud`
+                                    && data.props.G.publicPlayers[p].cards.flat()
+                                        .findIndex((card) => card.name === `Thrud`) !== -1)))) {
+                        isDrawRow = true;
+                        DrawCard(data, playerCells, data.props.G.publicPlayers[p].heroes[i], id, data.props.G.publicPlayers[p]);
+                    }
+                    else {
+                        playerCells.push(_jsx("td", {}, `${data.props.G.publicPlayers[p].nickname} hero ${i}`));
+                    }
+                }
+                else {
+                    if (data.props.G.publicPlayers[p].campCards[i] !== undefined) {
+                        isDrawRow = true;
+                        DrawCard(data, playerCells, data.props.G.publicPlayers[p].campCards[i], id, data.props.G.publicPlayers[p]);
+                    }
+                    else {
+                        playerCells.push(_jsx("td", {}, `${data.props.G.publicPlayers[p].nickname} camp card ${i}`));
+                    }
+                }
+            }
+            if (isDrawRow) {
+                playerRows[p][i].push(_jsx("tr", { children: playerCells }, `${data.props.G.publicPlayers[p].nickname} board row ${i}`));
+            }
+            else {
+                break;
+            }
+        }
+        playersBoards[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", data.props.G.publicPlayers[p].nickname, ") cards, ", data.props.G.winner.length ? `Final: ${data.props.G.totalScore[p]}` :
+                            CurrentScoring(data.props.G.publicPlayers[p]), " points"] }, void 0), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders[p] }, void 0), _jsx("tr", { children: playerHeadersCount[p] }, void 0)] }, void 0), _jsx("tbody", { children: playerRows[p] }, void 0)] }, `${data.props.G.publicPlayers[p].nickname} board`));
+    }
+    return playersBoards;
+};
+/**
  * <h3>Отрисовка планшета монет, выложенных игроком на стол.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -154,93 +243,4 @@ export const DrawPlayersHandsCoins = (data) => {
         playersHandsCoins[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", data.props.G.publicPlayers[p].nickname, ") coins"] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: playerCells }, void 0) }, void 0)] }, `${data.props.G.publicPlayers[p].nickname} hand coins`));
     }
     return playersHandsCoins;
-};
-/**
- * <h3>Отрисовка планшета всех карт игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Отрисовка игрового поля.</li>
- * </ol>
- *
- * @param data Глобальные параметры.
- * @returns Игровые поля для планшета всех карт игрока.
- * @constructor
- */
-export const DrawPlayersBoards = (data) => {
-    const playersBoards = [], playerHeaders = [], playerHeadersCount = [], playerRows = [];
-    for (let p = 0; p < data.props.ctx.numPlayers; p++) {
-        playersBoards[p] = [];
-        playerHeaders[p] = [];
-        playerHeadersCount[p] = [];
-        playerRows[p] = [];
-        for (const suit in suitsConfig) {
-            playerHeaders[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, void 0) }, `${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName}`));
-            playerHeadersCount[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor} text-white`, children: _jsx("b", { children: data.props.G.publicPlayers[p].cards[GetSuitIndexByName(suit)]
-                        .reduce(TotalRank, 0) }, void 0) }, `${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName} count`));
-        }
-        for (let s = 0; s < 1 + Number(data.props.G.expansions.thingvellir.active); s++) {
-            if (s === 0) {
-                playerHeaders[p].push(_jsx("th", { className: "bg-gray-600", children: _jsx("span", { style: Styles.HeroBack(), className: "bg-hero-icon" }, void 0) }, `${data.props.G.publicPlayers[p].nickname} hero icon`));
-                playerHeadersCount[p].push(_jsx("th", { className: "bg-gray-600 text-white", children: _jsx("b", { children: data.props.G.publicPlayers[p].heroes.length }, void 0) }, `${data.props.G.publicPlayers[p].nickname} hero count`));
-            }
-            else {
-                playerHeaders[p].push(_jsx("th", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }, void 0) }, `${data.props.G.publicPlayers[p].nickname} camp icon`));
-                playerHeadersCount[p].push(_jsx("th", { className: "bg-yellow-200 text-white", children: _jsx("b", { children: data.props.G.publicPlayers[p].campCards.length }, void 0) }, `${data.props.G.publicPlayers[p].nickname} camp counts`));
-            }
-        }
-        for (let i = 0;; i++) {
-            const playerCells = [];
-            let isDrawRow = false, id = 0;
-            playerRows[p][i] = [];
-            for (let j = 0; j < data.props.G.suitsNum; j++) {
-                const suit = Object.keys(suitsConfig)[j];
-                id = i + j;
-                if (data.props.G.publicPlayers[p].cards[j][i] !== undefined) {
-                    isDrawRow = true;
-                    DrawCard(data, playerCells, data.props.G.publicPlayers[p].cards[j][i], id, data.props.G.publicPlayers[p], suit);
-                }
-                else {
-                    playerCells.push(_jsx("td", {}, `${data.props.G.publicPlayers[p].nickname} empty card ${id}`));
-                }
-            }
-            for (let k = 0; k < 1 + Number(data.props.G.expansions.thingvellir.active); k++) {
-                id += k + 1;
-                if (k === 0) {
-                    // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
-                    if (data.props.G.publicPlayers[p].heroes[i] !== undefined &&
-                        (!data.props.G.publicPlayers[p].heroes[i].suit &&
-                            !((data.props.G.publicPlayers[p].heroes[i].name === `Ylud`
-                                && data.props.G.publicPlayers[p].cards.flat()
-                                    .findIndex((card) => card.name === `Ylud`) !== -1)
-                                || (data.props.G.publicPlayers[p].heroes[i].name === `Thrud`
-                                    && data.props.G.publicPlayers[p].cards.flat()
-                                        .findIndex((card) => card.name === `Thrud`) !== -1)))) {
-                        isDrawRow = true;
-                        DrawCard(data, playerCells, data.props.G.publicPlayers[p].heroes[i], id, data.props.G.publicPlayers[p]);
-                    }
-                    else {
-                        playerCells.push(_jsx("td", {}, `${data.props.G.publicPlayers[p].nickname} hero ${i}`));
-                    }
-                }
-                else {
-                    if (data.props.G.publicPlayers[p].campCards[i] !== undefined) {
-                        isDrawRow = true;
-                        DrawCard(data, playerCells, data.props.G.publicPlayers[p].campCards[i], id, data.props.G.publicPlayers[p]);
-                    }
-                    else {
-                        playerCells.push(_jsx("td", {}, `${data.props.G.publicPlayers[p].nickname} camp card ${i}`));
-                    }
-                }
-            }
-            if (isDrawRow) {
-                playerRows[p][i].push(_jsx("tr", { children: playerCells }, `${data.props.G.publicPlayers[p].nickname} board row ${i}`));
-            }
-            else {
-                break;
-            }
-        }
-        playersBoards[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", data.props.G.publicPlayers[p].nickname, ") cards, ", data.props.G.winner.length ? `Final: ${data.props.G.totalScore[p]}` :
-                            CurrentScoring(data.props.G.publicPlayers[p]), " points"] }, void 0), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders[p] }, void 0), _jsx("tr", { children: playerHeadersCount[p] }, void 0)] }, void 0), _jsx("tbody", { children: playerRows[p] }, void 0)] }, `${data.props.G.publicPlayers[p].nickname} board`));
-    }
-    return playersBoards;
 };

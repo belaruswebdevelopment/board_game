@@ -95,72 +95,6 @@ export interface IDeckConfig {
 export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as ICard).suit !== undefined;
 
 /**
- * <h3>Создание карты.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при создании всех карт при инициализации игры.</li>
- * </ol>
- *
- * @param type Тип.
- * @param suit Фракция.
- * @param rank Шевроны.
- * @param points Очки.
- * @param name Название.
- * @param game Игра/дополнение.
- * @param tier Эпоха.
- * @param path URL путь.
- * @returns Карта дворфа.
- */
-export const CreateCard = ({
-    type = `базовая`,
-    suit,
-    rank,
-    points,
-    name = ``,
-    game = ``,
-    tier = 0,
-    path = ``,
-}: ICreateCard = {} as ICreateCard): ICard => ({
-    type,
-    suit,
-    rank,
-    points,
-    name,
-    game,
-    tier,
-    path,
-});
-
-/**
- * <h3>Создание карты улучшения монеты.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при создании всех карт улучшения монеты во время инициализации игры.</li>
- * </ol>
- *
- * @param type Тип.
- * @param value Значение.
- * @param action Действие.
- * @param name Название.
- * @param type Тип.
- * @param value Значение.
- * @param stack Действие.
- * @param name Название.
- * @returns Карта обмена монеты.
- */
-const CreateActionCard = ({
-    type = `улучшение монеты`,
-    value,
-    stack,
-    name,
-}: ICreateActionCard = {} as ICreateActionCard): IActionCard => ({
-    type,
-    value,
-    stack,
-    name,
-});
-
-/**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -211,29 +145,24 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
  * </oL>
  *
  * @todo Саше: сделать описание функции и параметров.
- * @param suitConfig Конфиг карт дворфов.
- * @param data
- * @returns "Средняя" карта дворфа.
+ * @param G
+ * @param ctx
+ * @returns Профит карты.
  */
-export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData): ICard => {
-    const avgCard: ICard = CreateCard({
-        suit: suitConfig.suit,
-        rank: 0,
-        points: 0
-    } as ICreateAverageSuitCard),
-        rank: number | number[] = suitConfig.ranksValues()[data.players][data.tier],
-        points: number | number[] = suitConfig.pointsValues()[data.players][data.tier];
-    let count: number = Array.isArray(points) ? points.length : points;
-    if (avgCard.points !== null) {
-        for (let i: number = 0; i < count; i++) {
-            avgCard.rank += Array.isArray(rank) ? rank[i] : 1;
-            avgCard.points += Array.isArray(points) ? points[i] : 1;
+/*export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
+    if (IsTopPlayer(G, Number(ctx.currentPlayer))) {
+        let top2PlayerId: number = GetTop2PlayerId(G, Number(ctx.currentPlayer));
+        if (top2PlayerId === -1) {
+            return 0;
         }
-        avgCard.rank /= count;
-        avgCard.points /= count;
+        return 0;
     }
-    return avgCard;
-};
+    let top1PlayerId: number = GetTop1PlayerId(G, Number(ctx.currentPlayer));
+    if (top1PlayerId === -1) {
+        return 0;
+    }
+    return 0;
+};*/
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -265,72 +194,100 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
 };
 
 /**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <h3>Создание карты улучшения монеты.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
+ * <li>Происходит при создании всех карт улучшения монеты во время инициализации игры.</li>
+ * </ol>
  *
- * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
- * @returns Профит карты.
+ * @param type Тип.
+ * @param value Значение.
+ * @param action Действие.
+ * @param name Название.
+ * @param type Тип.
+ * @param value Значение.
+ * @param stack Действие.
+ * @param name Название.
+ * @returns Карта обмена монеты.
  */
-/*export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
-    if (IsTopPlayer(G, Number(ctx.currentPlayer))) {
-        let top2PlayerId: number = GetTop2PlayerId(G, Number(ctx.currentPlayer));
-        if (top2PlayerId === -1) {
-            return 0;
-        }
-        return 0;
-    }
-    let top1PlayerId: number = GetTop1PlayerId(G, Number(ctx.currentPlayer));
-    if (top1PlayerId === -1) {
-        return 0;
-    }
-    return 0;
-};*/
+const CreateActionCard = ({
+    type = `улучшение монеты`,
+    value,
+    stack,
+    name,
+}: ICreateActionCard = {} as ICreateActionCard): IActionCard => ({
+    type,
+    value,
+    stack,
+    name,
+});
 
 /**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <h3>Создание карты.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
+ * <li>Происходит при создании всех карт при инициализации игры.</li>
+ * </ol>
  *
- * @todo Саше: сделать описание функции и параметров.
- * @param player Игрок.
- * @param card Карта.
- * @returns Потенциальное значение.
+ * @param type Тип.
+ * @param suit Фракция.
+ * @param rank Шевроны.
+ * @param points Очки.
+ * @param name Название.
+ * @param game Игра/дополнение.
+ * @param tier Эпоха.
+ * @param path URL путь.
+ * @returns Карта дворфа.
  */
-export const PotentialScoring = ({
-    player = {} as IPublicPlayer,
-    card = {} as TavernCardTypes,
-}): number => {
-    let score: number = 0,
-        potentialCards: PlayerCardsType[][] = [];
-    for (let i: number = 0; i < player.cards.length; i++) {
-        potentialCards[i] = [];
-        for (let j: number = 0; j < player.cards[i].length; j++) {
-            AddCardToCards(potentialCards, player.cards[i][j]);
+export const CreateCard = ({
+    type = `базовая`,
+    suit,
+    rank,
+    points,
+    name = ``,
+    game = ``,
+    tier = 0,
+    path = ``,
+}: ICreateCard = {} as ICreateCard): ICard => ({
+    type,
+    suit,
+    rank,
+    points,
+    name,
+    game,
+    tier,
+    path,
+});
+
+/**
+ * <h3>Убирает карту из таверны в стопку сброса.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При игре на 2-х игроков убирает не выбранную карту.</li>
+ * <li>Убирает оставшуюся карту при выборе карты из кэмпа.</li>
+ * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из кэмпа.</li>
+ * </ol>
+ *
+ * @param G
+ * @param discardCardIndex Индекс сбрасываемой карты в таверне.
+ * @returns Сброшена ли карта из таверны.
+ */
+export const DiscardCardFromTavern = (G: MyGameState, discardCardIndex: number): boolean => {
+    const discardedCard: TavernCardTypes = G.taverns[G.currentTavern][discardCardIndex];
+    if (discardedCard !== null) {
+        G.discardCardsDeck.push(discardedCard);
+        G.taverns[G.currentTavern][discardCardIndex] = null;
+        AddDataToLog(G, LogTypes.GAME, `Карта ${discardedCard.name} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
+        const additionalDiscardCardIndex: number =
+            G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
+        if (additionalDiscardCardIndex !== -1) {
+            AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
+            DiscardCardFromTavern(G, additionalDiscardCardIndex);
         }
+        return true;
     }
-    if (card !== null && `suit` in card) {
-        AddCardToCards(potentialCards, CreateCard(card));
-    }
-    let i: number = 0;
-    for (const suit in suitsConfig) {
-        score += suitsConfig[suit].scoringRule(potentialCards[i]);
-        i++;
-    }
-    if (card !== null && `value` in card) {
-        score += card.value;
-    }
-    for (let i: number = 0; i < player.boardCoins.length; i++) {
-        score += player.boardCoins[i]?.value ?? 0;
-        score += player.handCoins[i]?.value ?? 0;
-    }
-    return score;
+    AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны.`);
+    return false;
 };
 
 /**
@@ -373,32 +330,75 @@ export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: TavernCardTy
 };
 
 /**
- * <h3>Убирает карту из таверны в стопку сброса.</h3>
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При игре на 2-х игроков убирает не выбранную карту.</li>
- * <li>Убирает оставшуюся карту при выборе карты из кэмпа.</li>
- * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из кэмпа.</li>
- * </ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
  *
- * @param G
- * @param discardCardIndex Индекс сбрасываемой карты в таверне.
- * @returns Сброшена ли карта из таверны.
+ * @todo Саше: сделать описание функции и параметров.
+ * @param suitConfig Конфиг карт дворфов.
+ * @param data
+ * @returns "Средняя" карта дворфа.
  */
-export const DiscardCardFromTavern = (G: MyGameState, discardCardIndex: number): boolean => {
-    const discardedCard: TavernCardTypes = G.taverns[G.currentTavern][discardCardIndex];
-    if (discardedCard !== null) {
-        G.discardCardsDeck.push(discardedCard);
-        G.taverns[G.currentTavern][discardCardIndex] = null;
-        AddDataToLog(G, LogTypes.GAME, `Карта ${discardedCard.name} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
-        const additionalDiscardCardIndex: number =
-            G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
-        if (additionalDiscardCardIndex !== -1) {
-            AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
-            DiscardCardFromTavern(G, additionalDiscardCardIndex);
+export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData): ICard => {
+    const avgCard: ICard = CreateCard({
+        suit: suitConfig.suit,
+        rank: 0,
+        points: 0
+    } as ICreateAverageSuitCard),
+        rank: number | number[] = suitConfig.ranksValues()[data.players][data.tier],
+        points: number | number[] = suitConfig.pointsValues()[data.players][data.tier];
+    let count: number = Array.isArray(points) ? points.length : points;
+    if (avgCard.points !== null) {
+        for (let i: number = 0; i < count; i++) {
+            avgCard.rank += Array.isArray(rank) ? rank[i] : 1;
+            avgCard.points += Array.isArray(points) ? points[i] : 1;
         }
-        return true;
+        avgCard.rank /= count;
+        avgCard.points /= count;
     }
-    AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны.`);
-    return false;
+    return avgCard;
+};
+
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @todo Саше: сделать описание функции и параметров.
+ * @param player Игрок.
+ * @param card Карта.
+ * @returns Потенциальное значение.
+ */
+export const PotentialScoring = ({
+    player = {} as IPublicPlayer,
+    card = {} as TavernCardTypes,
+}): number => {
+    let score: number = 0,
+        potentialCards: PlayerCardsType[][] = [];
+    for (let i: number = 0; i < player.cards.length; i++) {
+        potentialCards[i] = [];
+        for (let j: number = 0; j < player.cards[i].length; j++) {
+            AddCardToCards(potentialCards, player.cards[i][j]);
+        }
+    }
+    if (card !== null && `suit` in card) {
+        AddCardToCards(potentialCards, CreateCard(card));
+    }
+    let i: number = 0;
+    for (const suit in suitsConfig) {
+        score += suitsConfig[suit].scoringRule(potentialCards[i]);
+        i++;
+    }
+    if (card !== null && `value` in card) {
+        score += card.value;
+    }
+    for (let i: number = 0; i < player.boardCoins.length; i++) {
+        score += player.boardCoins[i]?.value ?? 0;
+        score += player.handCoins[i]?.value ?? 0;
+    }
+    return score;
 };

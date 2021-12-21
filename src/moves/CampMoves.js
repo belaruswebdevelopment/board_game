@@ -4,6 +4,32 @@ import { AddActionsToStack, EndActionFromStackAndAddNew, StartActionForChosenPla
 import { AddDataToLog, LogTypes } from "../Logging";
 // todo Add logging
 /**
+ * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Срабатывает при выборе карты из кэмпа по действию персонажа Хольда.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id выбираемой карты из кэмпа.
+ * @returns
+ */
+export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
+    const isValidMove = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
+        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    const campCard = G.camp[cardId];
+    if (campCard !== null) {
+        EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
+    }
+};
+/**
  * <h3>Выбор карты из кэмпа.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -32,30 +58,19 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
     }
 };
 /**
- * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
+ * <h3>Сбрасывает карту в дискард в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Срабатывает при выборе карты из кэмпа по действию персонажа Хольда.</li>
+ * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param cardId Id выбираемой карты из кэмпа.
- * @returns
+ * @param suitId Id фракции.
+ * @param cardId Id сбрасываемой карты.
  */
-export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
-    const isValidMove = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
-        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
-    if (!isValidMove) {
-        return INVALID_MOVE;
-    }
-    const campCard = G.camp[cardId];
-    if (campCard !== null) {
-        EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
-    }
-    else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
-    }
+export const DiscardCardFromPlayerBoardMove = (G, ctx, suitId, cardId) => {
+    EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };
 /**
  * <h3>Сбрасывает карту из таверны при выборе карты из кэмпа на двоих игроков.</h3>
@@ -70,21 +85,6 @@ export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
  */
 export const DiscardCard2PlayersMove = (G, ctx, cardId) => {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
-};
-/**
- * <h3>Сбрасывает карту в дискард в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param suitId Id фракции.
- * @param cardId Id сбрасываемой карты.
- */
-export const DiscardCardFromPlayerBoardMove = (G, ctx, suitId, cardId) => {
-    EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
 };
 /**
  * <h3>Сбрасывает карту конкретной фракции в дискард по выбору игрока при действии артефакта Hofud.</h3>

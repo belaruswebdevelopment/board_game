@@ -7,30 +7,22 @@ import { Ctx, Move } from "boardgame.io";
 import { MyGameState } from "../GameSetup";
 import { IConfig, IPublicPlayer } from "../Player";
 import { ICoin } from "../Coin";
+
 // todo Add logging
 // todo Add Place coins async
 /**
- * <h3>Выбор монеты в руке для выкладки монет.</h3>
+ * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При клике по монете в руке.</li>
+ * <li>При клике по монете.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  * @param coinId Id монеты.
- * @returns
  */
-export const ClickHandCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
-    const isValidMove: boolean = IsValidMove({
-        obj: G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId],
-        objId: coinId,
-        range: [0, G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length]
-    });
-    if (!isValidMove) {
-        return INVALID_MOVE;
-    }
-    G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin = coinId;
+export const AddCoinToPouchMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): void => {
+    EndActionFromStackAndAddNew(G, ctx, [], coinId);
 };
 
 /**
@@ -119,6 +111,30 @@ export const ClickCoinToUpgradeMove: Move<MyGameState> = (G: MyGameState, ctx: C
 };
 
 /**
+ * <h3>Выбор монеты в руке для выкладки монет.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При клике по монете в руке.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @returns
+ */
+export const ClickHandCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
+    const isValidMove: boolean = IsValidMove({
+        obj: G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId],
+        objId: coinId,
+        range: [0, G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length]
+    });
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin = coinId;
+};
+
+/**
  * <h3>Выбор монеты для улучшения по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -140,19 +156,4 @@ export const UpgradeCoinVidofnirVedrfolnirMove: Move<MyGameState> = (G: MyGameSt
         return INVALID_MOVE;
     }
     EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
-};
-
-/**
- * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При клике по монете.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- */
-export const AddCoinToPouchMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], coinId);
 };

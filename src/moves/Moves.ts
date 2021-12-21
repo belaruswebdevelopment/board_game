@@ -21,8 +21,8 @@ import {
     PlaceEnlistmentMercenariesAction
 } from "../actions/Actions";
 import { DrawProfitCampAction } from "../actions/CampActions";
-// todo Add logging
 
+// todo Add logging
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -69,29 +69,6 @@ export const ClickCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardI
 };
 
 /**
- * <h3>Выбор конкретного преимущества по фракциям в конце первой эпохи.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>После определения преимуществ по фракциям в конце первой эпохи.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param cardId Id карты.
- * @returns
- */
-export const ClickDistinctionCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number):
-    string | void => {
-    const index: number = G.distinctions.indexOf(Number(ctx.currentPlayer)),
-        isValidMove: boolean = IsValidMove({ objId: cardId, values: [index] });
-    if (!isValidMove) {
-        return INVALID_MOVE;
-    }
-    suitsConfig[Object.keys(suitsConfig)[cardId]].distinction
-        .awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
-};
-
-/**
  * <h3>Выбор базовой карты из новой эпохи по преимуществу по фракции разведчиков.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -120,61 +97,26 @@ export const ClickCardToPickDistinctionMove: Move<MyGameState> = (G: MyGameState
 };
 
 /**
- * <h3>Выбор карт из дискарда.</h3>
+ * <h3>Выбор конкретного преимущества по фракциям в конце первой эпохи.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карт из дискарда по действию героев.</li>
- * <li>Выбор карт из дискарда по действию артефактов.</li>
+ * <li>После определения преимуществ по фракциям в конце первой эпохи.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
-export const PickDiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], cardId);
-};
-
-/**
- * <h3>Начало вербовки наёмников.</li>
- * <p>Применения:</p>
- * <ol>
- * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const StartEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
-    const stack: IStack[] = [
-        {
-            action: DrawProfitCampAction.name,
-            config: {
-                name: `enlistmentMercenaries`,
-                drawName: `Enlistment Mercenaries`,
-            },
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack);
-};
-
-/**
- * <h3>Пасс первого игрока в начале фазы вербовки наёмников.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Первый игрок в начале фазы вербовки наёмников пасует для того, чтобы вербовать последним.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const PassEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
-    const stack: IStack[] = [
-        {
-            action: PassEnlistmentMercenariesAction.name,
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack);
+export const ClickDistinctionCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number):
+    string | void => {
+    const index: number = G.distinctions.indexOf(Number(ctx.currentPlayer)),
+        isValidMove: boolean = IsValidMove({ objId: cardId, values: [index] });
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    suitsConfig[Object.keys(suitsConfig)[cardId]].distinction
+        .awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
 };
 
 /**
@@ -198,6 +140,41 @@ export const GetEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, 
 };
 
 /**
+ * <h3>Пасс первого игрока в начале фазы вербовки наёмников.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Первый игрок в начале фазы вербовки наёмников пасует для того, чтобы вербовать последним.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const PassEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
+    const stack: IStack[] = [
+        {
+            action: PassEnlistmentMercenariesAction.name,
+        },
+    ];
+    EndActionFromStackAndAddNew(G, ctx, stack);
+};
+
+/**
+ * <h3>Выбор карт из дискарда.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе карт из дискарда по действию героев.</li>
+ * <li>Выбор карт из дискарда по действию артефактов.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ */
+export const PickDiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
+    EndActionFromStackAndAddNew(G, ctx, [], cardId);
+};
+
+/**
  * <h3>Выбор фракции куда будет завербован наёмник.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -215,4 +192,27 @@ export const PlaceEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack, suitId);
+};
+
+/**
+ * <h3>Начало вербовки наёмников.</li>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const StartEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
+    const stack: IStack[] = [
+        {
+            action: DrawProfitCampAction.name,
+            config: {
+                name: `enlistmentMercenaries`,
+                drawName: `Enlistment Mercenaries`,
+            },
+        },
+    ];
+    EndActionFromStackAndAddNew(G, ctx, stack);
 };

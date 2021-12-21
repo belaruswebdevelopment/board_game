@@ -366,8 +366,8 @@ export const BoardGame = {
     ai: {
         //@ts-ignore
         enumerate,
-        objectives,
         iterations,
+        objectives,
         playoutDepth,
     },
 };

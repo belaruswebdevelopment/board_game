@@ -11,19 +11,19 @@ export interface IBackground {
  * <h3>Интерфейс для всех стилей.</h3>
  */
 interface IStyles {
-    Suits: (suitName: string) => IBackground,
-    Cards: (suit: string | null, name: string, points: number | null) => IBackground,
-    Heroes: (game: string, heroName: string) => IBackground,
-    Distinctions: (distinction: string) => IBackground,
-    DistinctionsBack: () => IBackground,
-    HeroBack: () => IBackground,
     Camp: () => IBackground,
     CampCards: (tier: number, cardPath: string) => IBackground,
+    Cards: (suit: string | null, name: string, points: number | null) => IBackground,
     Coin: (value: number, initial: boolean) => IBackground,
     CoinBack: () => IBackground,
-    Priority: () => IBackground,
-    Priorities: (priority: number) => IBackground,
+    Distinctions: (distinction: string) => IBackground,
+    DistinctionsBack: () => IBackground,
     Exchange: () => IBackground,
+    Heroes: (game: string, heroName: string) => IBackground,
+    HeroBack: () => IBackground,
+    Priorities: (priority: number) => IBackground,
+    Priority: () => IBackground,
+    Suits: (suitName: string) => IBackground,
     Taverns: (tavernId: number) => IBackground,
 }
 
@@ -36,9 +36,125 @@ interface IStyles {
  * </ol>
  */
 export const Styles: IStyles = {
-    Suits: (suitName: string): IBackground => ({
-        background: `url(/img/suits/${suitName}.png) no-repeat 0px 0px / 24px 24px`,
+    Camp: (): IBackground => ({
+        background: `url(/img/cards/camp/Camp.png) no-repeat 0px 3px / 24px 18px`,
     }),
+    CampCards: (tier: number, cardPath: string): IBackground => {
+        if (tier === 0) {
+            switch (cardPath) {
+                case `Draupnir`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px 0px / 128px 144px`,
+                    };
+                case `Fafnir Baleygr`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px 0px / 128px 144px`,
+                    };
+                case `Svalinn`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px 0px / 128px 144px`,
+                    };
+                case `Megingjord`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px 0px / 128px 144px`,
+                    };
+                case `Vegvisir`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px -48px / 128px 144px`,
+                    };
+                case `Vidofnir Vedrfolnir`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px -48px / 128px 144px`,
+                    };
+                case `hunter explorer 6`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px -48px / 128px 144px`,
+                    };
+                case `hunter miner 1`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px -48px / 128px 144px`,
+                    };
+                case `blacksmith miner 1`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px -96px / 128px 144px`,
+                    };
+                case `warrior 6 blacksmith`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px -96px / 128px 144px`,
+                    };
+                case `warrior 6 explorer 8`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px -96px / 128px 144px`,
+                    };
+                case `warrior 9 explorer 11`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px -96px / 128px 144px`,
+                    };
+                default:
+                    return {
+                        background: ``,
+                    };
+            }
+        } else if (tier === 1) {
+            switch (cardPath) {
+                case `Mjollnir`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px 0px / 128px 144px`,
+                    };
+                case `Hofud`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px 0px / 128px 144px`,
+                    };
+                case `Brisingamens`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px 0px / 128px 144px`,
+                    };
+                case `Hrafnsmerki`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px 0px / 128px 144px`,
+                    };
+                case `Gjallarhorn`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px -48px / 128px 144px`,
+                    };
+                case `Jarnglofi`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px -48px / 128px 144px`,
+                    };
+                case `hunter blacksmith`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px -48px / 128px 144px`,
+                    };
+                case `warrior 9 explorer 11`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px -48px / 128px 144px`,
+                    };
+                case `blacksmith explorer 8`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px -96px / 128px 144px`,
+                    };
+                case `warrior 6 miner 1`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px -96px / 128px 144px`,
+                    };
+                case `explorer 8 miner 1`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px -96px / 128px 144px`,
+                    };
+                case `warrior 6 hunter`:
+                    return {
+                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px -96px / 128px 144px`,
+                    };
+                default:
+                    return {
+                        background: ``,
+                    };
+            }
+        }
+        return {
+            background: ``,
+        };
+    },
     Cards: (suit: string | null, name: string, points: number | null): IBackground => {
         if (name === `Olwin`) {
             switch (name) {
@@ -180,6 +296,46 @@ export const Styles: IStyles = {
             }
         }
     },
+    Coin: (value: number, initial: boolean): IBackground => ({
+        background: `url(/img/coins/Coin${value}${initial ? `Initial` : ``}.jpg) no-repeat 0px 0px / 40px 40px`,
+    }),
+    CoinBack: (): IBackground => ({
+        background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
+    }),
+    Distinctions: (distinction: string): IBackground => {
+        switch (distinction) {
+            case SuitNames.BLACKSMITH:
+                return {
+                    background: `url(/img/distinctions/Distinctions.png) no-repeat 0px -100px / 96px 150px`,
+                };
+            case SuitNames.HUNTER:
+                return {
+                    background: `url(/img/distinctions/Distinctions.png) no-repeat -64px 0px / 96px 150px`,
+                };
+            case SuitNames.MINER:
+                return {
+                    background: `url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 96px 150px`,
+                };
+            case SuitNames.WARRIOR:
+                return {
+                    background: `url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 96px 150px`,
+                };
+            case SuitNames.EXPLORER:
+                return {
+                    background: `url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 96px 150px`,
+                };
+            default:
+                return {
+                    background: ``,
+                };
+        }
+    },
+    DistinctionsBack: (): IBackground => ({
+        background: `url(/img/distinctions/DistinctionsBack.png) no-repeat 0px 0px / 12px 18px`,
+    }),
+    Exchange: (): IBackground => ({
+        background: `url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px`,
+    }),
     Heroes: (game: string, heroName: string): IBackground => {
         if (game === `base`) {
             switch (heroName) {
@@ -308,173 +464,17 @@ export const Styles: IStyles = {
             background: "",
         };
     },
-    Distinctions: (distinction: string): IBackground => {
-        switch (distinction) {
-            case SuitNames.BLACKSMITH:
-                return {
-                    background: `url(/img/distinctions/Distinctions.png) no-repeat 0px -100px / 96px 150px`,
-                };
-            case SuitNames.HUNTER:
-                return {
-                    background: `url(/img/distinctions/Distinctions.png) no-repeat -64px 0px / 96px 150px`,
-                };
-            case SuitNames.MINER:
-                return {
-                    background: `url(/img/distinctions/Distinctions.png) no-repeat 0px -50px / 96px 150px`,
-                };
-            case SuitNames.WARRIOR:
-                return {
-                    background: `url(/img/distinctions/Distinctions.png) no-repeat -32px -50px / 96px 150px`,
-                };
-            case SuitNames.EXPLORER:
-                return {
-                    background: `url(/img/distinctions/Distinctions.png) no-repeat 0px 0px / 96px 150px`,
-                };
-            default:
-                return {
-                    background: ``,
-                };
-        }
-    },
-    DistinctionsBack: (): IBackground => ({
-        background: `url(/img/distinctions/DistinctionsBack.png) no-repeat 0px 0px / 12px 18px`,
-    }),
     HeroBack: (): IBackground => ({
         background: `url(/img/cards/heroes/HeroBack.png) no-repeat 6px 3px / 12px 18px`,
-    }),
-    Camp: (): IBackground => ({
-        background: `url(/img/cards/camp/Camp.png) no-repeat 0px 3px / 24px 18px`,
-    }),
-    CampCards: (tier: number, cardPath: string): IBackground => {
-        if (tier === 0) {
-            switch (cardPath) {
-                case `Draupnir`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px 0px / 128px 144px`,
-                    };
-                case `Fafnir Baleygr`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px 0px / 128px 144px`,
-                    };
-                case `Svalinn`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px 0px / 128px 144px`,
-                    };
-                case `Megingjord`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px 0px / 128px 144px`,
-                    };
-                case `Vegvisir`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px -48px / 128px 144px`,
-                    };
-                case `Vidofnir Vedrfolnir`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px -48px / 128px 144px`,
-                    };
-                case `hunter explorer 6`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px -48px / 128px 144px`,
-                    };
-                case `hunter miner 1`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px -48px / 128px 144px`,
-                    };
-                case `blacksmith miner 1`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px -96px / 128px 144px`,
-                    };
-                case `warrior 6 blacksmith`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px -96px / 128px 144px`,
-                    };
-                case `warrior 6 explorer 8`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px -96px / 128px 144px`,
-                    };
-                case `warrior 9 explorer 11`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px -96px / 128px 144px`,
-                    };
-                default:
-                    return {
-                        background: ``,
-                    };
-            }
-        } else if (tier === 1) {
-            switch (cardPath) {
-                case `Mjollnir`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px 0px / 128px 144px`,
-                    };
-                case `Hofud`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px 0px / 128px 144px`,
-                    };
-                case `Brisingamens`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px 0px / 128px 144px`,
-                    };
-                case `Hrafnsmerki`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px 0px / 128px 144px`,
-                    };
-                case `Gjallarhorn`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px -48px / 128px 144px`,
-                    };
-                case `Jarnglofi`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px -48px / 128px 144px`,
-                    };
-                case `hunter blacksmith`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px -48px / 128px 144px`,
-                    };
-                case `warrior 9 explorer 11`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px -48px / 128px 144px`,
-                    };
-                case `blacksmith explorer 8`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat 0px -96px / 128px 144px`,
-                    };
-                case `warrior 6 miner 1`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -32px -96px / 128px 144px`,
-                    };
-                case `explorer 8 miner 1`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -64px -96px / 128px 144px`,
-                    };
-                case `warrior 6 hunter`:
-                    return {
-                        background: `url(/img/cards/camp/Camp${tier}.png) no-repeat -96px -96px / 128px 144px`,
-                    };
-                default:
-                    return {
-                        background: ``,
-                    };
-            }
-        }
-        return {
-            background: ``,
-        };
-    },
-    Coin: (value: number, initial: boolean): IBackground => ({
-        background: `url(/img/coins/Coin${value}${initial ? `Initial` : ``}.jpg) no-repeat 0px 0px / 40px 40px`,
-    }),
-    CoinBack: (): IBackground => ({
-        background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
-    }),
-    Priority: (): IBackground => ({
-        background: `url(/img/priorities/Priority.png) no-repeat -34px -7px / 66px 36px`,
     }),
     Priorities: (priority: number): IBackground => ({
         background: `url(/img/priorities/Priority${priority}.png) no-repeat 0px 0px / 28px 38px`,
     }),
-    Exchange: (): IBackground => ({
-        background: `url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px`,
+    Priority: (): IBackground => ({
+        background: `url(/img/priorities/Priority.png) no-repeat -34px -7px / 66px 36px`,
+    }),
+    Suits: (suitName: string): IBackground => ({
+        background: `url(/img/suits/${suitName}.png) no-repeat 0px 0px / 24px 24px`,
     }),
     Taverns: (tavernId: number): IBackground => {
         switch (tavernId) {

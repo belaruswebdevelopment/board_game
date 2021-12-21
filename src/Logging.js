@@ -3,10 +3,10 @@
  */
 export var LogTypes;
 (function (LogTypes) {
-    LogTypes["PUBLIC"] = "public";
-    LogTypes["PRIVATE"] = "private";
-    LogTypes["GAME"] = "game";
     LogTypes["ERROR"] = "error";
+    LogTypes["GAME"] = "game";
+    LogTypes["PRIVATE"] = "private";
+    LogTypes["PUBLIC"] = "public";
 })(LogTypes || (LogTypes = {}));
 /**
  * <h3>Логирует данные.</h3>
