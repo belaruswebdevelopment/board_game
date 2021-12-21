@@ -38,10 +38,9 @@ import {
     // UpgradeCoinCampAction,
     UpgradeCoinVidofnirVedrfolnirAction
 } from "./CampActions";
-import { DrawCurrentProfit, PickCurrentHero } from "../helpers/ActionHelpers";
-import { DrawProfitCoinAction } from "./CoinActions";
+import { DrawCurrentProfit, PickCurrentHero, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "./CoinActions";
 // import { DrawCurrentProfit } from "../helpers/ActionHelpers";
-// import { UpgradeCoinAction } from "./CoinActions";
 
 // todo Check my types
 /**
@@ -62,6 +61,22 @@ export type ArgsTypes = (string | number | boolean | null | object)[];
  */
 export const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
     DrawCurrentProfit(G, ctx, config);
+};
+
+/**
+ * <h3>Действия, связанные с улучшением монет при игровых моментах.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li><li>При игровых моментах, улучшающих монеты.</li></li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя или карты улучшающей монеты.
+ * @param args Дополнительные аргументы.
+ */
+export const UpgradeCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
+    UpgradeCurrentCoin(G, ctx, config, ...args);
 };
 
 /**
@@ -239,9 +254,12 @@ export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args
         // case UpgradeCoinCampAction.name:
         //     action = UpgradeCoinCampAction;
         //     break;
-        // case UpgradeCoinAction.name:
-        //     action = UpgradeCoinAction;
-        //     break;
+        case UpgradeCoinAction.name:
+            action = UpgradeCoinAction;
+            break;
+        case UpgradeCoinActionCardAction.name:
+            action = UpgradeCoinActionCardAction;
+            break;
         case AddHeroToCardsAction.name:
             action = AddHeroToCardsAction;
             break;

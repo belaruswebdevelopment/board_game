@@ -1,4 +1,4 @@
-import { DrawCurrentProfit } from "../helpers/ActionHelpers";
+import { DrawCurrentProfit, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
 /**
  * <h3>Действия, связанные с отрисовкой профита от карт улучшения монет.</h3>
  * <p>Применения:</p>
@@ -25,6 +25,6 @@ export const DrawProfitCoinAction = (G, ctx, config) => {
  * @param config Конфиг действий героя или карты улучшающей монеты.
  * @param args Дополнительные аргументы.
  */
-// export const UpgradeCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
-//     UpgradeCurrentCoin(G, ctx, config, ...args);
-// };
+export const UpgradeCoinActionCardAction = (G, ctx, config, ...args) => {
+    UpgradeCurrentCoin(G, ctx, config, ...args);
+};

@@ -1,4 +1,4 @@
-import { DrawProfitCoinAction, /* UpgradeCoinAction */ } from "../actions/CoinActions";
+import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "../actions/CoinActions";
 import { IStack } from "../Player";
 import { INumberValues } from "./SuitData";
 
@@ -38,8 +38,7 @@ const upgradeCoinUpTo3: IActionCardConfig = {
             },
         },
         {
-            // action: UpgradeCoinAction.name,
-            action: `UpgradeCoinAction`,
+            action: UpgradeCoinActionCardAction.name,
             config: {
                 value: 3,
             },
@@ -85,8 +84,7 @@ const upgradeCoinUpTo5: IActionCardConfig = {
             },
         },
         {
-            // action: UpgradeCoinAction.name,
-            action: `UpgradeCoinAction`,
+            action: UpgradeCoinActionCardAction.name,
             config: {
                 value: 5,
             },

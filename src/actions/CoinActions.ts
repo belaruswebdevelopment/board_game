@@ -31,6 +31,6 @@ export const DrawProfitCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig):
  * @param config Конфиг действий героя или карты улучшающей монеты.
  * @param args Дополнительные аргументы.
  */
-// export const UpgradeCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
-//     UpgradeCurrentCoin(G, ctx, config, ...args);
-// };
+export const UpgradeCoinActionCardAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
+    UpgradeCurrentCoin(G, ctx, config, ...args);
+};

@@ -5,8 +5,7 @@ import { AddActionsToStack, StartActionFromStackOrEndActions } from "../helpers/
 import { AddDataToLog, LogTypes } from "../Logging";
 import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-// import { DrawProfitHeroAction } from "../actions/HeroActions";
-// import { UpgradeCoinAction } from "../actions/CoinActions";
+import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
 /**
  * <h3>Перечисление для названий фракций.</h3>
  */
@@ -276,8 +275,7 @@ const warrior = {
             if (G.tierToEnd !== 0) {
                 const stack = [
                     {
-                        // action: DrawProfitHeroAction.name,
-                        action: `DrawProfitHeroAction`,
+                        action: DrawProfitAction.name,
                         config: {
                             name: `upgradeCoin`,
                             stageName: `upgradeCoin`,
@@ -286,8 +284,7 @@ const warrior = {
                         },
                     },
                     {
-                        // action: UpgradeCoinAction.name,
-                        action: `UpgradeCoinAction`,
+                        action: UpgradeCoinAction.name,
                         config: {
                             value: 5,
                         },
@@ -382,8 +379,6 @@ const explorer = {
  * <ol>
  * <li>Происходит при создании всех карт при инициализации игры.</li>
  * </ol>
- *
- * @type {{blacksmith: ISuit, warrior: ISuit, explorer: ISuit, hunter: ISuit, miner: ISuit}}
  */
 export const suitsConfig = {
     blacksmith,

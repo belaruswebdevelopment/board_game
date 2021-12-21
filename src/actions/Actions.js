@@ -10,8 +10,8 @@ import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromP
 import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, AddCoinToPouchAction, CheckPickDiscardCardCampAction, DiscardAnyCardFromPlayerBoardAction, DiscardSuitCardAction, DiscardTradingCoinAction, DrawProfitCampAction, GetMjollnirProfitAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, 
 // UpgradeCoinCampAction,
 UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
-import { DrawCurrentProfit, PickCurrentHero } from "../helpers/ActionHelpers";
-import { DrawProfitCoinAction } from "./CoinActions";
+import { DrawCurrentProfit, PickCurrentHero, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "./CoinActions";
 /**
  * <h3>Действия, связанные с отрисовкой профита от игровых моментов.</h3>
  * <p>Применения:</p>
@@ -25,6 +25,21 @@ import { DrawProfitCoinAction } from "./CoinActions";
  */
 export const DrawProfitAction = (G, ctx, config) => {
     DrawCurrentProfit(G, ctx, config);
+};
+/**
+ * <h3>Действия, связанные с улучшением монет при игровых моментах.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li><li>При игровых моментах, улучшающих монеты.</li></li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя или карты улучшающей монеты.
+ * @param args Дополнительные аргументы.
+ */
+export const UpgradeCoinAction = (G, ctx, config, ...args) => {
+    UpgradeCurrentCoin(G, ctx, config, ...args);
 };
 /**
  * <h3>Сбрасывает карту из таверны по выбору игрока.</h3>
@@ -199,9 +214,12 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         // case UpgradeCoinCampAction.name:
         //     action = UpgradeCoinCampAction;
         //     break;
-        // case UpgradeCoinAction.name:
-        //     action = UpgradeCoinAction;
-        //     break;
+        case UpgradeCoinAction.name:
+            action = UpgradeCoinAction;
+            break;
+        case UpgradeCoinActionCardAction.name:
+            action = UpgradeCoinActionCardAction;
+            break;
         case AddHeroToCardsAction.name:
             action = AddHeroToCardsAction;
             break;

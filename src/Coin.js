@@ -1,6 +1,7 @@
 import { AddDataToLog, LogTypes } from "./Logging";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
+import { UpgradeCoinAction } from "./actions/Actions";
 /**
  * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
  * <p>Применения:</p>
@@ -115,8 +116,7 @@ export const Trading = (G, ctx, tradingCoins) => {
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin === `min`) {
         stack = [
             {
-                // action: UpgradeCoinAction.name,
-                action: `UpgradeCoinAction`,
+                action: UpgradeCoinAction.name,
                 config: {
                     number: 1,
                     value: coinsMaxValue,
@@ -130,8 +130,7 @@ export const Trading = (G, ctx, tradingCoins) => {
     else {
         stack = [
             {
-                // action: UpgradeCoinAction.name,
-                action: `UpgradeCoinAction`,
+                action: UpgradeCoinAction.name,
                 config: {
                     number: 1,
                     value: coinsMinValue,
