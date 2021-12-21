@@ -5,7 +5,7 @@ import { AddDataToLog, LogTypes } from "../Logging";
 import { SuitNames, suitsConfig } from "../data/SuitData";
 import { isArtefactCard } from "../Camp";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
-import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { AddBuffToPlayer, DrawCurrentProfit, PickCurrentHero, PickDiscardCard } from "../helpers/ActionHelpers";
 /**
  * <h3>Действия, связанные с добавлением бафов от артефактов игроку.</h3>
  * <p>Применения:</p>
@@ -17,8 +17,22 @@ import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, UpgradeCurrentCoin
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const AddArtefactBuffToPlayerAction = (G, ctx, config) => {
+export const AddBuffToPlayerCampAction = (G, ctx, config) => {
     AddBuffToPlayer(G, ctx, config);
+};
+/**
+ * <h3>Действия, связанные с взятием героя от артефактов.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе карт кэмпа, дающих возможность взять карту героя.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ */
+export const PickHeroCampAction = (G, ctx, config) => {
+    PickCurrentHero(G, ctx, config);
 };
 /**
  * <h3>Действия, связанные с улучшением монет от карт кэмпа.</h3>
@@ -32,9 +46,9 @@ export const AddArtefactBuffToPlayerAction = (G, ctx, config) => {
  * @param config Конфиг действий героя или карты улучшающей монеты.
  * @param args Дополнительные аргументы.
  */
-export const UpgradeCoinCampAction = (G, ctx, config, ...args) => {
-    UpgradeCurrentCoin(G, ctx, config, ...args);
-};
+// export const UpgradeCoinCampAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
+//     UpgradeCurrentCoin(G, ctx, config, ...args);
+// };
 /**
  * <h3>Действия, связанные с отрисовкой профита от карт кэмпа.</h3>
  * <p>Применения:</p>
@@ -261,7 +275,8 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
         if (playerConfig.value === 3) {
             stack = [
                 {
-                    action: UpgradeCoinCampAction.name,
+                    // action: UpgradeCoinCampAction.name,
+                    action: `UpgradeCoinCampAction`,
                     config: {
                         value: 3,
                     },
@@ -287,7 +302,8 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
         else if (playerConfig.value === 2) {
             stack = [
                 {
-                    action: UpgradeCoinCampAction.name,
+                    // action: UpgradeCoinCampAction.name,
+                    action: `UpgradeCoinCampAction`,
                     config: {
                         value: 2,
                     },
@@ -297,7 +313,8 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
         else if (playerConfig.value === 5) {
             stack = [
                 {
-                    action: UpgradeCoinCampAction.name,
+                    // action: UpgradeCoinCampAction.name,
+                    action: `UpgradeCoinCampAction`,
                     config: {
                         value: 5,
                     },

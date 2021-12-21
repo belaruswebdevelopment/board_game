@@ -8,6 +8,30 @@ import { isCardNotAction } from "../Card";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { GetSuitIndexByName } from "./SuitHelpers";
 /**
+ * <h3>Действия, связанные с взятием героя.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе карт кэмпа, дающих возможность взять карту героя.</li>
+ * <li>При игровых моментах, дающих возможность взять карту героя.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ */
+export const PickCurrentHero = (G, ctx, config) => {
+    const isStartPickHero = IsStartActionStage(G, ctx, config);
+    if (isStartPickHero) {
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен пикнуть героя.`);
+    }
+    else {
+        if (config.stageName === undefined) {
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.stageName'.`);
+        }
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не стартовал стэйдж 'PickHero'.`);
+    }
+};
+/**
  * <h3>Действия, связанные с взятием карт из дискарда.</h3>
  * <p>Применения:</p>
  * <ol>

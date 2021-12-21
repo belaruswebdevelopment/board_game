@@ -40,9 +40,9 @@ import { ArgsTypes } from "./Actions";
  * @param config Конфиг действий героя или карты улучшающей монеты.
  * @param args Дополнительные аргументы.
  */
-export const UpgradeCoinHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
-    UpgradeCurrentCoin(G, ctx, config, ...args);
-};
+// export const UpgradeCoinHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
+//     UpgradeCurrentCoin(G, ctx, config, ...args);
+// };
 
 /**
  * <h3>Действия, связанные с возможностью дискарда карт с планшета игрока.</h3>
@@ -87,36 +87,36 @@ export const CheckDiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx,
  * @param suitId Id фракции.
  * @param cardId Id карты.
  */
-export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
-    cardId: number): void => {
-    const pickedCard: PlayerCardsType = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
-    // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
-    G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-        .splice(cardId, 1)[0] as ICard);
-    if (G.actionsNum === 2) {
-        const stack: IStack[] = [
-            {
-                action: DrawProfitHeroAction.name,
-                config: {
-                    stageName: `discardCardFromBoard`,
-                    drawName: `Dagda`,
-                    name: `DagdaAction`,
-                    suit: SuitNames.HUNTER,
-                },
-            },
-            {
-                action: DiscardCardsFromPlayerBoardAction.name,
-                config: {
-                    suit: SuitNames.HUNTER,
-                },
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
-    }
-    EndActionFromStackAndAddNew(G, ctx);
-};
+// export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
+//     cardId: number): void => {
+//     const pickedCard: PlayerCardsType = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
+//     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
+//     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
+//     // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
+//     G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+//         .splice(cardId, 1)[0] as ICard);
+//     if (G.actionsNum === 2) {
+//         const stack: IStack[] = [
+//             {
+//                 action: DrawProfitHeroAction.name,
+//                 config: {
+//                     stageName: `discardCardFromBoard`,
+//                     drawName: `Dagda`,
+//                     name: `DagdaAction`,
+//                     suit: SuitNames.HUNTER,
+//                 },
+//             },
+//             {
+//                 action: DiscardCardsFromPlayerBoardAction.name,
+//                 config: {
+//                     suit: SuitNames.HUNTER,
+//                 },
+//             },
+//         ];
+//         AddActionsToStackAfterCurrent(G, ctx, stack);
+//     }
+//     EndActionFromStackAndAddNew(G, ctx);
+// };
 
 /**
  * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>
@@ -146,9 +146,9 @@ export const CheckPickCampCardAction = (G: MyGameState, ctx: Ctx): void => {
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const DrawProfitHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-    DrawCurrentProfit(G, ctx, config);
-};
+// export const DrawProfitHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+//     DrawCurrentProfit(G, ctx, config);
+// };
 
 /**
  * <h3>Действия, связанные с добавлением других карт на планшет игрока.</h3>
@@ -204,7 +204,8 @@ export const PlaceCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
             },
                 stack: IStack[] = [
                     {
-                        action: DrawProfitHeroAction.name,
+                        // action: DrawProfitHeroAction.name,
+                        action: `DrawProfitHeroAction`,
                         variants,
                         config: {
                             name: `placeCards`,
@@ -301,7 +302,7 @@ export const PickDiscardCardHeroAction = (G: MyGameState, ctx: Ctx, config: ICon
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const AddHeroBuffToPlayerAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const AddBuffToPlayerHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
     AddBuffToPlayer(G, ctx, config);
 };
 
@@ -398,27 +399,4 @@ export const PickHeroWithConditionsAction = (G: MyGameState, ctx: Ctx, config: I
         return INVALID_MOVE;
     }
     EndActionFromStackAndAddNew(G, ctx);
-};
-
-/**
- * <h3>Действия, связанные с взятием героя.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе карт кэмпа, дающих возможность взять карту героя.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- */
-export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-    const isStartPickHero: boolean = IsStartActionStage(G, ctx, config);
-    if (isStartPickHero) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен пикнуть героя.`);
-    } else {
-        if (config.stageName === undefined) {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.stageName'.`);
-        }
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не стартовал стэйдж 'PickHero'.`);
-    }
 };

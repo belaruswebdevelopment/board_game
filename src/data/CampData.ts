@@ -3,16 +3,16 @@ import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { ICoin } from "../Coin";
 import { SuitNames } from "./SuitData";
 import {
-    AddArtefactBuffToPlayerAction,
+    AddBuffToPlayerCampAction,
     AddCampCardToCardsAction,
     CheckPickDiscardCardCampAction,
     DiscardTradingCoinAction,
     DrawProfitCampAction,
     PickDiscardCardCampAction,
+    PickHeroCampAction,
     StartDiscardSuitCardAction,
     StartVidofnirVedrfolnirAction
 } from "../actions/CampActions";
-import { PickHeroAction } from "../actions/HeroActions";
 
 /**
  * <h3>Интерфейс для данных карт кэмпа артефакт.</h3>
@@ -72,7 +72,7 @@ const Fafnir_Baleygr: IArtefact = {
             action: AddCampCardToCardsAction.name,
         },
         {
-            action: AddArtefactBuffToPlayerAction.name,
+            action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
                     name: `goCamp`,
@@ -175,7 +175,7 @@ const Megingjord: IArtefact = {
             action: AddCampCardToCardsAction.name,
         },
         {
-            action: AddArtefactBuffToPlayerAction.name,
+            action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
                     name: `noHero`,
@@ -233,7 +233,7 @@ const Brisingamens: IArtefact = {
             action: AddCampCardToCardsAction.name,
         },
         {
-            action: AddArtefactBuffToPlayerAction.name,
+            action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
                     name: `discardCardEndGame`,
@@ -280,7 +280,7 @@ const Mjollnir: IArtefact = {
             action: AddCampCardToCardsAction.name,
         },
         {
-            action: AddArtefactBuffToPlayerAction.name,
+            action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
                     name: `getMjollnirProfit`,
@@ -393,7 +393,7 @@ const Gjallarhorn: IArtefact = {
             action: AddCampCardToCardsAction.name,
         },
         {
-            action: PickHeroAction.name,
+            action: PickHeroCampAction.name,
             config: {
                 stageName: `pickHero`,
             },

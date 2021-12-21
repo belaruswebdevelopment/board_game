@@ -10,8 +10,8 @@ import { Ctx } from "boardgame.io";
 import { IStack, PlayerCardsType } from "../Player";
 import { IVariants } from "../data/HeroData";
 import { SuitNames } from "../data/SuitData";
-import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
-import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
+import { /* DrawProfitHeroAction, */ PlaceHeroAction } from "../actions/HeroActions";
+// import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
 import {
     DiscardAnyCardFromPlayerBoardAction,
     DrawProfitCampAction,
@@ -152,7 +152,8 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
                         && G.taverns[G.currentTavern].every(card => card !== null)) {
                         const stack: IStack[] = [
                             {
-                                action: DrawProfitAction.name,
+                                // action: DrawProfitAction.name,
+                                action: `DrawProfitAction`,
                                 config: {
                                     stageName: `discardCard`,
                                     name: `discardCard`,
@@ -160,7 +161,8 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
                                 },
                             },
                             {
-                                action: DiscardCardFromTavernAction.name,
+                                // action: DiscardCardFromTavernAction.name,
+                                action: `DiscardCardFromTavernAction`,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -269,7 +271,8 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
         };
         const stack: IStack[] = [
             {
-                action: DrawProfitHeroAction.name,
+                // action: DrawProfitHeroAction.name,
+                action: `DrawProfitHeroAction`,
                 playerId: G.publicPlayersOrder[0],
                 variants,
                 config: {

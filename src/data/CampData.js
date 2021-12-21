@@ -1,7 +1,6 @@
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
-import { AddArtefactBuffToPlayerAction, AddCampCardToCardsAction, CheckPickDiscardCardCampAction, DiscardTradingCoinAction, DrawProfitCampAction, PickDiscardCardCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
-import { PickHeroAction } from "../actions/HeroActions";
+import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, CheckPickDiscardCardCampAction, DiscardTradingCoinAction, DrawProfitCampAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -22,7 +21,7 @@ const Fafnir_Baleygr = {
             action: AddCampCardToCardsAction.name,
         },
         {
-            action: AddArtefactBuffToPlayerAction.name,
+            action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
                     name: `goCamp`,
@@ -120,7 +119,7 @@ const Megingjord = {
             action: AddCampCardToCardsAction.name,
         },
         {
-            action: AddArtefactBuffToPlayerAction.name,
+            action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
                     name: `noHero`,
@@ -176,7 +175,7 @@ const Brisingamens = {
             action: AddCampCardToCardsAction.name,
         },
         {
-            action: AddArtefactBuffToPlayerAction.name,
+            action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
                     name: `discardCardEndGame`,
@@ -222,7 +221,7 @@ const Mjollnir = {
             action: AddCampCardToCardsAction.name,
         },
         {
-            action: AddArtefactBuffToPlayerAction.name,
+            action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
                     name: `getMjollnirProfit`,
@@ -330,7 +329,7 @@ const Gjallarhorn = {
             action: AddCampCardToCardsAction.name,
         },
         {
-            action: PickHeroAction.name,
+            action: PickHeroCampAction.name,
             config: {
                 stageName: `pickHero`,
             },

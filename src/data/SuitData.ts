@@ -8,8 +8,8 @@ import { MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { DrawProfitHeroAction } from "../actions/HeroActions";
-import { UpgradeCoinAction } from "../actions/CoinActions";
+// import { DrawProfitHeroAction } from "../actions/HeroActions";
+// import { UpgradeCoinAction } from "../actions/CoinActions";
 
 /**
  * <h3>Перечисление для названий фракций.</h3>
@@ -342,7 +342,8 @@ const warrior: ISuit = {
             if (G.tierToEnd !== 0) {
                 const stack: IStack[] = [
                     {
-                        action: DrawProfitHeroAction.name,
+                        // action: DrawProfitHeroAction.name,
+                        action: `DrawProfitHeroAction`,
                         config: {
                             name: `upgradeCoin`,
                             stageName: `upgradeCoin`,
@@ -351,7 +352,8 @@ const warrior: ISuit = {
                         },
                     },
                     {
-                        action: UpgradeCoinAction.name,
+                        // action: UpgradeCoinAction.name,
+                        action: `UpgradeCoinAction`,
                         config: {
                             value: 5,
                         },
@@ -423,7 +425,8 @@ const explorer: ISuit = {
             if (G.tierToEnd !== 0) {
                 const stack: IStack[] = [
                     {
-                        action: DrawProfitHeroAction.name,
+                        // action: DrawProfitHeroAction.name,
+                        action: `DrawProfitHeroAction`,
                         config: {
                             name: `explorerDistinction`,
                             stageName: `pickDistinctionCard`,

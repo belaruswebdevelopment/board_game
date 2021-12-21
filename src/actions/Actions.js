@@ -1,13 +1,18 @@
 import { suitsConfig } from "../data/SuitData";
 import { AddCardToPlayer } from "../Player";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { CreateCard, DiscardCardFromTavern } from "../Card";
+import { CreateCard } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
-import { AddHeroBuffToPlayerAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, DrawProfitHeroAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, UpgradeCoinHeroAction } from "./HeroActions";
-import { AddArtefactBuffToPlayerAction, AddCampCardToCardsAction, AddCoinToPouchAction, CheckPickDiscardCardCampAction, DiscardAnyCardFromPlayerBoardAction, DiscardSuitCardAction, DiscardTradingCoinAction, DrawProfitCampAction, GetMjollnirProfitAction, PickDiscardCardCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinCampAction, UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
-import { DrawCurrentProfit } from "../helpers/ActionHelpers";
-import { UpgradeCoinAction } from "./CoinActions";
+import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, 
+// DiscardCardsFromPlayerBoardAction,
+// DrawProfitHeroAction,
+GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction,
+// UpgradeCoinHeroAction
+ } from "./HeroActions";
+import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, AddCoinToPouchAction, CheckPickDiscardCardCampAction, DiscardAnyCardFromPlayerBoardAction, DiscardSuitCardAction, DiscardTradingCoinAction, DrawProfitCampAction, GetMjollnirProfitAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, 
+// UpgradeCoinCampAction,
+UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
 /**
  * <h3>Действия, связанные с отрисовкой профита от игровых моментов.</h3>
  * <p>Применения:</p>
@@ -19,9 +24,9 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const DrawProfitAction = (G, ctx, config) => {
-    DrawCurrentProfit(G, ctx, config);
-};
+// export const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+//     DrawCurrentProfit(G, ctx, config);
+// };
 /**
  * <h3>Сбрасывает карту из таверны по выбору игрока.</h3>
  * <p>Применения:</p>
@@ -34,11 +39,11 @@ export const DrawProfitAction = (G, ctx, config) => {
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
  */
-export const DiscardCardFromTavernAction = (G, ctx, config, cardId) => {
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
-    DiscardCardFromTavern(G, cardId);
-    EndActionFromStackAndAddNew(G, ctx);
-};
+// export const DiscardCardFromTavernAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
+//     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
+//     DiscardCardFromTavern(G, cardId);
+//     EndActionFromStackAndAddNew(G, ctx);
+// };
 /**
  * <h3>Первый игрок в фазе вербовки наёмников может пасануть, чтобы вербовать последним.</h3>
  * <p>Применения:</p>
@@ -147,6 +152,20 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
     }
 };
 /**
+ * <h3>Действия, связанные с взятием героя.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При игровых моментах, дающих возможность взять карту героя.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ */
+// export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+//     PickCurrentHero(G, ctx, config);
+// };
+/**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -163,29 +182,29 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
 export const ActionDispatcher = (G, ctx, data, ...args) => {
     let action;
     switch (data.action) {
-        case DrawProfitHeroAction.name:
-            action = DrawProfitHeroAction;
-            break;
+        // case DrawProfitHeroAction.name:
+        //     action = DrawProfitHeroAction;
+        //     break;
         case DrawProfitCampAction.name:
             action = DrawProfitCampAction;
             break;
-        case UpgradeCoinHeroAction.name:
-            action = UpgradeCoinHeroAction;
-            break;
-        case UpgradeCoinCampAction.name:
-            action = UpgradeCoinCampAction;
-            break;
-        case UpgradeCoinAction.name:
-            action = UpgradeCoinAction;
-            break;
+        // case UpgradeCoinHeroAction.name:
+        //     action = UpgradeCoinHeroAction;
+        //     break;
+        // case UpgradeCoinCampAction.name:
+        //     action = UpgradeCoinCampAction;
+        //     break;
+        // case UpgradeCoinAction.name:
+        //     action = UpgradeCoinAction;
+        //     break;
         case AddHeroToCardsAction.name:
             action = AddHeroToCardsAction;
             break;
-        case AddHeroBuffToPlayerAction.name:
-            action = AddHeroBuffToPlayerAction;
+        case AddBuffToPlayerHeroAction.name:
+            action = AddBuffToPlayerHeroAction;
             break;
-        case AddArtefactBuffToPlayerAction.name:
-            action = AddArtefactBuffToPlayerAction;
+        case AddBuffToPlayerCampAction.name:
+            action = AddBuffToPlayerCampAction;
             break;
         case PickHeroWithConditionsAction.name:
             action = PickHeroWithConditionsAction;
@@ -193,12 +212,12 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         case CheckDiscardCardsFromPlayerBoardAction.name:
             action = CheckDiscardCardsFromPlayerBoardAction;
             break;
-        case DiscardCardsFromPlayerBoardAction.name:
-            action = DiscardCardsFromPlayerBoardAction;
-            break;
-        case DiscardCardFromTavernAction.name:
-            action = DiscardCardFromTavernAction;
-            break;
+        // case DiscardCardsFromPlayerBoardAction.name:
+        //     action = DiscardCardsFromPlayerBoardAction;
+        //     break;
+        // case DiscardCardFromTavernAction.name:
+        //     action = DiscardCardFromTavernAction;
+        //     break;
         case PlaceCardsAction.name:
             action = PlaceCardsAction;
             break;
@@ -226,8 +245,11 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         case AddCampCardToCardsAction.name:
             action = AddCampCardToCardsAction;
             break;
-        case PickHeroAction.name:
-            action = PickHeroAction;
+        // case PickHeroAction.name:
+        //     action = PickHeroAction;
+        //     break;
+        case PickHeroCampAction.name:
+            action = PickHeroCampAction;
             break;
         case AddCoinToPouchAction.name:
             action = AddCoinToPouchAction;

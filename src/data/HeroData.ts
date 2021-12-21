@@ -4,19 +4,19 @@ import { IPublicPlayer, IStack } from "../Player";
 import { SuitNames } from "./SuitData";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import {
-    AddHeroBuffToPlayerAction,
+    AddBuffToPlayerHeroAction,
     AddHeroToCardsAction,
     CheckDiscardCardsFromPlayerBoardAction,
     CheckPickCampCardAction,
     CheckPickDiscardCardHeroAction,
-    DiscardCardsFromPlayerBoardAction,
-    DrawProfitHeroAction,
+    // DiscardCardsFromPlayerBoardAction,
+    // DrawProfitHeroAction,
     GetClosedCoinIntoPlayerHandAction,
     PickDiscardCardHeroAction,
     PickHeroWithConditionsAction,
     PlaceCardsAction,
     PlaceHeroAction,
-    UpgradeCoinHeroAction
+    // UpgradeCoinHeroAction
 } from "../actions/HeroActions";
 
 /**
@@ -177,7 +177,7 @@ const Uline: IHeroData = {
             },
         },
         {
-            action: AddHeroBuffToPlayerAction.name,
+            action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
                     name: `everyTurn`,
@@ -316,7 +316,8 @@ const Grid: IHeroData = {
             },
         },
         {
-            action: DrawProfitHeroAction.name,
+            // action: DrawProfitHeroAction.name,
+            action: `DrawProfitHeroAction`,
             config: {
                 stageName: `upgradeCoin`,
                 drawName: `Grid`,
@@ -325,7 +326,8 @@ const Grid: IHeroData = {
             },
         },
         {
-            action: UpgradeCoinHeroAction.name,
+            // action: UpgradeCoinHeroAction.name,
+            action: `UpgradeCoinHeroAction`,
             config: {
                 value: 7,
             },
@@ -356,7 +358,8 @@ const Thrud: IHeroData = {
             },
         },
         {
-            action: DrawProfitHeroAction.name,
+            // action: DrawProfitHeroAction.name,
+            action: `DrawProfitHeroAction`,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -499,7 +502,8 @@ const Bonfur: IHeroData = {
             },
         },
         {
-            action: DrawProfitHeroAction.name,
+            // action: DrawProfitHeroAction.name,
+            action: `DrawProfitHeroAction`,
             config: {
                 stageName: `discardCardFromBoard`,
                 drawName: `Bonfur`,
@@ -508,7 +512,8 @@ const Bonfur: IHeroData = {
             },
         },
         {
-            action: DiscardCardsFromPlayerBoardAction.name,
+            // action: DiscardCardsFromPlayerBoardAction.name,
+            action: `DiscardCardsFromPlayerBoardAction`,
             config: {
                 suit: SuitNames.BLACKSMITH,
             },
@@ -546,7 +551,8 @@ const Dagda: IHeroData = {
             },
         },
         {
-            action: DrawProfitHeroAction.name,
+            // action: DrawProfitHeroAction.name,
+            action: `DrawProfitHeroAction`,
             config: {
                 stageName: `discardCardFromBoard`,
                 drawName: `Dagda`,
@@ -556,7 +562,8 @@ const Dagda: IHeroData = {
             },
         },
         {
-            action: DiscardCardsFromPlayerBoardAction.name,
+            // action: DiscardCardsFromPlayerBoardAction.name,
+            action: `DiscardCardsFromPlayerBoardAction`,
         },
         {
             action: AddHeroToCardsAction.name,
@@ -615,7 +622,7 @@ const Jarika: IHeroData = {
             },
         },
         {
-            action: AddHeroBuffToPlayerAction.name,
+            action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
                     name: `upgradeCoin`,
@@ -813,7 +820,8 @@ const Andumia: IHeroData = {
             action: CheckPickDiscardCardHeroAction.name,
         },
         {
-            action: DrawProfitHeroAction.name,
+            // action: DrawProfitHeroAction.name,
+            action: `DrawProfitHeroAction`,
             config: {
                 stageName: `pickDiscardCard`,
                 drawName: `Andumia`,
@@ -849,7 +857,7 @@ const Holda: IHeroData = {
             },
         },
         {
-            action: AddHeroBuffToPlayerAction.name,
+            action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
                     name: `goCampOneTime`,
@@ -861,7 +869,8 @@ const Holda: IHeroData = {
             action: CheckPickCampCardAction.name,
         },
         {
-            action: DrawProfitHeroAction.name,
+            // action: DrawProfitHeroAction.name,
+            action: `DrawProfitHeroAction`,
             config: {
                 stageName: `pickCampCardHolda`,
                 drawName: `Holda`,
@@ -894,7 +903,8 @@ const Khrad: IHeroData = {
             },
         },
         {
-            action: UpgradeCoinHeroAction.name,
+            // action: UpgradeCoinHeroAction.name,
+            action: `UpgradeCoinHeroAction`,
             config: {
                 value: 10,
                 coin: `min`,
@@ -926,7 +936,8 @@ const Olwin: IHeroData = {
             },
         },
         {
-            action: DrawProfitHeroAction.name,
+            // action: DrawProfitHeroAction.name,
+            action: `DrawProfitHeroAction`,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -1017,7 +1028,7 @@ const Zolkur: IHeroData = {
             },
         },
         {
-            action: AddHeroBuffToPlayerAction.name,
+            action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
                     name: `upgradeNextCoin`,

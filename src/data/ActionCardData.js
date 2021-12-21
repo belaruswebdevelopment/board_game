@@ -1,4 +1,3 @@
-import { DrawCoinProfitAction, UpgradeCoinAction } from "../actions/CoinActions";
 /**
  * <h3>Карта улучшения монеты на +3.</h3>
  * <p>Применения:</p>
@@ -10,7 +9,8 @@ const upgradeCoinUpTo3 = {
     value: 3,
     stack: [
         {
-            action: DrawCoinProfitAction.name,
+            // action: DrawProfitCoinAction.name,
+            action: `DrawProfitCoinAction`,
             config: {
                 name: `upgradeCoin`,
                 stageName: `upgradeCoin`,
@@ -19,7 +19,8 @@ const upgradeCoinUpTo3 = {
             },
         },
         {
-            action: UpgradeCoinAction.name,
+            // action: UpgradeCoinAction.name,
+            action: `UpgradeCoinAction`,
             config: {
                 value: 3,
             },
@@ -55,7 +56,8 @@ const upgradeCoinUpTo5 = {
     value: 5,
     stack: [
         {
-            action: DrawCoinProfitAction.name,
+            // action: DrawProfitCoinAction.name,
+            action: `DrawProfitCoinAction`,
             config: {
                 name: `upgradeCoin`,
                 stageName: `upgradeCoin`,
@@ -64,7 +66,8 @@ const upgradeCoinUpTo5 = {
             },
         },
         {
-            action: UpgradeCoinAction.name,
+            // action: UpgradeCoinAction.name,
+            action: `UpgradeCoinAction`,
             config: {
                 value: 5,
             },

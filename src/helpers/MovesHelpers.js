@@ -6,8 +6,8 @@ import { AddActionsToStack, StartActionFromStackOrEndActions } from "./StackHelp
 import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
 import { ActivateTrading } from "./CoinHelpers";
 import { SuitNames } from "../data/SuitData";
-import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
-import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
+import { /* DrawProfitHeroAction, */ PlaceHeroAction } from "../actions/HeroActions";
+// import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Actions";
 import { DiscardAnyCardFromPlayerBoardAction, DrawProfitCampAction, GetMjollnirProfitAction } from "../actions/CampActions";
 // todo Add logging
 /**
@@ -144,7 +144,8 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                         && G.taverns[G.currentTavern].every(card => card !== null)) {
                         const stack = [
                             {
-                                action: DrawProfitAction.name,
+                                // action: DrawProfitAction.name,
+                                action: `DrawProfitAction`,
                                 config: {
                                     stageName: `discardCard`,
                                     name: `discardCard`,
@@ -152,7 +153,8 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                                 },
                             },
                             {
-                                action: DiscardCardFromTavernAction.name,
+                                // action: DiscardCardFromTavernAction.name,
+                                action: `DiscardCardFromTavernAction`,
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -264,7 +266,8 @@ const StartEndTierActions = (G, ctx) => {
         };
         const stack = [
             {
-                action: DrawProfitHeroAction.name,
+                // action: DrawProfitHeroAction.name,
+                action: `DrawProfitHeroAction`,
                 playerId: G.publicPlayersOrder[0],
                 variants,
                 config: {
