@@ -10,7 +10,7 @@ import {
     CheckPickCampCardAction,
     CheckPickDiscardCardHeroAction,
     DiscardCardsFromPlayerBoardAction,
-    // DrawProfitHeroAction,
+    DrawProfitHeroAction,
     GetClosedCoinIntoPlayerHandAction,
     PickDiscardCardHeroAction,
     PickHeroWithConditionsAction,
@@ -316,8 +316,7 @@ const Grid: IHeroData = {
             },
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `upgradeCoin`,
                 drawName: `Grid`,
@@ -358,8 +357,7 @@ const Thrud: IHeroData = {
             },
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -502,8 +500,7 @@ const Bonfur: IHeroData = {
             },
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `discardCardFromBoard`,
                 drawName: `Bonfur`,
@@ -550,8 +547,7 @@ const Dagda: IHeroData = {
             },
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `discardCardFromBoard`,
                 drawName: `Dagda`,
@@ -818,8 +814,7 @@ const Andumia: IHeroData = {
             action: CheckPickDiscardCardHeroAction.name,
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `pickDiscardCard`,
                 drawName: `Andumia`,
@@ -867,8 +862,7 @@ const Holda: IHeroData = {
             action: CheckPickCampCardAction.name,
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `pickCampCardHolda`,
                 drawName: `Holda`,
@@ -934,8 +928,7 @@ const Olwin: IHeroData = {
             },
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,

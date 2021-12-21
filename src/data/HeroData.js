@@ -2,9 +2,7 @@ import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, 
-// DrawProfitHeroAction,
-GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction,
+import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, DrawProfitHeroAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction,
 // UpgradeCoinHeroAction
  } from "../actions/HeroActions";
 /**
@@ -236,8 +234,7 @@ const Grid = {
             },
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `upgradeCoin`,
                 drawName: `Grid`,
@@ -277,8 +274,7 @@ const Thrud = {
             },
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,
@@ -418,8 +414,7 @@ const Bonfur = {
             },
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `discardCardFromBoard`,
                 drawName: `Bonfur`,
@@ -465,8 +460,7 @@ const Dagda = {
             },
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `discardCardFromBoard`,
                 drawName: `Dagda`,
@@ -724,8 +718,7 @@ const Andumia = {
             action: CheckPickDiscardCardHeroAction.name,
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `pickDiscardCard`,
                 drawName: `Andumia`,
@@ -772,8 +765,7 @@ const Holda = {
             action: CheckPickCampCardAction.name,
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             config: {
                 stageName: `pickCampCardHolda`,
                 drawName: `Holda`,
@@ -837,8 +829,7 @@ const Olwin = {
             },
         },
         {
-            // action: DrawProfitHeroAction.name,
-            action: `DrawProfitHeroAction`,
+            action: DrawProfitHeroAction.name,
             variants: {
                 blacksmith: {
                     suit: SuitNames.BLACKSMITH,

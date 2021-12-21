@@ -3,7 +3,7 @@ import { GetSuitIndexByName } from "./SuitHelpers";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 import { SuitNames } from "../data/SuitData";
 import { CheckPickHero } from "../Hero";
-import { /* DrawProfitHeroAction, */ PlaceHeroAction } from "../actions/HeroActions";
+import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
 /**
  * <h3>Действия, связанные с возможностью взятия карт из дискарда.</h3>
  * <p>Применения:</p>
@@ -116,8 +116,7 @@ export const StartThrudMoving = (G, ctx, card) => {
             },
         }, stack = [
             {
-                // action: DrawProfitHeroAction.name,
-                action: `DrawProfitHeroAction`,
+                action: DrawProfitHeroAction.name,
                 variants,
                 config: {
                     drawName: `Thrud`,

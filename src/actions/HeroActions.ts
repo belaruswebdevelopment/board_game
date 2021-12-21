@@ -97,15 +97,15 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
         .splice(cardId, 1)[0] as ICard);
     if (G.actionsNum === 2) {
         const stack: IStack[] = [
-            // {
-            //     action: DrawProfitHeroAction.name,
-            //     config: {
-            //         stageName: `discardCardFromBoard`,
-            //         drawName: `Dagda`,
-            //         name: `DagdaAction`,
-            //         suit: SuitNames.HUNTER,
-            //     },
-            // },
+            {
+                action: DrawProfitHeroAction.name,
+                config: {
+                    stageName: `discardCardFromBoard`,
+                    drawName: `Dagda`,
+                    name: `DagdaAction`,
+                    suit: SuitNames.HUNTER,
+                },
+            },
             {
                 action: DiscardCardsFromPlayerBoardAction.name,
                 config: {
@@ -146,9 +146,9 @@ export const CheckPickCampCardAction = (G: MyGameState, ctx: Ctx): void => {
  * @param ctx
  * @param config Конфиг действий героя.
  */
-// export const DrawProfitHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-//     DrawCurrentProfit(G, ctx, config);
-// };
+export const DrawProfitHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+    DrawCurrentProfit(G, ctx, config);
+};
 
 /**
  * <h3>Действия, связанные с добавлением других карт на планшет игрока.</h3>
@@ -204,8 +204,7 @@ export const PlaceCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
             },
                 stack: IStack[] = [
                     {
-                        // action: DrawProfitHeroAction.name,
-                        action: `DrawProfitHeroAction`,
+                        action: DrawProfitHeroAction.name,
                         variants,
                         config: {
                             name: `placeCards`,

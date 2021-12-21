@@ -4,9 +4,7 @@ import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../h
 import { CreateCard, DiscardCardFromTavern } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
-import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, 
-// DrawProfitHeroAction,
-GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction,
+import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, DrawProfitHeroAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction,
 // UpgradeCoinHeroAction
  } from "./HeroActions";
 import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, AddCoinToPouchAction, CheckPickDiscardCardCampAction, DiscardAnyCardFromPlayerBoardAction, DiscardSuitCardAction, DiscardTradingCoinAction, DrawProfitCampAction, GetMjollnirProfitAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, 
@@ -183,9 +181,9 @@ export const PickHeroAction = (G, ctx, config) => {
 export const ActionDispatcher = (G, ctx, data, ...args) => {
     let action;
     switch (data.action) {
-        // case DrawProfitHeroAction.name:
-        //     action = DrawProfitHeroAction;
-        //     break;
+        case DrawProfitHeroAction.name:
+            action = DrawProfitHeroAction;
+            break;
         case DrawProfitCampAction.name:
             action = DrawProfitCampAction;
             break;

@@ -13,7 +13,7 @@ import {
     CheckPickCampCardAction,
     CheckPickDiscardCardHeroAction,
     DiscardCardsFromPlayerBoardAction,
-    // DrawProfitHeroAction,
+    DrawProfitHeroAction,
     GetClosedCoinIntoPlayerHandAction,
     PickDiscardCardHeroAction,
     PickHeroWithConditionsAction,
@@ -221,9 +221,9 @@ export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void 
 export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args: ArgsTypes): void => {
     let action: Function | null;
     switch (data.action) {
-        // case DrawProfitHeroAction.name:
-        //     action = DrawProfitHeroAction;
-        //     break;
+        case DrawProfitHeroAction.name:
+            action = DrawProfitHeroAction;
+            break;
         case DrawProfitCampAction.name:
             action = DrawProfitCampAction;
             break;

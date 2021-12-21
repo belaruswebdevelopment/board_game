@@ -9,7 +9,7 @@ import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { AddBuffToPlayer, PickDiscardCard } from "../helpers/ActionHelpers";
+import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard } from "../helpers/ActionHelpers";
 /**
  * <h3>Действия, связанные с улучшением монет от героев.</h3>
  * <p>Применения:</p>
@@ -77,15 +77,15 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId
         .splice(cardId, 1)[0]);
     if (G.actionsNum === 2) {
         const stack = [
-            // {
-            //     action: DrawProfitHeroAction.name,
-            //     config: {
-            //         stageName: `discardCardFromBoard`,
-            //         drawName: `Dagda`,
-            //         name: `DagdaAction`,
-            //         suit: SuitNames.HUNTER,
-            //     },
-            // },
+            {
+                action: DrawProfitHeroAction.name,
+                config: {
+                    stageName: `discardCardFromBoard`,
+                    drawName: `Dagda`,
+                    name: `DagdaAction`,
+                    suit: SuitNames.HUNTER,
+                },
+            },
             {
                 action: DiscardCardsFromPlayerBoardAction.name,
                 config: {
@@ -124,9 +124,9 @@ export const CheckPickCampCardAction = (G, ctx) => {
  * @param ctx
  * @param config Конфиг действий героя.
  */
-// export const DrawProfitHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-//     DrawCurrentProfit(G, ctx, config);
-// };
+export const DrawProfitHeroAction = (G, ctx, config) => {
+    DrawCurrentProfit(G, ctx, config);
+};
 /**
  * <h3>Действия, связанные с добавлением других карт на планшет игрока.</h3>
  * <p>Применения:</p>
@@ -179,8 +179,7 @@ export const PlaceCardsAction = (G, ctx, config, suitId) => {
                 },
             }, stack = [
                 {
-                    // action: DrawProfitHeroAction.name,
-                    action: `DrawProfitHeroAction`,
+                    action: DrawProfitHeroAction.name,
                     variants,
                     config: {
                         name: `placeCards`,

@@ -7,7 +7,7 @@ import { ICoin } from "../Coin";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { SuitNames } from "../data/SuitData";
 import { CheckPickHero } from "../Hero";
-import { /* DrawProfitHeroAction, */ PlaceHeroAction } from "../actions/HeroActions";
+import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
 
 /**
  * <h3>Действия, связанные с возможностью взятия карт из дискарда.</h3>
@@ -128,8 +128,7 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
         },
             stack: IStack[] = [
                 {
-                    // action: DrawProfitHeroAction.name,
-                    action: `DrawProfitHeroAction`,
+                    action: DrawProfitHeroAction.name,
                     variants,
                     config: {
                         drawName: `Thrud`,
