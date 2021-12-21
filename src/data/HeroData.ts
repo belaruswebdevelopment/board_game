@@ -9,7 +9,7 @@ import {
     CheckDiscardCardsFromPlayerBoardAction,
     CheckPickCampCardAction,
     CheckPickDiscardCardHeroAction,
-    // DiscardCardsFromPlayerBoardAction,
+    DiscardCardsFromPlayerBoardAction,
     // DrawProfitHeroAction,
     GetClosedCoinIntoPlayerHandAction,
     PickDiscardCardHeroAction,
@@ -512,8 +512,7 @@ const Bonfur: IHeroData = {
             },
         },
         {
-            // action: DiscardCardsFromPlayerBoardAction.name,
-            action: `DiscardCardsFromPlayerBoardAction`,
+            action: DiscardCardsFromPlayerBoardAction.name,
             config: {
                 suit: SuitNames.BLACKSMITH,
             },
@@ -562,8 +561,7 @@ const Dagda: IHeroData = {
             },
         },
         {
-            // action: DiscardCardsFromPlayerBoardAction.name,
-            action: `DiscardCardsFromPlayerBoardAction`,
+            action: DiscardCardsFromPlayerBoardAction.name,
         },
         {
             action: AddHeroToCardsAction.name,

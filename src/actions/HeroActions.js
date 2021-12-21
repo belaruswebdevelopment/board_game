@@ -68,36 +68,35 @@ export const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
  * @param suitId Id фракции.
  * @param cardId Id карты.
  */
-// export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
-//     cardId: number): void => {
-//     const pickedCard: PlayerCardsType = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
-//     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-//     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
-//     // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
-//     G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-//         .splice(cardId, 1)[0] as ICard);
-//     if (G.actionsNum === 2) {
-//         const stack: IStack[] = [
-//             {
-//                 action: DrawProfitHeroAction.name,
-//                 config: {
-//                     stageName: `discardCardFromBoard`,
-//                     drawName: `Dagda`,
-//                     name: `DagdaAction`,
-//                     suit: SuitNames.HUNTER,
-//                 },
-//             },
-//             {
-//                 action: DiscardCardsFromPlayerBoardAction.name,
-//                 config: {
-//                     suit: SuitNames.HUNTER,
-//                 },
-//             },
-//         ];
-//         AddActionsToStackAfterCurrent(G, ctx, stack);
-//     }
-//     EndActionFromStackAndAddNew(G, ctx);
-// };
+export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId) => {
+    const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
+    // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
+    G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+        .splice(cardId, 1)[0]);
+    if (G.actionsNum === 2) {
+        const stack = [
+            // {
+            //     action: DrawProfitHeroAction.name,
+            //     config: {
+            //         stageName: `discardCardFromBoard`,
+            //         drawName: `Dagda`,
+            //         name: `DagdaAction`,
+            //         suit: SuitNames.HUNTER,
+            //     },
+            // },
+            {
+                action: DiscardCardsFromPlayerBoardAction.name,
+                config: {
+                    suit: SuitNames.HUNTER,
+                },
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
+    }
+    EndActionFromStackAndAddNew(G, ctx);
+};
 /**
  * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>
  * <p>Применения:</p>

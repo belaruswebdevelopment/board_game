@@ -4,8 +4,7 @@ import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../h
 import { CreateCard, DiscardCardFromTavern } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
-import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, 
-// DiscardCardsFromPlayerBoardAction,
+import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, 
 // DrawProfitHeroAction,
 GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction,
 // UpgradeCoinHeroAction
@@ -217,9 +216,9 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         case CheckDiscardCardsFromPlayerBoardAction.name:
             action = CheckDiscardCardsFromPlayerBoardAction;
             break;
-        // case DiscardCardsFromPlayerBoardAction.name:
-        //     action = DiscardCardsFromPlayerBoardAction;
-        //     break;
+        case DiscardCardsFromPlayerBoardAction.name:
+            action = DiscardCardsFromPlayerBoardAction;
+            break;
         case DiscardCardFromTavernAction.name:
             action = DiscardCardFromTavernAction;
             break;

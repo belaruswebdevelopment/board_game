@@ -12,7 +12,7 @@ import {
     CheckDiscardCardsFromPlayerBoardAction,
     CheckPickCampCardAction,
     CheckPickDiscardCardHeroAction,
-    // DiscardCardsFromPlayerBoardAction,
+    DiscardCardsFromPlayerBoardAction,
     // DrawProfitHeroAction,
     GetClosedCoinIntoPlayerHandAction,
     PickDiscardCardHeroAction,
@@ -254,9 +254,9 @@ export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args
         case CheckDiscardCardsFromPlayerBoardAction.name:
             action = CheckDiscardCardsFromPlayerBoardAction;
             break;
-        // case DiscardCardsFromPlayerBoardAction.name:
-        //     action = DiscardCardsFromPlayerBoardAction;
-        //     break;
+        case DiscardCardsFromPlayerBoardAction.name:
+            action = DiscardCardsFromPlayerBoardAction;
+            break;
         case DiscardCardFromTavernAction.name:
             action = DiscardCardFromTavernAction;
             break;

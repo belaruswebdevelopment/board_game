@@ -2,8 +2,7 @@ import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, 
-// DiscardCardsFromPlayerBoardAction,
+import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, 
 // DrawProfitHeroAction,
 GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction,
 // UpgradeCoinHeroAction
@@ -429,8 +428,7 @@ const Bonfur = {
             },
         },
         {
-            // action: DiscardCardsFromPlayerBoardAction.name,
-            action: `DiscardCardsFromPlayerBoardAction`,
+            action: DiscardCardsFromPlayerBoardAction.name,
             config: {
                 suit: SuitNames.BLACKSMITH,
             },
@@ -478,8 +476,7 @@ const Dagda = {
             },
         },
         {
-            // action: DiscardCardsFromPlayerBoardAction.name,
-            action: `DiscardCardsFromPlayerBoardAction`,
+            action: DiscardCardsFromPlayerBoardAction.name,
         },
         {
             action: AddHeroToCardsAction.name,
