@@ -39,6 +39,7 @@ import {
     UpgradeCoinVidofnirVedrfolnirAction
 } from "./CampActions";
 import { PickCurrentHero } from "../helpers/ActionHelpers";
+import { DrawProfitCoinAction } from "./CoinActions";
 // import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 // import { UpgradeCoinAction } from "./CoinActions";
 
@@ -225,6 +226,9 @@ export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args
         //     break;
         case DrawProfitCampAction.name:
             action = DrawProfitCampAction;
+            break;
+        case DrawProfitCoinAction.name:
+            action = DrawProfitCoinAction;
             break;
         // case UpgradeCoinHeroAction.name:
         //     action = UpgradeCoinHeroAction;

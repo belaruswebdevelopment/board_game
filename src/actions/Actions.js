@@ -14,6 +14,7 @@ import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, AddCoinToPouchActi
 // UpgradeCoinCampAction,
 UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
 import { PickCurrentHero } from "../helpers/ActionHelpers";
+import { DrawProfitCoinAction } from "./CoinActions";
 /**
  * <h3>Действия, связанные с отрисовкой профита от игровых моментов.</h3>
  * <p>Применения:</p>
@@ -188,6 +189,9 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
         //     break;
         case DrawProfitCampAction.name:
             action = DrawProfitCampAction;
+            break;
+        case DrawProfitCoinAction.name:
+            action = DrawProfitCoinAction;
             break;
         // case UpgradeCoinHeroAction.name:
         //     action = UpgradeCoinHeroAction;
