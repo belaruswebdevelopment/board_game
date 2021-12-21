@@ -38,7 +38,7 @@ import {
     // UpgradeCoinCampAction,
     UpgradeCoinVidofnirVedrfolnirAction
 } from "./CampActions";
-import { PickCurrentHero } from "../helpers/ActionHelpers";
+import { DrawCurrentProfit, PickCurrentHero } from "../helpers/ActionHelpers";
 import { DrawProfitCoinAction } from "./CoinActions";
 // import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 // import { UpgradeCoinAction } from "./CoinActions";
@@ -60,9 +60,9 @@ export type ArgsTypes = (string | number | boolean | null | object)[];
  * @param ctx
  * @param config Конфиг действий героя.
  */
-// export const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-//     DrawCurrentProfit(G, ctx, config);
-// };
+export const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+    DrawCurrentProfit(G, ctx, config);
+};
 
 /**
  * <h3>Сбрасывает карту из таверны по выбору игрока.</h3>
@@ -221,6 +221,9 @@ export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void 
 export const ActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args: ArgsTypes): void => {
     let action: Function | null;
     switch (data.action) {
+        case DrawProfitAction.name:
+            action = DrawProfitAction;
+            break;
         case DrawProfitHeroAction.name:
             action = DrawProfitHeroAction;
             break;

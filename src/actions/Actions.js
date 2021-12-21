@@ -10,7 +10,7 @@ import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromP
 import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, AddCoinToPouchAction, CheckPickDiscardCardCampAction, DiscardAnyCardFromPlayerBoardAction, DiscardSuitCardAction, DiscardTradingCoinAction, DrawProfitCampAction, GetMjollnirProfitAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, 
 // UpgradeCoinCampAction,
 UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
-import { PickCurrentHero } from "../helpers/ActionHelpers";
+import { DrawCurrentProfit, PickCurrentHero } from "../helpers/ActionHelpers";
 import { DrawProfitCoinAction } from "./CoinActions";
 /**
  * <h3>Действия, связанные с отрисовкой профита от игровых моментов.</h3>
@@ -23,9 +23,9 @@ import { DrawProfitCoinAction } from "./CoinActions";
  * @param ctx
  * @param config Конфиг действий героя.
  */
-// export const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
-//     DrawCurrentProfit(G, ctx, config);
-// };
+export const DrawProfitAction = (G, ctx, config) => {
+    DrawCurrentProfit(G, ctx, config);
+};
 /**
  * <h3>Сбрасывает карту из таверны по выбору игрока.</h3>
  * <p>Применения:</p>
@@ -181,6 +181,9 @@ export const PickHeroAction = (G, ctx, config) => {
 export const ActionDispatcher = (G, ctx, data, ...args) => {
     let action;
     switch (data.action) {
+        case DrawProfitAction.name:
+            action = DrawProfitAction;
+            break;
         case DrawProfitHeroAction.name:
             action = DrawProfitHeroAction;
             break;
