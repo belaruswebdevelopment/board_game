@@ -84,15 +84,7 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
  */
 export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
     if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
-        let playerCards: PlayerCardsType[][] = [];
-        let index: number = 0;
-        for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
-                playerCards[index] = [];
-                playerCards[index].push(...G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]);
-                index++;
-            }
-        }
+        let playerCards: PlayerCardsType[][] = Object.values(G.publicPlayers[Number(ctx.currentPlayer)].cards);
         const isCanPickHero: boolean =
             Math.min(...playerCards.map((item: PlayerCardsType[]): number =>
                 item.reduce(TotalRank, 0))) >
@@ -164,12 +156,7 @@ export const CreateHero = ({
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: MyGameState, ctx: Ctx): void => {
     for (let i: number = 0; i < ctx.numPlayers; i++) {
-        const playerCards: PlayerCardsType[] = [];
-        for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
-                playerCards.concat(G.publicPlayers[i].cards[suit]);
-            }
-        }
+        const playerCards: PlayerCardsType[] = Object.values(G.publicPlayers[i].cards).flat();
         const thrud: PlayerCardsType | undefined =
             playerCards.find((card: PlayerCardsType): boolean => card.name === `Thrud`);
         if (thrud !== undefined && thrud.suit !== null) {

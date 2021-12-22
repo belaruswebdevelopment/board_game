@@ -198,10 +198,12 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder: number[][] = [];
     for (const suit in suitsConfig) {
-        averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
-            players: ctx.numPlayers,
-            tier: 0,
-        } as IAverageSuitCardData);
+        if (suitsConfig.hasOwnProperty(suit)) {
+            averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
+                players: ctx.numPlayers,
+                tier: 0,
+            } as IAverageSuitCardData);
+        }
     }
     for (let i: number = 0; i < initCoinsOrder.length; i++) {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));

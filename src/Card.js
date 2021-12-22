@@ -281,8 +281,10 @@ export const PotentialScoring = ({ player = {}, card = {}, }) => {
     }
     let i = 0;
     for (const suit in suitsConfig) {
-        score += suitsConfig[suit].scoringRule(potentialCards[suit]);
-        i++;
+        if (suitsConfig.hasOwnProperty(suit)) {
+            score += suitsConfig[suit].scoringRule(potentialCards[suit]);
+            i++;
+        }
     }
     if (card !== null && `value` in card) {
         score += card.value;

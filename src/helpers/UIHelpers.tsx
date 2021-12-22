@@ -297,14 +297,16 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
     const playerHeaders: JSX.Element[] = [],
         playerRows: JSX.Element[][] = [];
     for (const suit in suitsConfig) {
-        playerHeaders.push(
-            <th className={`${suitsConfig[suit].suitColor}`}
-                key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`}>
-                <span style={Styles.Suits(suit)} className="bg-suit-icon">
+        if (suitsConfig.hasOwnProperty(suit)) {
+            playerHeaders.push(
+                <th className={`${suitsConfig[suit].suitColor}`}
+                    key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`}>
+                    <span style={Styles.Suits(suit)} className="bg-suit-icon">
 
-                </span>
-            </th>
-        );
+                    </span>
+                </th>
+            );
+        }
     }
     DiscardAnyCardFromPlayerBoardProfit(data.props.G, data.props.ctx, data, playerRows);
     return (

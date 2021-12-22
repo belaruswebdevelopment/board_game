@@ -59,12 +59,7 @@ export const DrawPlayersBoards = (data) => {
             for (let k = 0; k < 1 + Number(data.props.G.expansions.thingvellir.active); k++) {
                 id += k + 1;
                 if (k === 0) {
-                    const playerCards = [];
-                    for (const suit in suitsConfig) {
-                        if (suitsConfig.hasOwnProperty(suit)) {
-                            playerCards.concat(data.props.G.publicPlayers[p].cards[suit]);
-                        }
-                    }
+                    const playerCards = Object.values(data.props.G.publicPlayers[p].cards).flat();
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                     if (data.props.G.publicPlayers[p].heroes[i] !== undefined &&
                         (!data.props.G.publicPlayers[p].heroes[i].suit &&

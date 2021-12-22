@@ -74,10 +74,12 @@ export const SetupGame = (ctx) => {
         .map((item, index) => index), initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
     for (const suit in suitsConfig) {
-        averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
-            players: ctx.numPlayers,
-            tier: 0,
-        });
+        if (suitsConfig.hasOwnProperty(suit)) {
+            averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
+                players: ctx.numPlayers,
+                tier: 0,
+            });
+        }
     }
     for (let i = 0; i < initCoinsOrder.length; i++) {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));

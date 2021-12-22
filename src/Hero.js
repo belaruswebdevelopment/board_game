@@ -2,7 +2,6 @@ import { AddDataToLog, LogTypes } from "./Logging";
 import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { PickHeroAction } from "./actions/Actions";
-import { suitsConfig } from "./data/SuitData";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -48,15 +47,7 @@ export const BuildHeroes = (configOptions, heroesConfig) => {
  */
 export const CheckPickHero = (G, ctx) => {
     if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
-        let playerCards = [];
-        let index = 0;
-        for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
-                playerCards[index] = [];
-                playerCards[index].push(...G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]);
-                index++;
-            }
-        }
+        let playerCards = Object.values(G.publicPlayers[Number(ctx.currentPlayer)].cards);
         const isCanPickHero = Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) >
             G.publicPlayers[Number(ctx.currentPlayer)].heroes.length;
         if (isCanPickHero) {
@@ -114,12 +105,7 @@ export const CreateHero = ({ type, name, description, game, suit, rank, points, 
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const playerCards = [];
-        for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
-                playerCards.concat(G.publicPlayers[i].cards[suit]);
-            }
-        }
+        const playerCards = Object.values(G.publicPlayers[i].cards).flat();
         const thrud = playerCards.find((card) => card.name === `Thrud`);
         if (thrud !== undefined && thrud.suit !== null) {
             const thrudIndex = G.publicPlayers[i].cards[thrud.suit]
