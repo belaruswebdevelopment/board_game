@@ -2,11 +2,11 @@ import { suitsConfig } from "../data/SuitData";
 import { tavernsConfig } from "../Tavern";
 import { CurrentScoring } from "../Score";
 import { Styles } from "../data/StyleData";
-import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { GameBoard } from "../GameBoard";
 import { ICoin } from "../Coin";
+import { PlayerCardsType } from "../Player";
 
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
@@ -30,21 +30,22 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
         playerHeadersCount[p] = [];
         playerRows[p] = [];
         for (const suit in suitsConfig) {
-            playerHeaders[p].push(
-                <th className={`${suitsConfig[suit].suitColor}`}
-                    key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName}`}>
-                    <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
+            if (suitsConfig.hasOwnProperty(suit)) {
+                playerHeaders[p].push(
+                    <th className={`${suitsConfig[suit].suitColor}`}
+                        key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName}`}>
+                        <span style={Styles.Suits(suit)} className="bg-suit-icon">
 
-                    </span>
-                </th>
-            );
-            playerHeadersCount[p].push(
-                <th className={`${suitsConfig[suit].suitColor} text-white`}
-                    key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName} count`}>
-                    <b>{data.props.G.publicPlayers[p].cards[GetSuitIndexByName(suit)]
-                        .reduce(TotalRank, 0)}</b>
-                </th>
-            );
+                        </span>
+                    </th>
+                );
+                playerHeadersCount[p].push(
+                    <th className={`${suitsConfig[suit].suitColor} text-white`}
+                        key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName} count`}>
+                        <b>{data.props.G.publicPlayers[p].cards[suit].reduce(TotalRank, 0)}</b>
+                    </th>
+                );
+            }
         }
         for (let s: number = 0; s < 1 + Number(data.props.G.expansions.thingvellir.active); s++) {
             if (s === 0) {
@@ -80,37 +81,44 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
         for (let i: number = 0; ; i++) {
             const playerCells: JSX.Element[] = [];
             let isDrawRow: boolean = false,
-                id: number = 0;
+                id: number = 0,
+                j: number = 0;
             playerRows[p][i] = [];
-            for (let j: number = 0; j < data.props.G.suitsNum; j++) {
-                const suit: string = Object.keys(suitsConfig)[j];
-                id = i + j;
-                if (data.props.G.publicPlayers[p].cards[j][i] !== undefined) {
-                    isDrawRow = true;
-                    DrawCard(data, playerCells, data.props.G.publicPlayers[p].cards[j][i], id,
-                        data.props.G.publicPlayers[p], suit);
-                } else {
-                    playerCells.push(
-                        <td key={`${data.props.G.publicPlayers[p].nickname} empty card ${id}`}>
+            for (const suit in suitsConfig) {
+                if (suitsConfig.hasOwnProperty(suit)) {
+                    id = i + j;
+                    if (data.props.G.publicPlayers[p].cards[suit][i] !== undefined) {
+                        isDrawRow = true;
+                        DrawCard(data, playerCells, data.props.G.publicPlayers[p].cards[suit][i], id,
+                            data.props.G.publicPlayers[p], suit);
+                    } else {
+                        playerCells.push(
+                            <td key={`${data.props.G.publicPlayers[p].nickname} empty card ${id}`}>
 
-                        </td>
-                    );
+                            </td>
+                        );
+                    }
+                    j++;
                 }
             }
             for (let k: number = 0; k < 1 + Number(data.props.G.expansions.thingvellir.active); k++) {
                 id += k + 1;
                 if (k === 0) {
+                    const playerCards: PlayerCardsType[] = [];
+                    for (const suit in suitsConfig) {
+                        if (suitsConfig.hasOwnProperty(suit)) {
+                            playerCards.concat(data.props.G.publicPlayers[p].cards[suit]);
+                        }
+                    }
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                     if (data.props.G.publicPlayers[p].heroes[i] !== undefined &&
                         (!data.props.G.publicPlayers[p].heroes[i].suit &&
                             !((data.props.G.publicPlayers[p].heroes[i].name === `Ylud`
-                                && data.props.G.publicPlayers[p].cards.flat()
-                                    .findIndex((card: { name: string; }): boolean =>
-                                        card.name === `Ylud`) !== -1)
+                                && playerCards.findIndex((card: { name: string; }): boolean =>
+                                    card.name === `Ylud`) !== -1)
                                 || (data.props.G.publicPlayers[p].heroes[i].name === `Thrud`
-                                    && data.props.G.publicPlayers[p].cards.flat()
-                                        .findIndex((card: { name: string; }): boolean =>
-                                            card.name === `Thrud`) !== -1)))) {
+                                    && playerCards.findIndex((card: { name: string; }): boolean =>
+                                        card.name === `Thrud`) !== -1)))) {
                         isDrawRow = true;
                         DrawCard(data, playerCells, data.props.G.publicPlayers[p].heroes[i], id,
                             data.props.G.publicPlayers[p]);

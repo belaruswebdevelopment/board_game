@@ -8,7 +8,6 @@ import {
     EndActionFromStackAndAddNew,
     StartActionFromStackOrEndActions
 } from "../helpers/StackHelpers";
-import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { Ctx, Move } from "boardgame.io";
 import { DeckCardTypes, MyGameState } from "../GameSetup";
@@ -46,20 +45,20 @@ export const ClickCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardI
         return INVALID_MOVE;
     }
     const card: DeckCardTypes | null = G.taverns[G.currentTavern][cardId];
-    let suitId: null | number = null;
+    let suit: null | string = null;
     G.taverns[G.currentTavern][cardId] = null;
     if (card !== null) {
         const isAdded: boolean = AddCardToPlayer(G, ctx, card);
         if (isCardNotAction(card)) {
             if (isAdded) {
                 CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
-                suitId = GetSuitIndexByName(card.suit);
+                suit = card.suit;
             }
         } else {
             AddActionsToStack(G, ctx, card.stack);
         }
         if (G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-            StartActionFromStackOrEndActions(G, ctx, false, suitId);
+            StartActionFromStackOrEndActions(G, ctx, false, suit);
         } else {
             AfterBasicPickCardActions(G, ctx, false);
         }
@@ -82,18 +81,18 @@ export const ClickCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardI
 export const ClickCardToPickDistinctionMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     const isAdded: boolean = AddCardToPlayer(G, ctx, G.decks[1][cardId]),
         pickedCard: DeckCardTypes = G.decks[1].splice(cardId, 1)[0];
-    let suitId: null | number = null;
+    let suit: null | string = null;
     G.decks[1] = ctx.random!.Shuffle(G.decks[1]);
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {
-            delete G.distinctions[4];
+            delete G.distinctions[1];
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-            suitId = GetSuitIndexByName(pickedCard.suit);
+            suit = pickedCard.suit;
         }
     } else {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
-    EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    EndActionFromStackAndAddNew(G, ctx, [], suit);
 };
 
 /**
@@ -183,15 +182,15 @@ export const PickDiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx,
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const PlaceEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
+export const PlaceEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suit: string): void => {
     const stack: IStack[] = [
         {
             action: PlaceEnlistmentMercenariesAction.name,
         },
     ];
-    EndActionFromStackAndAddNew(G, ctx, stack, suitId);
+    EndActionFromStackAndAddNew(G, ctx, stack, suit);
 };
 
 /**

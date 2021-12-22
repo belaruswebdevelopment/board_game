@@ -98,11 +98,12 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
         return INVALID_MOVE;
     }
     if (G.distinctions.length) {
-        const isDistinction3 = G.distinctions[3] !== undefined;
-        if (isDistinction3) {
-            delete G.distinctions[3];
+        // todo Rework in suit name distinctions and delete not by if but by current distinction suit
+        const isDistinctionExplorer = G.distinctions[1] !== undefined;
+        if (isDistinctionExplorer) {
+            delete G.distinctions[1];
         }
-        else if (!isDistinction3 && G.distinctions[4] !== undefined) {
+        else if (!isDistinctionExplorer && G.distinctions[4] !== undefined) {
             delete G.distinctions[4];
         }
     }

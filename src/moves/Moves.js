@@ -3,7 +3,6 @@ import { AddCardToPlayer } from "../Player";
 import { suitsConfig } from "../data/SuitData";
 import { IsValidMove } from "../MoveValidator";
 import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
-import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { isCardNotAction } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
@@ -34,21 +33,21 @@ export const ClickCardMove = (G, ctx, cardId) => {
         return INVALID_MOVE;
     }
     const card = G.taverns[G.currentTavern][cardId];
-    let suitId = null;
+    let suit = null;
     G.taverns[G.currentTavern][cardId] = null;
     if (card !== null) {
         const isAdded = AddCardToPlayer(G, ctx, card);
         if (isCardNotAction(card)) {
             if (isAdded) {
                 CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
-                suitId = GetSuitIndexByName(card.suit);
+                suit = card.suit;
             }
         }
         else {
             AddActionsToStack(G, ctx, card.stack);
         }
         if (G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-            StartActionFromStackOrEndActions(G, ctx, false, suitId);
+            StartActionFromStackOrEndActions(G, ctx, false, suit);
         }
         else {
             AfterBasicPickCardActions(G, ctx, false);
@@ -71,19 +70,19 @@ export const ClickCardMove = (G, ctx, cardId) => {
  */
 export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     const isAdded = AddCardToPlayer(G, ctx, G.decks[1][cardId]), pickedCard = G.decks[1].splice(cardId, 1)[0];
-    let suitId = null;
+    let suit = null;
     G.decks[1] = ctx.random.Shuffle(G.decks[1]);
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {
-            delete G.distinctions[4];
+            delete G.distinctions[1];
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-            suitId = GetSuitIndexByName(pickedCard.suit);
+            suit = pickedCard.suit;
         }
     }
     else {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
-    EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    EndActionFromStackAndAddNew(G, ctx, [], suit);
 };
 /**
  * <h3>Выбор конкретного преимущества по фракциям в конце первой эпохи.</h3>
@@ -166,15 +165,15 @@ export const PickDiscardCardMove = (G, ctx, cardId) => {
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const PlaceEnlistmentMercenariesMove = (G, ctx, suitId) => {
+export const PlaceEnlistmentMercenariesMove = (G, ctx, suit) => {
     const stack = [
         {
             action: PlaceEnlistmentMercenariesAction.name,
         },
     ];
-    EndActionFromStackAndAddNew(G, ctx, stack, suitId);
+    EndActionFromStackAndAddNew(G, ctx, stack, suit);
 };
 /**
  * <h3>Начало вербовки наёмников.</li>

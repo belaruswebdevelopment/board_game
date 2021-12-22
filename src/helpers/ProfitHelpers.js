@@ -20,7 +20,6 @@ export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
     }
 };
 export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, playerRows) => {
-    var _a;
     for (let i = 0;; i++) {
         const playerCells = [];
         let isDrawRow = false;
@@ -28,20 +27,29 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, playerRows) =>
         if (data instanceof GameBoard && playerRows !== undefined) {
             playerRows[i] = [];
         }
-        for (let j = 0; j < G.suitsNum; j++) {
-            id = i + j;
-            if (((_a = G.publicPlayers[Number(ctx.currentPlayer)].cards[j]) === null || _a === void 0 ? void 0 : _a[i]) !== undefined) {
-                isExit = false;
-                if (Array.isArray(data)) {
-                    isDrawRow = true;
-                }
-                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][i].type !== `герой`) {
-                    if (data instanceof GameBoard && playerRows !== undefined) {
+        let j = 0;
+        for (const suit in suitsConfig) {
+            if (suitsConfig.hasOwnProperty(suit)) {
+                id = i + j;
+                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i] !== undefined) {
+                    isExit = false;
+                    if (Array.isArray(data)) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].cards[j][i], id, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], Object.keys(suitsConfig)[j], OnClickDiscardCardFromPlayerBoard.name, j, i);
                     }
-                    else if (Array.isArray(data)) {
-                        data.push([j]);
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i].type !== `герой`) {
+                        if (data instanceof GameBoard && playerRows !== undefined) {
+                            isDrawRow = true;
+                            DrawCard(data, playerCells, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
+                                .cards[suit][i], id, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], suit, OnClickDiscardCardFromPlayerBoard.name, suit, i);
+                        }
+                        else if (Array.isArray(data)) {
+                            data.push([suit]);
+                        }
+                    }
+                    else {
+                        if (data instanceof GameBoard && playerRows !== undefined) {
+                            playerCells.push(_jsx("td", {}, `${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} empty card ${id}`));
+                        }
                     }
                 }
                 else {
@@ -49,11 +57,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, playerRows) =>
                         playerCells.push(_jsx("td", {}, `${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} empty card ${id}`));
                     }
                 }
-            }
-            else {
-                if (data instanceof GameBoard && playerRows !== undefined) {
-                    playerCells.push(_jsx("td", {}, `${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} empty card ${id}`));
-                }
+                j++;
             }
         }
         if (data instanceof GameBoard && playerRows !== undefined) {
@@ -72,21 +76,21 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, playerRows) =>
     }
 };
 export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
-    var _a;
     const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config, pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (config !== undefined) {
-        for (let j = 0; j < G.suitsNum; j++) {
-            const suit = (_a = G.publicPlayers[Number(ctx.currentPlayer)].cards[j][0]) === null || _a === void 0 ? void 0 : _a.suit;
-            if (suit !== undefined && suit !== null && suitsConfig[suit].suit !== config.suit
-                && !(G.drawProfit === `DagdaAction` && G.actionsNum === 1 && pickedCard !== null
-                    && `suit` in pickedCard && suitsConfig[suit].suit === pickedCard.suit)) {
-                const last = G.publicPlayers[Number(ctx.currentPlayer)].cards[j].length - 1;
-                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].type !== `герой`) {
-                    if (data instanceof GameBoard && boardCells !== undefined) {
-                        DrawCard(data, boardCells, G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last], last, G.publicPlayers[Number(ctx.currentPlayer)], G.publicPlayers[Number(ctx.currentPlayer)].cards[j][last].suit, OnClickCardToDiscard.name, j, last);
-                    }
-                    else if (Array.isArray(data)) {
-                        data.push([j, last]);
+        for (const suit in suitsConfig) {
+            if (suitsConfig.hasOwnProperty(suit)) {
+                if (suit !== config.suit
+                    && !(G.drawProfit === `DagdaAction` && G.actionsNum === 1 && pickedCard !== null
+                        && `suit` in pickedCard && suit === pickedCard.suit)) {
+                    const last = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== `герой`) {
+                        if (data instanceof GameBoard && boardCells !== undefined) {
+                            DrawCard(data, boardCells, G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last], last, G.publicPlayers[Number(ctx.currentPlayer)], suit, OnClickCardToDiscard.name, suit, last);
+                        }
+                        else if (Array.isArray(data)) {
+                            data.push([suit, last]);
+                        }
                     }
                 }
             }
@@ -126,16 +130,17 @@ export const GetEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     }
 };
 export const GetMjollnirProfitProfit = (G, ctx, data, boardCells) => {
-    for (let j = 0; j < G.suitsNum; j++) {
-        if (data instanceof GameBoard && boardCells !== undefined) {
-            const suit = Object.keys(suitsConfig)[j];
-            // todo Move logic to DrawCard?
-            boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.OnClickSuitToGetMjollnirProfit(j), children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon", children: _jsx("b", { className: "whitespace-nowrap text-white", children: G.publicPlayers[Number(ctx.currentPlayer)].cards[j]
-                            .reduce(TotalRank, 0) * 2 }, void 0) }, void 0) }, `${suit} suit to get Mjöllnir profit`));
-        }
-        else if (Array.isArray(data)) {
-            data.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[j]
-                .reduce(TotalRank, 0));
+    for (const suit in suitsConfig) {
+        if (suitsConfig.hasOwnProperty(suit)) {
+            if (data instanceof GameBoard && boardCells !== undefined) {
+                // todo Move logic to DrawCard?
+                boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.OnClickSuitToGetMjollnirProfit(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { className: "whitespace-nowrap text-white", children: G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
+                                .reduce(TotalRank, 0) * 2 }, void 0) }, void 0) }, `${suit} suit to get Mjöllnir profit`));
+            }
+            else if (Array.isArray(data)) {
+                data.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
+                    .reduce(TotalRank, 0));
+            }
         }
     }
 };
@@ -169,36 +174,40 @@ export const PickDiscardCardProfit = (G, ctx, data, boardCells) => {
 };
 export const PlaceCardsProfit = (G, ctx, data, boardCells) => {
     var _a, _b;
-    for (let j = 0; j < G.suitsNum; j++) {
-        const suit = Object.keys(suitsConfig)[j], pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-        if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
-            if (data instanceof GameBoard && boardCells !== undefined) {
-                const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-                if (config !== undefined) {
-                    // todo Move logic to DrawCard?
-                    boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.OnClickSuitToPlaceCard(j), children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = (_a = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants) === null || _a === void 0 ? void 0 : _a[suit].points) !== null && _b !== void 0 ? _b : `` }, void 0) }, void 0) }, `Place ${config.drawName} on ${suitsConfig[suit].suitName}`));
+    for (const suit in suitsConfig) {
+        if (suitsConfig.hasOwnProperty(suit)) {
+            const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+            if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
+                if (data instanceof GameBoard && boardCells !== undefined) {
+                    const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
+                    if (config !== undefined) {
+                        // todo Move logic to DrawCard?
+                        boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.OnClickSuitToPlaceCard(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = (_a = G.publicPlayers[Number(ctx.currentPlayer)]
+                                        .stack[0].variants) === null || _a === void 0 ? void 0 : _a[suit].points) !== null && _b !== void 0 ? _b : `` }, void 0) }, void 0) }, `Place ${config.drawName} on ${suitsConfig[suit].suitName}`));
+                    }
                 }
-            }
-            else if (Array.isArray(data)) {
-                data.push([j]);
+                else if (Array.isArray(data)) {
+                    data.push([suit]);
+                }
             }
         }
     }
 };
 export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     var _a, _b;
-    for (let j = 0; j < G.suitsNum; j++) {
-        const card = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-        if (card !== null && `stack` in card) {
-            const suit = Object.keys(suitsConfig)[j];
-            if (card.stack[0].variants !== undefined) {
-                if (suit === ((_a = card.stack[0].variants[suit]) === null || _a === void 0 ? void 0 : _a.suit)) {
-                    if (data instanceof GameBoard && boardCells !== undefined) {
-                        // todo Move logic to DrawCard?
-                        boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.OnClickSuitToPlaceMercenary(j), children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = card.stack[0].variants[suit].points) !== null && _b !== void 0 ? _b : `` }, void 0) }, void 0) }, `Place ${card.name} ${j} on ${suitsConfig[suit].suitName}`));
-                    }
-                    else if (Array.isArray(data)) {
-                        data.push([j]);
+    for (const suit in suitsConfig) {
+        if (suitsConfig.hasOwnProperty(suit)) {
+            const card = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+            if (card !== null && `stack` in card) {
+                if (card.stack[0].variants !== undefined) {
+                    if (suit === ((_a = card.stack[0].variants[suit]) === null || _a === void 0 ? void 0 : _a.suit)) {
+                        if (data instanceof GameBoard && boardCells !== undefined) {
+                            // todo Move logic to DrawCard?
+                            boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.OnClickSuitToPlaceMercenary(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = card.stack[0].variants[suit].points) !== null && _b !== void 0 ? _b : `` }, void 0) }, void 0) }, `Place ${card.name} on ${suitsConfig[suit].suitName}`));
+                        }
+                        else if (Array.isArray(data)) {
+                            data.push([suit]);
+                        }
                     }
                 }
             }

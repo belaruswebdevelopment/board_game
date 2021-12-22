@@ -1,4 +1,3 @@
-import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
@@ -463,8 +462,7 @@ const Idunn = {
         },
     ],
     scoringRule: (player) => player !== undefined ?
-        player.cards[GetSuitIndexByName(SuitNames.EXPLORER)]
-            .reduce(TotalRank, 0) * 2 : 0,
+        player.cards[SuitNames.EXPLORER].reduce(TotalRank, 0) * 2 : 0,
 };
 /**
  * <h3>Данные о герое.</h3>

@@ -1,4 +1,3 @@
-import { suitsConfig } from "../data/SuitData";
 import { AddCardToPlayer, IConfig, IStack, PickedCardType } from "../Player";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { CreateCard, DiscardCardFromTavern, ICard, ICreateCard } from "../Card";
@@ -288,11 +287,10 @@ export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void 
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
-    const suit: string = Object.keys(suitsConfig)[suitId],
-        pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string): void => {
+    const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null) {
         if (`stack` in pickedCard && `tier` in pickedCard && `path` in pickedCard) {
             if (pickedCard.stack[0].variants !== undefined) {
@@ -324,7 +322,7 @@ export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, confi
                     AddActionsToStackAfterCurrent(G, ctx, stack);
                 }
                 CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
-                EndActionFromStackAndAddNew(G, ctx, [], suitId);
+                EndActionFromStackAndAddNew(G, ctx, [], suit);
             } else {
                 AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
             }

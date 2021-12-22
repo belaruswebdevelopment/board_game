@@ -59,9 +59,10 @@ export const DrawCurrentPlayerTurn = (data) => (_jsxs("b", { children: ["Current
 export const DrawDistinctions = (data) => {
     const boardCells = [];
     for (let i = 0; i < 1; i++) {
-        for (let j = 0; j < data.props.G.suitsNum; j++) {
-            const suit = Object.keys(suitsConfig)[j];
-            boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => data.OnClickDistinctionCard(j), title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }, void 0) }, `Distinction ${suit} card`));
+        for (const suit in suitsConfig) {
+            if (suitsConfig.hasOwnProperty(suit)) {
+                boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => data.OnClickDistinctionCard(suit), title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }, void 0) }, `Distinction ${suit} card`));
+            }
         }
     }
     return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }, void 0), " ", _jsx("span", { children: "Distinctions" }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));

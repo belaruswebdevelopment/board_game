@@ -17,12 +17,11 @@ import { CheckCurrentSuitDistinctions } from "./Distinction";
  * @returns Текущий счёт указанного игрока.
  */
 export const CurrentScoring = (player) => {
-    let score = 0, index = 0;
+    let score = 0;
     for (const suit in suitsConfig) {
-        if (player.cards[index] !== undefined) {
-            score += suitsConfig[suit].scoringRule(player.cards[index]);
+        if (suitsConfig.hasOwnProperty(suit)) {
+            score += suitsConfig[suit].scoringRule(player.cards[suit]);
         }
-        index++;
     }
     return score;
 };

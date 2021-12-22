@@ -1,6 +1,5 @@
 import { AddDataToLog, LogTypes } from "./Logging";
 import { SuitNames, suitsConfig } from "./data/SuitData";
-import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { DeckCardTypes, DistinctionTypes, MyGameState } from "./GameSetup";
 import { Ctx } from "boardgame.io";
@@ -16,30 +15,23 @@ import { Ctx } from "boardgame.io";
  *
  * @param G
  * @param ctx
- * @param suitName Фракция.
+ * @param suit Фракция.
  * @returns Индекс игрока с преимуществом по фракции, если имеется.
  */
-export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suitName: string): number | undefined => {
-    const playersRanks: number[] = [],
-        suitIndex: number = GetSuitIndexByName(suitName);
-    if (suitIndex !== -1) {
-        for (let i: number = 0; i < ctx.numPlayers; i++) {
-            playersRanks.push(G.publicPlayers[i].cards[suitIndex]
-                .reduce(TotalRank, 0));
-        }
-        const max: number = Math.max(...playersRanks),
-            maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max);
-        if (maxPlayers.length === 1) {
-            const playerDistinctionIndex: number = playersRanks.indexOf(maxPlayers[0]);
-            AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suitName].suitName} получил игрок: ${G.publicPlayers[playerDistinctionIndex].nickname}.`);
-            return playerDistinctionIndex;
-        } else {
-            AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suitName].suitName} никто не получил.`);
-            return undefined;
-        }
+export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suit: string): number | undefined => {
+    const playersRanks: number[] = [];
+    for (let i: number = 0; i < ctx.numPlayers; i++) {
+        playersRanks.push(G.publicPlayers[i].cards[suit].reduce(TotalRank, 0));
+    }
+    const max: number = Math.max(...playersRanks),
+        maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max);
+    if (maxPlayers.length === 1) {
+        const playerDistinctionIndex: number = playersRanks.indexOf(maxPlayers[0]);
+        AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} получил игрок: ${G.publicPlayers[playerDistinctionIndex].nickname}.`);
+        return playerDistinctionIndex;
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${suitName}.`);
-        // todo Must return undefined or something else!?
+        AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} никто не получил.`);
+        return undefined;
     }
 };
 
@@ -52,26 +44,19 @@ export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suitName: 
  *
  * @param G
  * @param ctx
- * @param suitName Фракция.
+ * @param suit Название фракции.
  * @returns Индексы игроков с преимуществом по фракции.
  */
-export const CheckCurrentSuitDistinctions = (G: MyGameState, ctx: Ctx, suitName: string): number[] | undefined => {
-    const playersRanks: number[] = [],
-        suitIndex: number = GetSuitIndexByName(suitName);
-    if (suitIndex !== -1) {
-        for (let i: number = 0; i < ctx.numPlayers; i++) {
-            playersRanks.push(G.publicPlayers[i].cards[suitIndex]
-                .reduce(TotalRank, 0));
-        }
-        const max: number = Math.max(...playersRanks),
-            maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max);
-        const playerDistinctionIndex: number = playersRanks.indexOf(maxPlayers[0]);
-        AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suitName].suitName} получил игрок: ${G.publicPlayers[playerDistinctionIndex].nickname}.`);
-        return maxPlayers;
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${suitName}.`);
-        // todo Must return undefined or something else!?
+export const CheckCurrentSuitDistinctions = (G: MyGameState, ctx: Ctx, suit: string): number[] | undefined => {
+    const playersRanks: number[] = [];
+    for (let i: number = 0; i < ctx.numPlayers; i++) {
+        playersRanks.push(G.publicPlayers[i].cards[suit].reduce(TotalRank, 0));
     }
+    const max: number = Math.max(...playersRanks),
+        maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max),
+        playerDistinctionIndex: number = playersRanks.indexOf(maxPlayers[0]);
+    AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} получил игрок: ${G.publicPlayers[playerDistinctionIndex].nickname}.`);
+    return maxPlayers;
 };
 
 /**
@@ -88,13 +73,15 @@ export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
     let i: number = 0;
     AddDataToLog(G, LogTypes.GAME, "Преимущество по фракциям в конце эпохи:");
     for (const suit in suitsConfig) {
-        const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
-        G.distinctions[i] = result;
-        if (suit === SuitNames.EXPLORER && result === undefined) {
-            const discardedCard: DeckCardTypes = G.decks[1].splice(0, 1)[0];
-            G.discardCardsDeck.push(discardedCard);
-            AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
+        if (suitsConfig.hasOwnProperty(suit)) {
+            const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
+            G.distinctions[i] = result;
+            if (suit === SuitNames.EXPLORER && result === undefined) {
+                const discardedCard: DeckCardTypes = G.decks[1].splice(0, 1)[0];
+                G.discardCardsDeck.push(discardedCard);
+                AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
+            }
+            i++;
         }
-        i++;
     }
 };

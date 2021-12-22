@@ -26,7 +26,7 @@ export interface IArtefact {
     rank: null | number,
     points: null | number,
     stack: IStack[],
-    scoringRule: (player?: IPublicPlayer, suitId?: number) => number,
+    scoringRule: (player?: IPublicPlayer, suit?: string) => number,
 }
 
 /**
@@ -289,8 +289,8 @@ const Mjollnir: IArtefact = {
             },
         },
     ],
-    scoringRule: (player?: IPublicPlayer, suitId?: number): number => player !== undefined && suitId !== undefined ?
-        player.cards[suitId].reduce(TotalRank, 0) * 2 : 0,
+    scoringRule: (player?: IPublicPlayer, suit?: string): number => player !== undefined && suit !== undefined ?
+        player.cards[suit].reduce(TotalRank, 0) * 2 : 0,
 };
 
 /**
@@ -342,9 +342,19 @@ const Hrafnsmerki: IArtefact = {
             action: AddCampCardToCardsAction.name,
         },
     ],
-    scoringRule: (player?: IPublicPlayer): number => player !== undefined ?
-        player.cards.flat().filter((card: PlayerCardsType): boolean =>
-            card.type === `наёмник`).length * 5 : 0,
+    scoringRule: (player?: IPublicPlayer): number => {
+        if (player !== undefined) {
+            let score: number = 0;
+            for (const suit in player.cards) {
+                if (player.cards.hasOwnProperty(suit)) {
+                    score += player.cards[suit].filter((card: PlayerCardsType): boolean =>
+                        card.type === `наёмник`).length * 5;
+                }
+            }
+            return score;
+        }
+        return 0;
+    },
 };
 
 /**

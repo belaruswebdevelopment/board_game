@@ -9,7 +9,7 @@ import { CampDeckCardTypes, MyGameState, TavernCardTypes } from "../GameSetup";
 import { Ctx } from "boardgame.io";
 import { IStack, PlayerCardsType } from "../Player";
 import { IVariants } from "../data/HeroData";
-import { SuitNames } from "../data/SuitData";
+import { SuitNames, suitsConfig } from "../data/SuitData";
 import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
 import { DrawProfitAction } from "../actions/Actions";
 import {
@@ -256,13 +256,15 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
     }
     if (!ylud) {
         for (let i: number = 0; i < G.publicPlayers.length; i++) {
-            for (let j: number = 0; j < G.suitsNum; j++) {
-                index = G.publicPlayers[i].cards[j]
-                    .findIndex((card: PlayerCardsType): boolean => card.name === `Ylud`);
-                if (index !== -1) {
-                    G.publicPlayers[Number(ctx.currentPlayer)].cards[i].splice(index, 1);
-                    G.publicPlayersOrder.push(i);
-                    ylud = true;
+            for (const suit in suitsConfig) {
+                if (suitsConfig.hasOwnProperty(suit)) {
+                    index = G.publicPlayers[i].cards[suit]
+                        .findIndex((card: PlayerCardsType): boolean => card.name === `Ylud`);
+                    if (index !== -1) {
+                        G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(index, 1);
+                        G.publicPlayersOrder.push(i);
+                        ylud = true;
+                    }
                 }
             }
         }

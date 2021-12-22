@@ -5,7 +5,7 @@ import { DiscardCardFromTavern } from "../Card";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "./StackHelpers";
 import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
 import { ActivateTrading } from "./CoinHelpers";
-import { SuitNames } from "../data/SuitData";
+import { SuitNames, suitsConfig } from "../data/SuitData";
 import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
 import { DrawProfitAction } from "../actions/Actions";
 import { DiscardAnyCardFromPlayerBoardAction, DrawProfitCampAction, GetMjollnirProfitAction } from "../actions/CampActions";
@@ -252,13 +252,15 @@ const StartEndTierActions = (G, ctx) => {
     }
     if (!ylud) {
         for (let i = 0; i < G.publicPlayers.length; i++) {
-            for (let j = 0; j < G.suitsNum; j++) {
-                index = G.publicPlayers[i].cards[j]
-                    .findIndex((card) => card.name === `Ylud`);
-                if (index !== -1) {
-                    G.publicPlayers[Number(ctx.currentPlayer)].cards[i].splice(index, 1);
-                    G.publicPlayersOrder.push(i);
-                    ylud = true;
+            for (const suit in suitsConfig) {
+                if (suitsConfig.hasOwnProperty(suit)) {
+                    index = G.publicPlayers[i].cards[suit]
+                        .findIndex((card) => card.name === `Ylud`);
+                    if (index !== -1) {
+                        G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(index, 1);
+                        G.publicPlayersOrder.push(i);
+                        ylud = true;
+                    }
                 }
             }
         }

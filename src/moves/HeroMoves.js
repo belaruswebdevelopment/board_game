@@ -30,11 +30,11 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardCardMove = (G, ctx, suitId, cardId) => {
-    EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
+export const DiscardCardMove = (G, ctx, suit, cardId) => {
+    EndActionFromStackAndAddNew(G, ctx, [], suit, cardId);
 };
 /**
  * <h3>Расположение героя или зависимых карт героя на планшет игрока.</h3>
@@ -45,8 +45,8 @@ export const DiscardCardMove = (G, ctx, suitId, cardId) => {
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const PlaceCardMove = (G, ctx, suitId) => {
-    EndActionFromStackAndAddNew(G, ctx, [], suitId);
+export const PlaceCardMove = (G, ctx, suit) => {
+    EndActionFromStackAndAddNew(G, ctx, [], suit);
 };

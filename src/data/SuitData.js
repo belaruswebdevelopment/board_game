@@ -71,7 +71,7 @@ const blacksmith = {
         description: `Получив знак отличия кузнецов, сразу же призовите Главного кузнеца с двумя шевронами в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов.`,
         awarding: (G, ctx, player) => {
             if (G.tierToEnd !== 0) {
-                player.cards[0].push(CreateCard({
+                player.cards[SuitNames.BLACKSMITH].push(CreateCard({
                     suit: SuitNames.BLACKSMITH,
                     rank: 2,
                     points: 2,
@@ -139,8 +139,7 @@ const explorer = {
             if (G.tierToEnd !== 0) {
                 const stack = [
                     {
-                        // action: DrawProfitHeroAction.name,
-                        action: `DrawProfitHeroAction`,
+                        action: DrawProfitAction.name,
                         config: {
                             name: `explorerDistinction`,
                             stageName: `pickDistinctionCard`,
@@ -214,7 +213,7 @@ const hunter = {
                     value: 3,
                     isTriggerTrading: true,
                 });
-                delete G.distinctions[1];
+                delete G.distinctions[2];
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
                 ctx.events.endTurn();
             }
@@ -279,7 +278,7 @@ const miner = {
                     value: 6,
                     isExchangeable: false,
                 });
-                delete G.distinctions[2];
+                delete G.distinctions[3];
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия горняков свой кристалл на особый кристалл 6.`);
                 ctx.events.endTurn();
             }

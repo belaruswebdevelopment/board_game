@@ -11,7 +11,6 @@ import { BuildCampCards, IArtefactCampCard, IMercenaryCampCard } from "./Camp";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { Ctx } from "boardgame.io";
 import { ILogData } from "./Logging";
-import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { heroesConfig } from "./data/HeroData";
 
 /**
@@ -38,6 +37,10 @@ interface IBotData {
     allPicks: any,
     maxIter: number,
     deckLength: number,
+}
+
+interface IAverageCard {
+    [index: string]: ICard,
 }
 
 /**
@@ -70,7 +73,7 @@ export type DistinctionTypes = null | undefined | number;
  */
 export interface MyGameState {
     actionsNum: number,
-    averageCards: ICard[],
+    averageCards: IAverageCard,
     botData: IBotData,
     camp: CampCardTypes[],
     campDecks: CampDeckCardTypes[][],
@@ -91,7 +94,7 @@ export interface MyGameState {
     logData: ILogData[],
     marketCoins: ICoin[],
     marketCoinsUnique: ICoin[],
-    suitIdForMjollnir: null | number,
+    suitIdForMjollnir: null | string,
     suitsNum: number,
     taverns: TavernCardTypes[][],
     tavernsNum: number,
@@ -180,7 +183,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         const randomPriorityIndex: number = Math.floor(Math.random() * priorities.length),
             priority: IPriority = priorities.splice(randomPriorityIndex, 1)[0];
         players[i] = BuildPlayer();
-        publicPlayers[i] = BuildPublicPlayer(ctx.numPlayers, suitsNum, "Dan" + i, priority);
+        publicPlayers[i] = BuildPublicPlayer("Dan" + i, priority);
     }
     const marketCoinsUnique: ICoin[] = [],
         marketCoins: ICoin[] = BuildCoins(marketCoinsConfig, {
@@ -189,13 +192,13 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
             isInitial: false,
             isTriggerTrading: false,
         });
-    const averageCards: ICard[] = [],
+    const averageCards: IAverageCard = {},
         initHandCoinsId: number[] = Array(players[0].boardCoins.length).fill(undefined)
             .map((item: undefined, index: number): number => index),
         initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder: number[][] = [];
     for (const suit in suitsConfig) {
-        averageCards[GetSuitIndexByName(suit)] = GetAverageSuitCard(suitsConfig[suit], {
+        averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
             players: ctx.numPlayers,
             tier: 0,
         } as IAverageSuitCardData);

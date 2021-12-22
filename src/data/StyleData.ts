@@ -23,7 +23,7 @@ interface IStyles {
     HeroBack: () => IBackground,
     Priorities: (priority: number) => IBackground,
     Priority: () => IBackground,
-    Suits: (suitName: string) => IBackground,
+    Suits: (suit: string) => IBackground,
     Taverns: (tavernId: number) => IBackground,
 }
 
@@ -473,8 +473,8 @@ export const Styles: IStyles = {
     Priority: (): IBackground => ({
         background: `url(/img/priorities/Priority.png) no-repeat -34px -7px / 66px 36px`,
     }),
-    Suits: (suitName: string): IBackground => ({
-        background: `url(/img/suits/${suitName}.png) no-repeat 0px 0px / 24px 24px`,
+    Suits: (suit: string): IBackground => ({
+        background: `url(/img/suits/${suit}.png) no-repeat 0px 0px / 24px 24px`,
     }),
     Taverns: (tavernId: number): IBackground => {
         switch (tavernId) {

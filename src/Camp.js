@@ -133,7 +133,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @param name Название.
  * @param description Описание.
  * @param game Игра/дополнение.
- * @param suit Фракция.
+ * @param suit Название ракции.
  * @param rank Шевроны.
  * @param points Очки.
  * @param stack Действия.

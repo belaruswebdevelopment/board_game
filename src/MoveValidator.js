@@ -1,4 +1,3 @@
-import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
 /**
@@ -168,13 +167,10 @@ export const moveValidators = {
                 if (G.heroes[id].name === `Hourya`) {
                     const config = G.heroes[id].stack[0].config;
                     if ((config === null || config === void 0 ? void 0 : config.conditions) !== undefined) {
-                        const suitId = GetSuitIndexByName(config.conditions.suitCountMin.suit);
-                        if (suitId !== -1) {
-                            isValid = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-                                .reduce(TotalRank, 0) >= config.conditions.suitCountMin.value;
-                            return isValid;
-                        }
-                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${config.conditions.suitCountMin.suit}.`);
+                        isValid = G.publicPlayers[Number(ctx.currentPlayer)]
+                            .cards[config.conditions.suitCountMin.suit].reduce(TotalRank, 0) >=
+                            config.conditions.suitCountMin.value;
+                        return isValid;
                     }
                     else {
                         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Нет обязательного параметр stack[0] у героя ${G.heroes[id].name}.`);

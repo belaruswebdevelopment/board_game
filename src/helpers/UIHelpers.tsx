@@ -1,4 +1,3 @@
-import { GetSuitIndexByName } from "./SuitHelpers";
 import { suitsConfig } from "../data/SuitData";
 import { IBackground, Styles } from "../data/StyleData";
 import { ArgsTypes } from "../actions/Actions";
@@ -86,7 +85,7 @@ export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: stri
  * @param card Карта.
  * @param id Id карты.
  * @param player Игрок.
- * @param suit Фракция.
+ * @param suit Название фракции.
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
@@ -301,7 +300,7 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
         playerHeaders.push(
             <th className={`${suitsConfig[suit].suitColor}`}
                 key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`}>
-                <span style={Styles.Suits(suitsConfig[suit].suit)} className="bg-suit-icon">
+                <span style={Styles.Suits(suit)} className="bg-suit-icon">
 
                 </span>
             </th>
@@ -326,19 +325,18 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
  * </ol>
  *
  * @param data Глобальные параметры.
- * @param suitName Фракция.
+ * @param suit Название фракции.
  * @returns Поле игрока для дискарда карты фракции.
  */
-export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: string): JSX.Element => {
+export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suit: string): JSX.Element => {
     const playersHeaders: JSX.Element[] = [],
-        playersRows: JSX.Element[][] = [],
-        suitId: number = GetSuitIndexByName(suitName);
+        playersRows: JSX.Element[][] = [];
     for (let p: number = 0; p < data.props.G.publicPlayers.length; p++) {
         if (p !== Number(data.props.ctx.currentPlayer)) {
             playersHeaders.push(
-                <th className={`${suitsConfig[suitName].suitColor} discard suit`}
-                    key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suitName].suitName}`}>
-                    <span style={Styles.Suits(suitsConfig[suitName].suitName)} className="bg-suit-icon">
+                <th className={`${suitsConfig[suit].suitColor} discard suit`}
+                    key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName}`}>
+                    <span style={Styles.Suits(suit)} className="bg-suit-icon">
                         {p + 1}
                     </span>
                 </th>
@@ -352,13 +350,13 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suitName: st
         const playersCells: JSX.Element[] = [];
         for (let p: number = 0; p < data.props.G.publicPlayers.length; p++) {
             if (p !== Number(data.props.ctx.currentPlayer)) {
-                if (data.props.G.publicPlayers[p].cards[suitId][i] !== undefined) {
-                    if (data.props.G.publicPlayers[p].cards[suitId][i].type !== `герой`) {
+                if (data.props.G.publicPlayers[p].cards[suit][i] !== undefined) {
+                    if (data.props.G.publicPlayers[p].cards[suit][i].type !== `герой`) {
                         isExit = false;
                         isDrawRow = true;
-                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i],
-                            i, data.props.G.publicPlayers[p], suitName,
-                            OnClickDiscardSuitCardFromPlayerBoard.name, suitId, p, i);
+                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suit][i],
+                            i, data.props.G.publicPlayers[p], suit,
+                            OnClickDiscardSuitCardFromPlayerBoard.name, suit, p, i);
                     }
                 } else {
                     playersCells.push(

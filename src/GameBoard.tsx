@@ -24,17 +24,17 @@ import { MyGameState } from "./GameSetup";
  * </ol>
  */
 export class GameBoard extends React.Component<BoardProps<MyGameState>> {
-    OnClickDistinctionCard = (cardId: number): void => {
-        this.props.moves.ClickDistinctionCard(cardId);
+    OnClickDistinctionCard = (suit: string): void => {
+        this.props.moves.ClickDistinctionCard(suit);
     };
-    OnClickSuitToGetMjollnirProfit = (suitId: number): void => {
-        this.props.moves.GetMjollnirProfit(suitId);
+    OnClickSuitToGetMjollnirProfit = (suit: string): void => {
+        this.props.moves.GetMjollnirProfit(suit);
     };
-    OnClickSuitToPlaceCard = (suitId: number): void => {
-        this.props.moves.PlaceCard(suitId);
+    OnClickSuitToPlaceCard = (suit: string): void => {
+        this.props.moves.PlaceCard(suit);
     };
-    OnClickSuitToPlaceMercenary = (suitId: number): void => {
-        this.props.moves.PlaceEnlistmentMercenaries(suitId);
+    OnClickSuitToPlaceMercenary = (suit: string): void => {
+        this.props.moves.PlaceEnlistmentMercenaries(suit);
     };
 
     render() {

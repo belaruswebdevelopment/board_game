@@ -1,4 +1,3 @@
-import { suitsConfig } from "../data/SuitData";
 import { AddCardToPlayer } from "../Player";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { CreateCard, DiscardCardFromTavern } from "../Card";
@@ -244,10 +243,10 @@ export const PickHeroAction = (G, ctx, config) => {
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
-    const suit = Object.keys(suitsConfig)[suitId], pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+export const PlaceEnlistmentMercenariesAction = (G, ctx, config, suit) => {
+    const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null) {
         if (`stack` in pickedCard && `tier` in pickedCard && `path` in pickedCard) {
             if (pickedCard.stack[0].variants !== undefined) {
@@ -279,7 +278,7 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, config, suitId) => {
                     AddActionsToStackAfterCurrent(G, ctx, stack);
                 }
                 CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
-                EndActionFromStackAndAddNew(G, ctx, [], suitId);
+                EndActionFromStackAndAddNew(G, ctx, [], suit);
             }
             else {
                 AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);

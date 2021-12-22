@@ -3,7 +3,6 @@ import { HasLowestPriority } from "./Priority";
 import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
 import { CurrentScoring } from "./Score";
 import { moveBy, moveValidators } from "./MoveValidator";
-import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./helpers/ProfitHelpers";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -40,7 +39,7 @@ export const enumerate = (G, ctx) => {
                     // todo sync bot moves options with profit UI options for players (same logic without UI)
                     let type = undefined;
                     if (stage === `upgradeCoin`) {
-                        // todo fix for Uline
+                        // todo fix for Uline???
                         type = `board`;
                     }
                     if (!moveValidators[moveName].validate({ G, ctx, id, type })) {
@@ -264,14 +263,13 @@ export const enumerate = (G, ctx) => {
         // todo Bot can't do async turns...?
         const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
         if (config !== undefined && config.suit !== undefined) {
-            const suitId = GetSuitIndexByName(config.suit);
             for (let p = 0; p < G.publicPlayers.length; p++) {
                 if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
-                    for (let i = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
+                    for (let i = 0; i < G.publicPlayers[p].cards[config.suit].length; i++) {
                         for (let j = 0; j < 1; j++) {
-                            if (G.publicPlayers[p].cards[suitId][i] !== undefined) {
-                                if (G.publicPlayers[p].cards[suitId][i].type !== `герой`) {
-                                    const points = G.publicPlayers[p].cards[suitId][i].points;
+                            if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
+                                if (G.publicPlayers[p].cards[config.suit][i].type !== `герой`) {
+                                    const points = G.publicPlayers[p].cards[config.suit][i].points;
                                     if (points !== null) {
                                         botMoveArguments.push([points]);
                                     }
@@ -280,11 +278,11 @@ export const enumerate = (G, ctx) => {
                         }
                     }
                     const minValue = Math.min(...botMoveArguments);
-                    const minCardIndex = G.publicPlayers[p].cards[suitId].findIndex((card) => card.type !== "герой" && card.points === minValue);
+                    const minCardIndex = G.publicPlayers[p].cards[config.suit].findIndex((card) => card.type !== "герой" && card.points === minValue);
                     if (minCardIndex !== -1) {
                         moves.push({
                             move: `DiscardSuitCardFromPlayerBoardMove`,
-                            args: [suitId, p, minCardIndex],
+                            args: [config.suit, p, minCardIndex],
                         });
                     }
                 }
@@ -362,10 +360,9 @@ export const iterations = (G, ctx) => {
             }
             if (G.decks[0].length > 18) {
                 if (tavernCard && isCardNotAction(tavernCard)) {
-                    const curSuit = GetSuitIndexByName(tavernCard.suit);
-                    if (CompareCards(tavernCard, G.averageCards[curSuit]) === -1
+                    if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
                         && currentTavern.some((card) => card !== null
-                            && CompareCards(card, G.averageCards[curSuit]) > -1)) {
+                            && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {
                         continue;
                     }
                 }

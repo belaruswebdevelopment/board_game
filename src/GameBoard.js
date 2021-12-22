@@ -14,17 +14,17 @@ import { DrawLogData } from "./ui/LogUI";
 export class GameBoard extends React.Component {
     constructor() {
         super(...arguments);
-        this.OnClickDistinctionCard = (cardId) => {
-            this.props.moves.ClickDistinctionCard(cardId);
+        this.OnClickDistinctionCard = (suit) => {
+            this.props.moves.ClickDistinctionCard(suit);
         };
-        this.OnClickSuitToGetMjollnirProfit = (suitId) => {
-            this.props.moves.GetMjollnirProfit(suitId);
+        this.OnClickSuitToGetMjollnirProfit = (suit) => {
+            this.props.moves.GetMjollnirProfit(suit);
         };
-        this.OnClickSuitToPlaceCard = (suitId) => {
-            this.props.moves.PlaceCard(suitId);
+        this.OnClickSuitToPlaceCard = (suit) => {
+            this.props.moves.PlaceCard(suit);
         };
-        this.OnClickSuitToPlaceMercenary = (suitId) => {
-            this.props.moves.PlaceEnlistmentMercenaries(suitId);
+        this.OnClickSuitToPlaceMercenary = (suit) => {
+            this.props.moves.PlaceEnlistmentMercenaries(suit);
         };
     }
     render() {

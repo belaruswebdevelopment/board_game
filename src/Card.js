@@ -1,6 +1,5 @@
 import { AddCardToCards } from "./Player";
 import { suitsConfig } from "./data/SuitData";
-import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { tavernsConfig } from "./Tavern";
 /**
@@ -28,22 +27,24 @@ export const isCardNotAction = (card) => card.suit !== undefined;
 export const BuildCards = (deckConfig, data) => {
     const cards = [];
     for (const suit in suitsConfig) {
-        const points = deckConfig.suits[suit].pointsValues()[data.players][data.tier];
-        let count = 0;
-        if (Array.isArray(points)) {
-            count = points.length;
-        }
-        else {
-            count = points;
-        }
-        for (let j = 0; j < count; j++) {
-            const rank = deckConfig.suits[suit].ranksValues()[data.players][data.tier];
-            cards.push(CreateCard({
-                suit: deckConfig.suits[suit].suit,
-                rank: Array.isArray(rank) ? rank[j] : 1,
-                points: Array.isArray(points) ? points[j] : null,
-                name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
-            }));
+        if (suitsConfig.hasOwnProperty(suit)) {
+            const points = deckConfig.suits[suit].pointsValues()[data.players][data.tier];
+            let count = 0;
+            if (Array.isArray(points)) {
+                count = points.length;
+            }
+            else {
+                count = points;
+            }
+            for (let j = 0; j < count; j++) {
+                const rank = deckConfig.suits[suit].ranksValues()[data.players][data.tier];
+                cards.push(CreateCard({
+                    suit: deckConfig.suits[suit].suit,
+                    rank: Array.isArray(rank) ? rank[j] : 1,
+                    points: Array.isArray(points) ? points[j] : null,
+                    name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
+                }));
+            }
         }
     }
     for (let i = 0; i < deckConfig.actions.length; i++) {
@@ -142,7 +143,7 @@ const CreateActionCard = ({ type = `улучшение монеты`, value, sta
  * </ol>
  *
  * @param type Тип.
- * @param suit Фракция.
+ * @param suit Название фракции.
  * @param rank Шевроны.
  * @param points Очки.
  * @param name Название.
@@ -206,12 +207,9 @@ export const DiscardCardFromTavern = (G, discardCardIndex) => {
  * @returns Сравнительное значение.
  */
 export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
-    // todo check it and fix -1
-    let suitId = -1;
     if (compareCard !== null && "suit" in compareCard) {
-        suitId = GetSuitIndexByName(compareCard.suit);
         if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
-            return CompareCards(compareCard, G.averageCards[suitId]);
+            return CompareCards(compareCard, G.averageCards[compareCard.suit]);
         }
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
@@ -220,7 +218,11 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
         temp.forEach((player) => player.splice(Number(ctx.currentPlayer), 1));
         return result - Math.max(...temp.map((player) => Math.max(...player)));
     }
-    return CompareCards(compareCard, G.averageCards[suitId]);
+    if (compareCard !== null && "suit" in compareCard) {
+        return CompareCards(compareCard, G.averageCards[compareCard.suit]);
+    }
+    // todo FIX IT, UNREACHABLE!? 0 === DEFAULT?!
+    return 0;
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -231,7 +233,7 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
  *
  * @todo Саше: сделать описание функции и параметров.
  * @param suitConfig Конфиг карт дворфов.
- * @param data
+ * @param data ????????????????????????????????????????????????????????????????????
  * @returns "Средняя" карта дворфа.
  */
 export const GetAverageSuitCard = (suitConfig, data) => {
@@ -265,11 +267,13 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  */
 export const PotentialScoring = ({ player = {}, card = {}, }) => {
     var _a, _b, _c, _d;
-    let score = 0, potentialCards = [];
-    for (let i = 0; i < player.cards.length; i++) {
-        potentialCards[i] = [];
-        for (let j = 0; j < player.cards[i].length; j++) {
-            AddCardToCards(potentialCards, player.cards[i][j]);
+    let score = 0, potentialCards = {};
+    for (const suit in suitsConfig) {
+        if (suitsConfig.hasOwnProperty(suit)) {
+            potentialCards[suit] = [];
+            for (let j = 0; j < player.cards[suit].length; j++) {
+                AddCardToCards(potentialCards, player.cards[suit][j]);
+            }
         }
     }
     if (card !== null && `suit` in card) {
@@ -277,7 +281,7 @@ export const PotentialScoring = ({ player = {}, card = {}, }) => {
     }
     let i = 0;
     for (const suit in suitsConfig) {
-        score += suitsConfig[suit].scoringRule(potentialCards[i]);
+        score += suitsConfig[suit].scoringRule(potentialCards[suit]);
         i++;
     }
     if (card !== null && `value` in card) {

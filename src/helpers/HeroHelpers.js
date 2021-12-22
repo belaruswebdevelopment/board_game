@@ -1,5 +1,4 @@
 import { heroesConfig } from "../data/HeroData";
-import { GetSuitIndexByName } from "./SuitHelpers";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 import { SuitNames } from "../data/SuitData";
 import { CheckPickHero } from "../Hero";
@@ -18,10 +17,10 @@ import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
  */
 export const CheckAndMoveThrud = (G, ctx, card) => {
     if (card.suit !== null) {
-        const suitId = GetSuitIndexByName(card.suit), index = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+        const index = G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit]
             .findIndex((card) => card.name === `Thrud`);
         if (index !== -1) {
-            G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(index, 1);
+            G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit].splice(index, 1);
         }
         return index !== -1;
     }

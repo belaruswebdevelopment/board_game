@@ -66,11 +66,11 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardCardFromPlayerBoardMove = (G, ctx, suitId, cardId) => {
-    EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
+export const DiscardCardFromPlayerBoardMove = (G, ctx, suit, cardId) => {
+    EndActionFromStackAndAddNew(G, ctx, [], suit, cardId);
 };
 /**
  * <h3>Сбрасывает карту из таверны при выборе карты из кэмпа на двоих игроков.</h3>
@@ -95,12 +95,12 @@ export const DiscardCard2PlayersMove = (G, ctx, cardId) => {
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
-export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suitId, playerId, cardId) => {
+export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, playerId, cardId) => {
     // TODO Uncomment it for players and fix it for bots
     /*let isValidMove: boolean = false;
     if (ctx.playerID !== undefined) {
@@ -111,7 +111,7 @@ export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suitId, playerId, car
     if (!isValidMove) {
         return INVALID_MOVE;
     }*/
-    StartActionForChosenPlayer(G, ctx, playerId, suitId, playerId, cardId);
+    StartActionForChosenPlayer(G, ctx, playerId, suit, playerId, cardId);
 };
 /**
  * <h3>Выбирает фракцию для применения финального эффекта артефакта Mjollnir.</h3>
@@ -122,8 +122,8 @@ export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suitId, playerId, car
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const GetMjollnirProfitMove = (G, ctx, suitId) => {
-    EndActionFromStackAndAddNew(G, ctx, [], suitId);
+export const GetMjollnirProfitMove = (G, ctx, suit) => {
+    EndActionFromStackAndAddNew(G, ctx, [], suit);
 };

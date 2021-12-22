@@ -1,5 +1,4 @@
 import { IHeroConfig } from "./data/HeroData";
-import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
@@ -7,6 +6,7 @@ import { MyGameState } from "./GameSetup";
 import { Ctx } from "boardgame.io";
 import { IStack, PlayerCardsType } from "./Player";
 import { PickHeroAction } from "./actions/Actions";
+import { suitsConfig } from "./data/SuitData";
 
 /**
  * <h3>Интерфейс для героя.</h3>
@@ -84,10 +84,18 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
  */
 export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
     if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
+        let playerCards: PlayerCardsType[][] = [];
+        let index: number = 0;
+        for (const suit in suitsConfig) {
+            if (suitsConfig.hasOwnProperty(suit)) {
+                playerCards[index] = [];
+                playerCards[index].push(...G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]);
+                index++;
+            }
+        }
         const isCanPickHero: boolean =
-            Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].cards
-                .map((item: PlayerCardsType[]): number =>
-                    item.reduce(TotalRank, 0))) >
+            Math.min(...playerCards.map((item: PlayerCardsType[]): number =>
+                item.reduce(TotalRank, 0))) >
             G.publicPlayers[Number(ctx.currentPlayer)].heroes.length;
         if (isCanPickHero) {
             const stack: IStack[] = [
@@ -115,7 +123,7 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
  * @param name Название.
  * @param description Описание.
  * @param game Игра/дополнение.
- * @param suit Фракция.
+ * @param suit Название фракции.
  * @param rank Шевроны.
  * @param points Очки.
  * @param active Взят ли герой.
@@ -156,14 +164,18 @@ export const CreateHero = ({
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: MyGameState, ctx: Ctx): void => {
     for (let i: number = 0; i < ctx.numPlayers; i++) {
-        const playerCards: PlayerCardsType[] = G.publicPlayers[i].cards.flat(),
-            thrud: PlayerCardsType | undefined =
-                playerCards.find((card: PlayerCardsType): boolean => card.name === `Thrud`);
+        const playerCards: PlayerCardsType[] = [];
+        for (const suit in suitsConfig) {
+            if (suitsConfig.hasOwnProperty(suit)) {
+                playerCards.concat(G.publicPlayers[i].cards[suit]);
+            }
+        }
+        const thrud: PlayerCardsType | undefined =
+            playerCards.find((card: PlayerCardsType): boolean => card.name === `Thrud`);
         if (thrud !== undefined && thrud.suit !== null) {
-            const thrudSuit: number = GetSuitIndexByName(thrud.suit),
-                thrudIndex: number = G.publicPlayers[i].cards[thrudSuit]
-                    .findIndex((card: PlayerCardsType): boolean => card.name === `Thrud`);
-            G.publicPlayers[i].cards[thrudSuit].splice(thrudIndex, 1);
+            const thrudIndex: number = G.publicPlayers[i].cards[thrud.suit]
+                .findIndex((card: PlayerCardsType): boolean => card.name === `Thrud`);
+            G.publicPlayers[i].cards[thrud.suit].splice(thrudIndex, 1);
             AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с игрового поля.`);
         }
     }

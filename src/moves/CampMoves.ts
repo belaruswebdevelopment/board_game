@@ -74,12 +74,12 @@ export const ClickCampCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, c
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
+export const DiscardCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suit: string,
     cardId: number): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
+    EndActionFromStackAndAddNew(G, ctx, [], suit, cardId);
 };
 
 /**
@@ -106,12 +106,12 @@ export const DiscardCard2PlayersMove: Move<MyGameState> = (G: MyGameState, ctx: 
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
-export const DiscardSuitCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number,
+export const DiscardSuitCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suit: string,
     playerId: number, cardId: number): string | void => {
     // TODO Uncomment it for players and fix it for bots
     /*let isValidMove: boolean = false;
@@ -123,7 +123,7 @@ export const DiscardSuitCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameS
     if (!isValidMove) {
         return INVALID_MOVE;
     }*/
-    StartActionForChosenPlayer(G, ctx, playerId, suitId, playerId, cardId);
+    StartActionForChosenPlayer(G, ctx, playerId, suit, playerId, cardId);
 };
 
 /**
@@ -135,8 +135,8 @@ export const DiscardSuitCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameS
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const GetMjollnirProfitMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], suitId);
+export const GetMjollnirProfitMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suit: string): void => {
+    EndActionFromStackAndAddNew(G, ctx, [], suit);
 };

@@ -3,7 +3,6 @@ import { HasLowestPriority } from "./Priority";
 import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
 import { CurrentScoring } from "./Score";
 import { moveBy, moveValidators } from "./MoveValidator";
-import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
 import { Ctx } from "boardgame.io";
 import { ICoin } from "./Coin";
@@ -22,6 +21,7 @@ import {
     StartEnlistmentMercenariesProfit,
     UpgradeCoinVidofnirVedrfolnirProfit
 } from "./helpers/ProfitHelpers";
+import { suitsConfig } from "./data/SuitData";
 
 /**
  * <h3>Интерфейс для возможных мувов у ботов.</h3>
@@ -74,7 +74,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     // todo sync bot moves options with profit UI options for players (same logic without UI)
                     let type: undefined | string = undefined;
                     if (stage === `upgradeCoin`) {
-                        // todo fix for Uline
+                        // todo fix for Uline???
                         type = `board`;
                     }
                     if (!moveValidators[moveName].validate({ G, ctx, id, type })) {
@@ -221,7 +221,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     if (ctx.phase === `getMjollnirProfit`) {
         const totalSuitsRanks: number[] = [];
         GetMjollnirProfitProfit(G, ctx, totalSuitsRanks);
-        botMoveArguments.push([totalSuitsRanks.indexOf(Math.max(...totalSuitsRanks))]);
+        botMoveArguments.push([Object.values(suitsConfig)[totalSuitsRanks
+            .indexOf(Math.max(...totalSuitsRanks))].suit]);
         moves.push({
             move: `GetMjollnirProfitMove`,
             args: [...botMoveArguments[0]],
@@ -305,14 +306,13 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         // todo Bot can't do async turns...?
         const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
         if (config !== undefined && config.suit !== undefined) {
-            const suitId: number = GetSuitIndexByName(config.suit);
             for (let p: number = 0; p < G.publicPlayers.length; p++) {
                 if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
-                    for (let i: number = 0; i < G.publicPlayers[p].cards[suitId].length; i++) {
+                    for (let i: number = 0; i < G.publicPlayers[p].cards[config.suit].length; i++) {
                         for (let j: number = 0; j < 1; j++) {
-                            if (G.publicPlayers[p].cards[suitId][i] !== undefined) {
-                                if (G.publicPlayers[p].cards[suitId][i].type !== `герой`) {
-                                    const points: number | null = G.publicPlayers[p].cards[suitId][i].points;
+                            if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
+                                if (G.publicPlayers[p].cards[config.suit][i].type !== `герой`) {
+                                    const points: number | null = G.publicPlayers[p].cards[config.suit][i].points;
                                     if (points !== null) {
                                         botMoveArguments.push([points]);
                                     }
@@ -322,12 +322,12 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     }
                     const minValue: number = Math.min(...botMoveArguments as unknown as number[]);
                     const minCardIndex: number =
-                        G.publicPlayers[p].cards[suitId].findIndex((card: PlayerCardsType): boolean =>
+                        G.publicPlayers[p].cards[config.suit].findIndex((card: PlayerCardsType): boolean =>
                             card.type !== "герой" && card.points === minValue);
                     if (minCardIndex !== -1) {
                         moves.push({
                             move: `DiscardSuitCardFromPlayerBoardMove`,
-                            args: [suitId, p, minCardIndex],
+                            args: [config.suit, p, minCardIndex],
                         });
                     }
                 }
@@ -410,10 +410,9 @@ export const iterations = (G: MyGameState, ctx: Ctx): number => {
             }
             if (G.decks[0].length > 18) {
                 if (tavernCard && isCardNotAction(tavernCard)) {
-                    const curSuit: number = GetSuitIndexByName(tavernCard.suit);
-                    if (CompareCards(tavernCard, G.averageCards[curSuit]) === -1
+                    if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
                         && currentTavern.some((card: DeckCardTypes | null): boolean => card !== null
-                            && CompareCards(card, G.averageCards[curSuit]) > -1)) {
+                            && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {
                         continue;
                     }
                 }

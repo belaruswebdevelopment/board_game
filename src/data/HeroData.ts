@@ -1,4 +1,3 @@
-import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { IPublicPlayer, IStack } from "../Player";
 import { SuitNames } from "./SuitData";
@@ -553,8 +552,7 @@ const Idunn: IHeroData = {
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ?
-        player.cards[GetSuitIndexByName(SuitNames.EXPLORER)]
-            .reduce(TotalRank, 0) * 2 : 0,
+        player.cards[SuitNames.EXPLORER].reduce(TotalRank, 0) * 2 : 0,
 };
 
 /**

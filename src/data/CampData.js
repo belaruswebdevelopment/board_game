@@ -230,8 +230,8 @@ const Mjollnir = {
             },
         },
     ],
-    scoringRule: (player, suitId) => player !== undefined && suitId !== undefined ?
-        player.cards[suitId].reduce(TotalRank, 0) * 2 : 0,
+    scoringRule: (player, suit) => player !== undefined && suit !== undefined ?
+        player.cards[suit].reduce(TotalRank, 0) * 2 : 0,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -281,8 +281,18 @@ const Hrafnsmerki = {
             action: AddCampCardToCardsAction.name,
         },
     ],
-    scoringRule: (player) => player !== undefined ?
-        player.cards.flat().filter((card) => card.type === `наёмник`).length * 5 : 0,
+    scoringRule: (player) => {
+        if (player !== undefined) {
+            let score = 0;
+            for (const suit in player.cards) {
+                if (player.cards.hasOwnProperty(suit)) {
+                    score += player.cards[suit].filter((card) => card.type === `наёмник`).length * 5;
+                }
+            }
+            return score;
+        }
+        return 0;
+    },
 };
 /**
  * <h3>Данные об артефакте.</h3>

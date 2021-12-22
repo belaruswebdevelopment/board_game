@@ -21,13 +21,12 @@ import { IPublicPlayer } from "./Player";
  * @returns Текущий счёт указанного игрока.
  */
 export const CurrentScoring = (player: IPublicPlayer): number => {
-    let score: number = 0,
-        index: number = 0;
+    let score: number = 0;
     for (const suit in suitsConfig) {
-        if (player.cards[index] !== undefined) {
-            score += suitsConfig[suit].scoringRule(player.cards[index]);
+        if (suitsConfig.hasOwnProperty(suit)) {
+            score += suitsConfig[suit].scoringRule(player.cards[suit]);
         }
-        index++;
+
     }
     return score;
 };

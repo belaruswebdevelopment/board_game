@@ -100,10 +100,11 @@ export const ClickCoinToUpgradeMove: Move<MyGameState> = (G: MyGameState, ctx: C
         return INVALID_MOVE;
     }
     if (G.distinctions.length) {
-        const isDistinction3: boolean = G.distinctions[3] !== undefined;
-        if (isDistinction3) {
-            delete G.distinctions[3];
-        } else if (!isDistinction3 && G.distinctions[4] !== undefined) {
+        // todo Rework in suit name distinctions and delete not by if but by current distinction suit
+        const isDistinctionExplorer: boolean = G.distinctions[1] !== undefined;
+        if (isDistinctionExplorer) {
+            delete G.distinctions[1];
+        } else if (!isDistinctionExplorer && G.distinctions[4] !== undefined) {
             delete G.distinctions[4];
         }
     }

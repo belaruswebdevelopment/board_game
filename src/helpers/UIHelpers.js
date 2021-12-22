@@ -1,5 +1,4 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { GetSuitIndexByName } from "./SuitHelpers";
 import { suitsConfig } from "../data/SuitData";
 import { Styles } from "../data/StyleData";
 import { AddDataToLog, LogTypes } from "../Logging";
@@ -59,7 +58,7 @@ export const DrawButton = (data, boardCells, key, name, player, actionName, ...a
  * @param card Карта.
  * @param id Id карты.
  * @param player Игрок.
- * @param suit Фракция.
+ * @param suit Название фракции.
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
@@ -259,11 +258,11 @@ export const DrawPlayerBoardForCardDiscard = (data) => {
  * </ol>
  *
  * @param data Глобальные параметры.
- * @param suitName Фракция.
+ * @param suitName Название фракции.
  * @returns Поле игрока для дискарда карты фракции.
  */
 export const DrawPlayersBoardForSuitCardDiscard = (data, suitName) => {
-    const playersHeaders = [], playersRows = [], suitId = GetSuitIndexByName(suitName);
+    const playersHeaders = [], playersRows = [];
     for (let p = 0; p < data.props.G.publicPlayers.length; p++) {
         if (p !== Number(data.props.ctx.currentPlayer)) {
             playersHeaders.push(_jsx("th", { className: `${suitsConfig[suitName].suitColor} discard suit`, children: _jsx("span", { style: Styles.Suits(suitsConfig[suitName].suitName), className: "bg-suit-icon", children: p + 1 }, void 0) }, `${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suitName].suitName}`));
@@ -275,11 +274,11 @@ export const DrawPlayersBoardForSuitCardDiscard = (data, suitName) => {
         const playersCells = [];
         for (let p = 0; p < data.props.G.publicPlayers.length; p++) {
             if (p !== Number(data.props.ctx.currentPlayer)) {
-                if (data.props.G.publicPlayers[p].cards[suitId][i] !== undefined) {
-                    if (data.props.G.publicPlayers[p].cards[suitId][i].type !== `герой`) {
+                if (data.props.G.publicPlayers[p].cards[suitName][i] !== undefined) {
+                    if (data.props.G.publicPlayers[p].cards[suitName][i].type !== `герой`) {
                         isExit = false;
                         isDrawRow = true;
-                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitId][i], i, data.props.G.publicPlayers[p], suitName, OnClickDiscardSuitCardFromPlayerBoard.name, suitId, p, i);
+                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitName][i], i, data.props.G.publicPlayers[p], suitName, OnClickDiscardSuitCardFromPlayerBoard.name, suitName, p, i);
                     }
                 }
                 else {

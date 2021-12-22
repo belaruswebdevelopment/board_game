@@ -114,17 +114,18 @@ export const DrawCurrentPlayerTurn = (data: GameBoard): JSX.Element => (
 export const DrawDistinctions = (data: GameBoard): JSX.Element => {
     const boardCells: JSX.Element[] = [];
     for (let i: number = 0; i < 1; i++) {
-        for (let j: number = 0; j < data.props.G.suitsNum; j++) {
-            const suit: string = Object.keys(suitsConfig)[j];
-            boardCells.push(
-                <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
-                    onClick={() => data.OnClickDistinctionCard(j)}
-                    title={suitsConfig[suit].distinction.description}>
-                    <span style={Styles.Distinctions(suit)} className="bg-suit-distinction">
+        for (const suit in suitsConfig) {
+            if (suitsConfig.hasOwnProperty(suit)) {
+                boardCells.push(
+                    <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
+                        onClick={() => data.OnClickDistinctionCard(suit)}
+                        title={suitsConfig[suit].distinction.description}>
+                        <span style={Styles.Distinctions(suit)} className="bg-suit-distinction">
 
-                    </span>
-                </td>
-            );
+                        </span>
+                    </td>
+                );
+            }
         }
     }
     return (

@@ -4,7 +4,6 @@ import {
     EndActionForChosenPlayer,
     EndActionFromStackAndAddNew
 } from "../helpers/StackHelpers";
-import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import {
     AddCampCardToPlayer,
     AddCampCardToPlayerCards,
@@ -67,18 +66,13 @@ export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConf
     }
     const campCard: CampDeckCardTypes | null = G.camp[cardId];
     if (campCard !== null) {
-        let suitId: number | null = null,
+        let suit: string | null = null,
             stack: IStack[] = [];
         G.camp[cardId] = null;
         if (isArtefactCard(campCard) && campCard.suit !== null) {
             AddCampCardToPlayerCards(G, ctx, campCard);
             CheckAndMoveThrudOrPickHeroAction(G, ctx, campCard);
-            suitId = GetSuitIndexByName(campCard.suit);
-            if (suitId !== -1) {
-                // todo ???
-            } else {
-                // todo ???
-            }
+            suit = campCard.suit;
         } else {
             AddCampCardToPlayer(G, ctx, campCard);
             if (ctx.phase === `enlistmentMercenaries` && G.publicPlayers[Number(ctx.currentPlayer)].campCards
@@ -94,7 +88,7 @@ export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConf
                 ];
             }
         }
-        EndActionFromStackAndAddNew(G, ctx, stack, suitId);
+        EndActionFromStackAndAddNew(G, ctx, stack, suit);
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не пикнута карта кэмпа.`);
     }
@@ -153,13 +147,13 @@ export const CheckPickDiscardCardCampAction = (G: MyGameState, ctx: Ctx): void =
  * @param G
  * @param ctx
  * @param config Конфиг действий артефакта.
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardAnyCardFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number,
+export const DiscardAnyCardFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string,
     cardId: number): void => {
     const discardedCard: PlayerCardsType =
-        G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(cardId, 1)[0];
+        G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0];
     G.discardCardsDeck.push(discardedCard as ICard);
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} сбросил карту ${discardedCard.name} в дискард.`);
     delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
@@ -176,24 +170,24 @@ export const DiscardAnyCardFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, co
  * @param G
  * @param ctx
  * @param config Конфиг действий артефакта.
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number, playerId: number,
+export const DiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string, playerId: number,
     cardId: number): void => {
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         // TODO Rework it for players and fix it for bots
         /*if (ctx.playerID !== ctx.currentPlayer) {
             const discardedCard: PlayerCardsType =
-                G.publicPlayers[Number(ctx.playerID)].cards[suitId].splice(cardId, 1)[0];
+                G.publicPlayers[Number(ctx.playerID)].cards[suit].splice(cardId, 1)[0];
             G.discardCardsDeck.push(discardedCard as ICard);
             AddDataToLog(G, LogTypes.GAME, `Игрок ${ G.publicPlayers[Number(ctx.playerID)].nickname } сбросил карту ${ discardedCard.name } в дискард.`);
             EndActionForChosenPlayer(G, ctx, playerId);
         } else {*/
         const discardedCard: PlayerCardsType =
-            G.publicPlayers[playerId].cards[suitId].splice(cardId, 1)[0];
+            G.publicPlayers[playerId].cards[suit].splice(cardId, 1)[0];
         G.discardCardsDeck.push(discardedCard as ICard);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в дискард.`);
         EndActionForChosenPlayer(G, ctx, playerId);
@@ -254,12 +248,12 @@ export const DrawProfitCampAction = (G: MyGameState, ctx: Ctx, config: IConfig):
  * @param G
  * @param ctx
  * @param config Конфиг действий артефакта.
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const GetMjollnirProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig, suitId: number): void => {
+export const GetMjollnirProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string): void => {
     delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.getMjollnirProfit;
-    G.suitIdForMjollnir = suitId;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал фракцию ${Object.values(suitsConfig)[suitId].suitName} для эффекта артефакта Mjollnir.`);
+    G.suitIdForMjollnir = suit;
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал фракцию ${suitsConfig[suit].suitName} для эффекта артефакта Mjollnir.`);
     EndActionFromStackAndAddNew(G, ctx);
 };
 
@@ -307,10 +301,9 @@ export const PickHeroCampAction = (G: MyGameState, ctx: Ctx, config: IConfig): v
  */
 export const StartDiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
     if (config.suit !== undefined) {
-        const suitId: number = GetSuitIndexByName(config.suit),
-            value: { [index: number]: { stage: string; }; } = {};
+        const value: { [index: number]: { stage: string; }; } = {};
         for (let i: number = 0; i < ctx.numPlayers; i++) {
-            if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[suitId].length) {
+            if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[config.suit].length) {
                 value[i] = {
                     stage: `discardSuitCard`,
                 };

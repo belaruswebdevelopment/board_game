@@ -34,11 +34,11 @@ export const ClickHeroCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, h
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number, cardId: number): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], suitId, cardId);
+export const DiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suit: string, cardId: number): void => {
+    EndActionFromStackAndAddNew(G, ctx, [], suit, cardId);
 };
 
 /**
@@ -50,8 +50,8 @@ export const DiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, sui
  *
  * @param G
  * @param ctx
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const PlaceCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suitId: number): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], suitId);
+export const PlaceCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suit: string): void => {
+    EndActionFromStackAndAddNew(G, ctx, [], suit);
 };

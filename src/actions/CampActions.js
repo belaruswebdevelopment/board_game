@@ -1,5 +1,4 @@
 import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { AddCampCardToPlayer, AddCampCardToPlayerCards } from "../Player";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { SuitNames, suitsConfig } from "../data/SuitData";
@@ -42,18 +41,12 @@ export const AddCampCardToCardsAction = (G, ctx, config, cardId) => {
     }
     const campCard = G.camp[cardId];
     if (campCard !== null) {
-        let suitId = null, stack = [];
+        let suit = null, stack = [];
         G.camp[cardId] = null;
         if (isArtefactCard(campCard) && campCard.suit !== null) {
             AddCampCardToPlayerCards(G, ctx, campCard);
             CheckAndMoveThrudOrPickHeroAction(G, ctx, campCard);
-            suitId = GetSuitIndexByName(campCard.suit);
-            if (suitId !== -1) {
-                // todo ???
-            }
-            else {
-                // todo ???
-            }
+            suit = campCard.suit;
         }
         else {
             AddCampCardToPlayer(G, ctx, campCard);
@@ -70,7 +63,7 @@ export const AddCampCardToCardsAction = (G, ctx, config, cardId) => {
                 ];
             }
         }
-        EndActionFromStackAndAddNew(G, ctx, stack, suitId);
+        EndActionFromStackAndAddNew(G, ctx, stack, suit);
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не пикнута карта кэмпа.`);
@@ -124,11 +117,11 @@ export const CheckPickDiscardCardCampAction = (G, ctx) => {
  * @param G
  * @param ctx
  * @param config Конфиг действий артефакта.
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, config, suitId, cardId) => {
-    const discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId].splice(cardId, 1)[0];
+export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, config, suit, cardId) => {
+    const discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0];
     G.discardCardsDeck.push(discardedCard);
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} сбросил карту ${discardedCard.name} в дискард.`);
     delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
@@ -144,22 +137,22 @@ export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, config, suitId, card
  * @param G
  * @param ctx
  * @param config Конфиг действий артефакта.
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardSuitCardAction = (G, ctx, config, suitId, playerId, cardId) => {
+export const DiscardSuitCardAction = (G, ctx, config, suit, playerId, cardId) => {
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         // TODO Rework it for players and fix it for bots
         /*if (ctx.playerID !== ctx.currentPlayer) {
             const discardedCard: PlayerCardsType =
-                G.publicPlayers[Number(ctx.playerID)].cards[suitId].splice(cardId, 1)[0];
+                G.publicPlayers[Number(ctx.playerID)].cards[suit].splice(cardId, 1)[0];
             G.discardCardsDeck.push(discardedCard as ICard);
             AddDataToLog(G, LogTypes.GAME, `Игрок ${ G.publicPlayers[Number(ctx.playerID)].nickname } сбросил карту ${ discardedCard.name } в дискард.`);
             EndActionForChosenPlayer(G, ctx, playerId);
         } else {*/
-        const discardedCard = G.publicPlayers[playerId].cards[suitId].splice(cardId, 1)[0];
+        const discardedCard = G.publicPlayers[playerId].cards[suit].splice(cardId, 1)[0];
         G.discardCardsDeck.push(discardedCard);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в дискард.`);
         EndActionForChosenPlayer(G, ctx, playerId);
@@ -219,12 +212,12 @@ export const DrawProfitCampAction = (G, ctx, config) => {
  * @param G
  * @param ctx
  * @param config Конфиг действий артефакта.
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const GetMjollnirProfitAction = (G, ctx, config, suitId) => {
+export const GetMjollnirProfitAction = (G, ctx, config, suit) => {
     delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.getMjollnirProfit;
-    G.suitIdForMjollnir = suitId;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал фракцию ${Object.values(suitsConfig)[suitId].suitName} для эффекта артефакта Mjollnir.`);
+    G.suitIdForMjollnir = suit;
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал фракцию ${suitsConfig[suit].suitName} для эффекта артефакта Mjollnir.`);
     EndActionFromStackAndAddNew(G, ctx);
 };
 /**
@@ -269,9 +262,9 @@ export const PickHeroCampAction = (G, ctx, config) => {
  */
 export const StartDiscardSuitCardAction = (G, ctx, config) => {
     if (config.suit !== undefined) {
-        const suitId = GetSuitIndexByName(config.suit), value = {};
+        const value = {};
         for (let i = 0; i < ctx.numPlayers; i++) {
-            if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[suitId].length) {
+            if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[config.suit].length) {
                 value[i] = {
                     stage: `discardSuitCard`,
                 };

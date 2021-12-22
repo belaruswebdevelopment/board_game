@@ -5,7 +5,6 @@ import { CheckPickHero } from "../Hero";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { ReturnCoinToPlayerHands } from "../Coin";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, GetHeroIndexByName } from "../helpers/HeroHelpers";
-import { GetSuitIndexByName } from "../helpers/SuitHelpers";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { TotalRank } from "../helpers/ScoreHelpers";
@@ -38,17 +37,14 @@ export const AddBuffToPlayerHeroAction = (G, ctx, config) => {
 export const AddHeroToCardsAction = (G, ctx, config) => {
     if (config.drawName) {
         const heroIndex = GetHeroIndexByName(config.drawName), hero = G.heroes[heroIndex];
-        let suitId = null;
+        let suit = null;
         AddHeroCardToPlayerHeroCards(G, ctx, hero);
         AddHeroCardToPlayerCards(G, ctx, hero);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
         if (hero.suit !== null) {
-            suitId = GetSuitIndexByName(hero.suit);
-            if (suitId === -1) {
-                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${hero.suit}.`);
-            }
+            suit = hero.suit;
         }
-        EndActionFromStackAndAddNew(G, ctx, [], suitId);
+        EndActionFromStackAndAddNew(G, ctx, [], suit);
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.drawName'.`);
@@ -69,11 +65,13 @@ export const AddHeroToCardsAction = (G, ctx, config) => {
 export const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
     var _a;
     const cardsToDiscard = [];
-    for (let i = 0; i < G.suitsNum; i++) {
-        if (config.suit !== Object.keys(suitsConfig)[i]) {
-            const last = G.publicPlayers[Number(ctx.currentPlayer)].cards[i].length - 1;
-            if (last >= 0 && G.publicPlayers[Number(ctx.currentPlayer)].cards[i][last].type !== `герой`) {
-                cardsToDiscard.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[i][last]);
+    for (const suit in suitsConfig) {
+        if (suitsConfig.hasOwnProperty(suit)) {
+            if (config.suit !== suit) {
+                const last = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
+                if (last >= 0 && G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== `герой`) {
+                    cardsToDiscard.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last]);
+                }
             }
         }
     }
@@ -123,15 +121,15 @@ export const CheckPickDiscardCardHeroAction = (G, ctx) => {
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suitId, cardId) => {
-    const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId][cardId];
+export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suit, cardId) => {
+    const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId];
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
     // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
-    G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
+    G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
         .splice(cardId, 1)[0]);
     if (G.actionsNum === 2) {
         const stack = [
@@ -227,9 +225,9 @@ export const PickHeroWithConditionsAction = (G, ctx, config) => {
                 for (const key in config.conditions[condition]) {
                     if (config.conditions[condition].hasOwnProperty(key)) {
                         if (key === `suit`) {
-                            const suitId = GetSuitIndexByName(config.conditions[condition][key]);
-                            ranks = G.publicPlayers[Number(ctx.currentPlayer)].cards[suitId]
-                                .reduce(TotalRank, 0);
+                            ranks =
+                                G.publicPlayers[Number(ctx.currentPlayer)].cards[config.conditions[condition][key]]
+                                    .reduce(TotalRank, 0);
                         }
                         else if (key === `value`) {
                             isValidMove = ranks >= config.conditions[condition][key];
@@ -255,12 +253,12 @@ export const PickHeroWithConditionsAction = (G, ctx, config) => {
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const PlaceCardsAction = (G, ctx, config, suitId) => {
+export const PlaceCardsAction = (G, ctx, config, suit) => {
     const playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
     if (playerVariants !== undefined) {
-        const suit = Object.keys(suitsConfig)[suitId], olwinDouble = CreateCard({
+        const olwinDouble = CreateCard({
             suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
@@ -313,7 +311,7 @@ export const PlaceCardsAction = (G, ctx, config, suitId) => {
             AddActionsToStackAfterCurrent(G, ctx, stack);
         }
         CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
-        EndActionFromStackAndAddNew(G, ctx, [], suitId);
+        EndActionFromStackAndAddNew(G, ctx, [], suit);
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найден обязательный параметр 'stack[0].variants'.`);
@@ -330,10 +328,10 @@ export const PlaceCardsAction = (G, ctx, config, suitId) => {
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
- * @param suitId Id фракции.
+ * @param suit Название фракции.
  */
-export const PlaceHeroAction = (G, ctx, config, suitId) => {
-    const suit = Object.keys(suitsConfig)[suitId], playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
+export const PlaceHeroAction = (G, ctx, config, suit) => {
+    const playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
     if (playerVariants !== undefined && config.name !== undefined) {
         const heroCard = CreateCard({
             suit,

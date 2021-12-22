@@ -13,7 +13,6 @@ import {
 } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
-import { GetSuitIndexByName } from "./SuitHelpers";
 
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -115,7 +114,7 @@ export const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardI
     // todo Rework all COMMON for heroes and camp actions in two logic?
     const isAdded: boolean = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
         pickedCard: DeckCardTypes = G.discardCardsDeck.splice(cardId, 1)[0];
-    let suitId: number | null = null;
+    let suit: string | null = null;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
     if (G.actionsNum === 2) {
         const stack: IStack[] = [
@@ -139,15 +138,12 @@ export const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardI
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-            suitId = GetSuitIndexByName(pickedCard.suit);
-            if (suitId === -1) {
-                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найдена несуществующая фракция ${pickedCard.suit}.`);
-            }
+            suit = pickedCard.suit;
         }
     } else {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
-    EndActionFromStackAndAddNew(G, ctx, [], suitId);
+    EndActionFromStackAndAddNew(G, ctx, [], suit);
 };
 
 /**

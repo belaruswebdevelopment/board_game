@@ -9,7 +9,6 @@ import { actionCardsConfigArray } from "./data/ActionCardData";
 import { BuildHeroes } from "./Hero";
 import { BuildCampCards } from "./Camp";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
-import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { heroesConfig } from "./data/HeroData";
 /**
  * <h3>Сетап игры.</h3>
@@ -63,7 +62,7 @@ export const SetupGame = (ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const randomPriorityIndex = Math.floor(Math.random() * priorities.length), priority = priorities.splice(randomPriorityIndex, 1)[0];
         players[i] = BuildPlayer();
-        publicPlayers[i] = BuildPublicPlayer(ctx.numPlayers, suitsNum, "Dan" + i, priority);
+        publicPlayers[i] = BuildPublicPlayer("Dan" + i, priority);
     }
     const marketCoinsUnique = [], marketCoins = BuildCoins(marketCoinsConfig, {
         count: marketCoinsUnique,
@@ -71,11 +70,11 @@ export const SetupGame = (ctx) => {
         isInitial: false,
         isTriggerTrading: false,
     });
-    const averageCards = [], initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined)
+    const averageCards = {}, initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined)
         .map((item, index) => index), initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
     for (const suit in suitsConfig) {
-        averageCards[GetSuitIndexByName(suit)] = GetAverageSuitCard(suitsConfig[suit], {
+        averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
             players: ctx.numPlayers,
             tier: 0,
         });
