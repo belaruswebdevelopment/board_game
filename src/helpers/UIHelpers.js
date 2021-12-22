@@ -245,7 +245,7 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
 export const DrawPlayerBoardForCardDiscard = (data) => {
     const playerHeaders = [], playerRows = [];
     for (const suit in suitsConfig) {
-        playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suitsConfig[suit].suit), className: "bg-suit-icon" }, void 0) }, `${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`));
+        playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }, void 0) }, `${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`));
     }
     DiscardAnyCardFromPlayerBoardProfit(data.props.G, data.props.ctx, data, playerRows);
     return (_jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playerHeaders }, void 0) }, void 0), _jsx("tbody", { children: playerRows }, void 0)] }, void 0));
@@ -258,14 +258,14 @@ export const DrawPlayerBoardForCardDiscard = (data) => {
  * </ol>
  *
  * @param data Глобальные параметры.
- * @param suitName Название фракции.
+ * @param suit Название фракции.
  * @returns Поле игрока для дискарда карты фракции.
  */
-export const DrawPlayersBoardForSuitCardDiscard = (data, suitName) => {
+export const DrawPlayersBoardForSuitCardDiscard = (data, suit) => {
     const playersHeaders = [], playersRows = [];
     for (let p = 0; p < data.props.G.publicPlayers.length; p++) {
         if (p !== Number(data.props.ctx.currentPlayer)) {
-            playersHeaders.push(_jsx("th", { className: `${suitsConfig[suitName].suitColor} discard suit`, children: _jsx("span", { style: Styles.Suits(suitsConfig[suitName].suitName), className: "bg-suit-icon", children: p + 1 }, void 0) }, `${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suitName].suitName}`));
+            playersHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor} discard suit`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: p + 1 }, void 0) }, `${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName}`));
         }
     }
     for (let i = 0;; i++) {
@@ -274,11 +274,11 @@ export const DrawPlayersBoardForSuitCardDiscard = (data, suitName) => {
         const playersCells = [];
         for (let p = 0; p < data.props.G.publicPlayers.length; p++) {
             if (p !== Number(data.props.ctx.currentPlayer)) {
-                if (data.props.G.publicPlayers[p].cards[suitName][i] !== undefined) {
-                    if (data.props.G.publicPlayers[p].cards[suitName][i].type !== `герой`) {
+                if (data.props.G.publicPlayers[p].cards[suit][i] !== undefined) {
+                    if (data.props.G.publicPlayers[p].cards[suit][i].type !== `герой`) {
                         isExit = false;
                         isDrawRow = true;
-                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suitName][i], i, data.props.G.publicPlayers[p], suitName, OnClickDiscardSuitCardFromPlayerBoard.name, suitName, p, i);
+                        DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suit][i], i, data.props.G.publicPlayers[p], suit, OnClickDiscardSuitCardFromPlayerBoard.name, suit, p, i);
                     }
                 }
                 else {

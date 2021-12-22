@@ -4,6 +4,7 @@ import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
 import { CurrentScoring } from "./Score";
 import { moveBy, moveValidators } from "./MoveValidator";
 import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./helpers/ProfitHelpers";
+import { suitsConfig } from "./data/SuitData";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -175,7 +176,8 @@ export const enumerate = (G, ctx) => {
     if (ctx.phase === `getMjollnirProfit`) {
         const totalSuitsRanks = [];
         GetMjollnirProfitProfit(G, ctx, totalSuitsRanks);
-        botMoveArguments.push([totalSuitsRanks.indexOf(Math.max(...totalSuitsRanks))]);
+        botMoveArguments.push([Object.values(suitsConfig)[totalSuitsRanks
+                .indexOf(Math.max(...totalSuitsRanks))].suit]);
         moves.push({
             move: `GetMjollnirProfitMove`,
             args: [...botMoveArguments[0]],

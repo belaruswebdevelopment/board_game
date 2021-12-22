@@ -449,8 +449,8 @@ export const Styles = {
     Priority: () => ({
         background: `url(/img/priorities/Priority.png) no-repeat -34px -7px / 66px 36px`,
     }),
-    Suits: (suitName) => ({
-        background: `url(/img/suits/${suitName}.png) no-repeat 0px 0px / 24px 24px`,
+    Suits: (suit) => ({
+        background: `url(/img/suits/${suit}.png) no-repeat 0px 0px / 24px 24px`,
     }),
     Taverns: (tavernId) => {
         switch (tavernId) {

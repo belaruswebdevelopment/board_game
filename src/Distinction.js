@@ -12,7 +12,7 @@ import { TotalRank } from "./helpers/ScoreHelpers";
  *
  * @param G
  * @param ctx
- * @param suitName Фракция.
+ * @param suit Фракция.
  * @returns Индекс игрока с преимуществом по фракции, если имеется.
  */
 export const CheckCurrentSuitDistinction = (G, ctx, suit) => {
