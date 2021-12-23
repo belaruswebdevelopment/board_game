@@ -23,6 +23,7 @@ import {
 } from "./helpers/ProfitHelpers";
 import { suitsConfig } from "./data/SuitData";
 import { Phases, Stages } from "./Game";
+import { ConfigNames } from "./actions/Actions";
 
 /**
  * <h3>Интерфейс для возможных мувов у ботов.</h3>
@@ -237,20 +238,20 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         });
     }
     if (ctx.phase === Phases.EnlistmentMercenaries) {
-        if (G.drawProfit === `startOrPassEnlistmentMercenaries`) {
+        if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
             StartEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             if (Math.floor(Math.random() * botMoveArguments.length) === 0) {
                 moves.push({ move: `StartEnlistmentMercenariesMove`, args: [] });
             } else {
                 moves.push({ move: `PassEnlistmentMercenariesMove`, args: [] });
             }
-        } else if (G.drawProfit === `enlistmentMercenaries`) {
+        } else if (G.drawProfit === ConfigNames.EnlistmentMercenaries) {
             GetEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: `GetEnlistmentMercenariesMove`,
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
-        } else if (G.drawProfit === `placeEnlistmentMercenaries`) {
+        } else if (G.drawProfit === ConfigNames.PlaceEnlistmentMercenaries) {
             PlaceEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: `PlaceEnlistmentMercenariesMove`,

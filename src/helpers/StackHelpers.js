@@ -1,4 +1,4 @@
-import { ActionDispatcher } from "../actions/Actions";
+import { ActionDispatcher, ConfigNames } from "../actions/Actions";
 import { EndAction } from "./ActionHelpers";
 /**
  * <h3>Добавляет действия в стэк действий конкретного игрока.</li>
@@ -88,7 +88,7 @@ export const EndActionForChosenPlayer = (G, ctx, playerId) => {
 export const EndActionFromStackAndAddNew = (G, ctx, newStack = [], ...args) => {
     var _a;
     const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (G.drawProfit !== `` || (config === null || config === void 0 ? void 0 : config.name) === `explorerDistinction`) {
+    if (G.drawProfit !== `` || (config === null || config === void 0 ? void 0 : config.name) === ConfigNames.ExplorerDistinction) {
         G.actionsNum = 0;
         G.drawProfit = ``;
     }

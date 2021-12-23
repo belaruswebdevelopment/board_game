@@ -1,6 +1,6 @@
 import type { Ctx, Game } from "boardgame.io";
 import { PlayerView } from "boardgame.io/core";
-import { DrawNames } from "./actions/Actions";
+import { ConfigNames, DrawNames } from "./actions/Actions";
 import { DrawProfitCampAction } from "./actions/CampActions";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { RefillCamp } from "./Camp";
@@ -313,7 +313,7 @@ export const BoardGame: Game<MyGameState> = {
                         action: DrawProfitCampAction.name,
                         playerId: G.publicPlayersOrder[0],
                         config: {
-                            name: `startOrPassEnlistmentMercenaries`,
+                            name: ConfigNames.StartOrPassEnlistmentMercenaries,
                             drawName: DrawNames.StartOrPassEnlistmentMercenaries,
                         },
                     },

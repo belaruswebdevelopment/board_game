@@ -1,4 +1,4 @@
-import { DrawNames } from "../actions/Actions";
+import { ConfigNames, DrawNames } from "../actions/Actions";
 import { CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCampAction } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
 import { UpgradeCoin } from "../Coin";
@@ -117,7 +117,7 @@ export const PickDiscardCard = (G, ctx, config, cardId) => {
                 action: DrawProfitCampAction.name,
                 config: {
                     stageName: Stages.PickDiscardCard,
-                    name: `BrisingamensAction`,
+                    name: ConfigNames.BrisingamensAction,
                     drawName: DrawNames.Brisingamens,
                 },
             },

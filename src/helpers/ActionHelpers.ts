@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { ArgsTypes, DrawNames } from "../actions/Actions";
+import { ArgsTypes, ConfigNames, DrawNames } from "../actions/Actions";
 import {
     CheckPickDiscardCardCampAction,
     DrawProfitCampAction,
@@ -126,7 +126,7 @@ export const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardI
                 action: DrawProfitCampAction.name,
                 config: {
                     stageName: Stages.PickDiscardCard,
-                    name: `BrisingamensAction`,
+                    name: ConfigNames.BrisingamensAction,
                     drawName: DrawNames.Brisingamens,
                 },
             },

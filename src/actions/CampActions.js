@@ -7,7 +7,7 @@ import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../help
 import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { AddCampCardToPlayer, AddCampCardToPlayerCards } from "../Player";
-import { DrawNames } from "./Actions";
+import { ConfigNames, DrawNames } from "./Actions";
 /**
  * <h3>Действия, связанные с добавлением бафов от артефактов игроку.</h3>
  * <p>Применения:</p>
@@ -59,7 +59,7 @@ export const AddCampCardToCardsAction = (G, ctx, config, cardId) => {
                     {
                         action: DrawProfitCampAction.name,
                         config: {
-                            name: `enlistmentMercenaries`,
+                            name: ConfigNames.EnlistmentMercenaries,
                             drawName: DrawNames.EnlistmentMercenaries,
                         },
                     },
@@ -284,7 +284,7 @@ export const StartDiscardSuitCardAction = (G, ctx, config) => {
             }
         }
         ctx.events.setActivePlayers({ value });
-        G.drawProfit = `HofudAction`;
+        G.drawProfit = ConfigNames.HofudAction;
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.suit'.`);
@@ -310,7 +310,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
             {
                 action: DrawProfitCampAction.name,
                 config: {
-                    name: `AddCoinToPouchVidofnirVedrfolnir`,
+                    name: ConfigNames.AddCoinToPouchVidofnirVedrfolnir,
                     stageName: Stages.AddCoinToPouch,
                     number: number,
                     drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
@@ -334,7 +334,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                 {
                     action: DrawProfitCampAction.name,
                     config: {
-                        name: `VidofnirVedrfolnirAction`,
+                        name: ConfigNames.VidofnirVedrfolnirAction,
                         stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         value: 5,
                         drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
@@ -353,7 +353,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                 {
                     action: DrawProfitCampAction.name,
                     config: {
-                        name: `VidofnirVedrfolnirAction`,
+                        name: ConfigNames.VidofnirVedrfolnirAction,
                         stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         number: 2,
                         value: 3,
@@ -417,7 +417,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
                     action: DrawProfitCampAction.name,
                     config: {
                         coinId,
-                        name: `VidofnirVedrfolnirAction`,
+                        name: ConfigNames.VidofnirVedrfolnirAction,
                         stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         value: 2,
                         drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,

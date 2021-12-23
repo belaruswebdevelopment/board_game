@@ -3,7 +3,7 @@ import { IArtefactCampCard, isArtefactCard } from "./Camp";
 import { ICard, IPlayerCards, isCardNotAction } from "./Card";
 import { BuildCoins, ICoin } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
-import { IBuff, IConditions, IVariants } from "./data/HeroData";
+import { HeroNames, IBuff, IConditions, IVariants } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
 import { Phases } from "./Game";
 import { CampDeckCardTypes, DeckCardTypes, MyGameState } from "./GameSetup";
@@ -292,11 +292,12 @@ export const CheckPlayersBasicOrder = (G: MyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i: number = 0; i < ctx.numPlayers; i++) {
         if (ctx.phase !== Phases.PlaceCoinsUline) {
-            if (G.publicPlayers[i].buffs.everyTurn !== `Uline`) {
+            // todo Create enums for buffs values
+            if (G.publicPlayers[i].buffs.everyTurn !== HeroNames.Uline) {
                 G.publicPlayersOrder.push(i);
             }
         } else {
-            if (G.publicPlayers[i].buffs.everyTurn === `Uline`) {
+            if (G.publicPlayers[i].buffs.everyTurn === HeroNames.Uline) {
                 G.publicPlayersOrder.push(i);
             }
         }

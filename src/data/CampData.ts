@@ -1,4 +1,4 @@
-import { DrawNames } from "../actions/Actions";
+import { BuffNames, ConfigNames, DrawNames } from "../actions/Actions";
 import {
     AddBuffToPlayerCampAction,
     AddCampCardToCardsAction,
@@ -108,7 +108,7 @@ const Brisingamens: IArtefact = {
             action: DrawProfitCampAction.name,
             config: {
                 stageName: Stages.PickDiscardCard,
-                name: `BrisingamensAction`,
+                name: ConfigNames.BrisingamensAction,
                 number: 2,
                 drawName: DrawNames.Brisingamens,
             },
@@ -169,7 +169,7 @@ const Fafnir_Baleygr: IArtefact = {
             action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
-                    name: `goCamp`,
+                    name: BuffNames.GoCamp,
                     value: true,
                 },
             },
@@ -320,7 +320,7 @@ const Megingjord: IArtefact = {
             action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
-                    name: `noHero`,
+                    name: BuffNames.NoHero,
                     value: true,
                 },
             },
@@ -352,7 +352,7 @@ const Mjollnir: IArtefact = {
             action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
-                    name: `getMjollnirProfit`,
+                    name: BuffNames.GetMjollnirProfit,
                     value: true,
                 },
             },

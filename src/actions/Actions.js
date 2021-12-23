@@ -8,7 +8,7 @@ import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, AddCoinToPouchActi
 import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "./CoinActions";
 import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, DrawProfitHeroAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, UpgradeCoinHeroAction } from "./HeroActions";
 /**
- * <h3>Перечисление для типов карт.</h3>
+ * <h3>Перечисление для описаний отрисовки экшенов.</h3>
  */
 export var DrawNames;
 (function (DrawNames) {
@@ -53,6 +53,47 @@ export var DrawNames;
     DrawNames["Zolkur"] = "Zolkur";
     DrawNames["Zoral"] = "Zoral";
 })(DrawNames || (DrawNames = {}));
+;
+/**
+ * <h3>Перечисление для названия отрисовки экшенов в конфиге.</h3>
+ */
+export var ConfigNames;
+(function (ConfigNames) {
+    ConfigNames["AddCoinToPouchVidofnirVedrfolnir"] = "AddCoinToPouchVidofnirVedrfolnir";
+    ConfigNames["AndumiaAction"] = "AndumiaAction";
+    ConfigNames["BonfurAction"] = "BonfurAction";
+    ConfigNames["BrisingamensAction"] = "BrisingamensAction";
+    ConfigNames["BrisingamensEndGameAction"] = "BrisingamensEndGameAction";
+    ConfigNames["DagdaAction"] = "DagdaAction";
+    ConfigNames["DiscardCard"] = "discardCard";
+    ConfigNames["EnlistmentMercenaries"] = "enlistmentMercenaries";
+    ConfigNames["ExplorerDistinction"] = "explorerDistinction";
+    ConfigNames["GetMjollnirProfit"] = "getMjollnirProfit";
+    ConfigNames["HofudAction"] = "HofudAction";
+    ConfigNames["HoldaAction"] = "HoldaAction";
+    ConfigNames["PlaceCards"] = "placeCards";
+    ConfigNames["PlaceEnlistmentMercenaries"] = "placeEnlistmentMercenaries";
+    ConfigNames["StartOrPassEnlistmentMercenaries"] = "startOrPassEnlistmentMercenaries";
+    ConfigNames["Thrud"] = "Thrud";
+    ConfigNames["UpgradeCoin"] = "upgradeCoin";
+    ConfigNames["VidofnirVedrfolnirAction"] = "VidofnirVedrfolnirAction";
+    ConfigNames["Ylud"] = "Ylud";
+})(ConfigNames || (ConfigNames = {}));
+;
+/**
+ * <h3>Перечисление для названия бафов в конфиге.</h3>
+ */
+export var BuffNames;
+(function (BuffNames) {
+    BuffNames["DiscardCardEndGame"] = "discardCardEndGame";
+    BuffNames["EveryTurn"] = "everyTurn";
+    BuffNames["GetMjollnirProfit"] = "getMjollnirProfit";
+    BuffNames["GoCamp"] = "goCamp";
+    BuffNames["GoCampOneTime"] = "goCampOneTime";
+    BuffNames["NoHero"] = "noHero";
+    BuffNames["UpgradeCoin"] = "upgradeCoin";
+    BuffNames["UpgradeNextCoin"] = "upgradeNextCoin";
+})(BuffNames || (BuffNames = {}));
 ;
 /**
  * <h3>Диспетчер действий при их активации.</h3>
@@ -241,7 +282,7 @@ export const GetEnlistmentMercenariesAction = (G, ctx, config, cardId) => {
             {
                 action: DrawProfitCampAction.name,
                 config: {
-                    name: `placeEnlistmentMercenaries`,
+                    name: ConfigNames.PlaceEnlistmentMercenaries,
                     drawName: DrawNames.PlaceEnlistmentMercenaries,
                 },
             },
@@ -317,7 +358,7 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, config, suit) => {
                         {
                             action: DrawProfitCampAction.name,
                             config: {
-                                name: `enlistmentMercenaries`,
+                                name: ConfigNames.EnlistmentMercenaries,
                                 drawName: DrawNames.EnlistmentMercenaries,
                             },
                         },

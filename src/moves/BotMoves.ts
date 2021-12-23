@@ -1,5 +1,6 @@
 import { Ctx, Move } from "boardgame.io";
 import { ICoin } from "../Coin";
+import { HeroNames } from "../data/HeroData";
 import { Phases } from "../Game";
 import { MyGameState } from "../GameSetup";
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
@@ -29,7 +30,7 @@ export const BotsPlaceAllCoinsMove: Move<MyGameState> = (G: MyGameState, ctx: Ct
         }
     }
     const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers
-        .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== `Uline`)
+        .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== HeroNames.Uline)
         .every((player: IPublicPlayer): boolean => player.handCoins
             .every((coin: ICoin | null): boolean => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {

@@ -1,6 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { ConfigNames } from "../actions/Actions";
 import { isCardNotAction } from "../Card";
 import { CountMarketCoins } from "../Coin";
+import { HeroNames } from "../data/HeroData";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
@@ -133,15 +135,15 @@ export const DrawMarketCoins = (data) => {
 export const DrawProfit = (data, option) => {
     var _a, _b, _c, _d, _e;
     const boardCells = [], config = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].stack[0].config;
-    let caption = "Get ";
+    let caption = `Get `;
     for (let i = 0; i < 1; i++) {
-        if (option === "placeCards") {
+        if (option === ConfigNames.PlaceCards) {
             if (config !== undefined) {
                 caption += `suit to place ${(_a = data.props.G.actionsNum) !== null && _a !== void 0 ? _a : 1} ${config.drawName} ${data.props.G.actionsNum > 1 ? `s` : ``} to ${data.props.G.actionsNum > 1 ? `different` : `that`} suit.`;
                 PlaceCardsProfit(data.props.G, data.props.ctx, data, boardCells);
             }
         }
-        else if (option === `explorerDistinction`) {
+        else if (option === ConfigNames.ExplorerDistinction) {
             caption += `one card to your board.`;
             // todo Move to ProfitHelpers and add logic for bot or just use standard pick cards / upgrade coins
             for (let j = 0; j < 3; j++) {
@@ -153,62 +155,62 @@ export const DrawProfit = (data, option) => {
                 DrawCard(data, boardCells, data.props.G.decks[1][j], j, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)], suit, OnClickCardToPickDistinction.name, j);
             }
         }
-        else if (option === `BonfurAction` || option === `DagdaAction`) {
+        else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
             caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? `s` : ``} to discard from your board.`;
             DiscardCardFromBoardProfit(data.props.G, data.props.ctx, data, boardCells);
         }
-        else if (option === `AndumiaAction` || option === `BrisingamensAction`) {
+        else if (option === ConfigNames.AndumiaAction || option === ConfigNames.BrisingamensAction) {
             caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} from discard pile to your board.`;
             PickDiscardCardProfit(data.props.G, data.props.ctx, data, boardCells);
         }
-        else if (option === `BrisingamensEndGameAction`) {
+        else if (option === ConfigNames.BrisingamensEndGameAction) {
             caption += `one card to discard from your board.`;
             boardCells.push(_jsx("td", { children: DrawPlayerBoardForCardDiscard(data) }, `${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} discard card`));
         }
-        else if (option === `HofudAction`) {
+        else if (option === ConfigNames.HofudAction) {
             caption += `one warrior card to discard from your board.`;
             if (config !== undefined && config.suit !== undefined) {
                 boardCells.push(_jsx("td", { children: DrawPlayersBoardForSuitCardDiscard(data, config.suit) }, `Discard ${config.suit} suit cardboard`));
             }
         }
-        else if (option === `HoldaAction`) {
+        else if (option === ConfigNames.HoldaAction) {
             caption += `one card from camp to your board.`;
             PickCampCardHoldaProfit(data.props.G, data.props.ctx, data, boardCells);
         }
-        else if (option === `discardCard`) {
+        else if (option === ConfigNames.DiscardCard) {
             caption += `one card to discard from current tavern.`;
             DiscardCardProfit(data.props.G, data.props.ctx, data, boardCells);
         }
-        else if (option === `getMjollnirProfit`) {
+        else if (option === ConfigNames.GetMjollnirProfit) {
             caption += `suit to get Mjöllnir profit from ranks on that suit.`;
             GetMjollnirProfitProfit(data.props.G, data.props.ctx, data, boardCells);
         }
-        else if (option === `startOrPassEnlistmentMercenaries`) {
+        else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {
             caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
             StartEnlistmentMercenariesProfit(data.props.G, data.props.ctx, data, boardCells);
         }
-        else if (option === `enlistmentMercenaries`) {
+        else if (option === ConfigNames.EnlistmentMercenaries) {
             caption += `mercenary to place it to your player board.`;
             GetEnlistmentMercenariesProfit(data.props.G, data.props.ctx, data, boardCells);
         }
-        else if (option === `placeEnlistmentMercenaries`) {
+        else if (option === ConfigNames.PlaceEnlistmentMercenaries) {
             const card = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].pickedCard;
             if (card !== null) {
                 caption += `suit to place ${card.name} to that suit.`;
                 PlaceEnlistmentMercenariesProfit(data.props.G, data.props.ctx, data, boardCells);
             }
         }
-        else if (option === `AddCoinToPouchVidofnirVedrfolnir`) {
+        else if (option === ConfigNames.AddCoinToPouchVidofnirVedrfolnir) {
             caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch to fill it.`;
             AddCoinToPouchProfit(data.props.G, data.props.ctx, data, boardCells);
         }
         else {
             if (config !== undefined) {
                 caption += `coin to upgrade up to ${config.value}.`;
-                if (option === `VidofnirVedrfolnirAction`) {
+                if (option === ConfigNames.VidofnirVedrfolnirAction) {
                     UpgradeCoinVidofnirVedrfolnirProfit(data.props.G, data.props.ctx, data, boardCells);
                 }
-                else if (option === `upgradeCoin`) {
+                else if (option === ConfigNames.UpgradeCoin) {
                     // todo Move to ProfitHelpers and add logic for bot or just use standard upgrade coins
                     const handCoins = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins
                         .filter((coin) => coin !== null);
@@ -217,8 +219,9 @@ export const DrawProfit = (data, option) => {
                         data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins.length; j++) {
                         // todo Check .? for all coins!!! and delete AS
                         if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn ===
-                            `Uline` && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j]
-                            === null) {
+                            HeroNames.Uline
+                            && data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins[j] ===
+                                null) {
                             handCoinIndex++;
                             const handCoinId = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
                                 .handCoins.findIndex((coin) => {

@@ -1,3 +1,4 @@
+import { ArtefactNames } from "./CampData";
 import { HeroNames } from "./HeroData";
 import { SuitNames } from "./SuitData";
 ;
@@ -41,27 +42,27 @@ export const Styles = {
     CampCards: (tier, cardPath) => {
         if (tier === 0) {
             switch (cardPath) {
-                case `Draupnir`:
+                case ArtefactNames.Draupnir:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat 0px 0px / 128px 144px`,
                     };
-                case `Fafnir Baleygr`:
+                case ArtefactNames.Fafnir_Baleygr:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat -32px 0px / 128px 144px`,
                     };
-                case `Svalinn`:
+                case ArtefactNames.Svalinn:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat -64px 0px / 128px 144px`,
                     };
-                case `Megingjord`:
+                case ArtefactNames.Megingjord:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat -96px 0px / 128px 144px`,
                     };
-                case `Vegvisir`:
+                case ArtefactNames.Vegvisir:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat 0px -48px / 128px 144px`,
                     };
-                case `Vidofnir Vedrfolnir`:
+                case ArtefactNames.Vidofnir_Vedrfolnir:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat -32px -48px / 128px 144px`,
                     };
@@ -97,27 +98,27 @@ export const Styles = {
         }
         else if (tier === 1) {
             switch (cardPath) {
-                case `Mjollnir`:
+                case ArtefactNames.Mjollnir:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat 0px 0px / 128px 144px`,
                     };
-                case `Hofud`:
+                case ArtefactNames.Hofud:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat -32px 0px / 128px 144px`,
                     };
-                case `Brisingamens`:
+                case ArtefactNames.Brisingamens:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat -64px 0px / 128px 144px`,
                     };
-                case `Hrafnsmerki`:
+                case ArtefactNames.Hrafnsmerki:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat -96px 0px / 128px 144px`,
                     };
-                case `Gjallarhorn`:
+                case ArtefactNames.Gjallarhorn:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat 0px -48px / 128px 144px`,
                     };
-                case `Jarnglofi`:
+                case ArtefactNames.Jarnglofi:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat -32px -48px / 128px 144px`,
                     };
@@ -341,91 +342,91 @@ export const Styles = {
     Heroes: (game, heroName) => {
         if (game === `base`) {
             switch (heroName) {
-                case `Bonfur`:
+                case HeroNames.Bonfur:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -96px -48px / 288px 144px`,
                     };
-                case `Aegur`:
+                case HeroNames.Aegur:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -128px -96px / 288px 144px`,
                     };
-                case `Dagda`:
+                case HeroNames.Dagda:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -128px -48px / 288px 144px`,
                     };
-                case `Aral`:
+                case HeroNames.Aral:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -160px -96px / 288px 144px`,
                     };
-                case `Lokdur`:
+                case HeroNames.Lokdur:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -224px 0px / 288px 144px`,
                     };
-                case `Zoral`:
+                case HeroNames.Zoral:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -32px -48px / 288px 144px`,
                     };
-                case `Tarah`:
+                case HeroNames.Tarah:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -160px 0px / 288px 144px`,
                     };
-                case `Kraal`:
+                case HeroNames.Kraal:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -192px 0px / 288px 144px`,
                     };
-                case `Idunn`:
+                case HeroNames.Idunn:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -128px 0px / 288px 144px`,
                     };
-                case `Hourya`:
+                case HeroNames.Hourya:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -96px -96px / 288px 144px`,
                     };
-                case `Dwerg Bergelmir`:
+                case HeroNames.Dwerg_Bergelmir:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat 0px 0px / 288px 144px`,
                     };
-                case `Dwerg Jungir`:
+                case HeroNames.Dwerg_Jungir:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -64px 0px / 288px 144px`,
                     };
-                case `Dwerg Aesir`:
+                case HeroNames.Dwerg_Aesir:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -64px -48px / 288px 144px`,
                     };
-                case `Dwerg Ymir`:
+                case HeroNames.Dwerg_Ymir:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -32px -96px / 288px 144px`,
                     };
-                case `Dwerg Sigmir`:
+                case HeroNames.Dwerg_Sigmir:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -64px -96px / 288px 144px`,
                     };
-                case `Ylud`:
+                case HeroNames.Ylud:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -32px 0px / 288px 144px`,
                     };
-                case `Uline`:
+                case HeroNames.Uline:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -96px 0px / 288px 144px`,
                     };
-                case `Grid`:
+                case HeroNames.Grid:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -256px 0px / 288px 144px`,
                     };
-                case `Thrud`:
+                case HeroNames.Thrud:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat 0px -48px / 288px 144px`,
                     };
-                case `Skaa`:
+                case HeroNames.Skaa:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -160px -48px / 288px 144px`,
                     };
-                case `Jarika`:
+                case HeroNames.Jarika:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat -192px -48px / 288px 144px`,
                     };
-                case `Astrid`:
+                case HeroNames.Astrid:
                     return {
                         background: `${heroesBasicPath}heroes.png) no-repeat 0px -96px / 288px 144px`,
                     };
@@ -437,23 +438,23 @@ export const Styles = {
         }
         else if (game === `thingvellir`) {
             switch (heroName) {
-                case `Andumia`:
+                case HeroNames.Andumia:
                     return {
                         background: `${heroesThingvellirPath}heroes.png) no-repeat 0px 0px / 128px 100px`,
                     };
-                case `Holda`:
+                case HeroNames.Holda:
                     return {
                         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -0px / 128px 100px`,
                     };
-                case `Khrad`:
+                case HeroNames.Khrad:
                     return {
                         background: `${heroesThingvellirPath}heroes.png) no-repeat -64px 0px / 128px 100px`,
                     };
-                case `Olwin`:
+                case HeroNames.Olwin:
                     return {
                         background: `${heroesThingvellirPath}heroes.png) no-repeat 0px -50px / 128px 100px`,
                     };
-                case `Zolkur`:
+                case HeroNames.Zolkur:
                     return {
                         background: `${heroesThingvellirPath}heroes.png) no-repeat -96px -50px / 128px 100px`,
                     };

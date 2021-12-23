@@ -25,7 +25,7 @@ import {
     IStack,
     PlayerCardsType
 } from "../Player";
-import { ArgsTypes, DrawNames } from "./Actions";
+import { ArgsTypes, ConfigNames, DrawNames } from "./Actions";
 
 /**
  * <h3>Действия, связанные с добавлением бафов от героев игроку.</h3>
@@ -162,7 +162,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
                 config: {
                     stageName: Stages.DiscardCardFromBoard,
                     drawName: DrawNames.Dagda,
-                    name: `DagdaAction`,
+                    name: ConfigNames.DagdaAction,
                     suit: SuitNames.HUNTER,
                 },
             },
@@ -329,7 +329,7 @@ export const PlaceCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
                         action: DrawProfitHeroAction.name,
                         variants,
                         config: {
-                            name: `placeCards`,
+                            name: ConfigNames.PlaceCards,
                             stageName: Stages.PlaceCards,
                             drawName: DrawNames.Olwin,
                         },

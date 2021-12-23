@@ -1,5 +1,5 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { DrawNames, GetEnlistmentMercenariesAction, PassEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
+import { ConfigNames, DrawNames, GetEnlistmentMercenariesAction, PassEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { DrawProfitCampAction } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
 import { SuitNames, suitsConfig } from "../data/SuitData";
@@ -190,7 +190,7 @@ export const StartEnlistmentMercenariesMove = (G, ctx) => {
         {
             action: DrawProfitCampAction.name,
             config: {
-                name: `enlistmentMercenaries`,
+                name: ConfigNames.EnlistmentMercenaries,
                 drawName: DrawNames.EnlistmentMercenaries,
             },
         },

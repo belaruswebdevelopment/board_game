@@ -1,6 +1,7 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { ICoin } from "../Coin";
+import { HeroNames } from "../data/HeroData";
 import { SuitNames } from "../data/SuitData";
 import { Phases, Stages } from "../Game";
 import { MyGameState } from "../GameSetup";
@@ -61,7 +62,7 @@ export const ClickBoardCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
             AfterBasicPickCardActions(G, ctx, false);
         } else {
             const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers
-                .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== `Uline`)
+                .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== HeroNames.Uline)
                 .every((player: IPublicPlayer): boolean => player.handCoins
                     .every((coin: ICoin | null): boolean => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {

@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { ActionDispatcher, ArgsTypes } from "../actions/Actions";
+import { ActionDispatcher, ArgsTypes, ConfigNames } from "../actions/Actions";
 import { MyGameState } from "../GameSetup";
 import { IConfig, IStack } from "../Player";
 import { EndAction } from "./ActionHelpers";
@@ -91,7 +91,7 @@ export const EndActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: num
 export const EndActionFromStackAndAddNew = (G: MyGameState, ctx: Ctx, newStack: IStack[] = [], ...args: ArgsTypes):
     void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    if (G.drawProfit !== `` || config?.name === `explorerDistinction`) {
+    if (G.drawProfit !== `` || config?.name === ConfigNames.ExplorerDistinction) {
         G.actionsNum = 0;
         G.drawProfit = ``;
     }

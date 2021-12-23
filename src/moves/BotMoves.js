@@ -1,3 +1,4 @@
+import { HeroNames } from "../data/HeroData";
 import { Phases } from "../Game";
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 /**
@@ -25,7 +26,7 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
         }
     }
     const isEveryPlayersHandCoinsEmpty = G.publicPlayers
-        .filter((player) => player.buffs.everyTurn !== `Uline`)
+        .filter((player) => player.buffs.everyTurn !== HeroNames.Uline)
         .every((player) => player.handCoins
         .every((coin) => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {

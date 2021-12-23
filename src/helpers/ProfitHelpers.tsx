@@ -1,7 +1,9 @@
 import { Ctx } from "boardgame.io";
+import { ConfigNames } from "../actions/Actions";
 import { IBotMoveArgumentsTypes } from "../AI";
 import { isCardNotAction, RusCardTypes } from "../Card";
 import { ICoin } from "../Coin";
+import { HeroNames } from "../data/HeroData";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GameBoard } from "../GameBoard";
@@ -28,7 +30,7 @@ import {
 export const AddCoinToPouchProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
     boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === `Uline`
+        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
             && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
             if (data instanceof GameBoard && boardCells !== undefined) {
                 DrawCoin(data, boardCells, `coin`,
@@ -119,7 +121,7 @@ export const DiscardCardFromBoardProfit = (G: MyGameState, ctx: Ctx, data?: Game
         for (const suit in suitsConfig) {
             if (suitsConfig.hasOwnProperty(suit)) {
                 if (suit !== config.suit
-                    && !(G.drawProfit === `DagdaAction` && G.actionsNum === 1 && pickedCard !== null
+                    && !(G.drawProfit === ConfigNames.DagdaAction && G.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
                     const last: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
                     if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== RusCardTypes.HERO) {
@@ -301,6 +303,7 @@ export const StartEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?
     boardCells?: JSX.Element[]): void => {
     for (let j: number = 0; j < 2; j++) {
         if (j === 0) {
+            // todo Add Enums for text
             if (data instanceof GameBoard && boardCells !== undefined) {
                 DrawButton(data, boardCells, `start Enlistment Mercenaries`, `Start`,
                     G.publicPlayers[Number(ctx.currentPlayer)],

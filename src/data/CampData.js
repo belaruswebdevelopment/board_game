@@ -1,4 +1,4 @@
-import { DrawNames } from "../actions/Actions";
+import { BuffNames, ConfigNames, DrawNames } from "../actions/Actions";
 import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, CheckPickDiscardCardCampAction, DiscardTradingCoinAction, DrawProfitCampAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { RusCardTypes } from "../Card";
 import { Stages } from "../Game";
@@ -62,7 +62,7 @@ const Brisingamens = {
             action: DrawProfitCampAction.name,
             config: {
                 stageName: Stages.PickDiscardCard,
-                name: `BrisingamensAction`,
+                name: ConfigNames.BrisingamensAction,
                 number: 2,
                 drawName: DrawNames.Brisingamens,
             },
@@ -119,7 +119,7 @@ const Fafnir_Baleygr = {
             action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
-                    name: `goCamp`,
+                    name: BuffNames.GoCamp,
                     value: true,
                 },
             },
@@ -264,7 +264,7 @@ const Megingjord = {
             action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
-                    name: `noHero`,
+                    name: BuffNames.NoHero,
                     value: true,
                 },
             },
@@ -295,7 +295,7 @@ const Mjollnir = {
             action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
-                    name: `getMjollnirProfit`,
+                    name: BuffNames.GetMjollnirProfit,
                     value: true,
                 },
             },

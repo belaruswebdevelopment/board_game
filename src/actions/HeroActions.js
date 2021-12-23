@@ -10,7 +10,7 @@ import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../h
 import { CheckPickHero } from "../Hero";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards } from "../Player";
-import { DrawNames } from "./Actions";
+import { ConfigNames, DrawNames } from "./Actions";
 /**
  * <h3>Действия, связанные с добавлением бафов от героев игроку.</h3>
  * <p>Применения:</p>
@@ -141,7 +141,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suit, cardId) 
                 config: {
                     stageName: Stages.DiscardCardFromBoard,
                     drawName: DrawNames.Dagda,
-                    name: `DagdaAction`,
+                    name: ConfigNames.DagdaAction,
                     suit: SuitNames.HUNTER,
                 },
             },
@@ -301,7 +301,7 @@ export const PlaceCardsAction = (G, ctx, config, suit) => {
                     action: DrawProfitHeroAction.name,
                     variants,
                     config: {
-                        name: `placeCards`,
+                        name: ConfigNames.PlaceCards,
                         stageName: Stages.PlaceCards,
                         drawName: DrawNames.Olwin,
                     },

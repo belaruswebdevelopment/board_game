@@ -1,4 +1,4 @@
-import { DrawNames } from "../actions/Actions";
+import { ConfigNames, DrawNames } from "../actions/Actions";
 import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
 import { heroesConfig, HeroNames } from "../data/HeroData";
 import { SuitNames } from "../data/SuitData";
@@ -62,7 +62,7 @@ export const CheckAndMoveThrudOrPickHeroAction = (G, ctx, card) => {
 export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
     var _a;
     // todo Rework it all!
-    const ulinePlayerIndex = G.publicPlayers.findIndex((player) => player.buffs.everyTurn === `Uline`);
+    const ulinePlayerIndex = G.publicPlayers.findIndex((player) => player.buffs.everyTurn === HeroNames.Uline);
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
             if (ctx.phase === Phases.PickCards) {
@@ -168,7 +168,7 @@ export const StartThrudMoving = (G, ctx, card) => {
                 variants,
                 config: {
                     drawName: DrawNames.Thrud,
-                    name: `placeCards`,
+                    name: ConfigNames.PlaceCards,
                     stageName: Stages.PlaceCards,
                     suit: card.suit,
                 },
@@ -177,7 +177,7 @@ export const StartThrudMoving = (G, ctx, card) => {
                 action: PlaceHeroAction.name,
                 variants,
                 config: {
-                    name: `Thrud`,
+                    name: ConfigNames.Thrud,
                 },
             },
         ];

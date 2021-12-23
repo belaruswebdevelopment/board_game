@@ -1,4 +1,4 @@
-import { DrawNames } from "../actions/Actions";
+import { BuffNames, ConfigNames, DrawNames } from "../actions/Actions";
 import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, DrawProfitHeroAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, UpgradeCoinHeroAction } from "../actions/HeroActions";
 import { Stages } from "../Game";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
@@ -98,7 +98,7 @@ const Andumia = {
             config: {
                 stageName: Stages.PickDiscardCard,
                 drawName: DrawNames.Andumia,
-                name: `AndumiaAction`,
+                name: ConfigNames.AndumiaAction,
             },
         },
         {
@@ -181,7 +181,7 @@ const Bonfur = {
             config: {
                 stageName: Stages.DiscardCardFromBoard,
                 drawName: DrawNames.Bonfur,
-                name: `BonfurAction`,
+                name: ConfigNames.BonfurAction,
                 suit: SuitNames.BLACKSMITH,
             },
         },
@@ -227,7 +227,7 @@ const Dagda = {
             config: {
                 stageName: Stages.DiscardCardFromBoard,
                 drawName: DrawNames.Dagda,
-                name: `DagdaAction`,
+                name: ConfigNames.DagdaAction,
                 suit: SuitNames.HUNTER,
                 number: 2,
             },
@@ -390,7 +390,7 @@ const Grid = {
             config: {
                 stageName: Stages.UpgradeCoin,
                 drawName: DrawNames.Grid,
-                name: `upgradeCoin`,
+                name: ConfigNames.UpgradeCoin,
                 value: 7,
             },
         },
@@ -428,7 +428,7 @@ const Holda = {
             action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
-                    name: `goCampOneTime`,
+                    name: BuffNames.GoCampOneTime,
                     value: true,
                 },
             },
@@ -441,7 +441,7 @@ const Holda = {
             config: {
                 stageName: Stages.PickCampCardHolda,
                 drawName: DrawNames.Holda,
-                name: `HoldaAction`,
+                name: ConfigNames.HoldaAction,
             },
         },
     ],
@@ -532,7 +532,7 @@ const Jarika = {
             action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
-                    name: `upgradeCoin`,
+                    name: BuffNames.UpgradeCoin,
                     value: 2,
                 },
             },
@@ -672,7 +672,7 @@ const Olwin = {
             config: {
                 stageName: Stages.PlaceCards,
                 drawName: DrawNames.Olwin,
-                name: `placeCards`,
+                name: ConfigNames.PlaceCards,
                 number: 2,
             },
         },
@@ -809,7 +809,7 @@ const Thrud = {
             },
             config: {
                 stageName: Stages.PlaceCards,
-                name: `placeCards`,
+                name: ConfigNames.PlaceCards,
                 drawName: DrawNames.Thrud,
             },
         },
@@ -874,8 +874,8 @@ const Uline = {
             action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
-                    name: `everyTurn`,
-                    value: `Uline`,
+                    name: BuffNames.EveryTurn,
+                    value: HeroNames.Uline,
                 },
             },
         },
@@ -935,7 +935,7 @@ const Zolkur = {
             action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
-                    name: `upgradeNextCoin`,
+                    name: BuffNames.UpgradeNextCoin,
                     value: `min`,
                 },
             },

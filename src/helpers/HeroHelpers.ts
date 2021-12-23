@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { DrawNames } from "../actions/Actions";
+import { ConfigNames, DrawNames } from "../actions/Actions";
 import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
 import { ICoin } from "../Coin";
 import { heroesConfig, HeroNames, IVariants } from "../data/HeroData";
@@ -69,7 +69,8 @@ export const CheckAndMoveThrudOrPickHeroAction = (G: MyGameState, ctx: Ctx, card
 export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): string | boolean => {
     // todo Rework it all!
     const ulinePlayerIndex: number =
-        G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.buffs.everyTurn === `Uline`);
+        G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+            player.buffs.everyTurn === HeroNames.Uline);
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
             if (ctx.phase === Phases.PickCards) {
@@ -177,7 +178,7 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
                     variants,
                     config: {
                         drawName: DrawNames.Thrud,
-                        name: `placeCards`,
+                        name: ConfigNames.PlaceCards,
                         stageName: Stages.PlaceCards,
                         suit: card.suit,
                     },
@@ -186,7 +187,7 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
                     action: PlaceHeroAction.name,
                     variants,
                     config: {
-                        name: `Thrud`,
+                        name: ConfigNames.Thrud,
                     },
                 },
             ];

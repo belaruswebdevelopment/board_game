@@ -6,6 +6,7 @@ import { moveBy, moveValidators } from "./MoveValidator";
 import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./helpers/ProfitHelpers";
 import { suitsConfig } from "./data/SuitData";
 import { Phases, Stages } from "./Game";
+import { ConfigNames } from "./actions/Actions";
 ;
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -193,7 +194,7 @@ export const enumerate = (G, ctx) => {
         });
     }
     if (ctx.phase === Phases.EnlistmentMercenaries) {
-        if (G.drawProfit === `startOrPassEnlistmentMercenaries`) {
+        if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
             StartEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             if (Math.floor(Math.random() * botMoveArguments.length) === 0) {
                 moves.push({ move: `StartEnlistmentMercenariesMove`, args: [] });
@@ -202,14 +203,14 @@ export const enumerate = (G, ctx) => {
                 moves.push({ move: `PassEnlistmentMercenariesMove`, args: [] });
             }
         }
-        else if (G.drawProfit === `enlistmentMercenaries`) {
+        else if (G.drawProfit === ConfigNames.EnlistmentMercenaries) {
             GetEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: `GetEnlistmentMercenariesMove`,
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
-        else if (G.drawProfit === `placeEnlistmentMercenaries`) {
+        else if (G.drawProfit === ConfigNames.PlaceEnlistmentMercenaries) {
             PlaceEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: `PlaceEnlistmentMercenariesMove`,

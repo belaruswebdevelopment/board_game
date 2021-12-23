@@ -1,4 +1,4 @@
-import { DrawNames, DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
+import { ConfigNames, DrawNames, DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
 import { CreateCard } from "../Card";
 import { CreateCoin } from "../Coin";
 import { Stages } from "../Game";
@@ -19,6 +19,18 @@ export var SuitNames;
     SuitNames["WARRIOR"] = "warrior";
 })(SuitNames || (SuitNames = {}));
 ;
+/**
+ * <h3>Перечисление для русских названий фракций.</h3>
+ */
+export var RusSuitNames;
+(function (RusSuitNames) {
+    RusSuitNames["BLACKSMITH"] = "\u041A\u0443\u0437\u043D\u0435\u0446\u044B";
+    RusSuitNames["EXPLORER"] = "\u0420\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u0438";
+    RusSuitNames["HUNTER"] = "\u041E\u0445\u043E\u0442\u043D\u0438\u043A\u0438";
+    RusSuitNames["MINER"] = "\u0413\u043E\u0440\u043D\u044F\u043A\u0438";
+    RusSuitNames["WARRIOR"] = "\u0412\u043E\u0438\u043D\u044B";
+})(RusSuitNames || (RusSuitNames = {}));
+;
 ;
 ;
 ;
@@ -36,7 +48,7 @@ export var SuitNames;
  */
 const blacksmith = {
     suit: SuitNames.BLACKSMITH,
-    suitName: `Кузнецы`,
+    suitName: RusSuitNames.BLACKSMITH,
     suitColor: `bg-purple-600`,
     description: `Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).`,
     ranksValues: () => ({
@@ -102,7 +114,7 @@ const blacksmith = {
  */
 const explorer = {
     suit: SuitNames.EXPLORER,
-    suitName: `Разведчики`,
+    suitName: RusSuitNames.EXPLORER,
     suitColor: `bg-blue-500`,
     description: `Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.`,
     ranksValues: () => ({
@@ -150,7 +162,7 @@ const explorer = {
                     {
                         action: DrawProfitAction.name,
                         config: {
-                            name: `explorerDistinction`,
+                            name: ConfigNames.ExplorerDistinction,
                             stageName: Stages.PickDistinctionCard,
                             drawName: DrawNames.PickСardByExplorerDistinction,
                         },
@@ -173,7 +185,7 @@ const explorer = {
  */
 const hunter = {
     suit: SuitNames.HUNTER,
-    suitName: `Охотники`,
+    suitName: RusSuitNames.HUNTER,
     suitColor: `bg-green-600`,
     description: `Их показатель храбрости равен квадрату числа карт охотников в армии игрока.`,
     ranksValues: () => ({
@@ -239,7 +251,7 @@ const hunter = {
  */
 const miner = {
     suit: SuitNames.MINER,
-    suitName: `Горняки`,
+    suitName: RusSuitNames.MINER,
     suitColor: `bg-yellow-600`,
     description: `Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии игрока.`,
     ranksValues: () => ({
@@ -309,7 +321,7 @@ const miner = {
  */
 const warrior = {
     suit: SuitNames.WARRIOR,
-    suitName: `Воины`,
+    suitName: RusSuitNames.WARRIOR,
     suitColor: `bg-red-600`,
     description: `Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты. В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной монеты к показателю храбрости своих воинов.`,
     ranksValues: () => ({
@@ -357,7 +369,7 @@ const warrior = {
                     {
                         action: DrawProfitAction.name,
                         config: {
-                            name: `upgradeCoin`,
+                            name: ConfigNames.UpgradeCoin,
                             stageName: Stages.UpgradeCoin,
                             value: 5,
                             drawName: DrawNames.UpgradeCoinWarriorDistinction,

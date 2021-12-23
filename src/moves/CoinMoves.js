@@ -1,4 +1,5 @@
 import { INVALID_MOVE } from "boardgame.io/core";
+import { HeroNames } from "../data/HeroData";
 import { SuitNames } from "../data/SuitData";
 import { Phases, Stages } from "../Game";
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
@@ -58,7 +59,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
         }
         else {
             const isEveryPlayersHandCoinsEmpty = G.publicPlayers
-                .filter((player) => player.buffs.everyTurn !== `Uline`)
+                .filter((player) => player.buffs.everyTurn !== HeroNames.Uline)
                 .every((player) => player.handCoins
                 .every((coin) => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {

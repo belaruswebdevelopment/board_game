@@ -2,6 +2,7 @@ import { isArtefactCard } from "./Camp";
 import { isCardNotAction } from "./Card";
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
+import { HeroNames } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
 import { Phases } from "./Game";
 import { AddDataToLog, LogTypes } from "./Logging";
@@ -189,12 +190,13 @@ export const CheckPlayersBasicOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         if (ctx.phase !== Phases.PlaceCoinsUline) {
-            if (G.publicPlayers[i].buffs.everyTurn !== `Uline`) {
+            // todo Create enums for buffs values
+            if (G.publicPlayers[i].buffs.everyTurn !== HeroNames.Uline) {
                 G.publicPlayersOrder.push(i);
             }
         }
         else {
-            if (G.publicPlayers[i].buffs.everyTurn === `Uline`) {
+            if (G.publicPlayers[i].buffs.everyTurn === HeroNames.Uline) {
                 G.publicPlayersOrder.push(i);
             }
         }

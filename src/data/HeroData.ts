@@ -1,4 +1,4 @@
-import { DrawNames } from "../actions/Actions";
+import { BuffNames, ConfigNames, DrawNames } from "../actions/Actions";
 import {
     AddBuffToPlayerHeroAction,
     AddHeroToCardsAction,
@@ -167,7 +167,7 @@ const Andumia: IHeroData = {
             config: {
                 stageName: Stages.PickDiscardCard,
                 drawName: DrawNames.Andumia,
-                name: `AndumiaAction`,
+                name: ConfigNames.AndumiaAction,
             },
         },
         {
@@ -253,7 +253,7 @@ const Bonfur: IHeroData = {
             config: {
                 stageName: Stages.DiscardCardFromBoard,
                 drawName: DrawNames.Bonfur,
-                name: `BonfurAction`,
+                name: ConfigNames.BonfurAction,
                 suit: SuitNames.BLACKSMITH,
             },
         },
@@ -300,7 +300,7 @@ const Dagda: IHeroData = {
             config: {
                 stageName: Stages.DiscardCardFromBoard,
                 drawName: DrawNames.Dagda,
-                name: `DagdaAction`,
+                name: ConfigNames.DagdaAction,
                 suit: SuitNames.HUNTER,
                 number: 2,
             },
@@ -469,7 +469,7 @@ const Grid: IHeroData = {
             config: {
                 stageName: Stages.UpgradeCoin,
                 drawName: DrawNames.Grid,
-                name: `upgradeCoin`,
+                name: ConfigNames.UpgradeCoin,
                 value: 7,
             },
         },
@@ -508,7 +508,7 @@ const Holda: IHeroData = {
             action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
-                    name: `goCampOneTime`,
+                    name: BuffNames.GoCampOneTime,
                     value: true,
                 },
             },
@@ -521,7 +521,7 @@ const Holda: IHeroData = {
             config: {
                 stageName: Stages.PickCampCardHolda,
                 drawName: DrawNames.Holda,
-                name: `HoldaAction`,
+                name: ConfigNames.HoldaAction,
             },
         },
     ],
@@ -615,7 +615,7 @@ const Jarika: IHeroData = {
             action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
-                    name: `upgradeCoin`,
+                    name: BuffNames.UpgradeCoin,
                     value: 2,
                 },
             },
@@ -759,7 +759,7 @@ const Olwin: IHeroData = {
             config: {
                 stageName: Stages.PlaceCards,
                 drawName: DrawNames.Olwin,
-                name: `placeCards`,
+                name: ConfigNames.PlaceCards,
                 number: 2,
             },
         },
@@ -899,7 +899,7 @@ const Thrud: IHeroData = {
             },
             config: {
                 stageName: Stages.PlaceCards,
-                name: `placeCards`,
+                name: ConfigNames.PlaceCards,
                 drawName: DrawNames.Thrud,
             },
         },
@@ -965,8 +965,8 @@ const Uline: IHeroData = {
             action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
-                    name: `everyTurn`,
-                    value: `Uline`,
+                    name: BuffNames.EveryTurn,
+                    value: HeroNames.Uline,
                 },
             },
         },
@@ -1028,7 +1028,7 @@ const Zolkur: IHeroData = {
             action: AddBuffToPlayerHeroAction.name,
             config: {
                 buff: {
-                    name: `upgradeNextCoin`,
+                    name: BuffNames.UpgradeNextCoin,
                     value: `min`,
                 },
             },

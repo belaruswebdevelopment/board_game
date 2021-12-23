@@ -47,7 +47,7 @@ import {
 export type ArgsTypes = (string | number | boolean | null | object)[];
 
 /**
- * <h3>Перечисление для типов карт.</h3>
+ * <h3>Перечисление для описаний отрисовки экшенов.</h3>
  */
 export const enum DrawNames {
     AddCoinToPouchVidofnirVedrfolnir = `Add coin to pouch Vidofnir Vedrfolnir`,
@@ -90,6 +90,45 @@ export const enum DrawNames {
     Ylud = `Ylud`,
     Zolkur = `Zolkur`,
     Zoral = `Zoral`,
+};
+
+/**
+ * <h3>Перечисление для названия отрисовки экшенов в конфиге.</h3>
+ */
+export const enum ConfigNames {
+    AddCoinToPouchVidofnirVedrfolnir = `AddCoinToPouchVidofnirVedrfolnir`,
+    AndumiaAction = `AndumiaAction`,
+    BonfurAction = `BonfurAction`,
+    BrisingamensAction = `BrisingamensAction`,
+    BrisingamensEndGameAction = `BrisingamensEndGameAction`,
+    DagdaAction = `DagdaAction`,
+    DiscardCard = `discardCard`,
+    EnlistmentMercenaries = `enlistmentMercenaries`,
+    ExplorerDistinction = `explorerDistinction`,
+    GetMjollnirProfit = `getMjollnirProfit`,
+    HofudAction = `HofudAction`,
+    HoldaAction = `HoldaAction`,
+    PlaceCards = `placeCards`,
+    PlaceEnlistmentMercenaries = `placeEnlistmentMercenaries`,
+    StartOrPassEnlistmentMercenaries = `startOrPassEnlistmentMercenaries`,
+    Thrud = `Thrud`,
+    UpgradeCoin = `upgradeCoin`,
+    VidofnirVedrfolnirAction = `VidofnirVedrfolnirAction`,
+    Ylud = `Ylud`,
+};
+
+/**
+ * <h3>Перечисление для названия бафов в конфиге.</h3>
+ */
+export const enum BuffNames {
+    DiscardCardEndGame = `discardCardEndGame`,
+    EveryTurn = `everyTurn`,
+    GetMjollnirProfit = `getMjollnirProfit`,
+    GoCamp = `goCamp`,
+    GoCampOneTime = `goCampOneTime`,
+    NoHero = `noHero`,
+    UpgradeCoin = `upgradeCoin`,
+    UpgradeNextCoin = `upgradeNextCoin`,
 };
 
 /**
@@ -282,7 +321,7 @@ export const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config:
             {
                 action: DrawProfitCampAction.name,
                 config: {
-                    name: `placeEnlistmentMercenaries`,
+                    name: ConfigNames.PlaceEnlistmentMercenaries,
                     drawName: DrawNames.PlaceEnlistmentMercenaries,
                 },
             },
@@ -361,7 +400,7 @@ export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, confi
                         {
                             action: DrawProfitCampAction.name,
                             config: {
-                                name: `enlistmentMercenaries`,
+                                name: ConfigNames.EnlistmentMercenaries,
                                 drawName: DrawNames.EnlistmentMercenaries,
                             },
                         },

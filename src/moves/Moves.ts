@@ -1,6 +1,7 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import {
+    ConfigNames,
     DrawNames,
     GetEnlistmentMercenariesAction,
     PassEnlistmentMercenariesAction,
@@ -209,7 +210,7 @@ export const StartEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState
         {
             action: DrawProfitCampAction.name,
             config: {
-                name: `enlistmentMercenaries`,
+                name: ConfigNames.EnlistmentMercenaries,
                 drawName: DrawNames.EnlistmentMercenaries,
             },
         },
