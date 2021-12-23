@@ -6,6 +6,12 @@ import { suitsConfig } from "./data/SuitData";
 import { isCardNotAction } from "./Card";
 import { isArtefactCard } from "./Camp";
 import { Phases } from "./Game";
+;
+;
+;
+;
+;
+;
 /**
  * <h3>Добавляет взятую из кэмпа карту в массив карт кэмпа игрока.</h3>
  * <p>Применения:</p>

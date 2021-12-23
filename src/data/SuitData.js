@@ -18,6 +18,14 @@ export var SuitNames;
     SuitNames["MINER"] = "miner";
     SuitNames["WARRIOR"] = "warrior";
 })(SuitNames || (SuitNames = {}));
+;
+;
+;
+;
+;
+;
+;
+;
 /**
  * <h3>Фракция кузнецов.</h3>
  * <p>Применения:</p>

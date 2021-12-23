@@ -18,6 +18,7 @@ import { CheckPlayersBasicOrder } from "./Player";
 import { DrawProfitCampAction } from "./actions/CampActions";
 import { RusCardTypes } from "./Card";
 import { DrawNames } from "./actions/Actions";
+;
 /**
  * <h3>Перечисление для фаз игры.</h3>
  */
@@ -32,6 +33,7 @@ export var Phases;
     Phases["PlaceCoins"] = "placeCoins";
     Phases["PlaceCoinsUline"] = "placeCoinsUline";
 })(Phases || (Phases = {}));
+;
 /**
  * <h3>Перечисление для стейджей игры.</h3>
  */
@@ -50,8 +52,10 @@ export var Stages;
     Stages["UpgradeCoin"] = "upgradeCoin";
     Stages["UpgradeCoinVidofnirVedrfolnir"] = "upgradeCoinVidofnirVedrfolnir";
 })(Stages || (Stages = {}));
+;
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
+// todo Add dock block
 const order = {
     first: () => 0,
     next: (G, ctx) => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,

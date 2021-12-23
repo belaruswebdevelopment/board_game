@@ -8,14 +8,14 @@ import { IPublicPlayer } from "./Player";
 export interface IPriority {
     value: number,
     isExchangeable: boolean,
-}
+};
 
 /**
  * <h3>Интерфейс для конфига всех кристаллов.</h3>
  */
 interface IPrioritiesConfig {
     [index: number]: IPriority[],
-}
+};
 
 /**
  * <h3>Интерфейс для создания кристалла.</h3>
@@ -23,7 +23,7 @@ interface IPrioritiesConfig {
 interface ICreatePriority {
     value: number,
     isExchangeable?: boolean,
-}
+};
 
 /**
  * <h3>Изменяет приоритет игроков для выбора карт из текущей таверны.</h3>

@@ -23,7 +23,7 @@ export interface IHero {
     points: null | number,
     active: boolean,
     stack: IStack[],
-}
+};
 
 /**
  * <h3>Интерфейс для создания героя.</h3>
@@ -38,7 +38,7 @@ interface ICreateHero {
     points: null | number,
     active?: boolean,
     stack: IStack[],
-}
+};
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>

@@ -6,7 +6,7 @@ import { INumberValues } from "./SuitData";
 export interface IInitialTradingCoinConfig {
     value: number,
     isTriggerTrading: boolean,
-}
+};
 
 /**
  * <h3>Интерфейс для конфига монет рынка.</h3>
@@ -14,7 +14,7 @@ export interface IInitialTradingCoinConfig {
 export interface IMarketCoinConfig {
     value: number,
     count: () => INumberValues,
-}
+};
 
 /**
  * <h3>Проверка, является ли объект конфигом базовых монет или конфигом монет рынка.</h3>

@@ -6,7 +6,7 @@ import { Ctx } from "boardgame.io";
 
 export interface IDistinctions {
     [index: string]: DistinctionTypes,
-}
+};
 
 // todo Rework 2 functions in one?
 /**

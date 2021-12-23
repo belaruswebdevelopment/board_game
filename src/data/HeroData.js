@@ -4,6 +4,13 @@ import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, DrawProfitHeroAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, UpgradeCoinHeroAction } from "../actions/HeroActions";
 import { Stages } from "../Game";
 import { DrawNames } from "../actions/Actions";
+;
+;
+;
+;
+;
+;
+;
 /**
  * <h3>Перечисление для названий героев.</h3>
  */
@@ -37,6 +44,7 @@ export var HeroNames;
     HeroNames["Zolkur"] = "Zolkur";
     HeroNames["Zoral"] = "Zoral";
 })(HeroNames || (HeroNames = {}));
+;
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>

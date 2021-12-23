@@ -4,6 +4,7 @@ import { Styles } from "../data/StyleData";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 import { RusCardTypes } from "../Card";
+;
 /**
  * h3>Отрисовка сегмента игрового поля по указанным данным.</h3>
  * <p>Применения:</p>

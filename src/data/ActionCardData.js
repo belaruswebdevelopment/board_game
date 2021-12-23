@@ -1,6 +1,8 @@
 import { DrawNames } from "../actions/Actions";
 import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "../actions/CoinActions";
 import { Stages } from "../Game";
+;
+;
 /**
  * <h3>Карта улучшения монеты на +3.</h3>
  * <p>Применения:</p>

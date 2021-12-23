@@ -4,6 +4,10 @@ import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, CheckPickDiscardCa
 import { RusCardTypes } from "../Card";
 import { Stages } from "../Game";
 import { DrawNames } from "../actions/Actions";
+;
+;
+;
+;
 /**
  * <h3>Перечисление для названий артефактов.</h3>
  */
@@ -22,6 +26,7 @@ export var ArtefactNames;
     ArtefactNames["Vegvisir"] = "Vegvisir";
     ArtefactNames["Vidofnir_Vedrfolnir"] = "Vidofnir Vedrfolnir";
 })(ArtefactNames || (ArtefactNames = {}));
+;
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>

@@ -2,6 +2,14 @@ import { AddCardToCards } from "./Player";
 import { suitsConfig } from "./data/SuitData";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { tavernsConfig } from "./Tavern";
+;
+;
+;
+;
+;
+;
+;
+;
 /**
  * <h3>Перечисление для типов карт.</h3>
  */
@@ -13,6 +21,7 @@ export var RusCardTypes;
     RusCardTypes["HERO"] = "\u0433\u0435\u0440\u043E\u0439";
     RusCardTypes["MERCENARY"] = "\u043D\u0430\u0451\u043C\u043D\u0438\u043A";
 })(RusCardTypes || (RusCardTypes = {}));
+;
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
  * <p>Применения:</p>

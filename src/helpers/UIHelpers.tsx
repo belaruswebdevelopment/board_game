@@ -17,7 +17,7 @@ export interface IDrawBoardOptions {
     boardCols: number,
     lastBoardCol: number,
     boardRows: number,
-}
+};
 
 /**
  * h3>Отрисовка сегмента игрового поля по указанным данным.</h3>

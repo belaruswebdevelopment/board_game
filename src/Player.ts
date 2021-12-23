@@ -35,7 +35,7 @@ export interface IBuffs {
     // getMjollnirProfit?: boolean,
     // discardCardEndGame?: boolean,
     [name: string]: string | number | boolean,
-}
+};
 
 /**
  * <h3>Интерфейс для конфига у карт.</h3>
@@ -52,7 +52,7 @@ export interface IConfig {
     stageName?: string,
     isTrading?: boolean,
     name?: string,
-}
+};
 
 /**
  * <h3>Интерфейс для стэка у карт.</h3>
@@ -62,7 +62,7 @@ export interface IStack {
     variants?: IVariants,
     config?: IConfig,
     playerId?: number,
-}
+};
 
 /**
  * <h3>Интерфейс для приватных данных игрока.</h3>
@@ -70,7 +70,7 @@ export interface IStack {
 export interface IPlayer {
     handCoins: ICoin[],
     boardCoins: ICoin[],
-}
+};
 
 // TODO Rework cards in object where keys === suits, not number-indexes
 /**
@@ -89,7 +89,7 @@ export interface IPublicPlayer {
     buffs: IBuffs,
     selectedCoin: undefined | number,
     pickedCard: PickedCardType,
-}
+};
 
 /**
  * <h3>Интерфейс для создания публичных данных игрока.</h3>
@@ -106,7 +106,7 @@ interface ICreatePublicPlayer {
     buffs?: IBuffs,
     selectedCoin?: undefined,
     pickedCard?: null,
-}
+};
 
 /**
  * <h3>Добавляет взятую из кэмпа карту в массив карт кэмпа игрока.</h3>

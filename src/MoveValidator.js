@@ -1,6 +1,12 @@
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { HeroNames } from "./data/HeroData";
+;
+;
+;
+;
+;
+;
 /**
  * Validates arguments inside of move.
  * obj - object to validate.

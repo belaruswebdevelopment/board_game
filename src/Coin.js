@@ -3,6 +3,9 @@ import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/S
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { UpgradeCoinAction } from "./actions/Actions";
 import { Stages } from "./Game";
+;
+;
+;
 /**
  * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
  * <p>Применения:</p>

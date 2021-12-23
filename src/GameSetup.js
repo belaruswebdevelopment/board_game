@@ -10,6 +10,11 @@ import { BuildHeroes } from "./Hero";
 import { BuildCampCards } from "./Camp";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { heroesConfig } from "./data/HeroData";
+;
+;
+;
+;
+;
 /**
  * <h3>Сетап игры.</h3>
  * <p>Применения:</p>

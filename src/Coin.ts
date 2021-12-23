@@ -15,7 +15,7 @@ export interface ICoin {
     value: number,
     isInitial: boolean,
     isTriggerTrading: boolean,
-}
+};
 
 /**
  * <h3>Интерфейс для создания монеты.</h3>
@@ -24,7 +24,7 @@ interface ICreateCoin {
     value: number,
     isInitial?: boolean,
     isTriggerTrading?: boolean,
-}
+};
 
 /**
  * <h3>Интерфейс опций для создания монет.</h3>
@@ -34,7 +34,7 @@ export interface IBuildCoinsOptions {
     isTriggerTrading: boolean,
     players?: number,
     count?: ICoin[],
-}
+};
 
 /**
  * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>

@@ -20,7 +20,7 @@ export interface ICard {
     game: string,
     tier: number,
     path: string,
-}
+};
 
 /**
  * <h3>Интерфейс для создания карты дворфа.</h3>
@@ -34,7 +34,7 @@ export interface ICreateCard {
     game?: string,
     tier?: number,
     path?: string,
-}
+};
 
 /**
  * <h3>Интерфейс для карты улучшения монеты.</h3>
@@ -44,7 +44,7 @@ export interface IActionCard {
     value: number,
     stack: IStack[],
     name: string,
-}
+};
 
 /**
  * <h3>Интерфейс для создания карты улучшения монеты.</h3>
@@ -54,7 +54,7 @@ interface ICreateActionCard {
     value: number,
     stack: IStack[],
     name: string,
-}
+};
 
 /**
  * <h3>Интерфейс для создания "средней" карты фракции.</h3>
@@ -63,7 +63,7 @@ interface ICreateAverageSuitCard {
     suit: string,
     rank: number,
     points: number,
-}
+};
 
 /**
  * <h3>Интерфейс "средней" карты фракции.</h3>
@@ -71,7 +71,7 @@ interface ICreateAverageSuitCard {
 export interface IAverageSuitCardData {
     players: number,
     tier: number,
-}
+};
 
 /**
  * <h3>Интерфейс для конфига дек.</h3>
@@ -79,11 +79,14 @@ export interface IAverageSuitCardData {
 export interface IDeckConfig {
     suits: ISuitConfig,
     actions: IActionCardConfig[],
-}
+};
 
+/**
+ * <h3>Интерфейс для карт игрока.</h3>
+ */
 export interface IPlayerCards {
     [index: string]: PlayerCardsType[],
-}
+};
 
 /**
  * <h3>Перечисление для типов карт.</h3>
@@ -94,7 +97,7 @@ export const enum RusCardTypes {
     BASIC = `базовая`,
     HERO = `герой`,
     MERCENARY = `наёмник`,
-}
+};
 
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>

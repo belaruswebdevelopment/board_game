@@ -9,7 +9,7 @@ import { INumberValues } from "./SuitData";
  */
 interface IActionCardValues {
     [index: number]: INumberValues,
-}
+};
 
 /**
  * <h3>Интерфейс для конфига карт обновления монет.</h3>
@@ -18,7 +18,7 @@ export interface IActionCardConfig {
     value: number,
     stack: IStack[],
     amount: () => IActionCardValues,
-}
+};
 
 /**
  * <h3>Карта улучшения монеты на +3.</h3>

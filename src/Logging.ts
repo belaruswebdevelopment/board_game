@@ -8,7 +8,7 @@ export const enum LogTypes {
     GAME = `game`,
     PRIVATE = `private`,
     PUBLIC = `public`,
-}
+};
 
 /**
  * <h3>Интерфейс для логирования данных.</h3>
@@ -16,7 +16,7 @@ export const enum LogTypes {
 export interface ILogData {
     type: LogTypes,
     value: string,
-}
+};
 
 /**
  * <h3>Логирует данные.</h3>

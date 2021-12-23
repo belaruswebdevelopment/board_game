@@ -5,6 +5,8 @@ import { TotalRank } from "./helpers/ScoreHelpers";
 import { PickHeroAction } from "./actions/Actions";
 import { Stages } from "./Game";
 import { RusCardTypes } from "./Card";
+;
+;
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>

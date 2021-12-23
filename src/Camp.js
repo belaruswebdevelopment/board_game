@@ -2,6 +2,10 @@ import { DiscardCardFromTavern, RusCardTypes } from "./Card";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
 import { AddCampCardToCardsAction } from "./actions/CampActions";
+;
+;
+;
+;
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>

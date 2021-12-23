@@ -53,6 +53,7 @@ export var DrawNames;
     DrawNames["Zolkur"] = "Zolkur";
     DrawNames["Zoral"] = "Zoral";
 })(DrawNames || (DrawNames = {}));
+;
 /**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>

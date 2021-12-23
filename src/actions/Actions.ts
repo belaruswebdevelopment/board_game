@@ -90,7 +90,7 @@ export const enum DrawNames {
     Ylud = `Ylud`,
     Zolkur = `Zolkur`,
     Zoral = `Zoral`,
-}
+};
 
 /**
  * <h3>Диспетчер действий при их активации.</h3>

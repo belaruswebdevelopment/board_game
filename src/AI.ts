@@ -30,7 +30,7 @@ import { Phases, Stages } from "./Game";
 interface IMoves {
     move: string,
     args: number[][] | (string | number | boolean)[] | number,
-}
+};
 
 export type IBotMoveArgumentsTypes = (number | string | boolean)[][];
 

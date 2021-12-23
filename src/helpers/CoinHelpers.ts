@@ -13,7 +13,7 @@ import { INumberValues } from "../data/SuitData";
 export interface IResolveBoardCoins {
     playersOrder: number[],
     exchangeOrder: number[],
-}
+};
 
 /**
  * <h3>Активирует обмен монет.</h3>
