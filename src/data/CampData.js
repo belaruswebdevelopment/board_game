@@ -1,9 +1,9 @@
-import { TotalRank } from "../helpers/ScoreHelpers";
-import { SuitNames } from "./SuitData";
+import { DrawNames } from "../actions/Actions";
 import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, CheckPickDiscardCardCampAction, DiscardTradingCoinAction, DrawProfitCampAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { RusCardTypes } from "../Card";
 import { Stages } from "../Game";
-import { DrawNames } from "../actions/Actions";
+import { TotalRank } from "../helpers/ScoreHelpers";
+import { SuitNames } from "./SuitData";
 ;
 ;
 ;

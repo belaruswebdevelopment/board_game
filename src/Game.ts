@@ -1,4 +1,30 @@
+import type { Ctx, Game } from "boardgame.io";
+import { PlayerView } from "boardgame.io/core";
+import { DrawNames } from "./actions/Actions";
+import { DrawProfitCampAction } from "./actions/CampActions";
+import { enumerate, iterations, objectives, playoutDepth } from "./AI";
+import { RefillCamp } from "./Camp";
+import { RusCardTypes } from "./Card";
+import { ReturnCoinsToPlayerHands } from "./Coin";
+import { CheckDistinction } from "./Distinction";
 import { CampDeckCardTypes, DistinctionTypes, MyGameState, SetupGame } from "./GameSetup";
+import { IResolveBoardCoins, ResolveBoardCoins } from "./helpers/CoinHelpers";
+import { AddActionsToStack } from "./helpers/StackHelpers";
+import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
+import {
+    ClickCampCardHoldaMove, ClickCampCardMove, DiscardCard2PlayersMove,
+    DiscardCardFromPlayerBoardMove,
+    DiscardSuitCardFromPlayerBoardMove,
+    GetMjollnirProfitMove
+} from "./moves/CampMoves";
+import {
+    AddCoinToPouchMove,
+    ClickBoardCoinMove,
+    ClickCoinToUpgradeMove,
+    ClickHandCoinMove,
+    UpgradeCoinVidofnirVedrfolnirMove
+} from "./moves/CoinMoves";
+import { ClickHeroCardMove, DiscardCardMove, PlaceCardMove } from "./moves/HeroMoves";
 import {
     ClickCardMove,
     ClickCardToPickDistinctionMove,
@@ -9,38 +35,10 @@ import {
     PlaceEnlistmentMercenariesMove,
     StartEnlistmentMercenariesMove
 } from "./moves/Moves";
+import { CheckPlayersBasicOrder, IPublicPlayer, IStack } from "./Player";
 import { ChangePlayersPriorities } from "./Priority";
 import { ScoreWinner } from "./Score";
-import { enumerate, iterations, objectives, playoutDepth } from "./AI";
-import { ReturnCoinsToPlayerHands } from "./Coin";
 import { RefillTaverns } from "./Tavern";
-import { RefillCamp } from "./Camp";
-import { ClickHeroCardMove, DiscardCardMove, PlaceCardMove, } from "./moves/HeroMoves";
-import {
-    AddCoinToPouchMove,
-    ClickBoardCoinMove,
-    ClickCoinToUpgradeMove,
-    ClickHandCoinMove,
-    UpgradeCoinVidofnirVedrfolnirMove
-} from "./moves/CoinMoves";
-import {
-    ClickCampCardMove,
-    ClickCampCardHoldaMove,
-    DiscardCard2PlayersMove,
-    DiscardCardFromPlayerBoardMove,
-    DiscardSuitCardFromPlayerBoardMove,
-    GetMjollnirProfitMove
-} from "./moves/CampMoves";
-import { AddActionsToStack } from "./helpers/StackHelpers";
-import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
-import { IResolveBoardCoins, ResolveBoardCoins } from "./helpers/CoinHelpers";
-import { PlayerView } from "boardgame.io/core";
-import { CheckDistinction } from "./Distinction";
-import type { Ctx, Game } from "boardgame.io";
-import { CheckPlayersBasicOrder, IPublicPlayer, IStack } from "./Player";
-import { DrawProfitCampAction } from "./actions/CampActions";
-import { RusCardTypes } from "./Card";
-import { DrawNames } from "./actions/Actions";
 
 /**
  * <h3>Интерфейс для порядка ходов.</h3>

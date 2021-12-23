@@ -1,6 +1,6 @@
-import { AddCardToCards } from "./Player";
 import { suitsConfig } from "./data/SuitData";
 import { AddDataToLog, LogTypes } from "./Logging";
+import { AddCardToCards } from "./Player";
 import { tavernsConfig } from "./Tavern";
 ;
 ;

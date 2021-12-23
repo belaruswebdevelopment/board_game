@@ -1,6 +1,6 @@
+import { HeroNames } from "./data/HeroData";
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
-import { HeroNames } from "./data/HeroData";
 ;
 ;
 ;

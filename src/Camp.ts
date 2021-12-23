@@ -1,10 +1,10 @@
+import { AddCampCardToCardsAction } from "./actions/CampActions";
 import { DiscardCardFromTavern, RusCardTypes } from "./Card";
-import { AddDataToLog, LogTypes } from "./Logging";
+import { IArtefactConfig, IMercenaries } from "./data/CampData";
 import { suitsConfig } from "./data/SuitData";
 import { CampCardTypes, CampDeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
+import { AddDataToLog, LogTypes } from "./Logging";
 import { IStack } from "./Player";
-import { IArtefactConfig, IMercenaries } from "./data/CampData";
-import { AddCampCardToCardsAction } from "./actions/CampActions";
 
 /**
  * <h3>Интерфейс для карты кэмпа артефакта.</h3>

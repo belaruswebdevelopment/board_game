@@ -1,18 +1,18 @@
-import { BuildPlayer, BuildPublicPlayer, IPlayer, IPublicPlayer } from "./Player";
-import { BuildCards, GetAverageSuitCard, IActionCard, IAverageSuitCardData, ICard, IDeckConfig } from "./Card";
-import { suitsConfig } from "./data/SuitData";
-import { marketCoinsConfig } from "./data/CoinData";
-import { BuildCoins, ICoin } from "./Coin";
-import { GetAllPicks, k_combinations, Permute } from "./BotConfig";
-import { GeneratePrioritiesForPlayerNumbers, IPriority } from "./Priority";
-import { actionCardsConfigArray } from "./data/ActionCardData";
-import { BuildHeroes, IHero } from "./Hero";
-import { BuildCampCards, IArtefactCampCard, IMercenaryCampCard } from "./Camp";
-import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { Ctx } from "boardgame.io";
-import { ILogData } from "./Logging";
+import { GetAllPicks, k_combinations, Permute } from "./BotConfig";
+import { BuildCampCards, IArtefactCampCard, IMercenaryCampCard } from "./Camp";
+import { BuildCards, GetAverageSuitCard, IActionCard, IAverageSuitCardData, ICard, IDeckConfig } from "./Card";
+import { BuildCoins, ICoin } from "./Coin";
+import { actionCardsConfigArray } from "./data/ActionCardData";
+import { artefactsConfig, mercenariesConfig } from "./data/CampData";
+import { marketCoinsConfig } from "./data/CoinData";
 import { heroesConfig } from "./data/HeroData";
+import { suitsConfig } from "./data/SuitData";
 import { IDistinctions } from "./Distinction";
+import { BuildHeroes, IHero } from "./Hero";
+import { ILogData } from "./Logging";
+import { BuildPlayer, BuildPublicPlayer, IPlayer, IPublicPlayer } from "./Player";
+import { GeneratePrioritiesForPlayerNumbers, IPriority } from "./Priority";
 
 /**
  * <h3>Интерфейс для дополнений к игре.</h3>

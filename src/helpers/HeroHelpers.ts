@@ -1,14 +1,14 @@
-import { heroesConfig, HeroNames, IVariants } from "../data/HeroData";
-import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
-import { MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
-import { ICoin } from "../Coin";
-import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
-import { SuitNames } from "../data/SuitData";
-import { CheckPickHero } from "../Hero";
-import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
-import { Phases, Stages } from "../Game";
 import { DrawNames } from "../actions/Actions";
+import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
+import { ICoin } from "../Coin";
+import { heroesConfig, HeroNames, IVariants } from "../data/HeroData";
+import { SuitNames } from "../data/SuitData";
+import { Phases, Stages } from "../Game";
+import { MyGameState } from "../GameSetup";
+import { CheckPickHero } from "../Hero";
+import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>

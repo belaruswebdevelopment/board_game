@@ -1,7 +1,22 @@
+import { isCardNotAction } from "../Card";
 import { CountMarketCoins, ICoin } from "../Coin";
-import { INumberValues, suitsConfig } from "../data/SuitData";
-import { tavernsConfig } from "../Tavern";
 import { Styles } from "../data/StyleData";
+import { INumberValues, suitsConfig } from "../data/SuitData";
+import { GameBoard } from "../GameBoard";
+import { CampCardTypes, DeckCardTypes, TavernCardTypes } from "../GameSetup";
+import {
+    AddCoinToPouchProfit,
+    DiscardCardFromBoardProfit,
+    DiscardCardProfit,
+    GetEnlistmentMercenariesProfit,
+    GetMjollnirProfitProfit,
+    PickCampCardHoldaProfit,
+    PickDiscardCardProfit,
+    PlaceCardsProfit,
+    PlaceEnlistmentMercenariesProfit,
+    StartEnlistmentMercenariesProfit,
+    UpgradeCoinVidofnirVedrfolnirProfit
+} from "../helpers/ProfitHelpers";
 import {
     DrawBoard,
     DrawCard,
@@ -16,24 +31,8 @@ import {
     OnClickHandCoin,
     OnClickHeroCard
 } from "../helpers/UIHelpers";
-import { GameBoard } from "../GameBoard";
-import { CampCardTypes, DeckCardTypes, TavernCardTypes } from "../GameSetup";
-import { isCardNotAction } from "../Card";
-import {
-    AddCoinToPouchProfit,
-    DiscardCardFromBoardProfit,
-    DiscardCardProfit,
-    GetEnlistmentMercenariesProfit,
-    GetMjollnirProfitProfit,
-    PickCampCardHoldaProfit,
-    PickDiscardCardProfit,
-    PlaceCardsProfit,
-    PlaceEnlistmentMercenariesProfit,
-    StartEnlistmentMercenariesProfit,
-    UpgradeCoinVidofnirVedrfolnirProfit
-} from "../helpers/ProfitHelpers";
 import { IConfig, PickedCardType } from "../Player";
-import { DrawNames } from "../actions/Actions";
+import { tavernsConfig } from "../Tavern";
 
 /**
  * <h3>Отрисовка карт кэмпа.</h3>

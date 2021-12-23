@@ -1,13 +1,13 @@
-import { AfterBasicPickCardActions } from "./MovesHelpers";
-import { AddCardToPlayer } from "../Player";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
-import { UpgradeCoin } from "../Coin";
 import { DrawNames } from "../actions/Actions";
 import { CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCampAction } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
-import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
+import { UpgradeCoin } from "../Coin";
 import { Stages } from "../Game";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { AddCardToPlayer } from "../Player";
+import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
+import { AfterBasicPickCardActions } from "./MovesHelpers";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
  * <p>Применения:</p>

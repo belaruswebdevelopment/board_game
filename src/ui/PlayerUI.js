@@ -1,12 +1,12 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { suitsConfig } from "../data/SuitData";
-import { tavernsConfig } from "../Tavern";
-import { CurrentScoring } from "../Score";
-import { Styles } from "../data/StyleData";
-import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
-import { TotalRank } from "../helpers/ScoreHelpers";
-import { Phases, Stages } from "../Game";
 import { HeroNames } from "../data/HeroData";
+import { Styles } from "../data/StyleData";
+import { suitsConfig } from "../data/SuitData";
+import { Phases, Stages } from "../Game";
+import { TotalRank } from "../helpers/ScoreHelpers";
+import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
+import { CurrentScoring } from "../Score";
+import { tavernsConfig } from "../Tavern";
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
  * <p>Применения:</p>

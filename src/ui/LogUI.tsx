@@ -1,5 +1,5 @@
-import { LogTypes } from "../Logging";
 import { GameBoard } from "../GameBoard";
+import { LogTypes } from "../Logging";
 
 /**
  * <h3>Отрисовка лог панели.</h3>

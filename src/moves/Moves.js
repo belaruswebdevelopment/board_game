@@ -1,14 +1,14 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { AddCardToPlayer } from "../Player";
-import { SuitNames, suitsConfig } from "../data/SuitData";
-import { IsValidMove } from "../MoveValidator";
-import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
-import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
-import { isCardNotAction } from "../Card";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { DrawNames, GetEnlistmentMercenariesAction, PassEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { DrawProfitCampAction } from "../actions/CampActions";
+import { isCardNotAction } from "../Card";
+import { SuitNames, suitsConfig } from "../data/SuitData";
+import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
+import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
+import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { IsValidMove } from "../MoveValidator";
+import { AddCardToPlayer } from "../Player";
 // todo Add logging
 /**
  * <h3>Выбор карты из таверны.</h3>

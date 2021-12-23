@@ -1,17 +1,16 @@
+import { DiscardCardFromTavernAction, DrawNames, DrawProfitAction } from "../actions/Actions";
+import { DiscardAnyCardFromPlayerBoardAction, DrawProfitCampAction, GetMjollnirProfitAction } from "../actions/CampActions";
+import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
 import { DiscardCardIfCampCardPicked, RefillEmptyCampCards } from "../Camp";
-import { CheckIfCurrentTavernEmpty, RefillTaverns } from "../Tavern";
-import { RemoveThrudFromPlayerBoardAfterGameEnd } from "../Hero";
 import { DiscardCardFromTavern, RusCardTypes } from "../Card";
-import { AddActionsToStack, StartActionFromStackOrEndActions } from "./StackHelpers";
-import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
-import { ActivateTrading } from "./CoinHelpers";
 import { HeroNames } from "../data/HeroData";
 import { SuitNames, suitsConfig } from "../data/SuitData";
-import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
-import { DrawNames, DrawProfitAction } from "../actions/Actions";
-import { DiscardAnyCardFromPlayerBoardAction, DrawProfitCampAction, GetMjollnirProfitAction } from "../actions/CampActions";
-import { DiscardCardFromTavernAction } from "../actions/Actions";
 import { Phases, Stages } from "../Game";
+import { RemoveThrudFromPlayerBoardAfterGameEnd } from "../Hero";
+import { CheckIfCurrentTavernEmpty, RefillTaverns } from "../Tavern";
+import { ActivateTrading } from "./CoinHelpers";
+import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
+import { AddActionsToStack, StartActionFromStackOrEndActions } from "./StackHelpers";
 // todo Add logging
 /**
  * <h3>Выполняет основные действия после выбора базовых карт.</h3>

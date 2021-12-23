@@ -1,9 +1,25 @@
+import { Ctx } from "boardgame.io";
+import { isArtefactCard } from "../Camp";
+import { ICard, RusCardTypes } from "../Card";
+import { ICoin } from "../Coin";
+import { SuitNames, suitsConfig } from "../data/SuitData";
+import { Phases, Stages } from "../Game";
+import { CampDeckCardTypes, MyGameState } from "../GameSetup";
+import {
+    AddBuffToPlayer,
+    DrawCurrentProfit,
+    PickCurrentHero,
+    PickDiscardCard,
+    UpgradeCurrentCoin
+} from "../helpers/ActionHelpers";
+import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
 import {
     AddActionsToStack,
     AddActionsToStackAfterCurrent,
     EndActionForChosenPlayer,
     EndActionFromStackAndAddNew
 } from "../helpers/StackHelpers";
+import { AddDataToLog, LogTypes } from "../Logging";
 import {
     AddCampCardToPlayer,
     AddCampCardToPlayerCards,
@@ -12,23 +28,7 @@ import {
     IStack,
     PlayerCardsType
 } from "../Player";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { SuitNames, suitsConfig } from "../data/SuitData";
-import { CampDeckCardTypes, MyGameState } from "../GameSetup";
-import { Ctx } from "boardgame.io";
-import { isArtefactCard } from "../Camp";
-import { ICard, RusCardTypes } from "../Card";
-import { ICoin } from "../Coin";
-import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
-import {
-    AddBuffToPlayer,
-    DrawCurrentProfit,
-    PickCurrentHero,
-    PickDiscardCard,
-    UpgradeCurrentCoin
-} from "../helpers/ActionHelpers";
 import { ArgsTypes, DrawNames } from "./Actions";
-import { Phases, Stages } from "../Game";
 
 /**
  * <h3>Действия, связанные с добавлением бафов от артефактов игроку.</h3>

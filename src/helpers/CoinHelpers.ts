@@ -1,9 +1,9 @@
-import { ICoin, Trading } from "../Coin";
-import { MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
-import { IPriority } from "../Priority";
-import { IPublicPlayer } from "../Player";
+import { ICoin, Trading } from "../Coin";
 import { INumberValues } from "../data/SuitData";
+import { MyGameState } from "../GameSetup";
+import { IPublicPlayer } from "../Player";
+import { IPriority } from "../Priority";
 
 // todo Add logging
 

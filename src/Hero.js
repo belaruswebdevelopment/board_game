@@ -1,10 +1,10 @@
-import { HeroNames } from "./data/HeroData";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
-import { TotalRank } from "./helpers/ScoreHelpers";
 import { PickHeroAction } from "./actions/Actions";
-import { Stages } from "./Game";
 import { RusCardTypes } from "./Card";
+import { HeroNames } from "./data/HeroData";
+import { Stages } from "./Game";
+import { TotalRank } from "./helpers/ScoreHelpers";
+import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
+import { AddDataToLog, LogTypes } from "./Logging";
 ;
 ;
 /**

@@ -1,11 +1,11 @@
+import { isArtefactCard } from "./Camp";
+import { isCardNotAction } from "./Card";
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
-import { CurrentScoring } from "./Score";
-import { AddDataToLog, LogTypes } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
-import { isCardNotAction } from "./Card";
-import { isArtefactCard } from "./Camp";
 import { Phases } from "./Game";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { CurrentScoring } from "./Score";
 ;
 ;
 ;

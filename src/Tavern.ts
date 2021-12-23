@@ -1,7 +1,7 @@
-import { AddDataToLog, LogTypes } from "./Logging";
-import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
 import { Ctx } from "boardgame.io";
 import { DiscardCardFromTavern } from "./Card";
+import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
+import { AddDataToLog, LogTypes } from "./Logging";
 
 /**
  * <h3>Интерфейс для конфига конкретной таверны.</h3>

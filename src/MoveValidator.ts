@@ -1,10 +1,10 @@
-import { TotalRank } from "./helpers/ScoreHelpers";
-import { MyGameState } from "./GameSetup";
 import { Ctx } from "boardgame.io";
-import { IConfig } from "./Player";
 import { ICoin } from "./Coin";
-import { AddDataToLog, LogTypes } from "./Logging";
 import { HeroNames } from "./data/HeroData";
+import { MyGameState } from "./GameSetup";
+import { TotalRank } from "./helpers/ScoreHelpers";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { IConfig } from "./Player";
 
 /**
  * <h3>Интерфейс для параметров валидатора мувов.</h3>

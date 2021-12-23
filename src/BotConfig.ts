@@ -1,6 +1,6 @@
+import { Ctx } from "boardgame.io";
 import { CompareCards, EvaluateCard, IActionCard, ICard, isCardNotAction } from "./Card";
 import { DeckCardTypes, MyGameState } from "./GameSetup";
-import { Ctx } from "boardgame.io";
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>

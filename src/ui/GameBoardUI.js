@@ -1,11 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { CountMarketCoins } from "../Coin";
-import { suitsConfig } from "../data/SuitData";
-import { tavernsConfig } from "../Tavern";
-import { Styles } from "../data/StyleData";
-import { DrawBoard, DrawCard, DrawCoin, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard, OnClickCampCard, OnClickCard, OnClickCardToPickDistinction, OnClickCoinToUpgrade, OnClickHandCoin, OnClickHeroCard } from "../helpers/UIHelpers";
 import { isCardNotAction } from "../Card";
+import { CountMarketCoins } from "../Coin";
+import { Styles } from "../data/StyleData";
+import { suitsConfig } from "../data/SuitData";
 import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
+import { DrawBoard, DrawCard, DrawCoin, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard, OnClickCampCard, OnClickCard, OnClickCardToPickDistinction, OnClickCoinToUpgrade, OnClickHandCoin, OnClickHeroCard } from "../helpers/UIHelpers";
+import { tavernsConfig } from "../Tavern";
 /**
  * <h3>Отрисовка карт кэмпа.</h3>
  * <p>Применения:</p>

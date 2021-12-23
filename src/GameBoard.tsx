@@ -1,4 +1,7 @@
+import type { BoardProps } from 'boardgame.io/react';
 import React from "react";
+import { MyGameState } from "./GameSetup";
+import { DrawDebugData } from "./ui/DebugUI";
 import {
     DrawCamp,
     DrawCurrentPlayerTurn,
@@ -10,11 +13,8 @@ import {
     DrawTierCards,
     DrawWinner
 } from "./ui/GameBoardUI";
-import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
-import { DrawDebugData } from "./ui/DebugUI";
 import { DrawLogData } from "./ui/LogUI";
-import type { BoardProps } from 'boardgame.io/react';
-import { MyGameState } from "./GameSetup";
+import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 
 /**
  * <h3>Отрисовка игрового стола.</h3>

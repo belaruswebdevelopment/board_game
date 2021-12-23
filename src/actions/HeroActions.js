@@ -1,16 +1,16 @@
-import { SuitNames, suitsConfig } from "../data/SuitData";
-import { CreateCard, RusCardTypes } from "../Card";
-import { AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards } from "../Player";
-import { CheckPickHero } from "../Hero";
-import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { ReturnCoinToPlayerHands } from "../Coin";
-import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, GetHeroIndexByName } from "../helpers/HeroHelpers";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { TotalRank } from "../helpers/ScoreHelpers";
-import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
-import { DrawNames } from "./Actions";
+import { CreateCard, RusCardTypes } from "../Card";
+import { ReturnCoinToPlayerHands } from "../Coin";
+import { SuitNames, suitsConfig } from "../data/SuitData";
 import { Stages } from "../Game";
+import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, GetHeroIndexByName } from "../helpers/HeroHelpers";
+import { TotalRank } from "../helpers/ScoreHelpers";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { CheckPickHero } from "../Hero";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards } from "../Player";
+import { DrawNames } from "./Actions";
 /**
  * <h3>Действия, связанные с добавлением бафов от героев игроку.</h3>
  * <p>Применения:</p>

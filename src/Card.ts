@@ -1,10 +1,10 @@
-import { AddCardToCards, IPublicPlayer, IStack, PlayerCardsType } from "./Player";
-import { ISuit, ISuitConfig, suitsConfig } from "./data/SuitData";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { tavernsConfig } from "./Tavern";
-import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
 import { Ctx } from "boardgame.io";
 import { IActionCardConfig } from "./data/ActionCardData";
+import { ISuit, ISuitConfig, suitsConfig } from "./data/SuitData";
+import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { AddCardToCards, IPublicPlayer, IStack, PlayerCardsType } from "./Player";
+import { tavernsConfig } from "./Tavern";
 
 // todo add LogTypes.ERROR logging to Sasha's functions
 

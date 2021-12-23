@@ -1,12 +1,12 @@
-import { AddDataToLog, LogTypes } from "./Logging";
-import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
-import { MyGameState } from "./GameSetup";
 import { Ctx } from "boardgame.io";
-import { IConfig, IPublicPlayer, IStack } from "./Player";
+import { UpgradeCoinAction } from "./actions/Actions";
 import { IInitialTradingCoinConfig, IMarketCoinConfig, isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { INumberValues } from "./data/SuitData";
-import { UpgradeCoinAction } from "./actions/Actions";
 import { Stages } from "./Game";
+import { MyGameState } from "./GameSetup";
+import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { IConfig, IPublicPlayer, IStack } from "./Player";
 
 /**
  * <h3>Интерфейс для монеты.</h3>

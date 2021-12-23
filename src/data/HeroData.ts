@@ -1,7 +1,4 @@
-import { TotalRank } from "../helpers/ScoreHelpers";
-import { IPublicPlayer, IStack } from "../Player";
-import { SuitNames } from "./SuitData";
-import { GetMaxCoinValue } from "../helpers/CoinHelpers";
+import { DrawNames } from "../actions/Actions";
 import {
     AddBuffToPlayerHeroAction,
     AddHeroToCardsAction,
@@ -18,7 +15,10 @@ import {
     UpgradeCoinHeroAction
 } from "../actions/HeroActions";
 import { Stages } from "../Game";
-import { DrawNames } from "../actions/Actions";
+import { GetMaxCoinValue } from "../helpers/CoinHelpers";
+import { TotalRank } from "../helpers/ScoreHelpers";
+import { IPublicPlayer, IStack } from "../Player";
+import { SuitNames } from "./SuitData";
 
 /**
  * <h3>Интерфейс для баффа карты героя.</h3>

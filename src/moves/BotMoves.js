@@ -1,5 +1,5 @@
-import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 import { Phases } from "../Game";
+import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 /**
  * <h3>Выкладка монет ботами.</h3>
  * <p>Применения:</p>

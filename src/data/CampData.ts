@@ -1,7 +1,4 @@
-import { TotalRank } from "../helpers/ScoreHelpers";
-import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
-import { ICoin } from "../Coin";
-import { SuitNames } from "./SuitData";
+import { DrawNames } from "../actions/Actions";
 import {
     AddBuffToPlayerCampAction,
     AddCampCardToCardsAction,
@@ -14,8 +11,11 @@ import {
     StartVidofnirVedrfolnirAction
 } from "../actions/CampActions";
 import { RusCardTypes } from "../Card";
+import { ICoin } from "../Coin";
 import { Stages } from "../Game";
-import { DrawNames } from "../actions/Actions";
+import { TotalRank } from "../helpers/ScoreHelpers";
+import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
+import { SuitNames } from "./SuitData";
 
 /**
  * <h3>Интерфейс для данных карт кэмпа артефакт.</h3>

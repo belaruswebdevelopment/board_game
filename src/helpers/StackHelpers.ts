@@ -1,8 +1,8 @@
-import { ActionDispatcher, ArgsTypes } from "../actions/Actions";
-import { EndAction } from "./ActionHelpers";
-import { MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
+import { ActionDispatcher, ArgsTypes } from "../actions/Actions";
+import { MyGameState } from "../GameSetup";
 import { IConfig, IStack } from "../Player";
+import { EndAction } from "./ActionHelpers";
 
 /**
  * <h3>Добавляет действия в стэк действий конкретного игрока.</li>

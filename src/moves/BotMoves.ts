@@ -1,9 +1,9 @@
-import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 import { Ctx, Move } from "boardgame.io";
-import { MyGameState } from "../GameSetup";
 import { ICoin } from "../Coin";
-import { IPublicPlayer } from "../Player";
 import { Phases } from "../Game";
+import { MyGameState } from "../GameSetup";
+import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
+import { IPublicPlayer } from "../Player";
 
 /**
  * <h3>Выкладка монет ботами.</h3>

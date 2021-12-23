@@ -1,5 +1,13 @@
-import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes } from "../GameSetup";
 import { Ctx } from "boardgame.io";
+import { IBotMoveArgumentsTypes } from "../AI";
+import { isCardNotAction, RusCardTypes } from "../Card";
+import { ICoin } from "../Coin";
+import { Styles } from "../data/StyleData";
+import { suitsConfig } from "../data/SuitData";
+import { GameBoard } from "../GameBoard";
+import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes } from "../GameSetup";
+import { IConfig, PickedCardType } from "../Player";
+import { TotalRank } from "./ScoreHelpers";
 import {
     DrawButton,
     DrawCard,
@@ -15,14 +23,6 @@ import {
     OnClickPassEnlistmentMercenaries,
     OnClickStartEnlistmentMercenaries
 } from "./UIHelpers";
-import { GameBoard } from "../GameBoard";
-import { IBotMoveArgumentsTypes } from "../AI";
-import { suitsConfig } from "../data/SuitData";
-import { IConfig, PickedCardType } from "../Player";
-import { Styles } from "../data/StyleData";
-import { isCardNotAction, RusCardTypes } from "../Card";
-import { ICoin } from "../Coin";
-import { TotalRank } from "./ScoreHelpers";
 
 // todo Add functions docbloocks
 export const AddCoinToPouchProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,

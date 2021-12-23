@@ -1,14 +1,14 @@
-import { IsValidMove } from "../MoveValidator";
+import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
+import { CampCardTypes, CampDeckCardTypes, MyGameState } from "../GameSetup";
 import {
     AddActionsToStack,
     EndActionFromStackAndAddNew,
     StartActionForChosenPlayer,
     StartActionFromStackOrEndActions
 } from "../helpers/StackHelpers";
-import { Ctx, Move } from "boardgame.io";
-import { CampCardTypes, CampDeckCardTypes, MyGameState } from "../GameSetup";
 import { AddDataToLog, LogTypes } from "../Logging";
+import { IsValidMove } from "../MoveValidator";
 
 // todo Add logging
 /**

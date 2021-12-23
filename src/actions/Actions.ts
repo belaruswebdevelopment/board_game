@@ -1,25 +1,11 @@
-import { AddCardToPlayer, IConfig, IStack, PickedCardType } from "../Player";
-import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { CreateCard, DiscardCardFromTavern, ICard, ICreateCard, RusCardTypes } from "../Card";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { CampDeckCardTypes, MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
+import { CreateCard, DiscardCardFromTavern, ICard, ICreateCard, RusCardTypes } from "../Card";
+import { CampDeckCardTypes, MyGameState } from "../GameSetup";
+import { DrawCurrentProfit, PickCurrentHero, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
-import {
-    AddBuffToPlayerHeroAction,
-    AddHeroToCardsAction,
-    CheckDiscardCardsFromPlayerBoardAction,
-    CheckPickCampCardAction,
-    CheckPickDiscardCardHeroAction,
-    DiscardCardsFromPlayerBoardAction,
-    DrawProfitHeroAction,
-    GetClosedCoinIntoPlayerHandAction,
-    PickDiscardCardHeroAction,
-    PickHeroWithConditionsAction,
-    PlaceCardsAction,
-    PlaceHeroAction,
-    UpgradeCoinHeroAction
-} from "./HeroActions";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { AddCardToPlayer, IConfig, IStack, PickedCardType } from "../Player";
 import {
     AddBuffToPlayerCampAction,
     AddCampCardToCardsAction,
@@ -37,8 +23,22 @@ import {
     UpgradeCoinCampAction,
     UpgradeCoinVidofnirVedrfolnirAction
 } from "./CampActions";
-import { DrawCurrentProfit, PickCurrentHero, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
 import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "./CoinActions";
+import {
+    AddBuffToPlayerHeroAction,
+    AddHeroToCardsAction,
+    CheckDiscardCardsFromPlayerBoardAction,
+    CheckPickCampCardAction,
+    CheckPickDiscardCardHeroAction,
+    DiscardCardsFromPlayerBoardAction,
+    DrawProfitHeroAction,
+    GetClosedCoinIntoPlayerHandAction,
+    PickDiscardCardHeroAction,
+    PickHeroWithConditionsAction,
+    PlaceCardsAction,
+    PlaceHeroAction,
+    UpgradeCoinHeroAction
+} from "./HeroActions";
 
 // todo Check my types
 /**

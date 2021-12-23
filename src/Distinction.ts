@@ -1,8 +1,8 @@
-import { AddDataToLog, LogTypes } from "./Logging";
-import { SuitNames, suitsConfig } from "./data/SuitData";
-import { TotalRank } from "./helpers/ScoreHelpers";
-import { DeckCardTypes, DistinctionTypes, MyGameState } from "./GameSetup";
 import { Ctx } from "boardgame.io";
+import { SuitNames, suitsConfig } from "./data/SuitData";
+import { DeckCardTypes, DistinctionTypes, MyGameState } from "./GameSetup";
+import { TotalRank } from "./helpers/ScoreHelpers";
+import { AddDataToLog, LogTypes } from "./Logging";
 
 export interface IDistinctions {
     [index: string]: DistinctionTypes,

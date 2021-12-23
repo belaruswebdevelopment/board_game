@@ -1,5 +1,22 @@
-import { SuitNames, suitsConfig } from "../data/SuitData";
+import { Ctx } from "boardgame.io";
+import { INVALID_MOVE } from "boardgame.io/core";
 import { CreateCard, ICard, ICreateCard, RusCardTypes } from "../Card";
+import { ICoin, ReturnCoinToPlayerHands } from "../Coin";
+import { IConditions, IVariants } from "../data/HeroData";
+import { SuitNames, suitsConfig } from "../data/SuitData";
+import { Stages } from "../Game";
+import { MyGameState } from "../GameSetup";
+import {
+    AddBuffToPlayer,
+    DrawCurrentProfit,
+    PickDiscardCard,
+    UpgradeCurrentCoin
+} from "../helpers/ActionHelpers";
+import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, GetHeroIndexByName } from "../helpers/HeroHelpers";
+import { TotalRank } from "../helpers/ScoreHelpers";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { CheckPickHero, IHero } from "../Hero";
+import { AddDataToLog, LogTypes } from "../Logging";
 import {
     AddCardToPlayer,
     AddHeroCardToPlayerCards,
@@ -8,24 +25,7 @@ import {
     IStack,
     PlayerCardsType
 } from "../Player";
-import { CheckPickHero, IHero } from "../Hero";
-import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { ICoin, ReturnCoinToPlayerHands } from "../Coin";
-import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, GetHeroIndexByName } from "../helpers/HeroHelpers";
-import { INVALID_MOVE } from "boardgame.io/core";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { TotalRank } from "../helpers/ScoreHelpers";
-import { MyGameState } from "../GameSetup";
-import { Ctx } from "boardgame.io";
-import { IConditions, IVariants } from "../data/HeroData";
-import {
-    AddBuffToPlayer,
-    DrawCurrentProfit,
-    PickDiscardCard,
-    UpgradeCurrentCoin
-} from "../helpers/ActionHelpers";
 import { ArgsTypes, DrawNames } from "./Actions";
-import { Stages } from "../Game";
 
 /**
  * <h3>Действия, связанные с добавлением бафов от героев игроку.</h3>

@@ -1,14 +1,13 @@
-import { HeroNames, IHeroConfig } from "./data/HeroData";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
-import { TotalRank } from "./helpers/ScoreHelpers";
-import { MyGameState } from "./GameSetup";
 import { Ctx } from "boardgame.io";
-import { IStack, PlayerCardsType } from "./Player";
 import { PickHeroAction } from "./actions/Actions";
-import { suitsConfig } from "./data/SuitData";
-import { Stages } from "./Game";
 import { RusCardTypes } from "./Card";
+import { HeroNames, IHeroConfig } from "./data/HeroData";
+import { Stages } from "./Game";
+import { MyGameState } from "./GameSetup";
+import { TotalRank } from "./helpers/ScoreHelpers";
+import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { IStack, PlayerCardsType } from "./Player";
 
 /**
  * <h3>Интерфейс для героя.</h3>

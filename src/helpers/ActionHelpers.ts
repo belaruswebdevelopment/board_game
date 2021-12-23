@@ -1,10 +1,4 @@
-import { AfterBasicPickCardActions } from "./MovesHelpers";
-import { DeckCardTypes, MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
-import { AddCardToPlayer, IConfig, IStack } from "../Player";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
-import { UpgradeCoin } from "../Coin";
 import { ArgsTypes, DrawNames } from "../actions/Actions";
 import {
     CheckPickDiscardCardCampAction,
@@ -12,8 +6,14 @@ import {
     PickDiscardCardCampAction
 } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
-import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
+import { UpgradeCoin } from "../Coin";
 import { Stages } from "../Game";
+import { DeckCardTypes, MyGameState } from "../GameSetup";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { AddCardToPlayer, IConfig, IStack } from "../Player";
+import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
+import { AfterBasicPickCardActions } from "./MovesHelpers";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>

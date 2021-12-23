@@ -1,13 +1,13 @@
-import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { AddCampCardToPlayer, AddCampCardToPlayerCards } from "../Player";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { SuitNames, suitsConfig } from "../data/SuitData";
 import { isArtefactCard } from "../Camp";
 import { RusCardTypes } from "../Card";
-import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
-import { AddBuffToPlayer, DrawCurrentProfit, PickCurrentHero, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
-import { DrawNames } from "./Actions";
+import { SuitNames, suitsConfig } from "../data/SuitData";
 import { Phases, Stages } from "../Game";
+import { AddBuffToPlayer, DrawCurrentProfit, PickCurrentHero, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
+import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { AddCampCardToPlayer, AddCampCardToPlayerCards } from "../Player";
+import { DrawNames } from "./Actions";
 /**
  * <h3>Действия, связанные с добавлением бафов от артефактов игроку.</h3>
  * <p>Применения:</p>

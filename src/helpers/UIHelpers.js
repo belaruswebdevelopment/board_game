@@ -1,9 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { suitsConfig } from "../data/SuitData";
+import { RusCardTypes } from "../Card";
 import { Styles } from "../data/StyleData";
+import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
-import { RusCardTypes } from "../Card";
 ;
 /**
  * h3>Отрисовка сегмента игрового поля по указанным данным.</h3>

@@ -1,14 +1,14 @@
-import { suitsConfig } from "../data/SuitData";
-import { IBackground, Styles } from "../data/StyleData";
 import { ArgsTypes } from "../actions/Actions";
-import { GameBoard } from "../GameBoard";
-import { ICoin } from "../Coin";
-import { IPublicPlayer } from "../Player";
-import { IHero } from "../Hero";
-import { CampDeckCardTypes, DeckCardTypes } from "../GameSetup";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 import { RusCardTypes } from "../Card";
+import { ICoin } from "../Coin";
+import { IBackground, Styles } from "../data/StyleData";
+import { suitsConfig } from "../data/SuitData";
+import { GameBoard } from "../GameBoard";
+import { CampDeckCardTypes, DeckCardTypes } from "../GameSetup";
+import { IHero } from "../Hero";
+import { AddDataToLog, LogTypes } from "../Logging";
+import { IPublicPlayer } from "../Player";
+import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 
 /**
  * <h3>Интерфейс для параметров отрисовки игрового поля.</h3>

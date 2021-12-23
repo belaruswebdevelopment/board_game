@@ -1,23 +1,23 @@
-import { SetupGame } from "./GameSetup";
-import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, GetEnlistmentMercenariesMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
-import { ChangePlayersPriorities } from "./Priority";
-import { ScoreWinner } from "./Score";
+import { PlayerView } from "boardgame.io/core";
+import { DrawNames } from "./actions/Actions";
+import { DrawProfitCampAction } from "./actions/CampActions";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
-import { ReturnCoinsToPlayerHands } from "./Coin";
-import { RefillTaverns } from "./Tavern";
 import { RefillCamp } from "./Camp";
-import { ClickHeroCardMove, DiscardCardMove, PlaceCardMove, } from "./moves/HeroMoves";
-import { AddCoinToPouchMove, ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CoinMoves";
-import { ClickCampCardMove, ClickCampCardHoldaMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, DiscardSuitCardFromPlayerBoardMove, GetMjollnirProfitMove } from "./moves/CampMoves";
+import { RusCardTypes } from "./Card";
+import { ReturnCoinsToPlayerHands } from "./Coin";
+import { CheckDistinction } from "./Distinction";
+import { SetupGame } from "./GameSetup";
+import { ResolveBoardCoins } from "./helpers/CoinHelpers";
 import { AddActionsToStack } from "./helpers/StackHelpers";
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
-import { ResolveBoardCoins } from "./helpers/CoinHelpers";
-import { PlayerView } from "boardgame.io/core";
-import { CheckDistinction } from "./Distinction";
+import { ClickCampCardHoldaMove, ClickCampCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, DiscardSuitCardFromPlayerBoardMove, GetMjollnirProfitMove } from "./moves/CampMoves";
+import { AddCoinToPouchMove, ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CoinMoves";
+import { ClickHeroCardMove, DiscardCardMove, PlaceCardMove } from "./moves/HeroMoves";
+import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, GetEnlistmentMercenariesMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
 import { CheckPlayersBasicOrder } from "./Player";
-import { DrawProfitCampAction } from "./actions/CampActions";
-import { RusCardTypes } from "./Card";
-import { DrawNames } from "./actions/Actions";
+import { ChangePlayersPriorities } from "./Priority";
+import { ScoreWinner } from "./Score";
+import { RefillTaverns } from "./Tavern";
 ;
 /**
  * <h3>Перечисление для фаз игры.</h3>

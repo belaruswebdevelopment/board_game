@@ -1,10 +1,10 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { DrawButton, DrawCard, DrawCoin, OnClickCampCardHolda, OnClickCardFromDiscard, OnClickCardToDiscard, OnClickCardToDiscard2Players, OnClickCoinToAddToPouch, OnClickCoinToUpgradeVidofnirVedrfolnir, OnClickDiscardCardFromPlayerBoard, OnClickGetEnlistmentMercenaries, OnClickPassEnlistmentMercenaries, OnClickStartEnlistmentMercenaries } from "./UIHelpers";
-import { GameBoard } from "../GameBoard";
-import { suitsConfig } from "../data/SuitData";
-import { Styles } from "../data/StyleData";
 import { isCardNotAction, RusCardTypes } from "../Card";
+import { Styles } from "../data/StyleData";
+import { suitsConfig } from "../data/SuitData";
+import { GameBoard } from "../GameBoard";
 import { TotalRank } from "./ScoreHelpers";
+import { DrawButton, DrawCard, DrawCoin, OnClickCampCardHolda, OnClickCardFromDiscard, OnClickCardToDiscard, OnClickCardToDiscard2Players, OnClickCoinToAddToPouch, OnClickCoinToUpgradeVidofnirVedrfolnir, OnClickDiscardCardFromPlayerBoard, OnClickGetEnlistmentMercenaries, OnClickPassEnlistmentMercenaries, OnClickStartEnlistmentMercenaries } from "./UIHelpers";
 // todo Add functions docbloocks
 export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {

@@ -1,10 +1,10 @@
-import { heroesConfig, HeroNames } from "../data/HeroData";
-import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
-import { SuitNames } from "../data/SuitData";
-import { CheckPickHero } from "../Hero";
-import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
-import { Phases, Stages } from "../Game";
 import { DrawNames } from "../actions/Actions";
+import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
+import { heroesConfig, HeroNames } from "../data/HeroData";
+import { SuitNames } from "../data/SuitData";
+import { Phases, Stages } from "../Game";
+import { CheckPickHero } from "../Hero";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>
  * <p>Применения:</p>

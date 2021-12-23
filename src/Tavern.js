@@ -1,5 +1,5 @@
-import { AddDataToLog, LogTypes } from "./Logging";
 import { DiscardCardFromTavern } from "./Card";
+import { AddDataToLog, LogTypes } from "./Logging";
 ;
 ;
 /**

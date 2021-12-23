@@ -1,6 +1,6 @@
-import { AddDataToLog, LogTypes } from "./Logging";
 import { SuitNames, suitsConfig } from "./data/SuitData";
 import { TotalRank } from "./helpers/ScoreHelpers";
+import { AddDataToLog, LogTypes } from "./Logging";
 ;
 // todo Rework 2 functions in one?
 /**

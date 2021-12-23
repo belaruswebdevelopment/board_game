@@ -1,16 +1,16 @@
+import { Ctx } from "boardgame.io";
+import { IArtefactCampCard, isArtefactCard } from "./Camp";
+import { ICard, IPlayerCards, isCardNotAction } from "./Card";
 import { BuildCoins, ICoin } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
-import { CurrentScoring } from "./Score";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { suitsConfig } from "./data/SuitData";
-import { CampDeckCardTypes, DeckCardTypes, MyGameState } from "./GameSetup";
-import { Ctx } from "boardgame.io";
-import { IPriority } from "./Priority";
-import { ICard, IPlayerCards, isCardNotAction } from "./Card";
-import { IHero } from "./Hero";
-import { IArtefactCampCard, isArtefactCard } from "./Camp";
 import { IBuff, IConditions, IVariants } from "./data/HeroData";
+import { suitsConfig } from "./data/SuitData";
 import { Phases } from "./Game";
+import { CampDeckCardTypes, DeckCardTypes, MyGameState } from "./GameSetup";
+import { IHero } from "./Hero";
+import { AddDataToLog, LogTypes } from "./Logging";
+import { IPriority } from "./Priority";
+import { CurrentScoring } from "./Score";
 
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>

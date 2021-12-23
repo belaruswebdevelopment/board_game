@@ -1,12 +1,12 @@
-import { CreateCoin } from "../Coin";
+import { DrawNames, DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
 import { CreateCard } from "../Card";
-import { CreatePriority } from "../Priority";
+import { CreateCoin } from "../Coin";
+import { Stages } from "../Game";
+import { GetMaxCoinValue } from "../helpers/CoinHelpers";
+import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
 import { AddDataToLog, LogTypes } from "../Logging";
-import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
-import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { DrawNames, DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
-import { Stages } from "../Game";
+import { CreatePriority } from "../Priority";
 /**
  * <h3>Перечисление для названий фракций.</h3>
  */

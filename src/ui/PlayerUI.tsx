@@ -1,14 +1,14 @@
-import { suitsConfig } from "../data/SuitData";
-import { tavernsConfig } from "../Tavern";
-import { CurrentScoring } from "../Score";
-import { Styles } from "../data/StyleData";
-import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
-import { TotalRank } from "../helpers/ScoreHelpers";
-import { GameBoard } from "../GameBoard";
 import { ICoin } from "../Coin";
-import { PlayerCardsType } from "../Player";
-import { Phases, Stages } from "../Game";
 import { HeroNames } from "../data/HeroData";
+import { Styles } from "../data/StyleData";
+import { suitsConfig } from "../data/SuitData";
+import { Phases, Stages } from "../Game";
+import { GameBoard } from "../GameBoard";
+import { TotalRank } from "../helpers/ScoreHelpers";
+import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
+import { PlayerCardsType } from "../Player";
+import { CurrentScoring } from "../Score";
+import { tavernsConfig } from "../Tavern";
 
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>

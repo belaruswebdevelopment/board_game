@@ -1,11 +1,11 @@
-import { SuitNames, suitsConfig } from "./data/SuitData";
-import { heroesConfig, IHeroData } from "./data/HeroData";
-import { GetSuitIndexByName } from "./helpers/SuitHelpers";
-import { AddDataToLog, LogTypes } from "./Logging";
+import { Ctx } from "boardgame.io";
 import { artefactsConfig, IArtefact } from "./data/CampData";
+import { heroesConfig, IHeroData } from "./data/HeroData";
+import { SuitNames, suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { MyGameState } from "./GameSetup";
-import { Ctx } from "boardgame.io";
+import { GetSuitIndexByName } from "./helpers/SuitHelpers";
+import { AddDataToLog, LogTypes } from "./Logging";
 import { IPublicPlayer } from "./Player";
 
 /**

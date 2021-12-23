@@ -1,5 +1,5 @@
-import { AddDataToLog, LogTypes } from "./Logging";
 import { MyGameState } from "./GameSetup";
+import { AddDataToLog, LogTypes } from "./Logging";
 import { IPublicPlayer } from "./Player";
 
 /**

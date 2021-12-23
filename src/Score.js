@@ -1,9 +1,9 @@
-import { SuitNames, suitsConfig } from "./data/SuitData";
+import { artefactsConfig } from "./data/CampData";
 import { heroesConfig } from "./data/HeroData";
+import { SuitNames, suitsConfig } from "./data/SuitData";
+import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
-import { artefactsConfig } from "./data/CampData";
-import { CheckCurrentSuitDistinctions } from "./Distinction";
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
  * <p>Применения:</p>

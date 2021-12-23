@@ -1,7 +1,7 @@
-import { IsValidMove } from "../MoveValidator";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddActionsToStack, EndActionFromStackAndAddNew, StartActionForChosenPlayer, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
 import { AddDataToLog, LogTypes } from "../Logging";
+import { IsValidMove } from "../MoveValidator";
 // todo Add logging
 /**
  * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
