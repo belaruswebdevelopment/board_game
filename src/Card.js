@@ -3,6 +3,17 @@ import { suitsConfig } from "./data/SuitData";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { tavernsConfig } from "./Tavern";
 /**
+ * <h3>Перечисление для типов карт.</h3>
+ */
+export var RusCardTypes;
+(function (RusCardTypes) {
+    RusCardTypes["ACTION"] = "\u0443\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B";
+    RusCardTypes["ARTEFACT"] = "\u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442";
+    RusCardTypes["BASIC"] = "\u0431\u0430\u0437\u043E\u0432\u0430\u044F";
+    RusCardTypes["HERO"] = "\u0433\u0435\u0440\u043E\u0439";
+    RusCardTypes["MERCENARY"] = "\u043D\u0430\u0451\u043C\u043D\u0438\u043A";
+})(RusCardTypes || (RusCardTypes = {}));
+/**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -129,7 +140,7 @@ export const CompareCards = (card1, card2) => {
  * @param name Название.
  * @returns Карта обмена монеты.
  */
-const CreateActionCard = ({ type = `улучшение монеты`, value, stack, name, } = {}) => ({
+const CreateActionCard = ({ type = RusCardTypes.ACTION, value, stack, name, } = {}) => ({
     type,
     value,
     stack,
@@ -152,7 +163,7 @@ const CreateActionCard = ({ type = `улучшение монеты`, value, sta
  * @param path URL путь.
  * @returns Карта дворфа.
  */
-export const CreateCard = ({ type = `базовая`, suit, rank, points, name = ``, game = ``, tier = 0, path = ``, } = {}) => ({
+export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name = ``, game = ``, tier = 0, path = ``, } = {}) => ({
     type,
     suit,
     rank,

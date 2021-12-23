@@ -1,4 +1,5 @@
 import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "../actions/CoinActions";
+import { Stages } from "../Game";
 /**
  * <h3>Карта улучшения монеты на +3.</h3>
  * <p>Применения:</p>
@@ -13,7 +14,7 @@ const upgradeCoinUpTo3 = {
             action: DrawProfitCoinAction.name,
             config: {
                 name: `upgradeCoin`,
-                stageName: `upgradeCoin`,
+                stageName: Stages.UpgradeCoin,
                 value: 3,
                 drawName: `Upgrade coin`,
             },
@@ -58,7 +59,7 @@ const upgradeCoinUpTo5 = {
             action: DrawProfitCoinAction.name,
             config: {
                 name: `upgradeCoin`,
-                stageName: `upgradeCoin`,
+                stageName: Stages.UpgradeCoin,
                 value: 5,
                 drawName: `Upgrade coin`,
             },

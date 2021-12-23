@@ -6,6 +6,7 @@ import { AddDataToLog, LogTypes } from "../Logging";
 import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
+import { Stages } from "../Game";
 /**
  * <h3>Перечисление для названий фракций.</h3>
  */
@@ -142,7 +143,7 @@ const explorer = {
                         action: DrawProfitAction.name,
                         config: {
                             name: `explorerDistinction`,
-                            stageName: `pickDistinctionCard`,
+                            stageName: Stages.PickDistinctionCard,
                             drawName: `Pick card by Explorer distinction`,
                         },
                     },
@@ -349,7 +350,7 @@ const warrior = {
                         action: DrawProfitAction.name,
                         config: {
                             name: `upgradeCoin`,
-                            stageName: `upgradeCoin`,
+                            stageName: Stages.UpgradeCoin,
                             value: 5,
                             drawName: `Upgrade coin Warrior distinction`,
                         },

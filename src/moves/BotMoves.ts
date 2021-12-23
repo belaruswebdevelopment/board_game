@@ -3,6 +3,7 @@ import { Ctx, Move } from "boardgame.io";
 import { MyGameState } from "../GameSetup";
 import { ICoin } from "../Coin";
 import { IPublicPlayer } from "../Player";
+import { Phases } from "../Game";
 
 /**
  * <h3>Выкладка монет ботами.</h3>
@@ -32,10 +33,10 @@ export const BotsPlaceAllCoinsMove: Move<MyGameState> = (G: MyGameState, ctx: Ct
         .every((player: IPublicPlayer): boolean => player.handCoins
             .every((coin: ICoin | null): boolean => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {
-        if (CheckAndStartUlineActionsOrContinue(G, ctx) === `placeCoinsUline`) {
-            ctx.events!.setPhase!("placeCoinsUline");
+        if (CheckAndStartUlineActionsOrContinue(G, ctx) === Phases.PlaceCoinsUline) {
+            ctx.events!.setPhase!(Phases.PlaceCoinsUline);
         } else {
-            ctx.events!.setPhase!(`pickCards`);
+            ctx.events!.setPhase!(Phases.PickCards);
         }
     } else {
         if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins

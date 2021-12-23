@@ -3,7 +3,7 @@ import { DrawButton, DrawCard, DrawCoin, OnClickCampCardHolda, OnClickCardFromDi
 import { GameBoard } from "../GameBoard";
 import { suitsConfig } from "../data/SuitData";
 import { Styles } from "../data/StyleData";
-import { isCardNotAction } from "../Card";
+import { isCardNotAction, RusCardTypes } from "../Card";
 import { TotalRank } from "./ScoreHelpers";
 // todo Add functions docbloocks
 export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
@@ -36,7 +36,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, playerRows) =>
                     if (Array.isArray(data)) {
                         isDrawRow = true;
                     }
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i].type !== `герой`) {
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i].type !== RusCardTypes.HERO) {
                         if (data instanceof GameBoard && playerRows !== undefined) {
                             isDrawRow = true;
                             DrawCard(data, playerCells, data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
@@ -84,7 +84,7 @@ export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
                     && !(G.drawProfit === `DagdaAction` && G.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
                     const last = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== `герой`) {
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== RusCardTypes.HERO) {
                         if (data instanceof GameBoard && boardCells !== undefined) {
                             DrawCard(data, boardCells, G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last], last, G.publicPlayers[Number(ctx.currentPlayer)], suit, OnClickCardToDiscard.name, suit, last);
                         }
@@ -119,7 +119,7 @@ export const DiscardCardProfit = (G, ctx, data, boardCells) => {
 // };
 export const GetEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     const mercenaries = G.publicPlayers[Number(ctx.currentPlayer)].campCards
-        .filter((card) => card.type === `наёмник`);
+        .filter((card) => card.type === RusCardTypes.MERCENARY);
     for (let j = 0; j < mercenaries.length; j++) {
         if (data instanceof GameBoard && boardCells !== undefined) {
             DrawCard(data, boardCells, mercenaries[j], j, G.publicPlayers[Number(ctx.currentPlayer)], null, OnClickGetEnlistmentMercenaries.name, j);

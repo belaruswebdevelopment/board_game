@@ -1,6 +1,6 @@
 import { AddCardToPlayer } from "../Player";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { CreateCard, DiscardCardFromTavern } from "../Card";
+import { CreateCard, DiscardCardFromTavern, RusCardTypes } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, DrawProfitHeroAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, UpgradeCoinHeroAction } from "./HeroActions";
@@ -186,7 +186,7 @@ export const DrawProfitAction = (G, ctx, config) => {
 export const GetEnlistmentMercenariesAction = (G, ctx, config, cardId) => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard =
         G.publicPlayers[Number(ctx.currentPlayer)].campCards
-            .filter((card) => card.type === `наёмник`)[cardId];
+            .filter((card) => card.type === RusCardTypes.MERCENARY)[cardId];
     const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null) {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы 'Enlistment Mercenaries' выбрал наёмника '${pickedCard.name}'.`);
@@ -251,7 +251,7 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, config, suit) => {
         if (`stack` in pickedCard && `tier` in pickedCard && `path` in pickedCard) {
             if (pickedCard.stack[0].variants !== undefined) {
                 const mercenaryCard = CreateCard({
-                    type: `наёмник`,
+                    type: RusCardTypes.MERCENARY,
                     suit,
                     rank: 1,
                     points: pickedCard.stack[0].variants[suit].points,
@@ -265,7 +265,7 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, config, suit) => {
                     .findIndex((card) => card.name === pickedCard.name);
                 G.publicPlayers[Number(ctx.currentPlayer)].campCards.splice(cardIndex, 1);
                 if (G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                    .filter((card) => card.type === `наёмник`).length) {
+                    .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
                     const stack = [
                         {
                             action: DrawProfitCampAction.name,

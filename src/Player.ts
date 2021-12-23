@@ -10,6 +10,7 @@ import { ICard, IPlayerCards, isCardNotAction } from "./Card";
 import { IHero } from "./Hero";
 import { IArtefactCampCard, isArtefactCard } from "./Camp";
 import { IBuff, IConditions, IVariants } from "./data/HeroData";
+import { Phases } from "./Game";
 
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>
@@ -290,7 +291,7 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority):
 export const CheckPlayersBasicOrder = (G: MyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i: number = 0; i < ctx.numPlayers; i++) {
-        if (ctx.phase !== `placeCoinsUline`) {
+        if (ctx.phase !== Phases.PlaceCoinsUline) {
             if (G.publicPlayers[i].buffs.everyTurn !== `Uline`) {
                 G.publicPlayersOrder.push(i);
             }

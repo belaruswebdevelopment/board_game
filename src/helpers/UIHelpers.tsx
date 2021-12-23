@@ -8,6 +8,7 @@ import { IHero } from "../Hero";
 import { CampDeckCardTypes, DeckCardTypes } from "../GameSetup";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
+import { RusCardTypes } from "../Card";
 
 /**
  * <h3>Интерфейс для параметров отрисовки игрового поля.</h3>
@@ -136,7 +137,7 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
     if (suit !== null && suit !== undefined) {
         tdClasses = suitsConfig[suit].suitColor;
     }
-    if (card.type === `герой` && `game` in card) {
+    if (card.type === RusCardTypes.HERO && `game` in card) {
         styles = Styles.Heroes(card.game, card.name);
         if (player === null && `active` in card && !card.active) {
             spanClasses = `bg-hero-inactive`;
@@ -146,7 +147,7 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
         if (suit === null) {
             tdClasses = `bg-gray-600`;
         }
-    } else if (card.type === `наёмник` || card.type === `артефакт`) {
+    } else if (card.type === RusCardTypes.MERCENARY || card.type === RusCardTypes.ARTEFACT) {
         if (`tier` in card && `path` in card) {
             styles = Styles.CampCards(card.tier, card.path);
         }
@@ -353,7 +354,7 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suit: string
         for (let p: number = 0; p < data.props.G.publicPlayers.length; p++) {
             if (p !== Number(data.props.ctx.currentPlayer)) {
                 if (data.props.G.publicPlayers[p].cards[suit][i] !== undefined) {
-                    if (data.props.G.publicPlayers[p].cards[suit][i].type !== `герой`) {
+                    if (data.props.G.publicPlayers[p].cards[suit][i].type !== RusCardTypes.HERO) {
                         isExit = false;
                         isDrawRow = true;
                         DrawCard(data, playersCells, data.props.G.publicPlayers[p].cards[suit][i],

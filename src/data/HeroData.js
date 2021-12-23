@@ -2,6 +2,7 @@ import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, DrawProfitHeroAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, UpgradeCoinHeroAction } from "../actions/HeroActions";
+import { Stages } from "../Game";
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -53,7 +54,7 @@ const Andumia = {
         {
             action: DrawProfitHeroAction.name,
             config: {
-                stageName: `pickDiscardCard`,
+                stageName: Stages.PickDiscardCard,
                 drawName: `Andumia`,
                 name: `AndumiaAction`,
             },
@@ -136,7 +137,7 @@ const Bonfur = {
         {
             action: DrawProfitHeroAction.name,
             config: {
-                stageName: `discardCardFromBoard`,
+                stageName: Stages.DiscardCardFromBoard,
                 drawName: `Bonfur`,
                 name: `BonfurAction`,
                 suit: SuitNames.BLACKSMITH,
@@ -182,7 +183,7 @@ const Dagda = {
         {
             action: DrawProfitHeroAction.name,
             config: {
-                stageName: `discardCardFromBoard`,
+                stageName: Stages.DiscardCardFromBoard,
                 drawName: `Dagda`,
                 name: `DagdaAction`,
                 suit: SuitNames.HUNTER,
@@ -345,7 +346,7 @@ const Grid = {
         {
             action: DrawProfitHeroAction.name,
             config: {
-                stageName: `upgradeCoin`,
+                stageName: Stages.UpgradeCoin,
                 drawName: `Grid`,
                 name: `upgradeCoin`,
                 value: 7,
@@ -396,7 +397,7 @@ const Holda = {
         {
             action: DrawProfitHeroAction.name,
             config: {
-                stageName: `pickCampCardHolda`,
+                stageName: Stages.PickCampCardHolda,
                 drawName: `Holda`,
                 name: `HoldaAction`,
             },
@@ -627,7 +628,7 @@ const Olwin = {
                 },
             },
             config: {
-                stageName: `placeCards`,
+                stageName: Stages.PlaceCards,
                 drawName: `Olwin`,
                 name: `placeCards`,
                 number: 2,
@@ -765,7 +766,7 @@ const Thrud = {
                 },
             },
             config: {
-                stageName: `placeCards`,
+                stageName: Stages.PlaceCards,
                 name: `placeCards`,
                 drawName: `Thrud`,
             },

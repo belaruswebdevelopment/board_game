@@ -1,4 +1,5 @@
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
+import { Phases } from "../Game";
 /**
  * <h3>Выкладка монет ботами.</h3>
  * <p>Применения:</p>
@@ -28,11 +29,11 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
         .every((player) => player.handCoins
         .every((coin) => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {
-        if (CheckAndStartUlineActionsOrContinue(G, ctx) === `placeCoinsUline`) {
-            ctx.events.setPhase("placeCoinsUline");
+        if (CheckAndStartUlineActionsOrContinue(G, ctx) === Phases.PlaceCoinsUline) {
+            ctx.events.setPhase(Phases.PlaceCoinsUline);
         }
         else {
-            ctx.events.setPhase(`pickCards`);
+            ctx.events.setPhase(Phases.PickCards);
         }
     }
     else {

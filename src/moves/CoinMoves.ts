@@ -8,6 +8,7 @@ import { MyGameState } from "../GameSetup";
 import { IConfig, IPublicPlayer } from "../Player";
 import { ICoin } from "../Coin";
 import { SuitNames } from "../data/SuitData";
+import { Phases, Stages } from "../Game";
 
 // todo Add logging
 // todo Add Place coins async
@@ -53,9 +54,9 @@ export const ClickBoardCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
         player.boardCoins[coinId] = player.handCoins[tempId];
         player.handCoins[tempId] = null;
         player.selectedCoin = undefined;
-        if (ctx.phase === "placeCoinsUline") {
-            ctx.events!.setPhase!("pickCards");
-        } else if ((ctx.activePlayers?.[ctx.currentPlayer]) === `placeTradingCoinsUline`) {
+        if (ctx.phase === Phases.PlaceCoinsUline) {
+            ctx.events!.setPhase!(Phases.PickCards);
+        } else if ((ctx.activePlayers?.[ctx.currentPlayer]) === Stages.PlaceTradingCoinsUline) {
             G.actionsNum--;
             AfterBasicPickCardActions(G, ctx, false);
         } else {
@@ -64,10 +65,10 @@ export const ClickBoardCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
                 .every((player: IPublicPlayer): boolean => player.handCoins
                     .every((coin: ICoin | null): boolean => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {
-                if (CheckAndStartUlineActionsOrContinue(G, ctx) === `placeCoinsUline`) {
-                    ctx.events!.setPhase!(`placeCoinsUline`);
+                if (CheckAndStartUlineActionsOrContinue(G, ctx) === Phases.PlaceCoinsUline) {
+                    ctx.events!.setPhase!(Phases.PlaceCoinsUline);
                 } else {
-                    ctx.events!.setPhase!(`pickCards`);
+                    ctx.events!.setPhase!(Phases.PickCards);
                 }
             } else {
                 if (player.handCoins.every((coin: ICoin | null): boolean => coin === null)) {

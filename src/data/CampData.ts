@@ -13,6 +13,8 @@ import {
     StartDiscardSuitCardAction,
     StartVidofnirVedrfolnirAction
 } from "../actions/CampActions";
+import { RusCardTypes } from "../Card";
+import { Stages } from "../Game";
 
 /**
  * <h3>Интерфейс для данных карт кэмпа артефакт.</h3>
@@ -247,7 +249,7 @@ const Brisingamens: IArtefact = {
         {
             action: DrawProfitCampAction.name,
             config: {
-                stageName: `pickDiscardCard`,
+                stageName: Stages.PickDiscardCard,
                 name: `BrisingamensAction`,
                 number: 2,
                 drawName: `Brisingamens`,
@@ -348,7 +350,7 @@ const Hrafnsmerki: IArtefact = {
             for (const suit in player.cards) {
                 if (player.cards.hasOwnProperty(suit)) {
                     score += player.cards[suit].filter((card: PlayerCardsType): boolean =>
-                        card.type === `наёмник`).length * 5;
+                        card.type === RusCardTypes.MERCENARY).length * 5;
                 }
             }
             return score;
@@ -405,7 +407,7 @@ const Gjallarhorn: IArtefact = {
         {
             action: PickHeroCampAction.name,
             config: {
-                stageName: `pickHero`,
+                stageName: Stages.PickHero,
             },
         },
     ],

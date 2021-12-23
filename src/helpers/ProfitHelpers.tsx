@@ -20,7 +20,7 @@ import { IBotMoveArgumentsTypes } from "../AI";
 import { suitsConfig } from "../data/SuitData";
 import { IConfig, PickedCardType } from "../Player";
 import { Styles } from "../data/StyleData";
-import { isCardNotAction } from "../Card";
+import { isCardNotAction, RusCardTypes } from "../Card";
 import { ICoin } from "../Coin";
 import { TotalRank } from "./ScoreHelpers";
 
@@ -60,7 +60,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, da
                     if (Array.isArray(data)) {
                         isDrawRow = true;
                     }
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i].type !== `герой`) {
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i].type !== RusCardTypes.HERO) {
                         if (data instanceof GameBoard && playerRows !== undefined) {
                             isDrawRow = true;
                             DrawCard(data, playerCells,
@@ -122,7 +122,7 @@ export const DiscardCardFromBoardProfit = (G: MyGameState, ctx: Ctx, data?: Game
                     && !(G.drawProfit === `DagdaAction` && G.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
                     const last: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== `герой`) {
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== RusCardTypes.HERO) {
                         if (data instanceof GameBoard && boardCells !== undefined) {
                             DrawCard(data, boardCells,
                                 G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last], last,
@@ -166,7 +166,7 @@ export const GetEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: 
     boardCells?: JSX.Element[]): void => {
     const mercenaries: CampDeckCardTypes[] =
         G.publicPlayers[Number(ctx.currentPlayer)].campCards
-            .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`);
+            .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY);
     for (let j: number = 0; j < mercenaries.length; j++) {
         if (data instanceof GameBoard && boardCells !== undefined) {
             DrawCard(data, boardCells, mercenaries[j], j,

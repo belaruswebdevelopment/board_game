@@ -1,5 +1,5 @@
 import { SuitNames, suitsConfig } from "../data/SuitData";
-import { CreateCard } from "../Card";
+import { CreateCard, RusCardTypes } from "../Card";
 import { AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards } from "../Player";
 import { CheckPickHero } from "../Hero";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
@@ -9,6 +9,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { Stages } from "../Game";
 /**
  * <h3>Действия, связанные с добавлением бафов от героев игроку.</h3>
  * <p>Применения:</p>
@@ -69,7 +70,8 @@ export const CheckDiscardCardsFromPlayerBoardAction = (G, ctx, config) => {
         if (suitsConfig.hasOwnProperty(suit)) {
             if (config.suit !== suit) {
                 const last = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
-                if (last >= 0 && G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== `герой`) {
+                if (last >= 0
+                    && G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== RusCardTypes.HERO) {
                     cardsToDiscard.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last]);
                 }
             }
@@ -136,7 +138,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suit, cardId) 
             {
                 action: DrawProfitHeroAction.name,
                 config: {
-                    stageName: `discardCardFromBoard`,
+                    stageName: Stages.DiscardCardFromBoard,
                     drawName: `Dagda`,
                     name: `DagdaAction`,
                     suit: SuitNames.HUNTER,
@@ -299,7 +301,7 @@ export const PlaceCardsAction = (G, ctx, config, suit) => {
                     variants,
                     config: {
                         name: `placeCards`,
-                        stageName: `placeCards`,
+                        stageName: Stages.PlaceCards,
                         drawName: `Olwin`,
                     },
                 },
@@ -337,7 +339,7 @@ export const PlaceHeroAction = (G, ctx, config, suit) => {
             suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
-            type: `герой`,
+            type: RusCardTypes.HERO,
             name: config.name,
             game: `base`,
         });

@@ -3,8 +3,10 @@ import { AddCampCardToPlayer, AddCampCardToPlayerCards } from "../Player";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { SuitNames, suitsConfig } from "../data/SuitData";
 import { isArtefactCard } from "../Camp";
+import { RusCardTypes } from "../Card";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
 import { AddBuffToPlayer, DrawCurrentProfit, PickCurrentHero, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { Phases, Stages } from "../Game";
 /**
  * <h3>Действия, связанные с добавлением бафов от артефактов игроку.</h3>
  * <p>Применения:</p>
@@ -32,7 +34,7 @@ export const AddBuffToPlayerCampAction = (G, ctx, config) => {
  * @param cardId Id карты.
  */
 export const AddCampCardToCardsAction = (G, ctx, config, cardId) => {
-    if (ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+    if (ctx.phase === Phases.PickCards && Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
         && ctx.activePlayers === null) {
         G.campPicked = true;
     }
@@ -50,8 +52,8 @@ export const AddCampCardToCardsAction = (G, ctx, config, cardId) => {
         }
         else {
             AddCampCardToPlayer(G, ctx, campCard);
-            if (ctx.phase === `enlistmentMercenaries` && G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                .filter((card) => card.type === `наёмник`).length) {
+            if (ctx.phase === Phases.EnlistmentMercenaries && G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
                 stack = [
                     {
                         action: DrawProfitCampAction.name,
@@ -175,7 +177,7 @@ export const DiscardSuitCardAction = (G, ctx, config, suit, playerId, cardId) =>
 export const DiscardTradingCoinAction = (G, ctx) => {
     let tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
         .findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading));
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" && tradingCoinIndex === -1) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === `Uline` && tradingCoinIndex === -1) {
         tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading));
         G.publicPlayers[Number(ctx.currentPlayer)].handCoins
@@ -266,7 +268,7 @@ export const StartDiscardSuitCardAction = (G, ctx, config) => {
         for (let i = 0; i < ctx.numPlayers; i++) {
             if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[config.suit].length) {
                 value[i] = {
-                    stage: `discardSuitCard`,
+                    stage: Stages.DiscardSuitCard,
                 };
                 const stack = [
                     {
@@ -308,7 +310,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                 action: DrawProfitCampAction.name,
                 config: {
                     name: `AddCoinToPouchVidofnirVedrfolnir`,
-                    stageName: `addCoinToPouch`,
+                    stageName: Stages.AddCoinToPouch,
                     number: number,
                     drawName: `Add coin to pouch Vidofnir Vedrfolnir`,
                 },
@@ -332,7 +334,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                     action: DrawProfitCampAction.name,
                     config: {
                         name: `VidofnirVedrfolnirAction`,
-                        stageName: `upgradeCoinVidofnirVedrfolnir`,
+                        stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         value: 5,
                         drawName: `Upgrade coin Vidofnir Vedrfolnir`,
                     },
@@ -351,7 +353,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                     action: DrawProfitCampAction.name,
                     config: {
                         name: `VidofnirVedrfolnirAction`,
-                        stageName: `upgradeCoinVidofnirVedrfolnir`,
+                        stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         number: 2,
                         value: 3,
                         drawName: `Upgrade coin Vidofnir Vedrfolnir`,
@@ -415,7 +417,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
                     config: {
                         coinId,
                         name: `VidofnirVedrfolnirAction`,
-                        stageName: `upgradeCoinVidofnirVedrfolnir`,
+                        stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         value: 2,
                         drawName: `Upgrade coin Vidofnir Vedrfolnir`,
                     },

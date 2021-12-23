@@ -9,6 +9,7 @@ import { Ctx } from "boardgame.io";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
+import { Stages } from "../Game";
 
 /**
  * <h3>Перечисление для названий фракций.</h3>
@@ -205,7 +206,7 @@ const explorer: ISuit = {
                         action: DrawProfitAction.name,
                         config: {
                             name: `explorerDistinction`,
-                            stageName: `pickDistinctionCard`,
+                            stageName: Stages.PickDistinctionCard,
                             drawName: `Pick card by Explorer distinction`,
                         },
                     },
@@ -416,7 +417,7 @@ const warrior: ISuit = {
                         action: DrawProfitAction.name,
                         config: {
                             name: `upgradeCoin`,
-                            stageName: `upgradeCoin`,
+                            stageName: Stages.UpgradeCoin,
                             value: 5,
                             drawName: `Upgrade coin Warrior distinction`,
                         },

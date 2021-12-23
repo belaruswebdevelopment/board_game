@@ -6,6 +6,7 @@ import { UpgradeCoin } from "../Coin";
 import { CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCampAction } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
+import { Stages } from "../Game";
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
  * <p>Применения:</p>
@@ -114,7 +115,7 @@ export const PickDiscardCard = (G, ctx, config, cardId) => {
             {
                 action: DrawProfitCampAction.name,
                 config: {
-                    stageName: `pickDiscardCard`,
+                    stageName: Stages.PickDiscardCard,
                     name: `BrisingamensAction`,
                     drawName: `Brisingamens`,
                 },

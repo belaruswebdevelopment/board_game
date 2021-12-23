@@ -2,6 +2,8 @@ import { AddDataToLog, LogTypes } from "./Logging";
 import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { PickHeroAction } from "./actions/Actions";
+import { Stages } from "./Game";
+import { RusCardTypes } from "./Card";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -18,7 +20,7 @@ export const BuildHeroes = (configOptions, heroesConfig) => {
     for (const hero in heroesConfig) {
         if (configOptions.includes(heroesConfig[hero].game)) {
             heroes.push(CreateHero({
-                type: "герой",
+                type: RusCardTypes.HERO,
                 name: heroesConfig[hero].name,
                 description: heroesConfig[hero].description,
                 game: heroesConfig[hero].game,
@@ -55,7 +57,7 @@ export const CheckPickHero = (G, ctx) => {
                 {
                     action: PickHeroAction.name,
                     config: {
-                        stageName: `pickHero`,
+                        stageName: Stages.PickHero,
                     },
                 },
             ];

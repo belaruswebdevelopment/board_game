@@ -4,6 +4,7 @@ import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 import { SuitNames } from "../data/SuitData";
+import { Phases, Stages } from "../Game";
 // todo Add logging
 // todo Add Place coins async
 /**
@@ -48,10 +49,10 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
         player.boardCoins[coinId] = player.handCoins[tempId];
         player.handCoins[tempId] = null;
         player.selectedCoin = undefined;
-        if (ctx.phase === "placeCoinsUline") {
-            ctx.events.setPhase("pickCards");
+        if (ctx.phase === Phases.PlaceCoinsUline) {
+            ctx.events.setPhase(Phases.PickCards);
         }
-        else if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[ctx.currentPlayer]) === `placeTradingCoinsUline`) {
+        else if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[ctx.currentPlayer]) === Stages.PlaceTradingCoinsUline) {
             G.actionsNum--;
             AfterBasicPickCardActions(G, ctx, false);
         }
@@ -61,11 +62,11 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
                 .every((player) => player.handCoins
                 .every((coin) => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {
-                if (CheckAndStartUlineActionsOrContinue(G, ctx) === `placeCoinsUline`) {
-                    ctx.events.setPhase(`placeCoinsUline`);
+                if (CheckAndStartUlineActionsOrContinue(G, ctx) === Phases.PlaceCoinsUline) {
+                    ctx.events.setPhase(Phases.PlaceCoinsUline);
                 }
                 else {
-                    ctx.events.setPhase(`pickCards`);
+                    ctx.events.setPhase(Phases.PickCards);
                 }
             }
             else {

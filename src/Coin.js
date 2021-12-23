@@ -2,6 +2,7 @@ import { AddDataToLog, LogTypes } from "./Logging";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { UpgradeCoinAction } from "./actions/Actions";
+import { Stages } from "./Game";
 /**
  * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
  * <p>Применения:</p>
@@ -305,7 +306,7 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
                 G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = null;
             }
             if ((ctx.activePlayers !== null
-                && ctx.activePlayers[Number(ctx.currentPlayer)]) === `placeTradingCoinsUline`) {
+                && ctx.activePlayers[Number(ctx.currentPlayer)]) === Stages.PlaceTradingCoinsUline) {
                 const emptyCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.indexOf(null);
                 G.publicPlayers[Number(ctx.currentPlayer)].handCoins[emptyCoinIndex] = upgradedCoin;
             }

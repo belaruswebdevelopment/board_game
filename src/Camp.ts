@@ -1,4 +1,4 @@
-import { DiscardCardFromTavern } from "./Card";
+import { DiscardCardFromTavern, RusCardTypes } from "./Card";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
 import { CampCardTypes, CampDeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
@@ -208,7 +208,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
  * @returns Карта кэмпа артефакт.
  */
 export const CreateArtefactCampCard = ({
-    type = "артефакт",
+    type = RusCardTypes.ARTEFACT,
     tier,
     path,
     name,
@@ -248,7 +248,7 @@ export const CreateArtefactCampCard = ({
  * @returns Карта кэмпа наёмник.
  */
 export const CreateMercenaryCampCard = ({
-    type = `наёмник`,
+    type = RusCardTypes.MERCENARY,
     tier,
     path,
     name,

@@ -1,6 +1,6 @@
 import { AddCardToPlayer, IConfig, IStack, PickedCardType } from "../Player";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { CreateCard, DiscardCardFromTavern, ICard, ICreateCard } from "../Card";
+import { CreateCard, DiscardCardFromTavern, ICard, ICreateCard, RusCardTypes } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { CampDeckCardTypes, MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
@@ -228,7 +228,7 @@ export const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): voi
 export const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard =
         G.publicPlayers[Number(ctx.currentPlayer)].campCards
-            .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`)[cardId];
+            .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY)[cardId];
     const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null) {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы 'Enlistment Mercenaries' выбрал наёмника '${pickedCard.name}'.`);
@@ -295,7 +295,7 @@ export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, confi
         if (`stack` in pickedCard && `tier` in pickedCard && `path` in pickedCard) {
             if (pickedCard.stack[0].variants !== undefined) {
                 const mercenaryCard: ICard = CreateCard({
-                    type: `наёмник`,
+                    type: RusCardTypes.MERCENARY,
                     suit,
                     rank: 1,
                     points: pickedCard.stack[0].variants[suit].points,
@@ -309,7 +309,8 @@ export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, confi
                     .findIndex((card: CampDeckCardTypes): boolean => card.name === pickedCard.name);
                 G.publicPlayers[Number(ctx.currentPlayer)].campCards.splice(cardIndex, 1);
                 if (G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                    .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
+                    .filter((card: CampDeckCardTypes): boolean =>
+                        card.type === RusCardTypes.MERCENARY).length) {
                     const stack: IStack[] = [
                         {
                             action: DrawProfitCampAction.name,

@@ -39,6 +39,7 @@ import { CheckDistinction } from "./Distinction";
 import type { Ctx, Game } from "boardgame.io";
 import { CheckPlayersBasicOrder, IPublicPlayer, IStack } from "./Player";
 import { DrawProfitCampAction } from "./actions/CampActions";
+import { RusCardTypes } from "./Card";
 
 /**
  * <h3>Интерфейс для порядка ходов.</h3>
@@ -47,6 +48,38 @@ interface IOrder {
     next: (G: MyGameState, ctx: Ctx) => number;
     first: () => number;
     playOrder: (G: MyGameState) => string[];
+}
+
+/**
+ * <h3>Перечисление для фаз игры.</h3>
+ */
+export const enum Phases {
+    BrisingamensEndGame = `brisingamensEndGame`,
+    EndTier = `endTier`,
+    EnlistmentMercenaries = `enlistmentMercenaries`,
+    GetDistinctions = `getDistinctions`,
+    GetMjollnirProfit = `getMjollnirProfit`,
+    PickCards = `pickCards`,
+    PlaceCoins = `placeCoins`,
+    PlaceCoinsUline = `placeCoinsUline`,
+}
+
+/**
+ * <h3>Перечисление для стейджей игры.</h3>
+ */
+export const enum Stages {
+    AddCoinToPouch = `addCoinToPouch`,
+    DiscardCard = `discardCard`,
+    DiscardCardFromBoard = `discardCardFromBoard`,
+    DiscardSuitCard = `discardSuitCard`,
+    PickCampCardHolda = `pickCampCardHolda`,
+    PickDiscardCard = `pickDiscardCard`,
+    PickDistinctionCard = `pickDistinctionCard`,
+    PickHero = `pickHero`,
+    PlaceCards = `placeCards`,
+    PlaceTradingCoinsUline = `placeTradingCoinsUline`,
+    UpgradeCoin = `upgradeCoin`,
+    UpgradeCoinVidofnirVedrfolnir = `upgradeCoinVidofnirVedrfolnir`,
 }
 
 // todo Add logging
@@ -80,7 +113,7 @@ export const BoardGame: Game<MyGameState> = {
                 ClickBoardCoinMove,
                 BotsPlaceAllCoinsMove,
             },
-            next: `pickCards`,
+            next: Phases.PickCards,
             onBegin: (G: MyGameState, ctx: Ctx): void => {
                 G.currentTavern = -1;
                 if (ctx.turn !== 0) {
@@ -243,14 +276,16 @@ export const BoardGame: Game<MyGameState> = {
                     playersIndexes: number[] = [];
                 players.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
                     if (nextPlayer.campCards
-                        .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length <
-                        currentPlayer.campCards
-                            .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
+                        .filter((card: CampDeckCardTypes): boolean =>
+                            card.type === RusCardTypes.MERCENARY).length < currentPlayer.campCards
+                                .filter((card: CampDeckCardTypes): boolean =>
+                                    card.type === RusCardTypes.MERCENARY).length) {
                         return 1;
                     } else if (nextPlayer.campCards
-                        .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length >
-                        currentPlayer.campCards
-                            .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
+                        .filter((card: CampDeckCardTypes): boolean =>
+                            card.type === RusCardTypes.MERCENARY).length > currentPlayer.campCards
+                                .filter((card: CampDeckCardTypes): boolean =>
+                                    card.type === RusCardTypes.MERCENARY).length) {
                         return -1;
                     }
                     if (nextPlayer.priority.value < currentPlayer.priority.value) {
@@ -262,7 +297,8 @@ export const BoardGame: Game<MyGameState> = {
                 });
                 players.forEach((playerSorted: IPublicPlayer): void => {
                     if (playerSorted.campCards
-                        .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
+                        .filter((card: CampDeckCardTypes): boolean =>
+                            card.type === RusCardTypes.MERCENARY).length) {
                         playersIndexes.push(G.publicPlayers
                             .findIndex((player: IPublicPlayer): boolean =>
                                 player.nickname === playerSorted.nickname));
@@ -374,7 +410,7 @@ export const BoardGame: Game<MyGameState> = {
                     },
                 },
             },
-            next: `placeCoins`,
+            next: Phases.PlaceCoins,
             moves: {
                 ClickDistinctionCardMove,
             },

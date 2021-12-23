@@ -7,6 +7,7 @@ import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { SuitNames } from "../data/SuitData";
 import { CheckPickHero } from "../Hero";
 import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
+import { Phases, Stages } from "../Game";
 
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>
@@ -70,16 +71,16 @@ export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): s
         G.publicPlayers.findIndex((player: IPublicPlayer): boolean => player.buffs.everyTurn === `Uline`);
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-            if (ctx.phase === `pickCards`) {
+            if (ctx.phase === Phases.PickCards) {
                 const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
                 if (coin?.isTriggerTrading) {
                     if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                         .filter((coin: ICoin | null, index: number): boolean =>
                             index >= G.tavernsNum && coin === null)) {
-                        if (ctx.activePlayers?.[ctx.currentPlayer] !== `placeTradingCoinsUline`) {
+                        if (ctx.activePlayers?.[ctx.currentPlayer] !== Stages.PlaceTradingCoinsUline) {
                             G.actionsNum = G.suitsNum - G.tavernsNum;
-                            ctx.events!.setStage!(`placeTradingCoinsUline`);
-                            return `placeTradingCoinsUline`;
+                            ctx.events!.setStage!(Stages.PlaceTradingCoinsUline);
+                            return Stages.PlaceTradingCoinsUline;
                         } else if (!G.actionsNum) {
                             ctx.events!.endStage!();
                             return `endPlaceTradingCoinsUline`;
@@ -90,10 +91,10 @@ export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): s
                 }
             }
         } else {
-            return `placeCoinsUline`;
+            return Phases.PlaceCoinsUline;
         }
-    } else if (ctx.phase !== `pickCards`) {
-        ctx.events!.setPhase!(`pickCards`);
+    } else if (ctx.phase !== Phases.PickCards) {
+        ctx.events!.setPhase!(Phases.PickCards);
     }
     return false;
 };
@@ -176,7 +177,7 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
                     config: {
                         drawName: `Thrud`,
                         name: `placeCards`,
-                        stageName: `placeCards`,
+                        stageName: Stages.PlaceCards,
                         suit: card.suit,
                     },
                 },

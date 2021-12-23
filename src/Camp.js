@@ -1,4 +1,4 @@
-import { DiscardCardFromTavern } from "./Card";
+import { DiscardCardFromTavern, RusCardTypes } from "./Card";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
 import { AddCampCardToCardsAction } from "./actions/CampActions";
@@ -139,7 +139,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @param stack Действия.
  * @returns Карта кэмпа артефакт.
  */
-export const CreateArtefactCampCard = ({ type = "артефакт", tier, path, name, description, game, suit, rank, points, stack, } = {}) => ({
+export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, path, name, description, game, suit, rank, points, stack, } = {}) => ({
     type,
     tier,
     path,
@@ -166,7 +166,7 @@ export const CreateArtefactCampCard = ({ type = "артефакт", tier, path, 
  * @param stack Действия.
  * @returns Карта кэмпа наёмник.
  */
-export const CreateMercenaryCampCard = ({ type = `наёмник`, tier, path, name, game = `thingvellir`, stack } = {}) => ({
+export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, path, name, game = `thingvellir`, stack } = {}) => ({
     type,
     tier,
     path,

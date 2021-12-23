@@ -1,6 +1,8 @@
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
 import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, CheckPickDiscardCardCampAction, DiscardTradingCoinAction, DrawProfitCampAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
+import { RusCardTypes } from "../Card";
+import { Stages } from "../Game";
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>
@@ -189,7 +191,7 @@ const Brisingamens = {
         {
             action: DrawProfitCampAction.name,
             config: {
-                stageName: `pickDiscardCard`,
+                stageName: Stages.PickDiscardCard,
                 name: `BrisingamensAction`,
                 number: 2,
                 drawName: `Brisingamens`,
@@ -286,7 +288,7 @@ const Hrafnsmerki = {
             let score = 0;
             for (const suit in player.cards) {
                 if (player.cards.hasOwnProperty(suit)) {
-                    score += player.cards[suit].filter((card) => card.type === `наёмник`).length * 5;
+                    score += player.cards[suit].filter((card) => card.type === RusCardTypes.MERCENARY).length * 5;
                 }
             }
             return score;
@@ -341,7 +343,7 @@ const Gjallarhorn = {
         {
             action: PickHeroCampAction.name,
             config: {
-                stageName: `pickHero`,
+                stageName: Stages.PickHero,
             },
         },
     ],

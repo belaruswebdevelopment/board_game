@@ -86,6 +86,17 @@ export interface IPlayerCards {
 }
 
 /**
+ * <h3>Перечисление для типов карт.</h3>
+ */
+export const enum RusCardTypes {
+    ACTION = `улучшение монеты`,
+    ARTEFACT = `артефакт`,
+    BASIC = `базовая`,
+    HERO = `герой`,
+    MERCENARY = `наёмник`,
+}
+
+/**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -216,7 +227,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  * @returns Карта обмена монеты.
  */
 const CreateActionCard = ({
-    type = `улучшение монеты`,
+    type = RusCardTypes.ACTION,
     value,
     stack,
     name,
@@ -245,7 +256,7 @@ const CreateActionCard = ({
  * @returns Карта дворфа.
  */
 export const CreateCard = ({
-    type = `базовая`,
+    type = RusCardTypes.BASIC,
     suit,
     rank,
     points,

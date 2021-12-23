@@ -16,6 +16,39 @@ import { PlayerView } from "boardgame.io/core";
 import { CheckDistinction } from "./Distinction";
 import { CheckPlayersBasicOrder } from "./Player";
 import { DrawProfitCampAction } from "./actions/CampActions";
+import { RusCardTypes } from "./Card";
+/**
+ * <h3>Перечисление для фаз игры.</h3>
+ */
+export var Phases;
+(function (Phases) {
+    Phases["BrisingamensEndGame"] = "brisingamensEndGame";
+    Phases["EndTier"] = "endTier";
+    Phases["EnlistmentMercenaries"] = "enlistmentMercenaries";
+    Phases["GetDistinctions"] = "getDistinctions";
+    Phases["GetMjollnirProfit"] = "getMjollnirProfit";
+    Phases["PickCards"] = "pickCards";
+    Phases["PlaceCoins"] = "placeCoins";
+    Phases["PlaceCoinsUline"] = "placeCoinsUline";
+})(Phases || (Phases = {}));
+/**
+ * <h3>Перечисление для стейджей игры.</h3>
+ */
+export var Stages;
+(function (Stages) {
+    Stages["AddCoinToPouch"] = "addCoinToPouch";
+    Stages["DiscardCard"] = "discardCard";
+    Stages["DiscardCardFromBoard"] = "discardCardFromBoard";
+    Stages["DiscardSuitCard"] = "discardSuitCard";
+    Stages["PickCampCardHolda"] = "pickCampCardHolda";
+    Stages["PickDiscardCard"] = "pickDiscardCard";
+    Stages["PickDistinctionCard"] = "pickDistinctionCard";
+    Stages["PickHero"] = "pickHero";
+    Stages["PlaceCards"] = "placeCards";
+    Stages["PlaceTradingCoinsUline"] = "placeTradingCoinsUline";
+    Stages["UpgradeCoin"] = "upgradeCoin";
+    Stages["UpgradeCoinVidofnirVedrfolnir"] = "upgradeCoinVidofnirVedrfolnir";
+})(Stages || (Stages = {}));
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
 const order = {
@@ -45,7 +78,7 @@ export const BoardGame = {
                 ClickBoardCoinMove,
                 BotsPlaceAllCoinsMove,
             },
-            next: `pickCards`,
+            next: Phases.PickCards,
             onBegin: (G, ctx) => {
                 G.currentTavern = -1;
                 if (ctx.turn !== 0) {
@@ -206,15 +239,13 @@ export const BoardGame = {
                 const players = G.publicPlayers.map((player) => player), playersIndexes = [];
                 players.sort((nextPlayer, currentPlayer) => {
                     if (nextPlayer.campCards
-                        .filter((card) => card.type === `наёмник`).length <
-                        currentPlayer.campCards
-                            .filter((card) => card.type === `наёмник`).length) {
+                        .filter((card) => card.type === RusCardTypes.MERCENARY).length < currentPlayer.campCards
+                        .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
                         return 1;
                     }
                     else if (nextPlayer.campCards
-                        .filter((card) => card.type === `наёмник`).length >
-                        currentPlayer.campCards
-                            .filter((card) => card.type === `наёмник`).length) {
+                        .filter((card) => card.type === RusCardTypes.MERCENARY).length > currentPlayer.campCards
+                        .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
                         return -1;
                     }
                     if (nextPlayer.priority.value < currentPlayer.priority.value) {
@@ -227,7 +258,7 @@ export const BoardGame = {
                 });
                 players.forEach((playerSorted) => {
                     if (playerSorted.campCards
-                        .filter((card) => card.type === `наёмник`).length) {
+                        .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
                         playersIndexes.push(G.publicPlayers
                             .findIndex((player) => player.nickname === playerSorted.nickname));
                     }
@@ -338,7 +369,7 @@ export const BoardGame = {
                     },
                 },
             },
-            next: `placeCoins`,
+            next: Phases.PlaceCoins,
             moves: {
                 ClickDistinctionCardMove,
             },

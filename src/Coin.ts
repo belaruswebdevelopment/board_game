@@ -6,6 +6,7 @@ import { IConfig, IPublicPlayer, IStack } from "./Player";
 import { IInitialTradingCoinConfig, IMarketCoinConfig, isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { INumberValues } from "./data/SuitData";
 import { UpgradeCoinAction } from "./actions/Actions";
+import { Stages } from "./Game";
 
 /**
  * <h3>Интерфейс для монеты.</h3>
@@ -361,7 +362,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                 G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = null;
             }
             if ((ctx.activePlayers !== null
-                && ctx.activePlayers[Number(ctx.currentPlayer)]) === `placeTradingCoinsUline`) {
+                && ctx.activePlayers[Number(ctx.currentPlayer)]) === Stages.PlaceTradingCoinsUline) {
                 const emptyCoinIndex: number =
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins.indexOf(null);
                 G.publicPlayers[Number(ctx.currentPlayer)].handCoins[emptyCoinIndex] = upgradedCoin;

@@ -5,6 +5,7 @@ import { AddDataToLog, LogTypes } from "./Logging";
 import { suitsConfig } from "./data/SuitData";
 import { isCardNotAction } from "./Card";
 import { isArtefactCard } from "./Camp";
+import { Phases } from "./Game";
 /**
  * <h3>Добавляет взятую из кэмпа карту в массив карт кэмпа игрока.</h3>
  * <p>Применения:</p>
@@ -181,7 +182,7 @@ export const BuildPublicPlayer = (nickname, priority) => {
 export const CheckPlayersBasicOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        if (ctx.phase !== `placeCoinsUline`) {
+        if (ctx.phase !== Phases.PlaceCoinsUline) {
             if (G.publicPlayers[i].buffs.everyTurn !== `Uline`) {
                 G.publicPlayersOrder.push(i);
             }

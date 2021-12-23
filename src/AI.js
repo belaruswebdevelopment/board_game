@@ -1,10 +1,11 @@
-import { CompareCards, EvaluateCard, isCardNotAction } from "./Card";
+import { CompareCards, EvaluateCard, isCardNotAction, RusCardTypes } from "./Card";
 import { HasLowestPriority } from "./Priority";
 import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
 import { CurrentScoring } from "./Score";
 import { moveBy, moveValidators } from "./MoveValidator";
 import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./helpers/ProfitHelpers";
 import { suitsConfig } from "./data/SuitData";
+import { Phases, Stages } from "./Game";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -27,7 +28,7 @@ export const enumerate = (G, ctx) => {
     const botMoveArguments = [];
     for (const stage in moveBy[ctx.phase]) {
         if (moveBy[ctx.phase].hasOwnProperty(stage)) {
-            if (ctx.phase === `pickCards` && stage.startsWith(`default`)) {
+            if (ctx.phase === Phases.PickCards && stage.startsWith(`default`)) {
                 continue;
             }
             if (stage.includes(activeStageOfCurrentPlayer)
@@ -39,7 +40,7 @@ export const enumerate = (G, ctx) => {
                 for (let id = minValue; id < maxValue; id++) {
                     // todo sync bot moves options with profit UI options for players (same logic without UI)
                     let type = undefined;
-                    if (stage === `upgradeCoin`) {
+                    if (stage === Stages.UpgradeCoin) {
                         // todo fix for Uline???
                         type = `board`;
                     }
@@ -61,7 +62,7 @@ export const enumerate = (G, ctx) => {
     if (moves.length > 0) {
         return moves;
     }
-    if (ctx.phase === `pickCards` && activeStageOfCurrentPlayer === `default` && ctx.activePlayers === null) {
+    if (ctx.phase === Phases.PickCards && activeStageOfCurrentPlayer === `default` && ctx.activePlayers === null) {
         // todo Fix it, now just for bot can do RANDOM move
         let pickCardOrCampCard = `card`;
         if (G.expansions.thingvellir.active
@@ -113,7 +114,7 @@ export const enumerate = (G, ctx) => {
             });
         }
     }
-    if (enableAdvancedBot && ctx.phase === `placeCoins`) {
+    if (enableAdvancedBot && ctx.phase === Phases.PlaceCoins) {
         moves = [];
         const hasLowestPriority = HasLowestPriority(G, Number(ctx.currentPlayer));
         let resultsForCoins = CheckHeuristicsForCoinsPlacement(G, ctx);
@@ -166,14 +167,14 @@ export const enumerate = (G, ctx) => {
         //console.log(moves);
     }
     // todo Fix it, now just for bot can do RANDOM move
-    if (activeStageOfCurrentPlayer === `placeCards` || ctx.phase === `endTier`) {
+    if (activeStageOfCurrentPlayer === Stages.PlaceCards || ctx.phase === Phases.EndTier) {
         PlaceCardsProfit(G, ctx, botMoveArguments);
         moves.push({
             move: `PlaceCardMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
-    if (ctx.phase === `getMjollnirProfit`) {
+    if (ctx.phase === Phases.GetMjollnirProfit) {
         const totalSuitsRanks = [];
         GetMjollnirProfitProfit(G, ctx, totalSuitsRanks);
         botMoveArguments.push([Object.values(suitsConfig)[totalSuitsRanks
@@ -183,14 +184,14 @@ export const enumerate = (G, ctx) => {
             args: [...botMoveArguments[0]],
         });
     }
-    if (ctx.phase === `brisingamensEndGame`) {
+    if (ctx.phase === Phases.BrisingamensEndGame) {
         DiscardAnyCardFromPlayerBoardProfit(G, ctx, botMoveArguments);
         moves.push({
             move: `DiscardCardFromPlayerBoardMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
-    if (ctx.phase === `enlistmentMercenaries`) {
+    if (ctx.phase === Phases.EnlistmentMercenaries) {
         if (G.drawProfit === `startOrPassEnlistmentMercenaries`) {
             StartEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             if (Math.floor(Math.random() * botMoveArguments.length) === 0) {
@@ -215,7 +216,7 @@ export const enumerate = (G, ctx) => {
             });
         }
     }
-    if (ctx.phase === `placeCoinsUline`) {
+    if (ctx.phase === Phases.PlaceCoinsUline) {
         for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
             if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
                 botMoveArguments.push([j]);
@@ -227,7 +228,7 @@ export const enumerate = (G, ctx) => {
         });
         moves.push({ move: `ClickBoardCoinMove`, args: [G.currentTavern + 1] });
     }
-    if (activeStageOfCurrentPlayer === `placeTradingCoinsUline`) {
+    if (activeStageOfCurrentPlayer === Stages.PlaceTradingCoinsUline) {
         for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
             if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
                 botMoveArguments.push([j]);
@@ -244,14 +245,14 @@ export const enumerate = (G, ctx) => {
             moves.push({ move: `ClickBoardCoinMove`, args: [G.tavernsNum] });
         }
     }
-    if (activeStageOfCurrentPlayer === `addCoinToPouch`) {
+    if (activeStageOfCurrentPlayer === Stages.AddCoinToPouch) {
         AddCoinToPouchProfit(G, ctx, botMoveArguments);
         moves.push({
             move: `AddCoinToPouchMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
-    if (activeStageOfCurrentPlayer === `upgradeCoinVidofnirVedrfolnir`) {
+    if (activeStageOfCurrentPlayer === Stages.UpgradeCoinVidofnirVedrfolnir) {
         UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, botMoveArguments);
         moves.push({
             move: `UpgradeCoinVidofnirVedrfolnirMove`,
@@ -260,7 +261,7 @@ export const enumerate = (G, ctx) => {
     }
     // TODO FIX It's not activeStageOfCurrentPlayer it' for Other players!!!
     // if (activeStageOfCurrentPlayer === "discardSuitCard") {
-    if (ctx.phase === `pickCards` && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default`) {
+    if (ctx.phase === Phases.PickCards && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default`) {
         // TODO Fix this (only for quick bot actions)
         // todo Bot can't do async turns...?
         const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
@@ -270,7 +271,7 @@ export const enumerate = (G, ctx) => {
                     for (let i = 0; i < G.publicPlayers[p].cards[config.suit].length; i++) {
                         for (let j = 0; j < 1; j++) {
                             if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
-                                if (G.publicPlayers[p].cards[config.suit][i].type !== `герой`) {
+                                if (G.publicPlayers[p].cards[config.suit][i].type !== RusCardTypes.HERO) {
                                     const points = G.publicPlayers[p].cards[config.suit][i].points;
                                     if (points !== null) {
                                         botMoveArguments.push([points]);
@@ -280,7 +281,7 @@ export const enumerate = (G, ctx) => {
                         }
                     }
                     const minValue = Math.min(...botMoveArguments);
-                    const minCardIndex = G.publicPlayers[p].cards[config.suit].findIndex((card) => card.type !== "герой" && card.points === minValue);
+                    const minCardIndex = G.publicPlayers[p].cards[config.suit].findIndex((card) => card.type !== RusCardTypes.HERO && card.points === minValue);
                     if (minCardIndex !== -1) {
                         moves.push({
                             move: `DiscardSuitCardFromPlayerBoardMove`,
@@ -291,14 +292,14 @@ export const enumerate = (G, ctx) => {
             }
         }
     }
-    if (activeStageOfCurrentPlayer === `discardCardFromBoard`) {
+    if (activeStageOfCurrentPlayer === Stages.DiscardCardFromBoard) {
         DiscardCardFromBoardProfit(G, ctx, botMoveArguments);
         moves.push({
             move: `DiscardCardMove`,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
-    if (activeStageOfCurrentPlayer === `pickDiscardCard`) {
+    if (activeStageOfCurrentPlayer === Stages.PickDiscardCard) {
         PickDiscardCardProfit(G, ctx, botMoveArguments);
         moves.push({
             move: `PickDiscardCardMove`,
@@ -306,7 +307,7 @@ export const enumerate = (G, ctx) => {
         });
     }
     if (ctx.numPlayers === 2) {
-        if (activeStageOfCurrentPlayer === `discardCard`) {
+        if (activeStageOfCurrentPlayer === Stages.DiscardCard) {
             DiscardCardProfit(G, ctx, botMoveArguments);
             moves.push({
                 move: `DiscardCard2PlayersMove`,
@@ -314,7 +315,7 @@ export const enumerate = (G, ctx) => {
             });
         }
     }
-    if (activeStageOfCurrentPlayer === `pickCampCardHolda`) {
+    if (activeStageOfCurrentPlayer === Stages.PickCampCardHolda) {
         PickCampCardHoldaProfit(G, ctx, botMoveArguments);
         moves.push({
             move: `ClickCampCardHoldaMove`,
@@ -341,7 +342,7 @@ export const enumerate = (G, ctx) => {
 */
 export const iterations = (G, ctx) => {
     const maxIter = G.botData.maxIter;
-    if (ctx.phase === `pickCards`) {
+    if (ctx.phase === Phases.PickCards) {
         const currentTavern = G.taverns[G.currentTavern];
         if (currentTavern.filter((card) => card !== null).length === 1) {
             return 1;

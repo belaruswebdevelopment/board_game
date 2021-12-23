@@ -17,6 +17,7 @@ import {
     PlaceHeroAction,
     UpgradeCoinHeroAction
 } from "../actions/HeroActions";
+import { Stages } from "../Game";
 
 /**
  * <h3>Интерфейс для баффа карты героя.</h3>
@@ -130,7 +131,7 @@ const Andumia: IHeroData = {
         {
             action: DrawProfitHeroAction.name,
             config: {
-                stageName: `pickDiscardCard`,
+                stageName: Stages.PickDiscardCard,
                 drawName: `Andumia`,
                 name: `AndumiaAction`,
             },
@@ -216,7 +217,7 @@ const Bonfur: IHeroData = {
         {
             action: DrawProfitHeroAction.name,
             config: {
-                stageName: `discardCardFromBoard`,
+                stageName: Stages.DiscardCardFromBoard,
                 drawName: `Bonfur`,
                 name: `BonfurAction`,
                 suit: SuitNames.BLACKSMITH,
@@ -263,7 +264,7 @@ const Dagda: IHeroData = {
         {
             action: DrawProfitHeroAction.name,
             config: {
-                stageName: `discardCardFromBoard`,
+                stageName: Stages.DiscardCardFromBoard,
                 drawName: `Dagda`,
                 name: `DagdaAction`,
                 suit: SuitNames.HUNTER,
@@ -432,7 +433,7 @@ const Grid: IHeroData = {
         {
             action: DrawProfitHeroAction.name,
             config: {
-                stageName: `upgradeCoin`,
+                stageName: Stages.UpgradeCoin,
                 drawName: `Grid`,
                 name: `upgradeCoin`,
                 value: 7,
@@ -484,7 +485,7 @@ const Holda: IHeroData = {
         {
             action: DrawProfitHeroAction.name,
             config: {
-                stageName: `pickCampCardHolda`,
+                stageName: Stages.PickCampCardHolda,
                 drawName: `Holda`,
                 name: `HoldaAction`,
             },
@@ -722,7 +723,7 @@ const Olwin: IHeroData = {
                 },
             },
             config: {
-                stageName: `placeCards`,
+                stageName: Stages.PlaceCards,
                 drawName: `Olwin`,
                 name: `placeCards`,
                 number: 2,
@@ -863,7 +864,7 @@ const Thrud: IHeroData = {
                 },
             },
             config: {
-                stageName: `placeCards`,
+                stageName: Stages.PlaceCards,
                 name: `placeCards`,
                 drawName: `Thrud`,
             },

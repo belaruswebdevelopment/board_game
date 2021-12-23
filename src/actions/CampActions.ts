@@ -17,7 +17,7 @@ import { SuitNames, suitsConfig } from "../data/SuitData";
 import { CampDeckCardTypes, MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
 import { isArtefactCard } from "../Camp";
-import { ICard } from "../Card";
+import { ICard, RusCardTypes } from "../Card";
 import { ICoin } from "../Coin";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
 import {
@@ -28,6 +28,7 @@ import {
     UpgradeCurrentCoin
 } from "../helpers/ActionHelpers";
 import { ArgsTypes } from "./Actions";
+import { Phases, Stages } from "../Game";
 
 /**
  * <h3>Действия, связанные с добавлением бафов от артефактов игроку.</h3>
@@ -57,7 +58,7 @@ export const AddBuffToPlayerCampAction = (G: MyGameState, ctx: Ctx, config: ICon
  * @param cardId Id карты.
  */
 export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
-    if (ctx.phase === "pickCards" && Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+    if (ctx.phase === Phases.PickCards && Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
         && ctx.activePlayers === null) {
         G.campPicked = true;
     }
@@ -75,8 +76,8 @@ export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConf
             suit = campCard.suit;
         } else {
             AddCampCardToPlayer(G, ctx, campCard);
-            if (ctx.phase === `enlistmentMercenaries` && G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                .filter((card: CampDeckCardTypes): boolean => card.type === `наёмник`).length) {
+            if (ctx.phase === Phases.EnlistmentMercenaries && G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY).length) {
                 stack = [
                     {
                         action: DrawProfitCampAction.name,
@@ -210,7 +211,7 @@ export const DiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: IConfig,
 export const DiscardTradingCoinAction = (G: MyGameState, ctx: Ctx): void => {
     let tradingCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
         .findIndex((coin: ICoin | null): boolean => Boolean(coin?.isTriggerTrading));
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" && tradingCoinIndex === -1) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === `Uline` && tradingCoinIndex === -1) {
         tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin: ICoin | null): boolean => Boolean(coin?.isTriggerTrading));
         G.publicPlayers[Number(ctx.currentPlayer)].handCoins
@@ -305,7 +306,7 @@ export const StartDiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: ICo
         for (let i: number = 0; i < ctx.numPlayers; i++) {
             if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[config.suit].length) {
                 value[i] = {
-                    stage: `discardSuitCard`,
+                    stage: Stages.DiscardSuitCard,
                 };
                 const stack: IStack[] = [
                     {
@@ -348,7 +349,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
                 action: DrawProfitCampAction.name,
                 config: {
                     name: `AddCoinToPouchVidofnirVedrfolnir`,
-                    stageName: `addCoinToPouch`,
+                    stageName: Stages.AddCoinToPouch,
                     number: number,
                     drawName: `Add coin to pouch Vidofnir Vedrfolnir`,
                 },
@@ -371,7 +372,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
                     action: DrawProfitCampAction.name,
                     config: {
                         name: `VidofnirVedrfolnirAction`,
-                        stageName: `upgradeCoinVidofnirVedrfolnir`,
+                        stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         value: 5,
                         drawName: `Upgrade coin Vidofnir Vedrfolnir`,
                     },
@@ -389,7 +390,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
                     action: DrawProfitCampAction.name,
                     config: {
                         name: `VidofnirVedrfolnirAction`,
-                        stageName: `upgradeCoinVidofnirVedrfolnir`,
+                        stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         number: 2,
                         value: 3,
                         drawName: `Upgrade coin Vidofnir Vedrfolnir`,
@@ -456,7 +457,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, co
                     config: {
                         coinId,
                         name: `VidofnirVedrfolnirAction`,
-                        stageName: `upgradeCoinVidofnirVedrfolnir`,
+                        stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         value: 2,
                         drawName: `Upgrade coin Vidofnir Vedrfolnir`,
                     },

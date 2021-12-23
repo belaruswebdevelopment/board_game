@@ -7,6 +7,8 @@ import { Ctx } from "boardgame.io";
 import { IStack, PlayerCardsType } from "./Player";
 import { PickHeroAction } from "./actions/Actions";
 import { suitsConfig } from "./data/SuitData";
+import { Stages } from "./Game";
+import { RusCardTypes } from "./Card";
 
 /**
  * <h3>Интерфейс для героя.</h3>
@@ -54,7 +56,7 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
     for (const hero in heroesConfig) {
         if (configOptions.includes(heroesConfig[hero].game)) {
             heroes.push(CreateHero({
-                type: "герой",
+                type: RusCardTypes.HERO,
                 name: heroesConfig[hero].name,
                 description: heroesConfig[hero].description,
                 game: heroesConfig[hero].game,
@@ -94,7 +96,7 @@ export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
                 {
                     action: PickHeroAction.name,
                     config: {
-                        stageName: `pickHero`,
+                        stageName: Stages.PickHero,
                     },
                 },
             ];

@@ -1,7 +1,7 @@
 import { DiscardCardIfCampCardPicked, RefillEmptyCampCards } from "../Camp";
 import { CheckIfCurrentTavernEmpty, RefillTaverns } from "../Tavern";
 import { RemoveThrudFromPlayerBoardAfterGameEnd } from "../Hero";
-import { DiscardCardFromTavern } from "../Card";
+import { DiscardCardFromTavern, RusCardTypes } from "../Card";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "./StackHelpers";
 import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
 import { ActivateTrading } from "./CoinHelpers";
@@ -10,6 +10,7 @@ import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
 import { DrawProfitAction } from "../actions/Actions";
 import { DiscardAnyCardFromPlayerBoardAction, DrawProfitCampAction, GetMjollnirProfitAction } from "../actions/CampActions";
 import { DiscardCardFromTavernAction } from "../actions/Actions";
+import { Phases, Stages } from "../Game";
 // todo Add logging
 /**
  * <h3>Выполняет основные действия после выбора базовых карт.</h3>
@@ -29,9 +30,9 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
     // todo rework it?
     // todo Add LogTypes.ERROR ?
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
-    if (ctx.phase === `pickCards`) {
+    if (ctx.phase === Phases.PickCards) {
         const isUlinePlaceTradingCoin = CheckAndStartUlineActionsOrContinue(G, ctx);
-        if (isUlinePlaceTradingCoin !== `placeTradingCoinsUline`
+        if (isUlinePlaceTradingCoin !== Stages.PlaceTradingCoinsUline
             && isUlinePlaceTradingCoin !== `nextPlaceTradingCoinsUline`) {
             let isTradingActivated = false;
             if (!isTrading) {
@@ -54,11 +55,12 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                 }
                 else if (isCurrentTavernEmpty) {
                     const isPlaceCoinsUline = CheckAndStartUlineActionsOrContinue(G, ctx);
-                    if (isPlaceCoinsUline !== `endPlaceTradingCoinsUline` && isPlaceCoinsUline !== `placeCoinsUline`) {
-                        ctx.events.setPhase(`pickCards`);
+                    if (isPlaceCoinsUline !== `endPlaceTradingCoinsUline`
+                        && isPlaceCoinsUline !== Phases.PlaceCoinsUline) {
+                        ctx.events.setPhase(Phases.PickCards);
                     }
                     else {
-                        ctx.events.setPhase(`placeCoinsUline`);
+                        ctx.events.setPhase(Phases.PlaceCoinsUline);
                     }
                 }
                 else {
@@ -68,7 +70,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                             {
                                 action: DrawProfitAction.name,
                                 config: {
-                                    stageName: `discardCard`,
+                                    stageName: Stages.DiscardCard,
                                     name: `discardCard`,
                                     drawName: `Discard tavern card`,
                                 },
@@ -87,13 +89,14 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
             }
         }
     }
-    else if (ctx.phase === `endTier` || ctx.phase === `brisingamensEndGame` || ctx.phase === `getMjollnirProfit`) {
+    else if (ctx.phase === Phases.EndTier || ctx.phase === Phases.BrisingamensEndGame
+        || ctx.phase === Phases.GetMjollnirProfit) {
         CheckEndGameLastActions(G, ctx);
     }
-    else if (ctx.phase === `getDistinctions`) {
+    else if (ctx.phase === Phases.GetDistinctions) {
         ctx.events.endTurn();
     }
-    else if (ctx.phase === `enlistmentMercenaries`) {
+    else if (ctx.phase === Phases.EnlistmentMercenaries) {
         if (((ctx.playOrderPos === 0 && ctx.playOrder.length === 1)
             && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1])
             || ((ctx.playOrderPos !== 0 && ctx.playOrder.length > 1)
@@ -101,7 +104,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
             || (ctx.playOrder[ctx.playOrder.length - 2] !== undefined
                 && (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 2])
                 && !G.publicPlayers[Number(ctx.playOrder[ctx.playOrder.length - 1])].campCards
-                    .filter((card) => card.type === `наёмник`).length)) {
+                    .filter((card) => card.type === RusCardTypes.MERCENARY).length)) {
             StartEndTierActions(G, ctx);
         }
         else {
@@ -148,7 +151,7 @@ const AfterLastTavernEmptyActions = (G, ctx) => {
             RefillEmptyCampCards(G);
         }
         RefillTaverns(G);
-        ctx.events.setPhase(`placeCoins`);
+        ctx.events.setPhase(Phases.PlaceCoins);
     }
 };
 /**
@@ -163,15 +166,15 @@ const AfterLastTavernEmptyActions = (G, ctx) => {
  */
 export const CheckEndGameLastActions = (G, ctx) => {
     if (G.tierToEnd) {
-        ctx.events.setPhase(`getDistinctions`);
+        ctx.events.setPhase(Phases.GetDistinctions);
     }
     else {
-        if (ctx.phase !== `brisingamensEndGame` && ctx.phase !== `getMjollnirProfit`) {
+        if (ctx.phase !== Phases.BrisingamensEndGame && ctx.phase !== Phases.GetMjollnirProfit) {
             RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
         }
         let isNewPhase = false;
         if (G.expansions.thingvellir.active) {
-            if (ctx.phase !== `brisingamensEndGame` && ctx.phase !== `getMjollnirProfit`) {
+            if (ctx.phase !== Phases.BrisingamensEndGame && ctx.phase !== Phases.GetMjollnirProfit) {
                 for (let i = 0; i < ctx.numPlayers; i++) {
                     if (G.publicPlayers[i].buffs.discardCardEndGame) {
                         isNewPhase = true;
@@ -192,7 +195,7 @@ export const CheckEndGameLastActions = (G, ctx) => {
                         ];
                         AddActionsToStack(G, ctx, stack);
                         G.drawProfit = `BrisingamensEndGameAction`;
-                        ctx.events.setPhase(`brisingamensEndGame`);
+                        ctx.events.setPhase(Phases.BrisingamensEndGame);
                         break;
                     }
                 }
@@ -218,7 +221,7 @@ export const CheckEndGameLastActions = (G, ctx) => {
                         ];
                         AddActionsToStack(G, ctx, stack);
                         G.drawProfit = `getMjollnirProfit`;
-                        ctx.events.setPhase(`getMjollnirProfit`);
+                        ctx.events.setPhase(Phases.GetMjollnirProfit);
                         break;
                     }
                 }
@@ -266,7 +269,7 @@ const StartEndTierActions = (G, ctx) => {
         }
     }
     if (ylud) {
-        ctx.events.setPhase(`endTier`);
+        ctx.events.setPhase(Phases.EndTier);
         const variants = {
             blacksmith: {
                 suit: SuitNames.BLACKSMITH,
@@ -300,7 +303,7 @@ const StartEndTierActions = (G, ctx) => {
                 playerId: G.publicPlayersOrder[0],
                 variants,
                 config: {
-                    stageName: `placeCards`,
+                    stageName: Stages.PlaceCards,
                     drawName: `Ylud`,
                     name: `placeCard`,
                 },
@@ -335,14 +338,14 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
     let count = false;
     for (let i = 0; i < G.publicPlayers.length; i++) {
         if (G.publicPlayers[i].campCards
-            .filter((card) => card.type === `наёмник`).length) {
+            .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
             count = true;
             break;
         }
     }
     if (count) {
         G.drawProfit = `startOrPassEnlistmentMercenaries`;
-        ctx.events.setPhase(`enlistmentMercenaries`);
+        ctx.events.setPhase(Phases.EnlistmentMercenaries);
     }
     else {
         StartEndTierActions(G, ctx);
