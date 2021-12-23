@@ -8,6 +8,52 @@ import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, AddCoinToPouchActi
 import { DrawCurrentProfit, PickCurrentHero, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
 import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "./CoinActions";
 /**
+ * <h3>Перечисление для типов карт.</h3>
+ */
+export var DrawNames;
+(function (DrawNames) {
+    DrawNames["AddCoinToPouchVidofnirVedrfolnir"] = "Add coin to pouch Vidofnir Vedrfolnir";
+    DrawNames["Aegur"] = "Aegur";
+    DrawNames["Andumia"] = "Andumia";
+    DrawNames["Aral"] = "Aral";
+    DrawNames["Astrid"] = "Astrid";
+    DrawNames["Bonfur"] = "Bonfur";
+    DrawNames["Brisingamens"] = "Brisingamens";
+    DrawNames["BrisingamensEndGame"] = "Brisingamens end game";
+    DrawNames["Dagda"] = "Dagda";
+    DrawNames["DiscardTavernCard"] = "Discard tavern card";
+    DrawNames["Dwerg_Aesir"] = "Dwerg_Aesir";
+    DrawNames["Dwerg_Bergelmir"] = "Dwerg_Bergelmir";
+    DrawNames["Dwerg_Jungir"] = "Dwerg_Jungir";
+    DrawNames["Dwerg_Sigmir"] = "Dwerg_Sigmir";
+    DrawNames["Dwerg_Ymir"] = "Dwerg_Ymir";
+    DrawNames["EnlistmentMercenaries"] = "Enlistment Mercenaries";
+    DrawNames["Mjollnir"] = "Mjollnir";
+    DrawNames["GetMjollnirProfit"] = "getMjollnirProfit";
+    DrawNames["Grid"] = "Grid";
+    DrawNames["Holda"] = "Holda";
+    DrawNames["Hourya"] = "Hourya";
+    DrawNames["Idunn"] = "Idunn";
+    DrawNames["Jarika"] = "Jarika";
+    DrawNames["Khrad"] = "Khrad";
+    DrawNames["Kraal"] = "Kraal";
+    DrawNames["Lokdur"] = "Lokdur";
+    DrawNames["Olwin"] = "Olwin";
+    DrawNames["Pick\u0421ardByExplorerDistinction"] = "Pick card by Explorer distinction";
+    DrawNames["PlaceEnlistmentMercenaries"] = "Place Enlistment Mercenaries";
+    DrawNames["Skaa"] = "Skaa";
+    DrawNames["StartOrPassEnlistmentMercenaries"] = "Start or Pass Enlistment Mercenaries";
+    DrawNames["Tarah"] = "Tarah";
+    DrawNames["Thrud"] = "Thrud";
+    DrawNames["UpgradeCoin"] = "Upgrade coin";
+    DrawNames["UpgradeCoinVidofnirVedrfolnir"] = "Upgrade coin Vidofnir Vedrfolnir";
+    DrawNames["UpgradeCoinWarriorDistinction"] = "Upgrade coin Warrior distinction";
+    DrawNames["Uline"] = "Uline";
+    DrawNames["Ylud"] = "Ylud";
+    DrawNames["Zolkur"] = "Zolkur";
+    DrawNames["Zoral"] = "Zoral";
+})(DrawNames || (DrawNames = {}));
+/**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -195,7 +241,7 @@ export const GetEnlistmentMercenariesAction = (G, ctx, config, cardId) => {
                 action: DrawProfitCampAction.name,
                 config: {
                     name: `placeEnlistmentMercenaries`,
-                    drawName: `Place Enlistment Mercenaries`,
+                    drawName: DrawNames.PlaceEnlistmentMercenaries,
                 },
             },
         ];
@@ -271,7 +317,7 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, config, suit) => {
                             action: DrawProfitCampAction.name,
                             config: {
                                 name: `enlistmentMercenaries`,
-                                drawName: `Enlistment Mercenaries`,
+                                drawName: DrawNames.EnlistmentMercenaries,
                             },
                         },
                     ];

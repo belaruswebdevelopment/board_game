@@ -40,6 +40,7 @@ import type { Ctx, Game } from "boardgame.io";
 import { CheckPlayersBasicOrder, IPublicPlayer, IStack } from "./Player";
 import { DrawProfitCampAction } from "./actions/CampActions";
 import { RusCardTypes } from "./Card";
+import { DrawNames } from "./actions/Actions";
 
 /**
  * <h3>Интерфейс для порядка ходов.</h3>
@@ -314,7 +315,7 @@ export const BoardGame: Game<MyGameState> = {
                         playerId: G.publicPlayersOrder[0],
                         config: {
                             name: `startOrPassEnlistmentMercenaries`,
-                            drawName: `Start or Pass Enlistment Mercenaries`,
+                            drawName: DrawNames.StartOrPassEnlistmentMercenaries,
                         },
                     },
                 ];

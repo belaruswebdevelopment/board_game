@@ -6,6 +6,7 @@ import { Styles } from "../data/StyleData";
 import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { Phases, Stages } from "../Game";
+import { HeroNames } from "../data/HeroData";
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
  * <p>Применения:</p>
@@ -64,10 +65,10 @@ export const DrawPlayersBoards = (data) => {
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                     if (data.props.G.publicPlayers[p].heroes[i] !== undefined &&
                         (!data.props.G.publicPlayers[p].heroes[i].suit &&
-                            !((data.props.G.publicPlayers[p].heroes[i].name === `Ylud`
-                                && playerCards.findIndex((card) => card.name === `Ylud`) !== -1)
-                                || (data.props.G.publicPlayers[p].heroes[i].name === `Thrud`
-                                    && playerCards.findIndex((card) => card.name === `Thrud`) !== -1)))) {
+                            !((data.props.G.publicPlayers[p].heroes[i].name === HeroNames.Ylud
+                                && playerCards.findIndex((card) => card.name === HeroNames.Ylud) !== -1)
+                                || (data.props.G.publicPlayers[p].heroes[i].name === HeroNames.Thrud
+                                    && playerCards.findIndex((card) => card.name === HeroNames.Thrud) !== -1)))) {
                         isDrawRow = true;
                         DrawCard(data, playerCells, data.props.G.publicPlayers[p].heroes[i], id, data.props.G.publicPlayers[p]);
                     }

@@ -4,6 +4,7 @@ import { Ctx } from "boardgame.io";
 import { IConfig } from "./Player";
 import { ICoin } from "./Coin";
 import { AddDataToLog, LogTypes } from "./Logging";
+import { HeroNames } from "./data/HeroData";
 
 /**
  * <h3>Интерфейс для параметров валидатора мувов.</h3>
@@ -223,7 +224,7 @@ export const moveValidators: IMoveValidators = {
             if (id !== undefined) {
                 let isValid: boolean = G.heroes[id].active;
                 // todo Add validators to others heroes
-                if (G.heroes[id].name === `Hourya`) {
+                if (G.heroes[id].name === HeroNames.Hourya) {
                     const config: IConfig | undefined = G.heroes[id].stack[0].config;
                     if (config?.conditions !== undefined) {
                         isValid = G.publicPlayers[Number(ctx!.currentPlayer)]

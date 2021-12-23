@@ -5,7 +5,7 @@ import { AddCardToPlayer, IConfig, IStack } from "../Player";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 import { UpgradeCoin } from "../Coin";
-import { ArgsTypes } from "../actions/Actions";
+import { ArgsTypes, DrawNames } from "../actions/Actions";
 import {
     CheckPickDiscardCardCampAction,
     DrawProfitCampAction,
@@ -127,7 +127,7 @@ export const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardI
                 config: {
                     stageName: Stages.PickDiscardCard,
                     name: `BrisingamensAction`,
-                    drawName: `Brisingamens`,
+                    drawName: DrawNames.Brisingamens,
                 },
             },
             {

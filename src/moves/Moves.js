@@ -7,7 +7,7 @@ import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { isCardNotAction } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
-import { GetEnlistmentMercenariesAction, PassEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
+import { DrawNames, GetEnlistmentMercenariesAction, PassEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { DrawProfitCampAction } from "../actions/CampActions";
 // todo Add logging
 /**
@@ -191,7 +191,7 @@ export const StartEnlistmentMercenariesMove = (G, ctx) => {
             action: DrawProfitCampAction.name,
             config: {
                 name: `enlistmentMercenaries`,
-                drawName: `Enlistment Mercenaries`,
+                drawName: DrawNames.EnlistmentMercenaries,
             },
         },
     ];

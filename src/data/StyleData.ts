@@ -1,3 +1,4 @@
+import { HeroNames } from "./HeroData";
 import { SuitNames } from "./SuitData";
 
 /**
@@ -186,9 +187,9 @@ export const Styles: IStyles = {
         };
     },
     Cards: (suit: string | null, name: string, points: number | null): IBackground => {
-        if (name === `Olwin`) {
+        if (name === HeroNames.Olwin) {
             switch (name) {
-                case `Olwin`:
+                case HeroNames.Olwin:
                     return {
                         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
                     };

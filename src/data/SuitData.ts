@@ -8,7 +8,7 @@ import { MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
+import { DrawNames, DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
 import { Stages } from "../Game";
 
 /**
@@ -207,7 +207,7 @@ const explorer: ISuit = {
                         config: {
                             name: `explorerDistinction`,
                             stageName: Stages.PickDistinctionCard,
-                            drawName: `Pick card by Explorer distinction`,
+                            drawName: DrawNames.PickСardByExplorerDistinction,
                         },
                     },
                 ];
@@ -419,7 +419,7 @@ const warrior: ISuit = {
                             name: `upgradeCoin`,
                             stageName: Stages.UpgradeCoin,
                             value: 5,
-                            drawName: `Upgrade coin Warrior distinction`,
+                            drawName: DrawNames.UpgradeCoinWarriorDistinction,
                         },
                     },
                     {

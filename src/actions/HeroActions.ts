@@ -24,7 +24,7 @@ import {
     PickDiscardCard,
     UpgradeCurrentCoin
 } from "../helpers/ActionHelpers";
-import { ArgsTypes } from "./Actions";
+import { ArgsTypes, DrawNames } from "./Actions";
 import { Stages } from "../Game";
 
 /**
@@ -161,7 +161,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
                 action: DrawProfitHeroAction.name,
                 config: {
                     stageName: Stages.DiscardCardFromBoard,
-                    drawName: `Dagda`,
+                    drawName: DrawNames.Dagda,
                     name: `DagdaAction`,
                     suit: SuitNames.HUNTER,
                 },
@@ -331,7 +331,7 @@ export const PlaceCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
                         config: {
                             name: `placeCards`,
                             stageName: Stages.PlaceCards,
-                            drawName: `Olwin`,
+                            drawName: DrawNames.Olwin,
                         },
                     },
                     {

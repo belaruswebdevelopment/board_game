@@ -15,6 +15,7 @@ import { isCardNotAction } from "../Card";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import {
+    DrawNames,
     GetEnlistmentMercenariesAction,
     PassEnlistmentMercenariesAction,
     PlaceEnlistmentMercenariesAction
@@ -209,7 +210,7 @@ export const StartEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState
             action: DrawProfitCampAction.name,
             config: {
                 name: `enlistmentMercenaries`,
-                drawName: `Enlistment Mercenaries`,
+                drawName: DrawNames.EnlistmentMercenaries,
             },
         },
     ];

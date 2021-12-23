@@ -1,4 +1,4 @@
-import { heroesConfig, IVariants } from "../data/HeroData";
+import { heroesConfig, HeroNames, IVariants } from "../data/HeroData";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 import { MyGameState } from "../GameSetup";
 import { Ctx } from "boardgame.io";
@@ -8,6 +8,7 @@ import { SuitNames } from "../data/SuitData";
 import { CheckPickHero } from "../Hero";
 import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
 import { Phases, Stages } from "../Game";
+import { DrawNames } from "../actions/Actions";
 
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>
@@ -24,7 +25,7 @@ import { Phases, Stages } from "../Game";
 export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: PlayerCardsType): boolean => {
     if (card.suit !== null) {
         const index: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit]
-            .findIndex((card: PlayerCardsType): boolean => card.name === `Thrud`);
+            .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Thrud);
         if (index !== -1) {
             G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit].splice(index, 1);
         }
@@ -175,7 +176,7 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
                     action: DrawProfitHeroAction.name,
                     variants,
                     config: {
-                        drawName: `Thrud`,
+                        drawName: DrawNames.Thrud,
                         name: `placeCards`,
                         stageName: Stages.PlaceCards,
                         suit: card.suit,

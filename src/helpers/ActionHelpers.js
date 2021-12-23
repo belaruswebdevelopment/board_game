@@ -3,6 +3,7 @@ import { AddCardToPlayer } from "../Player";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 import { UpgradeCoin } from "../Coin";
+import { DrawNames } from "../actions/Actions";
 import { CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCampAction } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
@@ -117,7 +118,7 @@ export const PickDiscardCard = (G, ctx, config, cardId) => {
                 config: {
                     stageName: Stages.PickDiscardCard,
                     name: `BrisingamensAction`,
-                    drawName: `Brisingamens`,
+                    drawName: DrawNames.Brisingamens,
                 },
             },
             {

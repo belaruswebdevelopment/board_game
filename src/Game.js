@@ -17,6 +17,7 @@ import { CheckDistinction } from "./Distinction";
 import { CheckPlayersBasicOrder } from "./Player";
 import { DrawProfitCampAction } from "./actions/CampActions";
 import { RusCardTypes } from "./Card";
+import { DrawNames } from "./actions/Actions";
 /**
  * <h3>Перечисление для фаз игры.</h3>
  */
@@ -273,7 +274,7 @@ export const BoardGame = {
                         playerId: G.publicPlayersOrder[0],
                         config: {
                             name: `startOrPassEnlistmentMercenaries`,
-                            drawName: `Start or Pass Enlistment Mercenaries`,
+                            drawName: DrawNames.StartOrPassEnlistmentMercenaries,
                         },
                     },
                 ];

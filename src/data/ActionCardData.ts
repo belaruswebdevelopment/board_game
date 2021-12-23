@@ -1,3 +1,4 @@
+import { DrawNames } from "../actions/Actions";
 import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "../actions/CoinActions";
 import { Stages } from "../Game";
 import { IStack } from "../Player";
@@ -35,7 +36,7 @@ const upgradeCoinUpTo3: IActionCardConfig = {
                 name: `upgradeCoin`,
                 stageName: Stages.UpgradeCoin,
                 value: 3,
-                drawName: `Upgrade coin`,
+                drawName: DrawNames.UpgradeCoin,
             },
         },
         {
@@ -81,7 +82,7 @@ const upgradeCoinUpTo5: IActionCardConfig = {
                 name: `upgradeCoin`,
                 stageName: Stages.UpgradeCoin,
                 value: 5,
-                drawName: `Upgrade coin`,
+                drawName: DrawNames.UpgradeCoin,
             },
         },
         {

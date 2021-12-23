@@ -1,3 +1,4 @@
+import { HeroNames } from "./data/HeroData";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
@@ -108,10 +109,10 @@ export const CreateHero = ({ type, name, description, game, suit, rank, points, 
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerCards = Object.values(G.publicPlayers[i].cards).flat();
-        const thrud = playerCards.find((card) => card.name === `Thrud`);
+        const thrud = playerCards.find((card) => card.name === HeroNames.Thrud);
         if (thrud !== undefined && thrud.suit !== null) {
             const thrudIndex = G.publicPlayers[i].cards[thrud.suit]
-                .findIndex((card) => card.name === `Thrud`);
+                .findIndex((card) => card.name === HeroNames.Thrud);
             G.publicPlayers[i].cards[thrud.suit].splice(thrudIndex, 1);
             AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с игрового поля.`);
         }

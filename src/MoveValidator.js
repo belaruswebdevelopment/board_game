@@ -1,5 +1,6 @@
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
+import { HeroNames } from "./data/HeroData";
 /**
  * Validates arguments inside of move.
  * obj - object to validate.
@@ -164,7 +165,7 @@ export const moveValidators = {
             if (id !== undefined) {
                 let isValid = G.heroes[id].active;
                 // todo Add validators to others heroes
-                if (G.heroes[id].name === `Hourya`) {
+                if (G.heroes[id].name === HeroNames.Hourya) {
                     const config = G.heroes[id].stack[0].config;
                     if ((config === null || config === void 0 ? void 0 : config.conditions) !== undefined) {
                         isValid = G.publicPlayers[Number(ctx.currentPlayer)]

@@ -9,6 +9,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { AddDataToLog, LogTypes } from "../Logging";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { DrawNames } from "./Actions";
 import { Stages } from "../Game";
 /**
  * <h3>Действия, связанные с добавлением бафов от героев игроку.</h3>
@@ -139,7 +140,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suit, cardId) 
                 action: DrawProfitHeroAction.name,
                 config: {
                     stageName: Stages.DiscardCardFromBoard,
-                    drawName: `Dagda`,
+                    drawName: DrawNames.Dagda,
                     name: `DagdaAction`,
                     suit: SuitNames.HUNTER,
                 },
@@ -302,7 +303,7 @@ export const PlaceCardsAction = (G, ctx, config, suit) => {
                     config: {
                         name: `placeCards`,
                         stageName: Stages.PlaceCards,
-                        drawName: `Olwin`,
+                        drawName: DrawNames.Olwin,
                     },
                 },
                 {

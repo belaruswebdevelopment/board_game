@@ -5,9 +5,10 @@ import { DiscardCardFromTavern, RusCardTypes } from "../Card";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "./StackHelpers";
 import { CheckAndStartUlineActionsOrContinue } from "./HeroHelpers";
 import { ActivateTrading } from "./CoinHelpers";
+import { HeroNames } from "../data/HeroData";
 import { SuitNames, suitsConfig } from "../data/SuitData";
 import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
-import { DrawProfitAction } from "../actions/Actions";
+import { DrawNames, DrawProfitAction } from "../actions/Actions";
 import { DiscardAnyCardFromPlayerBoardAction, DrawProfitCampAction, GetMjollnirProfitAction } from "../actions/CampActions";
 import { DiscardCardFromTavernAction } from "../actions/Actions";
 import { Phases, Stages } from "../Game";
@@ -72,7 +73,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                                 config: {
                                     stageName: Stages.DiscardCard,
                                     name: `discardCard`,
-                                    drawName: `Discard tavern card`,
+                                    drawName: DrawNames.DiscardTavernCard,
                                 },
                             },
                             {
@@ -115,7 +116,7 @@ export const AfterBasicPickCardActions = (G, ctx, isTrading) => {
                         .findIndex((playerIndex) => playerIndex === ctx.currentPlayer) + 1]),
                     config: {
                         name: `enlistmentMercenaries`,
-                        drawName: `Enlistment Mercenaries`,
+                        drawName: DrawNames.EnlistmentMercenaries,
                     },
                 },
             ];
@@ -185,7 +186,7 @@ export const CheckEndGameLastActions = (G, ctx) => {
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: `BrisingamensEndGameAction`,
-                                    drawName: `Brisingamens end game`,
+                                    drawName: DrawNames.BrisingamensEndGame,
                                 },
                             },
                             {
@@ -211,7 +212,7 @@ export const CheckEndGameLastActions = (G, ctx) => {
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: `getMjollnirProfit`,
-                                    drawName: `Mjollnir`,
+                                    drawName: DrawNames.Mjollnir,
                                 },
                             },
                             {
@@ -247,7 +248,7 @@ const StartEndTierActions = (G, ctx) => {
     G.publicPlayersOrder = [];
     let ylud = false, index = -1;
     for (let i = 0; i < G.publicPlayers.length; i++) {
-        index = G.publicPlayers[i].heroes.findIndex((hero) => hero.name === `Ylud`);
+        index = G.publicPlayers[i].heroes.findIndex((hero) => hero.name === HeroNames.Ylud);
         if (index !== -1) {
             ylud = true;
             G.publicPlayersOrder.push(i);
@@ -258,7 +259,7 @@ const StartEndTierActions = (G, ctx) => {
             for (const suit in suitsConfig) {
                 if (suitsConfig.hasOwnProperty(suit)) {
                     index = G.publicPlayers[i].cards[suit]
-                        .findIndex((card) => card.name === `Ylud`);
+                        .findIndex((card) => card.name === HeroNames.Ylud);
                     if (index !== -1) {
                         G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(index, 1);
                         G.publicPlayersOrder.push(i);
@@ -304,7 +305,7 @@ const StartEndTierActions = (G, ctx) => {
                 variants,
                 config: {
                     stageName: Stages.PlaceCards,
-                    drawName: `Ylud`,
+                    drawName: DrawNames.Ylud,
                     name: `placeCard`,
                 },
             },

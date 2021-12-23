@@ -1,4 +1,4 @@
-import { IHeroConfig } from "./data/HeroData";
+import { HeroNames, IHeroConfig } from "./data/HeroData";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
 import { TotalRank } from "./helpers/ScoreHelpers";
@@ -160,10 +160,10 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: MyGameState, ctx: Ctx)
     for (let i: number = 0; i < ctx.numPlayers; i++) {
         const playerCards: PlayerCardsType[] = Object.values(G.publicPlayers[i].cards).flat();
         const thrud: PlayerCardsType | undefined =
-            playerCards.find((card: PlayerCardsType): boolean => card.name === `Thrud`);
+            playerCards.find((card: PlayerCardsType): boolean => card.name === HeroNames.Thrud);
         if (thrud !== undefined && thrud.suit !== null) {
             const thrudIndex: number = G.publicPlayers[i].cards[thrud.suit]
-                .findIndex((card: PlayerCardsType): boolean => card.name === `Thrud`);
+                .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Thrud);
             G.publicPlayers[i].cards[thrud.suit].splice(thrudIndex, 1);
             AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с игрового поля.`);
         }

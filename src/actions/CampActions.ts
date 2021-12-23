@@ -27,7 +27,7 @@ import {
     PickDiscardCard,
     UpgradeCurrentCoin
 } from "../helpers/ActionHelpers";
-import { ArgsTypes } from "./Actions";
+import { ArgsTypes, DrawNames } from "./Actions";
 import { Phases, Stages } from "../Game";
 
 /**
@@ -83,7 +83,7 @@ export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConf
                         action: DrawProfitCampAction.name,
                         config: {
                             name: `enlistmentMercenaries`,
-                            drawName: `Enlistment Mercenaries`,
+                            drawName: DrawNames.EnlistmentMercenaries,
                         },
                     },
                 ];
@@ -351,7 +351,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
                     name: `AddCoinToPouchVidofnirVedrfolnir`,
                     stageName: Stages.AddCoinToPouch,
                     number: number,
-                    drawName: `Add coin to pouch Vidofnir Vedrfolnir`,
+                    drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
                 },
             },
             {
@@ -374,7 +374,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
                         name: `VidofnirVedrfolnirAction`,
                         stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         value: 5,
-                        drawName: `Upgrade coin Vidofnir Vedrfolnir`,
+                        drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                     },
                 },
                 {
@@ -393,7 +393,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
                         stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         number: 2,
                         value: 3,
-                        drawName: `Upgrade coin Vidofnir Vedrfolnir`,
+                        drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                     },
                 },
                 {
@@ -459,7 +459,7 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, co
                         name: `VidofnirVedrfolnirAction`,
                         stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
                         value: 2,
-                        drawName: `Upgrade coin Vidofnir Vedrfolnir`,
+                        drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
                     },
                 },
                 {

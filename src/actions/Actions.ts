@@ -47,6 +47,52 @@ import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "./CoinActions
 export type ArgsTypes = (string | number | boolean | null | object)[];
 
 /**
+ * <h3>Перечисление для типов карт.</h3>
+ */
+export const enum DrawNames {
+    AddCoinToPouchVidofnirVedrfolnir = `Add coin to pouch Vidofnir Vedrfolnir`,
+    Aegur = `Aegur`,
+    Andumia = `Andumia`,
+    Aral = `Aral`,
+    Astrid = `Astrid`,
+    Bonfur = `Bonfur`,
+    Brisingamens = `Brisingamens`,
+    BrisingamensEndGame = `Brisingamens end game`,
+    Dagda = `Dagda`,
+    DiscardTavernCard = `Discard tavern card`,
+    Dwerg_Aesir = `Dwerg_Aesir`,
+    Dwerg_Bergelmir = `Dwerg_Bergelmir`,
+    Dwerg_Jungir = `Dwerg_Jungir`,
+    Dwerg_Sigmir = `Dwerg_Sigmir`,
+    Dwerg_Ymir = `Dwerg_Ymir`,
+    EnlistmentMercenaries = `Enlistment Mercenaries`,
+    Mjollnir = `Mjollnir`,
+    GetMjollnirProfit = `getMjollnirProfit`,
+    Grid = `Grid`,
+    Holda = `Holda`,
+    Hourya = `Hourya`,
+    Idunn = `Idunn`,
+    Jarika = `Jarika`,
+    Khrad = `Khrad`,
+    Kraal = `Kraal`,
+    Lokdur = `Lokdur`,
+    Olwin = `Olwin`,
+    PickСardByExplorerDistinction = `Pick card by Explorer distinction`,
+    PlaceEnlistmentMercenaries = `Place Enlistment Mercenaries`,
+    Skaa = `Skaa`,
+    StartOrPassEnlistmentMercenaries = `Start or Pass Enlistment Mercenaries`,
+    Tarah = `Tarah`,
+    Thrud = `Thrud`,
+    UpgradeCoin = `Upgrade coin`,
+    UpgradeCoinVidofnirVedrfolnir = `Upgrade coin Vidofnir Vedrfolnir`,
+    UpgradeCoinWarriorDistinction = `Upgrade coin Warrior distinction`,
+    Uline = `Uline`,
+    Ylud = `Ylud`,
+    Zolkur = `Zolkur`,
+    Zoral = `Zoral`,
+}
+
+/**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -237,7 +283,7 @@ export const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config:
                 action: DrawProfitCampAction.name,
                 config: {
                     name: `placeEnlistmentMercenaries`,
-                    drawName: `Place Enlistment Mercenaries`,
+                    drawName: DrawNames.PlaceEnlistmentMercenaries,
                 },
             },
         ];
@@ -316,7 +362,7 @@ export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, confi
                             action: DrawProfitCampAction.name,
                             config: {
                                 name: `enlistmentMercenaries`,
-                                drawName: `Enlistment Mercenaries`,
+                                drawName: DrawNames.EnlistmentMercenaries,
                             },
                         },
                     ];

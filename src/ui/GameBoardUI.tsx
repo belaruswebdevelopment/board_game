@@ -33,6 +33,7 @@ import {
     UpgradeCoinVidofnirVedrfolnirProfit
 } from "../helpers/ProfitHelpers";
 import { IConfig, PickedCardType } from "../Player";
+import { DrawNames } from "../actions/Actions";
 
 /**
  * <h3>Отрисовка карт кэмпа.</h3>

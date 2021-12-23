@@ -8,10 +8,10 @@ import { ActivateTrading } from "./CoinHelpers";
 import { CampDeckCardTypes, MyGameState, TavernCardTypes } from "../GameSetup";
 import { Ctx } from "boardgame.io";
 import { IStack, PlayerCardsType } from "../Player";
-import { IVariants } from "../data/HeroData";
+import { HeroNames, IVariants } from "../data/HeroData";
 import { SuitNames, suitsConfig } from "../data/SuitData";
 import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
-import { DrawProfitAction } from "../actions/Actions";
+import { DrawNames, DrawProfitAction } from "../actions/Actions";
 import {
     DiscardAnyCardFromPlayerBoardAction,
     DrawProfitCampAction,
@@ -80,7 +80,7 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
                                 config: {
                                     stageName: Stages.DiscardCard,
                                     name: `discardCard`,
-                                    drawName: `Discard tavern card`,
+                                    drawName: DrawNames.DiscardTavernCard,
                                 },
                             },
                             {
@@ -119,7 +119,7 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
                         .findIndex((playerIndex: string): boolean => playerIndex === ctx.currentPlayer) + 1]),
                     config: {
                         name: `enlistmentMercenaries`,
-                        drawName: `Enlistment Mercenaries`,
+                        drawName: DrawNames.EnlistmentMercenaries,
                     },
                 },
             ];
@@ -188,7 +188,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: `BrisingamensEndGameAction`,
-                                    drawName: `Brisingamens end game`,
+                                    drawName: DrawNames.BrisingamensEndGame,
                                 },
                             },
                             {
@@ -214,7 +214,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                                 playerId: G.publicPlayersOrder[0],
                                 config: {
                                     name: `getMjollnirProfit`,
-                                    drawName: `Mjollnir`,
+                                    drawName: DrawNames.Mjollnir,
                                 },
                             },
                             {
@@ -252,7 +252,7 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
     let ylud: boolean = false,
         index: number = -1;
     for (let i: number = 0; i < G.publicPlayers.length; i++) {
-        index = G.publicPlayers[i].heroes.findIndex((hero: IHero): boolean => hero.name === `Ylud`);
+        index = G.publicPlayers[i].heroes.findIndex((hero: IHero): boolean => hero.name === HeroNames.Ylud);
         if (index !== -1) {
             ylud = true;
             G.publicPlayersOrder.push(i);
@@ -263,7 +263,7 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
             for (const suit in suitsConfig) {
                 if (suitsConfig.hasOwnProperty(suit)) {
                     index = G.publicPlayers[i].cards[suit]
-                        .findIndex((card: PlayerCardsType): boolean => card.name === `Ylud`);
+                        .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
                     if (index !== -1) {
                         G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(index, 1);
                         G.publicPlayersOrder.push(i);
@@ -309,7 +309,7 @@ const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
                 variants,
                 config: {
                     stageName: Stages.PlaceCards,
-                    drawName: `Ylud`,
+                    drawName: DrawNames.Ylud,
                     name: `placeCard`,
                 },
             },

@@ -8,6 +8,7 @@ import { GameBoard } from "../GameBoard";
 import { ICoin } from "../Coin";
 import { PlayerCardsType } from "../Player";
 import { Phases, Stages } from "../Game";
+import { HeroNames } from "../data/HeroData";
 
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
@@ -109,12 +110,12 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                     if (data.props.G.publicPlayers[p].heroes[i] !== undefined &&
                         (!data.props.G.publicPlayers[p].heroes[i].suit &&
-                            !((data.props.G.publicPlayers[p].heroes[i].name === `Ylud`
+                            !((data.props.G.publicPlayers[p].heroes[i].name === HeroNames.Ylud
                                 && playerCards.findIndex((card: { name: string; }): boolean =>
-                                    card.name === `Ylud`) !== -1)
-                                || (data.props.G.publicPlayers[p].heroes[i].name === `Thrud`
+                                    card.name === HeroNames.Ylud) !== -1)
+                                || (data.props.G.publicPlayers[p].heroes[i].name === HeroNames.Thrud
                                     && playerCards.findIndex((card: { name: string; }): boolean =>
-                                        card.name === `Thrud`) !== -1)))) {
+                                        card.name === HeroNames.Thrud) !== -1)))) {
                         isDrawRow = true;
                         DrawCard(data, playerCells, data.props.G.publicPlayers[p].heroes[i], id,
                             data.props.G.publicPlayers[p]);
