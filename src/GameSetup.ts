@@ -12,6 +12,7 @@ import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { Ctx } from "boardgame.io";
 import { ILogData } from "./Logging";
 import { heroesConfig } from "./data/HeroData";
+import { IDistinctions } from "./Distinction";
 
 /**
  * <h3>Интерфейс для дополнений к игре.</h3>
@@ -84,7 +85,7 @@ export interface MyGameState {
     decks: DeckCardTypes[][],
     discardCampCardsDeck: CampDeckCardTypes[],
     discardCardsDeck: DeckCardTypes[],
-    distinctions: DistinctionTypes[],
+    distinctions: IDistinctions,
     drawProfit: string,
     drawSize: number,
     exchangeOrder: (number | undefined)[],
@@ -135,7 +136,12 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         decks: DeckCardTypes[][] = [],
         discardCardsDeck: DeckCardTypes[] = [],
         campDecks: CampDeckCardTypes[][] = [],
-        distinctions: null[] = Array(suitsNum).fill(null);
+        distinctions: IDistinctions = {};
+    for (const suit in suitsConfig) {
+        if (suitsConfig.hasOwnProperty(suit)) {
+            distinctions[suit] = null;
+        }
+    }
     let winner: number[] = [],
         campPicked: boolean = false,
         camp: CampDeckCardTypes[] = [],

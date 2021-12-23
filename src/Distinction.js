@@ -63,18 +63,16 @@ export const CheckCurrentSuitDistinctions = (G, ctx, suit) => {
  * @param ctx
  */
 export const CheckDistinction = (G, ctx) => {
-    let i = 0;
     AddDataToLog(G, LogTypes.GAME, "Преимущество по фракциям в конце эпохи:");
     for (const suit in suitsConfig) {
         if (suitsConfig.hasOwnProperty(suit)) {
             const result = CheckCurrentSuitDistinction(G, ctx, suit);
-            G.distinctions[i] = result;
+            G.distinctions[suit] = result;
             if (suit === SuitNames.EXPLORER && result === undefined) {
                 const discardedCard = G.decks[1].splice(0, 1)[0];
                 G.discardCardsDeck.push(discardedCard);
                 AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
             }
-            i++;
         }
     }
 };

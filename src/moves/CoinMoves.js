@@ -3,6 +3,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
+import { SuitNames } from "../data/SuitData";
 // todo Add logging
 // todo Add Place coins async
 /**
@@ -97,14 +98,14 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    if (G.distinctions.length) {
+    if (Object.values(G.distinctions).length) {
         // todo Rework in suit name distinctions and delete not by if but by current distinction suit
-        const isDistinctionExplorer = G.distinctions[1] !== undefined;
+        const isDistinctionExplorer = G.distinctions[SuitNames.EXPLORER] !== undefined;
         if (isDistinctionExplorer) {
-            delete G.distinctions[1];
+            G.distinctions[SuitNames.EXPLORER] = undefined;
         }
-        else if (!isDistinctionExplorer && G.distinctions[4] !== undefined) {
-            delete G.distinctions[4];
+        else if (!isDistinctionExplorer && G.distinctions[SuitNames.WARRIOR] !== undefined) {
+            G.distinctions[SuitNames.WARRIOR] = undefined;
         }
     }
     EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);

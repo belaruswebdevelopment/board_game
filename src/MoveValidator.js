@@ -199,10 +199,10 @@ export const moveValidators = {
         validate: () => true,
     },
     ClickDistinctionCardMove: {
-        getRange: ({ G }) => ([0, G.distinctions.length]),
+        getRange: ({ G }) => ([0, Object.values(G.distinctions).length]),
         validate: ({ G, ctx, id }) => {
             if (id !== undefined) {
-                return G.distinctions.indexOf(Number(ctx.currentPlayer)) === id;
+                return Object.values(G.distinctions).indexOf(Number(ctx.currentPlayer)) === id;
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;

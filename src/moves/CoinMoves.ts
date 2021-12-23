@@ -7,6 +7,7 @@ import { Ctx, Move } from "boardgame.io";
 import { MyGameState } from "../GameSetup";
 import { IConfig, IPublicPlayer } from "../Player";
 import { ICoin } from "../Coin";
+import { SuitNames } from "../data/SuitData";
 
 // todo Add logging
 // todo Add Place coins async
@@ -99,13 +100,13 @@ export const ClickCoinToUpgradeMove: Move<MyGameState> = (G: MyGameState, ctx: C
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    if (G.distinctions.length) {
+    if (Object.values(G.distinctions).length) {
         // todo Rework in suit name distinctions and delete not by if but by current distinction suit
-        const isDistinctionExplorer: boolean = G.distinctions[1] !== undefined;
+        const isDistinctionExplorer: boolean = G.distinctions[SuitNames.EXPLORER] !== undefined;
         if (isDistinctionExplorer) {
-            delete G.distinctions[1];
-        } else if (!isDistinctionExplorer && G.distinctions[4] !== undefined) {
-            delete G.distinctions[4];
+            G.distinctions[SuitNames.EXPLORER] = undefined;
+        } else if (!isDistinctionExplorer && G.distinctions[SuitNames.WARRIOR] !== undefined) {
+            G.distinctions[SuitNames.WARRIOR] = undefined;
         }
     }
     EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);

@@ -25,7 +25,12 @@ export const SetupGame = (ctx) => {
         thingvellir: {
             active: true,
         },
-    }, totalScore = [], logData = [], decks = [], discardCardsDeck = [], campDecks = [], distinctions = Array(suitsNum).fill(null);
+    }, totalScore = [], logData = [], decks = [], discardCardsDeck = [], campDecks = [], distinctions = {};
+    for (const suit in suitsConfig) {
+        if (suitsConfig.hasOwnProperty(suit)) {
+            distinctions[suit] = null;
+        }
+    }
     let winner = [], campPicked = false, camp = [], discardCampCardsDeck = [];
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {

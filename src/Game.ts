@@ -381,7 +381,7 @@ export const BoardGame: Game<MyGameState> = {
             onBegin: (G: MyGameState, ctx: Ctx): void => {
                 CheckDistinction(G, ctx);
                 const distinctions: DistinctionTypes[] =
-                    G.distinctions.filter((distinction: DistinctionTypes): boolean =>
+                    Object.values(G.distinctions).filter((distinction: DistinctionTypes): boolean =>
                         distinction !== null && distinction !== undefined);
                 if (distinctions.every((distinction: DistinctionTypes): boolean =>
                     distinction !== null && distinction !== undefined)) {
@@ -389,15 +389,14 @@ export const BoardGame: Game<MyGameState> = {
                 }
             },
             onEnd: (G: MyGameState): void => {
-                // todo Useless action because all distinctions are undefined?
-                G.distinctions = Array(G.suitsNum).fill(undefined);
                 if (G.expansions.thingvellir.active) {
                     RefillCamp(G);
                 }
                 RefillTaverns(G);
             },
             endIf: (G: MyGameState): boolean =>
-                G.distinctions.every((distinction: DistinctionTypes): boolean => distinction === undefined),
+                Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
+                    distinction === undefined),
         },
     },
     onEnd: (G: MyGameState, ctx: Ctx) => {

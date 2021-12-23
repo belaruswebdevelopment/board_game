@@ -76,7 +76,7 @@ const blacksmith = {
                     rank: 2,
                     points: 2,
                 }));
-                delete G.distinctions[0];
+                G.distinctions[SuitNames.BLACKSMITH] = undefined;
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
                 ctx.events.endTurn();
             }
@@ -213,7 +213,7 @@ const hunter = {
                     value: 3,
                     isTriggerTrading: true,
                 });
-                delete G.distinctions[2];
+                G.distinctions[SuitNames.HUNTER] = undefined;
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
                 ctx.events.endTurn();
             }
@@ -278,7 +278,7 @@ const miner = {
                     value: 6,
                     isExchangeable: false,
                 });
-                delete G.distinctions[3];
+                G.distinctions[SuitNames.MINER] = undefined;
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия горняков свой кристалл на особый кристалл 6.`);
                 ctx.events.endTurn();
             }

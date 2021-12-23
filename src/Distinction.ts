@@ -4,6 +4,10 @@ import { TotalRank } from "./helpers/ScoreHelpers";
 import { DeckCardTypes, DistinctionTypes, MyGameState } from "./GameSetup";
 import { Ctx } from "boardgame.io";
 
+export interface IDistinctions {
+    [index: string]: DistinctionTypes,
+}
+
 // todo Rework 2 functions in one?
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по шевронам конкретной фракции.</h3>
@@ -18,7 +22,7 @@ import { Ctx } from "boardgame.io";
  * @param suit Фракция.
  * @returns Индекс игрока с преимуществом по фракции, если имеется.
  */
-export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suit: string): number | undefined => {
+export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suit: string): DistinctionTypes => {
     const playersRanks: number[] = [];
     for (let i: number = 0; i < ctx.numPlayers; i++) {
         playersRanks.push(G.publicPlayers[i].cards[suit].reduce(TotalRank, 0));
@@ -70,18 +74,16 @@ export const CheckCurrentSuitDistinctions = (G: MyGameState, ctx: Ctx, suit: str
  * @param ctx
  */
 export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
-    let i: number = 0;
     AddDataToLog(G, LogTypes.GAME, "Преимущество по фракциям в конце эпохи:");
     for (const suit in suitsConfig) {
         if (suitsConfig.hasOwnProperty(suit)) {
             const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
-            G.distinctions[i] = result;
+            G.distinctions[suit] = result;
             if (suit === SuitNames.EXPLORER && result === undefined) {
                 const discardedCard: DeckCardTypes = G.decks[1].splice(0, 1)[0];
                 G.discardCardsDeck.push(discardedCard);
                 AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
             }
-            i++;
         }
     }
 };

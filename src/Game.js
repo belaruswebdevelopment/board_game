@@ -344,20 +344,18 @@ export const BoardGame = {
             },
             onBegin: (G, ctx) => {
                 CheckDistinction(G, ctx);
-                const distinctions = G.distinctions.filter((distinction) => distinction !== null && distinction !== undefined);
+                const distinctions = Object.values(G.distinctions).filter((distinction) => distinction !== null && distinction !== undefined);
                 if (distinctions.every((distinction) => distinction !== null && distinction !== undefined)) {
                     G.publicPlayersOrder = distinctions;
                 }
             },
             onEnd: (G) => {
-                // todo Useless action because all distinctions are undefined?
-                G.distinctions = Array(G.suitsNum).fill(undefined);
                 if (G.expansions.thingvellir.active) {
                     RefillCamp(G);
                 }
                 RefillTaverns(G);
             },
-            endIf: (G) => G.distinctions.every((distinction) => distinction === undefined),
+            endIf: (G) => Object.values(G.distinctions).every((distinction) => distinction === undefined),
         },
     },
     onEnd: (G, ctx) => {

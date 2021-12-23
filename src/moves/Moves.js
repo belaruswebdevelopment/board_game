@@ -1,6 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCardToPlayer } from "../Player";
-import { suitsConfig } from "../data/SuitData";
+import { SuitNames, suitsConfig } from "../data/SuitData";
 import { IsValidMove } from "../MoveValidator";
 import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
@@ -74,7 +74,7 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     G.decks[1] = ctx.random.Shuffle(G.decks[1]);
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {
-            delete G.distinctions[1];
+            G.distinctions[SuitNames.EXPLORER] = undefined;
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
             suit = pickedCard.suit;
         }
@@ -97,7 +97,7 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
  * @returns
  */
 export const ClickDistinctionCardMove = (G, ctx, cardId) => {
-    const index = G.distinctions.indexOf(Number(ctx.currentPlayer)), isValidMove = IsValidMove({ objId: cardId, values: [index] });
+    const index = Object.values(G.distinctions).indexOf(Number(ctx.currentPlayer)), isValidMove = IsValidMove({ objId: cardId, values: [index] });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
