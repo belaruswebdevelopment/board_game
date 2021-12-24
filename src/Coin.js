@@ -3,9 +3,6 @@ import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { Stages } from "./Game";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
-;
-;
-;
 /**
  * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
  * <p>Применения:</p>

@@ -7,7 +7,6 @@ import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardF
 import { suitsConfig } from "./data/SuitData";
 import { Phases, Stages } from "./Game";
 import { ConfigNames } from "./actions/Actions";
-;
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>

@@ -10,11 +10,6 @@ import { suitsConfig } from "./data/SuitData";
 import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
-;
-;
-;
-;
-;
 /**
  * <h3>Сетап игры.</h3>
  * <p>Применения:</p>

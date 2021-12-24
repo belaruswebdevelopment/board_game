@@ -4,13 +4,6 @@ import { Stages } from "../Game";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
-;
-;
-;
-;
-;
-;
-;
 /**
  * <h3>Перечисление для названий героев.</h3>
  */
@@ -44,7 +37,6 @@ export var HeroNames;
     HeroNames["Zolkur"] = "Zolkur";
     HeroNames["Zoral"] = "Zoral";
 })(HeroNames || (HeroNames = {}));
-;
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>

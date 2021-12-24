@@ -1,7 +1,5 @@
 import { DiscardCardFromTavern } from "./Card";
 import { AddDataToLog, LogTypes } from "./Logging";
-;
-;
 /**
  * <h3>Конфиг таверн.</h3>
  * <p>Применения:</p>

@@ -26,7 +26,7 @@ import { SuitNames } from "./SuitData";
 export interface IBuff {
     name: string,
     value: string | number | boolean,
-};
+}
 
 /**
  * <h3>Интерфейс для варианта карты героя.</h3>
@@ -35,14 +35,14 @@ interface IVariant {
     suit: string,
     rank: number,
     points: null | number,
-};
+}
 
 /**
  * <h3>Интерфейс для вариантов карты героя.</h3>
  */
 export interface IVariants {
     [name: string]: IVariant,
-};
+}
 
 /**
  * <h3>Интерфейс для условия карты героя.</h3>
@@ -50,14 +50,14 @@ export interface IVariants {
 interface ICondition {
     suit: string,
     [name: string]: string | number | boolean,
-};
+}
 
 /**
  * <h3>Интерфейс для условий карты героя.</h3>
  */
 export interface IConditions {
     [name: string]: ICondition,
-};
+}
 
 /**
  * <h3>Интерфейс для данных карты героя.</h3>
@@ -71,14 +71,14 @@ export interface IHeroData {
     points: null | number,
     stack: IStack[],
     scoringRule: (player?: IPublicPlayer) => number,
-};
+}
 
 /**
  * <h3>Интерфейс для конфига карт героев.</h3>
  */
 export interface IHeroConfig {
     [name: string]: IHeroData,
-};
+}
 
 /**
  * <h3>Перечисление для названий героев.</h3>
@@ -111,7 +111,7 @@ export const enum HeroNames {
     Ylud = `Ylud`,
     Zolkur = `Zolkur`,
     Zoral = `Zoral`,
-};
+}
 
 /**
  * <h3>Данные о герое.</h3>

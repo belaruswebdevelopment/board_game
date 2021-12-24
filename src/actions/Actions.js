@@ -53,7 +53,6 @@ export var DrawNames;
     DrawNames["Zolkur"] = "Zolkur";
     DrawNames["Zoral"] = "Zoral";
 })(DrawNames || (DrawNames = {}));
-;
 /**
  * <h3>Перечисление для названия отрисовки экшенов в конфиге.</h3>
  */
@@ -79,7 +78,6 @@ export var ConfigNames;
     ConfigNames["VidofnirVedrfolnirAction"] = "VidofnirVedrfolnirAction";
     ConfigNames["Ylud"] = "Ylud";
 })(ConfigNames || (ConfigNames = {}));
-;
 /**
  * <h3>Перечисление для названия бафов в конфиге.</h3>
  */
@@ -94,7 +92,6 @@ export var BuffNames;
     BuffNames["UpgradeCoin"] = "upgradeCoin";
     BuffNames["UpgradeNextCoin"] = "upgradeNextCoin";
 })(BuffNames || (BuffNames = {}));
-;
 /**
  * <h3>Диспетчер действий при их активации.</h3>
  * <p>Применения:</p>

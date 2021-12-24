@@ -6,7 +6,7 @@ import { AddDataToLog, LogTypes } from "./Logging";
 
 export interface IDistinctions {
     [index: string]: DistinctionTypes,
-};
+}
 
 // todo Rework 2 functions in one?
 /**

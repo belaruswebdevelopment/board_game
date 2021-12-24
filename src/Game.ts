@@ -47,7 +47,7 @@ interface IOrder {
     next: (G: MyGameState, ctx: Ctx) => number;
     first: () => number;
     playOrder: (G: MyGameState) => string[];
-};
+}
 
 /**
  * <h3>Перечисление для фаз игры.</h3>
@@ -61,7 +61,7 @@ export const enum Phases {
     PickCards = `pickCards`,
     PlaceCoins = `placeCoins`,
     PlaceCoinsUline = `placeCoinsUline`,
-};
+}
 
 /**
  * <h3>Перечисление для стейджей игры.</h3>
@@ -79,7 +79,7 @@ export const enum Stages {
     PlaceTradingCoinsUline = `placeTradingCoinsUline`,
     UpgradeCoin = `upgradeCoin`,
     UpgradeCoinVidofnirVedrfolnir = `upgradeCoinVidofnirVedrfolnir`,
-};
+}
 
 // todo Add logging
 // todo Add colors for cards Points by suit colors!

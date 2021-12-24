@@ -3,9 +3,6 @@ import { DiscardCardFromTavern, RusCardTypes } from "./Card";
 import { suitsConfig } from "./data/SuitData";
 import { AddDataToLog, LogTypes } from "./Logging";
 ;
-;
-;
-;
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>

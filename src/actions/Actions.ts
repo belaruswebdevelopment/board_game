@@ -90,7 +90,7 @@ export const enum DrawNames {
     Ylud = `Ylud`,
     Zolkur = `Zolkur`,
     Zoral = `Zoral`,
-};
+}
 
 /**
  * <h3>Перечисление для названия отрисовки экшенов в конфиге.</h3>
@@ -115,7 +115,7 @@ export const enum ConfigNames {
     UpgradeCoin = `upgradeCoin`,
     VidofnirVedrfolnirAction = `VidofnirVedrfolnirAction`,
     Ylud = `Ylud`,
-};
+}
 
 /**
  * <h3>Перечисление для названия бафов в конфиге.</h3>
@@ -129,7 +129,7 @@ export const enum BuffNames {
     NoHero = `noHero`,
     UpgradeCoin = `upgradeCoin`,
     UpgradeNextCoin = `upgradeNextCoin`,
-};
+}
 
 /**
  * <h3>Диспетчер действий при их активации.</h3>

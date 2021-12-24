@@ -5,8 +5,6 @@ import { Stages } from "./Game";
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
-;
-;
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>

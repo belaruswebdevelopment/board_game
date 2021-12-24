@@ -20,7 +20,7 @@ export interface IArtefactCampCard {
     rank: null | number,
     points: null | number,
     stack: IStack[],
-};
+}
 
 /**
  * <h3>Интерфейс для создания карты кэмпа артефакта.</h3>
@@ -48,7 +48,7 @@ export interface IMercenaryCampCard {
     name: string,
     game: string,
     stack: IStack[],
-};
+}
 
 /**
  * <h3>Интерфейс для создания карты кэмпа наёмника.</h3>
@@ -60,7 +60,7 @@ interface ICreateMercenaryCampCard {
     name: string,
     game?: string,
     stack: IStack[],
-};
+}
 
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>

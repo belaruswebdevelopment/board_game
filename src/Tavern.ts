@@ -8,14 +8,14 @@ import { AddDataToLog, LogTypes } from "./Logging";
  */
 interface ITavernInConfig {
     name: string,
-};
+}
 
 /**
  * <h3>Интерфейс для конфига всех таверн.</h3>
  */
 interface ITavernsConfig {
     [index: number]: ITavernInConfig,
-};
+}
 
 /**
  * <h3>Конфиг таверн.</h3>

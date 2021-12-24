@@ -30,7 +30,7 @@ export interface IArtefact {
     points: null | number,
     stack: IStack[],
     scoringRule: (player?: IPublicPlayer, suit?: string) => number,
-};
+}
 
 /**
  * <h3>Интерфейс для данных карт кэмпа наёмник.</h3>
@@ -39,21 +39,21 @@ interface IMercenary {
     suit: string,
     rank: number,
     points: null | number,
-};
+}
 
 /**
  * <h3>Интерфейс для перечня данных карт кэмпа наёмники.</h3>
  */
 export interface IMercenaries {
     [name: string]: IMercenary,
-};
+}
 
 /**
  * <h3>Интерфейс для конфига данных карт кэмпа артефакт.</h3>
  */
 export interface IArtefactConfig {
     [name: string]: IArtefact,
-};
+}
 
 /**
  * <h3>Перечисление для названий артефактов.</h3>
@@ -71,7 +71,7 @@ export const enum ArtefactNames {
     Svalinn = `Svalinn`,
     Vegvisir = `Vegvisir`,
     Vidofnir_Vedrfolnir = `Vidofnir Vedrfolnir`,
-};
+}
 
 /**
  * <h3>Данные об артефакте.</h3>

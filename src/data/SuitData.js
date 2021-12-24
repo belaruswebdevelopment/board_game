@@ -18,7 +18,6 @@ export var SuitNames;
     SuitNames["MINER"] = "miner";
     SuitNames["WARRIOR"] = "warrior";
 })(SuitNames || (SuitNames = {}));
-;
 /**
  * <h3>Перечисление для русских названий фракций.</h3>
  */
@@ -30,14 +29,6 @@ export var RusSuitNames;
     RusSuitNames["MINER"] = "\u0413\u043E\u0440\u043D\u044F\u043A\u0438";
     RusSuitNames["WARRIOR"] = "\u0412\u043E\u0438\u043D\u044B";
 })(RusSuitNames || (RusSuitNames = {}));
-;
-;
-;
-;
-;
-;
-;
-;
 /**
  * <h3>Фракция кузнецов.</h3>
  * <p>Применения:</p>

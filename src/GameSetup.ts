@@ -21,14 +21,14 @@ interface IExpansion {
     [name: string]: {
         active: boolean,
     },
-};
+}
 
 /**
  * <h3>Интерфейс для объекта, хранящего скрытые (secret) данные всех игроков.</h3>
  */
 interface IPlayers {
     [index: number]: IPlayer,
-};
+}
 
 /**
  * <h3>Интерфейс для данных бота.</h3>
@@ -38,11 +38,11 @@ interface IBotData {
     allPicks: any,
     maxIter: number,
     deckLength: number,
-};
+}
 
 interface IAverageCard {
     [index: string]: ICard,
-};
+}
 
 /**
  * <h3>Типы данных для дек карт.</h3>
@@ -105,7 +105,7 @@ export interface MyGameState {
     publicPlayers: IPublicPlayer[],
     publicPlayersOrder: number[],
     winner: number[],
-};
+}
 
 /**
  * <h3>Сетап игры.</h3>

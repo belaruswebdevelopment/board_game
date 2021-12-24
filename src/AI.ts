@@ -31,7 +31,7 @@ import { ConfigNames } from "./actions/Actions";
 interface IMoves {
     move: string,
     args: number[][] | (string | number | boolean)[] | number,
-};
+}
 
 export type IBotMoveArgumentsTypes = (number | string | boolean)[][];
 

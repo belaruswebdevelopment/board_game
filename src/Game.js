@@ -18,7 +18,6 @@ import { CheckPlayersBasicOrder } from "./Player";
 import { ChangePlayersPriorities } from "./Priority";
 import { ScoreWinner } from "./Score";
 import { RefillTaverns } from "./Tavern";
-;
 /**
  * <h3>Перечисление для фаз игры.</h3>
  */
@@ -33,7 +32,6 @@ export var Phases;
     Phases["PlaceCoins"] = "placeCoins";
     Phases["PlaceCoinsUline"] = "placeCoinsUline";
 })(Phases || (Phases = {}));
-;
 /**
  * <h3>Перечисление для стейджей игры.</h3>
  */
@@ -52,7 +50,6 @@ export var Stages;
     Stages["UpgradeCoin"] = "upgradeCoin";
     Stages["UpgradeCoinVidofnirVedrfolnir"] = "upgradeCoinVidofnirVedrfolnir";
 })(Stages || (Stages = {}));
-;
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
 // todo Add dock block

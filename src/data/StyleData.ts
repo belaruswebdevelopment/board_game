@@ -7,7 +7,7 @@ import { SuitNames } from "./SuitData";
  */
 export interface IBackground {
     background: string,
-};
+}
 
 /**
  * <h3>Интерфейс для всех стилей.</h3>
@@ -27,7 +27,7 @@ interface IStyles {
     Priority: () => IBackground,
     Suits: (suit: string) => IBackground,
     Taverns: (tavernId: number) => IBackground,
-};
+}
 
 /**
  * <h3>Путь к базовым картам.</h3>

@@ -4,10 +4,6 @@ import { RusCardTypes } from "../Card";
 import { Stages } from "../Game";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { SuitNames } from "./SuitData";
-;
-;
-;
-;
 /**
  * <h3>Перечисление для названий артефактов.</h3>
  */
@@ -26,7 +22,6 @@ export var ArtefactNames;
     ArtefactNames["Vegvisir"] = "Vegvisir";
     ArtefactNames["Vidofnir_Vedrfolnir"] = "Vidofnir Vedrfolnir";
 })(ArtefactNames || (ArtefactNames = {}));
-;
 /**
  * <h3>Данные об артефакте.</h3>
  * <p>Применения:</p>

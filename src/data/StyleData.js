@@ -1,8 +1,6 @@
 import { ArtefactNames } from "./CampData";
 import { HeroNames } from "./HeroData";
 import { SuitNames } from "./SuitData";
-;
-;
 /**
  * <h3>Путь к базовым картам.</h3>
  */

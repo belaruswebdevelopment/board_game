@@ -8,8 +8,6 @@ export var LogTypes;
     LogTypes["PRIVATE"] = "private";
     LogTypes["PUBLIC"] = "public";
 })(LogTypes || (LogTypes = {}));
-;
-;
 /**
  * <h3>Логирует данные.</h3>
  * <p>Применения:</p>

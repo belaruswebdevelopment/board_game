@@ -7,12 +7,6 @@ import { suitsConfig } from "./data/SuitData";
 import { Phases } from "./Game";
 import { AddDataToLog, LogTypes } from "./Logging";
 import { CurrentScoring } from "./Score";
-;
-;
-;
-;
-;
-;
 /**
  * <h3>Добавляет взятую из кэмпа карту в массив карт кэмпа игрока.</h3>
  * <p>Применения:</p>
