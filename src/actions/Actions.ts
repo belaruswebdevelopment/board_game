@@ -77,7 +77,7 @@ export const enum DrawNames {
     Kraal = `Kraal`,
     Lokdur = `Lokdur`,
     Olwin = `Olwin`,
-    PickСardByExplorerDistinction = `Pick card by Explorer distinction`,
+    PickCardByExplorerDistinction = `Pick card by Explorer distinction`,
     PlaceEnlistmentMercenaries = `Place Enlistment Mercenaries`,
     Skaa = `Skaa`,
     StartOrPassEnlistmentMercenaries = `Start or Pass Enlistment Mercenaries`,

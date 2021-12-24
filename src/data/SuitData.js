@@ -164,7 +164,7 @@ const explorer = {
                         config: {
                             name: ConfigNames.ExplorerDistinction,
                             stageName: Stages.PickDistinctionCard,
-                            drawName: DrawNames.PickСardByExplorerDistinction,
+                            drawName: DrawNames.PickCardByExplorerDistinction,
                         },
                     },
                 ];

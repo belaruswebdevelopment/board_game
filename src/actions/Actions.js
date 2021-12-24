@@ -39,7 +39,7 @@ export var DrawNames;
     DrawNames["Kraal"] = "Kraal";
     DrawNames["Lokdur"] = "Lokdur";
     DrawNames["Olwin"] = "Olwin";
-    DrawNames["Pick\u0421ardByExplorerDistinction"] = "Pick card by Explorer distinction";
+    DrawNames["PickCardByExplorerDistinction"] = "Pick card by Explorer distinction";
     DrawNames["PlaceEnlistmentMercenaries"] = "Place Enlistment Mercenaries";
     DrawNames["Skaa"] = "Skaa";
     DrawNames["StartOrPassEnlistmentMercenaries"] = "Start or Pass Enlistment Mercenaries";
