@@ -1,5 +1,6 @@
 import { isArtefactCard } from "../Camp";
 import { RusCardTypes } from "../Card";
+import { HeroNames } from "../data/HeroData";
 import { SuitNames, suitsConfig } from "../data/SuitData";
 import { Phases, Stages } from "../Game";
 import { AddBuffToPlayer, DrawCurrentProfit, PickCurrentHero, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
@@ -188,7 +189,8 @@ export const DiscardSuitCardAction = (G, ctx, config, suit, playerId, cardId) =>
 export const DiscardTradingCoinAction = (G, ctx) => {
     let tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
         .findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading));
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === `Uline` && tradingCoinIndex === -1) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
+        && tradingCoinIndex === -1) {
         tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading));
         G.publicPlayers[Number(ctx.currentPlayer)].handCoins
@@ -315,7 +317,8 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     const number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
         .filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length;
     let stack = [];
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === "Uline" && number > 0 && handCoinsNumber) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline && number > 0
+        && handCoinsNumber) {
         stack = [
             {
                 action: DrawProfitCampAction.name,

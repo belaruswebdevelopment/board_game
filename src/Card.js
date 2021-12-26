@@ -218,7 +218,7 @@ export const DiscardCardFromTavern = (G, discardCardIndex) => {
  * @returns Сравнительное значение.
  */
 export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
-    if (compareCard !== null && "suit" in compareCard) {
+    if (compareCard !== null && `suit` in compareCard) {
         if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
             return CompareCards(compareCard, G.averageCards[compareCard.suit]);
         }
@@ -229,7 +229,7 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
         temp.forEach((player) => player.splice(Number(ctx.currentPlayer), 1));
         return result - Math.max(...temp.map((player) => Math.max(...player)));
     }
-    if (compareCard !== null && "suit" in compareCard) {
+    if (compareCard !== null && `suit` in compareCard) {
         return CompareCards(compareCard, G.averageCards[compareCard.suit]);
     }
     // todo FIX IT, UNREACHABLE!? 0 === DEFAULT?!

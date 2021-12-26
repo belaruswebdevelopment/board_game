@@ -53,7 +53,7 @@ export const SetupGame = (ctx) => {
         });
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
-    const heroesConfigOptions = ["base"];
+    const heroesConfigOptions = [`base`];
     for (const expansion in expansions) {
         if (expansions[expansion].active) {
             heroesConfigOptions.push(expansion);
@@ -69,7 +69,7 @@ export const SetupGame = (ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const randomPriorityIndex = Math.floor(Math.random() * priorities.length), priority = priorities.splice(randomPriorityIndex, 1)[0];
         players[i] = BuildPlayer();
-        publicPlayers[i] = BuildPublicPlayer("Dan" + i, priority);
+        publicPlayers[i] = BuildPublicPlayer(`Dan` + i, priority);
     }
     const marketCoinsUnique = [], marketCoins = BuildCoins(marketCoinsConfig, {
         count: marketCoinsUnique,

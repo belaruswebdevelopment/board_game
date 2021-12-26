@@ -35,7 +35,8 @@ export const AddCoinToPouchProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard 
             if (data instanceof GameBoard && boardCells !== undefined) {
                 DrawCoin(data, boardCells, `coin`,
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j], j,
-                    G.publicPlayers[Number(ctx.currentPlayer)], `border-2`, null, OnClickCoinToAddToPouch.name, j);
+                    G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
+                    null, OnClickCoinToAddToPouch.name, j);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }
@@ -327,7 +328,8 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G: MyGameState, ctx: Ctx, da
     boardCells?: JSX.Element[]): void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (config !== undefined) {
-        for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
+        for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
+        j++) {
             const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
             if (coin !== null) {
                 if (!coin.isTriggerTrading && config.coinId !== j) {

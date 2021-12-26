@@ -835,7 +835,7 @@ const Thrud = {
                 },
             },
             config: {
-                name: `Thrud`,
+                name: HeroNames.Thrud,
             },
         },
     ],

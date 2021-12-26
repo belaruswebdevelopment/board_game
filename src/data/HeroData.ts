@@ -933,7 +933,7 @@ const Thrud: IHeroData = {
                 },
             },
             config: {
-                name: `Thrud`,
+                name: HeroNames.Thrud,
             },
         },
     ],

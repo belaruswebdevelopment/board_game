@@ -272,7 +272,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
             caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? `s` : ``} to discard from your board.`;
             DiscardCardFromBoardProfit(data.props.G, data.props.ctx, data, boardCells);
         } else if (option === ConfigNames.AndumiaAction || option === ConfigNames.BrisingamensAction) {
-            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? "s" : ""} from discard pile to your board.`;
+            caption += `${data.props.G.actionsNum} card${data.props.G.actionsNum > 1 ? `s` : ``} from discard pile to your board.`;
             PickDiscardCardProfit(data.props.G, data.props.ctx, data, boardCells);
         } else if (option === ConfigNames.BrisingamensEndGameAction) {
             caption += `one card to discard from your board.`;
@@ -314,7 +314,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                 PlaceEnlistmentMercenariesProfit(data.props.G, data.props.ctx, data, boardCells);
             }
         } else if (option === ConfigNames.AddCoinToPouchVidofnirVedrfolnir) {
-            caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? "s" : ""} to add to your pouch to fill it.`;
+            caption += `${data.props.G.actionsNum} coin${data.props.G.actionsNum > 1 ? `s` : ``} to add to your pouch to fill it.`;
             AddCoinToPouchProfit(data.props.G, data.props.ctx, data, boardCells);
         } else {
             if (config !== undefined) {

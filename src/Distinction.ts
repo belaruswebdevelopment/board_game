@@ -74,7 +74,7 @@ export const CheckCurrentSuitDistinctions = (G: MyGameState, ctx: Ctx, suit: str
  * @param ctx
  */
 export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
-    AddDataToLog(G, LogTypes.GAME, "Преимущество по фракциям в конце эпохи:");
+    AddDataToLog(G, LogTypes.GAME, `Преимущество по фракциям в конце эпохи:`);
     for (const suit in suitsConfig) {
         if (suitsConfig.hasOwnProperty(suit)) {
             const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);

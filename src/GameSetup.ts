@@ -166,7 +166,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         } as IAverageSuitCardData);
         decks[i] = ctx.random!.Shuffle(decks[i]);
     }
-    const heroesConfigOptions: string[] = ["base"];
+    const heroesConfigOptions: string[] = [`base`];
     for (const expansion in expansions) {
         if (expansions[expansion].active) {
             heroesConfigOptions.push(expansion);
@@ -190,7 +190,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         const randomPriorityIndex: number = Math.floor(Math.random() * priorities.length),
             priority: IPriority = priorities.splice(randomPriorityIndex, 1)[0];
         players[i] = BuildPlayer();
-        publicPlayers[i] = BuildPublicPlayer("Dan" + i, priority);
+        publicPlayers[i] = BuildPublicPlayer(`Dan` + i, priority);
     }
     const marketCoinsUnique: ICoin[] = [],
         marketCoins: ICoin[] = BuildCoins(marketCoinsConfig, {

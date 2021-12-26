@@ -63,7 +63,7 @@ export const CheckCurrentSuitDistinctions = (G, ctx, suit) => {
  * @param ctx
  */
 export const CheckDistinction = (G, ctx) => {
-    AddDataToLog(G, LogTypes.GAME, "Преимущество по фракциям в конце эпохи:");
+    AddDataToLog(G, LogTypes.GAME, `Преимущество по фракциям в конце эпохи:`);
     for (const suit in suitsConfig) {
         if (suitsConfig.hasOwnProperty(suit)) {
             const result = CheckCurrentSuitDistinction(G, ctx, suit);
