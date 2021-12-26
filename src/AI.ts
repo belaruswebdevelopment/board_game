@@ -1,12 +1,11 @@
-import { CompareCards, EvaluateCard, isCardNotAction, RusCardTypes } from "./Card";
-import { HasLowestPriority } from "./Priority";
-import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
-import { CurrentScoring } from "./Score";
-import { moveBy, moveValidators } from "./MoveValidator";
-import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
 import { Ctx } from "boardgame.io";
+import { ConfigNames } from "./actions/Actions";
+import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
+import { CompareCards, EvaluateCard, isCardNotAction, RusCardTypes } from "./Card";
 import { ICoin } from "./Coin";
-import { IConfig, PlayerCardsType } from "./Player";
+import { suitsConfig } from "./data/SuitData";
+import { Phases, Stages } from "./Game";
+import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
 import {
     AddCoinToPouchProfit,
     DiscardAnyCardFromPlayerBoardProfit,
@@ -21,9 +20,11 @@ import {
     StartEnlistmentMercenariesProfit,
     UpgradeCoinVidofnirVedrfolnirProfit
 } from "./helpers/ProfitHelpers";
-import { suitsConfig } from "./data/SuitData";
-import { Phases, Stages } from "./Game";
-import { ConfigNames } from "./actions/Actions";
+import { MoveNames } from "./moves/Moves";
+import { moveBy, moveValidators } from "./MoveValidator";
+import { IConfig, PlayerCardsType } from "./Player";
+import { HasLowestPriority } from "./Priority";
+import { CurrentScoring } from "./Score";
 
 /**
  * <h3>Интерфейс для возможных мувов у ботов.</h3>
@@ -135,7 +136,10 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 }
                 if (flag) {
                     uniqueArr.push(tavernCard);
-                    moves.push({ move: `ClickCardMove`, args: [i] });
+                    moves.push({
+                        move: MoveNames.ClickCardMove,
+                        args: [i],
+                    });
                 }
                 flag = true;
             }
@@ -146,7 +150,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 }
             }
             moves.push({
-                move: `ClickCampCardMove`,
+                move: MoveNames.ClickCampCardMove,
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
@@ -179,7 +183,10 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 if (hasTrading) {
                     continue;
                 }
-                moves.push({ move: `BotsPlaceAllCoinsMove`, args: [allCoinsOrder[i]] });
+                moves.push({
+                    move: MoveNames.BotsPlaceAllCoinsMove,
+                    args: [allCoinsOrder[i]],
+                });
             } else if (tradingProfit > 0) {
                 if (!hasTrading) {
                     continue;
@@ -202,12 +209,18 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                             && coin!.value < minCoin.value).length <= 1;
                     }
                     if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
-                        moves.push({ move: "BotsPlaceAllCoinsMove", args: [G.botData.allCoinsOrder[i]] });
-                        //console.log(`#` + i.toString().padStart(2) + `:     ` + allCoinsOrder[i].map(item => handCoins[item].value));
+                        moves.push({
+                            move: MoveNames.BotsPlaceAllCoinsMove,
+                            args: [G.botData.allCoinsOrder[i]],
+                        });
+                        //console.log(`#` + i.toString().padStart(2) + `: ` + allCoinsOrder[i].map(item => handCoins[item].value));
                     }
                 }
             } else {
-                moves.push({ move: "BotsPlaceAllCoinsMove", args: [allCoinsOrder[i]] });
+                moves.push({
+                    move: MoveNames.BotsPlaceAllCoinsMove,
+                    args: [allCoinsOrder[i]],
+                });
             }
         }
         //console.log(moves);
@@ -216,7 +229,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     if (activeStageOfCurrentPlayer === Stages.PlaceCards || ctx.phase === Phases.EndTier) {
         PlaceCardsProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `PlaceCardMove`,
+            move: MoveNames.PlaceCardMove,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
@@ -226,14 +239,14 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         botMoveArguments.push([Object.values(suitsConfig)[totalSuitsRanks
             .indexOf(Math.max(...totalSuitsRanks))].suit]);
         moves.push({
-            move: `GetMjollnirProfitMove`,
+            move: MoveNames.GetMjollnirProfitMove,
             args: [...botMoveArguments[0]],
         });
     }
     if (ctx.phase === Phases.BrisingamensEndGame) {
         DiscardAnyCardFromPlayerBoardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `DiscardCardFromPlayerBoardMove`,
+            move: MoveNames.DiscardCardFromPlayerBoardMove,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
@@ -241,20 +254,26 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
             StartEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             if (Math.floor(Math.random() * botMoveArguments.length) === 0) {
-                moves.push({ move: `StartEnlistmentMercenariesMove`, args: [] });
+                moves.push({
+                    move: MoveNames.StartEnlistmentMercenariesMove,
+                    args: [],
+                });
             } else {
-                moves.push({ move: `PassEnlistmentMercenariesMove`, args: [] });
+                moves.push({
+                    move: MoveNames.PassEnlistmentMercenariesMove,
+                    args: [],
+                });
             }
         } else if (G.drawProfit === ConfigNames.EnlistmentMercenaries) {
             GetEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: `GetEnlistmentMercenariesMove`,
+                move: MoveNames.GetEnlistmentMercenariesMove,
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         } else if (G.drawProfit === ConfigNames.PlaceEnlistmentMercenaries) {
             PlaceEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: `PlaceEnlistmentMercenariesMove`,
+                move: MoveNames.PlaceEnlistmentMercenariesMove,
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
@@ -266,10 +285,13 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             }
         }
         moves.push({
-            move: `ClickHandCoinMove`,
+            move: MoveNames.ClickHandCoinMove,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
-        moves.push({ move: `ClickBoardCoinMove`, args: [G.currentTavern + 1] });
+        moves.push({
+            move: MoveNames.ClickBoardCoinMove,
+            args: [G.currentTavern + 1],
+        });
     }
     if (activeStageOfCurrentPlayer === Stages.PlaceTradingCoinsUline) {
         for (let j: number = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
@@ -278,32 +300,38 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             }
         }
         moves.push({
-            move: `ClickHandCoinMove`,
+            move: MoveNames.ClickHandCoinMove,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
         if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
-            moves.push({ move: `ClickBoardCoinMove`, args: [G.tavernsNum + 1] });
+            moves.push({
+                move: MoveNames.ClickBoardCoinMove,
+                args: [G.tavernsNum + 1],
+            });
         } else {
-            moves.push({ move: `ClickBoardCoinMove`, args: [G.tavernsNum] });
+            moves.push({
+                move: MoveNames.ClickBoardCoinMove,
+                args: [G.tavernsNum],
+            });
         }
     }
     if (activeStageOfCurrentPlayer === Stages.AddCoinToPouch) {
         AddCoinToPouchProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `AddCoinToPouchMove`,
+            move: MoveNames.AddCoinToPouchMove,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
     if (activeStageOfCurrentPlayer === Stages.UpgradeCoinVidofnirVedrfolnir) {
         UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `UpgradeCoinVidofnirVedrfolnirMove`,
+            move: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
     // TODO FIX It's not activeStageOfCurrentPlayer it' for Other players!!!
     // if (activeStageOfCurrentPlayer === "discardSuitCard") {
-    if (ctx.phase === Phases.PickCards && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default`) {
+    if (ctx.phase === Phases.PickCards && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default `) {
         // TODO Fix this (only for quick bot actions)
         // todo Bot can't do async turns...?
         const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
@@ -328,7 +356,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                             card.type !== RusCardTypes.HERO && card.points === minValue);
                     if (minCardIndex !== -1) {
                         moves.push({
-                            move: `DiscardSuitCardFromPlayerBoardMove`,
+                            move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
                             args: [config.suit, p, minCardIndex],
                         });
                     }
@@ -339,14 +367,14 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     if (activeStageOfCurrentPlayer === Stages.DiscardCardFromBoard) {
         DiscardCardFromBoardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `DiscardCardMove`,
+            move: MoveNames.DiscardCardMove,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
     if (activeStageOfCurrentPlayer === Stages.PickDiscardCard) {
         PickDiscardCardProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `PickDiscardCardMove`,
+            move: MoveNames.PickDiscardCardMove,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
@@ -354,7 +382,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         if (activeStageOfCurrentPlayer === Stages.DiscardCard) {
             DiscardCardProfit(G, ctx, botMoveArguments);
             moves.push({
-                move: `DiscardCard2PlayersMove`,
+                move: MoveNames.DiscardCard2PlayersMove,
                 args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
             });
         }
@@ -362,13 +390,13 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     if (activeStageOfCurrentPlayer === Stages.PickCampCardHolda) {
         PickCampCardHoldaProfit(G, ctx, botMoveArguments);
         moves.push({
-            move: `ClickCampCardHoldaMove`,
+            move: MoveNames.ClickCampCardHoldaMove,
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
     if (moves.length === 0 && ctx.phase !== null) {
         // todo Fix for bot no moves if have artefact with not pick new hero and get artifact with get new hero (he can pick hero by it's action)
-        console.log(`ALERT: bot has ${moves.length} moves. Phase: ${ctx.phase}`);
+        console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
     }
     return moves;
 };
@@ -453,7 +481,7 @@ export const objectives = (): {
     },
     /*isWeaker: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== `placeCoins`) {
+            if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
@@ -477,7 +505,7 @@ export const objectives = (): {
     },*/
     /*isSecond: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== `placeCoins`) {
+            if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
@@ -501,7 +529,7 @@ export const objectives = (): {
     },*/
     /*isEqual: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== `placeCoins`) {
+            if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
@@ -526,7 +554,7 @@ export const objectives = (): {
     },*/
     isFirst: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== `pickCards`) {
+            if (ctx.phase !== Phases.PickCards) {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length)) {
@@ -550,7 +578,7 @@ export const objectives = (): {
     },
     isStronger: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
-            if (ctx.phase !== `pickCards`) {
+            if (ctx.phase !== Phases.PickCards) {
                 return false;
             }
             if (G.decks[G.decks.length - 1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length)) {
@@ -591,4 +619,4 @@ export const playoutDepth = (G: MyGameState, ctx: Ctx): number => {
         return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 20;
     }
     return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 2;
-};
+};;

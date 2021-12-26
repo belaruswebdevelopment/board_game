@@ -125,10 +125,15 @@ export const CheckPickDiscardCardCampAction = (G, ctx) => {
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, config, suit, cardId) => {
     const discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0];
-    G.discardCardsDeck.push(discardedCard);
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} сбросил карту ${discardedCard.name} в дискард.`);
-    delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
-    EndActionFromStackAndAddNew(G, ctx);
+    if (discardedCard.type !== RusCardTypes.HERO) {
+        G.discardCardsDeck.push(discardedCard);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} сбросил карту ${discardedCard.name} в дискард.`);
+        delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
+        EndActionFromStackAndAddNew(G, ctx);
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
+    }
 };
 /**
  * <h3>Действия, связанные с дискардом карты из конкретной фракции игрока.</h3>
@@ -147,6 +152,15 @@ export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, config, suit, cardId
 export const DiscardSuitCardAction = (G, ctx, config, suit, playerId, cardId) => {
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
+        if (G.publicPlayers[playerId].cards[suit][cardId].type !== RusCardTypes.HERO) {
+            const discardedCard = G.publicPlayers[playerId].cards[suit].splice(cardId, 1)[0];
+            G.discardCardsDeck.push(discardedCard);
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в дискард.`);
+            EndActionForChosenPlayer(G, ctx, playerId);
+        }
+        else {
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
+        }
         // TODO Rework it for players and fix it for bots
         /*if (ctx.playerID !== ctx.currentPlayer) {
             const discardedCard: PlayerCardsType =
@@ -155,10 +169,6 @@ export const DiscardSuitCardAction = (G, ctx, config, suit, playerId, cardId) =>
             AddDataToLog(G, LogTypes.GAME, `Игрок ${ G.publicPlayers[Number(ctx.playerID)].nickname } сбросил карту ${ discardedCard.name } в дискард.`);
             EndActionForChosenPlayer(G, ctx, playerId);
         } else {*/
-        const discardedCard = G.publicPlayers[playerId].cards[suit].splice(cardId, 1)[0];
-        G.discardCardsDeck.push(discardedCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в дискард.`);
-        EndActionForChosenPlayer(G, ctx, playerId);
         //        }
     }
     else {

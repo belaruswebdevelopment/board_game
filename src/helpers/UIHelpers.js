@@ -244,6 +244,7 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
  * @returns Поле для вывода карт для дискарда.
  */
 export const DrawPlayerBoardForCardDiscard = (data) => {
+    // todo Discard cards must be hidden from others users?
     const playerHeaders = [], playerRows = [];
     for (const suit in suitsConfig) {
         if (suitsConfig.hasOwnProperty(suit)) {

@@ -147,7 +147,7 @@ const Aegur: IHeroData = {
  */
 const Andumia: IHeroData = {
     name: HeroNames.Andumia,
-    description: `Adds 12 points to your Final Bravery Value.When you recruit her, immediately look at all the cards in the discard pile and keep one(Royal Offering card or Dwarf card). - If it is a Royal Offering card, its effect is immediately applied, then the card is returned to the discard. - If it is a Dwarf card, place it in your army. Its placement can trigger the recruitment of a Hero card.`,
+    description: `Adds 12 points to your Final Bravery Value. When you recruit her, immediately look at all the cards in the discard pile and keep one (Royal Offering card or Dwarf card). - If it is a Royal Offering card, its effect is immediately applied, then the card is returned to the discard. - If it is a Dwarf card, place it in your army. Its placement can trigger the recruitment of a Hero card.`,
     game: `thingvellir`,
     suit: null,
     rank: null,
@@ -236,7 +236,7 @@ const Astrid: IHeroData = {
  */
 const Bonfur: IHeroData = {
     name: HeroNames.Bonfur,
-    description: `Обладает 3 шевронами.Призвав Бонфура, сразу же поместите его карту в колонку кузнецов и отправьте в сброс одну нижнюю карту дворфа(не героя) из другой колонки своей армии по своему выбору.`,
+    description: `Обладает 3 шевронами.Призвав Бонфура, сразу же поместите его карту в колонку кузнецов и отправьте в сброс одну нижнюю карту дворфа (не героя) из другой колонки своей армии по своему выбору.`,
     game: `base`,
     suit: SuitNames.BLACKSMITH,
     rank: 3,
@@ -282,7 +282,7 @@ const Bonfur: IHeroData = {
  */
 const Dagda: IHeroData = {
     name: HeroNames.Dagda,
-    description: `Обладает 3 шевронами.Призвав Дагду, сразу же поместите её карту в колонку охотников и отправьте в сброс по одной нижней карте дворфов(не героев) из двух других колонок своей армии по своему выбору.`,
+    description: `Обладает 3 шевронами.Призвав Дагду, сразу же поместите её карту в колонку охотников и отправьте в сброс по одной нижней карте дворфов (не героев) из двух других колонок своей армии по своему выбору.`,
     game: `base`,
     suit: SuitNames.HUNTER,
     rank: 3,
@@ -452,7 +452,7 @@ const Dwerg_Ymir: IHeroData = {
  */
 const Grid: IHeroData = {
     name: HeroNames.Grid,
-    description: `Прибавьте 7 очков к своему итоговому показателю храбрости.Когда вы призвали Грид и положили её карту в свою командную зону, сразу же улучшите на + 7 номинал одной из своих монет.`,
+    description: `Прибавьте 7 очков к своему итоговому показателю храбрости. Когда вы призвали Грид и положили её карту в свою командную зону, сразу же улучшите на + 7 номинал одной из своих монет.`,
     game: "base",
     suit: null,
     rank: null,
@@ -492,7 +492,7 @@ const Grid: IHeroData = {
  */
 const Holda: IHeroData = {
     name: HeroNames.Holda,
-    description: `Adds 12 points to your Final Bravery Value.When you recruit her, immediately choose a Mercenary or Artifact card available at the Camp.`,
+    description: `Adds 12 points to your Final Bravery Value. When you recruit her, immediately choose a Mercenary or Artifact card available at the Camp.`,
     game: `thingvellir`,
     suit: null,
     rank: null,
@@ -537,7 +537,7 @@ const Holda: IHeroData = {
  */
 const Hourya: IHeroData = {
     name: HeroNames.Hourya,
-    description: `Обладает 1 шевроном.Прибавьте 20 очков к показателю храбрости разведчиков.Чтобы призвать Хурию, игрок должен иметь в своей армии как минимум 5 шевронов в колонке разведчиков.Важно: если Труд и / или Илуд расположены в колонке разведчиков, то их шевроны учитываются для призыва Хурии`,
+    description: `Обладает 1 шевроном.Прибавьте 20 очков к показателю храбрости разведчиков. Чтобы призвать Хурию, игрок должен иметь в своей армии как минимум 5 шевронов в колонке разведчиков. Важно: если Труд и / или Илуд расположены в колонке разведчиков, то их шевроны учитываются для призыва Хурии.`,
     game: `base`,
     suit: SuitNames.EXPLORER,
     rank: 1,
@@ -599,7 +599,7 @@ const Idunn: IHeroData = {
  */
 const Jarika: IHeroData = {
     name: HeroNames.Jarika,
-    description: `Adds 8 points to your Final Bravery Value.As a neutral Hero, place her in your Command Zone.During a coin transformation or a coin trade(Royal Offering, Warrior Distinction, Grid), increase the value of the desired sum by + 2.`,
+    description: `Adds 8 points to your Final Bravery Value. As a neutral Hero, place her in your Command Zone. During a coin transformation or a coin trade(Royal Offering, Warrior Distinction, Grid), increase the value of the desired sum by + 2.`,
     game: `base`,
     suit: null,
     rank: null,
@@ -633,7 +633,7 @@ const Jarika: IHeroData = {
  */
 const Khrad: IHeroData = {
     name: HeroNames.Khrad,
-    description: `Adds 4 points to your Final Bravery Value.When you recruit him, immediately add + 10 to your lowest value coin(except the Trading coin).`,
+    description: `Adds 4 points to your Final Bravery Value. When you recruit him, immediately add + 10 to your lowest value coin (except the Trading coin).`,
     game: `thingvellir`,
     suit: null,
     rank: null,
@@ -690,7 +690,7 @@ const Kraal: IHeroData = {
  */
 const Lokdur: IHeroData = {
     name: HeroNames.Lokdur,
-    description: `Обладает 1 шевроном.Прибавьте 3 к сумме очков храбрости горняков.Локдур увеличивает сумму очков храбрости горняков на 3, а сумму шевронов на 1.`,
+    description: `Обладает 1 шевроном.Прибавьте 3 к сумме очков храбрости горняков. Локдур увеличивает сумму очков храбрости горняков на 3, а сумму шевронов на 1.`,
     game: `base`,
     suit: SuitNames.MINER,
     rank: 1,
@@ -715,7 +715,7 @@ const Lokdur: IHeroData = {
  */
 const Olwin: IHeroData = {
     name: HeroNames.Olwin,
-    description: `Adds 9 points to your Final Bravery Value.When you recruit him, also take his two doubles whose Bravery value is 0 and then place each of these cards in two different columns of your choice.Their placement may result in the recruitment of a Hero card. «Olwin's double» cards are considered Dwarf cards of the class in which they are placed and can be destroyed by the powers of Dagda, Bonfur, Brisingamens, and Hofud.`,
+    description: `Adds 9 points to your Final Bravery Value. When you recruit him, also take his two doubles whose Bravery value is 0 and then place each of these cards in two different columns of your choice. Their placement may result in the recruitment of a Hero card. «Olwin's double» cards are considered Dwarf cards of the class in which they are placed and can be destroyed by the powers of Dagda, Bonfur, Brisingamens, and Hofud.`,
     game: `thingvellir`,
     suit: null,
     rank: null,
@@ -856,7 +856,7 @@ const Tarah: IHeroData = {
  */
 const Thrud: IHeroData = {
     name: HeroNames.Thrud,
-    description: `Призвав этого героя, поместите её карту по своему выбору в любую колонку класса своей армии.На карту Труд нельзя положить никакую другую карту дворфа.Если карта дворфа или героя помещается в колонку, где расположена Труд, то игрок должен взять карту Труд в руку, поместить карту дворфа или героя и затем вернуть карту Труд в армию, в любую колонку по своему выбору.Игрок получает право призвать нового героя, если, разместив карту Труд, создал необходимую для этого новую линию 5 шевронов.В конце эпохи 1, при распределении карт знаков отличия, шеврон Труд учитывается в том воинском классе, где она расположена.В эпоху 2, после посещения последней таверны, но перед подсчётом итогового показателя храбрости, карта Труд перемещается из армии в командную зону.Труд прибавляет 13 очков к итоговому показателю храбрости игрока.`,
+    description: `Призвав этого героя, поместите её карту по своему выбору в любую колонку класса своей армии. На карту Труд нельзя положить никакую другую карту дворфа. Если карта дворфа или героя помещается в колонку, где расположена Труд, то игрок должен взять карту Труд в руку, поместить карту дворфа или героя и затем вернуть карту Труд в армию, в любую колонку по своему выбору. Игрок получает право призвать нового героя, если, разместив карту Труд, создал необходимую для этого новую линию 5 шевронов. В конце эпохи 1, при распределении карт знаков отличия, шеврон Труд учитывается в том воинском классе, где она расположена. В эпоху 2, после посещения последней таверны, но перед подсчётом итогового показателя храбрости, карта Труд перемещается из армии в командную зону. Труд прибавляет 13 очков к итоговому показателю храбрости игрока.`,
     game: `base`,
     suit: null,
     rank: null,
@@ -1012,7 +1012,7 @@ const Ylud: IHeroData = {
  */
 const Zolkur: IHeroData = {
     name: HeroNames.Zolkur,
-    description: `Adds 10 points to your Final Bravery Value.When you recruit him, immediately place him on the coins of your pouch.During your next trade, you trade the lower value coin instead of the higher as in a standard exchange.Then return Zolkur's card to the Command Zone.`,
+    description: `Adds 10 points to your Final Bravery Value. When you recruit him, immediately place him on the coins of your pouch. During your next trade, you trade the lower value coin instead of the higher as in a standard exchange. Then return Zolkur's card to the Command Zone.`,
     game: `thingvellir`,
     suit: null,
     rank: null,
@@ -1046,7 +1046,7 @@ const Zolkur: IHeroData = {
  */
 const Zoral: IHeroData = {
     name: HeroNames.Zoral,
-    description: `Обладает 3 шевронами.Прибавьте 1, 0 и 0 к сумме очков храбрости горняков.Зорал увеличивает сумму очков храбрости горняков на 1, а сумму шевронов – на 3.`,
+    description: `Обладает 3 шевронами.Прибавьте 1, 0 и 0 к сумме очков храбрости горняков. Зорал увеличивает сумму очков храбрости горняков на 1, а сумму шевронов – на 3.`,
     game: `base`,
     suit: SuitNames.MINER,
     rank: 3,

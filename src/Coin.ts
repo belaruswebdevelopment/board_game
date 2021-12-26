@@ -1,6 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { UpgradeCoinAction } from "./actions/Actions";
 import { IInitialTradingCoinConfig, IMarketCoinConfig, isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
+import { HeroNames } from "./data/HeroData";
 import { INumberValues } from "./data/SuitData";
 import { Stages } from "./Game";
 import { MyGameState } from "./GameSetup";
@@ -263,7 +264,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
     }
     if (config?.coin === `min`) {
         // todo Upgrade isInitial min coin or not or User must choose!?
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === `Uline`) {
+        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline) {
             const allCoins: (ICoin | null)[] = [],
                 allHandCoins: (ICoin | null)[] = G.publicPlayers[Number(ctx.currentPlayer)]
                     .handCoins.filter((coin: ICoin | null): boolean => coin !== null);
@@ -305,7 +306,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                         isCoin(upgradingCoin) && coin?.value === upgradingCoin.value);
             }
         }
-    } else if (type === "hand") {
+    } else if (type === `hand`) {
         const handCoinPosition: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
             .filter((coin: ICoin | null, index: number): boolean =>
                 coin === null && index <= upgradingCoinId).length;

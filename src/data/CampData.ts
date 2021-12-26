@@ -96,7 +96,7 @@ const Brisingamens: IArtefact = {
             action: AddBuffToPlayerCampAction.name,
             config: {
                 buff: {
-                    name: `discardCardEndGame`,
+                    name: BuffNames.DiscardCardEndGame,
                     value: true,
                 },
             },

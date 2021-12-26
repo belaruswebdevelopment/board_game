@@ -29,7 +29,8 @@ export interface IResolveBoardCoins {
 export const ActivateTrading = (G: MyGameState, ctx: Ctx): boolean => {
     if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern]?.isTriggerTrading) {
         const tradingCoins: ICoin[] = [];
-        for (let i: number = G.tavernsNum; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
+        for (let i: number = G.tavernsNum; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
+            i++) {
             const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i];
             if (coin !== null) {
                 tradingCoins.push(coin);

@@ -134,6 +134,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         totalScore: number[] = [],
         logData: ILogData[] = [],
         decks: DeckCardTypes[][] = [],
+        // todo Discard cards must be hidden from users?
         discardCardsDeck: DeckCardTypes[] = [],
         campDecks: CampDeckCardTypes[][] = [],
         distinctions: IDistinctions = {};

@@ -25,7 +25,9 @@ export const SetupGame = (ctx) => {
         thingvellir: {
             active: true,
         },
-    }, totalScore = [], logData = [], decks = [], discardCardsDeck = [], campDecks = [], distinctions = {};
+    }, totalScore = [], logData = [], decks = [], 
+    // todo Discard cards must be hidden from users?
+    discardCardsDeck = [], campDecks = [], distinctions = {};
     for (const suit in suitsConfig) {
         if (suitsConfig.hasOwnProperty(suit)) {
             distinctions[suit] = null;

@@ -280,9 +280,9 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
             const isCardDiscarded: boolean = DiscardCardFromTavern(G, discardCardIndex);
             if (isCardDiscarded) {
                 G.campPicked = false;
-            } else {
+            } /* else {
                 // todo LogTypes.ERROR because not => G.campPicked = false; ?
-            }
+            } */
         } else {
             // todo Fix this error sometimes shown...
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);

@@ -24,6 +24,32 @@ import { IsValidMove } from "../MoveValidator";
 import { AddCardToPlayer, IStack } from "../Player";
 
 // todo Add logging
+
+/**
+ * <h3>Перечисление для описаний отрисовки экшенов.</h3>
+ */
+export const enum MoveNames {
+    AddCoinToPouchMove = `AddCoinToPouchMove`,
+    BotsPlaceAllCoinsMove = `BotsPlaceAllCoinsMove`,
+    ClickBoardCoinMove = `ClickBoardCoinMove`,
+    ClickCampCardHoldaMove = `ClickCampCardHoldaMove`,
+    ClickCampCardMove = `ClickCampCardMove`,
+    ClickCardMove = `ClickCardMove`,
+    ClickHandCoinMove = `ClickHandCoinMove`,
+    DiscardCardFromPlayerBoardMove = `DiscardCardFromPlayerBoardMove`,
+    DiscardCardMove = `DiscardCardMove`,
+    DiscardCard2PlayersMove = `DiscardCard2PlayersMove`,
+    DiscardSuitCardFromPlayerBoardMove = `DiscardSuitCardFromPlayerBoardMove`,
+    GetEnlistmentMercenariesMove = `GetEnlistmentMercenariesMove`,
+    GetMjollnirProfitMove = `GetMjollnirProfitMove`,
+    PassEnlistmentMercenariesMove = `PassEnlistmentMercenariesMove`,
+    PickDiscardCardMove = `PickDiscardCardMove`,
+    PlaceCardMove = `PlaceCardMove`,
+    PlaceEnlistmentMercenariesMove = `PlaceEnlistmentMercenariesMove`,
+    StartEnlistmentMercenariesMove = `StartEnlistmentMercenariesMove`,
+    UpgradeCoinVidofnirVedrfolnirMove = `UpgradeCoinVidofnirVedrfolnirMove`,
+}
+
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>

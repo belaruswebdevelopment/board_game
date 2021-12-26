@@ -11,6 +11,31 @@ import { IsValidMove } from "../MoveValidator";
 import { AddCardToPlayer } from "../Player";
 // todo Add logging
 /**
+ * <h3>Перечисление для описаний отрисовки экшенов.</h3>
+ */
+export var MoveNames;
+(function (MoveNames) {
+    MoveNames["AddCoinToPouchMove"] = "AddCoinToPouchMove";
+    MoveNames["BotsPlaceAllCoinsMove"] = "BotsPlaceAllCoinsMove";
+    MoveNames["ClickBoardCoinMove"] = "ClickBoardCoinMove";
+    MoveNames["ClickCampCardHoldaMove"] = "ClickCampCardHoldaMove";
+    MoveNames["ClickCampCardMove"] = "ClickCampCardMove";
+    MoveNames["ClickCardMove"] = "ClickCardMove";
+    MoveNames["ClickHandCoinMove"] = "ClickHandCoinMove";
+    MoveNames["DiscardCardFromPlayerBoardMove"] = "DiscardCardFromPlayerBoardMove";
+    MoveNames["DiscardCardMove"] = "DiscardCardMove";
+    MoveNames["DiscardCard2PlayersMove"] = "DiscardCard2PlayersMove";
+    MoveNames["DiscardSuitCardFromPlayerBoardMove"] = "DiscardSuitCardFromPlayerBoardMove";
+    MoveNames["GetEnlistmentMercenariesMove"] = "GetEnlistmentMercenariesMove";
+    MoveNames["GetMjollnirProfitMove"] = "GetMjollnirProfitMove";
+    MoveNames["PassEnlistmentMercenariesMove"] = "PassEnlistmentMercenariesMove";
+    MoveNames["PickDiscardCardMove"] = "PickDiscardCardMove";
+    MoveNames["PlaceCardMove"] = "PlaceCardMove";
+    MoveNames["PlaceEnlistmentMercenariesMove"] = "PlaceEnlistmentMercenariesMove";
+    MoveNames["StartEnlistmentMercenariesMove"] = "StartEnlistmentMercenariesMove";
+    MoveNames["UpgradeCoinVidofnirVedrfolnirMove"] = "UpgradeCoinVidofnirVedrfolnirMove";
+})(MoveNames || (MoveNames = {}));
+/**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
  * <ol>

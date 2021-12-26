@@ -295,6 +295,7 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
  * @returns Поле для вывода карт для дискарда.
  */
 export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
+    // todo Discard cards must be hidden from others users?
     const playerHeaders: JSX.Element[] = [],
         playerRows: JSX.Element[][] = [];
     for (const suit in suitsConfig) {

@@ -1,6 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { CreateCard, RusCardTypes } from "../Card";
 import { ReturnCoinToPlayerHands } from "../Coin";
+import { HeroNames } from "../data/HeroData";
 import { SuitNames, suitsConfig } from "../data/SuitData";
 import { Stages } from "../Game";
 import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
@@ -129,32 +130,37 @@ export const CheckPickDiscardCardHeroAction = (G, ctx) => {
  */
 export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suit, cardId) => {
     const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId];
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
-    // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
-    G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
-        .splice(cardId, 1)[0]);
-    if (G.actionsNum === 2) {
-        const stack = [
-            {
-                action: DrawProfitHeroAction.name,
-                config: {
-                    stageName: Stages.DiscardCardFromBoard,
-                    drawName: DrawNames.Dagda,
-                    name: ConfigNames.DagdaAction,
-                    suit: SuitNames.HUNTER,
+    if (pickedCard.type !== RusCardTypes.HERO) {
+        G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
+        // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
+        G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
+            .splice(cardId, 1)[0]);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
+        if (G.actionsNum === 2) {
+            const stack = [
+                {
+                    action: DrawProfitHeroAction.name,
+                    config: {
+                        stageName: Stages.DiscardCardFromBoard,
+                        drawName: DrawNames.Dagda,
+                        name: ConfigNames.DagdaAction,
+                        suit: SuitNames.HUNTER,
+                    },
                 },
-            },
-            {
-                action: DiscardCardsFromPlayerBoardAction.name,
-                config: {
-                    suit: SuitNames.HUNTER,
+                {
+                    action: DiscardCardsFromPlayerBoardAction.name,
+                    config: {
+                        suit: SuitNames.HUNTER,
+                    },
                 },
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+            ];
+            AddActionsToStackAfterCurrent(G, ctx, stack);
+        }
+        EndActionFromStackAndAddNew(G, ctx);
     }
-    EndActionFromStackAndAddNew(G, ctx);
+    else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
+    }
 };
 /**
  * <h3>Действия, связанные с отрисовкой профита от героев.</h3>
@@ -265,7 +271,7 @@ export const PlaceCardsAction = (G, ctx, config, suit) => {
             suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
-            name: `Olwin`,
+            name: HeroNames.Olwin,
         });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Олвин во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);

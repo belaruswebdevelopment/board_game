@@ -1,5 +1,6 @@
 import { UpgradeCoinAction } from "./actions/Actions";
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
+import { HeroNames } from "./data/HeroData";
 import { Stages } from "./Game";
 import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
 import { AddDataToLog, LogTypes } from "./Logging";
@@ -209,7 +210,7 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
     }
     if ((config === null || config === void 0 ? void 0 : config.coin) === `min`) {
         // todo Upgrade isInitial min coin or not or User must choose!?
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === `Uline`) {
+        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline) {
             const allCoins = [], allHandCoins = G.publicPlayers[Number(ctx.currentPlayer)]
                 .handCoins.filter((coin) => coin !== null);
             for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
@@ -248,7 +249,7 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
             }
         }
     }
-    else if (type === "hand") {
+    else if (type === `hand`) {
         const handCoinPosition = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
             .filter((coin, index) => coin === null && index <= upgradingCoinId).length;
         coin = G.publicPlayers[Number(ctx.currentPlayer)].handCoins

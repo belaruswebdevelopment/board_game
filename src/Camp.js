@@ -192,10 +192,9 @@ export const DiscardCardIfCampCardPicked = (G) => {
             const isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
             if (isCardDiscarded) {
                 G.campPicked = false;
-            }
-            else {
+            } /* else {
                 // todo LogTypes.ERROR because not => G.campPicked = false; ?
-            }
+            } */
         }
         else {
             // todo Fix this error sometimes shown...
