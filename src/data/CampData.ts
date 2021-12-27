@@ -11,7 +11,7 @@ import {
     StartVidofnirVedrfolnirAction
 } from "../actions/CampActions";
 import { RusCardTypes } from "../Card";
-import { ICoin } from "../Coin";
+import { IconType } from "../Coin";
 import { Stages } from "../Game";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
@@ -141,7 +141,7 @@ const Draupnir: IArtefact = {
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.boardCoins
-        .filter((coin: ICoin | null): boolean =>
+        .filter((coin: IconType): boolean =>
             Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
 };
 

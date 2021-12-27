@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { ICoin, Trading } from "../Coin";
+import { ICoin, IconType, Trading } from "../Coin";
 import { INumberValues } from "../data/SuitData";
 import { MyGameState } from "../GameSetup";
 import { IPublicPlayer } from "../Player";
@@ -31,7 +31,7 @@ export const ActivateTrading = (G: MyGameState, ctx: Ctx): boolean => {
         const tradingCoins: ICoin[] = [];
         for (let i: number = G.tavernsNum; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
             i++) {
-            const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i];
+            const coin: IconType = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i];
             if (coin !== null) {
                 tradingCoins.push(coin);
             }
@@ -55,10 +55,10 @@ export const ActivateTrading = (G: MyGameState, ctx: Ctx): boolean => {
  * @returns Максимальная монета игрока.
  */
 export const GetMaxCoinValue = (player: IPublicPlayer): number => (Math.max(...player.boardCoins
-    .filter((coin: ICoin | null): boolean => Boolean(coin?.value))
-    .map((coin: ICoin | null): number => coin!.value),
-    ...player.handCoins.filter((coin: ICoin | null): boolean => Boolean(coin?.value))
-        .map((coin: ICoin | null): number => coin!.value)));
+    .filter((coin: IconType): boolean => Boolean(coin?.value))
+    .map((coin: IconType): number => coin!.value),
+    ...player.handCoins.filter((coin: IconType): boolean => Boolean(coin?.value))
+        .map((coin: IconType): number => coin!.value)));
 
 /**
  * <h3>Определяет по расположению монет игроками порядок ходов и порядок обмена кристаллов приоритета.</h3>
@@ -76,15 +76,15 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins 
         coinValues: number[] = [],
         exchangeOrder: number[] = [];
     for (let i: number = 0; i < ctx.numPlayers; i++) {
-        const coin: ICoin | null = G.publicPlayers[i].boardCoins[G.currentTavern];
+        const coin: IconType = G.publicPlayers[i].boardCoins[G.currentTavern];
         if (coin !== null) {
             coinValues[i] = coin.value;
             playersOrder.push(i);
             exchangeOrder.push(i);
         }
         for (let j: number = playersOrder.length - 1; j > 0; j--) {
-            const coin: ICoin | null = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern],
-                prevCoin: ICoin | null = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
+            const coin: IconType = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern],
+                prevCoin: IconType = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
             if (coin !== null && prevCoin !== null) {
                 if (coin.value > prevCoin.value) {
                     [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];

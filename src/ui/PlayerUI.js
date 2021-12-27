@@ -142,7 +142,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                     }
                     else {
                         if (data.props.G.winner.length || (data.props.ctx.phase === Phases.PlaceCoinsUline
-                            && data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== `placeCoins`
+                            && data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== Phases.PlaceCoins
                             && data.props.G.currentTavern >= j)) {
                             DrawCoin(data, playerCells, `coin`, data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.props.G.publicPlayers[p]);
                         }

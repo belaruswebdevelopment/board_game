@@ -1,4 +1,4 @@
-import { ICoin } from "../Coin";
+import { IconType } from "../Coin";
 import { HeroNames } from "../data/HeroData";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -222,7 +222,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                             OnClickBoardCoin.name, j);
                     } else {
                         if (data.props.G.winner.length || (data.props.ctx.phase === Phases.PlaceCoinsUline
-                            && data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== `placeCoins`
+                            && data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== Phases.PlaceCoins
                                 && data.props.G.currentTavern >= j)) {
                             DrawCoin(data, playerCells, `coin`,
                                 data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
@@ -262,7 +262,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                                 </span>
                             </th>
                         );
-                        const coin: ICoin | null = data.props.G.publicPlayers[p].boardCoins[coinIndex];
+                        const coin: IconType = data.props.G.publicPlayers[p].boardCoins[coinIndex];
                         if (coin === null) {
                             if (Number(data.props.ctx.currentPlayer) === p
                                 && data.props.ctx.phase !== Phases.PlaceCoinsUline

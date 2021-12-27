@@ -10,7 +10,7 @@ import {
 import { DrawProfitCampAction } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
 import { SuitNames, suitsConfig } from "../data/SuitData";
-import { DeckCardTypes, MyGameState } from "../GameSetup";
+import { DeckCardTypes, MyGameState, TavernCardTypes } from "../GameSetup";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import {
@@ -72,7 +72,7 @@ export const ClickCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardI
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const card: DeckCardTypes | null = G.taverns[G.currentTavern][cardId];
+    const card: TavernCardTypes = G.taverns[G.currentTavern][cardId];
     let suit: null | string = null;
     G.taverns[G.currentTavern][cardId] = null;
     if (card !== null) {

@@ -1,6 +1,6 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { CampCardTypes, CampDeckCardTypes, MyGameState } from "../GameSetup";
+import { CampCardTypes, MyGameState } from "../GameSetup";
 import {
     AddActionsToStack,
     EndActionFromStackAndAddNew,
@@ -29,7 +29,7 @@ export const ClickCampCardHoldaMove: Move<MyGameState> = (G: MyGameState, ctx: C
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const campCard: CampDeckCardTypes | null = G.camp[cardId];
+    const campCard: CampCardTypes = G.camp[cardId];
     if (campCard !== null) {
         EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
     } else {
@@ -56,7 +56,7 @@ export const ClickCampCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, c
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const card: CampCardTypes | null = G.camp[cardId];
+    const card: CampCardTypes = G.camp[cardId];
     if (card !== null) {
         AddActionsToStack(G, ctx, card.stack);
         StartActionFromStackOrEndActions(G, ctx, false, cardId);

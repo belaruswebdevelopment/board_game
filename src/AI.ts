@@ -2,7 +2,7 @@ import { Ctx } from "boardgame.io";
 import { ConfigNames } from "./actions/Actions";
 import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
 import { CompareCards, EvaluateCard, isCardNotAction, RusCardTypes } from "./Card";
-import { ICoin } from "./Coin";
+import { IconType } from "./Coin";
 import { suitsConfig } from "./data/SuitData";
 import { Phases, Stages } from "./Game";
 import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
@@ -174,7 +174,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
         }
         const allCoinsOrder: number[][] = G.botData.allCoinsOrder,
-            handCoins: (ICoin | null)[] = G.publicPlayers[Number(ctx.currentPlayer)].handCoins;
+            handCoins: IconType[] = G.publicPlayers[Number(ctx.currentPlayer)].handCoins;
         for (let i: number = 0; i < allCoinsOrder.length; i++) {
             const hasTrading: boolean =
                 allCoinsOrder[i].some((coinId: number): boolean =>
@@ -193,8 +193,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 }
                 const hasPositionForMaxCoin: boolean = positionForMaxCoin !== -1,
                     hasPositionForMinCoin: boolean = positionForMinCoin !== -1,
-                    maxCoin: ICoin | null = handCoins[allCoinsOrder[i][positionForMaxCoin]],
-                    minCoin: ICoin | null = handCoins[allCoinsOrder[i][positionForMinCoin]];
+                    maxCoin: IconType = handCoins[allCoinsOrder[i][positionForMaxCoin]],
+                    minCoin: IconType = handCoins[allCoinsOrder[i][positionForMinCoin]];
                 if (maxCoin && minCoin) {
                     let isTopCoinsOnPosition: boolean = false,
                         isMinCoinsOnPosition: boolean = false;
@@ -205,7 +205,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                                 && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
                     }
                     if (hasPositionForMinCoin) {
-                        isMinCoinsOnPosition = handCoins.filter((coin: ICoin | null): boolean => coin !== null
+                        isMinCoinsOnPosition = handCoins.filter((coin: IconType): boolean => coin !== null
                             && coin!.value < minCoin.value).length <= 1;
                     }
                     if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
@@ -416,32 +416,32 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
 export const iterations = (G: MyGameState, ctx: Ctx): number => {
     const maxIter: number = G.botData.maxIter;
     if (ctx.phase === Phases.PickCards) {
-        const currentTavern: (DeckCardTypes | null)[] = G.taverns[G.currentTavern];
-        if (currentTavern.filter((card: DeckCardTypes | null): boolean => card !== null).length === 1) {
+        const currentTavern: TavernCardTypes[] = G.taverns[G.currentTavern];
+        if (currentTavern.filter((card: TavernCardTypes): boolean => card !== null).length === 1) {
             return 1;
         }
         const cardIndex: number =
-            currentTavern.findIndex((card: DeckCardTypes | null): boolean => card !== null),
-            tavernCard: DeckCardTypes | null = currentTavern[cardIndex];
-        if (currentTavern.every((card: DeckCardTypes | null): boolean =>
+            currentTavern.findIndex((card: TavernCardTypes): boolean => card !== null),
+            tavernCard: TavernCardTypes = currentTavern[cardIndex];
+        if (currentTavern.every((card: TavernCardTypes): boolean =>
             card === null || (isCardNotAction(card) && tavernCard !== null && isCardNotAction(tavernCard)
                 && card.suit === tavernCard.suit && CompareCards(card, tavernCard) === 0))) {
             return 1;
         }
         let efficientMovesCount: number = 0;
         for (let i: number = 0; i < currentTavern.length; i++) {
-            const tavernCard: DeckCardTypes | null = currentTavern[i];
+            const tavernCard: TavernCardTypes = currentTavern[i];
             if (tavernCard === null) {
                 continue;
             }
-            if (currentTavern.some((card: DeckCardTypes | null): boolean =>
+            if (currentTavern.some((card: TavernCardTypes): boolean =>
                 CompareCards(tavernCard, card) === -1)) {
                 continue;
             }
             if (G.decks[0].length > 18) {
                 if (tavernCard && isCardNotAction(tavernCard)) {
                     if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
-                        && currentTavern.some((card: DeckCardTypes | null): boolean => card !== null
+                        && currentTavern.some((card: TavernCardTypes): boolean => card !== null
                             && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {
                         continue;
                     }

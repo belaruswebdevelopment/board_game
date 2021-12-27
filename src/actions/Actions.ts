@@ -424,7 +424,7 @@ export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, confi
  * <h3>Действия, связанные с улучшением монет при игровых моментах.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li><li>При игровых моментах, улучшающих монеты.</li></li>
+ * <li>При игровых моментах, улучшающих монеты.</li>
  * </ol>
  *
  * @param G

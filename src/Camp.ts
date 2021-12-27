@@ -105,7 +105,7 @@ const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
     // todo Add LogTypes.ERROR logging ?
     for (let i: number = 0; i < G.camp.length; i++) {
         if (G.camp[i] !== null) {
-            const card: CampDeckCardTypes | null = G.camp.splice(i, 1, null)[0];
+            const card: CampCardTypes = G.camp.splice(i, 1, null)[0];
             if (card !== null) {
                 G.discardCampCardsDeck.push(card);
             }

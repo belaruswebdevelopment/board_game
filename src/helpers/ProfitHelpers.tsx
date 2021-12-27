@@ -2,7 +2,7 @@ import { Ctx } from "boardgame.io";
 import { ConfigNames } from "../actions/Actions";
 import { IBotMoveArgumentsTypes } from "../AI";
 import { isCardNotAction, RusCardTypes } from "../Card";
-import { ICoin } from "../Coin";
+import { IconType } from "../Coin";
 import { HeroNames } from "../data/HeroData";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -329,8 +329,8 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G: MyGameState, ctx: Ctx, da
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (config !== undefined) {
         for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
-        j++) {
-            const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
+            j++) {
+            const coin: IconType = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
             if (coin !== null) {
                 if (!coin.isTriggerTrading && config.coinId !== j) {
                     if (data instanceof GameBoard && boardCells !== undefined) {

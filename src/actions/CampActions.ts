@@ -1,11 +1,11 @@
 import { Ctx } from "boardgame.io";
 import { isArtefactCard } from "../Camp";
 import { ICard, RusCardTypes } from "../Card";
-import { ICoin } from "../Coin";
+import { IconType } from "../Coin";
 import { HeroNames } from "../data/HeroData";
 import { SuitNames, suitsConfig } from "../data/SuitData";
 import { Phases, Stages } from "../Game";
-import { CampDeckCardTypes, MyGameState } from "../GameSetup";
+import { CampCardTypes, CampDeckCardTypes, MyGameState } from "../GameSetup";
 import {
     AddBuffToPlayer,
     DrawCurrentProfit,
@@ -66,7 +66,7 @@ export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConf
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime) {
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime;
     }
-    const campCard: CampDeckCardTypes | null = G.camp[cardId];
+    const campCard: CampCardTypes = G.camp[cardId];
     if (campCard !== null) {
         let suit: string | null = null,
             stack: IStack[] = [];
@@ -111,7 +111,7 @@ export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConf
 export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, coinId: number): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         tempId: number = player.boardCoins
-            .findIndex((coin: ICoin | null, index: number): boolean =>
+            .findIndex((coin: IconType, index: number): boolean =>
                 index >= G.tavernsNum && coin === null),
         stack: IStack[] = [
             {
@@ -219,11 +219,11 @@ export const DiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: IConfig,
  */
 export const DiscardTradingCoinAction = (G: MyGameState, ctx: Ctx): void => {
     let tradingCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-        .findIndex((coin: ICoin | null): boolean => Boolean(coin?.isTriggerTrading));
+        .findIndex((coin: IconType): boolean => Boolean(coin?.isTriggerTrading));
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
         && tradingCoinIndex === -1) {
         tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex((coin: ICoin | null): boolean => Boolean(coin?.isTriggerTrading));
+            .findIndex((coin: IconType): boolean => Boolean(coin?.isTriggerTrading));
         G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .splice(tradingCoinIndex, 1, null);
     } else {
@@ -349,7 +349,7 @@ export const StartDiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: ICo
  */
 export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void => {
     const number: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-        .filter((coin: ICoin | null, index: number): boolean =>
+        .filter((coin: IconType, index: number): boolean =>
             index >= G.tavernsNum && coin === null).length,
         handCoinsNumber: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length;
     let stack: IStack[] = [];

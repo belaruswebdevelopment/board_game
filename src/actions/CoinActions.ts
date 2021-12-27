@@ -23,7 +23,7 @@ export const DrawProfitCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig):
  * <h3>Действия, связанные с улучшением монет от карт улучшения монет.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li><li>При выборе карт, улучшающих монеты.</li></li>
+ * <li>При выборе карт, улучшающих монеты.</li>
  * </ol>
  *
  * @param G

@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { ICoin } from "./Coin";
+import { IconType } from "./Coin";
 import { HeroNames } from "./data/HeroData";
 import { MyGameState } from "./GameSetup";
 import { TotalRank } from "./helpers/ScoreHelpers";
@@ -105,9 +105,9 @@ const CheckMove = ({ obj, objId, range = [], values = [] }: ICheckMoveParam): bo
 export const CoinUpgradeValidation = (G: MyGameState, ctx: Ctx, coinId: number, type: string): boolean => {
     if (type === "hand") {
         const handCoinPosition: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .filter((coin: ICoin | null, index: number): boolean => coin === null && index <= coinId).length;
+            .filter((coin: IconType, index: number): boolean => coin === null && index <= coinId).length;
         if (!G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .filter((coin: ICoin | null): boolean => coin !== null)[handCoinPosition - 1]?.isTriggerTrading) {
+            .filter((coin: IconType): boolean => coin !== null)[handCoinPosition - 1]?.isTriggerTrading) {
             return true;
         }
     } else {

@@ -1,6 +1,6 @@
 import { ArgsTypes } from "../actions/Actions";
 import { RusCardTypes } from "../Card";
-import { ICoin } from "../Coin";
+import { IconType } from "../Coin";
 import { IBackground, Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GameBoard } from "../GameBoard";
@@ -204,7 +204,7 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin: ICoin | null, id: number,
+export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: string, coin: IconType, id: number,
     player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
     actionName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },

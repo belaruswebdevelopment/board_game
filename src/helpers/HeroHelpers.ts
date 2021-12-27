@@ -1,7 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { ConfigNames, DrawNames } from "../actions/Actions";
 import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
-import { ICoin } from "../Coin";
+import { IconType } from "../Coin";
 import { heroesConfig, HeroNames, IVariants } from "../data/HeroData";
 import { SuitNames } from "../data/SuitData";
 import { Phases, Stages } from "../Game";
@@ -74,10 +74,10 @@ export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): s
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
             if (ctx.phase === Phases.PickCards) {
-                const coin: ICoin | null = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
+                const coin: IconType = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
                 if (coin?.isTriggerTrading) {
                     if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                        .filter((coin: ICoin | null, index: number): boolean =>
+                        .filter((coin: IconType, index: number): boolean =>
                             index >= G.tavernsNum && coin === null)) {
                         if (ctx.activePlayers?.[ctx.currentPlayer] !== Stages.PlaceTradingCoinsUline) {
                             G.actionsNum = G.suitsNum - G.tavernsNum;
