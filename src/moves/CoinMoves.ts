@@ -1,6 +1,6 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { IconType } from "../Coin";
+import { CoinType } from "../Coin";
 import { HeroNames } from "../data/HeroData";
 import { SuitNames } from "../data/SuitData";
 import { Phases, Stages } from "../Game";
@@ -64,7 +64,7 @@ export const ClickBoardCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
             const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers
                 .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== HeroNames.Uline)
                 .every((player: IPublicPlayer): boolean => player.handCoins
-                    .every((coin: IconType): boolean => coin === null));
+                    .every((coin: CoinType): boolean => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {
                 if (CheckAndStartUlineActionsOrContinue(G, ctx) === Phases.PlaceCoinsUline) {
                     ctx.events!.setPhase!(Phases.PlaceCoinsUline);
@@ -72,7 +72,7 @@ export const ClickBoardCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
                     ctx.events!.setPhase!(Phases.PickCards);
                 }
             } else {
-                if (player.handCoins.every((coin: IconType): boolean => coin === null)) {
+                if (player.handCoins.every((coin: CoinType): boolean => coin === null)) {
                     ctx.events!.endTurn!();
                 }
             }

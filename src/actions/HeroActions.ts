@@ -1,7 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { CreateCard, ICard, ICreateCard, RusCardTypes } from "../Card";
-import { IconType, ReturnCoinToPlayerHands } from "../Coin";
+import { CoinType, ReturnCoinToPlayerHands } from "../Coin";
 import { HeroNames, IConditions, IVariants } from "../data/HeroData";
 import { SuitNames, suitsConfig } from "../data/SuitData";
 import { Stages } from "../Game";
@@ -210,9 +210,9 @@ export const DrawProfitHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig):
 export const GetClosedCoinIntoPlayerHandAction = (G: MyGameState, ctx: Ctx): void => {
     const coinsCount: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length,
         tradingBoardCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .findIndex((coin: IconType): boolean => Boolean(coin?.isTriggerTrading)),
+            .findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading)),
         tradingHandCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex((coin: IconType): boolean => Boolean(coin?.isTriggerTrading));
+            .findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
     for (let i: number = 0; i < coinsCount; i++) {
         if ((i < G.tavernsNum && G.currentTavern < i) || (i >= G.tavernsNum && tradingHandCoinIndex !== -1)
             || (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {

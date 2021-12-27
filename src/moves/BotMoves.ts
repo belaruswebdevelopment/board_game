@@ -1,5 +1,5 @@
 import { Ctx, Move } from "boardgame.io";
-import { IconType } from "../Coin";
+import { CoinType } from "../Coin";
 import { HeroNames } from "../data/HeroData";
 import { Phases } from "../Game";
 import { MyGameState } from "../GameSetup";
@@ -20,7 +20,7 @@ import { IPublicPlayer } from "../Player";
 export const BotsPlaceAllCoinsMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinsOrder: number[]): void => {
     for (let i: number = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
         const coinId: number = coinsOrder[i] || G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex((coin: IconType): boolean => coin !== null);
+            .findIndex((coin: CoinType): boolean => coin !== null);
         if (coinId !== -1) {
             G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i] =
                 G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId];
@@ -32,7 +32,7 @@ export const BotsPlaceAllCoinsMove: Move<MyGameState> = (G: MyGameState, ctx: Ct
     const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers
         .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== HeroNames.Uline)
         .every((player: IPublicPlayer): boolean => player.handCoins
-            .every((coin: IconType): boolean => coin === null));
+            .every((coin: CoinType): boolean => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {
         if (CheckAndStartUlineActionsOrContinue(G, ctx) === Phases.PlaceCoinsUline) {
             ctx.events!.setPhase!(Phases.PlaceCoinsUline);
@@ -41,7 +41,7 @@ export const BotsPlaceAllCoinsMove: Move<MyGameState> = (G: MyGameState, ctx: Ct
         }
     } else {
         if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .every((coin: IconType): boolean => coin === null)) {
+            .every((coin: CoinType): boolean => coin === null)) {
             ctx.events!.endTurn!();
         }
     }

@@ -1,7 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { IArtefactCampCard, isArtefactCard } from "./Camp";
 import { ICard, IPlayerCards, isCardNotAction } from "./Card";
-import { BuildCoins, ICoin } from "./Coin";
+import { BuildCoins, CoinType, ICoin } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { HeroNames, IBuff, IConditions, IVariants } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
@@ -82,8 +82,8 @@ export interface IPublicPlayer {
     cards: IPlayerCards,
     heroes: IHero[],
     campCards: CampDeckCardTypes[],
-    handCoins: (null | ICoin)[],
-    boardCoins: (null | ICoin)[],
+    handCoins: CoinType[],
+    boardCoins: CoinType[],
     stack: IStack[],
     priority: IPriority,
     buffs: IBuffs,

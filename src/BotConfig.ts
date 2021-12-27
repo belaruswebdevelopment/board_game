@@ -1,7 +1,8 @@
 import { Ctx } from "boardgame.io";
 import { CompareCards, EvaluateCard, IActionCard, ICard, isCardNotAction } from "./Card";
-import { DeckCardTypes, MyGameState } from "./GameSetup";
+import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
 
+// todo Fix reurn types & move to interfaces
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -15,7 +16,7 @@ import { DeckCardTypes, MyGameState } from "./GameSetup";
  * @returns
  */
 export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
-    const taverns: (DeckCardTypes | null)[][] = G.taverns/*,
+    const taverns: TavernCardTypes[][] = G.taverns/*,
         averageCards: ICard[] = G.averageCards*/;
     let result: number[] = Array(taverns.length).fill(0);
     const temp: number[] = taverns.map((tavern: (DeckCardTypes | null)[]): number =>

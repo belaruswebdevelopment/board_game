@@ -1,6 +1,6 @@
 import { ConfigNames } from "../actions/Actions";
 import { isCardNotAction } from "../Card";
-import { CountMarketCoins, IconType } from "../Coin";
+import { CountMarketCoins, CoinType } from "../Coin";
 import { HeroNames } from "../data/HeroData";
 import { Styles } from "../data/StyleData";
 import { INumberValues, suitsConfig } from "../data/SuitData";
@@ -324,7 +324,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                 } else if (option === ConfigNames.UpgradeCoin) {
                     // todo Move to ProfitHelpers and add logic for bot or just use standard upgrade coins
                     const handCoins = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins
-                        .filter((coin: IconType): boolean => coin !== null);
+                        .filter((coin: CoinType): boolean => coin !== null);
                     let handCoinIndex: number = -1;
                     for (let j: number = 0; j <
                         data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins.length; j++) {
@@ -336,7 +336,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                             handCoinIndex++;
                             const handCoinId: number =
                                 data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]
-                                    .handCoins.findIndex((coin: IconType): boolean =>
+                                    .handCoins.findIndex((coin: CoinType): boolean =>
                                         coin?.value === handCoins[handCoinIndex]?.value
                                         && coin?.isInitial === handCoins[handCoinIndex]?.isInitial);
                             if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)]

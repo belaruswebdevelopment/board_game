@@ -1,4 +1,4 @@
-import { IconType } from "../Coin";
+import { CoinType } from "../Coin";
 import { HeroNames } from "../data/HeroData";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -236,7 +236,8 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                     coinIndex++;
                 }
             } else if (i === 1) {
-                for (let j = data.props.G.tavernsNum; j <= data.props.G.publicPlayers[p].boardCoins.length; j++) {
+                for (let j: number = data.props.G.tavernsNum; j <= data.props.G.publicPlayers[p].boardCoins.length;
+                    j++) {
                     if (j === data.props.G.publicPlayers[p].boardCoins.length) {
                         playerFooters[p].push(
                             <th key={`${data.props.G.publicPlayers[p].nickname} priority icon`}>
@@ -262,7 +263,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                                 </span>
                             </th>
                         );
-                        const coin: IconType = data.props.G.publicPlayers[p].boardCoins[coinIndex];
+                        const coin: CoinType = data.props.G.publicPlayers[p].boardCoins[coinIndex];
                         if (coin === null) {
                             if (Number(data.props.ctx.currentPlayer) === p
                                 && data.props.ctx.phase !== Phases.PlaceCoinsUline

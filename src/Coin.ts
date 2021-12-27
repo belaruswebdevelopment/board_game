@@ -12,7 +12,7 @@ import { IConfig, IPublicPlayer, IStack } from "./Player";
 /**
  * <h3>Типы данных для монет на столе или в руке.</h3>
  */
-export type IconType = null | ICoin;
+export type CoinType = null | ICoin;
 
 /**
  * <h3>Интерфейс для монеты.</h3>
@@ -263,16 +263,16 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
     // todo add LogTypes.ERROR logging
     // todo Split into different functions!
     let upgradingCoin: {} | ICoin = {},
-        coin: IconType | undefined;
+        coin: CoinType | undefined;
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin) {
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin;
     }
     if (config?.coin === `min`) {
         // todo Upgrade isInitial min coin or not or User must choose!?
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline) {
-            const allCoins: IconType[] = [],
-                allHandCoins: IconType[] = G.publicPlayers[Number(ctx.currentPlayer)]
-                    .handCoins.filter((coin: IconType): boolean => coin !== null);
+            const allCoins: CoinType[] = [],
+                allHandCoins: CoinType[] = G.publicPlayers[Number(ctx.currentPlayer)]
+                    .handCoins.filter((coin: CoinType): boolean => coin !== null);
             for (let i: number = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
                 if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i] === null) {
                     allCoins.push(allHandCoins.splice(0, 1)[0]);
@@ -281,46 +281,46 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                 }
             }
             const minCoinValue: number = Math.min(...allCoins
-                .filter((coin: IconType): boolean => coin !== null && !coin.isTriggerTrading)
-                .map((coin: IconType): number => coin!.value)),
-                upgradingCoinInitial: IconType | undefined = allCoins
-                    .find((coin: IconType): boolean | undefined =>
+                .filter((coin: CoinType): boolean => coin !== null && !coin.isTriggerTrading)
+                .map((coin: CoinType): number => coin!.value)),
+                upgradingCoinInitial: CoinType | undefined = allCoins
+                    .find((coin: CoinType): boolean | undefined =>
                         coin!.value === minCoinValue && coin!.isInitial);
             if (upgradingCoinInitial !== null && upgradingCoinInitial !== undefined) {
                 upgradingCoin = upgradingCoinInitial;
             } else {
-                coin = allCoins.find((coin: IconType): boolean =>
+                coin = allCoins.find((coin: CoinType): boolean =>
                     coin!.value === minCoinValue && !coin!.isInitial);
                 if (coin !== null && coin !== undefined) {
                     upgradingCoin = coin;
                 }
             }
-            upgradingCoinId = allCoins.findIndex((coin: IconType): boolean =>
+            upgradingCoinId = allCoins.findIndex((coin: CoinType): boolean =>
                 isCoin(upgradingCoin) && coin!.value === upgradingCoin.value);
         } else {
             const minCoinValue: number =
                 Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                    .filter((coin: IconType): boolean => coin !== null && !coin.isTriggerTrading)
-                    .map((coin: IconType): number => coin!.value));
+                    .filter((coin: CoinType): boolean => coin !== null && !coin.isTriggerTrading)
+                    .map((coin: CoinType): number => coin!.value));
             coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                .find((coin: IconType): boolean => coin?.value === minCoinValue);
+                .find((coin: CoinType): boolean => coin?.value === minCoinValue);
             if (coin !== null && coin !== undefined) {
                 upgradingCoin = coin;
                 upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                    .findIndex((coin: IconType): boolean =>
+                    .findIndex((coin: CoinType): boolean =>
                         isCoin(upgradingCoin) && coin?.value === upgradingCoin.value);
             }
         }
     } else if (type === `hand`) {
         const handCoinPosition: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .filter((coin: IconType, index: number): boolean =>
+            .filter((coin: CoinType, index: number): boolean =>
                 coin === null && index <= upgradingCoinId).length;
         coin = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .filter((coin: IconType): boolean => coin !== null)[handCoinPosition - 1];
+            .filter((coin: CoinType): boolean => coin !== null)[handCoinPosition - 1];
         if (coin !== null && coin !== undefined) {
             upgradingCoin = coin;
             upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                .findIndex((coin: IconType): boolean =>
+                .findIndex((coin: CoinType): boolean =>
                     isCoin(upgradingCoin) && coin?.value === upgradingCoin.value && coin?.isInitial === isInitial);
         }
     } else {
@@ -362,7 +362,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
             let handCoinIndex: number = -1;
             if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] === null) {
                 handCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                    .findIndex((coin: IconType): boolean =>
+                    .findIndex((coin: CoinType): boolean =>
                         isCoin(upgradingCoin) && coin?.value === upgradingCoin.value);
             } else {
                 G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = null;

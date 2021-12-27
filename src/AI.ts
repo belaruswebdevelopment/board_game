@@ -2,7 +2,7 @@ import { Ctx } from "boardgame.io";
 import { ConfigNames } from "./actions/Actions";
 import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
 import { CompareCards, EvaluateCard, isCardNotAction, RusCardTypes } from "./Card";
-import { IconType } from "./Coin";
+import { CoinType } from "./Coin";
 import { suitsConfig } from "./data/SuitData";
 import { Phases, Stages } from "./Game";
 import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
@@ -173,7 +173,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
         }
         const allCoinsOrder: number[][] = G.botData.allCoinsOrder,
-            handCoins: IconType[] = G.publicPlayers[Number(ctx.currentPlayer)].handCoins;
+            handCoins: CoinType[] = G.publicPlayers[Number(ctx.currentPlayer)].handCoins;
         for (let i: number = 0; i < allCoinsOrder.length; i++) {
             const hasTrading: boolean =
                 allCoinsOrder[i].some((coinId: number): boolean =>
@@ -192,8 +192,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 }
                 const hasPositionForMaxCoin: boolean = positionForMaxCoin !== -1,
                     hasPositionForMinCoin: boolean = positionForMinCoin !== -1,
-                    maxCoin: IconType = handCoins[allCoinsOrder[i][positionForMaxCoin]],
-                    minCoin: IconType = handCoins[allCoinsOrder[i][positionForMinCoin]];
+                    maxCoin: CoinType = handCoins[allCoinsOrder[i][positionForMaxCoin]],
+                    minCoin: CoinType = handCoins[allCoinsOrder[i][positionForMinCoin]];
                 if (maxCoin && minCoin) {
                     let isTopCoinsOnPosition: boolean = false,
                         isMinCoinsOnPosition: boolean = false;
@@ -204,7 +204,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                                 && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
                     }
                     if (hasPositionForMinCoin) {
-                        isMinCoinsOnPosition = handCoins.filter((coin: IconType): boolean => coin !== null
+                        isMinCoinsOnPosition = handCoins.filter((coin: CoinType): boolean => coin !== null
                             && coin!.value < minCoin.value).length <= 1;
                     }
                     if (isTopCoinsOnPosition && isMinCoinsOnPosition) {

@@ -1,7 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { ConfigNames, DrawNames, DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
 import { CreateCard, ICard } from "../Card";
-import { CreateCoin, IconType } from "../Coin";
+import { CreateCoin, CoinType } from "../Coin";
 import { Stages } from "../Game";
 import { MyGameState } from "../GameSetup";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
@@ -285,7 +285,7 @@ const hunter: ISuit = {
         awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
             if (G.tierToEnd !== 0) {
                 const tradingCoinIndex: number =
-                    player.boardCoins.findIndex((coin: IconType): boolean => coin?.value === 0);
+                    player.boardCoins.findIndex((coin: CoinType): boolean => coin?.value === 0);
                 player.boardCoins[tradingCoinIndex] = CreateCoin({
                     value: 3,
                     isTriggerTrading: true,

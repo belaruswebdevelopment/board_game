@@ -1,4 +1,5 @@
 import { CompareCards, EvaluateCard, isCardNotAction } from "./Card";
+// todo Fix reurn types & move to interfaces
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
