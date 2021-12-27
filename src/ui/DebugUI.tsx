@@ -36,7 +36,7 @@ export const DrawDebugData = (data: GameBoard): JSX.Element | null => {
  */
 const DrawObjectData = (obj: { [key: string]: any; }): JSX.Element => {
     const values: JSX.Element[] = [];
-    for (let [key, value] of Object.entries(obj)) {
+    for (const [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {
             const data: JSX.Element = DrawObjectData(value);
             if (Array.isArray(value)) {
@@ -97,10 +97,10 @@ const GetDebugData = (data: GameBoard): { ctx: {}, G: {}; } | undefined => {
             G: {},
             ctx: {},
         };
-        for (let [key, value] of Object.entries(data.props.G)) {
+        for (const [key, value] of Object.entries(data.props.G)) {
             debugData.G[key] = value;
         }
-        for (let [key, value] of Object.entries(data.props.ctx)) {
+        for (const [key, value] of Object.entries(data.props.ctx)) {
             debugData.ctx[key] = value;
         }
         return debugData;

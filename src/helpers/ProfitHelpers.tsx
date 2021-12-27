@@ -152,7 +152,8 @@ export const DiscardCardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | I
                     suit = card.suit;
                 }
                 DrawCard(data, boardCells, card, j,
-                    G.publicPlayers[Number(ctx.currentPlayer)], suit, OnClickCardToDiscard2Players.name, j);
+                    G.publicPlayers[Number(ctx.currentPlayer)], suit,
+                    OnClickCardToDiscard2Players.name, j);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }

@@ -234,9 +234,8 @@ export const PickHeroWithConditionsAction = (G, ctx, config) => {
                 for (const key in config.conditions[condition]) {
                     if (config.conditions[condition].hasOwnProperty(key)) {
                         if (key === `suit`) {
-                            ranks =
-                                G.publicPlayers[Number(ctx.currentPlayer)].cards[config.conditions[condition][key]]
-                                    .reduce(TotalRank, 0);
+                            ranks = G.publicPlayers[Number(ctx.currentPlayer)]
+                                .cards[config.conditions[condition][key]].reduce(TotalRank, 0);
                         }
                         else if (key === `value`) {
                             isValidMove = ranks >= config.conditions[condition][key];

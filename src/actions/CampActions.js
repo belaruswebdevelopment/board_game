@@ -86,8 +86,7 @@ export const AddCampCardToCardsAction = (G, ctx, config, cardId) => {
  * @param coinId Id монеты.
  */
 export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins
-        .findIndex((coin, index) => index >= G.tavernsNum && coin === null), stack = [
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null), stack = [
         {
             action: StartVidofnirVedrfolnirAction.name,
         },

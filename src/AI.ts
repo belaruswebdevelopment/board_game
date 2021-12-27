@@ -54,8 +54,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     let moves: IMoves[] = [],
         flag: boolean = true,
         advancedString: string = `advanced`,
-        isAdvancedExist: boolean =
-            Object.keys(moveBy[ctx.phase])
+        isAdvancedExist: boolean = Object.keys(moveBy[ctx.phase])
                 .some((key: string): boolean => key.includes(advancedString));
     const activeStageOfCurrentPlayer: string = ctx.activePlayers?.[Number(ctx.currentPlayer)] ?? `default`;
     // todo Fix it, now just for bot can do RANDOM move

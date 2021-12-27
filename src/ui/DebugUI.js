@@ -30,7 +30,7 @@ export const DrawDebugData = (data) => {
  */
 const DrawObjectData = (obj) => {
     const values = [];
-    for (let [key, value] of Object.entries(obj)) {
+    for (const [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {
             const data = DrawObjectData(value);
             if (Array.isArray(value)) {
@@ -62,10 +62,10 @@ const GetDebugData = (data) => {
             G: {},
             ctx: {},
         };
-        for (let [key, value] of Object.entries(data.props.G)) {
+        for (const [key, value] of Object.entries(data.props.G)) {
             debugData.G[key] = value;
         }
-        for (let [key, value] of Object.entries(data.props.ctx)) {
+        for (const [key, value] of Object.entries(data.props.ctx)) {
             debugData.ctx[key] = value;
         }
         return debugData;

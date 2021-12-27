@@ -115,12 +115,10 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins 
                 tiePlayers.map((player: IPublicPlayer): number => player.priority.value),
                 maxPriority: number = Math.max(...tiePlayersPriorities),
                 minPriority: number = Math.min(...tiePlayersPriorities),
-                maxIndex: number =
-                    G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-                        player.priority.value === maxPriority),
-                minIndex: number =
-                    G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-                        player.priority.value === minPriority);
+                maxIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+                    player.priority.value === maxPriority),
+                minIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+                    player.priority.value === minPriority);
             tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
                 player.priority.value === maxPriority), 1);
             tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>

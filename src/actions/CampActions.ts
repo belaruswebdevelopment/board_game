@@ -110,9 +110,8 @@ export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConf
  */
 export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, coinId: number): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        tempId: number = player.boardCoins
-            .findIndex((coin: IconType, index: number): boolean =>
-                index >= G.tavernsNum && coin === null),
+        tempId: number = player.boardCoins.findIndex((coin: IconType, index: number): boolean =>
+            index >= G.tavernsNum && coin === null),
         stack: IStack[] = [
             {
                 action: StartVidofnirVedrfolnirAction.name,
@@ -372,7 +371,8 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
         AddActionsToStackAfterCurrent(G, ctx, stack);
     } else {
         let coinsValue: number = 0;
-        for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
+        for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
+            j++) {
             if (!G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]?.isTriggerTrading) {
                 coinsValue++;
             }

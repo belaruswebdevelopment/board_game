@@ -49,9 +49,8 @@ export const AfterBasicPickCardActions = (G: MyGameState, ctx: Ctx, isTrading: b
             if (!isTradingActivated) {
                 if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                     && ctx.playOrder.length < Number(ctx.numPlayers)) {
-                    const cardIndex: number =
-                        G.taverns[G.currentTavern]
-                            .findIndex((card: TavernCardTypes): boolean => card !== null);
+                    const cardIndex: number = G.taverns[G.currentTavern]
+                        .findIndex((card: TavernCardTypes): boolean => card !== null);
                     DiscardCardFromTavern(G, cardIndex);
                 }
                 if (G.expansions.thingvellir.active

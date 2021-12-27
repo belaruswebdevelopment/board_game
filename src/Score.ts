@@ -105,8 +105,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     if (G.expansions.thingvellir.active) {
         let artifactsScore: number = 0;
         for (let i: number = 0; i < player.campCards.length; i++) {
-            const artefact: IArtefact | undefined =
-                Object.values(artefactsConfig)
+            const artefact: IArtefact | undefined = Object.values(artefactsConfig)
                     .find((artefact: IArtefact): boolean => artefact.name === player.campCards[i].name);
             let currentArtefactScore: number = 0;
             if (artefact !== undefined) {
