@@ -1,63 +1,36 @@
-import { ArtefactNames } from "./CampData";
-import { HeroNames } from "./HeroData";
-import { SuitNames } from "./SuitData";
+import { ArtefactNames, HeroNames, SuitNames } from "../typescript/enums";
+import { IStyles, IBackground } from "../typescript/interfaces";
 
-/**
- * <h3>Интерфейс для отрисовки бэкграунда в стилях.</h3>
- */
-export interface IBackground {
-    background: string,
-}
-
-/**
- * <h3>Интерфейс для всех стилей.</h3>
- */
-interface IStyles {
-    Camp: () => IBackground,
-    CampCards: (tier: number, cardPath: string) => IBackground,
-    Cards: (suit: string | null, name: string, points: number | null) => IBackground,
-    Coin: (value: number, initial: boolean) => IBackground,
-    CoinBack: () => IBackground,
-    Distinctions: (distinction: string) => IBackground,
-    DistinctionsBack: () => IBackground,
-    Exchange: () => IBackground,
-    Heroes: (game: string, heroName: string) => IBackground,
-    HeroBack: () => IBackground,
-    Priorities: (priority: number) => IBackground,
-    Priority: () => IBackground,
-    Suits: (suit: string) => IBackground,
-    Taverns: (tavernId: number) => IBackground,
-}
 
 /**
  * <h3>Путь к базовым картам.</h3>
  */
-const basicCardsPath: string = `url(/img/cards/basic/basic`;
+const basicCardsPath = `url(/img/cards/basic/basic`;
 
 /**
  * <h3>Путь к картам кэмпа.</h3>
  */
-const campCardsPath: string = `url(/img/cards/camp/Camp`;
+const campCardsPath = `url(/img/cards/camp/Camp`;
 
 /**
  * <h3>Путь к картам преимуществ.</h3>
  */
-const distinctionsPath: string = `url(/img/distinctions/Distinctions.png)`;
+const distinctionsPath = `url(/img/distinctions/Distinctions.png)`;
 
 /**
  * <h3>Путь к базовым героям.</h3>
  */
-const heroesBasicPath: string = `url(/img/cards/heroes/basic/`;
+const heroesBasicPath = `url(/img/cards/heroes/basic/`;
 
 /**
  * <h3>Путь к героям Тингвеллира.</h3>
  */
-const heroesThingvellirPath: string = `url(/img/cards/heroes/thingvellir/`;
+const heroesThingvellirPath = `url(/img/cards/heroes/thingvellir/`;
 
 /**
  * <h3>Путь к изображениям таверн.</h3>
  */
-const tavernsPath: string = `url(/img/taverns/Taverns.png)`;
+const tavernsPath = `url(/img/taverns/Taverns.png)`;
 
 // todo Add vars for paths
 /**

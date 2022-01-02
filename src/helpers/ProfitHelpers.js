@@ -1,12 +1,11 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { ConfigNames } from "../actions/Actions";
-import { isCardNotAction, RusCardTypes } from "../Card";
-import { HeroNames } from "../data/HeroData";
+import { isCardNotAction } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GameBoard } from "../GameBoard";
+import { HeroNames, RusCardTypes, ConfigNames } from "../typescript/enums";
 import { TotalRank } from "./ScoreHelpers";
-import { DrawButton, DrawCard, DrawCoin, OnClickCampCardHolda, OnClickCardFromDiscard, OnClickCardToDiscard, OnClickCardToDiscard2Players, OnClickCoinToAddToPouch, OnClickCoinToUpgradeVidofnirVedrfolnir, OnClickDiscardCardFromPlayerBoard, OnClickGetEnlistmentMercenaries, OnClickPassEnlistmentMercenaries, OnClickStartEnlistmentMercenaries } from "./UIHelpers";
+import { DrawCoin, OnClickCoinToAddToPouch, DrawCard, OnClickDiscardCardFromPlayerBoard, OnClickCardToDiscard, OnClickCardToDiscard2Players, OnClickGetEnlistmentMercenaries, OnClickCampCardHolda, OnClickCardFromDiscard, DrawButton, OnClickStartEnlistmentMercenaries, OnClickPassEnlistmentMercenaries, OnClickCoinToUpgradeVidofnirVedrfolnir } from "./UIHelpers";
 // todo Add functions docbloocks
 export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
@@ -31,7 +30,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, playerRows) =>
         }
         let j = 0;
         for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
+            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 id = i + j;
                 if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i] !== undefined) {
                     isExit = false;
@@ -81,7 +80,7 @@ export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
     const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config, pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (config !== undefined) {
         for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
+            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 if (suit !== config.suit
                     && !(G.drawProfit === ConfigNames.DagdaAction && G.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
@@ -133,7 +132,7 @@ export const GetEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
 };
 export const GetMjollnirProfitProfit = (G, ctx, data, boardCells) => {
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             if (data instanceof GameBoard && boardCells !== undefined) {
                 // todo Move logic to DrawCard?
                 boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.OnClickSuitToGetMjollnirProfit(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { className: "whitespace-nowrap text-white", children: G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
@@ -177,7 +176,7 @@ export const PickDiscardCardProfit = (G, ctx, data, boardCells) => {
 export const PlaceCardsProfit = (G, ctx, data, boardCells) => {
     var _a, _b;
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
             if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
                 if (data instanceof GameBoard && boardCells !== undefined) {
@@ -198,7 +197,7 @@ export const PlaceCardsProfit = (G, ctx, data, boardCells) => {
 export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     var _a, _b;
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const card = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
             if (card !== null && `stack` in card) {
                 if (card.stack[0].variants !== undefined) {

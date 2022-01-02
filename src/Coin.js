@@ -1,9 +1,6 @@
-import { UpgradeCoinAction } from "./actions/Actions";
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
-import { HeroNames } from "./data/HeroData";
-import { Stages } from "./Game";
-import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
-import { AddDataToLog, LogTypes } from "./Logging";
+import { AddDataToLog } from "./Logging";
+import { HeroNames, LogTypes, Stages } from "./typescript/enums";
 /**
  * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
  * <p>Применения:</p>
@@ -127,67 +124,6 @@ export const ReturnCoinToPlayerHands = (player, coinId) => {
     return true;
 };
 /**
- * <h3>Активация обмена монет с рынка.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Вызывается после выбора базовой карты игроком, если выложены монета, активирующая обмен монет.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param tradingCoins Монеты для обмена.
- */
-export const Trading = (G, ctx, tradingCoins) => {
-    const coinsValues = tradingCoins.map((coin) => coin.value), coinsMaxValue = Math.max(...coinsValues), coinsMinValue = Math.min(...coinsValues);
-    let stack, upgradingCoinId, upgradingCoin, coinMaxIndex = 0, coinMinIndex = 0;
-    AddDataToLog(G, LogTypes.GAME, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
-    // TODO trading isInitial first or playerChoose?
-    for (let i = 0; i < tradingCoins.length; i++) {
-        if (tradingCoins[i].value === coinsMaxValue) {
-            coinMaxIndex = i;
-            // if (tradingCoins[i].isInitial) {
-            //     break;
-            // }
-        }
-        if (tradingCoins[i].value === coinsMinValue) {
-            coinMinIndex = i;
-            // if (tradingCoins[i].isInitial) {
-            //     break;
-            // }
-        }
-    }
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin === `min`) {
-        stack = [
-            {
-                action: UpgradeCoinAction.name,
-                config: {
-                    number: 1,
-                    value: coinsMaxValue,
-                    isTrading: true,
-                },
-            },
-        ];
-        upgradingCoinId = G.tavernsNum + coinMinIndex;
-        upgradingCoin = tradingCoins[coinMinIndex];
-    }
-    else {
-        stack = [
-            {
-                action: UpgradeCoinAction.name,
-                config: {
-                    number: 1,
-                    value: coinsMinValue,
-                    isTrading: true,
-                },
-            },
-        ];
-        upgradingCoinId = G.tavernsNum + coinMaxIndex;
-        upgradingCoin = tradingCoins[coinMaxIndex];
-    }
-    AddActionsToStack(G, ctx, stack);
-    StartActionFromStackOrEndActions(G, ctx, false, upgradingCoinId, `board`, upgradingCoin.isInitial);
-};
-/**
  * <h3>Обмен монеты с рынка.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -223,22 +159,30 @@ export const UpgradeCoin = (G, ctx, config, upgradingCoinId, type, isInitial) =>
             }
             const minCoinValue = Math.min(...allCoins
                 .filter((coin) => coin !== null && !coin.isTriggerTrading)
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 .map((coin) => coin.value)), upgradingCoinInitial = allCoins
-                .find((coin) => coin.value === minCoinValue && coin.isInitial);
+                .find((coin) => 
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            coin.value === minCoinValue && coin.isInitial);
             if (upgradingCoinInitial !== null && upgradingCoinInitial !== undefined) {
                 upgradingCoin = upgradingCoinInitial;
             }
             else {
-                coin = allCoins.find((coin) => coin.value === minCoinValue && !coin.isInitial);
+                coin = allCoins.find((coin) => 
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                coin.value === minCoinValue && !coin.isInitial);
                 if (coin !== null && coin !== undefined) {
                     upgradingCoin = coin;
                 }
             }
-            upgradingCoinId = allCoins.findIndex((coin) => isCoin(upgradingCoin) && coin.value === upgradingCoin.value);
+            upgradingCoinId = allCoins.findIndex((coin) => 
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            isCoin(upgradingCoin) && coin.value === upgradingCoin.value);
         }
         else {
             const minCoinValue = Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                 .filter((coin) => coin !== null && !coin.isTriggerTrading)
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 .map((coin) => coin.value));
             coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                 .find((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue);

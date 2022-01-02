@@ -5,7 +5,7 @@
  * <li>При проверках в функциях.</li>
  * </ol>
  *
- * @param {IInitialTradingCoinConfig | IMarketCoinConfig} config Конфиг.
+ * @param config Конфиг.
  * @returns Является ли объект конфигом базовых монет или конфигом монет рынка.
  */
 export const isInitialPlayerCoinsConfigNotMarket = (config) => config.isTriggerTrading !== undefined;

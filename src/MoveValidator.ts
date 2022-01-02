@@ -1,60 +1,9 @@
 import { Ctx } from "boardgame.io";
-import { CoinType } from "./Coin";
-import { HeroNames } from "./data/HeroData";
-import { MyGameState } from "./GameSetup";
 import { TotalRank } from "./helpers/ScoreHelpers";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { IConfig } from "./Player";
-
-/**
- * <h3>Интерфейс для параметров валидатора мувов.</h3>
- */
-interface IMoveValidatorParams {
-    G: MyGameState,
-    ctx?: Ctx,
-    id?: number,
-    type?: string,
-}
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-interface IMoveByOption {
-    [name: string]: string,
-}
-
-/**
- * <h3>Интерфейс для возможных валидаторов у мувов.</h3>
- */
-interface IMoveBy {
-    [name: string]: IMoveByOption,
-}
-
-/**
- * <h3>Интерфейс для проверки параметров валидатора мувов.</h3>
- */
-interface ICheckMoveParam {
-    obj?: object | null,
-    objId: number,
-    range?: number[],
-    values?: number[],
-}
-
-/**
- * <h3>Интерфейс для валидатора мувов.</h3>
- */
-interface IMoveValidator {
-    getRange: (params: IMoveValidatorParams) => [number, number],
-    getValue?: (params: IMoveValidatorParams) => number[],
-    validate: (params: IMoveValidatorParams) => boolean,
-}
-
-/**
- * <h3>Интерфейс для объекта валидаторов мувов.</h3>
- */
-interface IMoveValidators {
-    [name: string]: IMoveValidator,
-}
+import { AddDataToLog } from "./Logging";
+import { CoinType } from "./typescript/coin_types";
+import { LogTypes, HeroNames } from "./typescript/enums";
+import { ICheckMoveParam, MyGameState, IMoveBy, IMoveValidators, IMoveValidatorParams, IConfig } from "./typescript/interfaces";
 
 /**
  * Validates arguments inside of move.
@@ -63,7 +12,6 @@ interface IMoveValidators {
  * range - range for Id.
  * values - values for Id.
  */
-
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -184,11 +132,11 @@ export const moveValidators: IMoveValidators = {
     // todo Add all validators to all moves
     ClickHandCoinMove: {
         getRange: ({ G, ctx }: IMoveValidatorParams): [number, number] =>
-            ([0, G.publicPlayers[Number(ctx!.currentPlayer)].handCoins.length]),
+            ([0, G.publicPlayers[Number(ctx?.currentPlayer)].handCoins.length]),
         validate: ({ G, ctx, id }: IMoveValidatorParams): boolean => {
             if (id !== undefined) {
-                return G.publicPlayers[Number(ctx!.currentPlayer)].selectedCoin === undefined
-                    && G.publicPlayers[Number(ctx!.currentPlayer)].handCoins[id] !== null;
+                return G.publicPlayers[Number(ctx?.currentPlayer)].selectedCoin === undefined
+                    && G.publicPlayers[Number(ctx?.currentPlayer)].handCoins[id] !== null;
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
@@ -196,11 +144,11 @@ export const moveValidators: IMoveValidators = {
     },
     ClickBoardCoinMove: {
         getRange: ({ G, ctx }: IMoveValidatorParams): [number, number] =>
-            ([0, G.publicPlayers[Number(ctx!.currentPlayer)].boardCoins.length]),
+            ([0, G.publicPlayers[Number(ctx?.currentPlayer)].boardCoins.length]),
         validate: ({ G, ctx, id }: IMoveValidatorParams): boolean => {
             if (id !== undefined) {
-                return G.publicPlayers[Number(ctx!.currentPlayer)].selectedCoin !== undefined
-                    && G.publicPlayers[Number(ctx!.currentPlayer)].boardCoins[id] === null;
+                return G.publicPlayers[Number(ctx?.currentPlayer)].selectedCoin !== undefined
+                    && G.publicPlayers[Number(ctx?.currentPlayer)].boardCoins[id] === null;
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
@@ -227,7 +175,7 @@ export const moveValidators: IMoveValidators = {
                 if (G.heroes[id].name === HeroNames.Hourya) {
                     const config: IConfig | undefined = G.heroes[id].stack[0].config;
                     if (config?.conditions !== undefined) {
-                        isValid = G.publicPlayers[Number(ctx!.currentPlayer)]
+                        isValid = G.publicPlayers[Number(ctx?.currentPlayer)]
                             .cards[config.conditions.suitCountMin.suit].reduce(TotalRank, 0) >=
                             config.conditions.suitCountMin.value;
                         return isValid;
@@ -245,9 +193,10 @@ export const moveValidators: IMoveValidators = {
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
     ClickCoinToUpgradeMove: {
         getRange: ({ G, ctx }: IMoveValidatorParams): [number, number] =>
-            ([0, G.publicPlayers[Number(ctx!.currentPlayer)].boardCoins.length]),
+            ([0, G.publicPlayers[Number(ctx?.currentPlayer)].boardCoins.length]),
         validate: ({ G, ctx, id, type }: IMoveValidatorParams): boolean => {
             if (id !== undefined && type !== undefined) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 return CoinUpgradeValidation(G, ctx!, id, type);
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id' или не передан обязательный параметр 'type'.`);
@@ -262,7 +211,7 @@ export const moveValidators: IMoveValidators = {
         getRange: ({ G }: IMoveValidatorParams): [number, number] => ([0, Object.values(G.distinctions).length]),
         validate: ({ G, ctx, id }: IMoveValidatorParams): boolean => {
             if (id !== undefined) {
-                return Object.values(G.distinctions).indexOf(Number(ctx!.currentPlayer)) === id;
+                return Object.values(G.distinctions).indexOf(Number(ctx?.currentPlayer)) === id;
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
@@ -271,8 +220,8 @@ export const moveValidators: IMoveValidators = {
     ClickCampCardMove: {
         getRange: ({ G }: IMoveValidatorParams): [number, number] => ([0, G.camp.length]),
         validate: ({ G, ctx }: IMoveValidatorParams): boolean =>
-            G.expansions.thingvellir.active && (Number(ctx!.currentPlayer) === G.publicPlayersOrder[0]
-                || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx!.currentPlayer)].buffs.goCamp))),
+            G.expansions.thingvellir.active && (Number(ctx?.currentPlayer) === G.publicPlayersOrder[0]
+                || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx?.currentPlayer)].buffs.goCamp))),
     },
 };
 

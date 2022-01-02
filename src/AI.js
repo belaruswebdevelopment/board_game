@@ -1,13 +1,12 @@
-import { ConfigNames } from "./actions/Actions";
 import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
-import { CompareCards, EvaluateCard, isCardNotAction, RusCardTypes } from "./Card";
+import { CompareCards, EvaluateCard } from "./bot_logic/card_logic";
+import { isCardNotAction } from "./Card";
 import { suitsConfig } from "./data/SuitData";
-import { Phases, Stages } from "./Game";
 import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./helpers/ProfitHelpers";
-import { MoveNames } from "./moves/Moves";
 import { moveBy, moveValidators } from "./MoveValidator";
 import { HasLowestPriority } from "./Priority";
 import { CurrentScoring } from "./Score";
+import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescript/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -22,21 +21,20 @@ import { CurrentScoring } from "./Score";
 export const enumerate = (G, ctx) => {
     var _a, _b;
     //make false for standard bot
-    const enableAdvancedBot = true, uniqueArr = [];
-    let moves = [], flag = true, advancedString = `advanced`, isAdvancedExist = Object.keys(moveBy[ctx.phase])
+    const enableAdvancedBot = true, uniqueArr = [], activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : `default`, advancedString = `advanced`, isAdvancedExist = Object.keys(moveBy[ctx.phase])
         .some((key) => key.includes(advancedString));
-    const activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : `default`;
+    let moves = [], flag = true;
     // todo Fix it, now just for bot can do RANDOM move
     const botMoveArguments = [];
     for (const stage in moveBy[ctx.phase]) {
-        if (moveBy[ctx.phase].hasOwnProperty(stage)) {
+        if (Object.prototype.hasOwnProperty.call(moveBy[ctx.phase], stage)) {
             if (ctx.phase === Phases.PickCards && stage.startsWith(`default`)) {
                 continue;
             }
             if (stage.includes(activeStageOfCurrentPlayer)
                 && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
                 // todo Sync players and bots validations in one places
-                const moveName = moveBy[ctx.phase][stage], [minValue, maxValue] = moveValidators[moveName].getRange({ G, ctx }), hasGetValue = moveValidators[moveName].hasOwnProperty(`getValue`);
+                const moveName = moveBy[ctx.phase][stage], [minValue, maxValue] = moveValidators[moveName].getRange({ G, ctx }), hasGetValue = Object.prototype.hasOwnProperty.call(moveValidators[moveName], `getValue`);
                 let argValue;
                 let argArray;
                 for (let id = minValue; id < maxValue; id++) {
@@ -50,6 +48,7 @@ export const enumerate = (G, ctx) => {
                         continue;
                     }
                     if (hasGetValue) {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         argArray = moveValidators[moveName].getValue({ G, ctx, id });
                         moves.push({ move: moveName, args: [argArray] });
                     }
@@ -156,10 +155,12 @@ export const enumerate = (G, ctx) => {
                     if (hasPositionForMaxCoin) {
                         isTopCoinsOnPosition =
                             allCoinsOrder[i].filter((coinIndex) => handCoins[coinIndex] !== null
+                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                 && handCoins[coinIndex].value > maxCoin.value).length <= 1;
                     }
                     if (hasPositionForMinCoin) {
                         isMinCoinsOnPosition = handCoins.filter((coin) => coin !== null
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             && coin.value < minCoin.value).length <= 1;
                     }
                     if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
@@ -564,4 +565,3 @@ export const playoutDepth = (G, ctx) => {
     }
     return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 2;
 };
-;

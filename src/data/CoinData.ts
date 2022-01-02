@@ -1,20 +1,4 @@
-import { INumberValues } from "./SuitData";
-
-/**
- * <h3>Интерфейс для конфига базовых монет.</h3>
- */
-export interface IInitialTradingCoinConfig {
-    value: number,
-    isTriggerTrading: boolean,
-}
-
-/**
- * <h3>Интерфейс для конфига монет рынка.</h3>
- */
-export interface IMarketCoinConfig {
-    value: number,
-    count: () => INumberValues,
-}
+import { IInitialTradingCoinConfig, IMarketCoinConfig, INumberValues } from "../typescript/interfaces";
 
 /**
  * <h3>Проверка, является ли объект конфигом базовых монет или конфигом монет рынка.</h3>
@@ -23,7 +7,7 @@ export interface IMarketCoinConfig {
  * <li>При проверках в функциях.</li>
  * </ol>
  *
- * @param {IInitialTradingCoinConfig | IMarketCoinConfig} config Конфиг.
+ * @param config Конфиг.
  * @returns Является ли объект конфигом базовых монет или конфигом монет рынка.
  */
 export const isInitialPlayerCoinsConfigNotMarket = (config: IInitialTradingCoinConfig | IMarketCoinConfig):

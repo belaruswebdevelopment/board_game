@@ -1,43 +1,8 @@
 import { Ctx } from "boardgame.io";
-import { PickHeroAction } from "./actions/Actions";
-import { RusCardTypes } from "./Card";
-import { HeroNames, IHeroConfig } from "./data/HeroData";
-import { Stages } from "./Game";
-import { MyGameState } from "./GameSetup";
-import { TotalRank } from "./helpers/ScoreHelpers";
-import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { IStack, PlayerCardsType } from "./Player";
-
-/**
- * <h3>Интерфейс для героя.</h3>
- */
-export interface IHero {
-    type: string,
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    active: boolean,
-    stack: IStack[],
-}
-
-/**
- * <h3>Интерфейс для создания героя.</h3>
- */
-interface ICreateHero {
-    type: string,
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    active?: boolean,
-    stack: IStack[],
-}
+import { AddDataToLog } from "./Logging";
+import { PlayerCardsType } from "./typescript/card_types";
+import { HeroNames, LogTypes, RusCardTypes } from "./typescript/enums";
+import { ICreateHero, IHero, IHeroConfig, MyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -67,42 +32,6 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
         }
     }
     return heroes;
-};
-
-/**
- * <h3>Проверяет возможность взятия нового героя.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при расположении на планшете игрока карта из таверны.</li>
- * <li>Происходит при завершении действия взятых героев.</li>
- * <li>Происходит при расположении на планшете игрока карта героя Илуд.</li>
- * <li>Происходит при расположении на планшете игрока карта героя Труд.</li>
- * <li>Происходит при перемещении на планшете игрока карта героя Труд.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
-        let playerCards: PlayerCardsType[][] = Object.values(G.publicPlayers[Number(ctx.currentPlayer)].cards);
-        const isCanPickHero: boolean =
-            Math.min(...playerCards.map((item: PlayerCardsType[]): number =>
-                item.reduce(TotalRank, 0))) >
-            G.publicPlayers[Number(ctx.currentPlayer)].heroes.length;
-        if (isCanPickHero) {
-            const stack: IStack[] = [
-                {
-                    action: PickHeroAction.name,
-                    config: {
-                        stageName: Stages.PickHero,
-                    },
-                },
-            ];
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен выбрать нового героя.`);
-            AddActionsToStackAfterCurrent(G, ctx, stack);
-        }
-    }
 };
 
 /**
@@ -156,7 +85,7 @@ export const CreateHero = ({
  * @param ctx
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: MyGameState, ctx: Ctx): void => {
-    for (let i: number = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers; i++) {
         const playerCards: PlayerCardsType[] = Object.values(G.publicPlayers[i].cards).flat();
         const thrud: PlayerCardsType | undefined =
             playerCards.find((card: PlayerCardsType): boolean => card.name === HeroNames.Thrud);

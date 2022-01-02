@@ -1,5 +1,5 @@
-import { ActionDispatcher, ConfigNames } from "../actions/Actions";
-import { EndAction } from "./ActionHelpers";
+import { ConfigNames } from "../typescript/enums";
+import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 /**
  * <h3>Добавляет действия в стэк действий конкретного игрока.</li>
  * <p>Применения:</p>
@@ -62,9 +62,11 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
  * @param playerId Id игрока.
  */
 export const EndActionForChosenPlayer = (G, ctx, playerId) => {
+    var _a;
     G.publicPlayers[playerId].stack = [];
-    ctx.events.endStage();
+    (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.endStage();
     let activePlayers = 0;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const activePlayersKey in ctx.activePlayers) {
         activePlayers++;
     }
@@ -86,52 +88,17 @@ export const EndActionForChosenPlayer = (G, ctx, playerId) => {
  * @returns Выполнение действий.
  */
 export const EndActionFromStackAndAddNew = (G, ctx, newStack = [], ...args) => {
-    var _a;
+    var _a, _b;
     const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (G.drawProfit !== `` || (config === null || config === void 0 ? void 0 : config.name) === ConfigNames.ExplorerDistinction) {
         G.actionsNum = 0;
         G.drawProfit = ``;
     }
     if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
-        ctx.events.endStage();
+        (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.endStage();
     }
-    const isTrading = (_a = config === null || config === void 0 ? void 0 : config.isTrading) !== null && _a !== void 0 ? _a : false;
+    const isTrading = (_b = config === null || config === void 0 ? void 0 : config.isTrading) !== null && _b !== void 0 ? _b : false;
     G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
     AddActionsToStack(G, ctx, newStack);
     StartActionFromStackOrEndActions(G, ctx, isTrading, ...args);
-};
-/**
- * <h3>Начинает действия из стэка действий указанного игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Выполняется при необходимости активировать действия в стэке действий указанного игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param playerId Id игрока.
- * @param args Дополнительные аргументы.
- */
-export const StartActionForChosenPlayer = (G, ctx, playerId, ...args) => {
-    ActionDispatcher(G, ctx, G.publicPlayers[playerId].stack[0], ...args);
-};
-/**
- * <h3>Начинает действия из стэка действий конкретного игрока или завершает действия при их отсутствии.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Выполняется при необходимости активировать действия в стэке действий.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param isTrading Является ли действие обменом монет (трейдингом).
- * @param args Дополнительные аргументы.
- */
-export const StartActionFromStackOrEndActions = (G, ctx, isTrading, ...args) => {
-    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) {
-        ActionDispatcher(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0], ...args);
-    }
-    else {
-        EndAction(G, ctx, isTrading);
-    }
 };

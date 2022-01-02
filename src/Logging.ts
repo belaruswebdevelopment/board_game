@@ -1,22 +1,5 @@
-import { MyGameState } from "./GameSetup";
-
-/**
- * <h3>Перечисление для типов логов.</h3>
- */
-export const enum LogTypes {
-    ERROR = `error`,
-    GAME = `game`,
-    PRIVATE = `private`,
-    PUBLIC = `public`,
-}
-
-/**
- * <h3>Интерфейс для логирования данных.</h3>
- */
-export interface ILogData {
-    type: LogTypes,
-    value: string,
-}
+import { LogTypes } from "./typescript/enums";
+import { MyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Логирует данные.</h3>

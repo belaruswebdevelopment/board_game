@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { RusCardTypes } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { AddDataToLog, LogTypes } from "../Logging";
+import { AddDataToLog } from "../Logging";
+import { LogTypes, RusCardTypes } from "../typescript/enums";
 import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 /**
  * h3>Отрисовка сегмента игрового поля по указанным данным.</h3>
@@ -34,6 +34,7 @@ export const DrawBoard = (objectsSize) => {
  * @param args Аргументы действия.
  */
 export const DrawButton = (data, boardCells, key, name, player, actionName, ...args) => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     let action = null;
     switch (actionName) {
         case OnClickStartEnlistmentMercenaries.name:
@@ -64,7 +65,9 @@ export const DrawButton = (data, boardCells, key, name, player, actionName, ...a
  * @param args Аргументы действия.
  */
 export const DrawCard = (data, playerCells, card, id, player, suit, actionName, ...args) => {
-    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, action = null;
+    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, 
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    action = null;
     switch (actionName) {
         case OnClickHeroCard.name:
             action = OnClickHeroCard;
@@ -169,7 +172,9 @@ export const DrawCard = (data, playerCells, card, id, player, suit, actionName, 
  * @param args Аргументы действия.
  */
 export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses, additionalParam, actionName, ...args) => {
-    let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action = null;
+    let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, 
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    action = null;
     switch (actionName) {
         case OnClickBoardCoin.name:
             action = OnClickBoardCoin;
@@ -247,7 +252,7 @@ export const DrawPlayerBoardForCardDiscard = (data) => {
     // todo Discard cards must be hidden from others users?
     const playerHeaders = [], playerRows = [];
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }, void 0) }, `${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`));
         }
     }
@@ -310,7 +315,7 @@ export const DrawPlayersBoardForSuitCardDiscard = (data, suit) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickBoardCoin = (data, ...args) => {
-    data.props.moves.ClickBoardCoin(...args);
+    data.props.moves.ClickBoardCoinMove(...args);
 };
 /**
  * <h3>Активация мува при клике на карту кэмпа.</h3>
@@ -323,7 +328,7 @@ export const OnClickBoardCoin = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCampCard = (data, ...args) => {
-    data.props.moves.ClickCampCard(...args);
+    data.props.moves.ClickCampCardMove(...args);
 };
 /**
  * <h3>Активация мува при клике на карту кэмпа по действию героя Хольда.</h3>
@@ -336,7 +341,7 @@ export const OnClickCampCard = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCampCardHolda = (data, ...args) => {
-    data.props.moves.ClickCampCardHolda(...args);
+    data.props.moves.ClickCampCardHoldaMove(...args);
 };
 /**
  * <h3>Активация мува при клике на карту таверны.</h3>
@@ -349,7 +354,7 @@ export const OnClickCampCardHolda = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCard = (data, ...args) => {
-    data.props.moves.ClickCard(...args);
+    data.props.moves.ClickCardMove(...args);
 };
 /**
  * <h3>Активация мува при клике на карты из дискарда.</h3>
@@ -362,7 +367,7 @@ export const OnClickCard = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCardFromDiscard = (data, ...args) => {
-    data.props.moves.PickDiscardCard(...args);
+    data.props.moves.PickDiscardCardMove(...args);
 };
 /**
  * <h3>Активация мува при клике на карты для дискарда.</h3>
@@ -375,7 +380,7 @@ export const OnClickCardFromDiscard = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCardToDiscard = (data, ...args) => {
-    data.props.moves.DiscardCard(...args);
+    data.props.moves.DiscardCardMove(...args);
 };
 /**
  * <h3>Активация мува при клике на карту таверны для дискарда.</h3>
@@ -388,7 +393,7 @@ export const OnClickCardToDiscard = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCardToDiscard2Players = (data, ...args) => {
-    data.props.moves.DiscardCard2Players(...args);
+    data.props.moves.DiscardCard2PlayersMove(...args);
 };
 /**
  * <h3>Активация мува при клике на карту преимущества.</h3>
@@ -401,7 +406,7 @@ export const OnClickCardToDiscard2Players = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCardToPickDistinction = (data, ...args) => {
-    data.props.moves.ClickCardToPickDistinction(...args);
+    data.props.moves.ClickCardToPickDistinctionMove(...args);
 };
 /**
  * <h3>Активация мува при клике на монету для добавления её в кошелёк.</h3>
@@ -414,7 +419,7 @@ export const OnClickCardToPickDistinction = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCoinToAddToPouch = (data, ...args) => {
-    data.props.moves.AddCoinToPouch(...args);
+    data.props.moves.AddCoinToPouchMove(...args);
 };
 /**
  * <h3>Активация мува при клике на монету для её улучшения.</h3>
@@ -427,7 +432,7 @@ export const OnClickCoinToAddToPouch = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCoinToUpgrade = (data, ...args) => {
-    data.props.moves.ClickCoinToUpgrade(...args);
+    data.props.moves.ClickCoinToUpgradeMove(...args);
 };
 /**
  * <h3>Активация мува при клике на монету для её улучшения по действию артефакта 'VidofnirVedrfolnir'.</h3>
@@ -440,7 +445,7 @@ export const OnClickCoinToUpgrade = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCoinToUpgradeVidofnirVedrfolnir = (data, ...args) => {
-    data.props.moves.UpgradeCoinVidofnirVedrfolnir(...args);
+    data.props.moves.UpgradeCoinVidofnirVedrfolnirMove(...args);
 };
 /**
  * <h3>Активация мува при клике на карту на планшете игрока для дискарда.</h3>
@@ -453,7 +458,7 @@ export const OnClickCoinToUpgradeVidofnirVedrfolnir = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickDiscardCardFromPlayerBoard = (data, ...args) => {
-    data.props.moves.DiscardCardFromPlayerBoard(...args);
+    data.props.moves.DiscardCardFromPlayerBoardMove(...args);
 };
 /**
  * <h3>Активация мува при клике на карту на планшете определённой фракции игрока для дискарда.</h3>
@@ -466,7 +471,7 @@ export const OnClickDiscardCardFromPlayerBoard = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 const OnClickDiscardSuitCardFromPlayerBoard = (data, ...args) => {
-    data.props.moves.DiscardSuitCardFromPlayerBoard(...args);
+    data.props.moves.DiscardSuitCardFromPlayerBoardMove(...args);
 };
 /**
  * <h3>Активация мува при клике на карту наёмника.</h3>
@@ -479,7 +484,7 @@ const OnClickDiscardSuitCardFromPlayerBoard = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickGetEnlistmentMercenaries = (data, ...args) => {
-    data.props.moves.GetEnlistmentMercenaries(...args);
+    data.props.moves.GetEnlistmentMercenariesMove(...args);
 };
 /**
  * <h3>Активация мува при клике на монету в руке игрока.</h3>
@@ -492,7 +497,7 @@ export const OnClickGetEnlistmentMercenaries = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickHandCoin = (data, ...args) => {
-    data.props.moves.ClickHandCoin(...args);
+    data.props.moves.ClickHandCoinMove(...args);
 };
 /**
  * <h3>Активация мува при клике на карту героя.</h3>
@@ -505,7 +510,7 @@ export const OnClickHandCoin = (data, ...args) => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickHeroCard = (data, ...args) => {
-    data.props.moves.ClickHeroCard(...args);
+    data.props.moves.ClickHeroCardMove(...args);
 };
 /**
  * <h3>Активация мува при клике на кнопку старта действия 'EnlistmentMercenaries'.</h3>
@@ -517,7 +522,7 @@ export const OnClickHeroCard = (data, ...args) => {
  * @param data Глобальные параметры.
  */
 export const OnClickStartEnlistmentMercenaries = (data) => {
-    data.props.moves.StartEnlistmentMercenaries();
+    data.props.moves.StartEnlistmentMercenariesMove();
 };
 /**
  * <h3>Активация мува при клике на кнопку паса действия 'EnlistmentMercenaries'.</h3>
@@ -529,5 +534,5 @@ export const OnClickStartEnlistmentMercenaries = (data) => {
  * @param data Глобальные параметры.
  */
 export const OnClickPassEnlistmentMercenaries = (data) => {
-    data.props.moves.PassEnlistmentMercenaries();
+    data.props.moves.PassEnlistmentMercenariesMove();
 };

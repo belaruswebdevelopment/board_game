@@ -1,13 +1,12 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { ConfigNames } from "../actions/Actions";
 import { isCardNotAction } from "../Card";
 import { CountMarketCoins } from "../Coin";
-import { HeroNames } from "../data/HeroData";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
-import { DrawBoard, DrawCard, DrawCoin, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard, OnClickCampCard, OnClickCard, OnClickCardToPickDistinction, OnClickCoinToUpgrade, OnClickHandCoin, OnClickHeroCard } from "../helpers/UIHelpers";
-import { tavernsConfig } from "../Tavern";
+import { PlaceCardsProfit, DiscardCardFromBoardProfit, PickDiscardCardProfit, PickCampCardHoldaProfit, DiscardCardProfit, GetMjollnirProfitProfit, StartEnlistmentMercenariesProfit, GetEnlistmentMercenariesProfit, PlaceEnlistmentMercenariesProfit, AddCoinToPouchProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
+import { DrawCard, OnClickCampCard, DrawBoard, OnClickHeroCard, DrawCoin, OnClickHandCoin, OnClickCardToPickDistinction, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard, OnClickCoinToUpgrade, OnClickCard } from "../helpers/UIHelpers";
+import { ConfigNames, HeroNames } from "../typescript/enums";
+import { tavernsConfig } from "../typescript/interfaces";
 /**
  * <h3>Отрисовка карт кэмпа.</h3>
  * <p>Применения:</p>
@@ -62,7 +61,7 @@ export const DrawDistinctions = (data) => {
     const boardCells = [];
     for (let i = 0; i < 1; i++) {
         for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
+            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => data.OnClickDistinctionCard(suit), title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }, void 0) }, `Distinction ${suit} card`));
             }
         }

@@ -1,32 +1,21 @@
 import { Ctx } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { CreateCard, ICard, ICreateCard, RusCardTypes } from "../Card";
-import { CoinType, ReturnCoinToPlayerHands } from "../Coin";
-import { HeroNames, IConditions, IVariants } from "../data/HeroData";
-import { SuitNames, suitsConfig } from "../data/SuitData";
-import { Stages } from "../Game";
-import { MyGameState } from "../GameSetup";
-import {
-    AddBuffToPlayer,
-    DrawCurrentProfit,
-    PickDiscardCard,
-    UpgradeCurrentCoin
-} from "../helpers/ActionHelpers";
-import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, GetHeroIndexByName } from "../helpers/HeroHelpers";
+import { CreateCard } from "../Card";
+import { ReturnCoinToPlayerHands } from "../Coin";
+import { suitsConfig } from "../data/SuitData";
+import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, CheckPickHero, GetHeroIndexByName } from "../helpers/HeroHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { CheckPickHero, IHero } from "../Hero";
-import { AddDataToLog, LogTypes } from "../Logging";
-import {
-    AddCardToPlayer,
-    AddHeroCardToPlayerCards,
-    AddHeroCardToPlayerHeroCards,
-    IConfig,
-    IStack,
-    PlayerCardsType
-} from "../Player";
-import { ArgsTypes, ConfigNames, DrawNames } from "./Actions";
+import { AddDataToLog } from "../Logging";
+import { AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards } from "../Player";
+import { PlayerCardsType } from "../typescript/card_types";
+import { CoinType } from "../typescript/coin_types";
+import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, RusCardTypes, Stages, SuitNames } from "../typescript/enums";
+import { ICard, IConditions, IConfig, ICreateCard, IHero, IStack, IVariants, MyGameState } from "../typescript/interfaces";
+import { ArgsTypes } from "../typescript/types";
 
+// todo Does INVALID_MOVE be not in moves but in actions?
 /**
  * <h3>Действия, связанные с добавлением бафов от героев игроку.</h3>
  * <p>Применения:</p>
@@ -85,7 +74,7 @@ export const AddHeroToCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig):
 export const CheckDiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig): string | void => {
     const cardsToDiscard: PlayerCardsType[] = [];
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             if (config.suit !== suit) {
                 const last: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
                 if (last >= 0
@@ -159,7 +148,10 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
         if (G.actionsNum === 2) {
             const stack: IStack[] = [
                 {
-                    action: DrawProfitHeroAction.name,
+                    action: {
+                        name: DrawProfitHeroAction.name,
+                        type: ActionTypes.Hero,
+                    },
                     config: {
                         stageName: Stages.DiscardCardFromBoard,
                         drawName: DrawNames.Dagda,
@@ -168,7 +160,10 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
                     },
                 },
                 {
-                    action: DiscardCardsFromPlayerBoardAction.name,
+                    action: {
+                        name: DiscardCardsFromPlayerBoardAction.name,
+                        type: ActionTypes.Hero,
+                    },
                     config: {
                         suit: SuitNames.HUNTER,
                     },
@@ -213,7 +208,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G: MyGameState, ctx: Ctx): voi
             .findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading)),
         tradingHandCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
-    for (let i: number = 0; i < coinsCount; i++) {
+    for (let i = 0; i < coinsCount; i++) {
         if ((i < G.tavernsNum && G.currentTavern < i) || (i >= G.tavernsNum && tradingHandCoinIndex !== -1)
             || (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {
             ReturnCoinToPlayerHands(G.publicPlayers[Number(ctx.currentPlayer)], i);
@@ -251,13 +246,13 @@ export const PickDiscardCardHeroAction = (G: MyGameState, ctx: Ctx, config: ICon
  * @returns
  */
 export const PickHeroWithConditionsAction = (G: MyGameState, ctx: Ctx, config: IConfig): string | void => {
-    let isValidMove: boolean = false;
+    let isValidMove = false;
     for (const condition in config.conditions) {
-        if (config.conditions.hasOwnProperty(condition)) {
+        if (Object.prototype.hasOwnProperty.call(config.conditions, condition)) {
             if (condition === `suitCountMin`) {
-                let ranks: number = 0;
+                let ranks = 0;
                 for (const key in (config.conditions as IConditions)[condition]) {
-                    if (config.conditions[condition].hasOwnProperty(key)) {
+                    if (Object.prototype.hasOwnProperty.call(config.conditions[condition], key)) {
                         if (key === `suit`) {
                             ranks = G.publicPlayers[Number(ctx.currentPlayer)]
                                 .cards[config.conditions[condition][key]].reduce(TotalRank, 0);
@@ -329,7 +324,10 @@ export const PlaceCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
             },
                 stack: IStack[] = [
                     {
-                        action: DrawProfitHeroAction.name,
+                        action: {
+                            name: DrawProfitHeroAction.name,
+                            type: ActionTypes.Hero,
+                        },
                         variants,
                         config: {
                             name: ConfigNames.PlaceCards,
@@ -338,7 +336,10 @@ export const PlaceCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
                         },
                     },
                     {
-                        action: PlaceCardsAction.name,
+                        action: {
+                            name: PlaceCardsAction.name,
+                            type: ActionTypes.Hero,
+                        },
                         variants,
                     },
                 ];

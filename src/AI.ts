@@ -1,40 +1,17 @@
 import { Ctx } from "boardgame.io";
-import { ConfigNames } from "./actions/Actions";
 import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
-import { CompareCards, EvaluateCard, isCardNotAction, RusCardTypes } from "./Card";
-import { CoinType } from "./Coin";
+import { CompareCards, EvaluateCard } from "./bot_logic/card_logic";
+import { isCardNotAction } from "./Card";
 import { suitsConfig } from "./data/SuitData";
-import { Phases, Stages } from "./Game";
-import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
-import {
-    AddCoinToPouchProfit,
-    DiscardAnyCardFromPlayerBoardProfit,
-    DiscardCardFromBoardProfit,
-    DiscardCardProfit,
-    GetEnlistmentMercenariesProfit,
-    GetMjollnirProfitProfit,
-    PickCampCardHoldaProfit,
-    PickDiscardCardProfit,
-    PlaceCardsProfit,
-    PlaceEnlistmentMercenariesProfit,
-    StartEnlistmentMercenariesProfit,
-    UpgradeCoinVidofnirVedrfolnirProfit
-} from "./helpers/ProfitHelpers";
-import { MoveNames } from "./moves/Moves";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./helpers/ProfitHelpers";
 import { moveBy, moveValidators } from "./MoveValidator";
-import { IConfig, PlayerCardsType } from "./Player";
 import { HasLowestPriority } from "./Priority";
 import { CurrentScoring } from "./Score";
-
-/**
- * <h3>Интерфейс для возможных мувов у ботов.</h3>
- */
-interface IMoves {
-    move: string,
-    args: number[][] | (string | number | boolean)[] | number,
-}
-
-export type IBotMoveArgumentsTypes = (number | string | boolean)[][];
+import { DeckCardTypes, TavernCardTypes, PlayerCardsType } from "./typescript/card_types";
+import { CoinType } from "./typescript/coin_types";
+import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescript/enums";
+import { IConfig, IMoves, MyGameState } from "./typescript/interfaces";
+import { IBotMoveArgumentsTypes } from "./typescript/types";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -49,18 +26,18 @@ export type IBotMoveArgumentsTypes = (number | string | boolean)[][];
  */
 export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     //make false for standard bot
-    const enableAdvancedBot: boolean = true,
-        uniqueArr: DeckCardTypes[] = [];
+    const enableAdvancedBot = true,
+        uniqueArr: DeckCardTypes[] = [],
+        activeStageOfCurrentPlayer: string = ctx.activePlayers?.[Number(ctx.currentPlayer)] ?? `default`,
+        advancedString = `advanced`,
+        isAdvancedExist = Object.keys(moveBy[ctx.phase])
+            .some((key: string): boolean => key.includes(advancedString));
     let moves: IMoves[] = [],
-        flag: boolean = true,
-        advancedString: string = `advanced`,
-        isAdvancedExist: boolean = Object.keys(moveBy[ctx.phase])
-                .some((key: string): boolean => key.includes(advancedString));
-    const activeStageOfCurrentPlayer: string = ctx.activePlayers?.[Number(ctx.currentPlayer)] ?? `default`;
+        flag = true;
     // todo Fix it, now just for bot can do RANDOM move
     const botMoveArguments: IBotMoveArgumentsTypes = [];
     for (const stage in moveBy[ctx.phase]) {
-        if (moveBy[ctx.phase].hasOwnProperty(stage)) {
+        if (Object.prototype.hasOwnProperty.call(moveBy[ctx.phase], stage)) {
             if (ctx.phase === Phases.PickCards && stage.startsWith(`default`)) {
                 continue;
             }
@@ -69,7 +46,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 // todo Sync players and bots validations in one places
                 const moveName: string = moveBy[ctx.phase][stage],
                     [minValue, maxValue]: [number, number] = moveValidators[moveName].getRange({ G, ctx }),
-                    hasGetValue: boolean = moveValidators[moveName].hasOwnProperty(`getValue`);
+                    hasGetValue: boolean =
+                        Object.prototype.hasOwnProperty.call(moveValidators[moveName], `getValue`);
                 let argValue: number;
                 let argArray: number[];
                 for (let id: number = minValue; id < maxValue; id++) {
@@ -83,6 +61,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                         continue;
                     }
                     if (hasGetValue) {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         argArray = moveValidators[moveName].getValue!({ G, ctx, id });
                         moves.push({ move: moveName, args: [argArray] });
                     } else {
@@ -98,7 +77,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     }
     if (ctx.phase === Phases.PickCards && activeStageOfCurrentPlayer === `default` && ctx.activePlayers === null) {
         // todo Fix it, now just for bot can do RANDOM move
-        let pickCardOrCampCard: string = `card`;
+        let pickCardOrCampCard = `card`;
         if (G.expansions.thingvellir.active
             && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
                 || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
@@ -106,7 +85,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         }
         if (pickCardOrCampCard === `card`) {
             const tavern: TavernCardTypes[] = G.taverns[G.currentTavern];
-            for (let i: number = 0; i < tavern.length; i++) {
+            for (let i = 0; i < tavern.length; i++) {
                 const tavernCard: TavernCardTypes = tavern[i];
                 if (tavernCard === null) {
                     continue;
@@ -124,7 +103,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     continue;
                 }
                 const uniqueArrLength: number = uniqueArr.length;
-                for (let j: number = 0; j < uniqueArrLength; j++) {
+                for (let j = 0; j < uniqueArrLength; j++) {
                     const uniqueCard: DeckCardTypes = uniqueArr[j];
                     if (isCardNotAction(tavernCard) && isCardNotAction(uniqueCard)
                         && tavernCard.suit === uniqueCard.suit
@@ -143,7 +122,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                 flag = true;
             }
         } else {
-            for (let j: number = 0; j < G.campNum; j++) {
+            for (let j = 0; j < G.campNum; j++) {
                 if (G.camp[j] !== null) {
                     botMoveArguments.push([j]);
                 }
@@ -174,7 +153,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         }
         const allCoinsOrder: number[][] = G.botData.allCoinsOrder,
             handCoins: CoinType[] = G.publicPlayers[Number(ctx.currentPlayer)].handCoins;
-        for (let i: number = 0; i < allCoinsOrder.length; i++) {
+        for (let i = 0; i < allCoinsOrder.length; i++) {
             const hasTrading: boolean =
                 allCoinsOrder[i].some((coinId: number): boolean =>
                     Boolean(handCoins[coinId]?.isTriggerTrading));
@@ -195,16 +174,18 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                     maxCoin: CoinType = handCoins[allCoinsOrder[i][positionForMaxCoin]],
                     minCoin: CoinType = handCoins[allCoinsOrder[i][positionForMinCoin]];
                 if (maxCoin && minCoin) {
-                    let isTopCoinsOnPosition: boolean = false,
-                        isMinCoinsOnPosition: boolean = false;
+                    let isTopCoinsOnPosition = false,
+                        isMinCoinsOnPosition = false;
                     if (hasPositionForMaxCoin) {
                         isTopCoinsOnPosition =
                             allCoinsOrder[i].filter((coinIndex: number): boolean =>
                                 handCoins[coinIndex] !== null
+                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                 && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
                     }
                     if (hasPositionForMinCoin) {
                         isMinCoinsOnPosition = handCoins.filter((coin: CoinType): boolean => coin !== null
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             && coin!.value < minCoin.value).length <= 1;
                     }
                     if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
@@ -278,7 +259,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         }
     }
     if (ctx.phase === Phases.PlaceCoinsUline) {
-        for (let j: number = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
+        for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
             if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
                 botMoveArguments.push([j]);
             }
@@ -293,7 +274,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         });
     }
     if (activeStageOfCurrentPlayer === Stages.PlaceTradingCoinsUline) {
-        for (let j: number = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
+        for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
             if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
                 botMoveArguments.push([j]);
             }
@@ -335,10 +316,10 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         // todo Bot can't do async turns...?
         const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
         if (config !== undefined && config.suit !== undefined) {
-            for (let p: number = 0; p < G.publicPlayers.length; p++) {
+            for (let p = 0; p < G.publicPlayers.length; p++) {
                 if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
-                    for (let i: number = 0; i < G.publicPlayers[p].cards[config.suit].length; i++) {
-                        for (let j: number = 0; j < 1; j++) {
+                    for (let i = 0; i < G.publicPlayers[p].cards[config.suit].length; i++) {
+                        for (let j = 0; j < 1; j++) {
                             if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
                                 if (G.publicPlayers[p].cards[config.suit][i].type !== RusCardTypes.HERO) {
                                     const points: number | null = G.publicPlayers[p].cards[config.suit][i].points;
@@ -427,8 +408,8 @@ export const iterations = (G: MyGameState, ctx: Ctx): number => {
                 && card.suit === tavernCard.suit && CompareCards(card, tavernCard) === 0))) {
             return 1;
         }
-        let efficientMovesCount: number = 0;
-        for (let i: number = 0; i < currentTavern.length; i++) {
+        let efficientMovesCount = 0;
+        for (let i = 0; i < currentTavern.length; i++) {
             const tavernCard: TavernCardTypes = currentTavern[i];
             if (tavernCard === null) {
                 continue;
@@ -563,7 +544,7 @@ export const objectives = (): {
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i: number = 0; i < ctx.numPlayers; i++) {
+            for (let i = 0; i < ctx.numPlayers; i++) {
                 totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
             const [top1, top2]: number[] =
@@ -587,7 +568,7 @@ export const objectives = (): {
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i: number = 0; i < ctx.numPlayers; i++) {
+            for (let i = 0; i < ctx.numPlayers; i++) {
                 totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
             const [top1, top2]: number[] =
@@ -618,4 +599,4 @@ export const playoutDepth = (G: MyGameState, ctx: Ctx): number => {
         return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 20;
     }
     return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 2;
-};;
+};

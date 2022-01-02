@@ -1,8 +1,8 @@
 import { AddCampCardToCardsAction } from "./actions/CampActions";
-import { DiscardCardFromTavern, RusCardTypes } from "./Card";
 import { suitsConfig } from "./data/SuitData";
-import { AddDataToLog, LogTypes } from "./Logging";
-;
+import { AddDataToLog } from "./Logging";
+import { DiscardCardFromTavern } from "./Tavern";
+import { LogTypes, ActionTypes, RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>
@@ -70,7 +70,7 @@ const AddRemainingCampCardsToDiscard = (G) => {
 export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
     const campCards = [];
     for (const campArtefactCard in artefactConfig) {
-        if (artefactConfig.hasOwnProperty(campArtefactCard)) {
+        if (Object.prototype.hasOwnProperty.call(artefactConfig, campArtefactCard)) {
             if (artefactConfig[campArtefactCard].tier === tier) {
                 campCards.push(CreateArtefactCampCard({
                     tier,
@@ -89,11 +89,12 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
     for (let i = 0; i < mercenariesConfig[tier].length; i++) {
         let name = ``, path = ``;
         for (const campMercenarySuit in mercenariesConfig[tier][i]) {
-            if (mercenariesConfig[tier][i].hasOwnProperty(campMercenarySuit)) {
+            if (Object.prototype.hasOwnProperty.call(mercenariesConfig[tier][i], campMercenarySuit)) {
                 path += campMercenarySuit + ` `;
                 name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
                 for (const campMercenaryCardProperty in mercenariesConfig[tier][i][campMercenarySuit]) {
-                    if (mercenariesConfig[tier][i][campMercenarySuit].hasOwnProperty(campMercenaryCardProperty)) {
+                    if (Object.prototype.hasOwnProperty
+                        .call(mercenariesConfig[tier][i][campMercenarySuit], campMercenaryCardProperty)) {
                         if (campMercenaryCardProperty === `rank`) {
                             name += `шевронов: ${mercenariesConfig[tier][i][campMercenarySuit].rank}, `;
                         }
@@ -113,7 +114,10 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
             name: name.trim(),
             stack: [
                 {
-                    action: AddCampCardToCardsAction.name,
+                    action: {
+                        name: AddCampCardToCardsAction.name,
+                        type: ActionTypes.Camp,
+                    },
                     variants: mercenariesConfig[tier][i],
                 },
             ],

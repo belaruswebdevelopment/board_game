@@ -1,10 +1,8 @@
-import { Ctx, Move } from "boardgame.io";
-import { CoinType } from "../Coin";
-import { HeroNames } from "../data/HeroData";
-import { Phases } from "../Game";
-import { MyGameState } from "../GameSetup";
+import { Move, Ctx } from "boardgame.io";
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
-import { IPublicPlayer } from "../Player";
+import { CoinType } from "../typescript/coin_types";
+import { HeroNames, Phases } from "../typescript/enums";
+import { MyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Выкладка монет ботами.</h3>
@@ -18,7 +16,7 @@ import { IPublicPlayer } from "../Player";
  * @param coinsOrder Порядок выкладки монет.
  */
 export const BotsPlaceAllCoinsMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinsOrder: number[]): void => {
-    for (let i: number = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
+    for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
         const coinId: number = coinsOrder[i] || G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin: CoinType): boolean => coin !== null);
         if (coinId !== -1) {
@@ -35,14 +33,14 @@ export const BotsPlaceAllCoinsMove: Move<MyGameState> = (G: MyGameState, ctx: Ct
             .every((coin: CoinType): boolean => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {
         if (CheckAndStartUlineActionsOrContinue(G, ctx) === Phases.PlaceCoinsUline) {
-            ctx.events!.setPhase!(Phases.PlaceCoinsUline);
+            ctx.events?.setPhase(Phases.PlaceCoinsUline);
         } else {
-            ctx.events!.setPhase!(Phases.PickCards);
+            ctx.events?.setPhase(Phases.PickCards);
         }
     } else {
         if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .every((coin: CoinType): boolean => coin === null)) {
-            ctx.events!.endTurn!();
+            ctx.events?.endTurn();
         }
     }
 };

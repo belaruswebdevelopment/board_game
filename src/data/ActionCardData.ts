@@ -1,24 +1,6 @@
-import { ConfigNames, DrawNames } from "../actions/Actions";
 import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "../actions/CoinActions";
-import { Stages } from "../Game";
-import { IStack } from "../Player";
-import { INumberValues } from "./SuitData";
-
-/**
- * <h3>Интерфейс для значения, на которое обновляется монета.</h3>
- */
-interface IActionCardValues {
-    [index: number]: INumberValues,
-}
-
-/**
- * <h3>Интерфейс для конфига карт обновления монет.</h3>
- */
-export interface IActionCardConfig {
-    value: number,
-    stack: IStack[],
-    amount: () => IActionCardValues,
-}
+import { ActionTypes, ConfigNames, Stages, DrawNames } from "../typescript/enums";
+import { IActionCardConfig, IActionCardValues } from "../typescript/interfaces";
 
 /**
  * <h3>Карта улучшения монеты на +3.</h3>
@@ -31,7 +13,10 @@ const upgradeCoinUpTo3: IActionCardConfig = {
     value: 3,
     stack: [
         {
-            action: DrawProfitCoinAction.name,
+            action: {
+                name: DrawProfitCoinAction.name,
+                type: ActionTypes.Coin,
+            },
             config: {
                 name: ConfigNames.UpgradeCoin,
                 stageName: Stages.UpgradeCoin,
@@ -40,7 +25,10 @@ const upgradeCoinUpTo3: IActionCardConfig = {
             },
         },
         {
-            action: UpgradeCoinActionCardAction.name,
+            action: {
+                name: UpgradeCoinActionCardAction.name,
+                type: ActionTypes.Coin,
+            },
             config: {
                 value: 3,
             },
@@ -77,7 +65,10 @@ const upgradeCoinUpTo5: IActionCardConfig = {
     value: 5,
     stack: [
         {
-            action: DrawProfitCoinAction.name,
+            action: {
+                name: DrawProfitCoinAction.name,
+                type: ActionTypes.Coin,
+            },
             config: {
                 name: ConfigNames.UpgradeCoin,
                 stageName: Stages.UpgradeCoin,
@@ -86,7 +77,10 @@ const upgradeCoinUpTo5: IActionCardConfig = {
             },
         },
         {
-            action: UpgradeCoinActionCardAction.name,
+            action: {
+                name: UpgradeCoinActionCardAction.name,
+                type: ActionTypes.Coin,
+            },
             config: {
                 value: 5,
             },

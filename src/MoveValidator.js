@@ -1,6 +1,6 @@
-import { HeroNames } from "./data/HeroData";
 import { TotalRank } from "./helpers/ScoreHelpers";
-import { AddDataToLog, LogTypes } from "./Logging";
+import { AddDataToLog } from "./Logging";
+import { LogTypes, HeroNames } from "./typescript/enums";
 /**
  * Validates arguments inside of move.
  * obj - object to validate.
@@ -126,22 +126,22 @@ export const moveBy = {
 export const moveValidators = {
     // todo Add all validators to all moves
     ClickHandCoinMove: {
-        getRange: ({ G, ctx }) => ([0, G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length]),
+        getRange: ({ G, ctx }) => ([0, G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].handCoins.length]),
         validate: ({ G, ctx, id }) => {
             if (id !== undefined) {
-                return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
-                    && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id] !== null;
+                return G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].selectedCoin === undefined
+                    && G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].handCoins[id] !== null;
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
         },
     },
     ClickBoardCoinMove: {
-        getRange: ({ G, ctx }) => ([0, G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length]),
+        getRange: ({ G, ctx }) => ([0, G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].boardCoins.length]),
         validate: ({ G, ctx, id }) => {
             if (id !== undefined) {
-                return G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined
-                    && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[id] === null;
+                return G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].selectedCoin !== undefined
+                    && G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].boardCoins[id] === null;
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
@@ -168,7 +168,7 @@ export const moveValidators = {
                 if (G.heroes[id].name === HeroNames.Hourya) {
                     const config = G.heroes[id].stack[0].config;
                     if ((config === null || config === void 0 ? void 0 : config.conditions) !== undefined) {
-                        isValid = G.publicPlayers[Number(ctx.currentPlayer)]
+                        isValid = G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)]
                             .cards[config.conditions.suitCountMin.suit].reduce(TotalRank, 0) >=
                             config.conditions.suitCountMin.value;
                         return isValid;
@@ -186,9 +186,10 @@ export const moveValidators = {
     },
     // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
     ClickCoinToUpgradeMove: {
-        getRange: ({ G, ctx }) => ([0, G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length]),
+        getRange: ({ G, ctx }) => ([0, G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].boardCoins.length]),
         validate: ({ G, ctx, id, type }) => {
             if (id !== undefined && type !== undefined) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 return CoinUpgradeValidation(G, ctx, id, type);
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id' или не передан обязательный параметр 'type'.`);
@@ -203,7 +204,7 @@ export const moveValidators = {
         getRange: ({ G }) => ([0, Object.values(G.distinctions).length]),
         validate: ({ G, ctx, id }) => {
             if (id !== undefined) {
-                return Object.values(G.distinctions).indexOf(Number(ctx.currentPlayer)) === id;
+                return Object.values(G.distinctions).indexOf(Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)) === id;
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
@@ -211,8 +212,8 @@ export const moveValidators = {
     },
     ClickCampCardMove: {
         getRange: ({ G }) => ([0, G.camp.length]),
-        validate: ({ G, ctx }) => G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
-            || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp))),
+        validate: ({ G, ctx }) => G.expansions.thingvellir.active && (Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer) === G.publicPlayersOrder[0]
+            || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].buffs.goCamp))),
     },
 };
 /**

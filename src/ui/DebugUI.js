@@ -28,6 +28,7 @@ export const DrawDebugData = (data) => {
  * @param obj Информация.
  * @returns
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DrawObjectData = (obj) => {
     const values = [];
     for (const [key, value] of Object.entries(obj)) {

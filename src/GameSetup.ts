@@ -1,111 +1,20 @@
 import { Ctx } from "boardgame.io";
-import { GetAllPicks, k_combinations, Permute } from "./BotConfig";
-import { BuildCampCards, IArtefactCampCard, IMercenaryCampCard } from "./Camp";
-import { BuildCards, GetAverageSuitCard, IActionCard, IAverageSuitCardData, ICard, IDeckConfig } from "./Card";
-import { BuildCoins, ICoin } from "./Coin";
+import { k_combinations, Permute, GetAllPicks } from "./BotConfig";
+import { GetAverageSuitCard } from "./bot_logic/card_logic";
+import { BuildCampCards } from "./Camp";
+import { BuildCards } from "./Card";
+import { BuildCoins } from "./Coin";
 import { actionCardsConfigArray } from "./data/ActionCardData";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { marketCoinsConfig } from "./data/CoinData";
 import { heroesConfig } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
-import { IDistinctions } from "./Distinction";
-import { BuildHeroes, IHero } from "./Hero";
-import { ILogData } from "./Logging";
-import { BuildPlayer, BuildPublicPlayer, IPlayer, IPublicPlayer } from "./Player";
-import { GeneratePrioritiesForPlayerNumbers, IPriority } from "./Priority";
-
-/**
- * <h3>Интерфейс для дополнений к игре.</h3>
- */
-interface IExpansion {
-    [name: string]: {
-        active: boolean,
-    },
-}
-
-/**
- * <h3>Интерфейс для объекта, хранящего скрытые (secret) данные всех игроков.</h3>
- */
-interface IPlayers {
-    [index: number]: IPlayer,
-}
-
-/**
- * <h3>Интерфейс для данных бота.</h3>
- */
-interface IBotData {
-    allCoinsOrder: number[][],
-    allPicks: any,
-    maxIter: number,
-    deckLength: number,
-}
-
-interface IAverageCard {
-    [index: string]: ICard,
-}
-
-/**
- * <h3>Типы данных для дек карт.</h3>
- */
-export type DeckCardTypes = ICard | IActionCard;
-
-/**
- * <h3>Типы данных для дек карт кэмпа.</h3>
- */
-export type CampDeckCardTypes = IArtefactCampCard | IMercenaryCampCard;
-
-/**
- * <h3>Типы данных для кэмпа.</h3>
- */
-export type CampCardTypes = null | CampDeckCardTypes;
-
-/**
- * <h3>Типы данных для карт таверн.</h3>
- */
-export type TavernCardTypes = null | DeckCardTypes;
-
-/**
- * <h3>Типы данных для преимуществ.</h3>
- */
-export type DistinctionTypes = null | undefined | number;
-
-/**
- * <h3>Интерфейс для игровых пользовательских данных G.</h3>
- */
-export interface MyGameState {
-    actionsNum: number,
-    averageCards: IAverageCard,
-    botData: IBotData,
-    camp: CampCardTypes[],
-    campDecks: CampDeckCardTypes[][],
-    campNum: number,
-    campPicked: boolean,
-    currentTavern: number,
-    debug: boolean,
-    decks: DeckCardTypes[][],
-    discardCampCardsDeck: CampDeckCardTypes[],
-    discardCardsDeck: DeckCardTypes[],
-    distinctions: IDistinctions,
-    drawProfit: string,
-    drawSize: number,
-    exchangeOrder: (number | undefined)[],
-    expansions: IExpansion,
-    heroes: IHero[],
-    log: boolean,
-    logData: ILogData[],
-    marketCoins: ICoin[],
-    marketCoinsUnique: ICoin[],
-    suitIdForMjollnir: null | string,
-    suitsNum: number,
-    taverns: TavernCardTypes[][],
-    tavernsNum: number,
-    tierToEnd: number,
-    totalScore: number[],
-    players: IPlayers,
-    publicPlayers: IPublicPlayer[],
-    publicPlayersOrder: number[],
-    winner: number[],
-}
+import { BuildHeroes } from "./Hero";
+import { BuildPlayer, BuildPublicPlayer } from "./Player";
+import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
+import { DeckCardTypes, CampDeckCardTypes } from "./typescript/card_types";
+import { ICoin } from "./typescript/coin_interfaces";
+import { MyGameState, IExpansion, ILogData, IDistinctions, IDeckConfig, IAverageSuitCardData, IHero, IPlayers, IPublicPlayer, IPriority, IAverageCard, IBotData } from "./typescript/interfaces";
 
 /**
  * <h3>Сетап игры.</h3>
@@ -118,14 +27,14 @@ export interface MyGameState {
  * @returns Данные игры.
  */
 export const SetupGame = (ctx: Ctx): MyGameState => {
-    const suitsNum: number = 5,
-        tierToEnd: number = 2,
-        campNum: number = 5,
-        actionsNum: number = 0,
-        log: boolean = true,
-        debug: boolean = false,
-        drawProfit: string = ``,
-        suitIdForMjollnir: null = null,
+    const suitsNum = 5,
+        tierToEnd = 2,
+        campNum = 5,
+        actionsNum = 0,
+        log = true,
+        debug = false,
+        drawProfit = ``,
+        suitIdForMjollnir = null,
         expansions: IExpansion = {
             thingvellir: {
                 active: true,
@@ -139,23 +48,24 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         campDecks: CampDeckCardTypes[][] = [],
         distinctions: IDistinctions = {};
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             distinctions[suit] = null;
         }
     }
-    let winner: number[] = [],
-        campPicked: boolean = false,
-        camp: CampDeckCardTypes[] = [],
+    const winner: number[] = [],
+        campPicked = false,
         discardCampCardsDeck: CampDeckCardTypes[] = [];
+    let camp: CampDeckCardTypes[] = [];
     if (expansions.thingvellir.active) {
-        for (let i: number = 0; i < tierToEnd; i++) {
+        for (let i = 0; i < tierToEnd; i++) {
             // todo Camp cards must be hidden from users?
             campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             campDecks[i] = ctx.random!.Shuffle(campDecks[i]);
         }
         camp = campDecks[0].splice(0, campNum);
     }
-    for (let i: number = 0; i < tierToEnd; i++) {
+    for (let i = 0; i < tierToEnd; i++) {
         // todo Deck cards must be hidden from users?
         decks[i] = BuildCards({
             suits: suitsConfig,
@@ -164,6 +74,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
             players: ctx.numPlayers,
             tier: i,
         } as IAverageSuitCardData);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         decks[i] = ctx.random!.Shuffle(decks[i]);
     }
     const heroesConfigOptions: string[] = [`base`];
@@ -174,19 +85,19 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
     }
     const heroes: IHero[] = BuildHeroes(heroesConfigOptions, heroesConfig),
         taverns: DeckCardTypes[][] = [],
-        tavernsNum: number = 3,
-        currentTavern: number = -1,
+        tavernsNum = 3,
+        currentTavern = -1,
         drawSize: number = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
-    for (let i: number = 0; i < tavernsNum; i++) {
+    for (let i = 0; i < tavernsNum; i++) {
         // todo Taverns cards must be hidden from users?
         taverns[i] = decks[0].splice(0, drawSize);
     }
     const players: IPlayers = {},
         publicPlayers: IPublicPlayer[] = [],
         publicPlayersOrder: number[] = [],
-        exchangeOrder: number[] = [];
-    let priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
-    for (let i: number = 0; i < ctx.numPlayers; i++) {
+        exchangeOrder: number[] = [],
+        priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
+    for (let i = 0; i < ctx.numPlayers; i++) {
         const randomPriorityIndex: number = Math.floor(Math.random() * priorities.length),
             priority: IPriority = priorities.splice(randomPriorityIndex, 1)[0];
         players[i] = BuildPlayer();
@@ -205,14 +116,14 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder: number[][] = [];
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
                 players: ctx.numPlayers,
                 tier: 0,
             } as IAverageSuitCardData);
         }
     }
-    for (let i: number = 0; i < initCoinsOrder.length; i++) {
+    for (let i = 0; i < initCoinsOrder.length; i++) {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
     }
     const botData: IBotData = {

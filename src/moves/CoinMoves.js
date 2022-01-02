@@ -1,11 +1,9 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { HeroNames } from "../data/HeroData";
-import { SuitNames } from "../data/SuitData";
-import { Phases, Stages } from "../Game";
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { CoinUpgradeValidation, IsValidMove } from "../MoveValidator";
+import { IsValidMove, CoinUpgradeValidation } from "../MoveValidator";
+import { Phases, Stages, HeroNames, SuitNames } from "../typescript/enums";
 // todo Add logging
 // todo Add Place coins async
 /**
@@ -35,7 +33,7 @@ export const AddCoinToPouchMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickBoardCoinMove = (G, ctx, coinId) => {
-    var _a;
+    var _a, _b, _c, _d, _e;
     const player = G.publicPlayers[Number(ctx.currentPlayer)], isValidMove = IsValidMove({ objId: coinId, range: [0, player.boardCoins.length] });
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -51,9 +49,9 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
         player.handCoins[tempId] = null;
         player.selectedCoin = undefined;
         if (ctx.phase === Phases.PlaceCoinsUline) {
-            ctx.events.setPhase(Phases.PickCards);
+            (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setPhase(Phases.PickCards);
         }
-        else if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[ctx.currentPlayer]) === Stages.PlaceTradingCoinsUline) {
+        else if (((_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[ctx.currentPlayer]) === Stages.PlaceTradingCoinsUline) {
             G.actionsNum--;
             AfterBasicPickCardActions(G, ctx, false);
         }
@@ -64,15 +62,15 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
                 .every((coin) => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {
                 if (CheckAndStartUlineActionsOrContinue(G, ctx) === Phases.PlaceCoinsUline) {
-                    ctx.events.setPhase(Phases.PlaceCoinsUline);
+                    (_c = ctx.events) === null || _c === void 0 ? void 0 : _c.setPhase(Phases.PlaceCoinsUline);
                 }
                 else {
-                    ctx.events.setPhase(Phases.PickCards);
+                    (_d = ctx.events) === null || _d === void 0 ? void 0 : _d.setPhase(Phases.PickCards);
                 }
             }
             else {
                 if (player.handCoins.every((coin) => coin === null)) {
-                    ctx.events.endTurn();
+                    (_e = ctx.events) === null || _e === void 0 ? void 0 : _e.endTurn();
                 }
             }
         }

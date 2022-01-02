@@ -1,8 +1,8 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { MyGameState } from "../GameSetup";
 import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
+import { MyGameState } from "../typescript/interfaces";
 
 // todo Add logging
 /**

@@ -1,14 +1,13 @@
-import { CoinType } from "../Coin";
-import { HeroNames } from "../data/HeroData";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { Phases, Stages } from "../Game";
 import { GameBoard } from "../GameBoard";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
-import { PlayerCardsType } from "../Player";
 import { CurrentScoring } from "../Score";
-import { tavernsConfig } from "../Tavern";
+import { PlayerCardsType } from "../typescript/card_types";
+import { CoinType } from "../typescript/coin_types";
+import { HeroNames, Phases, Stages } from "../typescript/enums";
+import { tavernsConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
@@ -26,13 +25,13 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
         playerHeaders: JSX.Element[][] = [],
         playerHeadersCount: JSX.Element[][] = [],
         playerRows: JSX.Element[][][] = [];
-    for (let p: number = 0; p < data.props.ctx.numPlayers; p++) {
+    for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         playersBoards[p] = [];
         playerHeaders[p] = [];
         playerHeadersCount[p] = [];
         playerRows[p] = [];
         for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
+            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 playerHeaders[p].push(
                     <th className={`${suitsConfig[suit].suitColor}`}
                         key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName}`}>
@@ -49,7 +48,7 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                 );
             }
         }
-        for (let s: number = 0; s < 1 + Number(data.props.G.expansions.thingvellir.active); s++) {
+        for (let s = 0; s < 1 + Number(data.props.G.expansions.thingvellir.active); s++) {
             if (s === 0) {
                 playerHeaders[p].push(
                     <th className="bg-gray-600" key={`${data.props.G.publicPlayers[p].nickname} hero icon`}>
@@ -80,14 +79,14 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                 );
             }
         }
-        for (let i: number = 0; ; i++) {
+        for (let i = 0; ; i++) {
             const playerCells: JSX.Element[] = [];
-            let isDrawRow: boolean = false,
-                id: number = 0,
-                j: number = 0;
+            let isDrawRow = false,
+                id = 0,
+                j = 0;
             playerRows[p][i] = [];
             for (const suit in suitsConfig) {
-                if (suitsConfig.hasOwnProperty(suit)) {
+                if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     id = i + j;
                     if (data.props.G.publicPlayers[p].cards[suit][i] !== undefined) {
                         isDrawRow = true;
@@ -103,7 +102,7 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                     j++;
                 }
             }
-            for (let k: number = 0; k < 1 + Number(data.props.G.expansions.thingvellir.active); k++) {
+            for (let k = 0; k < 1 + Number(data.props.G.expansions.thingvellir.active); k++) {
                 id += k + 1;
                 if (k === 0) {
                     const playerCards: PlayerCardsType[] = Object.values(data.props.G.publicPlayers[p].cards).flat();
@@ -181,17 +180,17 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
         playerHeaders: JSX.Element[][] = [],
         playerFooters: JSX.Element[][] = [],
         playerRows: JSX.Element[][][] = [];
-    for (let p: number = 0; p < data.props.ctx.numPlayers; p++) {
-        let coinIndex: number = 0;
+    for (let p = 0; p < data.props.ctx.numPlayers; p++) {
+        let coinIndex = 0;
         playersBoardsCoins[p] = [];
         playerHeaders[p] = [];
         playerFooters[p] = [];
         playerRows[p] = [];
-        for (let i: number = 0; i < 2; i++) {
+        for (let i = 0; i < 2; i++) {
             const playerCells: JSX.Element[] = [];
             playerRows[p][i] = [];
             if (i === 0) {
-                for (let j: number = 0; j < data.props.G.tavernsNum; j++) {
+                for (let j = 0; j < data.props.G.tavernsNum; j++) {
                     playerHeaders[p].push(
                         <th key={`Tavern ${tavernsConfig[j].name}`}>
                             <span style={Styles.Taverns(j)} className="bg-tavern-icon">
@@ -337,11 +336,11 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
  */
 export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
     const playersHandsCoins: JSX.Element[][] = [];
-    for (let p: number = 0; p < data.props.ctx.numPlayers; p++) {
+    for (let p = 0; p < data.props.ctx.numPlayers; p++) {
         const playerCells: JSX.Element[] = [];
         playersHandsCoins[p] = [];
-        for (let i: number = 0; i < 1; i++) {
-            for (let j: number = 0; j < data.props.G.publicPlayers[p].handCoins.length; j++) {
+        for (let i = 0; i < 1; i++) {
+            for (let j = 0; j < data.props.G.publicPlayers[p].handCoins.length; j++) {
                 if (data.props.G.publicPlayers[p].handCoins[j] === null) {
                     playerCells.push(
                         <td key={`${data.props.G.publicPlayers[p].nickname} hand coin ${j} empty`}
@@ -353,7 +352,7 @@ export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
                     );
                 } else {
                     if (Number(data.props.ctx.currentPlayer) === p || data.props.G.winner.length) {
-                        let coinClasses: string = `border-2`;
+                        let coinClasses = `border-2`;
                         if (data.props.G.publicPlayers[p].selectedCoin === j) {
                             coinClasses = `border-2 border-green-400`;
                         }

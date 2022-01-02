@@ -1,94 +1,17 @@
 import { Ctx } from "boardgame.io";
-import { ConfigNames, DrawNames, DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
-import { CreateCard, ICard } from "../Card";
-import { CreateCoin, CoinType } from "../Coin";
-import { Stages } from "../Game";
-import { MyGameState } from "../GameSetup";
+import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
+import { CreateCard } from "../Card";
+import { CreateCoin } from "../Coin";
+import { StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
-import { AddActionsToStack, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
+import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-
-/**
- * <h3>Перечисление для названий фракций.</h3>
- */
-export const enum SuitNames {
-    BLACKSMITH = `blacksmith`,
-    EXPLORER = `explorer`,
-    HUNTER = `hunter`,
-    MINER = `miner`,
-    WARRIOR = `warrior`,
-}
-
-/**
- * <h3>Перечисление для русских названий фракций.</h3>
- */
-export const enum RusSuitNames {
-    BLACKSMITH = `Кузнецы`,
-    EXPLORER = `Разведчики`,
-    HUNTER = `Охотники`,
-    MINER = `Горняки`,
-    WARRIOR = `Воины`,
-}
-
-/**
- * <h3>Интерфейс для числовых индексов и числовых значений.</h3>
- */
-export interface INumberValues {
-    [index: number]: number,
-}
-
-/**
- * <h3>Интерфейс для числовых индексов и массивов числовых значений.</h3>
- */
-interface IArrayValuesForTiers {
-    [index: number]: number[],
-}
-
-/**
- * <h3>Интерфейс для значений шевронов карт.</h3>
- */
-interface IRankValues {
-    [index: number]: INumberValues,
-}
-
-/**
- * <h3>Интерфейс для значений очков карт.</h3>
- */
-interface IPointsValues {
-    [index: number]: INumberValues | IArrayValuesForTiers,
-}
-
-/**
- * <h3>Интерфейс для преимуществ по фракциям.</h3>
- */
-interface IDistinction {
-    description: string,
-    awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number,
-}
-
-/**
- * <h3>Интерфейс для фракций.</h3>
- */
-export interface ISuit {
-    suit: string,
-    suitName: string,
-    suitColor: string,
-    description: string,
-    ranksValues: () => IRankValues,
-    pointsValues: () => IPointsValues,
-    scoringRule: (cards: PlayerCardsType[]) => number,
-    distinction: IDistinction,
-}
-
-/**
- * <h3>Интерфейс для конфига фракций.</h3>
- */
-export interface ISuitConfig {
-    [name: string]: ISuit,
-}
+import { PlayerCardsType } from "../typescript/card_types";
+import { CoinType } from "../typescript/coin_types";
+import { ActionTypes, ConfigNames, DrawNames, LogTypes, RusSuitNames, Stages, SuitNames } from "../typescript/enums";
+import { ICard, IPointsValues, IPublicPlayer, IRankValues, IStack, ISuit, ISuitConfig, MyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Фракция кузнецов.</h3>
@@ -152,7 +75,7 @@ const blacksmith: ISuit = {
                 } as ICard));
                 G.distinctions[SuitNames.BLACKSMITH] = undefined;
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
-                ctx.events!.endTurn!();
+                ctx.events?.endTurn();
             }
             return 0;
         },
@@ -214,7 +137,10 @@ const explorer: ISuit = {
             if (G.tierToEnd !== 0) {
                 const stack: IStack[] = [
                     {
-                        action: DrawProfitAction.name,
+                        action: {
+                            name: DrawProfitAction.name,
+                            type: ActionTypes.Action,
+                        },
                         config: {
                             name: ConfigNames.ExplorerDistinction,
                             stageName: Stages.PickDistinctionCard,
@@ -292,7 +218,7 @@ const hunter: ISuit = {
                 });
                 G.distinctions[SuitNames.HUNTER] = undefined;
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
-                ctx.events!.endTurn!();
+                ctx.events?.endTurn();
             }
             return 0;
         },
@@ -359,7 +285,7 @@ const miner: ISuit = {
                 });
                 G.distinctions[SuitNames.MINER] = undefined;
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия горняков свой кристалл на особый кристалл 6.`);
-                ctx.events!.endTurn!();
+                ctx.events?.endTurn();
             } else {
                 if (player.priority.value === 6) {
                     return 3;
@@ -425,7 +351,10 @@ const warrior: ISuit = {
             if (G.tierToEnd !== 0) {
                 const stack: IStack[] = [
                     {
-                        action: DrawProfitAction.name,
+                        action: {
+                            name: DrawProfitAction.name,
+                            type: ActionTypes.Action,
+                        },
                         config: {
                             name: ConfigNames.UpgradeCoin,
                             stageName: Stages.UpgradeCoin,
@@ -434,7 +363,10 @@ const warrior: ISuit = {
                         },
                     },
                     {
-                        action: UpgradeCoinAction.name,
+                        action: {
+                            name: UpgradeCoinAction.name,
+                            type: ActionTypes.Action,
+                        },
                         config: {
                             value: 5,
                         },

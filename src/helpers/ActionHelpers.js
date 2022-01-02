@@ -1,13 +1,11 @@
-import { ConfigNames, DrawNames } from "../actions/Actions";
-import { CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCampAction } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
 import { UpgradeCoin } from "../Coin";
-import { Stages } from "../Game";
-import { AddDataToLog, LogTypes } from "../Logging";
+import { AddDataToLog } from "../Logging";
 import { AddCardToPlayer } from "../Player";
+import { LogTypes } from "../typescript/enums";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AfterBasicPickCardActions } from "./MovesHelpers";
-import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
+import { EndActionFromStackAndAddNew, AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
  * <p>Применения:</p>
@@ -83,8 +81,9 @@ export const EndAction = (G, ctx, isTrading) => {
  * @returns Стартанул ли стэйдж.
  */
 export const IsStartActionStage = (G, ctx, config) => {
+    var _a;
     if (config.stageName !== undefined) {
-        ctx.events.setStage(config.stageName);
+        (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setStage(config.stageName);
         AddDataToLog(G, LogTypes.GAME, `Начало стэйджа ${config.stageName}.`);
         return true;
     }
@@ -109,23 +108,32 @@ export const PickDiscardCard = (G, ctx, config, cardId) => {
     let suit = null;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
     if (G.actionsNum === 2) {
-        const stack = [
-            {
-                action: CheckPickDiscardCardCampAction.name,
-            },
-            {
-                action: DrawProfitCampAction.name,
-                config: {
-                    stageName: Stages.PickDiscardCard,
-                    name: ConfigNames.BrisingamensAction,
-                    drawName: DrawNames.Brisingamens,
-                },
-            },
-            {
-                action: PickDiscardCardCampAction.name,
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+        // const stack: IStack[] = [
+        //     {
+        //         action: {
+        //             name: CheckPickDiscardCardCampAction.name,
+        //             type: ActionTypes.Camp,
+        //         },
+        //     },
+        //     {
+        //         action: {
+        //             name: DrawProfitCampAction.name,
+        //             type: ActionTypes.Camp,
+        //         },
+        //         config: {
+        //             stageName: Stages.PickDiscardCard,
+        //             name: ConfigNames.BrisingamensAction,
+        //             drawName: DrawNames.Brisingamens,
+        //         },
+        //     },
+        //     {
+        //         action: {
+        //             name: PickDiscardCardCampAction.name,
+        //             type: ActionTypes.Camp,
+        //         },
+        //     },
+        // ];
+        // AddActionsToStackAfterCurrent(G, ctx, stack);
     }
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {

@@ -1,46 +1,10 @@
 import { Ctx } from "boardgame.io";
-import { UpgradeCoinAction } from "./actions/Actions";
-import { IInitialTradingCoinConfig, IMarketCoinConfig, isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
-import { HeroNames } from "./data/HeroData";
-import { INumberValues } from "./data/SuitData";
-import { Stages } from "./Game";
-import { MyGameState } from "./GameSetup";
-import { AddActionsToStack, StartActionFromStackOrEndActions } from "./helpers/StackHelpers";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { IConfig, IPublicPlayer, IStack } from "./Player";
-
-/**
- * <h3>Типы данных для монет на столе или в руке.</h3>
- */
-export type CoinType = null | ICoin;
-
-/**
- * <h3>Интерфейс для монеты.</h3>
- */
-export interface ICoin {
-    value: number,
-    isInitial: boolean,
-    isTriggerTrading: boolean,
-}
-
-/**
- * <h3>Интерфейс для создания монеты.</h3>
- */
-interface ICreateCoin {
-    value: number,
-    isInitial?: boolean,
-    isTriggerTrading?: boolean,
-}
-
-/**
- * <h3>Интерфейс опций для создания монет.</h3>
- */
-export interface IBuildCoinsOptions {
-    isInitial: boolean,
-    isTriggerTrading: boolean,
-    players?: number,
-    count?: ICoin[],
-}
+import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
+import { AddDataToLog } from "./Logging";
+import { ICoin } from "./typescript/coin_interfaces";
+import { CoinType } from "./typescript/coin_types";
+import { HeroNames, LogTypes, Stages } from "./typescript/enums";
+import { IBuildCoinsOptions, IConfig, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig, INumberValues, IPublicPlayer, MyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
@@ -52,7 +16,7 @@ export interface IBuildCoinsOptions {
  * @param obj Пустой объект или монета.
  * @returns Является ли объект монетой, а не пустым объектом.
  */
-const isCoin = (obj: {} | ICoin): obj is ICoin => (obj as ICoin).value !== undefined;
+const isCoin = (obj: Record<string, unknown> | ICoin): obj is ICoin => (obj as ICoin).value !== undefined;
 
 /**
  * <h3>Создание всех монет.</h3>
@@ -69,7 +33,7 @@ const isCoin = (obj: {} | ICoin): obj is ICoin => (obj as ICoin).value !== undef
 export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoinConfig[],
     options: IBuildCoinsOptions): ICoin[] => {
     const coins: ICoin[] = [];
-    for (let i: number = 0; i < coinConfig.length; i++) {
+    for (let i = 0; i < coinConfig.length; i++) {
         const config: IMarketCoinConfig | IInitialTradingCoinConfig = coinConfig[i],
             count: number = options.players !== undefined && !isInitialPlayerCoinsConfigNotMarket(config) ?
                 config.count()[options.players] : 1;
@@ -80,7 +44,7 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
                 isTriggerTrading: false,
             });
         }
-        for (let c: number = 0; c < count; c++) {
+        for (let c = 0; c < count; c++) {
             coins.push(CreateCoin({
                 value: config.value,
                 isInitial: options.isInitial,
@@ -103,7 +67,7 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
  */
 export const CountMarketCoins = (G: MyGameState): INumberValues => {
     const repeated: INumberValues = {};
-    for (let i: number = 0; i < G.marketCoinsUnique.length; i++) {
+    for (let i = 0; i < G.marketCoinsUnique.length; i++) {
         const temp: number = G.marketCoinsUnique[i].value;
         repeated[temp] = G.marketCoins.filter((coin: ICoin): boolean => coin.value === temp).length;
     }
@@ -143,8 +107,8 @@ export const CreateCoin = ({
  * @param G
  */
 export const ReturnCoinsToPlayerHands = (G: MyGameState): void => {
-    for (let i: number = 0; i < G.publicPlayers.length; i++) {
-        for (let j: number = 0; j < G.publicPlayers[i].boardCoins.length; j++) {
+    for (let i = 0; i < G.publicPlayers.length; i++) {
+        for (let j = 0; j < G.publicPlayers[i].boardCoins.length; j++) {
             const isCoinReturned: boolean = ReturnCoinToPlayerHands(G.publicPlayers[i], j);
             if (!isCoinReturned) {
                 break;
@@ -177,74 +141,6 @@ export const ReturnCoinToPlayerHands = (player: IPublicPlayer, coinId: number): 
 };
 
 /**
- * <h3>Активация обмена монет с рынка.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Вызывается после выбора базовой карты игроком, если выложены монета, активирующая обмен монет.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param tradingCoins Монеты для обмена.
- */
-export const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
-    const coinsValues: number[] = tradingCoins.map((coin: ICoin): number => coin.value),
-        coinsMaxValue: number = Math.max(...coinsValues),
-        coinsMinValue: number = Math.min(...coinsValues);
-    let stack: IStack[],
-        upgradingCoinId: number,
-        upgradingCoin: ICoin,
-        coinMaxIndex: number = 0,
-        coinMinIndex: number = 0;
-    AddDataToLog(G, LogTypes.GAME, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
-    // TODO trading isInitial first or playerChoose?
-    for (let i: number = 0; i < tradingCoins.length; i++) {
-        if (tradingCoins[i].value === coinsMaxValue) {
-            coinMaxIndex = i;
-            // if (tradingCoins[i].isInitial) {
-            //     break;
-            // }
-        }
-        if (tradingCoins[i].value === coinsMinValue) {
-            coinMinIndex = i;
-            // if (tradingCoins[i].isInitial) {
-            //     break;
-            // }
-        }
-    }
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin === `min`) {
-        stack = [
-            {
-                action: UpgradeCoinAction.name,
-                config: {
-                    number: 1,
-                    value: coinsMaxValue,
-                    isTrading: true,
-                },
-            },
-        ];
-        upgradingCoinId = G.tavernsNum + coinMinIndex;
-        upgradingCoin = tradingCoins[coinMinIndex];
-    } else {
-        stack = [
-            {
-                action: UpgradeCoinAction.name,
-                config: {
-                    number: 1,
-                    value: coinsMinValue,
-                    isTrading: true,
-                },
-            },
-        ];
-        upgradingCoinId = G.tavernsNum + coinMaxIndex;
-        upgradingCoin = tradingCoins[coinMaxIndex];
-    }
-    AddActionsToStack(G, ctx, stack);
-    StartActionFromStackOrEndActions(G, ctx, false, upgradingCoinId, `board`,
-        upgradingCoin.isInitial);
-};
-
-/**
  * <h3>Обмен монеты с рынка.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -262,7 +158,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
     isInitial: boolean): void => {
     // todo add LogTypes.ERROR logging
     // todo Split into different functions!
-    let upgradingCoin: {} | ICoin = {},
+    let upgradingCoin: Record<string, unknown> | ICoin = {},
         coin: CoinType | undefined;
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin) {
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin;
@@ -273,7 +169,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
             const allCoins: CoinType[] = [],
                 allHandCoins: CoinType[] = G.publicPlayers[Number(ctx.currentPlayer)]
                     .handCoins.filter((coin: CoinType): boolean => coin !== null);
-            for (let i: number = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
+            for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
                 if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i] === null) {
                     allCoins.push(allHandCoins.splice(0, 1)[0]);
                 } else {
@@ -282,25 +178,30 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
             }
             const minCoinValue: number = Math.min(...allCoins
                 .filter((coin: CoinType): boolean => coin !== null && !coin.isTriggerTrading)
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 .map((coin: CoinType): number => coin!.value)),
                 upgradingCoinInitial: CoinType | undefined = allCoins
                     .find((coin: CoinType): boolean | undefined =>
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         coin!.value === minCoinValue && coin!.isInitial);
             if (upgradingCoinInitial !== null && upgradingCoinInitial !== undefined) {
                 upgradingCoin = upgradingCoinInitial;
             } else {
                 coin = allCoins.find((coin: CoinType): boolean =>
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     coin!.value === minCoinValue && !coin!.isInitial);
                 if (coin !== null && coin !== undefined) {
                     upgradingCoin = coin;
                 }
             }
             upgradingCoinId = allCoins.findIndex((coin: CoinType): boolean =>
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 isCoin(upgradingCoin) && coin!.value === upgradingCoin.value);
         } else {
             const minCoinValue: number =
                 Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                     .filter((coin: CoinType): boolean => coin !== null && !coin.isTriggerTrading)
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     .map((coin: CoinType): number => coin!.value));
             coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                 .find((coin: CoinType): boolean => coin?.value === minCoinValue);
@@ -332,7 +233,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
     if (isCoin(upgradingCoin)) {
         const buffValue: number = G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin ?
             G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin as number : 0;
-        let newValue: number = 0;
+        let newValue = 0;
         if (config.value !== undefined) {
             newValue = upgradingCoin.value + config.value + buffValue;
         }
@@ -342,7 +243,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                 upgradedCoin = G.marketCoins[G.marketCoins.length - 1];
                 G.marketCoins.splice(G.marketCoins.length - 1, 1);
             } else {
-                for (let i: number = 0; i < G.marketCoins.length; i++) {
+                for (let i = 0; i < G.marketCoins.length; i++) {
                     if (G.marketCoins[i].value < newValue) {
                         upgradedCoin = G.marketCoins[i];
                     } else if (G.marketCoins[i].value >= newValue) {
@@ -359,7 +260,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
         AddDataToLog(G, LogTypes.GAME, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на +${config.value}.`);
         if (upgradedCoin !== null) {
             AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${isInitial}' с ценностью '${upgradingCoin.value}' на +${config.value} с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
-            let handCoinIndex: number = -1;
+            let handCoinIndex = -1;
             if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] === null) {
                 handCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
                     .findIndex((coin: CoinType): boolean =>
@@ -382,8 +283,8 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                 }
             }
             if (!upgradingCoin.isInitial) {
-                let returningIndex: number = 0;
-                for (let i: number = 0; i < G.marketCoins.length; i++) {
+                let returningIndex = 0;
+                for (let i = 0; i < G.marketCoins.length; i++) {
                     returningIndex = i;
                     if (G.marketCoins[i].value > upgradingCoin.value) {
                         break;

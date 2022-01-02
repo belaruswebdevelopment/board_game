@@ -1,23 +1,13 @@
-import { ArgsTypes } from "../actions/Actions";
-import { RusCardTypes } from "../Card";
-import { CoinType } from "../Coin";
-import { IBackground, Styles } from "../data/StyleData";
+import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GameBoard } from "../GameBoard";
-import { CampDeckCardTypes, DeckCardTypes } from "../GameSetup";
-import { IHero } from "../Hero";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { IPublicPlayer } from "../Player";
+import { AddDataToLog } from "../Logging";
+import { CampDeckCardTypes, DeckCardTypes } from "../typescript/card_types";
+import { CoinType } from "../typescript/coin_types";
+import { LogTypes, RusCardTypes } from "../typescript/enums";
+import { IBackground, IDrawBoardOptions, IHero, IPublicPlayer } from "../typescript/interfaces";
+import { ArgsTypes } from "../typescript/types";
 import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
-
-/**
- * <h3>Интерфейс для параметров отрисовки игрового поля.</h3>
- */
-export interface IDrawBoardOptions {
-    boardCols: number,
-    lastBoardCol: number,
-    boardRows: number,
-}
 
 /**
  * h3>Отрисовка сегмента игрового поля по указанным данным.</h3>
@@ -53,6 +43,7 @@ export const DrawBoard = (objectsSize: number): IDrawBoardOptions => {
  */
 export const DrawButton = (data: GameBoard, boardCells: JSX.Element[], key: string, name: string, player: IPublicPlayer,
     actionName?: string, ...args: ArgsTypes): void => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     let action: Function | null = null;
     switch (actionName) {
         case OnClickStartEnlistmentMercenaries.name:
@@ -94,8 +85,9 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
     id: number, player: IPublicPlayer | null, suit?: string | null, actionName?: string, ...args: ArgsTypes):
     void => {
     let styles: IBackground = { background: `` },
-        tdClasses: string = ``,
-        spanClasses: string = ``,
+        tdClasses = ``,
+        spanClasses = ``,
+        // eslint-disable-next-line @typescript-eslint/ban-types
         action: Function | null = null;
     switch (actionName) {
         case OnClickHeroCard.name:
@@ -166,8 +158,8 @@ export const DrawCard = (data: GameBoard, playerCells: JSX.Element[], card: Deck
     if (actionName !== null) {
         tdClasses += ` cursor-pointer`;
     }
-    let description: string = ``,
-        value: string = ``;
+    let description = ``,
+        value = ``;
     if (`description` in card) {
         description = card.description;
     }
@@ -209,8 +201,9 @@ export const DrawCoin = (data: GameBoard, playerCells: JSX.Element[], type: stri
     actionName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         span: JSX.Element | number | null = null,
-        tdClasses: string = `bg-yellow-300`,
-        spanClasses: string = ``,
+        tdClasses = `bg-yellow-300`,
+        spanClasses = ``,
+        // eslint-disable-next-line @typescript-eslint/ban-types
         action: Function | null = null;
     switch (actionName) {
         case OnClickBoardCoin.name:
@@ -299,7 +292,7 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
     const playerHeaders: JSX.Element[] = [],
         playerRows: JSX.Element[][] = [];
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             playerHeaders.push(
                 <th className={`${suitsConfig[suit].suitColor}`}
                     key={`${data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`}>
@@ -335,7 +328,7 @@ export const DrawPlayerBoardForCardDiscard = (data: GameBoard): JSX.Element => {
 export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suit: string): JSX.Element => {
     const playersHeaders: JSX.Element[] = [],
         playersRows: JSX.Element[][] = [];
-    for (let p: number = 0; p < data.props.G.publicPlayers.length; p++) {
+    for (let p = 0; p < data.props.G.publicPlayers.length; p++) {
         if (p !== Number(data.props.ctx.currentPlayer)) {
             playersHeaders.push(
                 <th className={`${suitsConfig[suit].suitColor} discard suit`}
@@ -347,12 +340,12 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suit: string
             );
         }
     }
-    for (let i: number = 0; ; i++) {
-        let isDrawRow: boolean = false,
-            isExit: boolean = true;
+    for (let i = 0; ; i++) {
+        let isDrawRow = false,
+            isExit = true;
         playersRows[i] = [];
         const playersCells: JSX.Element[] = [];
-        for (let p: number = 0; p < data.props.G.publicPlayers.length; p++) {
+        for (let p = 0; p < data.props.G.publicPlayers.length; p++) {
             if (p !== Number(data.props.ctx.currentPlayer)) {
                 if (data.props.G.publicPlayers[p].cards[suit][i] !== undefined) {
                     if (data.props.G.publicPlayers[p].cards[suit][i].type !== RusCardTypes.HERO) {
@@ -403,7 +396,7 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: GameBoard, suit: string
  * @param args Дополнительные аргументы.
  */
 export const OnClickBoardCoin = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.ClickBoardCoin(...args);
+    data.props.moves.ClickBoardCoinMove(...args);
 };
 
 /**
@@ -417,7 +410,7 @@ export const OnClickBoardCoin = (data: GameBoard, ...args: ArgsTypes): void => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCampCard = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.ClickCampCard(...args);
+    data.props.moves.ClickCampCardMove(...args);
 };
 
 /**
@@ -431,7 +424,7 @@ export const OnClickCampCard = (data: GameBoard, ...args: ArgsTypes): void => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCampCardHolda = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.ClickCampCardHolda(...args);
+    data.props.moves.ClickCampCardHoldaMove(...args);
 };
 
 /**
@@ -445,7 +438,7 @@ export const OnClickCampCardHolda = (data: GameBoard, ...args: ArgsTypes): void 
  * @param args Дополнительные аргументы.
  */
 export const OnClickCard = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.ClickCard(...args);
+    data.props.moves.ClickCardMove(...args);
 };
 
 /**
@@ -459,7 +452,7 @@ export const OnClickCard = (data: GameBoard, ...args: ArgsTypes): void => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickCardFromDiscard = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.PickDiscardCard(...args);
+    data.props.moves.PickDiscardCardMove(...args);
 };
 
 /**
@@ -473,7 +466,7 @@ export const OnClickCardFromDiscard = (data: GameBoard, ...args: ArgsTypes): voi
  * @param args Дополнительные аргументы.
  */
 export const OnClickCardToDiscard = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.DiscardCard(...args);
+    data.props.moves.DiscardCardMove(...args);
 };
 
 /**
@@ -487,7 +480,7 @@ export const OnClickCardToDiscard = (data: GameBoard, ...args: ArgsTypes): void 
  * @param args Дополнительные аргументы.
  */
 export const OnClickCardToDiscard2Players = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.DiscardCard2Players(...args);
+    data.props.moves.DiscardCard2PlayersMove(...args);
 };
 
 /**
@@ -501,7 +494,7 @@ export const OnClickCardToDiscard2Players = (data: GameBoard, ...args: ArgsTypes
  * @param args Дополнительные аргументы.
  */
 export const OnClickCardToPickDistinction = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.ClickCardToPickDistinction(...args);
+    data.props.moves.ClickCardToPickDistinctionMove(...args);
 };
 
 /**
@@ -515,7 +508,7 @@ export const OnClickCardToPickDistinction = (data: GameBoard, ...args: ArgsTypes
  * @param args Дополнительные аргументы.
  */
 export const OnClickCoinToAddToPouch = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.AddCoinToPouch(...args);
+    data.props.moves.AddCoinToPouchMove(...args);
 };
 
 /**
@@ -529,7 +522,7 @@ export const OnClickCoinToAddToPouch = (data: GameBoard, ...args: ArgsTypes): vo
  * @param args Дополнительные аргументы.
  */
 export const OnClickCoinToUpgrade = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.ClickCoinToUpgrade(...args);
+    data.props.moves.ClickCoinToUpgradeMove(...args);
 };
 
 /**
@@ -543,7 +536,7 @@ export const OnClickCoinToUpgrade = (data: GameBoard, ...args: ArgsTypes): void 
  * @param args Дополнительные аргументы.
  */
 export const OnClickCoinToUpgradeVidofnirVedrfolnir = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.UpgradeCoinVidofnirVedrfolnir(...args);
+    data.props.moves.UpgradeCoinVidofnirVedrfolnirMove(...args);
 };
 
 /**
@@ -557,7 +550,7 @@ export const OnClickCoinToUpgradeVidofnirVedrfolnir = (data: GameBoard, ...args:
  * @param args Дополнительные аргументы.
  */
 export const OnClickDiscardCardFromPlayerBoard = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.DiscardCardFromPlayerBoard(...args);
+    data.props.moves.DiscardCardFromPlayerBoardMove(...args);
 };
 
 /**
@@ -571,7 +564,7 @@ export const OnClickDiscardCardFromPlayerBoard = (data: GameBoard, ...args: Args
  * @param args Дополнительные аргументы.
  */
 const OnClickDiscardSuitCardFromPlayerBoard = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.DiscardSuitCardFromPlayerBoard(...args);
+    data.props.moves.DiscardSuitCardFromPlayerBoardMove(...args);
 };
 
 /**
@@ -585,7 +578,7 @@ const OnClickDiscardSuitCardFromPlayerBoard = (data: GameBoard, ...args: ArgsTyp
  * @param args Дополнительные аргументы.
  */
 export const OnClickGetEnlistmentMercenaries = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.GetEnlistmentMercenaries(...args);
+    data.props.moves.GetEnlistmentMercenariesMove(...args);
 };
 
 /**
@@ -599,7 +592,7 @@ export const OnClickGetEnlistmentMercenaries = (data: GameBoard, ...args: ArgsTy
  * @param args Дополнительные аргументы.
  */
 export const OnClickHandCoin = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.ClickHandCoin(...args);
+    data.props.moves.ClickHandCoinMove(...args);
 };
 
 /**
@@ -613,7 +606,7 @@ export const OnClickHandCoin = (data: GameBoard, ...args: ArgsTypes): void => {
  * @param args Дополнительные аргументы.
  */
 export const OnClickHeroCard = (data: GameBoard, ...args: ArgsTypes): void => {
-    data.props.moves.ClickHeroCard(...args);
+    data.props.moves.ClickHeroCardMove(...args);
 };
 
 /**
@@ -626,7 +619,7 @@ export const OnClickHeroCard = (data: GameBoard, ...args: ArgsTypes): void => {
  * @param data Глобальные параметры.
  */
 export const OnClickStartEnlistmentMercenaries = (data: GameBoard): void => {
-    data.props.moves.StartEnlistmentMercenaries();
+    data.props.moves.StartEnlistmentMercenariesMove();
 };
 
 /**
@@ -639,5 +632,5 @@ export const OnClickStartEnlistmentMercenaries = (data: GameBoard): void => {
  * @param data Глобальные параметры.
  */
 export const OnClickPassEnlistmentMercenaries = (data: GameBoard): void => {
-    data.props.moves.PassEnlistmentMercenaries();
+    data.props.moves.PassEnlistmentMercenariesMove();
 };

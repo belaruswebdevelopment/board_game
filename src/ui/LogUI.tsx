@@ -1,5 +1,5 @@
 import { GameBoard } from "../GameBoard";
-import { LogTypes } from "../Logging";
+import { LogTypes } from "../typescript/enums";
 
 /**
  * <h3>Отрисовка лог панели.</h3>

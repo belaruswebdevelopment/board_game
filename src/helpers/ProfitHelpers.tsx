@@ -1,35 +1,20 @@
 import { Ctx } from "boardgame.io";
-import { ConfigNames } from "../actions/Actions";
-import { IBotMoveArgumentsTypes } from "../AI";
-import { isCardNotAction, RusCardTypes } from "../Card";
-import { CoinType } from "../Coin";
-import { HeroNames } from "../data/HeroData";
+import { isCardNotAction } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { GameBoard } from "../GameBoard";
-import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, MyGameState, TavernCardTypes } from "../GameSetup";
-import { IConfig, PickedCardType } from "../Player";
+import { PickedCardType, TavernCardTypes, CampDeckCardTypes, CampCardTypes, DeckCardTypes } from "../typescript/card_types";
+import { CoinType } from "../typescript/coin_types";
+import { HeroNames, RusCardTypes, ConfigNames } from "../typescript/enums";
+import { MyGameState, IConfig } from "../typescript/interfaces";
+import { IBotMoveArgumentsTypes } from "../typescript/types";
 import { TotalRank } from "./ScoreHelpers";
-import {
-    DrawButton,
-    DrawCard,
-    DrawCoin,
-    OnClickCampCardHolda,
-    OnClickCardFromDiscard,
-    OnClickCardToDiscard,
-    OnClickCardToDiscard2Players,
-    OnClickCoinToAddToPouch,
-    OnClickCoinToUpgradeVidofnirVedrfolnir,
-    OnClickDiscardCardFromPlayerBoard,
-    OnClickGetEnlistmentMercenaries,
-    OnClickPassEnlistmentMercenaries,
-    OnClickStartEnlistmentMercenaries
-} from "./UIHelpers";
+import { DrawCoin, OnClickCoinToAddToPouch, DrawCard, OnClickDiscardCardFromPlayerBoard, OnClickCardToDiscard, OnClickCardToDiscard2Players, OnClickGetEnlistmentMercenaries, OnClickCampCardHolda, OnClickCardFromDiscard, DrawButton, OnClickStartEnlistmentMercenaries, OnClickPassEnlistmentMercenaries, OnClickCoinToUpgradeVidofnirVedrfolnir } from "./UIHelpers";
 
 // todo Add functions docbloocks
 export const AddCoinToPouchProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
     boardCells?: JSX.Element[]): void => {
-    for (let j: number = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
+    for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
             && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
             if (data instanceof GameBoard && boardCells !== undefined) {
@@ -46,17 +31,17 @@ export const AddCoinToPouchProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard 
 
 export const DiscardAnyCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
     playerRows?: JSX.Element[][]): void => {
-    for (let i: number = 0; ; i++) {
+    for (let i = 0; ; i++) {
         const playerCells: JSX.Element[] = [];
-        let isDrawRow: boolean = false;
-        let isExit: boolean = true,
-            id: number = 0;
+        let isDrawRow = false;
+        let isExit = true,
+            id = 0;
         if (data instanceof GameBoard && playerRows !== undefined) {
             playerRows[i] = [];
         }
-        let j: number = 0;
+        let j = 0;
         for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
+            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 id = i + j;
                 if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i] !== undefined) {
                     isExit = false;
@@ -120,7 +105,7 @@ export const DiscardCardFromBoardProfit = (G: MyGameState, ctx: Ctx, data?: Game
         pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (config !== undefined) {
         for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
+            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 if (suit !== config.suit
                     && !(G.drawProfit === ConfigNames.DagdaAction && G.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
@@ -143,7 +128,7 @@ export const DiscardCardFromBoardProfit = (G: MyGameState, ctx: Ctx, data?: Game
 
 export const DiscardCardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
     boardCells?: JSX.Element[]): void => {
-    for (let j: number = 0; j < G.drawSize; j++) {
+    for (let j = 0; j < G.drawSize; j++) {
         const card: TavernCardTypes = G.taverns[G.currentTavern][j];
         if (card !== null) {
             if (data instanceof GameBoard && boardCells !== undefined) {
@@ -171,7 +156,7 @@ export const GetEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: 
     const mercenaries: CampDeckCardTypes[] =
         G.publicPlayers[Number(ctx.currentPlayer)].campCards
             .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY);
-    for (let j: number = 0; j < mercenaries.length; j++) {
+    for (let j = 0; j < mercenaries.length; j++) {
         if (data instanceof GameBoard && boardCells !== undefined) {
             DrawCard(data, boardCells, mercenaries[j], j,
                 G.publicPlayers[Number(ctx.currentPlayer)], null,
@@ -185,7 +170,7 @@ export const GetEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: 
 export const GetMjollnirProfitProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | number[],
     boardCells?: JSX.Element[]): void => {
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             if (data instanceof GameBoard && boardCells !== undefined) {
                 // todo Move logic to DrawCard?
                 boardCells.push(
@@ -210,7 +195,7 @@ export const GetMjollnirProfitProfit = (G: MyGameState, ctx: Ctx, data?: GameBoa
 
 export const PickCampCardHoldaProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
     boardCells?: JSX.Element[]): void => {
-    for (let j: number = 0; j < G.campNum; j++) {
+    for (let j = 0; j < G.campNum; j++) {
         const card: CampCardTypes = G.camp[j];
         if (card !== null) {
             if (data instanceof GameBoard && boardCells !== undefined) {
@@ -226,7 +211,7 @@ export const PickCampCardHoldaProfit = (G: MyGameState, ctx: Ctx, data?: GameBoa
 
 export const PickDiscardCardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
     boardCells?: JSX.Element[]): void => {
-    for (let j: number = 0; j < G.discardCardsDeck.length; j++) {
+    for (let j = 0; j < G.discardCardsDeck.length; j++) {
         if (data instanceof GameBoard && boardCells !== undefined) {
             const card: DeckCardTypes = G.discardCardsDeck[j];
             let suit: null | string = null;
@@ -245,7 +230,7 @@ export const PickDiscardCardProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard
 export const PlaceCardsProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
     boardCells?: JSX.Element[]): void => {
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
             if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
                 if (data instanceof GameBoard && boardCells !== undefined) {
@@ -275,7 +260,7 @@ export const PlaceCardsProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IB
 export const PlaceEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
     boardCells?: JSX.Element[]): void => {
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const card: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
             if (card !== null && `stack` in card) {
                 if (card.stack[0].variants !== undefined) {
@@ -303,7 +288,7 @@ export const PlaceEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?
 
 export const StartEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx, data?: GameBoard | IBotMoveArgumentsTypes,
     boardCells?: JSX.Element[]): void => {
-    for (let j: number = 0; j < 2; j++) {
+    for (let j = 0; j < 2; j++) {
         if (j === 0) {
             // todo Add Enums for text
             if (data instanceof GameBoard && boardCells !== undefined) {

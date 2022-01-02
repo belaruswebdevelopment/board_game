@@ -1,55 +1,22 @@
 import { PlayerView } from "boardgame.io/core";
-import { ConfigNames, DrawNames } from "./actions/Actions";
 import { DrawProfitCampAction } from "./actions/CampActions";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { RefillCamp } from "./Camp";
-import { RusCardTypes } from "./Card";
 import { ReturnCoinsToPlayerHands } from "./Coin";
 import { CheckDistinction } from "./Distinction";
 import { SetupGame } from "./GameSetup";
 import { ResolveBoardCoins } from "./helpers/CoinHelpers";
 import { AddActionsToStack } from "./helpers/StackHelpers";
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
-import { ClickCampCardHoldaMove, ClickCampCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, DiscardSuitCardFromPlayerBoardMove, GetMjollnirProfitMove } from "./moves/CampMoves";
+import { ClickCampCardHoldaMove, ClickCampCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, DiscardSuitCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/CampMoves";
 import { AddCoinToPouchMove, ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CoinMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceCardMove } from "./moves/HeroMoves";
-import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, GetEnlistmentMercenariesMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
+import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, PassEnlistmentMercenariesMove, PickDiscardCardMove } from "./moves/Moves";
 import { CheckPlayersBasicOrder } from "./Player";
 import { ChangePlayersPriorities } from "./Priority";
 import { ScoreWinner } from "./Score";
 import { RefillTaverns } from "./Tavern";
-/**
- * <h3>Перечисление для фаз игры.</h3>
- */
-export var Phases;
-(function (Phases) {
-    Phases["BrisingamensEndGame"] = "brisingamensEndGame";
-    Phases["EndTier"] = "endTier";
-    Phases["EnlistmentMercenaries"] = "enlistmentMercenaries";
-    Phases["GetDistinctions"] = "getDistinctions";
-    Phases["GetMjollnirProfit"] = "getMjollnirProfit";
-    Phases["PickCards"] = "pickCards";
-    Phases["PlaceCoins"] = "placeCoins";
-    Phases["PlaceCoinsUline"] = "placeCoinsUline";
-})(Phases || (Phases = {}));
-/**
- * <h3>Перечисление для стейджей игры.</h3>
- */
-export var Stages;
-(function (Stages) {
-    Stages["AddCoinToPouch"] = "addCoinToPouch";
-    Stages["DiscardCard"] = "discardCard";
-    Stages["DiscardCardFromBoard"] = "discardCardFromBoard";
-    Stages["DiscardSuitCard"] = "discardSuitCard";
-    Stages["PickCampCardHolda"] = "pickCampCardHolda";
-    Stages["PickDiscardCard"] = "pickDiscardCard";
-    Stages["PickDistinctionCard"] = "pickDistinctionCard";
-    Stages["PickHero"] = "pickHero";
-    Stages["PlaceCards"] = "placeCards";
-    Stages["PlaceTradingCoinsUline"] = "placeTradingCoinsUline";
-    Stages["UpgradeCoin"] = "upgradeCoin";
-    Stages["UpgradeCoinVidofnirVedrfolnir"] = "upgradeCoinVidofnirVedrfolnir";
-})(Stages || (Stages = {}));
+import { ActionTypes, ConfigNames, DrawNames, Phases, RusCardTypes } from "./typescript/enums";
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
 // todo Add dock block
@@ -238,6 +205,7 @@ export const BoardGame = {
                 PlaceEnlistmentMercenariesMove,
             },
             onBegin: (G, ctx) => {
+                // todo Move to CampHelpers?
                 const players = G.publicPlayers.map((player) => player), playersIndexes = [];
                 players.sort((nextPlayer, currentPlayer) => {
                     if (nextPlayer.campCards
@@ -271,7 +239,10 @@ export const BoardGame = {
                 }
                 const stack = [
                     {
-                        action: DrawProfitCampAction.name,
+                        action: {
+                            name: DrawProfitCampAction.name,
+                            type: ActionTypes.Camp,
+                        },
                         playerId: G.publicPlayersOrder[0],
                         config: {
                             name: ConfigNames.StartOrPassEnlistmentMercenaries,
@@ -395,6 +366,7 @@ export const BoardGame = {
         return ScoreWinner(G, ctx);
     },
     ai: {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         enumerate,
         iterations,

@@ -1,6 +1,8 @@
 import { Ctx } from "boardgame.io";
-import { CompareCards, EvaluateCard, IActionCard, ICard, isCardNotAction } from "./Card";
-import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
+import { EvaluateCard, CompareCards } from "./bot_logic/card_logic";
+import { isCardNotAction } from "./Card";
+import { TavernCardTypes, DeckCardTypes } from "./typescript/card_types";
+import { MyGameState, ICard, IActionCard } from "./typescript/interfaces";
 
 // todo Fix reurn types & move to interfaces
 /**
@@ -32,9 +34,9 @@ export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
     const tempChars: { mean: number; variation: number; }[] =
         tempNumbers.map((element: number[]): { mean: number, variation: number; } =>
             GetCharacteristics(element));
-    let maxIndex: number = 0,
+    let maxIndex = 0,
         minIndex: number = tempChars.length - 1;
-    for (let i: number = 1; i < temp.length; i++) {
+    for (let i = 1; i < temp.length; i++) {
         if (CompareCharacteristics(tempChars[maxIndex], tempChars[i]) < 0) {
             maxIndex = i;
         }
@@ -61,7 +63,7 @@ export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
  */
 const CompareCharacteristics = (stat1: { variation: number, mean: number; },
     stat2: { variation: number, mean: number; }): number => {
-    const eps: number = 0.0001,
+    const eps = 0.0001,
         tempVariation: number = stat1.variation - stat2.variation;
     if (Math.abs(tempVariation) < eps) {
         return stat1.mean - stat2.mean;
@@ -81,8 +83,9 @@ const CompareCharacteristics = (stat1: { variation: number, mean: number; },
  * @param playersNum
  * @returns
  */
-export const GetAllPicks = ({ tavernsNum, playersNum }: { tavernsNum: number, playersNum: number; }): any => {
+export const GetAllPicks = ({ tavernsNum, playersNum }: { tavernsNum: number, playersNum: number; }): unknown => {
     const temp: number[][] = [],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         cartesian = (...a: any) => {
             if (a.length === 1) {
                 a = a.flat();
@@ -91,7 +94,7 @@ export const GetAllPicks = ({ tavernsNum, playersNum }: { tavernsNum: number, pl
                 a.flatMap((d: number[]): number[][] => b.map((e: number[]): number[] =>
                     [d, e].flat())));
         };
-    for (let i: number = 0; i < tavernsNum; i++) {
+    for (let i = 0; i < tavernsNum; i++) {
         temp[i] = Array(playersNum).fill(undefined)
             .map((item: number, index: number): number => index);
     }
@@ -146,10 +149,10 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number; } = {
-    heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 0),
-    weight: 20,
-};
+// const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number; } = {
+//     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 0),
+//     weight: 20,
+// };
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -159,10 +162,10 @@ const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number; }
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
-    heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === -1),
-    weight: 40,
-};
+// const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
+//     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === -1),
+//     weight: 40,
+// };
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -172,11 +175,11 @@ const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number; } =
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
-    heuristic: (array: number[]): boolean =>
-        (array.filter((item: number): boolean => item === -1).length === 1),
-    weight: -100,
-};
+// const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
+//     heuristic: (array: number[]): boolean =>
+//         (array.filter((item: number): boolean => item === -1).length === 1),
+//     weight: -100,
+// };
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -186,10 +189,10 @@ const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number;
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: number; } = {
-    heuristic: (array: number[]): boolean => array.every((item: number): boolean => item !== 0),
-    weight: -50,
-};
+// const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: number; } = {
+//     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item !== 0),
+//     weight: -50,
+// };
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -204,8 +207,8 @@ const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: nu
  * @returns
  */
 export const k_combinations = (set: number[], k: number): number[][] => {
-    let combs: number[][] = [],
-        head: number[],
+    const combs: number[][] = [];
+    let head: number[],
         tailCombs: number[][];
     if (k > set.length || k <= 0) {
         return [];
@@ -214,19 +217,19 @@ export const k_combinations = (set: number[], k: number): number[][] => {
         return [set];
     }
     if (k === 1) {
-        for (let i: number = 0; i < set.length; i++) {
+        for (let i = 0; i < set.length; i++) {
             combs.push([set[i]]);
         }
         return combs;
     }
-    for (let i: number = 0; i < set.length - k + 1; i++) {
+    for (let i = 0; i < set.length - k + 1; i++) {
         // head is a list that includes only our current element.
         head = set.slice(i, i + 1);
         // We take smaller combinations from the subsequent elements
         tailCombs = k_combinations(set.slice(i + 1), k - 1);
         // For each (k-1)-combination we join it with the current
         // and store it to the set of k-combinations.
-        for (let j: number = 0; j < tailCombs.length; j++) {
+        for (let j = 0; j < tailCombs.length; j++) {
             combs.push(head.concat(tailCombs[j]));
         }
     }
@@ -247,8 +250,8 @@ export const k_combinations = (set: number[], k: number): number[][] => {
 export const Permute = (permutation: number[]): number[][] => {
     const length: number = permutation.length,
         result: number[][] = [permutation.slice()];
-    let c: number[] = new Array(length).fill(0),
-        i: number = 1,
+    const c: number[] = new Array(length).fill(0);
+    let i = 1,
         k: number,
         p: number;
     while (i < length) {

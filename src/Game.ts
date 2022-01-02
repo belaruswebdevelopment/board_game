@@ -1,85 +1,26 @@
-import type { Ctx, Game } from "boardgame.io";
+import { Ctx, Game } from "boardgame.io";
 import { PlayerView } from "boardgame.io/core";
-import { ConfigNames, DrawNames } from "./actions/Actions";
 import { DrawProfitCampAction } from "./actions/CampActions";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { RefillCamp } from "./Camp";
-import { RusCardTypes } from "./Card";
 import { ReturnCoinsToPlayerHands } from "./Coin";
 import { CheckDistinction } from "./Distinction";
-import { CampDeckCardTypes, DistinctionTypes, MyGameState, SetupGame } from "./GameSetup";
-import { IResolveBoardCoins, ResolveBoardCoins } from "./helpers/CoinHelpers";
+import { SetupGame } from "./GameSetup";
+import { ResolveBoardCoins } from "./helpers/CoinHelpers";
 import { AddActionsToStack } from "./helpers/StackHelpers";
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
-import {
-    ClickCampCardHoldaMove, ClickCampCardMove, DiscardCard2PlayersMove,
-    DiscardCardFromPlayerBoardMove,
-    DiscardSuitCardFromPlayerBoardMove,
-    GetMjollnirProfitMove
-} from "./moves/CampMoves";
-import {
-    AddCoinToPouchMove,
-    ClickBoardCoinMove,
-    ClickCoinToUpgradeMove,
-    ClickHandCoinMove,
-    UpgradeCoinVidofnirVedrfolnirMove
-} from "./moves/CoinMoves";
+import { ClickCampCardHoldaMove, ClickCampCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, DiscardSuitCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/CampMoves";
+import { AddCoinToPouchMove, ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CoinMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceCardMove } from "./moves/HeroMoves";
-import {
-    ClickCardMove,
-    ClickCardToPickDistinctionMove,
-    ClickDistinctionCardMove,
-    GetEnlistmentMercenariesMove,
-    PassEnlistmentMercenariesMove,
-    PickDiscardCardMove,
-    PlaceEnlistmentMercenariesMove,
-    StartEnlistmentMercenariesMove
-} from "./moves/Moves";
-import { CheckPlayersBasicOrder, IPublicPlayer, IStack } from "./Player";
+import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, PassEnlistmentMercenariesMove, PickDiscardCardMove } from "./moves/Moves";
+import { CheckPlayersBasicOrder } from "./Player";
 import { ChangePlayersPriorities } from "./Priority";
 import { ScoreWinner } from "./Score";
 import { RefillTaverns } from "./Tavern";
-
-/**
- * <h3>Интерфейс для порядка ходов.</h3>
- */
-interface IOrder {
-    next: (G: MyGameState, ctx: Ctx) => number;
-    first: () => number;
-    playOrder: (G: MyGameState) => string[];
-}
-
-/**
- * <h3>Перечисление для фаз игры.</h3>
- */
-export const enum Phases {
-    BrisingamensEndGame = `brisingamensEndGame`,
-    EndTier = `endTier`,
-    EnlistmentMercenaries = `enlistmentMercenaries`,
-    GetDistinctions = `getDistinctions`,
-    GetMjollnirProfit = `getMjollnirProfit`,
-    PickCards = `pickCards`,
-    PlaceCoins = `placeCoins`,
-    PlaceCoinsUline = `placeCoinsUline`,
-}
-
-/**
- * <h3>Перечисление для стейджей игры.</h3>
- */
-export const enum Stages {
-    AddCoinToPouch = `addCoinToPouch`,
-    DiscardCard = `discardCard`,
-    DiscardCardFromBoard = `discardCardFromBoard`,
-    DiscardSuitCard = `discardSuitCard`,
-    PickCampCardHolda = `pickCampCardHolda`,
-    PickDiscardCard = `pickDiscardCard`,
-    PickDistinctionCard = `pickDistinctionCard`,
-    PickHero = `pickHero`,
-    PlaceCards = `placeCards`,
-    PlaceTradingCoinsUline = `placeTradingCoinsUline`,
-    UpgradeCoin = `upgradeCoin`,
-    UpgradeCoinVidofnirVedrfolnir = `upgradeCoinVidofnirVedrfolnir`,
-}
+import { CampDeckCardTypes } from "./typescript/card_types";
+import { ActionTypes, ConfigNames, DrawNames, Phases, RusCardTypes } from "./typescript/enums";
+import { IOrder, IPublicPlayer, IResolveBoardCoins, IStack, MyGameState } from "./typescript/interfaces";
+import { DistinctionTypes } from "./typescript/types";
 
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
@@ -271,6 +212,7 @@ export const BoardGame: Game<MyGameState> = {
                 PlaceEnlistmentMercenariesMove,
             },
             onBegin: (G: MyGameState, ctx: Ctx): void => {
+                // todo Move to CampHelpers?
                 const players: IPublicPlayer[] =
                     G.publicPlayers.map((player: IPublicPlayer): IPublicPlayer => player),
                     playersIndexes: number[] = [];
@@ -310,7 +252,10 @@ export const BoardGame: Game<MyGameState> = {
                 }
                 const stack: IStack[] = [
                     {
-                        action: DrawProfitCampAction.name,
+                        action: {
+                            name: DrawProfitCampAction.name,
+                            type: ActionTypes.Camp,
+                        },
                         playerId: G.publicPlayersOrder[0],
                         config: {
                             name: ConfigNames.StartOrPassEnlistmentMercenaries,
@@ -439,6 +384,7 @@ export const BoardGame: Game<MyGameState> = {
         return ScoreWinner(G, ctx);
     },
     ai: {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         enumerate,
         iterations,

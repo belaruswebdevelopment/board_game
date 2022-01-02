@@ -11,7 +11,8 @@ import { GameBoard } from "../GameBoard";
  * @returns Дебаг панель.
  */
 export const DrawDebugData = (data: GameBoard): JSX.Element | null => {
-    const debugData: { G: { [key: string]: any; }, ctx: { [key: string]: any; }; } | undefined = GetDebugData(data);
+    const debugData: { G: { [key: string]: unknown; }, ctx: { [key: string]: unknown; }; } | undefined =
+        GetDebugData(data);
     if (debugData === undefined) {
         return null;
     } else {
@@ -34,6 +35,7 @@ export const DrawDebugData = (data: GameBoard): JSX.Element | null => {
  * @param obj Информация.
  * @returns
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DrawObjectData = (obj: { [key: string]: any; }): JSX.Element => {
     const values: JSX.Element[] = [];
     for (const [key, value] of Object.entries(obj)) {
@@ -91,9 +93,9 @@ const DrawObjectData = (obj: { [key: string]: any; }): JSX.Element => {
  * @param data Глобальные параметры.
  * @returns Данные для отрисовки дебаг информации.
  */
-const GetDebugData = (data: GameBoard): { ctx: {}, G: {}; } | undefined => {
+const GetDebugData = (data: GameBoard): { ctx: Record<string, unknown>, G: Record<string, unknown>; } | undefined => {
     if (data.props.G.debug) {
-        const debugData: { G: { [key: string]: any; }, ctx: { [key: string]: any; }; } = {
+        const debugData: { G: { [key: string]: unknown; }, ctx: { [key: string]: unknown; }; } = {
             G: {},
             ctx: {},
         };

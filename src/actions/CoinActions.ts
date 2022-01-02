@@ -1,8 +1,7 @@
 import { Ctx } from "boardgame.io";
-import { MyGameState } from "../GameSetup";
 import { DrawCurrentProfit, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
-import { IConfig } from "../Player";
-import { ArgsTypes } from "./Actions";
+import { MyGameState, IConfig } from "../typescript/interfaces";
+import { ArgsTypes } from "../typescript/types";
 
 /**
  * <h3>Действия, связанные с отрисовкой профита от карт улучшения монет.</h3>

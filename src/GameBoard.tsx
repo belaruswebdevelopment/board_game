@@ -1,18 +1,8 @@
-import type { BoardProps } from 'boardgame.io/react';
+import { BoardProps } from "boardgame.io/react";
 import React from "react";
-import { MyGameState } from "./GameSetup";
+import { MyGameState } from "./typescript/interfaces";
 import { DrawDebugData } from "./ui/DebugUI";
-import {
-    DrawCamp,
-    DrawCurrentPlayerTurn,
-    DrawDistinctions,
-    DrawHeroes,
-    DrawMarketCoins,
-    DrawProfit,
-    DrawTaverns,
-    DrawTierCards,
-    DrawWinner
-} from "./ui/GameBoardUI";
+import { DrawCamp, DrawCurrentPlayerTurn, DrawDistinctions, DrawHeroes, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
 import { DrawLogData } from "./ui/LogUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 
@@ -38,8 +28,8 @@ export class GameBoard extends React.Component<BoardProps<MyGameState>> {
     };
 
     render() {
-        const gridClass: string = `col-span-4`,
-            classes: string = `col-span-4 text-center underline border`,
+        const gridClass = `col-span-4`,
+            classes = `col-span-4 text-center underline border`,
             tierCardsUI: JSX.Element = DrawTierCards(this),
             currentPlayerTurnUI: JSX.Element = DrawCurrentPlayerTurn(this),
             winnerUI: JSX.Element = DrawWinner(this),

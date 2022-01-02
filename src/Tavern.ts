@@ -1,40 +1,8 @@
 import { Ctx } from "boardgame.io";
-import { DiscardCardFromTavern } from "./Card";
-import { DeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
-import { AddDataToLog, LogTypes } from "./Logging";
-
-/**
- * <h3>Интерфейс для конфига конкретной таверны.</h3>
- */
-interface ITavernInConfig {
-    name: string,
-}
-
-/**
- * <h3>Интерфейс для конфига всех таверн.</h3>
- */
-interface ITavernsConfig {
-    [index: number]: ITavernInConfig,
-}
-
-/**
- * <h3>Конфиг таверн.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Применяется для описания таверн (+для ключей).</li>
- * </ol>
- */
-export const tavernsConfig: ITavernsConfig = {
-    0: {
-        name: `«Весёлый гоблин»`,
-    },
-    1: {
-        name: `«Парящий дракон»`,
-    },
-    2: {
-        name: `«Гарцующий конь»`,
-    },
-};
+import { AddDataToLog } from "./Logging";
+import { DeckCardTypes, TavernCardTypes } from "./typescript/card_types";
+import { LogTypes } from "./typescript/enums";
+import { MyGameState, tavernsConfig } from "./typescript/interfaces";
 
 /**
  * <h3>Проверяет все ли карты выбраны игроками в текущей таверне.</h1>
@@ -50,7 +18,7 @@ export const tavernsConfig: ITavernsConfig = {
  * @returns Пуста ли текущая таверна.
  */
 export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => {
-    let isCurrentTavernEmpty: boolean = false;
+    let isCurrentTavernEmpty = false;
     if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         isCurrentTavernEmpty =
             G.taverns[G.currentTavern].every((card: TavernCardTypes): boolean => card === null);
@@ -72,6 +40,37 @@ export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => 
 };
 
 /**
+ * <h3>Убирает карту из таверны в стопку сброса.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При игре на 2-х игроков убирает не выбранную карту.</li>
+ * <li>Убирает оставшуюся карту при выборе карты из кэмпа.</li>
+ * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из кэмпа.</li>
+ * </ol>
+ *
+ * @param G
+ * @param discardCardIndex Индекс сбрасываемой карты в таверне.
+ * @returns Сброшена ли карта из таверны.
+ */
+export const DiscardCardFromTavern = (G: MyGameState, discardCardIndex: number): boolean => {
+    const discardedCard: TavernCardTypes = G.taverns[G.currentTavern][discardCardIndex];
+    if (discardedCard !== null) {
+        G.discardCardsDeck.push(discardedCard);
+        G.taverns[G.currentTavern][discardCardIndex] = null;
+        AddDataToLog(G, LogTypes.GAME, `Карта ${discardedCard.name} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
+        const additionalDiscardCardIndex: number =
+            G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
+        if (additionalDiscardCardIndex !== -1) {
+            AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
+            DiscardCardFromTavern(G, additionalDiscardCardIndex);
+        }
+        return true;
+    }
+    AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны.`);
+    return false;
+};
+
+/**
  * <h3>Автоматически заполняет все таверны картами текущей эпохи.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -82,8 +81,8 @@ export const CheckIfCurrentTavernEmpty = (G: MyGameState, ctx: Ctx): boolean => 
  * @param G
  */
 export const RefillTaverns = (G: MyGameState): void => {
-    let error: boolean = false;
-    for (let i: number = 0; i < G.tavernsNum; i++) {
+    let error = false;
+    for (let i = 0; i < G.tavernsNum; i++) {
         const refillDeck: DeckCardTypes[] =
             G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
         if (refillDeck.length === G.drawSize) {

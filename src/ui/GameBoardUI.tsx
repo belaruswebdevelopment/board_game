@@ -1,40 +1,14 @@
-import { ConfigNames } from "../actions/Actions";
 import { isCardNotAction } from "../Card";
-import { CountMarketCoins, CoinType } from "../Coin";
-import { HeroNames } from "../data/HeroData";
+import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
-import { INumberValues, suitsConfig } from "../data/SuitData";
+import { suitsConfig } from "../data/SuitData";
 import { GameBoard } from "../GameBoard";
-import { CampCardTypes, DeckCardTypes, TavernCardTypes } from "../GameSetup";
-import {
-    AddCoinToPouchProfit,
-    DiscardCardFromBoardProfit,
-    DiscardCardProfit,
-    GetEnlistmentMercenariesProfit,
-    GetMjollnirProfitProfit,
-    PickCampCardHoldaProfit,
-    PickDiscardCardProfit,
-    PlaceCardsProfit,
-    PlaceEnlistmentMercenariesProfit,
-    StartEnlistmentMercenariesProfit,
-    UpgradeCoinVidofnirVedrfolnirProfit
-} from "../helpers/ProfitHelpers";
-import {
-    DrawBoard,
-    DrawCard,
-    DrawCoin,
-    DrawPlayerBoardForCardDiscard,
-    DrawPlayersBoardForSuitCardDiscard,
-    IDrawBoardOptions,
-    OnClickCampCard,
-    OnClickCard,
-    OnClickCardToPickDistinction,
-    OnClickCoinToUpgrade,
-    OnClickHandCoin,
-    OnClickHeroCard
-} from "../helpers/UIHelpers";
-import { IConfig, PickedCardType } from "../Player";
-import { tavernsConfig } from "../Tavern";
+import { PlaceCardsProfit, DiscardCardFromBoardProfit, PickDiscardCardProfit, PickCampCardHoldaProfit, DiscardCardProfit, GetMjollnirProfitProfit, StartEnlistmentMercenariesProfit, GetEnlistmentMercenariesProfit, PlaceEnlistmentMercenariesProfit, AddCoinToPouchProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
+import { DrawCard, OnClickCampCard, DrawBoard, OnClickHeroCard, DrawCoin, OnClickHandCoin, OnClickCardToPickDistinction, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard, OnClickCoinToUpgrade, OnClickCard } from "../helpers/UIHelpers";
+import { CampCardTypes, PickedCardType, TavernCardTypes, DeckCardTypes } from "../typescript/card_types";
+import { CoinType } from "../typescript/coin_types";
+import { ConfigNames, HeroNames } from "../typescript/enums";
+import { IDrawBoardOptions, INumberValues, IConfig, tavernsConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка карт кэмпа.</h3>
@@ -48,8 +22,8 @@ import { tavernsConfig } from "../Tavern";
  */
 export const DrawCamp = (data: GameBoard): JSX.Element => {
     const boardCells: JSX.Element[] = [];
-    for (let i: number = 0; i < 1; i++) {
-        for (let j: number = 0; j < data.props.G.campNum; j++) {
+    for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < data.props.G.campNum; j++) {
             const campCard: CampCardTypes = data.props.G.camp[j];
             if (campCard === null || data.props.G.camp[j] === undefined) {
                 boardCells.push(
@@ -115,9 +89,9 @@ export const DrawCurrentPlayerTurn = (data: GameBoard): JSX.Element => (
  */
 export const DrawDistinctions = (data: GameBoard): JSX.Element => {
     const boardCells: JSX.Element[] = [];
-    for (let i: number = 0; i < 1; i++) {
+    for (let i = 0; i < 1; i++) {
         for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
+            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 boardCells.push(
                     <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
                         onClick={() => data.OnClickDistinctionCard(suit)}
@@ -157,10 +131,10 @@ export const DrawDistinctions = (data: GameBoard): JSX.Element => {
 export const DrawHeroes = (data: GameBoard): JSX.Element => {
     const boardRows: JSX.Element[][] = [],
         drawData: IDrawBoardOptions = DrawBoard(data.props.G.heroes.length);
-    for (let i: number = 0; i < drawData.boardRows; i++) {
+    for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
         boardRows[i] = [];
-        for (let j: number = 0; j < drawData.boardCols; j++) {
+        for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j;
             DrawCard(data, boardCells, data.props.G.heroes[increment], increment, null,
                 null, OnClickHeroCard.name, increment);
@@ -200,10 +174,10 @@ export const DrawMarketCoins = (data: GameBoard): JSX.Element => {
     const boardRows: JSX.Element[][] = [],
         drawData: IDrawBoardOptions = DrawBoard(data.props.G.marketCoinsUnique.length),
         countMarketCoins: INumberValues = CountMarketCoins(data.props.G);
-    for (let i: number = 0; i < drawData.boardRows; i++) {
+    for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
         boardRows[i] = [];
-        for (let j: number = 0; j < drawData.boardCols; j++) {
+        for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
                 tempCoinValue = data.props.G.marketCoinsUnique[increment].value,
                 coinClassName: string = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
@@ -248,8 +222,8 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
     const boardCells: JSX.Element[] = [],
         config: IConfig | undefined =
             data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].stack[0].config;
-    let caption: string = `Get `;
-    for (let i: number = 0; i < 1; i++) {
+    let caption = `Get `;
+    for (let i = 0; i < 1; i++) {
         if (option === ConfigNames.PlaceCards) {
             if (config !== undefined) {
                 caption += `suit to place ${data.props.G.actionsNum ?? 1} ${config.drawName} ${data.props.G.actionsNum > 1 ? `s` : ``} to ${data.props.G.actionsNum > 1 ? `different` : `that`} suit.`;
@@ -258,7 +232,7 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
         } else if (option === ConfigNames.ExplorerDistinction) {
             caption += `one card to your board.`;
             // todo Move to ProfitHelpers and add logic for bot or just use standard pick cards / upgrade coins
-            for (let j: number = 0; j < 3; j++) {
+            for (let j = 0; j < 3; j++) {
                 const card = data.props.G.decks[1][j];
                 let suit: null | string = null;
                 if (isCardNotAction(card)) {
@@ -325,8 +299,8 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
                     // todo Move to ProfitHelpers and add logic for bot or just use standard upgrade coins
                     const handCoins = data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].handCoins
                         .filter((coin: CoinType): boolean => coin !== null);
-                    let handCoinIndex: number = -1;
-                    for (let j: number = 0; j <
+                    let handCoinIndex = -1;
+                    for (let j = 0; j <
                         data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].boardCoins.length; j++) {
                         // todo Check .? for all coins!!! and delete AS
                         if (data.props.G.publicPlayers[Number(data.props.ctx.currentPlayer)].buffs.everyTurn ===
@@ -394,10 +368,10 @@ export const DrawProfit = (data: GameBoard, option: string): JSX.Element => {
  */
 export const DrawTaverns = (data: GameBoard, gridClass: string) => {
     const tavernsBoards: JSX.Element[] = [];
-    for (let t: number = 0; t < data.props.G.tavernsNum; t++) {
-        for (let i: number = 0; i < 1; i++) {
+    for (let t = 0; t < data.props.G.tavernsNum; t++) {
+        for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];
-            for (let j: number = 0; j < data.props.G.drawSize; j++) {
+            for (let j = 0; j < data.props.G.drawSize; j++) {
                 const tavernCard: TavernCardTypes = data.props.G.taverns[t][j];
                 if (tavernCard === null) {
                     boardCells.push(

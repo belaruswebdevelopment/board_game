@@ -1,12 +1,12 @@
 import { Ctx } from "boardgame.io";
-import { artefactsConfig, IArtefact } from "./data/CampData";
-import { heroesConfig, IHeroData } from "./data/HeroData";
-import { SuitNames, suitsConfig } from "./data/SuitData";
+import { artefactsConfig } from "./data/CampData";
+import { heroesConfig } from "./data/HeroData";
+import { suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
-import { MyGameState } from "./GameSetup";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { IPublicPlayer } from "./Player";
+import { AddDataToLog } from "./Logging";
+import { LogTypes, SuitNames } from "./typescript/enums";
+import { IArtefact, IHeroData, IPublicPlayer, MyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -21,9 +21,9 @@ import { IPublicPlayer } from "./Player";
  * @returns Текущий счёт указанного игрока.
  */
 export const CurrentScoring = (player: IPublicPlayer): number => {
-    let score: number = 0;
+    let score = 0;
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             score += suitsConfig[suit].scoringRule(player.cards[suit]);
         }
 
@@ -46,13 +46,13 @@ export const CurrentScoring = (player: IPublicPlayer): number => {
 export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     AddDataToLog(G, LogTypes.GAME, `Результаты игры игрока ${player.nickname}:`);
     let score: number = CurrentScoring(player),
-        coinsValue: number = 0;
+        coinsValue = 0;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за карты дворфов игрока ${player.nickname}: ${score}`);
-    for (let i: number = 0; i < player.boardCoins.length; i++) {
+    for (let i = 0; i < player.boardCoins.length; i++) {
         coinsValue += player.boardCoins[i]?.value ?? 0;
     }
     if (player.buffs.everyTurn === `Uline`) {
-        for (let i: number = 0; i < player.handCoins.length; i++) {
+        for (let i = 0; i < player.handCoins.length; i++) {
             coinsValue += player.handCoins[i]?.value ?? 0;
         }
     }
@@ -78,12 +78,12 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
             AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока ${player.nickname}: ${minerDistinctionPriorityScore}`);
         }
     }
-    let heroesScore: number = 0,
-        dwerg_brothers: number = 0;
+    let heroesScore = 0,
+        dwerg_brothers = 0;
     const dwerg_brothers_scoring: number[] = [0, 13, 40, 81, 108, 135];
-    for (let i: number = 0; i < player.heroes.length; i++) {
-        const heroData: IHeroData | undefined =
-            Object.values(heroesConfig).find((hero: IHeroData): boolean => hero.name === player.heroes[i].name);
+    for (let i = 0; i < player.heroes.length; i++) {
+        const heroData: IHeroData | undefined = Object.values(heroesConfig)
+            .find((hero: IHeroData): boolean => hero.name === player.heroes[i].name);
         if (heroData !== undefined) {
             if (player.heroes[i].name.startsWith(`Dwerg`)) {
                 dwerg_brothers += heroData.scoringRule(player);
@@ -103,11 +103,11 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
     score += heroesScore;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за героев игрока ${player.nickname}: ${heroesScore}.`);
     if (G.expansions.thingvellir.active) {
-        let artifactsScore: number = 0;
-        for (let i: number = 0; i < player.campCards.length; i++) {
+        let artifactsScore = 0;
+        for (let i = 0; i < player.campCards.length; i++) {
             const artefact: IArtefact | undefined = Object.values(artefactsConfig)
-                    .find((artefact: IArtefact): boolean => artefact.name === player.campCards[i].name);
-            let currentArtefactScore: number = 0;
+                .find((artefact: IArtefact): boolean => artefact.name === player.campCards[i].name);
+            let currentArtefactScore = 0;
             if (artefact !== undefined) {
                 if (G.suitIdForMjollnir !== null) {
                     currentArtefactScore = artefact.scoringRule(player, G.suitIdForMjollnir);
@@ -142,12 +142,12 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
  */
 export const ScoreWinner = (G: MyGameState, ctx: Ctx): MyGameState | void => {
     AddDataToLog(G, LogTypes.GAME, `Финальные результаты игры:`);
-    for (let i: number = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers; i++) {
         G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i]));
     }
     const maxScore: number = Math.max(...G.totalScore),
         maxPlayers: number = G.totalScore.filter((score: number): boolean => score === maxScore).length;
-    let winners: number = 0;
+    let winners = 0;
     for (let i: number = ctx.numPlayers - 1; i >= 0; i--) {
         if (maxScore === G.totalScore[i] && maxPlayers > winners) {
             G.winner.push(i);

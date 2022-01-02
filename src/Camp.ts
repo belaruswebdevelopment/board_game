@@ -1,66 +1,10 @@
 import { AddCampCardToCardsAction } from "./actions/CampActions";
-import { DiscardCardFromTavern, RusCardTypes } from "./Card";
-import { IArtefactConfig, IMercenaries } from "./data/CampData";
 import { suitsConfig } from "./data/SuitData";
-import { CampCardTypes, CampDeckCardTypes, MyGameState, TavernCardTypes } from "./GameSetup";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { IStack } from "./Player";
-
-/**
- * <h3>Интерфейс для карты кэмпа артефакта.</h3>
- */
-export interface IArtefactCampCard {
-    type: string,
-    tier: number,
-    path: string,
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    stack: IStack[],
-}
-
-/**
- * <h3>Интерфейс для создания карты кэмпа артефакта.</h3>
- */
-interface ICreateArtefactCampCard {
-    type?: string,
-    tier: number,
-    path: string,
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    stack: IStack[],
-};
-
-/**
- * <h3>Интерфейс для карты кэмпа наёмника.</h3>
- */
-export interface IMercenaryCampCard {
-    type: string,
-    tier: number,
-    path: string,
-    name: string,
-    game: string,
-    stack: IStack[],
-}
-
-/**
- * <h3>Интерфейс для создания карты кэмпа наёмника.</h3>
- */
-interface ICreateMercenaryCampCard {
-    type?: string,
-    tier: number,
-    path: string,
-    name: string,
-    game?: string,
-    stack: IStack[],
-}
+import { AddDataToLog } from "./Logging";
+import { DiscardCardFromTavern } from "./Tavern";
+import { CampDeckCardTypes, CampCardTypes, TavernCardTypes } from "./typescript/card_types";
+import { LogTypes, ActionTypes, RusCardTypes } from "./typescript/enums";
+import { IArtefactCampCard, IMercenaryCampCard, MyGameState, IArtefactConfig, IMercenaries, ICreateArtefactCampCard, ICreateMercenaryCampCard } from "./typescript/interfaces";
 
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
@@ -103,7 +47,7 @@ const AddCardToCamp = (G: MyGameState, cardIndex: number): void => {
  */
 const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
     // todo Add LogTypes.ERROR logging ?
-    for (let i: number = 0; i < G.camp.length; i++) {
+    for (let i = 0; i < G.camp.length; i++) {
         if (G.camp[i] !== null) {
             const card: CampCardTypes = G.camp.splice(i, 1, null)[0];
             if (card !== null) {
@@ -135,7 +79,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
     CampDeckCardTypes[] => {
     const campCards: CampDeckCardTypes[] = [];
     for (const campArtefactCard in artefactConfig) {
-        if (artefactConfig.hasOwnProperty(campArtefactCard)) {
+        if (Object.prototype.hasOwnProperty.call(artefactConfig, campArtefactCard)) {
             if (artefactConfig[campArtefactCard].tier === tier) {
                 campCards.push(CreateArtefactCampCard({
                     tier,
@@ -151,15 +95,16 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
             }
         }
     }
-    for (let i: number = 0; i < mercenariesConfig[tier].length; i++) {
-        let name: string = ``,
-            path: string = ``;
+    for (let i = 0; i < mercenariesConfig[tier].length; i++) {
+        let name = ``,
+            path = ``;
         for (const campMercenarySuit in mercenariesConfig[tier][i]) {
-            if (mercenariesConfig[tier][i].hasOwnProperty(campMercenarySuit)) {
+            if (Object.prototype.hasOwnProperty.call(mercenariesConfig[tier][i], campMercenarySuit)) {
                 path += campMercenarySuit + ` `;
                 name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
                 for (const campMercenaryCardProperty in mercenariesConfig[tier][i][campMercenarySuit]) {
-                    if (mercenariesConfig[tier][i][campMercenarySuit].hasOwnProperty(campMercenaryCardProperty)) {
+                    if (Object.prototype.hasOwnProperty
+                        .call(mercenariesConfig[tier][i][campMercenarySuit], campMercenaryCardProperty)) {
                         if (campMercenaryCardProperty === `rank`) {
                             name += `шевронов: ${mercenariesConfig[tier][i][campMercenarySuit].rank}, `;
                         }
@@ -179,7 +124,10 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
             name: name.trim(),
             stack: [
                 {
-                    action: AddCampCardToCardsAction.name,
+                    action: {
+                        name: AddCampCardToCardsAction.name,
+                        type: ActionTypes.Camp,
+                    },
                     variants: mercenariesConfig[tier][i],
                 },
             ],
@@ -301,7 +249,7 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
  */
 export const RefillCamp = (G: MyGameState): void => {
     AddRemainingCampCardsToDiscard(G);
-    for (let i: number = 0; i < G.campNum; i++) {
+    for (let i = 0; i < G.campNum; i++) {
         AddCardToCamp(G, i);
     }
     AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами новой эпохи.`);

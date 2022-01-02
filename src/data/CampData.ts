@@ -1,77 +1,9 @@
-import { BuffNames, ConfigNames, DrawNames } from "../actions/Actions";
-import {
-    AddBuffToPlayerCampAction,
-    AddCampCardToCardsAction,
-    CheckPickDiscardCardCampAction,
-    DiscardTradingCoinAction,
-    DrawProfitCampAction,
-    PickDiscardCardCampAction,
-    PickHeroCampAction,
-    StartDiscardSuitCardAction,
-    StartVidofnirVedrfolnirAction
-} from "../actions/CampActions";
-import { RusCardTypes } from "../Card";
-import { CoinType } from "../Coin";
-import { Stages } from "../Game";
+import { AddCampCardToCardsAction, AddBuffToPlayerCampAction, CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, DiscardTradingCoinAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
-import { SuitNames } from "./SuitData";
-
-/**
- * <h3>Интерфейс для данных карт кэмпа артефакт.</h3>
- */
-export interface IArtefact {
-    name: string,
-    description: string,
-    game: string,
-    tier: number,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    stack: IStack[],
-    scoringRule: (player?: IPublicPlayer, suit?: string) => number,
-}
-
-/**
- * <h3>Интерфейс для данных карт кэмпа наёмник.</h3>
- */
-interface IMercenary {
-    suit: string,
-    rank: number,
-    points: null | number,
-}
-
-/**
- * <h3>Интерфейс для перечня данных карт кэмпа наёмники.</h3>
- */
-export interface IMercenaries {
-    [name: string]: IMercenary,
-}
-
-/**
- * <h3>Интерфейс для конфига данных карт кэмпа артефакт.</h3>
- */
-export interface IArtefactConfig {
-    [name: string]: IArtefact,
-}
-
-/**
- * <h3>Перечисление для названий артефактов.</h3>
- */
-export const enum ArtefactNames {
-    Brisingamens = `Brisingamens`,
-    Draupnir = `Draupnir`,
-    Fafnir_Baleygr = `Fafnir Baleygr`,
-    Gjallarhorn = `Gjallarhorn`,
-    Hofud = `Hofud`,
-    Hrafnsmerki = `Hrafnsmerki`,
-    Jarnglofi = `Jarnglofi`,
-    Megingjord = `Megingjord`,
-    Mjollnir = `Mjollnir`,
-    Svalinn = `Svalinn`,
-    Vegvisir = `Vegvisir`,
-    Vidofnir_Vedrfolnir = `Vidofnir Vedrfolnir`,
-}
+import { PlayerCardsType } from "../typescript/card_types";
+import { CoinType } from "../typescript/coin_types";
+import { ArtefactNames, ActionTypes, BuffNames, Stages, ConfigNames, DrawNames, SuitNames, RusCardTypes } from "../typescript/enums";
+import { IArtefact, IPublicPlayer, IMercenaries, IArtefactConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Данные об артефакте.</h3>
@@ -90,10 +22,16 @@ const Brisingamens: IArtefact = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
         {
-            action: AddBuffToPlayerCampAction.name,
+            action: {
+                name: AddBuffToPlayerCampAction.name,
+                type: ActionTypes.Camp,
+            },
             config: {
                 buff: {
                     name: BuffNames.DiscardCardEndGame,
@@ -102,10 +40,16 @@ const Brisingamens: IArtefact = {
             },
         },
         {
-            action: CheckPickDiscardCardCampAction.name,
+            action: {
+                name: CheckPickDiscardCardCampAction.name,
+                type: ActionTypes.Camp,
+            },
         },
         {
-            action: DrawProfitCampAction.name,
+            action: {
+                name: DrawProfitCampAction.name,
+                type: ActionTypes.Camp,
+            },
             config: {
                 stageName: Stages.PickDiscardCard,
                 name: ConfigNames.BrisingamensAction,
@@ -114,7 +58,10 @@ const Brisingamens: IArtefact = {
             },
         },
         {
-            action: PickDiscardCardCampAction.name,
+            action: {
+                name: PickDiscardCardCampAction.name,
+                type: ActionTypes.Camp,
+            },
         },
     ],
     scoringRule: (): number => 0,
@@ -137,12 +84,14 @@ const Draupnir: IArtefact = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.boardCoins
-        .filter((coin: CoinType): boolean =>
-            Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
+        .filter((coin: CoinType): boolean => Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
 };
 
 
@@ -163,10 +112,16 @@ const Fafnir_Baleygr: IArtefact = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
         {
-            action: AddBuffToPlayerCampAction.name,
+            action: {
+                name: AddBuffToPlayerCampAction.name,
+                type: ActionTypes.Camp,
+            },
             config: {
                 buff: {
                     name: BuffNames.GoCamp,
@@ -195,10 +150,16 @@ const Gjallarhorn: IArtefact = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
         {
-            action: PickHeroCampAction.name,
+            action: {
+                name: PickHeroCampAction.name,
+                type: ActionTypes.Camp,
+            },
             config: {
                 stageName: Stages.PickHero,
             },
@@ -224,10 +185,16 @@ const Hofud: IArtefact = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
         {
-            action: StartDiscardSuitCardAction.name,
+            action: {
+                name: StartDiscardSuitCardAction.name,
+                type: ActionTypes.Camp,
+            },
             config: {
                 suit: SuitNames.WARRIOR,
             },
@@ -253,14 +220,17 @@ const Hrafnsmerki: IArtefact = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => {
         if (player !== undefined) {
-            let score: number = 0;
+            let score = 0;
             for (const suit in player.cards) {
-                if (player.cards.hasOwnProperty(suit)) {
+                if (Object.prototype.hasOwnProperty.call(player.cards, suit)) {
                     score += player.cards[suit].filter((card: PlayerCardsType): boolean =>
                         card.type === RusCardTypes.MERCENARY).length * 5;
                 }
@@ -288,10 +258,16 @@ const Jarnglofi: IArtefact = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
         {
-            action: DiscardTradingCoinAction.name,
+            action: {
+                name: DiscardTradingCoinAction.name,
+                type: ActionTypes.Camp,
+            },
         },
     ],
     scoringRule: (): number => 24,
@@ -314,10 +290,16 @@ const Megingjord: IArtefact = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
         {
-            action: AddBuffToPlayerCampAction.name,
+            action: {
+                name: AddBuffToPlayerCampAction.name,
+                type: ActionTypes.Camp,
+            },
             config: {
                 buff: {
                     name: BuffNames.NoHero,
@@ -346,10 +328,16 @@ const Mjollnir: IArtefact = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
         {
-            action: AddBuffToPlayerCampAction.name,
+            action: {
+                name: AddBuffToPlayerCampAction.name,
+                type: ActionTypes.Camp,
+            },
             config: {
                 buff: {
                     name: BuffNames.GetMjollnirProfit,
@@ -379,7 +367,10 @@ const Svalinn: IArtefact = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
     ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.heroes.length * 5 : 0,
@@ -402,7 +393,10 @@ const Vegvisir: IArtefact = {
     points: 13,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
     ],
     scoringRule: (): number => 0,
@@ -425,10 +419,16 @@ const Vidofnir_Vedrfolnir: IArtefact = {
     points: null,
     stack: [
         {
-            action: AddCampCardToCardsAction.name,
+            action: {
+                name: AddCampCardToCardsAction.name,
+                type: ActionTypes.Camp,
+            },
         },
         {
-            action: StartVidofnirVedrfolnirAction.name,
+            action: {
+                name: StartVidofnirVedrfolnirAction.name,
+                type: ActionTypes.Camp,
+            },
         },
     ],
     scoringRule: (): number => 0,

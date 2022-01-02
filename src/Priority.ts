@@ -1,29 +1,6 @@
-import { MyGameState } from "./GameSetup";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { IPublicPlayer } from "./Player";
-
-/**
- * <h3>Интерфейс для кристалла.</h3>
- */
-export interface IPriority {
-    value: number,
-    isExchangeable: boolean,
-}
-
-/**
- * <h3>Интерфейс для конфига всех кристаллов.</h3>
- */
-interface IPrioritiesConfig {
-    [index: number]: IPriority[],
-}
-
-/**
- * <h3>Интерфейс для создания кристалла.</h3>
- */
-interface ICreatePriority {
-    value: number,
-    isExchangeable?: boolean,
-}
+import { AddDataToLog } from "./Logging";
+import { LogTypes } from "./typescript/enums";
+import { ICreatePriority, IPrioritiesConfig, IPriority, IPublicPlayer, MyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Изменяет приоритет игроков для выбора карт из текущей таверны.</h3>
@@ -36,7 +13,7 @@ interface ICreatePriority {
  */
 export const ChangePlayersPriorities = (G: MyGameState): void => {
     const tempPriorities: (IPriority | undefined)[] = [];
-    for (let i: number = 0; i < G.exchangeOrder.length; i++) {
+    for (let i = 0; i < G.exchangeOrder.length; i++) {
         const exchangeOrder: number | undefined = G.exchangeOrder[i];
         if (exchangeOrder !== undefined) {
             tempPriorities[i] = G.publicPlayers[exchangeOrder].priority;
@@ -44,7 +21,7 @@ export const ChangePlayersPriorities = (G: MyGameState): void => {
     }
     if (tempPriorities.length) {
         AddDataToLog(G, LogTypes.GAME, `Обмен кристаллами между игроками:`);
-        for (let i: number = 0; i < G.exchangeOrder.length; i++) {
+        for (let i = 0; i < G.exchangeOrder.length; i++) {
             const tempPriority: IPriority | undefined = tempPriorities[i];
             if (tempPriority !== undefined && G.publicPlayers[i].priority.value !== tempPriority.value) {
                 G.publicPlayers[i].priority = tempPriority;

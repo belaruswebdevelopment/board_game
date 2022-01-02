@@ -2,11 +2,9 @@ import { isArtefactCard } from "./Camp";
 import { isCardNotAction } from "./Card";
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
-import { HeroNames } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
-import { Phases } from "./Game";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { CurrentScoring } from "./Score";
+import { AddDataToLog } from "./Logging";
+import { HeroNames, LogTypes, Phases } from "./typescript/enums";
 /**
  * <h3>Добавляет взятую из кэмпа карту в массив карт кэмпа игрока.</h3>
  * <p>Применения:</p>
@@ -46,22 +44,6 @@ export const AddCampCardToPlayerCards = (G, ctx, card) => {
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить артефакт ${card.name} на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
     }
-};
-/**
- * <h3>Добавляет карту в массив потенциальных карт для ботов.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при подсчёте потенциального скоринга для ботов.</li>
- * </ol>
- *
- * @param cards Массив потенциальных карт для ботов.
- * @param card Карта.
- */
-export const AddCardToCards = (cards, card) => {
-    if (card.suit !== null) {
-        cards[card.suit].push(card);
-    }
-    // todo Else it can be upgrade coin card here and it is not error, sure? Or add LogTypes.ERROR logging?
 };
 /**
  * <h3>Добавляет взятую карту в массив карт игрока.</h3>
@@ -157,7 +139,7 @@ export const BuildPlayer = () => CreatePlayer({
 export const BuildPublicPlayer = (nickname, priority) => {
     const cards = {};
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             cards[suit] = [];
         }
     }
@@ -244,65 +226,3 @@ const CreatePublicPlayer = ({ nickname, cards, heroes = [], campCards = [], hand
     selectedCoin,
     pickedCard,
 });
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: Добавить описание для функции и параметров.
- * @param G
- * @param playerId Id игрока.
- * @returns
- */
-export const IsTopPlayer = (G, playerId) => G.publicPlayers.every((player) => CurrentScoring(player) <= CurrentScoring(G.publicPlayers[playerId]));
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: Добавить описание для функции и параметров
- * @param G
- * @param currentPlayerId Id текущего игрока.
- * @returns
- */
-/*export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number => {
-    let top1PlayerId: number =
-    G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean => IsTopPlayer(G, index));
-    if (G.publicPlayersOrder.indexOf(currentPlayerId) > G.publicPlayersOrder.indexOf(top1PlayerId)) {
-        top1PlayerId = -1;
-    }
-    return top1PlayerId;
-};*/
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: Добавить описание для функции и параметров.
- * @param G
- * @param top1PlayerId Id текущего игрока.
- * @returns
- */
-/*export const GetTop2PlayerId = (G: MyGameState, top1PlayerId: number): number => {
-    const playersScore: number[] = G.publicPlayers.map((player: IPublicPlayer): number => CurrentScoring(player)),
-        maxScore: number = Math.max(...playersScore);
-    let top2PlayerId: number,
-        temp: number;
-    if (playersScore.filter((score: number): boolean => score === maxScore).length === 1) {
-        temp = playersScore.sort((a: number, b: number): number => b - a)[1];
-        top2PlayerId = G.publicPlayers.findIndex((player: IPublicPlayer): boolean => CurrentScoring(player) === temp);
-    } else {
-        top2PlayerId = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean =>
-        index !== top1PlayerId && IsTopPlayer(G, index));
-    }
-    if (G.publicPlayersOrder.indexOf(top1PlayerId) > G.publicPlayersOrder.indexOf(top2PlayerId)) {
-        top2PlayerId = -1;
-    }
-    return top2PlayerId;
-};*/

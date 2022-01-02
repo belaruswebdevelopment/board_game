@@ -1,6 +1,7 @@
-import { SuitNames, suitsConfig } from "./data/SuitData";
+import { suitsConfig } from "./data/SuitData";
 import { TotalRank } from "./helpers/ScoreHelpers";
-import { AddDataToLog, LogTypes } from "./Logging";
+import { AddDataToLog } from "./Logging";
+import { LogTypes, SuitNames } from "./typescript/enums";
 // todo Rework 2 functions in one?
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по шевронам конкретной фракции.</h3>
@@ -65,7 +66,7 @@ export const CheckCurrentSuitDistinctions = (G, ctx, suit) => {
 export const CheckDistinction = (G, ctx) => {
     AddDataToLog(G, LogTypes.GAME, `Преимущество по фракциям в конце эпохи:`);
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const result = CheckCurrentSuitDistinction(G, ctx, suit);
             G.distinctions[suit] = result;
             if (suit === SuitNames.EXPLORER && result === undefined) {

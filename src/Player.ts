@@ -1,112 +1,13 @@
 import { Ctx } from "boardgame.io";
-import { IArtefactCampCard, isArtefactCard } from "./Camp";
-import { ICard, IPlayerCards, isCardNotAction } from "./Card";
-import { BuildCoins, CoinType, ICoin } from "./Coin";
+import { isArtefactCard } from "./Camp";
+import { isCardNotAction } from "./Card";
+import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
-import { HeroNames, IBuff, IConditions, IVariants } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
-import { Phases } from "./Game";
-import { CampDeckCardTypes, DeckCardTypes, MyGameState } from "./GameSetup";
-import { IHero } from "./Hero";
-import { AddDataToLog, LogTypes } from "./Logging";
-import { IPriority } from "./Priority";
-import { CurrentScoring } from "./Score";
-
-/**
- * <h3>Типы данных для карт на планшете игрока.</h3>
- */
-export type PlayerCardsType = ICard | IArtefactCampCard | IHero;
-
-/**
- * <h3>Типы данных для карт пикнутых игроком.</h3>
- */
-export type PickedCardType = null | DeckCardTypes | CampDeckCardTypes | IHero;
-
-/**
- * <h3>Интерфейс для видов бафов у карт.</h3>
- */
-export interface IBuffs {
-    // everyTurn?: string,
-    // upgradeNextCoin?: string,
-    // upgradeCoin?: number,
-    // goCampOneTime?: boolean,
-    // goCamp?: boolean,
-    // noHero?: boolean,
-    // getMjollnirProfit?: boolean,
-    // discardCardEndGame?: boolean,
-    [name: string]: string | number | boolean,
-}
-
-/**
- * <h3>Интерфейс для конфига у карт.</h3>
- */
-export interface IConfig {
-    conditions?: IConditions,
-    buff?: IBuff,
-    number?: number,
-    coinId?: number,
-    suit?: string,
-    coin?: string,
-    value?: number,
-    drawName?: string,
-    stageName?: string,
-    isTrading?: boolean,
-    name?: string,
-}
-
-/**
- * <h3>Интерфейс для стэка у карт.</h3>
- */
-export interface IStack {
-    action: string,
-    variants?: IVariants,
-    config?: IConfig,
-    playerId?: number,
-}
-
-/**
- * <h3>Интерфейс для приватных данных игрока.</h3>
- */
-export interface IPlayer {
-    handCoins: ICoin[],
-    boardCoins: ICoin[],
-}
-
-// TODO Rework cards in object where keys === suits, not number-indexes
-/**
- * <h3>Интерфейс для публичных данных игрока.</h3>
- */
-export interface IPublicPlayer {
-    nickname: string,
-    // todo use not number index but suitName
-    cards: IPlayerCards,
-    heroes: IHero[],
-    campCards: CampDeckCardTypes[],
-    handCoins: CoinType[],
-    boardCoins: CoinType[],
-    stack: IStack[],
-    priority: IPriority,
-    buffs: IBuffs,
-    selectedCoin: undefined | number,
-    pickedCard: PickedCardType,
-}
-
-/**
- * <h3>Интерфейс для создания публичных данных игрока.</h3>
- */
-interface ICreatePublicPlayer {
-    nickname: string,
-    cards: IPlayerCards,
-    heroes?: IHero[],
-    campCards?: CampDeckCardTypes[],
-    handCoins: ICoin[],
-    boardCoins: ICoin[],
-    stack?: IStack[],
-    priority: IPriority,
-    buffs?: IBuffs,
-    selectedCoin?: undefined,
-    pickedCard?: null,
-}
+import { AddDataToLog } from "./Logging";
+import { CampDeckCardTypes, DeckCardTypes } from "./typescript/card_types";
+import { HeroNames, LogTypes, Phases } from "./typescript/enums";
+import { IArtefactCampCard, ICreatePublicPlayer, IHero, IPlayer, IPlayerCards, IPriority, IPublicPlayer, MyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Добавляет взятую из кэмпа карту в массив карт кэмпа игрока.</h3>
@@ -146,23 +47,6 @@ export const AddCampCardToPlayerCards = (G: MyGameState, ctx: Ctx, card: IArtefa
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить артефакт ${card.name} на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
     }
-};
-
-/**
- * <h3>Добавляет карту в массив потенциальных карт для ботов.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при подсчёте потенциального скоринга для ботов.</li>
- * </ol>
- *
- * @param cards Массив потенциальных карт для ботов.
- * @param card Карта.
- */
-export const AddCardToCards = (cards: IPlayerCards, card: PlayerCardsType): void => {
-    if (card.suit !== null) {
-        cards[card.suit].push(card);
-    }
-    // todo Else it can be upgrade coin card here and it is not error, sure? Or add LogTypes.ERROR logging?
 };
 
 /**
@@ -263,7 +147,7 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority):
     IPublicPlayer => {
     const cards: IPlayerCards = {};
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             cards[suit] = [];
         }
     }
@@ -290,7 +174,7 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority):
 */
 export const CheckPlayersBasicOrder = (G: MyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
-    for (let i: number = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers; i++) {
         if (ctx.phase !== Phases.PlaceCoinsUline) {
             // todo Create enums for buffs values
             if (G.publicPlayers[i].buffs.everyTurn !== HeroNames.Uline) {
@@ -368,70 +252,3 @@ const CreatePublicPlayer = ({
     selectedCoin,
     pickedCard,
 });
-
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: Добавить описание для функции и параметров.
- * @param G
- * @param playerId Id игрока.
- * @returns
- */
-export const IsTopPlayer = (G: MyGameState, playerId: number): boolean =>
-    G.publicPlayers.every((player: IPublicPlayer): boolean =>
-        CurrentScoring(player) <= CurrentScoring(G.publicPlayers[playerId]));
-
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: Добавить описание для функции и параметров
- * @param G
- * @param currentPlayerId Id текущего игрока.
- * @returns
- */
-/*export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number => {
-    let top1PlayerId: number =
-    G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean => IsTopPlayer(G, index));
-    if (G.publicPlayersOrder.indexOf(currentPlayerId) > G.publicPlayersOrder.indexOf(top1PlayerId)) {
-        top1PlayerId = -1;
-    }
-    return top1PlayerId;
-};*/
-
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: Добавить описание для функции и параметров.
- * @param G
- * @param top1PlayerId Id текущего игрока.
- * @returns
- */
-/*export const GetTop2PlayerId = (G: MyGameState, top1PlayerId: number): number => {
-    const playersScore: number[] = G.publicPlayers.map((player: IPublicPlayer): number => CurrentScoring(player)),
-        maxScore: number = Math.max(...playersScore);
-    let top2PlayerId: number,
-        temp: number;
-    if (playersScore.filter((score: number): boolean => score === maxScore).length === 1) {
-        temp = playersScore.sort((a: number, b: number): number => b - a)[1];
-        top2PlayerId = G.publicPlayers.findIndex((player: IPublicPlayer): boolean => CurrentScoring(player) === temp);
-    } else {
-        top2PlayerId = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean =>
-        index !== top1PlayerId && IsTopPlayer(G, index));
-    }
-    if (G.publicPlayersOrder.indexOf(top1PlayerId) > G.publicPlayersOrder.indexOf(top2PlayerId)) {
-        top2PlayerId = -1;
-    }
-    return top2PlayerId;
-};*/

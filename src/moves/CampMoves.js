@@ -1,7 +1,10 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { AddActionsToStack, EndActionFromStackAndAddNew, StartActionForChosenPlayer, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
-import { AddDataToLog, LogTypes } from "../Logging";
+import { GetEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction, DrawProfitCampAction } from "../actions/CampActions";
+import { StartActionForChosenPlayer, StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
+import { EndActionFromStackAndAddNew, AddActionsToStack } from "../helpers/StackHelpers";
+import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
+import { LogTypes, ActionTypes, ConfigNames, DrawNames } from "../typescript/enums";
 // todo Add logging
 /**
  * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
@@ -114,6 +117,28 @@ export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, playerId, cardI
     StartActionForChosenPlayer(G, ctx, playerId, suit, playerId, cardId);
 };
 /**
+ * <h3>Выбор игроком карты наёмника для вербовки.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ */
+export const GetEnlistmentMercenariesMove = (G, ctx, cardId) => {
+    const stack = [
+        {
+            action: {
+                name: GetEnlistmentMercenariesAction.name,
+                type: ActionTypes.Camp,
+            },
+        },
+    ];
+    EndActionFromStackAndAddNew(G, ctx, stack, cardId);
+};
+/**
  * <h3>Выбирает фракцию для применения финального эффекта артефакта Mjollnir.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -126,4 +151,51 @@ export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, playerId, cardI
  */
 export const GetMjollnirProfitMove = (G, ctx, suit) => {
     EndActionFromStackAndAddNew(G, ctx, [], suit);
+};
+/**
+ * <h3>Выбор фракции куда будет завербован наёмник.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе фракции, куда будет завербован наёмник.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param suit Название фракции.
+ */
+export const PlaceEnlistmentMercenariesMove = (G, ctx, suit) => {
+    const stack = [
+        {
+            action: {
+                name: PlaceEnlistmentMercenariesAction.name,
+                type: ActionTypes.Camp,
+            },
+        },
+    ];
+    EndActionFromStackAndAddNew(G, ctx, stack, suit);
+};
+/**
+ * <h3>Начало вербовки наёмников.</li>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const StartEnlistmentMercenariesMove = (G, ctx) => {
+    const stack = [
+        {
+            action: {
+                name: DrawProfitCampAction.name,
+                type: ActionTypes.Camp,
+            },
+            config: {
+                name: ConfigNames.EnlistmentMercenaries,
+                drawName: DrawNames.EnlistmentMercenaries,
+            },
+        },
+    ];
+    EndActionFromStackAndAddNew(G, ctx, stack);
 };

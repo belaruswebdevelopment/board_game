@@ -1,6 +1,5 @@
-import { HeroNames } from "../data/HeroData";
-import { Phases } from "../Game";
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
+import { HeroNames, Phases } from "../typescript/enums";
 /**
  * <h3>Выкладка монет ботами.</h3>
  * <p>Применения:</p>
@@ -13,6 +12,7 @@ import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
  * @param coinsOrder Порядок выкладки монет.
  */
 export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
+    var _a, _b, _c;
     for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
         const coinId = coinsOrder[i] || G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin) => coin !== null);
@@ -31,16 +31,16 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
         .every((coin) => coin === null));
     if (isEveryPlayersHandCoinsEmpty) {
         if (CheckAndStartUlineActionsOrContinue(G, ctx) === Phases.PlaceCoinsUline) {
-            ctx.events.setPhase(Phases.PlaceCoinsUline);
+            (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setPhase(Phases.PlaceCoinsUline);
         }
         else {
-            ctx.events.setPhase(Phases.PickCards);
+            (_b = ctx.events) === null || _b === void 0 ? void 0 : _b.setPhase(Phases.PickCards);
         }
     }
     else {
         if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .every((coin) => coin === null)) {
-            ctx.events.endTurn();
+            (_c = ctx.events) === null || _c === void 0 ? void 0 : _c.endTurn();
         }
     }
 };

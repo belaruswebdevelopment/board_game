@@ -1,9 +1,10 @@
 import { artefactsConfig } from "./data/CampData";
 import { heroesConfig } from "./data/HeroData";
-import { SuitNames, suitsConfig } from "./data/SuitData";
+import { suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
-import { AddDataToLog, LogTypes } from "./Logging";
+import { AddDataToLog } from "./Logging";
+import { LogTypes, SuitNames } from "./typescript/enums";
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
  * <p>Применения:</p>
@@ -19,7 +20,7 @@ import { AddDataToLog, LogTypes } from "./Logging";
 export const CurrentScoring = (player) => {
     let score = 0;
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             score += suitsConfig[suit].scoringRule(player.cards[suit]);
         }
     }
@@ -72,7 +73,8 @@ export const FinalScoring = (G, ctx, player) => {
     let heroesScore = 0, dwerg_brothers = 0;
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
-        const heroData = Object.values(heroesConfig).find((hero) => hero.name === player.heroes[i].name);
+        const heroData = Object.values(heroesConfig)
+            .find((hero) => hero.name === player.heroes[i].name);
         if (heroData !== undefined) {
             if (player.heroes[i].name.startsWith(`Dwerg`)) {
                 dwerg_brothers += heroData.scoringRule(player);

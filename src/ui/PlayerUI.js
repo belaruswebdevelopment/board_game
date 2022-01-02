@@ -1,12 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { HeroNames } from "../data/HeroData";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { Phases, Stages } from "../Game";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
 import { CurrentScoring } from "../Score";
-import { tavernsConfig } from "../Tavern";
+import { HeroNames, Phases, Stages } from "../typescript/enums";
+import { tavernsConfig } from "../typescript/interfaces";
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
  * <p>Применения:</p>
@@ -26,7 +25,7 @@ export const DrawPlayersBoards = (data) => {
         playerHeadersCount[p] = [];
         playerRows[p] = [];
         for (const suit in suitsConfig) {
-            if (suitsConfig.hasOwnProperty(suit)) {
+            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 playerHeaders[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }, void 0) }, `${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName}`));
                 playerHeadersCount[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor} text-white`, children: _jsx("b", { children: data.props.G.publicPlayers[p].cards[suit].reduce(TotalRank, 0) }, void 0) }, `${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName} count`));
             }
@@ -46,7 +45,7 @@ export const DrawPlayersBoards = (data) => {
             let isDrawRow = false, id = 0, j = 0;
             playerRows[p][i] = [];
             for (const suit in suitsConfig) {
-                if (suitsConfig.hasOwnProperty(suit)) {
+                if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     id = i + j;
                     if (data.props.G.publicPlayers[p].cards[suit][i] !== undefined) {
                         isDrawRow = true;

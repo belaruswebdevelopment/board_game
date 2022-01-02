@@ -1,55 +1,20 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import {
-    ConfigNames,
-    DrawNames,
-    GetEnlistmentMercenariesAction,
-    PassEnlistmentMercenariesAction,
-    PlaceEnlistmentMercenariesAction
-} from "../actions/Actions";
-import { DrawProfitCampAction } from "../actions/CampActions";
+import { PassEnlistmentMercenariesAction } from "../actions/Actions";
 import { isCardNotAction } from "../Card";
-import { SuitNames, suitsConfig } from "../data/SuitData";
-import { DeckCardTypes, MyGameState, TavernCardTypes } from "../GameSetup";
+import { suitsConfig } from "../data/SuitData";
+import { StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
-import {
-    AddActionsToStack,
-    AddActionsToStackAfterCurrent,
-    EndActionFromStackAndAddNew,
-    StartActionFromStackOrEndActions
-} from "../helpers/StackHelpers";
-import { AddDataToLog, LogTypes } from "../Logging";
+import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { AddCardToPlayer, IStack } from "../Player";
+import { AddCardToPlayer } from "../Player";
+import { DeckCardTypes, TavernCardTypes } from "../typescript/card_types";
+import { ActionTypes, LogTypes, SuitNames } from "../typescript/enums";
+import { IStack, MyGameState } from "../typescript/interfaces";
 
 // todo Add logging
-
-/**
- * <h3>Перечисление для описаний отрисовки экшенов.</h3>
- */
-export const enum MoveNames {
-    AddCoinToPouchMove = `AddCoinToPouchMove`,
-    BotsPlaceAllCoinsMove = `BotsPlaceAllCoinsMove`,
-    ClickBoardCoinMove = `ClickBoardCoinMove`,
-    ClickCampCardHoldaMove = `ClickCampCardHoldaMove`,
-    ClickCampCardMove = `ClickCampCardMove`,
-    ClickCardMove = `ClickCardMove`,
-    ClickHandCoinMove = `ClickHandCoinMove`,
-    DiscardCardFromPlayerBoardMove = `DiscardCardFromPlayerBoardMove`,
-    DiscardCardMove = `DiscardCardMove`,
-    DiscardCard2PlayersMove = `DiscardCard2PlayersMove`,
-    DiscardSuitCardFromPlayerBoardMove = `DiscardSuitCardFromPlayerBoardMove`,
-    GetEnlistmentMercenariesMove = `GetEnlistmentMercenariesMove`,
-    GetMjollnirProfitMove = `GetMjollnirProfitMove`,
-    PassEnlistmentMercenariesMove = `PassEnlistmentMercenariesMove`,
-    PickDiscardCardMove = `PickDiscardCardMove`,
-    PlaceCardMove = `PlaceCardMove`,
-    PlaceEnlistmentMercenariesMove = `PlaceEnlistmentMercenariesMove`,
-    StartEnlistmentMercenariesMove = `StartEnlistmentMercenariesMove`,
-    UpgradeCoinVidofnirVedrfolnirMove = `UpgradeCoinVidofnirVedrfolnirMove`,
-}
-
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -110,6 +75,7 @@ export const ClickCardToPickDistinctionMove: Move<MyGameState> = (G: MyGameState
     const isAdded: boolean = AddCardToPlayer(G, ctx, G.decks[1][cardId]),
         pickedCard: DeckCardTypes = G.decks[1].splice(cardId, 1)[0];
     let suit: null | string = null;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     G.decks[1] = ctx.random!.Shuffle(G.decks[1]);
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {
@@ -147,26 +113,6 @@ export const ClickDistinctionCardMove: Move<MyGameState> = (G: MyGameState, ctx:
 };
 
 /**
- * <h3>Выбор игроком карты наёмника для вербовки.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param cardId Id карты.
- */
-export const GetEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
-    const stack: IStack[] = [
-        {
-            action: GetEnlistmentMercenariesAction.name,
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack, cardId);
-};
-
-/**
  * <h3>Пасс первого игрока в начале фазы вербовки наёмников.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -179,7 +125,10 @@ export const GetEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, 
 export const PassEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
     const stack: IStack[] = [
         {
-            action: PassEnlistmentMercenariesAction.name,
+            action: {
+                name: PassEnlistmentMercenariesAction.name,
+                type: ActionTypes.Action,
+            },
         },
     ];
     EndActionFromStackAndAddNew(G, ctx, stack);
@@ -199,47 +148,4 @@ export const PassEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState,
  */
 export const PickDiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
-};
-
-/**
- * <h3>Выбор фракции куда будет завербован наёмник.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе фракции, куда будет завербован наёмник.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param suit Название фракции.
- */
-export const PlaceEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suit: string): void => {
-    const stack: IStack[] = [
-        {
-            action: PlaceEnlistmentMercenariesAction.name,
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack, suit);
-};
-
-/**
- * <h3>Начало вербовки наёмников.</li>
- * <p>Применения:</p>
- * <ol>
- * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const StartEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
-    const stack: IStack[] = [
-        {
-            action: DrawProfitCampAction.name,
-            config: {
-                name: ConfigNames.EnlistmentMercenaries,
-                drawName: DrawNames.EnlistmentMercenaries,
-            },
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack);
 };

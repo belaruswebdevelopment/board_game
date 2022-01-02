@@ -1,19 +1,15 @@
 import { Ctx } from "boardgame.io";
-import { ArgsTypes, ConfigNames, DrawNames } from "../actions/Actions";
-import {
-    CheckPickDiscardCardCampAction,
-    DrawProfitCampAction,
-    PickDiscardCardCampAction
-} from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
 import { UpgradeCoin } from "../Coin";
-import { Stages } from "../Game";
-import { DeckCardTypes, MyGameState } from "../GameSetup";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { AddCardToPlayer, IConfig, IStack } from "../Player";
+import { AddDataToLog } from "../Logging";
+import { AddCardToPlayer } from "../Player";
+import { DeckCardTypes } from "../typescript/card_types";
+import { LogTypes } from "../typescript/enums";
+import { MyGameState, IConfig } from "../typescript/interfaces";
+import { ArgsTypes } from "../typescript/types";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AfterBasicPickCardActions } from "./MovesHelpers";
-import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
+import { EndActionFromStackAndAddNew, AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -91,7 +87,7 @@ export const EndAction = (G: MyGameState, ctx: Ctx, isTrading: boolean): void =>
  */
 export const IsStartActionStage = (G: MyGameState, ctx: Ctx, config: IConfig): boolean => {
     if (config.stageName !== undefined) {
-        ctx.events!.setStage!(config.stageName);
+        ctx.events?.setStage(config.stageName);
         AddDataToLog(G, LogTypes.GAME, `Начало стэйджа ${config.stageName}.`);
         return true;
     }
@@ -118,23 +114,32 @@ export const PickDiscardCard = (G: MyGameState, ctx: Ctx, config: IConfig, cardI
     let suit: string | null = null;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
     if (G.actionsNum === 2) {
-        const stack: IStack[] = [
-            {
-                action: CheckPickDiscardCardCampAction.name,
-            },
-            {
-                action: DrawProfitCampAction.name,
-                config: {
-                    stageName: Stages.PickDiscardCard,
-                    name: ConfigNames.BrisingamensAction,
-                    drawName: DrawNames.Brisingamens,
-                },
-            },
-            {
-                action: PickDiscardCardCampAction.name,
-            },
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+        // const stack: IStack[] = [
+        //     {
+        //         action: {
+        //             name: CheckPickDiscardCardCampAction.name,
+        //             type: ActionTypes.Camp,
+        //         },
+        //     },
+        //     {
+        //         action: {
+        //             name: DrawProfitCampAction.name,
+        //             type: ActionTypes.Camp,
+        //         },
+        //         config: {
+        //             stageName: Stages.PickDiscardCard,
+        //             name: ConfigNames.BrisingamensAction,
+        //             drawName: DrawNames.Brisingamens,
+        //         },
+        //     },
+        //     {
+        //         action: {
+        //             name: PickDiscardCardCampAction.name,
+        //             type: ActionTypes.Camp,
+        //         },
+        //     },
+        // ];
+        // AddActionsToStackAfterCurrent(G, ctx, stack);
     }
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {

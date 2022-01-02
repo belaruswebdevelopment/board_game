@@ -1,10 +1,5 @@
-import { PickHeroAction } from "./actions/Actions";
-import { RusCardTypes } from "./Card";
-import { HeroNames } from "./data/HeroData";
-import { Stages } from "./Game";
-import { TotalRank } from "./helpers/ScoreHelpers";
-import { AddActionsToStackAfterCurrent } from "./helpers/StackHelpers";
-import { AddDataToLog, LogTypes } from "./Logging";
+import { AddDataToLog } from "./Logging";
+import { HeroNames, LogTypes, RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -33,39 +28,6 @@ export const BuildHeroes = (configOptions, heroesConfig) => {
         }
     }
     return heroes;
-};
-/**
- * <h3>Проверяет возможность взятия нового героя.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при расположении на планшете игрока карта из таверны.</li>
- * <li>Происходит при завершении действия взятых героев.</li>
- * <li>Происходит при расположении на планшете игрока карта героя Илуд.</li>
- * <li>Происходит при расположении на планшете игрока карта героя Труд.</li>
- * <li>Происходит при перемещении на планшете игрока карта героя Труд.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckPickHero = (G, ctx) => {
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
-        let playerCards = Object.values(G.publicPlayers[Number(ctx.currentPlayer)].cards);
-        const isCanPickHero = Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) >
-            G.publicPlayers[Number(ctx.currentPlayer)].heroes.length;
-        if (isCanPickHero) {
-            const stack = [
-                {
-                    action: PickHeroAction.name,
-                    config: {
-                        stageName: Stages.PickHero,
-                    },
-                },
-            ];
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен выбрать нового героя.`);
-            AddActionsToStackAfterCurrent(G, ctx, stack);
-        }
-    }
 };
 /**
  * <h3>Создание героя.</h3>

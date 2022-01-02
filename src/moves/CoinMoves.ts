@@ -1,15 +1,12 @@
-import { Ctx, Move } from "boardgame.io";
+import { Move, Ctx } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { CoinType } from "../Coin";
-import { HeroNames } from "../data/HeroData";
-import { SuitNames } from "../data/SuitData";
-import { Phases, Stages } from "../Game";
-import { MyGameState } from "../GameSetup";
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { CoinUpgradeValidation, IsValidMove } from "../MoveValidator";
-import { IConfig, IPublicPlayer } from "../Player";
+import { IsValidMove, CoinUpgradeValidation } from "../MoveValidator";
+import { CoinType } from "../typescript/coin_types";
+import { Phases, Stages, HeroNames, SuitNames } from "../typescript/enums";
+import { MyGameState, IPublicPlayer, IConfig } from "../typescript/interfaces";
 
 // todo Add logging
 // todo Add Place coins async
@@ -56,7 +53,7 @@ export const ClickBoardCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
         player.handCoins[tempId] = null;
         player.selectedCoin = undefined;
         if (ctx.phase === Phases.PlaceCoinsUline) {
-            ctx.events!.setPhase!(Phases.PickCards);
+            ctx.events?.setPhase(Phases.PickCards);
         } else if ((ctx.activePlayers?.[ctx.currentPlayer]) === Stages.PlaceTradingCoinsUline) {
             G.actionsNum--;
             AfterBasicPickCardActions(G, ctx, false);
@@ -67,13 +64,13 @@ export const ClickBoardCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
                     .every((coin: CoinType): boolean => coin === null));
             if (isEveryPlayersHandCoinsEmpty) {
                 if (CheckAndStartUlineActionsOrContinue(G, ctx) === Phases.PlaceCoinsUline) {
-                    ctx.events!.setPhase!(Phases.PlaceCoinsUline);
+                    ctx.events?.setPhase(Phases.PlaceCoinsUline);
                 } else {
-                    ctx.events!.setPhase!(Phases.PickCards);
+                    ctx.events?.setPhase(Phases.PickCards);
                 }
             } else {
                 if (player.handCoins.every((coin: CoinType): boolean => coin === null)) {
-                    ctx.events!.endTurn!();
+                    ctx.events?.endTurn();
                 }
             }
         }

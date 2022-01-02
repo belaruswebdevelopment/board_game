@@ -1,12 +1,11 @@
 import { Ctx } from "boardgame.io";
-import { SuitNames, suitsConfig } from "./data/SuitData";
-import { DeckCardTypes, DistinctionTypes, MyGameState } from "./GameSetup";
+import { suitsConfig } from "./data/SuitData";
 import { TotalRank } from "./helpers/ScoreHelpers";
-import { AddDataToLog, LogTypes } from "./Logging";
-
-export interface IDistinctions {
-    [index: string]: DistinctionTypes,
-}
+import { AddDataToLog } from "./Logging";
+import { DeckCardTypes } from "./typescript/card_types";
+import { LogTypes, SuitNames } from "./typescript/enums";
+import { MyGameState } from "./typescript/interfaces";
+import { DistinctionTypes } from "./typescript/types";
 
 // todo Rework 2 functions in one?
 /**
@@ -24,7 +23,7 @@ export interface IDistinctions {
  */
 export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suit: string): DistinctionTypes => {
     const playersRanks: number[] = [];
-    for (let i: number = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers; i++) {
         playersRanks.push(G.publicPlayers[i].cards[suit].reduce(TotalRank, 0));
     }
     const max: number = Math.max(...playersRanks),
@@ -53,7 +52,7 @@ export const CheckCurrentSuitDistinction = (G: MyGameState, ctx: Ctx, suit: stri
  */
 export const CheckCurrentSuitDistinctions = (G: MyGameState, ctx: Ctx, suit: string): number[] | undefined => {
     const playersRanks: number[] = [];
-    for (let i: number = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers; i++) {
         playersRanks.push(G.publicPlayers[i].cards[suit].reduce(TotalRank, 0));
     }
     const max: number = Math.max(...playersRanks),
@@ -76,7 +75,7 @@ export const CheckCurrentSuitDistinctions = (G: MyGameState, ctx: Ctx, suit: str
 export const CheckDistinction = (G: MyGameState, ctx: Ctx): void => {
     AddDataToLog(G, LogTypes.GAME, `Преимущество по фракциям в конце эпохи:`);
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
             G.distinctions[suit] = result;
             if (suit === SuitNames.EXPLORER && result === undefined) {

@@ -1,6 +1,5 @@
-import { ConfigNames, DrawNames } from "../actions/Actions";
 import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "../actions/CoinActions";
-import { Stages } from "../Game";
+import { ActionTypes, ConfigNames, Stages, DrawNames } from "../typescript/enums";
 /**
  * <h3>Карта улучшения монеты на +3.</h3>
  * <p>Применения:</p>
@@ -12,7 +11,10 @@ const upgradeCoinUpTo3 = {
     value: 3,
     stack: [
         {
-            action: DrawProfitCoinAction.name,
+            action: {
+                name: DrawProfitCoinAction.name,
+                type: ActionTypes.Coin,
+            },
             config: {
                 name: ConfigNames.UpgradeCoin,
                 stageName: Stages.UpgradeCoin,
@@ -21,7 +23,10 @@ const upgradeCoinUpTo3 = {
             },
         },
         {
-            action: UpgradeCoinActionCardAction.name,
+            action: {
+                name: UpgradeCoinActionCardAction.name,
+                type: ActionTypes.Coin,
+            },
             config: {
                 value: 3,
             },
@@ -57,7 +62,10 @@ const upgradeCoinUpTo5 = {
     value: 5,
     stack: [
         {
-            action: DrawProfitCoinAction.name,
+            action: {
+                name: DrawProfitCoinAction.name,
+                type: ActionTypes.Coin,
+            },
             config: {
                 name: ConfigNames.UpgradeCoin,
                 stageName: Stages.UpgradeCoin,
@@ -66,7 +74,10 @@ const upgradeCoinUpTo5 = {
             },
         },
         {
-            action: UpgradeCoinActionCardAction.name,
+            action: {
+                name: UpgradeCoinActionCardAction.name,
+                type: ActionTypes.Coin,
+            },
             config: {
                 value: 5,
             },

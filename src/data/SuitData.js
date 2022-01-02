@@ -1,34 +1,13 @@
-import { ConfigNames, DrawNames, DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
+import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
 import { CreateCard } from "../Card";
 import { CreateCoin } from "../Coin";
-import { Stages } from "../Game";
+import { StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
-import { AddActionsToStack, StartActionFromStackOrEndActions } from "../helpers/StackHelpers";
-import { AddDataToLog, LogTypes } from "../Logging";
+import { AddActionsToStack } from "../helpers/StackHelpers";
+import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-/**
- * <h3>Перечисление для названий фракций.</h3>
- */
-export var SuitNames;
-(function (SuitNames) {
-    SuitNames["BLACKSMITH"] = "blacksmith";
-    SuitNames["EXPLORER"] = "explorer";
-    SuitNames["HUNTER"] = "hunter";
-    SuitNames["MINER"] = "miner";
-    SuitNames["WARRIOR"] = "warrior";
-})(SuitNames || (SuitNames = {}));
-/**
- * <h3>Перечисление для русских названий фракций.</h3>
- */
-export var RusSuitNames;
-(function (RusSuitNames) {
-    RusSuitNames["BLACKSMITH"] = "\u041A\u0443\u0437\u043D\u0435\u0446\u044B";
-    RusSuitNames["EXPLORER"] = "\u0420\u0430\u0437\u0432\u0435\u0434\u0447\u0438\u043A\u0438";
-    RusSuitNames["HUNTER"] = "\u041E\u0445\u043E\u0442\u043D\u0438\u043A\u0438";
-    RusSuitNames["MINER"] = "\u0413\u043E\u0440\u043D\u044F\u043A\u0438";
-    RusSuitNames["WARRIOR"] = "\u0412\u043E\u0438\u043D\u044B";
-})(RusSuitNames || (RusSuitNames = {}));
+import { ActionTypes, ConfigNames, DrawNames, LogTypes, RusSuitNames, Stages, SuitNames } from "../typescript/enums";
 /**
  * <h3>Фракция кузнецов.</h3>
  * <p>Применения:</p>
@@ -82,6 +61,7 @@ const blacksmith = {
     distinction: {
         description: `Получив знак отличия кузнецов, сразу же призовите Главного кузнеца с двумя шевронами в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов.`,
         awarding: (G, ctx, player) => {
+            var _a;
             if (G.tierToEnd !== 0) {
                 player.cards[SuitNames.BLACKSMITH].push(CreateCard({
                     suit: SuitNames.BLACKSMITH,
@@ -90,7 +70,7 @@ const blacksmith = {
                 }));
                 G.distinctions[SuitNames.BLACKSMITH] = undefined;
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
-                ctx.events.endTurn();
+                (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.endTurn();
             }
             return 0;
         },
@@ -151,7 +131,10 @@ const explorer = {
             if (G.tierToEnd !== 0) {
                 const stack = [
                     {
-                        action: DrawProfitAction.name,
+                        action: {
+                            name: DrawProfitAction.name,
+                            type: ActionTypes.Action,
+                        },
                         config: {
                             name: ConfigNames.ExplorerDistinction,
                             stageName: Stages.PickDistinctionCard,
@@ -219,6 +202,7 @@ const hunter = {
     distinction: {
         description: `Получив знак отличия охотников, сразу же обменяйте свою монету с номиналом 0 на особую монету с номиналом 3. Эта монета также позволяет обменивать монеты в кошеле и не может быть улучшена.`,
         awarding: (G, ctx, player) => {
+            var _a;
             if (G.tierToEnd !== 0) {
                 const tradingCoinIndex = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === 0);
                 player.boardCoins[tradingCoinIndex] = CreateCoin({
@@ -227,7 +211,7 @@ const hunter = {
                 });
                 G.distinctions[SuitNames.HUNTER] = undefined;
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
-                ctx.events.endTurn();
+                (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.endTurn();
             }
             return 0;
         },
@@ -285,6 +269,7 @@ const miner = {
     distinction: {
         description: `Получив знак отличия горняков, сразу же положите особый кристалл 6 поверх вашего текущего кристалла (тот остаётся скрытым до конца игры). В конце игры обладатель этого кристалла прибавит +3 очка к итоговому показателю храбрости своей армии. Этот кристалл позволяет победить во всех спорах при равенстве ставок и никогда не обменивается.`,
         awarding: (G, ctx, player) => {
+            var _a;
             if (G.tierToEnd !== 0) {
                 player.priority = CreatePriority({
                     value: 6,
@@ -292,7 +277,7 @@ const miner = {
                 });
                 G.distinctions[SuitNames.MINER] = undefined;
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия горняков свой кристалл на особый кристалл 6.`);
-                ctx.events.endTurn();
+                (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.endTurn();
             }
             else {
                 if (player.priority.value === 6) {
@@ -358,7 +343,10 @@ const warrior = {
             if (G.tierToEnd !== 0) {
                 const stack = [
                     {
-                        action: DrawProfitAction.name,
+                        action: {
+                            name: DrawProfitAction.name,
+                            type: ActionTypes.Action,
+                        },
                         config: {
                             name: ConfigNames.UpgradeCoin,
                             stageName: Stages.UpgradeCoin,
@@ -367,7 +355,10 @@ const warrior = {
                         },
                     },
                     {
-                        action: UpgradeCoinAction.name,
+                        action: {
+                            name: UpgradeCoinAction.name,
+                            type: ActionTypes.Action,
+                        },
                         config: {
                             value: 5,
                         },

@@ -1,23 +1,6 @@
-import { DiscardCardFromTavern } from "./Card";
-import { AddDataToLog, LogTypes } from "./Logging";
-/**
- * <h3>Конфиг таверн.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Применяется для описания таверн (+для ключей).</li>
- * </ol>
- */
-export const tavernsConfig = {
-    0: {
-        name: `«Весёлый гоблин»`,
-    },
-    1: {
-        name: `«Парящий дракон»`,
-    },
-    2: {
-        name: `«Гарцующий конь»`,
-    },
-};
+import { AddDataToLog } from "./Logging";
+import { LogTypes } from "./typescript/enums";
+import { tavernsConfig } from "./typescript/interfaces";
 /**
  * <h3>Проверяет все ли карты выбраны игроками в текущей таверне.</h1>
  * <p>Применения:</p>
@@ -50,6 +33,35 @@ export const CheckIfCurrentTavernEmpty = (G, ctx) => {
         }
     }
     return isCurrentTavernEmpty;
+};
+/**
+ * <h3>Убирает карту из таверны в стопку сброса.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При игре на 2-х игроков убирает не выбранную карту.</li>
+ * <li>Убирает оставшуюся карту при выборе карты из кэмпа.</li>
+ * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из кэмпа.</li>
+ * </ol>
+ *
+ * @param G
+ * @param discardCardIndex Индекс сбрасываемой карты в таверне.
+ * @returns Сброшена ли карта из таверны.
+ */
+export const DiscardCardFromTavern = (G, discardCardIndex) => {
+    const discardedCard = G.taverns[G.currentTavern][discardCardIndex];
+    if (discardedCard !== null) {
+        G.discardCardsDeck.push(discardedCard);
+        G.taverns[G.currentTavern][discardCardIndex] = null;
+        AddDataToLog(G, LogTypes.GAME, `Карта ${discardedCard.name} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
+        const additionalDiscardCardIndex = G.taverns[G.currentTavern].findIndex((card) => card !== null);
+        if (additionalDiscardCardIndex !== -1) {
+            AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
+            DiscardCardFromTavern(G, additionalDiscardCardIndex);
+        }
+        return true;
+    }
+    AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны.`);
+    return false;
 };
 /**
  * <h3>Автоматически заполняет все таверны картами текущей эпохи.</h3>

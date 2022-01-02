@@ -1,14 +1,12 @@
 import { isArtefactCard } from "../Camp";
-import { RusCardTypes } from "../Card";
-import { HeroNames } from "../data/HeroData";
-import { SuitNames, suitsConfig } from "../data/SuitData";
-import { Phases, Stages } from "../Game";
-import { AddBuffToPlayer, DrawCurrentProfit, PickCurrentHero, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { CreateCard } from "../Card";
+import { suitsConfig } from "../data/SuitData";
+import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, PickCurrentHero, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
-import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { AddDataToLog, LogTypes } from "../Logging";
-import { AddCampCardToPlayer, AddCampCardToPlayerCards } from "../Player";
-import { ConfigNames, DrawNames } from "./Actions";
+import { EndActionFromStackAndAddNew, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, AddActionsToStack } from "../helpers/StackHelpers";
+import { AddDataToLog } from "../Logging";
+import { AddCampCardToPlayerCards, AddCampCardToPlayer, AddCardToPlayer } from "../Player";
+import { Phases, RusCardTypes, ActionTypes, ConfigNames, DrawNames, LogTypes, HeroNames, Stages, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с добавлением бафов от артефактов игроку.</h3>
  * <p>Применения:</p>
@@ -58,7 +56,10 @@ export const AddCampCardToCardsAction = (G, ctx, config, cardId) => {
                 .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
                 stack = [
                     {
-                        action: DrawProfitCampAction.name,
+                        action: {
+                            name: DrawProfitCampAction.name,
+                            type: ActionTypes.Camp,
+                        },
                         config: {
                             name: ConfigNames.EnlistmentMercenaries,
                             drawName: DrawNames.EnlistmentMercenaries,
@@ -88,7 +89,10 @@ export const AddCampCardToCardsAction = (G, ctx, config, cardId) => {
 export const AddCoinToPouchAction = (G, ctx, config, coinId) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null), stack = [
         {
-            action: StartVidofnirVedrfolnirAction.name,
+            action: {
+                name: StartVidofnirVedrfolnirAction.name,
+                type: ActionTypes.Camp,
+            },
         },
     ];
     player.boardCoins[tempId] = player.handCoins[coinId];
@@ -217,6 +221,43 @@ export const DrawProfitCampAction = (G, ctx, config) => {
     DrawCurrentProfit(G, ctx, config);
 };
 /**
+ * <h3>Игрок выбирает наёмника для вербовки.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Применяется когда игроку нужно выбрать наёмника для вербовки.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @param cardId Id карты.
+ */
+export const GetEnlistmentMercenariesAction = (G, ctx, config, cardId) => {
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard =
+        G.publicPlayers[Number(ctx.currentPlayer)].campCards
+            .filter((card) => card.type === RusCardTypes.MERCENARY)[cardId];
+    const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+    if (pickedCard !== null) {
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы 'Enlistment Mercenaries' выбрал наёмника '${pickedCard.name}'.`);
+        const stack = [
+            {
+                action: {
+                    name: DrawProfitCampAction.name,
+                    type: ActionTypes.Camp,
+                },
+                config: {
+                    name: ConfigNames.PlaceEnlistmentMercenaries,
+                    drawName: DrawNames.PlaceEnlistmentMercenaries,
+                },
+            },
+        ];
+        EndActionFromStackAndAddNew(G, ctx, stack);
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не пикнута карта наёмника.`);
+    }
+};
+/**
  * <h3>Выбор фракции для применения финального эффекта артефакта Mjollnir.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -264,6 +305,68 @@ export const PickHeroCampAction = (G, ctx, config) => {
     PickCurrentHero(G, ctx, config);
 };
 /**
+ * <h3>Игрок выбирает фракцию для вербовки указанного наёмника.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Применяется когда игроку нужно выбрать фракцию для вербовки наёмника.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ * @param suit Название фракции.
+ */
+export const PlaceEnlistmentMercenariesAction = (G, ctx, config, suit) => {
+    const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+    if (pickedCard !== null) {
+        if (`stack` in pickedCard && `tier` in pickedCard && `path` in pickedCard) {
+            if (pickedCard.stack[0].variants !== undefined) {
+                const mercenaryCard = CreateCard({
+                    type: RusCardTypes.MERCENARY,
+                    suit,
+                    rank: 1,
+                    points: pickedCard.stack[0].variants[suit].points,
+                    name: pickedCard.name,
+                    tier: pickedCard.tier,
+                    path: pickedCard.path,
+                });
+                AddCardToPlayer(G, ctx, mercenaryCard);
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы 'Enlistment Mercenaries' завербовал наёмника '${mercenaryCard.name}'.`);
+                const cardIndex = G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                    .findIndex((card) => card.name === pickedCard.name);
+                G.publicPlayers[Number(ctx.currentPlayer)].campCards.splice(cardIndex, 1);
+                if (G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                    .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
+                    const stack = [
+                        {
+                            action: {
+                                name: DrawProfitCampAction.name,
+                                type: ActionTypes.Camp,
+                            },
+                            config: {
+                                name: ConfigNames.EnlistmentMercenaries,
+                                drawName: DrawNames.EnlistmentMercenaries,
+                            },
+                        },
+                    ];
+                    AddActionsToStackAfterCurrent(G, ctx, stack);
+                }
+                CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
+                EndActionFromStackAndAddNew(G, ctx, [], suit);
+            }
+            else {
+                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
+            }
+        }
+        else {
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Вместо карты наёмника пикнута карта другого типа.`);
+        }
+    }
+    else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не пикнута карта наёмника.`);
+    }
+};
+/**
  * <h3>Старт действия, связанные с дискардом карты из конкретной фракции игрока.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -275,6 +378,7 @@ export const PickHeroCampAction = (G, ctx, config) => {
  * @param config Конфиг действий артефакта.
  */
 export const StartDiscardSuitCardAction = (G, ctx, config) => {
+    var _a;
     if (config.suit !== undefined) {
         const value = {};
         for (let i = 0; i < ctx.numPlayers; i++) {
@@ -284,7 +388,10 @@ export const StartDiscardSuitCardAction = (G, ctx, config) => {
                 };
                 const stack = [
                     {
-                        action: DiscardSuitCardAction.name,
+                        action: {
+                            name: DiscardSuitCardAction.name,
+                            type: ActionTypes.Camp,
+                        },
                         playerId: i,
                         config: {
                             suit: SuitNames.WARRIOR,
@@ -294,7 +401,7 @@ export const StartDiscardSuitCardAction = (G, ctx, config) => {
                 AddActionsToStack(G, ctx, stack);
             }
         }
-        ctx.events.setActivePlayers({ value });
+        (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({ value });
         G.drawProfit = ConfigNames.HofudAction;
     }
     else {
@@ -320,7 +427,10 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         && handCoinsNumber) {
         stack = [
             {
-                action: DrawProfitCampAction.name,
+                action: {
+                    name: DrawProfitCampAction.name,
+                    type: ActionTypes.Camp,
+                },
                 config: {
                     name: ConfigNames.AddCoinToPouchVidofnirVedrfolnir,
                     stageName: Stages.AddCoinToPouch,
@@ -329,7 +439,10 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                 },
             },
             {
-                action: AddCoinToPouchAction.name,
+                action: {
+                    name: AddCoinToPouchAction.name,
+                    type: ActionTypes.Camp,
+                },
             },
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
@@ -344,7 +457,10 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         if (coinsValue === 1) {
             stack = [
                 {
-                    action: DrawProfitCampAction.name,
+                    action: {
+                        name: DrawProfitCampAction.name,
+                        type: ActionTypes.Camp,
+                    },
                     config: {
                         name: ConfigNames.VidofnirVedrfolnirAction,
                         stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
@@ -353,7 +469,10 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                     },
                 },
                 {
-                    action: UpgradeCoinVidofnirVedrfolnirAction.name,
+                    action: {
+                        name: UpgradeCoinVidofnirVedrfolnirAction.name,
+                        type: ActionTypes.Camp,
+                    },
                     config: {
                         value: 5,
                     }
@@ -363,7 +482,10 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         else if (coinsValue === 2) {
             stack = [
                 {
-                    action: DrawProfitCampAction.name,
+                    action: {
+                        name: DrawProfitCampAction.name,
+                        type: ActionTypes.Camp,
+                    },
                     config: {
                         name: ConfigNames.VidofnirVedrfolnirAction,
                         stageName: Stages.UpgradeCoinVidofnirVedrfolnir,
@@ -373,7 +495,10 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                     },
                 },
                 {
-                    action: UpgradeCoinVidofnirVedrfolnirAction.name,
+                    action: {
+                        name: UpgradeCoinVidofnirVedrfolnirAction.name,
+                        type: ActionTypes.Camp,
+                    },
                     config: {
                         value: 3,
                     }
@@ -420,13 +545,19 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
         if (playerConfig.value === 3) {
             stack = [
                 {
-                    action: UpgradeCoinCampAction.name,
+                    action: {
+                        name: UpgradeCoinCampAction.name,
+                        type: ActionTypes.Camp,
+                    },
                     config: {
                         value: 3,
                     },
                 },
                 {
-                    action: DrawProfitCampAction.name,
+                    action: {
+                        name: DrawProfitCampAction.name,
+                        type: ActionTypes.Camp,
+                    },
                     config: {
                         coinId,
                         name: ConfigNames.VidofnirVedrfolnirAction,
@@ -436,7 +567,10 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
                     },
                 },
                 {
-                    action: UpgradeCoinVidofnirVedrfolnirAction.name,
+                    action: {
+                        name: UpgradeCoinVidofnirVedrfolnirAction.name,
+                        type: ActionTypes.Camp,
+                    },
                     config: {
                         value: 2,
                     }
@@ -446,7 +580,10 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
         else if (playerConfig.value === 2) {
             stack = [
                 {
-                    action: UpgradeCoinCampAction.name,
+                    action: {
+                        name: UpgradeCoinCampAction.name,
+                        type: ActionTypes.Camp,
+                    },
                     config: {
                         value: 2,
                     },
@@ -456,7 +593,10 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
         else if (playerConfig.value === 5) {
             stack = [
                 {
-                    action: UpgradeCoinCampAction.name,
+                    action: {
+                        name: UpgradeCoinCampAction.name,
+                        type: ActionTypes.Camp,
+                    },
                     config: {
                         value: 5,
                     },

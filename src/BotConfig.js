@@ -1,4 +1,5 @@
-import { CompareCards, EvaluateCard, isCardNotAction } from "./Card";
+import { EvaluateCard, CompareCards } from "./bot_logic/card_logic";
+import { isCardNotAction } from "./Card";
 // todo Fix reurn types & move to interfaces
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -66,7 +67,9 @@ const CompareCharacteristics = (stat1, stat2) => {
  * @returns
  */
 export const GetAllPicks = ({ tavernsNum, playersNum }) => {
-    const temp = [], cartesian = (...a) => {
+    const temp = [], 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    cartesian = (...a) => {
         if (a.length === 1) {
             a = a.flat();
         }
@@ -120,10 +123,10 @@ const isAllCardsEqual = {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isAllAverage = {
-    heuristic: (array) => array.every((item) => item === 0),
-    weight: 20,
-};
+// const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number; } = {
+//     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 0),
+//     weight: 20,
+// };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -132,10 +135,10 @@ const isAllAverage = {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isAllWorse = {
-    heuristic: (array) => array.every((item) => item === -1),
-    weight: 40,
-};
+// const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
+//     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === -1),
+//     weight: 40,
+// };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -144,10 +147,11 @@ const isAllWorse = {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isOnlyOneWorse = {
-    heuristic: (array) => (array.filter((item) => item === -1).length === 1),
-    weight: -100,
-};
+// const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
+//     heuristic: (array: number[]): boolean =>
+//         (array.filter((item: number): boolean => item === -1).length === 1),
+//     weight: -100,
+// };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -156,10 +160,10 @@ const isOnlyOneWorse = {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isOnlyWorseOrBetter = {
-    heuristic: (array) => array.every((item) => item !== 0),
-    weight: -50,
-};
+// const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: number; } = {
+//     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item !== 0),
+//     weight: -50,
+// };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -173,7 +177,8 @@ const isOnlyWorseOrBetter = {
  * @returns
  */
 export const k_combinations = (set, k) => {
-    let combs = [], head, tailCombs;
+    const combs = [];
+    let head, tailCombs;
     if (k > set.length || k <= 0) {
         return [];
     }
@@ -212,7 +217,8 @@ export const k_combinations = (set, k) => {
  */
 export const Permute = (permutation) => {
     const length = permutation.length, result = [permutation.slice()];
-    let c = new Array(length).fill(0), i = 1, k, p;
+    const c = new Array(length).fill(0);
+    let i = 1, k, p;
     while (i < length) {
         if (c[i] < i) {
             k = i % 2 && c[i];

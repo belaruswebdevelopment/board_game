@@ -1,6 +1,7 @@
-import { GetAllPicks, k_combinations, Permute } from "./BotConfig";
+import { k_combinations, Permute, GetAllPicks } from "./BotConfig";
+import { GetAverageSuitCard } from "./bot_logic/card_logic";
 import { BuildCampCards } from "./Camp";
-import { BuildCards, GetAverageSuitCard } from "./Card";
+import { BuildCards } from "./Card";
 import { BuildCoins } from "./Coin";
 import { actionCardsConfigArray } from "./data/ActionCardData";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
@@ -29,15 +30,17 @@ export const SetupGame = (ctx) => {
     // todo Discard cards must be hidden from users?
     discardCardsDeck = [], campDecks = [], distinctions = {};
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             distinctions[suit] = null;
         }
     }
-    let winner = [], campPicked = false, camp = [], discardCampCardsDeck = [];
+    const winner = [], campPicked = false, discardCampCardsDeck = [];
+    let camp = [];
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
             // todo Camp cards must be hidden from users?
             campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             campDecks[i] = ctx.random.Shuffle(campDecks[i]);
         }
         camp = campDecks[0].splice(0, campNum);
@@ -51,6 +54,7 @@ export const SetupGame = (ctx) => {
             players: ctx.numPlayers,
             tier: i,
         });
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
     const heroesConfigOptions = [`base`];
@@ -64,8 +68,7 @@ export const SetupGame = (ctx) => {
         // todo Taverns cards must be hidden from users?
         taverns[i] = decks[0].splice(0, drawSize);
     }
-    const players = {}, publicPlayers = [], publicPlayersOrder = [], exchangeOrder = [];
-    let priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
+    const players = {}, publicPlayers = [], publicPlayersOrder = [], exchangeOrder = [], priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
     for (let i = 0; i < ctx.numPlayers; i++) {
         const randomPriorityIndex = Math.floor(Math.random() * priorities.length), priority = priorities.splice(randomPriorityIndex, 1)[0];
         players[i] = BuildPlayer();
@@ -81,7 +84,7 @@ export const SetupGame = (ctx) => {
         .map((item, index) => index), initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
     for (const suit in suitsConfig) {
-        if (suitsConfig.hasOwnProperty(suit)) {
+        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
                 players: ctx.numPlayers,
                 tier: 0,

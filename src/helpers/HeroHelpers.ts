@@ -1,14 +1,16 @@
 import { Ctx } from "boardgame.io";
-import { ConfigNames, DrawNames } from "../actions/Actions";
+import { PickHeroAction } from "../actions/Actions";
 import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
-import { CoinType } from "../Coin";
-import { heroesConfig, HeroNames, IVariants } from "../data/HeroData";
-import { SuitNames } from "../data/SuitData";
-import { Phases, Stages } from "../Game";
-import { MyGameState } from "../GameSetup";
-import { CheckPickHero } from "../Hero";
-import { IPublicPlayer, IStack, PlayerCardsType } from "../Player";
-import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
+import { heroesConfig } from "../data/HeroData";
+import { suitsConfig } from "../data/SuitData";
+import { AddDataToLog } from "../Logging";
+import { PlayerCardsType } from "../typescript/card_types";
+import { CoinType } from "../typescript/coin_types";
+import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, Phases, Stages, SuitNames } from "../typescript/enums";
+import { IHero, IPublicPlayer, IStack, IVariants, MyGameState } from "../typescript/interfaces";
+import { CheckEndGameLastActions } from "./CampHelpers";
+import { TotalRank } from "./ScoreHelpers";
+import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>
@@ -81,10 +83,10 @@ export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): s
                             index >= G.tavernsNum && coin === null)) {
                         if (ctx.activePlayers?.[ctx.currentPlayer] !== Stages.PlaceTradingCoinsUline) {
                             G.actionsNum = G.suitsNum - G.tavernsNum;
-                            ctx.events!.setStage!(Stages.PlaceTradingCoinsUline);
+                            ctx.events?.setStage(Stages.PlaceTradingCoinsUline);
                             return Stages.PlaceTradingCoinsUline;
                         } else if (!G.actionsNum) {
-                            ctx.events!.endStage!();
+                            ctx.events?.endStage();
                             return `endPlaceTradingCoinsUline`;
                         } else if (G.actionsNum) {
                             return `nextPlaceTradingCoinsUline`;
@@ -96,7 +98,7 @@ export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): s
             return Phases.PlaceCoinsUline;
         }
     } else if (ctx.phase !== Phases.PickCards) {
-        ctx.events!.setPhase!(Phases.PickCards);
+        ctx.events?.setPhase(Phases.PickCards);
     }
     return false;
 };
@@ -120,6 +122,46 @@ export const CheckPickDiscardCard = (G: MyGameState, ctx: Ctx): void => {
 };
 
 /**
+ * <h3>Проверяет возможность взятия нового героя.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при расположении на планшете игрока карта из таверны.</li>
+ * <li>Происходит при завершении действия взятых героев.</li>
+ * <li>Происходит при расположении на планшете игрока карта героя Илуд.</li>
+ * <li>Происходит при расположении на планшете игрока карта героя Труд.</li>
+ * <li>Происходит при перемещении на планшете игрока карта героя Труд.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
+    if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
+        const playerCards: PlayerCardsType[][] =
+            Object.values(G.publicPlayers[Number(ctx.currentPlayer)].cards),
+            isCanPickHero: boolean =
+                Math.min(...playerCards.map((item: PlayerCardsType[]): number =>
+                    item.reduce(TotalRank, 0))) >
+                G.publicPlayers[Number(ctx.currentPlayer)].heroes.length;
+        if (isCanPickHero) {
+            const stack: IStack[] = [
+                {
+                    action: {
+                        name: PickHeroAction.name,
+                        type: ActionTypes.Action,
+                    },
+                    config: {
+                        stageName: Stages.PickHero,
+                    },
+                },
+            ];
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен выбрать нового героя.`);
+            AddActionsToStackAfterCurrent(G, ctx, stack);
+        }
+    }
+};
+
+/**
  * <h3>Вычисляет индекс указанного героя.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -131,6 +173,104 @@ export const CheckPickDiscardCard = (G: MyGameState, ctx: Ctx): void => {
  */
 export const GetHeroIndexByName = (heroName: string): number =>
     Object.keys(heroesConfig).indexOf(heroName);
+
+/**
+* <h3>Начало экшенов в фазе EndTier.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>При начале фазы EndTier.</li>
+* </ol>
+*
+* @param G
+* @param ctx
+*/
+export const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
+    G.publicPlayersOrder = [];
+    let ylud = false,
+        index = -1;
+    for (let i = 0; i < G.publicPlayers.length; i++) {
+        index = G.publicPlayers[i].heroes.findIndex((hero: IHero): boolean => hero.name === HeroNames.Ylud);
+        if (index !== -1) {
+            ylud = true;
+            G.publicPlayersOrder.push(i);
+        }
+    }
+    if (!ylud) {
+        for (let i = 0; i < G.publicPlayers.length; i++) {
+            for (const suit in suitsConfig) {
+                if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
+                    index = G.publicPlayers[i].cards[suit]
+                        .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
+                    if (index !== -1) {
+                        G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(index, 1);
+                        G.publicPlayersOrder.push(i);
+                        ylud = true;
+                    }
+                }
+            }
+        }
+    }
+    if (ylud) {
+        ctx.events?.setPhase(Phases.EndTier);
+        const variants: IVariants = {
+            blacksmith: {
+                suit: SuitNames.BLACKSMITH,
+                rank: 1,
+                points: null,
+            },
+            hunter: {
+                suit: SuitNames.HUNTER,
+                rank: 1,
+                points: null,
+            },
+            explorer: {
+                suit: SuitNames.EXPLORER,
+                rank: 1,
+                points: 11,
+            },
+            warrior: {
+                suit: SuitNames.WARRIOR,
+                rank: 1,
+                points: 7,
+            },
+            miner: {
+                suit: SuitNames.MINER,
+                rank: 1,
+                points: 1,
+            },
+        };
+        const stack: IStack[] = [
+            {
+                action: {
+                    name: DrawProfitHeroAction.name,
+                    type: ActionTypes.Hero,
+                },
+                playerId: G.publicPlayersOrder[0],
+                variants,
+                config: {
+                    stageName: Stages.PlaceCards,
+                    drawName: DrawNames.Ylud,
+                    name: ConfigNames.PlaceCards,
+                },
+            },
+            {
+                action: {
+                    name: PlaceHeroAction.name,
+                    type: ActionTypes.Hero,
+                },
+                playerId: G.publicPlayersOrder[0],
+                variants,
+                config: {
+                    name: ConfigNames.Ylud,
+                },
+            },
+        ];
+        AddActionsToStack(G, ctx, stack);
+        G.drawProfit = ConfigNames.PlaceCards;
+    } else {
+        CheckEndGameLastActions(G, ctx);
+    }
+};
 
 /**
  * <h3>Перемещение героя Труд.</h3>
@@ -174,7 +314,10 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
         },
             stack: IStack[] = [
                 {
-                    action: DrawProfitHeroAction.name,
+                    action: {
+                        name: DrawProfitHeroAction.name,
+                        type: ActionTypes.Hero,
+                    },
                     variants,
                     config: {
                         drawName: DrawNames.Thrud,
@@ -184,7 +327,10 @@ export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType
                     },
                 },
                 {
-                    action: PlaceHeroAction.name,
+                    action: {
+                        name: PlaceHeroAction.name,
+                        type: ActionTypes.Hero,
+                    },
                     variants,
                     config: {
                         name: ConfigNames.Thrud,

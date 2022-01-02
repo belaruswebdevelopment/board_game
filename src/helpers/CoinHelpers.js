@@ -1,4 +1,9 @@
-import { Trading } from "../Coin";
+import { UpgradeCoinAction } from "../actions/Actions";
+import { AddDataToLog } from "../Logging";
+import { ActionTypes, LogTypes } from "../typescript/enums";
+import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
+import { AddActionsToStack } from "./StackHelpers";
+// todo Add logging
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
@@ -40,7 +45,9 @@ export const ActivateTrading = (G, ctx) => {
  */
 export const GetMaxCoinValue = (player) => (Math.max(...player.boardCoins
     .filter((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.value))
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     .map((coin) => coin.value), ...player.handCoins.filter((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.value))
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     .map((coin) => coin.value)));
 /**
  * <h3>Определяет по расположению монет игроками порядок ходов и порядок обмена кристаллов приоритета.</h3>
@@ -84,7 +91,7 @@ export const ResolveBoardCoins = (G, ctx) => {
     for (let i = 0; i < coinValues.length; i++) {
         counts[coinValues[i]] = 1 + (counts[coinValues[i]] || 0);
     }
-    for (let prop in counts) {
+    for (const prop in counts) {
         if (counts[prop] <= 1) {
             continue;
         }
@@ -98,4 +105,71 @@ export const ResolveBoardCoins = (G, ctx) => {
         }
     }
     return { playersOrder, exchangeOrder };
+};
+/**
+ * <h3>Активация обмена монет с рынка.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Вызывается после выбора базовой карты игроком, если выложены монета, активирующая обмен монет.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param tradingCoins Монеты для обмена.
+ */
+export const Trading = (G, ctx, tradingCoins) => {
+    const coinsValues = tradingCoins.map((coin) => coin.value), coinsMaxValue = Math.max(...coinsValues), coinsMinValue = Math.min(...coinsValues);
+    let stack, upgradingCoinId, upgradingCoin, coinMaxIndex = 0, coinMinIndex = 0;
+    AddDataToLog(G, LogTypes.GAME, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
+    // TODO trading isInitial first or playerChoose?
+    for (let i = 0; i < tradingCoins.length; i++) {
+        if (tradingCoins[i].value === coinsMaxValue) {
+            coinMaxIndex = i;
+            // if (tradingCoins[i].isInitial) {
+            //     break;
+            // }
+        }
+        if (tradingCoins[i].value === coinsMinValue) {
+            coinMinIndex = i;
+            // if (tradingCoins[i].isInitial) {
+            //     break;
+            // }
+        }
+    }
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin === `min`) {
+        stack = [
+            {
+                action: {
+                    name: UpgradeCoinAction.name,
+                    type: ActionTypes.Action,
+                },
+                config: {
+                    number: 1,
+                    value: coinsMaxValue,
+                    isTrading: true,
+                },
+            },
+        ];
+        upgradingCoinId = G.tavernsNum + coinMinIndex;
+        upgradingCoin = tradingCoins[coinMinIndex];
+    }
+    else {
+        stack = [
+            {
+                action: {
+                    name: UpgradeCoinAction.name,
+                    type: ActionTypes.Action,
+                },
+                config: {
+                    number: 1,
+                    value: coinsMinValue,
+                    isTrading: true,
+                },
+            },
+        ];
+        upgradingCoinId = G.tavernsNum + coinMaxIndex;
+        upgradingCoin = tradingCoins[coinMaxIndex];
+    }
+    AddActionsToStack(G, ctx, stack);
+    StartActionFromStackOrEndActions(G, ctx, false, upgradingCoinId, `board`, upgradingCoin.isInitial);
 };

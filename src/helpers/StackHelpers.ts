@@ -1,8 +1,8 @@
 import { Ctx } from "boardgame.io";
-import { ActionDispatcher, ArgsTypes, ConfigNames } from "../actions/Actions";
-import { MyGameState } from "../GameSetup";
-import { IConfig, IStack } from "../Player";
-import { EndAction } from "./ActionHelpers";
+import { ConfigNames } from "../typescript/enums";
+import { IConfig, IStack, MyGameState } from "../typescript/interfaces";
+import { ArgsTypes } from "../typescript/types";
+import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 
 /**
  * <h3>Добавляет действия в стэк действий конкретного игрока.</li>
@@ -37,7 +37,7 @@ export const AddActionsToStack = (G: MyGameState, ctx: Ctx, stack: IStack[]): vo
  */
 export const AddActionsToStackAfterCurrent = (G: MyGameState, ctx: Ctx, stack: IStack[]): void => {
     if (stack.length) {
-        let noCurrent: boolean = false;
+        let noCurrent = false;
         for (let i: number = stack.length - 1; i >= 0; i--) {
             const playerId: number = stack[i].playerId ?? Number(ctx.currentPlayer);
             if (i === stack.length - 1 && G.publicPlayers[playerId].stack[0] === undefined) {
@@ -65,8 +65,9 @@ export const AddActionsToStackAfterCurrent = (G: MyGameState, ctx: Ctx, stack: I
  */
 export const EndActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: number): void => {
     G.publicPlayers[playerId].stack = [];
-    ctx.events!.endStage!();
-    let activePlayers: number = 0;
+    ctx.events?.endStage();
+    let activePlayers = 0;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const activePlayersKey in ctx.activePlayers) {
         activePlayers++;
     }
@@ -96,47 +97,10 @@ export const EndActionFromStackAndAddNew = (G: MyGameState, ctx: Ctx, newStack: 
         G.drawProfit = ``;
     }
     if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
-        ctx.events!.endStage!();
+        ctx.events?.endStage();
     }
     const isTrading: boolean = config?.isTrading ?? false;
     G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
     AddActionsToStack(G, ctx, newStack);
     StartActionFromStackOrEndActions(G, ctx, isTrading, ...args);
-};
-
-/**
- * <h3>Начинает действия из стэка действий указанного игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Выполняется при необходимости активировать действия в стэке действий указанного игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param playerId Id игрока.
- * @param args Дополнительные аргументы.
- */
-export const StartActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: number, ...args: ArgsTypes): void => {
-    ActionDispatcher(G, ctx, G.publicPlayers[playerId].stack[0], ...args);
-};
-
-/**
- * <h3>Начинает действия из стэка действий конкретного игрока или завершает действия при их отсутствии.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Выполняется при необходимости активировать действия в стэке действий.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param isTrading Является ли действие обменом монет (трейдингом).
- * @param args Дополнительные аргументы.
- */
-export const StartActionFromStackOrEndActions = (G: MyGameState, ctx: Ctx, isTrading: boolean, ...args: ArgsTypes):
-    void => {
-    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) {
-        ActionDispatcher(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0], ...args);
-    } else {
-        EndAction(G, ctx, isTrading);
-    }
 };

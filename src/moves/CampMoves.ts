@@ -1,14 +1,13 @@
-import { Ctx, Move } from "boardgame.io";
+import { Move, Ctx } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { CampCardTypes, MyGameState } from "../GameSetup";
-import {
-    AddActionsToStack,
-    EndActionFromStackAndAddNew,
-    StartActionForChosenPlayer,
-    StartActionFromStackOrEndActions
-} from "../helpers/StackHelpers";
-import { AddDataToLog, LogTypes } from "../Logging";
+import { GetEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction, DrawProfitCampAction } from "../actions/CampActions";
+import { StartActionForChosenPlayer, StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
+import { EndActionFromStackAndAddNew, AddActionsToStack } from "../helpers/StackHelpers";
+import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
+import { CampCardTypes } from "../typescript/card_types";
+import { LogTypes, ActionTypes, ConfigNames, DrawNames } from "../typescript/enums";
+import { MyGameState, IStack } from "../typescript/interfaces";
 
 // todo Add logging
 /**
@@ -127,6 +126,29 @@ export const DiscardSuitCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameS
 };
 
 /**
+ * <h3>Выбор игроком карты наёмника для вербовки.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id карты.
+ */
+export const GetEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
+    const stack: IStack[] = [
+        {
+            action: {
+                name: GetEnlistmentMercenariesAction.name,
+                type: ActionTypes.Camp,
+            },
+        },
+    ];
+    EndActionFromStackAndAddNew(G, ctx, stack, cardId);
+};
+
+/**
  * <h3>Выбирает фракцию для применения финального эффекта артефакта Mjollnir.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -139,4 +161,53 @@ export const DiscardSuitCardFromPlayerBoardMove: Move<MyGameState> = (G: MyGameS
  */
 export const GetMjollnirProfitMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suit: string): void => {
     EndActionFromStackAndAddNew(G, ctx, [], suit);
+};
+
+/**
+ * <h3>Выбор фракции куда будет завербован наёмник.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе фракции, куда будет завербован наёмник.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param suit Название фракции.
+ */
+export const PlaceEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suit: string): void => {
+    const stack: IStack[] = [
+        {
+            action: {
+                name: PlaceEnlistmentMercenariesAction.name,
+                type: ActionTypes.Camp,
+            },
+        },
+    ];
+    EndActionFromStackAndAddNew(G, ctx, stack, suit);
+};
+
+/**
+ * <h3>Начало вербовки наёмников.</li>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const StartEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
+    const stack: IStack[] = [
+        {
+            action: {
+                name: DrawProfitCampAction.name,
+                type: ActionTypes.Camp,
+            },
+            config: {
+                name: ConfigNames.EnlistmentMercenaries,
+                drawName: DrawNames.EnlistmentMercenaries,
+            },
+        },
+    ];
+    EndActionFromStackAndAddNew(G, ctx, stack);
 };
