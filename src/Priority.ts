@@ -1,6 +1,7 @@
 import { AddDataToLog } from "./Logging";
 import { LogTypes } from "./typescript/enums";
-import { ICreatePriority, IPrioritiesConfig, IPriority, IPublicPlayer, MyGameState } from "./typescript/interfaces";
+import { IPublicPlayer, MyGameState } from "./typescript/interfaces";
+import { IPriority, ICreatePriority, IPrioritiesConfig } from "./typescript/priority_interfaces";
 
 /**
  * <h3>Изменяет приоритет игроков для выбора карт из текущей таверны.</h3>

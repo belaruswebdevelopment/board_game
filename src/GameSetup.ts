@@ -14,7 +14,9 @@ import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { DeckCardTypes, CampDeckCardTypes } from "./typescript/card_types";
 import { ICoin } from "./typescript/coin_interfaces";
-import { MyGameState, IExpansion, ILogData, IDistinctions, IDeckConfig, IAverageSuitCardData, IHero, IPlayers, IPublicPlayer, IPriority, IAverageCard, IBotData } from "./typescript/interfaces";
+import { IHero } from "./typescript/hero_card_interfaces";
+import { MyGameState, IExpansion, ILogData, IDistinctions, IDeckConfig, IAverageSuitCardData, IPlayers, IPublicPlayer, IAverageCard, IBotData } from "./typescript/interfaces";
+import { IPriority } from "./typescript/priority_interfaces";
 
 /**
  * <h3>Сетап игры.</h3>

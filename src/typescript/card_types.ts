@@ -1,4 +1,6 @@
-import { IActionCard, IArtefactCampCard, ICard, IHero, IMercenaryCampCard } from "./interfaces";
+import { IHero } from "./hero_card_interfaces";
+import { ICard, IActionCard, IArtefactCampCard, IMercenaryCampCard } from "./interfaces";
+
 
 /**
  * <h3>Типы данных для дек карт.</h3>

@@ -4,8 +4,8 @@ import { suitsConfig } from "../data/SuitData";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
 import { CurrentScoring } from "../Score";
+import { tavernsConfig } from "../Tavern";
 import { HeroNames, Phases, Stages } from "../typescript/enums";
-import { tavernsConfig } from "../typescript/interfaces";
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
  * <p>Применения:</p>

@@ -2,10 +2,10 @@ import { isArtefactCard } from "../Camp";
 import { CreateCard } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, PickCurrentHero, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { AddCampCardToPlayerCards, AddCampCardToPlayer, AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
 import { EndActionFromStackAndAddNew, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { AddCampCardToPlayerCards, AddCampCardToPlayer, AddCardToPlayer } from "../Player";
 import { Phases, RusCardTypes, ActionTypes, ConfigNames, DrawNames, LogTypes, HeroNames, Stages, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с добавлением бафов от артефактов игроку.</h3>

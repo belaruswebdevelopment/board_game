@@ -5,7 +5,8 @@ import { AddDataToLog } from "../Logging";
 import { CampDeckCardTypes, DeckCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { LogTypes, RusCardTypes } from "../typescript/enums";
-import { IBackground, IDrawBoardOptions, IHero, IPublicPlayer } from "../typescript/interfaces";
+import { IHero } from "../typescript/hero_card_interfaces";
+import { IBackground, IDrawBoardOptions, IPublicPlayer } from "../typescript/interfaces";
 import { ArgsTypes } from "../typescript/types";
 import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 

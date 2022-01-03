@@ -2,7 +2,8 @@ import { Ctx } from "boardgame.io";
 import { AddDataToLog } from "./Logging";
 import { DeckCardTypes, TavernCardTypes } from "./typescript/card_types";
 import { LogTypes } from "./typescript/enums";
-import { MyGameState, tavernsConfig } from "./typescript/interfaces";
+import { MyGameState } from "./typescript/interfaces";
+import { ITavernsConfig } from "./typescript/tavern_interfaces";
 
 /**
  * <h3>Проверяет все ли карты выбраны игроками в текущей таверне.</h1>
@@ -96,4 +97,23 @@ export const RefillTaverns = (G: MyGameState): void => {
     if (!error) {
         AddDataToLog(G, LogTypes.GAME, `Все таверны заполнены новыми картами.`);
     }
+};
+
+/**
+ * <h3>Конфиг таверн.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Применяется для описания таверн (+для ключей).</li>
+ * </ol>
+ */
+export const tavernsConfig: ITavernsConfig = {
+    0: {
+        name: `«Весёлый гоблин»`,
+    },
+    1: {
+        name: `«Парящий дракон»`,
+    },
+    2: {
+        name: `«Гарцующий конь»`,
+    },
 };

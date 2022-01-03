@@ -2,7 +2,8 @@ import { Ctx } from "boardgame.io";
 import { AddDataToLog } from "./Logging";
 import { PlayerCardsType } from "./typescript/card_types";
 import { HeroNames, LogTypes, RusCardTypes } from "./typescript/enums";
-import { ICreateHero, IHero, IHeroConfig, MyGameState } from "./typescript/interfaces";
+import { IHeroConfig, IHero, ICreateHero } from "./typescript/hero_card_interfaces";
+import { MyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>

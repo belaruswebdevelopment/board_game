@@ -8,9 +8,9 @@ import { ActionTypes, ConfigNames, DrawNames, Phases, RusCardTypes, Stages } fro
 import { IStack, MyGameState } from "../typescript/interfaces";
 import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 import { CheckEndGameLastActions } from "./CampHelpers";
-import { ActivateTrading } from "./CoinHelpers";
 import { CheckAndStartUlineActionsOrContinue, StartEndTierActions } from "./HeroHelpers";
 import { AddActionsToStack } from "./StackHelpers";
+import { ActivateTrading } from "./TradingHelpers";
 
 // todo Add logging
 /**

@@ -1,25 +1,12 @@
 import { Ctx } from "boardgame.io";
+import { IActionCardConfig } from "./action_card_intarfaces";
 import { PlayerCardsType, CampCardTypes, CampDeckCardTypes, DeckCardTypes, TavernCardTypes, PickedCardType } from "./card_types";
 import { ICoin } from "./coin_interfaces";
 import { CoinType } from "./coin_types";
 import { LogTypes } from "./enums";
+import { IHero } from "./hero_card_interfaces";
+import { IPriority } from "./priority_interfaces";
 import { DistinctionTypes } from "./types";
-
-/**
- * <h3>Интерфейс для значения, на которое обновляется монета.</h3>
- */
-export interface IActionCardValues {
-    [index: number]: INumberValues,
-}
-
-/**
- * <h3>Интерфейс для конфига карт обновления монет.</h3>
- */
-export interface IActionCardConfig {
-    value: number,
-    stack: IStack[],
-    amount: () => IActionCardValues,
-}
 
 /**
  * <h3>Интерфейс для данных карт кэмпа артефакт.</h3>
@@ -129,27 +116,6 @@ export interface ICondition {
  */
 export interface IConditions {
     [name: string]: ICondition,
-}
-
-/**
- * <h3>Интерфейс для данных карты героя.</h3>
- */
-export interface IHeroData {
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    stack: IStack[],
-    scoringRule: (player?: IPublicPlayer) => number,
-}
-
-/**
- * <h3>Интерфейс для конфига карт героев.</h3>
- */
-export interface IHeroConfig {
-    [name: string]: IHeroData,
 }
 
 /**
@@ -436,7 +402,7 @@ export interface IPlayers {
  */
 export interface IBotData {
     allCoinsOrder: number[][],
-    allPicks: any,
+    allPicks: unknown,
     maxIter: number,
     deckLength: number,
 }
@@ -484,36 +450,6 @@ export interface MyGameState {
     publicPlayers: IPublicPlayer[],
     publicPlayersOrder: number[],
     winner: number[],
-}
-
-/**
- * <h3>Интерфейс для героя.</h3>
- */
-export interface IHero {
-    type: string,
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    active: boolean,
-    stack: IStack[],
-}
-
-/**
- * <h3>Интерфейс для создания героя.</h3>
- */
-export interface ICreateHero {
-    type: string,
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    active?: boolean,
-    stack: IStack[],
 }
 
 /**
@@ -666,59 +602,3 @@ export interface ICreatePublicPlayer {
     selectedCoin?: undefined,
     pickedCard?: null,
 }
-
-/**
- * <h3>Интерфейс для кристалла.</h3>
- */
-export interface IPriority {
-    value: number,
-    isExchangeable: boolean,
-}
-
-/**
- * <h3>Интерфейс для конфига всех кристаллов.</h3>
- */
-export interface IPrioritiesConfig {
-    [index: number]: IPriority[],
-}
-
-/**
- * <h3>Интерфейс для создания кристалла.</h3>
- */
-export interface ICreatePriority {
-    value: number,
-    isExchangeable?: boolean,
-}
-
-/**
- * <h3>Интерфейс для конфига конкретной таверны.</h3>
- */
-export interface ITavernInConfig {
-    name: string,
-}
-
-/**
- * <h3>Интерфейс для конфига всех таверн.</h3>
- */
-export interface ITavernsConfig {
-    [index: number]: ITavernInConfig,
-}
-
-/**
- * <h3>Конфиг таверн.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Применяется для описания таверн (+для ключей).</li>
- * </ol>
- */
-export const tavernsConfig: ITavernsConfig = {
-    0: {
-        name: `«Весёлый гоблин»`,
-    },
-    1: {
-        name: `«Парящий дракон»`,
-    },
-    2: {
-        name: `«Гарцующий конь»`,
-    },
-};

@@ -1,6 +1,5 @@
 import { AddDataToLog } from "./Logging";
 import { LogTypes } from "./typescript/enums";
-import { tavernsConfig } from "./typescript/interfaces";
 /**
  * <h3>Проверяет все ли карты выбраны игроками в текущей таверне.</h1>
  * <p>Применения:</p>
@@ -89,4 +88,22 @@ export const RefillTaverns = (G) => {
     if (!error) {
         AddDataToLog(G, LogTypes.GAME, `Все таверны заполнены новыми картами.`);
     }
+};
+/**
+ * <h3>Конфиг таверн.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Применяется для описания таверн (+для ключей).</li>
+ * </ol>
+ */
+export const tavernsConfig = {
+    0: {
+        name: `«Весёлый гоблин»`,
+    },
+    1: {
+        name: `«Парящий дракон»`,
+    },
+    2: {
+        name: `«Гарцующий конь»`,
+    },
 };

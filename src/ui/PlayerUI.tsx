@@ -4,10 +4,10 @@ import { GameBoard } from "../GameBoard";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
 import { CurrentScoring } from "../Score";
+import { tavernsConfig } from "../Tavern";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { HeroNames, Phases, Stages } from "../typescript/enums";
-import { tavernsConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>

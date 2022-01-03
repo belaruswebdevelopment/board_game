@@ -2,7 +2,7 @@ import { ActionDispatcher } from "../actions/ActionDispatcher";
 import { CampActionDispatcher } from "../actions/CampActionDispatcher";
 import { CoinActionDispatcher } from "../actions/CoinActionDispatcher";
 import { HeroActionDispatcher } from "../actions/HeroActionDispatcher";
-import { EndAction } from "./ActionHelpers";
+import { AfterBasicPickCardActions } from "./MovesHelpers";
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const ActionDispatcherSwitcher = (actionTypes) => {
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -24,6 +24,20 @@ export const ActionDispatcherSwitcher = (actionTypes) => {
             actionDispatcher = null;
     }
     return actionDispatcher;
+};
+/**
+ * <h3>Завершение текущего экшена.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Срабатывает после завершения каждого экшена.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param isTrading Является ли действие обменом монет (трейдингом).
+ */
+const EndAction = (G, ctx, isTrading) => {
+    AfterBasicPickCardActions(G, ctx, isTrading);
 };
 /**
  * <h3>Начинает действия из стэка действий указанного игрока.</h3>

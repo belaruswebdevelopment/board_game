@@ -5,7 +5,7 @@ import { CoinActionDispatcher } from "../actions/CoinActionDispatcher";
 import { HeroActionDispatcher } from "../actions/HeroActionDispatcher";
 import { MyGameState } from "../typescript/interfaces";
 import { ArgsTypes } from "../typescript/types";
-import { EndAction } from "./ActionHelpers";
+import { AfterBasicPickCardActions } from "./MovesHelpers";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const ActionDispatcherSwitcher = (actionTypes: string): Function | null => {
@@ -28,6 +28,21 @@ export const ActionDispatcherSwitcher = (actionTypes: string): Function | null =
             actionDispatcher = null;
     }
     return actionDispatcher;
+};
+
+/**
+ * <h3>Завершение текущего экшена.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Срабатывает после завершения каждого экшена.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param isTrading Является ли действие обменом монет (трейдингом).
+ */
+const EndAction = (G: MyGameState, ctx: Ctx, isTrading: boolean): void => {
+    AfterBasicPickCardActions(G, ctx, isTrading);
 };
 
 /**

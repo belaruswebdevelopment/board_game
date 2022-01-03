@@ -3,13 +3,12 @@ import { CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCa
 import { isCardNotAction } from "../Card";
 import { UpgradeCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
-import { AddCardToPlayer } from "../Player";
 import { DeckCardTypes } from "../typescript/card_types";
 import { ActionTypes, ConfigNames, DrawNames, LogTypes, Stages } from "../typescript/enums";
 import { IConfig, IStack, MyGameState } from "../typescript/interfaces";
 import { ArgsTypes } from "../typescript/types";
+import { AddCardToPlayer } from "./CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
-import { AfterBasicPickCardActions } from "./MovesHelpers";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 
 /**
@@ -57,21 +56,6 @@ export const DrawCurrentProfit = (G: MyGameState, ctx: Ctx, config: IConfig): vo
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найден обязательный параметр 'config.name'.`);
     }
-};
-
-/**
- * <h3>Завершение текущего экшена.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Срабатывает после завершения каждого экшена.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param isTrading Является ли действие обменом монет (трейдингом).
- */
-export const EndAction = (G: MyGameState, ctx: Ctx, isTrading: boolean): void => {
-    AfterBasicPickCardActions(G, ctx, isTrading);
 };
 
 /**

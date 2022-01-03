@@ -2,10 +2,9 @@ import { CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCa
 import { isCardNotAction } from "../Card";
 import { UpgradeCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
-import { AddCardToPlayer } from "../Player";
 import { ActionTypes, ConfigNames, DrawNames, LogTypes, Stages } from "../typescript/enums";
+import { AddCardToPlayer } from "./CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
-import { AfterBasicPickCardActions } from "./MovesHelpers";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -54,20 +53,6 @@ export const DrawCurrentProfit = (G, ctx, config) => {
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найден обязательный параметр 'config.name'.`);
     }
-};
-/**
- * <h3>Завершение текущего экшена.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Срабатывает после завершения каждого экшена.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param isTrading Является ли действие обменом монет (трейдингом).
- */
-export const EndAction = (G, ctx, isTrading) => {
-    AfterBasicPickCardActions(G, ctx, isTrading);
 };
 /**
  * <h3>Действия, связанные со стартом стэйджа.</h3>

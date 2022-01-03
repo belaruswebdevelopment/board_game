@@ -3,12 +3,12 @@ import { PassEnlistmentMercenariesAction } from "../actions/Actions";
 import { isCardNotAction } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
+import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { AddCardToPlayer } from "../Player";
 import { ActionTypes, LogTypes, SuitNames } from "../typescript/enums";
 // todo Add logging
 /**

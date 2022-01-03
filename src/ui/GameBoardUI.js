@@ -5,8 +5,8 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { PlaceCardsProfit, DiscardCardFromBoardProfit, PickDiscardCardProfit, PickCampCardHoldaProfit, DiscardCardProfit, GetMjollnirProfitProfit, StartEnlistmentMercenariesProfit, GetEnlistmentMercenariesProfit, PlaceEnlistmentMercenariesProfit, AddCoinToPouchProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
 import { DrawCard, OnClickCampCard, DrawBoard, OnClickHeroCard, DrawCoin, OnClickHandCoin, OnClickCardToPickDistinction, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard, OnClickCoinToUpgrade, OnClickCard } from "../helpers/UIHelpers";
+import { tavernsConfig } from "../Tavern";
 import { ConfigNames, HeroNames } from "../typescript/enums";
-import { tavernsConfig } from "../typescript/interfaces";
 /**
  * <h3>Отрисовка карт кэмпа.</h3>
  * <p>Применения:</p>

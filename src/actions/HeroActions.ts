@@ -4,15 +4,16 @@ import { CreateCard } from "../Card";
 import { ReturnCoinToPlayerHands } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { AddHeroCardToPlayerHeroCards, AddHeroCardToPlayerCards, AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, CheckPickHero, GetHeroIndexByName } from "../helpers/HeroHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { AddCardToPlayer, AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards } from "../Player";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, RusCardTypes, Stages, SuitNames } from "../typescript/enums";
-import { ICard, IConditions, IConfig, ICreateCard, IHero, IStack, IVariants, MyGameState } from "../typescript/interfaces";
+import { IHero } from "../typescript/hero_card_interfaces";
+import { ICard, IConditions, IConfig, ICreateCard, IStack, IVariants, MyGameState } from "../typescript/interfaces";
 import { ArgsTypes } from "../typescript/types";
 
 // todo Does INVALID_MOVE be not in moves but in actions?

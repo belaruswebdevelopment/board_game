@@ -5,9 +5,9 @@ import { CheckIfCurrentTavernEmpty, DiscardCardFromTavern, RefillTaverns } from 
 import { ActionTypes, ConfigNames, DrawNames, Phases, RusCardTypes, Stages } from "../typescript/enums";
 import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 import { CheckEndGameLastActions } from "./CampHelpers";
-import { ActivateTrading } from "./CoinHelpers";
 import { CheckAndStartUlineActionsOrContinue, StartEndTierActions } from "./HeroHelpers";
 import { AddActionsToStack } from "./StackHelpers";
+import { ActivateTrading } from "./TradingHelpers";
 // todo Add logging
 /**
  * <h3>Выполняет основные действия после выбора базовых карт.</h3>

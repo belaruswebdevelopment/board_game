@@ -1,6 +1,6 @@
 import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "../actions/CoinActions";
+import { IActionCardConfig, IActionCardValues } from "../typescript/action_card_intarfaces";
 import { ActionTypes, ConfigNames, Stages, DrawNames } from "../typescript/enums";
-import { IActionCardConfig, IActionCardValues } from "../typescript/interfaces";
 
 /**
  * <h3>Карта улучшения монеты на +3.</h3>

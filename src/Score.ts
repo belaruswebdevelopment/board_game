@@ -6,7 +6,8 @@ import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog } from "./Logging";
 import { LogTypes, SuitNames } from "./typescript/enums";
-import { IArtefact, IHeroData, IPublicPlayer, MyGameState } from "./typescript/interfaces";
+import { IHeroData } from "./typescript/hero_card_interfaces";
+import { IArtefact, IPublicPlayer, MyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
