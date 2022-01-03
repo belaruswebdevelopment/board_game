@@ -7,7 +7,7 @@ import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardF
 import { moveBy, moveValidators } from "./MoveValidator";
 import { HasLowestPriority } from "./Priority";
 import { CurrentScoring } from "./Score";
-import { DeckCardTypes, TavernCardTypes, PlayerCardsType } from "./typescript/card_types";
+import { DeckCardTypes, PlayerCardsType, TavernCardTypes } from "./typescript/card_types";
 import { CoinType } from "./typescript/coin_types";
 import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescript/enums";
 import { IConfig, IMoves, MyGameState } from "./typescript/interfaces";
@@ -309,7 +309,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
-    // TODO FIX It's not activeStageOfCurrentPlayer it' for Other players!!!
+    // TODO FIX It's not activeStageOfCurrentPlayer it's for Others players!!!
     // if (activeStageOfCurrentPlayer === "discardSuitCard") {
     if (ctx.phase === Phases.PickCards && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default `) {
         // TODO Fix this (only for quick bot actions)

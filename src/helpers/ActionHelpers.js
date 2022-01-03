@@ -1,11 +1,12 @@
+import { CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCampAction } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
 import { UpgradeCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
 import { AddCardToPlayer } from "../Player";
-import { LogTypes } from "../typescript/enums";
+import { ActionTypes, ConfigNames, DrawNames, LogTypes, Stages } from "../typescript/enums";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AfterBasicPickCardActions } from "./MovesHelpers";
-import { EndActionFromStackAndAddNew, AddActionsToStackAfterCurrent } from "./StackHelpers";
+import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
  * <p>Применения:</p>
@@ -108,32 +109,32 @@ export const PickDiscardCard = (G, ctx, config, cardId) => {
     let suit = null;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
     if (G.actionsNum === 2) {
-        // const stack: IStack[] = [
-        //     {
-        //         action: {
-        //             name: CheckPickDiscardCardCampAction.name,
-        //             type: ActionTypes.Camp,
-        //         },
-        //     },
-        //     {
-        //         action: {
-        //             name: DrawProfitCampAction.name,
-        //             type: ActionTypes.Camp,
-        //         },
-        //         config: {
-        //             stageName: Stages.PickDiscardCard,
-        //             name: ConfigNames.BrisingamensAction,
-        //             drawName: DrawNames.Brisingamens,
-        //         },
-        //     },
-        //     {
-        //         action: {
-        //             name: PickDiscardCardCampAction.name,
-        //             type: ActionTypes.Camp,
-        //         },
-        //     },
-        // ];
-        // AddActionsToStackAfterCurrent(G, ctx, stack);
+        const stack = [
+            {
+                action: {
+                    name: CheckPickDiscardCardCampAction.name,
+                    type: ActionTypes.Camp,
+                },
+            },
+            {
+                action: {
+                    name: DrawProfitCampAction.name,
+                    type: ActionTypes.Camp,
+                },
+                config: {
+                    stageName: Stages.PickDiscardCard,
+                    name: ConfigNames.BrisingamensAction,
+                    drawName: DrawNames.Brisingamens,
+                },
+            },
+            {
+                action: {
+                    name: PickDiscardCardCampAction.name,
+                    type: ActionTypes.Camp,
+                },
+            },
+        ];
+        AddActionsToStackAfterCurrent(G, ctx, stack);
     }
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {

@@ -289,7 +289,7 @@ export const enumerate = (G, ctx) => {
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
-    // TODO FIX It's not activeStageOfCurrentPlayer it' for Other players!!!
+    // TODO FIX It's not activeStageOfCurrentPlayer it's for Others players!!!
     // if (activeStageOfCurrentPlayer === "discardSuitCard") {
     if (ctx.phase === Phases.PickCards && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default `) {
         // TODO Fix this (only for quick bot actions)
