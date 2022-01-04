@@ -1,4 +1,5 @@
-import { GameBoard } from "../GameBoard";
+import { BoardProps } from "boardgame.io/react";
+import { MyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -10,7 +11,7 @@ import { GameBoard } from "../GameBoard";
  * @param data Глобальные параметры.
  * @returns Дебаг панель.
  */
-export const DrawDebugData = (data: GameBoard): JSX.Element | null => {
+export const DrawDebugData = (data: BoardProps<MyGameState>): JSX.Element | null => {
     const debugData: { G: { [key: string]: unknown; }, ctx: { [key: string]: unknown; }; } | undefined =
         GetDebugData(data);
     if (debugData === undefined) {
@@ -93,16 +94,17 @@ const DrawObjectData = (obj: { [key: string]: any; }): JSX.Element => {
  * @param data Глобальные параметры.
  * @returns Данные для отрисовки дебаг информации.
  */
-const GetDebugData = (data: GameBoard): { ctx: Record<string, unknown>, G: Record<string, unknown>; } | undefined => {
-    if (data.props.G.debug) {
+const GetDebugData = (data: BoardProps<MyGameState>): { ctx: Record<string, unknown>, G: Record<string, unknown>; }
+    | undefined => {
+    if (data.G.debug) {
         const debugData: { G: { [key: string]: unknown; }, ctx: { [key: string]: unknown; }; } = {
             G: {},
             ctx: {},
         };
-        for (const [key, value] of Object.entries(data.props.G)) {
+        for (const [key, value] of Object.entries(data.G)) {
             debugData.G[key] = value;
         }
-        for (const [key, value] of Object.entries(data.props.ctx)) {
+        for (const [key, value] of Object.entries(data.ctx)) {
             debugData.ctx[key] = value;
         }
         return debugData;

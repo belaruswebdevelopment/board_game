@@ -2,9 +2,9 @@ import { AddCampCardToCardsAction } from "./actions/CampActions";
 import { suitsConfig } from "./data/SuitData";
 import { AddDataToLog } from "./Logging";
 import { DiscardCardFromTavern } from "./Tavern";
-import { CampDeckCardTypes, CampCardTypes, TavernCardTypes } from "./typescript/card_types";
-import { LogTypes, ActionTypes, RusCardTypes } from "./typescript/enums";
-import { IArtefactCampCard, IMercenaryCampCard, MyGameState, IArtefactConfig, IMercenaries, ICreateArtefactCampCard, ICreateMercenaryCampCard } from "./typescript/interfaces";
+import { CampCardTypes, CampDeckCardTypes, TavernCardTypes } from "./typescript/card_types";
+import { ActionTypes, LogTypes, RusCardTypes } from "./typescript/enums";
+import { IArtefactCampCard, IArtefactConfig, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenaries, IMercenaryCampCard, MyGameState } from "./typescript/interfaces";
 
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
@@ -232,7 +232,6 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
                 // todo LogTypes.ERROR because not => G.campPicked = false; ?
             } */
         } else {
-            // todo Fix this error sometimes shown...
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
         }
     }

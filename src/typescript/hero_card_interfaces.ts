@@ -1,4 +1,5 @@
-import { IPublicPlayer, IStack } from "./interfaces";
+import { IStack } from "./interfaces";
+import { IPublicPlayer } from "./player_interfaces";
 
 /**
  * <h3>Интерфейс для создания героя.</h3>

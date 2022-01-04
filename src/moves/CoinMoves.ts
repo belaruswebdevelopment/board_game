@@ -6,7 +6,8 @@ import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { IsValidMove, CoinUpgradeValidation } from "../MoveValidator";
 import { CoinType } from "../typescript/coin_types";
 import { Phases, Stages, HeroNames, SuitNames } from "../typescript/enums";
-import { MyGameState, IPublicPlayer, IConfig } from "../typescript/interfaces";
+import { MyGameState, IConfig } from "../typescript/interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 
 // todo Add logging
 // todo Add Place coins async

@@ -3,7 +3,8 @@ import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { HeroNames, Phases } from "./typescript/enums";
-import { ICreatePublicPlayer, IPlayer, IPlayerCards, IPublicPlayer, MyGameState } from "./typescript/interfaces";
+import { IPlayerCards, MyGameState } from "./typescript/interfaces";
+import { IPlayer, IPublicPlayer, ICreatePublicPlayer } from "./typescript/player_interfaces";
 import { IPriority } from "./typescript/priority_interfaces";
 
 /**

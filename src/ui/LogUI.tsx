@@ -1,5 +1,6 @@
-import { GameBoard } from "../GameBoard";
+import { BoardProps } from "boardgame.io/react";
 import { LogTypes } from "../typescript/enums";
+import { MyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка лог панели.</h3>
@@ -11,32 +12,32 @@ import { LogTypes } from "../typescript/enums";
  * @param data Глобальные параметры.
  * @returns Поле для вывода логов.
  */
-export const DrawLogData = (data: GameBoard): JSX.Element | null => {
-    if (data.props.G.log) {
+export const DrawLogData = (data: BoardProps<MyGameState>): JSX.Element | null => {
+    if (data.G.log) {
         const loggingData: JSX.Element[] = [];
-        for (let i: number = data.props.G.logData.length - 1; i >= 0; i--) {
-            if (data.props.G.logData[i].type === LogTypes.PRIVATE) {
+        for (let i: number = data.G.logData.length - 1; i >= 0; i--) {
+            if (data.G.logData[i].type === LogTypes.PRIVATE) {
                 loggingData.push(
                     <li key={`Log ${i}`} className="text-black">
-                        {data.props.G.logData[i].value}
+                        {data.G.logData[i].value}
                     </li>
                 );
-            } else if (data.props.G.logData[i].type === LogTypes.GAME) {
+            } else if (data.G.logData[i].type === LogTypes.GAME) {
                 loggingData.push(
                     <li key={`Log ${i}`} className="text-blue-500">
-                        {data.props.G.logData[i].value}
+                        {data.G.logData[i].value}
                     </li>
                 );
-            } else if (data.props.G.logData[i].type === LogTypes.PUBLIC) {
+            } else if (data.G.logData[i].type === LogTypes.PUBLIC) {
                 loggingData.push(
                     <li key={`Log ${i}`} className="text-green-500">
-                        {data.props.G.logData[i].value}
+                        {data.G.logData[i].value}
                     </li>
                 );
-            } else if (data.props.G.logData[i].type === LogTypes.ERROR) {
+            } else if (data.G.logData[i].type === LogTypes.ERROR) {
                 loggingData.push(
                     <li key={`Log ${i}`} className="text-red-500">
-                        {data.props.G.logData[i].value}
+                        {data.G.logData[i].value}
                     </li>
                 );
             }

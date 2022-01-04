@@ -1,13 +1,14 @@
+import { BoardProps } from "boardgame.io/react";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { GameBoard } from "../GameBoard";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { DrawCard, DrawCoin, OnClickBoardCoin, OnClickHandCoin } from "../helpers/UIHelpers";
+import { DrawCard, DrawCoin } from "../helpers/UIElementHelpers";
 import { CurrentScoring } from "../Score";
 import { tavernsConfig } from "../Tavern";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { HeroNames, Phases, Stages } from "../typescript/enums";
+import { MyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
@@ -20,12 +21,12 @@ import { HeroNames, Phases, Stages } from "../typescript/enums";
  * @returns Игровые поля для планшета всех карт игрока.
  * @constructor
  */
-export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
+export const DrawPlayersBoards = (data: BoardProps<MyGameState>): JSX.Element[][] => {
     const playersBoards: JSX.Element[][] = [],
         playerHeaders: JSX.Element[][] = [],
         playerHeadersCount: JSX.Element[][] = [],
         playerRows: JSX.Element[][][] = [];
-    for (let p = 0; p < data.props.ctx.numPlayers; p++) {
+    for (let p = 0; p < data.ctx.numPlayers; p++) {
         playersBoards[p] = [];
         playerHeaders[p] = [];
         playerHeadersCount[p] = [];
@@ -34,7 +35,7 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 playerHeaders[p].push(
                     <th className={`${suitsConfig[suit].suitColor}`}
-                        key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName}`}>
+                        key={`${data.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName}`}>
                         <span style={Styles.Suits(suit)} className="bg-suit-icon">
 
                         </span>
@@ -42,16 +43,16 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                 );
                 playerHeadersCount[p].push(
                     <th className={`${suitsConfig[suit].suitColor} text-white`}
-                        key={`${data.props.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName} count`}>
-                        <b>{data.props.G.publicPlayers[p].cards[suit].reduce(TotalRank, 0)}</b>
+                        key={`${data.G.publicPlayers[p].nickname} ${suitsConfig[suit].suitName} count`}>
+                        <b>{data.G.publicPlayers[p].cards[suit].reduce(TotalRank, 0)}</b>
                     </th>
                 );
             }
         }
-        for (let s = 0; s < 1 + Number(data.props.G.expansions.thingvellir.active); s++) {
+        for (let s = 0; s < 1 + Number(data.G.expansions.thingvellir.active); s++) {
             if (s === 0) {
                 playerHeaders[p].push(
-                    <th className="bg-gray-600" key={`${data.props.G.publicPlayers[p].nickname} hero icon`}>
+                    <th className="bg-gray-600" key={`${data.G.publicPlayers[p].nickname} hero icon`}>
                         <span style={Styles.HeroBack()} className="bg-hero-icon">
 
                         </span>
@@ -59,13 +60,13 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                 );
                 playerHeadersCount[p].push(
                     <th className="bg-gray-600 text-white"
-                        key={`${data.props.G.publicPlayers[p].nickname} hero count`}>
-                        <b>{data.props.G.publicPlayers[p].heroes.length}</b>
+                        key={`${data.G.publicPlayers[p].nickname} hero count`}>
+                        <b>{data.G.publicPlayers[p].heroes.length}</b>
                     </th>
                 );
             } else {
                 playerHeaders[p].push(
-                    <th className="bg-yellow-200" key={`${data.props.G.publicPlayers[p].nickname} camp icon`}>
+                    <th className="bg-yellow-200" key={`${data.G.publicPlayers[p].nickname} camp icon`}>
                         <span style={Styles.Camp()} className="bg-camp-icon">
 
                         </span>
@@ -73,8 +74,8 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                 );
                 playerHeadersCount[p].push(
                     <th className="bg-yellow-200 text-white"
-                        key={`${data.props.G.publicPlayers[p].nickname} camp counts`}>
-                        <b>{data.props.G.publicPlayers[p].campCards.length}</b>
+                        key={`${data.G.publicPlayers[p].nickname} camp counts`}>
+                        <b>{data.G.publicPlayers[p].campCards.length}</b>
                     </th>
                 );
             }
@@ -88,13 +89,13 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
             for (const suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     id = i + j;
-                    if (data.props.G.publicPlayers[p].cards[suit][i] !== undefined) {
+                    if (data.G.publicPlayers[p].cards[suit][i] !== undefined) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, data.props.G.publicPlayers[p].cards[suit][i], id,
-                            data.props.G.publicPlayers[p], suit);
+                        DrawCard(data, playerCells, data.G.publicPlayers[p].cards[suit][i], id,
+                            data.G.publicPlayers[p], suit);
                     } else {
                         playerCells.push(
-                            <td key={`${data.props.G.publicPlayers[p].nickname} empty card ${id}`}>
+                            <td key={`${data.G.publicPlayers[p].nickname} empty card ${id}`}>
 
                             </td>
                         );
@@ -102,37 +103,37 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
                     j++;
                 }
             }
-            for (let k = 0; k < 1 + Number(data.props.G.expansions.thingvellir.active); k++) {
+            for (let k = 0; k < 1 + Number(data.G.expansions.thingvellir.active); k++) {
                 id += k + 1;
                 if (k === 0) {
-                    const playerCards: PlayerCardsType[] = Object.values(data.props.G.publicPlayers[p].cards).flat();
+                    const playerCards: PlayerCardsType[] = Object.values(data.G.publicPlayers[p].cards).flat();
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
-                    if (data.props.G.publicPlayers[p].heroes[i] !== undefined &&
-                        (!data.props.G.publicPlayers[p].heroes[i].suit &&
-                            !((data.props.G.publicPlayers[p].heroes[i].name === HeroNames.Ylud
+                    if (data.G.publicPlayers[p].heroes[i] !== undefined &&
+                        (!data.G.publicPlayers[p].heroes[i].suit &&
+                            !((data.G.publicPlayers[p].heroes[i].name === HeroNames.Ylud
                                 && playerCards.findIndex((card: { name: string; }): boolean =>
                                     card.name === HeroNames.Ylud) !== -1)
-                                || (data.props.G.publicPlayers[p].heroes[i].name === HeroNames.Thrud
+                                || (data.G.publicPlayers[p].heroes[i].name === HeroNames.Thrud
                                     && playerCards.findIndex((card: { name: string; }): boolean =>
                                         card.name === HeroNames.Thrud) !== -1)))) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, data.props.G.publicPlayers[p].heroes[i], id,
-                            data.props.G.publicPlayers[p]);
+                        DrawCard(data, playerCells, data.G.publicPlayers[p].heroes[i], id,
+                            data.G.publicPlayers[p]);
                     } else {
                         playerCells.push(
-                            <td key={`${data.props.G.publicPlayers[p].nickname} hero ${i}`}>
+                            <td key={`${data.G.publicPlayers[p].nickname} hero ${i}`}>
 
                             </td>
                         );
                     }
                 } else {
-                    if (data.props.G.publicPlayers[p].campCards[i] !== undefined) {
+                    if (data.G.publicPlayers[p].campCards[i] !== undefined) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, data.props.G.publicPlayers[p].campCards[i], id,
-                            data.props.G.publicPlayers[p]);
+                        DrawCard(data, playerCells, data.G.publicPlayers[p].campCards[i], id,
+                            data.G.publicPlayers[p]);
                     } else {
                         playerCells.push(
-                            <td key={`${data.props.G.publicPlayers[p].nickname} camp card ${i}`}>
+                            <td key={`${data.G.publicPlayers[p].nickname} camp card ${i}`}>
 
                             </td>
                         );
@@ -141,17 +142,17 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
             }
             if (isDrawRow) {
                 playerRows[p][i].push(
-                    <tr key={`${data.props.G.publicPlayers[p].nickname} board row ${i}`}>{playerCells}</tr>
+                    <tr key={`${data.G.publicPlayers[p].nickname} board row ${i}`}>{playerCells}</tr>
                 );
             } else {
                 break;
             }
         }
         playersBoards[p].push(
-            <table className="mx-auto" key={`${data.props.G.publicPlayers[p].nickname} board`}>
-                <caption>Player {p + 1} ({data.props.G.publicPlayers[p].nickname})
-                    cards, {data.props.G.winner.length ? `Final: ${data.props.G.totalScore[p]}` :
-                        CurrentScoring(data.props.G.publicPlayers[p])} points
+            <table className="mx-auto" key={`${data.G.publicPlayers[p].nickname} board`}>
+                <caption>Player {p + 1} ({data.G.publicPlayers[p].nickname})
+                    cards, {data.G.winner.length ? `Final: ${data.G.totalScore[p]}` :
+                        CurrentScoring(data.G.publicPlayers[p])} points
                 </caption>
                 <thead>
                     <tr>{playerHeaders[p]}</tr>
@@ -175,12 +176,12 @@ export const DrawPlayersBoards = (data: GameBoard): JSX.Element[][] => {
  * @returns Игровые поля для пользовательских монет на столе.
  * @constructor
  */
-export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
+export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Element[][] => {
     const playersBoardsCoins: JSX.Element[][] = [],
         playerHeaders: JSX.Element[][] = [],
         playerFooters: JSX.Element[][] = [],
         playerRows: JSX.Element[][][] = [];
-    for (let p = 0; p < data.props.ctx.numPlayers; p++) {
+    for (let p = 0; p < data.ctx.numPlayers; p++) {
         let coinIndex = 0;
         playersBoardsCoins[p] = [];
         playerHeaders[p] = [];
@@ -190,7 +191,7 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
             const playerCells: JSX.Element[] = [];
             playerRows[p][i] = [];
             if (i === 0) {
-                for (let j = 0; j < data.props.G.tavernsNum; j++) {
+                for (let j = 0; j < data.G.tavernsNum; j++) {
                     playerHeaders[p].push(
                         <th key={`Tavern ${tavernsConfig[j].name}`}>
                             <span style={Styles.Taverns(j)} className="bg-tavern-icon">
@@ -198,57 +199,56 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                             </span>
                         </th>
                     );
-                    if (data.props.G.publicPlayers[p].boardCoins[coinIndex] === null) {
-                        if ((Number(data.props.ctx.currentPlayer) === p
-                            && data.props.ctx.phase === Phases.PlaceCoins)
-                            || (Number(data.props.ctx.currentPlayer) === p
-                                && data.props.ctx.phase === Phases.PlaceCoinsUline
-                                && j === data.props.G.currentTavern + 1)) {
+                    if (data.G.publicPlayers[p].boardCoins[coinIndex] === null) {
+                        if ((Number(data.ctx.currentPlayer) === p
+                            && data.ctx.phase === Phases.PlaceCoins)
+                            || (Number(data.ctx.currentPlayer) === p
+                                && data.ctx.phase === Phases.PlaceCoinsUline
+                                && j === data.G.currentTavern + 1)) {
                             DrawCoin(data, playerCells, `back-tavern-icon`,
-                                data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
-                                data.props.G.publicPlayers[p], null, j,
-                                OnClickBoardCoin.name, j);
+                                data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
+                                data.G.publicPlayers[p], null, j,
+                                data.moves.ClickBoardCoinMove.name, j);
                         } else {
                             DrawCoin(data, playerCells, `back-tavern-icon`,
-                                data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
-                                data.props.G.publicPlayers[p], null, j);
+                                data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
+                                data.G.publicPlayers[p], null, j);
                         }
-                    } else if (data.props.ctx.phase === Phases.PlaceCoins
-                        && Number(data.props.ctx.currentPlayer) === p) {
+                    } else if (data.ctx.phase === Phases.PlaceCoins
+                        && Number(data.ctx.currentPlayer) === p) {
                         DrawCoin(data, playerCells, `coin`,
-                            data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
-                            data.props.G.publicPlayers[p], null, null,
-                            OnClickBoardCoin.name, j);
+                            data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
+                            data.G.publicPlayers[p], null, null,
+                            data.moves.ClickBoardCoinMove.name, j);
                     } else {
-                        if (data.props.G.winner.length || (data.props.ctx.phase === Phases.PlaceCoinsUline
-                            && data.props.G.currentTavern >= j - 1) || (data.props.ctx.phase !== Phases.PlaceCoins
-                                && data.props.G.currentTavern >= j)) {
+                        if (data.G.winner.length || (data.ctx.phase === Phases.PlaceCoinsUline
+                            && data.G.currentTavern >= j - 1) || (data.ctx.phase !== Phases.PlaceCoins
+                                && data.G.currentTavern >= j)) {
                             DrawCoin(data, playerCells, `coin`,
-                                data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
-                                data.props.G.publicPlayers[p]);
+                                data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
+                                data.G.publicPlayers[p]);
                         } else {
                             DrawCoin(data, playerCells, `back`,
-                                data.props.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
-                                data.props.G.publicPlayers[p]);
+                                data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
+                                data.G.publicPlayers[p]);
                         }
                     }
                     coinIndex++;
                 }
             } else if (i === 1) {
-                for (let j: number = data.props.G.tavernsNum; j <= data.props.G.publicPlayers[p].boardCoins.length;
-                    j++) {
-                    if (j === data.props.G.publicPlayers[p].boardCoins.length) {
+                for (let j: number = data.G.tavernsNum; j <= data.G.publicPlayers[p].boardCoins.length; j++) {
+                    if (j === data.G.publicPlayers[p].boardCoins.length) {
                         playerFooters[p].push(
-                            <th key={`${data.props.G.publicPlayers[p].nickname} priority icon`}>
+                            <th key={`${data.G.publicPlayers[p].nickname} priority icon`}>
                                 <span style={Styles.Priority()} className="bg-priority-icon">
 
                                 </span>
                             </th>
                         );
                         playerCells.push(
-                            <td key={`${data.props.G.publicPlayers[p].nickname} priority gem`}
+                            <td key={`${data.G.publicPlayers[p].nickname} priority gem`}
                                 className="bg-gray-300">
-                                <span style={Styles.Priorities(data.props.G.publicPlayers[p].priority.value)}
+                                <span style={Styles.Priorities(data.G.publicPlayers[p].priority.value)}
                                     className="bg-priority">
 
                                 </span>
@@ -256,44 +256,45 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                         );
                     } else {
                         playerFooters[p].push(
-                            <th key={`${data.props.G.publicPlayers[p].nickname} exchange icon ${j}`}>
+                            <th key={`${data.G.publicPlayers[p].nickname} exchange icon ${j}`}>
                                 <span style={Styles.Exchange()} className="bg-small-market-coin">
 
                                 </span>
                             </th>
                         );
-                        const coin: CoinType = data.props.G.publicPlayers[p].boardCoins[coinIndex];
+                        const coin: CoinType = data.G.publicPlayers[p].boardCoins[coinIndex];
                         if (coin === null) {
-                            if (Number(data.props.ctx.currentPlayer) === p
-                                && data.props.ctx.phase !== Phases.PlaceCoinsUline
-                                && (data.props.ctx.phase === Phases.PlaceCoins || (data.props.ctx.activePlayers
-                                    && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
+                            if (Number(data.ctx.currentPlayer) === p
+                                && data.ctx.phase !== Phases.PlaceCoinsUline
+                                && (data.ctx.phase === Phases.PlaceCoins || (data.ctx.activePlayers
+                                    && data.ctx.activePlayers[Number(data.ctx.currentPlayer)]) ===
                                     Stages.PlaceTradingCoinsUline)) {
-                                DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex,
-                                    data.props.G.publicPlayers[p], null, null,
-                                    OnClickBoardCoin.name, j);
+                                DrawCoin(data, playerCells, `back-small-market-coin`, coin,
+                                    coinIndex, data.G.publicPlayers[p], null,
+                                    null, data.moves.ClickBoardCoinMove.name,
+                                    j);
                             } else {
-                                DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex,
-                                    data.props.G.publicPlayers[p]);
+                                DrawCoin(data, playerCells, `back-small-market-coin`, coin,
+                                    coinIndex, data.G.publicPlayers[p]);
                             }
-                        } else if (Number(data.props.ctx.currentPlayer) === p
-                            && (data.props.ctx.phase === Phases.PlaceCoins || (data.props.ctx.activePlayers
-                                && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
+                        } else if (Number(data.ctx.currentPlayer) === p
+                            && (data.ctx.phase === Phases.PlaceCoins || (data.ctx.activePlayers
+                                && data.ctx.activePlayers[Number(data.ctx.currentPlayer)]) ===
                                 Stages.PlaceTradingCoinsUline)) {
                             DrawCoin(data, playerCells, `coin`, coin, coinIndex,
-                                data.props.G.publicPlayers[p], null, null,
-                                OnClickBoardCoin.name, j);
+                                data.G.publicPlayers[p], null, null,
+                                data.moves.ClickBoardCoinMove.name, j);
                         } else {
-                            if (data.props.G.winner.length || (data.props.ctx.phase !== Phases.PlaceCoins
-                                && Number(data.props.ctx.currentPlayer) === p
-                                && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern] !== null
-                                && data.props.G.publicPlayers[p].boardCoins[data.props.G.currentTavern]
+                            if (data.G.winner.length || (data.ctx.phase !== Phases.PlaceCoins
+                                && Number(data.ctx.currentPlayer) === p
+                                && data.G.publicPlayers[p].boardCoins[data.G.currentTavern] !== null
+                                && data.G.publicPlayers[p].boardCoins[data.G.currentTavern]
                                     ?.isTriggerTrading)) {
                                 DrawCoin(data, playerCells, `coin`, coin, coinIndex,
-                                    data.props.G.publicPlayers[p]);
+                                    data.G.publicPlayers[p]);
                             } else {
                                 DrawCoin(data, playerCells, `back`, coin, coinIndex,
-                                    data.props.G.publicPlayers[p]);
+                                    data.G.publicPlayers[p]);
                             }
                         }
                         coinIndex++;
@@ -301,12 +302,12 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
                 }
             }
             playerRows[p][i].push(<tr
-                key={`${data.props.G.publicPlayers[p].nickname} board coins row ${i}`}>{playerCells}</tr>);
+                key={`${data.G.publicPlayers[p].nickname} board coins row ${i}`}>{playerCells}</tr>);
         }
         playersBoardsCoins[p].push(
-            <table className="mx-auto" key={`${data.props.G.publicPlayers[p].nickname} board coins`}>
+            <table className="mx-auto" key={`${data.G.publicPlayers[p].nickname} board coins`}>
                 <caption>
-                    Player {p + 1} ({data.props.G.publicPlayers[p].nickname}) played coins
+                    Player {p + 1} ({data.G.publicPlayers[p].nickname}) played coins
                 </caption>
                 <thead>
                     <tr>{playerHeaders[p]}</tr>
@@ -334,16 +335,16 @@ export const DrawPlayersBoardsCoins = (data: GameBoard): JSX.Element[][] => {
  * @returns Игровые поля для пользовательских монет в руке.
  * @constructor
  */
-export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
+export const DrawPlayersHandsCoins = (data: BoardProps<MyGameState>): JSX.Element[][] => {
     const playersHandsCoins: JSX.Element[][] = [];
-    for (let p = 0; p < data.props.ctx.numPlayers; p++) {
+    for (let p = 0; p < data.ctx.numPlayers; p++) {
         const playerCells: JSX.Element[] = [];
         playersHandsCoins[p] = [];
         for (let i = 0; i < 1; i++) {
-            for (let j = 0; j < data.props.G.publicPlayers[p].handCoins.length; j++) {
-                if (data.props.G.publicPlayers[p].handCoins[j] === null) {
+            for (let j = 0; j < data.G.publicPlayers[p].handCoins.length; j++) {
+                if (data.G.publicPlayers[p].handCoins[j] === null) {
                     playerCells.push(
-                        <td key={`${data.props.G.publicPlayers[p].nickname} hand coin ${j} empty`}
+                        <td key={`${data.G.publicPlayers[p].nickname} hand coin ${j} empty`}
                             className="bg-yellow-300">
                             <span className="bg-coin bg-yellow-300 border-2">
 
@@ -351,32 +352,32 @@ export const DrawPlayersHandsCoins = (data: GameBoard): JSX.Element[][] => {
                         </td>
                     );
                 } else {
-                    if (Number(data.props.ctx.currentPlayer) === p || data.props.G.winner.length) {
+                    if (Number(data.ctx.currentPlayer) === p || data.G.winner.length) {
                         let coinClasses = `border-2`;
-                        if (data.props.G.publicPlayers[p].selectedCoin === j) {
+                        if (data.G.publicPlayers[p].selectedCoin === j) {
                             coinClasses = `border-2 border-green-400`;
                         }
-                        if (!data.props.G.winner.length && (data.props.ctx.phase === Phases.PlaceCoins
-                            || data.props.ctx.phase === Phases.PlaceCoinsUline || (data.props.ctx.activePlayers
-                                && data.props.ctx.activePlayers[Number(data.props.ctx.currentPlayer)]) ===
+                        if (!data.G.winner.length && (data.ctx.phase === Phases.PlaceCoins
+                            || data.ctx.phase === Phases.PlaceCoinsUline || (data.ctx.activePlayers
+                                && data.ctx.activePlayers[Number(data.ctx.currentPlayer)]) ===
                             Stages.PlaceTradingCoinsUline)) {
-                            DrawCoin(data, playerCells, `coin`, data.props.G.publicPlayers[p].handCoins[j],
-                                j, data.props.G.publicPlayers[p], coinClasses, null,
-                                OnClickHandCoin.name, j);
+                            DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].handCoins[j], j,
+                                data.G.publicPlayers[p], coinClasses, null,
+                                data.moves.ClickHandCoinMove.name, j);
                         } else {
-                            DrawCoin(data, playerCells, `coin`, data.props.G.publicPlayers[p].handCoins[j],
-                                j, data.props.G.publicPlayers[p], coinClasses);
+                            DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].handCoins[j], j,
+                                data.G.publicPlayers[p], coinClasses);
                         }
                     } else {
-                        DrawCoin(data, playerCells, `back`, data.props.G.publicPlayers[p].handCoins[j], j,
-                            data.props.G.publicPlayers[p]);
+                        DrawCoin(data, playerCells, `back`,
+                            data.G.publicPlayers[p].handCoins[j], j, data.G.publicPlayers[p]);
                     }
                 }
             }
         }
         playersHandsCoins[p].push(
-            <table className="mx-auto" key={`${data.props.G.publicPlayers[p].nickname} hand coins`}>
-                <caption>Player {p + 1} ({data.props.G.publicPlayers[p].nickname}) coins</caption>
+            <table className="mx-auto" key={`${data.G.publicPlayers[p].nickname} hand coins`}>
+                <caption>Player {p + 1} ({data.G.publicPlayers[p].nickname}) coins</caption>
                 <tbody>
                     <tr>{playerCells}</tr>
                 </tbody>

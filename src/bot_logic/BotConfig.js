@@ -1,9 +1,5 @@
-import { Ctx } from "boardgame.io";
-import { EvaluateCard, CompareCards } from "./bot_logic/card_logic";
-import { isCardNotAction } from "./Card";
-import { TavernCardTypes, DeckCardTypes } from "./typescript/card_types";
-import { MyGameState, ICard, IActionCard } from "./typescript/interfaces";
-
+import { EvaluateCard, CompareCards } from "./BotCardLogic";
+import { isCardNotAction } from "../Card";
 // todo Fix reurn types & move to interfaces
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -17,25 +13,16 @@ import { MyGameState, ICard, IActionCard } from "./typescript/interfaces";
  * @param ctx
  * @returns
  */
-export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
-    const taverns: TavernCardTypes[][] = G.taverns/*,
+export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
+    const taverns = G.taverns /*,
         averageCards: ICard[] = G.averageCards*/;
-    let result: number[] = Array(taverns.length).fill(0);
-    const temp: number[] = taverns.map((tavern: (DeckCardTypes | null)[]): number =>
-        absoluteHeuristicsForTradingCoin.reduce((acc: number, item: {
-            heuristic: (cards: DeckCardTypes[]) => boolean; weight: number;
-        }): number =>
-            acc + (tavern !== null && item.heuristic(tavern as DeckCardTypes[]) ? item.weight : 0),
-            0));
-    result = result.map((value: number, index: number) => value + temp[index]);
-    const tempNumbers: number[][] = taverns.map((tavern: (DeckCardTypes | null)[]): number[] => tavern
-        .map((card: ICard | IActionCard | null, index: number, arr: (DeckCardTypes | null)[]): number =>
-            EvaluateCard(G, ctx, card as ICard, index, arr)));
-    const tempChars: { mean: number; variation: number; }[] =
-        tempNumbers.map((element: number[]): { mean: number, variation: number; } =>
-            GetCharacteristics(element));
-    let maxIndex = 0,
-        minIndex: number = tempChars.length - 1;
+    let result = Array(taverns.length).fill(0);
+    const temp = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (tavern !== null && item.heuristic(tavern) ? item.weight : 0), 0));
+    result = result.map((value, index) => value + temp[index]);
+    const tempNumbers = taverns.map((tavern) => tavern
+        .map((card, index, arr) => EvaluateCard(G, ctx, card, index, arr)));
+    const tempChars = tempNumbers.map((element) => GetCharacteristics(element));
+    let maxIndex = 0, minIndex = tempChars.length - 1;
     for (let i = 1; i < temp.length; i++) {
         if (CompareCharacteristics(tempChars[maxIndex], tempChars[i]) < 0) {
             maxIndex = i;
@@ -48,7 +35,6 @@ export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
     result[minIndex] += -10;
     return result;
 };
-
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -61,16 +47,13 @@ export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
  * @param stat2
  * @returns
  */
-const CompareCharacteristics = (stat1: { variation: number, mean: number; },
-    stat2: { variation: number, mean: number; }): number => {
-    const eps = 0.0001,
-        tempVariation: number = stat1.variation - stat2.variation;
+const CompareCharacteristics = (stat1, stat2) => {
+    const eps = 0.0001, tempVariation = stat1.variation - stat2.variation;
     if (Math.abs(tempVariation) < eps) {
         return stat1.mean - stat2.mean;
     }
     return tempVariation;
 };
-
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -83,24 +66,21 @@ const CompareCharacteristics = (stat1: { variation: number, mean: number; },
  * @param playersNum
  * @returns
  */
-export const GetAllPicks = ({ tavernsNum, playersNum }: { tavernsNum: number, playersNum: number; }): unknown => {
-    const temp: number[][] = [],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        cartesian = (...a: any) => {
-            if (a.length === 1) {
-                a = a.flat();
-            }
-            return a.reduce((a: number[][], b: number[][]): number[][] =>
-                a.flatMap((d: number[]): number[][] => b.map((e: number[]): number[] =>
-                    [d, e].flat())));
-        };
+export const GetAllPicks = ({ tavernsNum, playersNum }) => {
+    const temp = [], 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    cartesian = (...a) => {
+        if (a.length === 1) {
+            a = a.flat();
+        }
+        return a.reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
+    };
     for (let i = 0; i < tavernsNum; i++) {
         temp[i] = Array(playersNum).fill(undefined)
-            .map((item: number, index: number): number => index);
+            .map((item, index) => index);
     }
     return cartesian(temp);
 };
-
 //may be to add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -113,17 +93,13 @@ export const GetAllPicks = ({ tavernsNum, playersNum }: { tavernsNum: number, pl
  * @param array
  * @returns
  */
-const GetCharacteristics = (array: number[]): { mean: number, variation: number; } => {
-    const mean: number = array.reduce((acc: number, item: number): number =>
-        acc + item / array.length, 0),
-        variation: number = array.reduce((acc: number, item: number): number =>
-            acc + ((item - mean) ** 2) / array.length, 0);
+const GetCharacteristics = (array) => {
+    const mean = array.reduce((acc, item) => acc + item / array.length, 0), variation = array.reduce((acc, item) => acc + ((item - mean) ** 2) / array.length, 0);
     return {
         mean,
         variation,
     };
 };
-
 //absolute heuristics
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -133,13 +109,11 @@ const GetCharacteristics = (array: number[]): { mean: number, variation: number;
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number; } = {
-    heuristic: (cards: DeckCardTypes[]): boolean => cards.every((card: DeckCardTypes | null): boolean =>
-    (card !== null && isCardNotAction(card) && isCardNotAction(cards[0]) && card.suit === cards[0].suit
+const isAllCardsEqual = {
+    heuristic: (cards) => cards.every((card) => (card !== null && isCardNotAction(card) && isCardNotAction(cards[0]) && card.suit === cards[0].suit
         && CompareCards(card, cards[0]) === 0)),
     weight: -100,
 };
-
 //relative heuristics
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -153,7 +127,6 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 0),
 //     weight: 20,
 // };
-
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -166,7 +139,6 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === -1),
 //     weight: 40,
 // };
-
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -180,7 +152,6 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
 //         (array.filter((item: number): boolean => item === -1).length === 1),
 //     weight: -100,
 // };
-
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -193,7 +164,6 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item !== 0),
 //     weight: -50,
 // };
-
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -206,10 +176,9 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
  * @param k
  * @returns
  */
-export const k_combinations = (set: number[], k: number): number[][] => {
-    const combs: number[][] = [];
-    let head: number[],
-        tailCombs: number[][];
+export const k_combinations = (set, k) => {
+    const combs = [];
+    let head, tailCombs;
     if (k > set.length || k <= 0) {
         return [];
     }
@@ -235,7 +204,6 @@ export const k_combinations = (set: number[], k: number): number[][] => {
     }
     return combs;
 };
-
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -247,13 +215,10 @@ export const k_combinations = (set: number[], k: number): number[][] => {
  * @param permutation
  * @returns
  */
-export const Permute = (permutation: number[]): number[][] => {
-    const length: number = permutation.length,
-        result: number[][] = [permutation.slice()];
-    const c: number[] = new Array(length).fill(0);
-    let i = 1,
-        k: number,
-        p: number;
+export const Permute = (permutation) => {
+    const length = permutation.length, result = [permutation.slice()];
+    const c = new Array(length).fill(0);
+    let i = 1, k, p;
     while (i < length) {
         if (c[i] < i) {
             k = i % 2 && c[i];
@@ -263,14 +228,14 @@ export const Permute = (permutation: number[]): number[][] => {
             ++c[i];
             i = 1;
             result.push(permutation.slice());
-        } else {
+        }
+        else {
             c[i] = 0;
             ++i;
         }
     }
     return result;
 };
-
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -279,9 +244,7 @@ export const Permute = (permutation: number[]): number[][] => {
  * </oL>
  * @todo Саше: сделать описание функции и параметров.
  */
-const absoluteHeuristicsForTradingCoin: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number; }[] =
-    [isAllCardsEqual];
-
+const absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>

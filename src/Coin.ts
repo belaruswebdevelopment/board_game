@@ -4,7 +4,8 @@ import { AddDataToLog } from "./Logging";
 import { ICoin } from "./typescript/coin_interfaces";
 import { CoinType } from "./typescript/coin_types";
 import { HeroNames, LogTypes, Stages } from "./typescript/enums";
-import { IBuildCoinsOptions, IConfig, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig, INumberValues, IPublicPlayer, MyGameState } from "./typescript/interfaces";
+import { IBuildCoinsOptions, IConfig, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig, INumberValues, MyGameState } from "./typescript/interfaces";
+import { IPublicPlayer } from "./typescript/player_interfaces";
 
 /**
  * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>

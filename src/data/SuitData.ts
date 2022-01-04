@@ -1,17 +1,8 @@
-import { Ctx } from "boardgame.io";
-import { DrawProfitAction, UpgradeCoinAction } from "../actions/Actions";
-import { CreateCard } from "../Card";
-import { CreateCoin } from "../Coin";
-import { StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
-import { GetMaxCoinValue } from "../helpers/CoinHelpers";
+import { BlacksmithDistinctionAwarding, ExplorerDistinctionAwarding, HunterDistinctionAwarding, MinerDistinctionAwarding, WarriorDistinctionAwarding } from "../helpers/DistinctionAwardingHelpers";
 import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
-import { AddActionsToStack } from "../helpers/StackHelpers";
-import { AddDataToLog } from "../Logging";
-import { CreatePriority } from "../Priority";
 import { PlayerCardsType } from "../typescript/card_types";
-import { CoinType } from "../typescript/coin_types";
-import { ActionTypes, ConfigNames, DrawNames, LogTypes, RusSuitNames, Stages, SuitNames } from "../typescript/enums";
-import { ICard, IPointsValues, IPublicPlayer, IRankValues, IStack, ISuit, ISuitConfig, MyGameState } from "../typescript/interfaces";
+import { RusSuitNames, SuitNames } from "../typescript/enums";
+import { IPointsValues, IRankValues, ISuit, ISuitConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Фракция кузнецов.</h3>
@@ -66,19 +57,7 @@ const blacksmith: ISuit = {
         ArithmeticSum(3, 1, cards.reduce(TotalRank, 0)),
     distinction: {
         description: `Получив знак отличия кузнецов, сразу же призовите Главного кузнеца с двумя шевронами в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов.`,
-        awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
-            if (G.tierToEnd !== 0) {
-                player.cards[SuitNames.BLACKSMITH].push(CreateCard({
-                    suit: SuitNames.BLACKSMITH,
-                    rank: 2,
-                    points: 2,
-                } as ICard));
-                G.distinctions[SuitNames.BLACKSMITH] = undefined;
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
-                ctx.events?.endTurn();
-            }
-            return 0;
-        },
+        awarding: BlacksmithDistinctionAwarding,
     },
 };
 
@@ -133,27 +112,7 @@ const explorer: ISuit = {
     scoringRule: (cards: PlayerCardsType[]): number => cards.reduce(TotalPoints, 0),
     distinction: {
         description: `Получив знак отличия разведчиков, сразу же возьмите 3 карты из колоды эпохи 2 и сохраните у себя одну из этих карт. Если это карта дворфа, сразу же поместите его в свою армию. Игрок получает право призвать нового героя, если в этот момент завершил линию 5 шевронов. Если это карта королевская награда, то улучшите одну из своих монет. Две оставшиеся карты возвращаются в колоду эпохи 2. Положите карту знак отличия разведчиков в командную зону рядом с вашим планшетом.`,
-        awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
-            if (G.tierToEnd !== 0) {
-                const stack: IStack[] = [
-                    {
-                        action: {
-                            name: DrawProfitAction.name,
-                            type: ActionTypes.Action,
-                        },
-                        config: {
-                            name: ConfigNames.ExplorerDistinction,
-                            stageName: Stages.PickDistinctionCard,
-                            drawName: DrawNames.PickCardByExplorerDistinction,
-                        },
-                    },
-                ];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
-                AddActionsToStack(G, ctx, stack);
-                StartActionFromStackOrEndActions(G, ctx, false);
-            }
-            return 0;
-        },
+        awarding: ExplorerDistinctionAwarding,
     },
 };
 
@@ -208,20 +167,7 @@ const hunter: ISuit = {
     scoringRule: (cards: PlayerCardsType[]): number => cards.reduce(TotalRank, 0) ** 2,
     distinction: {
         description: `Получив знак отличия охотников, сразу же обменяйте свою монету с номиналом 0 на особую монету с номиналом 3. Эта монета также позволяет обменивать монеты в кошеле и не может быть улучшена.`,
-        awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
-            if (G.tierToEnd !== 0) {
-                const tradingCoinIndex: number =
-                    player.boardCoins.findIndex((coin: CoinType): boolean => coin?.value === 0);
-                player.boardCoins[tradingCoinIndex] = CreateCoin({
-                    value: 3,
-                    isTriggerTrading: true,
-                });
-                G.distinctions[SuitNames.HUNTER] = undefined;
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
-                ctx.events?.endTurn();
-            }
-            return 0;
-        },
+        awarding: HunterDistinctionAwarding,
     },
 };
 
@@ -277,22 +223,7 @@ const miner: ISuit = {
         cards.reduce(TotalRank, 0) * cards.reduce(TotalPoints, 0),
     distinction: {
         description: `Получив знак отличия горняков, сразу же положите особый кристалл 6 поверх вашего текущего кристалла (тот остаётся скрытым до конца игры). В конце игры обладатель этого кристалла прибавит +3 очка к итоговому показателю храбрости своей армии. Этот кристалл позволяет победить во всех спорах при равенстве ставок и никогда не обменивается.`,
-        awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
-            if (G.tierToEnd !== 0) {
-                player.priority = CreatePriority({
-                    value: 6,
-                    isExchangeable: false,
-                });
-                G.distinctions[SuitNames.MINER] = undefined;
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия горняков свой кристалл на особый кристалл 6.`);
-                ctx.events?.endTurn();
-            } else {
-                if (player.priority.value === 6) {
-                    return 3;
-                }
-            }
-            return 0;
-        },
+        awarding: MinerDistinctionAwarding,
     },
 };
 
@@ -347,39 +278,7 @@ const warrior: ISuit = {
     scoringRule: (cards: PlayerCardsType[]): number => cards.reduce(TotalPoints, 0),
     distinction: {
         description: `Получив знак отличия воинов, сразу же улучшите одну из своих монет, добавив к её номиналу +5.`,
-        awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
-            if (G.tierToEnd !== 0) {
-                const stack: IStack[] = [
-                    {
-                        action: {
-                            name: DrawProfitAction.name,
-                            type: ActionTypes.Action,
-                        },
-                        config: {
-                            name: ConfigNames.UpgradeCoin,
-                            stageName: Stages.UpgradeCoin,
-                            value: 5,
-                            drawName: DrawNames.UpgradeCoinWarriorDistinction,
-                        },
-                    },
-                    {
-                        action: {
-                            name: UpgradeCoinAction.name,
-                            type: ActionTypes.Action,
-                        },
-                        config: {
-                            value: 5,
-                        },
-                    },
-                ];
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия воинов возможность улучшить одну из своих монет на +5:`);
-                AddActionsToStack(G, ctx, stack);
-                StartActionFromStackOrEndActions(G, ctx, false);
-            } else {
-                return GetMaxCoinValue(player);
-            }
-            return 0;
-        },
+        awarding: WarriorDistinctionAwarding,
     },
 };
 

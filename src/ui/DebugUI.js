@@ -58,15 +58,15 @@ const DrawObjectData = (obj) => {
  * @returns Данные для отрисовки дебаг информации.
  */
 const GetDebugData = (data) => {
-    if (data.props.G.debug) {
+    if (data.G.debug) {
         const debugData = {
             G: {},
             ctx: {},
         };
-        for (const [key, value] of Object.entries(data.props.G)) {
+        for (const [key, value] of Object.entries(data.G)) {
             debugData.G[key] = value;
         }
-        for (const [key, value] of Object.entries(data.props.ctx)) {
+        for (const [key, value] of Object.entries(data.ctx)) {
             debugData.ctx[key] = value;
         }
         return debugData;

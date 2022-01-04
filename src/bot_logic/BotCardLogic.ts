@@ -2,7 +2,8 @@ import { Ctx } from "boardgame.io";
 import { isCardNotAction, CreateCard } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { PlayerCardsType, TavernCardTypes } from "../typescript/card_types";
-import { MyGameState, IPublicPlayer, ISuit, IAverageSuitCardData, ICard, ICreateAverageSuitCard, IPlayerCards } from "../typescript/interfaces";
+import { MyGameState, ISuit, IAverageSuitCardData, ICard, ICreateAverageSuitCard, IPlayerCards } from "../typescript/interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
  * <h3>Добавляет карту в массив потенциальных карт для ботов.</h3>
@@ -14,39 +15,12 @@ import { MyGameState, IPublicPlayer, ISuit, IAverageSuitCardData, ICard, ICreate
  * @param cards Массив потенциальных карт для ботов.
  * @param card Карта.
  */
-export const AddCardToCards = (cards: IPlayerCards, card: PlayerCardsType): void => {
+const AddCardToCards = (cards: IPlayerCards, card: PlayerCardsType): void => {
     if (card.suit !== null) {
         cards[card.suit].push(card);
     }
     // todo Else it can be upgrade coin card here and it is not error, sure? Or add LogTypes.ERROR logging?
 };
-
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
- * @returns Профит карты.
- */
-/*export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
-    if (IsTopPlayer(G, Number(ctx.currentPlayer))) {
-        let top2PlayerId: number = GetTop2PlayerId(G, Number(ctx.currentPlayer));
-        if (top2PlayerId === -1) {
-            return 0;
-        }
-        return 0;
-    }
-    let top1PlayerId: number = GetTop1PlayerId(G, Number(ctx.currentPlayer));
-    if (top1PlayerId === -1) {
-        return 0;
-    }
-    return 0;
-};*/
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -162,7 +136,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * @param card Карта.
  * @returns Потенциальное значение.
  */
-export const PotentialScoring = ({
+const PotentialScoring = ({
     player = {} as IPublicPlayer,
     card = {} as TavernCardTypes,
 }): number => {

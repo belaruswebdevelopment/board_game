@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
-import { k_combinations, Permute, GetAllPicks } from "./BotConfig";
-import { GetAverageSuitCard } from "./bot_logic/card_logic";
+import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
+import { k_combinations, Permute, GetAllPicks } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
 import { BuildCards } from "./Card";
 import { BuildCoins } from "./Coin";
@@ -15,7 +15,8 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { DeckCardTypes, CampDeckCardTypes } from "./typescript/card_types";
 import { ICoin } from "./typescript/coin_interfaces";
 import { IHero } from "./typescript/hero_card_interfaces";
-import { MyGameState, IExpansion, ILogData, IDistinctions, IDeckConfig, IAverageSuitCardData, IPlayers, IPublicPlayer, IAverageCard, IBotData } from "./typescript/interfaces";
+import { MyGameState, IExpansion, ILogData, IDistinctions, IDeckConfig, IAverageSuitCardData, IAverageCard, IBotData } from "./typescript/interfaces";
+import { IPlayers, IPublicPlayer } from "./typescript/player_interfaces";
 import { IPriority } from "./typescript/priority_interfaces";
 
 /**

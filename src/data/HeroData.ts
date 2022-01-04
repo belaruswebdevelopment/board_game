@@ -3,7 +3,7 @@ import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { HeroNames, SuitNames, ActionTypes, DrawNames, Stages, ConfigNames, BuffNames } from "../typescript/enums";
 import { IHeroData, IHeroConfig } from "../typescript/hero_card_interfaces";
-import { IPublicPlayer } from "../typescript/interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
  * <h3>Данные о герое.</h3>

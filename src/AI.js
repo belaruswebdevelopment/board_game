@@ -1,5 +1,5 @@
-import { CheckHeuristicsForCoinsPlacement } from "./BotConfig";
-import { CompareCards, EvaluateCard } from "./bot_logic/card_logic";
+import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
+import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
 import { isCardNotAction } from "./Card";
 import { suitsConfig } from "./data/SuitData";
 import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./helpers/ProfitHelpers";

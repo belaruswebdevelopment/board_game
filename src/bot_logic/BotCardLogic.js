@@ -10,38 +10,12 @@ import { suitsConfig } from "../data/SuitData";
  * @param cards Массив потенциальных карт для ботов.
  * @param card Карта.
  */
-export const AddCardToCards = (cards, card) => {
+const AddCardToCards = (cards, card) => {
     if (card.suit !== null) {
         cards[card.suit].push(card);
     }
     // todo Else it can be upgrade coin card here and it is not error, sure? Or add LogTypes.ERROR logging?
 };
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- *
- * @todo Саше: сделать описание функции и параметров.
- * @param G
- * @param ctx
- * @returns Профит карты.
- */
-/*export const CardProfitForPlayer = (G: MyGameState, ctx: Ctx): number => {
-    if (IsTopPlayer(G, Number(ctx.currentPlayer))) {
-        let top2PlayerId: number = GetTop2PlayerId(G, Number(ctx.currentPlayer));
-        if (top2PlayerId === -1) {
-            return 0;
-        }
-        return 0;
-    }
-    let top1PlayerId: number = GetTop1PlayerId(G, Number(ctx.currentPlayer));
-    if (top1PlayerId === -1) {
-        return 0;
-    }
-    return 0;
-};*/
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -146,7 +120,7 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  * @param card Карта.
  * @returns Потенциальное значение.
  */
-export const PotentialScoring = ({ player = {}, card = {}, }) => {
+const PotentialScoring = ({ player = {}, card = {}, }) => {
     var _a, _b, _c, _d;
     const potentialCards = {};
     let score = 0;

@@ -3,7 +3,8 @@ import { TotalRank } from "../helpers/ScoreHelpers";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { ArtefactNames, ActionTypes, BuffNames, Stages, ConfigNames, DrawNames, SuitNames, RusCardTypes } from "../typescript/enums";
-import { IArtefact, IPublicPlayer, IMercenaries, IArtefactConfig } from "../typescript/interfaces";
+import { IArtefact, IMercenaries, IArtefactConfig } from "../typescript/interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
  * <h3>Данные об артефакте.</h3>

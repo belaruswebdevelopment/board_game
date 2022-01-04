@@ -1,5 +1,5 @@
-import { k_combinations, Permute, GetAllPicks } from "./BotConfig";
-import { GetAverageSuitCard } from "./bot_logic/card_logic";
+import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
+import { k_combinations, Permute, GetAllPicks } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
 import { BuildCards } from "./Card";
 import { BuildCoins } from "./Coin";

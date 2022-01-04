@@ -19,7 +19,8 @@ import { ScoreWinner } from "./Score";
 import { RefillTaverns } from "./Tavern";
 import { CampDeckCardTypes } from "./typescript/card_types";
 import { ActionTypes, ConfigNames, DrawNames, Phases, RusCardTypes } from "./typescript/enums";
-import { IOrder, IPublicPlayer, IResolveBoardCoins, IStack, MyGameState } from "./typescript/interfaces";
+import { IOrder, IResolveBoardCoins, IStack, MyGameState } from "./typescript/interfaces";
+import { IPublicPlayer } from "./typescript/player_interfaces";
 import { DistinctionTypes } from "./typescript/types";
 
 // todo Add logging

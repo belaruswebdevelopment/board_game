@@ -3,14 +3,16 @@ import { isArtefactCard } from "../Camp";
 import { CreateCard } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, PickCurrentHero, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
-import { AddCampCardToPlayerCards, AddCampCardToPlayer, AddCardToPlayer } from "../helpers/CardHelpers";
+import { AddCampCardToPlayerCards, AddCampCardToPlayer } from "../helpers/CampCardHelpers";
+import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
 import { EndActionFromStackAndAddNew, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { CampCardTypes, CampDeckCardTypes, PlayerCardsType, PickedCardType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { Phases, RusCardTypes, ActionTypes, ConfigNames, DrawNames, LogTypes, HeroNames, Stages, SuitNames } from "../typescript/enums";
-import { MyGameState, IConfig, IStack, IPublicPlayer, ICard, ICreateCard } from "../typescript/interfaces";
+import { MyGameState, IConfig, IStack, ICard, ICreateCard } from "../typescript/interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 import { ArgsTypes } from "../typescript/types";
 
 /**
