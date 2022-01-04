@@ -1,5 +1,5 @@
 import { BoardProps } from "boardgame.io/react";
-import { MyGameState } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>

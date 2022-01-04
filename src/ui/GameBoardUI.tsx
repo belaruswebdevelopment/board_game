@@ -7,10 +7,13 @@ import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, Ge
 import { DrawCard, DrawCoin } from "../helpers/UIElementHelpers";
 import { DrawBoard, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard } from "../helpers/UIHelpers";
 import { tavernsConfig } from "../Tavern";
+import { IConfig } from "../typescript/action_interfaces";
+import { IDrawBoardOptions } from "../typescript/board_interfaces";
 import { CampCardTypes, DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { ConfigNames, HeroNames } from "../typescript/enums";
-import { IConfig, IDrawBoardOptions, INumberValues, MyGameState } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
+import { INumberValues } from "../typescript/object_values_interfaces";
 
 /**
  * <h3>Отрисовка карт кэмпа.</h3>

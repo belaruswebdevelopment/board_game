@@ -1,7 +1,10 @@
 import { suitsConfig } from "./data/SuitData";
+import { ICreateActionCard, IActionCard } from "./typescript/action_card_intarfaces";
+import { IAverageSuitCardData } from "./typescript/bot_interfaces";
+import { ICard, ICreateCard } from "./typescript/card_interfaces";
 import { DeckCardTypes } from "./typescript/card_types";
 import { RusCardTypes } from "./typescript/enums";
-import { IActionCard, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig } from "./typescript/interfaces";
+import { IDeckConfig } from "./typescript/interfaces";
 
 // todo add LogTypes.ERROR logging to Sasha's functions
 /**

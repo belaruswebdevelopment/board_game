@@ -1,10 +1,11 @@
 import { Ctx } from "boardgame.io";
 import { UpgradeCoinAction } from "../actions/Actions";
 import { AddDataToLog } from "../Logging";
+import { IStack } from "../typescript/action_interfaces";
 import { ICoin } from "../typescript/coin_interfaces";
 import { CoinType } from "../typescript/coin_types";
 import { LogTypes, ActionTypes } from "../typescript/enums";
-import { MyGameState, IStack } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 

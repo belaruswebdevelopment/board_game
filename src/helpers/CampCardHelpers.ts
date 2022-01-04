@@ -2,9 +2,10 @@ import { Ctx } from "boardgame.io";
 import { isArtefactCard } from "../Camp";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
+import { IArtefactCampCard } from "../typescript/camp_card_interfaces";
 import { CampDeckCardTypes } from "../typescript/card_types";
 import { LogTypes } from "../typescript/enums";
-import { MyGameState, IArtefactCampCard } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 
 /**
  * <h3>Добавляет взятую из кэмпа карту в массив карт кэмпа игрока.</h3>

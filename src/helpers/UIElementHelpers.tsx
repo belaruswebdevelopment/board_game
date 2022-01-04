@@ -5,9 +5,10 @@ import { AddDataToLog } from "../Logging";
 import { DeckCardTypes, CampDeckCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { RusCardTypes, LogTypes } from "../typescript/enums";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { IHero } from "../typescript/hero_card_interfaces";
-import { MyGameState, IBackground } from "../typescript/interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
+import { IBackground } from "../typescript/style_interfaces";
 import { ArgsTypes } from "../typescript/types";
 
 /**

@@ -1,9 +1,9 @@
 import { AddCampCardToCardsAction, AddBuffToPlayerCampAction, CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, DiscardTradingCoinAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { TotalRank } from "../helpers/ScoreHelpers";
+import { IArtefact, IMercenaries, IArtefactConfig } from "../typescript/camp_card_interfaces";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { ArtefactNames, ActionTypes, BuffNames, Stages, ConfigNames, DrawNames, SuitNames, RusCardTypes } from "../typescript/enums";
-import { IArtefact, IMercenaries, IArtefactConfig } from "../typescript/interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**

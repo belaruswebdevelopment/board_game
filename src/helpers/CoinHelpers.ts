@@ -1,6 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { CoinType } from "../typescript/coin_types";
-import { INumberValues, IResolveBoardCoins, MyGameState } from "../typescript/interfaces";
+import { IResolveBoardCoins, MyGameState } from "../typescript/game_data_interfaces";
+import { INumberValues } from "../typescript/object_values_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { IPriority } from "../typescript/priority_interfaces";
 

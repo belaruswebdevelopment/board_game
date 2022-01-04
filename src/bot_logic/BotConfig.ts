@@ -2,7 +2,9 @@ import { Ctx } from "boardgame.io";
 import { EvaluateCard, CompareCards } from "./BotCardLogic";
 import { isCardNotAction } from "../Card";
 import { TavernCardTypes, DeckCardTypes } from "../typescript/card_types";
-import { MyGameState, ICard, IActionCard } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
+import { IActionCard } from "../typescript/action_card_intarfaces";
+import { ICard } from "../typescript/card_interfaces";
 
 // todo Fix reurn types & move to interfaces
 /**

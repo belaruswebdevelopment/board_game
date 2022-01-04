@@ -2,7 +2,7 @@ import { Ctx } from "boardgame.io";
 import { AddDataToLog } from "./Logging";
 import { DeckCardTypes, TavernCardTypes } from "./typescript/card_types";
 import { LogTypes } from "./typescript/enums";
-import { MyGameState } from "./typescript/interfaces";
+import { MyGameState } from "./typescript/game_data_interfaces";
 import { ITavernsConfig } from "./typescript/tavern_interfaces";
 
 /**

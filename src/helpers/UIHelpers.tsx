@@ -1,8 +1,9 @@
 import { BoardProps } from "boardgame.io/react";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { IDrawBoardOptions } from "../typescript/board_interfaces";
 import { RusCardTypes } from "../typescript/enums";
-import { IDrawBoardOptions, MyGameState } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 import { DrawCard } from "./UIElementHelpers";
 

@@ -1,4 +1,4 @@
-import { IStack } from "./interfaces";
+import { IStack } from "./action_interfaces";
 import { IPublicPlayer } from "./player_interfaces";
 
 /**

@@ -1,9 +1,11 @@
 import { Ctx } from "boardgame.io";
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddDataToLog } from "./Logging";
+import { IConfig } from "./typescript/action_interfaces";
 import { CoinType } from "./typescript/coin_types";
 import { LogTypes, HeroNames } from "./typescript/enums";
-import { ICheckMoveParam, MyGameState, IMoveBy, IMoveValidators, IMoveValidatorParams, IConfig } from "./typescript/interfaces";
+import { MyGameState } from "./typescript/game_data_interfaces";
+import { ICheckMoveParam, IMoveBy, IMoveValidators, IMoveValidatorParams } from "./typescript/move_validator_interfaces";
 
 /**
  * Validates arguments inside of move.

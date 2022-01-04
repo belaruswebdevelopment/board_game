@@ -8,7 +8,7 @@ import { tavernsConfig } from "../Tavern";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { HeroNames, Phases, Stages } from "../typescript/enums";
-import { MyGameState } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>

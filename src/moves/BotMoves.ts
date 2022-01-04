@@ -2,7 +2,7 @@ import { Move, Ctx } from "boardgame.io";
 import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 import { CoinType } from "../typescript/coin_types";
 import { HeroNames, Phases } from "../typescript/enums";
-import { MyGameState } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**

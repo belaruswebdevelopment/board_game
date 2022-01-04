@@ -1,6 +1,6 @@
 import { AddDataToLog } from "./Logging";
 import { LogTypes } from "./typescript/enums";
-import { MyGameState } from "./typescript/interfaces";
+import { MyGameState } from "./typescript/game_data_interfaces";
 import { IPublicPlayer } from "./typescript/player_interfaces";
 import { IPriority, ICreatePriority, IPrioritiesConfig } from "./typescript/priority_interfaces";
 

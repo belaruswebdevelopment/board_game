@@ -3,9 +3,10 @@ import { DiscardCardFromTavernAction, DrawProfitAction } from "../actions/Action
 import { DrawProfitCampAction } from "../actions/CampActions";
 import { DiscardCardIfCampCardPicked, RefillEmptyCampCards } from "../Camp";
 import { CheckIfCurrentTavernEmpty, DiscardCardFromTavern, RefillTaverns } from "../Tavern";
+import { IStack } from "../typescript/action_interfaces";
 import { CampDeckCardTypes, TavernCardTypes } from "../typescript/card_types";
 import { ActionTypes, ConfigNames, DrawNames, Phases, RusCardTypes, Stages } from "../typescript/enums";
-import { IStack, MyGameState } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 import { CheckEndGameLastActions } from "./CampHelpers";
 import { CheckAndStartUlineActionsOrContinue, StartEndTierActions } from "./HeroHelpers";

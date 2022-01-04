@@ -10,11 +10,13 @@ import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, CheckPickHero,
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
+import { IConfig, IStack, IConditions, IVariants } from "../typescript/action_interfaces";
+import { ICard, ICreateCard } from "../typescript/card_interfaces";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, RusCardTypes, Stages, SuitNames } from "../typescript/enums";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { IHero } from "../typescript/hero_card_interfaces";
-import { ICard, IConditions, IConfig, ICreateCard, IStack, IVariants, MyGameState } from "../typescript/interfaces";
 import { ArgsTypes } from "../typescript/types";
 
 // todo Does INVALID_MOVE be not in moves but in actions?

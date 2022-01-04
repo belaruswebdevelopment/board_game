@@ -12,10 +12,13 @@ import { suitsConfig } from "./data/SuitData";
 import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
+import { IAverageCard, IAverageSuitCardData, IBotData } from "./typescript/bot_interfaces";
 import { DeckCardTypes, CampDeckCardTypes } from "./typescript/card_types";
 import { ICoin } from "./typescript/coin_interfaces";
+import { IDistinctions } from "./typescript/distinction_interfaces";
+import { MyGameState, IExpansion, ILogData } from "./typescript/game_data_interfaces";
 import { IHero } from "./typescript/hero_card_interfaces";
-import { MyGameState, IExpansion, ILogData, IDistinctions, IDeckConfig, IAverageSuitCardData, IAverageCard, IBotData } from "./typescript/interfaces";
+import { IDeckConfig } from "./typescript/interfaces";
 import { IPlayers, IPublicPlayer } from "./typescript/player_interfaces";
 import { IPriority } from "./typescript/priority_interfaces";
 

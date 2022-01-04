@@ -1,5 +1,6 @@
 import { Ctx } from "boardgame.io";
-import { MyGameState, IStack } from "../typescript/interfaces";
+import { IStack } from "../typescript/action_interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "./CoinActions";
 

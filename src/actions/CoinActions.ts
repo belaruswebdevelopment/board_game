@@ -1,6 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { DrawCurrentProfit, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
-import { MyGameState, IConfig } from "../typescript/interfaces";
+import { IConfig } from "../typescript/action_interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 
 /**

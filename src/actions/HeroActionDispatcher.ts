@@ -1,5 +1,6 @@
 import { Ctx } from "boardgame.io";
-import { MyGameState, IStack } from "../typescript/interfaces";
+import { IStack } from "../typescript/action_interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DrawProfitHeroAction, DiscardCardsFromPlayerBoardAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, UpgradeCoinHeroAction } from "./HeroActions";
 

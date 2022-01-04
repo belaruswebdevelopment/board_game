@@ -2,9 +2,10 @@ import { AddCampCardToCardsAction } from "./actions/CampActions";
 import { suitsConfig } from "./data/SuitData";
 import { AddDataToLog } from "./Logging";
 import { DiscardCardFromTavern } from "./Tavern";
+import { IArtefactCampCard, IMercenaryCampCard, IArtefactConfig, IMercenaries, ICreateArtefactCampCard, ICreateMercenaryCampCard } from "./typescript/camp_card_interfaces";
 import { CampCardTypes, CampDeckCardTypes, TavernCardTypes } from "./typescript/card_types";
 import { ActionTypes, LogTypes, RusCardTypes } from "./typescript/enums";
-import { IArtefactCampCard, IArtefactConfig, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenaries, IMercenaryCampCard, MyGameState } from "./typescript/interfaces";
+import { MyGameState } from "./typescript/game_data_interfaces";
 
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>

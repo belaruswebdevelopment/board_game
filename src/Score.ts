@@ -5,9 +5,10 @@ import { suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog } from "./Logging";
+import { IArtefact } from "./typescript/camp_card_interfaces";
 import { LogTypes, SuitNames } from "./typescript/enums";
+import { MyGameState } from "./typescript/game_data_interfaces";
 import { IHeroData } from "./typescript/hero_card_interfaces";
-import { IArtefact, MyGameState } from "./typescript/interfaces";
 import { IPublicPlayer } from "./typescript/player_interfaces";
 
 /**

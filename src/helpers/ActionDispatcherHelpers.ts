@@ -3,7 +3,7 @@ import { ActionDispatcher } from "../actions/ActionDispatcher";
 import { CampActionDispatcher } from "../actions/CampActionDispatcher";
 import { CoinActionDispatcher } from "../actions/CoinActionDispatcher";
 import { HeroActionDispatcher } from "../actions/HeroActionDispatcher";
-import { MyGameState } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 import { AfterBasicPickCardActions } from "./MovesHelpers";
 

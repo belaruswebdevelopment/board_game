@@ -1,5 +1,5 @@
 import { LogTypes } from "./typescript/enums";
-import { MyGameState } from "./typescript/interfaces";
+import { MyGameState } from "./typescript/game_data_interfaces";
 
 /**
  * <h3>Логирует данные.</h3>

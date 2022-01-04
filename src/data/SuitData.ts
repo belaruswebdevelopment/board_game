@@ -2,7 +2,8 @@ import { BlacksmithDistinctionAwarding, ExplorerDistinctionAwarding, HunterDisti
 import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
 import { PlayerCardsType } from "../typescript/card_types";
 import { RusSuitNames, SuitNames } from "../typescript/enums";
-import { IPointsValues, IRankValues, ISuit, ISuitConfig } from "../typescript/interfaces";
+import { IRankValues, IPointsValues } from "../typescript/object_values_interfaces";
+import { ISuit, ISuitConfig } from "../typescript/suit_interfaces";
 
 /**
  * <h3>Фракция кузнецов.</h3>

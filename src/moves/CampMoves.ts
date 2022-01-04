@@ -5,9 +5,10 @@ import { StartActionForChosenPlayer, StartActionFromStackOrEndActions } from "..
 import { EndActionFromStackAndAddNew, AddActionsToStack } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
+import { IStack } from "../typescript/action_interfaces";
 import { CampCardTypes } from "../typescript/card_types";
 import { LogTypes, ActionTypes, ConfigNames, DrawNames } from "../typescript/enums";
-import { MyGameState, IStack } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 
 // todo Add logging
 /**

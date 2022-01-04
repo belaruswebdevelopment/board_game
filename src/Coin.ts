@@ -1,10 +1,12 @@
 import { Ctx } from "boardgame.io";
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { AddDataToLog } from "./Logging";
-import { ICoin } from "./typescript/coin_interfaces";
+import { IConfig } from "./typescript/action_interfaces";
+import { IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig } from "./typescript/coin_interfaces";
 import { CoinType } from "./typescript/coin_types";
 import { HeroNames, LogTypes, Stages } from "./typescript/enums";
-import { IBuildCoinsOptions, IConfig, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig, INumberValues, MyGameState } from "./typescript/interfaces";
+import { MyGameState } from "./typescript/game_data_interfaces";
+import { INumberValues } from "./typescript/object_values_interfaces";
 import { IPublicPlayer } from "./typescript/player_interfaces";
 
 /**

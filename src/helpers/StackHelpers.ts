@@ -1,6 +1,7 @@
 import { Ctx } from "boardgame.io";
+import { IStack, IConfig } from "../typescript/action_interfaces";
 import { ConfigNames } from "../typescript/enums";
-import { IConfig, IStack, MyGameState } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 

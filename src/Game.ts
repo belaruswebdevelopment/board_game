@@ -17,9 +17,10 @@ import { CheckPlayersBasicOrder } from "./Player";
 import { ChangePlayersPriorities } from "./Priority";
 import { ScoreWinner } from "./Score";
 import { RefillTaverns } from "./Tavern";
+import { IStack } from "./typescript/action_interfaces";
 import { CampDeckCardTypes } from "./typescript/card_types";
 import { ActionTypes, ConfigNames, DrawNames, Phases, RusCardTypes } from "./typescript/enums";
-import { IOrder, IResolveBoardCoins, IStack, MyGameState } from "./typescript/interfaces";
+import { IOrder, IResolveBoardCoins, MyGameState } from "./typescript/game_data_interfaces";
 import { IPublicPlayer } from "./typescript/player_interfaces";
 import { DistinctionTypes } from "./typescript/types";
 

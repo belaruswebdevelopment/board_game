@@ -1,9 +1,13 @@
 import { Ctx } from "boardgame.io";
 import { isCardNotAction, CreateCard } from "../Card";
 import { suitsConfig } from "../data/SuitData";
+import { IAverageSuitCardData, ICreateAverageSuitCard } from "../typescript/bot_interfaces";
+import { ICard } from "../typescript/card_interfaces";
 import { PlayerCardsType, TavernCardTypes } from "../typescript/card_types";
-import { MyGameState, ISuit, IAverageSuitCardData, ICard, ICreateAverageSuitCard, IPlayerCards } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
+import { IPlayerCards } from "../typescript/interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
+import { ISuit } from "../typescript/suit_interfaces";
 
 /**
  * <h3>Добавляет карту в массив потенциальных карт для ботов.</h3>

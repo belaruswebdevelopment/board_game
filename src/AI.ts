@@ -7,10 +7,12 @@ import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardF
 import { moveBy, moveValidators } from "./MoveValidator";
 import { HasLowestPriority } from "./Priority";
 import { CurrentScoring } from "./Score";
+import { IConfig } from "./typescript/action_interfaces";
+import { IMoves } from "./typescript/bot_interfaces";
 import { DeckCardTypes, PlayerCardsType, TavernCardTypes } from "./typescript/card_types";
 import { CoinType } from "./typescript/coin_types";
 import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescript/enums";
-import { IConfig, IMoves, MyGameState } from "./typescript/interfaces";
+import { MyGameState } from "./typescript/game_data_interfaces";
 import { IBotMoveArgumentsTypes } from "./typescript/types";
 
 /**

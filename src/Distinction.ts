@@ -4,7 +4,7 @@ import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddDataToLog } from "./Logging";
 import { DeckCardTypes } from "./typescript/card_types";
 import { LogTypes, SuitNames } from "./typescript/enums";
-import { MyGameState } from "./typescript/interfaces";
+import { MyGameState } from "./typescript/game_data_interfaces";
 import { DistinctionTypes } from "./typescript/types";
 
 // todo Rework 2 functions in one?

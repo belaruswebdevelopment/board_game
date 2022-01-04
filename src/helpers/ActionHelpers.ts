@@ -3,9 +3,10 @@ import { CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCa
 import { isCardNotAction } from "../Card";
 import { UpgradeCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
+import { IConfig, IStack } from "../typescript/action_interfaces";
 import { DeckCardTypes } from "../typescript/card_types";
 import { ActionTypes, ConfigNames, DrawNames, LogTypes, Stages } from "../typescript/enums";
-import { IConfig, IStack, MyGameState } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 import { AddCardToPlayer } from "./CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";

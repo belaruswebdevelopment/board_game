@@ -3,8 +3,9 @@ import { DrawCurrentProfit, PickCurrentHero, UpgradeCurrentCoin } from "../helpe
 import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
+import { IConfig } from "../typescript/action_interfaces";
 import { LogTypes } from "../typescript/enums";
-import { MyGameState, IConfig } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 
 /**

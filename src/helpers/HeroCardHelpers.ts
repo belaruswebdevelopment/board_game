@@ -2,8 +2,8 @@ import { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { IHero } from "../typescript/hero_card_interfaces";
-import { MyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет героя в массив карт игрока.</h3>

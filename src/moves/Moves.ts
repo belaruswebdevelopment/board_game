@@ -10,9 +10,10 @@ import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
+import { IStack } from "../typescript/action_interfaces";
 import { DeckCardTypes, TavernCardTypes } from "../typescript/card_types";
 import { ActionTypes, LogTypes, SuitNames } from "../typescript/enums";
-import { IStack, MyGameState } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 
 // todo Add logging
 /**

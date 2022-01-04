@@ -4,9 +4,10 @@ import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
 import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { IsValidMove, CoinUpgradeValidation } from "../MoveValidator";
+import { IConfig } from "../typescript/action_interfaces";
 import { CoinType } from "../typescript/coin_types";
 import { Phases, Stages, HeroNames, SuitNames } from "../typescript/enums";
-import { MyGameState, IConfig } from "../typescript/interfaces";
+import { MyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 // todo Add logging
