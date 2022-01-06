@@ -27,6 +27,13 @@ import { DistinctionTypes } from "./typescript/types";
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
 // todo Add dock block
+/**
+ * <h3>Параметры порядка хода.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При определении хода в каждую фазу игры.</li>
+ * </ol>
+ */
 const order: IOrder = {
     first: (): number => 0,
     next: (G: MyGameState, ctx: Ctx): number => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,

@@ -7,6 +7,16 @@ import { MyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 import { AfterBasicPickCardActions } from "./MovesHelpers";
 
+/**
+ * <h3>Диспетчер всех экшенов.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Срабатывает при вызове каждого экшена.</li>
+ * </ol>
+ *
+ * @param actionTypes Тип экшена.
+ * @returns Диспетчер экшенов.
+ */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const ActionDispatcherSwitcher = (actionTypes: string): Function | null => {
     // eslint-disable-next-line @typescript-eslint/ban-types

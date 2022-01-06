@@ -18,7 +18,7 @@ import { LogTypes } from "../typescript/enums";
  */
 export const AddCardToPlayer = (G, ctx, card) => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = card;
-    // TODO Not only deckcardtypes but ihero+icampcardtypes?? but they are created as ICard and added to players cards...
+    // TODO Not only deckcardtypes but ihero+icampcardtypes?? but they are created as ICard and added to players cards.
     if (isCardNotAction(card)) {
         G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit].push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);

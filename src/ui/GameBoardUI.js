@@ -213,8 +213,7 @@ export const DrawProfit = (data) => {
                     const handCoins = data.G.publicPlayers[Number(data.ctx.currentPlayer)].handCoins
                         .filter((coin) => coin !== null);
                     let handCoinIndex = -1;
-                    for (let j = 0; j <
-                        data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins.length; j++) {
+                    for (let j = 0; j < data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins.length; j++) {
                         // todo Check .? for all coins!!! and delete AS
                         if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].buffs.everyTurn ===
                             HeroNames.Uline
@@ -235,9 +234,7 @@ export const DrawProfit = (data) => {
                         }
                         else if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]
                             && !((_d = data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isTriggerTrading)) {
-                            DrawCoin(data, boardCells, `coin`, data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                .boardCoins[j], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, data.moves.ClickCoinToUpgradeMove.name, j, `board`, (_e = data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                .boardCoins[j]) === null || _e === void 0 ? void 0 : _e.isInitial);
+                            DrawCoin(data, boardCells, `coin`, data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, data.moves.ClickCoinToUpgradeMove.name, j, `board`, (_e = data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]) === null || _e === void 0 ? void 0 : _e.isInitial);
                         }
                     }
                 }
@@ -295,9 +292,9 @@ export const DrawTaverns = (data, gridClass) => {
  * @param data Глобальные параметры.
  * @returns Поле информации о количестве карт по эпохам.
  */
-export const DrawTierCards = (data) => (_jsxs("b", { children: ["Tier: ", _jsxs("span", { className: "italic", children: [data.G.decks.length - data.G.tierToEnd + 1 > data.G.decks.length ?
-                    data.G.decks.length : data.G.decks.length - data.G.tierToEnd + 1, "/", data.G.decks.length, " (", data.G.decks.length - data.G.tierToEnd !== 2 ?
-                    data.G.decks[data.G.decks.length - data.G.tierToEnd].length : 0, data.G.decks.length - data.G.tierToEnd === 0 ? `/`
+export const DrawTierCards = (data) => (_jsxs("b", { children: ["Tier: ", _jsxs("span", { className: "italic", children: [data.G.decks.length - data.G.tierToEnd + 1 > data.G.decks.length ? data.G.decks.length :
+                    data.G.decks.length - data.G.tierToEnd + 1, "/", data.G.decks.length, " (", data.G.decks.length - data.G.tierToEnd
+                    !== 2 ? data.G.decks[data.G.decks.length - data.G.tierToEnd].length : 0, data.G.decks.length - data.G.tierToEnd === 0 ? `/`
                     + data.G.decks.reduce((count, current) => count + current.length, 0) : ``, " cards left)"] }, void 0)] }, void 0));
 /**
  * <h3>Отрисовка игровой информации о текущем статусе игры.</h3>

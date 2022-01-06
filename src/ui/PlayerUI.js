@@ -62,12 +62,11 @@ export const DrawPlayersBoards = (data) => {
                 if (k === 0) {
                     const playerCards = Object.values(data.G.publicPlayers[p].cards).flat();
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
-                    if (data.G.publicPlayers[p].heroes[i] !== undefined &&
-                        (!data.G.publicPlayers[p].heroes[i].suit &&
-                            !((data.G.publicPlayers[p].heroes[i].name === HeroNames.Ylud
-                                && playerCards.findIndex((card) => card.name === HeroNames.Ylud) !== -1)
-                                || (data.G.publicPlayers[p].heroes[i].name === HeroNames.Thrud
-                                    && playerCards.findIndex((card) => card.name === HeroNames.Thrud) !== -1)))) {
+                    if (data.G.publicPlayers[p].heroes[i] !== undefined && (!data.G.publicPlayers[p].heroes[i].suit
+                        && !((data.G.publicPlayers[p].heroes[i].name === HeroNames.Ylud
+                            && playerCards.findIndex((card) => card.name === HeroNames.Ylud) !== -1)
+                            || (data.G.publicPlayers[p].heroes[i].name === HeroNames.Thrud
+                                && playerCards.findIndex((card) => card.name === HeroNames.Thrud) !== -1)))) {
                         isDrawRow = true;
                         DrawCard(data, playerCells, data.G.publicPlayers[p].heroes[i], id, data.G.publicPlayers[p]);
                     }
@@ -92,8 +91,7 @@ export const DrawPlayersBoards = (data) => {
                 break;
             }
         }
-        playersBoards[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", data.G.publicPlayers[p].nickname, ") cards, ", data.G.winner.length ? `Final: ${data.G.totalScore[p]}` :
-                            CurrentScoring(data.G.publicPlayers[p]), " points"] }, void 0), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders[p] }, void 0), _jsx("tr", { children: playerHeadersCount[p] }, void 0)] }, void 0), _jsx("tbody", { children: playerRows[p] }, void 0)] }, `${data.G.publicPlayers[p].nickname} board`));
+        playersBoards[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", data.G.publicPlayers[p].nickname, ") cards, ", data.G.winner.length ? `Final: ${data.G.totalScore[p]}` : CurrentScoring(data.G.publicPlayers[p]), " points"] }, void 0), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders[p] }, void 0), _jsx("tr", { children: playerHeadersCount[p] }, void 0)] }, void 0), _jsx("tbody", { children: playerRows[p] }, void 0)] }, `${data.G.publicPlayers[p].nickname} board`));
     }
     return playersBoards;
 };
@@ -124,10 +122,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                 for (let j = 0; j < data.G.tavernsNum; j++) {
                     playerHeaders[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Taverns(j), className: "bg-tavern-icon" }, void 0) }, `Tavern ${tavernsConfig[j].name}`));
                     if (data.G.publicPlayers[p].boardCoins[coinIndex] === null) {
-                        if ((Number(data.ctx.currentPlayer) === p
-                            && data.ctx.phase === Phases.PlaceCoins)
-                            || (Number(data.ctx.currentPlayer) === p
-                                && data.ctx.phase === Phases.PlaceCoinsUline
+                        if ((Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins)
+                            || (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoinsUline
                                 && j === data.G.currentTavern + 1)) {
                             DrawCoin(data, playerCells, `back-tavern-icon`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p], null, j, data.moves.ClickBoardCoinMove.name, j);
                         }
@@ -135,8 +131,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             DrawCoin(data, playerCells, `back-tavern-icon`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p], null, j);
                         }
                     }
-                    else if (data.ctx.phase === Phases.PlaceCoins
-                        && Number(data.ctx.currentPlayer) === p) {
+                    else if (data.ctx.phase === Phases.PlaceCoins && Number(data.ctx.currentPlayer) === p) {
                         DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p], null, null, data.moves.ClickBoardCoinMove.name, j);
                     }
                     else {
@@ -162,8 +157,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                         playerFooters[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }, void 0) }, `${data.G.publicPlayers[p].nickname} exchange icon ${j}`));
                         const coin = data.G.publicPlayers[p].boardCoins[coinIndex];
                         if (coin === null) {
-                            if (Number(data.ctx.currentPlayer) === p
-                                && data.ctx.phase !== Phases.PlaceCoinsUline
+                            if (Number(data.ctx.currentPlayer) === p && data.ctx.phase !== Phases.PlaceCoinsUline
                                 && (data.ctx.phase === Phases.PlaceCoins || (data.ctx.activePlayers
                                     && data.ctx.activePlayers[Number(data.ctx.currentPlayer)]) ===
                                     Stages.PlaceTradingCoinsUline)) {

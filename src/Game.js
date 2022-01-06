@@ -20,6 +20,13 @@ import { ActionTypes, ConfigNames, DrawNames, Phases, RusCardTypes } from "./typ
 // todo Add logging
 // todo Add colors for cards Points by suit colors!
 // todo Add dock block
+/**
+ * <h3>Параметры порядка хода.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При определении хода в каждую фазу игры.</li>
+ * </ol>
+ */
 const order = {
     first: () => 0,
     next: (G, ctx) => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,

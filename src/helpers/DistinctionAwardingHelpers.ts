@@ -7,6 +7,7 @@ import { CreatePriority } from "../Priority";
 import { IStack } from "../typescript/action_interfaces";
 import { ICard } from "../typescript/card_interfaces";
 import { CoinType } from "../typescript/coin_types";
+import { IAwarding } from "../typescript/distinction_interfaces";
 import { SuitNames, LogTypes, ActionTypes, ConfigNames, DrawNames, Stages } from "../typescript/enums";
 import { MyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
@@ -14,7 +15,7 @@ import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 import { GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 
-export const BlacksmithDistinctionAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const BlacksmithDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         player.cards[SuitNames.BLACKSMITH].push(CreateCard({
             suit: SuitNames.BLACKSMITH,
@@ -28,7 +29,7 @@ export const BlacksmithDistinctionAwarding = (G: MyGameState, ctx: Ctx, player: 
     return 0;
 };
 
-export const ExplorerDistinctionAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const ExplorerDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         const stack: IStack[] = [
             {
@@ -50,7 +51,7 @@ export const ExplorerDistinctionAwarding = (G: MyGameState, ctx: Ctx, player: IP
     return 0;
 };
 
-export const HunterDistinctionAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const HunterDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         const tradingCoinIndex: number =
             player.boardCoins.findIndex((coin: CoinType): boolean => coin?.value === 0);
@@ -65,7 +66,7 @@ export const HunterDistinctionAwarding = (G: MyGameState, ctx: Ctx, player: IPub
     return 0;
 };
 
-export const MinerDistinctionAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const MinerDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         player.priority = CreatePriority({
             value: 6,
@@ -82,7 +83,7 @@ export const MinerDistinctionAwarding = (G: MyGameState, ctx: Ctx, player: IPubl
     return 0;
 };
 
-export const WarriorDistinctionAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const WarriorDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         const stack: IStack[] = [
             {

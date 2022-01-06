@@ -15,5 +15,12 @@ export interface IDistinctions {
  */
 export interface IDistinction {
     description: string,
-    awarding: (G: MyGameState, ctx: Ctx, player: IPublicPlayer) => number,
+    awarding: IAwarding,
+}
+
+/**
+ * <h3>Интерфейс для преимуществ по фракциям.</h3>
+ */
+export interface IAwarding {
+    (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number,
 }

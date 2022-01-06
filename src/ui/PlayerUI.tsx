@@ -108,14 +108,13 @@ export const DrawPlayersBoards = (data: BoardProps<MyGameState>): JSX.Element[][
                 if (k === 0) {
                     const playerCards: PlayerCardsType[] = Object.values(data.G.publicPlayers[p].cards).flat();
                     // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
-                    if (data.G.publicPlayers[p].heroes[i] !== undefined &&
-                        (!data.G.publicPlayers[p].heroes[i].suit &&
-                            !((data.G.publicPlayers[p].heroes[i].name === HeroNames.Ylud
+                    if (data.G.publicPlayers[p].heroes[i] !== undefined && (!data.G.publicPlayers[p].heroes[i].suit
+                        && !((data.G.publicPlayers[p].heroes[i].name === HeroNames.Ylud
+                            && playerCards.findIndex((card: { name: string; }): boolean =>
+                                card.name === HeroNames.Ylud) !== -1)
+                            || (data.G.publicPlayers[p].heroes[i].name === HeroNames.Thrud
                                 && playerCards.findIndex((card: { name: string; }): boolean =>
-                                    card.name === HeroNames.Ylud) !== -1)
-                                || (data.G.publicPlayers[p].heroes[i].name === HeroNames.Thrud
-                                    && playerCards.findIndex((card: { name: string; }): boolean =>
-                                        card.name === HeroNames.Thrud) !== -1)))) {
+                                    card.name === HeroNames.Thrud) !== -1)))) {
                         isDrawRow = true;
                         DrawCard(data, playerCells, data.G.publicPlayers[p].heroes[i], id,
                             data.G.publicPlayers[p]);
@@ -150,9 +149,7 @@ export const DrawPlayersBoards = (data: BoardProps<MyGameState>): JSX.Element[][
         }
         playersBoards[p].push(
             <table className="mx-auto" key={`${data.G.publicPlayers[p].nickname} board`}>
-                <caption>Player {p + 1} ({data.G.publicPlayers[p].nickname})
-                    cards, {data.G.winner.length ? `Final: ${data.G.totalScore[p]}` :
-                        CurrentScoring(data.G.publicPlayers[p])} points
+                <caption>Player {p + 1} ({data.G.publicPlayers[p].nickname}) cards, {data.G.winner.length ? `Final: ${data.G.totalScore[p]}` : CurrentScoring(data.G.publicPlayers[p])} points
                 </caption>
                 <thead>
                     <tr>{playerHeaders[p]}</tr>
@@ -200,10 +197,8 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Eleme
                         </th>
                     );
                     if (data.G.publicPlayers[p].boardCoins[coinIndex] === null) {
-                        if ((Number(data.ctx.currentPlayer) === p
-                            && data.ctx.phase === Phases.PlaceCoins)
-                            || (Number(data.ctx.currentPlayer) === p
-                                && data.ctx.phase === Phases.PlaceCoinsUline
+                        if ((Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins)
+                            || (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoinsUline
                                 && j === data.G.currentTavern + 1)) {
                             DrawCoin(data, playerCells, `back-tavern-icon`,
                                 data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
@@ -214,8 +209,7 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Eleme
                                 data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                                 data.G.publicPlayers[p], null, j);
                         }
-                    } else if (data.ctx.phase === Phases.PlaceCoins
-                        && Number(data.ctx.currentPlayer) === p) {
+                    } else if (data.ctx.phase === Phases.PlaceCoins && Number(data.ctx.currentPlayer) === p) {
                         DrawCoin(data, playerCells, `coin`,
                             data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                             data.G.publicPlayers[p], null, null,
@@ -264,8 +258,7 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Eleme
                         );
                         const coin: CoinType = data.G.publicPlayers[p].boardCoins[coinIndex];
                         if (coin === null) {
-                            if (Number(data.ctx.currentPlayer) === p
-                                && data.ctx.phase !== Phases.PlaceCoinsUline
+                            if (Number(data.ctx.currentPlayer) === p && data.ctx.phase !== Phases.PlaceCoinsUline
                                 && (data.ctx.phase === Phases.PlaceCoins || (data.ctx.activePlayers
                                     && data.ctx.activePlayers[Number(data.ctx.currentPlayer)]) ===
                                     Stages.PlaceTradingCoinsUline)) {
@@ -274,8 +267,8 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Eleme
                                     null, data.moves.ClickBoardCoinMove.name,
                                     j);
                             } else {
-                                DrawCoin(data, playerCells, `back-small-market-coin`, coin,
-                                    coinIndex, data.G.publicPlayers[p]);
+                                DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex,
+                                    data.G.publicPlayers[p]);
                             }
                         } else if (Number(data.ctx.currentPlayer) === p
                             && (data.ctx.phase === Phases.PlaceCoins || (data.ctx.activePlayers
@@ -288,8 +281,7 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Eleme
                             if (data.G.winner.length || (data.ctx.phase !== Phases.PlaceCoins
                                 && Number(data.ctx.currentPlayer) === p
                                 && data.G.publicPlayers[p].boardCoins[data.G.currentTavern] !== null
-                                && data.G.publicPlayers[p].boardCoins[data.G.currentTavern]
-                                    ?.isTriggerTrading)) {
+                                && data.G.publicPlayers[p].boardCoins[data.G.currentTavern]?.isTriggerTrading)) {
                                 DrawCoin(data, playerCells, `coin`, coin, coinIndex,
                                     data.G.publicPlayers[p]);
                             } else {

@@ -304,8 +304,8 @@ export const DrawProfit = (data: BoardProps<MyGameState>): JSX.Element => {
                     const handCoins = data.G.publicPlayers[Number(data.ctx.currentPlayer)].handCoins
                         .filter((coin: CoinType): boolean => coin !== null);
                     let handCoinIndex = -1;
-                    for (let j = 0; j <
-                        data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins.length; j++) {
+                    for (let j = 0; j < data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins.length;
+                        j++) {
                         // todo Check .? for all coins!!! and delete AS
                         if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].buffs.everyTurn ===
                             HeroNames.Uline
@@ -331,13 +331,12 @@ export const DrawProfit = (data: BoardProps<MyGameState>): JSX.Element => {
                             && !data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]
                                 ?.isTriggerTrading) {
                             DrawCoin(data, boardCells, `coin`,
-                                data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                    .boardCoins[j], j,
+                                data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j], j,
                                 data.G.publicPlayers[Number(data.ctx.currentPlayer)],
                                 `border-2`, null,
                                 data.moves.ClickCoinToUpgradeMove.name, j, `board`,
-                                data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                    .boardCoins[j]?.isInitial as boolean);
+                                data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]?.isInitial as
+                                boolean);
                         }
                     }
                 }
@@ -390,11 +389,10 @@ export const DrawTaverns = (data: BoardProps<MyGameState>, gridClass: string) =>
                         tavernCardSuit = tavernCard.suit;
                     }
                     if (t === data.G.currentTavern) {
-                        DrawCard(data, boardCells, tavernCard, j, null,
-                            tavernCardSuit, data.moves.ClickCardMove.name, j);
+                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit,
+                            data.moves.ClickCardMove.name, j);
                     } else {
-                        DrawCard(data, boardCells, tavernCard, j, null,
-                            tavernCardSuit);
+                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);
                     }
                 }
             }
@@ -428,10 +426,9 @@ export const DrawTaverns = (data: BoardProps<MyGameState>, gridClass: string) =>
  */
 export const DrawTierCards = (data: BoardProps<MyGameState>): JSX.Element => (
     <b>Tier: <span className="italic">
-        {data.G.decks.length - data.G.tierToEnd + 1 > data.G.decks.length ?
-            data.G.decks.length : data.G.decks.length - data.G.tierToEnd + 1}
-        /{data.G.decks.length} ({data.G.decks.length - data.G.tierToEnd !== 2 ?
-            data.G.decks[data.G.decks.length - data.G.tierToEnd].length : 0}
+        {data.G.decks.length - data.G.tierToEnd + 1 > data.G.decks.length ? data.G.decks.length :
+            data.G.decks.length - data.G.tierToEnd + 1}/{data.G.decks.length} ({data.G.decks.length - data.G.tierToEnd
+                !== 2 ? data.G.decks[data.G.decks.length - data.G.tierToEnd].length : 0}
         {data.G.decks.length - data.G.tierToEnd === 0 ? `/`
             + data.G.decks.reduce((count: number, current: DeckCardTypes[]) =>
                 count + current.length, 0) : ``} cards left)
