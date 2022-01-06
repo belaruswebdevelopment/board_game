@@ -213,7 +213,7 @@ export const moveValidators: IMoveValidators = {
         getRange: ({ G }: IMoveValidatorParams): [number, number] => ([0, Object.values(G.distinctions).length]),
         validate: ({ G, ctx, id }: IMoveValidatorParams): boolean => {
             if (id !== undefined) {
-                return Object.values(G.distinctions).indexOf(Number(ctx?.currentPlayer)) === id;
+                return Object.values(G.distinctions).indexOf(ctx?.currentPlayer) === id;
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
@@ -222,7 +222,7 @@ export const moveValidators: IMoveValidators = {
     ClickCampCardMove: {
         getRange: ({ G }: IMoveValidatorParams): [number, number] => ([0, G.camp.length]),
         validate: ({ G, ctx }: IMoveValidatorParams): boolean =>
-            G.expansions.thingvellir.active && (Number(ctx?.currentPlayer) === G.publicPlayersOrder[0]
+            G.expansions.thingvellir.active && (ctx?.currentPlayer === G.publicPlayersOrder[0]
                 || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx?.currentPlayer)].buffs.goCamp))),
     },
 };

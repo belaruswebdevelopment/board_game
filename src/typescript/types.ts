@@ -12,4 +12,4 @@ export type ArgsTypes = (string | number | boolean | null | object)[];
 /**
  * <h3>Типы данных для преимуществ.</h3>
  */
-export type DistinctionTypes = null | undefined | number;
+export type DistinctionTypes = null | undefined | string;

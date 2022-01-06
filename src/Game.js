@@ -1,4 +1,4 @@
-import { PlayerView } from "boardgame.io/core";
+import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { DrawProfitCampAction } from "./actions/CampActions";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { RefillCamp } from "./Camp";
@@ -27,11 +27,7 @@ import { ActionTypes, ConfigNames, DrawNames, Phases, RusCardTypes } from "./typ
  * <li>При определении хода в каждую фазу игры.</li>
  * </ol>
  */
-const order = {
-    first: () => 0,
-    next: (G, ctx) => (ctx.playOrderPos + 1) % G.publicPlayersOrder.length,
-    playOrder: (G) => G.publicPlayersOrder.map((order) => String(order)),
-};
+const order = TurnOrder.CUSTOM_FROM(`publicPlayersOrder`);
 /**
  * <h3>Параметры игры.</h3>
  * <p>Применения:</p>
@@ -40,6 +36,8 @@ const order = {
  * </ol>
  */
 export const BoardGame = {
+    // todo Add all hooks external functions to all {}
+    // todo Check all endPhase / setPhase &  next (may be with G.condition ? 'phaseC' : 'phaseB') in it => add next or better move to hooks functions
     name: `nidavellir`,
     setup: SetupGame,
     playerView: PlayerView.STRIP_SECRETS,
@@ -66,6 +64,9 @@ export const BoardGame = {
         placeCoinsUline: {
             turn: {
                 order,
+                // todo Move endTurn to moveLimit
+                // minMoves: 2,
+                // maxMoves: 2,
             },
             moves: {
                 ClickHandCoinMove,
@@ -236,8 +237,8 @@ export const BoardGame = {
                 players.forEach((playerSorted) => {
                     if (playerSorted.campCards
                         .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
-                        playersIndexes.push(G.publicPlayers
-                            .findIndex((player) => player.nickname === playerSorted.nickname));
+                        playersIndexes.push(String(G.publicPlayers
+                            .findIndex((player) => player.nickname === playerSorted.nickname)));
                     }
                 });
                 G.publicPlayersOrder = playersIndexes;
@@ -250,7 +251,7 @@ export const BoardGame = {
                             name: DrawProfitCampAction.name,
                             type: ActionTypes.Camp,
                         },
-                        playerId: G.publicPlayersOrder[0],
+                        playerId: Number(G.publicPlayersOrder[0]),
                         config: {
                             name: ConfigNames.StartOrPassEnlistmentMercenaries,
                             drawName: DrawNames.StartOrPassEnlistmentMercenaries,
@@ -320,6 +321,9 @@ export const BoardGame = {
         getMjollnirProfit: {
             turn: {
                 order,
+                // todo Move endTurn to moveLimit
+                // minMoves: 1,
+                // maxMoves: 1,
             },
             moves: {
                 GetMjollnirProfitMove,
@@ -328,12 +332,16 @@ export const BoardGame = {
         brisingamensEndGame: {
             turn: {
                 order,
+                // todo Move endTurn to moveLimit
+                // minMoves: 1,
+                // maxMoves: 1,
             },
             moves: {
                 DiscardCardFromPlayerBoardMove,
             },
         },
         getDistinctions: {
+            // todo Allow Pick Hero and all acions from hero pick to this phase
             turn: {
                 order,
                 stages: {

@@ -11,7 +11,7 @@ import { IConfig } from "../typescript/action_interfaces";
 import { IDrawBoardOptions } from "../typescript/board_interfaces";
 import { CampCardTypes, DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { ConfigNames, HeroNames } from "../typescript/enums";
+import { ConfigNames, HeroNames, MoveNames } from "../typescript/enums";
 import { MyGameState } from "../typescript/game_data_interfaces";
 import { INumberValues } from "../typescript/object_values_interfaces";
 
@@ -40,7 +40,7 @@ export const DrawCamp = (data: BoardProps<MyGameState>): JSX.Element => {
                 );
             } else {
                 DrawCard(data, boardCells, campCard, j, null, null,
-                    data.moves.ClickCampCardMove.name, j);
+                    MoveNames.ClickCampCardMove, j);
             }
         }
     }
@@ -141,7 +141,7 @@ export const DrawHeroes = (data: BoardProps<MyGameState>): JSX.Element => {
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j;
             DrawCard(data, boardCells, data.G.heroes[increment], increment, null,
-                null, data.moves.ClickHeroCardMove.name, increment);
+                null, MoveNames.ClickHeroCardMove, increment);
             if (increment + 1 === data.G.heroes.length) {
                 break;
             }
@@ -187,7 +187,7 @@ export const DrawMarketCoins = (data: BoardProps<MyGameState>): JSX.Element => {
                 coinClassName: string = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
             DrawCoin(data, boardCells, `market`,
                 data.G.marketCoinsUnique[increment], increment, null, coinClassName,
-                countMarketCoins[tempCoinValue], data.moves.ClickHandCoinMove.name,
+                countMarketCoins[tempCoinValue], MoveNames.ClickHandCoinMove,
                 j);
             if (increment + 1 === data.G.marketCoinsUnique.length) {
                 break;
@@ -244,7 +244,7 @@ export const DrawProfit = (data: BoardProps<MyGameState>): JSX.Element => {
                 }
                 DrawCard(data, boardCells, data.G.decks[1][j], j,
                     data.G.publicPlayers[Number(data.ctx.currentPlayer)], suit,
-                    data.moves.ClickCardToPickDistinctionMove.name, j);
+                    MoveNames.ClickCardToPickDistinctionMove, j);
             }
         } else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
             caption += `${data.G.actionsNum} card${data.G.actionsNum > 1 ? `s` : ``} to discard from your board.`;
@@ -324,7 +324,7 @@ export const DrawProfit = (data: BoardProps<MyGameState>): JSX.Element => {
                                         .handCoins[handCoinId], j,
                                     data.G.publicPlayers[Number(data.ctx.currentPlayer)],
                                     `border-2`, null,
-                                    data.moves.ClickCoinToUpgradeMove.name, j, `hand`,
+                                    MoveNames.ClickCoinToUpgradeMove, j, `hand`,
                                     handCoins[handCoinIndex]?.isInitial as boolean);
                             }
                         } else if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]
@@ -334,7 +334,7 @@ export const DrawProfit = (data: BoardProps<MyGameState>): JSX.Element => {
                                 data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j], j,
                                 data.G.publicPlayers[Number(data.ctx.currentPlayer)],
                                 `border-2`, null,
-                                data.moves.ClickCoinToUpgradeMove.name, j, `board`,
+                                MoveNames.ClickCoinToUpgradeMove, j, `board`,
                                 data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]?.isInitial as
                                 boolean);
                         }
@@ -390,7 +390,7 @@ export const DrawTaverns = (data: BoardProps<MyGameState>, gridClass: string) =>
                     }
                     if (t === data.G.currentTavern) {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit,
-                            data.moves.ClickCardMove.name, j);
+                            MoveNames.ClickCardMove, j);
                     } else {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);
                     }

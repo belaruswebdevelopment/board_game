@@ -56,7 +56,7 @@
 /*export const GetTop1PlayerId = (G: MyGameState, currentPlayerId: number): number => {
     let top1PlayerId: number =
     G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean => IsTopPlayer(G, index));
-    if (G.publicPlayersOrder.indexOf(currentPlayerId) > G.publicPlayersOrder.indexOf(top1PlayerId)) {
+    if (G.publicPlayersOrder.indexOf(String(currentPlayerId)) > G.publicPlayersOrder.indexOf(String(top1PlayerId))) {
         top1PlayerId = -1;
     }
     return top1PlayerId;
@@ -86,7 +86,7 @@
         top2PlayerId = G.publicPlayers.findIndex((player: IPublicPlayer, index: number): boolean =>
         index !== top1PlayerId && IsTopPlayer(G, index));
     }
-    if (G.publicPlayersOrder.indexOf(top1PlayerId) > G.publicPlayersOrder.indexOf(top2PlayerId)) {
+    if (G.publicPlayersOrder.indexOf(String(top1PlayerId)) > G.publicPlayersOrder.indexOf(String(top2PlayerId))) {
         top2PlayerId = -1;
     }
     return top2PlayerId;

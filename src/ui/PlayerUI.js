@@ -5,7 +5,7 @@ import { TotalRank } from "../helpers/ScoreHelpers";
 import { DrawCard, DrawCoin } from "../helpers/UIElementHelpers";
 import { CurrentScoring } from "../Score";
 import { tavernsConfig } from "../Tavern";
-import { HeroNames, Phases, Stages } from "../typescript/enums";
+import { HeroNames, MoveNames, Phases, Stages } from "../typescript/enums";
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
  * <p>Применения:</p>
@@ -125,14 +125,14 @@ export const DrawPlayersBoardsCoins = (data) => {
                         if ((Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins)
                             || (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoinsUline
                                 && j === data.G.currentTavern + 1)) {
-                            DrawCoin(data, playerCells, `back-tavern-icon`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p], null, j, data.moves.ClickBoardCoinMove.name, j);
+                            DrawCoin(data, playerCells, `back-tavern-icon`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p], null, j, MoveNames.ClickBoardCoinMove, j);
                         }
                         else {
                             DrawCoin(data, playerCells, `back-tavern-icon`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p], null, j);
                         }
                     }
                     else if (data.ctx.phase === Phases.PlaceCoins && Number(data.ctx.currentPlayer) === p) {
-                        DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p], null, null, data.moves.ClickBoardCoinMove.name, j);
+                        DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p], null, null, MoveNames.ClickBoardCoinMove, j);
                     }
                     else {
                         if (data.G.winner.length || (data.ctx.phase === Phases.PlaceCoinsUline
@@ -161,7 +161,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                                 && (data.ctx.phase === Phases.PlaceCoins || (data.ctx.activePlayers
                                     && data.ctx.activePlayers[Number(data.ctx.currentPlayer)]) ===
                                     Stages.PlaceTradingCoinsUline)) {
-                                DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex, data.G.publicPlayers[p], null, null, data.moves.ClickBoardCoinMove.name, j);
+                                DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex, data.G.publicPlayers[p], null, null, MoveNames.ClickBoardCoinMove, j);
                             }
                             else {
                                 DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex, data.G.publicPlayers[p]);
@@ -171,7 +171,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             && (data.ctx.phase === Phases.PlaceCoins || (data.ctx.activePlayers
                                 && data.ctx.activePlayers[Number(data.ctx.currentPlayer)]) ===
                                 Stages.PlaceTradingCoinsUline)) {
-                            DrawCoin(data, playerCells, `coin`, coin, coinIndex, data.G.publicPlayers[p], null, null, data.moves.ClickBoardCoinMove.name, j);
+                            DrawCoin(data, playerCells, `coin`, coin, coinIndex, data.G.publicPlayers[p], null, null, MoveNames.ClickBoardCoinMove, j);
                         }
                         else {
                             if (data.G.winner.length || (data.ctx.phase !== Phases.PlaceCoins
@@ -225,7 +225,7 @@ export const DrawPlayersHandsCoins = (data) => {
                             || data.ctx.phase === Phases.PlaceCoinsUline || (data.ctx.activePlayers
                             && data.ctx.activePlayers[Number(data.ctx.currentPlayer)]) ===
                             Stages.PlaceTradingCoinsUline)) {
-                            DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].handCoins[j], j, data.G.publicPlayers[p], coinClasses, null, data.moves.ClickHandCoinMove.name, j);
+                            DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].handCoins[j], j, data.G.publicPlayers[p], coinClasses, null, MoveNames.ClickHandCoinMove, j);
                         }
                         else {
                             DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].handCoins[j], j, data.G.publicPlayers[p], coinClasses);

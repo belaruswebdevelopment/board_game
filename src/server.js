@@ -1,4 +1,4 @@
-import { Server } from 'boardgame.io/server';
+import { Origins, Server } from 'boardgame.io/server';
 import { BoardGame } from './Game';
 /**
  * <h3>Сервер игры.</h3>
@@ -9,5 +9,6 @@ import { BoardGame } from './Game';
  */
 const server = Server({
     games: [BoardGame],
+    origins: [Origins.LOCALHOST],
 });
 server.run(8000);

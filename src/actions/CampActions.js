@@ -1,13 +1,13 @@
 import { isArtefactCard } from "../Camp";
 import { CreateCard } from "../Card";
 import { suitsConfig } from "../data/SuitData";
-import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, PickCurrentHero, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
-import { AddCampCardToPlayerCards, AddCampCardToPlayer } from "../helpers/CampCardHelpers";
+import { AddBuffToPlayer, DrawCurrentProfit, PickCurrentHero, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { AddCampCardToPlayer, AddCampCardToPlayerCards } from "../helpers/CampCardHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
-import { EndActionFromStackAndAddNew, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, AddActionsToStack } from "../helpers/StackHelpers";
+import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { Phases, RusCardTypes, ActionTypes, ConfigNames, DrawNames, LogTypes, HeroNames, Stages, SuitNames } from "../typescript/enums";
+import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с добавлением бафов от артефактов игроку.</h3>
  * <p>Применения:</p>
@@ -35,8 +35,7 @@ export const AddBuffToPlayerCampAction = (G, ctx, config) => {
  * @param cardId Id карты.
  */
 export const AddCampCardToCardsAction = (G, ctx, config, cardId) => {
-    if (ctx.phase === Phases.PickCards && Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
-        && ctx.activePlayers === null) {
+    if (ctx.phase === Phases.PickCards && ctx.currentPlayer === G.publicPlayersOrder[0] && ctx.activePlayers === null) {
         G.campPicked = true;
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime) {
@@ -155,6 +154,8 @@ export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, config, suit, cardId
  * @param cardId Id сбрасываемой карты.
  */
 export const DiscardSuitCardAction = (G, ctx, config, suit, playerId, cardId) => {
+    console.log(playerId);
+    console.log(ctx.activePlayers);
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         if (G.publicPlayers[playerId].cards[suit][cardId].type !== RusCardTypes.HERO) {
@@ -402,7 +403,8 @@ export const StartDiscardSuitCardAction = (G, ctx, config) => {
                 AddActionsToStack(G, ctx, stack);
             }
         }
-        (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({ value });
+        // ctx.events?.setActivePlayers({ value });
+        (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({ others: Stages.DiscardSuitCard, /* minMoves: 1, maxMoves: 1 */ });
         G.drawProfit = ConfigNames.HofudAction;
     }
     else {

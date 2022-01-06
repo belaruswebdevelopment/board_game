@@ -2,7 +2,7 @@ import { BoardProps } from "boardgame.io/react";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { IDrawBoardOptions } from "../typescript/board_interfaces";
-import { RusCardTypes } from "../typescript/enums";
+import { MoveNames, RusCardTypes } from "../typescript/enums";
 import { MyGameState } from "../typescript/game_data_interfaces";
 import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 import { DrawCard } from "./UIElementHelpers";
@@ -101,7 +101,7 @@ export const DrawPlayersBoardForSuitCardDiscard = (data: BoardProps<MyGameState>
                         DrawCard(data, playersCells,
                             data.G.publicPlayers[p].cards[suit][i], i,
                             data.G.publicPlayers[p], suit,
-                            data.moves.DiscardSuitCardFromPlayerBoardMove.name, suit, p, i);
+                            MoveNames.DiscardSuitCardFromPlayerBoardMove, suit, p, i);
                     }
                 } else {
                     playersCells.push(

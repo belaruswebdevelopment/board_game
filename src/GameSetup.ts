@@ -100,7 +100,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
     }
     const players: IPlayers = {},
         publicPlayers: IPublicPlayer[] = [],
-        publicPlayersOrder: number[] = [],
+        publicPlayersOrder: string[] = [],
         exchangeOrder: number[] = [],
         priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
     for (let i = 0; i < ctx.numPlayers; i++) {

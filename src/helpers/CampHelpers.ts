@@ -29,14 +29,14 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                 for (let i = 0; i < ctx.numPlayers; i++) {
                     if (G.publicPlayers[i].buffs.discardCardEndGame) {
                         isNewPhase = true;
-                        G.publicPlayersOrder.push(i);
+                        G.publicPlayersOrder.push(String(i));
                         const stack: IStack[] = [
                             {
                                 action: {
                                     name: DrawProfitCampAction.name,
                                     type: ActionTypes.Camp,
                                 },
-                                playerId: G.publicPlayersOrder[0],
+                                playerId: Number(G.publicPlayersOrder[0]),
                                 config: {
                                     name: ConfigNames.BrisingamensEndGameAction,
                                     drawName: DrawNames.BrisingamensEndGame,
@@ -47,7 +47,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                                     name: DiscardAnyCardFromPlayerBoardAction.name,
                                     type: ActionTypes.Camp,
                                 },
-                                playerId: G.publicPlayersOrder[0],
+                                playerId: Number(G.publicPlayersOrder[0]),
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);
@@ -61,14 +61,14 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                 for (let i = 0; i < ctx.numPlayers; i++) {
                     if (G.publicPlayers[i].buffs.getMjollnirProfit) {
                         isNewPhase = true;
-                        G.publicPlayersOrder.push(i);
+                        G.publicPlayersOrder.push(String(i));
                         const stack: IStack[] = [
                             {
                                 action: {
                                     name: DrawProfitCampAction.name,
                                     type: ActionTypes.Camp,
                                 },
-                                playerId: G.publicPlayersOrder[0],
+                                playerId: Number(G.publicPlayersOrder[0]),
                                 config: {
                                     name: ConfigNames.GetMjollnirProfit,
                                     drawName: DrawNames.Mjollnir,
@@ -79,7 +79,7 @@ export const CheckEndGameLastActions = (G: MyGameState, ctx: Ctx): void => {
                                     name: GetMjollnirProfitAction.name,
                                     type: ActionTypes.Camp,
                                 },
-                                playerId: G.publicPlayersOrder[0],
+                                playerId: Number(G.publicPlayersOrder[0]),
                             },
                         ];
                         AddActionsToStack(G, ctx, stack);

@@ -7,7 +7,7 @@ import { CurrentScoring } from "../Score";
 import { tavernsConfig } from "../Tavern";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { HeroNames, Phases, Stages } from "../typescript/enums";
+import { HeroNames, MoveNames, Phases, Stages } from "../typescript/enums";
 import { MyGameState } from "../typescript/game_data_interfaces";
 
 /**
@@ -203,7 +203,7 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Eleme
                             DrawCoin(data, playerCells, `back-tavern-icon`,
                                 data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                                 data.G.publicPlayers[p], null, j,
-                                data.moves.ClickBoardCoinMove.name, j);
+                                MoveNames.ClickBoardCoinMove, j);
                         } else {
                             DrawCoin(data, playerCells, `back-tavern-icon`,
                                 data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
@@ -213,7 +213,7 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Eleme
                         DrawCoin(data, playerCells, `coin`,
                             data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex,
                             data.G.publicPlayers[p], null, null,
-                            data.moves.ClickBoardCoinMove.name, j);
+                            MoveNames.ClickBoardCoinMove, j);
                     } else {
                         if (data.G.winner.length || (data.ctx.phase === Phases.PlaceCoinsUline
                             && data.G.currentTavern >= j - 1) || (data.ctx.phase !== Phases.PlaceCoins
@@ -264,7 +264,7 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Eleme
                                     Stages.PlaceTradingCoinsUline)) {
                                 DrawCoin(data, playerCells, `back-small-market-coin`, coin,
                                     coinIndex, data.G.publicPlayers[p], null,
-                                    null, data.moves.ClickBoardCoinMove.name,
+                                    null, MoveNames.ClickBoardCoinMove,
                                     j);
                             } else {
                                 DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex,
@@ -276,7 +276,7 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Eleme
                                 Stages.PlaceTradingCoinsUline)) {
                             DrawCoin(data, playerCells, `coin`, coin, coinIndex,
                                 data.G.publicPlayers[p], null, null,
-                                data.moves.ClickBoardCoinMove.name, j);
+                                MoveNames.ClickBoardCoinMove, j);
                         } else {
                             if (data.G.winner.length || (data.ctx.phase !== Phases.PlaceCoins
                                 && Number(data.ctx.currentPlayer) === p
@@ -355,7 +355,7 @@ export const DrawPlayersHandsCoins = (data: BoardProps<MyGameState>): JSX.Elemen
                             Stages.PlaceTradingCoinsUline)) {
                             DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].handCoins[j], j,
                                 data.G.publicPlayers[p], coinClasses, null,
-                                data.moves.ClickHandCoinMove.name, j);
+                                MoveNames.ClickHandCoinMove, j);
                         } else {
                             DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].handCoins[j], j,
                                 data.G.publicPlayers[p], coinClasses);

@@ -6,7 +6,7 @@ import { suitsConfig } from "../data/SuitData";
 import { IConfig } from "../typescript/action_interfaces";
 import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { ConfigNames, HeroNames, RusCardTypes } from "../typescript/enums";
+import { ConfigNames, HeroNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { MyGameState } from "../typescript/game_data_interfaces";
 import { IBotMoveArgumentsTypes } from "../typescript/types";
 import { TotalRank } from "./ScoreHelpers";
@@ -22,7 +22,7 @@ export const AddCoinToPouchProfit = (G: MyGameState, ctx: Ctx, data: BoardProps<
                 DrawCoin(data, boardCells, `coin`,
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j], j,
                     G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
-                    null, data.moves.AddCoinToPouchMove.name, j);
+                    null, MoveNames.AddCoinToPouchMove, j);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }
@@ -115,7 +115,7 @@ export const DiscardCardFromBoardProfit = (G: MyGameState, ctx: Ctx,
                             DrawCard(data, boardCells,
                                 G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last], last,
                                 G.publicPlayers[Number(ctx.currentPlayer)], suit,
-                                data.moves.DiscardCardMove.name, suit, last);
+                                MoveNames.DiscardCardMove, suit, last);
                         } else if (Array.isArray(data)) {
                             data.push([suit, last]);
                         }
@@ -160,7 +160,7 @@ export const GetEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx,
         if (!Array.isArray(data) && boardCells !== undefined) {
             DrawCard(data, boardCells, mercenaries[j], j,
                 G.publicPlayers[Number(ctx.currentPlayer)], null,
-                data.moves.GetEnlistmentMercenariesMove.name, j);
+                MoveNames.GetEnlistmentMercenariesMove, j);
         } else if (Array.isArray(data)) {
             data.push([j]);
         }
@@ -201,7 +201,7 @@ export const PickCampCardHoldaProfit = (G: MyGameState, ctx: Ctx,
             if (!Array.isArray(data) && boardCells !== undefined) {
                 DrawCard(data, boardCells, card, j,
                     G.publicPlayers[Number(ctx.currentPlayer)], null,
-                    data.moves.ClickCampCardHoldaMove.name, j);
+                    MoveNames.ClickCampCardHoldaMove, j);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }
@@ -294,7 +294,7 @@ export const StartEnlistmentMercenariesProfit = (G: MyGameState, ctx: Ctx,
             if (!Array.isArray(data) && boardCells !== undefined) {
                 DrawButton(data, boardCells, `start Enlistment Mercenaries`, `Start`,
                     G.publicPlayers[Number(ctx.currentPlayer)],
-                    data.moves.StartEnlistmentMercenariesMove.name);
+                    MoveNames.StartEnlistmentMercenariesMove);
             } else if (Array.isArray(data)) {
                 data.push([j]);
             }
@@ -323,7 +323,7 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G: MyGameState, ctx: Ctx,
                         DrawCoin(data, boardCells, `coin`,
                             G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j], j,
                             G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
-                            null, data.moves.UpgradeCoinVidofnirVedrfolnirMove.name,
+                            null, MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
                             j, `board`, coin.isInitial);
                     } else if (Array.isArray(data)) {
                         data.push([j, `board`, coin.isInitial]);

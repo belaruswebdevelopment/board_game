@@ -1,3 +1,13 @@
+import { Client } from "boardgame.io/react";
+import { BoardGame } from "./Game";
+import { GameBoard } from "./GameBoard";
+const App = Client({
+    // debug: false,
+    game: BoardGame,
+    board: GameBoard,
+    numPlayers: 5,
+});
+export default App;
 /*import React from "react";
 import {Client} from "boardgame.io/react";
 import {Local} from "boardgame.io/multiplayer";
@@ -48,16 +58,6 @@ const enableLocalPlayer: boolean = true,
     );
 
 export default App;*/
-import { Client } from "boardgame.io/react";
-import { BoardGame } from "./Game";
-import { GameBoard } from "./GameBoard";
-const App = Client({
-    // debug: false,
-    game: BoardGame,
-    board: GameBoard,
-    numPlayers: 5,
-});
-export default App;
 /*
 import React from "react";
 import {render} from "react-dom";
@@ -106,9 +106,7 @@ class App extends React.Component {
         }
         return (
             <div>
-                <BoardGameClient
-                    playerID={this.state.playerID}
-                />
+                <BoardGameClient playerID={this.state.playerID}/>
             </div>
         );
     }

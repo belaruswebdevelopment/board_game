@@ -7,7 +7,7 @@ import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, Ge
 import { DrawCard, DrawCoin } from "../helpers/UIElementHelpers";
 import { DrawBoard, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard } from "../helpers/UIHelpers";
 import { tavernsConfig } from "../Tavern";
-import { ConfigNames, HeroNames } from "../typescript/enums";
+import { ConfigNames, HeroNames, MoveNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка карт кэмпа.</h3>
  * <p>Применения:</p>
@@ -27,7 +27,7 @@ export const DrawCamp = (data) => {
                 boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }, void 0) }, `Camp ${j} icon`));
             }
             else {
-                DrawCard(data, boardCells, campCard, j, null, null, data.moves.ClickCampCardMove.name, j);
+                DrawCard(data, boardCells, campCard, j, null, null, MoveNames.ClickCampCardMove, j);
             }
         }
     }
@@ -85,7 +85,7 @@ export const DrawHeroes = (data) => {
         boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j;
-            DrawCard(data, boardCells, data.G.heroes[increment], increment, null, null, data.moves.ClickHeroCardMove.name, increment);
+            DrawCard(data, boardCells, data.G.heroes[increment], increment, null, null, MoveNames.ClickHeroCardMove, increment);
             if (increment + 1 === data.G.heroes.length) {
                 break;
             }
@@ -111,7 +111,7 @@ export const DrawMarketCoins = (data) => {
         boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j, tempCoinValue = data.G.marketCoinsUnique[increment].value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
-            DrawCoin(data, boardCells, `market`, data.G.marketCoinsUnique[increment], increment, null, coinClassName, countMarketCoins[tempCoinValue], data.moves.ClickHandCoinMove.name, j);
+            DrawCoin(data, boardCells, `market`, data.G.marketCoinsUnique[increment], increment, null, coinClassName, countMarketCoins[tempCoinValue], MoveNames.ClickHandCoinMove, j);
             if (increment + 1 === data.G.marketCoinsUnique.length) {
                 break;
             }
@@ -150,7 +150,7 @@ export const DrawProfit = (data) => {
                 if (isCardNotAction(card)) {
                     suit = card.suit;
                 }
-                DrawCard(data, boardCells, data.G.decks[1][j], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], suit, data.moves.ClickCardToPickDistinctionMove.name, j);
+                DrawCard(data, boardCells, data.G.decks[1][j], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], suit, MoveNames.ClickCardToPickDistinctionMove, j);
             }
         }
         else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
@@ -229,12 +229,12 @@ export const DrawProfit = (data) => {
                                 && !((_b = data.G.publicPlayers[Number(data.ctx.currentPlayer)]
                                     .handCoins[handCoinId]) === null || _b === void 0 ? void 0 : _b.isTriggerTrading)) {
                                 DrawCoin(data, boardCells, `coin`, data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                    .handCoins[handCoinId], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, data.moves.ClickCoinToUpgradeMove.name, j, `hand`, (_c = handCoins[handCoinIndex]) === null || _c === void 0 ? void 0 : _c.isInitial);
+                                    .handCoins[handCoinId], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `hand`, (_c = handCoins[handCoinIndex]) === null || _c === void 0 ? void 0 : _c.isInitial);
                             }
                         }
                         else if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]
                             && !((_d = data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isTriggerTrading)) {
-                            DrawCoin(data, boardCells, `coin`, data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, data.moves.ClickCoinToUpgradeMove.name, j, `board`, (_e = data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]) === null || _e === void 0 ? void 0 : _e.isInitial);
+                            DrawCoin(data, boardCells, `coin`, data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `board`, (_e = data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]) === null || _e === void 0 ? void 0 : _e.isInitial);
                         }
                     }
                 }
@@ -270,7 +270,7 @@ export const DrawTaverns = (data, gridClass) => {
                         tavernCardSuit = tavernCard.suit;
                     }
                     if (t === data.G.currentTavern) {
-                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit, data.moves.ClickCardMove.name, j);
+                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit, MoveNames.ClickCardMove, j);
                     }
                     else {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);

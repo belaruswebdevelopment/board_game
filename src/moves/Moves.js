@@ -99,7 +99,7 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
  * @returns
  */
 export const ClickDistinctionCardMove = (G, ctx, cardId) => {
-    const index = Object.values(G.distinctions).indexOf(Number(ctx.currentPlayer)), isValidMove = IsValidMove({ objId: cardId, values: [index] });
+    const index = Object.values(G.distinctions).indexOf(ctx.currentPlayer), isValidMove = IsValidMove({ objId: cardId, values: [index] });
     if (!isValidMove) {
         return INVALID_MOVE;
     }

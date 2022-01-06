@@ -37,27 +37,27 @@ export const GetMaxCoinValue = (player: IPublicPlayer): number => (Math.max(...p
  * @returns Порядок ходов игроков & порядок изменения ходов игроками.
  */
 export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins => {
-    const playersOrder: number[] = [],
+    const playersOrderNumbers: number[] = [],
         coinValues: number[] = [],
         exchangeOrder: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const coin: CoinType = G.publicPlayers[i].boardCoins[G.currentTavern];
         if (coin !== null) {
             coinValues[i] = coin.value;
-            playersOrder.push(i);
+            playersOrderNumbers.push(i);
             exchangeOrder.push(i);
         }
-        for (let j: number = playersOrder.length - 1; j > 0; j--) {
-            const coin: CoinType = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern],
-                prevCoin: CoinType = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
+        for (let j: number = playersOrderNumbers.length - 1; j > 0; j--) {
+            const coin: CoinType = G.publicPlayers[playersOrderNumbers[j]].boardCoins[G.currentTavern],
+                prevCoin: CoinType = G.publicPlayers[playersOrderNumbers[j - 1]].boardCoins[G.currentTavern];
             if (coin !== null && prevCoin !== null) {
                 if (coin.value > prevCoin.value) {
-                    [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                    [playersOrderNumbers[j], playersOrderNumbers[j - 1]] = [playersOrderNumbers[j - 1], playersOrderNumbers[j]];
                 } else if (coin.value === prevCoin.value) {
-                    const priority: IPriority = G.publicPlayers[playersOrder[j]].priority,
-                        prevPriority: IPriority = G.publicPlayers[playersOrder[j - 1]].priority;
+                    const priority: IPriority = G.publicPlayers[playersOrderNumbers[j]].priority,
+                        prevPriority: IPriority = G.publicPlayers[playersOrderNumbers[j - 1]].priority;
                     if (priority.value > prevPriority.value) {
-                        [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                        [playersOrderNumbers[j], playersOrderNumbers[j - 1]] = [playersOrderNumbers[j - 1], playersOrderNumbers[j]];
                     }
                 } else {
                     break;
@@ -93,5 +93,9 @@ export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins 
             [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
         }
     }
-    return { playersOrder, exchangeOrder };
+    const playersOrder = playersOrderNumbers.map((index: number): string => String(index));
+    return {
+        playersOrder,
+        exchangeOrder,
+    };
 };

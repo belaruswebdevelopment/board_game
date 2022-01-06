@@ -28,24 +28,24 @@ export const GetMaxCoinValue = (player) => (Math.max(...player.boardCoins
  * @returns Порядок ходов игроков & порядок изменения ходов игроками.
  */
 export const ResolveBoardCoins = (G, ctx) => {
-    const playersOrder = [], coinValues = [], exchangeOrder = [];
+    const playersOrderNumbers = [], coinValues = [], exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const coin = G.publicPlayers[i].boardCoins[G.currentTavern];
         if (coin !== null) {
             coinValues[i] = coin.value;
-            playersOrder.push(i);
+            playersOrderNumbers.push(i);
             exchangeOrder.push(i);
         }
-        for (let j = playersOrder.length - 1; j > 0; j--) {
-            const coin = G.publicPlayers[playersOrder[j]].boardCoins[G.currentTavern], prevCoin = G.publicPlayers[playersOrder[j - 1]].boardCoins[G.currentTavern];
+        for (let j = playersOrderNumbers.length - 1; j > 0; j--) {
+            const coin = G.publicPlayers[playersOrderNumbers[j]].boardCoins[G.currentTavern], prevCoin = G.publicPlayers[playersOrderNumbers[j - 1]].boardCoins[G.currentTavern];
             if (coin !== null && prevCoin !== null) {
                 if (coin.value > prevCoin.value) {
-                    [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                    [playersOrderNumbers[j], playersOrderNumbers[j - 1]] = [playersOrderNumbers[j - 1], playersOrderNumbers[j]];
                 }
                 else if (coin.value === prevCoin.value) {
-                    const priority = G.publicPlayers[playersOrder[j]].priority, prevPriority = G.publicPlayers[playersOrder[j - 1]].priority;
+                    const priority = G.publicPlayers[playersOrderNumbers[j]].priority, prevPriority = G.publicPlayers[playersOrderNumbers[j - 1]].priority;
                     if (priority.value > prevPriority.value) {
-                        [playersOrder[j], playersOrder[j - 1]] = [playersOrder[j - 1], playersOrder[j]];
+                        [playersOrderNumbers[j], playersOrderNumbers[j - 1]] = [playersOrderNumbers[j - 1], playersOrderNumbers[j]];
                     }
                 }
                 else {
@@ -71,5 +71,9 @@ export const ResolveBoardCoins = (G, ctx) => {
             [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrder[maxIndex], exchangeOrder[minIndex]];
         }
     }
-    return { playersOrder, exchangeOrder };
+    const playersOrder = playersOrderNumbers.map((index) => String(index));
+    return {
+        playersOrder,
+        exchangeOrder,
+    };
 };

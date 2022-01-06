@@ -20,6 +20,7 @@ import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescri
  */
 export const enumerate = (G, ctx) => {
     var _a, _b;
+    // todo Allow Pick Hero and all acions from hero pick to this phase
     //make false for standard bot
     const enableAdvancedBot = true, uniqueArr = [], activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : `default`, advancedString = `advanced`, isAdvancedExist = Object.keys(moveBy[ctx.phase])
         .some((key) => key.includes(advancedString));
@@ -67,7 +68,7 @@ export const enumerate = (G, ctx) => {
         // todo Fix it, now just for bot can do RANDOM move
         let pickCardOrCampCard = `card`;
         if (G.expansions.thingvellir.active
-            && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+            && (ctx.currentPlayer === G.publicPlayersOrder[0]
                 || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
             pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
         }
@@ -290,8 +291,8 @@ export const enumerate = (G, ctx) => {
         });
     }
     // TODO FIX It's not activeStageOfCurrentPlayer it's for Others players!!!
-    // if (activeStageOfCurrentPlayer === "discardSuitCard") {
-    if (ctx.phase === Phases.PickCards && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default `) {
+    // if (ctx.activePlayers.find/findIndex === "discardSuitCard") {
+    if (ctx.phase === Phases.PickCards && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default`) {
         // TODO Fix this (only for quick bot actions)
         // todo Bot can't do async turns...?
         const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;

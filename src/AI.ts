@@ -27,6 +27,7 @@ import { IBotMoveArgumentsTypes } from "./typescript/types";
  * @returns Массив возможных мувов у ботов.
  */
 export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
+    // todo Allow Pick Hero and all acions from hero pick to this phase
     //make false for standard bot
     const enableAdvancedBot = true,
         uniqueArr: DeckCardTypes[] = [],
@@ -81,7 +82,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         // todo Fix it, now just for bot can do RANDOM move
         let pickCardOrCampCard = `card`;
         if (G.expansions.thingvellir.active
-            && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+            && (ctx.currentPlayer === G.publicPlayersOrder[0]
                 || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
             pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
         }
@@ -312,8 +313,8 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         });
     }
     // TODO FIX It's not activeStageOfCurrentPlayer it's for Others players!!!
-    // if (activeStageOfCurrentPlayer === "discardSuitCard") {
-    if (ctx.phase === Phases.PickCards && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default `) {
+    // if (ctx.activePlayers.find/findIndex === "discardSuitCard") {
+    if (ctx.phase === Phases.PickCards && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default`) {
         // TODO Fix this (only for quick bot actions)
         // todo Bot can't do async turns...?
         const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;

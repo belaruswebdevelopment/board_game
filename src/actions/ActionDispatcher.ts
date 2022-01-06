@@ -2,7 +2,7 @@ import { Ctx } from "boardgame.io";
 import { IStack } from "../typescript/action_interfaces";
 import { MyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
-import { DrawProfitAction, DiscardCardFromTavernAction, PassEnlistmentMercenariesAction, PickHeroAction, UpgradeCoinAction } from "./Actions";
+import { DiscardCardFromTavernAction, DrawProfitAction, PassEnlistmentMercenariesAction, PickHeroAction, UpgradeCoinAction } from "./Actions";
 
 /**
  * <h3>Диспетчер действий при их активации.</h3>

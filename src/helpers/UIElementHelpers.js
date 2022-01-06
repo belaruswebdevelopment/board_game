@@ -2,7 +2,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { RusCardTypes, LogTypes } from "../typescript/enums";
+import { LogTypes, MoveNames, RusCardTypes } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -22,10 +22,10 @@ export const DrawButton = (data, boardCells, key, name, player, actionName, ...a
     // eslint-disable-next-line @typescript-eslint/ban-types
     let action = null;
     switch (actionName) {
-        case data.moves.StartEnlistmentMercenariesMove.name:
+        case MoveNames.StartEnlistmentMercenariesMove:
             action = data.moves.StartEnlistmentMercenariesMove;
             break;
-        case data.moves.PassEnlistmentMercenariesMove.name:
+        case MoveNames.PassEnlistmentMercenariesMove:
             action = data.moves.PassEnlistmentMercenariesMove;
             break;
         default:
@@ -54,37 +54,37 @@ export const DrawCard = (data, playerCells, card, id, player, suit, actionName, 
     // eslint-disable-next-line @typescript-eslint/ban-types
     action = null;
     switch (actionName) {
-        case data.moves.ClickHeroCardMove.name:
+        case MoveNames.ClickHeroCardMove:
             action = data.moves.ClickHeroCardMove;
             break;
-        case data.moves.ClickCampCardMove.name:
+        case MoveNames.ClickCampCardMove:
             action = data.moves.ClickCampCardMove;
             break;
-        case data.moves.ClickCardMove.name:
+        case MoveNames.ClickCardMove:
             action = data.moves.ClickCardMove;
             break;
-        case data.moves.ClickCardToPickDistinctionMove.name:
+        case MoveNames.ClickCardToPickDistinctionMove:
             action = data.moves.ClickCardToPickDistinctionMove;
             break;
-        case data.moves.DiscardCardMove.name:
+        case MoveNames.DiscardCardMove:
             action = data.moves.DiscardCardMove;
             break;
-        case data.moves.PickDiscardCardMove.name:
+        case MoveNames.PickDiscardCardMove:
             action = data.moves.PickDiscardCardMove;
             break;
-        case data.moves.DiscardCard2PlayersMove.name:
+        case MoveNames.DiscardCard2PlayersMove:
             action = data.moves.DiscardCard2PlayersMove;
             break;
-        case data.moves.DiscardCardFromPlayerBoardMove.name:
+        case MoveNames.DiscardCardFromPlayerBoardMove:
             action = data.moves.DiscardCardFromPlayerBoardMove;
             break;
-        case data.moves.DiscardSuitCardFromPlayerBoardMove.name:
+        case MoveNames.DiscardSuitCardFromPlayerBoardMove:
             action = data.moves.DiscardSuitCardFromPlayerBoardMove;
             break;
-        case data.moves.ClickCampCardHoldaMove.name:
+        case MoveNames.ClickCampCardHoldaMove:
             action = data.moves.ClickCampCardHoldaMove;
             break;
-        case data.moves.GetEnlistmentMercenariesMove.name:
+        case MoveNames.GetEnlistmentMercenariesMove:
             action = data.moves.GetEnlistmentMercenariesMove;
             break;
         default:
@@ -161,19 +161,19 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
     // eslint-disable-next-line @typescript-eslint/ban-types
     action = null;
     switch (actionName) {
-        case data.moves.ClickBoardCoinMove.name:
+        case MoveNames.ClickBoardCoinMove:
             action = data.moves.ClickBoardCoinMove;
             break;
-        case data.moves.ClickHandCoinMove.name:
+        case MoveNames.ClickHandCoinMove:
             action = data.moves.ClickHandCoinMove;
             break;
-        case data.moves.ClickCoinToUpgradeMove.name:
+        case MoveNames.ClickCoinToUpgradeMove:
             action = data.moves.ClickCoinToUpgradeMove;
             break;
-        case data.moves.AddCoinToPouchMove.name:
+        case MoveNames.AddCoinToPouchMove:
             action = data.moves.AddCoinToPouchMove;
             break;
-        case data.moves.UpgradeCoinVidofnirVedrfolnirMove.name:
+        case MoveNames.UpgradeCoinVidofnirVedrfolnirMove:
             action = data.moves.UpgradeCoinVidofnirVedrfolnirMove;
             break;
         default:

@@ -41,7 +41,7 @@ export interface MyGameState {
     totalScore: number[],
     players: IPlayers,
     publicPlayers: IPublicPlayer[],
-    publicPlayersOrder: number[],
+    publicPlayersOrder: string[],
     winner: number[],
 }
 
@@ -75,6 +75,6 @@ export interface IOrder {
  * <h3>Интерфейс для резолвинга монет на столе.</h3>
  */
 export interface IResolveBoardCoins {
-    playersOrder: number[],
+    playersOrder: string[],
     exchangeOrder: number[],
 }

@@ -195,7 +195,7 @@ export const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
         index = G.publicPlayers[i].heroes.findIndex((hero: IHero): boolean => hero.name === HeroNames.Ylud);
         if (index !== -1) {
             ylud = true;
-            G.publicPlayersOrder.push(i);
+            G.publicPlayersOrder.push(String(i));
         }
     }
     if (!ylud) {
@@ -206,7 +206,7 @@ export const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
                         .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
                     if (index !== -1) {
                         G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(index, 1);
-                        G.publicPlayersOrder.push(i);
+                        G.publicPlayersOrder.push(String(i));
                         ylud = true;
                     }
                 }
@@ -248,7 +248,7 @@ export const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
                     name: DrawProfitHeroAction.name,
                     type: ActionTypes.Hero,
                 },
-                playerId: G.publicPlayersOrder[0],
+                playerId: Number(G.publicPlayersOrder[0]),
                 variants,
                 config: {
                     stageName: Stages.PlaceCards,
@@ -261,7 +261,7 @@ export const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
                     name: PlaceHeroAction.name,
                     type: ActionTypes.Hero,
                 },
-                playerId: G.publicPlayersOrder[0],
+                playerId: Number(G.publicPlayersOrder[0]),
                 variants,
                 config: {
                     name: ConfigNames.Ylud,

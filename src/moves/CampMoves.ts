@@ -51,7 +51,7 @@ export const ClickCampCardHoldaMove: Move<MyGameState> = (G: MyGameState, ctx: C
  */
 export const ClickCampCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
-        && G.expansions.thingvellir.active && (Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
+        && G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
             || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
     if (!isValidMove) {
         return INVALID_MOVE;

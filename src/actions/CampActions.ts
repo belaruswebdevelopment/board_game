@@ -2,17 +2,17 @@ import { Ctx } from "boardgame.io";
 import { isArtefactCard } from "../Camp";
 import { CreateCard } from "../Card";
 import { suitsConfig } from "../data/SuitData";
-import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, PickCurrentHero, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
-import { AddCampCardToPlayerCards, AddCampCardToPlayer } from "../helpers/CampCardHelpers";
+import { AddBuffToPlayer, DrawCurrentProfit, PickCurrentHero, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
+import { AddCampCardToPlayer, AddCampCardToPlayerCards } from "../helpers/CampCardHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
-import { EndActionFromStackAndAddNew, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, AddActionsToStack } from "../helpers/StackHelpers";
+import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionForChosenPlayer, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IConfig, IStack } from "../typescript/action_interfaces";
 import { ICard, ICreateCard } from "../typescript/card_interfaces";
-import { CampCardTypes, CampDeckCardTypes, PlayerCardsType, PickedCardType } from "../typescript/card_types";
+import { CampCardTypes, CampDeckCardTypes, PickedCardType, PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { Phases, RusCardTypes, ActionTypes, ConfigNames, DrawNames, LogTypes, HeroNames, Stages, SuitNames } from "../typescript/enums";
+import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames } from "../typescript/enums";
 import { MyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { ArgsTypes } from "../typescript/types";
@@ -45,8 +45,7 @@ export const AddBuffToPlayerCampAction = (G: MyGameState, ctx: Ctx, config: ICon
  * @param cardId Id карты.
  */
 export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
-    if (ctx.phase === Phases.PickCards && Number(ctx.currentPlayer) === G.publicPlayersOrder[0]
-        && ctx.activePlayers === null) {
+    if (ctx.phase === Phases.PickCards && ctx.currentPlayer === G.publicPlayersOrder[0] && ctx.activePlayers === null) {
         G.campPicked = true;
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime) {
@@ -173,6 +172,8 @@ export const DiscardAnyCardFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, co
  */
 export const DiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string, playerId: number,
     cardId: number): void => {
+    console.log(playerId);
+    console.log(ctx.activePlayers);
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         if (G.publicPlayers[playerId].cards[suit][cardId].type !== RusCardTypes.HERO) {
@@ -422,7 +423,8 @@ export const StartDiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: ICo
                 AddActionsToStack(G, ctx, stack);
             }
         }
-        ctx.events?.setActivePlayers({ value });
+        // ctx.events?.setActivePlayers({ value });
+        ctx.events?.setActivePlayers({ others: Stages.DiscardSuitCard, /* minMoves: 1, maxMoves: 1 */ });
         G.drawProfit = ConfigNames.HofudAction;
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.suit'.`);

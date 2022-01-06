@@ -104,7 +104,7 @@ export const ClickCardToPickDistinctionMove: Move<MyGameState> = (G: MyGameState
  */
 export const ClickDistinctionCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number):
     string | void => {
-    const index: number = Object.values(G.distinctions).indexOf(Number(ctx.currentPlayer)),
+    const index: number = Object.values(G.distinctions).indexOf(ctx.currentPlayer),
         isValidMove: boolean = IsValidMove({ objId: cardId, values: [index] });
     if (!isValidMove) {
         return INVALID_MOVE;

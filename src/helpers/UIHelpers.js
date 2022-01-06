@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { RusCardTypes } from "../typescript/enums";
+import { MoveNames, RusCardTypes } from "../typescript/enums";
 import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 import { DrawCard } from "./UIElementHelpers";
 /**
@@ -67,7 +67,7 @@ export const DrawPlayersBoardForSuitCardDiscard = (data, suit) => {
                     if (data.G.publicPlayers[p].cards[suit][i].type !== RusCardTypes.HERO) {
                         isExit = false;
                         isDrawRow = true;
-                        DrawCard(data, playersCells, data.G.publicPlayers[p].cards[suit][i], i, data.G.publicPlayers[p], suit, data.moves.DiscardSuitCardFromPlayerBoardMove.name, suit, p, i);
+                        DrawCard(data, playersCells, data.G.publicPlayers[p].cards[suit][i], i, data.G.publicPlayers[p], suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, suit, p, i);
                     }
                 }
                 else {

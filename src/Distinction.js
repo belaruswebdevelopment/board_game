@@ -25,7 +25,7 @@ export const CheckCurrentSuitDistinction = (G, ctx, suit) => {
     if (maxPlayers.length === 1) {
         const playerDistinctionIndex = playersRanks.indexOf(maxPlayers[0]);
         AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} получил игрок: ${G.publicPlayers[playerDistinctionIndex].nickname}.`);
-        return playerDistinctionIndex;
+        return String(playerDistinctionIndex);
     }
     else {
         AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} никто не получил.`);

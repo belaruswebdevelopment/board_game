@@ -71,11 +71,11 @@ export const CheckPlayersBasicOrder = (G: MyGameState, ctx: Ctx): void => {
         if (ctx.phase !== Phases.PlaceCoinsUline) {
             // todo Create enums for buffs values
             if (G.publicPlayers[i].buffs.everyTurn !== HeroNames.Uline) {
-                G.publicPlayersOrder.push(i);
+                G.publicPlayersOrder.push(String(i));
             }
         } else {
             if (G.publicPlayers[i].buffs.everyTurn === HeroNames.Uline) {
-                G.publicPlayersOrder.push(i);
+                G.publicPlayersOrder.push(String(i));
             }
         }
     }
