@@ -4,7 +4,7 @@ import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { DeckCardTypes } from "../typescript/card_types";
 import { LogTypes } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 
 /**
  * <h3>Добавляет взятую карту в массив карт игрока.</h3>
@@ -20,7 +20,7 @@ import { MyGameState } from "../typescript/game_data_interfaces";
  * @param card Карта.
  * @returns Добавлена ли карта на планшет игрока.
  */
-export const AddCardToPlayer = (G: MyGameState, ctx: Ctx, card: DeckCardTypes): boolean => {
+export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes): boolean => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = card;
     // TODO Not only deckcardtypes but ihero+icampcardtypes?? but they are created as ICard and added to players cards.
     if (isCardNotAction(card)) {

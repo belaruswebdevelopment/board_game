@@ -7,7 +7,7 @@ import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog } from "./Logging";
 import { IArtefact } from "./typescript/camp_card_interfaces";
 import { LogTypes, SuitNames } from "./typescript/enums";
-import { MyGameState } from "./typescript/game_data_interfaces";
+import { IMyGameState } from "./typescript/game_data_interfaces";
 import { IHeroData } from "./typescript/hero_card_interfaces";
 import { IPublicPlayer } from "./typescript/player_interfaces";
 
@@ -46,7 +46,7 @@ export const CurrentScoring = (player: IPublicPlayer): number => {
  * @param player Игрок.
  * @returns Финальный счёт указанного игрока.
  */
-export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     AddDataToLog(G, LogTypes.GAME, `Результаты игры игрока ${player.nickname}:`);
     let score: number = CurrentScoring(player),
         coinsValue = 0;
@@ -70,7 +70,9 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
         if (warriorsDistinction !== undefined && warriorsDistinction.includes(playerIndex)) {
             const warriorDistinctionScore: number = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
             score += warriorDistinctionScore;
-            AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока ${player.nickname}: ${warriorDistinctionScore}`);
+            if (warriorDistinctionScore) {
+                AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока ${player.nickname}: ${warriorDistinctionScore}`);
+            }
         }
     }
     const suitMinerIndex: number = GetSuitIndexByName(SuitNames.MINER);
@@ -143,7 +145,7 @@ export const FinalScoring = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): n
  * @param ctx
  * @returns Финальные данные о победителях, если закончилась игра.
  */
-export const ScoreWinner = (G: MyGameState, ctx: Ctx): MyGameState | void => {
+export const ScoreWinner = (G: IMyGameState, ctx: Ctx): IMyGameState | void => {
     AddDataToLog(G, LogTypes.GAME, `Финальные результаты игры:`);
     for (let i = 0; i < ctx.numPlayers; i++) {
         G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i]));

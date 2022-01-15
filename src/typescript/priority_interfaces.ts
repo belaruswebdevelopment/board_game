@@ -1,9 +1,9 @@
 /**
- * <h3>Интерфейс для кристалла.</h3>
+ * <h3>Интерфейс для создания кристалла.</h3>
  */
-export interface IPriority {
+export interface ICreatePriority {
     value: number,
-    isExchangeable: boolean,
+    isExchangeable?: boolean,
 }
 
 /**
@@ -14,9 +14,9 @@ export interface IPrioritiesConfig {
 }
 
 /**
- * <h3>Интерфейс для создания кристалла.</h3>
+ * <h3>Интерфейс для кристалла.</h3>
  */
-export interface ICreatePriority {
+export interface IPriority {
     value: number,
-    isExchangeable?: boolean,
+    isExchangeable: boolean,
 }

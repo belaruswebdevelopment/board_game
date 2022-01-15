@@ -3,7 +3,7 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { IDrawBoardOptions } from "../typescript/board_interfaces";
 import { MoveNames, RusCardTypes } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 import { DrawCard } from "./UIElementHelpers";
 
@@ -34,8 +34,8 @@ export const DrawBoard = (objectsSize: number): IDrawBoardOptions => {
  * @param data Глобальные параметры.
  * @returns Поле для вывода карт для дискарда.
  */
-export const DrawPlayerBoardForCardDiscard = (data: BoardProps<MyGameState>): JSX.Element => {
-    // todo Discard cards must be hidden from others users?
+export const DrawPlayerBoardForCardDiscard = (data: BoardProps<IMyGameState>): JSX.Element => {
+    // TODO Discard cards must be hidden from others users?
     const playerHeaders: JSX.Element[] = [],
         playerRows: JSX.Element[][] = [];
     for (const suit in suitsConfig) {
@@ -72,7 +72,7 @@ export const DrawPlayerBoardForCardDiscard = (data: BoardProps<MyGameState>): JS
  * @param suit Название фракции.
  * @returns Поле игрока для дискарда карты фракции.
  */
-export const DrawPlayersBoardForSuitCardDiscard = (data: BoardProps<MyGameState>, suit: string): JSX.Element => {
+export const DrawPlayersBoardForSuitCardDiscard = (data: BoardProps<IMyGameState>, suit: string): JSX.Element => {
     const playersHeaders: JSX.Element[] = [],
         playersRows: JSX.Element[][] = [];
     for (let p = 0; p < data.G.publicPlayers.length; p++) {

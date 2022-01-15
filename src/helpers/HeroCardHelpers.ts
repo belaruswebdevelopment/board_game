@@ -2,7 +2,7 @@ import { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IHero } from "../typescript/hero_card_interfaces";
 
 /**
@@ -16,7 +16,7 @@ import { IHero } from "../typescript/hero_card_interfaces";
  * @param ctx
  * @param hero Герой.
  */
-export const AddHeroCardToPlayerCards = (G: MyGameState, ctx: Ctx, hero: IHero): void => {
+export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHero): void => {
     if (hero.suit !== null) {
         G.publicPlayers[Number(ctx.currentPlayer)].cards[hero.suit].push(hero);
         AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
@@ -34,7 +34,7 @@ export const AddHeroCardToPlayerCards = (G: MyGameState, ctx: Ctx, hero: IHero):
  * @param ctx
  * @param hero Герой.
  */
-export const AddHeroCardToPlayerHeroCards = (G: MyGameState, ctx: Ctx, hero: IHero): void => {
+export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IHero): void => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = hero;
     if (hero.active) {
         hero.active = false;

@@ -1,6 +1,6 @@
-import { EvaluateCard, CompareCards } from "./BotCardLogic";
 import { isCardNotAction } from "../Card";
-// todo Fix reurn types & move to interfaces
+import { CompareCards, EvaluateCard } from "./BotCardLogic";
+// TODO Fix reurn types & move to interfaces
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -8,7 +8,7 @@ import { isCardNotAction } from "../Card";
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
  * @returns
@@ -42,7 +42,7 @@ export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param stat1
  * @param stat2
  * @returns
@@ -61,7 +61,7 @@ const CompareCharacteristics = (stat1, stat2) => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param tavernsNum
  * @param playersNum
  * @returns
@@ -89,7 +89,7 @@ export const GetAllPicks = ({ tavernsNum, playersNum }) => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param array
  * @returns
  */
@@ -107,7 +107,7 @@ const GetCharacteristics = (array) => {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 const isAllCardsEqual = {
     heuristic: (cards) => cards.every((card) => (card !== null && isCardNotAction(card) && isCardNotAction(cards[0]) && card.suit === cards[0].suit
@@ -121,7 +121,7 @@ const isAllCardsEqual = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 // const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number; } = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 0),
@@ -133,7 +133,7 @@ const isAllCardsEqual = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 // const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === -1),
@@ -145,7 +145,7 @@ const isAllCardsEqual = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 // const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
 //     heuristic: (array: number[]): boolean =>
@@ -158,7 +158,7 @@ const isAllCardsEqual = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 // const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: number; } = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item !== 0),
@@ -171,7 +171,7 @@ const isAllCardsEqual = {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param set
  * @param k
  * @returns
@@ -211,7 +211,7 @@ export const k_combinations = (set, k) => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param permutation
  * @returns
  */
@@ -242,7 +242,7 @@ export const Permute = (permutation) => {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 const absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
 /**
@@ -251,10 +251,11 @@ const absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 //const relativeHeuristicsForTradingCoin: (((array: number[]) => boolean) | {
 //    heuristic: (array: number[]) => boolean,
 //    weight: number
 //})[] = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
 //console.log(relativeHeuristicsForTradingCoin ?? "");
+//# sourceMappingURL=BotConfig.js.map

@@ -1,11 +1,13 @@
+import { DrawProfitAction, DiscardCardFromTavernAction } from "../actions/Actions";
 import { CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCampAction } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
 import { UpgradeCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
 import { ActionTypes, ConfigNames, DrawNames, LogTypes, Stages } from "../typescript/enums";
+import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 import { AddCardToPlayer } from "./CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
-import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
+import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
  * <p>Применения:</p>
@@ -89,7 +91,7 @@ export const IsStartActionStage = (G, ctx, config) => {
  * @param cardId Id карты.
  */
 export const PickDiscardCard = (G, ctx, config, cardId) => {
-    // todo Rework all COMMON for heroes and camp actions in two logic?
+    // TODO Rework all COMMON for heroes and camp actions in two logic?
     const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]), pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
     let suit = null;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
@@ -157,6 +159,39 @@ export const PickCurrentHero = (G, ctx, config) => {
     }
 };
 /**
+ * <h3>Действия, связанные с дискардом карты из таверны при пике карты кэмпа при игре на 2-х игроков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>После выбора карт кэмпа, если играет 2-а игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const StartDiscardCardFromTavernActionFor2Players = (G, ctx) => {
+    const stack = [
+        {
+            action: {
+                name: DrawProfitAction.name,
+                type: ActionTypes.Action,
+            },
+            config: {
+                stageName: Stages.DiscardCard,
+                name: ConfigNames.DiscardCard,
+                drawName: DrawNames.DiscardTavernCard,
+            },
+        },
+        {
+            action: {
+                name: DiscardCardFromTavernAction.name,
+                type: ActionTypes.Action,
+            },
+        },
+    ];
+    AddActionsToStack(G, ctx, stack);
+    StartActionFromStackOrEndActions(G, ctx, false);
+};
+/**
  * <h3>Действия, связанные с улучшением монет.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -173,3 +208,4 @@ export const UpgradeCurrentCoin = (G, ctx, config, ...args) => {
     UpgradeCoin(G, ctx, config, ...args);
     EndActionFromStackAndAddNew(G, ctx);
 };
+//# sourceMappingURL=ActionHelpers.js.map

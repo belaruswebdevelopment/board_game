@@ -4,13 +4,13 @@ import { ReturnCoinToPlayerHands } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
-import { AddHeroCardToPlayerHeroCards, AddHeroCardToPlayerCards } from "../helpers/HeroCardHelpers";
+import { AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards } from "../helpers/HeroCardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, CheckPickHero, GetHeroIndexByName } from "../helpers/HeroHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, RusCardTypes, Stages, SuitNames } from "../typescript/enums";
-// todo Does INVALID_MOVE be not in moves but in actions?
+// TODO Does INVALID_MOVE be not in actions but in moves?
 /**
  * <h3>Действия, связанные с добавлением бафов от героев игроку.</h3>
  * <p>Применения:</p>
@@ -131,7 +131,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, config, suit, cardId) 
     const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId];
     if (pickedCard.type !== RusCardTypes.HERO) {
         G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-        // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
+        // TODO Artefact cards can be added to discard too OR make artefact card as created ICard?
         G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
             .splice(cardId, 1)[0]);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
@@ -192,12 +192,8 @@ export const DrawProfitHeroAction = (G, ctx, config) => {
  * @param ctx
  */
 export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
-    const coinsCount = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length, tradingBoardCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-        .findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading)), tradingHandCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-        .findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading));
-    for (let i = 0; i < coinsCount; i++) {
-        if ((i < G.tavernsNum && G.currentTavern < i) || (i >= G.tavernsNum && tradingHandCoinIndex !== -1)
-            || (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {
+    for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
+        if (i > G.currentTavern) {
             ReturnCoinToPlayerHands(G.publicPlayers[Number(ctx.currentPlayer)], i);
         }
     }
@@ -384,3 +380,4 @@ export const PlaceHeroAction = (G, ctx, config, suit) => {
 export const UpgradeCoinHeroAction = (G, ctx, config, ...args) => {
     UpgradeCurrentCoin(G, ctx, config, ...args);
 };
+//# sourceMappingURL=HeroActions.js.map

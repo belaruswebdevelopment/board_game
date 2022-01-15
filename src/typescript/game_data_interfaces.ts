@@ -8,9 +8,26 @@ import { IHero } from "./hero_card_interfaces";
 import { IPlayers, IPublicPlayer } from "./player_interfaces";
 
 /**
+ * <h3>Интерфейс для дополнений к игре.</h3>
+ */
+export interface IExpansion {
+    [name: string]: {
+        active: boolean,
+    },
+}
+
+/**
+ * <h3>Интерфейс для логирования данных.</h3>
+ */
+export interface ILogData {
+    type: LogTypes,
+    value: string,
+}
+
+/**
  * <h3>Интерфейс для игровых пользовательских данных G.</h3>
  */
-export interface MyGameState {
+export interface IMyGameState {
     actionsNum: number,
     averageCards: IAverageCard,
     botData: IBotData,
@@ -46,29 +63,19 @@ export interface MyGameState {
 }
 
 /**
- * <h3>Интерфейс для логирования данных.</h3>
+ * <h3>Интерфейс для следующей фазы.</h3>
  */
-export interface ILogData {
-    type: LogTypes,
-    value: string,
-}
-
-/**
- * <h3>Интерфейс для дополнений к игре.</h3>
- */
-export interface IExpansion {
-    [name: string]: {
-        active: boolean,
-    },
+export interface INext {
+    next: string,
 }
 
 /**
  * <h3>Интерфейс для порядка ходов.</h3>
  */
 export interface IOrder {
-    next: (G: MyGameState, ctx: Ctx) => number;
+    next: (G: IMyGameState, ctx: Ctx) => number;
     first: () => number;
-    playOrder: (G: MyGameState) => string[];
+    playOrder: (G: IMyGameState) => string[];
 }
 
 /**

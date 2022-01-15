@@ -1,8 +1,8 @@
-import { AddHeroToCardsAction, CheckPickDiscardCardHeroAction, DrawProfitHeroAction, PickDiscardCardHeroAction, CheckDiscardCardsFromPlayerBoardAction, DiscardCardsFromPlayerBoardAction, UpgradeCoinHeroAction, AddBuffToPlayerHeroAction, CheckPickCampCardAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, GetClosedCoinIntoPlayerHandAction } from "../actions/HeroActions";
+import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, DrawProfitHeroAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, UpgradeCoinHeroAction } from "../actions/HeroActions";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { HeroNames, SuitNames, ActionTypes, DrawNames, Stages, ConfigNames, BuffNames } from "../typescript/enums";
-import { IHeroData, IHeroConfig } from "../typescript/hero_card_interfaces";
+import { ActionTypes, BuffNames, ConfigNames, DrawNames, HeroNames, Stages, SuitNames } from "../typescript/enums";
+import { IHeroConfig, IHeroData } from "../typescript/hero_card_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
@@ -444,6 +444,7 @@ const Grid: IHeroData = {
     scoringRule: (): number => 7,
 };
 
+// TODO Check Если, размещая карты в конце эпох, игрок призывает героя ХОЛЬДУ и благодаря её эффекту берёт карту наёмника из лагеря, то он сразу же кладёт эту карту в армию, а не в командную зону.
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -1010,7 +1011,6 @@ const Uline: IHeroData = {
     scoringRule: (): number => 9,
 };
 
-// todo rework AddBuff?!
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -1033,6 +1033,18 @@ const Ylud: IHeroData = {
             },
             config: {
                 drawName: DrawNames.Ylud,
+            },
+        },
+        {
+            action: {
+                name: AddBuffToPlayerHeroAction.name,
+                type: ActionTypes.Hero,
+            },
+            config: {
+                buff: {
+                    name: BuffNames.EndTier,
+                    value: DrawNames.Ylud,
+                },
             },
         },
     ],
@@ -1115,31 +1127,31 @@ const Zoral: IHeroData = {
  * </ol>
  */
 export const heroesConfig: IHeroConfig = {
-    Aegur,
-    Andumia,
+    Kraal,
+    Tarah,
     Aral,
-    Astrid,
-    Bonfur,
     Dagda,
+    Lokdur,
+    Zoral,
+    Aegur,
+    Bonfur,
+    Hourya,
+    Idunn,
+    Astrid,
     Dwerg_Aesir,
     Dwerg_Bergelmir,
     Dwerg_Jungir,
     Dwerg_Sigmir,
     Dwerg_Ymir,
     Grid,
-    Holda,
-    Hourya,
-    Idunn,
-    Jarika,
-    Khrad,
-    Kraal,
-    Lokdur,
-    Olwin,
     Skaa,
-    Tarah,
     Thrud,
     Uline,
     Ylud,
+    Jarika,
+    Andumia,
+    Holda,
+    Khrad,
+    Olwin,
     Zolkur,
-    Zoral,
 };

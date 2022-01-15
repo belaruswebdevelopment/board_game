@@ -40,3 +40,4 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.name} из-за того, что он был уже выбран другим игроком.`);
     }
 };
+//# sourceMappingURL=HeroCardHelpers.js.map

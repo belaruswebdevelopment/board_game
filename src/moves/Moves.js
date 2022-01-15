@@ -5,12 +5,11 @@ import { suitsConfig } from "../data/SuitData";
 import { StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
-import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
 import { ActionTypes, LogTypes, SuitNames } from "../typescript/enums";
-// todo Add logging
+// TODO Add logging
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -49,9 +48,6 @@ export const ClickCardMove = (G, ctx, cardId) => {
         }
         if (G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
             StartActionFromStackOrEndActions(G, ctx, false, suit);
-        }
-        else {
-            AfterBasicPickCardActions(G, ctx, false);
         }
     }
     else {
@@ -95,16 +91,15 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
  *
  * @param G
  * @param ctx
- * @param cardId Id карты.
+ * @param suit Фракция.
  * @returns
  */
-export const ClickDistinctionCardMove = (G, ctx, cardId) => {
-    const index = Object.values(G.distinctions).indexOf(ctx.currentPlayer), isValidMove = IsValidMove({ objId: cardId, values: [index] });
+export const ClickDistinctionCardMove = (G, ctx, suit) => {
+    const cardId = Object.keys(G.distinctions).indexOf(suit), index = Object.values(G.distinctions).indexOf(ctx.currentPlayer), isValidMove = cardId !== -1 && IsValidMove({ objId: cardId, values: [index] });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    suitsConfig[Object.keys(suitsConfig)[cardId]].distinction
-        .awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
+    suitsConfig[suit].distinction.awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
 };
 /**
  * <h3>Пасс первого игрока в начале фазы вербовки наёмников.</h3>
@@ -142,3 +137,4 @@ export const PassEnlistmentMercenariesMove = (G, ctx) => {
 export const PickDiscardCardMove = (G, ctx, cardId) => {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
 };
+//# sourceMappingURL=Moves.js.map

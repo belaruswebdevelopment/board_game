@@ -6,16 +6,15 @@ import { suitsConfig } from "../data/SuitData";
 import { StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
-import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
 import { IStack } from "../typescript/action_interfaces";
 import { DeckCardTypes, TavernCardTypes } from "../typescript/card_types";
 import { ActionTypes, LogTypes, SuitNames } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 
-// todo Add logging
+// TODO Add logging
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -28,7 +27,7 @@ import { MyGameState } from "../typescript/game_data_interfaces";
  * @param cardId Id карты.
  * @returns
  */
-export const ClickCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): string | void => {
+export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean = IsValidMove({ objId: G.currentTavern, values: [G.currentTavern] })
         && IsValidMove({
             obj: G.taverns[G.currentTavern][cardId],
@@ -53,8 +52,6 @@ export const ClickCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardI
         }
         if (G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
             StartActionFromStackOrEndActions(G, ctx, false, suit);
-        } else {
-            AfterBasicPickCardActions(G, ctx, false);
         }
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта.`);
@@ -72,7 +69,7 @@ export const ClickCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardI
  * @param ctx
  * @param cardId Id карты.
  */
-export const ClickCardToPickDistinctionMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
+export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const isAdded: boolean = AddCardToPlayer(G, ctx, G.decks[1][cardId]),
         pickedCard: DeckCardTypes = G.decks[1].splice(cardId, 1)[0];
     let suit: null | string = null;
@@ -99,18 +96,17 @@ export const ClickCardToPickDistinctionMove: Move<MyGameState> = (G: MyGameState
  *
  * @param G
  * @param ctx
- * @param cardId Id карты.
+ * @param suit Фракция.
  * @returns
  */
-export const ClickDistinctionCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number):
-    string | void => {
-    const index: number = Object.values(G.distinctions).indexOf(ctx.currentPlayer),
-        isValidMove: boolean = IsValidMove({ objId: cardId, values: [index] });
+export const ClickDistinctionCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string): string | void => {
+    const cardId: number = Object.keys(G.distinctions).indexOf(suit),
+        index: number = Object.values(G.distinctions).indexOf(ctx.currentPlayer),
+        isValidMove: boolean = cardId !== -1 && IsValidMove({ objId: cardId, values: [index] });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    suitsConfig[Object.keys(suitsConfig)[cardId]].distinction
-        .awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
+    suitsConfig[suit].distinction.awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
 };
 
 /**
@@ -123,7 +119,7 @@ export const ClickDistinctionCardMove: Move<MyGameState> = (G: MyGameState, ctx:
  * @param G
  * @param ctx
  */
-export const PassEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx): void => {
+export const PassEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx): void => {
     const stack: IStack[] = [
         {
             action: {
@@ -147,6 +143,6 @@ export const PassEnlistmentMercenariesMove: Move<MyGameState> = (G: MyGameState,
  * @param ctx
  * @param cardId Id карты.
  */
-export const PickDiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, cardId: number): void => {
+export const PickDiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], cardId);
 };

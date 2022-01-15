@@ -5,7 +5,7 @@ import { AddDataToLog } from "../Logging";
 import { IArtefactCampCard } from "../typescript/camp_card_interfaces";
 import { CampDeckCardTypes } from "../typescript/card_types";
 import { LogTypes } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 
 /**
  * <h3>Добавляет взятую из кэмпа карту в массив карт кэмпа игрока.</h3>
@@ -18,7 +18,7 @@ import { MyGameState } from "../typescript/game_data_interfaces";
  * @param ctx
  * @param card Карта кэмпа.
  */
-export const AddCampCardToPlayer = (G: MyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
+export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
     if (!isArtefactCard(card) || (isArtefactCard(card) && card.suit === null)) {
         G.publicPlayers[Number(ctx.currentPlayer)].campCards.push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту кэмпа ${card.name}.`);
@@ -38,7 +38,7 @@ export const AddCampCardToPlayer = (G: MyGameState, ctx: Ctx, card: CampDeckCard
  * @param ctx
  * @param card Карта кэмпа.
  */
-export const AddCampCardToPlayerCards = (G: MyGameState, ctx: Ctx, card: IArtefactCampCard): void => {
+export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtefactCampCard): void => {
     if (card.suit !== null) {
         G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit].push(card);
         AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту кэмпа '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);

@@ -3,9 +3,9 @@ import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { HeroNames, Phases } from "./typescript/enums";
-import { MyGameState } from "./typescript/game_data_interfaces";
+import { IMyGameState } from "./typescript/game_data_interfaces";
 import { IPlayerCards } from "./typescript/interfaces";
-import { IPlayer, IPublicPlayer, ICreatePublicPlayer } from "./typescript/player_interfaces";
+import { ICreatePublicPlayer, IPlayer, IPublicPlayer } from "./typescript/player_interfaces";
 import { IPriority } from "./typescript/priority_interfaces";
 
 /**
@@ -65,11 +65,11 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority):
 * @param G
 * @param ctx
 */
-export const CheckPlayersBasicOrder = (G: MyGameState, ctx: Ctx): void => {
+export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         if (ctx.phase !== Phases.PlaceCoinsUline) {
-            // todo Create enums for buffs values
+            // TODO Create enums for buffs values
             if (G.publicPlayers[i].buffs.everyTurn !== HeroNames.Uline) {
                 G.publicPlayersOrder.push(String(i));
             }

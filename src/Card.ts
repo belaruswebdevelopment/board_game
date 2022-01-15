@@ -1,23 +1,12 @@
 import { suitsConfig } from "./data/SuitData";
-import { ICreateActionCard, IActionCard } from "./typescript/action_card_intarfaces";
+import { IActionCard, ICreateActionCard } from "./typescript/action_card_intarfaces";
 import { IAverageSuitCardData } from "./typescript/bot_interfaces";
 import { ICard, ICreateCard } from "./typescript/card_interfaces";
 import { DeckCardTypes } from "./typescript/card_types";
 import { RusCardTypes } from "./typescript/enums";
 import { IDeckConfig } from "./typescript/interfaces";
 
-// todo add LogTypes.ERROR logging to Sasha's functions
-/**
- * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект картой дворфа, а не картой обмена монеты.
- */
-export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as ICard).suit !== undefined;
+// TODO Add LogTypes.ERROR logging to Sasha's functions
 
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
@@ -129,3 +118,15 @@ export const CreateCard = ({
     tier,
     path,
 });
+
+/**
+ * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой дворфа, а не картой обмена монеты.
+ */
+export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as ICard).suit !== undefined;

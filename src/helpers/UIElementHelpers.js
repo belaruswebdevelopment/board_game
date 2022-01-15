@@ -223,3 +223,4 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
     }
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, className: spanClasses, children: span }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}coin ${id}${coin !== null ? ` ${coin.value}` : ` empty`}`));
 };
+//# sourceMappingURL=UIElementHelpers.js.map

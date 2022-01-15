@@ -1,4 +1,4 @@
-import { Ctx } from "boardgame.io";
+import { Ctx, StageArg } from "boardgame.io";
 import { isArtefactCard } from "../Camp";
 import { CreateCard } from "../Card";
 import { suitsConfig } from "../data/SuitData";
@@ -13,7 +13,7 @@ import { ICard, ICreateCard } from "../typescript/card_interfaces";
 import { CampCardTypes, CampDeckCardTypes, PickedCardType, PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { ArgsTypes } from "../typescript/types";
 
@@ -28,7 +28,7 @@ import { ArgsTypes } from "../typescript/types";
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const AddBuffToPlayerCampAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const AddBuffToPlayerCampAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
     AddBuffToPlayer(G, ctx, config);
 };
 
@@ -44,8 +44,10 @@ export const AddBuffToPlayerCampAction = (G: MyGameState, ctx: Ctx, config: ICon
  * @param config Конфиг действий артефакта.
  * @param cardId Id карты.
  */
-export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
-    if (ctx.phase === Phases.PickCards && ctx.currentPlayer === G.publicPlayersOrder[0] && ctx.activePlayers === null) {
+export const AddCampCardToCardsAction = (G: IMyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
+    if (ctx.phase === Phases.PickCards && ctx.activePlayers === null
+        && (ctx.currentPlayer === G.publicPlayersOrder[0] ||
+            G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)) {
         G.campPicked = true;
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime) {
@@ -96,7 +98,7 @@ export const AddCampCardToCardsAction = (G: MyGameState, ctx: Ctx, config: IConf
  * @param config Конфиг действий артефакта.
  * @param coinId Id монеты.
  */
-export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, coinId: number): void => {
+export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, config: IConfig, coinId: number): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         tempId: number = player.boardCoins.findIndex((coin: CoinType, index: number): boolean =>
             index >= G.tavernsNum && coin === null),
@@ -125,7 +127,7 @@ export const AddCoinToPouchAction = (G: MyGameState, ctx: Ctx, config: IConfig, 
  * @param G
  * @param ctx
  */
-export const CheckPickDiscardCardCampAction = (G: MyGameState, ctx: Ctx): void => {
+export const CheckPickDiscardCardCampAction = (G: IMyGameState, ctx: Ctx): void => {
     CheckPickDiscardCard(G, ctx);
 };
 
@@ -142,7 +144,7 @@ export const CheckPickDiscardCardCampAction = (G: MyGameState, ctx: Ctx): void =
  * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardAnyCardFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string,
+export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, config: IConfig, suit: string,
     cardId: number): void => {
     const discardedCard: PlayerCardsType =
         G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0];
@@ -170,10 +172,8 @@ export const DiscardAnyCardFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, co
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string, playerId: number,
+export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, config: IConfig, suit: string, playerId: number,
     cardId: number): void => {
-    console.log(playerId);
-    console.log(ctx.activePlayers);
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         if (G.publicPlayers[playerId].cards[suit][cardId].type !== RusCardTypes.HERO) {
@@ -192,8 +192,8 @@ export const DiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: IConfig,
             G.discardCardsDeck.push(discardedCard as ICard);
             AddDataToLog(G, LogTypes.GAME, `Игрок ${ G.publicPlayers[Number(ctx.playerID)].nickname } сбросил карту ${ discardedCard.name } в дискард.`);
             EndActionForChosenPlayer(G, ctx, playerId);
-        } else {*/
-        //        }
+        } else {
+        }*/
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.`);
     }
@@ -209,7 +209,7 @@ export const DiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: IConfig,
  * @param G
  * @param ctx
  */
-export const DiscardTradingCoinAction = (G: MyGameState, ctx: Ctx): void => {
+export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
     let tradingCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
         .findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
@@ -237,7 +237,7 @@ export const DiscardTradingCoinAction = (G: MyGameState, ctx: Ctx): void => {
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const DrawProfitCampAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const DrawProfitCampAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
     DrawCurrentProfit(G, ctx, config);
 };
 
@@ -253,7 +253,7 @@ export const DrawProfitCampAction = (G: MyGameState, ctx: Ctx, config: IConfig):
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
  */
-export const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
+export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard =
         G.publicPlayers[Number(ctx.currentPlayer)].campCards
             .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY)[cardId];
@@ -290,7 +290,7 @@ export const GetEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config:
  * @param config Конфиг действий артефакта.
  * @param suit Название фракции.
  */
-export const GetMjollnirProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string): void => {
+export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, config: IConfig, suit: string): void => {
     delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.getMjollnirProfit;
     G.suitIdForMjollnir = suit;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал фракцию ${suitsConfig[suit].suitName} для эффекта артефакта Mjollnir.`);
@@ -309,7 +309,7 @@ export const GetMjollnirProfitAction = (G: MyGameState, ctx: Ctx, config: IConfi
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
  */
-export const PickDiscardCardCampAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
+export const PickDiscardCardCampAction = (G: IMyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
     PickDiscardCard(G, ctx, config, cardId);
 };
 
@@ -324,7 +324,7 @@ export const PickDiscardCardCampAction = (G: MyGameState, ctx: Ctx, config: ICon
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const PickHeroCampAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const PickHeroCampAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
     PickCurrentHero(G, ctx, config);
 };
 
@@ -340,7 +340,7 @@ export const PickHeroCampAction = (G: MyGameState, ctx: Ctx, config: IConfig): v
  * @param config Конфиг действий героя.
  * @param suit Название фракции.
  */
-export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string): void => {
+export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, config: IConfig, suit: string): void => {
     const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null) {
         if (`stack` in pickedCard && `tier` in pickedCard && `path` in pickedCard) {
@@ -400,9 +400,9 @@ export const PlaceEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx, confi
  * @param ctx
  * @param config Конфиг действий артефакта.
  */
-export const StartDiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
     if (config.suit !== undefined) {
-        const value: { [index: number]: { stage: string; }; } = {};
+        const value: Record<string, StageArg> | undefined = {};
         for (let i = 0; i < ctx.numPlayers; i++) {
             if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[config.suit].length) {
                 value[i] = {
@@ -423,8 +423,11 @@ export const StartDiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: ICo
                 AddActionsToStack(G, ctx, stack);
             }
         }
-        // ctx.events?.setActivePlayers({ value });
-        ctx.events?.setActivePlayers({ others: Stages.DiscardSuitCard, /* minMoves: 1, maxMoves: 1 */ });
+        ctx.events?.setActivePlayers({
+            value,
+            minMoves: 1,
+            maxMoves: 1,
+        });
         G.drawProfit = ConfigNames.HofudAction;
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.suit'.`);
@@ -441,7 +444,7 @@ export const StartDiscardSuitCardAction = (G: MyGameState, ctx: Ctx, config: ICo
  * @param G
  * @param ctx
  */
-export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void => {
+export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void => {
     const number: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
         .filter((coin: CoinType, index: number): boolean =>
             index >= G.tavernsNum && coin === null).length,
@@ -545,7 +548,7 @@ export const StartVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx): void =>
  * @param config Конфиг действий героя или карты улучшающей монеты.
  * @param args Дополнительные аргументы.
  */
-export const UpgradeCoinCampAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
+export const UpgradeCoinCampAction = (G: IMyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
     UpgradeCurrentCoin(G, ctx, config, ...args);
 };
 
@@ -563,7 +566,7 @@ export const UpgradeCoinCampAction = (G: MyGameState, ctx: Ctx, config: IConfig,
  * @param type Тип монеты.
  * @param isInitial Является ли монета базовой.
  */
-export const UpgradeCoinVidofnirVedrfolnirAction = (G: MyGameState, ctx: Ctx, config: IConfig, coinId: number,
+export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, config: IConfig, coinId: number,
     type: string, isInitial: boolean): void => {
     const playerConfig: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     let stack: IStack[] = [];

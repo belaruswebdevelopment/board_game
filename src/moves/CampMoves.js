@@ -1,11 +1,11 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { GetEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction, DrawProfitCampAction } from "../actions/CampActions";
+import { DrawProfitCampAction, GetEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/CampActions";
 import { StartActionForChosenPlayer, StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
-import { EndActionFromStackAndAddNew, AddActionsToStack } from "../helpers/StackHelpers";
+import { AddActionsToStack, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { LogTypes, ActionTypes, ConfigNames, DrawNames } from "../typescript/enums";
-// todo Add logging
+import { ActionTypes, ConfigNames, DrawNames, LogTypes } from "../typescript/enums";
+// TODO Add logging
 /**
  * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
  * <p>Применения:</p>
@@ -199,3 +199,4 @@ export const StartEnlistmentMercenariesMove = (G, ctx) => {
     ];
     EndActionFromStackAndAddNew(G, ctx, stack);
 };
+//# sourceMappingURL=CampMoves.js.map

@@ -5,7 +5,7 @@ import { suitsConfig } from "../data/SuitData";
 import { ConfigNames, HeroNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { TotalRank } from "./ScoreHelpers";
 import { DrawButton, DrawCard, DrawCoin } from "./UIElementHelpers";
-// todo Add functions docbloocks
+// TODO Add functions docbloocks
 export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
@@ -39,7 +39,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, playerRows) =>
                     if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i].type !== RusCardTypes.HERO) {
                         if (!Array.isArray(data) && playerRows !== undefined) {
                             isDrawRow = true;
-                            DrawCard(data, playerCells, G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i], id, G.publicPlayers[Number(ctx.currentPlayer)], suit, data.moves.DiscardCardFromPlayerBoardMove.name, suit, i);
+                            DrawCard(data, playerCells, G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i], id, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
                         }
                         else if (Array.isArray(data)) {
                             data.push([suit]);
@@ -105,7 +105,7 @@ export const DiscardCardProfit = (G, ctx, data, boardCells) => {
                 if (isCardNotAction(card)) {
                     suit = card.suit;
                 }
-                DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)], suit, data.moves.DiscardCard2PlayersMove.name, j);
+                DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.DiscardCard2PlayersMove, j);
             }
             else if (Array.isArray(data)) {
                 data.push([j]);
@@ -132,8 +132,8 @@ export const GetMjollnirProfitProfit = (G, ctx, data, boardCells) => {
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             if (!Array.isArray(data) && boardCells !== undefined) {
-                // todo Move logic to DrawCard?
-                boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.moves.GetMjollnirProfit(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { className: "whitespace-nowrap text-white", children: G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
+                // TODO Move logic to DrawCard?
+                boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.moves.GetMjollnirProfitMove(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { className: "whitespace-nowrap text-white", children: G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
                                 .reduce(TotalRank, 0) * 2 }, void 0) }, void 0) }, `${suit} suit to get Mjöllnir profit`));
             }
             else if (Array.isArray(data)) {
@@ -164,7 +164,7 @@ export const PickDiscardCardProfit = (G, ctx, data, boardCells) => {
             if (isCardNotAction(card)) {
                 suit = card.suit;
             }
-            DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)], suit, data.moves.PickDiscardCardMove.name, j);
+            DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.PickDiscardCardMove, j);
         }
         else if (Array.isArray(data)) {
             data.push([j]);
@@ -180,8 +180,8 @@ export const PlaceCardsProfit = (G, ctx, data, boardCells) => {
                 if (!Array.isArray(data) && boardCells !== undefined) {
                     const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
                     if (config !== undefined) {
-                        // todo Move logic to DrawCard?
-                        boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.moves.PlaceCard(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = (_a = G.publicPlayers[Number(ctx.currentPlayer)]
+                        // TODO Move logic to DrawCard?
+                        boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.moves.PlaceCardMove(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = (_a = G.publicPlayers[Number(ctx.currentPlayer)]
                                         .stack[0].variants) === null || _a === void 0 ? void 0 : _a[suit].points) !== null && _b !== void 0 ? _b : `` }, void 0) }, void 0) }, `Place ${config.drawName} on ${suitsConfig[suit].suitName}`));
                     }
                 }
@@ -201,8 +201,8 @@ export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
                 if (card.stack[0].variants !== undefined) {
                     if (suit === ((_a = card.stack[0].variants[suit]) === null || _a === void 0 ? void 0 : _a.suit)) {
                         if (!Array.isArray(data) && boardCells !== undefined) {
-                            // todo Move logic to DrawCard?
-                            boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.moves.PlaceEnlistmentMercenaries(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = card.stack[0].variants[suit].points) !== null && _b !== void 0 ? _b : `` }, void 0) }, void 0) }, `Place ${card.name} on ${suitsConfig[suit].suitName}`));
+                            // TODO Move logic to DrawCard?
+                            boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.moves.PlaceEnlistmentMercenariesMove(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = card.stack[0].variants[suit].points) !== null && _b !== void 0 ? _b : `` }, void 0) }, void 0) }, `Place ${card.name} on ${suitsConfig[suit].suitName}`));
                         }
                         else if (Array.isArray(data)) {
                             data.push([suit]);
@@ -216,7 +216,7 @@ export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
 export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < 2; j++) {
         if (j === 0) {
-            // todo Add Enums for ALL text here
+            // TODO Add Enums for ALL text here
             if (!Array.isArray(data) && boardCells !== undefined) {
                 DrawButton(data, boardCells, `start Enlistment Mercenaries`, `Start`, G.publicPlayers[Number(ctx.currentPlayer)], MoveNames.StartEnlistmentMercenariesMove);
             }
@@ -226,7 +226,7 @@ export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
         }
         else if (G.publicPlayersOrder.length > 1) {
             if (!Array.isArray(data) && boardCells !== undefined) {
-                DrawButton(data, boardCells, `pass Enlistment Mercenaries`, `Pass`, G.publicPlayers[Number(ctx.currentPlayer)], data.moves.PassEnlistmentMercenariesMove.name);
+                DrawButton(data, boardCells, `pass Enlistment Mercenaries`, `Pass`, G.publicPlayers[Number(ctx.currentPlayer)], MoveNames.PassEnlistmentMercenariesMove);
             }
             else if (Array.isArray(data)) {
                 data.push([j]);
@@ -252,3 +252,4 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G, ctx, data, boardCells) =>
         }
     }
 };
+//# sourceMappingURL=ProfitHelpers.js.map

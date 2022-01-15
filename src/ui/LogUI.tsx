@@ -1,6 +1,6 @@
 import { BoardProps } from "boardgame.io/react";
 import { LogTypes } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 
 /**
  * <h3>Отрисовка лог панели.</h3>
@@ -12,7 +12,7 @@ import { MyGameState } from "../typescript/game_data_interfaces";
  * @param data Глобальные параметры.
  * @returns Поле для вывода логов.
  */
-export const DrawLogData = (data: BoardProps<MyGameState>): JSX.Element | null => {
+export const DrawLogData = (data: BoardProps<IMyGameState>): JSX.Element | null => {
     if (data.G.log) {
         const loggingData: JSX.Element[] = [];
         for (let i: number = data.G.logData.length - 1; i >= 0; i--) {

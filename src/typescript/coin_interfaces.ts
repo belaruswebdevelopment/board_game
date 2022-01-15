@@ -1,12 +1,31 @@
 import { INumberValues } from "./object_values_interfaces";
 
 /**
+ * <h3>Интерфейс опций для создания монет.</h3>
+ */
+export interface IBuildCoinsOptions {
+    isInitial: boolean,
+    isTriggerTrading: boolean,
+    players?: number,
+    count?: ICoin[],
+}
+
+/**
  * <h3>Интерфейс для монеты.</h3>
  */
 export interface ICoin {
     value: number,
     isInitial: boolean,
     isTriggerTrading: boolean,
+}
+
+/**
+ * <h3>Интерфейс для создания монеты.</h3>
+ */
+export interface ICreateCoin {
+    value: number,
+    isInitial?: boolean,
+    isTriggerTrading?: boolean,
 }
 
 /**
@@ -23,23 +42,4 @@ export interface IInitialTradingCoinConfig {
 export interface IMarketCoinConfig {
     value: number,
     count: () => INumberValues,
-}
-
-/**
- * <h3>Интерфейс для создания монеты.</h3>
- */
-export interface ICreateCoin {
-    value: number,
-    isInitial?: boolean,
-    isTriggerTrading?: boolean,
-}
-
-/**
- * <h3>Интерфейс опций для создания монет.</h3>
- */
-export interface IBuildCoinsOptions {
-    isInitial: boolean,
-    isTriggerTrading: boolean,
-    players?: number,
-    count?: ICoin[],
 }

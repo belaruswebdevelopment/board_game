@@ -29,7 +29,7 @@ export const DrawBoard = (objectsSize) => {
  * @returns Поле для вывода карт для дискарда.
  */
 export const DrawPlayerBoardForCardDiscard = (data) => {
-    // todo Discard cards must be hidden from others users?
+    // TODO Discard cards must be hidden from others users?
     const playerHeaders = [], playerRows = [];
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -84,3 +84,4 @@ export const DrawPlayersBoardForSuitCardDiscard = (data, suit) => {
     }
     return (_jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playersHeaders }, void 0) }, void 0), _jsx("tbody", { children: playersRows }, void 0)] }, void 0));
 };
+//# sourceMappingURL=UIHelpers.js.map

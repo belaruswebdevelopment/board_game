@@ -8,7 +8,7 @@ import { tavernsConfig } from "../Tavern";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { HeroNames, MoveNames, Phases, Stages } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
@@ -21,7 +21,7 @@ import { MyGameState } from "../typescript/game_data_interfaces";
  * @returns Игровые поля для планшета всех карт игрока.
  * @constructor
  */
-export const DrawPlayersBoards = (data: BoardProps<MyGameState>): JSX.Element[][] => {
+export const DrawPlayersBoards = (data: BoardProps<IMyGameState>): JSX.Element[][] => {
     const playersBoards: JSX.Element[][] = [],
         playerHeaders: JSX.Element[][] = [],
         playerHeadersCount: JSX.Element[][] = [],
@@ -107,7 +107,7 @@ export const DrawPlayersBoards = (data: BoardProps<MyGameState>): JSX.Element[][
                 id += k + 1;
                 if (k === 0) {
                     const playerCards: PlayerCardsType[] = Object.values(data.G.publicPlayers[p].cards).flat();
-                    // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
+                    // TODO Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                     if (data.G.publicPlayers[p].heroes[i] !== undefined && (!data.G.publicPlayers[p].heroes[i].suit
                         && !((data.G.publicPlayers[p].heroes[i].name === HeroNames.Ylud
                             && playerCards.findIndex((card: { name: string; }): boolean =>
@@ -173,7 +173,8 @@ export const DrawPlayersBoards = (data: BoardProps<MyGameState>): JSX.Element[][
  * @returns Игровые поля для пользовательских монет на столе.
  * @constructor
  */
-export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Element[][] => {
+export const DrawPlayersBoardsCoins = (data: BoardProps<IMyGameState>): JSX.Element[][] => {
+    // TODO Your coins always public for you only, others private, but you see previous/current tavern coins for all players (and your's transparent for non opened coins)
     const playersBoardsCoins: JSX.Element[][] = [],
         playerHeaders: JSX.Element[][] = [],
         playerFooters: JSX.Element[][] = [],
@@ -327,7 +328,8 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<MyGameState>): JSX.Eleme
  * @returns Игровые поля для пользовательских монет в руке.
  * @constructor
  */
-export const DrawPlayersHandsCoins = (data: BoardProps<MyGameState>): JSX.Element[][] => {
+export const DrawPlayersHandsCoins = (data: BoardProps<IMyGameState>): JSX.Element[][] => {
+    // TODO Your coins always public for you only, others always private!
     const playersHandsCoins: JSX.Element[][] = [];
     for (let p = 0; p < data.ctx.numPlayers; p++) {
         const playerCells: JSX.Element[] = [];

@@ -1,5 +1,5 @@
 import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
-import { k_combinations, Permute, GetAllPicks } from "./bot_logic/BotConfig";
+import { GetAllPicks, k_combinations, Permute } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
 import { BuildCards } from "./Card";
 import { BuildCoins } from "./Coin";
@@ -27,7 +27,7 @@ export const SetupGame = (ctx) => {
             active: true,
         },
     }, totalScore = [], logData = [], decks = [], 
-    // todo Discard cards must be hidden from users?
+    // TODO Discard cards must be hidden from users?
     discardCardsDeck = [], campDecks = [], distinctions = {};
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -38,7 +38,7 @@ export const SetupGame = (ctx) => {
     let camp = [];
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
-            // todo Camp cards must be hidden from users?
+            // TODO Camp cards must be hidden from users?
             campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             campDecks[i] = ctx.random.Shuffle(campDecks[i]);
@@ -46,7 +46,7 @@ export const SetupGame = (ctx) => {
         camp = campDecks[0].splice(0, campNum);
     }
     for (let i = 0; i < tierToEnd; i++) {
-        // todo Deck cards must be hidden from users?
+        // TODO Deck cards must be hidden from users?
         decks[i] = BuildCards({
             suits: suitsConfig,
             actions: actionCardsConfigArray
@@ -65,7 +65,7 @@ export const SetupGame = (ctx) => {
     }
     const heroes = BuildHeroes(heroesConfigOptions, heroesConfig), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
-        // todo Taverns cards must be hidden from users?
+        // TODO Taverns cards must be hidden from users?
         taverns[i] = decks[0].splice(0, drawSize);
     }
     const players = {}, publicPlayers = [], publicPlayersOrder = [], exchangeOrder = [], priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
@@ -135,3 +135,4 @@ export const SetupGame = (ctx) => {
         winner,
     };
 };
+//# sourceMappingURL=GameSetup.js.map

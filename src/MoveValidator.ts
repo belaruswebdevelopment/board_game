@@ -3,9 +3,9 @@ import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddDataToLog } from "./Logging";
 import { IConfig } from "./typescript/action_interfaces";
 import { CoinType } from "./typescript/coin_types";
-import { LogTypes, HeroNames } from "./typescript/enums";
-import { MyGameState } from "./typescript/game_data_interfaces";
-import { ICheckMoveParam, IMoveBy, IMoveValidators, IMoveValidatorParams } from "./typescript/move_validator_interfaces";
+import { HeroNames, LogTypes } from "./typescript/enums";
+import { IMyGameState } from "./typescript/game_data_interfaces";
+import { ICheckMoveParam, IMoveBy, IMoveValidatorParams, IMoveValidators } from "./typescript/move_validator_interfaces";
 
 /**
  * Validates arguments inside of move.
@@ -21,7 +21,7 @@ import { ICheckMoveParam, IMoveBy, IMoveValidators, IMoveValidatorParams } from 
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param obj
  * @param objId
  * @param range
@@ -45,14 +45,14 @@ const CheckMove = ({ obj, objId, range = [], values = [] }: ICheckMoveParam): bo
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
  * @param coinId
  * @param type
  * @returns
  */
-export const CoinUpgradeValidation = (G: MyGameState, ctx: Ctx, coinId: number, type: string): boolean => {
+export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinId: number, type: string): boolean => {
     if (type === "hand") {
         const handCoinPosition: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
             .filter((coin: CoinType, index: number): boolean => coin === null && index <= coinId).length;
@@ -75,7 +75,7 @@ export const CoinUpgradeValidation = (G: MyGameState, ctx: Ctx, coinId: number, 
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param obj Параметры валидации мува.
  * @returns Валидный ли мув.
  */
@@ -89,7 +89,7 @@ export const IsValidMove = (obj: ICheckMoveParam): boolean => {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveBy: IMoveBy = {
     null: {},
@@ -101,21 +101,34 @@ export const moveBy: IMoveBy = {
     pickCards: {
         default: `ClickCardMove`,
         defaultPickCampCard: `ClickCampCardMove`,
+        // start
         pickHero: `ClickHeroCardMove`,
         upgradeCoin: `ClickCoinToUpgradeMove`,
         discardSuitCard: `discardSuitCardMove`,
+        // end
     },
     getDistinctions: {
         default: `ClickDistinctionCardMove`,
         pickDistinctionCard: `ClickCardToPickDistinctionMove`,
+        // start
+        pickHero: `ClickHeroCardMove`,
         upgradeCoin: `ClickCoinToUpgradeMove`,
+        discardSuitCard: `discardSuitCardMove`,
+        // end
     },
     endTier: {
-        pickHero: `ClickHeroCardMove`,
-    },
-    enlistmentMercenaries: {
+        // start
         pickHero: `ClickHeroCardMove`,
         upgradeCoin: `ClickCoinToUpgradeMove`,
+        discardSuitCard: `discardSuitCardMove`,
+        // end
+    },
+    enlistmentMercenaries: {
+        // start
+        pickHero: `ClickHeroCardMove`,
+        upgradeCoin: `ClickCoinToUpgradeMove`,
+        discardSuitCard: `discardSuitCardMove`,
+        // end
     },
     placeCoinsUline: {},
     getMjollnirProfit: {},
@@ -128,10 +141,10 @@ export const moveBy: IMoveBy = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveValidators: IMoveValidators = {
-    // todo Add all validators to all moves
+    // TODO Add all validators to all moves
     ClickHandCoinMove: {
         getRange: ({ G, ctx }: IMoveValidatorParams): [number, number] =>
             ([0, G.publicPlayers[Number(ctx?.currentPlayer)].handCoins.length]),
@@ -163,7 +176,7 @@ export const moveValidators: IMoveValidators = {
                 return G.botData.allCoinsOrder[id];
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
-            // todo Return []???
+            // TODO Return []???
             return [];
         },
         validate: (): boolean => true,
@@ -173,7 +186,7 @@ export const moveValidators: IMoveValidators = {
         validate: ({ G, ctx, id }: IMoveValidatorParams): boolean => {
             if (id !== undefined) {
                 let isValid: boolean = G.heroes[id].active;
-                // todo Add validators to others heroes
+                // TODO Add validators to others heroes
                 if (G.heroes[id].name === HeroNames.Hourya) {
                     const config: IConfig | undefined = G.heroes[id].stack[0].config;
                     if (config?.conditions !== undefined) {
@@ -192,7 +205,7 @@ export const moveValidators: IMoveValidators = {
             return false;
         },
     },
-    // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
+    // TODO Rework if Uline in play or no 1 coin in game (& add param isInitial?)
     ClickCoinToUpgradeMove: {
         getRange: ({ G, ctx }: IMoveValidatorParams): [number, number] =>
             ([0, G.publicPlayers[Number(ctx?.currentPlayer)].boardCoins.length]),
@@ -210,6 +223,7 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     ClickDistinctionCardMove: {
+        // TODO Rework with validator in Move: Object.keys(G.distinctions).includes(suit)
         getRange: ({ G }: IMoveValidatorParams): [number, number] => ([0, Object.values(G.distinctions).length]),
         validate: ({ G, ctx, id }: IMoveValidatorParams): boolean => {
             if (id !== undefined) {
@@ -234,7 +248,7 @@ export const moveValidators: IMoveValidators = {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param num
  * @param range
  * @returns
@@ -248,7 +262,7 @@ const ValidateByRange = (num: number, range: number[]): boolean => range[0] <= n
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param num
  * @param values
  * @returns

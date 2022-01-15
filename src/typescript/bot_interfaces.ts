@@ -1,6 +1,21 @@
 import { ICard } from "./card_interfaces";
 
 /**
+ * <h3>Интерфейс для средей карты фракции.</h3>
+ */
+export interface IAverageCard {
+    [index: string]: ICard,
+}
+
+/**
+ * <h3>Интерфейс "средней" карты фракции.</h3>
+ */
+export interface IAverageSuitCardData {
+    players: number,
+    tier: number,
+}
+
+/**
  * <h3>Интерфейс для данных бота.</h3>
  */
 export interface IBotData {
@@ -17,21 +32,6 @@ export interface ICreateAverageSuitCard {
     suit: string,
     rank: number,
     points: number,
-}
-
-/**
- * <h3>Интерфейс "средней" карты фракции.</h3>
- */
-export interface IAverageSuitCardData {
-    players: number,
-    tier: number,
-}
-
-/**
- * <h3>Интерфейс для средей карты фракции.</h3>
- */
-export interface IAverageCard {
-    [index: string]: ICard,
 }
 
 /**

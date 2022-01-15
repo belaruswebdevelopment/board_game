@@ -59,7 +59,9 @@ export const FinalScoring = (G, ctx, player) => {
         if (warriorsDistinction !== undefined && warriorsDistinction.includes(playerIndex)) {
             const warriorDistinctionScore = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
             score += warriorDistinctionScore;
-            AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока ${player.nickname}: ${warriorDistinctionScore}`);
+            if (warriorDistinctionScore) {
+                AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока ${player.nickname}: ${warriorDistinctionScore}`);
+            }
         }
     }
     const suitMinerIndex = GetSuitIndexByName(SuitNames.MINER);
@@ -155,3 +157,4 @@ export const ScoreWinner = (G, ctx) => {
         return G;
     }
 };
+//# sourceMappingURL=Score.js.map

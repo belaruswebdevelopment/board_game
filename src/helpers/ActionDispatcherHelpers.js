@@ -2,7 +2,6 @@ import { ActionDispatcher } from "../actions/ActionDispatcher";
 import { CampActionDispatcher } from "../actions/CampActionDispatcher";
 import { CoinActionDispatcher } from "../actions/CoinActionDispatcher";
 import { HeroActionDispatcher } from "../actions/HeroActionDispatcher";
-import { AfterBasicPickCardActions } from "./MovesHelpers";
 /**
  * <h3>Диспетчер всех экшенов.</h3>
  * <p>Применения:</p>
@@ -44,10 +43,9 @@ export const ActionDispatcherSwitcher = (actionTypes) => {
  *
  * @param G
  * @param ctx
- * @param isTrading Является ли действие обменом монет (трейдингом).
  */
-const EndAction = (G, ctx, isTrading) => {
-    AfterBasicPickCardActions(G, ctx, isTrading);
+const EndAction = (G, ctx) => {
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
 };
 /**
  * <h3>Начинает действия из стэка действий указанного игрока.</h3>
@@ -85,6 +83,7 @@ export const StartActionFromStackOrEndActions = (G, ctx, isTrading, ...args) => 
         actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0], ...args);
     }
     else {
-        EndAction(G, ctx, isTrading);
+        EndAction(G, ctx);
     }
 };
+//# sourceMappingURL=ActionDispatcherHelpers.js.map

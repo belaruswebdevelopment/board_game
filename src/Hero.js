@@ -80,3 +80,4 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
         }
     }
 };
+//# sourceMappingURL=Hero.js.map

@@ -1,7 +1,7 @@
-import { AddHeroToCardsAction, CheckPickDiscardCardHeroAction, DrawProfitHeroAction, PickDiscardCardHeroAction, CheckDiscardCardsFromPlayerBoardAction, DiscardCardsFromPlayerBoardAction, UpgradeCoinHeroAction, AddBuffToPlayerHeroAction, CheckPickCampCardAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, GetClosedCoinIntoPlayerHandAction } from "../actions/HeroActions";
+import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, DrawProfitHeroAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, UpgradeCoinHeroAction } from "../actions/HeroActions";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { HeroNames, SuitNames, ActionTypes, DrawNames, Stages, ConfigNames, BuffNames } from "../typescript/enums";
+import { ActionTypes, BuffNames, ConfigNames, DrawNames, HeroNames, Stages, SuitNames } from "../typescript/enums";
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -429,6 +429,7 @@ const Grid = {
     ],
     scoringRule: () => 7,
 };
+// TODO Check Если, размещая карты в конце эпох, игрок призывает героя ХОЛЬДУ и благодаря её эффекту берёт карту наёмника из лагеря, то он сразу же кладёт эту карту в армию, а не в командную зону.
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -983,7 +984,6 @@ const Uline = {
     ],
     scoringRule: () => 9,
 };
-// todo rework AddBuff?!
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -1006,6 +1006,18 @@ const Ylud = {
             },
             config: {
                 drawName: DrawNames.Ylud,
+            },
+        },
+        {
+            action: {
+                name: AddBuffToPlayerHeroAction.name,
+                type: ActionTypes.Hero,
+            },
+            config: {
+                buff: {
+                    name: BuffNames.EndTier,
+                    value: DrawNames.Ylud,
+                },
             },
         },
     ],
@@ -1113,3 +1125,4 @@ export const heroesConfig = {
     Zolkur,
     Zoral,
 };
+//# sourceMappingURL=HeroData.js.map

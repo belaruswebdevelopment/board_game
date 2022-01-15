@@ -1,11 +1,11 @@
 import { Ctx } from "boardgame.io";
 import { CoinType } from "../typescript/coin_types";
-import { IResolveBoardCoins, MyGameState } from "../typescript/game_data_interfaces";
+import { IResolveBoardCoins, IMyGameState } from "../typescript/game_data_interfaces";
 import { INumberValues } from "../typescript/object_values_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { IPriority } from "../typescript/priority_interfaces";
 
-// todo Add logging
+// TODO Add logging
 /**
  * <h3>Находит максимальную монету игрока.</h3>
  * <p>Применения:</p>
@@ -36,7 +36,7 @@ export const GetMaxCoinValue = (player: IPublicPlayer): number => (Math.max(...p
  * @param ctx
  * @returns Порядок ходов игроков & порядок изменения ходов игроками.
  */
-export const ResolveBoardCoins = (G: MyGameState, ctx: Ctx): IResolveBoardCoins => {
+export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins => {
     const playersOrderNumbers: number[] = [],
         coinValues: number[] = [],
         exchangeOrder: number[] = [];

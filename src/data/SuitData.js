@@ -7,7 +7,7 @@ import { RusSuitNames, SuitNames } from "../typescript/enums";
  * <ol>
  * <li>Используется в конфиге фракций.</li>
  * </ol>
- * @todo Add may be potential points for hunters and blacksmiths.
+ * @TODO Add may be potential points for hunters and blacksmiths.
  */
 const blacksmith = {
     suit: SuitNames.BLACKSMITH,
@@ -278,11 +278,13 @@ const warrior = {
  * <ol>
  * <li>Происходит при создании всех карт при инициализации игры.</li>
  * </ol>
+ * @TODO Create GenerateSuitsConfig function to create a config in Distinction Order?
  */
 export const suitsConfig = {
-    blacksmith,
-    explorer,
+    warrior,
     hunter,
     miner,
-    warrior,
+    blacksmith,
+    explorer,
 };
+//# sourceMappingURL=SuitData.js.map

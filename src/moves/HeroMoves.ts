@@ -2,9 +2,9 @@ import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 
-// todo Add logging
+// TODO Add logging
 /**
  * <h3>Выбор героя.</h3>
  * <p>Применения:</p>
@@ -17,7 +17,7 @@ import { MyGameState } from "../typescript/game_data_interfaces";
  * @param heroId Id героя.
  * @returns
  */
-export const ClickHeroCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, heroId: number): string | void => {
+export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number): string | void => {
     const isValidMove: boolean = IsValidMove({ obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length] });
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -37,7 +37,7 @@ export const ClickHeroCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, h
  * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suit: string, cardId: number): void => {
+export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], suit, cardId);
 };
 
@@ -52,6 +52,6 @@ export const DiscardCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, sui
  * @param ctx
  * @param suit Название фракции.
  */
-export const PlaceCardMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, suit: string): void => {
+export const PlaceCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string): void => {
     EndActionFromStackAndAddNew(G, ctx, [], suit);
 };

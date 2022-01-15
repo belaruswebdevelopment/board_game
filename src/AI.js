@@ -20,12 +20,12 @@ import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescri
  */
 export const enumerate = (G, ctx) => {
     var _a, _b;
-    // todo Allow Pick Hero and all acions from hero pick to this phase
+    // TODO Check Pick Hero and all actions from hero pick in getDistinction phase
     //make false for standard bot
     const enableAdvancedBot = true, uniqueArr = [], activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : `default`, advancedString = `advanced`, isAdvancedExist = Object.keys(moveBy[ctx.phase])
         .some((key) => key.includes(advancedString));
     let moves = [], flag = true;
-    // todo Fix it, now just for bot can do RANDOM move
+    // TODO Fix it, now just for bot can do RANDOM move
     const botMoveArguments = [];
     for (const stage in moveBy[ctx.phase]) {
         if (Object.prototype.hasOwnProperty.call(moveBy[ctx.phase], stage)) {
@@ -34,15 +34,15 @@ export const enumerate = (G, ctx) => {
             }
             if (stage.includes(activeStageOfCurrentPlayer)
                 && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
-                // todo Sync players and bots validations in one places
+                // TODO Sync players and bots validations in one places
                 const moveName = moveBy[ctx.phase][stage], [minValue, maxValue] = moveValidators[moveName].getRange({ G, ctx }), hasGetValue = Object.prototype.hasOwnProperty.call(moveValidators[moveName], `getValue`);
                 let argValue;
                 let argArray;
                 for (let id = minValue; id < maxValue; id++) {
-                    // todo sync bot moves options with profit UI options for players (same logic without UI)
+                    // TODO sync bot moves options with profit UI options for players (same logic without UI)
                     let type = undefined;
                     if (stage === Stages.UpgradeCoin) {
-                        // todo fix for Uline???
+                        // TODO fix for Uline???
                         type = `board`;
                     }
                     if (!moveValidators[moveName].validate({ G, ctx, id, type })) {
@@ -55,6 +55,9 @@ export const enumerate = (G, ctx) => {
                     }
                     else {
                         argValue = id;
+                        if (ctx.phase === Phases.GetDistinctions && stage.startsWith(`default`)) {
+                            argValue = Object.keys(suitsConfig)[id];
+                        }
                         moves.push({ move: moveName, args: [argValue] });
                     }
                 }
@@ -65,7 +68,7 @@ export const enumerate = (G, ctx) => {
         return moves;
     }
     if (ctx.phase === Phases.PickCards && activeStageOfCurrentPlayer === `default` && ctx.activePlayers === null) {
-        // todo Fix it, now just for bot can do RANDOM move
+        // TODO Fix it, now just for bot can do RANDOM move
         let pickCardOrCampCard = `card`;
         if (G.expansions.thingvellir.active
             && (ctx.currentPlayer === G.publicPlayersOrder[0]
@@ -182,7 +185,7 @@ export const enumerate = (G, ctx) => {
         }
         //console.log(moves);
     }
-    // todo Fix it, now just for bot can do RANDOM move
+    // TODO Fix it, now just for bot can do RANDOM move
     if (activeStageOfCurrentPlayer === Stages.PlaceCards || ctx.phase === Phases.EndTier) {
         PlaceCardsProfit(G, ctx, botMoveArguments);
         moves.push({
@@ -292,9 +295,9 @@ export const enumerate = (G, ctx) => {
     }
     // TODO FIX It's not activeStageOfCurrentPlayer it's for Others players!!!
     // if (ctx.activePlayers.find/findIndex === "discardSuitCard") {
-    if (ctx.phase === Phases.PickCards && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default`) {
+    if (ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default`) {
         // TODO Fix this (only for quick bot actions)
-        // todo Bot can't do async turns...?
+        // TODO Bot can't do async turns...?
         const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
         if (config !== undefined && config.suit !== undefined) {
             for (let p = 0; p < G.publicPlayers.length; p++) {
@@ -318,6 +321,7 @@ export const enumerate = (G, ctx) => {
                             move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
                             args: [config.suit, p, minCardIndex],
                         });
+                        break;
                     }
                 }
             }
@@ -354,7 +358,6 @@ export const enumerate = (G, ctx) => {
         });
     }
     if (moves.length === 0 && ctx.phase !== null) {
-        // todo Fix for bot no moves if have artefact with not pick new hero and get artifact with get new hero (he can pick hero by it's action)
         console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
     }
     return moves;
@@ -366,7 +369,7 @@ export const enumerate = (G, ctx) => {
 * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
 * </oL>
 *
-* @todo Саше: сделать описание функции и параметров.
+* @TODO Саше: сделать описание функции и параметров.
 * @param G
 * @param ctx
 * @returns
@@ -555,7 +558,7 @@ export const objectives = () => ({
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
  * @returns
@@ -566,3 +569,4 @@ export const playoutDepth = (G, ctx) => {
     }
     return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 2;
 };
+//# sourceMappingURL=AI.js.map

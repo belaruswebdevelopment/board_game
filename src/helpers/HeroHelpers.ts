@@ -2,18 +2,79 @@ import { Ctx } from "boardgame.io";
 import { PickHeroAction } from "../actions/Actions";
 import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
 import { heroesConfig } from "../data/HeroData";
-import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { IStack, IVariants } from "../typescript/action_interfaces";
 import { PlayerCardsType } from "../typescript/card_types";
-import { CoinType } from "../typescript/coin_types";
-import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, Phases, Stages, SuitNames } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
-import { IHero } from "../typescript/hero_card_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
-import { CheckEndGameLastActions } from "./CampHelpers";
+import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, Stages, SuitNames } from "../typescript/enums";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { TotalRank } from "./ScoreHelpers";
 import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
+
+/**
+ * <h3>Добавляет экшены при старте хода в фазе 'endTier'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При старте хода в фазе 'endTier'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const AddEndTierActionsToStack = (G: IMyGameState, ctx: Ctx): void => {
+    const variants: IVariants = {
+        blacksmith: {
+            suit: SuitNames.BLACKSMITH,
+            rank: 1,
+            points: null,
+        },
+        hunter: {
+            suit: SuitNames.HUNTER,
+            rank: 1,
+            points: null,
+        },
+        explorer: {
+            suit: SuitNames.EXPLORER,
+            rank: 1,
+            points: 11,
+        },
+        warrior: {
+            suit: SuitNames.WARRIOR,
+            rank: 1,
+            points: 7,
+        },
+        miner: {
+            suit: SuitNames.MINER,
+            rank: 1,
+            points: 1,
+        },
+    };
+    const stack: IStack[] = [
+        {
+            action: {
+                name: DrawProfitHeroAction.name,
+                type: ActionTypes.Hero,
+            },
+            variants,
+            config: {
+                stageName: Stages.PlaceCards,
+                drawName: DrawNames.Ylud,
+                name: ConfigNames.PlaceCards,
+            },
+        },
+        {
+            action: {
+                name: PlaceHeroAction.name,
+                type: ActionTypes.Hero,
+            },
+            variants,
+            config: {
+                name: ConfigNames.Ylud,
+            },
+        },
+    ];
+    AddActionsToStack(G, ctx, stack);
+    G.drawProfit = ConfigNames.PlaceCards;
+};
 
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>
@@ -27,7 +88,7 @@ import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAnd
  * @param card Карта.
  * @returns Нужно ли перемещать героя Труд.
  */
-export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: PlayerCardsType): boolean => {
+export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardsType): boolean => {
     if (card.suit !== null) {
         const index: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit]
             .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Thrud);
@@ -51,59 +112,13 @@ export const CheckAndMoveThrud = (G: MyGameState, ctx: Ctx, card: PlayerCardsTyp
  * @param card Карта, помещающаяся на карту героя Труд.
  */
 
-export const CheckAndMoveThrudOrPickHeroAction = (G: MyGameState, ctx: Ctx, card: PlayerCardsType): void => {
+export const CheckAndMoveThrudOrPickHeroAction = (G: IMyGameState, ctx: Ctx, card: PlayerCardsType): void => {
     const isMoveThrud: boolean = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
         StartThrudMoving(G, ctx, card);
     } else {
         CheckPickHero(G, ctx);
     }
-};
-
-/**
- * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При наличии героя Улина.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @returns Проверяет нужно ли начать действия по наличию героя Улина.
- */
-export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): string | boolean => {
-    // todo Rework it all!
-    const ulinePlayerIndex: number =
-        G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            player.buffs.everyTurn === HeroNames.Uline);
-    if (ulinePlayerIndex !== -1) {
-        if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-            if (ctx.phase === Phases.PickCards) {
-                const coin: CoinType = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
-                if (coin?.isTriggerTrading) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                        .filter((coin: CoinType, index: number): boolean =>
-                            index >= G.tavernsNum && coin === null)) {
-                        if (ctx.activePlayers?.[ctx.currentPlayer] !== Stages.PlaceTradingCoinsUline) {
-                            G.actionsNum = G.suitsNum - G.tavernsNum;
-                            ctx.events?.setStage(Stages.PlaceTradingCoinsUline);
-                            return Stages.PlaceTradingCoinsUline;
-                        } else if (!G.actionsNum) {
-                            ctx.events?.endStage();
-                            return `endPlaceTradingCoinsUline`;
-                        } else if (G.actionsNum) {
-                            return `nextPlaceTradingCoinsUline`;
-                        }
-                    }
-                }
-            }
-        } else {
-            return Phases.PlaceCoinsUline;
-        }
-    } else if (ctx.phase !== Phases.PickCards) {
-        ctx.events?.setPhase(Phases.PickCards);
-    }
-    return false;
 };
 
 /**
@@ -117,7 +132,7 @@ export const CheckAndStartUlineActionsOrContinue = (G: MyGameState, ctx: Ctx): s
  * @param G
  * @param ctx
  */
-export const CheckPickDiscardCard = (G: MyGameState, ctx: Ctx): void => {
+export const CheckPickDiscardCard = (G: IMyGameState, ctx: Ctx): void => {
     if (G.discardCardsDeck.length === 0) {
         G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
     }
@@ -138,7 +153,7 @@ export const CheckPickDiscardCard = (G: MyGameState, ctx: Ctx): void => {
  * @param G
  * @param ctx
  */
-export const CheckPickHero = (G: MyGameState, ctx: Ctx): void => {
+export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
     if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
         const playerCards: PlayerCardsType[][] =
             Object.values(G.publicPlayers[Number(ctx.currentPlayer)].cards),
@@ -178,104 +193,6 @@ export const GetHeroIndexByName = (heroName: string): number =>
     Object.keys(heroesConfig).indexOf(heroName);
 
 /**
-* <h3>Начало экшенов в фазе EndTier.</h3>
-* <p>Применения:</p>
-* <ol>
-* <li>При начале фазы EndTier.</li>
-* </ol>
-*
-* @param G
-* @param ctx
-*/
-export const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
-    G.publicPlayersOrder = [];
-    let ylud = false,
-        index = -1;
-    for (let i = 0; i < G.publicPlayers.length; i++) {
-        index = G.publicPlayers[i].heroes.findIndex((hero: IHero): boolean => hero.name === HeroNames.Ylud);
-        if (index !== -1) {
-            ylud = true;
-            G.publicPlayersOrder.push(String(i));
-        }
-    }
-    if (!ylud) {
-        for (let i = 0; i < G.publicPlayers.length; i++) {
-            for (const suit in suitsConfig) {
-                if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                    index = G.publicPlayers[i].cards[suit]
-                        .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
-                    if (index !== -1) {
-                        G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(index, 1);
-                        G.publicPlayersOrder.push(String(i));
-                        ylud = true;
-                    }
-                }
-            }
-        }
-    }
-    if (ylud) {
-        ctx.events?.setPhase(Phases.EndTier);
-        const variants: IVariants = {
-            blacksmith: {
-                suit: SuitNames.BLACKSMITH,
-                rank: 1,
-                points: null,
-            },
-            hunter: {
-                suit: SuitNames.HUNTER,
-                rank: 1,
-                points: null,
-            },
-            explorer: {
-                suit: SuitNames.EXPLORER,
-                rank: 1,
-                points: 11,
-            },
-            warrior: {
-                suit: SuitNames.WARRIOR,
-                rank: 1,
-                points: 7,
-            },
-            miner: {
-                suit: SuitNames.MINER,
-                rank: 1,
-                points: 1,
-            },
-        };
-        const stack: IStack[] = [
-            {
-                action: {
-                    name: DrawProfitHeroAction.name,
-                    type: ActionTypes.Hero,
-                },
-                playerId: Number(G.publicPlayersOrder[0]),
-                variants,
-                config: {
-                    stageName: Stages.PlaceCards,
-                    drawName: DrawNames.Ylud,
-                    name: ConfigNames.PlaceCards,
-                },
-            },
-            {
-                action: {
-                    name: PlaceHeroAction.name,
-                    type: ActionTypes.Hero,
-                },
-                playerId: Number(G.publicPlayersOrder[0]),
-                variants,
-                config: {
-                    name: ConfigNames.Ylud,
-                },
-            },
-        ];
-        AddActionsToStack(G, ctx, stack);
-        G.drawProfit = ConfigNames.PlaceCards;
-    } else {
-        CheckEndGameLastActions(G, ctx);
-    }
-};
-
-/**
  * <h3>Перемещение героя Труд.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -286,7 +203,7 @@ export const StartEndTierActions = (G: MyGameState, ctx: Ctx): void => {
  * @param ctx
  * @param card Карта.
  */
-export const StartThrudMoving = (G: MyGameState, ctx: Ctx, card: PlayerCardsType): void => {
+export const StartThrudMoving = (G: IMyGameState, ctx: Ctx, card: PlayerCardsType): void => {
     if (card.suit !== null) {
         const variants: IVariants = {
             blacksmith: {

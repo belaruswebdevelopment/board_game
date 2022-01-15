@@ -10,3 +10,4 @@ import { suitsConfig } from "../data/SuitData";
  * @returns Индекс фракции.
  */
 export const GetSuitIndexByName = (suit) => Object.keys(suitsConfig).indexOf(suit);
+//# sourceMappingURL=SuitHelpers.js.map

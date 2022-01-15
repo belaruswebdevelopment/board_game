@@ -12,7 +12,7 @@ import { IDrawBoardOptions } from "../typescript/board_interfaces";
 import { CampCardTypes, DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { ConfigNames, HeroNames, MoveNames } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { INumberValues } from "../typescript/object_values_interfaces";
 
 /**
@@ -25,7 +25,7 @@ import { INumberValues } from "../typescript/object_values_interfaces";
  * @param data Глобальные параметры.
  * @returns Поле кэмпа.
  */
-export const DrawCamp = (data: BoardProps<MyGameState>): JSX.Element => {
+export const DrawCamp = (data: BoardProps<IMyGameState>): JSX.Element => {
     const boardCells: JSX.Element[] = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < data.G.campNum; j++) {
@@ -76,7 +76,7 @@ export const DrawCamp = (data: BoardProps<MyGameState>): JSX.Element => {
  * @param data Глобальные параметры.
  * @returns Поле информации о текущем ходу.
  */
-export const DrawCurrentPlayerTurn = (data: BoardProps<MyGameState>): JSX.Element => (
+export const DrawCurrentPlayerTurn = (data: BoardProps<IMyGameState>): JSX.Element => (
     <b>Current player: <span className="italic">Player {Number(data.ctx.currentPlayer) + 1}</span> |
         Turn: <span className="italic">{data.ctx.turn}</span></b>
 );
@@ -91,14 +91,14 @@ export const DrawCurrentPlayerTurn = (data: BoardProps<MyGameState>): JSX.Elemen
  * @param data Глобальные параметры.
  * @returns Поле преимуществ в конце эпохи.
  */
-export const DrawDistinctions = (data: BoardProps<MyGameState>): JSX.Element => {
+export const DrawDistinctions = (data: BoardProps<IMyGameState>): JSX.Element => {
     const boardCells: JSX.Element[] = [];
     for (let i = 0; i < 1; i++) {
         for (const suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 boardCells.push(
                     <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
-                        onClick={() => data.moves.ClickDistinctionCard(suit)}
+                        onClick={() => data.moves.ClickDistinctionCardMove(suit)}
                         title={suitsConfig[suit].distinction.description}>
                         <span style={Styles.Distinctions(suit)} className="bg-suit-distinction">
 
@@ -132,7 +132,7 @@ export const DrawDistinctions = (data: BoardProps<MyGameState>): JSX.Element => 
  * @param data Глобальные параметры.
  * @returns Поле героев.
  */
-export const DrawHeroes = (data: BoardProps<MyGameState>): JSX.Element => {
+export const DrawHeroes = (data: BoardProps<IMyGameState>): JSX.Element => {
     const boardRows: JSX.Element[][] = [],
         drawData: IDrawBoardOptions = DrawBoard(data.G.heroes.length);
     for (let i = 0; i < drawData.boardRows; i++) {
@@ -174,7 +174,7 @@ export const DrawHeroes = (data: BoardProps<MyGameState>): JSX.Element => {
  * @param data Глобальные параметры.
  * @returns Поле рынка монет.
  */
-export const DrawMarketCoins = (data: BoardProps<MyGameState>): JSX.Element => {
+export const DrawMarketCoins = (data: BoardProps<IMyGameState>): JSX.Element => {
     const boardRows: JSX.Element[][] = [],
         drawData: IDrawBoardOptions = DrawBoard(data.G.marketCoinsUnique.length),
         countMarketCoins: INumberValues = CountMarketCoins(data.G);
@@ -222,7 +222,7 @@ export const DrawMarketCoins = (data: BoardProps<MyGameState>): JSX.Element => {
  * @param data Глобальные параметры.
  * @returns Поле профита.
  */
-export const DrawProfit = (data: BoardProps<MyGameState>): JSX.Element => {
+export const DrawProfit = (data: BoardProps<IMyGameState>): JSX.Element => {
     const boardCells: JSX.Element[] = [],
         config: IConfig | undefined = data.G.publicPlayers[Number(data.ctx.currentPlayer)].stack[0].config,
         option = data.G.drawProfit;
@@ -235,7 +235,7 @@ export const DrawProfit = (data: BoardProps<MyGameState>): JSX.Element => {
             }
         } else if (option === ConfigNames.ExplorerDistinction) {
             caption += `one card to your board.`;
-            // todo Move to ProfitHelpers and add logic for bot or just use standard pick cards / upgrade coins
+            // TODO Move to ProfitHelpers and add logic for bot or just use standard pick cards / upgrade coins
             for (let j = 0; j < 3; j++) {
                 const card = data.G.decks[1][j];
                 let suit: null | string = null;
@@ -300,13 +300,13 @@ export const DrawProfit = (data: BoardProps<MyGameState>): JSX.Element => {
                 if (option === ConfigNames.VidofnirVedrfolnirAction) {
                     UpgradeCoinVidofnirVedrfolnirProfit(data.G, data.ctx, data, boardCells);
                 } else if (option === ConfigNames.UpgradeCoin) {
-                    // todo Move to ProfitHelpers and add logic for bot or just use standard upgrade coins
+                    // TODO Move to ProfitHelpers and add logic for bot or just use standard upgrade coins
                     const handCoins = data.G.publicPlayers[Number(data.ctx.currentPlayer)].handCoins
                         .filter((coin: CoinType): boolean => coin !== null);
                     let handCoinIndex = -1;
                     for (let j = 0; j < data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins.length;
                         j++) {
-                        // todo Check .? for all coins!!! and delete AS
+                        // TODO Check .? for all coins!!! and delete AS
                         if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].buffs.everyTurn ===
                             HeroNames.Uline
                             && data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j] === null) {
@@ -368,7 +368,7 @@ export const DrawProfit = (data: BoardProps<MyGameState>): JSX.Element => {
  * @param gridClass Класс для отрисовки таверны.
  * @returns Поле таверн.
  */
-export const DrawTaverns = (data: BoardProps<MyGameState>, gridClass: string) => {
+export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) => {
     const tavernsBoards: JSX.Element[] = [];
     for (let t = 0; t < data.G.tavernsNum; t++) {
         for (let i = 0; i < 1; i++) {
@@ -424,7 +424,7 @@ export const DrawTaverns = (data: BoardProps<MyGameState>, gridClass: string) =>
  * @param data Глобальные параметры.
  * @returns Поле информации о количестве карт по эпохам.
  */
-export const DrawTierCards = (data: BoardProps<MyGameState>): JSX.Element => (
+export const DrawTierCards = (data: BoardProps<IMyGameState>): JSX.Element => (
     <b>Tier: <span className="italic">
         {data.G.decks.length - data.G.tierToEnd + 1 > data.G.decks.length ? data.G.decks.length :
             data.G.decks.length - data.G.tierToEnd + 1}/{data.G.decks.length} ({data.G.decks.length - data.G.tierToEnd
@@ -445,7 +445,7 @@ export const DrawTierCards = (data: BoardProps<MyGameState>): JSX.Element => (
  * @param data Глобальные параметры.
  * @returns Поле информации о ходе/победителях игры.
  */
-export const DrawWinner = (data: BoardProps<MyGameState>): JSX.Element => {
+export const DrawWinner = (data: BoardProps<IMyGameState>): JSX.Element => {
     let winner: string;
     if (data.ctx.gameover !== undefined) {
         if (data.G.winner !== undefined) {

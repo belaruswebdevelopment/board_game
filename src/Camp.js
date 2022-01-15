@@ -39,7 +39,7 @@ const AddCardToCamp = (G, cardIndex) => {
  * @param G
  */
 const AddRemainingCampCardsToDiscard = (G) => {
-    // todo Add LogTypes.ERROR logging ?
+    // TODO Add LogTypes.ERROR logging ?
     for (let i = 0; i < G.camp.length; i++) {
         if (G.camp[i] !== null) {
             const card = G.camp.splice(i, 1, null)[0];
@@ -190,18 +190,15 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, p
  */
 export const DiscardCardIfCampCardPicked = (G) => {
     if (G.campPicked) {
-        const discardCardIndex = G.taverns[G.currentTavern]
-            .findIndex((card) => card !== null);
+        const discardCardIndex = G.taverns[G.currentTavern].findIndex((card) => card !== null);
+        let isCardDiscarded = false;
         if (discardCardIndex !== -1) {
-            const isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
-            if (isCardDiscarded) {
-                G.campPicked = false;
-            } /* else {
-                // todo LogTypes.ERROR because not => G.campPicked = false; ?
-            } */
+            isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
+        }
+        if (isCardDiscarded) {
+            G.campPicked = false;
         }
         else {
-            // todo Fix sometimes This error happend!?
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
         }
     }
@@ -239,7 +236,7 @@ export const RefillEmptyCampCards = (G) => {
         return null;
     });
     const isEmptyCampCards = emptyCampCards.length === 0;
-    // todo Add LogTypes.ERROR logging ?
+    // TODO Add LogTypes.ERROR logging ?
     let isEmptyCurrentTierCampDeck = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
         emptyCampCards.forEach((cardIndex) => {
@@ -251,3 +248,4 @@ export const RefillEmptyCampCards = (G) => {
         AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами.`);
     }
 };
+//# sourceMappingURL=Camp.js.map

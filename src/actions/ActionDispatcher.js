@@ -37,3 +37,4 @@ export const ActionDispatcher = (G, ctx, data, ...args) => {
     }
     action === null || action === void 0 ? void 0 : action(G, ctx, data.config, ...args);
 };
+//# sourceMappingURL=ActionDispatcher.js.map

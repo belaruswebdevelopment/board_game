@@ -3,9 +3,8 @@ import { ActionDispatcher } from "../actions/ActionDispatcher";
 import { CampActionDispatcher } from "../actions/CampActionDispatcher";
 import { CoinActionDispatcher } from "../actions/CoinActionDispatcher";
 import { HeroActionDispatcher } from "../actions/HeroActionDispatcher";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
-import { AfterBasicPickCardActions } from "./MovesHelpers";
 
 /**
  * <h3>Диспетчер всех экшенов.</h3>
@@ -49,10 +48,9 @@ export const ActionDispatcherSwitcher = (actionTypes: string): Function | null =
  *
  * @param G
  * @param ctx
- * @param isTrading Является ли действие обменом монет (трейдингом).
  */
-const EndAction = (G: MyGameState, ctx: Ctx, isTrading: boolean): void => {
-    AfterBasicPickCardActions(G, ctx, isTrading);
+const EndAction = (G: IMyGameState, ctx: Ctx): void => {
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
 };
 
 /**
@@ -67,7 +65,7 @@ const EndAction = (G: MyGameState, ctx: Ctx, isTrading: boolean): void => {
  * @param playerId Id игрока.
  * @param args Дополнительные аргументы.
  */
-export const StartActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: number, ...args: ArgsTypes): void => {
+export const StartActionForChosenPlayer = (G: IMyGameState, ctx: Ctx, playerId: number, ...args: ArgsTypes): void => {
     // eslint-disable-next-line @typescript-eslint/ban-types
     const actionDispatcher: Function | null =
         ActionDispatcherSwitcher(G.publicPlayers[playerId].stack[0].action.type);
@@ -86,7 +84,7 @@ export const StartActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: n
  * @param isTrading Является ли действие обменом монет (трейдингом).
  * @param args Дополнительные аргументы.
  */
-export const StartActionFromStackOrEndActions = (G: MyGameState, ctx: Ctx, isTrading: boolean, ...args: ArgsTypes):
+export const StartActionFromStackOrEndActions = (G: IMyGameState, ctx: Ctx, isTrading: boolean, ...args: ArgsTypes):
     void => {
     if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) {
         // eslint-disable-next-line @typescript-eslint/ban-types
@@ -94,6 +92,6 @@ export const StartActionFromStackOrEndActions = (G: MyGameState, ctx: Ctx, isTra
             ActionDispatcherSwitcher(G.publicPlayers[Number(ctx.currentPlayer)].stack[0].action.type);
         actionDispatcher?.(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0], ...args);
     } else {
-        EndAction(G, ctx, isTrading);
+        EndAction(G, ctx);
     }
 };

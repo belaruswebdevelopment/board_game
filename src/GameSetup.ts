@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
-import { k_combinations, Permute, GetAllPicks } from "./bot_logic/BotConfig";
+import { GetAllPicks, k_combinations, Permute } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
 import { BuildCards } from "./Card";
 import { BuildCoins } from "./Coin";
@@ -13,10 +13,10 @@ import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { IAverageCard, IAverageSuitCardData, IBotData } from "./typescript/bot_interfaces";
-import { DeckCardTypes, CampDeckCardTypes } from "./typescript/card_types";
+import { CampDeckCardTypes, DeckCardTypes } from "./typescript/card_types";
 import { ICoin } from "./typescript/coin_interfaces";
 import { IDistinctions } from "./typescript/distinction_interfaces";
-import { MyGameState, IExpansion, ILogData } from "./typescript/game_data_interfaces";
+import { IExpansion, ILogData, IMyGameState } from "./typescript/game_data_interfaces";
 import { IHero } from "./typescript/hero_card_interfaces";
 import { IDeckConfig } from "./typescript/interfaces";
 import { IPlayers, IPublicPlayer } from "./typescript/player_interfaces";
@@ -32,7 +32,7 @@ import { IPriority } from "./typescript/priority_interfaces";
  * @param ctx
  * @returns Данные игры.
  */
-export const SetupGame = (ctx: Ctx): MyGameState => {
+export const SetupGame = (ctx: Ctx): IMyGameState => {
     const suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
@@ -49,7 +49,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         totalScore: number[] = [],
         logData: ILogData[] = [],
         decks: DeckCardTypes[][] = [],
-        // todo Discard cards must be hidden from users?
+        // TODO Discard cards must be hidden from users?
         discardCardsDeck: DeckCardTypes[] = [],
         campDecks: CampDeckCardTypes[][] = [],
         distinctions: IDistinctions = {};
@@ -64,7 +64,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
     let camp: CampDeckCardTypes[] = [];
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
-            // todo Camp cards must be hidden from users?
+            // TODO Camp cards must be hidden from users?
             campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             campDecks[i] = ctx.random!.Shuffle(campDecks[i]);
@@ -72,7 +72,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         camp = campDecks[0].splice(0, campNum);
     }
     for (let i = 0; i < tierToEnd; i++) {
-        // todo Deck cards must be hidden from users?
+        // TODO Deck cards must be hidden from users?
         decks[i] = BuildCards({
             suits: suitsConfig,
             actions: actionCardsConfigArray
@@ -95,7 +95,7 @@ export const SetupGame = (ctx: Ctx): MyGameState => {
         currentTavern = -1,
         drawSize: number = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
-        // todo Taverns cards must be hidden from users?
+        // TODO Taverns cards must be hidden from users?
         taverns[i] = decks[0].splice(0, drawSize);
     }
     const players: IPlayers = {},

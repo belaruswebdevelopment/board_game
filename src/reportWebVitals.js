@@ -10,3 +10,4 @@ const reportWebVitals = (onPerfEntry) => {
     }
 };
 export default reportWebVitals;
+//# sourceMappingURL=reportWebVitals.js.map

@@ -23,7 +23,6 @@ const heroesThingvellirPath = `url(/img/cards/heroes/thingvellir/`;
  * <h3>Путь к изображениям таверн.</h3>
  */
 const tavernsPath = `url(/img/taverns/Taverns.png)`;
-// todo Add vars for paths
 /**
  * <h3>Стилизация при отрисовке всех картинок в игре.</h3>
  * <p>Применения:</p>
@@ -497,3 +496,4 @@ export const Styles = {
         }
     },
 };
+//# sourceMappingURL=StyleData.js.map

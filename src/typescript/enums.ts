@@ -1,4 +1,14 @@
 /**
+ * <h3>Перечисление для описаний отрисовки экшенов.</h3>
+ */
+export const enum ActionTypes {
+    Action = `Action`,
+    Camp = `Camp`,
+    Coin = `Coin`,
+    Hero = `Hero`,
+}
+
+/**
  * <h3>Перечисление для названий артефактов.</h3>
  */
 export const enum ArtefactNames {
@@ -17,149 +27,43 @@ export const enum ArtefactNames {
 }
 
 /**
- * <h3>Перечисление для названий героев.</h3>
+ * <h3>Перечисление для названия бафов в конфиге.</h3>
  */
-export const enum HeroNames {
-    Aegur = `Aegur`,
-    Andumia = `Andumia`,
-    Aral = `Aral`,
-    Astrid = `Astrid`,
-    Bonfur = `Bonfur`,
-    Dagda = `Dagda`,
-    Dwerg_Aesir = `Dwerg Aesir`,
-    Dwerg_Bergelmir = `Dwerg Bergelmir`,
-    Dwerg_Jungir = `Dwerg Jungir`,
-    Dwerg_Sigmir = `Dwerg Sigmir`,
-    Dwerg_Ymir = `Dwerg Ymir`,
-    Grid = `Grid`,
-    Holda = `Holda`,
-    Hourya = `Hourya`,
-    Idunn = `Idunn`,
-    Jarika = `Jarika`,
-    Khrad = `Khrad`,
-    Kraal = `Kraal`,
-    Lokdur = `Lokdur`,
-    Olwin = `Olwin`,
-    Skaa = `Skaa`,
-    Tarah = `Tarah`,
-    Thrud = `Thrud`,
-    Uline = `Uline`,
-    Ylud = `Ylud`,
-    Zolkur = `Zolkur`,
-    Zoral = `Zoral`,
-}
-
-/**
- * <h3>Перечисление для названий фракций.</h3>
- */
-export const enum SuitNames {
-    BLACKSMITH = `blacksmith`,
-    EXPLORER = `explorer`,
-    HUNTER = `hunter`,
-    MINER = `miner`,
-    WARRIOR = `warrior`,
-}
-
-/**
- * <h3>Перечисление для русских названий фракций.</h3>
- */
-export const enum RusSuitNames {
-    BLACKSMITH = `Кузнецы`,
-    EXPLORER = `Разведчики`,
-    HUNTER = `Охотники`,
-    MINER = `Горняки`,
-    WARRIOR = `Воины`,
-}
-
-/**
- * <h3>Перечисление для описаний отрисовки экшенов.</h3>
- */
-export const enum MoveNames {
-    AddCoinToPouchMove = `AddCoinToPouchMove`,
-    BotsPlaceAllCoinsMove = `BotsPlaceAllCoinsMove`,
-    ClickBoardCoinMove = `ClickBoardCoinMove`,
-    ClickCampCardHoldaMove = `ClickCampCardHoldaMove`,
-    ClickCampCardMove = `ClickCampCardMove`,
-    ClickCardMove = `ClickCardMove`,
-    ClickCardToPickDistinctionMove = `ClickCardToPickDistinctionMove`,
-    ClickCoinToUpgradeMove = `ClickCoinToUpgradeMove`,
-    ClickHandCoinMove = `ClickHandCoinMove`,
-    ClickHeroCardMove = `ClickHeroCardMove`,
-    DiscardCardFromPlayerBoardMove = `DiscardCardFromPlayerBoardMove`,
-    DiscardCardMove = `DiscardCardMove`,
-    DiscardCard2PlayersMove = `DiscardCard2PlayersMove`,
-    DiscardSuitCardFromPlayerBoardMove = `DiscardSuitCardFromPlayerBoardMove`,
-    GetEnlistmentMercenariesMove = `GetEnlistmentMercenariesMove`,
-    GetMjollnirProfitMove = `GetMjollnirProfitMove`,
-    PassEnlistmentMercenariesMove = `PassEnlistmentMercenariesMove`,
-    PickDiscardCardMove = `PickDiscardCardMove`,
-    PlaceCardMove = `PlaceCardMove`,
-    PlaceEnlistmentMercenariesMove = `PlaceEnlistmentMercenariesMove`,
-    StartEnlistmentMercenariesMove = `StartEnlistmentMercenariesMove`,
-    UpgradeCoinVidofnirVedrfolnirMove = `UpgradeCoinVidofnirVedrfolnirMove`,
-}
-
-/**
- * <h3>Перечисление для типов карт.</h3>
- */
-export const enum RusCardTypes {
-    ACTION = `улучшение монеты`,
-    ARTEFACT = `артефакт`,
-    BASIC = `базовая`,
-    HERO = `герой`,
-    MERCENARY = `наёмник`,
-}
-
-/**
- * <h3>Перечисление для фаз игры.</h3>
- */
-export const enum Phases {
-    BrisingamensEndGame = `brisingamensEndGame`,
+export const enum BuffNames {
+    DiscardCardEndGame = `discardCardEndGame`,
     EndTier = `endTier`,
-    EnlistmentMercenaries = `enlistmentMercenaries`,
-    GetDistinctions = `getDistinctions`,
+    EveryTurn = `everyTurn`,
     GetMjollnirProfit = `getMjollnirProfit`,
-    PickCards = `pickCards`,
-    PlaceCoins = `placeCoins`,
-    PlaceCoinsUline = `placeCoinsUline`,
-}
-
-/**
- * <h3>Перечисление для стейджей игры.</h3>
- */
-export const enum Stages {
-    AddCoinToPouch = `addCoinToPouch`,
-    DiscardCard = `discardCard`,
-    DiscardCardFromBoard = `discardCardFromBoard`,
-    DiscardSuitCard = `discardSuitCard`,
-    PickCampCardHolda = `pickCampCardHolda`,
-    PickDiscardCard = `pickDiscardCard`,
-    PickDistinctionCard = `pickDistinctionCard`,
-    PickHero = `pickHero`,
-    PlaceCards = `placeCards`,
-    PlaceTradingCoinsUline = `placeTradingCoinsUline`,
+    GoCamp = `goCamp`,
+    GoCampOneTime = `goCampOneTime`,
+    NoHero = `noHero`,
     UpgradeCoin = `upgradeCoin`,
-    UpgradeCoinVidofnirVedrfolnir = `upgradeCoinVidofnirVedrfolnir`,
+    UpgradeNextCoin = `upgradeNextCoin`,
 }
 
 /**
- * <h3>Перечисление для типов логов.</h3>
+ * <h3>Перечисление для названия отрисовки экшенов в конфиге.</h3>
  */
-export const enum LogTypes {
-    ERROR = `error`,
-    GAME = `game`,
-    PRIVATE = `private`,
-    PUBLIC = `public`,
-}
-
-/**
- * <h3>Перечисление для описаний отрисовки экшенов.</h3>
- */
-export const enum ActionTypes {
-    Action = `Action`,
-    Camp = `Camp`,
-    Coin = `Coin`,
-    Hero = `Hero`,
+export const enum ConfigNames {
+    AddCoinToPouchVidofnirVedrfolnir = `AddCoinToPouchVidofnirVedrfolnir`,
+    AndumiaAction = `AndumiaAction`,
+    BonfurAction = `BonfurAction`,
+    BrisingamensAction = `BrisingamensAction`,
+    BrisingamensEndGameAction = `BrisingamensEndGameAction`,
+    DagdaAction = `DagdaAction`,
+    DiscardCard = `discardCard`,
+    EnlistmentMercenaries = `enlistmentMercenaries`,
+    ExplorerDistinction = `explorerDistinction`,
+    GetMjollnirProfit = `getMjollnirProfit`,
+    HofudAction = `HofudAction`,
+    HoldaAction = `HoldaAction`,
+    PlaceCards = `placeCards`,
+    PlaceEnlistmentMercenaries = `placeEnlistmentMercenaries`,
+    StartOrPassEnlistmentMercenaries = `startOrPassEnlistmentMercenaries`,
+    Thrud = `Thrud`,
+    UpgradeCoin = `upgradeCoin`,
+    VidofnirVedrfolnirAction = `VidofnirVedrfolnirAction`,
+    Ylud = `Ylud`,
 }
 
 /**
@@ -209,40 +113,137 @@ export const enum DrawNames {
 }
 
 /**
- * <h3>Перечисление для названия отрисовки экшенов в конфиге.</h3>
+ * <h3>Перечисление для названий героев.</h3>
  */
-export const enum ConfigNames {
-    AddCoinToPouchVidofnirVedrfolnir = `AddCoinToPouchVidofnirVedrfolnir`,
-    AndumiaAction = `AndumiaAction`,
-    BonfurAction = `BonfurAction`,
-    BrisingamensAction = `BrisingamensAction`,
-    BrisingamensEndGameAction = `BrisingamensEndGameAction`,
-    DagdaAction = `DagdaAction`,
-    DiscardCard = `discardCard`,
-    EnlistmentMercenaries = `enlistmentMercenaries`,
-    ExplorerDistinction = `explorerDistinction`,
-    GetMjollnirProfit = `getMjollnirProfit`,
-    HofudAction = `HofudAction`,
-    HoldaAction = `HoldaAction`,
-    PlaceCards = `placeCards`,
-    PlaceEnlistmentMercenaries = `placeEnlistmentMercenaries`,
-    StartOrPassEnlistmentMercenaries = `startOrPassEnlistmentMercenaries`,
+export const enum HeroNames {
+    Aegur = `Aegur`,
+    Andumia = `Andumia`,
+    Aral = `Aral`,
+    Astrid = `Astrid`,
+    Bonfur = `Bonfur`,
+    Dagda = `Dagda`,
+    Dwerg_Aesir = `Dwerg Aesir`,
+    Dwerg_Bergelmir = `Dwerg Bergelmir`,
+    Dwerg_Jungir = `Dwerg Jungir`,
+    Dwerg_Sigmir = `Dwerg Sigmir`,
+    Dwerg_Ymir = `Dwerg Ymir`,
+    Grid = `Grid`,
+    Holda = `Holda`,
+    Hourya = `Hourya`,
+    Idunn = `Idunn`,
+    Jarika = `Jarika`,
+    Khrad = `Khrad`,
+    Kraal = `Kraal`,
+    Lokdur = `Lokdur`,
+    Olwin = `Olwin`,
+    Skaa = `Skaa`,
+    Tarah = `Tarah`,
     Thrud = `Thrud`,
-    UpgradeCoin = `upgradeCoin`,
-    VidofnirVedrfolnirAction = `VidofnirVedrfolnirAction`,
+    Uline = `Uline`,
     Ylud = `Ylud`,
+    Zolkur = `Zolkur`,
+    Zoral = `Zoral`,
 }
 
 /**
- * <h3>Перечисление для названия бафов в конфиге.</h3>
+ * <h3>Перечисление для типов логов.</h3>
  */
-export const enum BuffNames {
-    DiscardCardEndGame = `discardCardEndGame`,
-    EveryTurn = `everyTurn`,
+export const enum LogTypes {
+    ERROR = `error`,
+    GAME = `game`,
+    PRIVATE = `private`,
+    PUBLIC = `public`,
+}
+
+/**
+ * <h3>Перечисление для описаний отрисовки экшенов.</h3>
+ */
+export const enum MoveNames {
+    AddCoinToPouchMove = `AddCoinToPouchMove`,
+    BotsPlaceAllCoinsMove = `BotsPlaceAllCoinsMove`,
+    ClickBoardCoinMove = `ClickBoardCoinMove`,
+    ClickCampCardHoldaMove = `ClickCampCardHoldaMove`,
+    ClickCampCardMove = `ClickCampCardMove`,
+    ClickCardMove = `ClickCardMove`,
+    ClickCardToPickDistinctionMove = `ClickCardToPickDistinctionMove`,
+    ClickCoinToUpgradeMove = `ClickCoinToUpgradeMove`,
+    ClickHandCoinMove = `ClickHandCoinMove`,
+    ClickHeroCardMove = `ClickHeroCardMove`,
+    DiscardCardFromPlayerBoardMove = `DiscardCardFromPlayerBoardMove`,
+    DiscardCardMove = `DiscardCardMove`,
+    DiscardCard2PlayersMove = `DiscardCard2PlayersMove`,
+    DiscardSuitCardFromPlayerBoardMove = `DiscardSuitCardFromPlayerBoardMove`,
+    GetEnlistmentMercenariesMove = `GetEnlistmentMercenariesMove`,
+    GetMjollnirProfitMove = `GetMjollnirProfitMove`,
+    PassEnlistmentMercenariesMove = `PassEnlistmentMercenariesMove`,
+    PickDiscardCardMove = `PickDiscardCardMove`,
+    PlaceCardMove = `PlaceCardMove`,
+    PlaceEnlistmentMercenariesMove = `PlaceEnlistmentMercenariesMove`,
+    StartEnlistmentMercenariesMove = `StartEnlistmentMercenariesMove`,
+    UpgradeCoinVidofnirVedrfolnirMove = `UpgradeCoinVidofnirVedrfolnirMove`,
+}
+
+/**
+ * <h3>Перечисление для фаз игры.</h3>
+ */
+export const enum Phases {
+    BrisingamensEndGame = `brisingamensEndGame`,
+    EndTier = `endTier`,
+    EnlistmentMercenaries = `enlistmentMercenaries`,
+    GetDistinctions = `getDistinctions`,
     GetMjollnirProfit = `getMjollnirProfit`,
-    GoCamp = `goCamp`,
-    GoCampOneTime = `goCampOneTime`,
-    NoHero = `noHero`,
+    PickCards = `pickCards`,
+    PlaceCoins = `placeCoins`,
+    PlaceCoinsUline = `placeCoinsUline`,
+}
+
+/**
+ * <h3>Перечисление для типов карт.</h3>
+ */
+export const enum RusCardTypes {
+    ACTION = `улучшение монеты`,
+    ARTEFACT = `артефакт`,
+    BASIC = `базовая`,
+    HERO = `герой`,
+    MERCENARY = `наёмник`,
+}
+
+/**
+ * <h3>Перечисление для русских названий фракций.</h3>
+ */
+export const enum RusSuitNames {
+    BLACKSMITH = `Кузнецы`,
+    EXPLORER = `Разведчики`,
+    HUNTER = `Охотники`,
+    MINER = `Горняки`,
+    WARRIOR = `Воины`,
+}
+
+/**
+ * <h3>Перечисление для стейджей игры.</h3>
+ */
+export const enum Stages {
+    AddCoinToPouch = `addCoinToPouch`,
+    DiscardCard = `discardCard`,
+    DiscardCardFromBoard = `discardCardFromBoard`,
+    DiscardSuitCard = `discardSuitCard`,
+    PickCampCardHolda = `pickCampCardHolda`,
+    PickDiscardCard = `pickDiscardCard`,
+    PickDistinctionCard = `pickDistinctionCard`,
+    PickHero = `pickHero`,
+    PlaceCards = `placeCards`,
+    PlaceTradingCoinsUline = `placeTradingCoinsUline`,
     UpgradeCoin = `upgradeCoin`,
-    UpgradeNextCoin = `upgradeNextCoin`,
+    UpgradeCoinVidofnirVedrfolnir = `upgradeCoinVidofnirVedrfolnir`,
+}
+
+/**
+ * <h3>Перечисление для названий фракций.</h3>
+ */
+export const enum SuitNames {
+    BLACKSMITH = `blacksmith`,
+    EXPLORER = `explorer`,
+    HUNTER = `hunter`,
+    MINER = `miner`,
+    WARRIOR = `warrior`,
 }

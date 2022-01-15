@@ -5,7 +5,7 @@ import { AddDataToLog } from "../Logging";
 import { CampDeckCardTypes, DeckCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { LogTypes, MoveNames, RusCardTypes } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IHero } from "../typescript/hero_card_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { IBackground } from "../typescript/style_interfaces";
@@ -26,7 +26,7 @@ import { ArgsTypes } from "../typescript/types";
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawButton = (data: BoardProps<MyGameState>, boardCells: JSX.Element[], key: string, name: string,
+export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], key: string, name: string,
     player: IPublicPlayer, actionName?: string, ...args: ArgsTypes): void => {
     // eslint-disable-next-line @typescript-eslint/ban-types
     let action: Function | null = null;
@@ -66,7 +66,7 @@ export const DrawButton = (data: BoardProps<MyGameState>, boardCells: JSX.Elemen
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawCard = (data: BoardProps<MyGameState>, playerCells: JSX.Element[],
+export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[],
     card: DeckCardTypes | CampDeckCardTypes | IHero, id: number, player: IPublicPlayer | null, suit?: string | null,
     actionName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
@@ -181,7 +181,7 @@ export const DrawCard = (data: BoardProps<MyGameState>, playerCells: JSX.Element
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawCoin = (data: BoardProps<MyGameState>, playerCells: JSX.Element[], type: string, coin: CoinType,
+export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], type: string, coin: CoinType,
     id: number, player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
     actionName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },

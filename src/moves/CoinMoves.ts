@@ -1,17 +1,14 @@
-import { Move, Ctx } from "boardgame.io";
+import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { CheckAndStartUlineActionsOrContinue } from "../helpers/HeroHelpers";
-import { AfterBasicPickCardActions } from "../helpers/MovesHelpers";
 import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
-import { IsValidMove, CoinUpgradeValidation } from "../MoveValidator";
+import { CoinUpgradeValidation, IsValidMove } from "../MoveValidator";
 import { IConfig } from "../typescript/action_interfaces";
-import { CoinType } from "../typescript/coin_types";
-import { Phases, Stages, HeroNames, SuitNames } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { SuitNames } from "../typescript/enums";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
-// todo Add logging
-// todo Add Place coins async
+// TODO Add logging
+// TODO Add Place coins async
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -23,7 +20,7 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
  * @param ctx
  * @param coinId Id монеты.
  */
-export const AddCoinToPouchMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): void => {
+export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number): void => {
     EndActionFromStackAndAddNew(G, ctx, [], coinId);
 };
 
@@ -39,7 +36,7 @@ export const AddCoinToPouchMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
  * @param coinId Id монеты.
  * @returns
  */
-export const ClickBoardCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
+export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number): string | void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         isValidMove: boolean = IsValidMove({ objId: coinId, range: [0, player.boardCoins.length] });
     if (!isValidMove) {
@@ -54,28 +51,6 @@ export const ClickBoardCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
         player.boardCoins[coinId] = player.handCoins[tempId];
         player.handCoins[tempId] = null;
         player.selectedCoin = undefined;
-        if (ctx.phase === Phases.PlaceCoinsUline) {
-            ctx.events?.setPhase(Phases.PickCards);
-        } else if ((ctx.activePlayers?.[ctx.currentPlayer]) === Stages.PlaceTradingCoinsUline) {
-            G.actionsNum--;
-            AfterBasicPickCardActions(G, ctx, false);
-        } else {
-            const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers
-                .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== HeroNames.Uline)
-                .every((player: IPublicPlayer): boolean => player.handCoins
-                    .every((coin: CoinType): boolean => coin === null));
-            if (isEveryPlayersHandCoinsEmpty) {
-                if (CheckAndStartUlineActionsOrContinue(G, ctx) === Phases.PlaceCoinsUline) {
-                    ctx.events?.setPhase(Phases.PlaceCoinsUline);
-                } else {
-                    ctx.events?.setPhase(Phases.PickCards);
-                }
-            } else {
-                if (player.handCoins.every((coin: CoinType): boolean => coin === null)) {
-                    ctx.events?.endTurn();
-                }
-            }
-        }
     } else {
         return INVALID_MOVE;
     }
@@ -95,19 +70,20 @@ export const ClickBoardCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, 
  * @param isInitial Является ли базовой.
  * @returns
  */
-export const ClickCoinToUpgradeMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number, type: string,
+export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number, type: string,
     isInitial: boolean): string | void => {
     const isValidMove: boolean = CoinUpgradeValidation(G, ctx, coinId, type);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
+    // todo Move to distinction phase hook?
     if (Object.values(G.distinctions).length) {
-        // todo Rework in suit name distinctions and delete not by if but by current distinction suit
-        const isDistinctionExplorer: boolean = G.distinctions[SuitNames.EXPLORER] !== undefined;
-        if (isDistinctionExplorer) {
-            G.distinctions[SuitNames.EXPLORER] = undefined;
-        } else if (!isDistinctionExplorer && G.distinctions[SuitNames.WARRIOR] !== undefined) {
+        // TODO Rework in suit name distinctions and delete not by if but by current distinction suit
+        const isDistinctionWarrior: boolean = G.distinctions[SuitNames.WARRIOR] !== undefined;
+        if (isDistinctionWarrior) {
             G.distinctions[SuitNames.WARRIOR] = undefined;
+        } else if (!isDistinctionWarrior && G.distinctions[SuitNames.EXPLORER] !== undefined) {
+            G.distinctions[SuitNames.EXPLORER] = undefined;
         }
     }
     EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
@@ -125,7 +101,7 @@ export const ClickCoinToUpgradeMove: Move<MyGameState> = (G: MyGameState, ctx: C
  * @param coinId Id монеты.
  * @returns
  */
-export const ClickHandCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number): string | void => {
+export const ClickHandCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number): string | void => {
     const isValidMove: boolean = IsValidMove({
         obj: G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId],
         objId: coinId,
@@ -151,7 +127,7 @@ export const ClickHandCoinMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, c
  * @param isInitial Является ли базовой.
  * @returns
  */
-export const UpgradeCoinVidofnirVedrfolnirMove: Move<MyGameState> = (G: MyGameState, ctx: Ctx, coinId: number,
+export const UpgradeCoinVidofnirVedrfolnirMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
     type: string, isInitial: boolean): string | void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     const isValidMove: boolean = CoinUpgradeValidation(G, ctx, coinId, type) && config?.coinId !== coinId;

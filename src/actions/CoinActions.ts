@@ -1,7 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { DrawCurrentProfit, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
 import { IConfig } from "../typescript/action_interfaces";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 
 /**
@@ -15,7 +15,7 @@ import { ArgsTypes } from "../typescript/types";
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const DrawProfitCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const DrawProfitCoinAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
     DrawCurrentProfit(G, ctx, config);
 };
 
@@ -31,6 +31,6 @@ export const DrawProfitCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig):
  * @param config Конфиг действий героя или карты улучшающей монеты.
  * @param args Дополнительные аргументы.
  */
-export const UpgradeCoinActionCardAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
+export const UpgradeCoinActionCardAction = (G: IMyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
     UpgradeCurrentCoin(G, ctx, config, ...args);
 };

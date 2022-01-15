@@ -1,11 +1,4 @@
 /**
- * <h3>Интерфейс для числовых индексов и числовых значений.</h3>
- */
-export interface INumberValues {
-    [index: number]: number,
-}
-
-/**
  * <h3>Интерфейс для числовых индексов и массивов числовых значений.</h3>
  */
 interface INumberArrayValues {
@@ -13,10 +6,10 @@ interface INumberArrayValues {
 }
 
 /**
- * <h3>Интерфейс для значений шевронов карт.</h3>
+ * <h3>Интерфейс для числовых индексов и числовых значений.</h3>
  */
-export interface IRankValues {
-    [index: number]: INumberValues,
+export interface INumberValues {
+    [index: number]: number,
 }
 
 /**
@@ -24,4 +17,11 @@ export interface IRankValues {
  */
 export interface IPointsValues {
     [index: number]: INumberValues | INumberArrayValues,
+}
+
+/**
+ * <h3>Интерфейс для значений шевронов карт.</h3>
+ */
+export interface IRankValues {
+    [index: number]: INumberValues,
 }

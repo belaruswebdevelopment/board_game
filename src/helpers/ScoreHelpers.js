@@ -45,3 +45,4 @@ export const TotalRank = (accumulator, currentValue) => {
     }
     return accumulator;
 };
+//# sourceMappingURL=ScoreHelpers.js.map

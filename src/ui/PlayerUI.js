@@ -61,7 +61,7 @@ export const DrawPlayersBoards = (data) => {
                 id += k + 1;
                 if (k === 0) {
                     const playerCards = Object.values(data.G.publicPlayers[p].cards).flat();
-                    // todo Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
+                    // TODO Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
                     if (data.G.publicPlayers[p].heroes[i] !== undefined && (!data.G.publicPlayers[p].heroes[i].suit
                         && !((data.G.publicPlayers[p].heroes[i].name === HeroNames.Ylud
                             && playerCards.findIndex((card) => card.name === HeroNames.Ylud) !== -1)
@@ -108,6 +108,7 @@ export const DrawPlayersBoards = (data) => {
  */
 export const DrawPlayersBoardsCoins = (data) => {
     var _a;
+    // TODO Your coins always public for you only, others private, but you see previous/current tavern coins for all players (and your's transparent for non opened coins)
     const playersBoardsCoins = [], playerHeaders = [], playerFooters = [], playerRows = [];
     for (let p = 0; p < data.ctx.numPlayers; p++) {
         let coinIndex = 0;
@@ -206,6 +207,7 @@ export const DrawPlayersBoardsCoins = (data) => {
  * @constructor
  */
 export const DrawPlayersHandsCoins = (data) => {
+    // TODO Your coins always public for you only, others always private!
     const playersHandsCoins = [];
     for (let p = 0; p < data.ctx.numPlayers; p++) {
         const playerCells = [];
@@ -241,3 +243,4 @@ export const DrawPlayersHandsCoins = (data) => {
     }
     return playersHandsCoins;
 };
+//# sourceMappingURL=PlayerUI.js.map

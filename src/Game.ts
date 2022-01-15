@@ -1,32 +1,27 @@
 import { Ctx, Game } from "boardgame.io";
 import { PlayerView, TurnOrder } from "boardgame.io/core";
-import { DrawProfitCampAction } from "./actions/CampActions";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
-import { RefillCamp } from "./Camp";
-import { ReturnCoinsToPlayerHands } from "./Coin";
-import { CheckDistinction } from "./Distinction";
 import { SetupGame } from "./GameSetup";
-import { ResolveBoardCoins } from "./helpers/CoinHelpers";
-import { AddActionsToStack } from "./helpers/StackHelpers";
+import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGamePhaseTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
+import { CheckEndEndTierPhase, CheckEndTierOrder, EndEndTierActions, OnEndTierPhaseTurnBegin } from "./hooks/EndTierHooks";
+import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesPhaseTurnBegin, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
+import { ReturnEndGameData } from "./hooks/GameHooks";
+import { CheckAndResolveDistinctionOrders, CheckEndDistinctionsPhase, CheckNextDistinctionTurn, EndDistinctionPhaseActions } from "./hooks/GetDistinctionsHooks";
+import { CheckEndGetMjollnirProfitPhase, CheckGetMjollnirProfitOrder, OnGetMjollnirProfitPhaseTurnBegin, StartEndGame } from "./hooks/GetMjollnirProfitHooks";
+import { CheckAndStartTrading, CheckEndPickCardsPhase, CheckEndPickCardsTurn, EndPickCardsActions, PickCardsDiscardCardsAfterLastPlayerTurnEnd, ResolveCurrentTavernOrders } from "./hooks/PickCardsHooks";
+import { CheckEndPlaceCoinsPhase, CheckEndPlaceCoinsTurn, EndPlaceCoinsActions, PreparationPhaseActions } from "./hooks/PlaceCoinsHooks";
+import { CheckEndPlaceCoinsUlinePhase, CheckUlinePlaceCoinsOrder, EndPlaceCoinsUlineActions } from "./hooks/PlaceCoinsUlineHooks";
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
 import { ClickCampCardHoldaMove, ClickCampCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, DiscardSuitCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/CampMoves";
 import { AddCoinToPouchMove, ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CoinMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceCardMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, PassEnlistmentMercenariesMove, PickDiscardCardMove } from "./moves/Moves";
-import { CheckPlayersBasicOrder } from "./Player";
-import { ChangePlayersPriorities } from "./Priority";
-import { ScoreWinner } from "./Score";
-import { RefillTaverns } from "./Tavern";
-import { IStack } from "./typescript/action_interfaces";
-import { CampDeckCardTypes } from "./typescript/card_types";
-import { ActionTypes, ConfigNames, DrawNames, Phases, RusCardTypes } from "./typescript/enums";
-import { IOrder, IResolveBoardCoins, MyGameState } from "./typescript/game_data_interfaces";
-import { IPublicPlayer } from "./typescript/player_interfaces";
-import { DistinctionTypes } from "./typescript/types";
+import { Phases } from "./typescript/enums";
+import { INext, IOrder, IMyGameState } from "./typescript/game_data_interfaces";
 
-// todo Add logging
-// todo Add colors for cards Points by suit colors!
-// todo Add dock block
+// TODO Add logging
+// TODO Add colors for cards Points by suit colors!
+// TODO Add dock block
 /**
  * <h3>Параметры порядка хода.</h3>
  * <p>Применения:</p>
@@ -43,9 +38,9 @@ const order: IOrder = TurnOrder.CUSTOM_FROM(`publicPlayersOrder`);
  * <li>При инициализации игрового стола.</li>
  * </ol>
  */
-export const BoardGame: Game<MyGameState> = {
-    // todo Add all hooks external functions to all {}
-    // todo Check all endPhase / setPhase &  next (may be with G.condition ? 'phaseC' : 'phaseB') in it => add next or better move to hooks functions
+export const BoardGame: Game<IMyGameState> = {
+    // TODO Add all hooks external functions to all {}
+    // TODO Check all endPhase/setPhase & next (may be with G.condition ? 'phaseC' : 'phaseB') in it => add next or better move to hooks functions
     name: `nidavellir`,
     setup: SetupGame,
     playerView: PlayerView.STRIP_SECRETS,
@@ -53,6 +48,7 @@ export const BoardGame: Game<MyGameState> = {
         placeCoins: {
             turn: {
                 order,
+                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndPlaceCoinsTurn(G, ctx),
             },
             start: true,
             moves: {
@@ -60,29 +56,22 @@ export const BoardGame: Game<MyGameState> = {
                 ClickBoardCoinMove,
                 BotsPlaceAllCoinsMove,
             },
-            next: Phases.PickCards,
-            onBegin: (G: MyGameState, ctx: Ctx): void => {
-                G.currentTavern = -1;
-                if (ctx.turn !== 0) {
-                    ReturnCoinsToPlayerHands(G);
-                }
-                CheckPlayersBasicOrder(G, ctx);
-            },
+            onBegin: (G: IMyGameState, ctx: Ctx): void => PreparationPhaseActions(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): void | INext => CheckEndPlaceCoinsPhase(G, ctx),
+            onEnd: (G: IMyGameState): void => EndPlaceCoinsActions(G),
         },
         placeCoinsUline: {
             turn: {
                 order,
-                // todo Move endTurn to moveLimit
-                // minMoves: 2,
-                // maxMoves: 2,
             },
             moves: {
                 ClickHandCoinMove,
                 ClickBoardCoinMove,
             },
-            onBegin: (G: MyGameState, ctx: Ctx): void => {
-                CheckPlayersBasicOrder(G, ctx);
-            },
+            next: Phases.PickCards,
+            onBegin: (G: IMyGameState, ctx: Ctx): void => CheckUlinePlaceCoinsOrder(G, ctx),
+            endIf: (G: IMyGameState): boolean | void => CheckEndPlaceCoinsUlinePhase(G),
+            onEnd: (G: IMyGameState): void => EndPlaceCoinsUlineActions(G),
         },
         pickCards: {
             turn: {
@@ -147,19 +136,17 @@ export const BoardGame: Game<MyGameState> = {
                         },
                     },
                 },
+                onMove: (G: IMyGameState, ctx: Ctx): void => CheckAndStartTrading(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndPickCardsTurn(G, ctx),
+                onEnd: (G: IMyGameState, ctx: Ctx) => PickCardsDiscardCardsAfterLastPlayerTurnEnd(G, ctx),
             },
             moves: {
                 ClickCardMove,
                 ClickCampCardMove,
             },
-            onBegin: (G: MyGameState, ctx: Ctx): void => {
-                G.currentTavern++;
-                const { playersOrder, exchangeOrder }: IResolveBoardCoins = ResolveBoardCoins(G, ctx);
-                [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
-            },
-            onEnd: (G: MyGameState): void => {
-                ChangePlayersPriorities(G);
-            },
+            onBegin: (G: IMyGameState, ctx: Ctx): void => ResolveCurrentTavernOrders(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx) => CheckEndPickCardsPhase(G, ctx),
+            onEnd: (G: IMyGameState): void => EndPickCardsActions(G),
         },
         enlistmentMercenaries: {
             turn: {
@@ -213,6 +200,8 @@ export const BoardGame: Game<MyGameState> = {
                     },
                     // End
                 },
+                onBegin: (G: IMyGameState, ctx: Ctx): void => OnEnlistmentMercenariesPhaseTurnBegin(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndEnlistmentMercenariesTurn(G, ctx),
             },
             moves: {
                 StartEnlistmentMercenariesMove,
@@ -220,60 +209,9 @@ export const BoardGame: Game<MyGameState> = {
                 GetEnlistmentMercenariesMove,
                 PlaceEnlistmentMercenariesMove,
             },
-            onBegin: (G: MyGameState, ctx: Ctx): void => {
-                // todo Move to CampHelpers?
-                const players: IPublicPlayer[] =
-                    G.publicPlayers.map((player: IPublicPlayer): IPublicPlayer => player),
-                    playersIndexes: string[] = [];
-                players.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
-                    if (nextPlayer.campCards
-                        .filter((card: CampDeckCardTypes): boolean =>
-                            card.type === RusCardTypes.MERCENARY).length < currentPlayer.campCards
-                                .filter((card: CampDeckCardTypes): boolean =>
-                                    card.type === RusCardTypes.MERCENARY).length) {
-                        return 1;
-                    } else if (nextPlayer.campCards
-                        .filter((card: CampDeckCardTypes): boolean =>
-                            card.type === RusCardTypes.MERCENARY).length > currentPlayer.campCards
-                                .filter((card: CampDeckCardTypes): boolean =>
-                                    card.type === RusCardTypes.MERCENARY).length) {
-                        return -1;
-                    }
-                    if (nextPlayer.priority.value < currentPlayer.priority.value) {
-                        return 1;
-                    } else if (nextPlayer.priority.value > currentPlayer.priority.value) {
-                        return -1;
-                    }
-                    return 0;
-                });
-                players.forEach((playerSorted: IPublicPlayer): void => {
-                    if (playerSorted.campCards
-                        .filter((card: CampDeckCardTypes): boolean =>
-                            card.type === RusCardTypes.MERCENARY).length) {
-                        playersIndexes.push(String(G.publicPlayers
-                            .findIndex((player: IPublicPlayer): boolean =>
-                                player.nickname === playerSorted.nickname)));
-                    }
-                });
-                G.publicPlayersOrder = playersIndexes;
-                if (playersIndexes.length > 1) {
-                    G.publicPlayersOrder.push(playersIndexes[0]);
-                }
-                const stack: IStack[] = [
-                    {
-                        action: {
-                            name: DrawProfitCampAction.name,
-                            type: ActionTypes.Camp,
-                        },
-                        playerId: Number(G.publicPlayersOrder[0]),
-                        config: {
-                            name: ConfigNames.StartOrPassEnlistmentMercenaries,
-                            drawName: DrawNames.StartOrPassEnlistmentMercenaries,
-                        },
-                    },
-                ];
-                AddActionsToStack(G, ctx, stack);
-            },
+            onBegin: (G: IMyGameState): void => PrepareMercenaryPhaseOrders(G),
+            endIf: (G: IMyGameState, ctx: Ctx): void | INext => CheckEndEnlistmentMercenariesPhase(G, ctx),
+            onEnd: (G: IMyGameState, ctx: Ctx): void => EndEnlistmentMercenariesActions(G, ctx),
         },
         endTier: {
             turn: {
@@ -327,41 +265,53 @@ export const BoardGame: Game<MyGameState> = {
                     },
                     // End
                 },
+                onBegin: (G: IMyGameState, ctx: Ctx): void => OnEndTierPhaseTurnBegin(G, ctx),
             },
             moves: {
                 PlaceCardMove,
             },
-        },
-        getMjollnirProfit: {
-            turn: {
-                order,
-                // todo Move endTurn to moveLimit
-                // minMoves: 1,
-                // maxMoves: 1,
-            },
-            moves: {
-                GetMjollnirProfitMove,
-            },
-        },
-        brisingamensEndGame: {
-            turn: {
-                order,
-                // todo Move endTurn to moveLimit
-                // minMoves: 1,
-                // maxMoves: 1,
-            },
-            moves: {
-                DiscardCardFromPlayerBoardMove,
-            },
+            onBegin: (G: IMyGameState): void => CheckEndTierOrder(G),
+            endIf: (G: IMyGameState, ctx: Ctx): void | INext => CheckEndEndTierPhase(G, ctx),
+            onEnd: (G: IMyGameState, ctx: Ctx): void => EndEndTierActions(G, ctx),
         },
         getDistinctions: {
-            // todo Allow Pick Hero and all acions from hero pick to this phase
             turn: {
                 order,
                 stages: {
-                    pickDistinctionCard: {
+                    // Start
+                    discardCardFromBoard: {
                         moves: {
-                            ClickCardToPickDistinctionMove,
+                            DiscardCardMove,
+                        },
+                    },
+                    placeCards: {
+                        moves: {
+                            PlaceCardMove,
+                        },
+                    },
+                    pickCampCardHolda: {
+                        moves: {
+                            ClickCampCardHoldaMove,
+                        },
+                    },
+                    pickDiscardCard: {
+                        moves: {
+                            PickDiscardCardMove,
+                        },
+                    },
+                    addCoinToPouch: {
+                        moves: {
+                            AddCoinToPouchMove,
+                        },
+                    },
+                    upgradeCoinVidofnirVedrfolnir: {
+                        moves: {
+                            UpgradeCoinVidofnirVedrfolnirMove,
+                        },
+                    },
+                    discardSuitCard: {
+                        moves: {
+                            DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
                     upgradeCoin: {
@@ -369,36 +319,58 @@ export const BoardGame: Game<MyGameState> = {
                             ClickCoinToUpgradeMove,
                         },
                     },
+                    pickHero: {
+                        moves: {
+                            ClickHeroCardMove,
+                        },
+                    },
+                    // End
+                    pickDistinctionCard: {
+                        moves: {
+                            ClickCardToPickDistinctionMove,
+                        },
+                    },
                 },
+                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckNextDistinctionTurn(G, ctx),
             },
             next: Phases.PlaceCoins,
             moves: {
                 ClickDistinctionCardMove,
             },
-            onBegin: (G: MyGameState, ctx: Ctx): void => {
-                CheckDistinction(G, ctx);
-                const distinctions: DistinctionTypes[] =
-                    Object.values(G.distinctions).filter((distinction: DistinctionTypes): boolean =>
-                        distinction !== null && distinction !== undefined);
-                if (distinctions.every((distinction: DistinctionTypes): boolean =>
-                    distinction !== null && distinction !== undefined)) {
-                    G.publicPlayersOrder = distinctions as string[];
-                }
+            onBegin: (G: IMyGameState, ctx: Ctx): void => CheckAndResolveDistinctionOrders(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndDistinctionsPhase(G, ctx),
+            onEnd: (G: IMyGameState): void => EndDistinctionPhaseActions(G),
+        },
+        brisingamensEndGame: {
+            turn: {
+                order,
+                minMoves: 1,
+                maxMoves: 1,
+                onBegin: (G: IMyGameState, ctx: Ctx): void => OnBrisingamensEndGamePhaseTurnBegin(G, ctx),
             },
-            onEnd: (G: MyGameState): void => {
-                if (G.expansions.thingvellir.active) {
-                    RefillCamp(G);
-                }
-                RefillTaverns(G);
+            moves: {
+                DiscardCardFromPlayerBoardMove,
             },
-            endIf: (G: MyGameState): boolean =>
-                Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
-                    distinction === undefined),
+            onBegin: (G: IMyGameState): void => CheckBrisingamensEndGameOrder(G),
+            endIf: (G: IMyGameState, ctx: Ctx): void | INext => StartGetMjollnirProfitOrEndGame(G, ctx),
+            onEnd: (G: IMyGameState): void => EndBrisingamensEndGameActions(G),
+        },
+        getMjollnirProfit: {
+            turn: {
+                order,
+                minMoves: 1,
+                maxMoves: 1,
+                onBegin: (G: IMyGameState, ctx: Ctx): void => OnGetMjollnirProfitPhaseTurnBegin(G, ctx),
+            },
+            moves: {
+                GetMjollnirProfitMove,
+            },
+            onBegin: (G: IMyGameState): void => CheckGetMjollnirProfitOrder(G),
+            endIf: (G: IMyGameState): boolean | void => CheckEndGetMjollnirProfitPhase(G),
+            onEnd: (G: IMyGameState, ctx: Ctx): void => StartEndGame(G, ctx),
         },
     },
-    onEnd: (G: MyGameState, ctx: Ctx) => {
-        return ScoreWinner(G, ctx);
-    },
+    onEnd: (G: IMyGameState, ctx: Ctx): IMyGameState | void => ReturnEndGameData(G, ctx),
     ai: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore

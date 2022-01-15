@@ -1,4 +1,4 @@
-// todo Add logging
+// TODO Add logging
 /**
  * <h3>Находит максимальную монету игрока.</h3>
  * <p>Применения:</p>
@@ -77,3 +77,4 @@ export const ResolveBoardCoins = (G, ctx) => {
         exchangeOrder,
     };
 };
+//# sourceMappingURL=CoinHelpers.js.map

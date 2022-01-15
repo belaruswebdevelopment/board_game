@@ -594,3 +594,4 @@ export const artefactsConfig = {
     Vegvisir,
     Vidofnir_Vedrfolnir,
 };
+//# sourceMappingURL=CampData.js.map

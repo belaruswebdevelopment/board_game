@@ -2,10 +2,13 @@ import { IStack } from "./action_interfaces";
 import { INumberValues } from "./object_values_interfaces";
 
 /**
- * <h3>Интерфейс для значения, на которое обновляется монета.</h3>
+ * <h3>Интерфейс для карты улучшения монеты.</h3>
  */
-export interface IActionCardValues {
-    [index: number]: INumberValues,
+export interface IActionCard {
+    type: string,
+    value: number,
+    stack: IStack[],
+    name: string,
 }
 
 /**
@@ -18,13 +21,10 @@ export interface IActionCardConfig {
 }
 
 /**
- * <h3>Интерфейс для карты улучшения монеты.</h3>
+ * <h3>Интерфейс для значения, на которое обновляется монета.</h3>
  */
-export interface IActionCard {
-    type: string,
-    value: number,
-    stack: IStack[],
-    name: string,
+export interface IActionCardValues {
+    [index: number]: INumberValues,
 }
 
 /**

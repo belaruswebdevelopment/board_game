@@ -17,29 +17,6 @@ export interface IArtefact {
 }
 
 /**
- * <h3>Интерфейс для данных карт кэмпа наёмник.</h3>
- */
-export interface IMercenary {
-    suit: string,
-    rank: number,
-    points: null | number,
-}
-
-/**
- * <h3>Интерфейс для перечня данных карт кэмпа наёмники.</h3>
- */
-export interface IMercenaries {
-    [name: string]: IMercenary,
-}
-
-/**
- * <h3>Интерфейс для конфига данных карт кэмпа артефакт.</h3>
- */
-export interface IArtefactConfig {
-    [name: string]: IArtefact,
-}
-
-/**
  * <h3>Интерфейс для карты кэмпа артефакта.</h3>
  */
 export interface IArtefactCampCard {
@@ -53,6 +30,13 @@ export interface IArtefactCampCard {
     rank: null | number,
     points: null | number,
     stack: IStack[],
+}
+
+/**
+ * <h3>Интерфейс для конфига данных карт кэмпа артефакт.</h3>
+ */
+export interface IArtefactConfig {
+    [name: string]: IArtefact,
 }
 
 /**
@@ -72,18 +56,6 @@ export interface ICreateArtefactCampCard {
 }
 
 /**
- * <h3>Интерфейс для карты кэмпа наёмника.</h3>
- */
-export interface IMercenaryCampCard {
-    type: string,
-    tier: number,
-    path: string,
-    name: string,
-    game: string,
-    stack: IStack[],
-}
-
-/**
  * <h3>Интерфейс для создания карты кэмпа наёмника.</h3>
  */
 export interface ICreateMercenaryCampCard {
@@ -92,5 +64,33 @@ export interface ICreateMercenaryCampCard {
     path: string,
     name: string,
     game?: string,
+    stack: IStack[],
+}
+
+/**
+ * <h3>Интерфейс для перечня данных карт кэмпа наёмники.</h3>
+ */
+export interface IMercenaries {
+    [name: string]: IMercenary,
+}
+
+/**
+ * <h3>Интерфейс для данных карт кэмпа наёмник.</h3>
+ */
+export interface IMercenary {
+    suit: string,
+    rank: number,
+    points: null | number,
+}
+
+/**
+ * <h3>Интерфейс для карты кэмпа наёмника.</h3>
+ */
+export interface IMercenaryCampCard {
+    type: string,
+    tier: number,
+    path: string,
+    name: string,
+    game: string,
     stack: IStack[],
 }

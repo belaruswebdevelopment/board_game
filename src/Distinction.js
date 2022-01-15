@@ -2,7 +2,7 @@ import { suitsConfig } from "./data/SuitData";
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddDataToLog } from "./Logging";
 import { LogTypes, SuitNames } from "./typescript/enums";
-// todo Rework 2 functions in one?
+// TODO Rework 2 functions in one?
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по шевронам конкретной фракции.</h3>
  * <p>Применения:</p>
@@ -77,3 +77,4 @@ export const CheckDistinction = (G, ctx) => {
         }
     }
 };
+//# sourceMappingURL=Distinction.js.map

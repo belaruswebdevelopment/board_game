@@ -33,3 +33,4 @@ export const DrawLogData = (data) => {
         return null;
     }
 };
+//# sourceMappingURL=LogUI.js.map

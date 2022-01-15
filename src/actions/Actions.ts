@@ -5,7 +5,7 @@ import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
 import { IConfig } from "../typescript/action_interfaces";
 import { LogTypes } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 
 /**
@@ -20,9 +20,8 @@ import { ArgsTypes } from "../typescript/types";
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
  */
-export const DiscardCardFromTavernAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
-  AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`
-  );
+export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
+  AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
   DiscardCardFromTavern(G, cardId);
   EndActionFromStackAndAddNew(G, ctx);
 };
@@ -38,7 +37,7 @@ export const DiscardCardFromTavernAction = (G: MyGameState, ctx: Ctx, config: IC
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const DrawProfitAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
   DrawCurrentProfit(G, ctx, config);
 };
 
@@ -52,7 +51,7 @@ export const DrawProfitAction = (G: MyGameState, ctx: Ctx, config: IConfig): voi
  * @param G
  * @param ctx
  */
-export const PassEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx): void => {
+export const PassEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx): void => {
   AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} пасанул во время фазы 'Enlistment Mercenaries'.`);
   EndActionFromStackAndAddNew(G, ctx);
 };
@@ -68,7 +67,7 @@ export const PassEnlistmentMercenariesAction = (G: MyGameState, ctx: Ctx): void 
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const PickHeroAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
   PickCurrentHero(G, ctx, config);
 };
 
@@ -84,6 +83,6 @@ export const PickHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void 
  * @param config Конфиг действий героя или карты улучшающей монеты.
  * @param args Дополнительные аргументы.
  */
-export const UpgradeCoinAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
+export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
   UpgradeCurrentCoin(G, ctx, config, ...args);
 };

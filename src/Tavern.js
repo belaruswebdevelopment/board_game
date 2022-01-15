@@ -13,26 +13,7 @@ import { LogTypes } from "./typescript/enums";
  * @param ctx
  * @returns Пуста ли текущая таверна.
  */
-export const CheckIfCurrentTavernEmpty = (G, ctx) => {
-    let isCurrentTavernEmpty = false;
-    if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        isCurrentTavernEmpty =
-            G.taverns[G.currentTavern].every((card) => card === null);
-        if (!isCurrentTavernEmpty) {
-            const discardCardIndex = G.taverns[G.currentTavern].findIndex((card) => card !== null);
-            if (discardCardIndex !== -1) {
-                const isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
-                if (isCardDiscarded) {
-                    isCurrentTavernEmpty = true;
-                }
-            }
-        }
-        if (isCurrentTavernEmpty) {
-            AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[G.currentTavern].name} пустая.`);
-        }
-    }
-    return isCurrentTavernEmpty;
-};
+export const CheckIfCurrentTavernEmpty = (G) => G.taverns[G.currentTavern].every((card) => card === null);
 /**
  * <h3>Убирает карту из таверны в стопку сброса.</h3>
  * <p>Применения:</p>
@@ -40,6 +21,7 @@ export const CheckIfCurrentTavernEmpty = (G, ctx) => {
  * <li>При игре на 2-х игроков убирает не выбранную карту.</li>
  * <li>Убирает оставшуюся карту при выборе карты из кэмпа.</li>
  * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из кэмпа.</li>
+ * <li>Игрок пике артефакта Jarnglofi.</li>
  * </ol>
  *
  * @param G
@@ -52,11 +34,6 @@ export const DiscardCardFromTavern = (G, discardCardIndex) => {
         G.discardCardsDeck.push(discardedCard);
         G.taverns[G.currentTavern][discardCardIndex] = null;
         AddDataToLog(G, LogTypes.GAME, `Карта ${discardedCard.name} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
-        const additionalDiscardCardIndex = G.taverns[G.currentTavern].findIndex((card) => card !== null);
-        if (additionalDiscardCardIndex !== -1) {
-            AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
-            DiscardCardFromTavern(G, additionalDiscardCardIndex);
-        }
         return true;
     }
     AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны.`);
@@ -107,3 +84,4 @@ export const tavernsConfig = {
         name: `«Гарцующий конь»`,
     },
 };
+//# sourceMappingURL=Tavern.js.map

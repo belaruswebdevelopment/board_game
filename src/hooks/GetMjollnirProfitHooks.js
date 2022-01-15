@@ -1,0 +1,27 @@
+import { AddGetMjollnirProfitActionsToStack } from "../helpers/CampHelpers";
+import { EndGame } from "../helpers/GameHooksHelpers";
+export const CheckGetMjollnirProfitOrder = (G) => {
+    const mjollnirPlayerIndex = G.publicPlayers.findIndex((player) => player.buffs.getMjollnirProfit === true);
+    G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
+};
+/**
+ * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе фракции для применения эффекта артефакта Mjollnir в фазе 'getMjollnirProfit'.</li>
+ * </ol>
+ *
+ * @param G
+ * @returns
+ */
+export const CheckEndGetMjollnirProfitPhase = (G) => {
+    if (G.publicPlayersOrder.length) {
+        return G.suitIdForMjollnir !== null;
+    }
+};
+export const OnGetMjollnirProfitPhaseTurnBegin = (G, ctx) => AddGetMjollnirProfitActionsToStack(G, ctx);
+export const StartEndGame = (G, ctx) => {
+    G.publicPlayersOrder = [];
+    EndGame(ctx);
+};
+//# sourceMappingURL=GetMjollnirProfitHooks.js.map

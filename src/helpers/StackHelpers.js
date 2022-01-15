@@ -62,9 +62,7 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
  * @param playerId Id игрока.
  */
 export const EndActionForChosenPlayer = (G, ctx, playerId) => {
-    var _a;
     G.publicPlayers[playerId].stack = [];
-    (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.endStage();
     let activePlayers = 0;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const activePlayersKey in ctx.activePlayers) {
@@ -102,3 +100,4 @@ export const EndActionFromStackAndAddNew = (G, ctx, newStack = [], ...args) => {
     AddActionsToStack(G, ctx, newStack);
     StartActionFromStackOrEndActions(G, ctx, isTrading, ...args);
 };
+//# sourceMappingURL=StackHelpers.js.map

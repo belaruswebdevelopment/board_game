@@ -7,28 +7,19 @@ import { IPlayerCards } from "./interfaces";
 import { IPriority } from "./priority_interfaces";
 
 /**
- * <h3>Интерфейс для приватных данных игрока.</h3>
+ * <h3>Интерфейс для видов бафов у карт.</h3>
  */
-export interface IPlayer {
-    handCoins: ICoin[],
-    boardCoins: ICoin[],
-}
-
-/**
- * <h3>Интерфейс для публичных данных игрока.</h3>
- */
-export interface IPublicPlayer {
-    nickname: string,
-    cards: IPlayerCards,
-    heroes: IHero[],
-    campCards: CampDeckCardTypes[],
-    handCoins: CoinType[],
-    boardCoins: CoinType[],
-    stack: IStack[],
-    priority: IPriority,
-    buffs: IBuffs,
-    selectedCoin: undefined | number,
-    pickedCard: PickedCardType,
+interface IBuffs {
+    // discardCardEndGame?: boolean,
+    // endTier?: string,
+    // everyTurn?: string,
+    // getMjollnirProfit?: boolean,
+    // goCamp?: boolean,
+    // goCampOneTime?: boolean,
+    // noHero?: boolean,
+    // upgradeCoin?: number,
+    // upgradeNextCoin?: string,
+    [name: string]: string | number | boolean,
 }
 
 /**
@@ -49,6 +40,14 @@ export interface ICreatePublicPlayer {
 }
 
 /**
+ * <h3>Интерфейс для приватных данных игрока.</h3>
+ */
+export interface IPlayer {
+    handCoins: ICoin[],
+    boardCoins: ICoin[],
+}
+
+/**
  * <h3>Интерфейс для объекта, хранящего скрытые (secret) данные всех игроков.</h3>
  */
 export interface IPlayers {
@@ -56,16 +55,18 @@ export interface IPlayers {
 }
 
 /**
- * <h3>Интерфейс для видов бафов у карт.</h3>
+ * <h3>Интерфейс для публичных данных игрока.</h3>
  */
-interface IBuffs {
-    // everyTurn?: string,
-    // upgradeNextCoin?: string,
-    // upgradeCoin?: number,
-    // goCampOneTime?: boolean,
-    // goCamp?: boolean,
-    // noHero?: boolean,
-    // getMjollnirProfit?: boolean,
-    // discardCardEndGame?: boolean,
-    [name: string]: string | number | boolean,
+export interface IPublicPlayer {
+    nickname: string,
+    cards: IPlayerCards,
+    heroes: IHero[],
+    campCards: CampDeckCardTypes[],
+    handCoins: CoinType[],
+    boardCoins: CoinType[],
+    stack: IStack[],
+    priority: IPriority,
+    buffs: IBuffs,
+    selectedCoin: undefined | number,
+    pickedCard: PickedCardType,
 }

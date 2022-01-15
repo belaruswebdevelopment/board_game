@@ -1,7 +1,7 @@
 import { Ctx } from "boardgame.io";
-import { IStack, IConfig } from "../typescript/action_interfaces";
+import { IConfig, IStack } from "../typescript/action_interfaces";
 import { ConfigNames } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 
@@ -16,7 +16,7 @@ import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
  * @param ctx
  * @param stack Стэк действий.
  */
-export const AddActionsToStack = (G: MyGameState, ctx: Ctx, stack: IStack[]): void => {
+export const AddActionsToStack = (G: IMyGameState, ctx: Ctx, stack: IStack[]): void => {
     if (stack.length) {
         for (let i: number = stack.length - 1; i >= 0; i--) {
             const playerId: number = stack[i].playerId ?? Number(ctx.currentPlayer);
@@ -36,7 +36,7 @@ export const AddActionsToStack = (G: MyGameState, ctx: Ctx, stack: IStack[]): vo
  * @param ctx
  * @param stack Стэк действий.
  */
-export const AddActionsToStackAfterCurrent = (G: MyGameState, ctx: Ctx, stack: IStack[]): void => {
+export const AddActionsToStackAfterCurrent = (G: IMyGameState, ctx: Ctx, stack: IStack[]): void => {
     if (stack.length) {
         let noCurrent = false;
         for (let i: number = stack.length - 1; i >= 0; i--) {
@@ -64,9 +64,8 @@ export const AddActionsToStackAfterCurrent = (G: MyGameState, ctx: Ctx, stack: I
  * @param ctx
  * @param playerId Id игрока.
  */
-export const EndActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: number): void => {
+export const EndActionForChosenPlayer = (G: IMyGameState, ctx: Ctx, playerId: number): void => {
     G.publicPlayers[playerId].stack = [];
-    ctx.events?.endStage();
     let activePlayers = 0;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const activePlayersKey in ctx.activePlayers) {
@@ -90,7 +89,7 @@ export const EndActionForChosenPlayer = (G: MyGameState, ctx: Ctx, playerId: num
  * @param args Дополнительные аргументы.
  * @returns Выполнение действий.
  */
-export const EndActionFromStackAndAddNew = (G: MyGameState, ctx: Ctx, newStack: IStack[] = [], ...args: ArgsTypes):
+export const EndActionFromStackAndAddNew = (G: IMyGameState, ctx: Ctx, newStack: IStack[] = [], ...args: ArgsTypes):
     void => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (G.drawProfit !== `` || config?.name === ConfigNames.ExplorerDistinction) {

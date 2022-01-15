@@ -3,17 +3,18 @@ import { CreateCard } from "../Card";
 import { CreateCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { SuitNames, LogTypes, ActionTypes, ConfigNames, DrawNames, Stages } from "../typescript/enums";
+import { ActionTypes, ConfigNames, DrawNames, LogTypes, Stages, SuitNames } from "../typescript/enums";
 import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 import { GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStack } from "./StackHelpers";
+// TODO Add dock blocks
 export const BlacksmithDistinctionAwarding = (G, ctx, player) => {
     var _a;
     if (G.tierToEnd !== 0) {
         player.cards[SuitNames.BLACKSMITH].push(CreateCard({
             suit: SuitNames.BLACKSMITH,
             rank: 2,
-            points: 2,
+            points: null,
         }));
         G.distinctions[SuitNames.BLACKSMITH] = undefined;
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
@@ -108,3 +109,4 @@ export const WarriorDistinctionAwarding = (G, ctx, player) => {
     }
     return 0;
 };
+//# sourceMappingURL=DistinctionAwardingHelpers.js.map

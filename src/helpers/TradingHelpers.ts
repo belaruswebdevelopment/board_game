@@ -4,8 +4,8 @@ import { AddDataToLog } from "../Logging";
 import { IStack } from "../typescript/action_interfaces";
 import { ICoin } from "../typescript/coin_interfaces";
 import { CoinType } from "../typescript/coin_types";
-import { LogTypes, ActionTypes } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { ActionTypes, LogTypes } from "../typescript/enums";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 
@@ -18,9 +18,8 @@ import { AddActionsToStack } from "./StackHelpers";
  *
  * @param G
  * @param ctx
- * @returns Активировался ли обмен монет.
  */
-export const ActivateTrading = (G: MyGameState, ctx: Ctx): boolean => {
+export const ActivateTrading = (G: IMyGameState, ctx: Ctx): void => {
     if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern]?.isTriggerTrading) {
         const tradingCoins: ICoin[] = [];
         for (let i: number = G.tavernsNum; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
@@ -31,9 +30,6 @@ export const ActivateTrading = (G: MyGameState, ctx: Ctx): boolean => {
             }
         }
         Trading(G, ctx, tradingCoins);
-        return true;
-    } else {
-        return false;
     }
 };
 
@@ -48,7 +44,7 @@ export const ActivateTrading = (G: MyGameState, ctx: Ctx): boolean => {
  * @param ctx
  * @param tradingCoins Монеты для обмена.
  */
-const Trading = (G: MyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
+const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
     const coinsValues: number[] = tradingCoins.map((coin: ICoin): number => coin.value),
         coinsMaxValue: number = Math.max(...coinsValues),
         coinsMinValue: number = Math.min(...coinsValues);

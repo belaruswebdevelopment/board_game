@@ -12,3 +12,4 @@ const server = Server({
     origins: [Origins.LOCALHOST],
 });
 server.run(8000);
+//# sourceMappingURL=server.js.map

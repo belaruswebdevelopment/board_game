@@ -5,20 +5,7 @@ import { DiscardCardFromTavern } from "./Tavern";
 import { IArtefactCampCard, IArtefactConfig, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenaries, IMercenaryCampCard } from "./typescript/camp_card_interfaces";
 import { CampCardTypes, CampDeckCardTypes, TavernCardTypes } from "./typescript/card_types";
 import { ActionTypes, LogTypes, RusCardTypes } from "./typescript/enums";
-import { MyGameState } from "./typescript/game_data_interfaces";
-
-/**
- * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
- */
-export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard): card is IArtefactCampCard =>
-    (card as IArtefactCampCard).suit !== undefined;
+import { IMyGameState } from "./typescript/game_data_interfaces";
 
 /**
 * <h3>Заполняет кэмп новой картой из карт кэмп деки текущей эпохи.</h3>
@@ -31,7 +18,7 @@ export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard): ca
 * @param G
 * @param cardIndex Индекс карты.
 */
-const AddCardToCamp = (G: MyGameState, cardIndex: number): void => {
+const AddCardToCamp = (G: IMyGameState, cardIndex: number): void => {
     const newCampCard: CampDeckCardTypes =
         G.campDecks[G.campDecks.length - G.tierToEnd].splice(0, 1)[0];
     G.camp.splice(cardIndex, 1, newCampCard);
@@ -46,8 +33,8 @@ const AddCardToCamp = (G: MyGameState, cardIndex: number): void => {
  *
  * @param G
  */
-const AddRemainingCampCardsToDiscard = (G: MyGameState): void => {
-    // todo Add LogTypes.ERROR logging ?
+const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
+    // TODO Add LogTypes.ERROR logging ?
     for (let i = 0; i < G.camp.length; i++) {
         if (G.camp[i] !== null) {
             const card: CampCardTypes = G.camp.splice(i, 1, null)[0];
@@ -221,23 +208,34 @@ export const CreateMercenaryCampCard = ({
  *
  * @param G
  */
-export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
+export const DiscardCardIfCampCardPicked = (G: IMyGameState): void => {
     if (G.campPicked) {
-        const discardCardIndex: number = G.taverns[G.currentTavern]
-            .findIndex((card: TavernCardTypes): boolean => card !== null);
+        const discardCardIndex: number =
+            G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
+        let isCardDiscarded = false;
         if (discardCardIndex !== -1) {
-            const isCardDiscarded: boolean = DiscardCardFromTavern(G, discardCardIndex);
-            if (isCardDiscarded) {
-                G.campPicked = false;
-            } /* else {
-                // todo LogTypes.ERROR because not => G.campPicked = false; ?
-            } */
+            isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
+        }
+        if (isCardDiscarded) {
+            G.campPicked = false;
         } else {
-            // todo Fix sometimes This error happend!?
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
         }
     }
 };
+
+/**
+ * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
+ */
+export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard): card is IArtefactCampCard =>
+    (card as IArtefactCampCard).suit !== undefined;
 
 /**
  * <h3>Автоматически заполняет кэмп картами новой эпохи.</h3>
@@ -248,7 +246,7 @@ export const DiscardCardIfCampCardPicked = (G: MyGameState): void => {
  *
  * @param G
  */
-export const RefillCamp = (G: MyGameState): void => {
+export const RefillCamp = (G: IMyGameState): void => {
     AddRemainingCampCardsToDiscard(G);
     for (let i = 0; i < G.campNum; i++) {
         AddCardToCamp(G, i);
@@ -265,7 +263,7 @@ export const RefillCamp = (G: MyGameState): void => {
  *
  * @param G
  */
-export const RefillEmptyCampCards = (G: MyGameState): void => {
+export const RefillEmptyCampCards = (G: IMyGameState): void => {
     const emptyCampCards: (number | null)[] =
         G.camp.map((card: CampCardTypes, index: number): number | null => {
             if (card === null) {
@@ -274,7 +272,7 @@ export const RefillEmptyCampCards = (G: MyGameState): void => {
             return null;
         });
     const isEmptyCampCards: boolean = emptyCampCards.length === 0;
-    // todo Add LogTypes.ERROR logging ?
+    // TODO Add LogTypes.ERROR logging ?
     let isEmptyCurrentTierCampDeck: boolean = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
         emptyCampCards.forEach((cardIndex: number | null): void => {

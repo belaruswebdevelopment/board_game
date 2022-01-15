@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { IStack } from "../typescript/action_interfaces";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, AddCoinToPouchAction, CheckPickDiscardCardCampAction, DrawProfitCampAction, DiscardAnyCardFromPlayerBoardAction, DiscardSuitCardAction, DiscardTradingCoinAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PickDiscardCardCampAction, PickHeroCampAction, PlaceEnlistmentMercenariesAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinCampAction, UpgradeCoinVidofnirVedrfolnirAction } from "./CampActions";
 
@@ -18,7 +18,7 @@ import { AddBuffToPlayerCampAction, AddCampCardToCardsAction, AddCoinToPouchActi
  * @param data Стэк.
  * @param args Дополнительные аргументы.
  */
-export const CampActionDispatcher = (G: MyGameState, ctx: Ctx, data: IStack, ...args: ArgsTypes): void => {
+export const CampActionDispatcher = (G: IMyGameState, ctx: Ctx, data: IStack, ...args: ArgsTypes): void => {
     // eslint-disable-next-line @typescript-eslint/ban-types
     let action: Function | null;
     switch (data.action.name) {

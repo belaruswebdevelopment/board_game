@@ -239,6 +239,7 @@ export var ConfigNames;
 export var BuffNames;
 (function (BuffNames) {
     BuffNames["DiscardCardEndGame"] = "discardCardEndGame";
+    BuffNames["EndTier"] = "endTier";
     BuffNames["EveryTurn"] = "everyTurn";
     BuffNames["GetMjollnirProfit"] = "getMjollnirProfit";
     BuffNames["GoCamp"] = "goCamp";
@@ -247,3 +248,4 @@ export var BuffNames;
     BuffNames["UpgradeCoin"] = "upgradeCoin";
     BuffNames["UpgradeNextCoin"] = "upgradeNextCoin";
 })(BuffNames || (BuffNames = {}));
+//# sourceMappingURL=enums.js.map

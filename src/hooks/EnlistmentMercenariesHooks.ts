@@ -1,0 +1,121 @@
+import { Ctx } from "boardgame.io";
+import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
+import { CheckEndTierActionsOrEndGameLastActions, RemoveThrudFromPlayerBoardAfterGameEnd } from "../helpers/GameHooksHelpers";
+import { CampDeckCardTypes } from "../typescript/card_types";
+import { DrawNames, RusCardTypes } from "../typescript/enums";
+import { INext, IMyGameState } from "../typescript/game_data_interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
+
+/**
+ * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При каждом действии с наёмником в фазе 'enlistmentMercenaries'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): void | INext => {
+    if (G.publicPlayersOrder.length) {
+        if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
+            && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
+            let allMercenariesPlayed = true;
+            for (let i = 0; i < G.publicPlayers.length; i++) {
+                allMercenariesPlayed = G.publicPlayers[i].campCards
+                    .filter((card: CampDeckCardTypes): boolean =>
+                        card.type === RusCardTypes.MERCENARY).length === 0;
+                if (!allMercenariesPlayed) {
+                    break;
+                }
+            }
+            if (allMercenariesPlayed) {
+                return CheckEndTierActionsOrEndGameLastActions(G, ctx);
+            }
+        }
+    }
+};
+
+/**
+ * <h3>Проверяет необходимость завершения хода в фазе 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При каждом действии в фазе 'enlistmentMercenaries'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @returns
+ */
+export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
+    if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1
+        && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
+        return true;
+    } else if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
+        return G.publicPlayers[Number(ctx.currentPlayer)].campCards
+            .filter((card: CampDeckCardTypes): boolean =>
+                card.type === RusCardTypes.MERCENARY).length === 0;
+    }
+};
+
+export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void => {
+    const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+        player.buffs.endTier === DrawNames.Ylud);
+    if (yludIndex === -1) {
+        RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+    }
+    G.publicPlayersOrder = [];
+};
+
+export const OnEnlistmentMercenariesPhaseTurnBegin = (G: IMyGameState, ctx: Ctx): void =>
+    AddEnlistmentMercenariesActionsToStack(G, ctx);
+
+/**
+* <h3>Определяет порядок найма наёмников при начале фазы 'enlistmentMercenaries'.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>При начале фазы 'enlistmentMercenaries'.</li>
+* </ol>
+*
+* @param G
+* @param ctx
+*/
+export const PrepareMercenaryPhaseOrders = (G: IMyGameState): void => {
+    const players: IPublicPlayer[] =
+        G.publicPlayers.map((player: IPublicPlayer): IPublicPlayer => player),
+        playersIndexes: string[] = [];
+    players.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
+        if (nextPlayer.campCards
+            .filter((card: CampDeckCardTypes): boolean =>
+                card.type === RusCardTypes.MERCENARY).length < currentPlayer.campCards
+                    .filter((card: CampDeckCardTypes): boolean =>
+                        card.type === RusCardTypes.MERCENARY).length) {
+            return 1;
+        } else if (nextPlayer.campCards
+            .filter((card: CampDeckCardTypes): boolean =>
+                card.type === RusCardTypes.MERCENARY).length > currentPlayer.campCards
+                    .filter((card: CampDeckCardTypes): boolean =>
+                        card.type === RusCardTypes.MERCENARY).length) {
+            return -1;
+        }
+        if (nextPlayer.priority.value < currentPlayer.priority.value) {
+            return 1;
+        } else if (nextPlayer.priority.value > currentPlayer.priority.value) {
+            return -1;
+        }
+        return 0;
+    });
+    players.forEach((playerSorted: IPublicPlayer): void => {
+        if (playerSorted.campCards
+            .filter((card: CampDeckCardTypes): boolean =>
+                card.type === RusCardTypes.MERCENARY).length) {
+            playersIndexes.push(String(G.publicPlayers
+                .findIndex((player: IPublicPlayer): boolean =>
+                    player.nickname === playerSorted.nickname)));
+        }
+    });
+    G.publicPlayersOrder = playersIndexes;
+    if (playersIndexes.length > 1) {
+        G.publicPlayersOrder.push(playersIndexes[0]);
+    }
+};

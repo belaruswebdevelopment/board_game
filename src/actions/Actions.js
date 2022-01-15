@@ -77,3 +77,4 @@ export const PickHeroAction = (G, ctx, config) => {
 export const UpgradeCoinAction = (G, ctx, config, ...args) => {
     UpgradeCurrentCoin(G, ctx, config, ...args);
 };
+//# sourceMappingURL=Actions.js.map

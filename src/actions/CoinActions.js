@@ -28,3 +28,4 @@ export const DrawProfitCoinAction = (G, ctx, config) => {
 export const UpgradeCoinActionCardAction = (G, ctx, config, ...args) => {
     UpgradeCurrentCoin(G, ctx, config, ...args);
 };
+//# sourceMappingURL=CoinActions.js.map

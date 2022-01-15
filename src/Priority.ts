@@ -1,6 +1,6 @@
 import { AddDataToLog } from "./Logging";
 import { LogTypes } from "./typescript/enums";
-import { MyGameState } from "./typescript/game_data_interfaces";
+import { IMyGameState } from "./typescript/game_data_interfaces";
 import { IPublicPlayer } from "./typescript/player_interfaces";
 import { IPriority, ICreatePriority, IPrioritiesConfig } from "./typescript/priority_interfaces";
 
@@ -13,7 +13,7 @@ import { IPriority, ICreatePriority, IPrioritiesConfig } from "./typescript/prio
  *
  * @param G
  */
-export const ChangePlayersPriorities = (G: MyGameState): void => {
+export const ChangePlayersPriorities = (G: IMyGameState): void => {
     const tempPriorities: (IPriority | undefined)[] = [];
     for (let i = 0; i < G.exchangeOrder.length; i++) {
         const exchangeOrder: number | undefined = G.exchangeOrder[i];
@@ -78,7 +78,7 @@ export const GeneratePrioritiesForPlayerNumbers = (numPlayers: number): IPriorit
  * @param playerId Id выбранного игрока.
  * @returns Имеет ли игрок наименьший кристалл.
  */
-export const HasLowestPriority = (G: MyGameState, playerId: number): boolean => {
+export const HasLowestPriority = (G: IMyGameState, playerId: number): boolean => {
     const tempPriorities: number[] =
         G.publicPlayers.map((player: IPublicPlayer): number => player.priority.value),
         minPriority: number = Math.min(...tempPriorities),

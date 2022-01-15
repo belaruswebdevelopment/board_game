@@ -27,3 +27,4 @@ export const AddCardToPlayer = (G, ctx, card) => {
     AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту '${card.name}'.`);
     return false;
 };
+//# sourceMappingURL=CardHelpers.js.map

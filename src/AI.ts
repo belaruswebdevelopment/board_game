@@ -12,7 +12,7 @@ import { IMoves } from "./typescript/bot_interfaces";
 import { DeckCardTypes, PlayerCardsType, TavernCardTypes } from "./typescript/card_types";
 import { CoinType } from "./typescript/coin_types";
 import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescript/enums";
-import { MyGameState } from "./typescript/game_data_interfaces";
+import { IMyGameState } from "./typescript/game_data_interfaces";
 import { IBotMoveArgumentsTypes } from "./typescript/types";
 
 /**
@@ -26,8 +26,8 @@ import { IBotMoveArgumentsTypes } from "./typescript/types";
  * @param ctx
  * @returns Массив возможных мувов у ботов.
  */
-export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
-    // todo Allow Pick Hero and all acions from hero pick to this phase
+export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
+    // TODO Check Pick Hero and all actions from hero pick in getDistinction phase
     //make false for standard bot
     const enableAdvancedBot = true,
         uniqueArr: DeckCardTypes[] = [],
@@ -37,7 +37,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             .some((key: string): boolean => key.includes(advancedString));
     let moves: IMoves[] = [],
         flag = true;
-    // todo Fix it, now just for bot can do RANDOM move
+    // TODO Fix it, now just for bot can do RANDOM move
     const botMoveArguments: IBotMoveArgumentsTypes = [];
     for (const stage in moveBy[ctx.phase]) {
         if (Object.prototype.hasOwnProperty.call(moveBy[ctx.phase], stage)) {
@@ -46,18 +46,18 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
             }
             if (stage.includes(activeStageOfCurrentPlayer)
                 && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
-                // todo Sync players and bots validations in one places
+                // TODO Sync players and bots validations in one places
                 const moveName: string = moveBy[ctx.phase][stage],
                     [minValue, maxValue]: [number, number] = moveValidators[moveName].getRange({ G, ctx }),
                     hasGetValue: boolean =
                         Object.prototype.hasOwnProperty.call(moveValidators[moveName], `getValue`);
-                let argValue: number;
+                let argValue: number | string;
                 let argArray: number[];
                 for (let id: number = minValue; id < maxValue; id++) {
-                    // todo sync bot moves options with profit UI options for players (same logic without UI)
+                    // TODO sync bot moves options with profit UI options for players (same logic without UI)
                     let type: undefined | string = undefined;
                     if (stage === Stages.UpgradeCoin) {
-                        // todo fix for Uline???
+                        // TODO fix for Uline???
                         type = `board`;
                     }
                     if (!moveValidators[moveName].validate({ G, ctx, id, type })) {
@@ -69,6 +69,9 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                         moves.push({ move: moveName, args: [argArray] });
                     } else {
                         argValue = id;
+                        if (ctx.phase === Phases.GetDistinctions && stage.startsWith(`default`)) {
+                            argValue = Object.keys(suitsConfig)[id];
+                        }
                         moves.push({ move: moveName, args: [argValue] });
                     }
                 }
@@ -79,7 +82,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         return moves;
     }
     if (ctx.phase === Phases.PickCards && activeStageOfCurrentPlayer === `default` && ctx.activePlayers === null) {
-        // todo Fix it, now just for bot can do RANDOM move
+        // TODO Fix it, now just for bot can do RANDOM move
         let pickCardOrCampCard = `card`;
         if (G.expansions.thingvellir.active
             && (ctx.currentPlayer === G.publicPlayersOrder[0]
@@ -208,7 +211,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         }
         //console.log(moves);
     }
-    // todo Fix it, now just for bot can do RANDOM move
+    // TODO Fix it, now just for bot can do RANDOM move
     if (activeStageOfCurrentPlayer === Stages.PlaceCards || ctx.phase === Phases.EndTier) {
         PlaceCardsProfit(G, ctx, botMoveArguments);
         moves.push({
@@ -314,9 +317,9 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
     }
     // TODO FIX It's not activeStageOfCurrentPlayer it's for Others players!!!
     // if (ctx.activePlayers.find/findIndex === "discardSuitCard") {
-    if (ctx.phase === Phases.PickCards && ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default`) {
+    if (ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default`) {
         // TODO Fix this (only for quick bot actions)
-        // todo Bot can't do async turns...?
+        // TODO Bot can't do async turns...?
         const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
         if (config !== undefined && config.suit !== undefined) {
             for (let p = 0; p < G.publicPlayers.length; p++) {
@@ -342,6 +345,7 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
                             move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
                             args: [config.suit, p, minCardIndex],
                         });
+                        break;
                     }
                 }
             }
@@ -378,7 +382,6 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
         });
     }
     if (moves.length === 0 && ctx.phase !== null) {
-        // todo Fix for bot no moves if have artefact with not pick new hero and get artifact with get new hero (he can pick hero by it's action)
         console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
     }
     return moves;
@@ -391,12 +394,12 @@ export const enumerate = (G: MyGameState, ctx: Ctx): IMoves[] => {
 * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
 * </oL>
 *
-* @todo Саше: сделать описание функции и параметров.
+* @TODO Саше: сделать описание функции и параметров.
 * @param G
 * @param ctx
 * @returns
 */
-export const iterations = (G: MyGameState, ctx: Ctx): number => {
+export const iterations = (G: IMyGameState, ctx: Ctx): number => {
     const maxIter: number = G.botData.maxIter;
     if (ctx.phase === Phases.PickCards) {
         const currentTavern: TavernCardTypes[] = G.taverns[G.currentTavern];
@@ -452,12 +455,12 @@ export const iterations = (G: MyGameState, ctx: Ctx): number => {
  * @returns
  */
 export const objectives = (): {
-    isEarlyGame: { weight: number; checker: (G: MyGameState) => boolean; };
-    isFirst: { weight: number; checker: (G: MyGameState, ctx: Ctx) => boolean; };
-    isStronger: { weight: number; checker: (G: MyGameState, ctx: Ctx) => boolean; };
+    isEarlyGame: { weight: number; checker: (G: IMyGameState) => boolean; };
+    isFirst: { weight: number; checker: (G: IMyGameState, ctx: Ctx) => boolean; };
+    isStronger: { weight: number; checker: (G: IMyGameState, ctx: Ctx) => boolean; };
 } => ({
     isEarlyGame: {
-        checker: (G: MyGameState): boolean => {
+        checker: (G: IMyGameState): boolean => {
             return G.decks[0].length > 0;
         },
         weight: -100.0,
@@ -536,7 +539,7 @@ export const objectives = (): {
         weight: 0.1,
     },*/
     isFirst: {
-        checker: (G: MyGameState, ctx: Ctx): boolean => {
+        checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== Phases.PickCards) {
                 return false;
             }
@@ -560,7 +563,7 @@ export const objectives = (): {
         weight: 0.5,
     },
     isStronger: {
-        checker: (G: MyGameState, ctx: Ctx): boolean => {
+        checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== Phases.PickCards) {
                 return false;
             }
@@ -592,12 +595,12 @@ export const objectives = (): {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
  * @returns
  */
-export const playoutDepth = (G: MyGameState, ctx: Ctx): number => {
+export const playoutDepth = (G: IMyGameState, ctx: Ctx): number => {
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
         return 3 * G.tavernsNum * G.taverns[0].length + 4 * ctx.numPlayers + 20;
     }

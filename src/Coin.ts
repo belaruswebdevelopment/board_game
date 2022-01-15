@@ -5,21 +5,9 @@ import { IConfig } from "./typescript/action_interfaces";
 import { IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig } from "./typescript/coin_interfaces";
 import { CoinType } from "./typescript/coin_types";
 import { HeroNames, LogTypes, Stages } from "./typescript/enums";
-import { MyGameState } from "./typescript/game_data_interfaces";
+import { IMyGameState } from "./typescript/game_data_interfaces";
 import { INumberValues } from "./typescript/object_values_interfaces";
 import { IPublicPlayer } from "./typescript/player_interfaces";
-
-/**
- * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функции улучшения монеты.</li>
- * </ol>
- *
- * @param obj Пустой объект или монета.
- * @returns Является ли объект монетой, а не пустым объектом.
- */
-const isCoin = (obj: Record<string, unknown> | ICoin): obj is ICoin => (obj as ICoin).value !== undefined;
 
 /**
  * <h3>Создание всех монет.</h3>
@@ -68,7 +56,7 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
  * @param G
  * @returns Количество всех монет на рынке (с повторами).
  */
-export const CountMarketCoins = (G: MyGameState): INumberValues => {
+export const CountMarketCoins = (G: IMyGameState): INumberValues => {
     const repeated: INumberValues = {};
     for (let i = 0; i < G.marketCoinsUnique.length; i++) {
         const temp: number = G.marketCoinsUnique[i].value;
@@ -101,6 +89,18 @@ export const CreateCoin = ({
 });
 
 /**
+ * <h3>Проверка, является ли объект монетой или пустым объектом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функции улучшения монеты.</li>
+ * </ol>
+ *
+ * @param obj Пустой объект или монета.
+ * @returns Является ли объект монетой, а не пустым объектом.
+ */
+const isCoin = (obj: Record<string, unknown> | ICoin): obj is ICoin => (obj as ICoin).value !== undefined;
+
+/**
  * <h3>Возвращает все монеты со стола в руки игроков в начале фазы выставления монет.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -109,7 +109,7 @@ export const CreateCoin = ({
  *
  * @param G
  */
-export const ReturnCoinsToPlayerHands = (G: MyGameState): void => {
+export const ReturnCoinsToPlayerHands = (G: IMyGameState): void => {
     for (let i = 0; i < G.publicPlayers.length; i++) {
         for (let j = 0; j < G.publicPlayers[i].boardCoins.length; j++) {
             const isCoinReturned: boolean = ReturnCoinToPlayerHands(G.publicPlayers[i], j);
@@ -157,17 +157,17 @@ export const ReturnCoinToPlayerHands = (player: IPublicPlayer, coinId: number): 
  * @param type Тип обменной монеты.
  * @param isInitial Является ли обменная монета базовой.
  */
-export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgradingCoinId: number, type: string,
+export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, config: IConfig, upgradingCoinId: number, type: string,
     isInitial: boolean): void => {
-    // todo add LogTypes.ERROR logging
-    // todo Split into different functions!
+    // TODO add LogTypes.ERROR logging
+    // TODO Split into different functions!
     let upgradingCoin: Record<string, unknown> | ICoin = {},
         coin: CoinType | undefined;
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin) {
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin;
     }
     if (config?.coin === `min`) {
-        // todo Upgrade isInitial min coin or not or User must choose!?
+        // TODO Upgrade isInitial min coin or not or User must choose!?
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline) {
             const allCoins: CoinType[] = [],
                 allHandCoins: CoinType[] = G.publicPlayers[Number(ctx.currentPlayer)]
@@ -260,6 +260,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                 }
             }
         }
+        // TODO Check coin returned to public or private player's coins
         AddDataToLog(G, LogTypes.GAME, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на +${config.value}.`);
         if (upgradedCoin !== null) {
             AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${isInitial}' с ценностью '${upgradingCoin.value}' на +${config.value} с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
@@ -276,6 +277,7 @@ export const UpgradeCoin = (G: MyGameState, ctx: Ctx, config: IConfig, upgrading
                 const emptyCoinIndex: number =
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins.indexOf(null);
                 G.publicPlayers[Number(ctx.currentPlayer)].handCoins[emptyCoinIndex] = upgradedCoin;
+                AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
             } else {
                 if (handCoinIndex === -1) {
                     G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = upgradedCoin;

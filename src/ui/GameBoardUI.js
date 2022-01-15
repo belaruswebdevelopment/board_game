@@ -62,7 +62,7 @@ export const DrawDistinctions = (data) => {
     for (let i = 0; i < 1; i++) {
         for (const suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => data.moves.ClickDistinctionCard(suit), title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }, void 0) }, `Distinction ${suit} card`));
+                boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => data.moves.ClickDistinctionCardMove(suit), title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }, void 0) }, `Distinction ${suit} card`));
             }
         }
     }
@@ -143,7 +143,7 @@ export const DrawProfit = (data) => {
         }
         else if (option === ConfigNames.ExplorerDistinction) {
             caption += `one card to your board.`;
-            // todo Move to ProfitHelpers and add logic for bot or just use standard pick cards / upgrade coins
+            // TODO Move to ProfitHelpers and add logic for bot or just use standard pick cards / upgrade coins
             for (let j = 0; j < 3; j++) {
                 const card = data.G.decks[1][j];
                 let suit = null;
@@ -209,12 +209,12 @@ export const DrawProfit = (data) => {
                     UpgradeCoinVidofnirVedrfolnirProfit(data.G, data.ctx, data, boardCells);
                 }
                 else if (option === ConfigNames.UpgradeCoin) {
-                    // todo Move to ProfitHelpers and add logic for bot or just use standard upgrade coins
+                    // TODO Move to ProfitHelpers and add logic for bot or just use standard upgrade coins
                     const handCoins = data.G.publicPlayers[Number(data.ctx.currentPlayer)].handCoins
                         .filter((coin) => coin !== null);
                     let handCoinIndex = -1;
                     for (let j = 0; j < data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins.length; j++) {
-                        // todo Check .? for all coins!!! and delete AS
+                        // TODO Check .? for all coins!!! and delete AS
                         if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].buffs.everyTurn ===
                             HeroNames.Uline
                             && data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j] === null) {
@@ -329,3 +329,4 @@ export const DrawWinner = (data) => {
     }
     return (_jsxs("b", { children: ["Game status: ", _jsx("span", { className: "italic", children: winner.trim() }, void 0)] }, void 0));
 };
+//# sourceMappingURL=GameBoardUI.js.map

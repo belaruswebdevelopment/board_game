@@ -1,12 +1,12 @@
 import { Ctx } from "boardgame.io";
-import { EvaluateCard, CompareCards } from "./BotCardLogic";
 import { isCardNotAction } from "../Card";
-import { TavernCardTypes, DeckCardTypes } from "../typescript/card_types";
-import { MyGameState } from "../typescript/game_data_interfaces";
 import { IActionCard } from "../typescript/action_card_intarfaces";
 import { ICard } from "../typescript/card_interfaces";
+import { DeckCardTypes, TavernCardTypes } from "../typescript/card_types";
+import { IMyGameState } from "../typescript/game_data_interfaces";
+import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
-// todo Fix reurn types & move to interfaces
+// TODO Fix reurn types & move to interfaces
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -14,12 +14,12 @@ import { ICard } from "../typescript/card_interfaces";
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
  * @returns
  */
-export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
+export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx) => {
     const taverns: TavernCardTypes[][] = G.taverns/*,
         averageCards: ICard[] = G.averageCards*/;
     let result: number[] = Array(taverns.length).fill(0);
@@ -58,7 +58,7 @@ export const CheckHeuristicsForCoinsPlacement = (G: MyGameState, ctx: Ctx) => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param stat1
  * @param stat2
  * @returns
@@ -80,7 +80,7 @@ const CompareCharacteristics = (stat1: { variation: number, mean: number; },
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param tavernsNum
  * @param playersNum
  * @returns
@@ -111,7 +111,7 @@ export const GetAllPicks = ({ tavernsNum, playersNum }: { tavernsNum: number, pl
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param array
  * @returns
  */
@@ -133,7 +133,7 @@ const GetCharacteristics = (array: number[]): { mean: number, variation: number;
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number; } = {
     heuristic: (cards: DeckCardTypes[]): boolean => cards.every((card: DeckCardTypes | null): boolean =>
@@ -149,7 +149,7 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 // const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number; } = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 0),
@@ -162,7 +162,7 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 // const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === -1),
@@ -175,7 +175,7 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 // const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
 //     heuristic: (array: number[]): boolean =>
@@ -189,7 +189,7 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 // const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: number; } = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item !== 0),
@@ -203,7 +203,7 @@ const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight:
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param set
  * @param k
  * @returns
@@ -245,7 +245,7 @@ export const k_combinations = (set: number[], k: number): number[][] => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param permutation
  * @returns
  */
@@ -279,7 +279,7 @@ export const Permute = (permutation: number[]): number[][] => {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 const absoluteHeuristicsForTradingCoin: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number; }[] =
     [isAllCardsEqual];
@@ -290,7 +290,7 @@ const absoluteHeuristicsForTradingCoin: { heuristic: (cards: DeckCardTypes[]) =>
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 //const relativeHeuristicsForTradingCoin: (((array: number[]) => boolean) | {
 //    heuristic: (array: number[]) => boolean,

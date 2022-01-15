@@ -16,3 +16,4 @@ const LobbyClient = () => _jsx(Lobby, { gameServer: `http://${window.location.ho
             board: GameBoard,
         }] }, void 0);
 export default LobbyClient;
+//# sourceMappingURL=LobbyClient.js.map

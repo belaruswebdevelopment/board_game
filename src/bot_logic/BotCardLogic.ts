@@ -1,10 +1,10 @@
 import { Ctx } from "boardgame.io";
-import { isCardNotAction, CreateCard } from "../Card";
+import { CreateCard, isCardNotAction } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { IAverageSuitCardData, ICreateAverageSuitCard } from "../typescript/bot_interfaces";
 import { ICard } from "../typescript/card_interfaces";
 import { PlayerCardsType, TavernCardTypes } from "../typescript/card_types";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPlayerCards } from "../typescript/interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { ISuit } from "../typescript/suit_interfaces";
@@ -23,7 +23,7 @@ const AddCardToCards = (cards: IPlayerCards, card: PlayerCardsType): void => {
     if (card.suit !== null) {
         cards[card.suit].push(card);
     }
-    // todo Else it can be upgrade coin card here and it is not error, sure? Or add LogTypes.ERROR logging?
+    // TODO Else it can be upgrade coin card here and it is not error, sure? Or add LogTypes.ERROR logging?
 };
 
 /**
@@ -33,7 +33,7 @@ const AddCardToCards = (cards: IPlayerCards, card: PlayerCardsType): void => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param card1 Первая карта.
  * @param card2 Вторая карта.
  * @returns Сравнительное значение.
@@ -62,7 +62,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
  * @param compareCard Карта для сравнения.
@@ -70,7 +70,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  * @param tavern Таверна.
  * @returns Сравнительное значение.
  */
-export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: TavernCardTypes, cardId: number,
+export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardTypes, cardId: number,
     tavern: TavernCardTypes[]): number => {
     if (compareCard !== null && `suit` in compareCard) {
         if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
@@ -92,7 +92,7 @@ export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: TavernCardTy
     if (compareCard !== null && `suit` in compareCard) {
         return CompareCards(compareCard, G.averageCards[compareCard.suit]);
     }
-    // todo FIX IT, UNREACHABLE!? 0 === DEFAULT?!
+    // TODO FIX IT, UNREACHABLE!? 0 === DEFAULT?!
     return 0;
 };
 
@@ -103,7 +103,7 @@ export const EvaluateCard = (G: MyGameState, ctx: Ctx, compareCard: TavernCardTy
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param suitConfig Конфиг карт дворфов.
  * @param data ????????????????????????????????????????????????????????????????????
  * @returns "Средняя" карта дворфа.
@@ -135,7 +135,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param player Игрок.
  * @param card Карта.
  * @returns Потенциальное значение.

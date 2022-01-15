@@ -35,7 +35,9 @@ export const AddBuffToPlayerCampAction = (G, ctx, config) => {
  * @param cardId Id карты.
  */
 export const AddCampCardToCardsAction = (G, ctx, config, cardId) => {
-    if (ctx.phase === Phases.PickCards && ctx.currentPlayer === G.publicPlayersOrder[0] && ctx.activePlayers === null) {
+    if (ctx.phase === Phases.PickCards && ctx.activePlayers === null
+        && (ctx.currentPlayer === G.publicPlayersOrder[0] ||
+            G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)) {
         G.campPicked = true;
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime) {
@@ -154,8 +156,6 @@ export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, config, suit, cardId
  * @param cardId Id сбрасываемой карты.
  */
 export const DiscardSuitCardAction = (G, ctx, config, suit, playerId, cardId) => {
-    console.log(playerId);
-    console.log(ctx.activePlayers);
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         if (G.publicPlayers[playerId].cards[suit][cardId].type !== RusCardTypes.HERO) {
@@ -174,8 +174,8 @@ export const DiscardSuitCardAction = (G, ctx, config, suit, playerId, cardId) =>
             G.discardCardsDeck.push(discardedCard as ICard);
             AddDataToLog(G, LogTypes.GAME, `Игрок ${ G.publicPlayers[Number(ctx.playerID)].nickname } сбросил карту ${ discardedCard.name } в дискард.`);
             EndActionForChosenPlayer(G, ctx, playerId);
-        } else {*/
-        //        }
+        } else {
+        }*/
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.`);
@@ -403,8 +403,11 @@ export const StartDiscardSuitCardAction = (G, ctx, config) => {
                 AddActionsToStack(G, ctx, stack);
             }
         }
-        // ctx.events?.setActivePlayers({ value });
-        (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({ others: Stages.DiscardSuitCard, /* minMoves: 1, maxMoves: 1 */ });
+        (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({
+            value,
+            minMoves: 1,
+            maxMoves: 1,
+        });
         G.drawProfit = ConfigNames.HofudAction;
     }
     else {
@@ -613,3 +616,4 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, config, coinId, type
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].config'.`);
     }
 };
+//# sourceMappingURL=CampActions.js.map

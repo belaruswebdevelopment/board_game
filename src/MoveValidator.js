@@ -1,6 +1,6 @@
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddDataToLog } from "./Logging";
-import { LogTypes, HeroNames } from "./typescript/enums";
+import { HeroNames, LogTypes } from "./typescript/enums";
 /**
  * Validates arguments inside of move.
  * obj - object to validate.
@@ -15,7 +15,7 @@ import { LogTypes, HeroNames } from "./typescript/enums";
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param obj
  * @param objId
  * @param range
@@ -39,7 +39,7 @@ const CheckMove = ({ obj, objId, range = [], values = [] }) => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
  * @param coinId
@@ -70,7 +70,7 @@ export const CoinUpgradeValidation = (G, ctx, coinId, type) => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param obj Параметры валидации мува.
  * @returns Валидный ли мув.
  */
@@ -83,7 +83,7 @@ export const IsValidMove = (obj) => {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveBy = {
     null: {},
@@ -95,21 +95,34 @@ export const moveBy = {
     pickCards: {
         default: `ClickCardMove`,
         defaultPickCampCard: `ClickCampCardMove`,
+        // start
         pickHero: `ClickHeroCardMove`,
         upgradeCoin: `ClickCoinToUpgradeMove`,
         discardSuitCard: `discardSuitCardMove`,
+        // end
     },
     getDistinctions: {
         default: `ClickDistinctionCardMove`,
         pickDistinctionCard: `ClickCardToPickDistinctionMove`,
+        // start
+        pickHero: `ClickHeroCardMove`,
         upgradeCoin: `ClickCoinToUpgradeMove`,
+        discardSuitCard: `discardSuitCardMove`,
+        // end
     },
     endTier: {
-        pickHero: `ClickHeroCardMove`,
-    },
-    enlistmentMercenaries: {
+        // start
         pickHero: `ClickHeroCardMove`,
         upgradeCoin: `ClickCoinToUpgradeMove`,
+        discardSuitCard: `discardSuitCardMove`,
+        // end
+    },
+    enlistmentMercenaries: {
+        // start
+        pickHero: `ClickHeroCardMove`,
+        upgradeCoin: `ClickCoinToUpgradeMove`,
+        discardSuitCard: `discardSuitCardMove`,
+        // end
     },
     placeCoinsUline: {},
     getMjollnirProfit: {},
@@ -121,10 +134,10 @@ export const moveBy = {
  * <ol>
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveValidators = {
-    // todo Add all validators to all moves
+    // TODO Add all validators to all moves
     ClickHandCoinMove: {
         getRange: ({ G, ctx }) => ([0, G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].handCoins.length]),
         validate: ({ G, ctx, id }) => {
@@ -154,7 +167,7 @@ export const moveValidators = {
                 return G.botData.allCoinsOrder[id];
             }
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
-            // todo Return []???
+            // TODO Return []???
             return [];
         },
         validate: () => true,
@@ -164,7 +177,7 @@ export const moveValidators = {
         validate: ({ G, ctx, id }) => {
             if (id !== undefined) {
                 let isValid = G.heroes[id].active;
-                // todo Add validators to others heroes
+                // TODO Add validators to others heroes
                 if (G.heroes[id].name === HeroNames.Hourya) {
                     const config = G.heroes[id].stack[0].config;
                     if ((config === null || config === void 0 ? void 0 : config.conditions) !== undefined) {
@@ -184,7 +197,7 @@ export const moveValidators = {
             return false;
         },
     },
-    // todo Rework if Uline in play or no 1 coin in game (& add param isInitial?)
+    // TODO Rework if Uline in play or no 1 coin in game (& add param isInitial?)
     ClickCoinToUpgradeMove: {
         getRange: ({ G, ctx }) => ([0, G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].boardCoins.length]),
         validate: ({ G, ctx, id, type }) => {
@@ -201,6 +214,7 @@ export const moveValidators = {
         validate: () => true,
     },
     ClickDistinctionCardMove: {
+        // TODO Rework with validator in Move: Object.keys(G.distinctions).includes(suit)
         getRange: ({ G }) => ([0, Object.values(G.distinctions).length]),
         validate: ({ G, ctx, id }) => {
             if (id !== undefined) {
@@ -223,7 +237,7 @@ export const moveValidators = {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param num
  * @param range
  * @returns
@@ -236,9 +250,10 @@ const ValidateByRange = (num, range) => range[0] <= num && num < range[1];
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param num
  * @param values
  * @returns
  */
 const ValidateByValues = (num, values) => values.includes(num);
+//# sourceMappingURL=MoveValidator.js.map

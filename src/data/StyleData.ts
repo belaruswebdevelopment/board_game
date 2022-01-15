@@ -1,5 +1,5 @@
 import { ArtefactNames, HeroNames, SuitNames } from "../typescript/enums";
-import { IStyles, IBackground } from "../typescript/style_interfaces";
+import { IBackground, IStyles } from "../typescript/style_interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -31,7 +31,6 @@ const heroesThingvellirPath = `url(/img/cards/heroes/thingvellir/`;
  */
 const tavernsPath = `url(/img/taverns/Taverns.png)`;
 
-// todo Add vars for paths
 /**
  * <h3>Стилизация при отрисовке всех картинок в игре.</h3>
  * <p>Применения:</p>

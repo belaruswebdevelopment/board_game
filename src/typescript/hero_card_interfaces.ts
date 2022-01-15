@@ -32,6 +32,13 @@ export interface IHero {
 }
 
 /**
+ * <h3>Интерфейс для конфига карт героев.</h3>
+ */
+export interface IHeroConfig {
+    [name: string]: IHeroData,
+}
+
+/**
  * <h3>Интерфейс для данных карты героя.</h3>
  */
 export interface IHeroData {
@@ -43,11 +50,4 @@ export interface IHeroData {
     points: null | number,
     stack: IStack[],
     scoringRule: (player?: IPublicPlayer) => number,
-}
-
-/**
- * <h3>Интерфейс для конфига карт героев.</h3>
- */
-export interface IHeroConfig {
-    [name: string]: IHeroData,
 }

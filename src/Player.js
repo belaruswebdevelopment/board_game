@@ -59,7 +59,7 @@ export const CheckPlayersBasicOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         if (ctx.phase !== Phases.PlaceCoinsUline) {
-            // todo Create enums for buffs values
+            // TODO Create enums for buffs values
             if (G.publicPlayers[i].buffs.everyTurn !== HeroNames.Uline) {
                 G.publicPlayersOrder.push(String(i));
             }
@@ -119,3 +119,4 @@ const CreatePublicPlayer = ({ nickname, cards, heroes = [], campCards = [], hand
     selectedCoin,
     pickedCard,
 });
+//# sourceMappingURL=Player.js.map

@@ -1,7 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-// todo Add logging
+// TODO Add logging
 /**
  * <h3>Выбор героя.</h3>
  * <p>Применения:</p>
@@ -50,3 +50,4 @@ export const DiscardCardMove = (G, ctx, suit, cardId) => {
 export const PlaceCardMove = (G, ctx, suit) => {
     EndActionFromStackAndAddNew(G, ctx, [], suit);
 };
+//# sourceMappingURL=HeroMoves.js.map

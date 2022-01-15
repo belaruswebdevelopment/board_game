@@ -42,3 +42,4 @@ export const AddCampCardToPlayerCards = (G, ctx, card) => {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить артефакт ${card.name} на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
     }
 };
+//# sourceMappingURL=CampCardHelpers.js.map

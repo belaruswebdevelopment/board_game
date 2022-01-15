@@ -2,7 +2,7 @@ import { BlacksmithDistinctionAwarding, ExplorerDistinctionAwarding, HunterDisti
 import { ArithmeticSum, TotalPoints, TotalRank } from "../helpers/ScoreHelpers";
 import { PlayerCardsType } from "../typescript/card_types";
 import { RusSuitNames, SuitNames } from "../typescript/enums";
-import { IRankValues, IPointsValues } from "../typescript/object_values_interfaces";
+import { IPointsValues, IRankValues } from "../typescript/object_values_interfaces";
 import { ISuit, ISuitConfig } from "../typescript/suit_interfaces";
 
 /**
@@ -11,7 +11,7 @@ import { ISuit, ISuitConfig } from "../typescript/suit_interfaces";
  * <ol>
  * <li>Используется в конфиге фракций.</li>
  * </ol>
- * @todo Add may be potential points for hunters and blacksmiths.
+ * @TODO Add may be potential points for hunters and blacksmiths.
  */
 const blacksmith: ISuit = {
     suit: SuitNames.BLACKSMITH,
@@ -289,11 +289,12 @@ const warrior: ISuit = {
  * <ol>
  * <li>Происходит при создании всех карт при инициализации игры.</li>
  * </ol>
+ * @TODO Create GenerateSuitsConfig function to create a config in Distinction Order?
  */
 export const suitsConfig: ISuitConfig = {
-    blacksmith,
-    explorer,
+    warrior,
     hunter,
     miner,
-    warrior,
+    blacksmith,
+    explorer,
 };

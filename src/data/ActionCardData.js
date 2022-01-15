@@ -110,3 +110,4 @@ const upgradeCoinUpTo5 = {
  * </ol>
  */
 export const actionCardsConfigArray = [upgradeCoinUpTo3, upgradeCoinUpTo5];
+//# sourceMappingURL=ActionCardData.js.map

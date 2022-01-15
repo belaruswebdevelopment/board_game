@@ -1,5 +1,5 @@
 import { LogTypes } from "./typescript/enums";
-import { MyGameState } from "./typescript/game_data_interfaces";
+import { IMyGameState } from "./typescript/game_data_interfaces";
 
 /**
  * <h3>Логирует данные.</h3>
@@ -12,6 +12,6 @@ import { MyGameState } from "./typescript/game_data_interfaces";
  * @param type Тип лога.
  * @param value Значение, заносимое в лог.
  */
-export const AddDataToLog = (G: MyGameState, type: LogTypes, value: string): void => {
+export const AddDataToLog = (G: IMyGameState, type: LogTypes, value: string): void => {
     G.logData.push({ type, value });
 };

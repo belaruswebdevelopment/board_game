@@ -8,19 +8,20 @@ import { IStack } from "../typescript/action_interfaces";
 import { ICard } from "../typescript/card_interfaces";
 import { CoinType } from "../typescript/coin_types";
 import { IAwarding } from "../typescript/distinction_interfaces";
-import { SuitNames, LogTypes, ActionTypes, ConfigNames, DrawNames, Stages } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { ActionTypes, ConfigNames, DrawNames, LogTypes, Stages, SuitNames } from "../typescript/enums";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 import { GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 
-export const BlacksmithDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+// TODO Add dock blocks
+export const BlacksmithDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         player.cards[SuitNames.BLACKSMITH].push(CreateCard({
             suit: SuitNames.BLACKSMITH,
             rank: 2,
-            points: 2,
+            points: null,
         } as ICard));
         G.distinctions[SuitNames.BLACKSMITH] = undefined;
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
@@ -29,7 +30,7 @@ export const BlacksmithDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ct
     return 0;
 };
 
-export const ExplorerDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const ExplorerDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         const stack: IStack[] = [
             {
@@ -51,7 +52,7 @@ export const ExplorerDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx,
     return 0;
 };
 
-export const HunterDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const HunterDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         const tradingCoinIndex: number =
             player.boardCoins.findIndex((coin: CoinType): boolean => coin?.value === 0);
@@ -66,7 +67,7 @@ export const HunterDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, p
     return 0;
 };
 
-export const MinerDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const MinerDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         player.priority = CreatePriority({
             value: 6,
@@ -83,7 +84,7 @@ export const MinerDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, pl
     return 0;
 };
 
-export const WarriorDistinctionAwarding: IAwarding = (G: MyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const WarriorDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         const stack: IStack[] = [
             {

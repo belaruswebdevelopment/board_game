@@ -98,3 +98,4 @@ export const prioritiesConfig = {
     4: priorities.slice(-4),
     5: priorities.slice(-5),
 };
+//# sourceMappingURL=Priority.js.map

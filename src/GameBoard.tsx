@@ -1,6 +1,6 @@
 import { BoardProps } from "boardgame.io/react";
 import React from "react";
-import { MyGameState } from "./typescript/game_data_interfaces";
+import { IMyGameState } from "./typescript/game_data_interfaces";
 import { DrawDebugData } from "./ui/DebugUI";
 import { DrawCamp, DrawCurrentPlayerTurn, DrawDistinctions, DrawHeroes, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
 import { DrawLogData } from "./ui/LogUI";
@@ -13,7 +13,7 @@ import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from
  * <li>При отрисовке игрового поля для игроков.</li>
  * </ol>
  */
-export class GameBoard extends React.Component<BoardProps<MyGameState>> {
+export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
     render() {
         const gridClass = `col-span-4`,
             classes = `col-span-4 text-center underline border`,

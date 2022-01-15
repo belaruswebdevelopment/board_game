@@ -1,4 +1,4 @@
-import { isCardNotAction, CreateCard } from "../Card";
+import { CreateCard, isCardNotAction } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 /**
  * <h3>Добавляет карту в массив потенциальных карт для ботов.</h3>
@@ -14,7 +14,7 @@ const AddCardToCards = (cards, card) => {
     if (card.suit !== null) {
         cards[card.suit].push(card);
     }
-    // todo Else it can be upgrade coin card here and it is not error, sure? Or add LogTypes.ERROR logging?
+    // TODO Else it can be upgrade coin card here and it is not error, sure? Or add LogTypes.ERROR logging?
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -23,7 +23,7 @@ const AddCardToCards = (cards, card) => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param card1 Первая карта.
  * @param card2 Вторая карта.
  * @returns Сравнительное значение.
@@ -51,7 +51,7 @@ export const CompareCards = (card1, card2) => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param G
  * @param ctx
  * @param compareCard Карта для сравнения.
@@ -76,7 +76,7 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
     if (compareCard !== null && `suit` in compareCard) {
         return CompareCards(compareCard, G.averageCards[compareCard.suit]);
     }
-    // todo FIX IT, UNREACHABLE!? 0 === DEFAULT?!
+    // TODO FIX IT, UNREACHABLE!? 0 === DEFAULT?!
     return 0;
 };
 /**
@@ -86,7 +86,7 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param suitConfig Конфиг карт дворфов.
  * @param data ????????????????????????????????????????????????????????????????????
  * @returns "Средняя" карта дворфа.
@@ -115,7 +115,7 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
  * </oL>
  *
- * @todo Саше: сделать описание функции и параметров.
+ * @TODO Саше: сделать описание функции и параметров.
  * @param player Игрок.
  * @param card Карта.
  * @returns Потенциальное значение.
@@ -149,3 +149,4 @@ const PotentialScoring = ({ player = {}, card = {}, }) => {
     }
     return score;
 };
+//# sourceMappingURL=BotCardLogic.js.map

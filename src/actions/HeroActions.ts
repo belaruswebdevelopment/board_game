@@ -5,21 +5,20 @@ import { ReturnCoinToPlayerHands } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { AddBuffToPlayer, DrawCurrentProfit, PickDiscardCard, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
-import { AddHeroCardToPlayerHeroCards, AddHeroCardToPlayerCards } from "../helpers/HeroCardHelpers";
+import { AddHeroCardToPlayerCards, AddHeroCardToPlayerHeroCards } from "../helpers/HeroCardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard, CheckPickHero, GetHeroIndexByName } from "../helpers/HeroHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
 import { AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { IConfig, IStack, IConditions, IVariants } from "../typescript/action_interfaces";
+import { IConditions, IConfig, IStack, IVariants } from "../typescript/action_interfaces";
 import { ICard, ICreateCard } from "../typescript/card_interfaces";
 import { PlayerCardsType } from "../typescript/card_types";
-import { CoinType } from "../typescript/coin_types";
 import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, RusCardTypes, Stages, SuitNames } from "../typescript/enums";
-import { MyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IHero } from "../typescript/hero_card_interfaces";
 import { ArgsTypes } from "../typescript/types";
 
-// todo Does INVALID_MOVE be not in moves but in actions?
+// TODO Does INVALID_MOVE be not in actions but in moves?
 /**
  * <h3>Действия, связанные с добавлением бафов от героев игроку.</h3>
  * <p>Применения:</p>
@@ -31,7 +30,7 @@ import { ArgsTypes } from "../typescript/types";
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const AddBuffToPlayerHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const AddBuffToPlayerHeroAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
     AddBuffToPlayer(G, ctx, config);
 };
 
@@ -46,7 +45,7 @@ export const AddBuffToPlayerHeroAction = (G: MyGameState, ctx: Ctx, config: ICon
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const AddHeroToCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const AddHeroToCardsAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
     if (config.drawName) {
         const heroIndex: number = GetHeroIndexByName(config.drawName),
             hero: IHero = G.heroes[heroIndex];
@@ -75,7 +74,7 @@ export const AddHeroToCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig):
  * @param config Конфиг действий героя.
  * @returns
  */
-export const CheckDiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig): string | void => {
+export const CheckDiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, config: IConfig): string | void => {
     const cardsToDiscard: PlayerCardsType[] = [];
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -106,7 +105,7 @@ export const CheckDiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx,
  * @param G
  * @param ctx
  */
-export const CheckPickCampCardAction = (G: MyGameState, ctx: Ctx): void => {
+export const CheckPickCampCardAction = (G: IMyGameState, ctx: Ctx): void => {
     if (G.camp.length === 0) {
         G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
     }
@@ -123,7 +122,7 @@ export const CheckPickCampCardAction = (G: MyGameState, ctx: Ctx): void => {
  * @param G
  * @param ctx
  */
-export const CheckPickDiscardCardHeroAction = (G: MyGameState, ctx: Ctx): void => {
+export const CheckPickDiscardCardHeroAction = (G: IMyGameState, ctx: Ctx): void => {
     CheckPickDiscardCard(G, ctx);
 };
 
@@ -140,12 +139,12 @@ export const CheckPickDiscardCardHeroAction = (G: MyGameState, ctx: Ctx): void =
  * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string,
+export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, config: IConfig, suit: string,
     cardId: number): void => {
     const pickedCard: PlayerCardsType = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId];
     if (pickedCard.type !== RusCardTypes.HERO) {
         G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-        // todo Artefact cards can be added to discard too OR make artefact card as created ICard?
+        // TODO Artefact cards can be added to discard too OR make artefact card as created ICard?
         G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
             .splice(cardId, 1)[0] as ICard);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
@@ -192,7 +191,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: MyGameState, ctx: Ctx, conf
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const DrawProfitHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig): void => {
+export const DrawProfitHeroAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
     DrawCurrentProfit(G, ctx, config);
 };
 
@@ -206,15 +205,9 @@ export const DrawProfitHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig):
  * @param G
  * @param ctx
  */
-export const GetClosedCoinIntoPlayerHandAction = (G: MyGameState, ctx: Ctx): void => {
-    const coinsCount: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length,
-        tradingBoardCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading)),
-        tradingHandCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
-    for (let i = 0; i < coinsCount; i++) {
-        if ((i < G.tavernsNum && G.currentTavern < i) || (i >= G.tavernsNum && tradingHandCoinIndex !== -1)
-            || (i >= G.tavernsNum && tradingBoardCoinIndex >= G.currentTavern)) {
+export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): void => {
+    for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
+        if (i > G.currentTavern) {
             ReturnCoinToPlayerHands(G.publicPlayers[Number(ctx.currentPlayer)], i);
         }
     }
@@ -233,7 +226,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G: MyGameState, ctx: Ctx): voi
  * @param config Конфиг действий героя.
  * @param cardId Id карты.
  */
-export const PickDiscardCardHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
+export const PickDiscardCardHeroAction = (G: IMyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
     PickDiscardCard(G, ctx, config, cardId);
 };
 
@@ -249,7 +242,7 @@ export const PickDiscardCardHeroAction = (G: MyGameState, ctx: Ctx, config: ICon
  * @param config Конфиг действий героя.
  * @returns
  */
-export const PickHeroWithConditionsAction = (G: MyGameState, ctx: Ctx, config: IConfig): string | void => {
+export const PickHeroWithConditionsAction = (G: IMyGameState, ctx: Ctx, config: IConfig): string | void => {
     let isValidMove = false;
     for (const condition in config.conditions) {
         if (Object.prototype.hasOwnProperty.call(config.conditions, condition)) {
@@ -287,7 +280,7 @@ export const PickHeroWithConditionsAction = (G: MyGameState, ctx: Ctx, config: I
  * @param config Конфиг действий героя.
  * @param suit Название фракции.
  */
-export const PlaceCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string): void => {
+export const PlaceCardsAction = (G: IMyGameState, ctx: Ctx, config: IConfig, suit: string): void => {
     const playerVariants: IVariants | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
     if (playerVariants !== undefined) {
         const olwinDouble: ICard = CreateCard({
@@ -369,7 +362,7 @@ export const PlaceCardsAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit
  * @param config Конфиг действий героя.
  * @param suit Название фракции.
  */
-export const PlaceHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit: string): void => {
+export const PlaceHeroAction = (G: IMyGameState, ctx: Ctx, config: IConfig, suit: string): void => {
     const playerVariants: IVariants | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
     if (playerVariants !== undefined && config.name !== undefined) {
         const heroCard: ICard = CreateCard({
@@ -401,6 +394,6 @@ export const PlaceHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig, suit:
  * @param config Конфиг действий героя или карты улучшающей монеты.
  * @param args Дополнительные аргументы.
  */
-export const UpgradeCoinHeroAction = (G: MyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
+export const UpgradeCoinHeroAction = (G: IMyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
     UpgradeCurrentCoin(G, ctx, config, ...args);
 };

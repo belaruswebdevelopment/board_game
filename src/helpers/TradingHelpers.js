@@ -1,6 +1,6 @@
 import { UpgradeCoinAction } from "../actions/Actions";
 import { AddDataToLog } from "../Logging";
-import { LogTypes, ActionTypes } from "../typescript/enums";
+import { ActionTypes, LogTypes } from "../typescript/enums";
 import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
 import { AddActionsToStack } from "./StackHelpers";
 /**
@@ -12,7 +12,6 @@ import { AddActionsToStack } from "./StackHelpers";
  *
  * @param G
  * @param ctx
- * @returns Активировался ли обмен монет.
  */
 export const ActivateTrading = (G, ctx) => {
     var _a;
@@ -25,10 +24,6 @@ export const ActivateTrading = (G, ctx) => {
             }
         }
         Trading(G, ctx, tradingCoins);
-        return true;
-    }
-    else {
-        return false;
     }
 };
 /**
@@ -98,3 +93,4 @@ const Trading = (G, ctx, tradingCoins) => {
     AddActionsToStack(G, ctx, stack);
     StartActionFromStackOrEndActions(G, ctx, false, upgradingCoinId, `board`, upgradingCoin.isInitial);
 };
+//# sourceMappingURL=TradingHelpers.js.map
