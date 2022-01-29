@@ -217,6 +217,10 @@ export var RusSuitNames;
 export var Stages;
 (function (Stages) {
     Stages["AddCoinToPouch"] = "addCoinToPouch";
+    Stages["Default1"] = "default1";
+    Stages["Default2"] = "default2";
+    Stages["Default3"] = "default3";
+    Stages["Default4"] = "default4";
     Stages["DiscardCard"] = "discardCard";
     Stages["DiscardBoardCard"] = "discardBoardCard";
     Stages["DiscardSuitCard"] = "discardSuitCard";

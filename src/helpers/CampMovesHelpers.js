@@ -37,8 +37,7 @@ export const AddCampCardToCards = (G, ctx, card) => {
     }
     if (ctx.phase === Phases.EnlistmentMercenaries && G.publicPlayers[Number(ctx.currentPlayer)].campCards
         .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
-        const stack = [StackData.enlistmentMercenaries()];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
     }
 };
 //# sourceMappingURL=CampMovesHelpers.js.map

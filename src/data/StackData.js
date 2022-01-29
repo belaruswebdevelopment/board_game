@@ -33,6 +33,7 @@ export const StackData = {
     }),
     discardSuitCard: (playerId) => ({
         playerId,
+        // TODO CHeck is it need suit!? or good to have stack suit on main player!?
         config: {
             suit: SuitNames.WARRIOR,
         },

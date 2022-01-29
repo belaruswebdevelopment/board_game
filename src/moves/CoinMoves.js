@@ -1,24 +1,8 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { UpgradeCoinAction } from "../actions/AutoActions";
-import { AddCoinToPouchAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
-import { CoinUpgradeValidation, IsValidMove } from "../MoveValidator";
-import { SuitNames } from "../typescript/enums";
-// TODO Add logging
+import { IsValidMove } from "../MoveValidator";
+import { Stages, SuitNames } from "../typescript/enums";
 // TODO Add Place coins async
-/**
- * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При клике по монете.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- */
-export const AddCoinToPouchMove = (G, ctx, coinId) => {
-    AddCoinToPouchAction(G, ctx, coinId);
-};
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>
  * <p>Применения:</p>
@@ -32,10 +16,11 @@ export const AddCoinToPouchMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickBoardCoinMove = (G, ctx, coinId) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], isValidMove = IsValidMove({ objId: coinId, range: [0, player.boardCoins.length] });
+    const isValidMove = IsValidMove(G, ctx, Stages.Default2, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player.boardCoins[coinId] !== null) {
         const tempId = player.handCoins.indexOf(null);
         player.handCoins[tempId] = player.boardCoins[coinId];
@@ -48,6 +33,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
         player.selectedCoin = undefined;
     }
     else {
+        // TODO FIX IT!
         return INVALID_MOVE;
     }
 };
@@ -67,7 +53,11 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
  */
 export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
     var _a, _b;
-    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
+    const isValidMove = IsValidMove(G, ctx, Stages.UpgradeCoin, {
+        coinId,
+        type,
+        isInitial
+    });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -103,36 +93,10 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
  * @returns
  */
 export const ClickHandCoinMove = (G, ctx, coinId) => {
-    const isValidMove = IsValidMove({
-        obj: G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId],
-        objId: coinId,
-        range: [0, G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length]
-    });
+    const isValidMove = IsValidMove(G, ctx, Stages.Default1, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin = coinId;
-};
-/**
- * <h3>Выбор монеты для улучшения по артефакту Vidofnir Vedrfolnir.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При клике по монете.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param coinId Id монеты.
- * @param type Тип монеты.
- * @param isInitial Является ли базовой.
- * @returns
- */
-export const UpgradeCoinVidofnirVedrfolnirMove = (G, ctx, coinId, type, isInitial) => {
-    const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-    const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type) && (config === null || config === void 0 ? void 0 : config.coinId) !== coinId;
-    if (!isValidMove) {
-        return INVALID_MOVE;
-    }
-    UpgradeCoinVidofnirVedrfolnirAction(G, ctx, coinId, type, isInitial);
 };
 //# sourceMappingURL=CoinMoves.js.map

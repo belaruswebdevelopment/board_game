@@ -14,8 +14,7 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  * @param ctx
  */
 export const AddBrisingamensEndGameActionsToStack = (G, ctx) => {
-    const stack = [StackData.brisingamensEndGameAction()];
-    AddActionsToStackAfterCurrent(G, ctx, stack);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.brisingamensEndGameAction()]);
 };
 /**
 * <h3>Заполняет кэмп новой картой из карт кэмп деки текущей эпохи.</h3>
@@ -63,8 +62,7 @@ export const AddEnlistmentMercenariesActionsToStack = (G, ctx) => {
  * @param ctx
  */
 export const AddGetMjollnirProfitActionsToStack = (G, ctx) => {
-    const stack = [StackData.getMjollnirProfit()];
-    AddActionsToStackAfterCurrent(G, ctx, stack);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.getMjollnirProfit()]);
 };
 /**
  * <h3>Перемещает все оставшиеся неиспользованные карты кэмпа в дискард.</h3>

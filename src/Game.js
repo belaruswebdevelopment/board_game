@@ -11,13 +11,12 @@ import { CheckEndPickCardsPhase, CheckEndPickCardsTurn, EndPickCardsActions, OnP
 import { CheckEndPlaceCoinsPhase, CheckEndPlaceCoinsTurn, OnPlaceCoinsTurnEnd, PreparationPhaseActions } from "./hooks/PlaceCoinsHooks";
 import { CheckEndPlaceCoinsUlinePhase, CheckUlinePlaceCoinsOrder, EndPlaceCoinsUlineActions } from "./hooks/PlaceCoinsUlineHooks";
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
-import { ClickCampCardHoldaMove, ClickCampCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, DiscardSuitCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/CampMoves";
-import { AddCoinToPouchMove, ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CoinMoves";
+import { AddCoinToPouchMove, ClickCampCardHoldaMove, ClickCampCardMove, DiscardSuitCardFromPlayerBoardMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CampMoves";
+import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove } from "./moves/CoinMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceCardMove } from "./moves/HeroMoves";
-import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, PassEnlistmentMercenariesMove, PickDiscardCardMove } from "./moves/Moves";
+import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
 import { Phases, Stages } from "./typescript/enums";
 // TODO Add logging
-// TODO Add colors for cards Points by suit colors!
 // TODO Add dock block
 /**
  * <h3>Параметры порядка хода.</h3>
@@ -380,6 +379,8 @@ export const BoardGame = {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         enumerate,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
         iterations,
         objectives,
         playoutDepth,

@@ -21,8 +21,7 @@ export const BlacksmithDistinctionAwarding = (G, ctx, player) => {
 };
 export const ExplorerDistinctionAwarding = (G, ctx, player) => {
     if (G.tierToEnd !== 0) {
-        const stack = [StackData.pickDistinctionCard()];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDistinctionCard()]);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
     }
     return 0;
@@ -57,8 +56,7 @@ export const MinerDistinctionAwarding = (G, ctx, player) => {
 };
 export const WarriorDistinctionAwarding = (G, ctx, player) => {
     if (G.tierToEnd !== 0) {
-        const stack = [StackData.upgradeCoinWarriorDistinction()];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinWarriorDistinction()]);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия воинов возможность улучшить одну из своих монет на +5:`);
     }
     else {

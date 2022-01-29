@@ -22,7 +22,7 @@ const Brisingamens = {
         value: true,
     },
     stack: [
-        // TODO Move to validator!
+        // TODO Move to stackValidator!
         // {
         //     action: {
         //         name: CheckPickDiscardCardCampAction.name,
@@ -109,10 +109,12 @@ const Hofud = {
     actions: {
         name: StartDiscardSuitCardAction.name,
     },
+    // TODO Move to Stack.?
     stack: [
         {
             config: {
                 // TODO Check all config and need to it => drawName: ???,
+                suit: SuitNames.WARRIOR,
                 name: ConfigNames.HofudAction,
             },
         },

@@ -14,8 +14,7 @@ import { HeroNames, LogTypes, Stages } from "../typescript/enums";
  * @param ctx
  */
 export const AddPickHeroAction = (G, ctx) => {
-    const stack = [StackData.pickHero()];
-    AddActionsToStackAfterCurrent(G, ctx, stack);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.pickHero()]);
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен выбрать нового героя.`);
 };
 /**
@@ -74,6 +73,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
  */
 export const StartDiscardSuitCardAction = (G, ctx, config) => {
     var _a;
+    // TODO Check Use config not as param but as current player config...
     if (config.suit !== undefined) {
         const value = {};
         for (let i = 0; i < ctx.numPlayers; i++) {
@@ -81,8 +81,7 @@ export const StartDiscardSuitCardAction = (G, ctx, config) => {
                 value[i] = {
                     stage: Stages.DiscardSuitCard,
                 };
-                const stack = [StackData.discardSuitCard(i)];
-                AddActionsToStackAfterCurrent(G, ctx, stack);
+                AddActionsToStackAfterCurrent(G, ctx, [StackData.discardSuitCard(i)]);
             }
         }
         (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({
@@ -109,14 +108,12 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     var _a;
     const number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
         .filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length;
-    let stack = [];
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline && number > 0
         && handCoinsNumber) {
-        stack = [StackData.addCoinToPouch(number)];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(number)]);
     }
     else {
-        let coinsValue = 0;
+        let coinsValue = 0, stack = [];
         for (let j = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
             if (!((_a = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
                 coinsValue++;
@@ -127,6 +124,9 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         }
         else if (coinsValue === 2) {
             stack = [StackData.upgradeCoinVidofnirVedrfolnir(3)];
+        }
+        else {
+            // TODO log error!?
         }
         AddActionsToStackAfterCurrent(G, ctx, stack);
     }

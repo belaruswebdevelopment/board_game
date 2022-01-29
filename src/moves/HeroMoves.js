@@ -3,6 +3,7 @@ import { DiscardCardsFromPlayerBoardAction, PlaceCardsAction } from "../actions/
 import { AddHeroToCards } from "../helpers/HeroMovesHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
+import { Stages } from "../typescript/enums";
 // TODO Add logging
 /**
  * <h3>Выбор героя.</h3>
@@ -17,7 +18,7 @@ import { IsValidMove } from "../MoveValidator";
  * @returns
  */
 export const ClickHeroCardMove = (G, ctx, heroId) => {
-    const isValidMove = IsValidMove({ obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length] });
+    const isValidMove = IsValidMove(G, ctx, Stages.PickHero, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -37,6 +38,13 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
  * @param cardId Id карты.
  */
 export const DiscardCardMove = (G, ctx, suit, cardId) => {
+    const isValidMove = IsValidMove(G, ctx, Stages.DiscardBoardCard, {
+        suit,
+        cardId,
+    });
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
     DiscardCardsFromPlayerBoardAction(G, ctx, suit, cardId);
 };
 /**
@@ -51,6 +59,10 @@ export const DiscardCardMove = (G, ctx, suit, cardId) => {
  * @param suit Название фракции.
  */
 export const PlaceCardMove = (G, ctx, suit) => {
+    const isValidMove = IsValidMove(G, ctx, Stages.PlaceCards, suit);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
     PlaceCardsAction(G, ctx, suit);
 };
 //# sourceMappingURL=HeroMoves.js.map

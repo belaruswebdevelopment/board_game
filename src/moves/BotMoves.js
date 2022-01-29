@@ -1,3 +1,6 @@
+import { INVALID_MOVE } from "boardgame.io/core";
+import { IsValidMove } from "../MoveValidator";
+import { Stages } from "../typescript/enums";
 /**
  * <h3>Выкладка монет ботами.</h3>
  * <p>Применения:</p>
@@ -10,6 +13,11 @@
  * @param coinsOrder Порядок выкладки монет.
  */
 export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
+    // TODO Check it and fix it!
+    const isValidMove = IsValidMove(G, ctx, Stages.Default3, coinsOrder);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
     for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
         const coinId = coinsOrder[i] || G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin) => coin !== null);

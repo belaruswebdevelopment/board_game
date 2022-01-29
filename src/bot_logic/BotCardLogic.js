@@ -1,5 +1,6 @@
 import { CreateCard, isCardNotAction } from "../Card";
 import { suitsConfig } from "../data/SuitData";
+// Check all types in this file!
 /**
  * <h3>Добавляет карту в массив потенциальных карт для ботов.</h3>
  * <p>Применения:</p>
@@ -66,9 +67,7 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
         }
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
-        const temp = tavern.map((card) => G.publicPlayers.map((player) => 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        PotentialScoring({ player, card: card }))), result = temp[cardId][Number(ctx.currentPlayer)];
+        const temp = tavern.map((card) => G.publicPlayers.map((player) => PotentialScoring(player, card))), result = temp[cardId][Number(ctx.currentPlayer)];
         temp.splice(cardId, 1);
         temp.forEach((player) => player.splice(Number(ctx.currentPlayer), 1));
         return result - Math.max(...temp.map((player) => Math.max(...player)));
@@ -120,7 +119,7 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  * @param card Карта.
  * @returns Потенциальное значение.
  */
-const PotentialScoring = ({ player = {}, card = {}, }) => {
+const PotentialScoring = (player, card) => {
     var _a, _b, _c, _d;
     const potentialCards = {};
     let score = 0;

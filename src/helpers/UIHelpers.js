@@ -2,7 +2,6 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { MoveNames, RusCardTypes } from "../typescript/enums";
-import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 import { DrawCard } from "./UIElementHelpers";
 /**
  * h3>Отрисовка сегмента игрового поля по указанным данным.</h3>
@@ -19,27 +18,6 @@ export const DrawBoard = (objectsSize) => {
     return { boardRows, boardCols, lastBoardCol };
 };
 /**
- * <h3>Отрисовка планшета конкретного игрока для дискарда карты.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Отрисовка планшета конкретного игрока для дискарда карты по действию артефакта Brisingamens.</li>
- * </ol>
- *
- * @param data Глобальные параметры.
- * @returns Поле для вывода карт для дискарда.
- */
-export const DrawPlayerBoardForCardDiscard = (data) => {
-    // TODO Discard cards must be hidden from others users?
-    const playerHeaders = [], playerRows = [];
-    for (const suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }, void 0) }, `${data.G.publicPlayers[Number(data.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`));
-        }
-    }
-    DiscardAnyCardFromPlayerBoardProfit(data.G, data.ctx, data, playerRows);
-    return (_jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playerHeaders }, void 0) }, void 0), _jsx("tbody", { children: playerRows }, void 0)] }, void 0));
-};
-/**
  * <h3>Отрисовка планшета конкретных игроков для дискарда карты конкретной фракции.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -51,6 +29,7 @@ export const DrawPlayerBoardForCardDiscard = (data) => {
  * @returns Поле игрока для дискарда карты фракции.
  */
 export const DrawPlayersBoardForSuitCardDiscard = (data, suit) => {
+    // TODO Move it to ProfitHelper!
     const playersHeaders = [], playersRows = [];
     for (let p = 0; p < data.G.publicPlayers.length; p++) {
         if (p !== Number(data.ctx.currentPlayer)) {

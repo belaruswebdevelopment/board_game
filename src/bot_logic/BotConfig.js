@@ -1,6 +1,6 @@
 import { isCardNotAction } from "../Card";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
-// TODO Fix reurn types & move to interfaces
+// TODO Fix all types & move {...} to interfaces
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -66,7 +66,7 @@ const CompareCharacteristics = (stat1, stat2) => {
  * @param playersNum
  * @returns
  */
-export const GetAllPicks = ({ tavernsNum, playersNum }) => {
+export const GetAllPicks = (tavernsNum, playersNum) => {
     const temp = [], 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     cartesian = (...a) => {

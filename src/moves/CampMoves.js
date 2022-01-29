@@ -1,15 +1,30 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { DiscardCardFromTavernAction } from "../actions/Actions";
-import { DiscardAnyCardFromPlayerBoardAction, DiscardSuitCardAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PlaceEnlistmentMercenariesAction } from "../actions/CampActions";
+import { AddCoinToPouchAction, DiscardSuitCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { isArtefactCard } from "../Camp";
-import { StackData } from "../data/StackData";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddCampCardToCards } from "../helpers/CampMovesHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { LogTypes } from "../typescript/enums";
-// TODO Add logging
+import { LogTypes, Stages } from "../typescript/enums";
+/**
+ * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При клике по монете.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ */
+export const AddCoinToPouchMove = (G, ctx, coinId) => {
+    const isValidMove = IsValidMove(G, ctx, Stages.AddCoinToPouch, coinId);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    AddCoinToPouchAction(G, ctx, coinId);
+};
 /**
  * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
  * <p>Применения:</p>
@@ -23,8 +38,7 @@ import { LogTypes } from "../typescript/enums";
  * @returns
  */
 export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
-    const isValidMove = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
-        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
+    const isValidMove = IsValidMove(G, ctx, Stages.PickCampCardHolda, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -55,9 +69,7 @@ export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
  * @returns
  */
 export const ClickCampCardMove = (G, ctx, cardId) => {
-    const isValidMove = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
-        && G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
-        || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
+    const isValidMove = IsValidMove(G, ctx, Stages.Default2, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -76,35 +88,6 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
     }
 };
 /**
- * <h3>Сбрасывает карту в дискард в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param suit Название фракции.
- * @param cardId Id сбрасываемой карты.
- */
-export const DiscardCardFromPlayerBoardMove = (G, ctx, suit, cardId) => {
-    DiscardAnyCardFromPlayerBoardAction(G, ctx, suit, cardId);
-};
-/**
- * <h3>Сбрасывает карту из таверны при выборе карты из кэмпа на двоих игроков.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Применяется при выборе первым игроком карты из кэмпа.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param cardId Id сбрасываемой карты.
- */
-export const DiscardCard2PlayersMove = (G, ctx, cardId) => {
-    DiscardCardFromTavernAction(G, ctx, cardId);
-};
-/**
  * <h3>Сбрасывает карту конкретной фракции в дискард по выбору игрока при действии артефакта Hofud.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -119,6 +102,11 @@ export const DiscardCard2PlayersMove = (G, ctx, cardId) => {
  * @returns
  */
 export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, playerId, cardId) => {
+    // TODO Or [suit, cardId]!?
+    const isValidMove = IsValidMove(G, ctx, Stages.DiscardSuitCard, cardId);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
     // TODO Uncomment it for players and fix it for bots
     /*let isValidMove: boolean = false;
     if (ctx.playerID !== undefined) {
@@ -132,59 +120,28 @@ export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, playerId, cardI
     DiscardSuitCardAction(G, ctx, suit, playerId, cardId);
 };
 /**
- * <h3>Выбор игроком карты наёмника для вербовки.</h3>
+ * <h3>Выбор монеты для улучшения по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
+ * <li>При клике по монете.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param cardId Id карты.
+ * @param coinId Id монеты.
+ * @param type Тип монеты.
+ * @param isInitial Является ли базовой.
+ * @returns
  */
-export const GetEnlistmentMercenariesMove = (G, ctx, cardId) => {
-    GetEnlistmentMercenariesAction(G, ctx, cardId);
-};
-/**
- * <h3>Выбирает фракцию для применения финального эффекта артефакта Mjollnir.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param suit Название фракции.
- */
-export const GetMjollnirProfitMove = (G, ctx, suit) => {
-    GetMjollnirProfitAction(G, ctx, suit);
-};
-/**
- * <h3>Выбор фракции куда будет завербован наёмник.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе фракции, куда будет завербован наёмник.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param suit Название фракции.
- */
-export const PlaceEnlistmentMercenariesMove = (G, ctx, suit) => {
-    PlaceEnlistmentMercenariesAction(G, ctx, suit);
-};
-/**
- * <h3>Начало вербовки наёмников.</li>
- * <p>Применения:</p>
- * <ol>
- * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const StartEnlistmentMercenariesMove = (G, ctx) => {
-    const stack = [StackData.enlistmentMercenaries()];
-    AddActionsToStackAfterCurrent(G, ctx, stack);
+export const UpgradeCoinVidofnirVedrfolnirMove = (G, ctx, coinId, type, isInitial) => {
+    const isValidMove = IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
+        coinId,
+        type,
+        isInitial
+    });
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    UpgradeCoinVidofnirVedrfolnirAction(G, ctx, coinId, type, isInitial);
 };
 //# sourceMappingURL=CampMoves.js.map

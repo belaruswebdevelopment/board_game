@@ -1,9 +1,6 @@
-import { isCardNotAction } from "../Card";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
-import { AddCardToPlayer } from "./CardHelpers";
-import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
@@ -25,17 +22,11 @@ export const AddBuffToPlayer = (G, ctx, buff) => {
 };
 // TODO Rework it!?
 export const AddGetDistinctionsActionToStack = (G, ctx) => {
-    const stack = [
-        {},
-    ];
-    AddActionsToStackAfterCurrent(G, ctx, stack);
+    AddActionsToStackAfterCurrent(G, ctx, [{}]);
 };
 // TODO Rework it!?
 export const AddPickCardActionToStack = (G, ctx) => {
-    const stack = [
-        {},
-    ];
-    AddActionsToStackAfterCurrent(G, ctx, stack);
+    AddActionsToStackAfterCurrent(G, ctx, [{}]);
 };
 /**
  * <h3>Действия, связанные с отрисовкой профита.</h3>
@@ -91,43 +82,6 @@ const StartOrEndActionStage = (G, ctx, config) => {
     }
 };
 /**
- * <h3>Действия, связанные с взятием карт из дискарда.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
- * <li>При выборе конкретных карт кэмпа, дающих возможность взять карты из дискарда.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param cardId Id карты.
- */
-export const PickDiscardCard = (G, ctx, cardId) => {
-    // TODO Rework all COMMON for heroes and camp actions in two logic?
-    const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]), pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
-    if (G.actionsNum === 2) {
-        const stack = [
-            {
-            // TODO Move it to validator!
-            // action: {
-            //     name: CheckPickDiscardCardCampAction.name,
-            // },
-            },
-            StackData.pickDiscardCardBrisingamens()
-        ];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
-    }
-    if (isCardNotAction(pickedCard)) {
-        if (isAdded) {
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-        }
-    }
-    else {
-        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
-    }
-};
-/**
  * <h3>Действия, связанные с дискардом карты из таверны при пике карты кэмпа при игре на 2-х игроков.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -138,7 +92,6 @@ export const PickDiscardCard = (G, ctx, cardId) => {
  * @param ctx
  */
 export const StartDiscardCardFromTavernActionFor2Players = (G, ctx) => {
-    const stack = [StackData.discardTavernCard()];
-    AddActionsToStackAfterCurrent(G, ctx, stack);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.discardTavernCard()]);
 };
 //# sourceMappingURL=ActionHelpers.js.map

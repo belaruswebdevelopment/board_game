@@ -1,9 +1,8 @@
 import { CreateCard } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
-import { PickDiscardCard } from "../helpers/ActionHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
-import { CheckAndMoveThrudOrPickHeroAction, CheckPickDiscardCard } from "../helpers/HeroHelpers";
+import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
@@ -21,19 +20,6 @@ export const CheckPickCampCardAction = (G, ctx) => {
     if (G.camp.length === 0) {
         G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
     }
-};
-/**
- * <h3>Действия, связанные с возможностью взятия карт из дискарда от героев.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckPickDiscardCardHeroAction = (G, ctx) => {
-    CheckPickDiscardCard(G, ctx);
 };
 /**
  * <h3>Действия, связанные с дискардом карт с планшета игрока.</h3>
@@ -56,28 +42,12 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
             .splice(cardId, 1)[0]);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту ${pickedCard.name}.`);
         if (G.actionsNum === 2) {
-            const stack = [StackData.discardCardFromBoardDagda()];
-            AddActionsToStackAfterCurrent(G, ctx, stack);
+            AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda()]);
         }
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
     }
-};
-/**
- * <h3>Действия, связанные с взятием карт из дискарда от героев.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- * @param cardId Id карты.
- */
-export const PickDiscardCardHeroAction = (G, ctx, config, cardId) => {
-    PickDiscardCard(G, ctx, cardId);
 };
 /**
  * <h3>Действия, связанные с добавлением других карт на планшет игрока.</h3>
@@ -102,8 +72,7 @@ export const PlaceCardsAction = (G, ctx, suit) => {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Олвин во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);
         if (G.actionsNum === 2) {
-            const stack = [StackData.placeCardsOlwin()];
-            AddActionsToStackAfterCurrent(G, ctx, stack);
+            AddActionsToStackAfterCurrent(G, ctx, [StackData.placeCardsOlwin()]);
         }
         CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
     }

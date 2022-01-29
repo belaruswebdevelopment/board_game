@@ -42,12 +42,14 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
 export const EndActionForChosenPlayer = (G, ctx, playerId) => {
     G.publicPlayers[playerId].stack = [];
     let activePlayers = 0;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const activePlayersKey in ctx.activePlayers) {
         activePlayers++;
     }
     if (activePlayers === 1) {
-        // G.publicPlayers[Number(ctx.currentPlayer)].stack = [];
+        // TODO Check: G.publicPlayers[Number(ctx.currentPlayer)].stack = [];
         G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
     }
 };

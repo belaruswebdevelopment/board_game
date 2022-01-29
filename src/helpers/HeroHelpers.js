@@ -15,8 +15,7 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  * @param ctx
  */
 export const AddEndTierActionsToStack = (G, ctx) => {
-    const stack = [StackData.placeCardsYlud()];
-    AddActionsToStackAfterCurrent(G, ctx, stack);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.placeCardsYlud()]);
     G.drawProfit = ConfigNames.PlaceCards;
 };
 /**
@@ -125,8 +124,7 @@ export const GetHeroIndexByName = (heroName) => Object.keys(heroesConfig).indexO
  */
 export const StartThrudMoving = (G, ctx, card) => {
     if (card.suit !== null) {
-        const stack = [StackData.placeCardsThrud(card.suit)];
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.placeCardsThrud(card.suit)]);
     }
 };
 //# sourceMappingURL=HeroHelpers.js.map

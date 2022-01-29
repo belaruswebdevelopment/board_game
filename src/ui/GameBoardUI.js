@@ -3,11 +3,11 @@ import { isCardNotAction } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
 import { DrawCard, DrawCoin } from "../helpers/UIElementHelpers";
-import { DrawBoard, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard } from "../helpers/UIHelpers";
+import { DrawBoard, DrawPlayersBoardForSuitCardDiscard } from "../helpers/UIHelpers";
 import { tavernsConfig } from "../Tavern";
-import { ConfigNames, HeroNames, MoveNames } from "../typescript/enums";
+import { ConfigNames, MoveNames, Phases, Stages } from "../typescript/enums";
 /**
  * <h3>Отрисовка карт кэмпа.</h3>
  * <p>Применения:</p>
@@ -19,7 +19,7 @@ import { ConfigNames, HeroNames, MoveNames } from "../typescript/enums";
  * @returns Поле кэмпа.
  */
 export const DrawCamp = (data) => {
-    const boardCells = [];
+    const boardCells = [], moveMainArgs = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < data.G.campNum; j++) {
             const campCard = data.G.camp[j];
@@ -28,9 +28,12 @@ export const DrawCamp = (data) => {
             }
             else {
                 DrawCard(data, boardCells, campCard, j, null, null, MoveNames.ClickCampCardMove, j);
+                moveMainArgs.push(j);
             }
         }
     }
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PickCards][Stages.Default2].numbers = moveMainArgs;
     return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }, void 0), _jsxs("span", { children: ["Camp ", data.G.campDecks.length - data.G.tierToEnd + 1 > data.G.campDecks.length ?
                                 data.G.campDecks.length : data.G.campDecks.length - data.G.tierToEnd + 1, "(", data.G.campDecks.length - data.G.tierToEnd !== 2 ?
                                 data.G.campDecks[data.G.campDecks.length - data.G.tierToEnd].length : 0, data.G.campDecks.length - data.G.tierToEnd === 0 ? `/` +
@@ -58,14 +61,17 @@ export const DrawCurrentPlayerTurn = (data) => (_jsxs("b", { children: ["Current
  * @returns Поле преимуществ в конце эпохи.
  */
 export const DrawDistinctions = (data) => {
-    const boardCells = [];
+    const boardCells = [], moveMainArgs = [];
     for (let i = 0; i < 1; i++) {
         for (const suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => data.moves.ClickDistinctionCardMove(suit), title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }, void 0) }, `Distinction ${suit} card`));
+                moveMainArgs.push(suit);
             }
         }
     }
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.GetDistinctions][Stages.Default1].strings = moveMainArgs;
     return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }, void 0), " ", _jsx("span", { children: "Distinctions" }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));
 };
 /**
@@ -79,19 +85,30 @@ export const DrawDistinctions = (data) => {
  * @returns Поле героев.
  */
 export const DrawHeroes = (data) => {
-    const boardRows = [], drawData = DrawBoard(data.G.heroes.length);
+    const boardRows = [], drawData = DrawBoard(data.G.heroes.length), moveMainArgs = [];
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells = [];
         boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j;
             DrawCard(data, boardCells, data.G.heroes[increment], increment, null, null, MoveNames.ClickHeroCardMove, increment);
+            if (data.G.heroes[increment].active) {
+                moveMainArgs.push(increment);
+            }
             if (increment + 1 === data.G.heroes.length) {
                 break;
             }
         }
         boardRows[i].push(_jsx("tr", { children: boardCells }, `Heroes row ${i}`));
     }
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PickCards][Stages.PickHero].numbers = moveMainArgs;
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.EnlistmentMercenaries][Stages.PickHero].numbers = moveMainArgs;
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.EndTier][Stages.PickHero].numbers = moveMainArgs;
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.GetDistinctions][Stages.PickHero].numbers = moveMainArgs;
     return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }, void 0), " ", _jsxs("span", { children: ["Heroes (", data.G.heroes.length, " left)"] }, void 0)] }, void 0), _jsx("tbody", { children: boardRows }, void 0)] }, void 0));
 };
 /**
@@ -131,7 +148,7 @@ export const DrawMarketCoins = (data) => {
  * @returns Поле профита.
  */
 export const DrawProfit = (data) => {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b;
     const boardCells = [], config = (_a = data.G.publicPlayers[Number(data.ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config, option = data.G.drawProfit;
     let caption = `Get `;
     for (let i = 0; i < 1; i++) {
@@ -143,15 +160,7 @@ export const DrawProfit = (data) => {
         }
         else if (option === ConfigNames.ExplorerDistinction) {
             caption += `one card to your board.`;
-            // TODO Move to ProfitHelpers and add logic for bot or just use standard pick cards / upgrade coins
-            for (let j = 0; j < 3; j++) {
-                const card = data.G.decks[1][j];
-                let suit = null;
-                if (isCardNotAction(card)) {
-                    suit = card.suit;
-                }
-                DrawCard(data, boardCells, data.G.decks[1][j], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], suit, MoveNames.ClickCardToPickDistinctionMove, j);
-            }
+            ExplorerDistinctionProfit(data.G, data.ctx, data, boardCells);
         }
         else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
             caption += `${data.G.actionsNum} card${data.G.actionsNum > 1 ? `s` : ``} to discard from your board.`;
@@ -163,11 +172,12 @@ export const DrawProfit = (data) => {
         }
         else if (option === ConfigNames.BrisingamensEndGameAction) {
             caption += `one card to discard from your board.`;
-            boardCells.push(_jsx("td", { children: DrawPlayerBoardForCardDiscard(data) }, `${data.G.publicPlayers[Number(data.ctx.currentPlayer)].nickname} discard card`));
+            DiscardAnyCardFromPlayerBoardProfit(data.G, data.ctx, data, boardCells);
         }
         else if (option === ConfigNames.HofudAction) {
             caption += `one warrior card to discard from your board.`;
             if (config !== undefined && config.suit !== undefined) {
+                // TODO Move to ProfitHelper!
                 boardCells.push(_jsx("td", { children: DrawPlayersBoardForSuitCardDiscard(data, config.suit) }, `Discard ${config.suit} suit cardboard`));
             }
         }
@@ -209,34 +219,7 @@ export const DrawProfit = (data) => {
                     UpgradeCoinVidofnirVedrfolnirProfit(data.G, data.ctx, data, boardCells);
                 }
                 else if (option === ConfigNames.UpgradeCoin) {
-                    // TODO Move to ProfitHelpers and add logic for bot or just use standard upgrade coins
-                    const handCoins = data.G.publicPlayers[Number(data.ctx.currentPlayer)].handCoins
-                        .filter((coin) => coin !== null);
-                    let handCoinIndex = -1;
-                    for (let j = 0; j < data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins.length; j++) {
-                        // TODO Check .? for all coins!!! and delete AS
-                        if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].buffs.everyTurn ===
-                            HeroNames.Uline
-                            && data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j] === null) {
-                            handCoinIndex++;
-                            const handCoinId = data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                .handCoins.findIndex((coin) => {
-                                var _a, _b;
-                                return (coin === null || coin === void 0 ? void 0 : coin.value) === ((_a = handCoins[handCoinIndex]) === null || _a === void 0 ? void 0 : _a.value)
-                                    && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === ((_b = handCoins[handCoinIndex]) === null || _b === void 0 ? void 0 : _b.isInitial);
-                            });
-                            if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].handCoins[handCoinId]
-                                && !((_c = data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                    .handCoins[handCoinId]) === null || _c === void 0 ? void 0 : _c.isTriggerTrading)) {
-                                DrawCoin(data, boardCells, `coin`, data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                    .handCoins[handCoinId], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `hand`, (_d = handCoins[handCoinIndex]) === null || _d === void 0 ? void 0 : _d.isInitial);
-                            }
-                        }
-                        else if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]
-                            && !((_e = data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]) === null || _e === void 0 ? void 0 : _e.isTriggerTrading)) {
-                            DrawCoin(data, boardCells, `coin`, data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `board`, (_f = data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]) === null || _f === void 0 ? void 0 : _f.isInitial);
-                        }
-                    }
+                    UpgradeCoinProfit(data.G, data.ctx, data, boardCells);
                 }
             }
         }
@@ -255,7 +238,7 @@ export const DrawProfit = (data) => {
  * @returns Поле таверн.
  */
 export const DrawTaverns = (data, gridClass) => {
-    const tavernsBoards = [];
+    const tavernsBoards = [], moveMainArgs = [];
     for (let t = 0; t < data.G.tavernsNum; t++) {
         for (let i = 0; i < 1; i++) {
             const boardCells = [];
@@ -271,6 +254,7 @@ export const DrawTaverns = (data, gridClass) => {
                     }
                     if (t === data.G.currentTavern) {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit, MoveNames.ClickCardMove, j);
+                        moveMainArgs.push(j);
                     }
                     else {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);
@@ -280,6 +264,8 @@ export const DrawTaverns = (data, gridClass) => {
             tavernsBoards.push(_jsxs("table", { className: `${gridClass} justify-self-center`, children: [_jsxs("caption", { className: "whitespace-nowrap", children: [_jsx("span", { style: Styles.Taverns(t), className: "bg-top-tavern-icon" }, void 0), " ", _jsx("b", { children: tavernsConfig[t].name }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, `Tavern ${tavernsConfig[t].name} board`));
         }
     }
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PickCards][Stages.Default1].numbers = moveMainArgs;
     return tavernsBoards;
 };
 /**
