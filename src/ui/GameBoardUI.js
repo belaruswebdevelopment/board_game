@@ -131,13 +131,13 @@ export const DrawMarketCoins = (data) => {
  * @returns Поле профита.
  */
 export const DrawProfit = (data) => {
-    var _a, _b, _c, _d, _e;
-    const boardCells = [], config = data.G.publicPlayers[Number(data.ctx.currentPlayer)].stack[0].config, option = data.G.drawProfit;
+    var _a, _b, _c, _d, _e, _f;
+    const boardCells = [], config = (_a = data.G.publicPlayers[Number(data.ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config, option = data.G.drawProfit;
     let caption = `Get `;
     for (let i = 0; i < 1; i++) {
         if (option === ConfigNames.PlaceCards) {
             if (config !== undefined) {
-                caption += `suit to place ${(_a = data.G.actionsNum) !== null && _a !== void 0 ? _a : 1} ${config.drawName} ${data.G.actionsNum > 1 ? `s` : ``} to ${data.G.actionsNum > 1 ? `different` : `that`} suit.`;
+                caption += `suit to place ${(_b = data.G.actionsNum) !== null && _b !== void 0 ? _b : 1} ${config.drawName} ${data.G.actionsNum > 1 ? `s` : ``} to ${data.G.actionsNum > 1 ? `different` : `that`} suit.`;
                 PlaceCardsProfit(data.G, data.ctx, data, boardCells);
             }
         }
@@ -226,15 +226,15 @@ export const DrawProfit = (data) => {
                                     && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === ((_b = handCoins[handCoinIndex]) === null || _b === void 0 ? void 0 : _b.isInitial);
                             });
                             if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].handCoins[handCoinId]
-                                && !((_b = data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                    .handCoins[handCoinId]) === null || _b === void 0 ? void 0 : _b.isTriggerTrading)) {
+                                && !((_c = data.G.publicPlayers[Number(data.ctx.currentPlayer)]
+                                    .handCoins[handCoinId]) === null || _c === void 0 ? void 0 : _c.isTriggerTrading)) {
                                 DrawCoin(data, boardCells, `coin`, data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                    .handCoins[handCoinId], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `hand`, (_c = handCoins[handCoinIndex]) === null || _c === void 0 ? void 0 : _c.isInitial);
+                                    .handCoins[handCoinId], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `hand`, (_d = handCoins[handCoinIndex]) === null || _d === void 0 ? void 0 : _d.isInitial);
                             }
                         }
                         else if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]
-                            && !((_d = data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isTriggerTrading)) {
-                            DrawCoin(data, boardCells, `coin`, data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `board`, (_e = data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]) === null || _e === void 0 ? void 0 : _e.isInitial);
+                            && !((_e = data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]) === null || _e === void 0 ? void 0 : _e.isTriggerTrading)) {
+                            DrawCoin(data, boardCells, `coin`, data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j], j, data.G.publicPlayers[Number(data.ctx.currentPlayer)], `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `board`, (_f = data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]) === null || _f === void 0 ? void 0 : _f.isInitial);
                         }
                     }
                 }

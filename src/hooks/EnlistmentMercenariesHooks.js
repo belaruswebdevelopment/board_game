@@ -1,6 +1,7 @@
+import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
-import { CheckEndTierActionsOrEndGameLastActions } from "../helpers/GameHooksHelpers";
-import { RusCardTypes } from "../typescript/enums";
+import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { DrawNames, RusCardTypes } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
  * <p>Применения:</p>
@@ -43,17 +44,31 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
 export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
     if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1
         && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        return true;
+        return EndTurnActions(G, ctx);
     }
     else if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
         return G.publicPlayers[Number(ctx.currentPlayer)].campCards
             .filter((card) => card.type === RusCardTypes.MERCENARY).length === 0;
     }
 };
-export const EndEnlistmentMercenariesActions = (G) => {
+export const EndEnlistmentMercenariesActions = (G, ctx) => {
+    const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === DrawNames.Ylud);
+    if (yludIndex === -1) {
+        RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+    }
     G.publicPlayersOrder = [];
 };
-export const OnEnlistmentMercenariesPhaseTurnBegin = (G, ctx) => AddEnlistmentMercenariesActionsToStack(G, ctx);
+export const OnEnlistmentMercenariesMove = (G, ctx) => {
+    StartOrEndActions(G, ctx);
+};
+export const OnEnlistmentMercenariesTurnBegin = (G, ctx) => {
+    var _a;
+    AddEnlistmentMercenariesActionsToStack(G, ctx);
+    DrawCurrentProfit(G, ctx, (_a = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config);
+};
+export const OnEnlistmentMercenariesTurnEnd = (G, ctx) => {
+    ClearPlayerPickedCard(G, ctx);
+};
 /**
 * <h3>Определяет порядок найма наёмников при начале фазы 'enlistmentMercenaries'.</h3>
 * <p>Применения:</p>

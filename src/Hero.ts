@@ -24,6 +24,9 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
                 suit: heroesConfig[hero].suit,
                 rank: heroesConfig[hero].rank,
                 points: heroesConfig[hero].points,
+                buff: heroesConfig[hero].buff,
+                validators: heroesConfig[hero].validators,
+                actions: heroesConfig[hero].actions,
                 stack: heroesConfig[hero].stack,
             } as ICreateHero));
         }
@@ -46,6 +49,9 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
  * @param rank Шевроны.
  * @param points Очки.
  * @param active Взят ли герой.
+ * @param buff Баф.
+ * @param validators Валидаторы.
+ * @param actions Экшены.
  * @param stack Действия.
  * @returns Герой.
  */
@@ -58,7 +64,10 @@ export const CreateHero = ({
     rank,
     points,
     active = true,
-    stack
+    buff,
+    validators,
+    actions,
+    stack,
 }: ICreateHero = {} as ICreateHero): IHero => ({
     type,
     name,
@@ -68,5 +77,8 @@ export const CreateHero = ({
     rank,
     points,
     active,
+    buff,
+    validators,
+    actions,
     stack,
 });

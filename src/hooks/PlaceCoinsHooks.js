@@ -1,5 +1,5 @@
-import { RefillEmptyCampCards } from "../Camp";
 import { ReturnCoinsToPlayerHands } from "../Coin";
+import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
@@ -42,7 +42,7 @@ export const CheckEndPlaceCoinsTurn = (G, ctx) => {
         return true;
     }
 };
-export const EndPlaceCoinsActions = (G) => {
+export const OnPlaceCoinsTurnEnd = (G) => {
     G.publicPlayersOrder = [];
 };
 /**

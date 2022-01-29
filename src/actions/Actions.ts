@@ -1,44 +1,96 @@
 import { Ctx } from "boardgame.io";
-import { DrawCurrentProfit, PickCurrentHero, UpgradeCurrentCoin } from "../helpers/ActionHelpers";
-import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { CreateCard, isCardNotAction } from "../Card";
+import { StackData } from "../data/StackData";
+import { suitsConfig } from "../data/SuitData";
+import { AddCardToPlayer } from "../helpers/CardHelpers";
+import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
-import { IConfig } from "../typescript/action_interfaces";
-import { LogTypes } from "../typescript/enums";
+import { ICard, ICreateCard } from "../typescript/card_interfaces";
+import { CampDeckCardTypes, DeckCardTypes, PickedCardType, PlayerCardsType } from "../typescript/card_types";
+import { LogTypes, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
-import { ArgsTypes } from "../typescript/types";
+
+/**
+ * <h3>Действия, связанные со сбросом любой указанной карты со стола игрока в дискард.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param suit Название фракции.
+ * @param cardId Id карты.
+ */
+export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
+    const discardedCard: PlayerCardsType =
+        G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0];
+    if (discardedCard.type !== RusCardTypes.HERO) {
+        G.discardCardsDeck.push(discardedCard as ICard);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} сбросил карту ${discardedCard.name} в дискард.`);
+        delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
+    }
+};
 
 /**
  * <h3>Сбрасывает карту из таверны по выбору игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Применяется при выборе первым игроком карты из кэмпа.</li>
+ * <li>Применяется при выборе первым игроком карты из кэмпа при игре на 2-х игроков.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
  * @param cardId Id карты.
  */
-export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, config: IConfig, cardId: number): void => {
-  AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
-  DiscardCardFromTavern(G, cardId);
-  EndActionFromStackAndAddNew(G, ctx);
+export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
+    DiscardCardFromTavern(G, cardId);
 };
 
 /**
- * <h3>Действия, связанные с отрисовкой профита от игровых моментов.</h3>
+ * <h3>Игрок выбирает наёмника для вербовки.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При игровых моментах, дающих профит.</li>
+ * <li>Применяется когда игроку нужно выбрать наёмника для вербовки.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param cardId Id карты.
  */
-export const DrawProfitAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
-  DrawCurrentProfit(G, ctx, config);
+export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard =
+        G.publicPlayers[Number(ctx.currentPlayer)].campCards
+            .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY)[cardId];
+    const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+    if (pickedCard !== null) {
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы 'Enlistment Mercenaries' выбрал наёмника '${pickedCard.name}'.`);
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не пикнута карта наёмника.`);
+    }
+};
+
+/**
+ * <h3>Выбор фракции для применения финального эффекта артефакта Mjollnir.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param suit Название фракции.
+ */
+export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
+    delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.getMjollnirProfit;
+    G.suitIdForMjollnir = suit;
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал фракцию ${suitsConfig[suit].suitName} для эффекта артефакта Mjollnir.`);
 };
 
 /**
@@ -52,37 +104,85 @@ export const DrawProfitAction = (G: IMyGameState, ctx: Ctx, config: IConfig): vo
  * @param ctx
  */
 export const PassEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx): void => {
-  AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} пасанул во время фазы 'Enlistment Mercenaries'.`);
-  EndActionFromStackAndAddNew(G, ctx);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} пасанул во время фазы 'Enlistment Mercenaries'.`);
 };
 
 /**
- * <h3>Действия, связанные с взятием героя.</h3>
+ * <h3>Действия, связанные с взятием карт из дискарда.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При игровых моментах, дающих возможность взять карту героя.</li>
+ * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
+ * <li>При выборе конкретных карт кэмпа, дающих возможность взять карты из дискарда.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param cardId Id карты.
  */
-export const PickHeroAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
-  PickCurrentHero(G, ctx, config);
+export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
+    // TODO Rework all COMMON for heroes and camp actions in two logic?
+    const isAdded: boolean = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
+        pickedCard: DeckCardTypes = G.discardCardsDeck.splice(cardId, 1)[0];
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
+    if (G.actionsNum === 2) {
+        // TODO Move it to validator!
+        // action: {
+        //     name: CheckPickDiscardCardCamp/HeroAction.name,
+        // },
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens()]);
+    }
+    if (isCardNotAction(pickedCard)) {
+        if (isAdded) {
+            CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
+        }
+    } else {
+        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
+    }
 };
 
 /**
- * <h3>Действия, связанные с улучшением монет при игровых моментах.</h3>
+ * <h3>Игрок выбирает фракцию для вербовки указанного наёмника.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При игровых моментах, улучшающих монеты.</li>
+ * <li>Применяется когда игроку нужно выбрать фракцию для вербовки наёмника.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя или карты улучшающей монеты.
- * @param args Дополнительные аргументы.
+ * @param suit Название фракции.
  */
-export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, config: IConfig, ...args: ArgsTypes): void => {
-  UpgradeCurrentCoin(G, ctx, config, ...args);
+export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
+    const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+    if (pickedCard !== null) {
+        if (`variants` in pickedCard && `tier` in pickedCard && `path` in pickedCard) {
+            if (pickedCard.variants !== undefined) {
+                const mercenaryCard: ICard = CreateCard({
+                    type: RusCardTypes.MERCENARY,
+                    suit,
+                    rank: 1,
+                    points: pickedCard.variants[suit].points,
+                    name: pickedCard.name,
+                    tier: pickedCard.tier,
+                    path: pickedCard.path,
+                } as ICreateCard);
+                AddCardToPlayer(G, ctx, mercenaryCard);
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы 'Enlistment Mercenaries' завербовал наёмника '${mercenaryCard.name}'.`);
+                const cardIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                    .findIndex((card: CampDeckCardTypes): boolean => card.name === pickedCard.name);
+                G.publicPlayers[Number(ctx.currentPlayer)].campCards.splice(cardIndex, 1);
+                if (G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                    .filter((card: CampDeckCardTypes): boolean =>
+                        card.type === RusCardTypes.MERCENARY).length) {
+                    AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
+                }
+                CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
+            } else {
+                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
+            }
+        } else {
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Вместо карты наёмника пикнута карта другого типа.`);
+        }
+    } else {
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не пикнута карта наёмника.`);
+    }
 };

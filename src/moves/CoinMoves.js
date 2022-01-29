@@ -1,5 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { UpgradeCoinAction } from "../actions/AutoActions";
+import { AddCoinToPouchAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { CoinUpgradeValidation, IsValidMove } from "../MoveValidator";
 import { SuitNames } from "../typescript/enums";
 // TODO Add logging
@@ -16,7 +17,7 @@ import { SuitNames } from "../typescript/enums";
  * @param coinId Id монеты.
  */
 export const AddCoinToPouchMove = (G, ctx, coinId) => {
-    EndActionFromStackAndAddNew(G, ctx, [], coinId);
+    AddCoinToPouchAction(G, ctx, coinId);
 };
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>
@@ -65,6 +66,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
+    var _a, _b;
     const isValidMove = CoinUpgradeValidation(G, ctx, coinId, type);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -80,7 +82,13 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
             G.distinctions[SuitNames.EXPLORER] = undefined;
         }
     }
-    EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
+    const value = (_b = (_a = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.value;
+    if (value !== undefined) {
+        UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
+    }
+    else {
+        // TODO Error logging!
+    }
 };
 /**
  * <h3>Выбор монеты в руке для выкладки монет.</h3>
@@ -125,6 +133,6 @@ export const UpgradeCoinVidofnirVedrfolnirMove = (G, ctx, coinId, type, isInitia
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    EndActionFromStackAndAddNew(G, ctx, [], coinId, type, isInitial);
+    UpgradeCoinVidofnirVedrfolnirAction(G, ctx, coinId, type, isInitial);
 };
 //# sourceMappingURL=CoinMoves.js.map

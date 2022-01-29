@@ -1,5 +1,4 @@
-import { AddDataToLog } from "./Logging";
-import { HeroNames, LogTypes, RusCardTypes } from "./typescript/enums";
+import { RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -23,6 +22,9 @@ export const BuildHeroes = (configOptions, heroesConfig) => {
                 suit: heroesConfig[hero].suit,
                 rank: heroesConfig[hero].rank,
                 points: heroesConfig[hero].points,
+                buff: heroesConfig[hero].buff,
+                validators: heroesConfig[hero].validators,
+                actions: heroesConfig[hero].actions,
                 stack: heroesConfig[hero].stack,
             }));
         }
@@ -44,10 +46,13 @@ export const BuildHeroes = (configOptions, heroesConfig) => {
  * @param rank Шевроны.
  * @param points Очки.
  * @param active Взят ли герой.
+ * @param buff Баф.
+ * @param validators Валидаторы.
+ * @param actions Экшены.
  * @param stack Действия.
  * @returns Герой.
  */
-export const CreateHero = ({ type, name, description, game, suit, rank, points, active = true, stack } = {}) => ({
+export const CreateHero = ({ type, name, description, game, suit, rank, points, active = true, buff, validators, actions, stack, } = {}) => ({
     type,
     name,
     description,
@@ -56,28 +61,9 @@ export const CreateHero = ({ type, name, description, game, suit, rank, points, 
     rank,
     points,
     active,
+    buff,
+    validators,
+    actions,
     stack,
 });
-/**
- * <h3>Удаляет Труд в конце игры с поля игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит в конце матча после всех игровых событий.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        const playerCards = Object.values(G.publicPlayers[i].cards).flat();
-        const thrud = playerCards.find((card) => card.name === HeroNames.Thrud);
-        if (thrud !== undefined && thrud.suit !== null) {
-            const thrudIndex = G.publicPlayers[i].cards[thrud.suit]
-                .findIndex((card) => card.name === HeroNames.Thrud);
-            G.publicPlayers[i].cards[thrud.suit].splice(thrudIndex, 1);
-            AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с игрового поля.`);
-        }
-    }
-};
 //# sourceMappingURL=Hero.js.map

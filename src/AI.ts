@@ -1,19 +1,14 @@
 import { Ctx } from "boardgame.io";
-import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
-import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
+import { CompareCards } from "./bot_logic/BotCardLogic";
 import { isCardNotAction } from "./Card";
-import { suitsConfig } from "./data/SuitData";
-import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./helpers/ProfitHelpers";
 import { moveBy, moveValidators } from "./MoveValidator";
-import { HasLowestPriority } from "./Priority";
 import { CurrentScoring } from "./Score";
 import { IConfig } from "./typescript/action_interfaces";
 import { IMoves } from "./typescript/bot_interfaces";
-import { DeckCardTypes, PlayerCardsType, TavernCardTypes } from "./typescript/card_types";
-import { CoinType } from "./typescript/coin_types";
+import { PlayerCardsType, TavernCardTypes } from "./typescript/card_types";
 import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
-import { IBotMoveArgumentsTypes } from "./typescript/types";
+import { MoveArgsTypes, ValidMoveIdParam } from "./typescript/types";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -27,360 +22,118 @@ import { IBotMoveArgumentsTypes } from "./typescript/types";
  * @returns Массив возможных мувов у ботов.
  */
 export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
-    // TODO Check Pick Hero and all actions from hero pick in getDistinction phase
-    //make false for standard bot
-    const enableAdvancedBot = true,
-        uniqueArr: DeckCardTypes[] = [],
-        activeStageOfCurrentPlayer: string = ctx.activePlayers?.[Number(ctx.currentPlayer)] ?? `default`,
-        advancedString = `advanced`,
-        isAdvancedExist = Object.keys(moveBy[ctx.phase])
-            .some((key: string): boolean => key.includes(advancedString));
-    let moves: IMoves[] = [],
-        flag = true;
     // TODO Fix it, now just for bot can do RANDOM move
-    const botMoveArguments: IBotMoveArgumentsTypes = [];
-    for (const stage in moveBy[ctx.phase]) {
-        if (Object.prototype.hasOwnProperty.call(moveBy[ctx.phase], stage)) {
-            if (ctx.phase === Phases.PickCards && stage.startsWith(`default`)) {
-                continue;
+    const moves: IMoves[] = [];
+    let activeStageOfCurrentPlayer: string = ctx.activePlayers?.[Number(ctx.currentPlayer)] ?? `default`;
+    if (activeStageOfCurrentPlayer === `default`) {
+        if (ctx.phase === Phases.PlaceCoins) {
+            activeStageOfCurrentPlayer = Stages.Default3;
+        } else if (ctx.phase === Phases.PlaceCoinsUline) {
+            // TODO BotPlaceCoinUline
+            if (G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined) {
+                activeStageOfCurrentPlayer = Stages.Default1;
+            } else {
+                activeStageOfCurrentPlayer = Stages.Default2;
+                // TODO Fix this: args: [G.currentTavern + 1]
             }
-            if (stage.includes(activeStageOfCurrentPlayer)
-                && (!isAdvancedExist || stage.includes(advancedString) === enableAdvancedBot)) {
-                // TODO Sync players and bots validations in one places
-                const moveName: string = moveBy[ctx.phase][stage],
-                    [minValue, maxValue]: [number, number] = moveValidators[moveName].getRange({ G, ctx }),
-                    hasGetValue: boolean =
-                        Object.prototype.hasOwnProperty.call(moveValidators[moveName], `getValue`);
-                let argValue: number | string;
-                let argArray: number[];
-                for (let id: number = minValue; id < maxValue; id++) {
-                    // TODO sync bot moves options with profit UI options for players (same logic without UI)
-                    let type: undefined | string = undefined;
-                    if (stage === Stages.UpgradeCoin) {
-                        // TODO fix for Uline???
-                        type = `board`;
-                    }
-                    if (!moveValidators[moveName].validate({ G, ctx, id, type })) {
-                        continue;
-                    }
-                    if (hasGetValue) {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        argArray = moveValidators[moveName].getValue!({ G, ctx, id });
-                        moves.push({ move: moveName, args: [argArray] });
-                    } else {
-                        argValue = id;
-                        if (ctx.phase === Phases.GetDistinctions && stage.startsWith(`default`)) {
-                            argValue = Object.keys(suitsConfig)[id];
-                        }
-                        moves.push({ move: moveName, args: [argValue] });
-                    }
+        } else if (ctx.phase === Phases.PickCards) {
+            if (ctx.activePlayers === null) {
+                let pickCardOrCampCard = `card`;
+                if (G.expansions.thingvellir.active
+                    && (ctx.currentPlayer === G.publicPlayersOrder[0]
+                        || (!G.campPicked
+                            && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
+                    pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                 }
-            }
-        }
-    }
-    if (moves.length > 0) {
-        return moves;
-    }
-    if (ctx.phase === Phases.PickCards && activeStageOfCurrentPlayer === `default` && ctx.activePlayers === null) {
-        // TODO Fix it, now just for bot can do RANDOM move
-        let pickCardOrCampCard = `card`;
-        if (G.expansions.thingvellir.active
-            && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
-            pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
-        }
-        if (pickCardOrCampCard === `card`) {
-            const tavern: TavernCardTypes[] = G.taverns[G.currentTavern];
-            for (let i = 0; i < tavern.length; i++) {
-                const tavernCard: TavernCardTypes = tavern[i];
-                if (tavernCard === null) {
-                    continue;
-                }
-                if (tavern.some((card: TavernCardTypes): boolean =>
-                    CompareCards(tavernCard, card) < 0)) {
-                    continue;
-                }
-                const isCurrentCardWorse: boolean =
-                    EvaluateCard(G, ctx, tavernCard, i, tavern) < 0,
-                    isExistCardNotWorse: boolean =
-                        tavern.some((card: TavernCardTypes): boolean => (card !== null)
-                            && (EvaluateCard(G, ctx, tavernCard, i, tavern) >= 0));
-                if (isCurrentCardWorse && isExistCardNotWorse) {
-                    continue;
-                }
-                const uniqueArrLength: number = uniqueArr.length;
-                for (let j = 0; j < uniqueArrLength; j++) {
-                    const uniqueCard: DeckCardTypes = uniqueArr[j];
-                    if (isCardNotAction(tavernCard) && isCardNotAction(uniqueCard)
-                        && tavernCard.suit === uniqueCard.suit
-                        && CompareCards(tavernCard, uniqueCard) === 0) {
-                        flag = false;
-                        break;
-                    }
-                }
-                if (flag) {
-                    uniqueArr.push(tavernCard);
-                    moves.push({
-                        move: MoveNames.ClickCardMove,
-                        args: [i],
-                    });
-                }
-                flag = true;
-            }
-        } else {
-            for (let j = 0; j < G.campNum; j++) {
-                if (G.camp[j] !== null) {
-                    botMoveArguments.push([j]);
-                }
-            }
-            moves.push({
-                move: MoveNames.ClickCampCardMove,
-                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-            });
-        }
-    }
-    if (enableAdvancedBot && ctx.phase === Phases.PlaceCoins) {
-        moves = [];
-        const hasLowestPriority: boolean = HasLowestPriority(G, Number(ctx.currentPlayer));
-        let resultsForCoins: number[] = CheckHeuristicsForCoinsPlacement(G, ctx);
-        if (hasLowestPriority) {
-            resultsForCoins = resultsForCoins.map((num: number, index: number): number =>
-                index === 0 ? num - 20 : num);
-        }
-        const minResultForCoins: number = Math.min(...resultsForCoins),
-            maxResultForCoins: number = Math.max(...resultsForCoins),
-            tradingProfit: number = G.decks[G.decks.length - 1].length > 9 ? 1 : 0;
-        let [positionForMinCoin, positionForMaxCoin]: number[] = [-1, -1];
-        if (minResultForCoins <= 0) {
-            positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
-        }
-        if (maxResultForCoins >= 0) {
-            positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
-        }
-        const allCoinsOrder: number[][] = G.botData.allCoinsOrder,
-            handCoins: CoinType[] = G.publicPlayers[Number(ctx.currentPlayer)].handCoins;
-        for (let i = 0; i < allCoinsOrder.length; i++) {
-            const hasTrading: boolean =
-                allCoinsOrder[i].some((coinId: number): boolean =>
-                    Boolean(handCoins[coinId]?.isTriggerTrading));
-            if (tradingProfit < 0) {
-                if (hasTrading) {
-                    continue;
-                }
-                moves.push({
-                    move: MoveNames.BotsPlaceAllCoinsMove,
-                    args: [allCoinsOrder[i]],
-                });
-            } else if (tradingProfit > 0) {
-                if (!hasTrading) {
-                    continue;
-                }
-                const hasPositionForMaxCoin: boolean = positionForMaxCoin !== -1,
-                    hasPositionForMinCoin: boolean = positionForMinCoin !== -1,
-                    maxCoin: CoinType = handCoins[allCoinsOrder[i][positionForMaxCoin]],
-                    minCoin: CoinType = handCoins[allCoinsOrder[i][positionForMinCoin]];
-                if (maxCoin && minCoin) {
-                    let isTopCoinsOnPosition = false,
-                        isMinCoinsOnPosition = false;
-                    if (hasPositionForMaxCoin) {
-                        isTopCoinsOnPosition =
-                            allCoinsOrder[i].filter((coinIndex: number): boolean =>
-                                handCoins[coinIndex] !== null
-                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
-                    }
-                    if (hasPositionForMinCoin) {
-                        isMinCoinsOnPosition = handCoins.filter((coin: CoinType): boolean => coin !== null
-                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            && coin!.value < minCoin.value).length <= 1;
-                    }
-                    if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
-                        moves.push({
-                            move: MoveNames.BotsPlaceAllCoinsMove,
-                            args: [G.botData.allCoinsOrder[i]],
-                        });
-                        //console.log(`#` + i.toString().padStart(2) + `: ` + allCoinsOrder[i].map(item => handCoins[item].value));
-                    }
+                if (pickCardOrCampCard === `card`) {
+                    activeStageOfCurrentPlayer = Stages.Default1;
+                } else {
+                    activeStageOfCurrentPlayer = Stages.Default2;
                 }
             } else {
-                moves.push({
-                    move: MoveNames.BotsPlaceAllCoinsMove,
-                    args: [allCoinsOrder[i]],
-                });
-            }
-        }
-        //console.log(moves);
-    }
-    // TODO Fix it, now just for bot can do RANDOM move
-    if (activeStageOfCurrentPlayer === Stages.PlaceCards || ctx.phase === Phases.EndTier) {
-        PlaceCardsProfit(G, ctx, botMoveArguments);
-        moves.push({
-            move: MoveNames.PlaceCardMove,
-            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-        });
-    }
-    if (ctx.phase === Phases.GetMjollnirProfit) {
-        const totalSuitsRanks: number[] = [];
-        GetMjollnirProfitProfit(G, ctx, totalSuitsRanks);
-        botMoveArguments.push([Object.values(suitsConfig)[totalSuitsRanks
-            .indexOf(Math.max(...totalSuitsRanks))].suit]);
-        moves.push({
-            move: MoveNames.GetMjollnirProfitMove,
-            args: [...botMoveArguments[0]],
-        });
-    }
-    if (ctx.phase === Phases.BrisingamensEndGame) {
-        DiscardAnyCardFromPlayerBoardProfit(G, ctx, botMoveArguments);
-        moves.push({
-            move: MoveNames.DiscardCardFromPlayerBoardMove,
-            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-        });
-    }
-    if (ctx.phase === Phases.EnlistmentMercenaries) {
-        if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
-            StartEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
-            if (Math.floor(Math.random() * botMoveArguments.length) === 0) {
-                moves.push({
-                    move: MoveNames.StartEnlistmentMercenariesMove,
-                    args: [],
-                });
-            } else {
-                moves.push({
-                    move: MoveNames.PassEnlistmentMercenariesMove,
-                    args: [],
-                });
-            }
-        } else if (G.drawProfit === ConfigNames.EnlistmentMercenaries) {
-            GetEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
-            moves.push({
-                move: MoveNames.GetEnlistmentMercenariesMove,
-                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-            });
-        } else if (G.drawProfit === ConfigNames.PlaceEnlistmentMercenaries) {
-            PlaceEnlistmentMercenariesProfit(G, ctx, botMoveArguments);
-            moves.push({
-                move: MoveNames.PlaceEnlistmentMercenariesMove,
-                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-            });
-        }
-    }
-    if (ctx.phase === Phases.PlaceCoinsUline) {
-        for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-            if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
-                botMoveArguments.push([j]);
-            }
-        }
-        moves.push({
-            move: MoveNames.ClickHandCoinMove,
-            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-        });
-        moves.push({
-            move: MoveNames.ClickBoardCoinMove,
-            args: [G.currentTavern + 1],
-        });
-    }
-    if (activeStageOfCurrentPlayer === Stages.PlaceTradingCoinsUline) {
-        for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-            if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
-                botMoveArguments.push([j]);
-            }
-        }
-        moves.push({
-            move: MoveNames.ClickHandCoinMove,
-            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-        });
-        if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
-            moves.push({
-                move: MoveNames.ClickBoardCoinMove,
-                args: [G.tavernsNum + 1],
-            });
-        } else {
-            moves.push({
-                move: MoveNames.ClickBoardCoinMove,
-                args: [G.tavernsNum],
-            });
-        }
-    }
-    if (activeStageOfCurrentPlayer === Stages.AddCoinToPouch) {
-        AddCoinToPouchProfit(G, ctx, botMoveArguments);
-        moves.push({
-            move: MoveNames.AddCoinToPouchMove,
-            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-        });
-    }
-    if (activeStageOfCurrentPlayer === Stages.UpgradeCoinVidofnirVedrfolnir) {
-        UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, botMoveArguments);
-        moves.push({
-            move: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
-            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-        });
-    }
-    // TODO FIX It's not activeStageOfCurrentPlayer it's for Others players!!!
-    // if (ctx.activePlayers.find/findIndex === "discardSuitCard") {
-    if (ctx.activePlayers !== null && activeStageOfCurrentPlayer === `default`) {
-        // TODO Fix this (only for quick bot actions)
-        // TODO Bot can't do async turns...?
-        const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-        if (config !== undefined && config.suit !== undefined) {
-            for (let p = 0; p < G.publicPlayers.length; p++) {
-                if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
-                    for (let i = 0; i < G.publicPlayers[p].cards[config.suit].length; i++) {
-                        for (let j = 0; j < 1; j++) {
-                            if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
-                                if (G.publicPlayers[p].cards[config.suit][i].type !== RusCardTypes.HERO) {
-                                    const points: number | null = G.publicPlayers[p].cards[config.suit][i].points;
-                                    if (points !== null) {
-                                        botMoveArguments.push([points]);
+                // TODO Fix this (only for quick bot actions)
+                // TODO Bot can't do async turns...?
+                // TODO Move it to ProfitHelpers
+                const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
+                if (config !== undefined && config.suit !== undefined) {
+                    for (let p = 0; p < G.publicPlayers.length; p++) {
+                        if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
+                            for (let i = 0; i < G.publicPlayers[p].cards[config.suit].length; i++) {
+                                for (let j = 0; j < 1; j++) {
+                                    if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
+                                        if (G.publicPlayers[p].cards[config.suit][i].type !== RusCardTypes.HERO) {
+                                            const points: number | null = G.publicPlayers[p].cards[config.suit][i].points;
+                                            if (points !== null) {
+                                                // G.currentMoveArguments.push(points);
+                                            }
+                                        }
                                     }
                                 }
                             }
+                            const minValue: number = Math.min(...G.currentMoveArguments as unknown as number[]);
+                            const minCardIndex: number =
+                                G.publicPlayers[p].cards[config.suit].findIndex((card: PlayerCardsType): boolean =>
+                                    card.type !== RusCardTypes.HERO && card.points === minValue);
+                            if (minCardIndex !== -1) {
+                                // moves.push({
+                                //     move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
+                                //     args: [config.suit, p, minCardIndex],
+                                // });
+                                break;
+                            }
                         }
-                    }
-                    const minValue: number = Math.min(...botMoveArguments as unknown as number[]);
-                    const minCardIndex: number =
-                        G.publicPlayers[p].cards[config.suit].findIndex((card: PlayerCardsType): boolean =>
-                            card.type !== RusCardTypes.HERO && card.points === minValue);
-                    if (minCardIndex !== -1) {
-                        moves.push({
-                            move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-                            args: [config.suit, p, minCardIndex],
-                        });
-                        break;
                     }
                 }
             }
+        } else if (ctx.phase === Phases.EnlistmentMercenaries) {
+            if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
+                if (Math.floor(Math.random() * G.currentMoveArguments.length) === 0) {
+                    activeStageOfCurrentPlayer = Stages.Default1;
+                } else {
+                    activeStageOfCurrentPlayer = Stages.Default2;
+                }
+            } else if (G.drawProfit === ConfigNames.EnlistmentMercenaries) {
+                activeStageOfCurrentPlayer = Stages.Default3;
+            } else if (G.drawProfit === ConfigNames.PlaceEnlistmentMercenaries) {
+                activeStageOfCurrentPlayer = Stages.Default4;
+            }
+        }
+    } else {
+        if (activeStageOfCurrentPlayer === Stages.PlaceTradingCoinsUline) {
+            if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
+                moves.push({
+                    move: MoveNames.ClickBoardCoinMove,
+                    args: [G.tavernsNum + 1],
+                });
+            } else {
+                moves.push({
+                    move: MoveNames.ClickBoardCoinMove,
+                    args: [G.tavernsNum],
+                });
+            }
         }
     }
-    if (activeStageOfCurrentPlayer === Stages.DiscardCardFromBoard) {
-        DiscardCardFromBoardProfit(G, ctx, botMoveArguments);
-        moves.push({
-            move: MoveNames.DiscardCardMove,
-            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-        });
-    }
-    if (activeStageOfCurrentPlayer === Stages.PickDiscardCard) {
-        PickDiscardCardProfit(G, ctx, botMoveArguments);
-        moves.push({
-            move: MoveNames.PickDiscardCardMove,
-            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-        });
-    }
-    if (ctx.numPlayers === 2) {
-        if (activeStageOfCurrentPlayer === Stages.DiscardCard) {
-            DiscardCardProfit(G, ctx, botMoveArguments);
-            moves.push({
-                move: MoveNames.DiscardCard2PlayersMove,
-                args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-            });
+    // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
+    const moveName: string = moveBy[ctx.phase][activeStageOfCurrentPlayer],
+        moveValue: ValidMoveIdParam = moveValidators[moveName].getValue(G, ctx);
+    let moveValues: MoveArgsTypes = [];
+    if (typeof moveValue === `number`) {
+        moveValues = [moveValue];
+    } else if (typeof moveValue === `string`) {
+        moveValues = [moveValue];
+    } else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
+        if (`suit` in moveValue) {
+            moveValues = [moveValue.suit, moveValue.cardId];
+        } else if (`coinId` in moveValue) {
+            moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
         }
+    } else if (moveValue === null) {
+        moveValues = [];
     }
-    if (activeStageOfCurrentPlayer === Stages.PickCampCardHolda) {
-        PickCampCardHoldaProfit(G, ctx, botMoveArguments);
-        moves.push({
-            move: MoveNames.ClickCampCardHoldaMove,
-            args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
-        });
-    }
+    moves.push({
+        move: moveName,
+        args: moveValues,
+    });
     if (moves.length === 0 && ctx.phase !== null) {
         console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
     }

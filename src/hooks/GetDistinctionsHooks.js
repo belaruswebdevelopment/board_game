@@ -1,5 +1,7 @@
-import { RefillCamp } from "../Camp";
 import { CheckDistinction } from "../Distinction";
+import { AddGetDistinctionsActionToStack } from "../helpers/ActionHelpers";
+import { RefillCamp } from "../helpers/CampHelpers";
+import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'getDistinctions'.</h3>
  * <p>Применения:</p>
@@ -10,7 +12,7 @@ import { CheckDistinction } from "../Distinction";
  * @param G
  * @param ctx
  */
-export const CheckAndResolveDistinctionOrders = (G, ctx) => {
+export const CheckAndResolveDistinctionsOrders = (G, ctx) => {
     CheckDistinction(G, ctx);
     const distinctions = Object.values(G.distinctions).filter((distinction) => distinction !== null && distinction !== undefined);
     if (distinctions.every((distinction) => distinction !== null && distinction !== undefined)) {
@@ -28,7 +30,7 @@ export const CheckAndResolveDistinctionOrders = (G, ctx) => {
 * @param ctx
  * @returns
  */
-export const CheckEndDistinctionsPhase = (G, ctx) => {
+export const CheckEndGetDistinctionsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
         if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
             return Object.values(G.distinctions).every((distinction) => distinction === undefined);
@@ -45,10 +47,8 @@ export const CheckEndDistinctionsPhase = (G, ctx) => {
  * @param G
  * @param ctx
  */
-export const CheckNextDistinctionTurn = (G, ctx) => {
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        return true;
-    }
+export const CheckNextGetDistinctionsTurn = (G, ctx) => {
+    return EndTurnActions(G, ctx);
 };
 /**
  * <h3>Действия при завершении фазы 'getDistinctions'.</h3>
@@ -59,10 +59,19 @@ export const CheckNextDistinctionTurn = (G, ctx) => {
  *
  * @param G
  */
-export const EndDistinctionPhaseActions = (G) => {
+export const EndGetDistinctionsPhaseActions = (G) => {
     if (G.expansions.thingvellir.active) {
         RefillCamp(G);
     }
     G.publicPlayersOrder = [];
+};
+export const OnGetDistinctionsMove = (G, ctx) => {
+    StartOrEndActions(G, ctx);
+};
+export const OnGetDistinctionsTurnBegin = (G, ctx) => {
+    AddGetDistinctionsActionToStack(G, ctx);
+};
+export const OnGetDistinctionsTurnEnd = (G, ctx) => {
+    ClearPlayerPickedCard(G, ctx);
 };
 //# sourceMappingURL=GetDistinctionsHooks.js.map

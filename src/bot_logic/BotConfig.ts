@@ -6,7 +6,7 @@ import { DeckCardTypes, TavernCardTypes } from "../typescript/card_types";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
-// TODO Fix reurn types & move to interfaces
+// TODO Fix all types & move {...} to interfaces
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -19,7 +19,7 @@ import { CompareCards, EvaluateCard } from "./BotCardLogic";
  * @param ctx
  * @returns
  */
-export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx) => {
+export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): number[] => {
     const taverns: TavernCardTypes[][] = G.taverns/*,
         averageCards: ICard[] = G.averageCards*/;
     let result: number[] = Array(taverns.length).fill(0);
@@ -63,8 +63,13 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx) => {
  * @param stat2
  * @returns
  */
-const CompareCharacteristics = (stat1: { variation: number, mean: number; },
-    stat2: { variation: number, mean: number; }): number => {
+const CompareCharacteristics = (stat1: {
+    variation: number,
+    mean: number,
+}, stat2: {
+    variation: number,
+    mean: number,
+}): number => {
     const eps = 0.0001,
         tempVariation: number = stat1.variation - stat2.variation;
     if (Math.abs(tempVariation) < eps) {
@@ -85,7 +90,7 @@ const CompareCharacteristics = (stat1: { variation: number, mean: number; },
  * @param playersNum
  * @returns
  */
-export const GetAllPicks = ({ tavernsNum, playersNum }: { tavernsNum: number, playersNum: number; }): unknown => {
+export const GetAllPicks = (tavernsNum: number, playersNum: number): unknown => {
     const temp: number[][] = [],
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         cartesian = (...a: any) => {

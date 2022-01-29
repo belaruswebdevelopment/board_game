@@ -1,16 +1,35 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { DrawProfitCampAction, GetEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/CampActions";
-import { StartActionForChosenPlayer, StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
-import { AddActionsToStack, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { AddCoinToPouchAction, DiscardSuitCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
+import { isArtefactCard } from "../Camp";
+import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
+import { AddCampCardToCards } from "../helpers/CampMovesHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { IStack } from "../typescript/action_interfaces";
 import { CampCardTypes } from "../typescript/card_types";
-import { ActionTypes, ConfigNames, DrawNames, LogTypes } from "../typescript/enums";
+import { LogTypes, Stages } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 
-// TODO Add logging
+/**
+ * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При клике по монете.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ */
+export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number): string | void => {
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.AddCoinToPouch, coinId);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    AddCoinToPouchAction(G, ctx, coinId);
+};
+
 /**
  * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
  * <p>Применения:</p>
@@ -23,15 +42,21 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @param cardId Id выбираемой карты из кэмпа.
  * @returns
  */
-export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
-    const isValidMove: boolean = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
-        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime);
+export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+    string | void => {
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.PickCampCardHolda, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
+    // TODO Move to function with Camp same logic
     const campCard: CampCardTypes = G.camp[cardId];
     if (campCard !== null) {
-        EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
+        G.camp[cardId] = null;
+        AddCampCardToCards(G, ctx, campCard);
+        if (isArtefactCard(campCard)) {
+            StartAutoAction(G, ctx, campCard.actions);
+            AddActionsToStackAfterCurrent(G, ctx, campCard.stack);
+        }
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
     }
@@ -50,51 +75,22 @@ export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx:
  * @returns
  */
 export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
-    const isValidMove: boolean = IsValidMove({ obj: G.camp[cardId], objId: cardId, range: [0, G.camp.length] })
-        && G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
-            || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.Default2, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const card: CampCardTypes = G.camp[cardId];
-    if (card !== null) {
-        AddActionsToStack(G, ctx, card.stack);
-        StartActionFromStackOrEndActions(G, ctx, false, cardId);
+    // TODO Move to function with Holda same logic
+    const campCard: CampCardTypes = G.camp[cardId];
+    if (campCard !== null) {
+        G.camp[cardId] = null;
+        AddCampCardToCards(G, ctx, campCard);
+        if (isArtefactCard(campCard)) {
+            StartAutoAction(G, ctx, campCard.actions);
+            AddActionsToStackAfterCurrent(G, ctx, campCard.stack);
+        }
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
     }
-};
-
-/**
- * <h3>Сбрасывает карту в дискард в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param suit Название фракции.
- * @param cardId Id сбрасываемой карты.
- */
-export const DiscardCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string,
-    cardId: number): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], suit, cardId);
-};
-
-/**
- * <h3>Сбрасывает карту из таверны при выборе карты из кэмпа на двоих игроков.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Применяется при выборе первым игроком карты из кэмпа.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param cardId Id сбрасываемой карты.
- */
-export const DiscardCard2PlayersMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], cardId);
 };
 
 /**
@@ -113,6 +109,11 @@ export const DiscardCard2PlayersMove: Move<IMyGameState> = (G: IMyGameState, ctx
  */
 export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string,
     playerId: number, cardId: number): string | void => {
+    // TODO Or [suit, cardId]!?
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.DiscardSuitCard, cardId);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
     // TODO Uncomment it for players and fix it for bots
     /*let isValidMove: boolean = false;
     if (ctx.playerID !== undefined) {
@@ -123,92 +124,32 @@ export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGam
     if (!isValidMove) {
         return INVALID_MOVE;
     }*/
-    StartActionForChosenPlayer(G, ctx, playerId, suit, playerId, cardId);
+    DiscardSuitCardAction(G, ctx, suit, playerId, cardId);
 };
 
 /**
- * <h3>Выбор игроком карты наёмника для вербовки.</h3>
+ * <h3>Выбор монеты для улучшения по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе какую карту наёмника будет вербовать игрок.</li>
+ * <li>При клике по монете.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param cardId Id карты.
+ * @param coinId Id монеты.
+ * @param type Тип монеты.
+ * @param isInitial Является ли базовой.
+ * @returns
  */
-export const GetEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
-    const stack: IStack[] = [
-        {
-            action: {
-                name: GetEnlistmentMercenariesAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack, cardId);
-};
-
-/**
- * <h3>Выбирает фракцию для применения финального эффекта артефакта Mjollnir.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>В конце игры при выборе игроком фракции для применения финального эффекта артефакта Mjollnir.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param suit Название фракции.
- */
-export const GetMjollnirProfitMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], suit);
-};
-
-/**
- * <h3>Выбор фракции куда будет завербован наёмник.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе фракции, куда будет завербован наёмник.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param suit Название фракции.
- */
-export const PlaceEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string): void => {
-    const stack: IStack[] = [
-        {
-            action: {
-                name: PlaceEnlistmentMercenariesAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack, suit);
-};
-
-/**
- * <h3>Начало вербовки наёмников.</li>
- * <p>Применения:</p>
- * <ol>
- * <li>Первый игрок в начале фазы вербовки наёмников выбирает старт вербовки.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const StartEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx): void => {
-    const stack: IStack[] = [
-        {
-            action: {
-                name: DrawProfitCampAction.name,
-                type: ActionTypes.Camp,
-            },
-            config: {
-                name: ConfigNames.EnlistmentMercenaries,
-                drawName: DrawNames.EnlistmentMercenaries,
-            },
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack);
+export const UpgradeCoinVidofnirVedrfolnirMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
+    type: string, isInitial: boolean): string | void => {
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
+        coinId,
+        type,
+        isInitial
+    });
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    UpgradeCoinVidofnirVedrfolnirAction(G, ctx, coinId, type, isInitial);
 };

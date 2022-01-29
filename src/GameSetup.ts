@@ -16,9 +16,11 @@ import { IAverageCard, IAverageSuitCardData, IBotData } from "./typescript/bot_i
 import { CampDeckCardTypes, DeckCardTypes } from "./typescript/card_types";
 import { ICoin } from "./typescript/coin_interfaces";
 import { IDistinctions } from "./typescript/distinction_interfaces";
+import { Phases, Stages } from "./typescript/enums";
 import { IExpansion, ILogData, IMyGameState } from "./typescript/game_data_interfaces";
 import { IHero } from "./typescript/hero_card_interfaces";
 import { IDeckConfig } from "./typescript/interfaces";
+import { ICurrentMoveArguments } from "./typescript/move_interfaces";
 import { IPlayers, IPublicPlayer } from "./typescript/player_interfaces";
 import { IPriority } from "./typescript/priority_interfaces";
 
@@ -46,6 +48,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
                 active: true,
             },
         },
+        currentMoveArguments: ICurrentMoveArguments[] = [],
         totalScore: number[] = [],
         logData: ILogData[] = [],
         decks: DeckCardTypes[][] = [],
@@ -134,10 +137,13 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     }
     const botData: IBotData = {
         allCoinsOrder,
-        allPicks: GetAllPicks({ tavernsNum, playersNum: ctx.numPlayers }),
+        allPicks: GetAllPicks(tavernsNum, ctx.numPlayers),
         maxIter: 1000,
         deckLength: decks[0].length,
     };
+    for (let i = 0; i < ctx.numPlayers; i++) {
+        currentMoveArguments[i].phases[Phases.PlaceCoins][Stages.Default3].arrayNumbers = allCoinsOrder;
+    }
     return {
         actionsNum,
         averageCards,
@@ -146,6 +152,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         campDecks,
         campNum,
         campPicked,
+        currentMoveArguments,
         currentTavern,
         debug,
         decks,

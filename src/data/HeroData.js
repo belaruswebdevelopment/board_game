@@ -1,7 +1,8 @@
-import { AddBuffToPlayerHeroAction, AddHeroToCardsAction, CheckDiscardCardsFromPlayerBoardAction, CheckPickCampCardAction, CheckPickDiscardCardHeroAction, DiscardCardsFromPlayerBoardAction, DrawProfitHeroAction, GetClosedCoinIntoPlayerHandAction, PickDiscardCardHeroAction, PickHeroWithConditionsAction, PlaceCardsAction, PlaceHeroAction, UpgradeCoinHeroAction } from "../actions/HeroActions";
+import { GetClosedCoinIntoPlayerHandAction, UpgradeCoinAction } from "../actions/AutoActions";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { ActionTypes, BuffNames, ConfigNames, DrawNames, HeroNames, Stages, SuitNames } from "../typescript/enums";
+import { BuffNames, DrawNames, HeroNames, SuitNames } from "../typescript/enums";
+import { StackData } from "./StackData";
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -16,17 +17,6 @@ const Aegur = {
     suit: SuitNames.BLACKSMITH,
     rank: 2,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Aegur,
-            },
-        },
-    ],
     scoringRule: () => 0,
 };
 /**
@@ -44,38 +34,13 @@ const Andumia = {
     rank: null,
     points: 12,
     stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Andumia,
-            },
-        },
-        {
-            action: {
-                name: CheckPickDiscardCardHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-        },
-        {
-            action: {
-                name: DrawProfitHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                stageName: Stages.PickDiscardCard,
-                drawName: DrawNames.Andumia,
-                name: ConfigNames.AndumiaAction,
-            },
-        },
-        {
-            action: {
-                name: PickDiscardCardHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-        },
+        // TODO Move to validator!
+        // {
+        //     action: {
+        //         name: CheckPickDiscardCardHeroAction.name,
+        //     },
+        // },
+        StackData.pickDiscardCardAndumia()
     ],
     scoringRule: () => 12,
 };
@@ -93,17 +58,6 @@ const Aral = {
     suit: SuitNames.HUNTER,
     rank: 2,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Aral,
-            },
-        },
-    ],
     scoringRule: () => 0,
 };
 /**
@@ -120,17 +74,6 @@ const Astrid = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Astrid,
-            },
-        },
-    ],
     scoringRule: (player) => player !== undefined ? GetMaxCoinValue(player) : 0,
 };
 /**
@@ -147,47 +90,12 @@ const Bonfur = {
     suit: SuitNames.BLACKSMITH,
     rank: 3,
     points: null,
-    stack: [
-        {
-            action: {
-                name: CheckDiscardCardsFromPlayerBoardAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                suit: SuitNames.BLACKSMITH,
-            },
+    validators: {
+        discardCard: {
+            suit: SuitNames.BLACKSMITH,
         },
-        {
-            action: {
-                name: DrawProfitHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                stageName: Stages.DiscardCardFromBoard,
-                drawName: DrawNames.Bonfur,
-                name: ConfigNames.BonfurAction,
-                suit: SuitNames.BLACKSMITH,
-            },
-        },
-        {
-            action: {
-                name: DiscardCardsFromPlayerBoardAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                suit: SuitNames.BLACKSMITH,
-            },
-        },
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Bonfur,
-            },
-        },
-    ],
+    },
+    stack: [StackData.discardCardFromBoardBonfur()],
     scoringRule: () => 0,
 };
 /**
@@ -204,46 +112,13 @@ const Dagda = {
     suit: SuitNames.HUNTER,
     rank: 3,
     points: null,
-    stack: [
-        {
-            action: {
-                name: CheckDiscardCardsFromPlayerBoardAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                suit: SuitNames.HUNTER,
-                number: 2,
-            },
+    validators: {
+        discardCard: {
+            suit: SuitNames.BLACKSMITH,
+            number: 2,
         },
-        {
-            action: {
-                name: DrawProfitHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                stageName: Stages.DiscardCardFromBoard,
-                drawName: DrawNames.Dagda,
-                name: ConfigNames.DagdaAction,
-                suit: SuitNames.HUNTER,
-                number: 2,
-            },
-        },
-        {
-            action: {
-                name: DiscardCardsFromPlayerBoardAction.name,
-                type: ActionTypes.Hero,
-            },
-        },
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Dagda,
-            },
-        },
-    ],
+    },
+    stack: [StackData.discardCardFromBoardDagda(2)],
     scoringRule: () => 0,
 };
 /**
@@ -260,17 +135,6 @@ const Dwerg_Aesir = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Dwerg_Aesir,
-            },
-        },
-    ],
     scoringRule: () => 1,
 };
 /**
@@ -287,17 +151,6 @@ const Dwerg_Bergelmir = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Dwerg_Bergelmir,
-            },
-        },
-    ],
     scoringRule: () => 1,
 };
 /**
@@ -314,17 +167,6 @@ const Dwerg_Jungir = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Dwerg_Jungir,
-            },
-        },
-    ],
     scoringRule: () => 1,
 };
 /**
@@ -341,17 +183,6 @@ const Dwerg_Sigmir = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Dwerg_Sigmir,
-            },
-        },
-    ],
     scoringRule: () => 1,
 };
 /**
@@ -368,17 +199,6 @@ const Dwerg_Ymir = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Dwerg_Ymir,
-            },
-        },
-    ],
     scoringRule: () => 1,
 };
 /**
@@ -395,38 +215,7 @@ const Grid = {
     suit: null,
     rank: null,
     points: 7,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Grid,
-            },
-        },
-        {
-            action: {
-                name: DrawProfitHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                stageName: Stages.UpgradeCoin,
-                drawName: DrawNames.Grid,
-                name: ConfigNames.UpgradeCoin,
-                value: 7,
-            },
-        },
-        {
-            action: {
-                name: UpgradeCoinHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                value: 7,
-            },
-        },
-    ],
+    stack: [StackData.upgradeCoin(7)],
     scoringRule: () => 7,
 };
 // TODO Check Если, размещая карты в конце эпох, игрок призывает героя ХОЛЬДУ и благодаря её эффекту берёт карту наёмника из лагеря, то он сразу же кладёт эту карту в армию, а не в командную зону.
@@ -444,45 +233,19 @@ const Holda = {
     suit: null,
     rank: null,
     points: 12,
+    buff: {
+        name: BuffNames.GoCampOneTime,
+        value: true,
+    },
     stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Holda,
-            },
-        },
-        {
-            action: {
-                name: AddBuffToPlayerHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                buff: {
-                    name: BuffNames.GoCampOneTime,
-                    value: true,
-                },
-            },
-        },
-        {
-            action: {
-                name: CheckPickCampCardAction.name,
-                type: ActionTypes.Hero,
-            },
-        },
-        {
-            action: {
-                name: DrawProfitHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                stageName: Stages.PickCampCardHolda,
-                drawName: DrawNames.Holda,
-                name: ConfigNames.HoldaAction,
-            },
-        },
+        //TODO Move to validator!
+        // {
+        //     action: {
+        //         name: CheckPickCampCardAction.name,
+        //     },
+        // },
+        // TODO Fix it PickHeroAction?
+        StackData.pickCampCardHolda()
     ],
     scoringRule: () => 12,
 };
@@ -500,31 +263,14 @@ const Hourya = {
     suit: SuitNames.EXPLORER,
     rank: 1,
     points: 20,
-    stack: [
-        {
-            action: {
-                name: PickHeroWithConditionsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                conditions: {
-                    suitCountMin: {
-                        suit: SuitNames.EXPLORER,
-                        value: 5,
-                    },
-                },
+    validators: {
+        conditions: {
+            suitCountMin: {
+                suit: SuitNames.EXPLORER,
+                value: 5,
             },
         },
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Hourya,
-            },
-        },
-    ],
+    },
     scoringRule: () => 0,
 };
 /**
@@ -541,17 +287,6 @@ const Idunn = {
     suit: SuitNames.EXPLORER,
     rank: 1,
     points: 7,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Idunn,
-            },
-        },
-    ],
     scoringRule: (player) => player !== undefined ?
         player.cards[SuitNames.EXPLORER].reduce(TotalRank, 0) * 2 : 0,
 };
@@ -569,29 +304,10 @@ const Jarika = {
     suit: null,
     rank: null,
     points: 8,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Jarika,
-            },
-        },
-        {
-            action: {
-                name: AddBuffToPlayerHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                buff: {
-                    name: BuffNames.UpgradeCoin,
-                    value: 2,
-                },
-            },
-        },
-    ],
+    buff: {
+        name: BuffNames.UpgradeCoin,
+        value: 2,
+    },
     scoringRule: () => 8,
 };
 /**
@@ -608,27 +324,14 @@ const Khrad = {
     suit: null,
     rank: null,
     points: 4,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Khrad,
-            },
-        },
-        {
-            action: {
-                name: UpgradeCoinHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                value: 10,
-                coin: `min`,
-            },
-        },
-    ],
+    buff: {
+        name: BuffNames.Coin,
+        value: `min`,
+    },
+    actions: {
+        name: UpgradeCoinAction.name,
+        params: [10],
+    },
     scoringRule: () => 4,
 };
 /**
@@ -645,17 +348,6 @@ const Kraal = {
     suit: SuitNames.WARRIOR,
     rank: 2,
     points: 7,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Kraal,
-            },
-        },
-    ],
     scoringRule: () => 0,
 };
 /**
@@ -672,17 +364,6 @@ const Lokdur = {
     suit: SuitNames.MINER,
     rank: 1,
     points: 3,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Lokdur,
-            },
-        },
-    ],
     scoringRule: () => 0,
 };
 /**
@@ -699,89 +380,7 @@ const Olwin = {
     suit: null,
     rank: null,
     points: 9,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Olwin,
-            },
-        },
-        {
-            action: {
-                name: DrawProfitHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            variants: {
-                blacksmith: {
-                    suit: SuitNames.BLACKSMITH,
-                    rank: 1,
-                    points: null,
-                },
-                hunter: {
-                    suit: SuitNames.HUNTER,
-                    rank: 1,
-                    points: null,
-                },
-                explorer: {
-                    suit: SuitNames.EXPLORER,
-                    rank: 1,
-                    points: 0,
-                },
-                warrior: {
-                    suit: SuitNames.WARRIOR,
-                    rank: 1,
-                    points: 0,
-                },
-                miner: {
-                    suit: SuitNames.MINER,
-                    rank: 1,
-                    points: 0,
-                },
-            },
-            config: {
-                stageName: Stages.PlaceCards,
-                drawName: DrawNames.Olwin,
-                name: ConfigNames.PlaceCards,
-                number: 2,
-            },
-        },
-        {
-            action: {
-                name: PlaceCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            variants: {
-                blacksmith: {
-                    suit: SuitNames.BLACKSMITH,
-                    rank: 1,
-                    points: null,
-                },
-                hunter: {
-                    suit: SuitNames.HUNTER,
-                    rank: 1,
-                    points: null,
-                },
-                explorer: {
-                    suit: SuitNames.EXPLORER,
-                    rank: 1,
-                    points: 0,
-                },
-                warrior: {
-                    suit: SuitNames.WARRIOR,
-                    rank: 1,
-                    points: 0,
-                },
-                miner: {
-                    suit: SuitNames.MINER,
-                    rank: 1,
-                    points: 0,
-                },
-            },
-        },
-    ],
+    stack: [StackData.placeCardsOlwin(2)],
     scoringRule: () => 9,
 };
 /**
@@ -798,17 +397,6 @@ const Skaa = {
     suit: null,
     rank: null,
     points: 17,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Skaa,
-            },
-        },
-    ],
     scoringRule: () => 17,
 };
 /**
@@ -825,17 +413,6 @@ const Tarah = {
     suit: SuitNames.WARRIOR,
     rank: 1,
     points: 14,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Tarah,
-            },
-        },
-    ],
     scoringRule: () => 0,
 };
 /**
@@ -852,91 +429,7 @@ const Thrud = {
     suit: null,
     rank: null,
     points: 13,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Thrud,
-            },
-        },
-        {
-            action: {
-                name: DrawProfitHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            variants: {
-                blacksmith: {
-                    suit: SuitNames.BLACKSMITH,
-                    rank: 1,
-                    points: null,
-                },
-                hunter: {
-                    suit: SuitNames.HUNTER,
-                    rank: 1,
-                    points: null,
-                },
-                explorer: {
-                    suit: SuitNames.EXPLORER,
-                    rank: 1,
-                    points: null,
-                },
-                warrior: {
-                    suit: SuitNames.WARRIOR,
-                    rank: 1,
-                    points: null,
-                },
-                miner: {
-                    suit: SuitNames.MINER,
-                    rank: 1,
-                    points: null,
-                },
-            },
-            config: {
-                stageName: Stages.PlaceCards,
-                name: ConfigNames.PlaceCards,
-                drawName: DrawNames.Thrud,
-            },
-        },
-        {
-            action: {
-                name: PlaceHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            variants: {
-                blacksmith: {
-                    suit: SuitNames.BLACKSMITH,
-                    rank: 1,
-                    points: null,
-                },
-                hunter: {
-                    suit: SuitNames.HUNTER,
-                    rank: 1,
-                    points: null,
-                },
-                explorer: {
-                    suit: SuitNames.EXPLORER,
-                    rank: 1,
-                    points: null,
-                },
-                warrior: {
-                    suit: SuitNames.WARRIOR,
-                    rank: 1,
-                    points: null,
-                },
-                miner: {
-                    suit: SuitNames.MINER,
-                    rank: 1,
-                    points: null,
-                },
-            },
-            config: {
-                name: HeroNames.Thrud,
-            },
-        },
-    ],
+    stack: [StackData.placeCardsThrud()],
     scoringRule: () => 13,
 };
 /**
@@ -953,35 +446,13 @@ const Uline = {
     suit: null,
     rank: null,
     points: 9,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Uline,
-            },
-        },
-        {
-            action: {
-                name: AddBuffToPlayerHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                buff: {
-                    name: BuffNames.EveryTurn,
-                    value: HeroNames.Uline,
-                },
-            },
-        },
-        {
-            action: {
-                name: GetClosedCoinIntoPlayerHandAction.name,
-                type: ActionTypes.Hero,
-            },
-        },
-    ],
+    actions: {
+        name: GetClosedCoinIntoPlayerHandAction.name,
+    },
+    buff: {
+        name: BuffNames.EveryTurn,
+        value: HeroNames.Uline,
+    },
     scoringRule: () => 9,
 };
 /**
@@ -998,29 +469,10 @@ const Ylud = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Ylud,
-            },
-        },
-        {
-            action: {
-                name: AddBuffToPlayerHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                buff: {
-                    name: BuffNames.EndTier,
-                    value: DrawNames.Ylud,
-                },
-            },
-        },
-    ],
+    buff: {
+        name: BuffNames.EndTier,
+        value: DrawNames.Ylud,
+    },
     scoringRule: () => 0,
 };
 /**
@@ -1037,29 +489,10 @@ const Zolkur = {
     suit: null,
     rank: null,
     points: 10,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Zolkur,
-            },
-        },
-        {
-            action: {
-                name: AddBuffToPlayerHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                buff: {
-                    name: BuffNames.UpgradeNextCoin,
-                    value: `min`,
-                },
-            },
-        },
-    ],
+    buff: {
+        name: BuffNames.UpgradeNextCoin,
+        value: `min`,
+    },
     scoringRule: () => 10,
 };
 /**
@@ -1076,17 +509,6 @@ const Zoral = {
     suit: SuitNames.MINER,
     rank: 3,
     points: 1,
-    stack: [
-        {
-            action: {
-                name: AddHeroToCardsAction.name,
-                type: ActionTypes.Hero,
-            },
-            config: {
-                drawName: DrawNames.Zoral,
-            },
-        },
-    ],
     scoringRule: () => 0,
 };
 /**
@@ -1097,32 +519,32 @@ const Zoral = {
  * </ol>
  */
 export const heroesConfig = {
-    Aegur,
-    Andumia,
+    Kraal,
+    Tarah,
     Aral,
-    Astrid,
-    Bonfur,
     Dagda,
+    Lokdur,
+    Zoral,
+    Aegur,
+    Bonfur,
+    Hourya,
+    Idunn,
+    Astrid,
     Dwerg_Aesir,
     Dwerg_Bergelmir,
     Dwerg_Jungir,
     Dwerg_Sigmir,
     Dwerg_Ymir,
     Grid,
-    Holda,
-    Hourya,
-    Idunn,
-    Jarika,
-    Khrad,
-    Kraal,
-    Lokdur,
-    Olwin,
     Skaa,
-    Tarah,
     Thrud,
     Uline,
     Ylud,
+    Jarika,
+    Andumia,
+    Holda,
+    Khrad,
+    Olwin,
     Zolkur,
-    Zoral,
 };
 //# sourceMappingURL=HeroData.js.map

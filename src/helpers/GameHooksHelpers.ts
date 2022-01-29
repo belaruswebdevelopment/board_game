@@ -3,8 +3,9 @@ import { AddDataToLog } from "../Logging";
 import { CampDeckCardTypes, PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { DrawNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages } from "../typescript/enums";
-import { INext, IMyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState, INext } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
+import { DrawCurrentProfit } from "./ActionHelpers";
 
 /**
  * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
@@ -16,7 +17,7 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
  * @param G
  * @param ctx
  */
-export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): void | INext => {
+export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): boolean | INext => {
     if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
         if (G.expansions.thingvellir.active) {
             return CheckEnlistmentMercenaries(G, ctx);
@@ -99,39 +100,33 @@ export const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): 
  * @param G
  * @param ctx
  */
-export const CheckEndGameLastActions = (G: IMyGameState, ctx: Ctx): void | INext => {
+export const CheckEndGameLastActions = (G: IMyGameState, ctx: Ctx): boolean | INext => {
     if (!G.decks[0].length && G.decks[1].length) {
         return {
             next: Phases.GetDistinctions,
         };
     } else {
-        let isNewPhase = false,
-            buffIndex: number;
+        let buffIndex: number;
         if (G.expansions.thingvellir.active) {
             if (ctx.phase !== Phases.BrisingamensEndGame && ctx.phase !== Phases.GetMjollnirProfit) {
                 buffIndex = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
                     Boolean(player.buffs.discardCardEndGame));
                 if (buffIndex !== -1) {
-                    isNewPhase = true;
                     return {
                         next: Phases.BrisingamensEndGame,
                     };
                 }
-            }
-            if (ctx.phase !== Phases.GetMjollnirProfit && !isNewPhase) {
+            } else if (ctx.phase !== Phases.GetMjollnirProfit) {
                 buffIndex = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
                     Boolean(player.buffs.getMjollnirProfit));
                 if (buffIndex !== -1) {
-                    isNewPhase = true;
                     return {
                         next: Phases.GetMjollnirProfit,
                     };
                 }
             }
         }
-        if (!isNewPhase) {
-            EndGame(ctx);
-        }
+        return true;
     }
 };
 
@@ -146,7 +141,7 @@ export const CheckEndGameLastActions = (G: IMyGameState, ctx: Ctx): void | INext
 * @param G
 * @param ctx
 */
-export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState, ctx: Ctx): void | INext => {
+export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState, ctx: Ctx): boolean | INext => {
     const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
         player.buffs.endTier === DrawNames.Ylud);
     if (yludIndex !== -1) {
@@ -168,7 +163,7 @@ export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState, ctx: Ct
  * @param G
  * @param ctx
  */
-const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): void | INext => {
+const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): boolean | INext => {
     let count = false;
     for (let i = 0; i < G.publicPlayers.length; i++) {
         if (G.publicPlayers[i].campCards
@@ -186,6 +181,14 @@ const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): void | INext => 
     }
 };
 
+export const StartOrEndActions = (G: IMyGameState, ctx: Ctx): void => {
+    if (G.actionsNum) {
+        G.actionsNum--;
+    }
+    G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
+    DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
+};
+
 /**
  * <h3>Завершает игру.</h3>
  * <p>Применения:</p>
@@ -196,8 +199,19 @@ const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): void | INext => 
  * @param ctx
  */
 export const EndGame = (ctx: Ctx): void => {
-    ctx.events?.endPhase();
     ctx.events?.endGame();
+};
+
+export const EndTurnActions = (G: IMyGameState, ctx: Ctx): boolean | void => {
+    if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
+        if (!G.actionsNum) {
+            return true;
+        }
+    }
+};
+
+export const ClearPlayerPickedCard = (G: IMyGameState, ctx: Ctx): void => {
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
 };
 
 /**

@@ -1,8 +1,6 @@
-import { UpgradeCoinAction } from "../actions/Actions";
+import { UpgradeCoinAction } from "../actions/AutoActions";
 import { AddDataToLog } from "../Logging";
-import { ActionTypes, LogTypes } from "../typescript/enums";
-import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
-import { AddActionsToStack } from "./StackHelpers";
+import { LogTypes } from "../typescript/enums";
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
@@ -39,7 +37,7 @@ export const ActivateTrading = (G, ctx) => {
  */
 const Trading = (G, ctx, tradingCoins) => {
     const coinsValues = tradingCoins.map((coin) => coin.value), coinsMaxValue = Math.max(...coinsValues), coinsMinValue = Math.min(...coinsValues);
-    let stack, upgradingCoinId, upgradingCoin, coinMaxIndex = 0, coinMinIndex = 0;
+    let upgradingCoinId, upgradingCoin, coinMaxIndex = 0, coinMinIndex = 0, value;
     AddDataToLog(G, LogTypes.GAME, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
     // TODO trading isInitial first or playerChoose?
     for (let i = 0; i < tradingCoins.length; i++) {
@@ -57,40 +55,15 @@ const Trading = (G, ctx, tradingCoins) => {
         }
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin === `min`) {
-        stack = [
-            {
-                action: {
-                    name: UpgradeCoinAction.name,
-                    type: ActionTypes.Action,
-                },
-                config: {
-                    number: 1,
-                    value: coinsMaxValue,
-                    isTrading: true,
-                },
-            },
-        ];
+        value = coinsMaxValue;
         upgradingCoinId = G.tavernsNum + coinMinIndex;
         upgradingCoin = tradingCoins[coinMinIndex];
     }
     else {
-        stack = [
-            {
-                action: {
-                    name: UpgradeCoinAction.name,
-                    type: ActionTypes.Action,
-                },
-                config: {
-                    number: 1,
-                    value: coinsMinValue,
-                    isTrading: true,
-                },
-            },
-        ];
+        value = coinsMinValue;
         upgradingCoinId = G.tavernsNum + coinMaxIndex;
         upgradingCoin = tradingCoins[coinMaxIndex];
     }
-    AddActionsToStack(G, ctx, stack);
-    StartActionFromStackOrEndActions(G, ctx, false, upgradingCoinId, `board`, upgradingCoin.isInitial);
+    UpgradeCoinAction(G, ctx, value, upgradingCoinId, `board`, upgradingCoin.isInitial);
 };
 //# sourceMappingURL=TradingHelpers.js.map

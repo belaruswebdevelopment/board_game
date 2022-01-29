@@ -2,25 +2,24 @@ import { Ctx, Game } from "boardgame.io";
 import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
-import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGamePhaseTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
-import { CheckEndEndTierPhase, CheckEndTierOrder, EndEndTierActions, OnEndTierPhaseTurnBegin } from "./hooks/EndTierHooks";
-import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesPhaseTurnBegin, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
-import { ReturnEndGameData } from "./hooks/GameHooks";
-import { CheckAndResolveDistinctionOrders, CheckEndDistinctionsPhase, CheckNextDistinctionTurn, EndDistinctionPhaseActions } from "./hooks/GetDistinctionsHooks";
-import { CheckEndGetMjollnirProfitPhase, CheckGetMjollnirProfitOrder, OnGetMjollnirProfitPhaseTurnBegin, StartEndGame } from "./hooks/GetMjollnirProfitHooks";
-import { CheckAndStartTrading, CheckEndPickCardsPhase, CheckEndPickCardsTurn, EndPickCardsActions, PickCardsDiscardCardsAfterLastPlayerTurnEnd, ResolveCurrentTavernOrders } from "./hooks/PickCardsHooks";
-import { CheckEndPlaceCoinsPhase, CheckEndPlaceCoinsTurn, EndPlaceCoinsActions, PreparationPhaseActions } from "./hooks/PlaceCoinsHooks";
+import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
+import { CheckEndEndTierPhase, CheckEndTierOrder, EndEndTierActions, OnEndTierMove, OnEndTierTurnBegin, OnEndTierTurnEnd } from "./hooks/EndTierHooks";
+import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, OnEnlistmentMercenariesTurnEnd, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
+import { CheckEndGame, ReturnEndGameData } from "./hooks/GameHooks";
+import { CheckAndResolveDistinctionsOrders, CheckEndGetDistinctionsPhase, CheckNextGetDistinctionsTurn, EndGetDistinctionsPhaseActions, OnGetDistinctionsMove, OnGetDistinctionsTurnBegin, OnGetDistinctionsTurnEnd } from "./hooks/GetDistinctionsHooks";
+import { CheckEndGetMjollnirProfitPhase, CheckGetMjollnirProfitOrder, OnGetMjollnirProfitTurnBegin, StartEndGame } from "./hooks/GetMjollnirProfitHooks";
+import { CheckEndPickCardsPhase, CheckEndPickCardsTurn, EndPickCardsActions, OnPickCardsMove, OnPickCardsTurnBegin, OnPickCardsTurnEnd, ResolveCurrentTavernOrders } from "./hooks/PickCardsHooks";
+import { CheckEndPlaceCoinsPhase, CheckEndPlaceCoinsTurn, OnPlaceCoinsTurnEnd, PreparationPhaseActions } from "./hooks/PlaceCoinsHooks";
 import { CheckEndPlaceCoinsUlinePhase, CheckUlinePlaceCoinsOrder, EndPlaceCoinsUlineActions } from "./hooks/PlaceCoinsUlineHooks";
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
-import { ClickCampCardHoldaMove, ClickCampCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, DiscardSuitCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/CampMoves";
-import { AddCoinToPouchMove, ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CoinMoves";
+import { AddCoinToPouchMove, ClickCampCardHoldaMove, ClickCampCardMove, DiscardSuitCardFromPlayerBoardMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CampMoves";
+import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove } from "./moves/CoinMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceCardMove } from "./moves/HeroMoves";
-import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, PassEnlistmentMercenariesMove, PickDiscardCardMove } from "./moves/Moves";
-import { Phases } from "./typescript/enums";
-import { INext, IOrder, IMyGameState } from "./typescript/game_data_interfaces";
+import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
+import { Phases, Stages } from "./typescript/enums";
+import { IMyGameState, INext, IOrder } from "./typescript/game_data_interfaces";
 
 // TODO Add logging
-// TODO Add colors for cards Points by suit colors!
 // TODO Add dock block
 /**
  * <h3>Параметры порядка хода.</h3>
@@ -45,7 +44,7 @@ export const BoardGame: Game<IMyGameState> = {
     setup: SetupGame,
     playerView: PlayerView.STRIP_SECRETS,
     phases: {
-        placeCoins: {
+        [Phases.PlaceCoins]: {
             turn: {
                 order,
                 endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndPlaceCoinsTurn(G, ctx),
@@ -58,9 +57,9 @@ export const BoardGame: Game<IMyGameState> = {
             },
             onBegin: (G: IMyGameState, ctx: Ctx): void => PreparationPhaseActions(G, ctx),
             endIf: (G: IMyGameState, ctx: Ctx): void | INext => CheckEndPlaceCoinsPhase(G, ctx),
-            onEnd: (G: IMyGameState): void => EndPlaceCoinsActions(G),
+            onEnd: (G: IMyGameState): void => OnPlaceCoinsTurnEnd(G),
         },
-        placeCoinsUline: {
+        [Phases.PlaceCoinsUline]: {
             turn: {
                 order,
             },
@@ -73,72 +72,73 @@ export const BoardGame: Game<IMyGameState> = {
             endIf: (G: IMyGameState): boolean | void => CheckEndPlaceCoinsUlinePhase(G),
             onEnd: (G: IMyGameState): void => EndPlaceCoinsUlineActions(G),
         },
-        pickCards: {
+        [Phases.PickCards]: {
             turn: {
                 order,
                 stages: {
                     // Start
-                    discardCardFromBoard: {
-                        moves: {
-                            DiscardCardMove,
-                        },
-                    },
-                    placeCards: {
-                        moves: {
-                            PlaceCardMove,
-                        },
-                    },
-                    pickCampCardHolda: {
-                        moves: {
-                            ClickCampCardHoldaMove,
-                        },
-                    },
-                    pickDiscardCard: {
-                        moves: {
-                            PickDiscardCardMove,
-                        },
-                    },
-                    addCoinToPouch: {
+                    [Stages.AddCoinToPouch]: {
                         moves: {
                             AddCoinToPouchMove,
                         },
                     },
-                    upgradeCoinVidofnirVedrfolnir: {
+                    [Stages.DiscardBoardCard]: {
                         moves: {
-                            UpgradeCoinVidofnirVedrfolnirMove,
+                            DiscardCardMove,
                         },
                     },
-                    discardSuitCard: {
+                    [Stages.DiscardSuitCard]: {
                         moves: {
                             DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
-                    upgradeCoin: {
+                    [Stages.PickCampCardHolda]: {
                         moves: {
-                            ClickCoinToUpgradeMove,
+                            ClickCampCardHoldaMove,
                         },
                     },
-                    pickHero: {
+                    [Stages.PickDiscardCard]: {
+                        moves: {
+                            PickDiscardCardMove,
+                        },
+                    },
+                    [Stages.PickHero]: {
                         moves: {
                             ClickHeroCardMove,
                         },
                     },
+                    [Stages.PlaceCards]: {
+                        moves: {
+                            PlaceCardMove,
+                        },
+                    },
+                    [Stages.UpgradeCoin]: {
+                        moves: {
+                            ClickCoinToUpgradeMove,
+                        },
+                    },
+                    [Stages.UpgradeVidofnirVedrfolnirCoin]: {
+                        moves: {
+                            UpgradeCoinVidofnirVedrfolnirMove,
+                        },
+                    },
                     // End
-                    discardCard: {
+                    [Stages.DiscardCard]: {
                         moves: {
                             DiscardCard2PlayersMove,
                         },
                     },
-                    placeTradingCoinsUline: {
+                    [Stages.PlaceTradingCoinsUline]: {
                         moves: {
                             ClickHandCoinMove,
                             ClickBoardCoinMove,
                         },
                     },
                 },
-                onMove: (G: IMyGameState, ctx: Ctx): void => CheckAndStartTrading(G, ctx),
+                onBegin: (G: IMyGameState, ctx: Ctx): void => OnPickCardsTurnBegin(G, ctx),
+                onMove: (G: IMyGameState, ctx: Ctx): void => OnPickCardsMove(G, ctx),
                 endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndPickCardsTurn(G, ctx),
-                onEnd: (G: IMyGameState, ctx: Ctx) => PickCardsDiscardCardsAfterLastPlayerTurnEnd(G, ctx),
+                onEnd: (G: IMyGameState, ctx: Ctx) => OnPickCardsTurnEnd(G, ctx),
             },
             moves: {
                 ClickCardMove,
@@ -148,60 +148,62 @@ export const BoardGame: Game<IMyGameState> = {
             endIf: (G: IMyGameState, ctx: Ctx) => CheckEndPickCardsPhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndPickCardsActions(G),
         },
-        enlistmentMercenaries: {
+        [Phases.EnlistmentMercenaries]: {
             turn: {
                 order,
                 stages: {
                     // Start
-                    discardCardFromBoard: {
-                        moves: {
-                            DiscardCardMove,
-                        },
-                    },
-                    placeCards: {
-                        moves: {
-                            PlaceCardMove,
-                        },
-                    },
-                    pickCampCardHolda: {
-                        moves: {
-                            ClickCampCardHoldaMove,
-                        },
-                    },
-                    pickDiscardCard: {
-                        moves: {
-                            PickDiscardCardMove,
-                        },
-                    },
-                    addCoinToPouch: {
+                    [Stages.AddCoinToPouch]: {
                         moves: {
                             AddCoinToPouchMove,
                         },
                     },
-                    upgradeCoinVidofnirVedrfolnir: {
+                    [Stages.DiscardBoardCard]: {
                         moves: {
-                            UpgradeCoinVidofnirVedrfolnirMove,
+                            DiscardCardMove,
                         },
                     },
-                    discardSuitCard: {
+                    [Stages.DiscardSuitCard]: {
                         moves: {
                             DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
-                    upgradeCoin: {
+                    [Stages.PickCampCardHolda]: {
                         moves: {
-                            ClickCoinToUpgradeMove,
+                            ClickCampCardHoldaMove,
                         },
                     },
-                    pickHero: {
+                    [Stages.PickDiscardCard]: {
+                        moves: {
+                            PickDiscardCardMove,
+                        },
+                    },
+                    [Stages.PickHero]: {
                         moves: {
                             ClickHeroCardMove,
                         },
                     },
+                    [Stages.PlaceCards]: {
+                        moves: {
+                            PlaceCardMove,
+                        },
+                    },
+                    [Stages.UpgradeCoin]: {
+                        moves: {
+                            ClickCoinToUpgradeMove,
+                        },
+                    },
+                    [Stages.UpgradeVidofnirVedrfolnirCoin]: {
+                        moves: {
+                            UpgradeCoinVidofnirVedrfolnirMove,
+                        },
+                    },
                     // End
                 },
-                onBegin: (G: IMyGameState, ctx: Ctx): void => OnEnlistmentMercenariesPhaseTurnBegin(G, ctx),
+                onBegin: (G: IMyGameState, ctx: Ctx): void => OnEnlistmentMercenariesTurnBegin(G, ctx),
+                onMove: (G: IMyGameState, ctx: Ctx): void => OnEnlistmentMercenariesMove(G, ctx),
                 endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndEnlistmentMercenariesTurn(G, ctx),
+                onEnd: (G: IMyGameState, ctx: Ctx): void => OnEnlistmentMercenariesTurnEnd(G, ctx),
             },
             moves: {
                 StartEnlistmentMercenariesMove,
@@ -210,157 +212,162 @@ export const BoardGame: Game<IMyGameState> = {
                 PlaceEnlistmentMercenariesMove,
             },
             onBegin: (G: IMyGameState): void => PrepareMercenaryPhaseOrders(G),
-            endIf: (G: IMyGameState, ctx: Ctx): void | INext => CheckEndEnlistmentMercenariesPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void => CheckEndEnlistmentMercenariesPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndEnlistmentMercenariesActions(G, ctx),
         },
-        endTier: {
+        [Phases.EndTier]: {
             turn: {
                 order,
                 stages: {
                     // Start
-                    discardCardFromBoard: {
-                        moves: {
-                            DiscardCardMove,
-                        },
-                    },
-                    placeCards: {
-                        moves: {
-                            PlaceCardMove,
-                        },
-                    },
-                    pickCampCardHolda: {
-                        moves: {
-                            ClickCampCardHoldaMove,
-                        },
-                    },
-                    pickDiscardCard: {
-                        moves: {
-                            PickDiscardCardMove,
-                        },
-                    },
-                    addCoinToPouch: {
+                    [Stages.AddCoinToPouch]: {
                         moves: {
                             AddCoinToPouchMove,
                         },
                     },
-                    upgradeCoinVidofnirVedrfolnir: {
+                    [Stages.DiscardBoardCard]: {
                         moves: {
-                            UpgradeCoinVidofnirVedrfolnirMove,
+                            DiscardCardMove,
                         },
                     },
-                    discardSuitCard: {
+                    [Stages.DiscardSuitCard]: {
                         moves: {
                             DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
-                    upgradeCoin: {
+                    [Stages.PickCampCardHolda]: {
                         moves: {
-                            ClickCoinToUpgradeMove,
+                            ClickCampCardHoldaMove,
                         },
                     },
-                    pickHero: {
+                    [Stages.PickDiscardCard]: {
+                        moves: {
+                            PickDiscardCardMove,
+                        },
+                    },
+                    [Stages.PickHero]: {
                         moves: {
                             ClickHeroCardMove,
                         },
                     },
+                    [Stages.PlaceCards]: {
+                        moves: {
+                            PlaceCardMove,
+                        },
+                    },
+                    [Stages.UpgradeCoin]: {
+                        moves: {
+                            ClickCoinToUpgradeMove,
+                        },
+                    },
+                    [Stages.UpgradeVidofnirVedrfolnirCoin]: {
+                        moves: {
+                            UpgradeCoinVidofnirVedrfolnirMove,
+                        },
+                    },
                     // End
                 },
-                onBegin: (G: IMyGameState, ctx: Ctx): void => OnEndTierPhaseTurnBegin(G, ctx),
+                onBegin: (G: IMyGameState, ctx: Ctx): void => OnEndTierTurnBegin(G, ctx),
+                onMove: (G: IMyGameState, ctx: Ctx): void => OnEndTierMove(G, ctx),
+                onEnd: (G: IMyGameState, ctx: Ctx): void => OnEndTierTurnEnd(G, ctx),
             },
             moves: {
                 PlaceCardMove,
             },
             onBegin: (G: IMyGameState): void => CheckEndTierOrder(G),
-            endIf: (G: IMyGameState, ctx: Ctx): void | INext => CheckEndEndTierPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void => CheckEndEndTierPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndEndTierActions(G, ctx),
         },
-        getDistinctions: {
+        [Phases.GetDistinctions]: {
             turn: {
                 order,
                 stages: {
                     // Start
-                    discardCardFromBoard: {
-                        moves: {
-                            DiscardCardMove,
-                        },
-                    },
-                    placeCards: {
-                        moves: {
-                            PlaceCardMove,
-                        },
-                    },
-                    pickCampCardHolda: {
-                        moves: {
-                            ClickCampCardHoldaMove,
-                        },
-                    },
-                    pickDiscardCard: {
-                        moves: {
-                            PickDiscardCardMove,
-                        },
-                    },
-                    addCoinToPouch: {
+                    [Stages.AddCoinToPouch]: {
                         moves: {
                             AddCoinToPouchMove,
                         },
                     },
-                    upgradeCoinVidofnirVedrfolnir: {
+                    [Stages.DiscardBoardCard]: {
                         moves: {
-                            UpgradeCoinVidofnirVedrfolnirMove,
+                            DiscardCardMove,
                         },
                     },
-                    discardSuitCard: {
+                    [Stages.DiscardSuitCard]: {
                         moves: {
                             DiscardSuitCardFromPlayerBoardMove,
                         },
                     },
-                    upgradeCoin: {
+                    [Stages.PickCampCardHolda]: {
                         moves: {
-                            ClickCoinToUpgradeMove,
+                            ClickCampCardHoldaMove,
                         },
                     },
-                    pickHero: {
+                    [Stages.PickDiscardCard]: {
+                        moves: {
+                            PickDiscardCardMove,
+                        },
+                    },
+                    [Stages.PickHero]: {
                         moves: {
                             ClickHeroCardMove,
                         },
                     },
+                    [Stages.PlaceCards]: {
+                        moves: {
+                            PlaceCardMove,
+                        },
+                    },
+                    [Stages.UpgradeCoin]: {
+                        moves: {
+                            ClickCoinToUpgradeMove,
+                        },
+                    },
+                    [Stages.UpgradeVidofnirVedrfolnirCoin]: {
+                        moves: {
+                            UpgradeCoinVidofnirVedrfolnirMove,
+                        },
+                    },
                     // End
-                    pickDistinctionCard: {
+                    [Stages.PickDistinctionCard]: {
                         moves: {
                             ClickCardToPickDistinctionMove,
                         },
                     },
                 },
-                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckNextDistinctionTurn(G, ctx),
+                onBegin: (G: IMyGameState, ctx: Ctx): void => OnGetDistinctionsTurnBegin(G, ctx),
+                onMove: (G: IMyGameState, ctx: Ctx): void => OnGetDistinctionsMove(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckNextGetDistinctionsTurn(G, ctx),
+                onEnd: (G: IMyGameState, ctx: Ctx): void => OnGetDistinctionsTurnEnd(G, ctx),
             },
             next: Phases.PlaceCoins,
             moves: {
                 ClickDistinctionCardMove,
             },
-            onBegin: (G: IMyGameState, ctx: Ctx): void => CheckAndResolveDistinctionOrders(G, ctx),
-            endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndDistinctionsPhase(G, ctx),
-            onEnd: (G: IMyGameState): void => EndDistinctionPhaseActions(G),
+            onBegin: (G: IMyGameState, ctx: Ctx): void => CheckAndResolveDistinctionsOrders(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndGetDistinctionsPhase(G, ctx),
+            onEnd: (G: IMyGameState): void => EndGetDistinctionsPhaseActions(G),
         },
-        brisingamensEndGame: {
+        [Phases.BrisingamensEndGame]: {
             turn: {
                 order,
                 minMoves: 1,
                 maxMoves: 1,
-                onBegin: (G: IMyGameState, ctx: Ctx): void => OnBrisingamensEndGamePhaseTurnBegin(G, ctx),
+                onBegin: (G: IMyGameState, ctx: Ctx): void => OnBrisingamensEndGameTurnBegin(G, ctx),
             },
             moves: {
                 DiscardCardFromPlayerBoardMove,
             },
             onBegin: (G: IMyGameState): void => CheckBrisingamensEndGameOrder(G),
-            endIf: (G: IMyGameState, ctx: Ctx): void | INext => StartGetMjollnirProfitOrEndGame(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void => StartGetMjollnirProfitOrEndGame(G, ctx),
             onEnd: (G: IMyGameState): void => EndBrisingamensEndGameActions(G),
         },
-        getMjollnirProfit: {
+        [Phases.GetMjollnirProfit]: {
             turn: {
                 order,
                 minMoves: 1,
                 maxMoves: 1,
-                onBegin: (G: IMyGameState, ctx: Ctx): void => OnGetMjollnirProfitPhaseTurnBegin(G, ctx),
+                onBegin: (G: IMyGameState, ctx: Ctx): void => OnGetMjollnirProfitTurnBegin(G, ctx),
             },
             moves: {
                 GetMjollnirProfitMove,
@@ -370,11 +377,14 @@ export const BoardGame: Game<IMyGameState> = {
             onEnd: (G: IMyGameState, ctx: Ctx): void => StartEndGame(G, ctx),
         },
     },
+    endIf: (G: IMyGameState): boolean | void => CheckEndGame(G),
     onEnd: (G: IMyGameState, ctx: Ctx): IMyGameState | void => ReturnEndGameData(G, ctx),
     ai: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         enumerate,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
         iterations,
         objectives,
         playoutDepth,

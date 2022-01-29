@@ -1,4 +1,5 @@
 import { ICard } from "./card_interfaces";
+import { MoveArgsTypes } from "./types";
 
 /**
  * <h3>Интерфейс для средей карты фракции.</h3>
@@ -39,5 +40,5 @@ export interface ICreateAverageSuitCard {
  */
 export interface IMoves {
     move: string,
-    args: number[][] | (string | number | boolean)[] | number,
+    args: MoveArgsTypes,
 }

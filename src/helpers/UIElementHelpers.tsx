@@ -155,7 +155,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     }
     playerCells.push(
         <td className={tdClasses} onClick={() => action?.(...args)}
-            key={`${(player && player.nickname) ? `player ${(player.nickname)} ` : ``}${suit} card ${id} ${card.name}`}>
+            key={`${player?.nickname ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`}>
             <span style={styles} title={description ?? card.name} className={spanClasses}>
                 <b>{value}</b>
             </span>

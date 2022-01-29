@@ -1,13 +1,10 @@
-import { DrawProfitAction, DiscardCardFromTavernAction } from "../actions/Actions";
-import { CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCampAction } from "../actions/CampActions";
 import { isCardNotAction } from "../Card";
-import { UpgradeCoin } from "../Coin";
+import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
-import { ActionTypes, ConfigNames, DrawNames, LogTypes, Stages } from "../typescript/enums";
-import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
+import { LogTypes } from "../typescript/enums";
 import { AddCardToPlayer } from "./CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
-import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
+import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>
  * <p>Применения:</p>
@@ -18,17 +15,27 @@ import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAnd
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param config Баф карты.
  */
-export const AddBuffToPlayer = (G, ctx, config) => {
-    if (config.buff !== undefined) {
-        G.publicPlayers[Number(ctx.currentPlayer)].buffs[config.buff.name] = config.buff.value;
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} получил баф '${config.buff.name}'.`);
-        EndActionFromStackAndAddNew(G, ctx);
+export const AddBuffToPlayer = (G, ctx, buff) => {
+    if (buff !== undefined) {
+        G.publicPlayers[Number(ctx.currentPlayer)].buffs[buff.name] = buff.value;
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} получил баф '${buff.name}'.`);
     }
-    else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найден обязательный параметр 'config.buff'.`);
-    }
+};
+// TODO Rework it!?
+export const AddGetDistinctionsActionToStack = (G, ctx) => {
+    const stack = [
+        {},
+    ];
+    AddActionsToStackAfterCurrent(G, ctx, stack);
+};
+// TODO Rework it!?
+export const AddPickCardActionToStack = (G, ctx) => {
+    const stack = [
+        {},
+    ];
+    AddActionsToStackAfterCurrent(G, ctx, stack);
 };
 /**
  * <h3>Действия, связанные с отрисовкой профита.</h3>
@@ -46,14 +53,19 @@ export const AddBuffToPlayer = (G, ctx, config) => {
  */
 export const DrawCurrentProfit = (G, ctx, config) => {
     var _a;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен получить преимущества от действия '${config.drawName}'.`);
-    IsStartActionStage(G, ctx, config);
-    G.actionsNum = (_a = config.number) !== null && _a !== void 0 ? _a : 1;
-    if (config.name !== undefined) {
-        G.drawProfit = config.name;
+    if (config !== undefined) {
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен получить преимущества от действия '${config.drawName}'.`);
+        StartOrEndActionStage(G, ctx, config);
+        G.actionsNum = (_a = config.number) !== null && _a !== void 0 ? _a : 1;
+        if (config.name !== undefined) {
+            G.drawProfit = config.name;
+        }
+        else {
+            G.drawProfit = ``;
+        }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найден обязательный параметр 'config.name'.`);
+        G.drawProfit = ``;
     }
 };
 /**
@@ -66,16 +78,17 @@ export const DrawCurrentProfit = (G, ctx, config) => {
  * @param G
  * @param ctx
  * @param config Конфиг действий героя.
- * @returns Стартанул ли стэйдж.
  */
-export const IsStartActionStage = (G, ctx, config) => {
-    var _a;
+const StartOrEndActionStage = (G, ctx, config) => {
+    var _a, _b;
     if (config.stageName !== undefined) {
         (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setStage(config.stageName);
         AddDataToLog(G, LogTypes.GAME, `Начало стэйджа ${config.stageName}.`);
-        return true;
     }
-    return false;
+    else if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
+        // TODO Not end for Hofud action?
+        (_b = ctx.events) === null || _b === void 0 ? void 0 : _b.endStage();
+    }
 };
 /**
  * <h3>Действия, связанные с взятием карт из дискарда.</h3>
@@ -87,75 +100,31 @@ export const IsStartActionStage = (G, ctx, config) => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
  * @param cardId Id карты.
  */
-export const PickDiscardCard = (G, ctx, config, cardId) => {
+export const PickDiscardCard = (G, ctx, cardId) => {
     // TODO Rework all COMMON for heroes and camp actions in two logic?
     const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]), pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
-    let suit = null;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
     if (G.actionsNum === 2) {
         const stack = [
             {
-                action: {
-                    name: CheckPickDiscardCardCampAction.name,
-                    type: ActionTypes.Camp,
-                },
+            // TODO Move it to validator!
+            // action: {
+            //     name: CheckPickDiscardCardCampAction.name,
+            // },
             },
-            {
-                action: {
-                    name: DrawProfitCampAction.name,
-                    type: ActionTypes.Camp,
-                },
-                config: {
-                    stageName: Stages.PickDiscardCard,
-                    name: ConfigNames.BrisingamensAction,
-                    drawName: DrawNames.Brisingamens,
-                },
-            },
-            {
-                action: {
-                    name: PickDiscardCardCampAction.name,
-                    type: ActionTypes.Camp,
-                },
-            },
+            StackData.pickDiscardCardBrisingamens()
         ];
         AddActionsToStackAfterCurrent(G, ctx, stack);
     }
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-            suit = pickedCard.suit;
         }
     }
     else {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
-    }
-    EndActionFromStackAndAddNew(G, ctx, [], suit);
-};
-/**
- * <h3>Действия, связанные с взятием героя.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе карт кэмпа, дающих возможность взять карту героя.</li>
- * <li>При игровых моментах, дающих возможность взять карту героя.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя.
- */
-export const PickCurrentHero = (G, ctx, config) => {
-    const isStartPickHero = IsStartActionStage(G, ctx, config);
-    if (isStartPickHero) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен пикнуть героя.`);
-    }
-    else {
-        if (config.stageName === undefined) {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.stageName'.`);
-        }
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не стартовал стэйдж 'PickHero'.`);
     }
 };
 /**
@@ -169,43 +138,7 @@ export const PickCurrentHero = (G, ctx, config) => {
  * @param ctx
  */
 export const StartDiscardCardFromTavernActionFor2Players = (G, ctx) => {
-    const stack = [
-        {
-            action: {
-                name: DrawProfitAction.name,
-                type: ActionTypes.Action,
-            },
-            config: {
-                stageName: Stages.DiscardCard,
-                name: ConfigNames.DiscardCard,
-                drawName: DrawNames.DiscardTavernCard,
-            },
-        },
-        {
-            action: {
-                name: DiscardCardFromTavernAction.name,
-                type: ActionTypes.Action,
-            },
-        },
-    ];
-    AddActionsToStack(G, ctx, stack);
-    StartActionFromStackOrEndActions(G, ctx, false);
-};
-/**
- * <h3>Действия, связанные с улучшением монет.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, улучшающих монеты.</li>
- * <li>При выборе карт, улучшающих монеты.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param config Конфиг действий героя или карты улучшающей монеты.
- * @param args Дополнительные аргументы.
- */
-export const UpgradeCurrentCoin = (G, ctx, config, ...args) => {
-    UpgradeCoin(G, ctx, config, ...args);
-    EndActionFromStackAndAddNew(G, ctx);
+    const stack = [StackData.discardTavernCard()];
+    AddActionsToStackAfterCurrent(G, ctx, stack);
 };
 //# sourceMappingURL=ActionHelpers.js.map

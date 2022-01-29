@@ -1,10 +1,11 @@
-import { AddCampCardToCardsAction, AddBuffToPlayerCampAction, CheckPickDiscardCardCampAction, DrawProfitCampAction, PickDiscardCardCampAction, PickHeroCampAction, StartDiscardSuitCardAction, DiscardTradingCoinAction, StartVidofnirVedrfolnirAction } from "../actions/CampActions";
+import { AddPickHeroAction, DiscardTradingCoinAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/AutoActions";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { IArtefact, IMercenaries, IArtefactConfig } from "../typescript/camp_card_interfaces";
+import { IArtefact, IArtefactConfig, IMercenaries } from "../typescript/camp_card_interfaces";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { ArtefactNames, ActionTypes, BuffNames, Stages, ConfigNames, DrawNames, SuitNames, RusCardTypes } from "../typescript/enums";
+import { ArtefactNames, BuffNames, ConfigNames, RusCardTypes, SuitNames } from "../typescript/enums";
 import { IPublicPlayer } from "../typescript/player_interfaces";
+import { StackData } from "./StackData";
 
 /**
  * <h3>Данные об артефакте.</h3>
@@ -21,49 +22,18 @@ const Brisingamens: IArtefact = {
     suit: null,
     rank: null,
     points: null,
+    buff: {
+        name: BuffNames.DiscardCardEndGame,
+        value: true,
+    },
     stack: [
-        {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-        {
-            action: {
-                name: AddBuffToPlayerCampAction.name,
-                type: ActionTypes.Camp,
-            },
-            config: {
-                buff: {
-                    name: BuffNames.DiscardCardEndGame,
-                    value: true,
-                },
-            },
-        },
-        {
-            action: {
-                name: CheckPickDiscardCardCampAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-        {
-            action: {
-                name: DrawProfitCampAction.name,
-                type: ActionTypes.Camp,
-            },
-            config: {
-                stageName: Stages.PickDiscardCard,
-                name: ConfigNames.BrisingamensAction,
-                number: 2,
-                drawName: DrawNames.Brisingamens,
-            },
-        },
-        {
-            action: {
-                name: PickDiscardCardCampAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
+        // TODO Move to stackValidator!
+        // {
+        //     action: {
+        //         name: CheckPickDiscardCardCampAction.name,
+        //     },
+        // },
+        StackData.pickDiscardCardBrisingamens(2)
     ],
     scoringRule: (): number => 0,
 };
@@ -83,18 +53,9 @@ const Draupnir: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-    ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.boardCoins
         .filter((coin: CoinType): boolean => Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
 };
-
 
 /**
  * <h3>Данные об артефакте.</h3>
@@ -111,26 +72,10 @@ const Fafnir_Baleygr: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-        {
-            action: {
-                name: AddBuffToPlayerCampAction.name,
-                type: ActionTypes.Camp,
-            },
-            config: {
-                buff: {
-                    name: BuffNames.GoCamp,
-                    value: true,
-                },
-            },
-        },
-    ],
+    buff: {
+        name: BuffNames.GoCamp,
+        value: true,
+    },
     scoringRule: (): number => 0,
 };
 
@@ -149,23 +94,9 @@ const Gjallarhorn: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-        {
-            action: {
-                name: PickHeroCampAction.name,
-                type: ActionTypes.Camp,
-            },
-            config: {
-                stageName: Stages.PickHero,
-            },
-        },
-    ],
+    actions: {
+        name: AddPickHeroAction.name,
+    },
     scoringRule: (): number => 0,
 };
 
@@ -184,20 +115,16 @@ const Hofud: IArtefact = {
     suit: null,
     rank: null,
     points: null,
+    actions: {
+        name: StartDiscardSuitCardAction.name,
+    },
+    // TODO Move to Stack.?
     stack: [
         {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-        {
-            action: {
-                name: StartDiscardSuitCardAction.name,
-                type: ActionTypes.Camp,
-            },
             config: {
+                // TODO Check all config and need to it => drawName: ???,
                 suit: SuitNames.WARRIOR,
+                name: ConfigNames.HofudAction,
             },
         },
     ],
@@ -219,14 +146,6 @@ const Hrafnsmerki: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-    ],
     scoringRule: (player?: IPublicPlayer): number => {
         if (player !== undefined) {
             let score = 0;
@@ -257,20 +176,9 @@ const Jarnglofi: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-        {
-            action: {
-                name: DiscardTradingCoinAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-    ],
+    actions: {
+        name: DiscardTradingCoinAction.name,
+    },
     scoringRule: (): number => 24,
 };
 
@@ -289,26 +197,10 @@ const Megingjord: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-        {
-            action: {
-                name: AddBuffToPlayerCampAction.name,
-                type: ActionTypes.Camp,
-            },
-            config: {
-                buff: {
-                    name: BuffNames.NoHero,
-                    value: true,
-                },
-            },
-        },
-    ],
+    buff: {
+        name: BuffNames.NoHero,
+        value: true,
+    },
     scoringRule: (): number => 28,
 };
 
@@ -327,26 +219,10 @@ const Mjollnir: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-        {
-            action: {
-                name: AddBuffToPlayerCampAction.name,
-                type: ActionTypes.Camp,
-            },
-            config: {
-                buff: {
-                    name: BuffNames.GetMjollnirProfit,
-                    value: true,
-                },
-            },
-        },
-    ],
+    buff: {
+        name: BuffNames.GetMjollnirProfit,
+        value: true,
+    },
     scoringRule: (player?: IPublicPlayer, suit?: string): number => player !== undefined && suit !== undefined ?
         player.cards[suit].reduce(TotalRank, 0) * 2 : 0,
 };
@@ -366,14 +242,6 @@ const Svalinn: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-    ],
     scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.heroes.length * 5 : 0,
 };
 
@@ -392,14 +260,6 @@ const Vegvisir: IArtefact = {
     suit: SuitNames.EXPLORER,
     rank: 1,
     points: 13,
-    stack: [
-        {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-    ],
     scoringRule: (): number => 0,
 };
 
@@ -418,20 +278,9 @@ const Vidofnir_Vedrfolnir: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    stack: [
-        {
-            action: {
-                name: AddCampCardToCardsAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-        {
-            action: {
-                name: StartVidofnirVedrfolnirAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-    ],
+    actions: {
+        name: StartVidofnirVedrfolnirAction.name,
+    },
     scoringRule: (): number => 0,
 };
 

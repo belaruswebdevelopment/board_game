@@ -2,13 +2,13 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { PassEnlistmentMercenariesAction } from "../actions/Actions";
 import { isCardNotAction } from "../Card";
 import { suitsConfig } from "../data/SuitData";
-import { StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
+import { PickDiscardCard } from "../helpers/ActionHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
-import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { ActionTypes, LogTypes, SuitNames } from "../typescript/enums";
+import { LogTypes, SuitNames } from "../typescript/enums";
 // TODO Add logging
 /**
  * <h3>Выбор карты из таверны.</h3>
@@ -33,21 +33,16 @@ export const ClickCardMove = (G, ctx, cardId) => {
         return INVALID_MOVE;
     }
     const card = G.taverns[G.currentTavern][cardId];
-    let suit = null;
     G.taverns[G.currentTavern][cardId] = null;
     if (card !== null) {
         const isAdded = AddCardToPlayer(G, ctx, card);
-        if (isCardNotAction(card)) {
-            if (isAdded) {
-                CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
-                suit = card.suit;
-            }
+        if (!isCardNotAction(card)) {
+            AddActionsToStackAfterCurrent(G, ctx, card.stack);
         }
         else {
-            AddActionsToStack(G, ctx, card.stack);
-        }
-        if (G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-            StartActionFromStackOrEndActions(G, ctx, false, suit);
+            if (isAdded) {
+                CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
+            }
         }
     }
     else {
@@ -67,20 +62,17 @@ export const ClickCardMove = (G, ctx, cardId) => {
  */
 export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     const isAdded = AddCardToPlayer(G, ctx, G.decks[1][cardId]), pickedCard = G.decks[1].splice(cardId, 1)[0];
-    let suit = null;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     G.decks[1] = ctx.random.Shuffle(G.decks[1]);
     if (isCardNotAction(pickedCard)) {
         if (isAdded) {
             G.distinctions[SuitNames.EXPLORER] = undefined;
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-            suit = pickedCard.suit;
         }
     }
     else {
         AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
     }
-    EndActionFromStackAndAddNew(G, ctx, [], suit);
 };
 /**
  * <h3>Выбор конкретного преимущества по фракциям в конце первой эпохи.</h3>
@@ -112,15 +104,7 @@ export const ClickDistinctionCardMove = (G, ctx, suit) => {
  * @param ctx
  */
 export const PassEnlistmentMercenariesMove = (G, ctx) => {
-    const stack = [
-        {
-            action: {
-                name: PassEnlistmentMercenariesAction.name,
-                type: ActionTypes.Action,
-            },
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack);
+    PassEnlistmentMercenariesAction(G, ctx);
 };
 /**
  * <h3>Выбор карт из дискарда.</h3>
@@ -135,6 +119,7 @@ export const PassEnlistmentMercenariesMove = (G, ctx) => {
  * @param cardId Id карты.
  */
 export const PickDiscardCardMove = (G, ctx, cardId) => {
-    EndActionFromStackAndAddNew(G, ctx, [], cardId);
+    // TODO Move to actions from ActionsHelpers
+    PickDiscardCard(G, ctx, cardId);
 };
 //# sourceMappingURL=Moves.js.map

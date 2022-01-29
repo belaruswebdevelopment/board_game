@@ -1,5 +1,5 @@
+import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
-import { EndGame } from "../helpers/GameHooksHelpers";
 import { Phases } from "../typescript/enums";
 export const CheckBrisingamensEndGameOrder = (G) => {
     const brisingamensPlayerIndex = G.publicPlayers.findIndex((player) => player.buffs.discardCardEndGame === true);
@@ -8,7 +8,11 @@ export const CheckBrisingamensEndGameOrder = (G) => {
 export const EndBrisingamensEndGameActions = (G) => {
     G.publicPlayersOrder = [];
 };
-export const OnBrisingamensEndGamePhaseTurnBegin = (G, ctx) => AddBrisingamensEndGameActionsToStack(G, ctx);
+export const OnBrisingamensEndGameTurnBegin = (G, ctx) => {
+    var _a;
+    AddBrisingamensEndGameActionsToStack(G, ctx);
+    DrawCurrentProfit(G, ctx, (_a = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config);
+};
 /**
  * <h3>Начинает фазу 'getMjollnirProfit' или завершает игру.</h3>
  * <p>Применения:</p>
@@ -29,7 +33,7 @@ export const StartGetMjollnirProfitOrEndGame = (G, ctx) => {
                 };
             }
             else {
-                EndGame(ctx);
+                return true;
             }
         }
     }

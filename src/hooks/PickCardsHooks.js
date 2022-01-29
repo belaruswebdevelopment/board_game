@@ -1,13 +1,39 @@
-import { DiscardCardIfCampCardPicked } from "../Camp";
-import { StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
-import { DiscardCardFromTavernJarnglofi } from "../helpers/CampHelpers";
+import { AddPickCardActionToStack, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
+import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
-import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, CheckAndStartUlineActionsOrContinue } from "../helpers/GameHooksHelpers";
+import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, CheckAndStartUlineActionsOrContinue, ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { ActivateTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
 import { LogTypes, Stages } from "../typescript/enums";
+export const OnPickCardsMove = (G, ctx) => {
+    var _a;
+    StartOrEndActions(G, ctx);
+    if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
+        if (ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
+            && !CheckIfCurrentTavernEmpty(G)) {
+            StartDiscardCardFromTavernActionFor2Players(G, ctx);
+        }
+        else {
+            // TODO Do it before or after trading or not matter?
+            CheckAndStartUlineActionsOrContinue(G, ctx);
+            const tradingCoinPlacesLength = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
+                .filter((coin, index) => index >= G.tavernsNum && coin === null).length;
+            if (!G.actionsNum) {
+                ActivateTrading(G, ctx);
+            }
+            else if (G.actionsNum === 2 && tradingCoinPlacesLength === 1
+                || G.actionsNum === 1 && !tradingCoinPlacesLength) {
+                G.actionsNum--;
+            }
+            else if (G.actionsNum === 2) {
+                // TODO Rework it to actions
+                (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setStage(Stages.PlaceTradingCoinsUline);
+            }
+        }
+    }
+};
 /**
  * <h3>Проверяет необходимость завершения хода/фазы 'pickCards'.</h3>
  * <p>Применения:</p>
@@ -47,47 +73,7 @@ export const CheckEndPickCardsPhase = (G, ctx) => {
  * @returns
  */
 export const CheckEndPickCardsTurn = (G, ctx) => {
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        if (!G.actionsNum) {
-            return true;
-        }
-    }
-};
-export const PickCardsDiscardCardsAfterLastPlayerTurnEnd = (G, ctx) => {
-    if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        if (G.expansions.thingvellir.active) {
-            DiscardCardIfCampCardPicked(G);
-            if (ctx.playOrder.length < ctx.numPlayers) {
-                DiscardCardFromTavernJarnglofi(G);
-            }
-        }
-    }
-};
-export const CheckAndStartTrading = (G, ctx) => {
-    var _a;
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        if (ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
-            && !CheckIfCurrentTavernEmpty(G)) {
-            StartDiscardCardFromTavernActionFor2Players(G, ctx);
-        }
-        else {
-            // TODO Do it before or after trading or not matter?
-            CheckAndStartUlineActionsOrContinue(G, ctx);
-            const tradingCoinPlacesLength = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                .filter((coin, index) => index >= G.tavernsNum && coin === null).length;
-            if (!G.actionsNum) {
-                ActivateTrading(G, ctx);
-            }
-            else if (G.actionsNum === 2 && tradingCoinPlacesLength === 1
-                || G.actionsNum === 1 && !tradingCoinPlacesLength) {
-                G.actionsNum--;
-            }
-            else if (G.actionsNum === 2) {
-                // TODO Rework it to actions
-                (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setStage(Stages.PlaceTradingCoinsUline);
-            }
-        }
-    }
+    return EndTurnActions(G, ctx);
 };
 /**
  * <h3>Порядок обмена кристаллов при завершении фазы 'pickCards'.</h3>
@@ -110,6 +96,20 @@ export const EndPickCardsActions = (G) => {
     }
     G.publicPlayersOrder = [];
     ChangePlayersPriorities(G);
+};
+export const OnPickCardsTurnBegin = (G, ctx) => {
+    AddPickCardActionToStack(G, ctx);
+};
+export const OnPickCardsTurnEnd = (G, ctx) => {
+    ClearPlayerPickedCard(G, ctx);
+    if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
+        if (G.expansions.thingvellir.active) {
+            DiscardCardIfCampCardPicked(G);
+            if (ctx.playOrder.length < ctx.numPlayers) {
+                DiscardCardFromTavernJarnglofi(G);
+            }
+        }
+    }
 };
 /**
  * <h3>Определяет порядок взятия карт из таверны и обмена кристалами при начале фазы 'pickCards'.</h3>

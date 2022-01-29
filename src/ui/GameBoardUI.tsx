@@ -3,16 +3,16 @@ import { isCardNotAction } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { AddCoinToPouchProfit, DiscardCardFromBoardProfit, DiscardCardProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
 import { DrawCard, DrawCoin } from "../helpers/UIElementHelpers";
-import { DrawBoard, DrawPlayerBoardForCardDiscard, DrawPlayersBoardForSuitCardDiscard } from "../helpers/UIHelpers";
+import { DrawBoard, DrawPlayersBoardForSuitCardDiscard } from "../helpers/UIHelpers";
 import { tavernsConfig } from "../Tavern";
 import { IConfig } from "../typescript/action_interfaces";
 import { IDrawBoardOptions } from "../typescript/board_interfaces";
 import { CampCardTypes, DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
-import { CoinType } from "../typescript/coin_types";
-import { ConfigNames, HeroNames, MoveNames } from "../typescript/enums";
+import { ConfigNames, MoveNames, Phases, Stages } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
+import { ICurrentMoveArgumentsStage } from "../typescript/move_interfaces";
 import { INumberValues } from "../typescript/object_values_interfaces";
 
 /**
@@ -26,7 +26,8 @@ import { INumberValues } from "../typescript/object_values_interfaces";
  * @returns Поле кэмпа.
  */
 export const DrawCamp = (data: BoardProps<IMyGameState>): JSX.Element => {
-    const boardCells: JSX.Element[] = [];
+    const boardCells: JSX.Element[] = [],
+        moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < data.G.campNum; j++) {
             const campCard: CampCardTypes = data.G.camp[j];
@@ -41,9 +42,12 @@ export const DrawCamp = (data: BoardProps<IMyGameState>): JSX.Element => {
             } else {
                 DrawCard(data, boardCells, campCard, j, null, null,
                     MoveNames.ClickCampCardMove, j);
+                moveMainArgs.push(j);
             }
         }
     }
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PickCards][Stages.Default2].numbers = moveMainArgs;
     return (
         <table>
             <caption>
@@ -92,7 +96,8 @@ export const DrawCurrentPlayerTurn = (data: BoardProps<IMyGameState>): JSX.Eleme
  * @returns Поле преимуществ в конце эпохи.
  */
 export const DrawDistinctions = (data: BoardProps<IMyGameState>): JSX.Element => {
-    const boardCells: JSX.Element[] = [];
+    const boardCells: JSX.Element[] = [],
+        moveMainArgs: ICurrentMoveArgumentsStage["strings"] = [];
     for (let i = 0; i < 1; i++) {
         for (const suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -105,9 +110,12 @@ export const DrawDistinctions = (data: BoardProps<IMyGameState>): JSX.Element =>
                         </span>
                     </td>
                 );
+                moveMainArgs.push(suit);
             }
         }
     }
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.GetDistinctions][Stages.Default1].strings = moveMainArgs;
     return (
         <table>
             <caption>
@@ -134,7 +142,8 @@ export const DrawDistinctions = (data: BoardProps<IMyGameState>): JSX.Element =>
  */
 export const DrawHeroes = (data: BoardProps<IMyGameState>): JSX.Element => {
     const boardRows: JSX.Element[][] = [],
-        drawData: IDrawBoardOptions = DrawBoard(data.G.heroes.length);
+        drawData: IDrawBoardOptions = DrawBoard(data.G.heroes.length),
+        moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
         boardRows[i] = [];
@@ -142,6 +151,9 @@ export const DrawHeroes = (data: BoardProps<IMyGameState>): JSX.Element => {
             const increment: number = i * drawData.boardCols + j;
             DrawCard(data, boardCells, data.G.heroes[increment], increment, null,
                 null, MoveNames.ClickHeroCardMove, increment);
+            if (data.G.heroes[increment].active) {
+                moveMainArgs.push(increment);
+            }
             if (increment + 1 === data.G.heroes.length) {
                 break;
             }
@@ -150,6 +162,14 @@ export const DrawHeroes = (data: BoardProps<IMyGameState>): JSX.Element => {
             <tr key={`Heroes row ${i}`}>{boardCells}</tr>
         );
     }
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PickCards][Stages.PickHero].numbers = moveMainArgs;
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.EnlistmentMercenaries][Stages.PickHero].numbers = moveMainArgs;
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.EndTier][Stages.PickHero].numbers = moveMainArgs;
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.GetDistinctions][Stages.PickHero].numbers = moveMainArgs;
     return (
         <table>
             <caption>
@@ -224,7 +244,7 @@ export const DrawMarketCoins = (data: BoardProps<IMyGameState>): JSX.Element => 
  */
 export const DrawProfit = (data: BoardProps<IMyGameState>): JSX.Element => {
     const boardCells: JSX.Element[] = [],
-        config: IConfig | undefined = data.G.publicPlayers[Number(data.ctx.currentPlayer)].stack[0].config,
+        config: IConfig | undefined = data.G.publicPlayers[Number(data.ctx.currentPlayer)].stack[0]?.config,
         option = data.G.drawProfit;
     let caption = `Get `;
     for (let i = 0; i < 1; i++) {
@@ -235,17 +255,7 @@ export const DrawProfit = (data: BoardProps<IMyGameState>): JSX.Element => {
             }
         } else if (option === ConfigNames.ExplorerDistinction) {
             caption += `one card to your board.`;
-            // TODO Move to ProfitHelpers and add logic for bot or just use standard pick cards / upgrade coins
-            for (let j = 0; j < 3; j++) {
-                const card = data.G.decks[1][j];
-                let suit: null | string = null;
-                if (isCardNotAction(card)) {
-                    suit = card.suit;
-                }
-                DrawCard(data, boardCells, data.G.decks[1][j], j,
-                    data.G.publicPlayers[Number(data.ctx.currentPlayer)], suit,
-                    MoveNames.ClickCardToPickDistinctionMove, j);
-            }
+            ExplorerDistinctionProfit(data.G, data.ctx, data, boardCells);
         } else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
             caption += `${data.G.actionsNum} card${data.G.actionsNum > 1 ? `s` : ``} to discard from your board.`;
             DiscardCardFromBoardProfit(data.G, data.ctx, data, boardCells);
@@ -254,15 +264,11 @@ export const DrawProfit = (data: BoardProps<IMyGameState>): JSX.Element => {
             PickDiscardCardProfit(data.G, data.ctx, data, boardCells);
         } else if (option === ConfigNames.BrisingamensEndGameAction) {
             caption += `one card to discard from your board.`;
-            boardCells.push(
-                <td
-                    key={`${data.G.publicPlayers[Number(data.ctx.currentPlayer)].nickname} discard card`}>
-                    {DrawPlayerBoardForCardDiscard(data)}
-                </td>
-            );
+            DiscardAnyCardFromPlayerBoardProfit(data.G, data.ctx, data, boardCells);
         } else if (option === ConfigNames.HofudAction) {
             caption += `one warrior card to discard from your board.`;
             if (config !== undefined && config.suit !== undefined) {
+                // TODO Move to ProfitHelper!
                 boardCells.push(
                     <td key={`Discard ${config.suit} suit cardboard`}>
                         {DrawPlayersBoardForSuitCardDiscard(data, config.suit)}
@@ -300,45 +306,7 @@ export const DrawProfit = (data: BoardProps<IMyGameState>): JSX.Element => {
                 if (option === ConfigNames.VidofnirVedrfolnirAction) {
                     UpgradeCoinVidofnirVedrfolnirProfit(data.G, data.ctx, data, boardCells);
                 } else if (option === ConfigNames.UpgradeCoin) {
-                    // TODO Move to ProfitHelpers and add logic for bot or just use standard upgrade coins
-                    const handCoins = data.G.publicPlayers[Number(data.ctx.currentPlayer)].handCoins
-                        .filter((coin: CoinType): boolean => coin !== null);
-                    let handCoinIndex = -1;
-                    for (let j = 0; j < data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins.length;
-                        j++) {
-                        // TODO Check .? for all coins!!! and delete AS
-                        if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].buffs.everyTurn ===
-                            HeroNames.Uline
-                            && data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j] === null) {
-                            handCoinIndex++;
-                            const handCoinId: number =
-                                data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                    .handCoins.findIndex((coin: CoinType): boolean =>
-                                        coin?.value === handCoins[handCoinIndex]?.value
-                                        && coin?.isInitial === handCoins[handCoinIndex]?.isInitial);
-                            if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].handCoins[handCoinId]
-                                && !data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                    .handCoins[handCoinId]?.isTriggerTrading) {
-                                DrawCoin(data, boardCells, `coin`,
-                                    data.G.publicPlayers[Number(data.ctx.currentPlayer)]
-                                        .handCoins[handCoinId], j,
-                                    data.G.publicPlayers[Number(data.ctx.currentPlayer)],
-                                    `border-2`, null,
-                                    MoveNames.ClickCoinToUpgradeMove, j, `hand`,
-                                    handCoins[handCoinIndex]?.isInitial as boolean);
-                            }
-                        } else if (data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]
-                            && !data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]
-                                ?.isTriggerTrading) {
-                            DrawCoin(data, boardCells, `coin`,
-                                data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j], j,
-                                data.G.publicPlayers[Number(data.ctx.currentPlayer)],
-                                `border-2`, null,
-                                MoveNames.ClickCoinToUpgradeMove, j, `board`,
-                                data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins[j]?.isInitial as
-                                boolean);
-                        }
-                    }
+                    UpgradeCoinProfit(data.G, data.ctx, data, boardCells);
                 }
             }
         }
@@ -369,7 +337,8 @@ export const DrawProfit = (data: BoardProps<IMyGameState>): JSX.Element => {
  * @returns Поле таверн.
  */
 export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) => {
-    const tavernsBoards: JSX.Element[] = [];
+    const tavernsBoards: JSX.Element[] = [],
+        moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
     for (let t = 0; t < data.G.tavernsNum; t++) {
         for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];
@@ -391,6 +360,7 @@ export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) =
                     if (t === data.G.currentTavern) {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit,
                             MoveNames.ClickCardMove, j);
+                        moveMainArgs.push(j);
                     } else {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);
                     }
@@ -411,6 +381,8 @@ export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) =
             );
         }
     }
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PickCards][Stages.Default1].numbers = moveMainArgs;
     return tavernsBoards;
 };
 

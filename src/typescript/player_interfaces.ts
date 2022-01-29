@@ -1,26 +1,11 @@
 import { IStack } from "./action_interfaces";
+import { IBuffs } from "./buff_interfaces";
 import { CampDeckCardTypes, PickedCardType } from "./card_types";
 import { ICoin } from "./coin_interfaces";
 import { CoinType } from "./coin_types";
 import { IHero } from "./hero_card_interfaces";
 import { IPlayerCards } from "./interfaces";
 import { IPriority } from "./priority_interfaces";
-
-/**
- * <h3>Интерфейс для видов бафов у карт.</h3>
- */
-interface IBuffs {
-    // discardCardEndGame?: boolean,
-    // endTier?: string,
-    // everyTurn?: string,
-    // getMjollnirProfit?: boolean,
-    // goCamp?: boolean,
-    // goCampOneTime?: boolean,
-    // noHero?: boolean,
-    // upgradeCoin?: number,
-    // upgradeNextCoin?: string,
-    [name: string]: string | number | boolean,
-}
 
 /**
  * <h3>Интерфейс для создания публичных данных игрока.</h3>

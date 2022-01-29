@@ -1,4 +1,6 @@
-import { IStack } from "./action_interfaces";
+import { IAction, IStack } from "./action_interfaces";
+import { IBuff } from "./buff_interfaces";
+import { IValidatorsConfig } from "./hero_validator_interfaces";
 import { IPublicPlayer } from "./player_interfaces";
 
 /**
@@ -13,7 +15,10 @@ export interface ICreateHero {
     rank: null | number,
     points: null | number,
     active?: boolean,
-    stack: IStack[],
+    buff?: IBuff,
+    validators?: IValidatorsConfig,
+    actions?: IAction,
+    stack?: IStack[],
 }
 
 /**
@@ -28,7 +33,10 @@ export interface IHero {
     rank: null | number,
     points: null | number,
     active: boolean,
-    stack: IStack[],
+    buff?: IBuff,
+    validators?: IValidatorsConfig,
+    actions?: IAction,
+    stack?: IStack[],
 }
 
 /**
@@ -48,6 +56,9 @@ export interface IHeroData {
     suit: null | string,
     rank: null | number,
     points: null | number,
-    stack: IStack[],
+    buff?: IBuff,
+    validators?: IValidatorsConfig,
+    actions?: IAction,
+    stack?: IStack[],
     scoringRule: (player?: IPublicPlayer) => number,
 }

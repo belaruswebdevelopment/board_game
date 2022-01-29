@@ -286,7 +286,7 @@ export const enumerate = (G, ctx) => {
             args: [...botMoveArguments[Math.floor(Math.random() * botMoveArguments.length)]],
         });
     }
-    if (activeStageOfCurrentPlayer === Stages.UpgradeCoinVidofnirVedrfolnir) {
+    if (activeStageOfCurrentPlayer === Stages.UpgradeVidofnirVedrfolnirCoin) {
         UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, botMoveArguments);
         moves.push({
             move: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
@@ -327,7 +327,7 @@ export const enumerate = (G, ctx) => {
             }
         }
     }
-    if (activeStageOfCurrentPlayer === Stages.DiscardCardFromBoard) {
+    if (activeStageOfCurrentPlayer === Stages.DiscardBoardCard) {
         DiscardCardFromBoardProfit(G, ctx, botMoveArguments);
         moves.push({
             move: MoveNames.DiscardCardMove,

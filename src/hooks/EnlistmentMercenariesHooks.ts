@@ -1,9 +1,10 @@
 import { Ctx } from "boardgame.io";
+import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
-import { CheckEndTierActionsOrEndGameLastActions, RemoveThrudFromPlayerBoardAfterGameEnd } from "../helpers/GameHooksHelpers";
+import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { CampDeckCardTypes } from "../typescript/card_types";
 import { DrawNames, RusCardTypes } from "../typescript/enums";
-import { INext, IMyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState, INext } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
@@ -16,7 +17,7 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
  * @param G
  * @param ctx
  */
-export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): void | INext => {
+export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     if (G.publicPlayersOrder.length) {
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
             && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
@@ -50,7 +51,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): v
 export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1
         && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        return true;
+        return EndTurnActions(G, ctx);
     } else if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
         return G.publicPlayers[Number(ctx.currentPlayer)].campCards
             .filter((card: CampDeckCardTypes): boolean =>
@@ -67,8 +68,18 @@ export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void
     G.publicPlayersOrder = [];
 };
 
-export const OnEnlistmentMercenariesPhaseTurnBegin = (G: IMyGameState, ctx: Ctx): void =>
+export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => {
+    StartOrEndActions(G, ctx);
+};
+
+export const OnEnlistmentMercenariesTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddEnlistmentMercenariesActionsToStack(G, ctx);
+    DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
+};
+
+export const OnEnlistmentMercenariesTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
+    ClearPlayerPickedCard(G, ctx);
+};
 
 /**
 * <h3>Определяет порядок найма наёмников при начале фазы 'enlistmentMercenaries'.</h3>

@@ -2,17 +2,6 @@ import { suitsConfig } from "./data/SuitData";
 import { RusCardTypes } from "./typescript/enums";
 // TODO Add LogTypes.ERROR logging to Sasha's functions
 /**
- * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При проверках в функциях.</li>
- * </ol>
- *
- * @param card Карта.
- * @returns Является ли объект картой дворфа, а не картой обмена монеты.
- */
-export const isCardNotAction = (card) => card.suit !== undefined;
-/**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -107,4 +96,15 @@ export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name
     tier,
     path,
 });
+/**
+ * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой дворфа, а не картой обмена монеты.
+ */
+export const isCardNotAction = (card) => card.suit !== undefined;
 //# sourceMappingURL=Card.js.map

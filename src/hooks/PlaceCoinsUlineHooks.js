@@ -1,17 +1,6 @@
 import { CheckPlayersBasicOrder } from "../Player";
 import { HeroNames } from "../typescript/enums";
 /**
- * <h3>Проверяет порядок хода при начале фазы 'placeCoinsUline'.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При начале фазы 'placeCoinsUline'.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckUlinePlaceCoinsOrder = (G, ctx) => CheckPlayersBasicOrder(G, ctx);
-/**
  * <h3>Проверяет необходимость завершения фазы 'placeCoinsUline'.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -27,6 +16,17 @@ export const CheckEndPlaceCoinsUlinePhase = (G) => {
         return G.publicPlayers[ulinePlayerIndex].boardCoins[G.currentTavern + 1] !== null;
     }
 };
+/**
+ * <h3>Проверяет порядок хода при начале фазы 'placeCoinsUline'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале фазы 'placeCoinsUline'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const CheckUlinePlaceCoinsOrder = (G, ctx) => CheckPlayersBasicOrder(G, ctx);
 export const EndPlaceCoinsUlineActions = (G) => {
     G.publicPlayersOrder = [];
 };

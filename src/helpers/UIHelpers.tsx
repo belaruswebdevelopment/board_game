@@ -4,7 +4,6 @@ import { suitsConfig } from "../data/SuitData";
 import { IDrawBoardOptions } from "../typescript/board_interfaces";
 import { MoveNames, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
-import { DiscardAnyCardFromPlayerBoardProfit } from "./ProfitHelpers";
 import { DrawCard } from "./UIElementHelpers";
 
 /**
@@ -25,43 +24,6 @@ export const DrawBoard = (objectsSize: number): IDrawBoardOptions => {
 };
 
 /**
- * <h3>Отрисовка планшета конкретного игрока для дискарда карты.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Отрисовка планшета конкретного игрока для дискарда карты по действию артефакта Brisingamens.</li>
- * </ol>
- *
- * @param data Глобальные параметры.
- * @returns Поле для вывода карт для дискарда.
- */
-export const DrawPlayerBoardForCardDiscard = (data: BoardProps<IMyGameState>): JSX.Element => {
-    // TODO Discard cards must be hidden from others users?
-    const playerHeaders: JSX.Element[] = [],
-        playerRows: JSX.Element[][] = [];
-    for (const suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            playerHeaders.push(
-                <th className={`${suitsConfig[suit].suitColor}`}
-                    key={`${data.G.publicPlayers[Number(data.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`}>
-                    <span style={Styles.Suits(suit)} className="bg-suit-icon">
-
-                    </span>
-                </th>
-            );
-        }
-    }
-    DiscardAnyCardFromPlayerBoardProfit(data.G, data.ctx, data, playerRows);
-    return (
-        <table>
-            <thead>
-                <tr>{playerHeaders}</tr>
-            </thead>
-            <tbody>{playerRows}</tbody>
-        </table>
-    );
-};
-
-/**
  * <h3>Отрисовка планшета конкретных игроков для дискарда карты конкретной фракции.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -73,6 +35,7 @@ export const DrawPlayerBoardForCardDiscard = (data: BoardProps<IMyGameState>): J
  * @returns Поле игрока для дискарда карты фракции.
  */
 export const DrawPlayersBoardForSuitCardDiscard = (data: BoardProps<IMyGameState>, suit: string): JSX.Element => {
+    // TODO Move it to ProfitHelper!
     const playersHeaders: JSX.Element[] = [],
         playersRows: JSX.Element[][] = [];
     for (let p = 0; p < data.G.publicPlayers.length; p++) {

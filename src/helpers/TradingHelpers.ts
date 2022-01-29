@@ -1,13 +1,10 @@
 import { Ctx } from "boardgame.io";
-import { UpgradeCoinAction } from "../actions/Actions";
+import { UpgradeCoinAction } from "../actions/AutoActions";
 import { AddDataToLog } from "../Logging";
-import { IStack } from "../typescript/action_interfaces";
 import { ICoin } from "../typescript/coin_interfaces";
 import { CoinType } from "../typescript/coin_types";
-import { ActionTypes, LogTypes } from "../typescript/enums";
+import { LogTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
-import { StartActionFromStackOrEndActions } from "./ActionDispatcherHelpers";
-import { AddActionsToStack } from "./StackHelpers";
 
 /**
  * <h3>Активирует обмен монет.</h3>
@@ -48,11 +45,11 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
     const coinsValues: number[] = tradingCoins.map((coin: ICoin): number => coin.value),
         coinsMaxValue: number = Math.max(...coinsValues),
         coinsMinValue: number = Math.min(...coinsValues);
-    let stack: IStack[],
-        upgradingCoinId: number,
+    let upgradingCoinId: number,
         upgradingCoin: ICoin,
         coinMaxIndex = 0,
-        coinMinIndex = 0;
+        coinMinIndex = 0,
+        value: number;
     AddDataToLog(G, LogTypes.GAME, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
     // TODO trading isInitial first or playerChoose?
     for (let i = 0; i < tradingCoins.length; i++) {
@@ -70,39 +67,13 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
         }
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin === `min`) {
-        stack = [
-            {
-                action: {
-                    name: UpgradeCoinAction.name,
-                    type: ActionTypes.Action,
-                },
-                config: {
-                    number: 1,
-                    value: coinsMaxValue,
-                    isTrading: true,
-                },
-            },
-        ];
+        value = coinsMaxValue;
         upgradingCoinId = G.tavernsNum + coinMinIndex;
         upgradingCoin = tradingCoins[coinMinIndex];
     } else {
-        stack = [
-            {
-                action: {
-                    name: UpgradeCoinAction.name,
-                    type: ActionTypes.Action,
-                },
-                config: {
-                    number: 1,
-                    value: coinsMinValue,
-                    isTrading: true,
-                },
-            },
-        ];
+        value = coinsMinValue;
         upgradingCoinId = G.tavernsNum + coinMaxIndex;
         upgradingCoin = tradingCoins[coinMaxIndex];
     }
-    AddActionsToStack(G, ctx, stack);
-    StartActionFromStackOrEndActions(G, ctx, false, upgradingCoinId, `board`,
-        upgradingCoin.isInitial);
+    UpgradeCoinAction(G, ctx, value, upgradingCoinId, `board`, upgradingCoin.isInitial);
 };

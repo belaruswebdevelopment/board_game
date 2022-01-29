@@ -1,10 +1,14 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { DrawProfitCampAction, GetEnlistmentMercenariesAction, PlaceEnlistmentMercenariesAction } from "../actions/CampActions";
-import { StartActionForChosenPlayer, StartActionFromStackOrEndActions } from "../helpers/ActionDispatcherHelpers";
-import { AddActionsToStack, EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { DiscardCardFromTavernAction } from "../actions/Actions";
+import { DiscardAnyCardFromPlayerBoardAction, DiscardSuitCardAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PlaceEnlistmentMercenariesAction } from "../actions/CampActions";
+import { isArtefactCard } from "../Camp";
+import { StackData } from "../data/StackData";
+import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
+import { AddCampCardToCards } from "../helpers/CampMovesHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { ActionTypes, ConfigNames, DrawNames, LogTypes } from "../typescript/enums";
+import { LogTypes } from "../typescript/enums";
 // TODO Add logging
 /**
  * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
@@ -24,9 +28,15 @@ export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
+    // TODO Move to function with Camp same logic
     const campCard = G.camp[cardId];
     if (campCard !== null) {
-        EndActionFromStackAndAddNew(G, ctx, campCard.stack, cardId);
+        G.camp[cardId] = null;
+        AddCampCardToCards(G, ctx, campCard);
+        if (isArtefactCard(campCard)) {
+            StartAutoAction(G, ctx, campCard.actions);
+            AddActionsToStackAfterCurrent(G, ctx, campCard.stack);
+        }
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
@@ -51,10 +61,15 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const card = G.camp[cardId];
-    if (card !== null) {
-        AddActionsToStack(G, ctx, card.stack);
-        StartActionFromStackOrEndActions(G, ctx, false, cardId);
+    // TODO Move to function with Holda same logic
+    const campCard = G.camp[cardId];
+    if (campCard !== null) {
+        G.camp[cardId] = null;
+        AddCampCardToCards(G, ctx, campCard);
+        if (isArtefactCard(campCard)) {
+            StartAutoAction(G, ctx, campCard.actions);
+            AddActionsToStackAfterCurrent(G, ctx, campCard.stack);
+        }
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
@@ -73,7 +88,7 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
  * @param cardId Id сбрасываемой карты.
  */
 export const DiscardCardFromPlayerBoardMove = (G, ctx, suit, cardId) => {
-    EndActionFromStackAndAddNew(G, ctx, [], suit, cardId);
+    DiscardAnyCardFromPlayerBoardAction(G, ctx, suit, cardId);
 };
 /**
  * <h3>Сбрасывает карту из таверны при выборе карты из кэмпа на двоих игроков.</h3>
@@ -87,7 +102,7 @@ export const DiscardCardFromPlayerBoardMove = (G, ctx, suit, cardId) => {
  * @param cardId Id сбрасываемой карты.
  */
 export const DiscardCard2PlayersMove = (G, ctx, cardId) => {
-    EndActionFromStackAndAddNew(G, ctx, [], cardId);
+    DiscardCardFromTavernAction(G, ctx, cardId);
 };
 /**
  * <h3>Сбрасывает карту конкретной фракции в дискард по выбору игрока при действии артефакта Hofud.</h3>
@@ -114,7 +129,7 @@ export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, playerId, cardI
     if (!isValidMove) {
         return INVALID_MOVE;
     }*/
-    StartActionForChosenPlayer(G, ctx, playerId, suit, playerId, cardId);
+    DiscardSuitCardAction(G, ctx, suit, playerId, cardId);
 };
 /**
  * <h3>Выбор игроком карты наёмника для вербовки.</h3>
@@ -128,15 +143,7 @@ export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, playerId, cardI
  * @param cardId Id карты.
  */
 export const GetEnlistmentMercenariesMove = (G, ctx, cardId) => {
-    const stack = [
-        {
-            action: {
-                name: GetEnlistmentMercenariesAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack, cardId);
+    GetEnlistmentMercenariesAction(G, ctx, cardId);
 };
 /**
  * <h3>Выбирает фракцию для применения финального эффекта артефакта Mjollnir.</h3>
@@ -150,7 +157,7 @@ export const GetEnlistmentMercenariesMove = (G, ctx, cardId) => {
  * @param suit Название фракции.
  */
 export const GetMjollnirProfitMove = (G, ctx, suit) => {
-    EndActionFromStackAndAddNew(G, ctx, [], suit);
+    GetMjollnirProfitAction(G, ctx, suit);
 };
 /**
  * <h3>Выбор фракции куда будет завербован наёмник.</h3>
@@ -164,15 +171,7 @@ export const GetMjollnirProfitMove = (G, ctx, suit) => {
  * @param suit Название фракции.
  */
 export const PlaceEnlistmentMercenariesMove = (G, ctx, suit) => {
-    const stack = [
-        {
-            action: {
-                name: PlaceEnlistmentMercenariesAction.name,
-                type: ActionTypes.Camp,
-            },
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack, suit);
+    PlaceEnlistmentMercenariesAction(G, ctx, suit);
 };
 /**
  * <h3>Начало вербовки наёмников.</li>
@@ -185,18 +184,7 @@ export const PlaceEnlistmentMercenariesMove = (G, ctx, suit) => {
  * @param ctx
  */
 export const StartEnlistmentMercenariesMove = (G, ctx) => {
-    const stack = [
-        {
-            action: {
-                name: DrawProfitCampAction.name,
-                type: ActionTypes.Camp,
-            },
-            config: {
-                name: ConfigNames.EnlistmentMercenaries,
-                drawName: DrawNames.EnlistmentMercenaries,
-            },
-        },
-    ];
-    EndActionFromStackAndAddNew(G, ctx, stack);
+    const stack = [StackData.enlistmentMercenaries()];
+    AddActionsToStackAfterCurrent(G, ctx, stack);
 };
 //# sourceMappingURL=CampMoves.js.map

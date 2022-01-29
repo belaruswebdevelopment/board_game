@@ -1,9 +1,10 @@
 import { Ctx } from "boardgame.io";
-import { CheckEndGameLastActions, RemoveThrudFromPlayerBoardAfterGameEnd } from "../helpers/GameHooksHelpers";
+import { DrawCurrentProfit } from "../helpers/ActionHelpers";
+import { CheckEndGameLastActions, ClearPlayerPickedCard, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
 import { PlayerCardsType } from "../typescript/card_types";
 import { DrawNames, HeroNames } from "../typescript/enums";
-import { INext, IMyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState, INext } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
@@ -16,7 +17,7 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
  * @param G
  * @param ctx
  */
-export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): void | INext => {
+export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     if (G.publicPlayersOrder.length) {
         const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
             player.buffs.endTier === DrawNames.Ylud);
@@ -49,9 +50,19 @@ export const CheckEndTierOrder = (G: IMyGameState): void => {
 };
 
 export const EndEndTierActions = (G: IMyGameState, ctx: Ctx): void => {
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
     RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
     G.publicPlayersOrder = [];
 };
 
-export const OnEndTierPhaseTurnBegin = (G: IMyGameState, ctx: Ctx): void =>
+export const OnEndTierMove = (G: IMyGameState, ctx: Ctx): void => {
+    StartOrEndActions(G, ctx);
+};
+export const OnEndTierTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
+    ClearPlayerPickedCard(G, ctx);
+};
+
+export const OnEndTierTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddEndTierActionsToStack(G, ctx);
+    DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
+};

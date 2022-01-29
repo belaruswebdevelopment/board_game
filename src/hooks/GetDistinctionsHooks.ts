@@ -1,6 +1,8 @@
 import { Ctx } from "boardgame.io";
-import { RefillCamp } from "../Camp";
 import { CheckDistinction } from "../Distinction";
+import { AddGetDistinctionsActionToStack } from "../helpers/ActionHelpers";
+import { RefillCamp } from "../helpers/CampHelpers";
+import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { DistinctionTypes } from "../typescript/types";
 
@@ -14,7 +16,7 @@ import { DistinctionTypes } from "../typescript/types";
  * @param G
  * @param ctx
  */
-export const CheckAndResolveDistinctionOrders = (G: IMyGameState, ctx: Ctx): void => {
+export const CheckAndResolveDistinctionsOrders = (G: IMyGameState, ctx: Ctx): void => {
     CheckDistinction(G, ctx);
     const distinctions: DistinctionTypes[] =
         Object.values(G.distinctions).filter((distinction: DistinctionTypes): boolean =>
@@ -36,7 +38,7 @@ export const CheckAndResolveDistinctionOrders = (G: IMyGameState, ctx: Ctx): voi
 * @param ctx
  * @returns
  */
-export const CheckEndDistinctionsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
+export const CheckEndGetDistinctionsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.publicPlayersOrder.length) {
         if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
             return Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
@@ -55,10 +57,8 @@ export const CheckEndDistinctionsPhase = (G: IMyGameState, ctx: Ctx): boolean | 
  * @param G
  * @param ctx
  */
-export const CheckNextDistinctionTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        return true;
-    }
+export const CheckNextGetDistinctionsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
+    return EndTurnActions(G, ctx);
 };
 
 /**
@@ -70,9 +70,21 @@ export const CheckNextDistinctionTurn = (G: IMyGameState, ctx: Ctx): boolean | v
  *
  * @param G
  */
-export const EndDistinctionPhaseActions = (G: IMyGameState): void => {
+export const EndGetDistinctionsPhaseActions = (G: IMyGameState): void => {
     if (G.expansions.thingvellir.active) {
         RefillCamp(G);
     }
     G.publicPlayersOrder = [];
+};
+
+export const OnGetDistinctionsMove = (G: IMyGameState, ctx: Ctx): void => {
+    StartOrEndActions(G, ctx);
+};
+
+export const OnGetDistinctionsTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
+    AddGetDistinctionsActionToStack(G, ctx);
+};
+
+export const OnGetDistinctionsTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
+    ClearPlayerPickedCard(G, ctx);
 };

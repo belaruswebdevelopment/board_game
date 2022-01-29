@@ -1,6 +1,5 @@
-import { TotalRank } from "./helpers/ScoreHelpers";
-import { AddDataToLog } from "./Logging";
-import { HeroNames, LogTypes } from "./typescript/enums";
+import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
+import { HeroNames, MoveNames, Phases, Stages } from "./typescript/enums";
 /**
  * Validates arguments inside of move.
  * obj - object to validate.
@@ -22,7 +21,7 @@ import { HeroNames, LogTypes } from "./typescript/enums";
  * @param values
  * @returns Валидный ли мув.
  */
-const CheckMove = ({ obj, objId, range = [], values = [] }) => {
+const CheckMove = ({ obj, objId, range = [], values = [], }) => {
     let isValid = obj !== null;
     if (range.length === 2) {
         isValid = isValid && ValidateByRange(objId, range);
@@ -87,46 +86,86 @@ export const IsValidMove = (obj) => {
  */
 export const moveBy = {
     null: {},
-    placeCoins: {
-        default1: `ClickHandCoinMove`,
-        default2: `ClickBoardCoinMove`,
-        default_advanced: `BotsPlaceAllCoinsMove`,
+    [Phases.PlaceCoins]: {
+        default1: MoveNames.ClickHandCoinMove,
+        default2: MoveNames.ClickBoardCoinMove,
+        default_advanced: MoveNames.BotsPlaceAllCoinsMove,
     },
-    pickCards: {
-        default: `ClickCardMove`,
-        defaultPickCampCard: `ClickCampCardMove`,
+    [Phases.PlaceCoinsUline]: {
+    // default1: MoveNames.ClickHandCoinMove,
+    // default2: MoveNames.ClickBoardCoinMove,
+    },
+    [Phases.PickCards]: {
+        default1: MoveNames.ClickCardMove,
+        default2: MoveNames.ClickCampCardMove,
         // start
-        pickHero: `ClickHeroCardMove`,
-        upgradeCoin: `ClickCoinToUpgradeMove`,
-        discardSuitCard: `discardSuitCardMove`,
+        [Stages.AddCoinToPouch]: MoveNames.AddCoinToPouchMove,
+        [Stages.DiscardBoardCard]: MoveNames.DiscardCardMove,
+        [Stages.DiscardSuitCard]: MoveNames.DiscardSuitCardFromPlayerBoardMove,
+        [Stages.PickCampCardHolda]: MoveNames.ClickCampCardHoldaMove,
+        [Stages.PickDiscardCard]: MoveNames.PickDiscardCardMove,
+        [Stages.PickHero]: MoveNames.ClickHeroCardMove,
+        [Stages.PlaceCards]: MoveNames.PlaceCardMove,
+        [Stages.UpgradeCoin]: MoveNames.ClickCoinToUpgradeMove,
+        [Stages.UpgradeVidofnirVedrfolnirCoin]: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
+        // end
+        [Stages.DiscardCard]: MoveNames.DiscardCard2PlayersMove,
+        // TODO Fix it!
+        [Stages.PlaceTradingCoinsUline]: MoveNames.ClickHandCoinMove,
+        // [Stages.PlaceTradingCoinsUline]: MoveNames.ClickBoardCoinMove,
+    },
+    [Phases.EnlistmentMercenaries]: {
+        default1: MoveNames.StartEnlistmentMercenariesMove,
+        default2: MoveNames.PassEnlistmentMercenariesMove,
+        default3: MoveNames.GetEnlistmentMercenariesMove,
+        default4: MoveNames.PlaceEnlistmentMercenariesMove,
+        // start
+        [Stages.AddCoinToPouch]: MoveNames.AddCoinToPouchMove,
+        [Stages.DiscardBoardCard]: MoveNames.DiscardCardMove,
+        [Stages.DiscardSuitCard]: MoveNames.DiscardSuitCardFromPlayerBoardMove,
+        [Stages.PickCampCardHolda]: MoveNames.ClickCampCardHoldaMove,
+        [Stages.PickDiscardCard]: MoveNames.PickDiscardCardMove,
+        [Stages.PickHero]: MoveNames.ClickHeroCardMove,
+        [Stages.PlaceCards]: MoveNames.PlaceCardMove,
+        [Stages.UpgradeCoin]: MoveNames.ClickCoinToUpgradeMove,
+        [Stages.UpgradeVidofnirVedrfolnirCoin]: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
         // end
     },
-    getDistinctions: {
-        default: `ClickDistinctionCardMove`,
-        pickDistinctionCard: `ClickCardToPickDistinctionMove`,
+    [Phases.EndTier]: {
+        default: MoveNames.PlaceCardMove,
         // start
-        pickHero: `ClickHeroCardMove`,
-        upgradeCoin: `ClickCoinToUpgradeMove`,
-        discardSuitCard: `discardSuitCardMove`,
+        [Stages.AddCoinToPouch]: MoveNames.AddCoinToPouchMove,
+        [Stages.DiscardBoardCard]: MoveNames.DiscardCardMove,
+        [Stages.DiscardSuitCard]: MoveNames.DiscardSuitCardFromPlayerBoardMove,
+        [Stages.PickCampCardHolda]: MoveNames.ClickCampCardHoldaMove,
+        [Stages.PickDiscardCard]: MoveNames.PickDiscardCardMove,
+        [Stages.PickHero]: MoveNames.ClickHeroCardMove,
+        [Stages.PlaceCards]: MoveNames.PlaceCardMove,
+        [Stages.UpgradeCoin]: MoveNames.ClickCoinToUpgradeMove,
+        [Stages.UpgradeVidofnirVedrfolnirCoin]: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
         // end
     },
-    endTier: {
+    [Phases.GetDistinctions]: {
+        default: MoveNames.ClickDistinctionCardMove,
         // start
-        pickHero: `ClickHeroCardMove`,
-        upgradeCoin: `ClickCoinToUpgradeMove`,
-        discardSuitCard: `discardSuitCardMove`,
+        [Stages.AddCoinToPouch]: MoveNames.AddCoinToPouchMove,
+        [Stages.DiscardBoardCard]: MoveNames.DiscardCardMove,
+        [Stages.DiscardSuitCard]: MoveNames.DiscardSuitCardFromPlayerBoardMove,
+        [Stages.PickCampCardHolda]: MoveNames.ClickCampCardHoldaMove,
+        [Stages.PickDiscardCard]: MoveNames.PickDiscardCardMove,
+        [Stages.PickHero]: MoveNames.ClickHeroCardMove,
+        [Stages.PlaceCards]: MoveNames.PlaceCardMove,
+        [Stages.UpgradeCoin]: MoveNames.ClickCoinToUpgradeMove,
+        [Stages.UpgradeVidofnirVedrfolnirCoin]: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
         // end
+        [Stages.PickDistinctionCard]: MoveNames.ClickCardToPickDistinctionMove,
     },
-    enlistmentMercenaries: {
-        // start
-        pickHero: `ClickHeroCardMove`,
-        upgradeCoin: `ClickCoinToUpgradeMove`,
-        discardSuitCard: `discardSuitCardMove`,
-        // end
+    [Phases.BrisingamensEndGame]: {
+        default: MoveNames.DiscardCardFromPlayerBoardMove,
     },
-    placeCoinsUline: {},
-    getMjollnirProfit: {},
-    brisingamensEndGame: {},
+    [Phases.GetMjollnirProfit]: {
+        defaul: MoveNames.GetMjollnirProfitMove,
+    },
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -138,96 +177,88 @@ export const moveBy = {
  */
 export const moveValidators = {
     // TODO Add all validators to all moves
-    ClickHandCoinMove: {
-        getRange: ({ G, ctx }) => ([0, G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].handCoins.length]),
-        validate: ({ G, ctx, id }) => {
-            if (id !== undefined) {
-                return G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].selectedCoin === undefined
-                    && G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].handCoins[id] !== null;
-            }
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
-            return false;
-        },
-    },
-    ClickBoardCoinMove: {
-        getRange: ({ G, ctx }) => ([0, G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].boardCoins.length]),
-        validate: ({ G, ctx, id }) => {
-            if (id !== undefined) {
-                return G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].selectedCoin !== undefined
-                    && G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].boardCoins[id] === null;
-            }
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
-            return false;
-        },
-    },
-    BotsPlaceAllCoinsMove: {
-        getRange: ({ G }) => ([0, G.botData.allCoinsOrder.length]),
+    [MoveNames.BotsPlaceAllCoinsMove]: {
+        getRange: ({ G }) => [0, G.botData.allCoinsOrder.length],
         getValue: ({ G, id }) => {
             if (id !== undefined) {
                 return G.botData.allCoinsOrder[id];
             }
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             // TODO Return []???
             return [];
         },
         validate: () => true,
     },
-    ClickHeroCardMove: {
-        getRange: ({ G }) => ([0, G.heroes.length]),
+    [MoveNames.ClickBoardCoinMove]: {
+        getRange: ({ G, ctx }) => [0, G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].boardCoins.length],
         validate: ({ G, ctx, id }) => {
             if (id !== undefined) {
-                let isValid = G.heroes[id].active;
-                // TODO Add validators to others heroes
-                if (G.heroes[id].name === HeroNames.Hourya) {
-                    const config = G.heroes[id].stack[0].config;
-                    if ((config === null || config === void 0 ? void 0 : config.conditions) !== undefined) {
-                        isValid = G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)]
-                            .cards[config.conditions.suitCountMin.suit].reduce(TotalRank, 0) >=
-                            config.conditions.suitCountMin.value;
-                        return isValid;
-                    }
-                    else {
-                        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Нет обязательного параметр stack[0] у героя ${G.heroes[id].name}.`);
-                    }
-                    return false;
-                }
-                return isValid;
+                return G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].selectedCoin !== undefined
+                    && G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].boardCoins[id] === null;
             }
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
         },
     },
+    [MoveNames.ClickCampCardMove]: {
+        getRange: ({ G }) => [0, G.camp.length],
+        validate: ({ G, ctx }) => G.expansions.thingvellir.active && ((ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer) === G.publicPlayersOrder[0]
+            || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].buffs.goCamp))),
+    },
+    [MoveNames.ClickCardToPickDistinctionMove]: {
+        getRange: () => ([0, 3]),
+        validate: () => true,
+    },
     // TODO Rework if Uline in play or no 1 coin in game (& add param isInitial?)
-    ClickCoinToUpgradeMove: {
-        getRange: ({ G, ctx }) => ([0, G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].boardCoins.length]),
+    [MoveNames.ClickCoinToUpgradeMove]: {
+        getRange: ({ G, ctx }) => [0, G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].boardCoins.length],
         validate: ({ G, ctx, id, type }) => {
             if (id !== undefined && type !== undefined) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 return CoinUpgradeValidation(G, ctx, id, type);
             }
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id' или не передан обязательный параметр 'type'.`);
             return false;
         },
     },
-    ClickCardToPickDistinctionMove: {
-        getRange: () => ([0, 3]),
-        validate: () => true,
-    },
-    ClickDistinctionCardMove: {
+    [MoveNames.ClickDistinctionCardMove]: {
         // TODO Rework with validator in Move: Object.keys(G.distinctions).includes(suit)
-        getRange: ({ G }) => ([0, Object.values(G.distinctions).length]),
+        getRange: ({ G }) => [0, Object.values(G.distinctions).length],
         validate: ({ G, ctx, id }) => {
             if (id !== undefined) {
                 return Object.values(G.distinctions).indexOf(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer) === id;
             }
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'id'.`);
             return false;
         }
     },
-    ClickCampCardMove: {
-        getRange: ({ G }) => ([0, G.camp.length]),
-        validate: ({ G, ctx }) => G.expansions.thingvellir.active && ((ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer) === G.publicPlayersOrder[0]
-            || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].buffs.goCamp))),
+    [MoveNames.ClickHandCoinMove]: {
+        getRange: ({ G, ctx }) => [0, G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].handCoins.length],
+        validate: ({ G, ctx, id }) => {
+            if (id !== undefined) {
+                return G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].selectedCoin === undefined
+                    && G.publicPlayers[Number(ctx === null || ctx === void 0 ? void 0 : ctx.currentPlayer)].handCoins[id] !== null;
+            }
+            return false;
+        },
+    },
+    [MoveNames.ClickHeroCardMove]: {
+        getRange: ({ G }) => [0, G.heroes.length],
+        validate: ({ G, ctx, id }) => {
+            if (ctx !== undefined && id !== undefined) {
+                let isValid = G.heroes[id].active;
+                // TODO Add validators to others heroes and to Pick Hero Move
+                switch (G.heroes[id].name) {
+                    case HeroNames.Hourya:
+                        isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
+                        break;
+                    case HeroNames.Bonfur:
+                    case HeroNames.Dagda:
+                        isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
+                        break;
+                    default:
+                        break;
+                }
+                return isValid;
+            }
+            return false;
+        },
     },
 };
 /**

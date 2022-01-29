@@ -1,12 +1,12 @@
 import { Ctx } from "boardgame.io";
-import { RefillEmptyCampCards } from "../Camp";
 import { ReturnCoinsToPlayerHands } from "../Coin";
+import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { CoinType } from "../typescript/coin_types";
 import { HeroNames } from "../typescript/enums";
-import { INext, IMyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState, INext } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
@@ -49,7 +49,7 @@ export const CheckEndPlaceCoinsTurn = (G: IMyGameState, ctx: Ctx): boolean | voi
     }
 };
 
-export const EndPlaceCoinsActions = (G: IMyGameState): void => {
+export const OnPlaceCoinsTurnEnd = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
 };
 

@@ -1,7 +1,10 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { DiscardCardsFromPlayerBoardAction, PlaceCardsAction } from "../actions/HeroActions";
+import { AddHeroToCards } from "../helpers/HeroMovesHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
+import { Stages } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 
 // TODO Add logging
@@ -18,11 +21,12 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @returns
  */
 export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number): string | void => {
-    const isValidMove: boolean = IsValidMove({ obj: G.heroes[heroId], objId: heroId, range: [0, G.heroes.length] });
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.PickHero, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    EndActionFromStackAndAddNew(G, ctx, G.heroes[heroId].stack);
+    AddHeroToCards(G, ctx, G.heroes[heroId]);
+    AddActionsToStackAfterCurrent(G, ctx, G.heroes[heroId].stack);
 };
 
 /**
@@ -37,8 +41,16 @@ export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
  * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], suit, cardId);
+export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number):
+    string | void => {
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.DiscardBoardCard, {
+        suit,
+        cardId,
+    });
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    DiscardCardsFromPlayerBoardAction(G, ctx, suit, cardId);
 };
 
 /**
@@ -52,6 +64,10 @@ export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, s
  * @param ctx
  * @param suit Название фракции.
  */
-export const PlaceCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string): void => {
-    EndActionFromStackAndAddNew(G, ctx, [], suit);
+export const PlaceCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string): string | void => {
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.PlaceCards, suit);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    PlaceCardsAction(G, ctx, suit);
 };

@@ -1,8 +1,8 @@
 import { Ctx } from "boardgame.io";
+import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
-import { EndGame } from "../helpers/GameHooksHelpers";
 import { Phases } from "../typescript/enums";
-import { INext, IMyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState, INext } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
@@ -16,8 +16,10 @@ export const EndBrisingamensEndGameActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
 };
 
-export const OnBrisingamensEndGamePhaseTurnBegin = (G: IMyGameState, ctx: Ctx): void =>
+export const OnBrisingamensEndGameTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddBrisingamensEndGameActionsToStack(G, ctx);
+    DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
+};
 
 /**
  * <h3>Начинает фазу 'getMjollnirProfit' или завершает игру.</h3>
@@ -29,7 +31,7 @@ export const OnBrisingamensEndGamePhaseTurnBegin = (G: IMyGameState, ctx: Ctx): 
  * @param ctx
  * @returns
  */
-export const StartGetMjollnirProfitOrEndGame = (G: IMyGameState, ctx: Ctx): void | INext => {
+export const StartGetMjollnirProfitOrEndGame = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     if (G.publicPlayersOrder.length) {
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame === undefined) {
             const buffIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
@@ -39,7 +41,7 @@ export const StartGetMjollnirProfitOrEndGame = (G: IMyGameState, ctx: Ctx): void
                     next: Phases.GetMjollnirProfit,
                 };
             } else {
-                EndGame(ctx);
+                return true;
             }
         }
     }

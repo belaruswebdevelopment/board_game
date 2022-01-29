@@ -1,4 +1,5 @@
-import { IStack } from "./action_interfaces";
+import { IAction, IStack, IVariants } from "./action_interfaces";
+import { IBuff } from "./buff_interfaces";
 import { IPublicPlayer } from "./player_interfaces";
 
 /**
@@ -12,7 +13,9 @@ export interface IArtefact {
     suit: null | string,
     rank: null | number,
     points: null | number,
-    stack: IStack[],
+    buff?: IBuff,
+    actions?: IAction,
+    stack?: IStack[],
     scoringRule: (player?: IPublicPlayer, suit?: string) => number,
 }
 
@@ -29,7 +32,9 @@ export interface IArtefactCampCard {
     suit: null | string,
     rank: null | number,
     points: null | number,
-    stack: IStack[],
+    buff?: IBuff,
+    actions?: IAction,
+    stack?: IStack[],
 }
 
 /**
@@ -52,7 +57,9 @@ export interface ICreateArtefactCampCard {
     suit: null | string,
     rank: null | number,
     points: null | number,
-    stack: IStack[],
+    buff?: IBuff,
+    actions?: IAction,
+    stack?: IStack[],
 }
 
 /**
@@ -64,7 +71,7 @@ export interface ICreateMercenaryCampCard {
     path: string,
     name: string,
     game?: string,
-    stack: IStack[],
+    variants: IVariants,
 }
 
 /**
@@ -92,5 +99,5 @@ export interface IMercenaryCampCard {
     path: string,
     name: string,
     game: string,
-    stack: IStack[],
+    variants: IVariants,
 }

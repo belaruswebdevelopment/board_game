@@ -1,5 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { EndActionFromStackAndAddNew } from "../helpers/StackHelpers";
+import { DiscardCardsFromPlayerBoardAction, PlaceCardsAction } from "../actions/HeroActions";
+import { AddHeroToCards } from "../helpers/HeroMovesHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 // TODO Add logging
 /**
@@ -19,7 +21,8 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    EndActionFromStackAndAddNew(G, ctx, G.heroes[heroId].stack);
+    AddHeroToCards(G, ctx, G.heroes[heroId]);
+    AddActionsToStackAfterCurrent(G, ctx, G.heroes[heroId].stack);
 };
 /**
  * <h3>Сброс карты с верха планшета игрока при выборе героя.</h3>
@@ -34,7 +37,7 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
  * @param cardId Id карты.
  */
 export const DiscardCardMove = (G, ctx, suit, cardId) => {
-    EndActionFromStackAndAddNew(G, ctx, [], suit, cardId);
+    DiscardCardsFromPlayerBoardAction(G, ctx, suit, cardId);
 };
 /**
  * <h3>Расположение героя или зависимых карт героя на планшет игрока.</h3>
@@ -48,6 +51,6 @@ export const DiscardCardMove = (G, ctx, suit, cardId) => {
  * @param suit Название фракции.
  */
 export const PlaceCardMove = (G, ctx, suit) => {
-    EndActionFromStackAndAddNew(G, ctx, [], suit);
+    PlaceCardsAction(G, ctx, suit);
 };
 //# sourceMappingURL=HeroMoves.js.map

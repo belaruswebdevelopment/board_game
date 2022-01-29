@@ -1,5 +1,8 @@
 import { Ctx, Move } from "boardgame.io";
+import { INVALID_MOVE } from "boardgame.io/core";
+import { IsValidMove } from "../MoveValidator";
 import { CoinType } from "../typescript/coin_types";
+import { Stages } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 
 /**
@@ -13,7 +16,13 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @param ctx
  * @param coinsOrder Порядок выкладки монет.
  */
-export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]): void => {
+export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]):
+    string | void => {
+    // TODO Check it and fix it!
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.Default3, coinsOrder);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
     for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
         const coinId: number = coinsOrder[i] || G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin: CoinType): boolean => coin !== null);

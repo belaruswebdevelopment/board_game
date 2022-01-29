@@ -19,6 +19,28 @@ export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
         }
     }
 };
+export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
+    const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config, pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+    if (config !== undefined) {
+        for (const suit in suitsConfig) {
+            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
+                if (suit !== config.suit
+                    && !(G.drawProfit === ConfigNames.DagdaAction && G.actionsNum === 1 && pickedCard !== null
+                        && `suit` in pickedCard && suit === pickedCard.suit)) {
+                    const last = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== RusCardTypes.HERO) {
+                        if (!Array.isArray(data) && boardCells !== undefined) {
+                            DrawCard(data, boardCells, G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last], last, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.DiscardCardMove, suit, last);
+                        }
+                        else if (Array.isArray(data)) {
+                            data.push([suit, last]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
 export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, playerRows) => {
     for (let i = 0;; i++) {
         const playerCells = [];
@@ -70,28 +92,6 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, playerRows) =>
         else if (Array.isArray(data)) {
             if (!isDrawRow) {
                 break;
-            }
-        }
-    }
-};
-export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
-    const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config, pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-    if (config !== undefined) {
-        for (const suit in suitsConfig) {
-            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                if (suit !== config.suit
-                    && !(G.drawProfit === ConfigNames.DagdaAction && G.actionsNum === 1 && pickedCard !== null
-                        && `suit` in pickedCard && suit === pickedCard.suit)) {
-                    const last = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== RusCardTypes.HERO) {
-                        if (!Array.isArray(data) && boardCells !== undefined) {
-                            DrawCard(data, boardCells, G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last], last, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.DiscardCardMove, suit, last);
-                        }
-                        else if (Array.isArray(data)) {
-                            data.push([suit, last]);
-                        }
-                    }
-                }
             }
         }
     }
@@ -197,12 +197,12 @@ export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const card = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
-            if (card !== null && `stack` in card) {
-                if (card.stack[0].variants !== undefined) {
-                    if (suit === ((_a = card.stack[0].variants[suit]) === null || _a === void 0 ? void 0 : _a.suit)) {
+            if (card !== null && `variants` in card) {
+                if (card.variants !== undefined) {
+                    if (suit === ((_a = card.variants[suit]) === null || _a === void 0 ? void 0 : _a.suit)) {
                         if (!Array.isArray(data) && boardCells !== undefined) {
                             // TODO Move logic to DrawCard?
-                            boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.moves.PlaceEnlistmentMercenariesMove(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = card.stack[0].variants[suit].points) !== null && _b !== void 0 ? _b : `` }, void 0) }, void 0) }, `Place ${card.name} on ${suitsConfig[suit].suitName}`));
+                            boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.moves.PlaceEnlistmentMercenariesMove(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = card.variants[suit].points) !== null && _b !== void 0 ? _b : `` }, void 0) }, void 0) }, `Place ${card.name} on ${suitsConfig[suit].suitName}`));
                         }
                         else if (Array.isArray(data)) {
                             data.push([suit]);

@@ -1,14 +1,4 @@
 /**
- * <h3>Перечисление для описаний отрисовки экшенов.</h3>
- */
-export const enum ActionTypes {
-    Action = `Action`,
-    Camp = `Camp`,
-    Coin = `Coin`,
-    Hero = `Hero`,
-}
-
-/**
  * <h3>Перечисление для названий артефактов.</h3>
  */
 export const enum ArtefactNames {
@@ -30,6 +20,7 @@ export const enum ArtefactNames {
  * <h3>Перечисление для названия бафов в конфиге.</h3>
  */
 export const enum BuffNames {
+    Coin = `coin`,
     DiscardCardEndGame = `discardCardEndGame`,
     EndTier = `endTier`,
     EveryTurn = `everyTurn`,
@@ -167,6 +158,7 @@ export const enum MoveNames {
     ClickCardMove = `ClickCardMove`,
     ClickCardToPickDistinctionMove = `ClickCardToPickDistinctionMove`,
     ClickCoinToUpgradeMove = `ClickCoinToUpgradeMove`,
+    ClickDistinctionCardMove = `ClickDistinctionCardMove`,
     ClickHandCoinMove = `ClickHandCoinMove`,
     ClickHeroCardMove = `ClickHeroCardMove`,
     DiscardCardFromPlayerBoardMove = `DiscardCardFromPlayerBoardMove`,
@@ -224,8 +216,12 @@ export const enum RusSuitNames {
  */
 export const enum Stages {
     AddCoinToPouch = `addCoinToPouch`,
+    Default1 = `default1`,
+    Default2 = `default2`,
+    Default3 = `default3`,
+    Default4 = `default4`,
     DiscardCard = `discardCard`,
-    DiscardCardFromBoard = `discardCardFromBoard`,
+    DiscardBoardCard = `discardBoardCard`,
     DiscardSuitCard = `discardSuitCard`,
     PickCampCardHolda = `pickCampCardHolda`,
     PickDiscardCard = `pickDiscardCard`,
@@ -234,7 +230,7 @@ export const enum Stages {
     PlaceCards = `placeCards`,
     PlaceTradingCoinsUline = `placeTradingCoinsUline`,
     UpgradeCoin = `upgradeCoin`,
-    UpgradeCoinVidofnirVedrfolnir = `upgradeCoinVidofnirVedrfolnir`,
+    UpgradeVidofnirVedrfolnirCoin = `upgradeVidofnirVedrfolnirCoin`,
 }
 
 /**

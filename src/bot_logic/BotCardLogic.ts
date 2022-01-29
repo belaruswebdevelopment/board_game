@@ -9,6 +9,7 @@ import { IPlayerCards } from "../typescript/interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { ISuit } from "../typescript/suit_interfaces";
 
+// Check all types in this file!
 /**
  * <h3>Добавляет карту в массив потенциальных карт для ботов.</h3>
  * <p>Применения:</p>
@@ -80,8 +81,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
         const temp: number[][] = tavern.map((card: TavernCardTypes): number[] =>
             G.publicPlayers.map((player: IPublicPlayer): number =>
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                PotentialScoring({ player, card: card! }))),
+                PotentialScoring(player, card))),
             result = temp[cardId][Number(ctx.currentPlayer)];
         temp.splice(cardId, 1);
         temp.forEach((player: number[]): number[] =>
@@ -140,10 +140,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * @param card Карта.
  * @returns Потенциальное значение.
  */
-const PotentialScoring = ({
-    player = {} as IPublicPlayer,
-    card = {} as TavernCardTypes,
-}): number => {
+const PotentialScoring = (player: IPublicPlayer, card: TavernCardTypes): number => {
     const potentialCards: IPlayerCards = {};
     let score = 0;
     for (const suit in suitsConfig) {

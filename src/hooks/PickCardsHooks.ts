@@ -1,18 +1,18 @@
 import { Ctx } from "boardgame.io";
-import { DiscardCardIfCampCardPicked } from "../Camp";
-import { StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
-import { DiscardCardFromTavernJarnglofi } from "../helpers/CampHelpers";
+import { AddPickCardActionToStack, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
+import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
-import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, CheckAndStartUlineActionsOrContinue } from "../helpers/GameHooksHelpers";
+import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, CheckAndStartUlineActionsOrContinue, ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { ActivateTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
 import { CoinType } from "../typescript/coin_types";
 import { LogTypes, Stages } from "../typescript/enums";
-import { INext, IResolveBoardCoins, IMyGameState } from "../typescript/game_data_interfaces";
+import { IMyGameState, INext, IResolveBoardCoins } from "../typescript/game_data_interfaces";
 
-export const CheckAndStartTrading = (G: IMyGameState, ctx: Ctx): void => {
+export const OnPickCardsMove = (G: IMyGameState, ctx: Ctx): void => {
+    StartOrEndActions(G, ctx);
     if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
         if (ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
             && !CheckIfCurrentTavernEmpty(G)) {
@@ -47,7 +47,7 @@ export const CheckAndStartTrading = (G: IMyGameState, ctx: Ctx): void => {
  * @param G
  * @param ctx
  */
-export const CheckEndPickCardsPhase = (G: IMyGameState, ctx: Ctx): void | INext => {
+export const CheckEndPickCardsPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length && G.publicPlayersOrder.length
         && !G.actionsNum && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
         && CheckIfCurrentTavernEmpty(G)) {
@@ -75,11 +75,7 @@ export const CheckEndPickCardsPhase = (G: IMyGameState, ctx: Ctx): void | INext 
  * @returns
  */
 export const CheckEndPickCardsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        if (!G.actionsNum) {
-            return true;
-        }
-    }
+    return EndTurnActions(G, ctx);
 };
 
 /**
@@ -104,7 +100,12 @@ export const EndPickCardsActions = (G: IMyGameState): void => {
     ChangePlayersPriorities(G);
 };
 
-export const PickCardsDiscardCardsAfterLastPlayerTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
+export const OnPickCardsTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
+    AddPickCardActionToStack(G, ctx);
+};
+
+export const OnPickCardsTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
+    ClearPlayerPickedCard(G, ctx);
     if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         if (G.expansions.thingvellir.active) {
             DiscardCardIfCampCardPicked(G);

@@ -1,6 +1,5 @@
-import { DrawProfitCoinAction, UpgradeCoinActionCardAction } from "../actions/CoinActions";
 import { IActionCardConfig, IActionCardValues } from "../typescript/action_card_intarfaces";
-import { ActionTypes, ConfigNames, Stages, DrawNames } from "../typescript/enums";
+import { StackData } from "./StackData";
 
 /**
  * <h3>Карта улучшения монеты на +3.</h3>
@@ -11,29 +10,7 @@ import { ActionTypes, ConfigNames, Stages, DrawNames } from "../typescript/enums
  */
 const upgradeCoinUpTo3: IActionCardConfig = {
     value: 3,
-    stack: [
-        {
-            action: {
-                name: DrawProfitCoinAction.name,
-                type: ActionTypes.Coin,
-            },
-            config: {
-                name: ConfigNames.UpgradeCoin,
-                stageName: Stages.UpgradeCoin,
-                value: 3,
-                drawName: DrawNames.UpgradeCoin,
-            },
-        },
-        {
-            action: {
-                name: UpgradeCoinActionCardAction.name,
-                type: ActionTypes.Coin,
-            },
-            config: {
-                value: 3,
-            },
-        },
-    ],
+    stack: [StackData.upgradeCoin(3)],
     amount: (): IActionCardValues => ({
         2: {
             0: 1,
@@ -63,29 +40,7 @@ const upgradeCoinUpTo3: IActionCardConfig = {
  */
 const upgradeCoinUpTo5: IActionCardConfig = {
     value: 5,
-    stack: [
-        {
-            action: {
-                name: DrawProfitCoinAction.name,
-                type: ActionTypes.Coin,
-            },
-            config: {
-                name: ConfigNames.UpgradeCoin,
-                stageName: Stages.UpgradeCoin,
-                value: 5,
-                drawName: DrawNames.UpgradeCoin,
-            },
-        },
-        {
-            action: {
-                name: UpgradeCoinActionCardAction.name,
-                type: ActionTypes.Coin,
-            },
-            config: {
-                value: 5,
-            },
-        },
-    ],
+    stack: [StackData.upgradeCoin(5)],
     amount: (): IActionCardValues => ({
         2: {
             0: 0,

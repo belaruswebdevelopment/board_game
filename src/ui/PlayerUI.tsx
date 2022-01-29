@@ -9,6 +9,7 @@ import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { HeroNames, MoveNames, Phases, Stages } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
+import { ICurrentMoveArgumentsStage } from "../typescript/move_interfaces";
 
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>
@@ -178,7 +179,8 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<IMyGameState>): JSX.Elem
     const playersBoardsCoins: JSX.Element[][] = [],
         playerHeaders: JSX.Element[][] = [],
         playerFooters: JSX.Element[][] = [],
-        playerRows: JSX.Element[][][] = [];
+        playerRows: JSX.Element[][][] = [],
+        moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
     for (let p = 0; p < data.ctx.numPlayers; p++) {
         let coinIndex = 0;
         playersBoardsCoins[p] = [];
@@ -229,6 +231,7 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<IMyGameState>): JSX.Elem
                         }
                     }
                     coinIndex++;
+                    moveMainArgs.push(j);
                 }
             } else if (i === 1) {
                 for (let j: number = data.G.tavernsNum; j <= data.G.publicPlayers[p].boardCoins.length; j++) {
@@ -291,6 +294,7 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<IMyGameState>): JSX.Elem
                             }
                         }
                         coinIndex++;
+                        moveMainArgs.push(j);
                     }
                 }
             }
@@ -314,6 +318,13 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<IMyGameState>): JSX.Elem
             </table>
         );
     }
+    // TODO Fix PlaceTradingCoinsUline can play hand coin too during this stage...
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PlaceCoins][Stages.Default2].numbers = moveMainArgs;
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PickCards][Stages.PlaceTradingCoinsUline].numbers = moveMainArgs;
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PlaceCoinsUline][Stages.Default2].numbers = moveMainArgs;
     return playersBoardsCoins;
 };
 
@@ -330,7 +341,8 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<IMyGameState>): JSX.Elem
  */
 export const DrawPlayersHandsCoins = (data: BoardProps<IMyGameState>): JSX.Element[][] => {
     // TODO Your coins always public for you only, others always private!
-    const playersHandsCoins: JSX.Element[][] = [];
+    const playersHandsCoins: JSX.Element[][] = [],
+        moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
     for (let p = 0; p < data.ctx.numPlayers; p++) {
         const playerCells: JSX.Element[] = [];
         playersHandsCoins[p] = [];
@@ -367,6 +379,7 @@ export const DrawPlayersHandsCoins = (data: BoardProps<IMyGameState>): JSX.Eleme
                             data.G.publicPlayers[p].handCoins[j], j, data.G.publicPlayers[p]);
                     }
                 }
+                moveMainArgs.push(j);
             }
         }
         playersHandsCoins[p].push(
@@ -378,5 +391,12 @@ export const DrawPlayersHandsCoins = (data: BoardProps<IMyGameState>): JSX.Eleme
             </table>
         );
     }
+    // TODO Fix PlaceTradingCoinsUline can play board coin too during this stage...
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PlaceCoins][Stages.Default1].numbers = moveMainArgs;
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PickCards][Stages.PlaceTradingCoinsUline].numbers = moveMainArgs;
+    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
+        .phases[Phases.PlaceCoinsUline][Stages.Default1].numbers = moveMainArgs;
     return playersHandsCoins;
 };

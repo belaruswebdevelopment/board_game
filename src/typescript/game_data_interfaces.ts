@@ -5,6 +5,7 @@ import { ICoin } from "./coin_interfaces";
 import { IDistinctions } from "./distinction_interfaces";
 import { LogTypes } from "./enums";
 import { IHero } from "./hero_card_interfaces";
+import { ICurrentMoveArguments } from "./move_interfaces";
 import { IPlayers, IPublicPlayer } from "./player_interfaces";
 
 /**
@@ -35,6 +36,7 @@ export interface IMyGameState {
     campDecks: CampDeckCardTypes[][],
     campNum: number,
     campPicked: boolean,
+    currentMoveArguments: ICurrentMoveArguments[],
     currentTavern: number,
     debug: boolean,
     decks: DeckCardTypes[][],

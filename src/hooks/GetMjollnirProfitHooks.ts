@@ -1,4 +1,5 @@
 import { Ctx } from "boardgame.io";
+import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddGetMjollnirProfitActionsToStack } from "../helpers/CampHelpers";
 import { EndGame } from "../helpers/GameHooksHelpers";
 import { IMyGameState } from "../typescript/game_data_interfaces";
@@ -27,8 +28,10 @@ export const CheckGetMjollnirProfitOrder = (G: IMyGameState): void => {
     G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
 };
 
-export const OnGetMjollnirProfitPhaseTurnBegin = (G: IMyGameState, ctx: Ctx): void =>
+export const OnGetMjollnirProfitTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddGetMjollnirProfitActionsToStack(G, ctx);
+    DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
+};
 
 export const StartEndGame = (G: IMyGameState, ctx: Ctx) => {
     G.publicPlayersOrder = [];

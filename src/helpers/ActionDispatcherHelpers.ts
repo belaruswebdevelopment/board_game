@@ -1,10 +1,7 @@
 import { Ctx } from "boardgame.io";
-import { ActionDispatcher } from "../actions/ActionDispatcher";
-import { CampActionDispatcher } from "../actions/CampActionDispatcher";
-import { CoinActionDispatcher } from "../actions/CoinActionDispatcher";
-import { HeroActionDispatcher } from "../actions/HeroActionDispatcher";
+import { AddPickHeroAction, DiscardTradingCoinAction, GetClosedCoinIntoPlayerHandAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "../actions/AutoActions";
+import { IAction } from "../typescript/action_interfaces";
 import { IMyGameState } from "../typescript/game_data_interfaces";
-import { ArgsTypes } from "../typescript/types";
 
 /**
  * <h3>Диспетчер всех экшенов.</h3>
@@ -13,85 +10,55 @@ import { ArgsTypes } from "../typescript/types";
  * <li>Срабатывает при вызове каждого экшена.</li>
  * </ol>
  *
- * @param actionTypes Тип экшена.
- * @returns Диспетчер экшенов.
+ * @param actionName Название экшена.
+ * @returns Экшен.
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-export const ActionDispatcherSwitcher = (actionTypes: string): Function | null => {
+const ActionDispatcherSwitcher = (actionName: string): Function | null => {
     // eslint-disable-next-line @typescript-eslint/ban-types
-    let actionDispatcher: Function | null;
-    switch (actionTypes) {
-        case `Action`:
-            actionDispatcher = ActionDispatcher;
+    let action: Function | null;
+    switch (actionName) {
+        case AddPickHeroAction.name:
+            action = AddPickHeroAction;
             break;
-        case `Camp`:
-            actionDispatcher = CampActionDispatcher;
+        case DiscardTradingCoinAction.name:
+            action = DiscardTradingCoinAction;
             break;
-        case `Coin`:
-            actionDispatcher = CoinActionDispatcher;
+        case GetClosedCoinIntoPlayerHandAction.name:
+            action = GetClosedCoinIntoPlayerHandAction;
             break;
-        case `Hero`:
-            actionDispatcher = HeroActionDispatcher;
+        case StartDiscardSuitCardAction.name:
+            action = StartDiscardSuitCardAction;
+            break;
+        case StartVidofnirVedrfolnirAction.name:
+            action = StartVidofnirVedrfolnirAction;
+            break;
+        case UpgradeCoinAction.name:
+            action = UpgradeCoinAction;
             break;
         default:
-            actionDispatcher = null;
+            action = null;
     }
-    return actionDispatcher;
+    return action;
 };
 
 /**
- * <h3>Завершение текущего экшена.</h3>
+ * <h3>Начинает автоматические действия конкретной карты при их наличии.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Срабатывает после завершения каждого экшена.</li>
+ * <li>Выполняется при необходимости активировать автоматические действия карт.</li>
  * </ol>
  *
  * @param G
  * @param ctx
+ * @param action Объект экшена.
  */
-const EndAction = (G: IMyGameState, ctx: Ctx): void => {
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
-};
-
-/**
- * <h3>Начинает действия из стэка действий указанного игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Выполняется при необходимости активировать действия в стэке действий указанного игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param playerId Id игрока.
- * @param args Дополнительные аргументы.
- */
-export const StartActionForChosenPlayer = (G: IMyGameState, ctx: Ctx, playerId: number, ...args: ArgsTypes): void => {
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    const actionDispatcher: Function | null =
-        ActionDispatcherSwitcher(G.publicPlayers[playerId].stack[0].action.type);
-    actionDispatcher?.(G, ctx, G.publicPlayers[playerId].stack[0], ...args);
-};
-
-/**
- * <h3>Начинает действия из стэка действий конкретного игрока или завершает действия при их отсутствии.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Выполняется при необходимости активировать действия в стэке действий.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param isTrading Является ли действие обменом монет (трейдингом).
- * @param args Дополнительные аргументы.
- */
-export const StartActionFromStackOrEndActions = (G: IMyGameState, ctx: Ctx, isTrading: boolean, ...args: ArgsTypes):
-    void => {
-    if (G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) {
+export const StartAutoAction = (G: IMyGameState, ctx: Ctx, action: IAction | undefined): void => {
+    if (action !== undefined) {
         // eslint-disable-next-line @typescript-eslint/ban-types
         const actionDispatcher: Function | null =
-            ActionDispatcherSwitcher(G.publicPlayers[Number(ctx.currentPlayer)].stack[0].action.type);
-        actionDispatcher?.(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0], ...args);
-    } else {
-        EndAction(G, ctx);
+            ActionDispatcherSwitcher(action.name);
+        // TODO Check need to add param Stack[0]!?
+        actionDispatcher?.(G, ctx, action.params);
     }
 };

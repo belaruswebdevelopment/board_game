@@ -1,10 +1,9 @@
-import { PickHeroAction } from "../actions/Actions";
-import { DrawProfitHeroAction, PlaceHeroAction } from "../actions/HeroActions";
+import { AddPickHeroAction } from "../actions/AutoActions";
 import { heroesConfig } from "../data/HeroData";
-import { AddDataToLog } from "../Logging";
-import { ActionTypes, ConfigNames, DrawNames, HeroNames, LogTypes, Stages, SuitNames } from "../typescript/enums";
+import { StackData } from "../data/StackData";
+import { ConfigNames, HeroNames } from "../typescript/enums";
 import { TotalRank } from "./ScoreHelpers";
-import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAndAddNew } from "./StackHelpers";
+import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
  * <h3>Добавляет экшены при старте хода в фазе 'endTier'.</h3>
  * <p>Применения:</p>
@@ -16,58 +15,8 @@ import { AddActionsToStack, AddActionsToStackAfterCurrent, EndActionFromStackAnd
  * @param ctx
  */
 export const AddEndTierActionsToStack = (G, ctx) => {
-    const variants = {
-        blacksmith: {
-            suit: SuitNames.BLACKSMITH,
-            rank: 1,
-            points: null,
-        },
-        hunter: {
-            suit: SuitNames.HUNTER,
-            rank: 1,
-            points: null,
-        },
-        explorer: {
-            suit: SuitNames.EXPLORER,
-            rank: 1,
-            points: 11,
-        },
-        warrior: {
-            suit: SuitNames.WARRIOR,
-            rank: 1,
-            points: 7,
-        },
-        miner: {
-            suit: SuitNames.MINER,
-            rank: 1,
-            points: 1,
-        },
-    };
-    const stack = [
-        {
-            action: {
-                name: DrawProfitHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            variants,
-            config: {
-                stageName: Stages.PlaceCards,
-                drawName: DrawNames.Ylud,
-                name: ConfigNames.PlaceCards,
-            },
-        },
-        {
-            action: {
-                name: PlaceHeroAction.name,
-                type: ActionTypes.Hero,
-            },
-            variants,
-            config: {
-                name: ConfigNames.Ylud,
-            },
-        },
-    ];
-    AddActionsToStack(G, ctx, stack);
+    const stack = [StackData.placeCardsYlud()];
+    AddActionsToStackAfterCurrent(G, ctx, stack);
     G.drawProfit = ConfigNames.PlaceCards;
 };
 /**
@@ -128,7 +77,6 @@ export const CheckPickDiscardCard = (G, ctx) => {
     if (G.discardCardsDeck.length === 0) {
         G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
     }
-    EndActionFromStackAndAddNew(G, ctx);
 };
 /**
  * <h3>Проверяет возможность взятия нового героя.</h3>
@@ -149,19 +97,7 @@ export const CheckPickHero = (G, ctx) => {
         const playerCards = Object.values(G.publicPlayers[Number(ctx.currentPlayer)].cards), isCanPickHero = Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) >
             G.publicPlayers[Number(ctx.currentPlayer)].heroes.length;
         if (isCanPickHero) {
-            const stack = [
-                {
-                    action: {
-                        name: PickHeroAction.name,
-                        type: ActionTypes.Action,
-                    },
-                    config: {
-                        stageName: Stages.PickHero,
-                    },
-                },
-            ];
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен выбрать нового героя.`);
-            AddActionsToStackAfterCurrent(G, ctx, stack);
+            AddPickHeroAction(G, ctx);
         }
     }
 };
@@ -189,57 +125,7 @@ export const GetHeroIndexByName = (heroName) => Object.keys(heroesConfig).indexO
  */
 export const StartThrudMoving = (G, ctx, card) => {
     if (card.suit !== null) {
-        const variants = {
-            blacksmith: {
-                suit: SuitNames.BLACKSMITH,
-                rank: 1,
-                points: null,
-            },
-            hunter: {
-                suit: SuitNames.HUNTER,
-                rank: 1,
-                points: null,
-            },
-            explorer: {
-                suit: SuitNames.EXPLORER,
-                rank: 1,
-                points: null,
-            },
-            warrior: {
-                suit: SuitNames.WARRIOR,
-                rank: 1,
-                points: null,
-            },
-            miner: {
-                suit: SuitNames.MINER,
-                rank: 1,
-                points: null,
-            },
-        }, stack = [
-            {
-                action: {
-                    name: DrawProfitHeroAction.name,
-                    type: ActionTypes.Hero,
-                },
-                variants,
-                config: {
-                    drawName: DrawNames.Thrud,
-                    name: ConfigNames.PlaceCards,
-                    stageName: Stages.PlaceCards,
-                    suit: card.suit,
-                },
-            },
-            {
-                action: {
-                    name: PlaceHeroAction.name,
-                    type: ActionTypes.Hero,
-                },
-                variants,
-                config: {
-                    name: ConfigNames.Thrud,
-                },
-            },
-        ];
+        const stack = [StackData.placeCardsThrud(card.suit)];
         AddActionsToStackAfterCurrent(G, ctx, stack);
     }
 };
