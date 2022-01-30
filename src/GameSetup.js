@@ -11,7 +11,6 @@ import { suitsConfig } from "./data/SuitData";
 import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
-import { Phases, Stages } from "./typescript/enums";
 /**
  * <h3>Сетап игры.</h3>
  * <p>Применения:</p>
@@ -27,7 +26,7 @@ export const SetupGame = (ctx) => {
         thingvellir: {
             active: true,
         },
-    }, currentMoveArguments = [], totalScore = [], logData = [], decks = [], 
+    }, totalScore = [], logData = [], decks = [], 
     // TODO Discard cards must be hidden from users?
     discardCardsDeck = [], campDecks = [], distinctions = {};
     for (const suit in suitsConfig) {
@@ -101,9 +100,6 @@ export const SetupGame = (ctx) => {
         maxIter: 1000,
         deckLength: decks[0].length,
     };
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        currentMoveArguments[i].phases[Phases.PlaceCoins][Stages.Default3].arrayNumbers = allCoinsOrder;
-    }
     return {
         actionsNum,
         averageCards,
@@ -112,7 +108,6 @@ export const SetupGame = (ctx) => {
         campDecks,
         campNum,
         campPicked,
-        currentMoveArguments,
         currentTavern,
         debug,
         decks,

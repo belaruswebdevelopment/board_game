@@ -56,7 +56,7 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
     const isValidMove = IsValidMove(G, ctx, Stages.UpgradeCoin, {
         coinId,
         type,
-        isInitial
+        isInitial,
     });
     if (!isValidMove) {
         return INVALID_MOVE;

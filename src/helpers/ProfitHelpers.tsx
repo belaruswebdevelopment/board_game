@@ -6,16 +6,14 @@ import { suitsConfig } from "../data/SuitData";
 import { IConfig } from "../typescript/action_interfaces";
 import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { ConfigNames, HeroNames, MoveNames, Phases, RusCardTypes, Stages } from "../typescript/enums";
+import { ConfigNames, HeroNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
-import { ICurrentMoveArgumentsStage, ICurrentMoveSuitCardIdArguments } from "../typescript/move_interfaces";
 import { TotalRank } from "./ScoreHelpers";
 import { DrawButton, DrawCard, DrawCoin } from "./UIElementHelpers";
 
 // TODO Add functions docbloocks
 export const AddCoinToPouchProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
     for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
             && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
@@ -23,23 +21,13 @@ export const AddCoinToPouchProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps
                 G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j], j,
                 G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
                 null, MoveNames.AddCoinToPouchMove, j);
-            moveMainArgs.push(j);
         }
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.PickCards][Stages.AddCoinToPouch].numbers =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EnlistmentMercenaries][Stages.AddCoinToPouch].numbers = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.EndTier][Stages.AddCoinToPouch].numbers =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.GetDistinctions][Stages.AddCoinToPouch].numbers = moveMainArgs;
 };
 
 export const DiscardCardFromBoardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const moveMainArgs: ICurrentMoveSuitCardIdArguments = {},
-        config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config,
+    const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config,
         pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (config !== undefined) {
         for (const suit in suitsConfig) {
@@ -53,28 +41,18 @@ export const DiscardCardFromBoardProfit = (G: IMyGameState, ctx: Ctx, data: Boar
                             G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last], last,
                             G.publicPlayers[Number(ctx.currentPlayer)], suit,
                             MoveNames.DiscardCardMove, suit, last);
-                        moveMainArgs[suit].push(last);
                     }
                 }
             }
         }
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.PickCards][Stages.DiscardBoardCard].suits =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EnlistmentMercenaries][Stages.DiscardBoardCard].suits = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.EndTier][Stages.DiscardBoardCard].suits =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.GetDistinctions][Stages.DiscardBoardCard].suits = moveMainArgs;
 };
 
 export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
     // TODO Discard cards must be hidden from others users?
     const playerHeaders: JSX.Element[] = [],
-        playerRows: JSX.Element[][] = [],
-        moveMainArgs: ICurrentMoveSuitCardIdArguments = {};
+        playerRows: JSX.Element[][] = [];
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             playerHeaders.push(
@@ -110,7 +88,6 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
                             G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i], id,
                             G.publicPlayers[Number(ctx.currentPlayer)],
                             suit, MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
-                        moveMainArgs[suit].push(i);
                     } else {
                         playerCells.push(
                             <td key={`${G.publicPlayers[Number(ctx.currentPlayer)].nickname} empty card ${id}`}>
@@ -150,19 +127,10 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
             </table>
         </td>
     );
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.PickCards][Stages.DiscardSuitCard].suits =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EnlistmentMercenaries][Stages.DiscardSuitCard].suits = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.EndTier][Stages.DiscardSuitCard].suits =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.GetDistinctions][Stages.DiscardSuitCard].suits = moveMainArgs;
 };
 
 export const DiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>, boardCells: JSX.Element[])
     : void => {
-    const moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
     for (let j = 0; j < G.drawSize; j++) {
         const card: TavernCardTypes = G.taverns[G.currentTavern][j];
         if (card !== null) {
@@ -173,11 +141,8 @@ export const DiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
             DrawCard(data, boardCells, card, j,
                 G.publicPlayers[Number(ctx.currentPlayer)], suit,
                 MoveNames.DiscardCard2PlayersMove, j);
-            moveMainArgs.push(j);
         }
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.PickCards][Stages.DiscardCard].numbers =
-        moveMainArgs;
 };
 
 // export const DiscardSuitCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx,
@@ -187,7 +152,6 @@ export const DiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
 
 export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
     for (let j = 0; j < 3; j++) {
         const card = G.decks[1][j];
         let suit: null | string = null;
@@ -197,31 +161,23 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, data: Board
         DrawCard(data, boardCells, G.decks[1][j], j,
             G.publicPlayers[Number(ctx.currentPlayer)], suit,
             MoveNames.ClickCardToPickDistinctionMove, j);
-        moveMainArgs.push(j);
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.GetDistinctions][Stages.PickDistinctionCard].numbers = moveMainArgs;
 };
 
 export const GetEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [],
-        mercenaries: CampDeckCardTypes[] =
-            G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY);
+    const mercenaries: CampDeckCardTypes[] =
+        G.publicPlayers[Number(ctx.currentPlayer)].campCards
+            .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY);
     for (let j = 0; j < mercenaries.length; j++) {
         DrawCard(data, boardCells, mercenaries[j], j,
             G.publicPlayers[Number(ctx.currentPlayer)], null,
             MoveNames.GetEnlistmentMercenariesMove, j);
-        moveMainArgs.push(j);
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EnlistmentMercenaries][Stages.Default3].numbers = moveMainArgs;
 };
 
 export const GetMjollnirProfitProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const moveMainArgs: ICurrentMoveArgumentsStage["strings"] = [];
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length) {
@@ -238,39 +194,25 @@ export const GetMjollnirProfitProfit = (G: IMyGameState, ctx: Ctx, data: BoardPr
                         </span>
                     </td>
                 );
-                moveMainArgs.push(suit);
             }
         }
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.GetMjollnirProfit][Stages.Default1].strings =
-        moveMainArgs;
 };
 
 export const PickCampCardHoldaProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
     for (let j = 0; j < G.campNum; j++) {
         const card: CampCardTypes = G.camp[j];
         if (card !== null) {
             DrawCard(data, boardCells, card, j,
                 G.publicPlayers[Number(ctx.currentPlayer)], null,
                 MoveNames.ClickCampCardHoldaMove, j);
-            moveMainArgs.push(j);
         }
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.PickCards][Stages.PickCampCardHolda].numbers = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EnlistmentMercenaries][Stages.PickCampCardHolda].numbers = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.EndTier][Stages.PickCampCardHolda].numbers =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.GetDistinctions][Stages.PickCampCardHolda].numbers = moveMainArgs;
 };
 
 export const PickDiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
         const card: DeckCardTypes = G.discardCardsDeck[j];
         let suit: null | string = null;
@@ -280,21 +222,11 @@ export const PickDiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProp
         DrawCard(data, boardCells, card, j,
             G.publicPlayers[Number(ctx.currentPlayer)], suit,
             MoveNames.PickDiscardCardMove, j);
-        moveMainArgs.push(j);
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.PickCards][Stages.PickDiscardCard].numbers =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EnlistmentMercenaries][Stages.PickDiscardCard].numbers = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.EndTier][Stages.PickDiscardCard].numbers =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.GetDistinctions][Stages.PickDiscardCard].numbers = moveMainArgs;
 };
 
 export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const moveMainArgs: ICurrentMoveArgumentsStage["strings"] = [];
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
@@ -312,26 +244,14 @@ export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMy
                             </span>
                         </td>
                     );
-                    moveMainArgs.push(suit);
                 }
             }
         }
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.PickCards][Stages.PlaceCards].strings =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EnlistmentMercenaries][Stages.PlaceCards].strings = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.EndTier][Stages.Default1].strings =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.EndTier][Stages.PlaceCards].strings =
-        moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)].phases[Phases.GetDistinctions][Stages.PlaceCards].strings =
-        moveMainArgs;
 };
 
 export const PlaceEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const moveMainArgs: ICurrentMoveArgumentsStage["strings"] = [];
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const card: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
@@ -348,14 +268,11 @@ export const PlaceEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
                                 </span>
                             </td>
                         );
-                        moveMainArgs.push(suit);
                     }
                 }
             }
         }
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EnlistmentMercenaries][Stages.Default4].strings = moveMainArgs;
 };
 
 export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
@@ -366,27 +283,22 @@ export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
             DrawButton(data, boardCells, `start Enlistment Mercenaries`, `Start`,
                 G.publicPlayers[Number(ctx.currentPlayer)],
                 MoveNames.StartEnlistmentMercenariesMove);
-            G.currentMoveArguments[Number(ctx.currentPlayer)]
-                .phases[Phases.EnlistmentMercenaries][Stages.Default1].empty = null;
         } else if (G.publicPlayersOrder.length > 1) {
             DrawButton(data, boardCells, `pass Enlistment Mercenaries`, `Pass`,
                 G.publicPlayers[Number(ctx.currentPlayer)],
                 MoveNames.PassEnlistmentMercenariesMove);
-            G.currentMoveArguments[Number(ctx.currentPlayer)]
-                .phases[Phases.EnlistmentMercenaries][Stages.Default1].empty = null;
         }
     }
 };
 
 export const UpgradeCoinProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const handCoins = data.G.publicPlayers[Number(data.ctx.currentPlayer)].handCoins
-        .filter((coin: CoinType): boolean => coin !== null),
-        moveMainArgs: ICurrentMoveArgumentsStage["coins"] = [];
+    const handCoins = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+        .filter((coin: CoinType): boolean => coin !== null);
     let handCoinIndex = -1;
-    for (let j = 0; j < data.G.publicPlayers[Number(data.ctx.currentPlayer)].boardCoins.length; j++) {
+    for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
         // TODO Check .? for all coins!!! and delete AS
-        if (G.publicPlayers[Number(data.ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
+        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
             && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j] === null) {
             handCoinIndex++;
             const handCoinId: number = G.publicPlayers[Number(data.ctx.currentPlayer)]
@@ -399,11 +311,6 @@ export const UpgradeCoinProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinId], j,
                     G.publicPlayers[Number(ctx.currentPlayer)], `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `hand`,
                     handCoins[handCoinIndex]?.isInitial as boolean);
-                moveMainArgs.push({
-                    coinId: j,
-                    type: `board`,
-                    isInitial: handCoins[handCoinIndex]?.isInitial as boolean,
-                });
             }
         } else if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]
             && !G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]?.isTriggerTrading) {
@@ -412,27 +319,13 @@ export const UpgradeCoinProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
                 G.publicPlayers[Number(ctx.currentPlayer)], `border-2`, null,
                 MoveNames.ClickCoinToUpgradeMove, j, `board`,
                 G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]?.isInitial as boolean);
-            moveMainArgs.push({
-                coinId: j,
-                type: `board`,
-                isInitial: G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]?.isInitial as boolean,
-            });
         }
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.PickCards][Stages.UpgradeCoin].coins = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EnlistmentMercenaries][Stages.UpgradeCoin].coins = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EndTier][Stages.UpgradeCoin].coins = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.GetDistinctions][Stages.UpgradeCoin].coins = moveMainArgs;
 };
 
 export const UpgradeCoinVidofnirVedrfolnirProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config,
-        moveMainArgs: ICurrentMoveArgumentsStage["coins"] = [];
+    const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
     if (config !== undefined) {
         for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
             j++) {
@@ -444,21 +337,8 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G: IMyGameState, ctx: Ctx, d
                         G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
                         null, MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
                         j, `board`, coin.isInitial);
-                    moveMainArgs.push({
-                        coinId: j,
-                        type: `board`,
-                        isInitial: coin.isInitial,
-                    });
                 }
             }
         }
     }
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.PickCards][Stages.UpgradeVidofnirVedrfolnirCoin].coins = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EnlistmentMercenaries][Stages.UpgradeVidofnirVedrfolnirCoin].coins = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.EndTier][Stages.UpgradeVidofnirVedrfolnirCoin].coins = moveMainArgs;
-    G.currentMoveArguments[Number(ctx.currentPlayer)]
-        .phases[Phases.GetDistinctions][Stages.UpgradeVidofnirVedrfolnirCoin].coins = moveMainArgs;
 };

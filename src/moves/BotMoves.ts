@@ -18,7 +18,6 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  */
 export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]):
     string | void => {
-    // TODO Check it and fix it!
     const isValidMove: boolean = IsValidMove(G, ctx, Stages.Default3, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;

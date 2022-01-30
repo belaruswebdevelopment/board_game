@@ -38,8 +38,6 @@ const order: IOrder = TurnOrder.CUSTOM_FROM(`publicPlayersOrder`);
  * </ol>
  */
 export const BoardGame: Game<IMyGameState> = {
-    // TODO Add all hooks external functions to all {}
-    // TODO Check all endPhase/setPhase & next (may be with G.condition ? 'phaseC' : 'phaseB') in it => add next or better move to hooks functions
     name: `nidavellir`,
     setup: SetupGame,
     playerView: PlayerView.STRIP_SECRETS,

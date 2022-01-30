@@ -59,7 +59,7 @@ export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx:
     const isValidMove: boolean = IsValidMove(G, ctx, Stages.UpgradeCoin, {
         coinId,
         type,
-        isInitial
+        isInitial,
     });
     if (!isValidMove) {
         return INVALID_MOVE;

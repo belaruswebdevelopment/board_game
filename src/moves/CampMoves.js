@@ -137,7 +137,7 @@ export const UpgradeCoinVidofnirVedrfolnirMove = (G, ctx, coinId, type, isInitia
     const isValidMove = IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
         coinId,
         type,
-        isInitial
+        isInitial,
     });
     if (!isValidMove) {
         return INVALID_MOVE;

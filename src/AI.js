@@ -69,15 +69,17 @@ export const enumerate = (G, ctx) => {
                                     }
                                 }
                             }
-                            const minValue = Math.min(...G.currentMoveArguments);
-                            const minCardIndex = G.publicPlayers[p].cards[config.suit].findIndex((card) => card.type !== RusCardTypes.HERO && card.points === minValue);
-                            if (minCardIndex !== -1) {
-                                // moves.push({
-                                //     move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-                                //     args: [config.suit, p, minCardIndex],
-                                // });
-                                break;
-                            }
+                            // const minValue: number = Math.min(...G.currentMoveArguments as unknown as number[]);
+                            // const minCardIndex: number =
+                            //     G.publicPlayers[p].cards[config.suit].findIndex((card: PlayerCardsType): boolean =>
+                            //         card.type !== RusCardTypes.HERO && card.points === minValue);
+                            // if (minCardIndex !== -1) {
+                            //     moves.push({
+                            //         move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
+                            //         args: [config.suit, p, minCardIndex],
+                            //     });
+                            //     break;
+                            // }
                         }
                     }
                 }
@@ -85,7 +87,7 @@ export const enumerate = (G, ctx) => {
         }
         else if (ctx.phase === Phases.EnlistmentMercenaries) {
             if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
-                if (Math.floor(Math.random() * G.currentMoveArguments.length) === 0) {
+                if (Math.floor(Math.random() * 2) === 0) {
                     activeStageOfCurrentPlayer = Stages.Default1;
                 }
                 else {
@@ -99,9 +101,22 @@ export const enumerate = (G, ctx) => {
                 activeStageOfCurrentPlayer = Stages.Default4;
             }
         }
+        else if (ctx.phase === Phases.EndTier) {
+            activeStageOfCurrentPlayer = Stages.Default1;
+        }
+        else if (ctx.phase === Phases.GetDistinctions) {
+            activeStageOfCurrentPlayer = Stages.Default1;
+        }
+        else if (ctx.phase === Phases.BrisingamensEndGame) {
+            activeStageOfCurrentPlayer = Stages.Default1;
+        }
+        else if (ctx.phase === Phases.GetMjollnirProfit) {
+            activeStageOfCurrentPlayer = Stages.Default1;
+        }
     }
     else {
         if (activeStageOfCurrentPlayer === Stages.PlaceTradingCoinsUline) {
+            // TODO Fix it!
             if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
                 moves.push({
                     move: MoveNames.ClickBoardCoinMove,
@@ -117,7 +132,7 @@ export const enumerate = (G, ctx) => {
         }
     }
     // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
-    const moveName = moveBy[ctx.phase][activeStageOfCurrentPlayer], moveValue = moveValidators[moveName].getValue(G, ctx);
+    const moveName = moveBy[ctx.phase][activeStageOfCurrentPlayer], moveRangeData = moveValidators[moveName].getRange(G, ctx), moveValue = moveValidators[moveName].getValue(G, ctx, moveRangeData);
     let moveValues = [];
     if (typeof moveValue === `number`) {
         moveValues = [moveValue];
@@ -135,6 +150,9 @@ export const enumerate = (G, ctx) => {
     }
     else if (moveValue === null) {
         moveValues = [];
+    }
+    else if (Array.isArray(moveValue)) {
+        moveValues = [moveValue];
     }
     moves.push({
         move: moveName,

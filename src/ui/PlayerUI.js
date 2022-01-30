@@ -109,7 +109,7 @@ export const DrawPlayersBoards = (data) => {
 export const DrawPlayersBoardsCoins = (data) => {
     var _a;
     // TODO Your coins always public for you only, others private, but you see previous/current tavern coins for all players (and your's transparent for non opened coins)
-    const playersBoardsCoins = [], playerHeaders = [], playerFooters = [], playerRows = [], moveMainArgs = [];
+    const playersBoardsCoins = [], playerHeaders = [], playerFooters = [], playerRows = [];
     for (let p = 0; p < data.ctx.numPlayers; p++) {
         let coinIndex = 0;
         playersBoardsCoins[p] = [];
@@ -146,7 +146,6 @@ export const DrawPlayersBoardsCoins = (data) => {
                         }
                     }
                     coinIndex++;
-                    moveMainArgs.push(j);
                 }
             }
             else if (i === 1) {
@@ -161,8 +160,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                         if (coin === null) {
                             if (Number(data.ctx.currentPlayer) === p && data.ctx.phase !== Phases.PlaceCoinsUline
                                 && (data.ctx.phase === Phases.PlaceCoins || (data.ctx.activePlayers
-                                    && data.ctx.activePlayers[Number(data.ctx.currentPlayer)]) ===
-                                    Stages.PlaceTradingCoinsUline)) {
+                                    && data.ctx.activePlayers[Number(data.ctx.currentPlayer)] ===
+                                        Stages.PlaceTradingCoinsUline))) {
                                 DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex, data.G.publicPlayers[p], null, null, MoveNames.ClickBoardCoinMove, j);
                             }
                             else {
@@ -171,8 +170,8 @@ export const DrawPlayersBoardsCoins = (data) => {
                         }
                         else if (Number(data.ctx.currentPlayer) === p
                             && (data.ctx.phase === Phases.PlaceCoins || (data.ctx.activePlayers
-                                && data.ctx.activePlayers[Number(data.ctx.currentPlayer)]) ===
-                                Stages.PlaceTradingCoinsUline)) {
+                                && data.ctx.activePlayers[Number(data.ctx.currentPlayer)] ===
+                                    Stages.PlaceTradingCoinsUline))) {
                             DrawCoin(data, playerCells, `coin`, coin, coinIndex, data.G.publicPlayers[p], null, null, MoveNames.ClickBoardCoinMove, j);
                         }
                         else {
@@ -187,7 +186,6 @@ export const DrawPlayersBoardsCoins = (data) => {
                             }
                         }
                         coinIndex++;
-                        moveMainArgs.push(j);
                     }
                 }
             }
@@ -195,13 +193,6 @@ export const DrawPlayersBoardsCoins = (data) => {
         }
         playersBoardsCoins[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", data.G.publicPlayers[p].nickname, ") played coins"] }, void 0), _jsx("thead", { children: _jsx("tr", { children: playerHeaders[p] }, void 0) }, void 0), _jsx("tbody", { children: playerRows[p] }, void 0), _jsx("tfoot", { children: _jsx("tr", { children: playerFooters[p] }, void 0) }, void 0)] }, `${data.G.publicPlayers[p].nickname} board coins`));
     }
-    // TODO Fix PlaceTradingCoinsUline can play hand coin too during this stage...
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.PlaceCoins][Stages.Default2].numbers = moveMainArgs;
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.PickCards][Stages.PlaceTradingCoinsUline].numbers = moveMainArgs;
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.PlaceCoinsUline][Stages.Default2].numbers = moveMainArgs;
     return playersBoardsCoins;
 };
 /**
@@ -217,7 +208,7 @@ export const DrawPlayersBoardsCoins = (data) => {
  */
 export const DrawPlayersHandsCoins = (data) => {
     // TODO Your coins always public for you only, others always private!
-    const playersHandsCoins = [], moveMainArgs = [];
+    const playersHandsCoins = [];
     for (let p = 0; p < data.ctx.numPlayers; p++) {
         const playerCells = [];
         playersHandsCoins[p] = [];
@@ -234,8 +225,8 @@ export const DrawPlayersHandsCoins = (data) => {
                         }
                         if (!data.G.winner.length && (data.ctx.phase === Phases.PlaceCoins
                             || data.ctx.phase === Phases.PlaceCoinsUline || (data.ctx.activePlayers
-                            && data.ctx.activePlayers[Number(data.ctx.currentPlayer)]) ===
-                            Stages.PlaceTradingCoinsUline)) {
+                            && data.ctx.activePlayers[Number(data.ctx.currentPlayer)] ===
+                                Stages.PlaceTradingCoinsUline))) {
                             DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].handCoins[j], j, data.G.publicPlayers[p], coinClasses, null, MoveNames.ClickHandCoinMove, j);
                         }
                         else {
@@ -246,18 +237,10 @@ export const DrawPlayersHandsCoins = (data) => {
                         DrawCoin(data, playerCells, `back`, data.G.publicPlayers[p].handCoins[j], j, data.G.publicPlayers[p]);
                     }
                 }
-                moveMainArgs.push(j);
             }
         }
         playersHandsCoins[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", data.G.publicPlayers[p].nickname, ") coins"] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: playerCells }, void 0) }, void 0)] }, `${data.G.publicPlayers[p].nickname} hand coins`));
     }
-    // TODO Fix PlaceTradingCoinsUline can play board coin too during this stage...
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.PlaceCoins][Stages.Default1].numbers = moveMainArgs;
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.PickCards][Stages.PlaceTradingCoinsUline].numbers = moveMainArgs;
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.PlaceCoinsUline][Stages.Default1].numbers = moveMainArgs;
     return playersHandsCoins;
 };
 //# sourceMappingURL=PlayerUI.js.map

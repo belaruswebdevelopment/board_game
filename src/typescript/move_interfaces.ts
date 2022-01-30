@@ -11,8 +11,8 @@ export interface ICurrentMoveArgumentPhases {
 }
 
 export interface ICurrentMoveArgumentsStage {
-    arrayNumbers: number[][],
-    coins: ICurrentMoveCoinsArguments[],
+    arrayNumbers?: number[][],
+    coins?: ICurrentMoveCoinsArguments[],
     empty?: null,
     numbers?: number[],
     strings?: string[],

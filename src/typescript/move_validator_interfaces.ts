@@ -30,9 +30,9 @@ interface IMoveByOption {
  * <h3>Интерфейс для валидатора мувов.</h3>
  */
 export interface IMoveValidator {
-    getRange: (G: IMyGameState, ctx: Ctx) => MoveValidatorGetRangeTypes,
-    getValue: (G: IMyGameState, ctx: Ctx) => ValidMoveIdParam,
-    validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParam, type?: string) => boolean,
+    getRange: (G?: IMyGameState, ctx?: Ctx) => MoveValidatorGetRangeTypes,
+    getValue: (G: IMyGameState, ctx: Ctx, moveRangeData: MoveValidatorGetRangeTypes) => ValidMoveIdParam,
+    validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParam) => boolean,
 }
 
 /**

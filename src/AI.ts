@@ -5,10 +5,10 @@ import { moveBy, moveValidators } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { IConfig } from "./typescript/action_interfaces";
 import { IMoves } from "./typescript/bot_interfaces";
-import { PlayerCardsType, TavernCardTypes } from "./typescript/card_types";
+import { TavernCardTypes } from "./typescript/card_types";
 import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
-import { MoveArgsTypes, ValidMoveIdParam } from "./typescript/types";
+import { MoveArgsTypes, MoveValidatorGetRangeTypes, ValidMoveIdParam } from "./typescript/types";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -70,24 +70,24 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                                     }
                                 }
                             }
-                            const minValue: number = Math.min(...G.currentMoveArguments as unknown as number[]);
-                            const minCardIndex: number =
-                                G.publicPlayers[p].cards[config.suit].findIndex((card: PlayerCardsType): boolean =>
-                                    card.type !== RusCardTypes.HERO && card.points === minValue);
-                            if (minCardIndex !== -1) {
-                                // moves.push({
-                                //     move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-                                //     args: [config.suit, p, minCardIndex],
-                                // });
-                                break;
-                            }
+                            // const minValue: number = Math.min(...G.currentMoveArguments as unknown as number[]);
+                            // const minCardIndex: number =
+                            //     G.publicPlayers[p].cards[config.suit].findIndex((card: PlayerCardsType): boolean =>
+                            //         card.type !== RusCardTypes.HERO && card.points === minValue);
+                            // if (minCardIndex !== -1) {
+                            //     moves.push({
+                            //         move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
+                            //         args: [config.suit, p, minCardIndex],
+                            //     });
+                            //     break;
+                            // }
                         }
                     }
                 }
             }
         } else if (ctx.phase === Phases.EnlistmentMercenaries) {
             if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
-                if (Math.floor(Math.random() * G.currentMoveArguments.length) === 0) {
+                if (Math.floor(Math.random() * 2) === 0) {
                     activeStageOfCurrentPlayer = Stages.Default1;
                 } else {
                     activeStageOfCurrentPlayer = Stages.Default2;
@@ -97,9 +97,18 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
             } else if (G.drawProfit === ConfigNames.PlaceEnlistmentMercenaries) {
                 activeStageOfCurrentPlayer = Stages.Default4;
             }
+        } else if (ctx.phase === Phases.EndTier) {
+            activeStageOfCurrentPlayer = Stages.Default1;
+        } else if (ctx.phase === Phases.GetDistinctions) {
+            activeStageOfCurrentPlayer = Stages.Default1;
+        } else if (ctx.phase === Phases.BrisingamensEndGame) {
+            activeStageOfCurrentPlayer = Stages.Default1;
+        } else if (ctx.phase === Phases.GetMjollnirProfit) {
+            activeStageOfCurrentPlayer = Stages.Default1;
         }
     } else {
         if (activeStageOfCurrentPlayer === Stages.PlaceTradingCoinsUline) {
+            // TODO Fix it!
             if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
                 moves.push({
                     move: MoveNames.ClickBoardCoinMove,
@@ -115,7 +124,8 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
     }
     // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
     const moveName: string = moveBy[ctx.phase][activeStageOfCurrentPlayer],
-        moveValue: ValidMoveIdParam = moveValidators[moveName].getValue(G, ctx);
+        moveRangeData: MoveValidatorGetRangeTypes = moveValidators[moveName].getRange(G, ctx),
+        moveValue: ValidMoveIdParam = moveValidators[moveName].getValue(G, ctx, moveRangeData);
     let moveValues: MoveArgsTypes = [];
     if (typeof moveValue === `number`) {
         moveValues = [moveValue];
@@ -129,6 +139,8 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
         }
     } else if (moveValue === null) {
         moveValues = [];
+    } else if (Array.isArray(moveValue)) {
+        moveValues = [moveValue];
     }
     moves.push({
         move: moveName,

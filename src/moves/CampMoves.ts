@@ -146,7 +146,7 @@ export const UpgradeCoinVidofnirVedrfolnirMove: Move<IMyGameState> = (G: IMyGame
     const isValidMove: boolean = IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
         coinId,
         type,
-        isInitial
+        isInitial,
     });
     if (!isValidMove) {
         return INVALID_MOVE;

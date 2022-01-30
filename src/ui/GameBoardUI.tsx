@@ -10,9 +10,8 @@ import { tavernsConfig } from "../Tavern";
 import { IConfig } from "../typescript/action_interfaces";
 import { IDrawBoardOptions } from "../typescript/board_interfaces";
 import { CampCardTypes, DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
-import { ConfigNames, MoveNames, Phases, Stages } from "../typescript/enums";
+import { ConfigNames, MoveNames } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
-import { ICurrentMoveArgumentsStage } from "../typescript/move_interfaces";
 import { INumberValues } from "../typescript/object_values_interfaces";
 
 /**
@@ -26,12 +25,11 @@ import { INumberValues } from "../typescript/object_values_interfaces";
  * @returns Поле кэмпа.
  */
 export const DrawCamp = (data: BoardProps<IMyGameState>): JSX.Element => {
-    const boardCells: JSX.Element[] = [],
-        moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
+    const boardCells: JSX.Element[] = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < data.G.campNum; j++) {
             const campCard: CampCardTypes = data.G.camp[j];
-            if (campCard === null || data.G.camp[j] === undefined) {
+            if (campCard === null || campCard === undefined) {
                 boardCells.push(
                     <td className="bg-yellow-200" key={`Camp ${j} icon`}>
                         <span style={Styles.Camp()} className="bg-camp-icon">
@@ -42,12 +40,9 @@ export const DrawCamp = (data: BoardProps<IMyGameState>): JSX.Element => {
             } else {
                 DrawCard(data, boardCells, campCard, j, null, null,
                     MoveNames.ClickCampCardMove, j);
-                moveMainArgs.push(j);
             }
         }
     }
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.PickCards][Stages.Default2].numbers = moveMainArgs;
     return (
         <table>
             <caption>
@@ -96,8 +91,7 @@ export const DrawCurrentPlayerTurn = (data: BoardProps<IMyGameState>): JSX.Eleme
  * @returns Поле преимуществ в конце эпохи.
  */
 export const DrawDistinctions = (data: BoardProps<IMyGameState>): JSX.Element => {
-    const boardCells: JSX.Element[] = [],
-        moveMainArgs: ICurrentMoveArgumentsStage["strings"] = [];
+    const boardCells: JSX.Element[] = [];
     for (let i = 0; i < 1; i++) {
         for (const suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -110,12 +104,9 @@ export const DrawDistinctions = (data: BoardProps<IMyGameState>): JSX.Element =>
                         </span>
                     </td>
                 );
-                moveMainArgs.push(suit);
             }
         }
     }
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.GetDistinctions][Stages.Default1].strings = moveMainArgs;
     return (
         <table>
             <caption>
@@ -142,8 +133,7 @@ export const DrawDistinctions = (data: BoardProps<IMyGameState>): JSX.Element =>
  */
 export const DrawHeroes = (data: BoardProps<IMyGameState>): JSX.Element => {
     const boardRows: JSX.Element[][] = [],
-        drawData: IDrawBoardOptions = DrawBoard(data.G.heroes.length),
-        moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
+        drawData: IDrawBoardOptions = DrawBoard(data.G.heroes.length);
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
         boardRows[i] = [];
@@ -151,9 +141,6 @@ export const DrawHeroes = (data: BoardProps<IMyGameState>): JSX.Element => {
             const increment: number = i * drawData.boardCols + j;
             DrawCard(data, boardCells, data.G.heroes[increment], increment, null,
                 null, MoveNames.ClickHeroCardMove, increment);
-            if (data.G.heroes[increment].active) {
-                moveMainArgs.push(increment);
-            }
             if (increment + 1 === data.G.heroes.length) {
                 break;
             }
@@ -162,14 +149,6 @@ export const DrawHeroes = (data: BoardProps<IMyGameState>): JSX.Element => {
             <tr key={`Heroes row ${i}`}>{boardCells}</tr>
         );
     }
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.PickCards][Stages.PickHero].numbers = moveMainArgs;
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.EnlistmentMercenaries][Stages.PickHero].numbers = moveMainArgs;
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.EndTier][Stages.PickHero].numbers = moveMainArgs;
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.GetDistinctions][Stages.PickHero].numbers = moveMainArgs;
     return (
         <table>
             <caption>
@@ -337,8 +316,7 @@ export const DrawProfit = (data: BoardProps<IMyGameState>): JSX.Element => {
  * @returns Поле таверн.
  */
 export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) => {
-    const tavernsBoards: JSX.Element[] = [],
-        moveMainArgs: ICurrentMoveArgumentsStage["numbers"] = [];
+    const tavernsBoards: JSX.Element[] = [];
     for (let t = 0; t < data.G.tavernsNum; t++) {
         for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];
@@ -360,7 +338,6 @@ export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) =
                     if (t === data.G.currentTavern) {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit,
                             MoveNames.ClickCardMove, j);
-                        moveMainArgs.push(j);
                     } else {
                         DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);
                     }
@@ -381,8 +358,6 @@ export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) =
             );
         }
     }
-    data.G.currentMoveArguments[Number(data.ctx.currentPlayer)]
-        .phases[Phases.PickCards][Stages.Default1].numbers = moveMainArgs;
     return tavernsBoards;
 };
 
