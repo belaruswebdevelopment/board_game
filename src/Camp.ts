@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
 import { IArtefactCampCard, IArtefactConfig, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenaries, IMercenaryCampCard } from "./typescript/camp_card_interfaces";
-import { CampDeckCardTypes } from "./typescript/card_types";
+import { CampDeckCardTypes, DiscardCardTypes } from "./typescript/card_types";
 import { RusCardTypes } from "./typescript/enums";
 
 /**
@@ -147,6 +147,9 @@ export const CreateMercenaryCampCard = ({
     variants,
 });
 
+export const isArtefactDiscardCard = (card: DiscardCardTypes): card is IArtefactCampCard =>
+    (card as IArtefactCampCard).type !== RusCardTypes.ARTEFACT;
+
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>
@@ -157,5 +160,5 @@ export const CreateMercenaryCampCard = ({
  * @param card Карта.
  * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
  */
-export const isArtefactCard = (card: IArtefactCampCard | IMercenaryCampCard): card is IArtefactCampCard =>
+export const isArtefactCardNotMercenary = (card: IArtefactCampCard | IMercenaryCampCard): card is IArtefactCampCard =>
     (card as IArtefactCampCard).suit !== undefined;

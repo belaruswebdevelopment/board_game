@@ -5,22 +5,7 @@ import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
-/**
- * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, дающих возможность взять карты из кэмпа.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckPickCampCardAction = (G, ctx) => {
-    if (G.camp.length === 0) {
-        G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
-    }
-};
+import { CardNames, LogTypes, RusCardTypes } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с дискардом карт с планшета игрока.</h3>
  * <p>Применения:</p>
@@ -67,7 +52,7 @@ export const PlaceCardsAction = (G, ctx, suit) => {
             suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
-            name: HeroNames.Olwin,
+            name: CardNames.Olwin,
         });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Олвин во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);

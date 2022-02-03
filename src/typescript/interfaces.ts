@@ -14,5 +14,6 @@ export interface IDeckConfig {
  * <h3>Интерфейс для карт игрока.</h3>
  */
 export interface IPlayerCards {
+    // TODO Rework [name: string]?
     [index: string]: PlayerCardsType[],
 }

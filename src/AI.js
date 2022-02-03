@@ -1,6 +1,6 @@
 import { CompareCards } from "./bot_logic/BotCardLogic";
 import { isCardNotAction } from "./Card";
-import { moveBy, moveValidators } from "./MoveValidator";
+import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescript/enums";
 /**
@@ -18,148 +18,153 @@ export const enumerate = (G, ctx) => {
     var _a, _b;
     // TODO Fix it, now just for bot can do RANDOM move
     const moves = [];
-    let activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : `default`;
-    if (activeStageOfCurrentPlayer === `default`) {
-        if (ctx.phase === Phases.PlaceCoins) {
-            activeStageOfCurrentPlayer = Stages.Default3;
-        }
-        else if (ctx.phase === Phases.PlaceCoinsUline) {
-            // TODO BotPlaceCoinUline
-            if (G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined) {
-                activeStageOfCurrentPlayer = Stages.Default1;
+    if (ctx.phase !== null) {
+        let activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : `default`;
+        if (activeStageOfCurrentPlayer === `default`) {
+            if (ctx.phase === Phases.PlaceCoins) {
+                activeStageOfCurrentPlayer = Stages.Default3;
             }
-            else {
-                activeStageOfCurrentPlayer = Stages.Default2;
-                // TODO Fix this: args: [G.currentTavern + 1]
-            }
-        }
-        else if (ctx.phase === Phases.PickCards) {
-            if (ctx.activePlayers === null) {
-                let pickCardOrCampCard = `card`;
-                if (G.expansions.thingvellir.active
-                    && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                        || (!G.campPicked
-                            && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
-                    pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
-                }
-                if (pickCardOrCampCard === `card`) {
+            else if (ctx.phase === Phases.PlaceCoinsUline) {
+                // TODO BotPlaceCoinUline
+                if (G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined) {
                     activeStageOfCurrentPlayer = Stages.Default1;
                 }
                 else {
                     activeStageOfCurrentPlayer = Stages.Default2;
+                    // TODO Fix this: args: [G.currentTavern + 1]
                 }
             }
-            else {
-                // TODO Fix this (only for quick bot actions)
-                // TODO Bot can't do async turns...?
-                // TODO Move it to ProfitHelpers
-                const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-                if (config !== undefined && config.suit !== undefined) {
-                    for (let p = 0; p < G.publicPlayers.length; p++) {
-                        if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
-                            for (let i = 0; i < G.publicPlayers[p].cards[config.suit].length; i++) {
-                                for (let j = 0; j < 1; j++) {
-                                    if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
-                                        if (G.publicPlayers[p].cards[config.suit][i].type !== RusCardTypes.HERO) {
-                                            const points = G.publicPlayers[p].cards[config.suit][i].points;
-                                            if (points !== null) {
-                                                // G.currentMoveArguments.push(points);
+            else if (ctx.phase === Phases.PickCards) {
+                if (ctx.activePlayers === null) {
+                    let pickCardOrCampCard = `card`;
+                    if (G.expansions.thingvellir.active
+                        && (ctx.currentPlayer === G.publicPlayersOrder[0]
+                            || (!G.campPicked
+                                && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
+                        pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
+                    }
+                    if (pickCardOrCampCard === `card`) {
+                        activeStageOfCurrentPlayer = Stages.Default1;
+                    }
+                    else {
+                        activeStageOfCurrentPlayer = Stages.Default2;
+                    }
+                }
+                else {
+                    // TODO Fix this (only for quick bot actions)
+                    // TODO Bot can't do async turns...?
+                    // TODO Move it to ProfitHelpers
+                    const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
+                    if (config !== undefined && config.suit !== undefined) {
+                        for (let p = 0; p < G.publicPlayers.length; p++) {
+                            if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
+                                for (let i = 0; i < G.publicPlayers[p].cards[config.suit].length; i++) {
+                                    for (let j = 0; j < 1; j++) {
+                                        if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
+                                            if (G.publicPlayers[p].cards[config.suit][i].type !== RusCardTypes.HERO) {
+                                                const points = G.publicPlayers[p].cards[config.suit][i].points;
+                                                if (points !== null) {
+                                                    // G.currentMoveArguments.push(points);
+                                                }
                                             }
                                         }
                                     }
                                 }
+                                // const minValue: number = Math.min(...G.currentMoveArguments as unknown as number[]);
+                                // const minCardIndex: number =
+                                //     G.publicPlayers[p].cards[config.suit].findIndex((card: PlayerCardsType): boolean =>
+                                //         card.type !== RusCardTypes.HERO && card.points === minValue);
+                                // if (minCardIndex !== -1) {
+                                //     moves.push({
+                                //         move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
+                                //         args: [config.suit, p, minCardIndex],
+                                //     });
+                                //     break;
+                                // }
                             }
-                            // const minValue: number = Math.min(...G.currentMoveArguments as unknown as number[]);
-                            // const minCardIndex: number =
-                            //     G.publicPlayers[p].cards[config.suit].findIndex((card: PlayerCardsType): boolean =>
-                            //         card.type !== RusCardTypes.HERO && card.points === minValue);
-                            // if (minCardIndex !== -1) {
-                            //     moves.push({
-                            //         move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-                            //         args: [config.suit, p, minCardIndex],
-                            //     });
-                            //     break;
-                            // }
                         }
                     }
                 }
             }
+            else if (ctx.phase === Phases.EnlistmentMercenaries) {
+                if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
+                    if (Math.floor(Math.random() * 2) === 0) {
+                        activeStageOfCurrentPlayer = Stages.Default1;
+                    }
+                    else {
+                        activeStageOfCurrentPlayer = Stages.Default2;
+                    }
+                }
+                else if (G.drawProfit === ConfigNames.EnlistmentMercenaries) {
+                    activeStageOfCurrentPlayer = Stages.Default3;
+                }
+                else if (G.drawProfit === ConfigNames.PlaceEnlistmentMercenaries) {
+                    activeStageOfCurrentPlayer = Stages.Default4;
+                }
+            }
+            else if (ctx.phase === Phases.EndTier) {
+                activeStageOfCurrentPlayer = Stages.Default1;
+            }
+            else if (ctx.phase === Phases.GetDistinctions) {
+                activeStageOfCurrentPlayer = Stages.Default1;
+            }
+            else if (ctx.phase === Phases.BrisingamensEndGame) {
+                activeStageOfCurrentPlayer = Stages.Default1;
+            }
+            else if (ctx.phase === Phases.GetMjollnirProfit) {
+                activeStageOfCurrentPlayer = Stages.Default1;
+            }
         }
-        else if (ctx.phase === Phases.EnlistmentMercenaries) {
-            if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
-                if (Math.floor(Math.random() * 2) === 0) {
-                    activeStageOfCurrentPlayer = Stages.Default1;
+        else {
+            if (activeStageOfCurrentPlayer === Stages.PlaceTradingCoinsUline) {
+                // TODO Fix it!
+                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
+                    moves.push({
+                        move: MoveNames.ClickBoardCoinMove,
+                        args: [G.tavernsNum + 1],
+                    });
                 }
                 else {
-                    activeStageOfCurrentPlayer = Stages.Default2;
+                    moves.push({
+                        move: MoveNames.ClickBoardCoinMove,
+                        args: [G.tavernsNum],
+                    });
                 }
             }
-            else if (G.drawProfit === ConfigNames.EnlistmentMercenaries) {
-                activeStageOfCurrentPlayer = Stages.Default3;
+        }
+        // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
+        const validator = GetValidator(ctx.phase, activeStageOfCurrentPlayer);
+        if (validator !== undefined) {
+            const moveName = validator.moveName, moveRangeData = validator.getRange(G, ctx), moveValue = validator.getValue(G, ctx, moveRangeData);
+            let moveValues = [];
+            if (typeof moveValue === `number`) {
+                moveValues = [moveValue];
             }
-            else if (G.drawProfit === ConfigNames.PlaceEnlistmentMercenaries) {
-                activeStageOfCurrentPlayer = Stages.Default4;
+            else if (typeof moveValue === `string`) {
+                moveValues = [moveValue];
             }
-        }
-        else if (ctx.phase === Phases.EndTier) {
-            activeStageOfCurrentPlayer = Stages.Default1;
-        }
-        else if (ctx.phase === Phases.GetDistinctions) {
-            activeStageOfCurrentPlayer = Stages.Default1;
-        }
-        else if (ctx.phase === Phases.BrisingamensEndGame) {
-            activeStageOfCurrentPlayer = Stages.Default1;
-        }
-        else if (ctx.phase === Phases.GetMjollnirProfit) {
-            activeStageOfCurrentPlayer = Stages.Default1;
-        }
-    }
-    else {
-        if (activeStageOfCurrentPlayer === Stages.PlaceTradingCoinsUline) {
-            // TODO Fix it!
-            if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
-                moves.push({
-                    move: MoveNames.ClickBoardCoinMove,
-                    args: [G.tavernsNum + 1],
-                });
+            else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
+                if (`suit` in moveValue) {
+                    moveValues = [moveValue.suit, moveValue.cardId];
+                }
+                else if (`coinId` in moveValue) {
+                    moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
+                }
             }
-            else {
-                moves.push({
-                    move: MoveNames.ClickBoardCoinMove,
-                    args: [G.tavernsNum],
-                });
+            else if (moveValue === null) {
+                moveValues = [];
             }
+            else if (Array.isArray(moveValue)) {
+                moveValues = [moveValue];
+            }
+            moves.push({
+                move: moveName,
+                args: moveValues,
+            });
         }
-    }
-    // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
-    const moveName = moveBy[ctx.phase][activeStageOfCurrentPlayer], moveRangeData = moveValidators[moveName].getRange(G, ctx), moveValue = moveValidators[moveName].getValue(G, ctx, moveRangeData);
-    let moveValues = [];
-    if (typeof moveValue === `number`) {
-        moveValues = [moveValue];
-    }
-    else if (typeof moveValue === `string`) {
-        moveValues = [moveValue];
-    }
-    else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
-        if (`suit` in moveValue) {
-            moveValues = [moveValue.suit, moveValue.cardId];
+        if (moves.length === 0) {
+            console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
         }
-        else if (`coinId` in moveValue) {
-            moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
-        }
-    }
-    else if (moveValue === null) {
-        moveValues = [];
-    }
-    else if (Array.isArray(moveValue)) {
-        moveValues = [moveValue];
-    }
-    moves.push({
-        move: moveName,
-        args: moveValues,
-    });
-    if (moves.length === 0 && ctx.phase !== null) {
-        console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
     }
     return moves;
 };

@@ -5,7 +5,7 @@ import { suitsConfig } from "./data/SuitData";
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
-import { ConfigNames, HeroNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescript/enums";
+import { ConfigNames, HeroNames, MoveNames, Phases, RusCardTypes, Stages, ValidatorNames } from "./typescript/enums";
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -49,119 +49,63 @@ export const CoinUpgradeValidation = (G, ctx, coinData) => {
  * @returns Валидный ли мув.
  */
 export const IsValidMove = (G, ctx, stage, id) => {
+    const validator = GetValidator(ctx.phase, stage);
     let isValid = false;
-    if (typeof id === `number`) {
-        isValid = ValidateByValues(id, moveValidators[moveBy[ctx.phase][stage]].getRange(G, ctx));
-    }
-    else if (typeof id === `string`) {
-        isValid = ValidateByValues(id, moveValidators[moveBy[ctx.phase][stage]].getRange(G, ctx));
-    }
-    else if (typeof id === `object` && !Array.isArray(id) && id !== null) {
-        if (`suit` in id) {
-            isValid = ValidateByObjectSuitIdValues(id, moveValidators[moveBy[ctx.phase][stage]].getRange(G, ctx));
+    if (validator !== undefined) {
+        if (typeof id === `number`) {
+            isValid = ValidateByValues(id, validator.getRange(G, ctx));
         }
-        else if (`coinId` in id) {
-            isValid = ValidateByObjectCoinIdTypeIsInitialValues(id, moveValidators[moveBy[ctx.phase][stage]].getRange(G, ctx));
+        else if (typeof id === `string`) {
+            isValid = ValidateByValues(id, validator.getRange(G, ctx));
         }
-    }
-    else {
-        isValid = true;
-    }
-    if (isValid) {
-        return moveValidators[moveBy[ctx.phase][stage]].validate(G, ctx, id);
+        else if (typeof id === `object` && !Array.isArray(id) && id !== null) {
+            if (`suit` in id) {
+                isValid = ValidateByObjectSuitIdValues(id, validator.getRange(G, ctx));
+            }
+            else if (`coinId` in id) {
+                isValid = ValidateByObjectCoinIdTypeIsInitialValues(id, validator.getRange(G, ctx));
+            }
+        }
+        else {
+            isValid = true;
+        }
+        if (isValid) {
+            return validator.validate(G, ctx, id);
+        }
     }
     return isValid;
 };
-/**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
- * </oL>
- * @TODO Саше: сделать описание функции и параметров.
- */
-export const moveBy = {
-    null: {},
-    [Phases.PlaceCoins]: {
-        [Stages.Default1]: MoveNames.ClickHandCoinMove,
-        [Stages.Default2]: MoveNames.ClickBoardCoinMove,
-        [Stages.Default3]: MoveNames.BotsPlaceAllCoinsMove,
-    },
-    [Phases.PlaceCoinsUline]: {
-        [Stages.Default1]: MoveNames.ClickHandCoinMove,
-        [Stages.Default2]: MoveNames.ClickBoardCoinMove,
-    },
-    [Phases.PickCards]: {
-        [Stages.Default1]: MoveNames.ClickCardMove,
-        [Stages.Default2]: MoveNames.ClickCampCardMove,
-        // start
-        [Stages.AddCoinToPouch]: MoveNames.AddCoinToPouchMove,
-        [Stages.DiscardBoardCard]: MoveNames.DiscardCardMove,
-        [Stages.DiscardSuitCard]: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-        [Stages.PickCampCardHolda]: MoveNames.ClickCampCardHoldaMove,
-        [Stages.PickDiscardCard]: MoveNames.PickDiscardCardMove,
-        [Stages.PickHero]: MoveNames.ClickHeroCardMove,
-        [Stages.PlaceCards]: MoveNames.PlaceCardMove,
-        [Stages.UpgradeCoin]: MoveNames.ClickCoinToUpgradeMove,
-        [Stages.UpgradeVidofnirVedrfolnirCoin]: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
-        // end
-        [Stages.DiscardCard]: MoveNames.DiscardCard2PlayersMove,
-        // TODO Fix it!
-        [Stages.PlaceTradingCoinsUline]: MoveNames.ClickHandCoinMove,
-        // [Stages.PlaceTradingCoinsUline]: MoveNames.ClickBoardCoinMove,
-    },
-    [Phases.EnlistmentMercenaries]: {
-        [Stages.Default1]: MoveNames.StartEnlistmentMercenariesMove,
-        [Stages.Default2]: MoveNames.PassEnlistmentMercenariesMove,
-        [Stages.Default3]: MoveNames.GetEnlistmentMercenariesMove,
-        [Stages.Default4]: MoveNames.PlaceEnlistmentMercenariesMove,
-        // start
-        [Stages.AddCoinToPouch]: MoveNames.AddCoinToPouchMove,
-        [Stages.DiscardBoardCard]: MoveNames.DiscardCardMove,
-        [Stages.DiscardSuitCard]: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-        [Stages.PickCampCardHolda]: MoveNames.ClickCampCardHoldaMove,
-        [Stages.PickDiscardCard]: MoveNames.PickDiscardCardMove,
-        [Stages.PickHero]: MoveNames.ClickHeroCardMove,
-        [Stages.PlaceCards]: MoveNames.PlaceCardMove,
-        [Stages.UpgradeCoin]: MoveNames.ClickCoinToUpgradeMove,
-        [Stages.UpgradeVidofnirVedrfolnirCoin]: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
-        // end
-    },
-    [Phases.EndTier]: {
-        [Stages.Default1]: MoveNames.PlaceCardMove,
-        // start
-        [Stages.AddCoinToPouch]: MoveNames.AddCoinToPouchMove,
-        [Stages.DiscardBoardCard]: MoveNames.DiscardCardMove,
-        [Stages.DiscardSuitCard]: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-        [Stages.PickCampCardHolda]: MoveNames.ClickCampCardHoldaMove,
-        [Stages.PickDiscardCard]: MoveNames.PickDiscardCardMove,
-        [Stages.PickHero]: MoveNames.ClickHeroCardMove,
-        [Stages.PlaceCards]: MoveNames.PlaceCardMove,
-        [Stages.UpgradeCoin]: MoveNames.ClickCoinToUpgradeMove,
-        [Stages.UpgradeVidofnirVedrfolnirCoin]: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
-        // end
-    },
-    [Phases.GetDistinctions]: {
-        [Stages.Default1]: MoveNames.ClickDistinctionCardMove,
-        // start
-        [Stages.AddCoinToPouch]: MoveNames.AddCoinToPouchMove,
-        [Stages.DiscardBoardCard]: MoveNames.DiscardCardMove,
-        [Stages.DiscardSuitCard]: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-        [Stages.PickCampCardHolda]: MoveNames.ClickCampCardHoldaMove,
-        [Stages.PickDiscardCard]: MoveNames.PickDiscardCardMove,
-        [Stages.PickHero]: MoveNames.ClickHeroCardMove,
-        [Stages.PlaceCards]: MoveNames.PlaceCardMove,
-        [Stages.UpgradeCoin]: MoveNames.ClickCoinToUpgradeMove,
-        [Stages.UpgradeVidofnirVedrfolnirCoin]: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
-        // end
-        [Stages.PickDistinctionCard]: MoveNames.ClickCardToPickDistinctionMove,
-    },
-    [Phases.BrisingamensEndGame]: {
-        [Stages.Default1]: MoveNames.DiscardCardFromPlayerBoardMove,
-    },
-    [Phases.GetMjollnirProfit]: {
-        [Stages.Default1]: MoveNames.GetMjollnirProfitMove,
-    },
+export const GetValidator = (phase, stage) => {
+    let validator;
+    switch (phase) {
+        case Phases.PlaceCoins:
+            validator = moveBy[phase][stage];
+            break;
+        case Phases.PlaceCoinsUline:
+            validator = moveBy[phase][stage];
+            break;
+        case Phases.PickCards:
+            validator = moveBy[phase][stage];
+            break;
+        case Phases.EnlistmentMercenaries:
+            validator = moveBy[phase][stage];
+            break;
+        case Phases.EndTier:
+            validator = moveBy[phase][stage];
+            break;
+        case Phases.GetDistinctions:
+            validator = moveBy[phase][stage];
+            break;
+        case Phases.BrisingamensEndGame:
+            validator = moveBy[phase][stage];
+            break;
+        case Phases.GetMjollnirProfit:
+            validator = moveBy[phase][stage];
+            break;
+        default:
+            break;
+    }
+    return validator;
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -173,7 +117,7 @@ export const moveBy = {
  */
 export const moveValidators = {
     // TODO Add all validators to all moves
-    [MoveNames.BotsPlaceAllCoinsMove]: {
+    BotsPlaceAllCoinsMoveValidator: {
         getRange: (G) => {
             let moveMainArgs = [];
             if (G !== undefined) {
@@ -235,9 +179,10 @@ export const moveValidators = {
             // TODO FIx it!
             return [];
         },
+        moveName: MoveNames.BotsPlaceAllCoinsMove,
         validate: () => true,
     },
-    [MoveNames.ClickBoardCoinMove]: {
+    ClickBoardCoinMoveValidator: {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
@@ -281,6 +226,7 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.ClickBoardCoinMove,
         validate: (G, ctx, id) => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
@@ -290,16 +236,14 @@ export const moveValidators = {
             return isValid;
         },
     },
-    [MoveNames.ClickCampCardMove]: {
+    ClickCampCardMoveValidator: {
         getRange: (G) => {
             const moveMainArgs = [];
             if (G !== undefined) {
-                for (let i = 0; i < 1; i++) {
-                    for (let j = 0; j < G.campNum; j++) {
-                        const campCard = G.camp[j];
-                        if (campCard !== null || campCard !== undefined) {
-                            moveMainArgs.push(j);
-                        }
+                for (let j = 0; j < G.campNum; j++) {
+                    const campCard = G.camp[j];
+                    if (campCard !== null) {
+                        moveMainArgs.push(j);
                     }
                 }
             }
@@ -309,6 +253,7 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.ClickCampCardMove,
         validate: (G, ctx) => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined) {
@@ -318,7 +263,7 @@ export const moveValidators = {
             return isValid;
         },
     },
-    [MoveNames.ClickCardMove]: {
+    ClickCardMoveValidator: {
         getRange: (G) => {
             const moveMainArgs = [];
             if (G !== undefined) {
@@ -367,9 +312,10 @@ export const moveValidators = {
             // TODO FIX it!
             return -1;
         },
+        moveName: MoveNames.ClickCardMove,
         validate: () => true,
     },
-    [MoveNames.ClickCardToPickDistinctionMove]: {
+    ClickCardToPickDistinctionMoveValidator: {
         getRange: () => {
             const moveMainArgs = [];
             for (let j = 0; j < 3; j++) {
@@ -381,16 +327,21 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.ClickCardToPickDistinctionMove,
         validate: () => true,
     },
-    [MoveNames.ClickDistinctionCardMove]: {
-        // TODO Rework with validator in Move:
-        getRange: () => {
+    ClickDistinctionCardMoveValidator: {
+        getRange: (G, ctx) => {
             const moveMainArgs = [];
-            for (let i = 0; i < 1; i++) {
+            if (G !== undefined && ctx !== undefined) {
                 for (const suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                        moveMainArgs.push(suit);
+                        if (G.distinctions[suit] === ctx.currentPlayer) {
+                            if (ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos]) {
+                                moveMainArgs.push(suit);
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -400,20 +351,18 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.ClickDistinctionCardMove,
         validate: (G, ctx, id) => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `string`) {
-                // TODO ID === SUIT NOT NUMBER!
-                const suitDistinctionIndex = Object.keys(G.distinctions).findIndex((suit) => suit === id);
                 isValid = Object.keys(G.distinctions).includes(id)
-                    && Object.keys(G.distinctions).filter((suit) => suit !== undefined
-                        && suit !== null).findIndex((suit) => suit === id) ===
-                        ctx.playOrderPos && G.distinctions[suitDistinctionIndex] === ctx.currentPlayer;
+                    && G.distinctions[id] === ctx.currentPlayer
+                    && ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos];
             }
             return isValid;
         }
     },
-    [MoveNames.ClickHandCoinMove]: {
+    ClickHandCoinMoveValidator: {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
@@ -433,6 +382,7 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.ClickHandCoinMove,
         validate: (G, ctx, id) => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
@@ -442,7 +392,7 @@ export const moveValidators = {
             return isValid;
         },
     },
-    [MoveNames.DiscardCardFromPlayerBoardMove]: {
+    DiscardCardFromPlayerBoardMoveValidator: {
         getRange: (G, ctx) => {
             const moveMainArgs = {};
             if (G !== undefined && ctx !== undefined) {
@@ -481,9 +431,10 @@ export const moveValidators = {
                 cardId: moveArguments[suitName][Math.floor(Math.random() * moveArguments[suitName].length)],
             };
         },
+        moveName: MoveNames.DiscardCardFromPlayerBoardMove,
         validate: () => true,
     },
-    [MoveNames.DiscardCard2PlayersMove]: {
+    DiscardCard2PlayersMoveValidator: {
         getRange: (G) => {
             const moveMainArgs = [];
             if (G !== undefined) {
@@ -499,6 +450,7 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.DiscardCard2PlayersMove,
         validate: (G, ctx) => {
             let isValid = false;
             if (ctx !== undefined) {
@@ -507,7 +459,7 @@ export const moveValidators = {
             return isValid;
         },
     },
-    [MoveNames.GetEnlistmentMercenariesMove]: {
+    GetEnlistmentMercenariesMoveValidator: {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
@@ -523,9 +475,10 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.GetEnlistmentMercenariesMove,
         validate: () => true,
     },
-    [MoveNames.GetMjollnirProfitMove]: {
+    GetMjollnirProfitMoveValidator: {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
@@ -551,11 +504,13 @@ export const moveValidators = {
             return Object.values(suitsConfig)[totalSuitsRanks
                 .indexOf(Math.max(...totalSuitsRanks))].suit;
         },
+        moveName: MoveNames.GetMjollnirProfitMove,
         validate: () => true,
     },
-    [MoveNames.PassEnlistmentMercenariesMove]: {
+    PassEnlistmentMercenariesMoveValidator: {
         getRange: () => null,
         getValue: () => null,
+        moveName: MoveNames.PassEnlistmentMercenariesMove,
         validate: (G, ctx) => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined) {
@@ -567,7 +522,7 @@ export const moveValidators = {
             return isValid;
         },
     },
-    [MoveNames.PlaceEnlistmentMercenariesMove]: {
+    PlaceEnlistmentMercenariesMoveValidator: {
         getRange: (G, ctx) => {
             var _a;
             const moveMainArgs = [];
@@ -591,11 +546,13 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.PlaceEnlistmentMercenariesMove,
         validate: () => true,
     },
-    [MoveNames.StartEnlistmentMercenariesMove]: {
+    StartEnlistmentMercenariesMoveValidator: {
         getRange: () => null,
         getValue: () => null,
+        moveName: MoveNames.StartEnlistmentMercenariesMove,
         validate: (G, ctx) => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined) {
@@ -608,7 +565,7 @@ export const moveValidators = {
         },
     },
     // start
-    [MoveNames.AddCoinToPouchMove]: {
+    AddCoinToPouchMoveValidator: {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
@@ -625,15 +582,15 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.AddCoinToPouchMove,
         validate: () => true,
     },
-    [MoveNames.ClickCampCardHoldaMove]: {
+    ClickCampCardHoldaMoveValidator: {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
                 for (let j = 0; j < G.campNum; j++) {
-                    const card = G.camp[j];
-                    if (card !== null) {
+                    if (G.camp[j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -644,9 +601,10 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.ClickCampCardHoldaMove,
         validate: () => true,
     },
-    [MoveNames.ClickCoinToUpgradeMove]: {
+    ClickCoinToUpgradeMoveValidator: {
         // TODO Rework if Uline in play or no 1 coin in game (& add param isInitial?)
         getRange: (G, ctx) => {
             var _a, _b, _c, _d;
@@ -667,7 +625,8 @@ export const moveValidators = {
                                 && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === ((_b = handCoins[handCoinIndex]) === null || _b === void 0 ? void 0 : _b.isInitial);
                         });
                         if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinId]
-                            && !((_a = G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
+                            && !((_a = G.publicPlayers[Number(ctx.currentPlayer)]
+                                .handCoins[handCoinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
                             moveMainArgs.push({
                                 coinId: j,
                                 type: `hand`,
@@ -692,6 +651,7 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.ClickCoinToUpgradeMove,
         validate: (G, ctx, id) => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `object` && id !== null
@@ -701,7 +661,7 @@ export const moveValidators = {
             return isValid;
         },
     },
-    [MoveNames.ClickHeroCardMove]: {
+    ClickHeroCardMoveValidator: {
         getRange: (G) => {
             const moveMainArgs = [];
             if (G !== undefined) {
@@ -717,26 +677,36 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.ClickHeroCardMove,
         validate: (G, ctx, id) => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                switch (G.heroes[id].name) {
-                    case HeroNames.Hourya:
-                        isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
-                        break;
-                    case HeroNames.Bonfur:
-                    case HeroNames.Dagda:
-                        isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
-                        break;
-                    default:
-                        isValid = true;
-                        break;
+                const validators = G.heroes[id].validators;
+                if (validators !== undefined) {
+                    for (const validator in validators) {
+                        if (Object.prototype.hasOwnProperty.call(validators, validator)) {
+                            switch (validator) {
+                                case ValidatorNames.Conditions:
+                                    isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
+                                    break;
+                                case ValidatorNames.DiscardCard:
+                                    isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
+                                    break;
+                                default:
+                                    isValid = true;
+                                    break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    isValid = true;
                 }
             }
             return isValid;
         },
     },
-    [MoveNames.DiscardCardMove]: {
+    DiscardCardMoveValidator: {
         getRange: (G, ctx) => {
             const moveMainArgs = {};
             if (G !== undefined && ctx !== undefined) {
@@ -774,18 +744,21 @@ export const moveValidators = {
                 cardId: moveArguments[suitName][Math.floor(Math.random() * moveArguments[suitName].length)],
             };
         },
+        moveName: MoveNames.DiscardCardMove,
         validate: () => true,
     },
-    // [MoveNames.DiscardSuitCardFromPlayerBoardMove]: {
+    // DiscardSuitCardFromPlayerBoardMoveValidator: {
     //     // TODO FIX IT!!!!!!
     //     getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArguments => currentMoveArguments,
-    //     // getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes): ValidMoveIdParam => {
+    //     // getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
+    // ValidMoveIdParamTypes => {
     //     //     const moveArguments: number[] = currentMoveArguments as number[];
     //     //     return [moveArguments[Math.floor(Math.random() * moveArguments.length)]];
     //     // },
+    // moveName: MoveNames.DiscardSuitCardFromPlayerBoardMove,
     //     validate: (): boolean => true, // TODO Check it
     // },
-    [MoveNames.PickDiscardCardMove]: {
+    PickDiscardCardMoveValidator: {
         getRange: (G) => {
             const moveMainArgs = [];
             if (G !== undefined) {
@@ -799,9 +772,10 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.PickDiscardCardMove,
         validate: () => true,
     },
-    [MoveNames.PlaceCardMove]: {
+    PlaceCardMoveValidator: {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
@@ -823,9 +797,10 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.PlaceCardMove,
         validate: () => true, // TODO Check it
     },
-    [MoveNames.UpgradeCoinVidofnirVedrfolnirMove]: {
+    UpgradeCoinVidofnirVedrfolnirMoveValidator: {
         // TODO Rework if Uline in play or no 1 coin in game(& add param isInitial ?)
         getRange: (G, ctx) => {
             const moveMainArgs = [];
@@ -853,6 +828,7 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
+        moveName: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
         validate: (G, ctx, id) => {
             var _a;
             let isValid = false;
@@ -865,6 +841,96 @@ export const moveValidators = {
         },
     },
     // end
+};
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ * @TODO Саше: сделать описание функции и параметров.
+ */
+export const moveBy = {
+    placeCoins: {
+        default1: moveValidators.ClickHandCoinMoveValidator,
+        default2: moveValidators.ClickBoardCoinMoveValidator,
+        default3: moveValidators.BotsPlaceAllCoinsMoveValidator,
+    },
+    placeCoinsUline: {
+        default1: moveValidators.ClickHandCoinMoveValidator,
+        default2: moveValidators.ClickBoardCoinMoveValidator,
+    },
+    pickCards: {
+        default1: moveValidators.ClickCardMoveValidator,
+        default2: moveValidators.ClickCampCardMoveValidator,
+        // start
+        addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
+        discardBoardCard: moveValidators.DiscardCardMoveValidator,
+        // discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
+        pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
+        pickHero: moveValidators.ClickHeroCardMoveValidator,
+        placeCards: moveValidators.PlaceCardMoveValidator,
+        upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
+        upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        // end
+        discardCard: moveValidators.DiscardCard2PlayersMoveValidator,
+        // TODO Fix it!
+        placeTradingCoinsUline: moveValidators.ClickHandCoinMoveValidator,
+        // PlaceTradingCoinsUline: moveValidators.ClickBoardCoinMove,
+    },
+    enlistmentMercenaries: {
+        default1: moveValidators.StartEnlistmentMercenariesMoveValidator,
+        default2: moveValidators.PassEnlistmentMercenariesMoveValidator,
+        default3: moveValidators.GetEnlistmentMercenariesMoveValidator,
+        default4: moveValidators.PlaceEnlistmentMercenariesMoveValidator,
+        // start
+        addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
+        discardBoardCard: moveValidators.DiscardCardMoveValidator,
+        // discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
+        pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
+        pickHero: moveValidators.ClickHeroCardMoveValidator,
+        placeCards: moveValidators.PlaceCardMoveValidator,
+        upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
+        upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        // end
+    },
+    endTier: {
+        default1: moveValidators.PlaceCardMoveValidator,
+        // start
+        addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
+        discardBoardCard: moveValidators.DiscardCardMoveValidator,
+        // discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
+        pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
+        pickHero: moveValidators.ClickHeroCardMoveValidator,
+        placeCards: moveValidators.PlaceCardMoveValidator,
+        upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
+        upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        // end
+    },
+    getDistinctions: {
+        default1: moveValidators.ClickDistinctionCardMoveValidator,
+        // start
+        addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
+        discardBoardCard: moveValidators.DiscardCardMoveValidator,
+        // discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
+        pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
+        pickHero: moveValidators.ClickHeroCardMoveValidator,
+        placeCards: moveValidators.PlaceCardMoveValidator,
+        upgradeCoin: moveValidators.ClickCoinToUpgradeMoveValidator,
+        upgradeVidofnirVedrfolnirCoin: moveValidators.UpgradeCoinVidofnirVedrfolnirMoveValidator,
+        // end
+        pickDistinctionCard: moveValidators.ClickCardToPickDistinctionMoveValidator,
+    },
+    brisingamensEndGame: {
+        default1: moveValidators.DiscardCardFromPlayerBoardMoveValidator,
+    },
+    getMjollnirProfit: {
+        default1: moveValidators.GetMjollnirProfitMoveValidator,
+    },
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>

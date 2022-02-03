@@ -1,5 +1,5 @@
 import { AddDataToLog } from "../Logging";
-import { DrawNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages } from "../typescript/enums";
+import { HeroNames, LogTypes, Phases, RusCardTypes, Stages } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
 /**
  * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
@@ -132,7 +132,7 @@ export const CheckEndGameLastActions = (G, ctx) => {
 * @param ctx
 */
 export const CheckEndTierActionsOrEndGameLastActions = (G, ctx) => {
-    const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === DrawNames.Ylud);
+    const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === HeroNames.Ylud);
     if (yludIndex !== -1) {
         return {
             next: Phases.EndTier,

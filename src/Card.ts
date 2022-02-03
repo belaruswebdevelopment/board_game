@@ -2,11 +2,9 @@ import { suitsConfig } from "./data/SuitData";
 import { IActionCard, ICreateActionCard } from "./typescript/action_card_intarfaces";
 import { IAverageSuitCardData } from "./typescript/bot_interfaces";
 import { ICard, ICreateCard } from "./typescript/card_interfaces";
-import { DeckCardTypes } from "./typescript/card_types";
+import { DeckCardTypes, DiscardCardTypes } from "./typescript/card_types";
 import { RusCardTypes } from "./typescript/enums";
 import { IDeckConfig } from "./typescript/interfaces";
-
-// TODO Add LogTypes.ERROR logging to Sasha's functions
 
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
@@ -118,6 +116,9 @@ export const CreateCard = ({
     tier,
     path,
 });
+
+export const isActionDiscardCard = (card: DiscardCardTypes): card is IActionCard =>
+    (card as IActionCard).type !== RusCardTypes.ACTION;
 
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>

@@ -3,8 +3,7 @@ import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent, EndActionForChosenPlayer } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IConfig } from "../typescript/action_interfaces";
-import { ICard } from "../typescript/card_interfaces";
-import { PlayerCardsType } from "../typescript/card_types";
+import { DiscardCardTypes, PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { LogTypes, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
@@ -52,7 +51,7 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: string, p
         if (G.publicPlayers[playerId].cards[suit][cardId].type !== RusCardTypes.HERO) {
             const discardedCard: PlayerCardsType =
                 G.publicPlayers[playerId].cards[suit].splice(cardId, 1)[0];
-            G.discardCardsDeck.push(discardedCard as ICard);
+            G.discardCardsDeck.push(discardedCard as DiscardCardTypes);
             AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в дискард.`);
             EndActionForChosenPlayer(G, ctx, playerId);
         } else {

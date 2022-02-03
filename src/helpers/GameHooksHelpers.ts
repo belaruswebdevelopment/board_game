@@ -2,7 +2,7 @@ import { Ctx } from "boardgame.io";
 import { AddDataToLog } from "../Logging";
 import { CampDeckCardTypes, PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { DrawNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages } from "../typescript/enums";
+import { HeroNames, LogTypes, Phases, RusCardTypes, Stages } from "../typescript/enums";
 import { IMyGameState, INext } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
@@ -143,7 +143,7 @@ export const CheckEndGameLastActions = (G: IMyGameState, ctx: Ctx): boolean | IN
 */
 export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState, ctx: Ctx): boolean | INext => {
     const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-        player.buffs.endTier === DrawNames.Ylud);
+        player.buffs.endTier === HeroNames.Ylud);
     if (yludIndex !== -1) {
         return {
             next: Phases.EndTier,

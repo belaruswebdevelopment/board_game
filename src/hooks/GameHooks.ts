@@ -1,14 +1,14 @@
 import { Ctx } from "boardgame.io";
 import { ScoreWinner } from "../Score";
 import { CampDeckCardTypes } from "../typescript/card_types";
-import { DrawNames, RusCardTypes } from "../typescript/enums";
+import { HeroNames, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 export const CheckEndGame = (G: IMyGameState): boolean | void => {
     if (G.tierToEnd === 0) {
         const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            player.buffs.endTier === DrawNames.Ylud);
+            player.buffs.endTier === HeroNames.Ylud);
         if (yludIndex !== -1) {
             return false;
         }
@@ -17,7 +17,7 @@ export const CheckEndGame = (G: IMyGameState): boolean | void => {
         if (brisingamensIndex !== -1) {
             return false;
         }
-        const mjollnirIndex = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+        const mjollnirIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
             Boolean(player.buffs.getMjollnirProfit));
         if (mjollnirIndex !== -1) {
             return false;

@@ -1,4 +1,4 @@
-import { isArtefactCard } from "../Camp";
+import { isArtefactCardNotMercenary } from "../Camp";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
@@ -14,7 +14,7 @@ import { LogTypes } from "../typescript/enums";
  * @param card Карта кэмпа.
  */
 export const AddCampCardToPlayer = (G, ctx, card) => {
-    if (!isArtefactCard(card) || (isArtefactCard(card) && card.suit === null)) {
+    if (!isArtefactCardNotMercenary(card) || (isArtefactCardNotMercenary(card) && card.suit === null)) {
         G.publicPlayers[Number(ctx.currentPlayer)].campCards.push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту кэмпа ${card.name}.`);
     }
@@ -32,14 +32,17 @@ export const AddCampCardToPlayer = (G, ctx, card) => {
  * @param G
  * @param ctx
  * @param card Карта кэмпа.
+ * @returns Добавлен ли артефакт на планшет игрока.
  */
 export const AddCampCardToPlayerCards = (G, ctx, card) => {
     if (card.suit !== null) {
         G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit].push(card);
         AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту кэмпа '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
+        return true;
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить артефакт ${card.name} на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
+        return false;
     }
 };
 //# sourceMappingURL=CampCardHelpers.js.map

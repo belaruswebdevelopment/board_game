@@ -21,7 +21,9 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  */
 export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff): void => {
     if (buff !== undefined) {
-        G.publicPlayers[Number(ctx.currentPlayer)].buffs[buff.name] = buff.value;
+        G.publicPlayers[Number(ctx.currentPlayer)].buffs = {
+            [buff.name]: buff.value,
+        };
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} получил баф '${buff.name}'.`);
     }
 };

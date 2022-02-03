@@ -1,5 +1,5 @@
 import { AddDataToLog } from "./Logging";
-import { DeckCardTypes, TavernCardTypes } from "./typescript/card_types";
+import { DeckCardTypes, DiscardCardTypes, TavernCardTypes } from "./typescript/card_types";
 import { LogTypes } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
 import { ITavernsConfig } from "./typescript/tavern_interfaces";
@@ -35,7 +35,7 @@ export const CheckIfCurrentTavernEmpty = (G: IMyGameState): boolean =>
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number): boolean => {
-    const discardedCard: TavernCardTypes = G.taverns[G.currentTavern][discardCardIndex];
+    const discardedCard: DiscardCardTypes = G.taverns[G.currentTavern][discardCardIndex] as DeckCardTypes;
     if (discardedCard !== null) {
         G.discardCardsDeck.push(discardedCard);
         G.taverns[G.currentTavern][discardCardIndex] = null;

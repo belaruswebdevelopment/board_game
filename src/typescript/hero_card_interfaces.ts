@@ -43,6 +43,7 @@ export interface IHero {
  * <h3>Интерфейс для конфига карт героев.</h3>
  */
 export interface IHeroConfig {
+    // TODO Rework [name: string]?
     [name: string]: IHeroData,
 }
 

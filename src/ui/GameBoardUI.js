@@ -23,7 +23,7 @@ export const DrawCamp = (data) => {
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < data.G.campNum; j++) {
             const campCard = data.G.camp[j];
-            if (campCard === null || campCard === undefined) {
+            if (campCard === null) {
                 boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }, void 0) }, `Camp ${j} icon`));
             }
             else {

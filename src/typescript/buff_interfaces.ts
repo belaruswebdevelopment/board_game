@@ -1,23 +1,25 @@
+import { HeroNames } from "./enums";
+
 /**
  * <h3>Интерфейс для баффа карт.</h3>
  */
 export interface IBuff {
-    name: string,
-    value: string | number | boolean,
+    name: keyof IBuffs,
+    value: string | number | true,
 }
 
 /**
  * <h3>Интерфейс для видов бафов у карт.</h3>
  */
 export interface IBuffs {
-    // discardCardEndGame?: boolean,
-    // endTier?: string,
-    // everyTurn?: string,
-    // getMjollnirProfit?: boolean,
-    // goCamp?: boolean,
-    // goCampOneTime?: boolean,
-    // noHero?: boolean,
-    // upgradeCoin?: number,
-    // upgradeNextCoin?: string,
-    [name: string]: string | number | boolean,
+    coin?: `min`,
+    discardCardEndGame?: true,
+    endTier?: HeroNames.Ylud,
+    everyTurn?: HeroNames.Uline,
+    getMjollnirProfit?: true,
+    goCamp?: true,
+    goCampOneTime?: true,
+    noHero?: true,
+    upgradeCoin?: number,
+    upgradeNextCoin?: string,
 }

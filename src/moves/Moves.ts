@@ -36,7 +36,7 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
     if (card !== null) {
         const isAdded: boolean = AddCardToPlayer(G, ctx, card);
         if (!isCardNotAction(card)) {
-            AddActionsToStackAfterCurrent(G, ctx, card.stack);
+            AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
         } else {
             if (isAdded) {
                 CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
@@ -74,7 +74,7 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
         }
     } else {
-        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
+        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack, pickedCard);
     }
 };
 

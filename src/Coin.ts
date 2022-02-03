@@ -163,7 +163,7 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
     // TODO Split into different functions!
     let upgradingCoin: Record<string, unknown> | ICoin = {},
         coin: CoinType | undefined;
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin !== undefined) {
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin;
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.coin === `min`) {
@@ -228,7 +228,8 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
                 upgradingCoin = coin;
                 upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
                     .findIndex((coin: CoinType): boolean =>
-                        isCoin(upgradingCoin) && coin?.value === upgradingCoin.value && coin?.isInitial === isInitial);
+                        isCoin(upgradingCoin) && coin?.value === upgradingCoin.value
+                        && coin?.isInitial === isInitial);
             }
         } else {
             coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId];

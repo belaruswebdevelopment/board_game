@@ -1,8 +1,8 @@
 import { ScoreWinner } from "../Score";
-import { DrawNames, RusCardTypes } from "../typescript/enums";
+import { HeroNames, RusCardTypes } from "../typescript/enums";
 export const CheckEndGame = (G) => {
     if (G.tierToEnd === 0) {
-        const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === DrawNames.Ylud);
+        const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === HeroNames.Ylud);
         if (yludIndex !== -1) {
             return false;
         }

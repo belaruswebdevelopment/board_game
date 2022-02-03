@@ -43,5 +43,6 @@ interface IVariant {
  * <h3>Интерфейс для вариантов карты героя.</h3>
  */
 export interface IVariants {
+    // TODO Rework [name: string] to typeof/keyof SUITS
     [name: string]: IVariant,
 }

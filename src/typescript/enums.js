@@ -1,3 +1,4 @@
+// TODO Check unused enums
 /**
  * <h3>Перечисление для названий артефактов.</h3>
  */
@@ -32,6 +33,11 @@ export var BuffNames;
     BuffNames["UpgradeCoin"] = "upgradeCoin";
     BuffNames["UpgradeNextCoin"] = "upgradeNextCoin";
 })(BuffNames || (BuffNames = {}));
+export var CardNames;
+(function (CardNames) {
+    CardNames["ChiefBlacksmith"] = "Chief blacksmith";
+    CardNames["Olwin"] = "Olwin";
+})(CardNames || (CardNames = {}));
 /**
  * <h3>Перечисление для названия отрисовки экшенов в конфиге.</h3>
  */
@@ -244,4 +250,11 @@ export var SuitNames;
     SuitNames["MINER"] = "miner";
     SuitNames["WARRIOR"] = "warrior";
 })(SuitNames || (SuitNames = {}));
+export var ValidatorNames;
+(function (ValidatorNames) {
+    ValidatorNames["Conditions"] = "conditions";
+    ValidatorNames["DiscardCard"] = "discardCard";
+    ValidatorNames["PickDiscardCardToStack"] = "pickDiscardCardToStack";
+    ValidatorNames["PickCampCardToStack"] = "pickCampCardToStack";
+})(ValidatorNames || (ValidatorNames = {}));
 //# sourceMappingURL=enums.js.map

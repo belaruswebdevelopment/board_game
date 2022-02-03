@@ -1,7 +1,7 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeCoinAction } from "../actions/AutoActions";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { BuffNames, DrawNames, HeroNames, SuitNames } from "../typescript/enums";
+import { BuffNames, DrawNames, HeroNames, SuitNames, ValidatorNames } from "../typescript/enums";
 import { IHeroConfig, IHeroData } from "../typescript/hero_card_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { StackData } from "./StackData";
@@ -37,15 +37,10 @@ const Andumia: IHeroData = {
     suit: null,
     rank: null,
     points: 12,
-    stack: [
-        // TODO Move to validator!
-        // {
-        //     action: {
-        //         name: CheckPickDiscardCardHeroAction.name,
-        //     },
-        // },
-        StackData.pickDiscardCardAndumia()
-    ],
+    validators: {
+        pickDiscardCardToStack: {},
+    },
+    stack: [StackData.pickDiscardCardAndumia()],
     scoringRule: (): number => 12,
 };
 
@@ -252,16 +247,10 @@ const Holda: IHeroData = {
         name: BuffNames.GoCampOneTime,
         value: true,
     },
-    stack: [
-        //TODO Move to validator!
-        // {
-        //     action: {
-        //         name: CheckPickCampCardAction.name,
-        //     },
-        // },
-        // TODO Fix it PickHeroAction?
-        StackData.pickCampCardHolda()
-    ],
+    validators: {
+        pickCampCardToStack: {},
+    },
+    stack: [StackData.pickCampCardHolda()],
     scoringRule: (): number => 12,
 };
 
@@ -280,7 +269,7 @@ const Hourya: IHeroData = {
     rank: 1,
     points: 20,
     validators: {
-        conditions: {
+        [ValidatorNames.Conditions]: {
             suitCountMin: {
                 suit: SuitNames.EXPLORER,
                 value: 5,

@@ -26,15 +26,10 @@ const Brisingamens: IArtefact = {
         name: BuffNames.DiscardCardEndGame,
         value: true,
     },
-    stack: [
-        // TODO Move to stackValidator!
-        // {
-        //     action: {
-        //         name: CheckPickDiscardCardCampAction.name,
-        //     },
-        // },
-        StackData.pickDiscardCardBrisingamens(2)
-    ],
+    validators: {
+        pickDiscardCardToStack: {},
+    },
+    stack: [StackData.pickDiscardCardBrisingamens(2)],
     scoringRule: (): number => 0,
 };
 

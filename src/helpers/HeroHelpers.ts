@@ -69,23 +69,6 @@ export const CheckAndMoveThrudOrPickHeroAction = (G: IMyGameState, ctx: Ctx, car
 };
 
 /**
- * <h3>Действия, связанные с возможностью взятия карт из дискарда.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
- * <li>При выборе конкретных карт кэмпа, дающих возможность взять карты из дискарда.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckPickDiscardCard = (G: IMyGameState, ctx: Ctx): void => {
-    if (G.discardCardsDeck.length === 0) {
-        G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
-    }
-};
-
-/**
  * <h3>Проверяет возможность взятия нового героя.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -113,6 +96,7 @@ export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
     }
 };
 
+// TODO Remove it!?
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
  * <p>Применения:</p>

@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { IAverageCard, IBotData } from "./bot_interfaces";
-import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, TavernCardTypes } from "./card_types";
+import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, DiscardCardTypes, TavernCardTypes } from "./card_types";
 import { ICoin } from "./coin_interfaces";
 import { IDistinctions } from "./distinction_interfaces";
 import { LogTypes } from "./enums";
@@ -39,7 +39,7 @@ export interface IMyGameState {
     debug: boolean,
     decks: DeckCardTypes[][],
     discardCampCardsDeck: CampDeckCardTypes[],
-    discardCardsDeck: DeckCardTypes[],
+    discardCardsDeck: DiscardCardTypes[],
     distinctions: IDistinctions,
     drawProfit: string,
     drawSize: number,

@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { isArtefactCard } from "../Camp";
+import { isArtefactCardNotMercenary } from "../Camp";
 import { StackData } from "../data/StackData";
 import { CampDeckCardTypes } from "../typescript/card_types";
 import { Phases, RusCardTypes } from "../typescript/enums";
@@ -29,12 +29,12 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime) {
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime;
     }
-    if (isArtefactCard(card) && card.suit !== null) {
+    if (isArtefactCardNotMercenary(card) && card.suit !== null) {
         AddCampCardToPlayerCards(G, ctx, card);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
     } else {
         AddCampCardToPlayer(G, ctx, card);
-        if (isArtefactCard(card)) {
+        if (isArtefactCardNotMercenary(card)) {
             AddBuffToPlayer(G, ctx, card.buff);
         }
     }

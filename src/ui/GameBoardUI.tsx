@@ -29,7 +29,7 @@ export const DrawCamp = (data: BoardProps<IMyGameState>): JSX.Element => {
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < data.G.campNum; j++) {
             const campCard: CampCardTypes = data.G.camp[j];
-            if (campCard === null || campCard === undefined) {
+            if (campCard === null) {
                 boardCells.push(
                     <td className="bg-yellow-200" key={`Camp ${j} icon`}>
                         <span style={Styles.Camp()} className="bg-camp-icon">

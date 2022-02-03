@@ -1,6 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypes } from "./typescript/enums";
-// TODO Add LogTypes.ERROR logging to Sasha's functions
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
  * <p>Применения:</p>
@@ -96,6 +95,7 @@ export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name
     tier,
     path,
 });
+export const isActionDiscardCard = (card) => card.type !== RusCardTypes.ACTION;
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
  * <p>Применения:</p>

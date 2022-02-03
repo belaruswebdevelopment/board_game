@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { isArtefactCard } from "../Camp";
+import { isArtefactCardNotMercenary } from "../Camp";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { IArtefactCampCard } from "../typescript/camp_card_interfaces";
@@ -19,7 +19,7 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @param card Карта кэмпа.
  */
 export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
-    if (!isArtefactCard(card) || (isArtefactCard(card) && card.suit === null)) {
+    if (!isArtefactCardNotMercenary(card) || (isArtefactCardNotMercenary(card) && card.suit === null)) {
         G.publicPlayers[Number(ctx.currentPlayer)].campCards.push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту кэмпа ${card.name}.`);
     } else {
@@ -37,12 +37,15 @@ export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCar
  * @param G
  * @param ctx
  * @param card Карта кэмпа.
+ * @returns Добавлен ли артефакт на планшет игрока.
  */
-export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtefactCampCard): void => {
+export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtefactCampCard): boolean => {
     if (card.suit !== null) {
         G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit].push(card);
         AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту кэмпа '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
+        return true;
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить артефакт ${card.name} на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
+        return false;
     }
 };

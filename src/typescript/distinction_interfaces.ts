@@ -22,5 +22,6 @@ export interface IDistinction {
  * <h3>Интерфейс для преимуществ.</h3>
  */
 export interface IDistinctions {
+    // TODO Rework [name: string] to typeof/keyof SUITS
     [index: string]: DistinctionTypes,
 }

@@ -4,7 +4,7 @@ import { TotalRank } from "../helpers/ScoreHelpers";
 import { PlayerCardsType } from "../typescript/card_types";
 import { RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IConditions, IValidatorsConfig } from "../typescript/hero_validator_interfaces";
+import { IValidatorsConfig } from "../typescript/hero_validator_interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью дискарда карт с планшета игрока.</h3>
@@ -64,7 +64,7 @@ export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, 
             if (Object.prototype.hasOwnProperty.call(validators.conditions, condition)) {
                 if (condition === `suitCountMin`) {
                     let ranks = 0;
-                    for (const key in (validators.conditions as IConditions)[condition]) {
+                    for (const key in validators.conditions[condition]) {
                         if (Object.prototype.hasOwnProperty.call(validators.conditions[condition], key)) {
                             if (key === `suit`) {
                                 ranks = G.publicPlayers[Number(ctx.currentPlayer)]

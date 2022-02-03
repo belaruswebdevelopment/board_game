@@ -3,7 +3,7 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckEndGameLastActions, ClearPlayerPickedCard, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
 import { PlayerCardsType } from "../typescript/card_types";
-import { DrawNames, HeroNames } from "../typescript/enums";
+import { HeroNames } from "../typescript/enums";
 import { IMyGameState, INext } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
@@ -20,7 +20,7 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
 export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     if (G.publicPlayersOrder.length) {
         const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            player.buffs.endTier === DrawNames.Ylud);
+            player.buffs.endTier === HeroNames.Ylud);
         if (yludIndex !== -1) {
             const index: number = Object.values(G.publicPlayers[yludIndex].cards).flat()
                 .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
@@ -45,7 +45,7 @@ export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext
 export const CheckEndTierOrder = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
     const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-        player.buffs.endTier === DrawNames.Ylud);
+        player.buffs.endTier === HeroNames.Ylud);
     G.publicPlayersOrder.push(String(yludIndex));
 };
 

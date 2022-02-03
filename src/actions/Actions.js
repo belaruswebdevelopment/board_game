@@ -1,6 +1,8 @@
-import { CreateCard, isCardNotAction } from "../Card";
+import { isArtefactDiscardCard } from "../Camp";
+import { CreateCard, isActionDiscardCard, isCardNotAction } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { AddCampCardToPlayerCards } from "../helpers/CampCardHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
@@ -111,24 +113,24 @@ export const PassEnlistmentMercenariesAction = (G, ctx) => {
  * @param cardId Id карты.
  */
 export const PickDiscardCard = (G, ctx, cardId) => {
-    // TODO Rework all COMMON for heroes and camp actions in two logic?
-    const isAdded = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]), pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
+    const pickedCard = G.discardCardsDeck.splice(cardId, 1)[0];
     if (G.actionsNum === 2) {
-        // TODO Move it to validator!
-        // action: {
-        //     name: CheckPickDiscardCardCamp/HeroAction.name,
-        // },
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens()]);
     }
-    if (isCardNotAction(pickedCard)) {
-        if (isAdded) {
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-        }
+    let isAdded = false;
+    if (isArtefactDiscardCard(pickedCard)) {
+        isAdded = AddCampCardToPlayerCards(G, ctx, pickedCard);
     }
     else {
-        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
+        isAdded = AddCardToPlayer(G, ctx, pickedCard);
+        if (!isCardNotAction(pickedCard)) {
+            AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
+        }
     }
+    if (isAdded && !isActionDiscardCard(pickedCard)) {
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
+    }
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
 };
 /**
  * <h3>Игрок выбирает фракцию для вербовки указанного наёмника.</h3>

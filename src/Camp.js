@@ -119,6 +119,7 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, p
     game,
     variants,
 });
+export const isArtefactDiscardCard = (card) => card.type !== RusCardTypes.ARTEFACT;
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>
@@ -129,5 +130,5 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, p
  * @param card Карта.
  * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
  */
-export const isArtefactCard = (card) => card.suit !== undefined;
+export const isArtefactCardNotMercenary = (card) => card.suit !== undefined;
 //# sourceMappingURL=Camp.js.map

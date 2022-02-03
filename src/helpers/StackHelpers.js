@@ -1,3 +1,5 @@
+import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
+import { ValidatorNames } from "../typescript/enums";
 /**
  * <h3>Добавляет действия в стэк действий конкретного игрока после текущего.</h3>
  * <p>Применения:</p>
@@ -9,21 +11,35 @@
  * @param ctx
  * @param stack Стэк действий.
  */
-export const AddActionsToStackAfterCurrent = (G, ctx, stack) => {
+export const AddActionsToStackAfterCurrent = (G, ctx, stack, card) => {
     var _a;
-    if (stack) {
-        let noCurrent = false;
-        for (let i = stack.length - 1; i >= 0; i--) {
-            const playerId = (_a = stack[i].playerId) !== null && _a !== void 0 ? _a : Number(ctx.currentPlayer);
-            if (i === stack.length - 1 && G.publicPlayers[playerId].stack[0] === undefined) {
-                G.publicPlayers[playerId].stack.push(stack[i]);
-                noCurrent = true;
+    let isValid = false;
+    if (stack !== undefined) {
+        if (card !== undefined && `validators` in card) {
+            const validators = card.validators;
+            for (const validator in validators) {
+                if (Object.prototype.hasOwnProperty.call(validators, validator)) {
+                    switch (validator) {
+                        case ValidatorNames.PickDiscardCardToStack:
+                            isValid = IsCanPickPickCampCardToStack(G, card);
+                            break;
+                        case ValidatorNames.PickCampCardToStack:
+                            isValid = IsCanPickPickDiscardCardToStack(G, card);
+                            break;
+                        default:
+                            isValid = true;
+                            break;
+                    }
+                }
             }
-            else if (!noCurrent) {
+        }
+        else {
+            isValid = true;
+        }
+        if (isValid) {
+            for (let i = stack.length - 1; i >= 0; i--) {
+                const playerId = (_a = stack[i].playerId) !== null && _a !== void 0 ? _a : Number(ctx.currentPlayer);
                 G.publicPlayers[playerId].stack.splice(1, 0, stack[i]);
-            }
-            else if (noCurrent) {
-                G.publicPlayers[playerId].stack.unshift(stack[i]);
             }
         }
     }

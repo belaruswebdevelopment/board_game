@@ -26,7 +26,7 @@ export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
         return INVALID_MOVE;
     }
     AddHeroToCards(G, ctx, G.heroes[heroId]);
-    AddActionsToStackAfterCurrent(G, ctx, G.heroes[heroId].stack);
+    AddActionsToStackAfterCurrent(G, ctx, G.heroes[heroId].stack, G.heroes[heroId]);
 };
 
 /**

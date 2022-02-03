@@ -1,5 +1,6 @@
 import { IAction, IStack, IVariants } from "./action_interfaces";
 import { IBuff } from "./buff_interfaces";
+import { IValidatorsConfig } from "./hero_validator_interfaces";
 import { IPublicPlayer } from "./player_interfaces";
 
 /**
@@ -14,6 +15,7 @@ export interface IArtefact {
     rank: null | number,
     points: null | number,
     buff?: IBuff,
+    validators?: IValidatorsConfig,
     actions?: IAction,
     stack?: IStack[],
     scoringRule: (player?: IPublicPlayer, suit?: string) => number,
@@ -41,6 +43,7 @@ export interface IArtefactCampCard {
  * <h3>Интерфейс для конфига данных карт кэмпа артефакт.</h3>
  */
 export interface IArtefactConfig {
+    // TODO Can i rework [name: string]?
     [name: string]: IArtefact,
 }
 
@@ -78,6 +81,7 @@ export interface ICreateMercenaryCampCard {
  * <h3>Интерфейс для перечня данных карт кэмпа наёмники.</h3>
  */
 export interface IMercenaries {
+    // TODO Rework [name: string] to typeof/keyof SUITS
     [name: string]: IMercenary,
 }
 

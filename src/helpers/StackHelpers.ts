@@ -1,6 +1,10 @@
 import { Ctx } from "boardgame.io";
+import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { IStack } from "../typescript/action_interfaces";
+import { CardsHasStack } from "../typescript/card_types";
+import { ValidatorNames } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
+import { IValidatorsConfig } from "../typescript/hero_validator_interfaces";
 
 /**
  * <h3>Добавляет действия в стэк действий конкретного игрока после текущего.</h3>
@@ -13,18 +17,34 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @param ctx
  * @param stack Стэк действий.
  */
-export const AddActionsToStackAfterCurrent = (G: IMyGameState, ctx: Ctx, stack?: IStack[]): void => {
-    if (stack) {
-        let noCurrent = false;
-        for (let i: number = stack.length - 1; i >= 0; i--) {
-            const playerId: number = stack[i].playerId ?? Number(ctx.currentPlayer);
-            if (i === stack.length - 1 && G.publicPlayers[playerId].stack[0] === undefined) {
-                G.publicPlayers[playerId].stack.push(stack[i]);
-                noCurrent = true;
-            } else if (!noCurrent) {
+export const AddActionsToStackAfterCurrent = (G: IMyGameState, ctx: Ctx, stack?: IStack[], card?: CardsHasStack):
+    void => {
+    let isValid = false;
+    if (stack !== undefined) {
+        if (card !== undefined && `validators` in card) {
+            const validators: IValidatorsConfig | undefined = card.validators;
+            for (const validator in validators) {
+                if (Object.prototype.hasOwnProperty.call(validators, validator)) {
+                    switch (validator) {
+                        case ValidatorNames.PickDiscardCardToStack:
+                            isValid = IsCanPickPickCampCardToStack(G, card);
+                            break;
+                        case ValidatorNames.PickCampCardToStack:
+                            isValid = IsCanPickPickDiscardCardToStack(G, card);
+                            break;
+                        default:
+                            isValid = true;
+                            break;
+                    }
+                }
+            }
+        } else {
+            isValid = true;
+        }
+        if (isValid) {
+            for (let i: number = stack.length - 1; i >= 0; i--) {
+                const playerId: number = stack[i].playerId ?? Number(ctx.currentPlayer);
                 G.publicPlayers[playerId].stack.splice(1, 0, stack[i]);
-            } else if (noCurrent) {
-                G.publicPlayers[playerId].stack.unshift(stack[i]);
             }
         }
     }

@@ -3,7 +3,7 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { CampDeckCardTypes } from "../typescript/card_types";
-import { DrawNames, RusCardTypes } from "../typescript/enums";
+import { HeroNames, RusCardTypes } from "../typescript/enums";
 import { IMyGameState, INext } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
@@ -61,7 +61,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): bo
 
 export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void => {
     const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-        player.buffs.endTier === DrawNames.Ylud);
+        player.buffs.endTier === HeroNames.Ylud);
     if (yludIndex === -1) {
         RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
     }

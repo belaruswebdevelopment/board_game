@@ -142,7 +142,7 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
     // TODO add LogTypes.ERROR logging
     // TODO Split into different functions!
     let upgradingCoin = {}, coin;
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin !== undefined) {
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin;
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.coin === `min`) {
@@ -204,7 +204,8 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
             if (coin !== null && coin !== undefined) {
                 upgradingCoin = coin;
                 upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                    .findIndex((coin) => isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === isInitial);
+                    .findIndex((coin) => isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value
+                    && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === isInitial);
             }
         }
         else {

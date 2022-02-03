@@ -3,6 +3,7 @@
  */
 interface ICondition {
     suit: string,
+    // TODO Rework [name: string]?
     [name: string]: string | number | boolean,
 }
 
@@ -10,6 +11,7 @@ interface ICondition {
  * <h3>Интерфейс для условий карты героя.</h3>
  */
 export interface IConditions {
+    // TODO Rework [name: string]?
     [name: string]: ICondition,
 }
 
@@ -24,4 +26,6 @@ interface IDiscardCard {
 export interface IValidatorsConfig {
     conditions?: IConditions,
     discardCard?: IDiscardCard,
+    pickCampCardToStack?: Record<string, never>,
+    pickDiscardCardToStack?: Record<string, never>,
 }

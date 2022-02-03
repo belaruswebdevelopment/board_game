@@ -32,7 +32,7 @@ export const ClickCardMove = (G, ctx, cardId) => {
     if (card !== null) {
         const isAdded = AddCardToPlayer(G, ctx, card);
         if (!isCardNotAction(card)) {
-            AddActionsToStackAfterCurrent(G, ctx, card.stack);
+            AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
         }
         else {
             if (isAdded) {
@@ -70,7 +70,7 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
         }
     }
     else {
-        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
+        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack, pickedCard);
     }
 };
 /**

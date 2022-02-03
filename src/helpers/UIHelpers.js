@@ -15,7 +15,11 @@ import { DrawCard } from "./UIElementHelpers";
  */
 export const DrawBoard = (objectsSize) => {
     const boardRows = Math.floor(Math.sqrt(objectsSize)), boardCols = Math.ceil(objectsSize / boardRows), lastBoardCol = objectsSize % boardCols;
-    return { boardRows, boardCols, lastBoardCol };
+    return {
+        boardRows,
+        boardCols,
+        lastBoardCol,
+    };
 };
 /**
  * <h3>Отрисовка планшета конкретных игроков для дискарда карты конкретной фракции.</h3>

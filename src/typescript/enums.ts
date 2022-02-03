@@ -1,3 +1,4 @@
+// TODO Check unused enums
 /**
  * <h3>Перечисление для названий артефактов.</h3>
  */
@@ -30,6 +31,11 @@ export const enum BuffNames {
     NoHero = `noHero`,
     UpgradeCoin = `upgradeCoin`,
     UpgradeNextCoin = `upgradeNextCoin`,
+}
+
+export const enum CardNames {
+    ChiefBlacksmith = `Chief blacksmith`,
+    Olwin = `Olwin`,
 }
 
 /**
@@ -242,4 +248,11 @@ export const enum SuitNames {
     HUNTER = `hunter`,
     MINER = `miner`,
     WARRIOR = `warrior`,
+}
+
+export const enum ValidatorNames {
+    Conditions = `conditions`,
+    DiscardCard = `discardCard`,
+    PickDiscardCardToStack = `pickDiscardCardToStack`,
+    PickCampCardToStack = `pickCampCardToStack`,
 }

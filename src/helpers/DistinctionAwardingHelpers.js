@@ -3,13 +3,14 @@ import { CreateCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { LogTypes, SuitNames } from "../typescript/enums";
+import { CardNames, LogTypes, SuitNames } from "../typescript/enums";
 import { GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 // TODO Add dock blocks
 export const BlacksmithDistinctionAwarding = (G, ctx, player) => {
     if (G.tierToEnd !== 0) {
         player.cards[SuitNames.BLACKSMITH].push(CreateCard({
+            name: CardNames.ChiefBlacksmith,
             suit: SuitNames.BLACKSMITH,
             rank: 2,
             points: null,

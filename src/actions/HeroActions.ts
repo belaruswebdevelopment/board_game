@@ -8,25 +8,9 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IConfig, IVariants } from "../typescript/action_interfaces";
 import { ICard, ICreateCard } from "../typescript/card_interfaces";
-import { PlayerCardsType } from "../typescript/card_types";
-import { HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
+import { DiscardCardTypes } from "../typescript/card_types";
+import { CardNames, LogTypes, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
-
-/**
- * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, дающих возможность взять карты из кэмпа.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckPickCampCardAction = (G: IMyGameState, ctx: Ctx): void => {
-    if (G.camp.length === 0) {
-        G.publicPlayers[Number(ctx.currentPlayer)].stack.splice(1);
-    }
-};
 
 /**
  * <h3>Действия, связанные с дискардом карт с планшета игрока.</h3>
@@ -42,7 +26,8 @@ export const CheckPickCampCardAction = (G: IMyGameState, ctx: Ctx): void => {
  */
 export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string,
     cardId: number): void => {
-    const pickedCard: PlayerCardsType = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId];
+    const pickedCard: DiscardCardTypes = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId] as
+        DiscardCardTypes;
     if (pickedCard.type !== RusCardTypes.HERO) {
         G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
         // TODO Artefact cards can be added to discard too OR make artefact card as created ICard?
@@ -75,7 +60,7 @@ export const PlaceCardsAction = (G: IMyGameState, ctx: Ctx, suit: string): void 
             suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
-            name: HeroNames.Olwin,
+            name: CardNames.Olwin,
         } as ICreateCard);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Олвин во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);

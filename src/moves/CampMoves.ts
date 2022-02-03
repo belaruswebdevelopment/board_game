@@ -1,7 +1,7 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, DiscardSuitCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
-import { isArtefactCard } from "../Camp";
+import { isArtefactCardNotMercenary } from "../Camp";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddCampCardToCards } from "../helpers/CampMovesHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
@@ -53,9 +53,9 @@ export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx:
     if (campCard !== null) {
         G.camp[cardId] = null;
         AddCampCardToCards(G, ctx, campCard);
-        if (isArtefactCard(campCard)) {
+        if (isArtefactCardNotMercenary(campCard)) {
             StartAutoAction(G, ctx, campCard.actions);
-            AddActionsToStackAfterCurrent(G, ctx, campCard.stack);
+            AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
         }
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
@@ -84,9 +84,9 @@ export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
     if (campCard !== null) {
         G.camp[cardId] = null;
         AddCampCardToCards(G, ctx, campCard);
-        if (isArtefactCard(campCard)) {
+        if (isArtefactCardNotMercenary(campCard)) {
             StartAutoAction(G, ctx, campCard.actions);
-            AddActionsToStackAfterCurrent(G, ctx, campCard.stack);
+            AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
         }
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);

@@ -1,7 +1,7 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeCoinAction } from "../actions/AutoActions";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { BuffNames, DrawNames, HeroNames, SuitNames } from "../typescript/enums";
+import { BuffNames, DrawNames, HeroNames, SuitNames, ValidatorNames } from "../typescript/enums";
 import { StackData } from "./StackData";
 /**
  * <h3>Данные о герое.</h3>
@@ -33,15 +33,10 @@ const Andumia = {
     suit: null,
     rank: null,
     points: 12,
-    stack: [
-        // TODO Move to validator!
-        // {
-        //     action: {
-        //         name: CheckPickDiscardCardHeroAction.name,
-        //     },
-        // },
-        StackData.pickDiscardCardAndumia()
-    ],
+    validators: {
+        pickDiscardCardToStack: {},
+    },
+    stack: [StackData.pickDiscardCardAndumia()],
     scoringRule: () => 12,
 };
 /**
@@ -237,16 +232,10 @@ const Holda = {
         name: BuffNames.GoCampOneTime,
         value: true,
     },
-    stack: [
-        //TODO Move to validator!
-        // {
-        //     action: {
-        //         name: CheckPickCampCardAction.name,
-        //     },
-        // },
-        // TODO Fix it PickHeroAction?
-        StackData.pickCampCardHolda()
-    ],
+    validators: {
+        pickCampCardToStack: {},
+    },
+    stack: [StackData.pickCampCardHolda()],
     scoringRule: () => 12,
 };
 /**
@@ -264,7 +253,7 @@ const Hourya = {
     rank: 1,
     points: 20,
     validators: {
-        conditions: {
+        [ValidatorNames.Conditions]: {
             suitCountMin: {
                 suit: SuitNames.EXPLORER,
                 value: 5,

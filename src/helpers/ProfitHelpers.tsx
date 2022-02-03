@@ -1,10 +1,10 @@
 import { Ctx } from "boardgame.io";
 import { BoardProps } from "boardgame.io/react";
-import { isCardNotAction } from "../Card";
+import { isActionDiscardCard, isCardNotAction } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { IConfig } from "../typescript/action_interfaces";
-import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
+import { CampCardTypes, CampDeckCardTypes, DiscardCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { ConfigNames, HeroNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
@@ -214,9 +214,9 @@ export const PickCampCardHoldaProfit = (G: IMyGameState, ctx: Ctx, data: BoardPr
 export const PickDiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
-        const card: DeckCardTypes = G.discardCardsDeck[j];
+        const card: DiscardCardTypes = G.discardCardsDeck[j];
         let suit: null | string = null;
-        if (isCardNotAction(card)) {
+        if (!isActionDiscardCard(card)) {
             suit = card.suit;
         }
         DrawCard(data, boardCells, card, j,

@@ -1,14 +1,16 @@
 import { Ctx } from "boardgame.io";
-import { CreateCard, isCardNotAction } from "../Card";
+import { isArtefactDiscardCard } from "../Camp";
+import { CreateCard, isActionDiscardCard, isCardNotAction } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { AddCampCardToPlayerCards } from "../helpers/CampCardHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
 import { ICard, ICreateCard } from "../typescript/card_interfaces";
-import { CampDeckCardTypes, DeckCardTypes, PickedCardType, PlayerCardsType } from "../typescript/card_types";
+import { CampDeckCardTypes, DiscardCardTypes, PickedCardType } from "../typescript/card_types";
 import { LogTypes, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 
@@ -25,10 +27,11 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @param cardId Id карты.
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
-    const discardedCard: PlayerCardsType =
-        G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0];
+    const discardedCard: DiscardCardTypes =
+        G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0] as
+        DiscardCardTypes;
     if (discardedCard.type !== RusCardTypes.HERO) {
-        G.discardCardsDeck.push(discardedCard as ICard);
+        G.discardCardsDeck.push(discardedCard);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} сбросил карту ${discardedCard.name} в дискард.`);
         delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
     } else {
@@ -120,24 +123,23 @@ export const PassEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx): void
  * @param cardId Id карты.
  */
 export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
-    // TODO Rework all COMMON for heroes and camp actions in two logic?
-    const isAdded: boolean = AddCardToPlayer(G, ctx, G.discardCardsDeck[cardId]),
-        pickedCard: DeckCardTypes = G.discardCardsDeck.splice(cardId, 1)[0];
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
+    const pickedCard: DiscardCardTypes = G.discardCardsDeck.splice(cardId, 1)[0];
     if (G.actionsNum === 2) {
-        // TODO Move it to validator!
-        // action: {
-        //     name: CheckPickDiscardCardCamp/HeroAction.name,
-        // },
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens()]);
     }
-    if (isCardNotAction(pickedCard)) {
-        if (isAdded) {
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-        }
+    let isAdded = false;
+    if (isArtefactDiscardCard(pickedCard)) {
+        isAdded = AddCampCardToPlayerCards(G, ctx, pickedCard);
     } else {
-        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
+        isAdded = AddCardToPlayer(G, ctx, pickedCard);
+        if (!isCardNotAction(pickedCard)) {
+            AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
+        }
     }
+    if (isAdded && !isActionDiscardCard(pickedCard)) {
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
+    }
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
 };
 
 /**

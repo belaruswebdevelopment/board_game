@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { isCardNotAction } from "../Card";
+import { isActionDiscardCard, isCardNotAction } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { ConfigNames, HeroNames, MoveNames, RusCardTypes } from "../typescript/enums";
@@ -133,7 +133,7 @@ export const PickDiscardCardProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
         const card = G.discardCardsDeck[j];
         let suit = null;
-        if (isCardNotAction(card)) {
+        if (!isActionDiscardCard(card)) {
             suit = card.suit;
         }
         DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.PickDiscardCardMove, j);

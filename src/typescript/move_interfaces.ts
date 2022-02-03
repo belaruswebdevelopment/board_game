@@ -1,26 +1,5 @@
-
-/**
- * <h3>Интерфейс для аргументов мувов для ботов.</h3>
- */
-export interface ICurrentMoveArguments {
-    phases: ICurrentMoveArgumentPhases,
-}
-
-export interface ICurrentMoveArgumentPhases {
-    [phase: string]: ICurrentMoveArgumentsStages,
-}
-
-export interface ICurrentMoveArgumentsStage {
-    arrayNumbers?: number[][],
-    coins?: ICurrentMoveCoinsArguments[],
-    empty?: null,
-    numbers?: number[],
-    strings?: string[],
-    suits?: ICurrentMoveSuitCardIdArguments,
-}
-
-interface ICurrentMoveArgumentsStages {
-    [stage: string]: ICurrentMoveArgumentsStage,
+export interface ICurrentMoveArgumentsStage<T> {
+    args: T,
 }
 
 export interface ICurrentMoveCoinsArguments {
@@ -41,5 +20,6 @@ export interface ICurrentMoveSuitCardCurrentId {
  * <h3>Интерфейс для аргументов мувов с фракциями для ботов.</h3>
  */
 export interface ICurrentMoveSuitCardIdArguments {
+    // TODO Rework [name: string]?
     [suit: string]: number[],
 }

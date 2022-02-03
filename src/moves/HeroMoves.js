@@ -23,7 +23,7 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
         return INVALID_MOVE;
     }
     AddHeroToCards(G, ctx, G.heroes[heroId]);
-    AddActionsToStackAfterCurrent(G, ctx, G.heroes[heroId].stack);
+    AddActionsToStackAfterCurrent(G, ctx, G.heroes[heroId].stack, G.heroes[heroId]);
 };
 /**
  * <h3>Сброс карты с верха планшета игрока при выборе героя.</h3>

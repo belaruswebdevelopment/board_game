@@ -20,7 +20,11 @@ export const DrawBoard = (objectsSize: number): IDrawBoardOptions => {
     const boardRows: number = Math.floor(Math.sqrt(objectsSize)),
         boardCols: number = Math.ceil(objectsSize / boardRows),
         lastBoardCol: number = objectsSize % boardCols;
-    return { boardRows, boardCols, lastBoardCol };
+    return {
+        boardRows,
+        boardCols,
+        lastBoardCol,
+    };
 };
 
 /**

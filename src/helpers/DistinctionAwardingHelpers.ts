@@ -7,7 +7,7 @@ import { CreatePriority } from "../Priority";
 import { ICard } from "../typescript/card_interfaces";
 import { CoinType } from "../typescript/coin_types";
 import { IAwarding } from "../typescript/distinction_interfaces";
-import { LogTypes, SuitNames } from "../typescript/enums";
+import { CardNames, LogTypes, SuitNames } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { GetMaxCoinValue } from "./CoinHelpers";
@@ -17,6 +17,7 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 export const BlacksmithDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         player.cards[SuitNames.BLACKSMITH].push(CreateCard({
+            name: CardNames.ChiefBlacksmith,
             suit: SuitNames.BLACKSMITH,
             rank: 2,
             points: null,
