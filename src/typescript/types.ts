@@ -8,4 +8,5 @@ export type ArgsTypes = (string | number | boolean | null | object)[];
  */
 export type DistinctionTypes = null | undefined | string;
 
-export type MoveArgsTypes = number[][] | [string] | [number] | [string, number] | [number, string, boolean];
+export type MoveArgsTypes = number[][] | [string] | [number] | [string, number] | [string, number, number]
+    | [number, string, boolean];

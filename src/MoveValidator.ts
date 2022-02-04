@@ -7,12 +7,12 @@ import { TotalRank } from "./helpers/ScoreHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
 import { IConfig } from "./typescript/action_interfaces";
-import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, PickedCardType, TavernCardTypes } from "./typescript/card_types";
+import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, PickedCardType, PlayerCardsType, TavernCardTypes } from "./typescript/card_types";
 import { CoinType } from "./typescript/coin_types";
 import { ConfigNames, HeroNames, MoveNames, Phases, RusCardTypes, Stages, ValidatorNames } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
 import { IValidatorsConfig } from "./typescript/hero_validator_interfaces";
-import { ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardIdArguments } from "./typescript/move_interfaces";
+import { ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardIdArguments, ICurrentMoveSuitCardPlayerCurrentId, ICurrentMoveSuitCardPlayerIdArguments } from "./typescript/move_interfaces";
 import { IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveValidator, IMoveValidators } from "./typescript/move_validator_interfaces";
 import { MoveValidatorGetRangeTypes, MoveValidatorPhaseTypes, ValidMoveIdParamTypes } from "./typescript/move_validator_types";
 
@@ -68,12 +68,15 @@ export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: string, id?: Valid
             isValid = ValidateByValues<string>(id,
                 validator.getRange(G, ctx) as string[]);
         } else if (typeof id === `object` && !Array.isArray(id) && id !== null) {
-            if (`suit` in id) {
-                isValid = ValidateByObjectSuitIdValues(id, validator.getRange(G, ctx) as
-                    ICurrentMoveSuitCardIdArguments);
-            } else if (`coinId` in id) {
+            if (`coinId` in id) {
                 isValid = ValidateByObjectCoinIdTypeIsInitialValues(id, validator.getRange(G, ctx) as
                     ICurrentMoveCoinsArguments[]);
+            } else if (`playerId` in id) {
+                isValid = ValidateByObjectSuitCardIdPlayerIdValues(id,
+                    validator.getRange(G, ctx, id.playerId) as ICurrentMoveSuitCardPlayerIdArguments);
+            } else if (`suit` in id) {
+                isValid = ValidateByObjectSuitCardIdValues(id, validator.getRange(G, ctx) as
+                    ICurrentMoveSuitCardIdArguments);
             }
         } else {
             isValid = true;
@@ -791,17 +794,55 @@ export const moveValidators: IMoveValidators = {
         moveName: MoveNames.DiscardCardMove,
         validate: (): boolean => true,
     },
-    // DiscardSuitCardFromPlayerBoardMoveValidator: {
-    //     // TODO FIX IT!!!!!!
-    //     getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArguments => currentMoveArguments,
-    //     // getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
-    // ValidMoveIdParamTypes => {
-    //     //     const moveArguments: number[] = currentMoveArguments as number[];
-    //     //     return [moveArguments[Math.floor(Math.random() * moveArguments.length)]];
-    //     // },
-    // moveName: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-    //     validate: (): boolean => true, // TODO Check it
-    // },
+    DiscardSuitCardFromPlayerBoardMoveValidator: {
+        getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number):
+            ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] => {
+            const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] = {
+                playerId: playerId as number,
+                suit: ``,
+                cards: [],
+            };
+            if (G !== undefined && ctx !== undefined && playerId !== undefined) {
+                const config: IConfig | undefined = G.publicPlayers[playerId].stack[0].config;
+                if (config !== undefined && config.suit !== undefined) {
+                    moveMainArgs.suit = config.suit;
+                    if (G.publicPlayers[playerId].stack[0] !== undefined) {
+                        for (let i = 0; i < G.publicPlayers[playerId].cards[config.suit].length; i++) {
+                            if (G.publicPlayers[playerId].cards[config.suit][i] !== undefined) {
+                                if (G.publicPlayers[playerId].cards[config.suit][i].type !== RusCardTypes.HERO) {
+                                    moveMainArgs.cards.push(i);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return moveMainArgs;
+        },
+        getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
+            ValidMoveIdParamTypes => {
+            const moveArguments: ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] =
+                currentMoveArguments as ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`];
+            const minValue: number = Math.min(...G.publicPlayers[moveArguments.playerId]
+                .cards[moveArguments.suit].filter((card: PlayerCardsType): boolean =>
+                    card.type !== RusCardTypes.HERO).map((card: PlayerCardsType): number =>
+                        card.points as number)),
+                minCardIndex: number = G.publicPlayers[moveArguments.playerId].cards[moveArguments.suit]
+                    .findIndex((card: PlayerCardsType): boolean =>
+                        card.type !== RusCardTypes.HERO && card.points === minValue);
+            if (minCardIndex !== -1) {
+                // TODO ?!
+            }
+            return {
+                playerId: moveArguments.playerId,
+                suit: moveArguments.suit,
+                cardId: moveArguments.cards[minCardIndex],
+            };
+        },
+        moveName: MoveNames.DiscardSuitCardFromPlayerBoardMove,
+        // TODO validate Not bot playerId === ctx.currentPlayer & for Bot playerId exists in playersNum?
+        validate: (): boolean => true,
+    },
     PickDiscardCardMoveValidator: {
         getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] => {
             const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
@@ -915,7 +956,7 @@ export const moveBy: IMoveBy = {
         // start
         addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
-        // discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
@@ -936,7 +977,7 @@ export const moveBy: IMoveBy = {
         // start
         addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
-        // discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
@@ -950,7 +991,7 @@ export const moveBy: IMoveBy = {
         // start
         addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
-        // discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
@@ -964,7 +1005,7 @@ export const moveBy: IMoveBy = {
         // start
         addCoinToPouch: moveValidators.AddCoinToPouchMoveValidator,
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
-        // discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
+        discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
@@ -997,10 +1038,11 @@ export const moveBy: IMoveBy = {
 const ValidateByValues = <T>(value: T, values: T[]): boolean => values.includes(value);
 
 const ValidateByObjectCoinIdTypeIsInitialValues = (value: ICurrentMoveCoinsArguments,
-    values: ICurrentMoveCoinsArguments[]): boolean => {
-    return values.findIndex((coin: ICurrentMoveCoinsArguments) =>
+    values: ICurrentMoveCoinsArguments[]): boolean => values.findIndex((coin: ICurrentMoveCoinsArguments) =>
         value.coinId === coin.coinId && value.type === coin.type && value.isInitial === coin.isInitial) !== -1;
-};
 
-const ValidateByObjectSuitIdValues = (value: ICurrentMoveSuitCardCurrentId, values: ICurrentMoveSuitCardIdArguments):
-    boolean => values[value.suit].includes(value.cardId);
+const ValidateByObjectSuitCardIdValues = (value: ICurrentMoveSuitCardCurrentId, values: ICurrentMoveSuitCardIdArguments)
+    : boolean => values[value.suit].includes(value.cardId);
+
+const ValidateByObjectSuitCardIdPlayerIdValues = (value: ICurrentMoveSuitCardPlayerCurrentId,
+    values: ICurrentMoveSuitCardPlayerIdArguments): boolean => values.suit === value.suit && values.playerId === value.playerId && values.cards.includes(value.cardId);

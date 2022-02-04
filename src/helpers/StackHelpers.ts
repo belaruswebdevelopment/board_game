@@ -49,29 +49,3 @@ export const AddActionsToStackAfterCurrent = (G: IMyGameState, ctx: Ctx, stack?:
         }
     }
 };
-
-/**
- * <h3>Завершает действие из стэка действий указанного игрока.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Выполняется при необходимости завершить действие в стэке действий указанного игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param playerId Id игрока.
- */
-export const EndActionForChosenPlayer = (G: IMyGameState, ctx: Ctx, playerId: number): void => {
-    G.publicPlayers[playerId].stack = [];
-    let activePlayers = 0;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const activePlayersKey in ctx.activePlayers) {
-        activePlayers++;
-    }
-    if (activePlayers === 1) {
-        // TODO Check: G.publicPlayers[Number(ctx.currentPlayer)].stack = [];
-        G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
-    }
-};

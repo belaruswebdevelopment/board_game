@@ -69,7 +69,7 @@ export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
                 const tradingCoinPlacesLength = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
                     .filter((coin, index) => index >= G.tavernsNum && coin === null).length;
                 if (tradingCoinPlacesLength > 0) {
-                    if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[ctx.currentPlayer]) !== Stages.PlaceTradingCoinsUline
+                    if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== Stages.PlaceTradingCoinsUline
                         && tradingCoinPlacesLength === 2) {
                         const handCoinsLength = G.publicPlayers[Number(ctx.currentPlayer)]
                             .handCoins.filter((coin) => coin !== null).length;
@@ -170,13 +170,8 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
         return CheckEndTierActionsOrEndGameLastActions(G, ctx);
     }
 };
-export const StartOrEndActions = (G, ctx) => {
-    var _a;
-    if (G.actionsNum) {
-        G.actionsNum--;
-    }
-    G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
-    DrawCurrentProfit(G, ctx, (_a = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config);
+export const ClearPlayerPickedCard = (G, ctx) => {
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
 };
 /**
  * <h3>Завершает игру.</h3>
@@ -198,9 +193,6 @@ export const EndTurnActions = (G, ctx) => {
         }
     }
 };
-export const ClearPlayerPickedCard = (G, ctx) => {
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
-};
 /**
  * <h3>Удаляет Труд в конце игры с поля игрока.</h3>
  * <p>Применения:</p>
@@ -221,6 +213,17 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
             G.publicPlayers[i].cards[thrud.suit].splice(thrudIndex, 1);
             AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с игрового поля.`);
         }
+    }
+};
+export const StartOrEndActions = (G, ctx) => {
+    var _a, _b;
+    if (G.actionsNum) {
+        G.actionsNum--;
+    }
+    if (ctx.activePlayers === null
+        || ctx.activePlayers !== null && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== undefined) {
+        G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
+        DrawCurrentProfit(G, ctx, (_b = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _b === void 0 ? void 0 : _b.config);
     }
 };
 //# sourceMappingURL=GameHooksHelpers.js.map

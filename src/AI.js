@@ -2,7 +2,7 @@ import { CompareCards } from "./bot_logic/BotCardLogic";
 import { isCardNotAction } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescript/enums";
+import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -18,6 +18,7 @@ export const enumerate = (G, ctx) => {
     var _a, _b;
     // TODO Fix it, now just for bot can do RANDOM move
     const moves = [];
+    let playerId;
     if (ctx.phase !== null) {
         let activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
@@ -51,36 +52,14 @@ export const enumerate = (G, ctx) => {
                     }
                 }
                 else {
-                    // TODO Fix this (only for quick bot actions)
+                    activeStageOfCurrentPlayer = Stages.DiscardSuitCard;
                     // TODO Bot can't do async turns...?
-                    // TODO Move it to ProfitHelpers
                     const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
                     if (config !== undefined && config.suit !== undefined) {
                         for (let p = 0; p < G.publicPlayers.length; p++) {
                             if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
-                                for (let i = 0; i < G.publicPlayers[p].cards[config.suit].length; i++) {
-                                    for (let j = 0; j < 1; j++) {
-                                        if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
-                                            if (G.publicPlayers[p].cards[config.suit][i].type !== RusCardTypes.HERO) {
-                                                const points = G.publicPlayers[p].cards[config.suit][i].points;
-                                                if (points !== null) {
-                                                    // G.currentMoveArguments.push(points);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                // const minValue: number = Math.min(...G.currentMoveArguments as unknown as number[]);
-                                // const minCardIndex: number =
-                                //     G.publicPlayers[p].cards[config.suit].findIndex((card: PlayerCardsType): boolean =>
-                                //         card.type !== RusCardTypes.HERO && card.points === minValue);
-                                // if (minCardIndex !== -1) {
-                                //     moves.push({
-                                //         move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-                                //         args: [config.suit, p, minCardIndex],
-                                //     });
-                                //     break;
-                                // }
+                                playerId = p;
+                                break;
                             }
                         }
                     }
@@ -135,7 +114,7 @@ export const enumerate = (G, ctx) => {
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
         const validator = GetValidator(ctx.phase, activeStageOfCurrentPlayer);
         if (validator !== undefined) {
-            const moveName = validator.moveName, moveRangeData = validator.getRange(G, ctx), moveValue = validator.getValue(G, ctx, moveRangeData);
+            const moveName = validator.moveName, moveRangeData = validator.getRange(G, ctx, playerId), moveValue = validator.getValue(G, ctx, moveRangeData);
             let moveValues = [];
             if (typeof moveValue === `number`) {
                 moveValues = [moveValue];
@@ -144,11 +123,14 @@ export const enumerate = (G, ctx) => {
                 moveValues = [moveValue];
             }
             else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
-                if (`suit` in moveValue) {
-                    moveValues = [moveValue.suit, moveValue.cardId];
-                }
-                else if (`coinId` in moveValue) {
+                if (`coinId` in moveValue) {
                     moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
+                }
+                else if (`playerId` in moveValue) {
+                    moveValues = [moveValue.suit, moveValue.playerId, moveValue.cardId];
+                }
+                else if (`suit` in moveValue) {
+                    moveValues = [moveValue.suit, moveValue.cardId];
                 }
             }
             else if (moveValue === null) {

@@ -77,11 +77,10 @@ export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): vo
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий артефакта.
  */
-export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
-    // TODO Check Use config not as param but as current player config...
-    if (config.suit !== undefined) {
+export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
+    const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[1].config;
+    if (config !== undefined && config.suit !== undefined) {
         const value: Record<string, StageArg> = {};
         for (let i = 0; i < ctx.numPlayers; i++) {
             if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[config.suit].length) {

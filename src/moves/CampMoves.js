@@ -48,8 +48,8 @@ export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
         G.camp[cardId] = null;
         AddCampCardToCards(G, ctx, campCard);
         if (isArtefactCardNotMercenary(campCard)) {
-            StartAutoAction(G, ctx, campCard.actions);
             AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
+            StartAutoAction(G, ctx, campCard.actions);
         }
     }
     else {
@@ -79,8 +79,8 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
         G.camp[cardId] = null;
         AddCampCardToCards(G, ctx, campCard);
         if (isArtefactCardNotMercenary(campCard)) {
-            StartAutoAction(G, ctx, campCard.actions);
             AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
+            StartAutoAction(G, ctx, campCard.actions);
         }
     }
     else {
@@ -102,21 +102,14 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
  * @returns
  */
 export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, playerId, cardId) => {
-    // TODO Or [suit, cardId]!?
-    const isValidMove = IsValidMove(G, ctx, Stages.DiscardSuitCard, cardId);
+    const isValidMove = IsValidMove(G, ctx, Stages.DiscardSuitCard, {
+        playerId,
+        suit,
+        cardId,
+    });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    // TODO Uncomment it for players and fix it for bots
-    /*let isValidMove: boolean = false;
-    if (ctx.playerID !== undefined) {
-        isValidMove = playerId !== Number(ctx.currentPlayer) && playerId === Number(ctx.playerID);
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.`);
-    }
-    if (!isValidMove) {
-        return INVALID_MOVE;
-    }*/
     DiscardSuitCardAction(G, ctx, suit, playerId, cardId);
 };
 /**

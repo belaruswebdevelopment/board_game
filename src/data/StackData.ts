@@ -35,9 +35,15 @@ export const StackData = {
     }),
     discardSuitCard: (playerId: number): IStack => ({
         playerId,
-        // TODO CHeck is it need suit!? or good to have stack suit on main player!?
         config: {
             suit: SuitNames.WARRIOR,
+        },
+    }),
+    discardSuitCardHofud: (): IStack => ({
+        config: {
+            suit: SuitNames.WARRIOR,
+            name: ConfigNames.HofudAction,
+            drawName: DrawNames.Hofud,
         },
     }),
     discardTavernCard: (): IStack => ({

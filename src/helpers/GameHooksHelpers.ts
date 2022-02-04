@@ -77,7 +77,7 @@ export const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): 
                         .filter((coin: CoinType, index: number): boolean =>
                             index >= G.tavernsNum && coin === null).length;
                 if (tradingCoinPlacesLength > 0) {
-                    if (ctx.activePlayers?.[ctx.currentPlayer] !== Stages.PlaceTradingCoinsUline
+                    if (ctx.activePlayers?.[Number(ctx.currentPlayer)] !== Stages.PlaceTradingCoinsUline
                         && tradingCoinPlacesLength === 2) {
                         const handCoinsLength: number = G.publicPlayers[Number(ctx.currentPlayer)]
                             .handCoins.filter((coin: CoinType): boolean => coin !== null).length;
@@ -181,12 +181,8 @@ const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): boolean | INext 
     }
 };
 
-export const StartOrEndActions = (G: IMyGameState, ctx: Ctx): void => {
-    if (G.actionsNum) {
-        G.actionsNum--;
-    }
-    G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
-    DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
+export const ClearPlayerPickedCard = (G: IMyGameState, ctx: Ctx): void => {
+    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
 };
 
 /**
@@ -210,10 +206,6 @@ export const EndTurnActions = (G: IMyGameState, ctx: Ctx): boolean | void => {
     }
 };
 
-export const ClearPlayerPickedCard = (G: IMyGameState, ctx: Ctx): void => {
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
-};
-
 /**
  * <h3>Удаляет Труд в конце игры с поля игрока.</h3>
  * <p>Применения:</p>
@@ -235,5 +227,16 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx
             G.publicPlayers[i].cards[thrud.suit].splice(thrudIndex, 1);
             AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с игрового поля.`);
         }
+    }
+};
+
+export const StartOrEndActions = (G: IMyGameState, ctx: Ctx): void => {
+    if (G.actionsNum) {
+        G.actionsNum--;
+    }
+    if (ctx.activePlayers === null
+        || ctx.activePlayers !== null && ctx.activePlayers?.[Number(ctx.currentPlayer)] !== undefined) {
+        G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
+        DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
     }
 };

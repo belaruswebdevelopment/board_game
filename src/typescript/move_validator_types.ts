@@ -1,7 +1,8 @@
-import { ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardIdArguments } from "./move_interfaces";
+import { ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardIdArguments, ICurrentMoveSuitCardPlayerCurrentId, ICurrentMoveSuitCardPlayerIdArguments } from "./move_interfaces";
 import { IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions } from "./move_validator_interfaces";
 
 export type MoveValidatorGetRangeTypes = ICurrentMoveArgumentsStage<ICurrentMoveSuitCardIdArguments>[`args`]
+    | ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`]
     | ICurrentMoveArgumentsStage<number[][]>[`args`]
     | ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`]
     | ICurrentMoveArgumentsStage<null>[`args`]
@@ -15,5 +16,5 @@ export type MoveValidatorStageTypes = keyof IMoveByPlaceCoinsOptions | keyof IMo
     | keyof IMoveByGetDistinctionsOptions | keyof IMoveByBrisingamensEndGameOptions
     | keyof IMoveByGetMjollnirProfitOptions;
 
-export type ValidMoveIdParamTypes = number | string | null | ICurrentMoveSuitCardCurrentId | ICurrentMoveCoinsArguments
-    | number[];
+export type ValidMoveIdParamTypes = number | string | null | ICurrentMoveSuitCardCurrentId
+    | ICurrentMoveSuitCardPlayerCurrentId | ICurrentMoveCoinsArguments | number[];

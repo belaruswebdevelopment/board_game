@@ -86,6 +86,7 @@ export const enum DrawNames {
     Mjollnir = `Mjollnir`,
     GetMjollnirProfit = `getMjollnirProfit`,
     Grid = `Grid`,
+    Hofud = `Hofud`,
     Holda = `Holda`,
     Hourya = `Hourya`,
     Idunn = `Idunn`,

@@ -145,10 +145,73 @@ export const DiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
     }
 };
 
-// export const DiscardSuitCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx,
-//     data?: null | IBotMoveArgumentsTypes, boardCells: JSX.Element[]): void => {
+export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
+    boardCells: JSX.Element[]): void => {
+    const playersHeaders: JSX.Element[] = [],
+        playersRows: JSX.Element[][] = [],
+        config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config;
+    if (config !== undefined && config.suit !== undefined) {
+        for (let p = 0; p < G.publicPlayers.length; p++) {
+            if (p !== Number(ctx.currentPlayer)) {
+                playersHeaders.push(
+                    <th className={`${suitsConfig[config.suit].suitColor} discard suit`}
+                        key={`${G.publicPlayers[p].nickname} ${suitsConfig[config.suit].suitName}`}>
+                        <span style={Styles.Suits(config.suit)} className="bg-suit-icon">
+                            {p + 1}
+                        </span>
+                    </th>
+                );
+            }
+        }
+        for (let i = 0; ; i++) {
+            let isDrawRow = false,
+                isExit = true;
+            playersRows[i] = [];
+            const playersCells: JSX.Element[] = [];
+            for (let p = 0; p < G.publicPlayers.length; p++) {
+                if (p !== Number(ctx.currentPlayer)) {
+                    if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
+                        if (G.publicPlayers[p].cards[config.suit][i].type !== RusCardTypes.HERO) {
+                            isExit = false;
+                            isDrawRow = true;
+                            DrawCard(data, playersCells, G.publicPlayers[p].cards[config.suit][i],
+                                i, G.publicPlayers[p], config.suit,
+                                MoveNames.DiscardSuitCardFromPlayerBoardMove, config.suit, p, i);
+                        }
+                    } else {
+                        playersCells.push(
+                            <td key={`${G.publicPlayers[p].nickname} discard suit cardboard row ${i}`}>
 
-// };
+                            </td>
+                        );
+                    }
+                }
+            }
+            if (isDrawRow) {
+                playersRows[i].push(
+                    <tr key={`Discard suit cardboard row ${i}`}>
+                        {playersCells}
+                    </tr>
+                );
+            }
+            if (isExit) {
+                break;
+            }
+        }
+        boardCells.push(
+            <td key={`Discard ${config.suit} suit cardboard`}>
+                <table>
+                    <thead>
+                        <tr>{playersHeaders}</tr>
+                    </thead>
+                    <tbody>{playersRows}</tbody>
+                </table>
+            </td>
+        );
+    } else {
+        // TODO Errors logging!?
+    }
+};
 
 export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {

@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
-import { AddActionsToStackAfterCurrent, EndActionForChosenPlayer } from "../helpers/StackHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IConfig } from "../typescript/action_interfaces";
 import { DiscardCardTypes, PlayerCardsType } from "../typescript/card_types";
@@ -44,8 +44,9 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: string, playerId: number,
-    cardId: number): void => {
+export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: string, playerId: number, cardId: number):
+    void => {
+    // TODO Rework it for players and fix it for bots?
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         if (G.publicPlayers[playerId].cards[suit][cardId].type !== RusCardTypes.HERO) {
@@ -53,19 +54,10 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: string, p
                 G.publicPlayers[playerId].cards[suit].splice(cardId, 1)[0];
             G.discardCardsDeck.push(discardedCard as DiscardCardTypes);
             AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в дискард.`);
-            EndActionForChosenPlayer(G, ctx, playerId);
+            G.publicPlayers[playerId].stack = [];
         } else {
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
         }
-        // TODO Rework it for players and fix it for bots
-        /*if (ctx.playerID !== ctx.currentPlayer) {
-            const discardedCard: PlayerCardsType =
-                G.publicPlayers[Number(ctx.playerID)].cards[suit].splice(cardId, 1)[0];
-            G.discardCardsDeck.push(discardedCard as ICard);
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${ G.publicPlayers[Number(ctx.playerID)].nickname } сбросил карту ${ discardedCard.name } в дискард.`);
-            EndActionForChosenPlayer(G, ctx, playerId);
-        } else {
-        }*/
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.`);
     }

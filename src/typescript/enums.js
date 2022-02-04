@@ -87,6 +87,7 @@ export var DrawNames;
     DrawNames["Mjollnir"] = "Mjollnir";
     DrawNames["GetMjollnirProfit"] = "getMjollnirProfit";
     DrawNames["Grid"] = "Grid";
+    DrawNames["Hofud"] = "Hofud";
     DrawNames["Holda"] = "Holda";
     DrawNames["Hourya"] = "Hourya";
     DrawNames["Idunn"] = "Idunn";

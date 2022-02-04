@@ -78,8 +78,8 @@ const StartOrEndActionStage = (G, ctx, config) => {
         (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setStage(config.stageName);
         AddDataToLog(G, LogTypes.GAME, `Начало стэйджа ${config.stageName}.`);
     }
-    else if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
-        // TODO Not end for Hofud action?
+    else if (ctx.activePlayers !== null && ctx.activePlayers[Number(ctx.currentPlayer)]) {
+        // TODO Is it need!?
         (_b = ctx.events) === null || _b === void 0 ? void 0 : _b.endStage();
     }
 };

@@ -3,9 +3,9 @@ import { isCardNotAction } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
 import { DrawCard, DrawCoin } from "../helpers/UIElementHelpers";
-import { DrawBoard, DrawPlayersBoardForSuitCardDiscard } from "../helpers/UIHelpers";
+import { DrawBoard } from "../helpers/UIHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, MoveNames } from "../typescript/enums";
 /**
@@ -159,10 +159,7 @@ export const DrawProfit = (data) => {
         }
         else if (option === ConfigNames.HofudAction) {
             caption += `one warrior card to discard from your board.`;
-            if (config !== undefined && config.suit !== undefined) {
-                // TODO Move to ProfitHelper!
-                boardCells.push(_jsx("td", { children: DrawPlayersBoardForSuitCardDiscard(data, config.suit) }, `Discard ${config.suit} suit cardboard`));
-            }
+            DiscardSuitCardFromPlayerBoardProfit(data.G, data.ctx, data, boardCells);
         }
         else if (option === ConfigNames.HoldaAction) {
             caption += `one card from camp to your board.`;

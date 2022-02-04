@@ -1,6 +1,6 @@
 import { AddPickHeroAction, DiscardTradingCoinAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/AutoActions";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { ArtefactNames, BuffNames, ConfigNames, RusCardTypes, SuitNames } from "../typescript/enums";
+import { ArtefactNames, BuffNames, RusCardTypes, SuitNames } from "../typescript/enums";
 import { StackData } from "./StackData";
 /**
  * <h3>Данные об артефакте.</h3>
@@ -104,16 +104,7 @@ const Hofud = {
     actions: {
         name: StartDiscardSuitCardAction.name,
     },
-    // TODO Move to Stack.?
-    stack: [
-        {
-            config: {
-                // TODO Check all config and need to it => drawName: ???,
-                suit: SuitNames.WARRIOR,
-                name: ConfigNames.HofudAction,
-            },
-        },
-    ],
+    stack: [StackData.discardSuitCardHofud()],
     scoringRule: () => 0,
 };
 /**

@@ -90,9 +90,46 @@ export const DiscardCardProfit = (G, ctx, data, boardCells) => {
         }
     }
 };
-// export const DiscardSuitCardFromPlayerBoardProfit = (G: MyGameState, ctx: Ctx,
-//     data?: null | IBotMoveArgumentsTypes, boardCells: JSX.Element[]): void => {
-// };
+export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, data, boardCells) => {
+    var _a;
+    const playersHeaders = [], playersRows = [], config = (_a = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config;
+    if (config !== undefined && config.suit !== undefined) {
+        for (let p = 0; p < G.publicPlayers.length; p++) {
+            if (p !== Number(ctx.currentPlayer)) {
+                playersHeaders.push(_jsx("th", { className: `${suitsConfig[config.suit].suitColor} discard suit`, children: _jsx("span", { style: Styles.Suits(config.suit), className: "bg-suit-icon", children: p + 1 }, void 0) }, `${G.publicPlayers[p].nickname} ${suitsConfig[config.suit].suitName}`));
+            }
+        }
+        for (let i = 0;; i++) {
+            let isDrawRow = false, isExit = true;
+            playersRows[i] = [];
+            const playersCells = [];
+            for (let p = 0; p < G.publicPlayers.length; p++) {
+                if (p !== Number(ctx.currentPlayer)) {
+                    if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
+                        if (G.publicPlayers[p].cards[config.suit][i].type !== RusCardTypes.HERO) {
+                            isExit = false;
+                            isDrawRow = true;
+                            DrawCard(data, playersCells, G.publicPlayers[p].cards[config.suit][i], i, G.publicPlayers[p], config.suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, config.suit, p, i);
+                        }
+                    }
+                    else {
+                        playersCells.push(_jsx("td", {}, `${G.publicPlayers[p].nickname} discard suit cardboard row ${i}`));
+                    }
+                }
+            }
+            if (isDrawRow) {
+                playersRows[i].push(_jsx("tr", { children: playersCells }, `Discard suit cardboard row ${i}`));
+            }
+            if (isExit) {
+                break;
+            }
+        }
+        boardCells.push(_jsx("td", { children: _jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playersHeaders }, void 0) }, void 0), _jsx("tbody", { children: playersRows }, void 0)] }, void 0) }, `Discard ${config.suit} suit cardboard`));
+    }
+    else {
+        // TODO Errors logging!?
+    }
+};
 export const ExplorerDistinctionProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < 3; j++) {
         const card = G.decks[1][j];

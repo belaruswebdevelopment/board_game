@@ -3,7 +3,7 @@ import { TotalRank } from "../helpers/ScoreHelpers";
 import { IArtefact, IArtefactConfig, IMercenaries } from "../typescript/camp_card_interfaces";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { ArtefactNames, BuffNames, ConfigNames, RusCardTypes, SuitNames } from "../typescript/enums";
+import { ArtefactNames, BuffNames, RusCardTypes, SuitNames } from "../typescript/enums";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { StackData } from "./StackData";
 
@@ -113,16 +113,7 @@ const Hofud: IArtefact = {
     actions: {
         name: StartDiscardSuitCardAction.name,
     },
-    // TODO Move to Stack.?
-    stack: [
-        {
-            config: {
-                // TODO Check all config and need to it => drawName: ???,
-                suit: SuitNames.WARRIOR,
-                name: ConfigNames.HofudAction,
-            },
-        },
-    ],
+    stack: [StackData.discardSuitCardHofud()],
     scoringRule: (): number => 0,
 };
 

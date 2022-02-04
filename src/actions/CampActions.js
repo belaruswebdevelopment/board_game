@@ -1,5 +1,5 @@
 import { StackData } from "../data/StackData";
-import { AddActionsToStackAfterCurrent, EndActionForChosenPlayer } from "../helpers/StackHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { LogTypes, RusCardTypes } from "../typescript/enums";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
@@ -35,26 +35,18 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
  * @param cardId Id сбрасываемой карты.
  */
 export const DiscardSuitCardAction = (G, ctx, suit, playerId, cardId) => {
+    // TODO Rework it for players and fix it for bots?
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         if (G.publicPlayers[playerId].cards[suit][cardId].type !== RusCardTypes.HERO) {
             const discardedCard = G.publicPlayers[playerId].cards[suit].splice(cardId, 1)[0];
             G.discardCardsDeck.push(discardedCard);
             AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в дискард.`);
-            EndActionForChosenPlayer(G, ctx, playerId);
+            G.publicPlayers[playerId].stack = [];
         }
         else {
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
         }
-        // TODO Rework it for players and fix it for bots
-        /*if (ctx.playerID !== ctx.currentPlayer) {
-            const discardedCard: PlayerCardsType =
-                G.publicPlayers[Number(ctx.playerID)].cards[suit].splice(cardId, 1)[0];
-            G.discardCardsDeck.push(discardedCard as ICard);
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${ G.publicPlayers[Number(ctx.playerID)].nickname } сбросил карту ${ discardedCard.name } в дискард.`);
-            EndActionForChosenPlayer(G, ctx, playerId);
-        } else {
-        }*/
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.`);

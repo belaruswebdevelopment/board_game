@@ -52,7 +52,7 @@ export interface IMoveByPickCardsOptions {
     // start
     addCoinToPouch: IMoveValidator,
     discardBoardCard: IMoveValidator,
-    // discardSuitCard: IMoveValidator,
+    discardSuitCard: IMoveValidator,
     pickCampCardHolda: IMoveValidator,
     pickDiscardCard: IMoveValidator,
     pickHero: IMoveValidator,
@@ -77,7 +77,7 @@ export interface IMoveByEnlistmentMercenariesOptions {
     // start
     addCoinToPouch: IMoveValidator,
     discardBoardCard: IMoveValidator,
-    // discardSuitCard: IMoveValidator,
+    discardSuitCard: IMoveValidator,
     pickCampCardHolda: IMoveValidator,
     pickDiscardCard: IMoveValidator,
     pickHero: IMoveValidator,
@@ -95,7 +95,7 @@ export interface IMoveByEndTierOptions {
     // start
     addCoinToPouch: IMoveValidator,
     discardBoardCard: IMoveValidator,
-    // discardSuitCard: IMoveValidator,
+    discardSuitCard: IMoveValidator,
     pickCampCardHolda: IMoveValidator,
     pickDiscardCard: IMoveValidator,
     pickHero: IMoveValidator,
@@ -113,7 +113,7 @@ export interface IMoveByGetDistinctionsOptions {
     // start
     addCoinToPouch: IMoveValidator,
     discardBoardCard: IMoveValidator,
-    // discardSuitCard: IMoveValidator,
+    discardSuitCard: IMoveValidator,
     pickCampCardHolda: IMoveValidator,
     pickDiscardCard: IMoveValidator,
     pickHero: IMoveValidator,
@@ -142,7 +142,7 @@ export interface IMoveByGetMjollnirProfitOptions {
  * <h3>Интерфейс для валидатора мувов.</h3>
  */
 export interface IMoveValidator {
-    getRange: (G?: IMyGameState, ctx?: Ctx) => MoveValidatorGetRangeTypes,
+    getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number) => MoveValidatorGetRangeTypes,
     getValue: (G: IMyGameState, ctx: Ctx, moveRangeData: MoveValidatorGetRangeTypes) => ValidMoveIdParamTypes,
     moveName: string,
     validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes) => boolean,
@@ -171,7 +171,7 @@ export interface IMoveValidators {
     ClickCoinToUpgradeMoveValidator: IMoveValidator,
     ClickHeroCardMoveValidator: IMoveValidator,
     DiscardCardMoveValidator: IMoveValidator,
-    // DiscardSuitCardFromPlayerBoardMoveValidator: IMoveValidator,
+    DiscardSuitCardFromPlayerBoardMoveValidator: IMoveValidator,
     PickDiscardCardMoveValidator: IMoveValidator,
     PlaceCardMoveValidator: IMoveValidator,
     UpgradeCoinVidofnirVedrfolnirMoveValidator: IMoveValidator,

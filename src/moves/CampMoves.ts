@@ -54,8 +54,8 @@ export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx:
         G.camp[cardId] = null;
         AddCampCardToCards(G, ctx, campCard);
         if (isArtefactCardNotMercenary(campCard)) {
-            StartAutoAction(G, ctx, campCard.actions);
             AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
+            StartAutoAction(G, ctx, campCard.actions);
         }
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
@@ -85,8 +85,8 @@ export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
         G.camp[cardId] = null;
         AddCampCardToCards(G, ctx, campCard);
         if (isArtefactCardNotMercenary(campCard)) {
-            StartAutoAction(G, ctx, campCard.actions);
             AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
+            StartAutoAction(G, ctx, campCard.actions);
         }
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
@@ -109,21 +109,14 @@ export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
  */
 export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string,
     playerId: number, cardId: number): string | void => {
-    // TODO Or [suit, cardId]!?
-    const isValidMove: boolean = IsValidMove(G, ctx, Stages.DiscardSuitCard, cardId);
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.DiscardSuitCard, {
+        playerId,
+        suit,
+        cardId,
+    });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    // TODO Uncomment it for players and fix it for bots
-    /*let isValidMove: boolean = false;
-    if (ctx.playerID !== undefined) {
-        isValidMove = playerId !== Number(ctx.currentPlayer) && playerId === Number(ctx.playerID);
-    } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.`);
-    }
-    if (!isValidMove) {
-        return INVALID_MOVE;
-    }*/
     DiscardSuitCardAction(G, ctx, suit, playerId, cardId);
 };
 

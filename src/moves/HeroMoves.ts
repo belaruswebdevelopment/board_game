@@ -1,6 +1,7 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardCardsFromPlayerBoardAction, PlaceCardsAction } from "../actions/HeroActions";
+import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddHeroToCards } from "../helpers/HeroMovesHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
@@ -27,6 +28,7 @@ export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
     }
     AddHeroToCards(G, ctx, G.heroes[heroId]);
     AddActionsToStackAfterCurrent(G, ctx, G.heroes[heroId].stack, G.heroes[heroId]);
+    StartAutoAction(G, ctx, G.heroes[heroId].actions);
 };
 
 /**

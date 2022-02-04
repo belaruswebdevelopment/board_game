@@ -6,7 +6,7 @@ import { CurrentScoring } from "./Score";
 import { IConfig } from "./typescript/action_interfaces";
 import { IMoves } from "./typescript/bot_interfaces";
 import { TavernCardTypes } from "./typescript/card_types";
-import { ConfigNames, MoveNames, Phases, RusCardTypes, Stages } from "./typescript/enums";
+import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
 import { IMoveValidator } from "./typescript/move_validator_interfaces";
 import { MoveValidatorGetRangeTypes, MoveValidatorPhaseTypes, ValidMoveIdParamTypes } from "./typescript/move_validator_types";
@@ -26,6 +26,7 @@ import { MoveArgsTypes } from "./typescript/types";
 export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
     // TODO Fix it, now just for bot can do RANDOM move
     const moves: IMoves[] = [];
+    let playerId: number | undefined;
     if (ctx.phase !== null) {
         let activeStageOfCurrentPlayer: string = ctx.activePlayers?.[Number(ctx.currentPlayer)] ?? `default`;
         if (activeStageOfCurrentPlayer === `default`) {
@@ -54,37 +55,15 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                         activeStageOfCurrentPlayer = Stages.Default2;
                     }
                 } else {
+                    activeStageOfCurrentPlayer = Stages.DiscardSuitCard;
                     // TODO Bot can't do async turns...?
-                    // TODO Move it to ProfitHelpers
                     const config: IConfig | undefined =
                         G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
                     if (config !== undefined && config.suit !== undefined) {
                         for (let p = 0; p < G.publicPlayers.length; p++) {
                             if (p !== Number(ctx.currentPlayer) && G.publicPlayers[p].stack[0] !== undefined) {
-                                for (let i = 0; i < G.publicPlayers[p].cards[config.suit].length; i++) {
-                                    for (let j = 0; j < 1; j++) {
-                                        if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
-                                            if (G.publicPlayers[p].cards[config.suit][i].type !== RusCardTypes.HERO) {
-                                                const points: number | null =
-                                                    G.publicPlayers[p].cards[config.suit][i].points;
-                                                if (points !== null) {
-                                                    // G.currentMoveArguments.push(points);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                // const minValue: number = Math.min(...G.currentMoveArguments as unknown as number[]);
-                                // const minCardIndex: number =
-                                //     G.publicPlayers[p].cards[config.suit].findIndex((card: PlayerCardsType): boolean =>
-                                //         card.type !== RusCardTypes.HERO && card.points === minValue);
-                                // if (minCardIndex !== -1) {
-                                //     moves.push({
-                                //         move: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-                                //         args: [config.suit, p, minCardIndex],
-                                //     });
-                                //     break;
-                                // }
+                                playerId = p;
+                                break;
                             }
                         }
                     }
@@ -131,7 +110,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
             GetValidator(ctx.phase as MoveValidatorPhaseTypes, activeStageOfCurrentPlayer);
         if (validator !== undefined) {
             const moveName: string = validator.moveName,
-                moveRangeData: MoveValidatorGetRangeTypes = validator.getRange(G, ctx),
+                moveRangeData: MoveValidatorGetRangeTypes = validator.getRange(G, ctx, playerId),
                 moveValue: ValidMoveIdParamTypes = validator.getValue(G, ctx, moveRangeData);
             let moveValues: MoveArgsTypes = [];
             if (typeof moveValue === `number`) {
@@ -139,10 +118,12 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
             } else if (typeof moveValue === `string`) {
                 moveValues = [moveValue];
             } else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
-                if (`suit` in moveValue) {
-                    moveValues = [moveValue.suit, moveValue.cardId];
-                } else if (`coinId` in moveValue) {
+                if (`coinId` in moveValue) {
                     moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
+                } else if (`playerId` in moveValue) {
+                    moveValues = [moveValue.suit, moveValue.playerId, moveValue.cardId];
+                } else if (`suit` in moveValue) {
+                    moveValues = [moveValue.suit, moveValue.cardId];
                 }
             } else if (moveValue === null) {
                 moveValues = [];

@@ -82,8 +82,8 @@ const StartOrEndActionStage = (G: IMyGameState, ctx: Ctx, config: IConfig): void
     if (config.stageName !== undefined) {
         ctx.events?.setStage(config.stageName);
         AddDataToLog(G, LogTypes.GAME, `Начало стэйджа ${config.stageName}.`);
-    } else if (ctx.activePlayers !== null && ctx.activePlayers[ctx.currentPlayer]) {
-        // TODO Not end for Hofud action?
+    } else if (ctx.activePlayers !== null && ctx.activePlayers[Number(ctx.currentPlayer)]) {
+        // TODO Is it need!?
         ctx.events?.endStage();
     }
 };
