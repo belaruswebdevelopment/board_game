@@ -167,6 +167,12 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
         case MoveNames.ClickHandCoinMove:
             action = data.moves.ClickHandCoinMove;
             break;
+        case MoveNames.ClickHandCoinUlineMove:
+            action = data.moves.ClickHandCoinUlineMove;
+            break;
+        case MoveNames.ClickHandTradingCoinUlineMove:
+            action = data.moves.ClickHandTradingCoinUlineMove;
+            break;
         case MoveNames.ClickCoinToUpgradeMove:
             action = data.moves.ClickCoinToUpgradeMove;
             break;

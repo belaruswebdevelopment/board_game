@@ -6,12 +6,12 @@ import { suitsConfig } from "../data/SuitData";
 import { IConfig } from "../typescript/action_interfaces";
 import { CampCardTypes, CampDeckCardTypes, DiscardCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { ConfigNames, HeroNames, MoveNames, RusCardTypes } from "../typescript/enums";
+import { ConfigNames, DrawNames, HeroNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { TotalRank } from "./ScoreHelpers";
 import { DrawButton, DrawCard, DrawCoin } from "./UIElementHelpers";
 
-// TODO Add functions docbloocks
+// TODO Add functions dock blocks
 export const AddCoinToPouchProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
     for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
@@ -247,7 +247,7 @@ export const GetMjollnirProfitProfit = (G: IMyGameState, ctx: Ctx, data: BoardPr
                 // TODO Move logic to DrawCard?
                 boardCells.push(
                     <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                        key={`${suit} suit to get Mjöllnir profit`}
+                        key={`${suit} suit to get Mjollnir profit`}
                         onClick={() => data.moves.GetMjollnirProfitMove(suit)}>
                         <span style={Styles.Suits(suit)} className="bg-suit-icon">
                             <b className="whitespace-nowrap text-white">
@@ -295,12 +295,27 @@ export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMy
             const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
             if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
                 const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
+                let move: ((suit: string) => void) | null;
+                switch (config?.drawName) {
+                    case DrawNames.Thrud:
+                        move = data.moves.PlaceThrudHeroMove;
+                        break;
+                    case DrawNames.Ylud:
+                        move = data.moves.PlaceYludHeroMove;
+                        break;
+                    case DrawNames.Olwin:
+                        move = data.moves.PlaceOlwinCardMove;
+                        break;
+                    default:
+                        move = null;
+                        break;
+                }
                 if (config !== undefined) {
                     // TODO Move logic to DrawCard?
                     boardCells.push(
                         <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
                             key={`Place ${config.drawName} on ${suitsConfig[suit].suitName}`}
-                            onClick={() => data.moves.PlaceCardMove(suit)}>
+                            onClick={() => move?.(suit)}>
                             <span style={Styles.Suits(suit)} className="bg-suit-icon">
                                 <b>{G.publicPlayers[Number(ctx.currentPlayer)]
                                     .stack[0].variants?.[suit].points ?? ``}</b>

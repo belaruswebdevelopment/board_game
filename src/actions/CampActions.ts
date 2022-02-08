@@ -32,10 +32,10 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
 };
 
 /**
- * <h3>Действия, связанные с дискардом карты из конкретной фракции игрока.</h3>
+ * <h3>Действия, связанные с сбросом карты из конкретной фракции игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты для дискарда по действию карты кэмпа артефакта Hofud.</li>
+ * <li>При выборе карты для сбросом по действию карты кэмпа артефакта Hofud.</li>
  * </ol>
  *
  * @param G
@@ -53,7 +53,7 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: string, p
             const discardedCard: PlayerCardsType =
                 G.publicPlayers[playerId].cards[suit].splice(cardId, 1)[0];
             G.discardCardsDeck.push(discardedCard as DiscardCardTypes);
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в дискард.`);
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в колоду сброса.`);
             G.publicPlayers[playerId].stack = [];
         } else {
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);

@@ -4,14 +4,14 @@ import { IAction } from "../typescript/action_interfaces";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 
 /**
- * <h3>Диспетчер всех экшенов.</h3>
+ * <h3>Диспетчер всех автоматических действий.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Срабатывает при вызове каждого экшена.</li>
+ * <li>Срабатывает при вызове каждого автоматического действия.</li>
  * </ol>
  *
- * @param actionName Название экшена.
- * @returns Экшен.
+ * @param actionName Название автоматических действий.
+ * @returns Автоматические действие.
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 const ActionDispatcherSwitcher = (actionName: string): Function | null => {
@@ -51,7 +51,7 @@ const ActionDispatcherSwitcher = (actionName: string): Function | null => {
  *
  * @param G
  * @param ctx
- * @param action Объект экшена.
+ * @param action Объект автоматических действий.
  */
 export const StartAutoAction = (G: IMyGameState, ctx: Ctx, action: IAction | undefined): void => {
     if (action !== undefined) {

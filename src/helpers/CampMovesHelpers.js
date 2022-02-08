@@ -1,7 +1,7 @@
 import { isArtefactCardNotMercenary } from "../Camp";
 import { StackData } from "../data/StackData";
-import { Phases, RusCardTypes } from "../typescript/enums";
-import { AddBuffToPlayer } from "./ActionHelpers";
+import { BuffNames, Phases, RusCardTypes } from "../typescript/enums";
+import { AddBuffToPlayer, DeleteBuffFromPlayer } from "./ActionHelpers";
 import { AddCampCardToPlayer, AddCampCardToPlayerCards } from "./CampCardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
@@ -23,7 +23,7 @@ export const AddCampCardToCards = (G, ctx, card) => {
         G.campPicked = true;
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime) {
-        delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime;
+        DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
     if (isArtefactCardNotMercenary(card) && card.suit !== null) {
         AddCampCardToPlayerCards(G, ctx, card);

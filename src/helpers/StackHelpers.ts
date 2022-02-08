@@ -23,20 +23,24 @@ export const AddActionsToStackAfterCurrent = (G: IMyGameState, ctx: Ctx, stack?:
     if (stack !== undefined) {
         if (card !== undefined && `validators` in card) {
             const validators: IValidatorsConfig | undefined = card.validators;
-            for (const validator in validators) {
-                if (Object.prototype.hasOwnProperty.call(validators, validator)) {
-                    switch (validator) {
-                        case ValidatorNames.PickDiscardCardToStack:
-                            isValid = IsCanPickPickCampCardToStack(G, card);
-                            break;
-                        case ValidatorNames.PickCampCardToStack:
-                            isValid = IsCanPickPickDiscardCardToStack(G, card);
-                            break;
-                        default:
-                            isValid = true;
-                            break;
+            if (validators !== undefined) {
+                for (const validator in validators) {
+                    if (Object.prototype.hasOwnProperty.call(validators, validator)) {
+                        switch (validator) {
+                            case ValidatorNames.PickDiscardCardToStack:
+                                isValid = IsCanPickPickDiscardCardToStack(G, card);
+                                break;
+                            case ValidatorNames.PickCampCardToStack:
+                                isValid = IsCanPickPickCampCardToStack(G, card);
+                                break;
+                            default:
+                                isValid = true;
+                                break;
+                        }
                     }
                 }
+            } else {
+                isValid = true;
             }
         } else {
             isValid = true;

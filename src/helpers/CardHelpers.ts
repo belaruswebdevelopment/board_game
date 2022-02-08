@@ -22,7 +22,7 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  */
 export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes): boolean => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = card;
-    // TODO Not only deckcardtypes but ihero+icampcardtypes?? but they are created as ICard and added to players cards.
+    // TODO Not only deck card types but hero+camp card types?? but they are created as ICard and added to players cards.
     if (isCardNotAction(card)) {
         G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit].push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);

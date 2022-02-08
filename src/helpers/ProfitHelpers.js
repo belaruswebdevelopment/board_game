@@ -2,10 +2,10 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { isActionDiscardCard, isCardNotAction } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { ConfigNames, HeroNames, MoveNames, RusCardTypes } from "../typescript/enums";
+import { ConfigNames, DrawNames, HeroNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { TotalRank } from "./ScoreHelpers";
 import { DrawButton, DrawCard, DrawCoin } from "./UIElementHelpers";
-// TODO Add functions docbloocks
+// TODO Add functions dock blocks
 export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
@@ -153,7 +153,7 @@ export const GetMjollnirProfitProfit = (G, ctx, data, boardCells) => {
             if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length) {
                 // TODO Move logic to DrawCard?
                 boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.moves.GetMjollnirProfitMove(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { className: "whitespace-nowrap text-white", children: G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
-                                .reduce(TotalRank, 0) * 2 }, void 0) }, void 0) }, `${suit} suit to get Mjöllnir profit`));
+                                .reduce(TotalRank, 0) * 2 }, void 0) }, void 0) }, `${suit} suit to get Mjollnir profit`));
             }
         }
     }
@@ -183,9 +183,24 @@ export const PlaceCardsProfit = (G, ctx, data, boardCells) => {
             const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
             if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
                 const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
+                let move;
+                switch (config === null || config === void 0 ? void 0 : config.drawName) {
+                    case DrawNames.Thrud:
+                        move = data.moves.PlaceThrudHeroMove;
+                        break;
+                    case DrawNames.Ylud:
+                        move = data.moves.PlaceYludHeroMove;
+                        break;
+                    case DrawNames.Olwin:
+                        move = data.moves.PlaceOlwinCardMove;
+                        break;
+                    default:
+                        move = null;
+                        break;
+                }
                 if (config !== undefined) {
                     // TODO Move logic to DrawCard?
-                    boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => data.moves.PlaceCardMove(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = (_a = G.publicPlayers[Number(ctx.currentPlayer)]
+                    boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => move === null || move === void 0 ? void 0 : move(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { children: (_b = (_a = G.publicPlayers[Number(ctx.currentPlayer)]
                                     .stack[0].variants) === null || _a === void 0 ? void 0 : _a[suit].points) !== null && _b !== void 0 ? _b : `` }, void 0) }, void 0) }, `Place ${config.drawName} on ${suitsConfig[suit].suitName}`));
                 }
             }

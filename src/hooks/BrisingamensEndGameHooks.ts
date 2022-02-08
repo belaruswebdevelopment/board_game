@@ -18,7 +18,7 @@ export const EndBrisingamensEndGameActions = (G: IMyGameState): void => {
 
 export const OnBrisingamensEndGameTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddBrisingamensEndGameActionsToStack(G, ctx);
-    DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
+    DrawCurrentProfit(G, ctx);
 };
 
 /**

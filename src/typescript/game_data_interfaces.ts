@@ -79,7 +79,7 @@ export interface IOrder {
 }
 
 /**
- * <h3>Интерфейс для резолвинга монет на столе.</h3>
+ * <h3>Интерфейс для распределения монет на столе.</h3>
  */
 export interface IResolveBoardCoins {
     playersOrder: string[],

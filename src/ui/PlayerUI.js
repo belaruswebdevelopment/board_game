@@ -123,22 +123,19 @@ export const DrawPlayersBoardsCoins = (data) => {
                 for (let j = 0; j < data.G.tavernsNum; j++) {
                     playerHeaders[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Taverns(j), className: "bg-tavern-icon" }, void 0) }, `Tavern ${tavernsConfig[j].name}`));
                     if (data.G.publicPlayers[p].boardCoins[coinIndex] === null) {
-                        if ((Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins)
-                            || (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoinsUline
-                                && j === data.G.currentTavern + 1)) {
+                        if (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins) {
                             DrawCoin(data, playerCells, `back-tavern-icon`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p], null, j, MoveNames.ClickBoardCoinMove, j);
                         }
                         else {
                             DrawCoin(data, playerCells, `back-tavern-icon`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p], null, j);
                         }
                     }
-                    else if (data.ctx.phase === Phases.PlaceCoins && Number(data.ctx.currentPlayer) === p) {
+                    else if (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins) {
                         DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p], null, null, MoveNames.ClickBoardCoinMove, j);
                     }
                     else {
-                        if (data.G.winner.length || (data.ctx.phase === Phases.PlaceCoinsUline
-                            && data.G.currentTavern >= j - 1) || (data.ctx.phase !== Phases.PlaceCoins
-                            && data.G.currentTavern >= j)) {
+                        if (data.G.winner.length
+                            || (data.ctx.phase !== Phases.PlaceCoins && data.G.currentTavern >= j)) {
                             DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].boardCoins[coinIndex], coinIndex, data.G.publicPlayers[p]);
                         }
                         else {
@@ -158,10 +155,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                         playerFooters[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }, void 0) }, `${data.G.publicPlayers[p].nickname} exchange icon ${j}`));
                         const coin = data.G.publicPlayers[p].boardCoins[coinIndex];
                         if (coin === null) {
-                            if (Number(data.ctx.currentPlayer) === p && data.ctx.phase !== Phases.PlaceCoinsUline
-                                && (data.ctx.phase === Phases.PlaceCoins || (data.ctx.activePlayers
-                                    && data.ctx.activePlayers[Number(data.ctx.currentPlayer)] ===
-                                        Stages.PlaceTradingCoinsUline))) {
+                            if (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins) {
                                 DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex, data.G.publicPlayers[p], null, null, MoveNames.ClickBoardCoinMove, j);
                             }
                             else {
@@ -169,9 +163,7 @@ export const DrawPlayersBoardsCoins = (data) => {
                             }
                         }
                         else if (Number(data.ctx.currentPlayer) === p
-                            && (data.ctx.phase === Phases.PlaceCoins || (data.ctx.activePlayers
-                                && data.ctx.activePlayers[Number(data.ctx.currentPlayer)] ===
-                                    Stages.PlaceTradingCoinsUline))) {
+                            && data.ctx.phase === Phases.PlaceCoins) {
                             DrawCoin(data, playerCells, `coin`, coin, coinIndex, data.G.publicPlayers[p], null, null, MoveNames.ClickBoardCoinMove, j);
                         }
                         else {
@@ -209,6 +201,21 @@ export const DrawPlayersBoardsCoins = (data) => {
 export const DrawPlayersHandsCoins = (data) => {
     // TODO Your coins always public for you only, others always private!
     const playersHandsCoins = [];
+    let moveName;
+    switch (data.ctx.phase) {
+        case Phases.PlaceCoins:
+            moveName = MoveNames.ClickHandCoinMove;
+            break;
+        case Phases.PlaceCoinsUline:
+            moveName = MoveNames.ClickHandCoinUlineMove;
+            break;
+        case Phases.PickCards:
+            moveName = MoveNames.ClickHandTradingCoinUlineMove;
+            break;
+        default:
+            moveName = undefined;
+            break;
+    }
     for (let p = 0; p < data.ctx.numPlayers; p++) {
         const playerCells = [];
         playersHandsCoins[p] = [];
@@ -227,7 +234,7 @@ export const DrawPlayersHandsCoins = (data) => {
                             || data.ctx.phase === Phases.PlaceCoinsUline || (data.ctx.activePlayers
                             && data.ctx.activePlayers[Number(data.ctx.currentPlayer)] ===
                                 Stages.PlaceTradingCoinsUline))) {
-                            DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].handCoins[j], j, data.G.publicPlayers[p], coinClasses, null, MoveNames.ClickHandCoinMove, j);
+                            DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].handCoins[j], j, data.G.publicPlayers[p], coinClasses, null, moveName, j);
                         }
                         else {
                             DrawCoin(data, playerCells, `coin`, data.G.publicPlayers[p].handCoins[j], j, data.G.publicPlayers[p], coinClasses);

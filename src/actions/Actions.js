@@ -2,18 +2,19 @@ import { isArtefactDiscardCard } from "../Camp";
 import { CreateCard, isActionDiscardCard, isCardNotAction } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
 import { AddCampCardToPlayerCards } from "../helpers/CampCardHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
-import { LogTypes, RusCardTypes } from "../typescript/enums";
+import { BuffNames, LogTypes, RusCardTypes } from "../typescript/enums";
 /**
- * <h3>Действия, связанные со сбросом любой указанной карты со стола игрока в дискард.</h3>
+ * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
+ * <li>Применяется при отправке карты в колоду сброса в конце игры при наличии артефакта Brisingamens.</li>
  * </ol>
  *
  * @param G
@@ -22,18 +23,18 @@ import { LogTypes, RusCardTypes } from "../typescript/enums";
  * @param cardId Id карты.
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, suit, cardId) => {
-    const discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0];
-    if (discardedCard.type !== RusCardTypes.HERO) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId].type !== RusCardTypes.HERO) {
+        const discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0];
         G.discardCardsDeck.push(discardedCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} сбросил карту ${discardedCard.name} в дискард.`);
-        delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
+        DeleteBuffFromPlayer(G, ctx, BuffNames.DiscardCardEndGame);
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
     }
 };
 /**
- * <h3>Сбрасывает карту из таверны по выбору игрока.</h3>
+ * <h3>Отправляет карту из таверны в колоду сброса по выбору игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Применяется при выборе первым игроком карты из кэмпа при игре на 2-х игроков.</li>
@@ -44,7 +45,7 @@ export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, suit, cardId) => {
  * @param cardId Id карты.
  */
 export const DiscardCardFromTavernAction = (G, ctx, cardId) => {
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в колоду сброса карту из таверны:`);
     DiscardCardFromTavern(G, cardId);
 };
 /**
@@ -68,7 +69,7 @@ export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не пикнута карта наёмника.`);
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не выбрана карта наёмника.`);
     }
 };
 /**
@@ -83,7 +84,7 @@ export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
  * @param suit Название фракции.
  */
 export const GetMjollnirProfitAction = (G, ctx, suit) => {
-    delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.getMjollnirProfit;
+    DeleteBuffFromPlayer(G, ctx, BuffNames.GetMjollnirProfit);
     G.suitIdForMjollnir = suit;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал фракцию ${suitsConfig[suit].suitName} для эффекта артефакта Mjollnir.`);
 };
@@ -101,11 +102,11 @@ export const PassEnlistmentMercenariesAction = (G, ctx) => {
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} пасанул во время фазы 'Enlistment Mercenaries'.`);
 };
 /**
- * <h3>Действия, связанные с взятием карт из дискарда.</h3>
+ * <h3>Действия, связанные с взятием карт из колоды сброса.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
- * <li>При выборе конкретных карт кэмпа, дающих возможность взять карты из дискарда.</li>
+ * <li>При выборе конкретных героев, дающих возможность взять карты из колоды сброса.</li>
+ * <li>При выборе конкретных карт кэмпа, дающих возможность взять карты из колоды сброса.</li>
  * </ol>
  *
  * @param G
@@ -130,7 +131,7 @@ export const PickDiscardCard = (G, ctx, cardId) => {
     if (isAdded && !isActionDiscardCard(pickedCard)) {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} взял карту ${pickedCard.name} из колоды сброса.`);
 };
 /**
  * <h3>Игрок выбирает фракцию для вербовки указанного наёмника.</h3>
@@ -173,11 +174,11 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
             }
         }
         else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Вместо карты наёмника пикнута карта другого типа.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Вместо карты наёмника взята карта другого типа.`);
         }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не пикнута карта наёмника.`);
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не взята карта наёмника.`);
     }
 };
 //# sourceMappingURL=Actions.js.map

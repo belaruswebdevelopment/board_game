@@ -30,8 +30,12 @@ export const AddGetDistinctionsActionToStack = (G, ctx) => {
 export const AddPickCardActionToStack = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [{}]);
 };
+export const DeleteBuffFromPlayer = (G, ctx, buffName) => {
+    delete G.publicPlayers[Number(ctx.currentPlayer)].buffs[buffName];
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} потерял баф '${buffName}'.`);
+};
 /**
- * <h3>Действия, связанные с отрисовкой профита.</h3>
+ * <h3>Действия, связанные с отображением профита.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При выборе конкретных героев, дающих профит.</li>
@@ -42,14 +46,14 @@ export const AddPickCardActionToStack = (G, ctx) => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
  */
-export const DrawCurrentProfit = (G, ctx, config) => {
-    var _a;
+export const DrawCurrentProfit = (G, ctx) => {
+    var _a, _b;
+    const config = (_a = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config;
     if (config !== undefined) {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен получить преимущества от действия '${config.drawName}'.`);
         StartOrEndActionStage(G, ctx, config);
-        G.actionsNum = (_a = config.number) !== null && _a !== void 0 ? _a : 1;
+        G.actionsNum = (_b = config.number) !== null && _b !== void 0 ? _b : 1;
         if (config.name !== undefined) {
             G.drawProfit = config.name;
         }
@@ -62,10 +66,10 @@ export const DrawCurrentProfit = (G, ctx, config) => {
     }
 };
 /**
- * <h3>Действия, связанные со стартом стэйджа.</h3>
+ * <h3>Действия, связанные со стартом конкретной стадии.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При начале экшенов, требующих старта стэйджа.</li>
+ * <li>При начале действий, требующих старта конкретной стадии.</li>
  * </ol>
  *
  * @param G
@@ -76,7 +80,7 @@ const StartOrEndActionStage = (G, ctx, config) => {
     var _a, _b;
     if (config.stageName !== undefined) {
         (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setStage(config.stageName);
-        AddDataToLog(G, LogTypes.GAME, `Начало стэйджа ${config.stageName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Начало стадии ${config.stageName}.`);
     }
     else if (ctx.activePlayers !== null && ctx.activePlayers[Number(ctx.currentPlayer)]) {
         // TODO Is it need!?
@@ -84,7 +88,7 @@ const StartOrEndActionStage = (G, ctx, config) => {
     }
 };
 /**
- * <h3>Действия, связанные с дискардом карты из таверны при пике карты кэмпа при игре на 2-х игроков.</h3>
+ * <h3>Действия, связанные с сбросом карты из таверны при выборе карты кэмпа при игре на 2-х игроков.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>После выбора карт кэмпа, если играет 2-а игрока.</li>

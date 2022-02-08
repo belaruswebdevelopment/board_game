@@ -1,7 +1,7 @@
 import { ArgsTypes } from "./types";
 
 /**
- * <h3>Интерфейс для экшена.</h3>
+ * <h3>Интерфейс для действия.</h3>
  */
 export interface IAction {
     name: string,

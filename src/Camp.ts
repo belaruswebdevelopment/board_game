@@ -82,10 +82,10 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
  * @param name Название.
  * @param description Описание.
  * @param game Игра/дополнение.
- * @param suit Название ракции.
+ * @param suit Название фракции.
  * @param rank Шевроны.
  * @param points Очки.
- * @param actions Экшены.
+ * @param actions Действия.
  * @param stack Действия.
  * @returns Карта кэмпа артефакт.
  */

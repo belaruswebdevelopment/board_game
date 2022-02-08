@@ -1,6 +1,6 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { DiscardCardsFromPlayerBoardAction, PlaceCardsAction } from "../actions/HeroActions";
+import { DiscardCardsFromPlayerBoardAction, PlaceOlwinCardsAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddHeroToCards } from "../helpers/HeroMovesHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
@@ -59,17 +59,55 @@ export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, s
  * <h3>Расположение героя или зависимых карт героя на планшет игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе героя со способностью выкладки карт на планшет игрока.</li>
+ * <li>При выборе героя Ольвин со способностью выкладки карт на планшет игрока.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  * @param suit Название фракции.
  */
-export const PlaceCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string): string | void => {
-    const isValidMove: boolean = IsValidMove(G, ctx, Stages.PlaceCards, suit);
+export const PlaceOlwinCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string): string | void => {
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.PlaceOlwinCards, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    PlaceCardsAction(G, ctx, suit);
+    PlaceOlwinCardsAction(G, ctx, suit);
+};
+
+/**
+ * <h3>Расположение героя на планшет игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе героя Труд со способностью перемещения на планшете игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param suit Название фракции.
+ */
+export const PlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string): string | void => {
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.PlaceThrudHero, suit);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    PlaceThrudAction(G, ctx, suit);
+};
+
+/**
+ * <h3>Расположение героя на планшет игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе героя Илуд со способностью размещения на планшете игрока в конце эпохи.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param suit Название фракции.
+ */
+export const PlaceYludHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: string): string | void => {
+    const isValidMove: boolean = IsValidMove(G, ctx, Stages.Default1, suit);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    PlaceYludAction(G, ctx, suit);
 };

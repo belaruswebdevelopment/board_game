@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
-import { CheckEndGameLastActions, ClearPlayerPickedCard, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
 import { PlayerCardsType } from "../typescript/card_types";
 import { HeroNames } from "../typescript/enums";
@@ -18,7 +18,7 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
  * @param ctx
  */
 export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
-    if (G.publicPlayersOrder.length) {
+    if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
         const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
             player.buffs.endTier === HeroNames.Ylud);
         if (yludIndex !== -1) {
@@ -46,12 +46,31 @@ export const CheckEndTierOrder = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
     const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
         player.buffs.endTier === HeroNames.Ylud);
+    if (G.tierToEnd === 0) {
+        const cards = Object.values(G.publicPlayers[yludIndex].cards).flat(),
+            index: number =
+                cards.findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
+        if (index !== -1) {
+            const suit: string | null = cards[index].suit;
+            if (suit !== null) {
+                const yludCardIndex: number = G.publicPlayers[yludIndex].cards[suit]
+                    .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
+                G.publicPlayers[yludIndex].cards[suit].splice(yludCardIndex, 1);
+            }
+        }
+    }
     G.publicPlayersOrder.push(String(yludIndex));
+};
+
+export const CheckEndEndTierTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
+    return EndTurnActions(G, ctx);
 };
 
 export const EndEndTierActions = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = null;
-    RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+    if (G.tierToEnd === 0) {
+        RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+    }
     G.publicPlayersOrder = [];
 };
 
@@ -64,5 +83,5 @@ export const OnEndTierTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
 
 export const OnEndTierTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddEndTierActionsToStack(G, ctx);
-    DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
+    DrawCurrentProfit(G, ctx);
 };

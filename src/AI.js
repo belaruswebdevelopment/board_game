@@ -2,7 +2,7 @@ import { CompareCards } from "./bot_logic/BotCardLogic";
 import { isCardNotAction } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
+import { ConfigNames, Phases, Stages } from "./typescript/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -27,13 +27,7 @@ export const enumerate = (G, ctx) => {
             }
             else if (ctx.phase === Phases.PlaceCoinsUline) {
                 // TODO BotPlaceCoinUline
-                if (G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined) {
-                    activeStageOfCurrentPlayer = Stages.Default1;
-                }
-                else {
-                    activeStageOfCurrentPlayer = Stages.Default2;
-                    // TODO Fix this: args: [G.currentTavern + 1]
-                }
+                activeStageOfCurrentPlayer = Stages.Default1;
             }
             else if (ctx.phase === Phases.PickCards) {
                 if (ctx.activePlayers === null) {
@@ -92,23 +86,6 @@ export const enumerate = (G, ctx) => {
             }
             else if (ctx.phase === Phases.GetMjollnirProfit) {
                 activeStageOfCurrentPlayer = Stages.Default1;
-            }
-        }
-        else {
-            if (activeStageOfCurrentPlayer === Stages.PlaceTradingCoinsUline) {
-                // TODO Fix it!
-                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
-                    moves.push({
-                        move: MoveNames.ClickBoardCoinMove,
-                        args: [G.tavernsNum + 1],
-                    });
-                }
-                else {
-                    moves.push({
-                        move: MoveNames.ClickBoardCoinMove,
-                        args: [G.tavernsNum],
-                    });
-                }
             }
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)

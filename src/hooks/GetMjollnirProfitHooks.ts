@@ -30,7 +30,7 @@ export const CheckGetMjollnirProfitOrder = (G: IMyGameState): void => {
 
 export const OnGetMjollnirProfitTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddGetMjollnirProfitActionsToStack(G, ctx);
-    DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
+    DrawCurrentProfit(G, ctx);
 };
 
 export const StartEndGame = (G: IMyGameState, ctx: Ctx) => {

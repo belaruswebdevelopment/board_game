@@ -135,7 +135,8 @@ export const DrawProfit = (data) => {
     const boardCells = [], config = (_a = data.G.publicPlayers[Number(data.ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config, option = data.G.drawProfit;
     let caption = `Get `;
     for (let i = 0; i < 1; i++) {
-        if (option === ConfigNames.PlaceCards) {
+        if (option === ConfigNames.PlaceThrudHero || option === ConfigNames.PlaceYludHero
+            || option === ConfigNames.PlaceOlwinCards) {
             if (config !== undefined) {
                 caption += `suit to place ${(_b = data.G.actionsNum) !== null && _b !== void 0 ? _b : 1} ${config.drawName} ${data.G.actionsNum > 1 ? `s` : ``} to ${data.G.actionsNum > 1 ? `different` : `that`} suit.`;
                 PlaceCardsProfit(data.G, data.ctx, data, boardCells);
@@ -170,7 +171,7 @@ export const DrawProfit = (data) => {
             DiscardCardProfit(data.G, data.ctx, data, boardCells);
         }
         else if (option === ConfigNames.GetMjollnirProfit) {
-            caption += `suit to get Mjöllnir profit from ranks on that suit.`;
+            caption += `suit to get Mjollnir profit from ranks on that suit.`;
             GetMjollnirProfitProfit(data.G, data.ctx, data, boardCells);
         }
         else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {

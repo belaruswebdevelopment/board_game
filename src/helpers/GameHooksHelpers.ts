@@ -94,7 +94,7 @@ export const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): 
  * <h3>Завершает каждую фазу конца игры и проверяет переход к другим фазам или завершает игру.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>После завершения экшенов в каждой фазе конца игры.</li>
+ * <li>После завершения действий в каждой фазе конца игры.</li>
  * </ol>
  *
  * @param G
@@ -237,6 +237,6 @@ export const StartOrEndActions = (G: IMyGameState, ctx: Ctx): void => {
     if (ctx.activePlayers === null
         || ctx.activePlayers !== null && ctx.activePlayers?.[Number(ctx.currentPlayer)] !== undefined) {
         G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
-        DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
+        DrawCurrentProfit(G, ctx);
     }
 };

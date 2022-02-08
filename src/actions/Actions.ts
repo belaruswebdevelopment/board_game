@@ -3,6 +3,7 @@ import { isArtefactDiscardCard } from "../Camp";
 import { CreateCard, isActionDiscardCard, isCardNotAction } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
 import { AddCampCardToPlayerCards } from "../helpers/CampCardHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
@@ -11,14 +12,14 @@ import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
 import { ICard, ICreateCard } from "../typescript/card_interfaces";
 import { CampDeckCardTypes, DiscardCardTypes, PickedCardType } from "../typescript/card_types";
-import { LogTypes, RusCardTypes } from "../typescript/enums";
+import { BuffNames, LogTypes, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 
 /**
- * <h3>Действия, связанные со сбросом любой указанной карты со стола игрока в дискард.</h3>
+ * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Применяется при сбросе карты в дискард в конце игры при наличии артефакта Brisingamens.</li>
+ * <li>Применяется при отправке карты в колоду сброса в конце игры при наличии артефакта Brisingamens.</li>
  * </ol>
  *
  * @param G
@@ -27,20 +28,20 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @param cardId Id карты.
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
-    const discardedCard: DiscardCardTypes =
-        G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0] as
-        DiscardCardTypes;
-    if (discardedCard.type !== RusCardTypes.HERO) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId].type !== RusCardTypes.HERO) {
+        const discardedCard: DiscardCardTypes =
+            G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0] as
+            DiscardCardTypes;
         G.discardCardsDeck.push(discardedCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} сбросил карту ${discardedCard.name} в дискард.`);
-        delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.discardCardEndGame;
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
+        DeleteBuffFromPlayer(G, ctx, BuffNames.DiscardCardEndGame);
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
     }
 };
 
 /**
- * <h3>Сбрасывает карту из таверны по выбору игрока.</h3>
+ * <h3>Отправляет карту из таверны в колоду сброса по выбору игрока.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Применяется при выборе первым игроком карты из кэмпа при игре на 2-х игроков.</li>
@@ -51,7 +52,7 @@ export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, s
  * @param cardId Id карты.
  */
 export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в сброс карту из таверны:`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в колоду сброса карту из таверны:`);
     DiscardCardFromTavern(G, cardId);
 };
 
@@ -75,7 +76,7 @@ export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы 'Enlistment Mercenaries' выбрал наёмника '${pickedCard.name}'.`);
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не пикнута карта наёмника.`);
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не выбрана карта наёмника.`);
     }
 };
 
@@ -91,7 +92,7 @@ export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId
  * @param suit Название фракции.
  */
 export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
-    delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.getMjollnirProfit;
+    DeleteBuffFromPlayer(G, ctx, BuffNames.GetMjollnirProfit);
     G.suitIdForMjollnir = suit;
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал фракцию ${suitsConfig[suit].suitName} для эффекта артефакта Mjollnir.`);
 };
@@ -111,11 +112,11 @@ export const PassEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx): void
 };
 
 /**
- * <h3>Действия, связанные с взятием карт из дискарда.</h3>
+ * <h3>Действия, связанные с взятием карт из колоды сброса.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе конкретных героев, дающих возможность взять карты из дискарда.</li>
- * <li>При выборе конкретных карт кэмпа, дающих возможность взять карты из дискарда.</li>
+ * <li>При выборе конкретных героев, дающих возможность взять карты из колоды сброса.</li>
+ * <li>При выборе конкретных карт кэмпа, дающих возможность взять карты из колоды сброса.</li>
  * </ol>
  *
  * @param G
@@ -139,7 +140,7 @@ export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void
     if (isAdded && !isActionDiscardCard(pickedCard)) {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${pickedCard.name} из дискарда.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} взял карту ${pickedCard.name} из колоды сброса.`);
 };
 
 /**
@@ -182,9 +183,9 @@ export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit
                 AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
             }
         } else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Вместо карты наёмника пикнута карта другого типа.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Вместо карты наёмника взята карта другого типа.`);
         }
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не пикнута карта наёмника.`);
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не взята карта наёмника.`);
     }
 };

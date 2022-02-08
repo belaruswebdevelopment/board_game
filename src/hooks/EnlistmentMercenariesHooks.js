@@ -52,9 +52,11 @@ export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
     }
 };
 export const EndEnlistmentMercenariesActions = (G, ctx) => {
-    const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === HeroNames.Ylud);
-    if (yludIndex === -1) {
-        RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+    if (G.tierToEnd === 0) {
+        const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === HeroNames.Ylud);
+        if (yludIndex === -1) {
+            RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+        }
     }
     G.publicPlayersOrder = [];
 };
@@ -62,9 +64,8 @@ export const OnEnlistmentMercenariesMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
 };
 export const OnEnlistmentMercenariesTurnBegin = (G, ctx) => {
-    var _a;
     AddEnlistmentMercenariesActionsToStack(G, ctx);
-    DrawCurrentProfit(G, ctx, (_a = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config);
+    DrawCurrentProfit(G, ctx);
 };
 export const OnEnlistmentMercenariesTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);

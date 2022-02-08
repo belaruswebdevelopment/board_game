@@ -51,7 +51,7 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
  * @param active Взят ли герой.
  * @param buff Баф.
  * @param validators Валидаторы.
- * @param actions Экшены.
+ * @param actions Действия.
  * @param stack Действия.
  * @returns Герой.
  */

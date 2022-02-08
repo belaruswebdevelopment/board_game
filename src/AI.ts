@@ -6,7 +6,7 @@ import { CurrentScoring } from "./Score";
 import { IConfig } from "./typescript/action_interfaces";
 import { IMoves } from "./typescript/bot_interfaces";
 import { TavernCardTypes } from "./typescript/card_types";
-import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
+import { ConfigNames, Phases, Stages } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
 import { IMoveValidator } from "./typescript/move_validator_interfaces";
 import { MoveValidatorGetRangeTypes, MoveValidatorPhaseTypes, ValidMoveIdParamTypes } from "./typescript/move_validator_types";
@@ -34,12 +34,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                 activeStageOfCurrentPlayer = Stages.Default3;
             } else if (ctx.phase === Phases.PlaceCoinsUline) {
                 // TODO BotPlaceCoinUline
-                if (G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined) {
-                    activeStageOfCurrentPlayer = Stages.Default1;
-                } else {
-                    activeStageOfCurrentPlayer = Stages.Default2;
-                    // TODO Fix this: args: [G.currentTavern + 1]
-                }
+                activeStageOfCurrentPlayer = Stages.Default1;
             } else if (ctx.phase === Phases.PickCards) {
                 if (ctx.activePlayers === null) {
                     let pickCardOrCampCard = `card`;
@@ -88,21 +83,6 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                 activeStageOfCurrentPlayer = Stages.Default1;
             } else if (ctx.phase === Phases.GetMjollnirProfit) {
                 activeStageOfCurrentPlayer = Stages.Default1;
-            }
-        } else {
-            if (activeStageOfCurrentPlayer === Stages.PlaceTradingCoinsUline) {
-                // TODO Fix it!
-                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.tavernsNum]) {
-                    moves.push({
-                        move: MoveNames.ClickBoardCoinMove,
-                        args: [G.tavernsNum + 1],
-                    });
-                } else {
-                    moves.push({
-                        move: MoveNames.ClickBoardCoinMove,
-                        args: [G.tavernsNum],
-                    });
-                }
             }
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)

@@ -1,4 +1,4 @@
-import { IActionCard } from "./action_card_intarfaces";
+import { IActionCard } from "./action_card_interfaces";
 import { IAction } from "./action_interfaces";
 import { IArtefact, IArtefactCampCard, IMercenaryCampCard } from "./camp_card_interfaces";
 import { ICard } from "./card_interfaces";
@@ -10,7 +10,7 @@ import { IHero } from "./hero_card_interfaces";
 export type CampCardTypes = CampDeckCardTypes | null;
 
 /**
- * <h3>Типы данных для дек карт кэмпа.</h3>
+ * <h3>Типы данных для карт колоды кэмпа.</h3>
  */
 export type CampDeckCardTypes = IArtefactCampCard | IMercenaryCampCard;
 
@@ -20,7 +20,7 @@ export type CampDeckCardTypes = IArtefactCampCard | IMercenaryCampCard;
 export type DeckCardTypes = ICard | IActionCard;
 
 /**
- * <h3>Типы данных для дискард дек карт.</h3>
+ * <h3>Типы данных для карт колоды сброса.</h3>
  */
 export type DiscardCardTypes = IActionCard | IArtefactCampCard | ICard;
 
@@ -29,7 +29,7 @@ export type CardsHasStack = IHero | IArtefact | IAction;
 export type CardsHasStackValidators = IHero | IArtefact;
 
 /**
- * <h3>Типы данных для карт пикнутых игроком.</h3>
+ * <h3>Типы данных для карт выбранных игроком.</h3>
  */
 export type PickedCardType = DeckCardTypes | CampDeckCardTypes | IHero | null;
 

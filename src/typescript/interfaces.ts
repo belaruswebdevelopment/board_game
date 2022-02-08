@@ -1,4 +1,4 @@
-import { IActionCardConfig } from "./action_card_intarfaces";
+import { IActionCardConfig } from "./action_card_interfaces";
 import { PlayerCardsType } from "./card_types";
 import { ISuitConfig } from "./suit_interfaces";
 

@@ -21,9 +21,8 @@ export const CheckGetMjollnirProfitOrder = (G) => {
     G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
 };
 export const OnGetMjollnirProfitTurnBegin = (G, ctx) => {
-    var _a;
     AddGetMjollnirProfitActionsToStack(G, ctx);
-    DrawCurrentProfit(G, ctx, (_a = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config);
+    DrawCurrentProfit(G, ctx);
 };
 export const StartEndGame = (G, ctx) => {
     G.publicPlayersOrder = [];

@@ -2,7 +2,7 @@ import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
 import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
-import { CheckEndEndTierPhase, CheckEndTierOrder, EndEndTierActions, OnEndTierMove, OnEndTierTurnBegin, OnEndTierTurnEnd } from "./hooks/EndTierHooks";
+import { CheckEndEndTierPhase, CheckEndEndTierTurn, CheckEndTierOrder, EndEndTierActions, OnEndTierMove, OnEndTierTurnBegin, OnEndTierTurnEnd } from "./hooks/EndTierHooks";
 import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, OnEnlistmentMercenariesTurnEnd, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
 import { CheckEndGame, ReturnEndGameData } from "./hooks/GameHooks";
 import { CheckAndResolveDistinctionsOrders, CheckEndGetDistinctionsPhase, CheckNextGetDistinctionsTurn, EndGetDistinctionsPhaseActions, OnGetDistinctionsMove, OnGetDistinctionsTurnBegin, OnGetDistinctionsTurnEnd } from "./hooks/GetDistinctionsHooks";
@@ -12,8 +12,8 @@ import { CheckEndPlaceCoinsPhase, CheckEndPlaceCoinsTurn, OnPlaceCoinsTurnEnd, P
 import { CheckEndPlaceCoinsUlinePhase, CheckUlinePlaceCoinsOrder, EndPlaceCoinsUlineActions } from "./hooks/PlaceCoinsUlineHooks";
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
 import { AddCoinToPouchMove, ClickCampCardHoldaMove, ClickCampCardMove, DiscardSuitCardFromPlayerBoardMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CampMoves";
-import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove } from "./moves/CoinMoves";
-import { ClickHeroCardMove, DiscardCardMove, PlaceCardMove } from "./moves/HeroMoves";
+import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, ClickHandCoinUlineMove, ClickHandTradingCoinUlineMove } from "./moves/CoinMoves";
+import { ClickHeroCardMove, DiscardCardMove, PlaceOlwinCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
 import { Phases } from "./typescript/enums";
 // TODO Add logging
@@ -58,8 +58,7 @@ export const BoardGame = {
                 order,
             },
             moves: {
-                ClickHandCoinMove,
-                ClickBoardCoinMove,
+                ClickHandCoinUlineMove,
             },
             next: Phases.PickCards,
             onBegin: (G, ctx) => CheckUlinePlaceCoinsOrder(G, ctx),
@@ -101,9 +100,14 @@ export const BoardGame = {
                             ClickHeroCardMove,
                         },
                     },
-                    placeCards: {
+                    placeOlwinCards: {
                         moves: {
-                            PlaceCardMove,
+                            PlaceOlwinCardMove,
+                        },
+                    },
+                    placeThrudHero: {
+                        moves: {
+                            PlaceThrudHeroMove,
                         },
                     },
                     upgradeCoin: {
@@ -124,8 +128,7 @@ export const BoardGame = {
                     },
                     placeTradingCoinsUline: {
                         moves: {
-                            ClickHandCoinMove,
-                            ClickBoardCoinMove,
+                            ClickHandTradingCoinUlineMove,
                         },
                     },
                 },
@@ -177,9 +180,14 @@ export const BoardGame = {
                             ClickHeroCardMove,
                         },
                     },
-                    placeCards: {
+                    placeOlwinCards: {
                         moves: {
-                            PlaceCardMove,
+                            PlaceOlwinCardMove,
+                        },
+                    },
+                    placeThrudHero: {
+                        moves: {
+                            PlaceThrudHeroMove,
                         },
                     },
                     upgradeCoin: {
@@ -244,9 +252,14 @@ export const BoardGame = {
                             ClickHeroCardMove,
                         },
                     },
-                    placeCards: {
+                    placeOlwinCards: {
                         moves: {
-                            PlaceCardMove,
+                            PlaceOlwinCardMove,
+                        },
+                    },
+                    placeThrudHero: {
+                        moves: {
+                            PlaceThrudHeroMove,
                         },
                     },
                     upgradeCoin: {
@@ -263,10 +276,11 @@ export const BoardGame = {
                 },
                 onBegin: (G, ctx) => OnEndTierTurnBegin(G, ctx),
                 onMove: (G, ctx) => OnEndTierMove(G, ctx),
+                endIf: (G, ctx) => CheckEndEndTierTurn(G, ctx),
                 onEnd: (G, ctx) => OnEndTierTurnEnd(G, ctx),
             },
             moves: {
-                PlaceCardMove,
+                PlaceYludHeroMove,
             },
             onBegin: (G) => CheckEndTierOrder(G),
             endIf: (G, ctx) => CheckEndEndTierPhase(G, ctx),
@@ -307,9 +321,14 @@ export const BoardGame = {
                             ClickHeroCardMove,
                         },
                     },
-                    placeCards: {
+                    placeOlwinCards: {
                         moves: {
-                            PlaceCardMove,
+                            PlaceOlwinCardMove,
+                        },
+                    },
+                    placeThrudHero: {
+                        moves: {
+                            PlaceThrudHeroMove,
                         },
                     },
                     upgradeCoin: {

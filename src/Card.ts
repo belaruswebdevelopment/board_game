@@ -1,5 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
-import { IActionCard, ICreateActionCard } from "./typescript/action_card_intarfaces";
+import { IActionCard, ICreateActionCard } from "./typescript/action_card_interfaces";
 import { IAverageSuitCardData } from "./typescript/bot_interfaces";
 import { ICard, ICreateCard } from "./typescript/card_interfaces";
 import { DeckCardTypes, DiscardCardTypes } from "./typescript/card_types";

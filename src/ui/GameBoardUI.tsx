@@ -227,7 +227,8 @@ export const DrawProfit = (data: BoardProps<IMyGameState>): JSX.Element => {
         option = data.G.drawProfit;
     let caption = `Get `;
     for (let i = 0; i < 1; i++) {
-        if (option === ConfigNames.PlaceCards) {
+        if (option === ConfigNames.PlaceThrudHero || option === ConfigNames.PlaceYludHero
+            || option === ConfigNames.PlaceOlwinCards) {
             if (config !== undefined) {
                 caption += `suit to place ${data.G.actionsNum ?? 1} ${config.drawName} ${data.G.actionsNum > 1 ? `s` : ``} to ${data.G.actionsNum > 1 ? `different` : `that`} suit.`;
                 PlaceCardsProfit(data.G, data.ctx, data, boardCells);
@@ -254,7 +255,7 @@ export const DrawProfit = (data: BoardProps<IMyGameState>): JSX.Element => {
             caption += `one card to discard from current tavern.`;
             DiscardCardProfit(data.G, data.ctx, data, boardCells);
         } else if (option === ConfigNames.GetMjollnirProfit) {
-            caption += `suit to get Mjöllnir profit from ranks on that suit.`;
+            caption += `suit to get Mjollnir profit from ranks on that suit.`;
             GetMjollnirProfitProfit(data.G, data.ctx, data, boardCells);
         } else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {
             caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;

@@ -2,7 +2,7 @@ import { ICard } from "./card_interfaces";
 import { MoveArgsTypes } from "./types";
 
 /**
- * <h3>Интерфейс для средей карты фракции.</h3>
+ * <h3>Интерфейс для средней карты фракции.</h3>
  */
 export interface IAverageCard {
     // TODO Rework [name: string] to typeof/keyof SUITS

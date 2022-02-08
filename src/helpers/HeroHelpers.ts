@@ -3,13 +3,13 @@ import { AddPickHeroAction } from "../actions/AutoActions";
 import { heroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
 import { PlayerCardsType } from "../typescript/card_types";
-import { ConfigNames, HeroNames } from "../typescript/enums";
+import { HeroNames } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { TotalRank } from "./ScoreHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**
- * <h3>Добавляет экшены при старте хода в фазе 'endTier'.</h3>
+ * <h3>Добавляет действия в стэк при старте хода в фазе 'endTier'.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При старте хода в фазе 'endTier'.</li>
@@ -19,15 +19,14 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  * @param ctx
  */
 export const AddEndTierActionsToStack = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.placeCardsYlud()]);
-    G.drawProfit = ConfigNames.PlaceCards;
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.placeYludHero()]);
 };
 
 /**
  * <h3>Проверяет нужно ли перемещать героя Труд.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При любых действия, когда пикается карта на планшет игрока.</li>
+ * <li>При любых действия, когда выкладывается карта на планшет игрока.</li>
  * </ol>
  *
  * @param G
@@ -96,7 +95,6 @@ export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
     }
 };
 
-// TODO Remove it!?
 /**
  * <h3>Вычисляет индекс указанного героя.</h3>
  * <p>Применения:</p>
@@ -114,7 +112,7 @@ export const GetHeroIndexByName = (heroName: string): number =>
  * <h3>Перемещение героя Труд.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При любых действия, когда пикается карта на планшет игрока и требуется переместить героя Труд.</li>
+ * <li>При любых действия, когда выкладывается карта на планшет игрока и требуется переместить героя Труд.</li>
  * </ol>
  я
  * @param G
@@ -123,6 +121,6 @@ export const GetHeroIndexByName = (heroName: string): number =>
  */
 export const StartThrudMoving = (G: IMyGameState, ctx: Ctx, card: PlayerCardsType): void => {
     if (card.suit !== null) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.placeCardsThrud(card.suit)]);
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.placeThrudHero(card.suit)]);
     }
 };

@@ -2,7 +2,7 @@ import { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { IConfig } from "../typescript/action_interfaces";
-import { IBuff } from "../typescript/buff_interfaces";
+import { IBuff, IBuffs } from "../typescript/buff_interfaces";
 import { LogTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
@@ -38,8 +38,13 @@ export const AddPickCardActionToStack = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStackAfterCurrent(G, ctx, [{}]);
 };
 
+export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: keyof IBuffs): void => {
+    delete G.publicPlayers[Number(ctx.currentPlayer)].buffs[buffName];
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} потерял баф '${buffName}'.`);
+};
+
 /**
- * <h3>Действия, связанные с отрисовкой профита.</h3>
+ * <h3>Действия, связанные с отображением профита.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При выборе конкретных героев, дающих профит.</li>
@@ -50,9 +55,9 @@ export const AddPickCardActionToStack = (G: IMyGameState, ctx: Ctx): void => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
  */
-export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx, config?: IConfig): void => {
+export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
+    const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config;
     if (config !== undefined) {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен получить преимущества от действия '${config.drawName}'.`);
         StartOrEndActionStage(G, ctx, config);
@@ -68,10 +73,10 @@ export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx, config?: IConfig): 
 };
 
 /**
- * <h3>Действия, связанные со стартом стэйджа.</h3>
+ * <h3>Действия, связанные со стартом конкретной стадии.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При начале экшенов, требующих старта стэйджа.</li>
+ * <li>При начале действий, требующих старта конкретной стадии.</li>
  * </ol>
  *
  * @param G
@@ -81,7 +86,7 @@ export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx, config?: IConfig): 
 const StartOrEndActionStage = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
     if (config.stageName !== undefined) {
         ctx.events?.setStage(config.stageName);
-        AddDataToLog(G, LogTypes.GAME, `Начало стэйджа ${config.stageName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Начало стадии ${config.stageName}.`);
     } else if (ctx.activePlayers !== null && ctx.activePlayers[Number(ctx.currentPlayer)]) {
         // TODO Is it need!?
         ctx.events?.endStage();
@@ -89,7 +94,7 @@ const StartOrEndActionStage = (G: IMyGameState, ctx: Ctx, config: IConfig): void
 };
 
 /**
- * <h3>Действия, связанные с дискардом карты из таверны при пике карты кэмпа при игре на 2-х игроков.</h3>
+ * <h3>Действия, связанные с сбросом карты из таверны при выборе карты кэмпа при игре на 2-х игроков.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>После выбора карт кэмпа, если играет 2-а игрока.</li>

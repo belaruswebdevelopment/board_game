@@ -12,7 +12,7 @@ import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 /**
- * <h3>Сетап игры.</h3>
+ * <h3>Инициализация игры.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Данные используются в игре.</li>

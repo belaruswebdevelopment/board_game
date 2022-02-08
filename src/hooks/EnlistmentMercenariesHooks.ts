@@ -60,10 +60,12 @@ export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): bo
 };
 
 export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void => {
-    const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-        player.buffs.endTier === HeroNames.Ylud);
-    if (yludIndex === -1) {
-        RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+    if (G.tierToEnd === 0) {
+        const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+            player.buffs.endTier === HeroNames.Ylud);
+        if (yludIndex === -1) {
+            RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+        }
     }
     G.publicPlayersOrder = [];
 };
@@ -74,7 +76,7 @@ export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => 
 
 export const OnEnlistmentMercenariesTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddEnlistmentMercenariesActionsToStack(G, ctx);
-    DrawCurrentProfit(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config);
+    DrawCurrentProfit(G, ctx);
 };
 
 export const OnEnlistmentMercenariesTurnEnd = (G: IMyGameState, ctx: Ctx): void => {

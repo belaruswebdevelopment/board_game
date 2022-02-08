@@ -7,10 +7,10 @@ import { DrawLogData } from "./ui/LogUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 
 /**
- * <h3>Отрисовка игрового стола.</h3>
+ * <h3>Отображение игрового стола.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При отрисовке игрового поля для игроков.</li>
+ * <li>При отображении игрового поля для игроков.</li>
  * </ol>
  */
 export class GameBoard extends React.Component<BoardProps<IMyGameState>> {

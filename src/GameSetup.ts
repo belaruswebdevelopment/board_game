@@ -23,7 +23,7 @@ import { IPlayers, IPublicPlayer } from "./typescript/player_interfaces";
 import { IPriority } from "./typescript/priority_interfaces";
 
 /**
- * <h3>Сетап игры.</h3>
+ * <h3>Инициализация игры.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Данные используются в игре.</li>

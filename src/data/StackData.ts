@@ -94,7 +94,7 @@ export const StackData = {
             drawName: DrawNames.PickCardByExplorerDistinction,
         },
     }),
-    placeCardsOlwin: (number?: number): IStack => ({
+    placeOlwinCards: (number?: number): IStack => ({
         variants: {
             blacksmith: {
                 suit: SuitNames.BLACKSMITH,
@@ -123,13 +123,13 @@ export const StackData = {
             },
         },
         config: {
-            name: ConfigNames.PlaceCards,
-            stageName: Stages.PlaceCards,
+            name: ConfigNames.PlaceOlwinCards,
+            stageName: Stages.PlaceOlwinCards,
             drawName: DrawNames.Olwin,
             number,
         },
     }),
-    placeCardsThrud: (suit?: string): IStack => ({
+    placeThrudHero: (suit?: string): IStack => ({
         variants: {
             blacksmith: {
                 suit: SuitNames.BLACKSMITH,
@@ -157,18 +157,14 @@ export const StackData = {
                 points: null,
             },
         },
-        // TODO Check and fix it!
-        // config: {
-        //     name: HeroNames.Thrud,
-        // },
         config: {
-            stageName: Stages.PlaceCards,
-            name: ConfigNames.PlaceCards,
+            stageName: Stages.PlaceThrudHero,
+            name: ConfigNames.PlaceThrudHero,
             drawName: DrawNames.Thrud,
             suit,
         },
     }),
-    placeCardsYlud: (): IStack => ({
+    placeYludHero: (): IStack => ({
         variants: {
             blacksmith: {
                 suit: SuitNames.BLACKSMITH,
@@ -196,14 +192,9 @@ export const StackData = {
                 points: 1,
             },
         },
-        // TODO Fix it!
-        // config: {
-        //     name: ConfigNames.Ylud,
-        // },
         config: {
-            stageName: Stages.PlaceCards,
             drawName: DrawNames.Ylud,
-            name: ConfigNames.PlaceCards,
+            name: ConfigNames.PlaceYludHero,
         },
     }),
     pickHero: (): IStack => ({

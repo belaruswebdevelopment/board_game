@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { isCardNotAction } from "../Card";
-import { IActionCard } from "../typescript/action_card_intarfaces";
+import { IActionCard } from "../typescript/action_card_interfaces";
 import { ICard } from "../typescript/card_interfaces";
 import { DeckCardTypes, TavernCardTypes } from "../typescript/card_types";
 import { IMyGameState } from "../typescript/game_data_interfaces";

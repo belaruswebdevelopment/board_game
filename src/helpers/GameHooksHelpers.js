@@ -85,7 +85,7 @@ export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
  * <h3>Завершает каждую фазу конца игры и проверяет переход к другим фазам или завершает игру.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>После завершения экшенов в каждой фазе конца игры.</li>
+ * <li>После завершения действий в каждой фазе конца игры.</li>
  * </ol>
  *
  * @param G
@@ -216,14 +216,14 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
     }
 };
 export const StartOrEndActions = (G, ctx) => {
-    var _a, _b;
+    var _a;
     if (G.actionsNum) {
         G.actionsNum--;
     }
     if (ctx.activePlayers === null
         || ctx.activePlayers !== null && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== undefined) {
         G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
-        DrawCurrentProfit(G, ctx, (_b = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _b === void 0 ? void 0 : _b.config);
+        DrawCurrentProfit(G, ctx);
     }
 };
 //# sourceMappingURL=GameHooksHelpers.js.map

@@ -1,6 +1,7 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
+import { DeleteBuffFromPlayer } from "./helpers/ActionHelpers";
 import { AddDataToLog } from "./Logging";
-import { HeroNames, LogTypes, Stages } from "./typescript/enums";
+import { BuffNames, HeroNames, LogTypes, Stages } from "./typescript/enums";
 /**
  * <h3>Создание всех монет.</h3>
  * <p>Применения:</p>
@@ -39,7 +40,7 @@ export const BuildCoins = (coinConfig, options) => {
  * <h3>Вычисляет количество монет каждого номинала на рынке монет.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Вызывается при отрисовке рынка монет.</li>
+ * <li>Вызывается при отображении рынка монет.</li>
  * </ol>
  *
  * @param G
@@ -143,10 +144,10 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
     // TODO Split into different functions!
     let upgradingCoin = {}, coin;
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin !== undefined) {
-        delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin;
+        DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.coin === `min`) {
-        delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.coin;
+        DeleteBuffFromPlayer(G, ctx, BuffNames.Coin);
         // TODO Upgrade isInitial min coin or not or User must choose!?
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline) {
             const allCoins = [], allHandCoins = G.publicPlayers[Number(ctx.currentPlayer)]

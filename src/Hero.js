@@ -48,7 +48,7 @@ export const BuildHeroes = (configOptions, heroesConfig) => {
  * @param active Взят ли герой.
  * @param buff Баф.
  * @param validators Валидаторы.
- * @param actions Экшены.
+ * @param actions Действия.
  * @param stack Действия.
  * @returns Герой.
  */

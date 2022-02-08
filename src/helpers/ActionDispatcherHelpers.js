@@ -1,13 +1,13 @@
 import { AddPickHeroAction, DiscardTradingCoinAction, GetClosedCoinIntoPlayerHandAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "../actions/AutoActions";
 /**
- * <h3>Диспетчер всех экшенов.</h3>
+ * <h3>Диспетчер всех автоматических действий.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Срабатывает при вызове каждого экшена.</li>
+ * <li>Срабатывает при вызове каждого автоматического действия.</li>
  * </ol>
  *
- * @param actionName Название экшена.
- * @returns Экшен.
+ * @param actionName Название автоматических действий.
+ * @returns Автоматические действие.
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 const ActionDispatcherSwitcher = (actionName) => {
@@ -46,7 +46,7 @@ const ActionDispatcherSwitcher = (actionName) => {
  *
  * @param G
  * @param ctx
- * @param action Объект экшена.
+ * @param action Объект автоматических действий.
  */
 export const StartAutoAction = (G, ctx, action) => {
     if (action !== undefined) {

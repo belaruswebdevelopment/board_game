@@ -9,9 +9,8 @@ export const EndBrisingamensEndGameActions = (G) => {
     G.publicPlayersOrder = [];
 };
 export const OnBrisingamensEndGameTurnBegin = (G, ctx) => {
-    var _a;
     AddBrisingamensEndGameActionsToStack(G, ctx);
-    DrawCurrentProfit(G, ctx, (_a = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config);
+    DrawCurrentProfit(G, ctx);
 };
 /**
  * <h3>Начинает фазу 'getMjollnirProfit' или завершает игру.</h3>

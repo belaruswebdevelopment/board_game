@@ -33,8 +33,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
         player.selectedCoin = undefined;
     }
     else {
-        // TODO FIX IT!
-        return INVALID_MOVE;
+        // TODO Logging error because coin === null && player.selectedCoin === undefined must be checked by Validator
     }
 };
 /**
@@ -98,5 +97,52 @@ export const ClickHandCoinMove = (G, ctx, coinId) => {
         return INVALID_MOVE;
     }
     G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin = coinId;
+};
+/**
+ * <h3>Выбор монеты в руке для выкладки монет.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При клике по монете в руке.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @returns
+ */
+export const ClickHandCoinUlineMove = (G, ctx, coinId) => {
+    const isValidMove = IsValidMove(G, ctx, Stages.Default1, coinId);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    player.boardCoins[G.currentTavern + 1] = player.handCoins[coinId];
+    player.handCoins[coinId] = null;
+};
+/**
+ * <h3>Выбор монеты в руке для выкладки монет.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При клике по монете в руке.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @returns
+ */
+export const ClickHandTradingCoinUlineMove = (G, ctx, coinId) => {
+    const isValidMove = IsValidMove(G, ctx, Stages.PlaceTradingCoinsUline, coinId);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player.boardCoins[G.tavernsNum] === null) {
+        player.boardCoins[G.tavernsNum] = player.handCoins[coinId];
+    }
+    else {
+        player.boardCoins[G.tavernsNum + 1] = player.handCoins[coinId];
+    }
+    player.handCoins[coinId] = null;
 };
 //# sourceMappingURL=CoinMoves.js.map

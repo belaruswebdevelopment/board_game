@@ -40,7 +40,6 @@ export interface IMoveByPlaceCoinsOptions {
  */
 export interface IMoveByPlaceCoinsUlineOptions {
     default1: IMoveValidator,
-    default2: IMoveValidator,
 }
 
 /**
@@ -56,14 +55,13 @@ export interface IMoveByPickCardsOptions {
     pickCampCardHolda: IMoveValidator,
     pickDiscardCard: IMoveValidator,
     pickHero: IMoveValidator,
-    placeCards: IMoveValidator,
+    placeOlwinCards: IMoveValidator,
+    placeThrudHero: IMoveValidator,
     upgradeCoin: IMoveValidator,
     upgradeVidofnirVedrfolnirCoin: IMoveValidator,
     // end
     discardCard: IMoveValidator,
-    // TODO Fix it!
     placeTradingCoinsUline: IMoveValidator,
-    // placeTradingCoinsUline: IMoveValidator,
 }
 
 /**
@@ -81,7 +79,8 @@ export interface IMoveByEnlistmentMercenariesOptions {
     pickCampCardHolda: IMoveValidator,
     pickDiscardCard: IMoveValidator,
     pickHero: IMoveValidator,
-    placeCards: IMoveValidator,
+    placeOlwinCards: IMoveValidator,
+    placeThrudHero: IMoveValidator,
     upgradeCoin: IMoveValidator,
     upgradeVidofnirVedrfolnirCoin: IMoveValidator,
     // end
@@ -99,7 +98,8 @@ export interface IMoveByEndTierOptions {
     pickCampCardHolda: IMoveValidator,
     pickDiscardCard: IMoveValidator,
     pickHero: IMoveValidator,
-    placeCards: IMoveValidator,
+    placeOlwinCards: IMoveValidator,
+    placeThrudHero: IMoveValidator,
     upgradeCoin: IMoveValidator,
     upgradeVidofnirVedrfolnirCoin: IMoveValidator,
     // end
@@ -117,7 +117,8 @@ export interface IMoveByGetDistinctionsOptions {
     pickCampCardHolda: IMoveValidator,
     pickDiscardCard: IMoveValidator,
     pickHero: IMoveValidator,
-    placeCards: IMoveValidator,
+    placeOlwinCards: IMoveValidator,
+    placeThrudHero: IMoveValidator,
     upgradeCoin: IMoveValidator,
     upgradeVidofnirVedrfolnirCoin: IMoveValidator,
     // end
@@ -159,6 +160,8 @@ export interface IMoveValidators {
     ClickCardToPickDistinctionMoveValidator: IMoveValidator,
     ClickDistinctionCardMoveValidator: IMoveValidator,
     ClickHandCoinMoveValidator: IMoveValidator,
+    ClickHandCoinUlineMoveValidator: IMoveValidator,
+    ClickHandTradingCoinUlineMoveValidator: IMoveValidator,
     DiscardCardFromPlayerBoardMoveValidator: IMoveValidator,
     DiscardCard2PlayersMoveValidator: IMoveValidator,
     GetEnlistmentMercenariesMoveValidator: IMoveValidator,
@@ -173,6 +176,8 @@ export interface IMoveValidators {
     DiscardCardMoveValidator: IMoveValidator,
     DiscardSuitCardFromPlayerBoardMoveValidator: IMoveValidator,
     PickDiscardCardMoveValidator: IMoveValidator,
-    PlaceCardMoveValidator: IMoveValidator,
+    PlaceOlwinCardMoveValidator: IMoveValidator,
+    PlaceThrudHeroMoveValidator: IMoveValidator,
+    PlaceYludHeroMoveValidator: IMoveValidator,
     UpgradeCoinVidofnirVedrfolnirMoveValidator: IMoveValidator,
 }

@@ -1,9 +1,10 @@
 import { Ctx } from "boardgame.io";
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
+import { DeleteBuffFromPlayer } from "./helpers/ActionHelpers";
 import { AddDataToLog } from "./Logging";
 import { IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig } from "./typescript/coin_interfaces";
 import { CoinType } from "./typescript/coin_types";
-import { HeroNames, LogTypes, Stages } from "./typescript/enums";
+import { BuffNames, HeroNames, LogTypes, Stages } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
 import { INumberValues } from "./typescript/object_values_interfaces";
 import { IPublicPlayer } from "./typescript/player_interfaces";
@@ -49,7 +50,7 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
  * <h3>Вычисляет количество монет каждого номинала на рынке монет.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Вызывается при отрисовке рынка монет.</li>
+ * <li>Вызывается при отображении рынка монет.</li>
  * </ol>
  *
  * @param G
@@ -164,10 +165,10 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
     let upgradingCoin: Record<string, unknown> | ICoin = {},
         coin: CoinType | undefined;
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin !== undefined) {
-        delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin;
+        DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
     }
     if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.coin === `min`) {
-        delete G.publicPlayers[Number(ctx.currentPlayer)].buffs.coin;
+        DeleteBuffFromPlayer(G, ctx, BuffNames.Coin);
         // TODO Upgrade isInitial min coin or not or User must choose!?
         if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline) {
             const allCoins: CoinType[] = [],

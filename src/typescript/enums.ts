@@ -39,7 +39,7 @@ export const enum CardNames {
 }
 
 /**
- * <h3>Перечисление для названия отрисовки экшенов в конфиге.</h3>
+ * <h3>Перечисление для названия отображения действий в конфиге.</h3>
  */
 export const enum ConfigNames {
     AddCoinToPouchVidofnirVedrfolnir = `AddCoinToPouchVidofnirVedrfolnir`,
@@ -54,8 +54,10 @@ export const enum ConfigNames {
     GetMjollnirProfit = `getMjollnirProfit`,
     HofudAction = `HofudAction`,
     HoldaAction = `HoldaAction`,
-    PlaceCards = `placeCards`,
     PlaceEnlistmentMercenaries = `placeEnlistmentMercenaries`,
+    PlaceOlwinCards = `placeOlwinCards`,
+    PlaceThrudHero = `placeThrudHero`,
+    PlaceYludHero = `placeYludHero`,
     StartOrPassEnlistmentMercenaries = `startOrPassEnlistmentMercenaries`,
     Thrud = `Thrud`,
     UpgradeCoin = `upgradeCoin`,
@@ -64,7 +66,7 @@ export const enum ConfigNames {
 }
 
 /**
- * <h3>Перечисление для описаний отрисовки экшенов.</h3>
+ * <h3>Перечисление для описаний отображения действий.</h3>
  */
 export const enum DrawNames {
     AddCoinToPouchVidofnirVedrfolnir = `Add coin to pouch Vidofnir Vedrfolnir`,
@@ -154,7 +156,7 @@ export const enum LogTypes {
 }
 
 /**
- * <h3>Перечисление для описаний отрисовки экшенов.</h3>
+ * <h3>Перечисление для описаний отображения действий.</h3>
  */
 export const enum MoveNames {
     AddCoinToPouchMove = `AddCoinToPouchMove`,
@@ -167,6 +169,8 @@ export const enum MoveNames {
     ClickCoinToUpgradeMove = `ClickCoinToUpgradeMove`,
     ClickDistinctionCardMove = `ClickDistinctionCardMove`,
     ClickHandCoinMove = `ClickHandCoinMove`,
+    ClickHandCoinUlineMove = `ClickHandCoinUlineMove`,
+    ClickHandTradingCoinUlineMove = `ClickHandTradingCoinUlineMove`,
     ClickHeroCardMove = `ClickHeroCardMove`,
     DiscardCardFromPlayerBoardMove = `DiscardCardFromPlayerBoardMove`,
     DiscardCardMove = `DiscardCardMove`,
@@ -176,7 +180,9 @@ export const enum MoveNames {
     GetMjollnirProfitMove = `GetMjollnirProfitMove`,
     PassEnlistmentMercenariesMove = `PassEnlistmentMercenariesMove`,
     PickDiscardCardMove = `PickDiscardCardMove`,
-    PlaceCardMove = `PlaceCardMove`,
+    PlaceOlwinCardMove = `PlaceOlwinCardMove`,
+    PlaceThrudHeroMove = `PlaceThrudHeroMove`,
+    PlaceYludHeroMove = `PlaceYludHeroMove`,
     PlaceEnlistmentMercenariesMove = `PlaceEnlistmentMercenariesMove`,
     StartEnlistmentMercenariesMove = `StartEnlistmentMercenariesMove`,
     UpgradeCoinVidofnirVedrfolnirMove = `UpgradeCoinVidofnirVedrfolnirMove`,
@@ -219,7 +225,7 @@ export const enum RusSuitNames {
 }
 
 /**
- * <h3>Перечисление для стейджей игры.</h3>
+ * <h3>Перечисление для стадий игры.</h3>
  */
 export const enum Stages {
     AddCoinToPouch = `addCoinToPouch`,
@@ -234,8 +240,9 @@ export const enum Stages {
     PickDiscardCard = `pickDiscardCard`,
     PickDistinctionCard = `pickDistinctionCard`,
     PickHero = `pickHero`,
-    PlaceCards = `placeCards`,
+    PlaceOlwinCards = `placeOlwinCards`,
     PlaceTradingCoinsUline = `placeTradingCoinsUline`,
+    PlaceThrudHero = `placeThrudHero`,
     UpgradeCoin = `upgradeCoin`,
     UpgradeVidofnirVedrfolnirCoin = `upgradeVidofnirVedrfolnirCoin`,
 }

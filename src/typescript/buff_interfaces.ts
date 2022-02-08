@@ -1,7 +1,7 @@
 import { HeroNames } from "./enums";
 
 /**
- * <h3>Интерфейс для баффа карт.</h3>
+ * <h3>Интерфейс для бафа карт.</h3>
  */
 export interface IBuff {
     name: keyof IBuffs,

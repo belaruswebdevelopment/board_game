@@ -39,7 +39,7 @@ export var CardNames;
     CardNames["Olwin"] = "Olwin";
 })(CardNames || (CardNames = {}));
 /**
- * <h3>Перечисление для названия отрисовки экшенов в конфиге.</h3>
+ * <h3>Перечисление для названия отображения действий в конфиге.</h3>
  */
 export var ConfigNames;
 (function (ConfigNames) {
@@ -55,8 +55,10 @@ export var ConfigNames;
     ConfigNames["GetMjollnirProfit"] = "getMjollnirProfit";
     ConfigNames["HofudAction"] = "HofudAction";
     ConfigNames["HoldaAction"] = "HoldaAction";
-    ConfigNames["PlaceCards"] = "placeCards";
     ConfigNames["PlaceEnlistmentMercenaries"] = "placeEnlistmentMercenaries";
+    ConfigNames["PlaceOlwinCards"] = "placeOlwinCards";
+    ConfigNames["PlaceThrudHero"] = "placeThrudHero";
+    ConfigNames["PlaceYludHero"] = "placeYludHero";
     ConfigNames["StartOrPassEnlistmentMercenaries"] = "startOrPassEnlistmentMercenaries";
     ConfigNames["Thrud"] = "Thrud";
     ConfigNames["UpgradeCoin"] = "upgradeCoin";
@@ -64,7 +66,7 @@ export var ConfigNames;
     ConfigNames["Ylud"] = "Ylud";
 })(ConfigNames || (ConfigNames = {}));
 /**
- * <h3>Перечисление для описаний отрисовки экшенов.</h3>
+ * <h3>Перечисление для описаний отображения действий.</h3>
  */
 export var DrawNames;
 (function (DrawNames) {
@@ -154,7 +156,7 @@ export var LogTypes;
     LogTypes["PUBLIC"] = "public";
 })(LogTypes || (LogTypes = {}));
 /**
- * <h3>Перечисление для описаний отрисовки экшенов.</h3>
+ * <h3>Перечисление для описаний отображения действий.</h3>
  */
 export var MoveNames;
 (function (MoveNames) {
@@ -168,6 +170,8 @@ export var MoveNames;
     MoveNames["ClickCoinToUpgradeMove"] = "ClickCoinToUpgradeMove";
     MoveNames["ClickDistinctionCardMove"] = "ClickDistinctionCardMove";
     MoveNames["ClickHandCoinMove"] = "ClickHandCoinMove";
+    MoveNames["ClickHandCoinUlineMove"] = "ClickHandCoinUlineMove";
+    MoveNames["ClickHandTradingCoinUlineMove"] = "ClickHandTradingCoinUlineMove";
     MoveNames["ClickHeroCardMove"] = "ClickHeroCardMove";
     MoveNames["DiscardCardFromPlayerBoardMove"] = "DiscardCardFromPlayerBoardMove";
     MoveNames["DiscardCardMove"] = "DiscardCardMove";
@@ -177,7 +181,9 @@ export var MoveNames;
     MoveNames["GetMjollnirProfitMove"] = "GetMjollnirProfitMove";
     MoveNames["PassEnlistmentMercenariesMove"] = "PassEnlistmentMercenariesMove";
     MoveNames["PickDiscardCardMove"] = "PickDiscardCardMove";
-    MoveNames["PlaceCardMove"] = "PlaceCardMove";
+    MoveNames["PlaceOlwinCardMove"] = "PlaceOlwinCardMove";
+    MoveNames["PlaceThrudHeroMove"] = "PlaceThrudHeroMove";
+    MoveNames["PlaceYludHeroMove"] = "PlaceYludHeroMove";
     MoveNames["PlaceEnlistmentMercenariesMove"] = "PlaceEnlistmentMercenariesMove";
     MoveNames["StartEnlistmentMercenariesMove"] = "StartEnlistmentMercenariesMove";
     MoveNames["UpgradeCoinVidofnirVedrfolnirMove"] = "UpgradeCoinVidofnirVedrfolnirMove";
@@ -219,7 +225,7 @@ export var RusSuitNames;
     RusSuitNames["WARRIOR"] = "\u0412\u043E\u0438\u043D\u044B";
 })(RusSuitNames || (RusSuitNames = {}));
 /**
- * <h3>Перечисление для стейджей игры.</h3>
+ * <h3>Перечисление для стадий игры.</h3>
  */
 export var Stages;
 (function (Stages) {
@@ -235,8 +241,9 @@ export var Stages;
     Stages["PickDiscardCard"] = "pickDiscardCard";
     Stages["PickDistinctionCard"] = "pickDistinctionCard";
     Stages["PickHero"] = "pickHero";
-    Stages["PlaceCards"] = "placeCards";
+    Stages["PlaceOlwinCards"] = "placeOlwinCards";
     Stages["PlaceTradingCoinsUline"] = "placeTradingCoinsUline";
+    Stages["PlaceThrudHero"] = "placeThrudHero";
     Stages["UpgradeCoin"] = "upgradeCoin";
     Stages["UpgradeVidofnirVedrfolnirCoin"] = "upgradeVidofnirVedrfolnirCoin";
 })(Stages || (Stages = {}));

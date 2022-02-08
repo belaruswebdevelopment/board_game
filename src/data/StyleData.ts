@@ -32,10 +32,10 @@ const heroesThingvellirPath = `url(/img/cards/heroes/thingvellir/`;
 const tavernsPath = `url(/img/taverns/Taverns.png)`;
 
 /**
- * <h3>Стилизация при отрисовке всех картинок в игре.</h3>
+ * <h3>Стилизация при отображении всех картинок в игре.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Используется при отрисовке всех картинок в игре.</li>
+ * <li>Используется при отображении всех картинок в игре.</li>
  * </ol>
  */
 export const Styles: IStyles = {

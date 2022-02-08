@@ -22,10 +22,10 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
     StartVidofnirVedrfolnirAction(G, ctx);
 };
 /**
- * <h3>Действия, связанные с дискардом карты из конкретной фракции игрока.</h3>
+ * <h3>Действия, связанные с сбросом карты из конкретной фракции игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты для дискарда по действию карты кэмпа артефакта Hofud.</li>
+ * <li>При выборе карты для сбросом по действию карты кэмпа артефакта Hofud.</li>
  * </ol>
  *
  * @param G
@@ -41,7 +41,7 @@ export const DiscardSuitCardAction = (G, ctx, suit, playerId, cardId) => {
         if (G.publicPlayers[playerId].cards[suit][cardId].type !== RusCardTypes.HERO) {
             const discardedCard = G.publicPlayers[playerId].cards[suit].splice(cardId, 1)[0];
             G.discardCardsDeck.push(discardedCard);
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в дискард.`);
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в колоду сброса.`);
             G.publicPlayers[playerId].stack = [];
         }
         else {

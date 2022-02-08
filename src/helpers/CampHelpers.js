@@ -4,7 +4,7 @@ import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
 import { LogTypes } from "../typescript/enums";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
- * <h3>Добавляет экшены при старте хода в фазе 'brisingamensEndGame'.</h3>
+ * <h3>Добавляет действия в стэк при старте хода в фазе 'brisingamensEndGame'.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При старте хода в фазе 'brisingamensEndGame'.</li>
@@ -32,7 +32,7 @@ const AddCardToCamp = (G, cardIndex) => {
     G.camp.splice(cardIndex, 1, newCampCard);
 };
 /**
- * <h3>Добавляет экшены при старте хода в фазе 'enlistmentMercenaries'.</h3>
+ * <h3>Добавляет действия в стэк при старте хода в фазе 'enlistmentMercenaries'.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При старте хода в фазе 'enlistmentMercenaries'.</li>
@@ -52,7 +52,7 @@ export const AddEnlistmentMercenariesActionsToStack = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, stack);
 };
 /**
- * <h3>Добавляет экшены при старте фазы 'getMjollnirProfit'.</h3>
+ * <h3>Добавляет действия в стэк при старте фазы 'getMjollnirProfit'.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При старте хода в фазе 'getMjollnirProfit'.</li>
@@ -65,7 +65,7 @@ export const AddGetMjollnirProfitActionsToStack = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.getMjollnirProfit()]);
 };
 /**
- * <h3>Перемещает все оставшиеся неиспользованные карты кэмпа в дискард.</h3>
+ * <h3>Перемещает все оставшиеся неиспользованные карты кэмпа в колоду сброса.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит в конце 1-й эпохи.</li>
@@ -113,7 +113,7 @@ export const DiscardCardFromTavernJarnglofi = (G) => {
     }
 };
 /**
- * <h3>Автоматически убирает оставшуюся карту таверны в стопку сброса при выборе карты из кэмпа.</h3>
+ * <h3>Автоматически убирает оставшуюся карту таверны в колоду сброса при выборе карты из кэмпа.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Проверяется после каждого выбора карты из таверны, если последний игрок в текущей таверне уже выбрал карту.</li>
