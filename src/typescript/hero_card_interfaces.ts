@@ -7,36 +7,36 @@ import { IPublicPlayer } from "./player_interfaces";
  * <h3>Интерфейс для создания героя.</h3>
  */
 export interface ICreateHero {
-    type: string,
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    active?: boolean,
-    buff?: IBuff,
-    validators?: IValidatorsConfig,
-    actions?: IAction,
-    stack?: IStack[],
+    readonly type: string,
+    readonly name: string,
+    readonly description: string,
+    readonly game: string,
+    readonly suit: null | string,
+    readonly rank: null | number,
+    readonly points: null | number,
+    readonly active?: boolean,
+    readonly buff?: IBuff,
+    readonly validators?: IValidatorsConfig,
+    readonly actions?: IAction,
+    readonly stack?: IStack[],
 }
 
 /**
  * <h3>Интерфейс для героя.</h3>
  */
 export interface IHero {
-    type: string,
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
+    readonly type: string,
+    readonly name: string,
+    readonly description: string,
+    readonly game: string,
+    readonly suit: null | string,
+    readonly rank: null | number,
+    readonly points: null | number,
     active: boolean,
-    buff?: IBuff,
-    validators?: IValidatorsConfig,
-    actions?: IAction,
-    stack?: IStack[],
+    readonly buff?: IBuff,
+    readonly validators?: IValidatorsConfig,
+    readonly actions?: IAction,
+    readonly stack?: IStack[],
 }
 
 /**
@@ -44,22 +44,22 @@ export interface IHero {
  */
 export interface IHeroConfig {
     // TODO Rework [name: string]?
-    [name: string]: IHeroData,
+    readonly [name: string]: IHeroData,
 }
 
 /**
  * <h3>Интерфейс для данных карты героя.</h3>
  */
 export interface IHeroData {
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    buff?: IBuff,
-    validators?: IValidatorsConfig,
-    actions?: IAction,
-    stack?: IStack[],
-    scoringRule: (player?: IPublicPlayer) => number,
+    readonly name: string,
+    readonly description: string,
+    readonly game: string,
+    readonly suit: null | string,
+    readonly rank: null | number,
+    readonly points: null | number,
+    readonly buff?: IBuff,
+    readonly validators?: IValidatorsConfig,
+    readonly actions?: IAction,
+    readonly stack?: IStack[],
+    readonly scoringRule: (player?: IPublicPlayer) => number,
 }

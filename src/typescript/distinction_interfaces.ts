@@ -14,8 +14,8 @@ export interface IAwarding {
  * <h3>Интерфейс для преимуществ по фракциям.</h3>
  */
 export interface IDistinction {
-    description: string,
-    awarding: IAwarding,
+    readonly description: string,
+    readonly awarding: IAwarding,
 }
 
 /**

@@ -813,7 +813,8 @@ export const moveValidators: IMoveValidators = {
                                     && `suit` in pickedCard && suit === pickedCard.suit)) {
                                 const last: number =
                                     G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
-                                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !==
+                                if (last !== -1
+                                    && G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !==
                                     RusCardTypes.HERO) {
                                     moveMainArgs[suit] = [];
                                     moveMainArgs[suit].push(last);

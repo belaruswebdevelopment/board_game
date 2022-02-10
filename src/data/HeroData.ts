@@ -1,7 +1,7 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeCoinAction } from "../actions/AutoActions";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { BuffNames, DrawNames, HeroNames, SuitNames, ValidatorNames } from "../typescript/enums";
+import { BuffNames, DrawNames, HeroNames, SuitNames } from "../typescript/enums";
 import { IHeroConfig, IHeroData } from "../typescript/hero_card_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { StackData } from "./StackData";
@@ -269,7 +269,7 @@ const Hourya: IHeroData = {
     rank: 1,
     points: 20,
     validators: {
-        [ValidatorNames.Conditions]: {
+        conditions: {
             suitCountMin: {
                 suit: SuitNames.EXPLORER,
                 value: 5,

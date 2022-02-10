@@ -7,36 +7,36 @@ import { IPublicPlayer } from "./player_interfaces";
  * <h3>Интерфейс для данных карт кэмпа артефакт.</h3>
  */
 export interface IArtefact {
-    name: string,
-    description: string,
-    game: string,
-    tier: number,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    buff?: IBuff,
-    validators?: IValidatorsConfig,
-    actions?: IAction,
-    stack?: IStack[],
-    scoringRule: (player?: IPublicPlayer, suit?: string) => number,
+    readonly name: string,
+    readonly description: string,
+    readonly game: string,
+    readonly tier: number,
+    readonly suit: null | string,
+    readonly rank: null | number,
+    readonly points: null | number,
+    readonly buff?: IBuff,
+    readonly validators?: IValidatorsConfig,
+    readonly actions?: IAction,
+    readonly stack?: IStack[],
+    readonly scoringRule: (player?: IPublicPlayer, suit?: string) => number,
 }
 
 /**
  * <h3>Интерфейс для карты кэмпа артефакта.</h3>
  */
 export interface IArtefactCampCard {
-    type: string,
-    tier: number,
-    path: string,
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    buff?: IBuff,
-    actions?: IAction,
-    stack?: IStack[],
+    readonly type: string,
+    readonly tier: number,
+    readonly path: string,
+    readonly name: string,
+    readonly description: string,
+    readonly game: string,
+    readonly suit: null | string,
+    readonly rank: null | number,
+    readonly points: null | number,
+    readonly buff?: IBuff,
+    readonly actions?: IAction,
+    readonly stack?: IStack[],
 }
 
 /**
@@ -44,37 +44,37 @@ export interface IArtefactCampCard {
  */
 export interface IArtefactConfig {
     // TODO Can i rework [name: string]?
-    [name: string]: IArtefact,
+    readonly [name: string]: IArtefact,
 }
 
 /**
  * <h3>Интерфейс для создания карты кэмпа артефакта.</h3>
  */
 export interface ICreateArtefactCampCard {
-    type?: string,
-    tier: number,
-    path: string,
-    name: string,
-    description: string,
-    game: string,
-    suit: null | string,
-    rank: null | number,
-    points: null | number,
-    buff?: IBuff,
-    actions?: IAction,
-    stack?: IStack[],
+    readonly type?: string,
+    readonly tier: number,
+    readonly path: string,
+    readonly name: string,
+    readonly description: string,
+    readonly game: string,
+    readonly suit: null | string,
+    readonly rank: null | number,
+    readonly points: null | number,
+    readonly buff?: IBuff,
+    readonly actions?: IAction,
+    readonly stack?: IStack[],
 }
 
 /**
  * <h3>Интерфейс для создания карты кэмпа наёмника.</h3>
  */
 export interface ICreateMercenaryCampCard {
-    type?: string,
-    tier: number,
-    path: string,
-    name: string,
-    game?: string,
-    variants: IVariants,
+    readonly type?: string,
+    readonly tier: number,
+    readonly path: string,
+    readonly name: string,
+    readonly game?: string,
+    readonly variants: IVariants,
 }
 
 /**
@@ -82,26 +82,26 @@ export interface ICreateMercenaryCampCard {
  */
 export interface IMercenaries {
     // TODO Rework [name: string] to typeof/keyof SUITS
-    [name: string]: IMercenary,
+    readonly [name: string]: IMercenary,
 }
 
 /**
  * <h3>Интерфейс для данных карт кэмпа наёмник.</h3>
  */
 export interface IMercenary {
-    suit: string,
-    rank: number,
-    points: null | number,
+    readonly suit: string,
+    readonly rank: number,
+    readonly points: null | number,
 }
 
 /**
  * <h3>Интерфейс для карты кэмпа наёмника.</h3>
  */
 export interface IMercenaryCampCard {
-    type: string,
-    tier: number,
-    path: string,
-    name: string,
-    game: string,
-    variants: IVariants,
+    readonly type: string,
+    readonly tier: number,
+    readonly path: string,
+    readonly name: string,
+    readonly game: string,
+    readonly variants: IVariants,
 }

@@ -11,25 +11,25 @@ import { IPriority } from "./priority_interfaces";
  * <h3>Интерфейс для создания публичных данных игрока.</h3>
  */
 export interface ICreatePublicPlayer {
-    nickname: string,
-    cards: IPlayerCards,
-    heroes?: IHero[],
-    campCards?: CampDeckCardTypes[],
-    handCoins: ICoin[],
-    boardCoins: ICoin[],
-    stack?: IStack[],
-    priority: IPriority,
-    buffs?: IBuffs,
-    selectedCoin?: undefined,
-    pickedCard?: null,
+    readonly nickname: string,
+    readonly cards: IPlayerCards,
+    readonly heroes?: IHero[],
+    readonly campCards?: CampDeckCardTypes[],
+    readonly handCoins: ICoin[],
+    readonly boardCoins: ICoin[],
+    readonly stack?: IStack[],
+    readonly priority: IPriority,
+    readonly buffs?: IBuffs,
+    readonly selectedCoin?: undefined,
+    readonly pickedCard?: null,
 }
 
 /**
  * <h3>Интерфейс для приватных данных игрока.</h3>
  */
 export interface IPlayer {
-    handCoins: ICoin[],
-    boardCoins: ICoin[],
+    readonly handCoins: ICoin[],
+    readonly boardCoins: ICoin[],
 }
 
 /**
@@ -43,12 +43,12 @@ export interface IPlayers {
  * <h3>Интерфейс для публичных данных игрока.</h3>
  */
 export interface IPublicPlayer {
-    nickname: string,
-    cards: IPlayerCards,
-    heroes: IHero[],
-    campCards: CampDeckCardTypes[],
-    handCoins: CoinType[],
-    boardCoins: CoinType[],
+    readonly nickname: string,
+    readonly cards: IPlayerCards,
+    readonly heroes: IHero[],
+    readonly campCards: CampDeckCardTypes[],
+    readonly handCoins: CoinType[],
+    readonly boardCoins: CoinType[],
     stack: IStack[],
     priority: IPriority,
     buffs: IBuffs,

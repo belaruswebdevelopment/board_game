@@ -36,7 +36,8 @@ export const DiscardCardFromBoardProfit = (G: IMyGameState, ctx: Ctx, data: Boar
                     && !(G.drawProfit === ConfigNames.DagdaAction && G.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
                     const last: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !== RusCardTypes.HERO) {
+                    if (last !== -1 && G.publicPlayers[Number(ctx.currentPlayer)]
+                        .cards[suit][last].type !== RusCardTypes.HERO) {
                         DrawCard(data, boardCells,
                             G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last], last,
                             G.publicPlayers[Number(ctx.currentPlayer)], suit,

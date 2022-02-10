@@ -2,7 +2,7 @@ import { Ctx } from "boardgame.io";
 import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
 import { GetAllPicks, k_combinations, Permute } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
-import { BuildCards } from "./Card";
+import { BuildAdditionalCards, BuildCards } from "./Card";
 import { BuildCoins } from "./Coin";
 import { actionCardsConfigArray } from "./data/ActionCardData";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
@@ -49,6 +49,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         totalScore: number[] = [],
         logData: ILogData[] = [],
         decks: DeckCardTypes[][] = [],
+        additionalCardsDeck = BuildAdditionalCards(),
         // TODO Discard cards must be hidden from users?
         discardCardsDeck: DeckCardTypes[] = [],
         campDecks: CampDeckCardTypes[][] = [],
@@ -149,6 +150,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         currentTavern,
         debug,
         decks,
+        additionalCardsDeck,
         discardCampCardsDeck,
         discardCardsDeck,
         distinctions,

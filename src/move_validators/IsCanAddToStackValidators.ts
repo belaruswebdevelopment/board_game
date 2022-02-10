@@ -36,8 +36,7 @@ export const IsCanPickPickCampCardToStack = (G: IMyGameState, card: CardsHasStac
  * @param G
  * @param ctx
  */
-export const IsCanPickPickDiscardCardToStack = (G: IMyGameState, card: CardsHasStackValidators):
-    boolean => {
+export const IsCanPickPickDiscardCardToStack = (G: IMyGameState, card: CardsHasStackValidators): boolean => {
     const validators: IValidatorsConfig | undefined = card.validators;
     let isValidMove = false;
     if (validators !== undefined) {

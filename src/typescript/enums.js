@@ -60,10 +60,8 @@ export var ConfigNames;
     ConfigNames["PlaceThrudHero"] = "placeThrudHero";
     ConfigNames["PlaceYludHero"] = "placeYludHero";
     ConfigNames["StartOrPassEnlistmentMercenaries"] = "startOrPassEnlistmentMercenaries";
-    ConfigNames["Thrud"] = "Thrud";
     ConfigNames["UpgradeCoin"] = "upgradeCoin";
     ConfigNames["VidofnirVedrfolnirAction"] = "VidofnirVedrfolnirAction";
-    ConfigNames["Ylud"] = "Ylud";
 })(ConfigNames || (ConfigNames = {}));
 /**
  * <h3>Перечисление для описаний отображения действий.</h3>
@@ -71,46 +69,26 @@ export var ConfigNames;
 export var DrawNames;
 (function (DrawNames) {
     DrawNames["AddCoinToPouchVidofnirVedrfolnir"] = "Add coin to pouch Vidofnir Vedrfolnir";
-    DrawNames["Aegur"] = "Aegur";
     DrawNames["Andumia"] = "Andumia";
-    DrawNames["Aral"] = "Aral";
-    DrawNames["Astrid"] = "Astrid";
     DrawNames["Bonfur"] = "Bonfur";
     DrawNames["Brisingamens"] = "Brisingamens";
     DrawNames["BrisingamensEndGame"] = "Brisingamens end game";
     DrawNames["Dagda"] = "Dagda";
     DrawNames["DiscardTavernCard"] = "Discard tavern card";
-    DrawNames["Dwerg_Aesir"] = "Dwerg_Aesir";
-    DrawNames["Dwerg_Bergelmir"] = "Dwerg_Bergelmir";
-    DrawNames["Dwerg_Jungir"] = "Dwerg_Jungir";
-    DrawNames["Dwerg_Sigmir"] = "Dwerg_Sigmir";
-    DrawNames["Dwerg_Ymir"] = "Dwerg_Ymir";
     DrawNames["EnlistmentMercenaries"] = "Enlistment Mercenaries";
     DrawNames["Mjollnir"] = "Mjollnir";
     DrawNames["GetMjollnirProfit"] = "getMjollnirProfit";
-    DrawNames["Grid"] = "Grid";
     DrawNames["Hofud"] = "Hofud";
     DrawNames["Holda"] = "Holda";
-    DrawNames["Hourya"] = "Hourya";
-    DrawNames["Idunn"] = "Idunn";
-    DrawNames["Jarika"] = "Jarika";
-    DrawNames["Khrad"] = "Khrad";
-    DrawNames["Kraal"] = "Kraal";
-    DrawNames["Lokdur"] = "Lokdur";
     DrawNames["Olwin"] = "Olwin";
     DrawNames["PickCardByExplorerDistinction"] = "Pick card by Explorer distinction";
     DrawNames["PlaceEnlistmentMercenaries"] = "Place Enlistment Mercenaries";
-    DrawNames["Skaa"] = "Skaa";
     DrawNames["StartOrPassEnlistmentMercenaries"] = "Start or Pass Enlistment Mercenaries";
-    DrawNames["Tarah"] = "Tarah";
     DrawNames["Thrud"] = "Thrud";
     DrawNames["UpgradeCoin"] = "Upgrade coin";
     DrawNames["UpgradeCoinVidofnirVedrfolnir"] = "Upgrade coin Vidofnir Vedrfolnir";
     DrawNames["UpgradeCoinWarriorDistinction"] = "Upgrade coin Warrior distinction";
-    DrawNames["Uline"] = "Uline";
     DrawNames["Ylud"] = "Ylud";
-    DrawNames["Zolkur"] = "Zolkur";
-    DrawNames["Zoral"] = "Zoral";
 })(DrawNames || (DrawNames = {}));
 /**
  * <h3>Перечисление для названий героев.</h3>

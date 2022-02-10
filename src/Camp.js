@@ -119,7 +119,7 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, p
     game,
     variants,
 });
-export const isArtefactDiscardCard = (card) => card.type !== RusCardTypes.ARTEFACT;
+export const isArtefactDiscardCard = (card) => card.type === RusCardTypes.ARTEFACT;
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>

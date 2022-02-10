@@ -1,25 +1,25 @@
 export interface ICurrentMoveArgumentsStage<T> {
-    args: T,
+    readonly args: T,
 }
 
 export interface ICurrentMoveCoinsArguments {
-    coinId: number,
-    type: string,
-    isInitial: boolean,
+    readonly coinId: number,
+    readonly type: string,
+    readonly isInitial: boolean,
 }
 
 /**
  * <h3>Интерфейс для выбранного аргумента мувов с фракциями для ботов.</h3>
  */
 export interface ICurrentMoveSuitCardCurrentId {
-    suit: string,
-    cardId: number,
+    readonly suit: string,
+    readonly cardId: number,
 }
 
 export interface ICurrentMoveSuitCardPlayerCurrentId {
-    playerId: number,
-    suit: string,
-    cardId: number,
+    readonly playerId: number,
+    readonly suit: string,
+    readonly cardId: number,
 }
 
 /**
@@ -31,7 +31,7 @@ export interface ICurrentMoveSuitCardIdArguments {
 }
 
 export interface ICurrentMoveSuitCardPlayerIdArguments {
-    playerId: number,
+    readonly playerId: number,
     suit: string,
-    cards: number[],
+    readonly cards: number[],
 }

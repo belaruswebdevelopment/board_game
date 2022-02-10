@@ -2,9 +2,9 @@
  * <h3>Интерфейс для условия карты героя.</h3>
  */
 interface ICondition {
-    suit: string,
+    readonly suit: string,
     // TODO Rework [name: string]?
-    [name: string]: string | number | boolean,
+    readonly [name: string]: string | number | boolean,
 }
 
 /**
@@ -12,20 +12,20 @@ interface ICondition {
  */
 export interface IConditions {
     // TODO Rework [name: string]?
-    [name: string]: ICondition,
+    readonly [name: string]: ICondition,
 }
 
 interface IDiscardCard {
-    suit: string,
-    number?: number,
+    readonly suit: string,
+    readonly number?: number,
 }
 
 /**
  * <h3>Интерфейс для конфига валидаторов героев.</h3>
  */
 export interface IValidatorsConfig {
-    conditions?: IConditions,
-    discardCard?: IDiscardCard,
-    pickCampCardToStack?: Record<string, never>,
-    pickDiscardCardToStack?: Record<string, never>,
+    readonly conditions?: IConditions,
+    readonly discardCard?: IDiscardCard,
+    readonly pickCampCardToStack?: Record<string, never>,
+    readonly pickDiscardCardToStack?: Record<string, never>,
 }

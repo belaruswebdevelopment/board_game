@@ -1,7 +1,7 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeCoinAction } from "../actions/AutoActions";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { BuffNames, DrawNames, HeroNames, SuitNames, ValidatorNames } from "../typescript/enums";
+import { BuffNames, DrawNames, HeroNames, SuitNames } from "../typescript/enums";
 import { StackData } from "./StackData";
 /**
  * <h3>Данные о герое.</h3>
@@ -253,7 +253,7 @@ const Hourya = {
     rank: 1,
     points: 20,
     validators: {
-        [ValidatorNames.Conditions]: {
+        conditions: {
             suitCountMin: {
                 suit: SuitNames.EXPLORER,
                 value: 5,

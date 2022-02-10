@@ -1,5 +1,4 @@
 import { Ctx } from "boardgame.io";
-import { CreateCard } from "../Card";
 import { CreateCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
@@ -16,14 +15,15 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 // TODO Add dock blocks
 export const BlacksmithDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
-        player.cards[SuitNames.BLACKSMITH].push(CreateCard({
-            name: CardNames.ChiefBlacksmith,
-            suit: SuitNames.BLACKSMITH,
-            rank: 2,
-            points: null,
-        } as ICard));
-        G.distinctions[SuitNames.BLACKSMITH] = undefined;
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
+        const card: ICard | undefined = G.additionalCardsDeck.find((card: ICard): boolean =>
+            card.name === CardNames.ChiefBlacksmith);
+        if (card !== undefined) {
+            player.cards[SuitNames.BLACKSMITH].push(card);
+            G.distinctions[SuitNames.BLACKSMITH] = undefined;
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
+        } else {
+            // TODO Log error!
+        }
     }
     return 0;
 };

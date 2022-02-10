@@ -1,3 +1,4 @@
+import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypes } from "./typescript/enums";
 /**
@@ -40,6 +41,20 @@ export const BuildCards = (deckConfig, data) => {
                 value: deckConfig.actions[i].value,
                 stack: deckConfig.actions[i].stack,
                 name: `улучшение монеты на +${deckConfig.actions[i].value}`,
+            }));
+        }
+    }
+    return cards;
+};
+export const BuildAdditionalCards = () => {
+    const cards = [];
+    for (const card in additionalCardsConfig) {
+        if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, card)) {
+            cards.push(CreateCard({
+                suit: additionalCardsConfig[card].suit,
+                rank: additionalCardsConfig[card].rank,
+                points: additionalCardsConfig[card].points,
+                name: additionalCardsConfig[card].name,
             }));
         }
     }

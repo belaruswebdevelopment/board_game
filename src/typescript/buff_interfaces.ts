@@ -4,22 +4,22 @@ import { HeroNames } from "./enums";
  * <h3>Интерфейс для бафа карт.</h3>
  */
 export interface IBuff {
-    name: keyof IBuffs,
-    value: string | number | true,
+    readonly name: keyof IBuffs,
+    readonly value: string | number | true,
 }
 
 /**
  * <h3>Интерфейс для видов бафов у карт.</h3>
  */
 export interface IBuffs {
-    coin?: `min`,
-    discardCardEndGame?: true,
-    endTier?: HeroNames.Ylud,
-    everyTurn?: HeroNames.Uline,
-    getMjollnirProfit?: true,
-    goCamp?: true,
-    goCampOneTime?: true,
-    noHero?: true,
-    upgradeCoin?: number,
-    upgradeNextCoin?: string,
+    readonly coin?: `min`,
+    readonly discardCardEndGame?: true,
+    readonly endTier?: HeroNames.Ylud,
+    readonly everyTurn?: HeroNames.Uline,
+    readonly getMjollnirProfit?: true,
+    readonly goCamp?: true,
+    readonly goCampOneTime?: true,
+    readonly noHero?: true,
+    readonly upgradeCoin?: number,
+    readonly upgradeNextCoin?: string,
 }

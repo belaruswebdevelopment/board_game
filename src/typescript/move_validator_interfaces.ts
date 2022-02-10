@@ -3,86 +3,76 @@ import { IMyGameState } from "./game_data_interfaces";
 import { MoveValidatorGetRangeTypes, ValidMoveIdParamTypes } from "./move_validator_types";
 
 /**
- * <h3>Интерфейс для проверки параметров валидатора мувов.</h3>
- */
-export interface ICheckMoveParam {
-    obj?: object | null,
-    objId: number,
-    range?: number[],
-    values?: number[],
-}
-
-/**
  * <h3>Интерфейс для возможных валидаторов у мувов.</h3>
  */
 export interface IMoveBy {
-    placeCoins: IMoveByPlaceCoinsOptions,
-    placeCoinsUline: IMoveByPlaceCoinsUlineOptions,
-    pickCards: IMoveByPickCardsOptions,
-    enlistmentMercenaries: IMoveByEnlistmentMercenariesOptions,
-    endTier: IMoveByEndTierOptions,
-    getDistinctions: IMoveByGetDistinctionsOptions,
-    brisingamensEndGame: IMoveByBrisingamensEndGameOptions,
-    getMjollnirProfit: IMoveByGetMjollnirProfitOptions,
+    readonly placeCoins: IMoveByPlaceCoinsOptions,
+    readonly placeCoinsUline: IMoveByPlaceCoinsUlineOptions,
+    readonly pickCards: IMoveByPickCardsOptions,
+    readonly enlistmentMercenaries: IMoveByEnlistmentMercenariesOptions,
+    readonly endTier: IMoveByEndTierOptions,
+    readonly getDistinctions: IMoveByGetDistinctionsOptions,
+    readonly brisingamensEndGame: IMoveByBrisingamensEndGameOptions,
+    readonly getMjollnirProfit: IMoveByGetMjollnirProfitOptions,
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByPlaceCoinsOptions {
-    default1: IMoveValidator,
-    default2: IMoveValidator,
-    default3: IMoveValidator,
+    readonly default1: IMoveValidator,
+    readonly default2: IMoveValidator,
+    readonly default3: IMoveValidator,
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByPlaceCoinsUlineOptions {
-    default1: IMoveValidator,
+    readonly default1: IMoveValidator,
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByPickCardsOptions {
-    default1: IMoveValidator,
-    default2: IMoveValidator,
+    readonly default1: IMoveValidator,
+    readonly default2: IMoveValidator,
     // start
-    addCoinToPouch: IMoveValidator,
-    discardBoardCard: IMoveValidator,
-    discardSuitCard: IMoveValidator,
-    pickCampCardHolda: IMoveValidator,
-    pickDiscardCard: IMoveValidator,
-    pickHero: IMoveValidator,
-    placeOlwinCards: IMoveValidator,
-    placeThrudHero: IMoveValidator,
-    upgradeCoin: IMoveValidator,
-    upgradeVidofnirVedrfolnirCoin: IMoveValidator,
+    readonly addCoinToPouch: IMoveValidator,
+    readonly discardBoardCard: IMoveValidator,
+    readonly discardSuitCard: IMoveValidator,
+    readonly pickCampCardHolda: IMoveValidator,
+    readonly pickDiscardCard: IMoveValidator,
+    readonly pickHero: IMoveValidator,
+    readonly placeOlwinCards: IMoveValidator,
+    readonly placeThrudHero: IMoveValidator,
+    readonly upgradeCoin: IMoveValidator,
+    readonly upgradeVidofnirVedrfolnirCoin: IMoveValidator,
     // end
-    discardCard: IMoveValidator,
-    placeTradingCoinsUline: IMoveValidator,
+    readonly discardCard: IMoveValidator,
+    readonly placeTradingCoinsUline: IMoveValidator,
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByEnlistmentMercenariesOptions {
-    default1: IMoveValidator,
-    default2: IMoveValidator,
-    default3: IMoveValidator,
-    default4: IMoveValidator,
+    readonly default1: IMoveValidator,
+    readonly default2: IMoveValidator,
+    readonly default3: IMoveValidator,
+    readonly default4: IMoveValidator,
     // start
-    addCoinToPouch: IMoveValidator,
-    discardBoardCard: IMoveValidator,
-    discardSuitCard: IMoveValidator,
-    pickCampCardHolda: IMoveValidator,
-    pickDiscardCard: IMoveValidator,
-    pickHero: IMoveValidator,
-    placeOlwinCards: IMoveValidator,
-    placeThrudHero: IMoveValidator,
-    upgradeCoin: IMoveValidator,
-    upgradeVidofnirVedrfolnirCoin: IMoveValidator,
+    readonly addCoinToPouch: IMoveValidator,
+    readonly discardBoardCard: IMoveValidator,
+    readonly discardSuitCard: IMoveValidator,
+    readonly pickCampCardHolda: IMoveValidator,
+    readonly pickDiscardCard: IMoveValidator,
+    readonly pickHero: IMoveValidator,
+    readonly placeOlwinCards: IMoveValidator,
+    readonly placeThrudHero: IMoveValidator,
+    readonly upgradeCoin: IMoveValidator,
+    readonly upgradeVidofnirVedrfolnirCoin: IMoveValidator,
     // end
 }
 
@@ -90,18 +80,18 @@ export interface IMoveByEnlistmentMercenariesOptions {
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByEndTierOptions {
-    default1: IMoveValidator,
+    readonly default1: IMoveValidator,
     // start
-    addCoinToPouch: IMoveValidator,
-    discardBoardCard: IMoveValidator,
-    discardSuitCard: IMoveValidator,
-    pickCampCardHolda: IMoveValidator,
-    pickDiscardCard: IMoveValidator,
-    pickHero: IMoveValidator,
-    placeOlwinCards: IMoveValidator,
-    placeThrudHero: IMoveValidator,
-    upgradeCoin: IMoveValidator,
-    upgradeVidofnirVedrfolnirCoin: IMoveValidator,
+    readonly addCoinToPouch: IMoveValidator,
+    readonly discardBoardCard: IMoveValidator,
+    readonly discardSuitCard: IMoveValidator,
+    readonly pickCampCardHolda: IMoveValidator,
+    readonly pickDiscardCard: IMoveValidator,
+    readonly pickHero: IMoveValidator,
+    readonly placeOlwinCards: IMoveValidator,
+    readonly placeThrudHero: IMoveValidator,
+    readonly upgradeCoin: IMoveValidator,
+    readonly upgradeVidofnirVedrfolnirCoin: IMoveValidator,
     // end
 }
 
@@ -109,75 +99,77 @@ export interface IMoveByEndTierOptions {
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByGetDistinctionsOptions {
-    default1: IMoveValidator,
+    readonly default1: IMoveValidator,
     // start
-    addCoinToPouch: IMoveValidator,
-    discardBoardCard: IMoveValidator,
-    discardSuitCard: IMoveValidator,
-    pickCampCardHolda: IMoveValidator,
-    pickDiscardCard: IMoveValidator,
-    pickHero: IMoveValidator,
-    placeOlwinCards: IMoveValidator,
-    placeThrudHero: IMoveValidator,
-    upgradeCoin: IMoveValidator,
-    upgradeVidofnirVedrfolnirCoin: IMoveValidator,
+    readonly addCoinToPouch: IMoveValidator,
+    readonly discardBoardCard: IMoveValidator,
+    readonly discardSuitCard: IMoveValidator,
+    readonly pickCampCardHolda: IMoveValidator,
+    readonly pickDiscardCard: IMoveValidator,
+    readonly pickHero: IMoveValidator,
+    readonly placeOlwinCards: IMoveValidator,
+    readonly placeThrudHero: IMoveValidator,
+    readonly upgradeCoin: IMoveValidator,
+    readonly upgradeVidofnirVedrfolnirCoin: IMoveValidator,
     // end
-    pickDistinctionCard: IMoveValidator,
+    readonly pickDistinctionCard: IMoveValidator,
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByBrisingamensEndGameOptions {
-    default1: IMoveValidator,
+    readonly default1: IMoveValidator,
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
 export interface IMoveByGetMjollnirProfitOptions {
-    default1: IMoveValidator,
+    readonly default1: IMoveValidator,
 }
 
 /**
  * <h3>Интерфейс для валидатора мувов.</h3>
  */
 export interface IMoveValidator {
-    getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number) => MoveValidatorGetRangeTypes,
-    getValue: (G: IMyGameState, ctx: Ctx, moveRangeData: MoveValidatorGetRangeTypes) => ValidMoveIdParamTypes,
-    moveName: string,
-    validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes) => boolean,
+    readonly getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number) => MoveValidatorGetRangeTypes,
+    readonly getValue: (G: IMyGameState, ctx: Ctx, moveRangeData: MoveValidatorGetRangeTypes) => ValidMoveIdParamTypes,
+    readonly moveName: string,
+    readonly validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes) => boolean,
 }
 
 /**
  * <h3>Интерфейс для объекта валидаторов мувов.</h3>
  */
 export interface IMoveValidators {
-    BotsPlaceAllCoinsMoveValidator: IMoveValidator,
-    ClickBoardCoinMoveValidator: IMoveValidator,
-    ClickCampCardMoveValidator: IMoveValidator,
-    ClickCardMoveValidator: IMoveValidator,
-    ClickCardToPickDistinctionMoveValidator: IMoveValidator,
-    ClickDistinctionCardMoveValidator: IMoveValidator,
-    ClickHandCoinMoveValidator: IMoveValidator,
-    ClickHandCoinUlineMoveValidator: IMoveValidator,
-    ClickHandTradingCoinUlineMoveValidator: IMoveValidator,
-    DiscardCardFromPlayerBoardMoveValidator: IMoveValidator,
-    DiscardCard2PlayersMoveValidator: IMoveValidator,
-    GetEnlistmentMercenariesMoveValidator: IMoveValidator,
-    GetMjollnirProfitMoveValidator: IMoveValidator,
-    PassEnlistmentMercenariesMoveValidator: IMoveValidator,
-    PlaceEnlistmentMercenariesMoveValidator: IMoveValidator,
-    StartEnlistmentMercenariesMoveValidator: IMoveValidator,
-    AddCoinToPouchMoveValidator: IMoveValidator,
-    ClickCampCardHoldaMoveValidator: IMoveValidator,
-    ClickCoinToUpgradeMoveValidator: IMoveValidator,
-    ClickHeroCardMoveValidator: IMoveValidator,
-    DiscardCardMoveValidator: IMoveValidator,
-    DiscardSuitCardFromPlayerBoardMoveValidator: IMoveValidator,
-    PickDiscardCardMoveValidator: IMoveValidator,
-    PlaceOlwinCardMoveValidator: IMoveValidator,
-    PlaceThrudHeroMoveValidator: IMoveValidator,
-    PlaceYludHeroMoveValidator: IMoveValidator,
-    UpgradeCoinVidofnirVedrfolnirMoveValidator: IMoveValidator,
+    readonly BotsPlaceAllCoinsMoveValidator: IMoveValidator,
+    readonly ClickBoardCoinMoveValidator: IMoveValidator,
+    readonly ClickCampCardMoveValidator: IMoveValidator,
+    readonly ClickCardMoveValidator: IMoveValidator,
+    readonly ClickCardToPickDistinctionMoveValidator: IMoveValidator,
+    readonly ClickDistinctionCardMoveValidator: IMoveValidator,
+    readonly ClickHandCoinMoveValidator: IMoveValidator,
+    readonly ClickHandCoinUlineMoveValidator: IMoveValidator,
+    readonly ClickHandTradingCoinUlineMoveValidator: IMoveValidator,
+    readonly DiscardCardFromPlayerBoardMoveValidator: IMoveValidator,
+    readonly DiscardCard2PlayersMoveValidator: IMoveValidator,
+    readonly GetEnlistmentMercenariesMoveValidator: IMoveValidator,
+    readonly GetMjollnirProfitMoveValidator: IMoveValidator,
+    readonly PassEnlistmentMercenariesMoveValidator: IMoveValidator,
+    readonly PlaceEnlistmentMercenariesMoveValidator: IMoveValidator,
+    readonly PlaceYludHeroMoveValidator: IMoveValidator,
+    readonly StartEnlistmentMercenariesMoveValidator: IMoveValidator,
+    // start
+    readonly AddCoinToPouchMoveValidator: IMoveValidator,
+    readonly ClickCampCardHoldaMoveValidator: IMoveValidator,
+    readonly ClickCoinToUpgradeMoveValidator: IMoveValidator,
+    readonly ClickHeroCardMoveValidator: IMoveValidator,
+    readonly DiscardCardMoveValidator: IMoveValidator,
+    readonly DiscardSuitCardFromPlayerBoardMoveValidator: IMoveValidator,
+    readonly PickDiscardCardMoveValidator: IMoveValidator,
+    readonly PlaceOlwinCardMoveValidator: IMoveValidator,
+    readonly PlaceThrudHeroMoveValidator: IMoveValidator,
+    readonly UpgradeCoinVidofnirVedrfolnirMoveValidator: IMoveValidator,
+    // end
 }

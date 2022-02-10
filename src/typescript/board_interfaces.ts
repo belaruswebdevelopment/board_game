@@ -2,7 +2,7 @@
  * <h3>Интерфейс для параметров отрисовки игрового поля.</h3>
  */
 export interface IDrawBoardOptions {
-    boardCols: number,
-    lastBoardCol: number,
-    boardRows: number,
+    readonly boardCols: number,
+    readonly lastBoardCol: number,
+    readonly boardRows: number,
 }

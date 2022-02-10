@@ -1,3 +1,4 @@
+import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
 import { IActionCard, ICreateActionCard } from "./typescript/action_card_interfaces";
 import { IAverageSuitCardData } from "./typescript/bot_interfaces";
@@ -46,6 +47,21 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
                 stack: deckConfig.actions[i].stack,
                 name: `улучшение монеты на +${deckConfig.actions[i].value}`,
             } as ICreateActionCard));
+        }
+    }
+    return cards;
+};
+
+export const BuildAdditionalCards = (): ICard[] => {
+    const cards: ICard[] = [];
+    for (const card in additionalCardsConfig) {
+        if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, card)) {
+            cards.push(CreateCard({
+                suit: additionalCardsConfig[card].suit,
+                rank: additionalCardsConfig[card].rank,
+                points: additionalCardsConfig[card].points,
+                name: additionalCardsConfig[card].name,
+            } as ICreateCard));
         }
     }
     return cards;
