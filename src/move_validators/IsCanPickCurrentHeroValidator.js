@@ -22,12 +22,9 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G, ctx, id
             for (const suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     if (validators.discardCard.suit !== suit) {
-                        const last = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
-                        if (last >= 0
-                            && G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !==
-                                RusCardTypes.HERO) {
-                            cardsToDiscard.push(G.publicPlayers[Number(ctx.currentPlayer)]
-                                .cards[suit][last]);
+                        const player = G.publicPlayers[Number(ctx.currentPlayer)], last = player.cards[suit].length - 1;
+                        if (last >= 0 && player.cards[suit][last].type !== RusCardTypes.HERO) {
+                            cardsToDiscard.push(player.cards[suit][last]);
                         }
                     }
                 }

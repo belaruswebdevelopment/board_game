@@ -16,4 +16,4 @@ export const DrawBoard = (objectsSize) => {
         lastBoardCol,
     };
 };
-//# sourceMappingURL=UIHelpers.js.map
+//# sourceMappingURL=DrawHelpers.js.map

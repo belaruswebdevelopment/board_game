@@ -54,15 +54,17 @@ export const CheckEndTierOrder = (G: IMyGameState): void => {
     const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
         Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
     if (G.tierToEnd === 0) {
-        const cards: PlayerCardsType[] = Object.values(G.publicPlayers[yludIndex].cards).flat(),
+        const player: IPublicPlayer = G.publicPlayers[yludIndex],
+            cards: PlayerCardsType[] = Object.values(player.cards).flat(),
             index: number =
                 cards.findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
         if (index !== -1) {
             const suit: string | null = cards[index].suit;
             if (suit !== null) {
-                const yludCardIndex: number = G.publicPlayers[yludIndex].cards[suit]
-                    .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
-                G.publicPlayers[yludIndex].cards[suit].splice(yludCardIndex, 1);
+                const yludCardIndex: number =
+                    player.cards[suit].findIndex((card: PlayerCardsType): boolean =>
+                        card.name === HeroNames.Ylud);
+                player.cards[suit].splice(yludCardIndex, 1);
             }
         }
     }

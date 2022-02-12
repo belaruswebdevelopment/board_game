@@ -20,12 +20,11 @@ import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../type
  * @param cardId Id карты.
  */
 export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
-    const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId];
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], pickedCard = player.cards[suit][cardId];
     if (pickedCard.type !== RusCardTypes.HERO) {
-        G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-        G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
-            .splice(cardId, 1)[0]);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в колоду сброса карту ${pickedCard.name}.`);
+        player.pickedCard = pickedCard;
+        G.discardCardsDeck.push(player.cards[suit].splice(cardId, 1)[0]);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил в колоду сброса карту ${pickedCard.name}.`);
         if (G.actionsNum === 2) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda()]);
         }
@@ -46,7 +45,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
  * @param suit Название фракции.
  */
 export const PlaceOlwinCardsAction = (G, ctx, suit) => {
-    const playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], playerVariants = player.stack[0].variants;
     if (playerVariants !== undefined) {
         const olwinDouble = CreateCard({
             suit,
@@ -54,7 +53,7 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
             points: playerVariants[suit].points,
             name: CardNames.Olwin,
         });
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Ольвин во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту Ольвин во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);
         if (G.actionsNum === 2) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.placeOlwinCards()]);
@@ -78,7 +77,7 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
  * @param suit Название фракции.
  */
 export const PlaceThrudAction = (G, ctx, suit) => {
-    const playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], playerVariants = player.stack[0].variants;
     if (playerVariants !== undefined) {
         const heroCard = CreateCard({
             suit,
@@ -88,7 +87,7 @@ export const PlaceThrudAction = (G, ctx, suit) => {
             name: HeroNames.Thrud,
             game: `base`,
         });
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${HeroNames.Thrud} во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${HeroNames.Thrud} во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, heroCard);
     }
     else {
@@ -108,7 +107,7 @@ export const PlaceThrudAction = (G, ctx, suit) => {
  * @param suit Название фракции.
  */
 export const PlaceYludAction = (G, ctx, suit) => {
-    const playerVariants = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], playerVariants = player.stack[0].variants;
     if (playerVariants !== undefined) {
         const heroCard = CreateCard({
             suit,
@@ -118,7 +117,7 @@ export const PlaceYludAction = (G, ctx, suit) => {
             name: HeroNames.Ylud,
             game: `base`,
         });
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${HeroNames.Ylud} во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${HeroNames.Ylud} во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, heroCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, heroCard);
         if (G.tierToEnd === 0) {

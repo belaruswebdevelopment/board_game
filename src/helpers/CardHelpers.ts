@@ -5,6 +5,7 @@ import { AddDataToLog } from "../Logging";
 import { DeckCardTypes } from "../typescript/card_types";
 import { LogTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
  * <h3>Добавляет взятую карту в массив карт игрока.</h3>
@@ -21,13 +22,14 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @returns Добавлена ли карта на планшет игрока.
  */
 export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes): boolean => {
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = card;
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+    player.pickedCard = card;
     // TODO Not only deck card types but hero+camp card types?? but they are created as ICard and added to players cards.
     if (isCardNotAction(card)) {
-        G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit].push(card);
-        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
+        player.cards[card.suit].push(card);
+        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
         return true;
     }
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту '${card.name}'.`);
+    AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}'.`);
     return false;
 };

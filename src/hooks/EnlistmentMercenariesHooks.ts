@@ -50,12 +50,12 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): b
  * @returns
  */
 export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1
-        && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1 && !player.stack.length) {
         return EndTurnActions(G, ctx);
-    } else if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        return G.publicPlayers[Number(ctx.currentPlayer)].campCards
-            .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY).length === 0;
+    } else if (!player.stack.length) {
+        return player.campCards.filter((card: CampDeckCardTypes): boolean =>
+            card.type === RusCardTypes.MERCENARY).length === 0;
     }
 };
 

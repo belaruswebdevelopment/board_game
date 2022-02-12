@@ -1,11 +1,11 @@
 import { Ctx } from "boardgame.io";
 import { AddPickHeroAction } from "../actions/AutoActions";
-import { heroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
 import { IBuffs } from "../typescript/buff_interfaces";
 import { PlayerCardsType } from "../typescript/card_types";
 import { HeroNames } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 import { TotalRank } from "./ScoreHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
@@ -37,10 +37,11 @@ export const AddEndTierActionsToStack = (G: IMyGameState, ctx: Ctx): void => {
  */
 export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardsType): boolean => {
     if (card.suit !== null) {
-        const index: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit]
-            .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Thrud);
+        const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+            index: number = player.cards[card.suit].findIndex((card: PlayerCardsType): boolean =>
+                card.name === HeroNames.Thrud);
         if (index !== -1) {
-            G.publicPlayers[Number(ctx.currentPlayer)].cards[card.suit].splice(index, 1);
+            player.cards[card.suit].splice(index, 1);
         }
         return index !== -1;
     }
@@ -83,32 +84,18 @@ export const CheckAndMoveThrudOrPickHeroAction = (G: IMyGameState, ctx: Ctx, car
  * @param ctx
  */
 export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-        .find((buff: IBuffs): boolean => buff.noHero !== undefined) === undefined) {
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player.buffs.find((buff: IBuffs): boolean => buff.noHero !== undefined) === undefined) {
         const playerCards: PlayerCardsType[][] =
-            Object.values(G.publicPlayers[Number(ctx.currentPlayer)].cards),
+            Object.values(player.cards),
             isCanPickHero: boolean =
                 Math.min(...playerCards.map((item: PlayerCardsType[]): number =>
-                    item.reduce(TotalRank, 0))) >
-                G.publicPlayers[Number(ctx.currentPlayer)].heroes.length;
+                    item.reduce(TotalRank, 0))) > player.heroes.length;
         if (isCanPickHero) {
             AddPickHeroAction(G, ctx);
         }
     }
 };
-
-/**
- * <h3>Вычисляет индекс указанного героя.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Используется повсеместно в проекте для вычисления индекса конкретного героя.</li>
- * </ol>
- *
- * @param heroName Название героя.
- * @returns Индекс героя.
- */
-export const GetHeroIndexByName = (heroName: string): number =>
-    Object.keys(heroesConfig).indexOf(heroName);
 
 /**
  * <h3>Перемещение героя Труд.</h3>

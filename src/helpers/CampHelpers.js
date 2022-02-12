@@ -102,8 +102,7 @@ const AddRemainingCampCardsToDiscard = (G) => {
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavernJarnglofi = (G) => {
-    const cardIndex = G.taverns[G.currentTavern]
-        .findIndex((card) => card !== null);
+    const cardIndex = G.taverns[G.currentTavern].findIndex((card) => card !== null);
     if (cardIndex !== -1) {
         AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
         DiscardCardFromTavern(G, cardIndex);

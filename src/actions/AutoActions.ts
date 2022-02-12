@@ -8,6 +8,7 @@ import { IBuffs } from "../typescript/buff_interfaces";
 import { CoinType } from "../typescript/coin_types";
 import { LogTypes, Stages } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 import { ArgsTypes } from "../typescript/types";
 
 /**
@@ -36,19 +37,18 @@ export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
-    let tradingCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-        .findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-        .find((buff: IBuffs): boolean => buff.everyTurn !== undefined) && tradingCoinIndex === -1) {
-        tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
-        G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .splice(tradingCoinIndex, 1, null);
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+    let tradingCoinIndex: number =
+        player.boardCoins.findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
+    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
+        && tradingCoinIndex === -1) {
+        tradingCoinIndex = player.handCoins.findIndex((coin: CoinType): boolean =>
+            Boolean(coin?.isTriggerTrading));
+        player.handCoins.splice(tradingCoinIndex, 1, null);
     } else {
-        G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .splice(tradingCoinIndex, 1, null);
+        player.boardCoins.splice(tradingCoinIndex, 1, null);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} сбросил монету активирующую обмен.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил монету активирующую обмен.`);
 };
 
 /**
@@ -62,9 +62,10 @@ export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): void => {
-    for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+    for (let i = 0; i < player.boardCoins.length; i++) {
         if (i > G.currentTavern) {
-            ReturnCoinToPlayerHands(G.publicPlayers[Number(ctx.currentPlayer)], i);
+            ReturnCoinToPlayerHands(player, i);
         }
     }
 };
@@ -112,18 +113,18 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void => {
-    const number: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-        .filter((coin: CoinType, index: number): boolean => index >= G.tavernsNum && coin === null).length,
-        handCoinsNumber: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length;
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-        .find((buff: IBuffs): boolean => buff.everyTurn !== undefined) && number > 0 && handCoinsNumber) {
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        number: number = player.boardCoins.filter((coin: CoinType, index: number): boolean =>
+            index >= G.tavernsNum && coin === null).length,
+        handCoinsNumber: number = player.handCoins.length;
+    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) && number > 0
+        && handCoinsNumber) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(number)]);
     } else {
         let coinsValue = 0,
             stack: IStack[] = [];
-        for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
-            j++) {
-            if (!G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]?.isTriggerTrading) {
+        for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
+            if (!player.boardCoins[j]?.isTriggerTrading) {
                 coinsValue++;
             }
         }

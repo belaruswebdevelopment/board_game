@@ -46,13 +46,12 @@ export const CheckEndTierOrder = (G) => {
     G.publicPlayersOrder = [];
     const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
     if (G.tierToEnd === 0) {
-        const cards = Object.values(G.publicPlayers[yludIndex].cards).flat(), index = cards.findIndex((card) => card.name === HeroNames.Ylud);
+        const player = G.publicPlayers[yludIndex], cards = Object.values(player.cards).flat(), index = cards.findIndex((card) => card.name === HeroNames.Ylud);
         if (index !== -1) {
             const suit = cards[index].suit;
             if (suit !== null) {
-                const yludCardIndex = G.publicPlayers[yludIndex].cards[suit]
-                    .findIndex((card) => card.name === HeroNames.Ylud);
-                G.publicPlayers[yludIndex].cards[suit].splice(yludCardIndex, 1);
+                const yludCardIndex = player.cards[suit].findIndex((card) => card.name === HeroNames.Ylud);
+                player.cards[suit].splice(yludCardIndex, 1);
             }
         }
     }

@@ -23,11 +23,11 @@ import { BuffNames, LogTypes, RusCardTypes } from "../typescript/enums";
  * @param cardId Id карты.
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, suit, cardId) => {
-    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId].type !== RusCardTypes.HERO) {
-        const discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
-            .splice(cardId, 1)[0];
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player.cards[suit][cardId].type !== RusCardTypes.HERO) {
+        const discardedCard = player.cards[suit].splice(cardId, 1)[0];
         G.discardCardsDeck.push(discardedCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
         DeleteBuffFromPlayer(G, ctx, BuffNames.DiscardCardEndGame);
     }
     else {
@@ -61,12 +61,11 @@ export const DiscardCardFromTavernAction = (G, ctx, cardId) => {
  * @param cardId Id карты.
  */
 export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard =
-        G.publicPlayers[Number(ctx.currentPlayer)].campCards
-            .filter((card) => card.type === RusCardTypes.MERCENARY)[cardId];
-    const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    player.pickedCard = player.campCards.filter((card) => card.type === RusCardTypes.MERCENARY)[cardId];
+    const pickedCard = player.pickedCard;
     if (pickedCard !== null) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы 'Enlistment Mercenaries' выбрал наёмника '${pickedCard.name}'.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы ${ctx.phase} выбрал наёмника '${pickedCard.name}'.`);
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
     }
     else {
@@ -100,7 +99,7 @@ export const GetMjollnirProfitAction = (G, ctx, suit) => {
  * @param ctx
  */
 export const PassEnlistmentMercenariesAction = (G, ctx) => {
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} пасанул во время фазы 'Enlistment Mercenaries'.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} пасанул во время фазы ${ctx.phase}.`);
 };
 /**
  * <h3>Действия, связанные с взятием карт из колоды сброса.</h3>
@@ -146,7 +145,7 @@ export const PickDiscardCard = (G, ctx, cardId) => {
  * @param suit Название фракции.
  */
 export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
-    const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], pickedCard = player.pickedCard;
     if (pickedCard !== null) {
         if (IsMercenaryCard(pickedCard)) {
             if (pickedCard.variants !== undefined) {
@@ -160,12 +159,10 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
                     path: pickedCard.path,
                 });
                 AddCardToPlayer(G, ctx, mercenaryCard);
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} во время фазы 'Enlistment Mercenaries' завербовал наёмника '${mercenaryCard.name}'.`);
-                const cardIndex = G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                    .findIndex((card) => card.name === pickedCard.name);
-                G.publicPlayers[Number(ctx.currentPlayer)].campCards.splice(cardIndex, 1);
-                if (G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                    .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы 'Enlistment Mercenaries' завербовал наёмника '${mercenaryCard.name}'.`);
+                const cardIndex = player.campCards.findIndex((card) => card.name === pickedCard.name);
+                player.campCards.splice(cardIndex, 1);
+                if (player.campCards.filter((card) => card.type === RusCardTypes.MERCENARY).length) {
                     AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
                 }
                 CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);

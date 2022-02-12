@@ -16,10 +16,11 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  */
 export const AddBuffToPlayer = (G, ctx, buff) => {
     if (buff !== undefined) {
-        G.publicPlayers[Number(ctx.currentPlayer)].buffs.push({
+        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        player.buffs.push({
             [buff.name]: true,
         });
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} получил баф '${buff.name}'.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил баф '${buff.name}'.`);
     }
 };
 // TODO Rework it!?
@@ -31,11 +32,10 @@ export const AddPickCardActionToStack = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [{}]);
 };
 export const DeleteBuffFromPlayer = (G, ctx, buffName) => {
-    const buffIndex = G.publicPlayers[Number(ctx.currentPlayer)].buffs
-        .findIndex((buff) => buff[buffName] !== undefined);
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], buffIndex = player.buffs.findIndex((buff) => buff[buffName] !== undefined);
     if (buffIndex !== -1) {
-        G.publicPlayers[Number(ctx.currentPlayer)].buffs.splice(buffIndex, 1);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} потерял баф '${buffName}'.`);
+        player.buffs.splice(buffIndex, 1);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} потерял баф '${buffName}'.`);
     }
     else {
         // TODO Log error?
@@ -56,9 +56,9 @@ export const DeleteBuffFromPlayer = (G, ctx, buffName) => {
  */
 export const DrawCurrentProfit = (G, ctx) => {
     var _a, _b;
-    const config = (_a = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]) === null || _a === void 0 ? void 0 : _a.config;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], config = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config;
     if (config !== undefined) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен получить преимущества от действия '${config.drawName}'.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
         StartOrEndActionStage(G, ctx, config);
         G.actionsNum = (_b = config.number) !== null && _b !== void 0 ? _b : 1;
         if (config.name !== undefined) {

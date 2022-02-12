@@ -3,9 +3,7 @@ import { isCardNotAction } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "../helpers/ProfitHelpers";
-import { DrawCard, DrawCoin } from "../helpers/UIElementHelpers";
-import { DrawBoard } from "../helpers/UIHelpers";
+import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { IConfig } from "../typescript/action_interfaces";
 import { IDrawBoardOptions } from "../typescript/board_interfaces";
@@ -13,6 +11,8 @@ import { CampCardTypes, DeckCardTypes, PickedCardType, TavernCardTypes } from ".
 import { ConfigNames, MoveNames } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { INumberValues } from "../typescript/object_values_interfaces";
+import { DrawCard, DrawCoin } from "./ElementsUI";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
 
 /**
  * <h3>Отрисовка карт кэмпа.</h3>

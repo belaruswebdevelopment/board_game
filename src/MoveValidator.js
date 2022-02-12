@@ -189,10 +189,10 @@ export const moveValidators = {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined
-                        || (G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
-                            && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j] !== null)) {
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                for (let j = 0; j < player.boardCoins.length; j++) {
+                    if (player.selectedCoin !== undefined || (player.selectedCoin === undefined
+                        && player.boardCoins[j] !== null)) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -207,9 +207,9 @@ export const moveValidators = {
         validate: (G, ctx, id) => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                isValid = G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined
-                    || (G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
-                        && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[id] !== null);
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                isValid = player.selectedCoin !== undefined || (player.selectedCoin === undefined
+                    && player.boardCoins[id] !== null);
             }
             return isValid;
         },
@@ -344,8 +344,9 @@ export const moveValidators = {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                for (let j = 0; j < player.handCoins.length; j++) {
+                    if (player.handCoins[j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -369,8 +370,9 @@ export const moveValidators = {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                for (let j = 0; j < player.handCoins.length; j++) {
+                    if (player.handCoins[j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -385,8 +387,8 @@ export const moveValidators = {
         validate: (G, ctx, id) => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                isValid = G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
-                    && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id] !== null;
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                isValid = player.selectedCoin === undefined && player.handCoins[id] !== null;
             }
             return isValid;
         },
@@ -395,8 +397,9 @@ export const moveValidators = {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                for (let j = 0; j < player.handCoins.length; j++) {
+                    if (player.handCoins[j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -411,8 +414,8 @@ export const moveValidators = {
         validate: (G, ctx, id) => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                isValid = G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
-                    && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id] !== null;
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                isValid = player.selectedCoin === undefined && player.handCoins[id] !== null;
             }
             return isValid;
         },
@@ -425,9 +428,10 @@ export const moveValidators = {
                     let isExit = true;
                     for (const suit in suitsConfig) {
                         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                            if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i] !== undefined) {
+                            const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                            if (player.cards[suit][i] !== undefined) {
                                 isExit = false;
-                                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i].type !==
+                                if (player.cards[suit][i].type !==
                                     RusCardTypes.HERO) {
                                     moveMainArgs[suit] = [];
                                     moveMainArgs[suit].push(i);
@@ -613,10 +617,10 @@ export const moveValidators = {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-                        .find((buff) => buff.everyTurn !== undefined)
-                        && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                for (let j = 0; j < player.handCoins.length; j++) {
+                    if (player.buffs.find((buff) => buff.everyTurn !== undefined)
+                        && player.handCoins[j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -655,24 +659,20 @@ export const moveValidators = {
             var _a, _b, _c, _d;
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
-                const handCoins = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                    .filter((coin) => coin !== null);
+                const player = G.publicPlayers[Number(ctx.currentPlayer)], handCoins = player.handCoins.filter((coin) => coin !== null);
                 let handCoinIndex = -1;
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
+                for (let j = 0; j < player.boardCoins.length; j++) {
                     // TODO Check .? for all coins!!! and delete AS
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-                        .find((buff) => buff.everyTurn !== undefined)
-                        && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j] === null) {
+                    if (player.buffs.find((buff) => buff.everyTurn !== undefined)
+                        && player.boardCoins[j] === null) {
                         handCoinIndex++;
-                        const handCoinId = G.publicPlayers[Number(ctx.currentPlayer)]
-                            .handCoins.findIndex((coin) => {
+                        const handCoinId = player.handCoins.findIndex((coin) => {
                             var _a, _b;
                             return (coin === null || coin === void 0 ? void 0 : coin.value) === ((_a = handCoins[handCoinIndex]) === null || _a === void 0 ? void 0 : _a.value)
                                 && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === ((_b = handCoins[handCoinIndex]) === null || _b === void 0 ? void 0 : _b.isInitial);
                         });
-                        if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinId]
-                            && !((_a = G.publicPlayers[Number(ctx.currentPlayer)]
-                                .handCoins[handCoinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
+                        if (player.handCoins[handCoinId] && !((_a = G.publicPlayers[Number(ctx.currentPlayer)]
+                            .handCoins[handCoinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
                             moveMainArgs.push({
                                 coinId: j,
                                 type: `hand`,
@@ -680,12 +680,11 @@ export const moveValidators = {
                             });
                         }
                     }
-                    else if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]
-                        && !((_c = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]) === null || _c === void 0 ? void 0 : _c.isTriggerTrading)) {
+                    else if (player.boardCoins[j] && !((_c = player.boardCoins[j]) === null || _c === void 0 ? void 0 : _c.isTriggerTrading)) {
                         moveMainArgs.push({
                             coinId: j,
                             type: `board`,
-                            isInitial: (_d = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isInitial,
+                            isInitial: (_d = player.boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isInitial,
                         });
                     }
                 }
@@ -756,7 +755,7 @@ export const moveValidators = {
         getRange: (G, ctx) => {
             const moveMainArgs = {};
             if (G !== undefined && ctx !== undefined) {
-                const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config, pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+                const player = G.publicPlayers[Number(ctx.currentPlayer)], config = player.stack[0].config, pickedCard = player.pickedCard;
                 if (config !== undefined) {
                     for (const suit in suitsConfig) {
                         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -764,10 +763,9 @@ export const moveValidators = {
                                 && !(G.drawProfit === ConfigNames.DagdaAction
                                     && G.actionsNum === 1 && pickedCard !== null
                                     && `suit` in pickedCard && suit === pickedCard.suit)) {
-                                const last = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
-                                if (last !== -1
-                                    && G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !==
-                                        RusCardTypes.HERO) {
+                                const last = player.cards[suit].length - 1;
+                                if (last !== -1 && player.cards[suit][last].type !==
+                                    RusCardTypes.HERO) {
                                     moveMainArgs[suit] = [];
                                     moveMainArgs[suit].push(last);
                                 }
@@ -802,13 +800,13 @@ export const moveValidators = {
                 cards: [],
             };
             if (G !== undefined && ctx !== undefined && playerId !== undefined) {
-                const config = G.publicPlayers[playerId].stack[0].config;
+                const player = G.publicPlayers[playerId], config = player.stack[0].config;
                 if (config !== undefined && config.suit !== undefined) {
                     moveMainArgs.suit = config.suit;
-                    if (G.publicPlayers[playerId].stack[0] !== undefined) {
-                        for (let i = 0; i < G.publicPlayers[playerId].cards[config.suit].length; i++) {
-                            if (G.publicPlayers[playerId].cards[config.suit][i] !== undefined) {
-                                if (G.publicPlayers[playerId].cards[config.suit][i].type !== RusCardTypes.HERO) {
+                    if (player.stack[0] !== undefined) {
+                        for (let i = 0; i < player.cards[config.suit].length; i++) {
+                            if (player.cards[config.suit][i] !== undefined) {
+                                if (player.cards[config.suit][i].type !== RusCardTypes.HERO) {
                                     moveMainArgs.cards.push(i);
                                 }
                             }
@@ -819,10 +817,7 @@ export const moveValidators = {
             return moveMainArgs;
         },
         getValue: (G, ctx, currentMoveArguments) => {
-            const moveArguments = currentMoveArguments;
-            const minValue = Math.min(...G.publicPlayers[moveArguments.playerId]
-                .cards[moveArguments.suit].filter((card) => card.type !== RusCardTypes.HERO).map((card) => card.points)), minCardIndex = G.publicPlayers[moveArguments.playerId].cards[moveArguments.suit]
-                .findIndex((card) => card.type !== RusCardTypes.HERO && card.points === minValue);
+            const moveArguments = currentMoveArguments, player = G.publicPlayers[moveArguments.playerId], minValue = Math.min(...player.cards[moveArguments.suit].filter((card) => card.type !== RusCardTypes.HERO).map((card) => card.points)), minCardIndex = player.cards[moveArguments.suit].findIndex((card) => card.type !== RusCardTypes.HERO && card.points === minValue);
             if (minCardIndex !== -1) {
                 // TODO ?!
             }
@@ -902,11 +897,10 @@ export const moveValidators = {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
-                const config = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
+                const player = G.publicPlayers[Number(ctx.currentPlayer)], config = player.stack[0].config;
                 if (config !== undefined) {
-                    for (let j = G.tavernsNum; j <
-                        G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
-                        const coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
+                    for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
+                        const coin = player.boardCoins[j];
                         if (coin !== null) {
                             if (!coin.isTriggerTrading && config.coinId !== j) {
                                 moveMainArgs.push({

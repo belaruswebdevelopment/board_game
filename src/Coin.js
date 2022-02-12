@@ -142,33 +142,28 @@ export const ReturnCoinToPlayerHands = (player, coinId) => {
 export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => {
     var _a;
     // TODO add LogTypes.ERROR logging
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
     // TODO Split into different functions!
     let upgradingCoin = {}, coin;
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-        .find((buff) => buff.upgradeNextCoin !== undefined)) {
+    if (player.buffs.find((buff) => buff.upgradeNextCoin !== undefined)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
     }
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-        .find((buff) => buff.coin !== undefined)) {
+    if (player.buffs.find((buff) => buff.coin !== undefined)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.Coin);
         // TODO Upgrade isInitial min coin or not or User must choose!?
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-            .find((buff) => buff.everyTurn !== undefined)) {
-            const allCoins = [], allHandCoins = G.publicPlayers[Number(ctx.currentPlayer)]
-                .handCoins.filter((coin) => coin !== null);
-            for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
-                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i] === null) {
+        if (player.buffs.find((buff) => buff.everyTurn !== undefined)) {
+            const allCoins = [], allHandCoins = player.handCoins.filter((coin) => coin !== null);
+            for (let i = 0; i < player.boardCoins.length; i++) {
+                if (player.boardCoins[i] === null) {
                     allCoins.push(allHandCoins.splice(0, 1)[0]);
                 }
                 else {
-                    allCoins.push(G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i]);
+                    allCoins.push(player.boardCoins[i]);
                 }
             }
-            const minCoinValue = Math.min(...allCoins
-                .filter((coin) => coin !== null && !coin.isTriggerTrading)
+            const minCoinValue = Math.min(...allCoins.filter((coin) => coin !== null && !coin.isTriggerTrading)
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                .map((coin) => coin.value)), upgradingCoinInitial = allCoins
-                .find((coin) => 
+                .map((coin) => coin.value)), upgradingCoinInitial = allCoins.find((coin) => 
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             coin.value === minCoinValue && coin.isInitial);
             if (upgradingCoinInitial !== null && upgradingCoinInitial !== undefined) {
@@ -187,41 +182,34 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
             isCoin(upgradingCoin) && coin.value === upgradingCoin.value);
         }
         else {
-            const minCoinValue = Math.min(...G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                .filter((coin) => coin !== null && !coin.isTriggerTrading)
+            const minCoinValue = Math.min(...player.boardCoins.filter((coin) => coin !== null && !coin.isTriggerTrading)
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 .map((coin) => coin.value));
-            coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                .find((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue);
+            coin = player.boardCoins.find((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue);
             if (coin !== null && coin !== undefined) {
                 upgradingCoin = coin;
-                upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                    .findIndex((coin) => isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
+                upgradingCoinId = player.boardCoins.findIndex((coin) => isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
             }
         }
     }
     if (upgradingCoinId !== undefined && type !== undefined && isInitial !== undefined) {
         if (type === `hand`) {
-            const handCoinPosition = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                .filter((coin, index) => coin === null && upgradingCoinId !== undefined && index <= upgradingCoinId).length;
-            coin = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                .filter((coin) => coin !== null)[handCoinPosition - 1];
+            const handCoinPosition = player.boardCoins.filter((coin, index) => coin === null && upgradingCoinId !== undefined && index <= upgradingCoinId).length;
+            coin = player.handCoins.filter((coin) => coin !== null)[handCoinPosition - 1];
             if (coin !== null && coin !== undefined) {
                 upgradingCoin = coin;
-                upgradingCoinId = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                    .findIndex((coin) => isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value
+                upgradingCoinId = player.handCoins.findIndex((coin) => isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value
                     && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === isInitial);
             }
         }
         else {
-            coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId];
+            coin = player.boardCoins[upgradingCoinId];
             if (coin !== null && coin !== undefined) {
                 upgradingCoin = coin;
             }
         }
         if (isCoin(upgradingCoin)) {
-            const buffValue = ((_a = G.publicPlayers[Number(ctx.currentPlayer)].buffs
-                .find((buff) => buff.upgradeCoin !== undefined)) === null || _a === void 0 ? void 0 : _a.upgradeCoin) ? 2 : 0;
+            const buffValue = ((_a = player.buffs.find((buff) => buff.upgradeCoin !== undefined)) === null || _a === void 0 ? void 0 : _a.upgradeCoin) ? 2 : 0;
             const newValue = upgradingCoin.value + value + buffValue;
             let upgradedCoin = null;
             if (G.marketCoins.length) {
@@ -250,27 +238,26 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
             if (upgradedCoin !== null) {
                 AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${isInitial}' с ценностью '${upgradingCoin.value}' на +${value} с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
                 let handCoinIndex = -1;
-                if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] === null) {
-                    handCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                        .findIndex((coin) => isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
+                if (player.boardCoins[upgradingCoinId] === null) {
+                    handCoinIndex = player.handCoins.findIndex((coin) => isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
                 }
                 else {
-                    G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = null;
+                    player.boardCoins[upgradingCoinId] = null;
                 }
                 if ((ctx.activePlayers !== null
                     && ctx.activePlayers[Number(ctx.currentPlayer)]) === Stages.PlaceTradingCoinsUline) {
-                    const emptyCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.indexOf(null);
-                    G.publicPlayers[Number(ctx.currentPlayer)].handCoins[emptyCoinIndex] = upgradedCoin;
-                    AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
+                    const emptyCoinIndex = player.handCoins.indexOf(null);
+                    player.handCoins[emptyCoinIndex] = upgradedCoin;
+                    AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока ${player.nickname}.`);
                 }
                 else {
                     if (handCoinIndex === -1) {
-                        G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[upgradingCoinId] = upgradedCoin;
-                        AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
+                        player.boardCoins[upgradingCoinId] = upgradedCoin;
+                        AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока ${player.nickname}.`);
                     }
                     else {
-                        G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinIndex] = upgradedCoin;
-                        AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока ${G.publicPlayers[Number(ctx.currentPlayer)].nickname}.`);
+                        player.handCoins[handCoinIndex] = upgradedCoin;
+                        AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока ${player.nickname}.`);
                     }
                 }
                 if (!upgradingCoin.isInitial) {

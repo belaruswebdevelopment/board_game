@@ -42,13 +42,12 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
  * @returns
  */
 export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
-    if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1
-        && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1 && !player.stack.length) {
         return EndTurnActions(G, ctx);
     }
-    else if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        return G.publicPlayers[Number(ctx.currentPlayer)].campCards
-            .filter((card) => card.type === RusCardTypes.MERCENARY).length === 0;
+    else if (!player.stack.length) {
+        return player.campCards.filter((card) => card.type === RusCardTypes.MERCENARY).length === 0;
     }
 };
 export const EndEnlistmentMercenariesActions = (G, ctx) => {

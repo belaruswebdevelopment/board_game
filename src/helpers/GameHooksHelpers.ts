@@ -42,9 +42,8 @@ export const AfterLastTavernEmptyActions = (G: IMyGameState): boolean | INext =>
  * @param G
  */
 export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G: IMyGameState): INext => {
-    const ulinePlayerIndex: number = G.publicPlayers
-        .findIndex((player: IPublicPlayer): boolean => Boolean(player.buffs
-            .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
+    const ulinePlayerIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+        Boolean(player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
     if (ulinePlayerIndex !== -1) {
         return {
             next: Phases.PlaceCoinsUline,
@@ -67,22 +66,21 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G: IMyGameState): I
  * @param ctx
  */
 export const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void => {
-    const ulinePlayerIndex: number = G.publicPlayers
-        .findIndex((player: IPublicPlayer): boolean => Boolean(player.buffs
-            .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        ulinePlayerIndex: number = G.publicPlayers.findIndex((findPlayer: IPublicPlayer): boolean =>
+            Boolean(findPlayer.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-            const coin: CoinType = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
+            const coin: CoinType = player.boardCoins[G.currentTavern];
             if (coin?.isTriggerTrading) {
                 const tradingCoinPlacesLength: number =
-                    G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                        .filter((coin: CoinType, index: number): boolean =>
-                            index >= G.tavernsNum && coin === null).length;
+                    player.boardCoins.filter((coin: CoinType, index: number): boolean =>
+                        index >= G.tavernsNum && coin === null).length;
                 if (tradingCoinPlacesLength > 0) {
                     if (ctx.activePlayers?.[Number(ctx.currentPlayer)] !== Stages.PlaceTradingCoinsUline
                         && tradingCoinPlacesLength === 2) {
-                        const handCoinsLength: number = G.publicPlayers[Number(ctx.currentPlayer)]
-                            .handCoins.filter((coin: CoinType): boolean => coin !== null).length;
+                        const handCoinsLength: number =
+                            player.handCoins.filter((coin: CoinType): boolean => coin !== null).length;
                         G.actionsNum =
                             G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
                     }
@@ -108,17 +106,18 @@ export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
         };
     } else {
         if (G.expansions.thingvellir.active) {
-            const brisingamensBuffIndex: number = G.publicPlayers
-                .findIndex((player: IPublicPlayer): boolean => Boolean(player.buffs
-                    .find((buff: IBuffs): boolean => buff.discardCardEndGame !== undefined)));
+            const brisingamensBuffIndex: number =
+                G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+                    Boolean(player.buffs.find((buff: IBuffs): boolean =>
+                        buff.discardCardEndGame !== undefined)));
             if (brisingamensBuffIndex !== -1) {
                 return {
                     next: Phases.BrisingamensEndGame,
                 };
             }
-            const mjollnirBuffIndex: number = G.publicPlayers
-                .findIndex((player: IPublicPlayer): boolean => Boolean(player.buffs
-                    .find((buff: IBuffs): boolean => buff.getMjollnirProfit !== undefined)));
+            const mjollnirBuffIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+                Boolean(player.buffs.find((buff: IBuffs): boolean =>
+                    buff.getMjollnirProfit !== undefined)));
             if (mjollnirBuffIndex !== -1) {
                 return {
                     next: Phases.GetMjollnirProfit,
@@ -141,9 +140,8 @@ export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
 * @param ctx
 */
 export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState): boolean | INext => {
-    const yludIndex: number = G.publicPlayers
-        .findIndex((player: IPublicPlayer): boolean => Boolean(player.buffs
-            .find((buff: IBuffs): boolean => buff.endTier !== undefined)));
+    const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+        Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
     if (yludIndex !== -1) {
         return {
             next: Phases.EndTier,
@@ -166,8 +164,8 @@ export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState): boolea
 const CheckEnlistmentMercenaries = (G: IMyGameState): boolean | INext => {
     let count = false;
     for (let i = 0; i < G.publicPlayers.length; i++) {
-        if (G.publicPlayers[i].campCards
-            .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY).length) {
+        if (G.publicPlayers[i].campCards.filter((card: CampDeckCardTypes): boolean =>
+            card.type === RusCardTypes.MERCENARY).length) {
             count = true;
             break;
         }
@@ -218,14 +216,16 @@ export const EndTurnActions = (G: IMyGameState, ctx: Ctx): boolean | void => {
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx): void => {
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const playerCards: PlayerCardsType[] = Object.values(G.publicPlayers[i].cards).flat();
-        const thrud: PlayerCardsType | undefined =
-            playerCards.find((card: PlayerCardsType): boolean => card.name === HeroNames.Thrud);
+        const player: IPublicPlayer = G.publicPlayers[i],
+            playerCards: PlayerCardsType[] = Object.values(player.cards).flat(),
+            thrud: PlayerCardsType | undefined =
+                playerCards.find((card: PlayerCardsType): boolean => card.name === HeroNames.Thrud);
         if (thrud !== undefined && thrud.suit !== null) {
-            const thrudIndex: number = G.publicPlayers[i].cards[thrud.suit]
-                .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Thrud);
-            G.publicPlayers[i].cards[thrud.suit].splice(thrudIndex, 1);
-            AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с игрового поля.`);
+            const thrudIndex: number =
+                player.cards[thrud.suit].findIndex((card: PlayerCardsType): boolean =>
+                    card.name === HeroNames.Thrud);
+            player.cards[thrud.suit].splice(thrudIndex, 1);
+            AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${player.nickname} уходит с игрового поля.`);
         }
     }
 };

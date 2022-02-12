@@ -5,6 +5,7 @@ import { PlayerCardsType } from "../typescript/card_types";
 import { RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IValidatorsConfig } from "../typescript/hero_validator_interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
@@ -28,12 +29,10 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
             for (const suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     if (validators.discardCard.suit !== suit) {
-                        const last: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
-                        if (last >= 0
-                            && G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !==
-                            RusCardTypes.HERO) {
-                            cardsToDiscard.push(G.publicPlayers[Number(ctx.currentPlayer)]
-                                .cards[suit][last]);
+                        const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+                            last: number = player.cards[suit].length - 1;
+                        if (last >= 0 && player.cards[suit][last].type !== RusCardTypes.HERO) {
+                            cardsToDiscard.push(player.cards[suit][last]);
                         }
                     }
                 }

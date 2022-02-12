@@ -12,6 +12,7 @@ import { ICard, ICreateCard } from "../typescript/card_interfaces";
 import { DiscardCardTypes } from "../typescript/card_types";
 import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
@@ -26,13 +27,12 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @param cardId Id карты.
  */
 export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
-    const pickedCard: DiscardCardTypes =
-        G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId] as DiscardCardTypes;
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        pickedCard: DiscardCardTypes = player.cards[suit][cardId] as DiscardCardTypes;
     if (pickedCard.type !== RusCardTypes.HERO) {
-        G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
-        G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
-            .splice(cardId, 1)[0] as ICard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил в колоду сброса карту ${pickedCard.name}.`);
+        player.pickedCard = pickedCard;
+        G.discardCardsDeck.push(player.cards[suit].splice(cardId, 1)[0] as ICard);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил в колоду сброса карту ${pickedCard.name}.`);
         if (G.actionsNum === 2) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda()]);
         }
@@ -53,7 +53,8 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
  * @param suit Название фракции.
  */
 export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
-    const playerVariants: IVariants | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        playerVariants: IVariants | undefined = player.stack[0].variants;
     if (playerVariants !== undefined) {
         const olwinDouble: ICard = CreateCard({
             suit,
@@ -61,7 +62,7 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: string): 
             points: playerVariants[suit].points,
             name: CardNames.Olwin,
         } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту Ольвин во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту Ольвин во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);
         if (G.actionsNum === 2) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.placeOlwinCards()]);
@@ -85,7 +86,8 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: string): 
  * @param suit Название фракции.
  */
 export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
-    const playerVariants: IVariants | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        playerVariants: IVariants | undefined = player.stack[0].variants;
     if (playerVariants !== undefined) {
         const heroCard: ICard = CreateCard({
             suit,
@@ -95,7 +97,7 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: string): void 
             name: HeroNames.Thrud,
             game: `base`,
         } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${HeroNames.Thrud} во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${HeroNames.Thrud} во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, heroCard);
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants' или не передан обязательный параметр 'stack[0].config.name'.`);
@@ -115,7 +117,8 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: string): void 
  * @param suit Название фракции.
  */
 export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
-    const playerVariants: IVariants | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].variants;
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        playerVariants: IVariants | undefined = player.stack[0].variants;
     if (playerVariants !== undefined) {
         const heroCard: ICard = CreateCard({
             suit,
@@ -125,7 +128,7 @@ export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: string): void =
             name: HeroNames.Ylud,
             game: `base`,
         } as ICreateCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${HeroNames.Ylud} во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${HeroNames.Ylud} во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, heroCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, heroCard);
         if (G.tierToEnd === 0) {

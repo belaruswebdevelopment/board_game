@@ -15,16 +15,17 @@ import { IMyGameState, INext, IResolveBoardCoins } from "../typescript/game_data
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 export const OnPickCardsMove = (G: IMyGameState, ctx: Ctx): void => {
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     StartOrEndActions(G, ctx);
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
+    if (!player.stack.length) {
         if (ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
             && !CheckIfCurrentTavernEmpty(G)) {
             StartDiscardCardFromTavernActionFor2Players(G, ctx);
         } else {
             // TODO Do it before or after trading or not matter?
             CheckAndStartUlineActionsOrContinue(G, ctx);
-            const tradingCoinPlacesLength: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                .filter((coin: CoinType, index: number): boolean =>
+            const tradingCoinPlacesLength: number =
+                player.boardCoins.filter((coin: CoinType, index: number): boolean =>
                     index >= G.tavernsNum && coin === null).length;
             if (!G.actionsNum) {
                 ActivateTrading(G, ctx);

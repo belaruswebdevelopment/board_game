@@ -16,6 +16,7 @@ import { IValidatorsConfig } from "./typescript/hero_validator_interfaces";
 import { ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardIdArguments, ICurrentMoveSuitCardPlayerCurrentId, ICurrentMoveSuitCardPlayerIdArguments } from "./typescript/move_interfaces";
 import { IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveValidator, IMoveValidators } from "./typescript/move_validator_interfaces";
 import { MoveValidatorGetRangeTypes, MoveValidatorPhaseTypes, ValidMoveIdParamTypes } from "./typescript/move_validator_types";
+import { IPublicPlayer } from "./typescript/player_interfaces";
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -211,10 +212,10 @@ export const moveValidators: IMoveValidators = {
         getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
             const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
             if (G !== undefined && ctx !== undefined) {
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined
-                        || (G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
-                            && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j] !== null)) {
+                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                for (let j = 0; j < player.boardCoins.length; j++) {
+                    if (player.selectedCoin !== undefined || (player.selectedCoin === undefined
+                        && player.boardCoins[j] !== null)) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -230,9 +231,9 @@ export const moveValidators: IMoveValidators = {
         validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                isValid = G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin !== undefined
-                    || (G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
-                        && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[id] !== null);
+                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                isValid = player.selectedCoin !== undefined || (player.selectedCoin === undefined
+                    && player.boardCoins[id] !== null);
             }
             return isValid;
         },
@@ -377,8 +378,9 @@ export const moveValidators: IMoveValidators = {
         getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
             const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
             if (G !== undefined && ctx !== undefined) {
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
+                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                for (let j = 0; j < player.handCoins.length; j++) {
+                    if (player.handCoins[j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -403,8 +405,9 @@ export const moveValidators: IMoveValidators = {
         getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
             const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
             if (G !== undefined && ctx !== undefined) {
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
+                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                for (let j = 0; j < player.handCoins.length; j++) {
+                    if (player.handCoins[j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -420,8 +423,8 @@ export const moveValidators: IMoveValidators = {
         validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                isValid = G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
-                    && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id] !== null;
+                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                isValid = player.selectedCoin === undefined && player.handCoins[id] !== null;
             }
             return isValid;
         },
@@ -430,8 +433,9 @@ export const moveValidators: IMoveValidators = {
         getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
             const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
             if (G !== undefined && ctx !== undefined) {
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
+                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                for (let j = 0; j < player.handCoins.length; j++) {
+                    if (player.handCoins[j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -447,8 +451,8 @@ export const moveValidators: IMoveValidators = {
         validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean => {
             let isValid = false;
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                isValid = G.publicPlayers[Number(ctx.currentPlayer)].selectedCoin === undefined
-                    && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id] !== null;
+                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                isValid = player.selectedCoin === undefined && player.handCoins[id] !== null;
             }
             return isValid;
         },
@@ -462,9 +466,10 @@ export const moveValidators: IMoveValidators = {
                     let isExit = true;
                     for (const suit in suitsConfig) {
                         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                            if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i] !== undefined) {
+                            const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                            if (player.cards[suit][i] !== undefined) {
                                 isExit = false;
-                                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i].type !==
+                                if (player.cards[suit][i].type !==
                                     RusCardTypes.HERO) {
                                     moveMainArgs[suit] = [];
                                     moveMainArgs[suit].push(i);
@@ -661,10 +666,10 @@ export const moveValidators: IMoveValidators = {
         getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
             const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
             if (G !== undefined && ctx !== undefined) {
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-                        .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
-                        && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
+                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                for (let j = 0; j < player.handCoins.length; j++) {
+                    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
+                        && player.handCoins[j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -704,35 +709,30 @@ export const moveValidators: IMoveValidators = {
             const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] =
                 [] as ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`];
             if (G !== undefined && ctx !== undefined) {
-                const handCoins = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-                    .filter((coin: CoinType): boolean => coin !== null);
+                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+                    handCoins = player.handCoins.filter((coin: CoinType): boolean => coin !== null);
                 let handCoinIndex = -1;
-                for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
+                for (let j = 0; j < player.boardCoins.length; j++) {
                     // TODO Check .? for all coins!!! and delete AS
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-                        .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
-                        && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j] === null) {
+                    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
+                        && player.boardCoins[j] === null) {
                         handCoinIndex++;
-                        const handCoinId: number = G.publicPlayers[Number(ctx.currentPlayer)]
-                            .handCoins.findIndex((coin: CoinType): boolean =>
-                                coin?.value === handCoins[handCoinIndex]?.value
-                                && coin?.isInitial === handCoins[handCoinIndex]?.isInitial);
-                        if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinId]
-                            && !G.publicPlayers[Number(ctx.currentPlayer)]
-                                .handCoins[handCoinId]?.isTriggerTrading) {
+                        const handCoinId: number = player.handCoins.findIndex((coin: CoinType): boolean =>
+                            coin?.value === handCoins[handCoinIndex]?.value
+                            && coin?.isInitial === handCoins[handCoinIndex]?.isInitial);
+                        if (player.handCoins[handCoinId] && !G.publicPlayers[Number(ctx.currentPlayer)]
+                            .handCoins[handCoinId]?.isTriggerTrading) {
                             moveMainArgs.push({
                                 coinId: j,
                                 type: `hand`,
                                 isInitial: handCoins[handCoinIndex]?.isInitial as boolean,
                             });
                         }
-                    } else if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]
-                        && !G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]?.isTriggerTrading) {
+                    } else if (player.boardCoins[j] && !player.boardCoins[j]?.isTriggerTrading) {
                         moveMainArgs.push({
                             coinId: j,
                             type: `board`,
-                            isInitial: G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]?.isInitial as
-                                boolean,
+                            isInitial: player.boardCoins[j]?.isInitial as boolean,
                         });
                     }
                 }
@@ -806,8 +806,9 @@ export const moveValidators: IMoveValidators = {
             ICurrentMoveArgumentsStage<ICurrentMoveSuitCardIdArguments>[`args`] => {
             const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveSuitCardIdArguments>[`args`] = {};
             if (G !== undefined && ctx !== undefined) {
-                const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config,
-                    pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+                    config: IConfig | undefined = player.stack[0].config,
+                    pickedCard: PickedCardType = player.pickedCard;
                 if (config !== undefined) {
                     for (const suit in suitsConfig) {
                         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -815,10 +816,8 @@ export const moveValidators: IMoveValidators = {
                                 && !(G.drawProfit === ConfigNames.DagdaAction
                                     && G.actionsNum === 1 && pickedCard !== null
                                     && `suit` in pickedCard && suit === pickedCard.suit)) {
-                                const last: number =
-                                    G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
-                                if (last !== -1
-                                    && G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last].type !==
+                                const last: number = player.cards[suit].length - 1;
+                                if (last !== -1 && player.cards[suit][last].type !==
                                     RusCardTypes.HERO) {
                                     moveMainArgs[suit] = [];
                                     moveMainArgs[suit].push(last);
@@ -857,13 +856,14 @@ export const moveValidators: IMoveValidators = {
                 cards: [],
             };
             if (G !== undefined && ctx !== undefined && playerId !== undefined) {
-                const config: IConfig | undefined = G.publicPlayers[playerId].stack[0].config;
+                const player: IPublicPlayer = G.publicPlayers[playerId],
+                    config: IConfig | undefined = player.stack[0].config;
                 if (config !== undefined && config.suit !== undefined) {
                     moveMainArgs.suit = config.suit;
-                    if (G.publicPlayers[playerId].stack[0] !== undefined) {
-                        for (let i = 0; i < G.publicPlayers[playerId].cards[config.suit].length; i++) {
-                            if (G.publicPlayers[playerId].cards[config.suit][i] !== undefined) {
-                                if (G.publicPlayers[playerId].cards[config.suit][i].type !== RusCardTypes.HERO) {
+                    if (player.stack[0] !== undefined) {
+                        for (let i = 0; i < player.cards[config.suit].length; i++) {
+                            if (player.cards[config.suit][i] !== undefined) {
+                                if (player.cards[config.suit][i].type !== RusCardTypes.HERO) {
                                     moveMainArgs.cards.push(i);
                                 }
                             }
@@ -876,13 +876,14 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
             const moveArguments: ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] =
-                currentMoveArguments as ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`];
-            const minValue: number = Math.min(...G.publicPlayers[moveArguments.playerId]
-                .cards[moveArguments.suit].filter((card: PlayerCardsType): boolean =>
-                    card.type !== RusCardTypes.HERO).map((card: PlayerCardsType): number =>
-                        card.points as number)),
-                minCardIndex: number = G.publicPlayers[moveArguments.playerId].cards[moveArguments.suit]
-                    .findIndex((card: PlayerCardsType): boolean =>
+                currentMoveArguments as ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`],
+                player: IPublicPlayer = G.publicPlayers[moveArguments.playerId],
+                minValue: number = Math.min(
+                    ...player.cards[moveArguments.suit].filter((card: PlayerCardsType): boolean =>
+                        card.type !== RusCardTypes.HERO).map((card: PlayerCardsType): number =>
+                            card.points as number)),
+                minCardIndex: number =
+                    player.cards[moveArguments.suit].findIndex((card: PlayerCardsType): boolean =>
                         card.type !== RusCardTypes.HERO && card.points === minValue);
             if (minCardIndex !== -1) {
                 // TODO ?!
@@ -966,11 +967,11 @@ export const moveValidators: IMoveValidators = {
         getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] => {
             const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] = [];
             if (G !== undefined && ctx !== undefined) {
-                const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
+                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+                    config: IConfig | undefined = player.stack[0].config;
                 if (config !== undefined) {
-                    for (let j: number = G.tavernsNum; j <
-                        G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
-                        const coin: CoinType = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
+                    for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
+                        const coin: CoinType = player.boardCoins[j];
                         if (coin !== null) {
                             if (!coin.isTriggerTrading && config.coinId !== j) {
                                 moveMainArgs.push({

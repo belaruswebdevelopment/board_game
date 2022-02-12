@@ -36,9 +36,7 @@ export const AfterLastTavernEmptyActions = (G) => {
  * @param G
  */
 export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
-    const ulinePlayerIndex = G.publicPlayers
-        .findIndex((player) => Boolean(player.buffs
-        .find((buff) => buff.everyTurn !== undefined)));
+    const ulinePlayerIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.everyTurn !== undefined)));
     if (ulinePlayerIndex !== -1) {
         return {
             next: Phases.PlaceCoinsUline,
@@ -62,20 +60,16 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
  */
 export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
     var _a;
-    const ulinePlayerIndex = G.publicPlayers
-        .findIndex((player) => Boolean(player.buffs
-        .find((buff) => buff.everyTurn !== undefined)));
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], ulinePlayerIndex = G.publicPlayers.findIndex((findPlayer) => Boolean(findPlayer.buffs.find((buff) => buff.everyTurn !== undefined)));
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-            const coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
+            const coin = player.boardCoins[G.currentTavern];
             if (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) {
-                const tradingCoinPlacesLength = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                    .filter((coin, index) => index >= G.tavernsNum && coin === null).length;
+                const tradingCoinPlacesLength = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
                 if (tradingCoinPlacesLength > 0) {
                     if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== Stages.PlaceTradingCoinsUline
                         && tradingCoinPlacesLength === 2) {
-                        const handCoinsLength = G.publicPlayers[Number(ctx.currentPlayer)]
-                            .handCoins.filter((coin) => coin !== null).length;
+                        const handCoinsLength = player.handCoins.filter((coin) => coin !== null).length;
                         G.actionsNum =
                             G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
                     }
@@ -101,17 +95,13 @@ export const CheckEndGameLastActions = (G) => {
     }
     else {
         if (G.expansions.thingvellir.active) {
-            const brisingamensBuffIndex = G.publicPlayers
-                .findIndex((player) => Boolean(player.buffs
-                .find((buff) => buff.discardCardEndGame !== undefined)));
+            const brisingamensBuffIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.discardCardEndGame !== undefined)));
             if (brisingamensBuffIndex !== -1) {
                 return {
                     next: Phases.BrisingamensEndGame,
                 };
             }
-            const mjollnirBuffIndex = G.publicPlayers
-                .findIndex((player) => Boolean(player.buffs
-                .find((buff) => buff.getMjollnirProfit !== undefined)));
+            const mjollnirBuffIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.getMjollnirProfit !== undefined)));
             if (mjollnirBuffIndex !== -1) {
                 return {
                     next: Phases.GetMjollnirProfit,
@@ -133,9 +123,7 @@ export const CheckEndGameLastActions = (G) => {
 * @param ctx
 */
 export const CheckEndTierActionsOrEndGameLastActions = (G) => {
-    const yludIndex = G.publicPlayers
-        .findIndex((player) => Boolean(player.buffs
-        .find((buff) => buff.endTier !== undefined)));
+    const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
     if (yludIndex !== -1) {
         return {
             next: Phases.EndTier,
@@ -158,8 +146,7 @@ export const CheckEndTierActionsOrEndGameLastActions = (G) => {
 const CheckEnlistmentMercenaries = (G) => {
     let count = false;
     for (let i = 0; i < G.publicPlayers.length; i++) {
-        if (G.publicPlayers[i].campCards
-            .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
+        if (G.publicPlayers[i].campCards.filter((card) => card.type === RusCardTypes.MERCENARY).length) {
             count = true;
             break;
         }
@@ -208,13 +195,11 @@ export const EndTurnActions = (G, ctx) => {
  */
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const playerCards = Object.values(G.publicPlayers[i].cards).flat();
-        const thrud = playerCards.find((card) => card.name === HeroNames.Thrud);
+        const player = G.publicPlayers[i], playerCards = Object.values(player.cards).flat(), thrud = playerCards.find((card) => card.name === HeroNames.Thrud);
         if (thrud !== undefined && thrud.suit !== null) {
-            const thrudIndex = G.publicPlayers[i].cards[thrud.suit]
-                .findIndex((card) => card.name === HeroNames.Thrud);
-            G.publicPlayers[i].cards[thrud.suit].splice(thrudIndex, 1);
-            AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${G.publicPlayers[i].nickname} уходит с игрового поля.`);
+            const thrudIndex = player.cards[thrud.suit].findIndex((card) => card.name === HeroNames.Thrud);
+            player.cards[thrud.suit].splice(thrudIndex, 1);
+            AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${player.nickname} уходит с игрового поля.`);
         }
     }
 };

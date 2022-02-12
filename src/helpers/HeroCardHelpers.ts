@@ -4,6 +4,9 @@ import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IHero } from "../typescript/hero_card_interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
+import { AddBuffToPlayer } from "./ActionHelpers";
+import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 
 /**
  * <h3>Добавляет героя в массив карт игрока.</h3>
@@ -18,8 +21,9 @@ import { IHero } from "../typescript/hero_card_interfaces";
  */
 export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHero): void => {
     if (hero.suit !== null) {
-        G.publicPlayers[Number(ctx.currentPlayer)].cards[hero.suit].push(hero);
-        AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
+        const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+        player.cards[hero.suit].push(hero);
+        AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
     }
 };
 
@@ -35,12 +39,31 @@ export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHero)
  * @param hero Герой.
  */
 export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IHero): void => {
-    G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = hero;
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+    player.pickedCard = hero;
     if (hero.active) {
         hero.active = false;
-        G.publicPlayers[Number(ctx.currentPlayer)].heroes.push(hero);
-        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал героя ${hero.name}.`);
+        player.heroes.push(hero);
+        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал героя ${hero.name}.`);
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.name} из-за того, что он был уже выбран другим игроком.`);
     }
+};
+
+/**
+ * <h3>Действия, связанные с добавлением героев в массив карт игрока.</li>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, добавляющихся в массив карт игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param config Конфиг действий героя.
+ */
+export const AddHeroToCards = (G: IMyGameState, ctx: Ctx, hero: IHero): void => {
+    AddHeroCardToPlayerHeroCards(G, ctx, hero);
+    AddHeroCardToPlayerCards(G, ctx, hero);
+    AddBuffToPlayer(G, ctx, hero.buff);
+    CheckAndMoveThrudOrPickHeroAction(G, ctx, hero);
 };

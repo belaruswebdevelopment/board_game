@@ -3,7 +3,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, DiscardSuitCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsArtefactCardNotMercenary } from "../Camp";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
-import { AddCampCardToCards } from "../helpers/CampMovesHelpers";
+import { AddCampCardToCards } from "../helpers/CampCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";

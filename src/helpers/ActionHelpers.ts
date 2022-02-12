@@ -5,6 +5,7 @@ import { IConfig } from "../typescript/action_interfaces";
 import { IBuff, IBuffs } from "../typescript/buff_interfaces";
 import { LogTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**
@@ -21,10 +22,11 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  */
 export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff): void => {
     if (buff !== undefined) {
-        G.publicPlayers[Number(ctx.currentPlayer)].buffs.push({
+        const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+        player.buffs.push({
             [buff.name]: true,
         });
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} получил баф '${buff.name}'.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил баф '${buff.name}'.`);
     }
 };
 
@@ -39,11 +41,11 @@ export const AddPickCardActionToStack = (G: IMyGameState, ctx: Ctx): void => {
 };
 
 export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: keyof IBuffs): void => {
-    const buffIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].buffs
-        .findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        buffIndex: number = player.buffs.findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
     if (buffIndex !== -1) {
-        G.publicPlayers[Number(ctx.currentPlayer)].buffs.splice(buffIndex, 1);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} потерял баф '${buffName}'.`);
+        player.buffs.splice(buffIndex, 1);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} потерял баф '${buffName}'.`);
     } else {
         // TODO Log error?
     }
@@ -63,9 +65,10 @@ export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: keyof 
  * @param ctx
  */
 export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
-    const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config;
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        config: IConfig | undefined = player.stack[0]?.config;
     if (config !== undefined) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен получить преимущества от действия '${config.drawName}'.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
         StartOrEndActionStage(G, ctx, config);
         G.actionsNum = config.number ?? 1;
         if (config.name !== undefined) {

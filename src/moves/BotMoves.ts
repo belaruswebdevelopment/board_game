@@ -4,6 +4,7 @@ import { IsValidMove } from "../MoveValidator";
 import { CoinType } from "../typescript/coin_types";
 import { Stages } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
  * <h3>Выкладка монет ботами.</h3>
@@ -22,13 +23,13 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
-        const coinId: number = coinsOrder[i] || G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex((coin: CoinType): boolean => coin !== null);
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+    for (let i = 0; i < player.boardCoins.length; i++) {
+        const coinId: number =
+            coinsOrder[i] || player.handCoins.findIndex((coin: CoinType): boolean => coin !== null);
         if (coinId !== -1) {
-            G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i] =
-                G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId];
-            G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId] = null;
+            player.boardCoins[i] = player.handCoins[coinId];
+            player.handCoins[coinId] = null;
         } else {
             // TODO LogTypes.ERROR ?
         }

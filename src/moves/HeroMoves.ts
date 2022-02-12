@@ -2,7 +2,7 @@ import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardCardsFromPlayerBoardAction, PlaceOlwinCardsAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
-import { AddHeroToCards } from "../helpers/HeroMovesHelpers";
+import { AddHeroToCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";

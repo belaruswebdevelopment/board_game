@@ -18,7 +18,7 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
     player.boardCoins[tempId] = player.handCoins[coinId];
     player.handCoins[coinId] = null;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} положил монету ценностью '${player.boardCoins[tempId]}' в свой кошелёк.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} положил монету ценностью '${player.boardCoins[tempId]}' в свой кошелёк.`);
     StartVidofnirVedrfolnirAction(G, ctx);
 };
 /**
@@ -38,11 +38,12 @@ export const DiscardSuitCardAction = (G, ctx, suit, playerId, cardId) => {
     // TODO Rework it for players and fix it for bots?
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
-        if (G.publicPlayers[playerId].cards[suit][cardId].type !== RusCardTypes.HERO) {
-            const discardedCard = G.publicPlayers[playerId].cards[suit].splice(cardId, 1)[0];
+        const player = G.publicPlayers[Number(playerId)];
+        if (player.cards[suit][cardId].type !== RusCardTypes.HERO) {
+            const discardedCard = player.cards[suit].splice(cardId, 1)[0];
             G.discardCardsDeck.push(discardedCard);
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[playerId].nickname} сбросил карту ${discardedCard.name} в колоду сброса.`);
-            G.publicPlayers[playerId].stack = [];
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил карту ${discardedCard.name} в колоду сброса.`);
+            player.stack = [];
         }
         else {
             AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);

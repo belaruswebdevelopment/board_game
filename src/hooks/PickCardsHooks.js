@@ -9,8 +9,9 @@ import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
 import { LogTypes, RusCardTypes, Stages } from "../typescript/enums";
 export const OnPickCardsMove = (G, ctx) => {
     var _a;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
     StartOrEndActions(G, ctx);
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
+    if (!player.stack.length) {
         if (ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
             && !CheckIfCurrentTavernEmpty(G)) {
             StartDiscardCardFromTavernActionFor2Players(G, ctx);
@@ -18,8 +19,7 @@ export const OnPickCardsMove = (G, ctx) => {
         else {
             // TODO Do it before or after trading or not matter?
             CheckAndStartUlineActionsOrContinue(G, ctx);
-            const tradingCoinPlacesLength = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-                .filter((coin, index) => index >= G.tavernsNum && coin === null).length;
+            const tradingCoinPlacesLength = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
             if (!G.actionsNum) {
                 ActivateTrading(G, ctx);
             }

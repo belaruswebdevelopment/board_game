@@ -2,7 +2,6 @@ import { artefactsConfig } from "./data/CampData";
 import { heroesConfig } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
-import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog } from "./Logging";
 import { LogTypes, SuitNames } from "./typescript/enums";
 /**
@@ -53,24 +52,18 @@ export const FinalScoring = (G, ctx, player) => {
     }
     score += coinsValue;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за монеты игрока ${player.nickname}: ${coinsValue}`);
-    const suitWarriorIndex = GetSuitIndexByName(SuitNames.WARRIOR);
-    if (suitWarriorIndex !== -1) {
-        const warriorsDistinction = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR), playerIndex = G.publicPlayers.findIndex((p) => p.nickname === player.nickname);
-        if (warriorsDistinction !== undefined && warriorsDistinction.includes(playerIndex)) {
-            const warriorDistinctionScore = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
-            score += warriorDistinctionScore;
-            if (warriorDistinctionScore) {
-                AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока ${player.nickname}: ${warriorDistinctionScore}`);
-            }
+    const warriorsDistinction = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR), playerIndex = G.publicPlayers.findIndex((p) => p.nickname === player.nickname);
+    if (warriorsDistinction !== undefined && warriorsDistinction.includes(playerIndex)) {
+        const warriorDistinctionScore = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
+        score += warriorDistinctionScore;
+        if (warriorDistinctionScore) {
+            AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока ${player.nickname}: ${warriorDistinctionScore}`);
         }
     }
-    const suitMinerIndex = GetSuitIndexByName(SuitNames.MINER);
-    if (suitMinerIndex !== -1) {
-        const minerDistinctionPriorityScore = suitsConfig[SuitNames.MINER].distinction.awarding(G, ctx, player);
-        score += minerDistinctionPriorityScore;
-        if (minerDistinctionPriorityScore) {
-            AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока ${player.nickname}: ${minerDistinctionPriorityScore}`);
-        }
+    const minerDistinctionPriorityScore = suitsConfig[SuitNames.MINER].distinction.awarding(G, ctx, player);
+    score += minerDistinctionPriorityScore;
+    if (minerDistinctionPriorityScore) {
+        AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока ${player.nickname}: ${minerDistinctionPriorityScore}`);
     }
     let heroesScore = 0, dwerg_brothers = 0;
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];

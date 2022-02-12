@@ -1,16 +1,8 @@
-import { BoardProps } from "boardgame.io/react";
+import { jsx as _jsx } from "react/jsx-runtime";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { CampDeckCardTypes, DeckCardTypes } from "../typescript/card_types";
-import { CoinType } from "../typescript/coin_types";
 import { LogTypes, MoveNames, RusCardTypes } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IHero } from "../typescript/hero_card_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
-import { IBackground } from "../typescript/style_interfaces";
-import { ArgsTypes } from "../typescript/types";
-
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -26,9 +18,8 @@ import { ArgsTypes } from "../typescript/types";
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], key: string, name: string,
-    player: IPublicPlayer, actionName?: string, ...args: ArgsTypes): void => {
-    let action: ((...args: ArgsTypes) => void) | null = null;
+export const DrawButton = (data, boardCells, key, name, player, actionName, ...args) => {
+    let action = null;
     switch (actionName) {
         case MoveNames.StartEnlistmentMercenariesMove:
             action = data.moves.StartEnlistmentMercenariesMove;
@@ -39,16 +30,8 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
         default:
             action = null;
     }
-    boardCells.push(
-        <td className="cursor-pointer" onClick={() => action?.(...args)}
-            key={`${player?.nickname ? `Player ${player.nickname} ` : ``}${key}`}>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                {name}
-            </button>
-        </td>
-    );
+    boardCells.push(_jsx("td", { className: "cursor-pointer", onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded", children: name }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `Player ${player.nickname} ` : ``}${key}`));
 };
-
 /**
  * <h3>Отрисовка карт.</h3>
  * <p>Применения:</p>
@@ -65,13 +48,8 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[],
-    card: DeckCardTypes | CampDeckCardTypes | IHero, id: number, player: IPublicPlayer | null, suit?: string | null,
-    actionName?: string, ...args: ArgsTypes): void => {
-    let styles: IBackground = { background: `` },
-        tdClasses = ``,
-        spanClasses = ``,
-        action: ((...args: ArgsTypes) => void) | null = null;
+export const DrawCard = (data, playerCells, card, id, player, suit, actionName, ...args) => {
+    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, action = null;
     switch (actionName) {
         case MoveNames.ClickHeroCardMove:
             action = data.moves.ClickHeroCardMove;
@@ -116,13 +94,15 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         styles = Styles.Heroes(card.game, card.name);
         if (player === null && `active` in card && !card.active) {
             spanClasses = `bg-hero-inactive`;
-        } else {
+        }
+        else {
             spanClasses = `bg-hero`;
         }
         if (suit === null) {
             tdClasses = `bg-gray-600`;
         }
-    } else if (card.type === RusCardTypes.MERCENARY || card.type === RusCardTypes.ARTEFACT) {
+    }
+    else if (card.type === RusCardTypes.MERCENARY || card.type === RusCardTypes.ARTEFACT) {
         if (`tier` in card && `path` in card) {
             styles = Styles.CampCards(card.tier, card.path);
         }
@@ -130,10 +110,12 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         if (suit === null) {
             tdClasses = `bg-yellow-200`;
         }
-    } else {
+    }
+    else {
         if (`suit` in card && `points` in card && card.suit !== null) {
             styles = Styles.Cards(card.suit, card.name, card.points);
-        } else {
+        }
+        else {
             styles = Styles.Cards(null, card.name, null);
         }
         spanClasses = `bg-card`;
@@ -141,26 +123,18 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     if (actionName !== null) {
         tdClasses += ` cursor-pointer`;
     }
-    let description = ``,
-        value = ``;
+    let description = ``, value = ``;
     if (`description` in card) {
         description = card.description;
     }
     if (`points` in card) {
         value = card.points !== null ? String(card.points) : ``;
-    } else if (`value` in card) {
+    }
+    else if (`value` in card) {
         value = String(card.value);
     }
-    playerCells.push(
-        <td className={tdClasses} onClick={() => action?.(...args)}
-            key={`${player?.nickname ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`}>
-            <span style={styles} title={description ?? card.name} className={spanClasses}>
-                <b>{value}</b>
-            </span>
-        </td>
-    );
+    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses, children: _jsx("b", { children: value }, void 0) }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`));
 };
-
 /**
  * <h3>Отрисовка монет.</h3>
  * <p>Применения:</p>
@@ -179,14 +153,8 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param actionName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], type: string, coin: CoinType,
-    id: number, player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
-    actionName?: string, ...args: ArgsTypes): void => {
-    let styles: IBackground = { background: `` },
-        span: JSX.Element | number | null = null,
-        tdClasses = `bg-yellow-300`,
-        spanClasses = ``,
-        action: ((...args: ArgsTypes) => void) | null = null;
+export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses, additionalParam, actionName, ...args) => {
+    let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action = null;
     switch (actionName) {
         case MoveNames.ClickBoardCoinMove:
             action = data.moves.ClickBoardCoinMove;
@@ -220,14 +188,14 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             styles = Styles.Coin(coin.value, false);
             spanClasses = `bg-market-coin`;
             if (coinClasses !== null && coinClasses !== undefined) {
-                span = (<span className={coinClasses}>
-                    {additionalParam}
-                </span>);
+                span = (_jsx("span", { className: coinClasses, children: additionalParam }, void 0));
             }
-        } else {
+        }
+        else {
             AddDataToLog(data.G, LogTypes.ERROR, `ОШИБКА: Монета на рынке не может быть 'null'.`);
         }
-    } else {
+    }
+    else {
         spanClasses = `bg-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
             spanClasses += ` ${coinClasses}`;
@@ -235,32 +203,54 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         if (type === `coin`) {
             if (coin === null) {
                 styles = Styles.CoinBack();
-            } else {
+            }
+            else {
                 if (coin.isInitial !== undefined) {
                     styles = Styles.Coin(coin.value, coin.isInitial);
                 }
             }
-        } else {
+        }
+        else {
             styles = Styles.CoinBack();
             if (type === `back-small-market-coin`) {
-                span = (<span style={Styles.Exchange()} className="bg-small-market-coin">
-
-                </span>);
-            } else if (type === `back-tavern-icon`) {
+                span = (_jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }, void 0));
+            }
+            else if (type === `back-tavern-icon`) {
                 if (additionalParam !== null && additionalParam !== undefined) {
-                    span = (<span style={Styles.Taverns(additionalParam)} className="bg-tavern-icon">
-
-                    </span>);
+                    span = (_jsx("span", { style: Styles.Taverns(additionalParam), className: "bg-tavern-icon" }, void 0));
                 }
             }
         }
     }
-    playerCells.push(
-        <td className={tdClasses} onClick={() => action?.(...args)}
-            key={`${player?.nickname ? `player ${player.nickname} ` : ``}coin ${id}${coin !== null ? ` ${coin.value}` : ` empty`}`}>
-            <span style={styles} className={spanClasses}>
-                {span}
-            </span>
-        </td>
-    );
+    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, className: spanClasses, children: span }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}coin ${id}${coin !== null ? ` ${coin.value}` : ` empty`}`));
 };
+export const DrawSuit = (data, boardCells, suit, key, value, player, actionName) => {
+    let action = null;
+    switch (actionName) {
+        case MoveNames.GetMjollnirProfitMove:
+            action = data.moves.GetMjollnirProfitMove;
+            break;
+        case MoveNames.ClickHandCoinMove:
+            action = data.moves.ClickHandCoinMove;
+            break;
+        case MoveNames.ClickHandCoinUlineMove:
+            action = data.moves.ClickHandCoinUlineMove;
+            break;
+        case MoveNames.PlaceThrudHeroMove:
+            action = data.moves.PlaceThrudHeroMove;
+            break;
+        case MoveNames.PlaceYludHeroMove:
+            action = data.moves.PlaceYludHeroMove;
+            break;
+        case MoveNames.PlaceOlwinCardMove:
+            action = data.moves.PlaceOlwinCardMove;
+            break;
+        case MoveNames.PlaceEnlistmentMercenariesMove:
+            action = data.moves.PlaceEnlistmentMercenariesMove;
+            break;
+        default:
+            action = null;
+    }
+    boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { className: "whitespace-nowrap text-white", children: value }, void 0) }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}choose ${suit} suit to ${key}`));
+};
+//# sourceMappingURL=ElementsUI.js.map

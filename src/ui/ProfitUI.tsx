@@ -3,46 +3,43 @@ import { BoardProps } from "boardgame.io/react";
 import { isActionDiscardCard, isCardNotAction } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { TotalRank } from "../helpers/ScoreHelpers";
 import { IConfig } from "../typescript/action_interfaces";
 import { IBuffs } from "../typescript/buff_interfaces";
 import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, DiscardCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
-import { TotalRank } from "./ScoreHelpers";
-import { DrawButton, DrawCard, DrawCoin } from "./UIElementHelpers";
+import { IPublicPlayer } from "../typescript/player_interfaces";
+import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
 // TODO Add functions dock blocks
 export const AddCoinToPouchProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-            .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
-            && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
-            DrawCoin(data, boardCells, `coin`,
-                G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j], j,
-                G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
-                null, MoveNames.AddCoinToPouchMove, j);
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+    for (let j = 0; j < player.handCoins.length; j++) {
+        if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
+            && player.handCoins[j] !== null) {
+            DrawCoin(data, boardCells, `coin`, player.handCoins[j], j, player,
+                `border-2`, null, MoveNames.AddCoinToPouchMove, j);
         }
     }
 };
 
 export const DiscardCardFromBoardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config,
-        pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        config: IConfig | undefined = player.stack[0].config,
+        pickedCard: PickedCardType = player.pickedCard;
     if (config !== undefined) {
         for (const suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 if (suit !== config.suit
                     && !(G.drawProfit === ConfigNames.DagdaAction && G.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
-                    const last: number = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length - 1;
-                    if (last !== -1 && G.publicPlayers[Number(ctx.currentPlayer)]
-                        .cards[suit][last].type !== RusCardTypes.HERO) {
-                        DrawCard(data, boardCells,
-                            G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][last], last,
-                            G.publicPlayers[Number(ctx.currentPlayer)], suit,
+                    const last: number = player.cards[suit].length - 1;
+                    if (last !== -1 && player.cards[suit][last].type !== RusCardTypes.HERO) {
+                        DrawCard(data, boardCells, player.cards[suit][last], last, player, suit,
                             MoveNames.DiscardCardMove, suit, last);
                     }
                 }
@@ -54,13 +51,14 @@ export const DiscardCardFromBoardProfit = (G: IMyGameState, ctx: Ctx, data: Boar
 export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
     // TODO Discard cards must be hidden from others users?
-    const playerHeaders: JSX.Element[] = [],
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        playerHeaders: JSX.Element[] = [],
         playerRows: JSX.Element[][] = [];
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             playerHeaders.push(
                 <th className={`${suitsConfig[suit].suitColor}`}
-                    key={`${data.G.publicPlayers[Number(data.ctx.currentPlayer)].nickname} ${suitsConfig[suit].suitName}`}>
+                    key={`${player.nickname} ${suitsConfig[suit].suitName}`}>
                     <span style={Styles.Suits(suit)} className="bg-suit-icon">
 
                     </span>
@@ -80,27 +78,25 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
         for (const suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 id = i + j;
-                if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i] !== undefined) {
+                if (player.cards[suit][i] !== undefined) {
                     isExit = false;
                     if (Array.isArray(data)) {
                         isDrawRow = true;
                     }
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i].type !== RusCardTypes.HERO) {
+                    if (player.cards[suit][i].type !== RusCardTypes.HERO) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells,
-                            G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][i], id,
-                            G.publicPlayers[Number(ctx.currentPlayer)],
-                            suit, MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
+                        DrawCard(data, playerCells, player.cards[suit][i], id, player, suit,
+                            MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
                     } else {
                         playerCells.push(
-                            <td key={`${G.publicPlayers[Number(ctx.currentPlayer)].nickname} empty card ${id}`}>
+                            <td key={`${player.nickname} empty card ${id}`}>
 
                             </td>
                         );
                     }
                 } else {
                     playerCells.push(
-                        <td key={`${G.publicPlayers[Number(ctx.currentPlayer)].nickname} empty card ${id}`}>
+                        <td key={`${player.nickname} empty card ${id}`}>
 
                         </td>
                     );
@@ -110,7 +106,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
         }
         if (isDrawRow) {
             playerRows[i].push(
-                <tr key={`${G.publicPlayers[Number(ctx.currentPlayer)].nickname} board row ${i}`}>
+                <tr key={`${player.nickname} board row ${i}`}>
                     {playerCells}
                 </tr>
             );
@@ -121,7 +117,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
     }
     boardCells.push(
         <td
-            key={`${data.G.publicPlayers[Number(data.ctx.currentPlayer)].nickname} discard card`}>
+            key={`${player.nickname} discard card`}>
             <table>
                 <thead>
                     <tr>{playerHeaders}</tr>
@@ -173,17 +169,18 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, 
             const playersCells: JSX.Element[] = [];
             for (let p = 0; p < G.publicPlayers.length; p++) {
                 if (p !== Number(ctx.currentPlayer)) {
-                    if (G.publicPlayers[p].cards[config.suit][i] !== undefined) {
-                        if (G.publicPlayers[p].cards[config.suit][i].type !== RusCardTypes.HERO) {
+                    const player: IPublicPlayer = G.publicPlayers[p];
+                    if (player.cards[config.suit][i] !== undefined) {
+                        if (player.cards[config.suit][i].type !== RusCardTypes.HERO) {
                             isExit = false;
                             isDrawRow = true;
-                            DrawCard(data, playersCells, G.publicPlayers[p].cards[config.suit][i],
-                                i, G.publicPlayers[p], config.suit,
-                                MoveNames.DiscardSuitCardFromPlayerBoardMove, config.suit, p, i);
+                            DrawCard(data, playersCells, player.cards[config.suit][i], i,
+                                player, config.suit, MoveNames.DiscardSuitCardFromPlayerBoardMove,
+                                config.suit, p, i);
                         }
                     } else {
                         playersCells.push(
-                            <td key={`${G.publicPlayers[p].nickname} discard suit cardboard row ${i}`}>
+                            <td key={`${player.nickname} discard suit cardboard row ${i}`}>
 
                             </td>
                         );
@@ -232,12 +229,11 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, data: Board
 
 export const GetEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const mercenaries: CampDeckCardTypes[] =
-        G.publicPlayers[Number(ctx.currentPlayer)].campCards
-            .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY);
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        mercenaries: CampDeckCardTypes[] = player.campCards.filter((card: CampDeckCardTypes): boolean =>
+            card.type === RusCardTypes.MERCENARY);
     for (let j = 0; j < mercenaries.length; j++) {
-        DrawCard(data, boardCells, mercenaries[j], j,
-            G.publicPlayers[Number(ctx.currentPlayer)], null,
+        DrawCard(data, boardCells, mercenaries[j], j, player, null,
             MoveNames.GetEnlistmentMercenariesMove, j);
     }
 };
@@ -246,20 +242,15 @@ export const GetMjollnirProfitProfit = (G: IMyGameState, ctx: Ctx, data: BoardPr
     boardCells: JSX.Element[]): void => {
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].length) {
-                // TODO Move logic to DrawCard?
-                boardCells.push(
-                    <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                        key={`${suit} suit to get Mjollnir profit`}
-                        onClick={() => data.moves.GetMjollnirProfitMove(suit)}>
-                        <span style={Styles.Suits(suit)} className="bg-suit-icon">
-                            <b className="whitespace-nowrap text-white">
-                                {G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
-                                    .reduce(TotalRank, 0) * 2}
-                            </b>
-                        </span>
-                    </td>
-                );
+            const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+            if (player.cards[suit].length) {
+                const config: IConfig | undefined = player.stack[0].config;
+                if (config !== undefined && config.drawName !== undefined) {
+                    const value: number | string =
+                        player.cards[suit].reduce(TotalRank, 0) * 2;
+                    DrawSuit(data, boardCells, suit, config.drawName, value, player,
+                        MoveNames.GetMjollnirProfitMove);
+                }
             }
         }
     }
@@ -285,46 +276,37 @@ export const PickDiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProp
         if (!isActionDiscardCard(card)) {
             suit = card.suit;
         }
-        DrawCard(data, boardCells, card, j,
-            G.publicPlayers[Number(ctx.currentPlayer)], suit,
-            MoveNames.PickDiscardCardMove, j);
+        DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)],
+            suit, MoveNames.PickDiscardCardMove, j);
     }
 };
 
-export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
-    boardCells: JSX.Element[]): void => {
+export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>, boardCells: JSX.Element[]):
+    void => {
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+            const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+                pickedCard: PickedCardType = player.pickedCard;
             if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
-                const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
-                let move: ((suit: string) => void) | null;
-                switch (config?.drawName) {
-                    case DrawNames.Thrud:
-                        move = data.moves.PlaceThrudHeroMove;
-                        break;
-                    case DrawNames.Ylud:
-                        move = data.moves.PlaceYludHeroMove;
-                        break;
-                    case DrawNames.Olwin:
-                        move = data.moves.PlaceOlwinCardMove;
-                        break;
-                    default:
-                        move = null;
-                        break;
-                }
-                if (config !== undefined) {
-                    // TODO Move logic to DrawCard?
-                    boardCells.push(
-                        <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                            key={`Place ${config.drawName} on ${suitsConfig[suit].suitName}`}
-                            onClick={() => move?.(suit)}>
-                            <span style={Styles.Suits(suit)} className="bg-suit-icon">
-                                <b>{G.publicPlayers[Number(ctx.currentPlayer)]
-                                    .stack[0].variants?.[suit].points ?? ``}</b>
-                            </span>
-                        </td>
-                    );
+                const config: IConfig | undefined = player.stack[0].config;
+                let moveName: string | null;
+                if (config !== undefined && config.drawName !== undefined) {
+                    switch (config?.drawName) {
+                        case DrawNames.Thrud:
+                            moveName = MoveNames.PlaceThrudHeroMove;
+                            break;
+                        case DrawNames.Ylud:
+                            moveName = MoveNames.PlaceYludHeroMove;
+                            break;
+                        case DrawNames.Olwin:
+                            moveName = MoveNames.PlaceOlwinCardMove;
+                            break;
+                        default:
+                            moveName = null;
+                            break;
+                    }
+                    const value: number | string = player.stack[0].variants?.[suit].points ?? ``;
+                    DrawSuit(data, boardCells, suit, config.drawName, value, player, moveName);
                 }
             }
         }
@@ -335,20 +317,17 @@ export const PlaceEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
     boardCells: JSX.Element[]): void => {
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            const card: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
+            const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+                card: PickedCardType = player.pickedCard;
             if (card !== null && `variants` in card) {
                 if (card.variants !== undefined) {
-                    if (suit === card.variants[suit]?.suit) {
-                        // TODO Move logic to DrawCard?
-                        boardCells.push(
-                            <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-                                onClick={() => data.moves.PlaceEnlistmentMercenariesMove(suit)}
-                                key={`Place ${card.name} on ${suitsConfig[suit].suitName}`}>
-                                <span style={Styles.Suits(suit)} className="bg-suit-icon">
-                                    <b>{card.variants[suit].points ?? ``}</b>
-                                </span>
-                            </td>
-                        );
+                    const config: IConfig | undefined = player.stack[0].config;
+                    if (config !== undefined && config.drawName !== undefined) {
+                        if (suit === card.variants[suit]?.suit) {
+                            const value: number | string = card.variants[suit].points ?? ``;
+                            DrawSuit(data, boardCells, suit, config.drawName, value, player,
+                                MoveNames.PlaceEnlistmentMercenariesMove);
+                        }
                     }
                 }
             }
@@ -359,14 +338,13 @@ export const PlaceEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
 export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
     for (let j = 0; j < 2; j++) {
+        const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
         if (j === 0) {
             // TODO Add Enums for ALL text here
-            DrawButton(data, boardCells, `start Enlistment Mercenaries`, `Start`,
-                G.publicPlayers[Number(ctx.currentPlayer)],
+            DrawButton(data, boardCells, `start Enlistment Mercenaries`, `Start`, player,
                 MoveNames.StartEnlistmentMercenariesMove);
         } else if (G.publicPlayersOrder.length > 1) {
-            DrawButton(data, boardCells, `pass Enlistment Mercenaries`, `Pass`,
-                G.publicPlayers[Number(ctx.currentPlayer)],
+            DrawButton(data, boardCells, `pass Enlistment Mercenaries`, `Pass`, player,
                 MoveNames.PassEnlistmentMercenariesMove);
         }
     }
@@ -374,52 +352,43 @@ export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
 
 export const UpgradeCoinProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const handCoins: CoinType[] = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-        .filter((coin: CoinType): boolean => coin !== null);
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        handCoins: CoinType[] = player.handCoins.filter((coin: CoinType): boolean => coin !== null);
     let handCoinIndex = -1;
-    for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
+    for (let j = 0; j < player.boardCoins.length; j++) {
         // TODO Check .? for all coins!!! and delete AS
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-            .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
-            && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j] === null) {
+        if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
+            && player.boardCoins[j] === null) {
             handCoinIndex++;
-            const handCoinId: number = G.publicPlayers[Number(data.ctx.currentPlayer)]
-                .handCoins.findIndex((coin: CoinType): boolean =>
-                    coin?.value === handCoins[handCoinIndex]?.value
-                    && coin?.isInitial === handCoins[handCoinIndex]?.isInitial);
-            if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinId]
-                && !G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinId]?.isTriggerTrading) {
-                DrawCoin(data, boardCells, `coin`,
-                    G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinId], j,
-                    G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
-                    null, MoveNames.ClickCoinToUpgradeMove, j, `hand`,
+            const handCoinId: number = player.handCoins.findIndex((coin: CoinType): boolean =>
+                coin?.value === handCoins[handCoinIndex]?.value
+                && coin?.isInitial === handCoins[handCoinIndex]?.isInitial);
+            if (player.handCoins[handCoinId] && !player.handCoins[handCoinId]?.isTriggerTrading) {
+                DrawCoin(data, boardCells, `coin`, player.handCoins[handCoinId], j,
+                    player, `border-2`, null,
+                    MoveNames.ClickCoinToUpgradeMove, j, `hand`,
                     handCoins[handCoinIndex]?.isInitial as boolean);
             }
-        } else if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]
-            && !G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]?.isTriggerTrading) {
-            DrawCoin(data, boardCells, `coin`,
-                G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j], j,
-                G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
-                null, MoveNames.ClickCoinToUpgradeMove, j, `board`,
-                G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]?.isInitial as boolean);
+        } else if (player.boardCoins[j] && !player.boardCoins[j]?.isTriggerTrading) {
+            DrawCoin(data, boardCells, `coin`, player.boardCoins[j], j, player,
+                `border-2`, null, MoveNames.ClickCoinToUpgradeMove,
+                j, `board`, player.boardCoins[j]?.isInitial as boolean);
         }
     }
 };
 
 export const UpgradeCoinVidofnirVedrfolnirProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config;
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        config: IConfig | undefined = player.stack[0].config;
     if (config !== undefined) {
-        for (let j: number = G.tavernsNum; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length;
-            j++) {
-            const coin: CoinType = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j];
+        for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
+            const coin: CoinType = player.boardCoins[j];
             if (coin !== null) {
                 if (!coin.isTriggerTrading && config.coinId !== j) {
-                    DrawCoin(data, boardCells, `coin`,
-                        G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j], j,
-                        G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
-                        null, MoveNames.UpgradeCoinVidofnirVedrfolnirMove, j,
-                        `board`, coin.isInitial);
+                    DrawCoin(data, boardCells, `coin`, player.boardCoins[j], j,
+                        player, `border-2`, null,
+                        MoveNames.UpgradeCoinVidofnirVedrfolnirMove, j, `board`, coin.isInitial);
                 }
             }
         }

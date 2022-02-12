@@ -17,13 +17,12 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
-        const coinId = coinsOrder[i] || G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .findIndex((coin) => coin !== null);
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    for (let i = 0; i < player.boardCoins.length; i++) {
+        const coinId = coinsOrder[i] || player.handCoins.findIndex((coin) => coin !== null);
         if (coinId !== -1) {
-            G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[i] =
-                G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId];
-            G.publicPlayers[Number(ctx.currentPlayer)].handCoins[coinId] = null;
+            player.boardCoins[i] = player.handCoins[coinId];
+            player.handCoins[coinId] = null;
         }
         else {
             // TODO LogTypes.ERROR ?
