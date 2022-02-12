@@ -21,9 +21,9 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  */
 export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff): void => {
     if (buff !== undefined) {
-        G.publicPlayers[Number(ctx.currentPlayer)].buffs = {
-            [buff.name]: buff.value,
-        };
+        G.publicPlayers[Number(ctx.currentPlayer)].buffs.push({
+            [buff.name]: true,
+        });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} получил баф '${buff.name}'.`);
     }
 };
@@ -39,8 +39,14 @@ export const AddPickCardActionToStack = (G: IMyGameState, ctx: Ctx): void => {
 };
 
 export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: keyof IBuffs): void => {
-    delete G.publicPlayers[Number(ctx.currentPlayer)].buffs[buffName];
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} потерял баф '${buffName}'.`);
+    const buffIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
+    if (buffIndex !== -1) {
+        G.publicPlayers[Number(ctx.currentPlayer)].buffs.splice(buffIndex, 1);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} потерял баф '${buffName}'.`);
+    } else {
+        // TODO Log error?
+    }
 };
 
 /**

@@ -55,9 +55,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {
-                        discardCardEndGame: true,
-                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
                 },
                 {
                     nickname: `Dan`,
@@ -106,9 +108,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {
-                        discardCardEndGame: true,
-                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
                 },
             ],
             discardCardsDeck: [
@@ -132,7 +136,8 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
         };
     });
     it(`should remove non-hero discarded card from player's cards`, () => {
-        DiscardAnyCardFromPlayerBoardAction(G as IMyGameState, { currentPlayer: '1' } as Ctx, `warrior`, 1);
+        DiscardAnyCardFromPlayerBoardAction(G as IMyGameState, { currentPlayer: '1' } as Ctx, `warrior`,
+            1);
         expect(G).toEqual({
             publicPlayers: [
                 {
@@ -182,9 +187,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {
-                        discardCardEndGame: true,
-                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
                 },
                 {
                     nickname: `Dan`,
@@ -223,7 +230,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {},
+                    buffs: [],
                 },
             ],
             discardCardsDeck: [
@@ -265,7 +272,8 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
         });
     });
     it(`shouldn't remove hero discarded card from player's cards`, () => {
-        DiscardAnyCardFromPlayerBoardAction(G as IMyGameState, { currentPlayer: '1' } as Ctx, `warrior`, 2);
+        DiscardAnyCardFromPlayerBoardAction(G as IMyGameState, { currentPlayer: '1' } as Ctx, `warrior`,
+            2);
         expect(G).toEqual({
             publicPlayers: [
                 {
@@ -315,9 +323,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {
-                        discardCardEndGame: true,
-                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
                 },
                 {
                     nickname: `Dan`,
@@ -366,9 +376,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {
-                        discardCardEndGame: true,
-                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
                 },
             ],
             discardCardsDeck: [

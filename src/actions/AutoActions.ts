@@ -4,8 +4,9 @@ import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IConfig, IStack } from "../typescript/action_interfaces";
+import { IBuffs } from "../typescript/buff_interfaces";
 import { CoinType } from "../typescript/coin_types";
-import { HeroNames, LogTypes, Stages } from "../typescript/enums";
+import { LogTypes, Stages } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { ArgsTypes } from "../typescript/types";
 
@@ -37,8 +38,8 @@ export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx): void => {
 export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
     let tradingCoinIndex: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
         .findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
-        && tradingCoinIndex === -1) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .find((buff: IBuffs): boolean => buff.everyTurn !== undefined) && tradingCoinIndex === -1) {
         tradingCoinIndex = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
             .findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
         G.publicPlayers[Number(ctx.currentPlayer)].handCoins
@@ -114,8 +115,8 @@ export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void =
     const number: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
         .filter((coin: CoinType, index: number): boolean => index >= G.tavernsNum && coin === null).length,
         handCoinsNumber: number = G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length;
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline && number > 0
-        && handCoinsNumber) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .find((buff: IBuffs): boolean => buff.everyTurn !== undefined) && number > 0 && handCoinsNumber) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(number)]);
     } else {
         let coinsValue = 0,

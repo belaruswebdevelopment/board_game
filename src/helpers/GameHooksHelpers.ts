@@ -1,5 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { AddDataToLog } from "../Logging";
+import { IBuffs } from "../typescript/buff_interfaces";
 import { CampDeckCardTypes, PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { HeroNames, LogTypes, Phases, RusCardTypes, Stages } from "../typescript/enums";
@@ -17,12 +18,12 @@ import { DrawCurrentProfit } from "./ActionHelpers";
  * @param G
  * @param ctx
  */
-export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): boolean | INext => {
+export const AfterLastTavernEmptyActions = (G: IMyGameState): boolean | INext => {
     if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
         if (G.expansions.thingvellir.active) {
-            return CheckEnlistmentMercenaries(G, ctx);
+            return CheckEnlistmentMercenaries(G);
         } else {
-            return CheckEndTierActionsOrEndGameLastActions(G, ctx);
+            return CheckEndTierActionsOrEndGameLastActions(G);
         }
     } else {
         return {
@@ -42,7 +43,8 @@ export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): boolean 
  */
 export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G: IMyGameState): INext => {
     const ulinePlayerIndex: number = G.publicPlayers
-        .findIndex((player: IPublicPlayer): boolean => player.buffs.everyTurn === HeroNames.Uline);
+        .findIndex((player: IPublicPlayer): boolean => Boolean(player.buffs
+            .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
     if (ulinePlayerIndex !== -1) {
         return {
             next: Phases.PlaceCoinsUline,
@@ -65,9 +67,9 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G: IMyGameState): I
  * @param ctx
  */
 export const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void => {
-    const ulinePlayerIndex: number =
-        G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            player.buffs.everyTurn === HeroNames.Uline);
+    const ulinePlayerIndex: number = G.publicPlayers
+        .findIndex((player: IPublicPlayer): boolean => Boolean(player.buffs
+            .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
             const coin: CoinType = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
@@ -81,8 +83,8 @@ export const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): 
                         && tradingCoinPlacesLength === 2) {
                         const handCoinsLength: number = G.publicPlayers[Number(ctx.currentPlayer)]
                             .handCoins.filter((coin: CoinType): boolean => coin !== null).length;
-                        G.actionsNum = G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum :
-                            handCoinsLength;
+                        G.actionsNum =
+                            G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
                     }
                 }
             }
@@ -98,32 +100,29 @@ export const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): 
  * </ol>
  *
  * @param G
- * @param ctx
  */
-export const CheckEndGameLastActions = (G: IMyGameState, ctx: Ctx): boolean | INext => {
+export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
     if (!G.decks[0].length && G.decks[1].length) {
         return {
             next: Phases.GetDistinctions,
         };
     } else {
-        let buffIndex: number;
         if (G.expansions.thingvellir.active) {
-            if (ctx.phase !== Phases.BrisingamensEndGame && ctx.phase !== Phases.GetMjollnirProfit) {
-                buffIndex = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-                    Boolean(player.buffs.discardCardEndGame));
-                if (buffIndex !== -1) {
-                    return {
-                        next: Phases.BrisingamensEndGame,
-                    };
-                }
-            } else if (ctx.phase !== Phases.GetMjollnirProfit) {
-                buffIndex = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-                    Boolean(player.buffs.getMjollnirProfit));
-                if (buffIndex !== -1) {
-                    return {
-                        next: Phases.GetMjollnirProfit,
-                    };
-                }
+            const brisingamensBuffIndex: number = G.publicPlayers
+                .findIndex((player: IPublicPlayer): boolean => Boolean(player.buffs
+                    .find((buff: IBuffs): boolean => buff.discardCardEndGame !== undefined)));
+            if (brisingamensBuffIndex !== -1) {
+                return {
+                    next: Phases.BrisingamensEndGame,
+                };
+            }
+            const mjollnirBuffIndex: number = G.publicPlayers
+                .findIndex((player: IPublicPlayer): boolean => Boolean(player.buffs
+                    .find((buff: IBuffs): boolean => buff.getMjollnirProfit !== undefined)));
+            if (mjollnirBuffIndex !== -1) {
+                return {
+                    next: Phases.GetMjollnirProfit,
+                };
             }
         }
         return true;
@@ -141,15 +140,16 @@ export const CheckEndGameLastActions = (G: IMyGameState, ctx: Ctx): boolean | IN
 * @param G
 * @param ctx
 */
-export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState, ctx: Ctx): boolean | INext => {
-    const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-        player.buffs.endTier === HeroNames.Ylud);
+export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState): boolean | INext => {
+    const yludIndex: number = G.publicPlayers
+        .findIndex((player: IPublicPlayer): boolean => Boolean(player.buffs
+            .find((buff: IBuffs): boolean => buff.endTier !== undefined)));
     if (yludIndex !== -1) {
         return {
             next: Phases.EndTier,
         };
     } else {
-        return CheckEndGameLastActions(G, ctx);
+        return CheckEndGameLastActions(G);
     }
 };
 
@@ -163,7 +163,7 @@ export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState, ctx: Ct
  * @param G
  * @param ctx
  */
-const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): boolean | INext => {
+const CheckEnlistmentMercenaries = (G: IMyGameState): boolean | INext => {
     let count = false;
     for (let i = 0; i < G.publicPlayers.length; i++) {
         if (G.publicPlayers[i].campCards
@@ -177,7 +177,7 @@ const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): boolean | INext 
             next: Phases.EnlistmentMercenaries,
         };
     } else {
-        return CheckEndTierActionsOrEndGameLastActions(G, ctx);
+        return CheckEndTierActionsOrEndGameLastActions(G);
     }
 };
 

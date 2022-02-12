@@ -1,7 +1,7 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { DeleteBuffFromPlayer } from "./helpers/ActionHelpers";
 import { AddDataToLog } from "./Logging";
-import { BuffNames, HeroNames, LogTypes, Stages } from "./typescript/enums";
+import { BuffNames, LogTypes, Stages } from "./typescript/enums";
 /**
  * <h3>Создание всех монет.</h3>
  * <p>Применения:</p>
@@ -140,16 +140,20 @@ export const ReturnCoinToPlayerHands = (player, coinId) => {
  * @param isInitial Является ли обменная монета базовой.
  */
 export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => {
+    var _a;
     // TODO add LogTypes.ERROR logging
     // TODO Split into different functions!
     let upgradingCoin = {}, coin;
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin !== undefined) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .find((buff) => buff.upgradeNextCoin !== undefined)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
     }
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.coin === `min`) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .find((buff) => buff.coin !== undefined)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.Coin);
         // TODO Upgrade isInitial min coin or not or User must choose!?
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline) {
+        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+            .find((buff) => buff.everyTurn !== undefined)) {
             const allCoins = [], allHandCoins = G.publicPlayers[Number(ctx.currentPlayer)]
                 .handCoins.filter((coin) => coin !== null);
             for (let i = 0; i < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; i++) {
@@ -216,8 +220,8 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
             }
         }
         if (isCoin(upgradingCoin)) {
-            const buffValue = G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin ?
-                G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin : 0;
+            const buffValue = ((_a = G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                .find((buff) => buff.upgradeCoin !== undefined)) === null || _a === void 0 ? void 0 : _a.upgradeCoin) ? 2 : 0;
             const newValue = upgradingCoin.value + value + buffValue;
             let upgradedCoin = null;
             if (G.marketCoins.length) {

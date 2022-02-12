@@ -19,7 +19,7 @@ export interface ICreatePublicPlayer {
     readonly boardCoins: ICoin[],
     readonly stack?: IStack[],
     readonly priority: IPriority,
-    readonly buffs?: IBuffs,
+    readonly buffs?: IBuffs[],
     readonly selectedCoin?: undefined,
     readonly pickedCard?: null,
 }
@@ -51,7 +51,7 @@ export interface IPublicPlayer {
     readonly boardCoins: CoinType[],
     stack: IStack[],
     priority: IPriority,
-    buffs: IBuffs,
+    readonly buffs: IBuffs[],
     selectedCoin: undefined | number,
     pickedCard: PickedCardType,
 }

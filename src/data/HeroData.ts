@@ -1,7 +1,7 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeCoinAction } from "../actions/AutoActions";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { BuffNames, DrawNames, HeroNames, SuitNames } from "../typescript/enums";
+import { BuffNames, HeroNames, SuitNames } from "../typescript/enums";
 import { IHeroConfig, IHeroData } from "../typescript/hero_card_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { StackData } from "./StackData";
@@ -245,7 +245,6 @@ const Holda: IHeroData = {
     points: 12,
     buff: {
         name: BuffNames.GoCampOneTime,
-        value: true,
     },
     validators: {
         pickCampCardToStack: {},
@@ -313,7 +312,6 @@ const Jarika: IHeroData = {
     points: 8,
     buff: {
         name: BuffNames.UpgradeCoin,
-        value: 2,
     },
     scoringRule: (): number => 8,
 };
@@ -334,7 +332,6 @@ const Khrad: IHeroData = {
     points: 4,
     buff: {
         name: BuffNames.Coin,
-        value: `min`,
     },
     actions: {
         name: UpgradeCoinAction.name,
@@ -466,7 +463,6 @@ const Uline: IHeroData = {
     },
     buff: {
         name: BuffNames.EveryTurn,
-        value: HeroNames.Uline,
     },
     scoringRule: (): number => 9,
 };
@@ -487,7 +483,6 @@ const Ylud: IHeroData = {
     points: null,
     buff: {
         name: BuffNames.EndTier,
-        value: DrawNames.Ylud,
     },
     scoringRule: (): number => 0,
 };
@@ -508,7 +503,6 @@ const Zolkur: IHeroData = {
     points: 10,
     buff: {
         name: BuffNames.UpgradeNextCoin,
-        value: `min`,
     },
     scoringRule: (): number => 10,
 };

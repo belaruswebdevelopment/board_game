@@ -1,7 +1,7 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeCoinAction } from "../actions/AutoActions";
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { TotalRank } from "../helpers/ScoreHelpers";
-import { BuffNames, DrawNames, HeroNames, SuitNames } from "../typescript/enums";
+import { BuffNames, HeroNames, SuitNames } from "../typescript/enums";
 import { StackData } from "./StackData";
 /**
  * <h3>Данные о герое.</h3>
@@ -230,7 +230,6 @@ const Holda = {
     points: 12,
     buff: {
         name: BuffNames.GoCampOneTime,
-        value: true,
     },
     validators: {
         pickCampCardToStack: {},
@@ -295,7 +294,6 @@ const Jarika = {
     points: 8,
     buff: {
         name: BuffNames.UpgradeCoin,
-        value: 2,
     },
     scoringRule: () => 8,
 };
@@ -315,7 +313,6 @@ const Khrad = {
     points: 4,
     buff: {
         name: BuffNames.Coin,
-        value: `min`,
     },
     actions: {
         name: UpgradeCoinAction.name,
@@ -440,7 +437,6 @@ const Uline = {
     },
     buff: {
         name: BuffNames.EveryTurn,
-        value: HeroNames.Uline,
     },
     scoringRule: () => 9,
 };
@@ -460,7 +456,6 @@ const Ylud = {
     points: null,
     buff: {
         name: BuffNames.EndTier,
-        value: DrawNames.Ylud,
     },
     scoringRule: () => 0,
 };
@@ -480,7 +475,6 @@ const Zolkur = {
     points: 10,
     buff: {
         name: BuffNames.UpgradeNextCoin,
-        value: `min`,
     },
     scoringRule: () => 10,
 };

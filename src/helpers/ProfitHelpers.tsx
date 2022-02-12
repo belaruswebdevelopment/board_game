@@ -4,9 +4,10 @@ import { isActionDiscardCard, isCardNotAction } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { IConfig } from "../typescript/action_interfaces";
-import { CampCardTypes, CampDeckCardTypes, DiscardCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
+import { IBuffs } from "../typescript/buff_interfaces";
+import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, DiscardCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { ConfigNames, DrawNames, HeroNames, MoveNames, RusCardTypes } from "../typescript/enums";
+import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { TotalRank } from "./ScoreHelpers";
 import { DrawButton, DrawCard, DrawCoin } from "./UIElementHelpers";
@@ -15,7 +16,8 @@ import { DrawButton, DrawCard, DrawCoin } from "./UIElementHelpers";
 export const AddCoinToPouchProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
     for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
+        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+            .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
             && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
             DrawCoin(data, boardCells, `coin`,
                 G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j], j,
@@ -217,7 +219,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, 
 export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
     for (let j = 0; j < 3; j++) {
-        const card = G.decks[1][j];
+        const card: DeckCardTypes = G.decks[1][j];
         let suit: null | string = null;
         if (isCardNotAction(card)) {
             suit = card.suit;
@@ -372,12 +374,13 @@ export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
 
 export const UpgradeCoinProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
-    const handCoins = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
+    const handCoins: CoinType[] = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
         .filter((coin: CoinType): boolean => coin !== null);
     let handCoinIndex = -1;
     for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
         // TODO Check .? for all coins!!! and delete AS
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
+        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+            .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
             && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j] === null) {
             handCoinIndex++;
             const handCoinId: number = G.publicPlayers[Number(data.ctx.currentPlayer)]
@@ -388,15 +391,16 @@ export const UpgradeCoinProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
                 && !G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinId]?.isTriggerTrading) {
                 DrawCoin(data, boardCells, `coin`,
                     G.publicPlayers[Number(ctx.currentPlayer)].handCoins[handCoinId], j,
-                    G.publicPlayers[Number(ctx.currentPlayer)], `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `hand`,
+                    G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
+                    null, MoveNames.ClickCoinToUpgradeMove, j, `hand`,
                     handCoins[handCoinIndex]?.isInitial as boolean);
             }
         } else if (G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]
             && !G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]?.isTriggerTrading) {
             DrawCoin(data, boardCells, `coin`,
                 G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j], j,
-                G.publicPlayers[Number(ctx.currentPlayer)], `border-2`, null,
-                MoveNames.ClickCoinToUpgradeMove, j, `board`,
+                G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
+                null, MoveNames.ClickCoinToUpgradeMove, j, `board`,
                 G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j]?.isInitial as boolean);
         }
     }
@@ -414,8 +418,8 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G: IMyGameState, ctx: Ctx, d
                     DrawCoin(data, boardCells, `coin`,
                         G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j], j,
                         G.publicPlayers[Number(ctx.currentPlayer)], `border-2`,
-                        null, MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
-                        j, `board`, coin.isInitial);
+                        null, MoveNames.UpgradeCoinVidofnirVedrfolnirMove, j,
+                        `board`, coin.isInitial);
                 }
             }
         }

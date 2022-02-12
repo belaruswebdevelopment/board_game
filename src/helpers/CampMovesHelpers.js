@@ -1,4 +1,4 @@
-import { isArtefactCardNotMercenary } from "../Camp";
+import { IsArtefactCardNotMercenary } from "../Camp";
 import { StackData } from "../data/StackData";
 import { BuffNames, Phases, RusCardTypes } from "../typescript/enums";
 import { AddBuffToPlayer, DeleteBuffFromPlayer } from "./ActionHelpers";
@@ -19,19 +19,21 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 export const AddCampCardToCards = (G, ctx, card) => {
     if (ctx.phase === Phases.PickCards && ctx.activePlayers === null
         && (ctx.currentPlayer === G.publicPlayersOrder[0] ||
-            G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)) {
+            G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                .find((buff) => buff.goCamp !== undefined))) {
         G.campPicked = true;
     }
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .find((buff) => buff.goCampOneTime !== undefined)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
-    if (isArtefactCardNotMercenary(card) && card.suit !== null) {
+    if (IsArtefactCardNotMercenary(card) && card.suit !== null) {
         AddCampCardToPlayerCards(G, ctx, card);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
     }
     else {
         AddCampCardToPlayer(G, ctx, card);
-        if (isArtefactCardNotMercenary(card)) {
+        if (IsArtefactCardNotMercenary(card)) {
             AddBuffToPlayer(G, ctx, card.buff);
         }
     }

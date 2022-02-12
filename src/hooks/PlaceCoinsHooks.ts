@@ -4,8 +4,8 @@ import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
+import { IBuffs } from "../typescript/buff_interfaces";
 import { CoinType } from "../typescript/coin_types";
-import { HeroNames } from "../typescript/enums";
 import { IMyGameState, INext } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
@@ -22,7 +22,8 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
 export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): void | INext => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers
-            .filter((player: IPublicPlayer): boolean => player.buffs.everyTurn !== HeroNames.Uline)
+            .filter((player: IPublicPlayer): boolean => Boolean(player.buffs
+                .find((buff: IBuffs): boolean => buff.everyTurn !== undefined) === undefined))
             .every((player: IPublicPlayer): boolean => player.handCoins
                 .every((coin: CoinType): boolean => coin === null));
         if (isEveryPlayersHandCoinsEmpty) {

@@ -26,6 +26,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
                     suit: artefactConfig[campArtefactCard].suit,
                     rank: artefactConfig[campArtefactCard].rank,
                     points: artefactConfig[campArtefactCard].points,
+                    buff: artefactConfig[campArtefactCard].buff,
                     actions: artefactConfig[campArtefactCard].actions,
                     stack: artefactConfig[campArtefactCard].stack,
                 }));
@@ -83,7 +84,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @param stack Действия.
  * @returns Карта кэмпа артефакт.
  */
-export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, path, name, description, game, suit, rank, points, actions, stack, } = {}) => ({
+export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, path, name, description, game, suit, rank, points, buff, actions, stack, } = {}) => ({
     type,
     tier,
     path,
@@ -93,6 +94,7 @@ export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, pat
     suit,
     rank,
     points,
+    buff,
     actions,
     stack,
 });
@@ -119,7 +121,7 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, p
     game,
     variants,
 });
-export const isArtefactDiscardCard = (card) => card.type === RusCardTypes.ARTEFACT;
+export const IsArtefactDiscardCard = (card) => card.type === RusCardTypes.ARTEFACT;
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>
@@ -130,5 +132,6 @@ export const isArtefactDiscardCard = (card) => card.type === RusCardTypes.ARTEFA
  * @param card Карта.
  * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
  */
-export const isArtefactCardNotMercenary = (card) => card.suit !== undefined;
+export const IsArtefactCardNotMercenary = (card) => card.suit !== undefined;
+export const IsMercenaryCard = (card) => card.variants !== undefined;
 //# sourceMappingURL=Camp.js.map

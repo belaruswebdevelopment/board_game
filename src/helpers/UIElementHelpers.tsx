@@ -28,8 +28,7 @@ import { ArgsTypes } from "../typescript/types";
  */
 export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], key: string, name: string,
     player: IPublicPlayer, actionName?: string, ...args: ArgsTypes): void => {
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    let action: Function | null = null;
+    let action: ((...args: ArgsTypes) => void) | null = null;
     switch (actionName) {
         case MoveNames.StartEnlistmentMercenariesMove:
             action = data.moves.StartEnlistmentMercenariesMove;
@@ -72,8 +71,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     let styles: IBackground = { background: `` },
         tdClasses = ``,
         spanClasses = ``,
-        // eslint-disable-next-line @typescript-eslint/ban-types
-        action: Function | null = null;
+        action: ((...args: ArgsTypes) => void) | null = null;
     switch (actionName) {
         case MoveNames.ClickHeroCardMove:
             action = data.moves.ClickHeroCardMove;
@@ -188,8 +186,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         span: JSX.Element | number | null = null,
         tdClasses = `bg-yellow-300`,
         spanClasses = ``,
-        // eslint-disable-next-line @typescript-eslint/ban-types
-        action: Function | null = null;
+        action: ((...args: ArgsTypes) => void) | null = null;
     switch (actionName) {
         case MoveNames.ClickBoardCoinMove:
             action = data.moves.ClickBoardCoinMove;

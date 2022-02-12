@@ -2,13 +2,14 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { isActionDiscardCard, isCardNotAction } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { ConfigNames, DrawNames, HeroNames, MoveNames, RusCardTypes } from "../typescript/enums";
+import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { TotalRank } from "./ScoreHelpers";
 import { DrawButton, DrawCard, DrawCoin } from "./UIElementHelpers";
 // TODO Add functions dock blocks
 export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
+        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+            .find((buff) => buff.everyTurn !== undefined)
             && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
             DrawCoin(data, boardCells, `coin`, G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j], j, G.publicPlayers[Number(ctx.currentPlayer)], `border-2`, null, MoveNames.AddCoinToPouchMove, j);
         }
@@ -242,7 +243,8 @@ export const UpgradeCoinProfit = (G, ctx, data, boardCells) => {
     let handCoinIndex = -1;
     for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
         // TODO Check .? for all coins!!! and delete AS
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
+        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+            .find((buff) => buff.everyTurn !== undefined)
             && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j] === null) {
             handCoinIndex++;
             const handCoinId = G.publicPlayers[Number(data.ctx.currentPlayer)]

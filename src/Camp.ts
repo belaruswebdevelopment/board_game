@@ -30,6 +30,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
                     suit: artefactConfig[campArtefactCard].suit,
                     rank: artefactConfig[campArtefactCard].rank,
                     points: artefactConfig[campArtefactCard].points,
+                    buff: artefactConfig[campArtefactCard].buff,
                     actions: artefactConfig[campArtefactCard].actions,
                     stack: artefactConfig[campArtefactCard].stack,
                 } as ICreateArtefactCampCard));
@@ -99,6 +100,7 @@ export const CreateArtefactCampCard = ({
     suit,
     rank,
     points,
+    buff,
     actions,
     stack,
 }: ICreateArtefactCampCard = {} as ICreateArtefactCampCard):
@@ -112,6 +114,7 @@ export const CreateArtefactCampCard = ({
         suit,
         rank,
         points,
+        buff,
         actions,
         stack,
     });
@@ -147,7 +150,7 @@ export const CreateMercenaryCampCard = ({
     variants,
 });
 
-export const isArtefactDiscardCard = (card: DiscardCardTypes): card is IArtefactCampCard =>
+export const IsArtefactDiscardCard = (card: DiscardCardTypes): card is IArtefactCampCard =>
     (card as IArtefactCampCard).type === RusCardTypes.ARTEFACT;
 
 /**
@@ -160,5 +163,8 @@ export const isArtefactDiscardCard = (card: DiscardCardTypes): card is IArtefact
  * @param card Карта.
  * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
  */
-export const isArtefactCardNotMercenary = (card: IArtefactCampCard | IMercenaryCampCard): card is IArtefactCampCard =>
+export const IsArtefactCardNotMercenary = (card: IArtefactCampCard | IMercenaryCampCard): card is IArtefactCampCard =>
     (card as IArtefactCampCard).suit !== undefined;
+
+export const IsMercenaryCard = (card: unknown): card is IMercenaryCampCard =>
+    (card as IMercenaryCampCard).variants !== undefined;

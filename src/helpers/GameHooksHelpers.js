@@ -11,13 +11,13 @@ import { DrawCurrentProfit } from "./ActionHelpers";
  * @param G
  * @param ctx
  */
-export const AfterLastTavernEmptyActions = (G, ctx) => {
+export const AfterLastTavernEmptyActions = (G) => {
     if (G.decks[G.decks.length - G.tierToEnd].length === 0) {
         if (G.expansions.thingvellir.active) {
-            return CheckEnlistmentMercenaries(G, ctx);
+            return CheckEnlistmentMercenaries(G);
         }
         else {
-            return CheckEndTierActionsOrEndGameLastActions(G, ctx);
+            return CheckEndTierActionsOrEndGameLastActions(G);
         }
     }
     else {
@@ -37,7 +37,8 @@ export const AfterLastTavernEmptyActions = (G, ctx) => {
  */
 export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
     const ulinePlayerIndex = G.publicPlayers
-        .findIndex((player) => player.buffs.everyTurn === HeroNames.Uline);
+        .findIndex((player) => Boolean(player.buffs
+        .find((buff) => buff.everyTurn !== undefined)));
     if (ulinePlayerIndex !== -1) {
         return {
             next: Phases.PlaceCoinsUline,
@@ -61,7 +62,9 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
  */
 export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
     var _a;
-    const ulinePlayerIndex = G.publicPlayers.findIndex((player) => player.buffs.everyTurn === HeroNames.Uline);
+    const ulinePlayerIndex = G.publicPlayers
+        .findIndex((player) => Boolean(player.buffs
+        .find((buff) => buff.everyTurn !== undefined)));
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
             const coin = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[G.currentTavern];
@@ -73,8 +76,8 @@ export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
                         && tradingCoinPlacesLength === 2) {
                         const handCoinsLength = G.publicPlayers[Number(ctx.currentPlayer)]
                             .handCoins.filter((coin) => coin !== null).length;
-                        G.actionsNum = G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum :
-                            handCoinsLength;
+                        G.actionsNum =
+                            G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
                     }
                 }
             }
@@ -89,32 +92,30 @@ export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
  * </ol>
  *
  * @param G
- * @param ctx
  */
-export const CheckEndGameLastActions = (G, ctx) => {
+export const CheckEndGameLastActions = (G) => {
     if (!G.decks[0].length && G.decks[1].length) {
         return {
             next: Phases.GetDistinctions,
         };
     }
     else {
-        let buffIndex;
         if (G.expansions.thingvellir.active) {
-            if (ctx.phase !== Phases.BrisingamensEndGame && ctx.phase !== Phases.GetMjollnirProfit) {
-                buffIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.discardCardEndGame));
-                if (buffIndex !== -1) {
-                    return {
-                        next: Phases.BrisingamensEndGame,
-                    };
-                }
+            const brisingamensBuffIndex = G.publicPlayers
+                .findIndex((player) => Boolean(player.buffs
+                .find((buff) => buff.discardCardEndGame !== undefined)));
+            if (brisingamensBuffIndex !== -1) {
+                return {
+                    next: Phases.BrisingamensEndGame,
+                };
             }
-            else if (ctx.phase !== Phases.GetMjollnirProfit) {
-                buffIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.getMjollnirProfit));
-                if (buffIndex !== -1) {
-                    return {
-                        next: Phases.GetMjollnirProfit,
-                    };
-                }
+            const mjollnirBuffIndex = G.publicPlayers
+                .findIndex((player) => Boolean(player.buffs
+                .find((buff) => buff.getMjollnirProfit !== undefined)));
+            if (mjollnirBuffIndex !== -1) {
+                return {
+                    next: Phases.GetMjollnirProfit,
+                };
             }
         }
         return true;
@@ -131,15 +132,17 @@ export const CheckEndGameLastActions = (G, ctx) => {
 * @param G
 * @param ctx
 */
-export const CheckEndTierActionsOrEndGameLastActions = (G, ctx) => {
-    const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === HeroNames.Ylud);
+export const CheckEndTierActionsOrEndGameLastActions = (G) => {
+    const yludIndex = G.publicPlayers
+        .findIndex((player) => Boolean(player.buffs
+        .find((buff) => buff.endTier !== undefined)));
     if (yludIndex !== -1) {
         return {
             next: Phases.EndTier,
         };
     }
     else {
-        return CheckEndGameLastActions(G, ctx);
+        return CheckEndGameLastActions(G);
     }
 };
 /**
@@ -152,7 +155,7 @@ export const CheckEndTierActionsOrEndGameLastActions = (G, ctx) => {
  * @param G
  * @param ctx
  */
-const CheckEnlistmentMercenaries = (G, ctx) => {
+const CheckEnlistmentMercenaries = (G) => {
     let count = false;
     for (let i = 0; i < G.publicPlayers.length; i++) {
         if (G.publicPlayers[i].campCards
@@ -167,7 +170,7 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
         };
     }
     else {
-        return CheckEndTierActionsOrEndGameLastActions(G, ctx);
+        return CheckEndTierActionsOrEndGameLastActions(G);
     }
 };
 export const ClearPlayerPickedCard = (G, ctx) => {

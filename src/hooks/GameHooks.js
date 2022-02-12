@@ -1,16 +1,18 @@
 import { ScoreWinner } from "../Score";
-import { HeroNames, RusCardTypes } from "../typescript/enums";
+import { RusCardTypes } from "../typescript/enums";
 export const CheckEndGame = (G) => {
     if (G.tierToEnd === 0) {
-        const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === HeroNames.Ylud);
+        const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
         if (yludIndex !== -1) {
             return false;
         }
-        const brisingamensIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.discardCardEndGame));
+        const brisingamensIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs
+            .find((buff) => buff.discardCardEndGame !== undefined)));
         if (brisingamensIndex !== -1) {
             return false;
         }
-        const mjollnirIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.getMjollnirProfit));
+        const mjollnirIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs
+            .find((buff) => buff.getMjollnirProfit !== undefined)));
         if (mjollnirIndex !== -1) {
             return false;
         }

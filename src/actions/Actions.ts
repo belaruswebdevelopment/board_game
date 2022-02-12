@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { isArtefactDiscardCard } from "../Camp";
+import { IsArtefactDiscardCard, IsMercenaryCard } from "../Camp";
 import { CreateCard, isActionDiscardCard, isCardNotAction } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
@@ -29,9 +29,8 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
     if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId].type !== RusCardTypes.HERO) {
-        const discardedCard: DiscardCardTypes =
-            G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0] as
-            DiscardCardTypes;
+        const discardedCard: DiscardCardTypes = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
+            .splice(cardId, 1)[0] as DiscardCardTypes;
         G.discardCardsDeck.push(discardedCard);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
         DeleteBuffFromPlayer(G, ctx, BuffNames.DiscardCardEndGame);
@@ -129,7 +128,7 @@ export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens()]);
     }
     let isAdded = false;
-    if (isArtefactDiscardCard(pickedCard)) {
+    if (IsArtefactDiscardCard(pickedCard)) {
         isAdded = AddCampCardToPlayerCards(G, ctx, pickedCard);
     } else {
         isAdded = AddCardToPlayer(G, ctx, pickedCard);
@@ -157,7 +156,7 @@ export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void
 export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
     const pickedCard: PickedCardType = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null) {
-        if (`variants` in pickedCard && `tier` in pickedCard && `path` in pickedCard) {
+        if (IsMercenaryCard(pickedCard)) {
             if (pickedCard.variants !== undefined) {
                 const mercenaryCard: ICard = CreateCard({
                     type: RusCardTypes.MERCENARY,

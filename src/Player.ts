@@ -2,7 +2,8 @@ import { Ctx } from "boardgame.io";
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
-import { HeroNames, Phases } from "./typescript/enums";
+import { IBuffs } from "./typescript/buff_interfaces";
+import { Phases } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
 import { IPlayerCards } from "./typescript/interfaces";
 import { ICreatePublicPlayer, IPlayer, IPublicPlayer } from "./typescript/player_interfaces";
@@ -69,12 +70,12 @@ export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         if (ctx.phase !== Phases.PlaceCoinsUline) {
-            // TODO Create enums for buffs values
-            if (G.publicPlayers[i].buffs.everyTurn !== HeroNames.Uline) {
+            if (G.publicPlayers[i].buffs
+                .find((buff: IBuffs): boolean => buff.everyTurn !== undefined) === undefined) {
                 G.publicPlayersOrder.push(String(i));
             }
         } else {
-            if (G.publicPlayers[i].buffs.everyTurn === HeroNames.Uline) {
+            if (G.publicPlayers[i].buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)) {
                 G.publicPlayersOrder.push(String(i));
             }
         }
@@ -129,7 +130,7 @@ const CreatePublicPlayer = ({
     boardCoins,
     stack = [],
     priority,
-    buffs = {},
+    buffs = [],
     selectedCoin,
     pickedCard = null,
 }: ICreatePublicPlayer = {} as ICreatePublicPlayer): IPublicPlayer => ({

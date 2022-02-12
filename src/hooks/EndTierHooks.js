@@ -14,12 +14,18 @@ import { HeroNames } from "../typescript/enums";
  */
 export const CheckEndEndTierPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === HeroNames.Ylud);
-        if (yludIndex !== -1) {
-            const index = Object.values(G.publicPlayers[yludIndex].cards).flat()
-                .findIndex((card) => card.name === HeroNames.Ylud);
-            if (index !== -1) {
-                return CheckEndGameLastActions(G, ctx);
+        const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
+        if (yludIndex !== -1 || (G.tierToEnd === 0 && yludIndex === -1)) {
+            let nextPhase = true;
+            if (yludIndex !== -1) {
+                const index = Object.values(G.publicPlayers[yludIndex].cards).flat()
+                    .findIndex((card) => card.name === HeroNames.Ylud);
+                if (index === -1) {
+                    nextPhase = false;
+                }
+            }
+            if (nextPhase) {
+                return CheckEndGameLastActions(G);
             }
         }
         else {
@@ -38,7 +44,7 @@ export const CheckEndEndTierPhase = (G, ctx) => {
  */
 export const CheckEndTierOrder = (G) => {
     G.publicPlayersOrder = [];
-    const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === HeroNames.Ylud);
+    const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
     if (G.tierToEnd === 0) {
         const cards = Object.values(G.publicPlayers[yludIndex].cards).flat(), index = cards.findIndex((card) => card.name === HeroNames.Ylud);
         if (index !== -1) {

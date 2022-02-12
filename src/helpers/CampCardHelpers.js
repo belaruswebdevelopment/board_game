@@ -1,4 +1,4 @@
-import { isArtefactCardNotMercenary } from "../Camp";
+import { IsArtefactCardNotMercenary } from "../Camp";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
@@ -14,7 +14,7 @@ import { LogTypes } from "../typescript/enums";
  * @param card Карта кэмпа.
  */
 export const AddCampCardToPlayer = (G, ctx, card) => {
-    if (!isArtefactCardNotMercenary(card) || (isArtefactCardNotMercenary(card) && card.suit === null)) {
+    if (!IsArtefactCardNotMercenary(card) || (IsArtefactCardNotMercenary(card) && card.suit === null)) {
         G.publicPlayers[Number(ctx.currentPlayer)].campCards.push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту кэмпа ${card.name}.`);
     }

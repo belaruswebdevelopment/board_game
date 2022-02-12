@@ -7,9 +7,10 @@ import { TotalRank } from "./helpers/ScoreHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
 import { IConfig } from "./typescript/action_interfaces";
+import { IBuffs } from "./typescript/buff_interfaces";
 import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, PickedCardType, PlayerCardsType, TavernCardTypes } from "./typescript/card_types";
 import { CoinType } from "./typescript/coin_types";
-import { ConfigNames, HeroNames, MoveNames, Phases, RusCardTypes, ValidatorNames } from "./typescript/enums";
+import { ConfigNames, MoveNames, Phases, RusCardTypes, ValidatorNames } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
 import { IValidatorsConfig } from "./typescript/hero_validator_interfaces";
 import { ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardIdArguments, ICurrentMoveSuitCardPlayerCurrentId, ICurrentMoveSuitCardPlayerIdArguments } from "./typescript/move_interfaces";
@@ -260,7 +261,8 @@ export const moveValidators: IMoveValidators = {
             if (G !== undefined && ctx !== undefined) {
                 isValid = G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
                     || (!G.campPicked
-                        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
+                        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                            .find((buff: IBuffs): boolean => buff.goCamp !== undefined))));
             }
             return isValid;
         },
@@ -660,7 +662,8 @@ export const moveValidators: IMoveValidators = {
             const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
             if (G !== undefined && ctx !== undefined) {
                 for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                        .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
                         && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
                         moveMainArgs.push(j);
                     }
@@ -706,7 +709,8 @@ export const moveValidators: IMoveValidators = {
                 let handCoinIndex = -1;
                 for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
                     // TODO Check .? for all coins!!! and delete AS
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                        .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
                         && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j] === null) {
                         handCoinIndex++;
                         const handCoinId: number = G.publicPlayers[Number(ctx.currentPlayer)]

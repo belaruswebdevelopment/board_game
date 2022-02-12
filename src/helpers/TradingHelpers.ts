@@ -1,6 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { UpgradeCoinAction } from "../actions/AutoActions";
 import { AddDataToLog } from "../Logging";
+import { IBuffs } from "../typescript/buff_interfaces";
 import { ICoin } from "../typescript/coin_interfaces";
 import { CoinType } from "../typescript/coin_types";
 import { LogTypes } from "../typescript/enums";
@@ -66,7 +67,8 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
             // }
         }
     }
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin === `min`) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .find((buff: IBuffs): boolean => buff.upgradeNextCoin !== undefined)) {
         value = coinsMaxValue;
         upgradingCoinId = G.tavernsNum + coinMinIndex;
         upgradingCoin = tradingCoins[coinMinIndex];

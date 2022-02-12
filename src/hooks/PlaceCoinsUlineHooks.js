@@ -1,5 +1,4 @@
 import { CheckPlayersBasicOrder } from "../Player";
-import { HeroNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoinsUline'.</h3>
  * <p>Применения:</p>
@@ -12,7 +11,7 @@ import { HeroNames } from "../typescript/enums";
  */
 export const CheckEndPlaceCoinsUlinePhase = (G) => {
     if (G.publicPlayersOrder.length) {
-        const ulinePlayerIndex = G.publicPlayers.findIndex((player) => player.buffs.everyTurn === HeroNames.Uline);
+        const ulinePlayerIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.everyTurn !== undefined)));
         return G.publicPlayers[ulinePlayerIndex].boardCoins[G.currentTavern + 1] !== null;
     }
 };

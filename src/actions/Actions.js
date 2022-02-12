@@ -1,4 +1,4 @@
-import { isArtefactDiscardCard } from "../Camp";
+import { IsArtefactDiscardCard, IsMercenaryCard } from "../Camp";
 import { CreateCard, isActionDiscardCard, isCardNotAction } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
@@ -24,7 +24,8 @@ import { BuffNames, LogTypes, RusCardTypes } from "../typescript/enums";
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, suit, cardId) => {
     if (G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId].type !== RusCardTypes.HERO) {
-        const discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit].splice(cardId, 1)[0];
+        const discardedCard = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
+            .splice(cardId, 1)[0];
         G.discardCardsDeck.push(discardedCard);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
         DeleteBuffFromPlayer(G, ctx, BuffNames.DiscardCardEndGame);
@@ -119,7 +120,7 @@ export const PickDiscardCard = (G, ctx, cardId) => {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens()]);
     }
     let isAdded = false;
-    if (isArtefactDiscardCard(pickedCard)) {
+    if (IsArtefactDiscardCard(pickedCard)) {
         isAdded = AddCampCardToPlayerCards(G, ctx, pickedCard);
     }
     else {
@@ -147,7 +148,7 @@ export const PickDiscardCard = (G, ctx, cardId) => {
 export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
     const pickedCard = G.publicPlayers[Number(ctx.currentPlayer)].pickedCard;
     if (pickedCard !== null) {
-        if (`variants` in pickedCard && `tier` in pickedCard && `path` in pickedCard) {
+        if (IsMercenaryCard(pickedCard)) {
             if (pickedCard.variants !== undefined) {
                 const mercenaryCard = CreateCard({
                     type: RusCardTypes.MERCENARY,

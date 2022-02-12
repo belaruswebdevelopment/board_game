@@ -2,12 +2,12 @@ import { Ctx, Game } from "boardgame.io";
 import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
-import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
+import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
 import { CheckEndEndTierPhase, CheckEndEndTierTurn, CheckEndTierOrder, EndEndTierActions, OnEndTierMove, OnEndTierTurnBegin, OnEndTierTurnEnd } from "./hooks/EndTierHooks";
 import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, OnEnlistmentMercenariesTurnEnd, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
 import { CheckEndGame, ReturnEndGameData } from "./hooks/GameHooks";
 import { CheckAndResolveDistinctionsOrders, CheckEndGetDistinctionsPhase, CheckNextGetDistinctionsTurn, EndGetDistinctionsPhaseActions, OnGetDistinctionsMove, OnGetDistinctionsTurnBegin, OnGetDistinctionsTurnEnd } from "./hooks/GetDistinctionsHooks";
-import { CheckEndGetMjollnirProfitPhase, CheckGetMjollnirProfitOrder, OnGetMjollnirProfitTurnBegin, StartEndGame } from "./hooks/GetMjollnirProfitHooks";
+import { CheckEndGetMjollnirProfitPhase, CheckGetMjollnirProfitOrder, OnGetMjollnirProfitMove, OnGetMjollnirProfitTurnBegin, StartEndGame } from "./hooks/GetMjollnirProfitHooks";
 import { CheckEndPickCardsPhase, CheckEndPickCardsTurn, EndPickCardsActions, OnPickCardsMove, OnPickCardsTurnBegin, OnPickCardsTurnEnd, ResolveCurrentTavernOrders } from "./hooks/PickCardsHooks";
 import { CheckEndPlaceCoinsPhase, CheckEndPlaceCoinsTurn, OnPlaceCoinsTurnEnd, PreparationPhaseActions } from "./hooks/PlaceCoinsHooks";
 import { CheckEndPlaceCoinsUlinePhase, CheckUlinePlaceCoinsOrder, EndPlaceCoinsUlineActions } from "./hooks/PlaceCoinsUlineHooks";
@@ -147,7 +147,7 @@ export const BoardGame: Game<IMyGameState> = {
             },
             onBegin: (G: IMyGameState, ctx: Ctx): void => ResolveCurrentTavernOrders(G, ctx),
             endIf: (G: IMyGameState, ctx: Ctx) => CheckEndPickCardsPhase(G, ctx),
-            onEnd: (G: IMyGameState): void => EndPickCardsActions(G),
+            onEnd: (G: IMyGameState, ctx: Ctx): void => EndPickCardsActions(G, ctx),
         },
         enlistmentMercenaries: {
             turn: {
@@ -371,6 +371,7 @@ export const BoardGame: Game<IMyGameState> = {
                 minMoves: 1,
                 maxMoves: 1,
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnBrisingamensEndGameTurnBegin(G, ctx),
+                onMove: (G: IMyGameState, ctx: Ctx): void => OnBrisingamensEndGameMove(G, ctx),
             },
             moves: {
                 DiscardCardFromPlayerBoardMove,
@@ -385,12 +386,13 @@ export const BoardGame: Game<IMyGameState> = {
                 minMoves: 1,
                 maxMoves: 1,
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnGetMjollnirProfitTurnBegin(G, ctx),
+                onMove: (G: IMyGameState, ctx: Ctx): void => OnGetMjollnirProfitMove(G, ctx),
             },
             moves: {
                 GetMjollnirProfitMove,
             },
             onBegin: (G: IMyGameState): void => CheckGetMjollnirProfitOrder(G),
-            endIf: (G: IMyGameState): boolean | void => CheckEndGetMjollnirProfitPhase(G),
+            endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndGetMjollnirProfitPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => StartEndGame(G, ctx),
         },
     },

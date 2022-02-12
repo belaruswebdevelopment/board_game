@@ -2,6 +2,7 @@ import { Ctx } from "boardgame.io";
 import { CreateCard } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
@@ -9,7 +10,7 @@ import { AddDataToLog } from "../Logging";
 import { IVariants } from "../typescript/action_interfaces";
 import { ICard, ICreateCard } from "../typescript/card_interfaces";
 import { DiscardCardTypes } from "../typescript/card_types";
-import { CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
+import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 
 /**
@@ -24,10 +25,9 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string,
-    cardId: number): void => {
-    const pickedCard: DiscardCardTypes = G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId] as
-        DiscardCardTypes;
+export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
+    const pickedCard: DiscardCardTypes =
+        G.publicPlayers[Number(ctx.currentPlayer)].cards[suit][cardId] as DiscardCardTypes;
     if (pickedCard.type !== RusCardTypes.HERO) {
         G.publicPlayers[Number(ctx.currentPlayer)].pickedCard = pickedCard;
         G.discardCardsDeck.push(G.publicPlayers[Number(ctx.currentPlayer)].cards[suit]
@@ -128,6 +128,9 @@ export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: string): void =
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${HeroNames.Ylud} во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, heroCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, heroCard);
+        if (G.tierToEnd === 0) {
+            DeleteBuffFromPlayer(G, ctx, BuffNames.EndTier);
+        }
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants' или не передан обязательный параметр 'stack[0].config.name'.`);
     }

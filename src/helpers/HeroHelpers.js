@@ -75,7 +75,8 @@ export const CheckAndMoveThrudOrPickHeroAction = (G, ctx, card) => {
  * @param ctx
  */
 export const CheckPickHero = (G, ctx) => {
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].buffs.noHero) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .find((buff) => buff.noHero !== undefined) === undefined) {
         const playerCards = Object.values(G.publicPlayers[Number(ctx.currentPlayer)].cards), isCanPickHero = Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) >
             G.publicPlayers[Number(ctx.currentPlayer)].heroes.length;
         if (isCanPickHero) {

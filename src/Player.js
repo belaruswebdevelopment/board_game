@@ -1,7 +1,7 @@
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
-import { HeroNames, Phases } from "./typescript/enums";
+import { Phases } from "./typescript/enums";
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
  * <p>Применения:</p>
@@ -59,13 +59,13 @@ export const CheckPlayersBasicOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         if (ctx.phase !== Phases.PlaceCoinsUline) {
-            // TODO Create enums for buffs values
-            if (G.publicPlayers[i].buffs.everyTurn !== HeroNames.Uline) {
+            if (G.publicPlayers[i].buffs
+                .find((buff) => buff.everyTurn !== undefined) === undefined) {
                 G.publicPlayersOrder.push(String(i));
             }
         }
         else {
-            if (G.publicPlayers[i].buffs.everyTurn === HeroNames.Uline) {
+            if (G.publicPlayers[i].buffs.find((buff) => buff.everyTurn !== undefined)) {
                 G.publicPlayersOrder.push(String(i));
             }
         }
@@ -106,7 +106,7 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * @param pickedCard Выбранная карта.
  * @returns Публичные данные игрока.
  */
-const CreatePublicPlayer = ({ nickname, cards, heroes = [], campCards = [], handCoins, boardCoins, stack = [], priority, buffs = {}, selectedCoin, pickedCard = null, } = {}) => ({
+const CreatePublicPlayer = ({ nickname, cards, heroes = [], campCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin, pickedCard = null, } = {}) => ({
     nickname,
     cards,
     campCards,

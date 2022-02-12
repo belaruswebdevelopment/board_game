@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { isArtefactCardNotMercenary } from "../Camp";
+import { IsArtefactCardNotMercenary } from "../Camp";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { IArtefactCampCard } from "../typescript/camp_card_interfaces";
@@ -19,7 +19,7 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @param card Карта кэмпа.
  */
 export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
-    if (!isArtefactCardNotMercenary(card) || (isArtefactCardNotMercenary(card) && card.suit === null)) {
+    if (!IsArtefactCardNotMercenary(card) || (IsArtefactCardNotMercenary(card) && card.suit === null)) {
         G.publicPlayers[Number(ctx.currentPlayer)].campCards.push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал карту кэмпа ${card.name}.`);
     } else {

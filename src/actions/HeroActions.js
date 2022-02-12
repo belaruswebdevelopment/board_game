@@ -1,11 +1,12 @@
 import { CreateCard } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
+import { DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
+import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
  * <p>Применения:</p>
@@ -120,6 +121,9 @@ export const PlaceYludAction = (G, ctx, suit) => {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} добавил карту ${HeroNames.Ylud} во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, heroCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, heroCard);
+        if (G.tierToEnd === 0) {
+            DeleteBuffFromPlayer(G, ctx, BuffNames.EndTier);
+        }
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants' или не передан обязательный параметр 'stack[0].config.name'.`);

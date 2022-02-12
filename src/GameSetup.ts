@@ -13,6 +13,7 @@ import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { IAverageCard, IAverageSuitCardData, IBotData } from "./typescript/bot_interfaces";
+import { ICard } from "./typescript/card_interfaces";
 import { CampDeckCardTypes, DeckCardTypes } from "./typescript/card_types";
 import { ICoin } from "./typescript/coin_interfaces";
 import { IDistinctions } from "./typescript/distinction_interfaces";
@@ -49,7 +50,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         totalScore: number[] = [],
         logData: ILogData[] = [],
         decks: DeckCardTypes[][] = [],
-        additionalCardsDeck = BuildAdditionalCards(),
+        additionalCardsDeck: ICard[] = BuildAdditionalCards(),
         // TODO Discard cards must be hidden from users?
         discardCardsDeck: DeckCardTypes[] = [],
         campDecks: CampDeckCardTypes[][] = [],

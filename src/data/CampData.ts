@@ -24,7 +24,6 @@ const Brisingamens: IArtefact = {
     points: null,
     buff: {
         name: BuffNames.DiscardCardEndGame,
-        value: true,
     },
     validators: {
         pickDiscardCardToStack: {},
@@ -48,8 +47,9 @@ const Draupnir: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.boardCoins
-        .filter((coin: CoinType): boolean => Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
+    scoringRule: (player?: IPublicPlayer): number => player !== undefined ?
+        player.boardCoins.filter((coin: CoinType): boolean =>
+            Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
 };
 
 /**
@@ -69,7 +69,6 @@ const Fafnir_Baleygr: IArtefact = {
     points: null,
     buff: {
         name: BuffNames.GoCamp,
-        value: true,
     },
     scoringRule: (): number => 0,
 };
@@ -185,7 +184,6 @@ const Megingjord: IArtefact = {
     points: null,
     buff: {
         name: BuffNames.NoHero,
-        value: true,
     },
     scoringRule: (): number => 28,
 };
@@ -207,7 +205,6 @@ const Mjollnir: IArtefact = {
     points: null,
     buff: {
         name: BuffNames.GetMjollnirProfit,
-        value: true,
     },
     scoringRule: (player?: IPublicPlayer, suit?: string): number => player !== undefined && suit !== undefined ?
         player.cards[suit].reduce(TotalRank, 0) * 2 : 0,

@@ -1,6 +1,6 @@
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddGetMjollnirProfitActionsToStack } from "../helpers/CampHelpers";
-import { EndGame } from "../helpers/GameHooksHelpers";
+import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
 /**
  * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>
  * <p>Применения:</p>
@@ -11,14 +11,17 @@ import { EndGame } from "../helpers/GameHooksHelpers";
  * @param G
  * @returns
  */
-export const CheckEndGetMjollnirProfitPhase = (G) => {
-    if (G.publicPlayersOrder.length) {
+export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
+    if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
         return G.suitIdForMjollnir !== null;
     }
 };
 export const CheckGetMjollnirProfitOrder = (G) => {
-    const mjollnirPlayerIndex = G.publicPlayers.findIndex((player) => player.buffs.getMjollnirProfit === true);
+    const mjollnirPlayerIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.getMjollnirProfit !== undefined)));
     G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
+};
+export const OnGetMjollnirProfitMove = (G, ctx) => {
+    StartOrEndActions(G, ctx);
 };
 export const OnGetMjollnirProfitTurnBegin = (G, ctx) => {
     AddGetMjollnirProfitActionsToStack(G, ctx);

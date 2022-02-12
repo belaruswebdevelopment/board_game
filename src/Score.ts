@@ -5,8 +5,9 @@ import { suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog } from "./Logging";
+import { IBuffs } from "./typescript/buff_interfaces";
 import { IArtefact } from "./typescript/camp_card_interfaces";
-import { HeroNames, LogTypes, SuitNames } from "./typescript/enums";
+import { LogTypes, SuitNames } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
 import { IHeroData } from "./typescript/hero_card_interfaces";
 import { IPublicPlayer } from "./typescript/player_interfaces";
@@ -54,7 +55,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): 
     for (let i = 0; i < player.boardCoins.length; i++) {
         coinsValue += player.boardCoins[i]?.value ?? 0;
     }
-    if (player.buffs.everyTurn === HeroNames.Uline) {
+    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)) {
         for (let i = 0; i < player.handCoins.length; i++) {
             coinsValue += player.handCoins[i]?.value ?? 0;
         }

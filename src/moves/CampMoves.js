@@ -1,6 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, DiscardSuitCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
-import { isArtefactCardNotMercenary } from "../Camp";
+import { IsArtefactCardNotMercenary } from "../Camp";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddCampCardToCards } from "../helpers/CampMovesHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
@@ -47,7 +47,7 @@ export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
     if (campCard !== null) {
         G.camp[cardId] = null;
         AddCampCardToCards(G, ctx, campCard);
-        if (isArtefactCardNotMercenary(campCard)) {
+        if (IsArtefactCardNotMercenary(campCard)) {
             AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
             StartAutoAction(G, ctx, campCard.actions);
         }
@@ -78,7 +78,7 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
     if (campCard !== null) {
         G.camp[cardId] = null;
         AddCampCardToCards(G, ctx, campCard);
-        if (isArtefactCardNotMercenary(campCard)) {
+        if (IsArtefactCardNotMercenary(campCard)) {
             AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
             StartAutoAction(G, ctx, campCard.actions);
         }

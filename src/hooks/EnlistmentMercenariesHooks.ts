@@ -2,8 +2,9 @@ import { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { IBuffs } from "../typescript/buff_interfaces";
 import { CampDeckCardTypes } from "../typescript/card_types";
-import { HeroNames, RusCardTypes } from "../typescript/enums";
+import { RusCardTypes } from "../typescript/enums";
 import { IMyGameState, INext } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
@@ -31,7 +32,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): b
                 }
             }
             if (allMercenariesPlayed) {
-                return CheckEndTierActionsOrEndGameLastActions(G, ctx);
+                return CheckEndTierActionsOrEndGameLastActions(G);
             }
         }
     }
@@ -54,15 +55,14 @@ export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): bo
         return EndTurnActions(G, ctx);
     } else if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
         return G.publicPlayers[Number(ctx.currentPlayer)].campCards
-            .filter((card: CampDeckCardTypes): boolean =>
-                card.type === RusCardTypes.MERCENARY).length === 0;
+            .filter((card: CampDeckCardTypes): boolean => card.type === RusCardTypes.MERCENARY).length === 0;
     }
 };
 
 export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void => {
     if (G.tierToEnd === 0) {
         const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            player.buffs.endTier === HeroNames.Ylud);
+            Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
         if (yludIndex === -1) {
             RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
         }

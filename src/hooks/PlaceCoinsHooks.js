@@ -3,7 +3,6 @@ import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
-import { HeroNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
  * <p>Применения:</p>
@@ -17,7 +16,8 @@ import { HeroNames } from "../typescript/enums";
 export const CheckEndPlaceCoinsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         const isEveryPlayersHandCoinsEmpty = G.publicPlayers
-            .filter((player) => player.buffs.everyTurn !== HeroNames.Uline)
+            .filter((player) => Boolean(player.buffs
+            .find((buff) => buff.everyTurn !== undefined) === undefined))
             .every((player) => player.handCoins
             .every((coin) => coin === null));
         if (isEveryPlayersHandCoinsEmpty) {

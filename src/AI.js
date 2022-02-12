@@ -35,7 +35,8 @@ export const enumerate = (G, ctx) => {
                     if (G.expansions.thingvellir.active
                         && (ctx.currentPlayer === G.publicPlayersOrder[0]
                             || (!G.campPicked
-                                && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
+                                && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                                    .find((buff) => buff.goCamp !== undefined))))) {
                         pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                     }
                     if (pickCardOrCampCard === `card`) {

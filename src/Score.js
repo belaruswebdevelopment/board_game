@@ -4,7 +4,7 @@ import { suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { GetSuitIndexByName } from "./helpers/SuitHelpers";
 import { AddDataToLog } from "./Logging";
-import { HeroNames, LogTypes, SuitNames } from "./typescript/enums";
+import { LogTypes, SuitNames } from "./typescript/enums";
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
  * <p>Применения:</p>
@@ -46,7 +46,7 @@ export const FinalScoring = (G, ctx, player) => {
     for (let i = 0; i < player.boardCoins.length; i++) {
         coinsValue += (_b = (_a = player.boardCoins[i]) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : 0;
     }
-    if (player.buffs.everyTurn === HeroNames.Uline) {
+    if (player.buffs.find((buff) => buff.everyTurn !== undefined)) {
         for (let i = 0; i < player.handCoins.length; i++) {
             coinsValue += (_d = (_c = player.handCoins[i]) === null || _c === void 0 ? void 0 : _c.value) !== null && _d !== void 0 ? _d : 0;
         }

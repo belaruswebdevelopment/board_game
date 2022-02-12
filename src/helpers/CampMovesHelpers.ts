@@ -1,6 +1,7 @@
 import { Ctx } from "boardgame.io";
-import { isArtefactCardNotMercenary } from "../Camp";
+import { IsArtefactCardNotMercenary } from "../Camp";
 import { StackData } from "../data/StackData";
+import { IBuffs } from "../typescript/buff_interfaces";
 import { CampDeckCardTypes } from "../typescript/card_types";
 import { BuffNames, Phases, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
@@ -23,18 +24,20 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
     if (ctx.phase === Phases.PickCards && ctx.activePlayers === null
         && (ctx.currentPlayer === G.publicPlayersOrder[0] ||
-            G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)) {
+            G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                .find((buff: IBuffs): boolean => buff.goCamp !== undefined))) {
         G.campPicked = true;
     }
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCampOneTime) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .find((buff: IBuffs): boolean => buff.goCampOneTime !== undefined)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
-    if (isArtefactCardNotMercenary(card) && card.suit !== null) {
+    if (IsArtefactCardNotMercenary(card) && card.suit !== null) {
         AddCampCardToPlayerCards(G, ctx, card);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
     } else {
         AddCampCardToPlayer(G, ctx, card);
-        if (isArtefactCardNotMercenary(card)) {
+        if (IsArtefactCardNotMercenary(card)) {
             AddBuffToPlayer(G, ctx, card.buff);
         }
     }

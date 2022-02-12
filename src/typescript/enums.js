@@ -77,6 +77,7 @@ export var DrawNames;
     DrawNames["DiscardTavernCard"] = "Discard tavern card";
     DrawNames["EnlistmentMercenaries"] = "Enlistment Mercenaries";
     DrawNames["Mjollnir"] = "Mjollnir";
+    // TODO Add it?!
     DrawNames["GetMjollnirProfit"] = "getMjollnirProfit";
     DrawNames["Hofud"] = "Hofud";
     DrawNames["Holda"] = "Holda";

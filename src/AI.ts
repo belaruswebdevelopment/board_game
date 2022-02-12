@@ -5,6 +5,7 @@ import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { IConfig } from "./typescript/action_interfaces";
 import { IMoves } from "./typescript/bot_interfaces";
+import { IBuffs } from "./typescript/buff_interfaces";
 import { TavernCardTypes } from "./typescript/card_types";
 import { ConfigNames, Phases, Stages } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
@@ -41,7 +42,8 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                     if (G.expansions.thingvellir.active
                         && (ctx.currentPlayer === G.publicPlayersOrder[0]
                             || (!G.campPicked
-                                && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)))) {
+                                && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                                    .find((buff: IBuffs): boolean => buff.goCamp !== undefined))))) {
                         pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                     }
                     if (pickCardOrCampCard === `card`) {

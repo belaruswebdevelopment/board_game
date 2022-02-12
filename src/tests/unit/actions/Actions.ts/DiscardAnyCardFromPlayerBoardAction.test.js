@@ -52,9 +52,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {
-                        discardCardEndGame: true,
-                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
                 },
                 {
                     nickname: `Dan`,
@@ -103,9 +105,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {
-                        discardCardEndGame: true,
-                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
                 },
             ],
             discardCardsDeck: [
@@ -179,9 +183,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {
-                        discardCardEndGame: true,
-                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
                 },
                 {
                     nickname: `Dan`,
@@ -220,7 +226,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {},
+                    buffs: [],
                 },
             ],
             discardCardsDeck: [
@@ -312,9 +318,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {
-                        discardCardEndGame: true,
-                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
                 },
                 {
                     nickname: `Dan`,
@@ -363,9 +371,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                             },
                         ]
                     },
-                    buffs: {
-                        discardCardEndGame: true,
-                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
                 },
             ],
             discardCardsDeck: [

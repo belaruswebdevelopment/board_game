@@ -76,6 +76,7 @@ export const enum DrawNames {
     DiscardTavernCard = `Discard tavern card`,
     EnlistmentMercenaries = `Enlistment Mercenaries`,
     Mjollnir = `Mjollnir`,
+    // TODO Add it?!
     GetMjollnirProfit = `getMjollnirProfit`,
     Hofud = `Hofud`,
     Holda = `Holda`,

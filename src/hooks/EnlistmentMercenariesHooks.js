@@ -1,7 +1,7 @@
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { HeroNames, RusCardTypes } from "../typescript/enums";
+import { RusCardTypes } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
  * <p>Применения:</p>
@@ -25,7 +25,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
                 }
             }
             if (allMercenariesPlayed) {
-                return CheckEndTierActionsOrEndGameLastActions(G, ctx);
+                return CheckEndTierActionsOrEndGameLastActions(G);
             }
         }
     }
@@ -53,7 +53,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
 };
 export const EndEnlistmentMercenariesActions = (G, ctx) => {
     if (G.tierToEnd === 0) {
-        const yludIndex = G.publicPlayers.findIndex((player) => player.buffs.endTier === HeroNames.Ylud);
+        const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
         if (yludIndex === -1) {
             RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
         }

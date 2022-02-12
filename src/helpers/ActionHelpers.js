@@ -16,9 +16,9 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  */
 export const AddBuffToPlayer = (G, ctx, buff) => {
     if (buff !== undefined) {
-        G.publicPlayers[Number(ctx.currentPlayer)].buffs = {
-            [buff.name]: buff.value,
-        };
+        G.publicPlayers[Number(ctx.currentPlayer)].buffs.push({
+            [buff.name]: true,
+        });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} получил баф '${buff.name}'.`);
     }
 };
@@ -31,8 +31,15 @@ export const AddPickCardActionToStack = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [{}]);
 };
 export const DeleteBuffFromPlayer = (G, ctx, buffName) => {
-    delete G.publicPlayers[Number(ctx.currentPlayer)].buffs[buffName];
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} потерял баф '${buffName}'.`);
+    const buffIndex = G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .findIndex((buff) => buff[buffName] !== undefined);
+    if (buffIndex !== -1) {
+        G.publicPlayers[Number(ctx.currentPlayer)].buffs.splice(buffIndex, 1);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} потерял баф '${buffName}'.`);
+    }
+    else {
+        // TODO Log error?
+    }
 };
 /**
  * <h3>Действия, связанные с отображением профита.</h3>

@@ -1,12 +1,12 @@
 import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
-import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
+import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
 import { CheckEndEndTierPhase, CheckEndEndTierTurn, CheckEndTierOrder, EndEndTierActions, OnEndTierMove, OnEndTierTurnBegin, OnEndTierTurnEnd } from "./hooks/EndTierHooks";
 import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, OnEnlistmentMercenariesTurnEnd, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
 import { CheckEndGame, ReturnEndGameData } from "./hooks/GameHooks";
 import { CheckAndResolveDistinctionsOrders, CheckEndGetDistinctionsPhase, CheckNextGetDistinctionsTurn, EndGetDistinctionsPhaseActions, OnGetDistinctionsMove, OnGetDistinctionsTurnBegin, OnGetDistinctionsTurnEnd } from "./hooks/GetDistinctionsHooks";
-import { CheckEndGetMjollnirProfitPhase, CheckGetMjollnirProfitOrder, OnGetMjollnirProfitTurnBegin, StartEndGame } from "./hooks/GetMjollnirProfitHooks";
+import { CheckEndGetMjollnirProfitPhase, CheckGetMjollnirProfitOrder, OnGetMjollnirProfitMove, OnGetMjollnirProfitTurnBegin, StartEndGame } from "./hooks/GetMjollnirProfitHooks";
 import { CheckEndPickCardsPhase, CheckEndPickCardsTurn, EndPickCardsActions, OnPickCardsMove, OnPickCardsTurnBegin, OnPickCardsTurnEnd, ResolveCurrentTavernOrders } from "./hooks/PickCardsHooks";
 import { CheckEndPlaceCoinsPhase, CheckEndPlaceCoinsTurn, OnPlaceCoinsTurnEnd, PreparationPhaseActions } from "./hooks/PlaceCoinsHooks";
 import { CheckEndPlaceCoinsUlinePhase, CheckUlinePlaceCoinsOrder, EndPlaceCoinsUlineActions } from "./hooks/PlaceCoinsUlineHooks";
@@ -143,7 +143,7 @@ export const BoardGame = {
             },
             onBegin: (G, ctx) => ResolveCurrentTavernOrders(G, ctx),
             endIf: (G, ctx) => CheckEndPickCardsPhase(G, ctx),
-            onEnd: (G) => EndPickCardsActions(G),
+            onEnd: (G, ctx) => EndPickCardsActions(G, ctx),
         },
         enlistmentMercenaries: {
             turn: {
@@ -367,6 +367,7 @@ export const BoardGame = {
                 minMoves: 1,
                 maxMoves: 1,
                 onBegin: (G, ctx) => OnBrisingamensEndGameTurnBegin(G, ctx),
+                onMove: (G, ctx) => OnBrisingamensEndGameMove(G, ctx),
             },
             moves: {
                 DiscardCardFromPlayerBoardMove,
@@ -381,12 +382,13 @@ export const BoardGame = {
                 minMoves: 1,
                 maxMoves: 1,
                 onBegin: (G, ctx) => OnGetMjollnirProfitTurnBegin(G, ctx),
+                onMove: (G, ctx) => OnGetMjollnirProfitMove(G, ctx),
             },
             moves: {
                 GetMjollnirProfitMove,
             },
             onBegin: (G) => CheckGetMjollnirProfitOrder(G),
-            endIf: (G) => CheckEndGetMjollnirProfitPhase(G),
+            endIf: (G, ctx) => CheckEndGetMjollnirProfitPhase(G, ctx),
             onEnd: (G, ctx) => StartEndGame(G, ctx),
         },
     },

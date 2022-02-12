@@ -19,7 +19,6 @@ const Brisingamens = {
     points: null,
     buff: {
         name: BuffNames.DiscardCardEndGame,
-        value: true,
     },
     validators: {
         pickDiscardCardToStack: {},
@@ -42,8 +41,8 @@ const Draupnir = {
     suit: null,
     rank: null,
     points: null,
-    scoringRule: (player) => player !== undefined ? player.boardCoins
-        .filter((coin) => Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
+    scoringRule: (player) => player !== undefined ?
+        player.boardCoins.filter((coin) => Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -62,7 +61,6 @@ const Fafnir_Baleygr = {
     points: null,
     buff: {
         name: BuffNames.GoCamp,
-        value: true,
     },
     scoringRule: () => 0,
 };
@@ -172,7 +170,6 @@ const Megingjord = {
     points: null,
     buff: {
         name: BuffNames.NoHero,
-        value: true,
     },
     scoringRule: () => 28,
 };
@@ -193,7 +190,6 @@ const Mjollnir = {
     points: null,
     buff: {
         name: BuffNames.GetMjollnirProfit,
-        value: true,
     },
     scoringRule: (player, suit) => player !== undefined && suit !== undefined ?
         player.cards[suit].reduce(TotalRank, 0) * 2 : 0,

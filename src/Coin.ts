@@ -2,9 +2,10 @@ import { Ctx } from "boardgame.io";
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { DeleteBuffFromPlayer } from "./helpers/ActionHelpers";
 import { AddDataToLog } from "./Logging";
+import { IBuffs } from "./typescript/buff_interfaces";
 import { IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig } from "./typescript/coin_interfaces";
 import { CoinType } from "./typescript/coin_types";
-import { BuffNames, HeroNames, LogTypes, Stages } from "./typescript/enums";
+import { BuffNames, LogTypes, Stages } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
 import { INumberValues } from "./typescript/object_values_interfaces";
 import { IPublicPlayer } from "./typescript/player_interfaces";
@@ -164,13 +165,16 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
     // TODO Split into different functions!
     let upgradingCoin: Record<string, unknown> | ICoin = {},
         coin: CoinType | undefined;
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeNextCoin !== undefined) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .find((buff: IBuffs): boolean => buff.upgradeNextCoin !== undefined)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
     }
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.coin === `min`) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+        .find((buff: IBuffs): boolean => buff.coin !== undefined)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.Coin);
         // TODO Upgrade isInitial min coin or not or User must choose!?
-        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline) {
+        if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+            .find((buff: IBuffs): boolean => buff.everyTurn !== undefined)) {
             const allCoins: CoinType[] = [],
                 allHandCoins: CoinType[] = G.publicPlayers[Number(ctx.currentPlayer)]
                     .handCoins.filter((coin: CoinType): boolean => coin !== null);
@@ -239,8 +243,8 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
             }
         }
         if (isCoin(upgradingCoin)) {
-            const buffValue: number = G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin ?
-                G.publicPlayers[Number(ctx.currentPlayer)].buffs.upgradeCoin as number : 0;
+            const buffValue: number = G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                .find((buff: IBuffs): boolean => buff.upgradeCoin !== undefined)?.upgradeCoin ? 2 : 0;
             const newValue = upgradingCoin.value + value + buffValue;
             let upgradedCoin = null;
             if (G.marketCoins.length) {

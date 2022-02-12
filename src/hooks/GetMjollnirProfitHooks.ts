@@ -1,7 +1,8 @@
 import { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddGetMjollnirProfitActionsToStack } from "../helpers/CampHelpers";
-import { EndGame } from "../helpers/GameHooksHelpers";
+import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { IBuffs } from "../typescript/buff_interfaces";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
@@ -15,17 +16,20 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
  * @param G
  * @returns
  */
-export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState): boolean | void => {
-    if (G.publicPlayersOrder.length) {
+export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
+    if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
         return G.suitIdForMjollnir !== null;
     }
 };
 
 export const CheckGetMjollnirProfitOrder = (G: IMyGameState): void => {
-    const mjollnirPlayerIndex: number =
-        G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            player.buffs.getMjollnirProfit === true);
+    const mjollnirPlayerIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+        Boolean(player.buffs.find((buff: IBuffs): boolean => buff.getMjollnirProfit !== undefined)));
     G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
+};
+
+export const OnGetMjollnirProfitMove = (G: IMyGameState, ctx: Ctx): void => {
+    StartOrEndActions(G, ctx);
 };
 
 export const OnGetMjollnirProfitTurnBegin = (G: IMyGameState, ctx: Ctx): void => {

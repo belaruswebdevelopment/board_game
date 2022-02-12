@@ -1,12 +1,12 @@
 import { AddPickCardActionToStack, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
-import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, CheckAndStartUlineActionsOrContinue, ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, CheckAndStartUlineActionsOrContinue, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { ActivateTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
-import { LogTypes, Stages } from "../typescript/enums";
+import { LogTypes, RusCardTypes, Stages } from "../typescript/enums";
 export const OnPickCardsMove = (G, ctx) => {
     var _a;
     StartOrEndActions(G, ctx);
@@ -23,8 +23,8 @@ export const OnPickCardsMove = (G, ctx) => {
             if (!G.actionsNum) {
                 ActivateTrading(G, ctx);
             }
-            else if (G.actionsNum === 2 && tradingCoinPlacesLength === 1
-                || G.actionsNum === 1 && !tradingCoinPlacesLength) {
+            else if ((G.actionsNum === 2 && tradingCoinPlacesLength === 1)
+                || (G.actionsNum === 1 && !tradingCoinPlacesLength)) {
                 G.actionsNum--;
             }
             else if (G.actionsNum === 2) {
@@ -50,8 +50,7 @@ export const CheckEndPickCardsPhase = (G, ctx) => {
         && CheckIfCurrentTavernEmpty(G)) {
         const isLastTavern = G.tavernsNum - 1 === G.currentTavern;
         if (isLastTavern) {
-            // TODO Rework not to change G
-            return AfterLastTavernEmptyActions(G, ctx);
+            return AfterLastTavernEmptyActions(G);
         }
         else {
             return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
@@ -83,8 +82,9 @@ export const CheckEndPickCardsTurn = (G, ctx) => {
  * </ol>
  *
  * @param G
+ * @param ctx
  */
-export const EndPickCardsActions = (G) => {
+export const EndPickCardsActions = (G, ctx) => {
     if (CheckIfCurrentTavernEmpty(G)) {
         AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[G.currentTavern].name} пустая.`);
     }
@@ -93,6 +93,24 @@ export const EndPickCardsActions = (G) => {
     }
     if (G.tavernsNum - 1 === G.currentTavern && G.decks[G.decks.length - G.tierToEnd].length === 0) {
         G.tierToEnd--;
+    }
+    if (G.tierToEnd === 0) {
+        const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
+        if (yludIndex !== -1) {
+            let startThrud = true;
+            if (G.expansions.thingvellir.active) {
+                for (let i = 0; i < G.publicPlayers.length; i++) {
+                    startThrud = G.publicPlayers[i].campCards
+                        .filter((card) => card.type === RusCardTypes.MERCENARY).length === 0;
+                    if (!startThrud) {
+                        break;
+                    }
+                }
+            }
+            if (startThrud) {
+                RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+            }
+        }
     }
     G.publicPlayersOrder = [];
     ChangePlayersPriorities(G);

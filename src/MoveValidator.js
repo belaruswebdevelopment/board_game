@@ -5,7 +5,7 @@ import { suitsConfig } from "./data/SuitData";
 import { TotalRank } from "./helpers/ScoreHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
-import { ConfigNames, HeroNames, MoveNames, Phases, RusCardTypes, ValidatorNames } from "./typescript/enums";
+import { ConfigNames, MoveNames, Phases, RusCardTypes, ValidatorNames } from "./typescript/enums";
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -237,7 +237,8 @@ export const moveValidators = {
             if (G !== undefined && ctx !== undefined) {
                 isValid = G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
                     || (!G.campPicked
-                        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs.goCamp)));
+                        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                            .find((buff) => buff.goCamp !== undefined))));
             }
             return isValid;
         },
@@ -613,7 +614,8 @@ export const moveValidators = {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
                 for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].handCoins.length; j++) {
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                        .find((buff) => buff.everyTurn !== undefined)
                         && G.publicPlayers[Number(ctx.currentPlayer)].handCoins[j] !== null) {
                         moveMainArgs.push(j);
                     }
@@ -658,7 +660,8 @@ export const moveValidators = {
                 let handCoinIndex = -1;
                 for (let j = 0; j < G.publicPlayers[Number(ctx.currentPlayer)].boardCoins.length; j++) {
                     // TODO Check .? for all coins!!! and delete AS
-                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.everyTurn === HeroNames.Uline
+                    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                        .find((buff) => buff.everyTurn !== undefined)
                         && G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[j] === null) {
                         handCoinIndex++;
                         const handCoinId = G.publicPlayers[Number(ctx.currentPlayer)]

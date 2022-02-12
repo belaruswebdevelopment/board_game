@@ -76,8 +76,8 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: string, p
  * @param type Тип монеты.
  * @param isInitial Является ли монета базовой.
  */
-export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, coinId: number,
-    type: string, isInitial: boolean): void => {
+export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, coinId: number, type: string,
+    isInitial: boolean): void => {
     const playerConfig: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config;
     if (playerConfig !== undefined) {
         if (playerConfig.value === 3) {

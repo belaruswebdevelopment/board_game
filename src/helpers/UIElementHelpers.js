@@ -19,7 +19,6 @@ import { LogTypes, MoveNames, RusCardTypes } from "../typescript/enums";
  * @param args Аргументы действия.
  */
 export const DrawButton = (data, boardCells, key, name, player, actionName, ...args) => {
-    // eslint-disable-next-line @typescript-eslint/ban-types
     let action = null;
     switch (actionName) {
         case MoveNames.StartEnlistmentMercenariesMove:
@@ -50,9 +49,7 @@ export const DrawButton = (data, boardCells, key, name, player, actionName, ...a
  * @param args Аргументы действия.
  */
 export const DrawCard = (data, playerCells, card, id, player, suit, actionName, ...args) => {
-    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, 
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    action = null;
+    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, action = null;
     switch (actionName) {
         case MoveNames.ClickHeroCardMove:
             action = data.moves.ClickHeroCardMove;
@@ -157,9 +154,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, actionName, 
  * @param args Аргументы действия.
  */
 export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses, additionalParam, actionName, ...args) => {
-    let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, 
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    action = null;
+    let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action = null;
     switch (actionName) {
         case MoveNames.ClickBoardCoinMove:
             action = data.moves.ClickBoardCoinMove;
