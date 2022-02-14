@@ -7,7 +7,7 @@ import { AddCampCardToCards } from "../helpers/CampCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { CampCardTypes } from "../typescript/card_types";
+import { CampCardTypes } from "../typescript/camp_card_types";
 import { LogTypes, Stages } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 

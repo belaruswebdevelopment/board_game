@@ -1,3 +1,8 @@
+export interface IAdditionalCardsConfig {
+    // TODO Rework [name: string]?
+    [index: string]: ICard,
+}
+
 /**
  * <h3>Интерфейс для карты дворфа.</h3>
  */
