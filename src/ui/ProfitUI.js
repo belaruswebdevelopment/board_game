@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { isActionDiscardCard, isCardNotAction } from "../Card";
+import { isActionDiscardCard, isCardNotActionAndNotNull } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { TotalRank } from "../helpers/ScoreHelpers";
+import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 // TODO Add functions dock blocks
@@ -84,7 +84,7 @@ export const DiscardCardProfit = (G, ctx, data, boardCells) => {
         const card = G.taverns[G.currentTavern][j];
         if (card !== null) {
             let suit = null;
-            if (isCardNotAction(card)) {
+            if (isCardNotActionAndNotNull(card)) {
                 suit = card.suit;
             }
             DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.DiscardCard2PlayersMove, j);
@@ -136,7 +136,7 @@ export const ExplorerDistinctionProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < 3; j++) {
         const card = G.decks[1][j];
         let suit = null;
-        if (isCardNotAction(card)) {
+        if (isCardNotActionAndNotNull(card)) {
             suit = card.suit;
         }
         DrawCard(data, boardCells, G.decks[1][j], j, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.ClickCardToPickDistinctionMove, j);

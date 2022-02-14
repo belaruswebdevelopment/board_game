@@ -1,5 +1,5 @@
 import { BoardProps } from "boardgame.io/react";
-import { isCardNotAction } from "../Card";
+import { isCardNotActionAndNotNull } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -7,7 +7,8 @@ import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { IConfig } from "../typescript/action_interfaces";
 import { IDrawBoardOptions } from "../typescript/board_interfaces";
-import { CampCardTypes, DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
+import { CampCardTypes } from "../typescript/camp_card_types";
+import { DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
 import { ConfigNames, MoveNames } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { INumberValues } from "../typescript/object_values_interfaces";
@@ -326,7 +327,7 @@ export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) =
                     );
                 } else {
                     let tavernCardSuit: string | null = null;
-                    if (isCardNotAction(tavernCard)) {
+                    if (isCardNotActionAndNotNull(tavernCard)) {
                         tavernCardSuit = tavernCard.suit;
                     }
                     if (t === data.G.currentTavern) {

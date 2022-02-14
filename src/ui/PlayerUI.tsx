@@ -1,8 +1,8 @@
 import { BoardProps } from "boardgame.io/react";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { TotalRank } from "../helpers/ScoreHelpers";
 import { CurrentScoring } from "../Score";
+import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
@@ -148,7 +148,7 @@ export const DrawPlayersBoards = (data: BoardProps<IMyGameState>): JSX.Element[]
         }
         playersBoards[p].push(
             <table className="mx-auto" key={`${player.nickname} board`}>
-                <caption>Player {p + 1} ({player.nickname}) cards, {data.G.winner.length ? `Final: ${data.G.totalScore[p]}` : CurrentScoring(player)} points
+                <caption>Player {p + 1} ({player.nickname}) cards, {data.G.winner.length ? `Final: ${data.G.totalScore[p]}` : CurrentScoring(data.G, p)} points
                 </caption>
                 <thead>
                     <tr>{playerHeaders[p]}</tr>

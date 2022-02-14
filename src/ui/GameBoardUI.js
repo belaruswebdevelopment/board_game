@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { isCardNotAction } from "../Card";
+import { isCardNotActionAndNotNull } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -230,7 +230,7 @@ export const DrawTaverns = (data, gridClass) => {
                 }
                 else {
                     let tavernCardSuit = null;
-                    if (isCardNotAction(tavernCard)) {
+                    if (isCardNotActionAndNotNull(tavernCard)) {
                         tavernCardSuit = tavernCard.suit;
                     }
                     if (t === data.G.currentTavern) {

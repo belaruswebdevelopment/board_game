@@ -1,12 +1,13 @@
 import { Ctx } from "boardgame.io";
 import { BoardProps } from "boardgame.io/react";
-import { isActionDiscardCard, isCardNotAction } from "../Card";
+import { isActionDiscardCard, isCardNotActionAndNotNull } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { TotalRank } from "../helpers/ScoreHelpers";
+import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { IConfig } from "../typescript/action_interfaces";
 import { IBuffs } from "../typescript/buff_interfaces";
-import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, DiscardCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
+import { CampCardTypes, CampDeckCardTypes } from "../typescript/camp_card_types";
+import { DeckCardTypes, DiscardCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
@@ -134,7 +135,7 @@ export const DiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
         const card: TavernCardTypes = G.taverns[G.currentTavern][j];
         if (card !== null) {
             let suit: null | string = null;
-            if (isCardNotAction(card)) {
+            if (isCardNotActionAndNotNull(card)) {
                 suit = card.suit;
             }
             DrawCard(data, boardCells, card, j,
@@ -218,7 +219,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, data: Board
     for (let j = 0; j < 3; j++) {
         const card: DeckCardTypes = G.decks[1][j];
         let suit: null | string = null;
-        if (isCardNotAction(card)) {
+        if (isCardNotActionAndNotNull(card)) {
             suit = card.suit;
         }
         DrawCard(data, boardCells, G.decks[1][j], j,
