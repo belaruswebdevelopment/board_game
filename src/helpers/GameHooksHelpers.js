@@ -1,5 +1,6 @@
+import { IsMercenaryCard } from "../Camp";
 import { AddDataToLog } from "../Logging";
-import { HeroNames, LogTypes, Phases, RusCardTypes, Stages } from "../typescript/enums";
+import { HeroNames, LogTypes, Phases, Stages } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
 /**
  * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
@@ -146,7 +147,7 @@ export const CheckEndTierActionsOrEndGameLastActions = (G) => {
 const CheckEnlistmentMercenaries = (G) => {
     let count = false;
     for (let i = 0; i < G.publicPlayers.length; i++) {
-        if (G.publicPlayers[i].campCards.filter((card) => card.type === RusCardTypes.MERCENARY).length) {
+        if (G.publicPlayers[i].campCards.filter((card) => IsMercenaryCard(card)).length) {
             count = true;
             break;
         }

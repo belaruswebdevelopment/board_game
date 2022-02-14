@@ -1,8 +1,8 @@
-import { IsArtefactCardNotMercenary } from "../Camp";
+import { IsArtefactCardNotMercenary, IsMercenaryCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, LogTypes, Phases, RusCardTypes } from "../typescript/enums";
+import { BuffNames, LogTypes, Phases } from "../typescript/enums";
 import { AddBuffToPlayer, DeleteBuffFromPlayer } from "./ActionHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
@@ -37,7 +37,7 @@ export const AddCampCardToCards = (G, ctx, card) => {
         }
     }
     if (ctx.phase === Phases.EnlistmentMercenaries
-        && player.campCards.filter((card) => card.type === RusCardTypes.MERCENARY).length) {
+        && player.campCards.filter((card) => IsMercenaryCard(card)).length) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
     }
 };

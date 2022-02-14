@@ -1,10 +1,13 @@
 import { Ctx } from "boardgame.io";
+import { IsMercenaryCard } from "../Camp";
 import { AddDataToLog } from "../Logging";
 import { IBuffs } from "../typescript/buff_interfaces";
-import { CampDeckCardTypes, PlayerCardsType } from "../typescript/card_types";
+import { CampDeckCardTypes } from "../typescript/camp_card_types";
+import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { HeroNames, LogTypes, Phases, RusCardTypes, Stages } from "../typescript/enums";
-import { IMyGameState, INext } from "../typescript/game_data_interfaces";
+import { HeroNames, LogTypes, Phases, Stages } from "../typescript/enums";
+import { IMyGameState } from "../typescript/game_data_interfaces";
+import { INext } from "../typescript/game_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 
@@ -165,7 +168,7 @@ const CheckEnlistmentMercenaries = (G: IMyGameState): boolean | INext => {
     let count = false;
     for (let i = 0; i < G.publicPlayers.length; i++) {
         if (G.publicPlayers[i].campCards.filter((card: CampDeckCardTypes): boolean =>
-            card.type === RusCardTypes.MERCENARY).length) {
+            IsMercenaryCard(card)).length) {
             count = true;
             break;
         }

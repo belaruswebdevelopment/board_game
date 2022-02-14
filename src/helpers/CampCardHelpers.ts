@@ -1,12 +1,12 @@
 import { Ctx } from "boardgame.io";
-import { IsArtefactCardNotMercenary } from "../Camp";
+import { IsArtefactCardNotMercenary, IsMercenaryCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { IBuffs } from "../typescript/buff_interfaces";
 import { IArtefactCampCard } from "../typescript/camp_card_interfaces";
-import { CampDeckCardTypes } from "../typescript/card_types";
-import { BuffNames, LogTypes, Phases, RusCardTypes } from "../typescript/enums";
+import { CampDeckCardTypes } from "../typescript/camp_card_types";
+import { BuffNames, LogTypes, Phases } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { AddBuffToPlayer, DeleteBuffFromPlayer } from "./ActionHelpers";
@@ -43,8 +43,7 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
         }
     }
     if (ctx.phase === Phases.EnlistmentMercenaries
-        && player.campCards.filter((card: CampDeckCardTypes): boolean =>
-            card.type === RusCardTypes.MERCENARY).length) {
+        && player.campCards.filter((card: CampDeckCardTypes): boolean => IsMercenaryCard(card)).length) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
     }
 };

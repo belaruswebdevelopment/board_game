@@ -1,4 +1,4 @@
-import { isCardNotAction } from "../Card";
+import { isCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
@@ -20,7 +20,7 @@ export const AddCardToPlayer = (G, ctx, card) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     player.pickedCard = card;
     // TODO Not only deck card types but hero+camp card types?? but they are created as ICard and added to players cards.
-    if (isCardNotAction(card)) {
+    if (isCardNotActionAndNotNull(card)) {
         player.cards[card.suit].push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
         return true;
