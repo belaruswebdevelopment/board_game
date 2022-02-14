@@ -5,7 +5,8 @@ import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
 import { IBuffs } from "../typescript/buff_interfaces";
 import { PlayerCardsType } from "../typescript/card_types";
 import { HeroNames } from "../typescript/enums";
-import { IMyGameState, INext } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
+import { INext } from "../typescript/game_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**

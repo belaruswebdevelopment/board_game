@@ -100,8 +100,7 @@ export const EndPickCardsActions = (G, ctx) => {
             let startThrud = true;
             if (G.expansions.thingvellir.active) {
                 for (let i = 0; i < G.publicPlayers.length; i++) {
-                    startThrud = G.publicPlayers[i].campCards
-                        .filter((card) => card.type === RusCardTypes.MERCENARY).length === 0;
+                    startThrud = G.publicPlayers[i].campCards.filter((card) => card.type === RusCardTypes.MERCENARY).length === 0;
                     if (!startThrud) {
                         break;
                     }

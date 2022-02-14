@@ -1,11 +1,12 @@
 import { Ctx } from "boardgame.io";
+import { IsMercenaryCard } from "../Camp";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { IBuffs } from "../typescript/buff_interfaces";
-import { CampDeckCardTypes } from "../typescript/card_types";
-import { RusCardTypes } from "../typescript/enums";
-import { IMyGameState, INext } from "../typescript/game_data_interfaces";
+import { CampDeckCardTypes } from "../typescript/camp_card_types";
+import { IMyGameState } from "../typescript/game_data_interfaces";
+import { INext } from "../typescript/game_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
@@ -25,8 +26,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): b
             let allMercenariesPlayed = true;
             for (let i = 0; i < G.publicPlayers.length; i++) {
                 allMercenariesPlayed = G.publicPlayers[i].campCards
-                    .filter((card: CampDeckCardTypes): boolean =>
-                        card.type === RusCardTypes.MERCENARY).length === 0;
+                    .filter((card: CampDeckCardTypes): boolean => IsMercenaryCard(card)).length === 0;
                 if (!allMercenariesPlayed) {
                     break;
                 }
@@ -55,7 +55,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): bo
         return EndTurnActions(G, ctx);
     } else if (!player.stack.length) {
         return player.campCards.filter((card: CampDeckCardTypes): boolean =>
-            card.type === RusCardTypes.MERCENARY).length === 0;
+            IsMercenaryCard(card)).length === 0;
     }
 };
 
@@ -98,17 +98,15 @@ export const PrepareMercenaryPhaseOrders = (G: IMyGameState): void => {
         G.publicPlayers.map((player: IPublicPlayer): IPublicPlayer => player),
         playersIndexes: string[] = [];
     players.sort((nextPlayer: IPublicPlayer, currentPlayer: IPublicPlayer): number => {
-        if (nextPlayer.campCards
-            .filter((card: CampDeckCardTypes): boolean =>
-                card.type === RusCardTypes.MERCENARY).length < currentPlayer.campCards
-                    .filter((card: CampDeckCardTypes): boolean =>
-                        card.type === RusCardTypes.MERCENARY).length) {
+        if (nextPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
+            IsMercenaryCard(card)).length <
+            currentPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
+                IsMercenaryCard(card)).length) {
             return 1;
-        } else if (nextPlayer.campCards
-            .filter((card: CampDeckCardTypes): boolean =>
-                card.type === RusCardTypes.MERCENARY).length > currentPlayer.campCards
-                    .filter((card: CampDeckCardTypes): boolean =>
-                        card.type === RusCardTypes.MERCENARY).length) {
+        } else if (nextPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
+            IsMercenaryCard(card)).length >
+            currentPlayer.campCards.filter((card: CampDeckCardTypes): boolean =>
+                IsMercenaryCard(card)).length) {
             return -1;
         }
         if (nextPlayer.priority.value < currentPlayer.priority.value) {
@@ -119,11 +117,10 @@ export const PrepareMercenaryPhaseOrders = (G: IMyGameState): void => {
         return 0;
     });
     players.forEach((playerSorted: IPublicPlayer): void => {
-        if (playerSorted.campCards
-            .filter((card: CampDeckCardTypes): boolean =>
-                card.type === RusCardTypes.MERCENARY).length) {
-            playersIndexes.push(String(G.publicPlayers
-                .findIndex((player: IPublicPlayer): boolean =>
+        if (playerSorted.campCards.filter((card: CampDeckCardTypes): boolean =>
+            IsMercenaryCard(card)).length) {
+            playersIndexes.push(
+                String(G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
                     player.nickname === playerSorted.nickname)));
         }
     });

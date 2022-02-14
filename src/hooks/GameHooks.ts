@@ -1,8 +1,8 @@
 import { Ctx } from "boardgame.io";
+import { IsMercenaryCard } from "../Camp";
 import { ScoreWinner } from "../Score";
 import { IBuffs } from "../typescript/buff_interfaces";
-import { CampDeckCardTypes } from "../typescript/card_types";
-import { RusCardTypes } from "../typescript/enums";
+import { CampDeckCardTypes } from "../typescript/camp_card_types";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
@@ -14,22 +14,21 @@ export const CheckEndGame = (G: IMyGameState): boolean | void => {
             return false;
         }
         const brisingamensIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            Boolean(player.buffs
-                .find((buff: IBuffs): boolean => buff.discardCardEndGame !== undefined)));
+            Boolean(player.buffs.find((buff: IBuffs): boolean =>
+                buff.discardCardEndGame !== undefined)));
         if (brisingamensIndex !== -1) {
             return false;
         }
         const mjollnirIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            Boolean(player.buffs
-                .find((buff: IBuffs): boolean => buff.getMjollnirProfit !== undefined)));
+            Boolean(player.buffs.find((buff: IBuffs): boolean =>
+                buff.getMjollnirProfit !== undefined)));
         if (mjollnirIndex !== -1) {
             return false;
         }
         let allMercenariesPlayed = true;
         for (let i = 0; i < G.publicPlayers.length; i++) {
-            allMercenariesPlayed = G.publicPlayers[i].campCards
-                .filter((card: CampDeckCardTypes): boolean =>
-                    card.type === RusCardTypes.MERCENARY).length === 0;
+            allMercenariesPlayed = G.publicPlayers[i].campCards.filter((card: CampDeckCardTypes): boolean =>
+                IsMercenaryCard(card)).length === 0;
             if (!allMercenariesPlayed) {
                 break;
             }

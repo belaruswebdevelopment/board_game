@@ -4,7 +4,8 @@ import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { IBuffs } from "../typescript/buff_interfaces";
 import { Phases } from "../typescript/enums";
-import { IMyGameState, INext } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
+import { INext } from "../typescript/game_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {

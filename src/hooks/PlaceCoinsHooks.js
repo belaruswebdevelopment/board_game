@@ -15,11 +15,7 @@ import { RefillTaverns } from "../Tavern";
  */
 export const CheckEndPlaceCoinsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        const isEveryPlayersHandCoinsEmpty = G.publicPlayers
-            .filter((player) => Boolean(player.buffs
-            .find((buff) => buff.everyTurn !== undefined) === undefined))
-            .every((player) => player.handCoins
-            .every((coin) => coin === null));
+        const isEveryPlayersHandCoinsEmpty = G.publicPlayers.filter((player) => Boolean(player.buffs.find((buff) => buff.everyTurn !== undefined) === undefined)).every((player) => player.handCoins.every((coin) => coin === null));
         if (isEveryPlayersHandCoinsEmpty) {
             return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
         }
@@ -37,8 +33,7 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
  * @returns
  */
 export const CheckEndPlaceCoinsTurn = (G, ctx) => {
-    if (G.publicPlayers[Number(ctx.currentPlayer)]
-        .handCoins.every((coin) => coin === null)) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins.every((coin) => coin === null)) {
         return true;
     }
 };

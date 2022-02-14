@@ -6,7 +6,8 @@ import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { IBuffs } from "../typescript/buff_interfaces";
 import { CoinType } from "../typescript/coin_types";
-import { IMyGameState, INext } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
+import { INext } from "../typescript/game_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 /**
@@ -21,11 +22,11 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
  */
 export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): void | INext => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        const isEveryPlayersHandCoinsEmpty: boolean = G.publicPlayers
-            .filter((player: IPublicPlayer): boolean => Boolean(player.buffs
-                .find((buff: IBuffs): boolean => buff.everyTurn !== undefined) === undefined))
-            .every((player: IPublicPlayer): boolean => player.handCoins
-                .every((coin: CoinType): boolean => coin === null));
+        const isEveryPlayersHandCoinsEmpty: boolean =
+            G.publicPlayers.filter((player: IPublicPlayer): boolean =>
+                Boolean(player.buffs.find((buff: IBuffs): boolean =>
+                    buff.everyTurn !== undefined) === undefined)).every((player: IPublicPlayer): boolean =>
+                        player.handCoins.every((coin: CoinType): boolean => coin === null));
         if (isEveryPlayersHandCoinsEmpty) {
             return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
         }
@@ -44,8 +45,8 @@ export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): void | INext
  * @returns
  */
 export const CheckEndPlaceCoinsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    if (G.publicPlayers[Number(ctx.currentPlayer)]
-        .handCoins.every((coin: CoinType): boolean => coin === null)) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins.every((coin: CoinType): boolean =>
+        coin === null)) {
         return true;
     }
 };

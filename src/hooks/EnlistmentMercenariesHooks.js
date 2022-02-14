@@ -1,7 +1,7 @@
+import { IsMercenaryCard } from "../Camp";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { RusCardTypes } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
  * <p>Применения:</p>
@@ -19,7 +19,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
             let allMercenariesPlayed = true;
             for (let i = 0; i < G.publicPlayers.length; i++) {
                 allMercenariesPlayed = G.publicPlayers[i].campCards
-                    .filter((card) => card.type === RusCardTypes.MERCENARY).length === 0;
+                    .filter((card) => IsMercenaryCard(card)).length === 0;
                 if (!allMercenariesPlayed) {
                     break;
                 }
@@ -47,7 +47,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
         return EndTurnActions(G, ctx);
     }
     else if (!player.stack.length) {
-        return player.campCards.filter((card) => card.type === RusCardTypes.MERCENARY).length === 0;
+        return player.campCards.filter((card) => IsMercenaryCard(card)).length === 0;
     }
 };
 export const EndEnlistmentMercenariesActions = (G, ctx) => {
@@ -82,14 +82,12 @@ export const OnEnlistmentMercenariesTurnEnd = (G, ctx) => {
 export const PrepareMercenaryPhaseOrders = (G) => {
     const players = G.publicPlayers.map((player) => player), playersIndexes = [];
     players.sort((nextPlayer, currentPlayer) => {
-        if (nextPlayer.campCards
-            .filter((card) => card.type === RusCardTypes.MERCENARY).length < currentPlayer.campCards
-            .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
+        if (nextPlayer.campCards.filter((card) => IsMercenaryCard(card)).length <
+            currentPlayer.campCards.filter((card) => IsMercenaryCard(card)).length) {
             return 1;
         }
-        else if (nextPlayer.campCards
-            .filter((card) => card.type === RusCardTypes.MERCENARY).length > currentPlayer.campCards
-            .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
+        else if (nextPlayer.campCards.filter((card) => IsMercenaryCard(card)).length >
+            currentPlayer.campCards.filter((card) => IsMercenaryCard(card)).length) {
             return -1;
         }
         if (nextPlayer.priority.value < currentPlayer.priority.value) {
@@ -101,10 +99,8 @@ export const PrepareMercenaryPhaseOrders = (G) => {
         return 0;
     });
     players.forEach((playerSorted) => {
-        if (playerSorted.campCards
-            .filter((card) => card.type === RusCardTypes.MERCENARY).length) {
-            playersIndexes.push(String(G.publicPlayers
-                .findIndex((player) => player.nickname === playerSorted.nickname)));
+        if (playerSorted.campCards.filter((card) => IsMercenaryCard(card)).length) {
+            playersIndexes.push(String(G.publicPlayers.findIndex((player) => player.nickname === playerSorted.nickname)));
         }
     });
     G.publicPlayersOrder = playersIndexes;

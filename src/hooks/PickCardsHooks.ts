@@ -8,10 +8,11 @@ import { AddDataToLog } from "../Logging";
 import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
 import { IBuffs } from "../typescript/buff_interfaces";
-import { CampDeckCardTypes } from "../typescript/card_types";
+import { CampDeckCardTypes } from "../typescript/camp_card_types";
 import { CoinType } from "../typescript/coin_types";
 import { LogTypes, RusCardTypes, Stages } from "../typescript/enums";
-import { IMyGameState, INext, IResolveBoardCoins } from "../typescript/game_data_interfaces";
+import { IMyGameState } from "../typescript/game_data_interfaces";
+import { INext, IResolveBoardCoins } from "../typescript/game_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 
 export const OnPickCardsMove = (G: IMyGameState, ctx: Ctx): void => {
@@ -106,9 +107,8 @@ export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void => {
             let startThrud = true;
             if (G.expansions.thingvellir.active) {
                 for (let i = 0; i < G.publicPlayers.length; i++) {
-                    startThrud = G.publicPlayers[i].campCards
-                        .filter((card: CampDeckCardTypes): boolean =>
-                            card.type === RusCardTypes.MERCENARY).length === 0;
+                    startThrud = G.publicPlayers[i].campCards.filter((card: CampDeckCardTypes): boolean =>
+                        card.type === RusCardTypes.MERCENARY).length === 0;
                     if (!startThrud) {
                         break;
                     }
