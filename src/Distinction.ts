@@ -1,7 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { suitsConfig } from "./data/SuitData";
-import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddDataToLog } from "./Logging";
+import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { DeckCardTypes } from "./typescript/card_types";
 import { LogTypes, SuitNames } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";

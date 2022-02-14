@@ -1,6 +1,7 @@
 import { suitsConfig } from "./data/SuitData";
 import { IArtefactCampCard, IArtefactConfig, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenaries, IMercenaryCampCard } from "./typescript/camp_card_interfaces";
-import { CampDeckCardTypes, DiscardCardTypes } from "./typescript/card_types";
+import { CampDeckCardTypes } from "./typescript/camp_card_types";
+import { DiscardCardTypes } from "./typescript/card_types";
 import { RusCardTypes } from "./typescript/enums";
 
 /**
@@ -33,7 +34,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
                     buff: artefactConfig[campArtefactCard].buff,
                     actions: artefactConfig[campArtefactCard].actions,
                     stack: artefactConfig[campArtefactCard].stack,
-                } as ICreateArtefactCampCard));
+                }));
             }
         }
     }
@@ -65,7 +66,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
             path: path.trim(),
             name: name.trim(),
             variants: mercenariesConfig[tier][i],
-        } as ICreateMercenaryCampCard));
+        }));
     }
     return campCards;
 };

@@ -110,7 +110,7 @@ export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name
     tier,
     path,
 });
-export const isActionDiscardCard = (card) => card.type !== RusCardTypes.ACTION;
+export const isActionDiscardCard = (card) => card.type === RusCardTypes.ACTION;
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
  * <p>Применения:</p>
@@ -121,5 +121,5 @@ export const isActionDiscardCard = (card) => card.type !== RusCardTypes.ACTION;
  * @param card Карта.
  * @returns Является ли объект картой дворфа, а не картой обмена монеты.
  */
-export const isCardNotAction = (card) => card.suit !== undefined;
+export const isCardNotActionAndNotNull = (card) => card.suit !== undefined;
 //# sourceMappingURL=Card.js.map

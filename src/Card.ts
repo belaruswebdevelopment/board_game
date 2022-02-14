@@ -3,7 +3,7 @@ import { suitsConfig } from "./data/SuitData";
 import { IActionCard, ICreateActionCard } from "./typescript/action_card_interfaces";
 import { IAverageSuitCardData } from "./typescript/bot_interfaces";
 import { ICard, ICreateCard } from "./typescript/card_interfaces";
-import { DeckCardTypes, DiscardCardTypes } from "./typescript/card_types";
+import { DeckCardTypes, DiscardCardTypes, TavernCardTypes } from "./typescript/card_types";
 import { RusCardTypes } from "./typescript/enums";
 import { IDeckConfig } from "./typescript/interfaces";
 
@@ -36,7 +36,7 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
                     rank: Array.isArray(rank) ? rank[j] : 1,
                     points: Array.isArray(points) ? points[j] : null,
                     name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
-                } as ICreateCard));
+                }));
             }
         }
     }
@@ -46,7 +46,7 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
                 value: deckConfig.actions[i].value,
                 stack: deckConfig.actions[i].stack,
                 name: `улучшение монеты на +${deckConfig.actions[i].value}`,
-            } as ICreateActionCard));
+            }));
         }
     }
     return cards;
@@ -61,7 +61,7 @@ export const BuildAdditionalCards = (): ICard[] => {
                 rank: additionalCardsConfig[card].rank,
                 points: additionalCardsConfig[card].points,
                 name: additionalCardsConfig[card].name,
-            } as ICreateCard));
+            }));
         }
     }
     return cards;
@@ -134,7 +134,7 @@ export const CreateCard = ({
 });
 
 export const isActionDiscardCard = (card: DiscardCardTypes): card is IActionCard =>
-    (card as IActionCard).type !== RusCardTypes.ACTION;
+    (card as IActionCard).type === RusCardTypes.ACTION;
 
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
@@ -146,4 +146,4 @@ export const isActionDiscardCard = (card: DiscardCardTypes): card is IActionCard
  * @param card Карта.
  * @returns Является ли объект картой дворфа, а не картой обмена монеты.
  */
-export const isCardNotAction = (card: DeckCardTypes): card is ICard => (card as ICard).suit !== undefined;
+export const isCardNotActionAndNotNull = (card: TavernCardTypes): card is ICard => (card as ICard).suit !== undefined;

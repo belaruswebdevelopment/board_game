@@ -12,14 +12,14 @@ import { suitsConfig } from "./data/SuitData";
 import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
-import { IAverageCard, IAverageSuitCardData, IBotData } from "./typescript/bot_interfaces";
+import { IAverageCard, IBotData } from "./typescript/bot_interfaces";
+import { CampDeckCardTypes } from "./typescript/camp_card_types";
 import { ICard } from "./typescript/card_interfaces";
-import { CampDeckCardTypes, DeckCardTypes } from "./typescript/card_types";
+import { DeckCardTypes } from "./typescript/card_types";
 import { ICoin } from "./typescript/coin_interfaces";
 import { IDistinctions } from "./typescript/distinction_interfaces";
 import { IExpansion, ILogData, IMyGameState } from "./typescript/game_data_interfaces";
 import { IHero } from "./typescript/hero_card_interfaces";
-import { IDeckConfig } from "./typescript/interfaces";
 import { IPlayers, IPublicPlayer } from "./typescript/player_interfaces";
 import { IPriority } from "./typescript/priority_interfaces";
 
@@ -78,10 +78,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         decks[i] = BuildCards({
             suits: suitsConfig,
             actions: actionCardsConfigArray
-        } as IDeckConfig, {
+        }, {
             players: ctx.numPlayers,
             tier: i,
-        } as IAverageSuitCardData);
+        });
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         decks[i] = ctx.random!.Shuffle(decks[i]);
     }
@@ -128,7 +128,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
                 players: ctx.numPlayers,
                 tier: 0,
-            } as IAverageSuitCardData);
+            });
         }
     }
     for (let i = 0; i < initCoinsOrder.length; i++) {

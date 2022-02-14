@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
-import { TotalRank } from "./helpers/ScoreHelpers";
 import { AddDataToLog } from "./Logging";
+import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { LogTypes, SuitNames } from "./typescript/enums";
 // TODO Rework 2 functions in one?
 /**

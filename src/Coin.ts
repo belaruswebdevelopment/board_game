@@ -41,7 +41,7 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
                 value: config.value,
                 isInitial: options.isInitial,
                 isTriggerTrading: isInitialPlayerCoinsConfigNotMarket(config) ? config.isTriggerTrading : false,
-            } as ICreateCoin));
+            }));
         }
     }
     return coins;
