@@ -5,6 +5,7 @@ import { DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
 /**
@@ -20,10 +21,10 @@ import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../type
  * @param cardId Id карты.
  */
 export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], pickedCard = player.cards[suit][cardId];
-    if (pickedCard.type !== RusCardTypes.HERO) {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], pickedCard = player.cards[suit].splice(cardId, 1)[0];
+    if (!isHeroCard(pickedCard)) {
         player.pickedCard = pickedCard;
-        G.discardCardsDeck.push(player.cards[suit].splice(cardId, 1)[0]);
+        G.discardCardsDeck.push(pickedCard);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил в колоду сброса карту ${pickedCard.name}.`);
         if (G.actionsNum === 2) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda()]);

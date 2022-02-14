@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { IsArtefactDiscardCard, IsMercenaryCard } from "../Camp";
-import { CreateCard, isActionDiscardCard, isCardNotAction } from "../Card";
+import { CreateCard, isActionDiscardCard, isCardNotActionAndNotNull } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
@@ -8,10 +8,12 @@ import { AddCampCardToPlayerCards } from "../helpers/CampCardHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
-import { ICard, ICreateCard } from "../typescript/card_interfaces";
-import { CampDeckCardTypes, DiscardCardTypes, PickedCardType } from "../typescript/card_types";
+import { CampDeckCardTypes } from "../typescript/camp_card_types";
+import { ICard } from "../typescript/card_interfaces";
+import { DiscardCardTypes, PickedCardType, PlayerCardsType } from "../typescript/card_types";
 import { BuffNames, LogTypes, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
@@ -29,13 +31,12 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
  * @param cardId Id карты.
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player.cards[suit][cardId].type !== RusCardTypes.HERO) {
-        const discardedCard: DiscardCardTypes =
-            player.cards[suit].splice(cardId, 1)[0] as DiscardCardTypes;
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        discardedCard: PlayerCardsType = player.cards[suit].splice(cardId, 1)[0];
+    if (!isHeroCard(discardedCard)) {
         G.discardCardsDeck.push(discardedCard);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
         DeleteBuffFromPlayer(G, ctx, BuffNames.DiscardCardEndGame);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
     }
@@ -71,11 +72,11 @@ export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, cardId: n
 export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     player.pickedCard = player.campCards.filter((card: CampDeckCardTypes): boolean =>
-        card.type === RusCardTypes.MERCENARY)[cardId];
+        IsMercenaryCard(card))[cardId];
     const pickedCard: PickedCardType = player.pickedCard;
     if (pickedCard !== null) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы ${ctx.phase} выбрал наёмника '${pickedCard.name}'.`);
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы ${ctx.phase} выбрал наёмника '${pickedCard.name}'.`);
     } else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не выбрана карта наёмника.`);
     }
@@ -93,8 +94,8 @@ export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId
  * @param suit Название фракции.
  */
 export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
-    DeleteBuffFromPlayer(G, ctx, BuffNames.GetMjollnirProfit);
     G.suitIdForMjollnir = suit;
+    DeleteBuffFromPlayer(G, ctx, BuffNames.GetMjollnirProfit);
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал фракцию ${suitsConfig[suit].suitName} для эффекта артефакта Mjollnir.`);
 };
 
@@ -134,7 +135,7 @@ export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void
         isAdded = AddCampCardToPlayerCards(G, ctx, pickedCard);
     } else {
         isAdded = AddCardToPlayer(G, ctx, pickedCard);
-        if (!isCardNotAction(pickedCard)) {
+        if (!isCardNotActionAndNotNull(pickedCard)) {
             AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
         }
     }
@@ -169,14 +170,14 @@ export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit
                     name: pickedCard.name,
                     tier: pickedCard.tier,
                     path: pickedCard.path,
-                } as ICreateCard);
+                });
                 AddCardToPlayer(G, ctx, mercenaryCard);
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы 'Enlistment Mercenaries' завербовал наёмника '${mercenaryCard.name}'.`);
                 const cardIndex: number = player.campCards.findIndex((card: CampDeckCardTypes): boolean =>
                     card.name === pickedCard.name);
                 player.campCards.splice(cardIndex, 1);
                 if (player.campCards.filter((card: CampDeckCardTypes): boolean =>
-                    card.type === RusCardTypes.MERCENARY).length) {
+                    IsMercenaryCard(card)).length) {
                     AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
                 }
                 CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);

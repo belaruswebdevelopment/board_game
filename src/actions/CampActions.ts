@@ -1,11 +1,12 @@
 import { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { IConfig } from "../typescript/action_interfaces";
-import { DiscardCardTypes, PlayerCardsType } from "../typescript/card_types";
+import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
-import { LogTypes, RusCardTypes } from "../typescript/enums";
+import { LogTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
@@ -49,10 +50,10 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: string, p
     // TODO Rework it for players and fix it for bots?
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
-        const player: IPublicPlayer = G.publicPlayers[Number(playerId)];
-        if (player.cards[suit][cardId].type !== RusCardTypes.HERO) {
-            const discardedCard: PlayerCardsType = player.cards[suit].splice(cardId, 1)[0];
-            G.discardCardsDeck.push(discardedCard as DiscardCardTypes);
+        const player: IPublicPlayer = G.publicPlayers[Number(playerId)],
+            discardedCard: PlayerCardsType = player.cards[suit].splice(cardId, 1)[0];
+        if (!isHeroCard(discardedCard)) {
+            G.discardCardsDeck.push(discardedCard);
             AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил карту ${discardedCard.name} в колоду сброса.`);
             player.stack = [];
         } else {

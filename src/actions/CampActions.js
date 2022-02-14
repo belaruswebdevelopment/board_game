@@ -1,7 +1,8 @@
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { LogTypes, RusCardTypes } from "../typescript/enums";
+import { LogTypes } from "../typescript/enums";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
 /**
  * <h3>Действия, связанные с добавлением монет в кошелёк для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
@@ -38,9 +39,8 @@ export const DiscardSuitCardAction = (G, ctx, suit, playerId, cardId) => {
     // TODO Rework it for players and fix it for bots?
     // Todo ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
-        const player = G.publicPlayers[Number(playerId)];
-        if (player.cards[suit][cardId].type !== RusCardTypes.HERO) {
-            const discardedCard = player.cards[suit].splice(cardId, 1)[0];
+        const player = G.publicPlayers[Number(playerId)], discardedCard = player.cards[suit].splice(cardId, 1)[0];
+        if (!isHeroCard(discardedCard)) {
             G.discardCardsDeck.push(discardedCard);
             AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил карту ${discardedCard.name} в колоду сброса.`);
             player.stack = [];

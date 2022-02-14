@@ -6,10 +6,11 @@ import { DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { IVariants } from "../typescript/action_interfaces";
-import { ICard, ICreateCard } from "../typescript/card_interfaces";
-import { DiscardCardTypes } from "../typescript/card_types";
+import { ICard } from "../typescript/card_interfaces";
+import { PlayerCardsType } from "../typescript/card_types";
 import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
@@ -28,10 +29,10 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
  */
 export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        pickedCard: DiscardCardTypes = player.cards[suit][cardId] as DiscardCardTypes;
-    if (pickedCard.type !== RusCardTypes.HERO) {
+        pickedCard: PlayerCardsType = player.cards[suit].splice(cardId, 1)[0];
+    if (!isHeroCard(pickedCard)) {
         player.pickedCard = pickedCard;
-        G.discardCardsDeck.push(player.cards[suit].splice(cardId, 1)[0] as ICard);
+        G.discardCardsDeck.push(pickedCard);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил в колоду сброса карту ${pickedCard.name}.`);
         if (G.actionsNum === 2) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda()]);
@@ -61,7 +62,7 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: string): 
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
             name: CardNames.Olwin,
-        } as ICreateCard);
+        });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту Ольвин во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);
         if (G.actionsNum === 2) {
@@ -96,7 +97,7 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: string): void 
             type: RusCardTypes.HERO,
             name: HeroNames.Thrud,
             game: `base`,
-        } as ICreateCard);
+        });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${HeroNames.Thrud} во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, heroCard);
     } else {
@@ -127,7 +128,7 @@ export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: string): void =
             type: RusCardTypes.HERO,
             name: HeroNames.Ylud,
             game: `base`,
-        } as ICreateCard);
+        });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${HeroNames.Ylud} во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, heroCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, heroCard);
