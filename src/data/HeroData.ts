@@ -1,9 +1,7 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeCoinAction } from "../actions/AutoActions";
-import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { TotalRank } from "../helpers/ScoreHelpers";
+import { AstridScoring, IdunnScoring } from "../score_helpers/HeroScoringHelpers";
 import { BuffNames, HeroNames, SuitNames } from "../typescript/enums";
 import { IHeroConfig, IHeroData } from "../typescript/hero_card_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
 import { StackData } from "./StackData";
 
 /**
@@ -75,7 +73,7 @@ const Astrid: IHeroData = {
     suit: null,
     rank: null,
     points: null,
-    scoringRule: (player?: IPublicPlayer): number => player !== undefined ? GetMaxCoinValue(player) : 0,
+    scoringRule: AstridScoring,
 };
 
 /**
@@ -292,8 +290,7 @@ const Idunn: IHeroData = {
     suit: SuitNames.EXPLORER,
     rank: 1,
     points: 7,
-    scoringRule: (player?: IPublicPlayer): number => player !== undefined ?
-        player.cards[SuitNames.EXPLORER].reduce(TotalRank, 0) * 2 : 0,
+    scoringRule: IdunnScoring,
 };
 
 /**

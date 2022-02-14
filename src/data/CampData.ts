@@ -1,10 +1,7 @@
 import { AddPickHeroAction, DiscardTradingCoinAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/AutoActions";
-import { TotalRank } from "../helpers/ScoreHelpers";
+import { DraupnirScoring, HrafnsmerkiScoring, MjollnirScoring, SvalinnScoring } from "../score_helpers/ArtefactScoringHelpers";
 import { IArtefact, IArtefactConfig, IMercenaries } from "../typescript/camp_card_interfaces";
-import { PlayerCardsType } from "../typescript/card_types";
-import { CoinType } from "../typescript/coin_types";
-import { ArtefactNames, BuffNames, RusCardTypes, SuitNames } from "../typescript/enums";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { ArtefactNames, BuffNames, SuitNames } from "../typescript/enums";
 import { StackData } from "./StackData";
 
 /**
@@ -47,9 +44,7 @@ const Draupnir: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    scoringRule: (player?: IPublicPlayer): number => player !== undefined ?
-        player.boardCoins.filter((coin: CoinType): boolean =>
-            Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
+    scoringRule: DraupnirScoring,
 };
 
 /**
@@ -131,19 +126,7 @@ const Hrafnsmerki: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    scoringRule: (player?: IPublicPlayer): number => {
-        if (player !== undefined) {
-            let score = 0;
-            for (const suit in player.cards) {
-                if (Object.prototype.hasOwnProperty.call(player.cards, suit)) {
-                    score += player.cards[suit].filter((card: PlayerCardsType): boolean =>
-                        card.type === RusCardTypes.MERCENARY).length * 5;
-                }
-            }
-            return score;
-        }
-        return 0;
-    },
+    scoringRule: HrafnsmerkiScoring,
 };
 
 /**
@@ -206,8 +189,7 @@ const Mjollnir: IArtefact = {
     buff: {
         name: BuffNames.GetMjollnirProfit,
     },
-    scoringRule: (player?: IPublicPlayer, suit?: string): number => player !== undefined && suit !== undefined ?
-        player.cards[suit].reduce(TotalRank, 0) * 2 : 0,
+    scoringRule: MjollnirScoring,
 };
 
 /**
@@ -225,7 +207,7 @@ const Svalinn: IArtefact = {
     suit: null,
     rank: null,
     points: null,
-    scoringRule: (player?: IPublicPlayer): number => player !== undefined ? player.heroes.length * 5 : 0,
+    scoringRule: SvalinnScoring,
 };
 
 /**

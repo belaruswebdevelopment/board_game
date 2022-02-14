@@ -1,6 +1,5 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeCoinAction } from "../actions/AutoActions";
-import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { TotalRank } from "../helpers/ScoreHelpers";
+import { AstridScoring, IdunnScoring } from "../score_helpers/HeroScoringHelpers";
 import { BuffNames, HeroNames, SuitNames } from "../typescript/enums";
 import { StackData } from "./StackData";
 /**
@@ -69,7 +68,7 @@ const Astrid = {
     suit: null,
     rank: null,
     points: null,
-    scoringRule: (player) => player !== undefined ? GetMaxCoinValue(player) : 0,
+    scoringRule: AstridScoring,
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -275,8 +274,7 @@ const Idunn = {
     suit: SuitNames.EXPLORER,
     rank: 1,
     points: 7,
-    scoringRule: (player) => player !== undefined ?
-        player.cards[SuitNames.EXPLORER].reduce(TotalRank, 0) * 2 : 0,
+    scoringRule: IdunnScoring,
 };
 /**
  * <h3>Данные о герое.</h3>

@@ -1,6 +1,6 @@
 import { AddPickHeroAction, DiscardTradingCoinAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/AutoActions";
-import { TotalRank } from "../helpers/ScoreHelpers";
-import { ArtefactNames, BuffNames, RusCardTypes, SuitNames } from "../typescript/enums";
+import { DraupnirScoring, HrafnsmerkiScoring, MjollnirScoring, SvalinnScoring } from "../score_helpers/ArtefactScoringHelpers";
+import { ArtefactNames, BuffNames, SuitNames } from "../typescript/enums";
 import { StackData } from "./StackData";
 /**
  * <h3>Данные об артефакте.</h3>
@@ -41,8 +41,7 @@ const Draupnir = {
     suit: null,
     rank: null,
     points: null,
-    scoringRule: (player) => player !== undefined ?
-        player.boardCoins.filter((coin) => Boolean(coin !== null && coin.value >= 15)).length * 6 : 0,
+    scoringRule: DraupnirScoring,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -120,18 +119,7 @@ const Hrafnsmerki = {
     suit: null,
     rank: null,
     points: null,
-    scoringRule: (player) => {
-        if (player !== undefined) {
-            let score = 0;
-            for (const suit in player.cards) {
-                if (Object.prototype.hasOwnProperty.call(player.cards, suit)) {
-                    score += player.cards[suit].filter((card) => card.type === RusCardTypes.MERCENARY).length * 5;
-                }
-            }
-            return score;
-        }
-        return 0;
-    },
+    scoringRule: HrafnsmerkiScoring,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -191,8 +179,7 @@ const Mjollnir = {
     buff: {
         name: BuffNames.GetMjollnirProfit,
     },
-    scoringRule: (player, suit) => player !== undefined && suit !== undefined ?
-        player.cards[suit].reduce(TotalRank, 0) * 2 : 0,
+    scoringRule: MjollnirScoring,
 };
 /**
  * <h3>Данные об артефакте.</h3>
@@ -209,7 +196,7 @@ const Svalinn = {
     suit: null,
     rank: null,
     points: null,
-    scoringRule: (player) => player !== undefined ? player.heroes.length * 5 : 0,
+    scoringRule: SvalinnScoring,
 };
 /**
  * <h3>Данные об артефакте.</h3>

@@ -1,6 +1,5 @@
-import { ICard } from "../typescript/card_interfaces";
+import { IAdditionalCardsConfig, ICard } from "../typescript/card_interfaces";
 import { CardNames, RusCardTypes, SuitNames } from "../typescript/enums";
-import { IAdditionalCardsConfig } from "../typescript/interfaces";
 
 // TODO Rework in IAdditionalCard!!!
 const ChiefBlacksmith: ICard = {
