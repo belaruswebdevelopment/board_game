@@ -1,10 +1,10 @@
 import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
 import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
-import { isCardNotAction } from "./Card";
+import { isCardNotActionAndNotNull } from "./Card";
 import { suitsConfig } from "./data/SuitData";
-import { TotalRank } from "./helpers/ScoreHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
+import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ConfigNames, MoveNames, Phases, RusCardTypes, ValidatorNames } from "./typescript/enums";
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -274,7 +274,7 @@ export const moveValidators = {
                 const uniqueArrLength = uniqueArr.length;
                 for (let j = 0; j < uniqueArrLength; j++) {
                     const uniqueCard = uniqueArr[j];
-                    if (isCardNotAction(tavernCard) && isCardNotAction(uniqueCard)
+                    if (isCardNotActionAndNotNull(tavernCard) && isCardNotActionAndNotNull(uniqueCard)
                         && tavernCard.suit === uniqueCard.suit
                         && CompareCards(tavernCard, uniqueCard) === 0) {
                         flag = false;

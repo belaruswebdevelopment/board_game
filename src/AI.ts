@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { CompareCards } from "./bot_logic/BotCardLogic";
-import { isCardNotAction } from "./Card";
+import { isCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { IConfig } from "./typescript/action_interfaces";
@@ -9,8 +9,8 @@ import { IBuffs } from "./typescript/buff_interfaces";
 import { TavernCardTypes } from "./typescript/card_types";
 import { ConfigNames, Phases, Stages } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
-import { IMoveValidator } from "./typescript/move_validator_interfaces";
-import { MoveValidatorGetRangeTypes, MoveValidatorPhaseTypes, ValidMoveIdParamTypes } from "./typescript/move_validator_types";
+import { IMoveBy, IMoveValidator } from "./typescript/move_validator_interfaces";
+import { MoveValidatorGetRangeTypes, ValidMoveIdParamTypes } from "./typescript/move_validator_types";
 import { MoveArgsTypes } from "./typescript/types";
 
 /**
@@ -89,7 +89,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
         const validator: IMoveValidator | undefined =
-            GetValidator(ctx.phase as MoveValidatorPhaseTypes, activeStageOfCurrentPlayer);
+            GetValidator(ctx.phase as keyof IMoveBy, activeStageOfCurrentPlayer);
         if (validator !== undefined) {
             const moveName: string = validator.moveName,
                 moveRangeData: MoveValidatorGetRangeTypes = validator.getRange(G, ctx, playerId),
@@ -147,7 +147,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
             currentTavern.findIndex((card: TavernCardTypes): boolean => card !== null),
             tavernCard: TavernCardTypes = currentTavern[cardIndex];
         if (currentTavern.every((card: TavernCardTypes): boolean =>
-            card === null || (isCardNotAction(card) && tavernCard !== null && isCardNotAction(tavernCard)
+            card === null || (isCardNotActionAndNotNull(card) && isCardNotActionAndNotNull(tavernCard)
                 && card.suit === tavernCard.suit && CompareCards(card, tavernCard) === 0))) {
             return 1;
         }
@@ -162,7 +162,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
                 continue;
             }
             if (G.decks[0].length > 18) {
-                if (tavernCard && isCardNotAction(tavernCard)) {
+                if (isCardNotActionAndNotNull(tavernCard)) {
                     if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
                         && currentTavern.some((card: TavernCardTypes): boolean => card !== null
                             && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {
@@ -288,7 +288,7 @@ export const objectives = (): {
             }
             const totalScore: number[] = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(CurrentScoring(G.publicPlayers[i]));
+                totalScore.push(CurrentScoring(G, i));
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2);
@@ -312,7 +312,7 @@ export const objectives = (): {
             }
             const totalScore: number[] = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(CurrentScoring(G.publicPlayers[i]));
+                totalScore.push(CurrentScoring(G, i));
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2);

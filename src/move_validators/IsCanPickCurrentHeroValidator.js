@@ -1,5 +1,5 @@
 import { suitsConfig } from "../data/SuitData";
-import { TotalRank } from "../helpers/ScoreHelpers";
+import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { RusCardTypes } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
@@ -58,7 +58,8 @@ export const IsCanPickHeroWithConditionsValidator = (G, ctx, id) => {
                         if (Object.prototype.hasOwnProperty.call(validators.conditions[condition], key)) {
                             if (key === `suit`) {
                                 ranks = G.publicPlayers[Number(ctx.currentPlayer)]
-                                    .cards[validators.conditions[condition][key]].reduce(TotalRank, 0);
+                                    .cards[validators.conditions[condition][key]]
+                                    .reduce(TotalRank, 0);
                             }
                             else if (key === `value`) {
                                 isValidMove = ranks >= validators.conditions[condition][key];

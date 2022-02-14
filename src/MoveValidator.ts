@@ -1,21 +1,22 @@
 import { Ctx } from "boardgame.io";
 import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
 import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
-import { isCardNotAction } from "./Card";
+import { isCardNotActionAndNotNull } from "./Card";
 import { suitsConfig } from "./data/SuitData";
-import { TotalRank } from "./helpers/ScoreHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
+import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { IConfig } from "./typescript/action_interfaces";
 import { IBuffs } from "./typescript/buff_interfaces";
-import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, PickedCardType, PlayerCardsType, TavernCardTypes } from "./typescript/card_types";
+import { CampCardTypes, CampDeckCardTypes } from "./typescript/camp_card_types";
+import { DeckCardTypes, PickedCardType, PlayerCardsType, TavernCardTypes } from "./typescript/card_types";
 import { CoinType } from "./typescript/coin_types";
 import { ConfigNames, MoveNames, Phases, RusCardTypes, ValidatorNames } from "./typescript/enums";
 import { IMyGameState } from "./typescript/game_data_interfaces";
 import { IValidatorsConfig } from "./typescript/hero_validator_interfaces";
 import { ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardIdArguments, ICurrentMoveSuitCardPlayerCurrentId, ICurrentMoveSuitCardPlayerIdArguments } from "./typescript/move_interfaces";
 import { IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveValidator, IMoveValidators } from "./typescript/move_validator_interfaces";
-import { MoveValidatorGetRangeTypes, MoveValidatorPhaseTypes, ValidMoveIdParamTypes } from "./typescript/move_validator_types";
+import { MoveValidatorGetRangeTypes, ValidMoveIdParamTypes } from "./typescript/move_validator_types";
 import { IPublicPlayer } from "./typescript/player_interfaces";
 
 /**
@@ -61,7 +62,7 @@ export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: ICurr
  * @returns Валидный ли мув.
  */
 export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: string, id?: ValidMoveIdParamTypes): boolean => {
-    const validator: IMoveValidator | undefined = GetValidator(ctx.phase as MoveValidatorPhaseTypes, stage);
+    const validator: IMoveValidator | undefined = GetValidator(ctx.phase as keyof IMoveBy, stage);
     let isValid = false;
     if (validator !== undefined) {
         if (typeof id === `number`) {
@@ -90,7 +91,7 @@ export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: string, id?: Valid
     return isValid;
 };
 
-export const GetValidator = (phase: MoveValidatorPhaseTypes, stage: string) => {
+export const GetValidator = (phase: keyof IMoveBy, stage: string) => {
     let validator: IMoveValidator | undefined;
     switch (phase) {
         case Phases.PlaceCoins:
@@ -306,7 +307,7 @@ export const moveValidators: IMoveValidators = {
                 const uniqueArrLength: number = uniqueArr.length;
                 for (let j = 0; j < uniqueArrLength; j++) {
                     const uniqueCard: DeckCardTypes = uniqueArr[j];
-                    if (isCardNotAction(tavernCard) && isCardNotAction(uniqueCard)
+                    if (isCardNotActionAndNotNull(tavernCard) && isCardNotActionAndNotNull(uniqueCard)
                         && tavernCard.suit === uniqueCard.suit
                         && CompareCards(tavernCard, uniqueCard) === 0) {
                         flag = false;

@@ -1,4 +1,3 @@
-// TODO Check unused enums
 /**
  * <h3>Перечисление для названий артефактов.</h3>
  */
@@ -76,7 +75,7 @@ export const enum DrawNames {
     DiscardTavernCard = `Discard tavern card`,
     EnlistmentMercenaries = `Enlistment Mercenaries`,
     Mjollnir = `Mjollnir`,
-    // TODO Add it?!
+    // TODO Add it and new to all Stack actions and give normal names to all?!
     GetMjollnirProfit = `getMjollnirProfit`,
     Hofud = `Hofud`,
     Holda = `Holda`,

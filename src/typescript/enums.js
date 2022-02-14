@@ -1,4 +1,3 @@
-// TODO Check unused enums
 /**
  * <h3>Перечисление для названий артефактов.</h3>
  */
@@ -77,7 +76,7 @@ export var DrawNames;
     DrawNames["DiscardTavernCard"] = "Discard tavern card";
     DrawNames["EnlistmentMercenaries"] = "Enlistment Mercenaries";
     DrawNames["Mjollnir"] = "Mjollnir";
-    // TODO Add it?!
+    // TODO Add it and new to all Stack actions and give normal names to all?!
     DrawNames["GetMjollnirProfit"] = "getMjollnirProfit";
     DrawNames["Hofud"] = "Hofud";
     DrawNames["Holda"] = "Holda";

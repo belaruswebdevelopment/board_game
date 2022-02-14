@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
-import { TotalRank } from "../helpers/ScoreHelpers";
+import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { PlayerCardsType } from "../typescript/card_types";
 import { RusCardTypes } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
@@ -67,7 +67,8 @@ export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, 
                         if (Object.prototype.hasOwnProperty.call(validators.conditions[condition], key)) {
                             if (key === `suit`) {
                                 ranks = G.publicPlayers[Number(ctx.currentPlayer)]
-                                    .cards[validators.conditions[condition][key]].reduce(TotalRank, 0);
+                                    .cards[validators.conditions[condition][key]]
+                                    .reduce(TotalRank, 0);
                             } else if (key === `value`) {
                                 isValidMove = ranks >= validators.conditions[condition][key];
                             }

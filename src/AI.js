@@ -1,5 +1,5 @@
 import { CompareCards } from "./bot_logic/BotCardLogic";
-import { isCardNotAction } from "./Card";
+import { isCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { ConfigNames, Phases, Stages } from "./typescript/enums";
@@ -148,7 +148,7 @@ export const iterations = (G, ctx) => {
             return 1;
         }
         const cardIndex = currentTavern.findIndex((card) => card !== null), tavernCard = currentTavern[cardIndex];
-        if (currentTavern.every((card) => card === null || (isCardNotAction(card) && tavernCard !== null && isCardNotAction(tavernCard)
+        if (currentTavern.every((card) => card === null || (isCardNotActionAndNotNull(card) && isCardNotActionAndNotNull(tavernCard)
             && card.suit === tavernCard.suit && CompareCards(card, tavernCard) === 0))) {
             return 1;
         }
@@ -162,7 +162,7 @@ export const iterations = (G, ctx) => {
                 continue;
             }
             if (G.decks[0].length > 18) {
-                if (tavernCard && isCardNotAction(tavernCard)) {
+                if (isCardNotActionAndNotNull(tavernCard)) {
                     if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
                         && currentTavern.some((card) => card !== null
                             && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {
@@ -283,7 +283,7 @@ export const objectives = () => ({
             }
             const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(CurrentScoring(G.publicPlayers[i]));
+                totalScore.push(CurrentScoring(G, i));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
             if (totalScore[Number(ctx.currentPlayer)] === top1) {
@@ -306,7 +306,7 @@ export const objectives = () => ({
             }
             const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(CurrentScoring(G.publicPlayers[i]));
+                totalScore.push(CurrentScoring(G, i));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
             if (totalScore[Number(ctx.currentPlayer)] === top1) {
