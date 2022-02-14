@@ -94,11 +94,11 @@ export const HasLowestPriority = (G: IMyGameState, playerId: number): boolean =>
  * </ol>
  */
 const priorities: IPriority[] = [
-    CreatePriority({ value: 1 } as ICreatePriority),
-    CreatePriority({ value: 2 } as ICreatePriority),
-    CreatePriority({ value: 3 } as ICreatePriority),
-    CreatePriority({ value: 4 } as ICreatePriority),
-    CreatePriority({ value: 5 } as ICreatePriority),
+    CreatePriority({ value: 1 }),
+    CreatePriority({ value: 2 }),
+    CreatePriority({ value: 3 }),
+    CreatePriority({ value: 4 }),
+    CreatePriority({ value: 5 }),
 ];
 
 /**

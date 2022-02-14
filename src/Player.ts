@@ -24,7 +24,7 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
         isTriggerTrading: false,
     }),
     boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
-} as IPlayer);
+});
 
 /**
  * <h3>Создаёт всех игроков (публичные данные).</h3>
@@ -52,7 +52,7 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority):
             { isInitial: true, isTriggerTrading: false }),
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
         priority,
-    } as ICreatePublicPlayer);
+    });
 };
 
 /**

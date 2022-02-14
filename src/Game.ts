@@ -17,7 +17,8 @@ import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, ClickHan
 import { ClickHeroCardMove, DiscardCardMove, PlaceOlwinCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
 import { Phases } from "./typescript/enums";
-import { IMyGameState, INext, IOrder } from "./typescript/game_data_interfaces";
+import { IMyGameState } from "./typescript/game_data_interfaces";
+import { INext, IOrder } from "./typescript/game_interfaces";
 
 // TODO Add logging
 // TODO Add dock block

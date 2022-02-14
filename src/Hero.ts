@@ -28,7 +28,7 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
                 validators: heroesConfig[hero].validators,
                 actions: heroesConfig[hero].actions,
                 stack: heroesConfig[hero].stack,
-            } as ICreateHero));
+            }));
         }
     }
     return heroes;
@@ -82,3 +82,6 @@ export const CreateHero = ({
     actions,
     stack,
 });
+
+export const isHeroCard = (card: unknown): card is IHero =>
+    (card as IHero).validators !== undefined;

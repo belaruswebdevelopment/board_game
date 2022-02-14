@@ -66,4 +66,5 @@ export const CreateHero = ({ type, name, description, game, suit, rank, points, 
     actions,
     stack,
 });
+export const isHeroCard = (card) => card.validators !== undefined;
 //# sourceMappingURL=Hero.js.map
