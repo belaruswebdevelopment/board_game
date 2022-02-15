@@ -288,7 +288,7 @@ export const objectives = (): {
             }
             const totalScore: number[] = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(CurrentScoring(G, i));
+                totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2);
@@ -312,7 +312,7 @@ export const objectives = (): {
             }
             const totalScore: number[] = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(CurrentScoring(G, i));
+                totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
             const [top1, top2]: number[] =
                 totalScore.sort((a: number, b: number): number => b - a).slice(0, 2);

@@ -1,32 +1,14 @@
 import { Ctx } from "boardgame.io";
-import { CreateCard, isCardNotAction } from "../Card";
+import { CreateCard, isCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
-import { IAverageSuitCardData, ICreateAverageSuitCard } from "../typescript/bot_interfaces";
+import { IAverageSuitCardData } from "../typescript/bot_interfaces";
 import { ICard } from "../typescript/card_interfaces";
-import { PlayerCardsType, TavernCardTypes } from "../typescript/card_types";
+import { TavernCardTypes } from "../typescript/card_types";
 import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPlayerCards } from "../typescript/interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
 import { ISuit } from "../typescript/suit_interfaces";
 
 // Check all types in this file!
-/**
- * <h3>Добавляет карту в массив потенциальных карт для ботов.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при подсчёте потенциального количества очков для ботов.</li>
- * </ol>
- *
- * @param cards Массив потенциальных карт для ботов.
- * @param card Карта.
- */
-const AddCardToCards = (cards: IPlayerCards, card: PlayerCardsType): void => {
-    if (card.suit !== null) {
-        cards[card.suit].push(card);
-    }
-    // TODO Else it can be upgrade coin card here and it is not error, sure? Or add LogTypes.ERROR logging?
-};
-
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -43,7 +25,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
     if (card1 === null || card2 === null) {
         return 0;
     }
-    if (isCardNotAction(card1) && isCardNotAction(card2)) {
+    if (isCardNotActionAndNotNull(card1) && isCardNotActionAndNotNull(card2)) {
         if (card1.suit === card2.suit) {
             const result: number = (card1.points !== undefined && card1.points !== null ?
                 card1.points : 1) - (card2.points !== undefined && card2.points !== null ? card2.points : 1);
@@ -80,8 +62,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
     }
     if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
         const temp: number[][] = tavern.map((card: TavernCardTypes): number[] =>
-            G.publicPlayers.map((player: IPublicPlayer): number =>
-                PotentialScoring(player, card))),
+            G.publicPlayers.map((player: IPublicPlayer): number => PotentialScoring(player, card))),
             result = temp[cardId][Number(ctx.currentPlayer)];
         temp.splice(cardId, 1);
         temp.forEach((player: number[]): number[] =>
@@ -113,7 +94,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
         suit: suitConfig.suit,
         rank: 0,
         points: 0
-    } as ICreateAverageSuitCard),
+    }),
         rank: number | number[] = suitConfig.ranksValues()[data.players][data.tier],
         points: number | number[] = suitConfig.pointsValues()[data.players][data.tier];
     const count = Array.isArray(points) ? points.length : points;
@@ -141,22 +122,14 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * @returns Потенциальное значение.
  */
 const PotentialScoring = (player: IPublicPlayer, card: TavernCardTypes): number => {
-    const potentialCards: IPlayerCards = {};
     let score = 0;
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            potentialCards[suit] = [];
-            for (let j = 0; j < player.cards[suit].length; j++) {
-                AddCardToCards(potentialCards, player.cards[suit][j]);
+            if (isCardNotActionAndNotNull(card) && card.suit === suit) {
+                score += suitsConfig[suit].scoringRule(player.cards[suit], card.points ?? 1);
+            } else {
+                score += suitsConfig[suit].scoringRule(player.cards[suit]);
             }
-        }
-    }
-    if (card !== null && `suit` in card) {
-        AddCardToCards(potentialCards, CreateCard(card));
-    }
-    for (const suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            score += suitsConfig[suit].scoringRule(potentialCards[suit]);
         }
     }
     if (card !== null && `value` in card) {

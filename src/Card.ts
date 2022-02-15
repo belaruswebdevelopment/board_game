@@ -146,4 +146,5 @@ export const isActionDiscardCard = (card: DiscardCardTypes): card is IActionCard
  * @param card Карта.
  * @returns Является ли объект картой дворфа, а не картой обмена монеты.
  */
-export const isCardNotActionAndNotNull = (card: TavernCardTypes): card is ICard => (card as ICard).suit !== undefined;
+export const isCardNotActionAndNotNull = (card: TavernCardTypes): card is ICard =>
+    card !== null && (card as ICard).suit !== undefined;

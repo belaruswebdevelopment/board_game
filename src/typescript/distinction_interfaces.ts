@@ -6,16 +6,9 @@ import { DistinctionTypes } from "./types";
 /**
  * <h3>Интерфейс для преимуществ по фракциям.</h3>
  */
-export interface IAwarding {
-    (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number,
-}
-
-/**
- * <h3>Интерфейс для преимуществ по фракциям.</h3>
- */
 export interface IDistinction {
     readonly description: string,
-    readonly awarding: IAwarding,
+    readonly awarding: (G: IMyGameState, ctx: Ctx, player: IPublicPlayer) => number,
 }
 
 /**

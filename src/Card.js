@@ -121,5 +121,5 @@ export const isActionDiscardCard = (card) => card.type === RusCardTypes.ACTION;
  * @param card Карта.
  * @returns Является ли объект картой дворфа, а не картой обмена монеты.
  */
-export const isCardNotActionAndNotNull = (card) => card.suit !== undefined;
+export const isCardNotActionAndNotNull = (card) => card !== null && card.suit !== undefined;
 //# sourceMappingURL=Card.js.map

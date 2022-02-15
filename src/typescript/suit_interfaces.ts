@@ -12,7 +12,7 @@ export interface ISuit {
     readonly description: string,
     readonly ranksValues: () => IRankValues,
     readonly pointsValues: () => IPointsValues,
-    readonly scoringRule: (cards: PlayerCardsType[]) => number,
+    readonly scoringRule: (cards: PlayerCardsType[], potentialCardValue?: number) => number,
     readonly distinction: IDistinction,
 }
 

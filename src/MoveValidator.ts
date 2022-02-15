@@ -570,9 +570,7 @@ export const moveValidators: IMoveValidators = {
             ValidMoveIdParamTypes => {
             const moveArguments: ICurrentMoveArgumentsStage<string[]>[`args`] = currentMoveArguments as string[],
                 totalSuitsRanks: number[] = [];
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             for (let j = 0; j < moveArguments.length; j++) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const suit: string = moveArguments[j];
                 totalSuitsRanks.push(G.publicPlayers[Number(ctx.currentPlayer)]
                     .cards[suit].reduce(TotalRank, 0) * 2);

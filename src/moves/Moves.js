@@ -1,6 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCard, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
-import { isCardNotAction } from "../Card";
+import { isCardNotActionAndNotNull } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
@@ -31,7 +31,7 @@ export const ClickCardMove = (G, ctx, cardId) => {
     G.taverns[G.currentTavern][cardId] = null;
     if (card !== null) {
         const isAdded = AddCardToPlayer(G, ctx, card);
-        if (!isCardNotAction(card)) {
+        if (!isCardNotActionAndNotNull(card)) {
             AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
         }
         else {
@@ -63,7 +63,7 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     const isAdded = AddCardToPlayer(G, ctx, G.decks[1][cardId]), pickedCard = G.decks[1].splice(cardId, 1)[0];
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     G.decks[1] = ctx.random.Shuffle(G.decks[1]);
-    if (isCardNotAction(pickedCard)) {
+    if (isCardNotActionAndNotNull(pickedCard)) {
         if (isAdded) {
             G.distinctions[SuitNames.EXPLORER] = undefined;
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);

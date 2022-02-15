@@ -19,8 +19,7 @@ export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
     let result = Array(taverns.length).fill(0);
     const temp = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (tavern !== null && item.heuristic(tavern) ? item.weight : 0), 0));
     result = result.map((value, index) => value + temp[index]);
-    const tempNumbers = taverns.map((tavern) => tavern
-        .map((card, index, arr) => EvaluateCard(G, ctx, card, index, arr)));
+    const tempNumbers = taverns.map((tavern) => tavern.map((card, index, arr) => EvaluateCard(G, ctx, card, index, arr)));
     const tempChars = tempNumbers.map((element) => GetCharacteristics(element));
     let maxIndex = 0, minIndex = tempChars.length - 1;
     for (let i = 1; i < temp.length; i++) {

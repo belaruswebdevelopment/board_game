@@ -1,22 +1,6 @@
-import { CreateCard, isCardNotAction } from "../Card";
+import { CreateCard, isCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 // Check all types in this file!
-/**
- * <h3>Добавляет карту в массив потенциальных карт для ботов.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>Происходит при подсчёте потенциального количества очков для ботов.</li>
- * </ol>
- *
- * @param cards Массив потенциальных карт для ботов.
- * @param card Карта.
- */
-const AddCardToCards = (cards, card) => {
-    if (card.suit !== null) {
-        cards[card.suit].push(card);
-    }
-    // TODO Else it can be upgrade coin card here and it is not error, sure? Or add LogTypes.ERROR logging?
-};
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -33,7 +17,7 @@ export const CompareCards = (card1, card2) => {
     if (card1 === null || card2 === null) {
         return 0;
     }
-    if (isCardNotAction(card1) && isCardNotAction(card2)) {
+    if (isCardNotActionAndNotNull(card1) && isCardNotActionAndNotNull(card2)) {
         if (card1.suit === card2.suit) {
             const result = (card1.points !== undefined && card1.points !== null ?
                 card1.points : 1) - (card2.points !== undefined && card2.points !== null ? card2.points : 1);
@@ -120,31 +104,24 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  * @returns Потенциальное значение.
  */
 const PotentialScoring = (player, card) => {
-    var _a, _b, _c, _d;
-    const potentialCards = {};
+    var _a, _b, _c, _d, _e;
     let score = 0;
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            potentialCards[suit] = [];
-            for (let j = 0; j < player.cards[suit].length; j++) {
-                AddCardToCards(potentialCards, player.cards[suit][j]);
+            if (isCardNotActionAndNotNull(card) && card.suit === suit) {
+                score += suitsConfig[suit].scoringRule(player.cards[suit], (_a = card.points) !== null && _a !== void 0 ? _a : 1);
             }
-        }
-    }
-    if (card !== null && `suit` in card) {
-        AddCardToCards(potentialCards, CreateCard(card));
-    }
-    for (const suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            score += suitsConfig[suit].scoringRule(potentialCards[suit]);
+            else {
+                score += suitsConfig[suit].scoringRule(player.cards[suit]);
+            }
         }
     }
     if (card !== null && `value` in card) {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
-        score += (_b = (_a = player.boardCoins[i]) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : 0;
-        score += (_d = (_c = player.handCoins[i]) === null || _c === void 0 ? void 0 : _c.value) !== null && _d !== void 0 ? _d : 0;
+        score += (_c = (_b = player.boardCoins[i]) === null || _b === void 0 ? void 0 : _b.value) !== null && _c !== void 0 ? _c : 0;
+        score += (_e = (_d = player.handCoins[i]) === null || _d === void 0 ? void 0 : _d.value) !== null && _e !== void 0 ? _e : 0;
     }
     return score;
 };

@@ -5,7 +5,6 @@ import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { ICard } from "../typescript/card_interfaces";
 import { CoinType } from "../typescript/coin_types";
-import { IAwarding } from "../typescript/distinction_interfaces";
 import { CardNames, LogTypes, SuitNames } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { IPublicPlayer } from "../typescript/player_interfaces";
@@ -13,7 +12,7 @@ import { GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 // TODO Add dock blocks
-export const BlacksmithDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         const card: ICard | undefined = G.additionalCardsDeck.find((card: ICard): boolean =>
             card.name === CardNames.ChiefBlacksmith);
@@ -28,7 +27,7 @@ export const BlacksmithDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: C
     return 0;
 };
 
-export const ExplorerDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDistinctionCard()]);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
@@ -36,7 +35,7 @@ export const ExplorerDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx
     return 0;
 };
 
-export const HunterDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         const tradingCoinIndex: number =
             player.boardCoins.findIndex((coin: CoinType): boolean => coin?.value === 0);
@@ -50,7 +49,7 @@ export const HunterDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, 
     return 0;
 };
 
-export const MinerDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const MinerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         player.priority = CreatePriority({
             value: 6,
@@ -66,7 +65,7 @@ export const MinerDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, p
     return 0;
 };
 
-export const WarriorDistinctionAwarding: IAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const WarriorDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinWarriorDistinction()]);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия воинов возможность улучшить одну из своих монет на +5:`);

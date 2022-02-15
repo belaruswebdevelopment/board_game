@@ -1,7 +1,7 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCard, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
-import { isCardNotAction } from "../Card";
+import { isCardNotActionAndNotNull } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
@@ -35,7 +35,7 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
     G.taverns[G.currentTavern][cardId] = null;
     if (card !== null) {
         const isAdded: boolean = AddCardToPlayer(G, ctx, card);
-        if (!isCardNotAction(card)) {
+        if (!isCardNotActionAndNotNull(card)) {
             AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
         } else {
             if (isAdded) {
@@ -68,7 +68,7 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
         pickedCard: DeckCardTypes = G.decks[1].splice(cardId, 1)[0];
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     G.decks[1] = ctx.random!.Shuffle(G.decks[1]);
-    if (isCardNotAction(pickedCard)) {
+    if (isCardNotActionAndNotNull(pickedCard)) {
         if (isAdded) {
             G.distinctions[SuitNames.EXPLORER] = undefined;
             CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
@@ -98,7 +98,6 @@ export const ClickDistinctionCardMove: Move<IMyGameState> = (G: IMyGameState, ct
     }
     suitsConfig[suit].distinction.awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
 };
-
 
 /**
  * <h3>Убирает карту в колоду сброса в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>

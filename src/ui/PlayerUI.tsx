@@ -148,7 +148,7 @@ export const DrawPlayersBoards = (data: BoardProps<IMyGameState>): JSX.Element[]
         }
         playersBoards[p].push(
             <table className="mx-auto" key={`${player.nickname} board`}>
-                <caption>Player {p + 1} ({player.nickname}) cards, {data.G.winner.length ? `Final: ${data.G.totalScore[p]}` : CurrentScoring(data.G, p)} points
+                <caption>Player {p + 1} ({player.nickname}) cards, {data.G.winner.length ? `Final: ${data.G.totalScore[p]}` : CurrentScoring(player)} points
                 </caption>
                 <thead>
                     <tr>{playerHeaders[p]}</tr>

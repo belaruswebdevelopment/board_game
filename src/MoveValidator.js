@@ -523,9 +523,7 @@ export const moveValidators = {
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, totalSuitsRanks = [];
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             for (let j = 0; j < moveArguments.length; j++) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const suit = moveArguments[j];
                 totalSuitsRanks.push(G.publicPlayers[Number(ctx.currentPlayer)]
                     .cards[suit].reduce(TotalRank, 0) * 2);

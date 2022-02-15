@@ -283,7 +283,7 @@ export const objectives = () => ({
             }
             const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(CurrentScoring(G, i));
+                totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
             if (totalScore[Number(ctx.currentPlayer)] === top1) {
@@ -306,7 +306,7 @@ export const objectives = () => ({
             }
             const totalScore = [];
             for (let i = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(CurrentScoring(G, i));
+                totalScore.push(CurrentScoring(G.publicPlayers[i]));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
             if (totalScore[Number(ctx.currentPlayer)] === top1) {
