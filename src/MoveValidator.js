@@ -524,12 +524,10 @@ export const moveValidators = {
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, totalSuitsRanks = [];
             for (let j = 0; j < moveArguments.length; j++) {
-                const suit = moveArguments[j];
                 totalSuitsRanks.push(G.publicPlayers[Number(ctx.currentPlayer)]
-                    .cards[suit].reduce(TotalRank, 0) * 2);
+                    .cards[moveArguments[j]].reduce(TotalRank, 0) * 2);
             }
-            return Object.values(suitsConfig)[totalSuitsRanks
-                .indexOf(Math.max(...totalSuitsRanks))].suit;
+            return moveArguments[totalSuitsRanks.indexOf(Math.max(...totalSuitsRanks))];
         },
         moveName: MoveNames.GetMjollnirProfitMove,
         validate: () => true,

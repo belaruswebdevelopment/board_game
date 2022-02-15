@@ -571,12 +571,10 @@ export const moveValidators: IMoveValidators = {
             const moveArguments: ICurrentMoveArgumentsStage<string[]>[`args`] = currentMoveArguments as string[],
                 totalSuitsRanks: number[] = [];
             for (let j = 0; j < moveArguments.length; j++) {
-                const suit: string = moveArguments[j];
                 totalSuitsRanks.push(G.publicPlayers[Number(ctx.currentPlayer)]
-                    .cards[suit].reduce(TotalRank, 0) * 2);
+                    .cards[moveArguments[j]].reduce(TotalRank, 0) * 2);
             }
-            return Object.values(suitsConfig)[totalSuitsRanks
-                .indexOf(Math.max(...totalSuitsRanks))].suit;
+            return moveArguments[totalSuitsRanks.indexOf(Math.max(...totalSuitsRanks))];
         },
         moveName: MoveNames.GetMjollnirProfitMove,
         validate: (): boolean => true,
