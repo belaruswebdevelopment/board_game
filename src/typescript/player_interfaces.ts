@@ -1,6 +1,7 @@
 import { IStack } from "./action_interfaces";
 import { IBuffs } from "./buff_interfaces";
-import { CampDeckCardTypes, PickedCardType } from "./card_types";
+import { CampDeckCardTypes } from "./camp_card_types";
+import { PickedCardType } from "./card_types";
 import { ICoin } from "./coin_interfaces";
 import { CoinType } from "./coin_types";
 import { IHero } from "./hero_card_interfaces";

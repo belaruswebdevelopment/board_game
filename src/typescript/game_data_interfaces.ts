@@ -1,7 +1,7 @@
-import { Ctx } from "boardgame.io";
 import { IAverageCard, IBotData } from "./bot_interfaces";
+import { CampCardTypes, CampDeckCardTypes } from "./camp_card_types";
 import { ICard } from "./card_interfaces";
-import { CampCardTypes, CampDeckCardTypes, DeckCardTypes, DiscardCardTypes, TavernCardTypes } from "./card_types";
+import { DeckCardTypes, DiscardCardTypes, TavernCardTypes } from "./card_types";
 import { ICoin } from "./coin_interfaces";
 import { IDistinctions } from "./distinction_interfaces";
 import { LogTypes } from "./enums";
@@ -62,28 +62,4 @@ export interface IMyGameState {
     readonly publicPlayers: IPublicPlayer[],
     publicPlayersOrder: string[],
     readonly winner: number[],
-}
-
-/**
- * <h3>Интерфейс для следующей фазы.</h3>
- */
-export interface INext {
-    readonly next: string,
-}
-
-/**
- * <h3>Интерфейс для порядка ходов.</h3>
- */
-export interface IOrder {
-    readonly next: (G: IMyGameState, ctx: Ctx) => number;
-    readonly first: () => number;
-    readonly playOrder: (G: IMyGameState) => string[];
-}
-
-/**
- * <h3>Интерфейс для распределения монет на столе.</h3>
- */
-export interface IResolveBoardCoins {
-    readonly playersOrder: string[],
-    readonly exchangeOrder: number[],
 }

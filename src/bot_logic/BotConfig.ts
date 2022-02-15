@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { isCardNotAction } from "../Card";
+import { isCardNotActionAndNotNull } from "../Card";
 import { IActionCard } from "../typescript/action_card_interfaces";
 import { ICard } from "../typescript/card_interfaces";
 import { DeckCardTypes, TavernCardTypes } from "../typescript/card_types";
@@ -23,16 +23,15 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
     const taverns: TavernCardTypes[][] = G.taverns/*,
         averageCards: ICard[] = G.averageCards*/;
     let result: number[] = Array(taverns.length).fill(0);
-    const temp: number[] = taverns.map((tavern: (DeckCardTypes | null)[]): number =>
+    const temp: number[] = taverns.map((tavern: TavernCardTypes[]): number =>
         absoluteHeuristicsForTradingCoin.reduce((acc: number, item: {
-            heuristic: (cards: DeckCardTypes[]) => boolean; weight: number;
-        }): number =>
-            acc + (tavern !== null && item.heuristic(tavern as DeckCardTypes[]) ? item.weight : 0),
-            0));
+            heuristic: (cards: TavernCardTypes[]) => boolean; weight: number;
+        }): number => acc + (tavern !== null && item.heuristic(tavern) ? item.weight : 0), 0));
     result = result.map((value: number, index: number) => value + temp[index]);
-    const tempNumbers: number[][] = taverns.map((tavern: (DeckCardTypes | null)[]): number[] => tavern
-        .map((card: ICard | IActionCard | null, index: number, arr: (DeckCardTypes | null)[]): number =>
-            EvaluateCard(G, ctx, card as ICard, index, arr)));
+    const tempNumbers: number[][] =
+        taverns.map((tavern: (DeckCardTypes | null)[]): number[] =>
+            tavern.map((card: ICard | IActionCard | null, index: number, arr: (DeckCardTypes | null)[]):
+                number => EvaluateCard(G, ctx, card, index, arr)));
     const tempChars: { mean: number; variation: number; }[] =
         tempNumbers.map((element: number[]): { mean: number, variation: number; } =>
             GetCharacteristics(element));
@@ -140,9 +139,9 @@ const GetCharacteristics = (array: number[]): { mean: number, variation: number;
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const isAllCardsEqual: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number; } = {
-    heuristic: (cards: DeckCardTypes[]): boolean => cards.every((card: DeckCardTypes | null): boolean =>
-    (card !== null && isCardNotAction(card) && isCardNotAction(cards[0]) && card.suit === cards[0].suit
+const isAllCardsEqual: { heuristic: (cards: TavernCardTypes[]) => boolean, weight: number; } = {
+    heuristic: (cards: TavernCardTypes[]): boolean => cards.every((card: TavernCardTypes): boolean =>
+    (isCardNotActionAndNotNull(card) && isCardNotActionAndNotNull(cards[0]) && card.suit === cards[0].suit
         && CompareCards(card, cards[0]) === 0)),
     weight: -100,
 };
@@ -286,7 +285,7 @@ export const Permute = (permutation: number[]): number[][] => {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const absoluteHeuristicsForTradingCoin: { heuristic: (cards: DeckCardTypes[]) => boolean, weight: number; }[] =
+const absoluteHeuristicsForTradingCoin: { heuristic: (cards: TavernCardTypes[]) => boolean, weight: number; }[] =
     [isAllCardsEqual];
 
 /**

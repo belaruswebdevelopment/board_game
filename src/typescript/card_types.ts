@@ -1,18 +1,9 @@
 import { IActionCard } from "./action_card_interfaces";
 import { IAction } from "./action_interfaces";
-import { IArtefact, IArtefactCampCard, IMercenaryCampCard } from "./camp_card_interfaces";
+import { IArtefact, IArtefactCampCard } from "./camp_card_interfaces";
+import { CampDeckCardTypes } from "./camp_card_types";
 import { ICard } from "./card_interfaces";
 import { IHero } from "./hero_card_interfaces";
-
-/**
- * <h3>Типы данных для кэмпа.</h3>
- */
-export type CampCardTypes = CampDeckCardTypes | null;
-
-/**
- * <h3>Типы данных для карт колоды кэмпа.</h3>
- */
-export type CampDeckCardTypes = IArtefactCampCard | IMercenaryCampCard;
 
 /**
  * <h3>Типы данных для дек карт.</h3>
