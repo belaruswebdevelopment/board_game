@@ -11,8 +11,8 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
 export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
     const brisingamensPlayerIndex: number =
         G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            Boolean(player.buffs
-                .find((buff: IBuffs): boolean => buff.discardCardEndGame !== undefined)));
+            Boolean(player.buffs.find((buff: IBuffs): boolean =>
+                buff.discardCardEndGame !== undefined)));
     G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
 };
 
@@ -41,11 +41,11 @@ export const OnBrisingamensEndGameTurnBegin = (G: IMyGameState, ctx: Ctx): void 
  */
 export const StartGetMjollnirProfitOrEndGame = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        if (G.publicPlayers[Number(G.publicPlayersOrder[0])].buffs
-            .find((buff: IBuffs): boolean => buff.discardCardEndGame !== undefined) === undefined) {
+        if (G.publicPlayers[Number(G.publicPlayersOrder[0])].buffs.find((buff: IBuffs): boolean =>
+            buff.discardCardEndGame !== undefined) === undefined) {
             const buffIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-                Boolean(player.buffs
-                    .find((buff: IBuffs): boolean => buff.getMjollnirProfit !== undefined)));
+                Boolean(player.buffs.find((buff: IBuffs): boolean =>
+                    buff.getMjollnirProfit !== undefined)));
             if (buffIndex !== -1) {
                 return {
                     next: Phases.GetMjollnirProfit,

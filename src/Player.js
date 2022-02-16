@@ -59,8 +59,7 @@ export const CheckPlayersBasicOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         if (ctx.phase !== Phases.PlaceCoinsUline) {
-            if (G.publicPlayers[i].buffs
-                .find((buff) => buff.everyTurn !== undefined) === undefined) {
+            if (G.publicPlayers[i].buffs.find((buff) => buff.everyTurn !== undefined) === undefined) {
                 G.publicPlayersOrder.push(String(i));
             }
         }
@@ -93,6 +92,7 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * <li>Происходит при создании всех игроков при инициализации игры.</li>
  * </ol>
  *
+ * @param actionsNum Количество действий.
  * @param nickname Никнейм.
  * @param cards Массив карт.
  * @param heroes Массив героев.
@@ -106,7 +106,8 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * @param pickedCard Выбранная карта.
  * @returns Публичные данные игрока.
  */
-const CreatePublicPlayer = ({ nickname, cards, heroes = [], campCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin, pickedCard = null, } = {}) => ({
+const CreatePublicPlayer = ({ actionsNum = 0, nickname, cards, heroes = [], campCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin, pickedCard = null, } = {}) => ({
+    actionsNum,
     nickname,
     cards,
     campCards,

@@ -13,7 +13,7 @@ import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
  */
 export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        return G.suitIdForMjollnir !== null;
+        return G.publicPlayers[Number(ctx.currentPlayer)].buffs.find((buff) => buff.suitIdForMjollnir !== undefined) !== undefined;
     }
 };
 export const CheckGetMjollnirProfitOrder = (G) => {

@@ -1,4 +1,5 @@
 import { IsMercenaryCard } from "../Camp";
+import { IBuffs } from "../typescript/buff_interfaces";
 import { PlayerCardsType } from "../typescript/card_types";
 import { CoinType } from "../typescript/coin_types";
 import { IPublicPlayer } from "../typescript/player_interfaces";
@@ -28,9 +29,15 @@ export const HrafnsmerkiScoring = (player?: IPublicPlayer): number => {
     return 0;
 };
 
-export const MjollnirScoring = (player?: IPublicPlayer, suit?: string): number => {
-    if (player !== undefined && suit !== undefined) {
-        return player.cards[suit].reduce(TotalRank, 0) * 2;
+export const MjollnirScoring = (player?: IPublicPlayer): number => {
+    if (player !== undefined) {
+        const suit: string | undefined = player.buffs.find((buff: IBuffs): boolean =>
+            buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
+        if (suit !== undefined) {
+            return player.cards[suit].reduce(TotalRank, 0) * 2;
+        } else {
+            // TODO Error suitIdForMjollnir must be!
+        }
     }
     // TODO error!?
     return 0;

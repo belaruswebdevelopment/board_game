@@ -29,6 +29,7 @@ export var BuffNames;
     BuffNames["GoCamp"] = "goCamp";
     BuffNames["GoCampOneTime"] = "goCampOneTime";
     BuffNames["NoHero"] = "noHero";
+    BuffNames["SuitIdForMjollnir"] = "suitIdForMjollnir";
     BuffNames["UpgradeCoin"] = "upgradeCoin";
     BuffNames["UpgradeNextCoin"] = "upgradeNextCoin";
 })(BuffNames || (BuffNames = {}));

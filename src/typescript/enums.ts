@@ -28,6 +28,7 @@ export const enum BuffNames {
     GoCamp = `goCamp`,
     GoCampOneTime = `goCampOneTime`,
     NoHero = `noHero`,
+    SuitIdForMjollnir = `suitIdForMjollnir`,
     UpgradeCoin = `upgradeCoin`,
     UpgradeNextCoin = `upgradeNextCoin`,
 }

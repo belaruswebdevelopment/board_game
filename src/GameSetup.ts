@@ -18,7 +18,7 @@ import { ICard } from "./typescript/card_interfaces";
 import { DeckCardTypes } from "./typescript/card_types";
 import { ICoin } from "./typescript/coin_interfaces";
 import { IDistinctions } from "./typescript/distinction_interfaces";
-import { IExpansion, ILogData, IMyGameState } from "./typescript/game_data_interfaces";
+import { IExpansions, ILogData, IMyGameState } from "./typescript/game_data_interfaces";
 import { IHero } from "./typescript/hero_card_interfaces";
 import { IPlayers, IPublicPlayer } from "./typescript/player_interfaces";
 import { IPriority } from "./typescript/priority_interfaces";
@@ -37,12 +37,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     const suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
-        actionsNum = 0,
         log = true,
         debug = false,
         drawProfit = ``,
-        suitIdForMjollnir = null,
-        expansions: IExpansion = {
+        expansions: IExpansions = {
             thingvellir: {
                 active: true,
             },
@@ -141,7 +139,6 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         deckLength: decks[0].length,
     };
     return {
-        actionsNum,
         averageCards,
         botData,
         camp,
@@ -164,7 +161,6 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         logData,
         marketCoins,
         marketCoinsUnique,
-        suitIdForMjollnir,
         suitsNum,
         taverns,
         tavernsNum,

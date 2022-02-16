@@ -67,8 +67,8 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
             // }
         }
     }
-    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs
-        .find((buff: IBuffs): boolean => buff.upgradeNextCoin !== undefined)) {
+    if (G.publicPlayers[Number(ctx.currentPlayer)].buffs.find((buff: IBuffs): boolean =>
+        buff.upgradeNextCoin !== undefined)) {
         value = coinsMaxValue;
         upgradingCoinId = G.tavernsNum + coinMinIndex;
         upgradingCoin = tradingCoins[coinMinIndex];

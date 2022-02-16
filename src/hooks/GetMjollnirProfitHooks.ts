@@ -18,7 +18,8 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
  */
 export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        return G.suitIdForMjollnir !== null;
+        return G.publicPlayers[Number(ctx.currentPlayer)].buffs.find((buff: IBuffs): boolean =>
+            buff.suitIdForMjollnir !== undefined) !== undefined;
     }
 };
 

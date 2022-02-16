@@ -37,8 +37,7 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  * @param priority Кристалл.
  * @returns Публичные данные игрока.
  */
-export const BuildPublicPlayer = (nickname: string, priority: IPriority):
-    IPublicPlayer => {
+export const BuildPublicPlayer = (nickname: string, priority: IPriority): IPublicPlayer => {
     const cards: IPlayerCards = {};
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -70,8 +69,8 @@ export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         if (ctx.phase !== Phases.PlaceCoinsUline) {
-            if (G.publicPlayers[i].buffs
-                .find((buff: IBuffs): boolean => buff.everyTurn !== undefined) === undefined) {
+            if (G.publicPlayers[i].buffs.find((buff: IBuffs): boolean =>
+                buff.everyTurn !== undefined) === undefined) {
                 G.publicPlayersOrder.push(String(i));
             }
         } else {
@@ -108,6 +107,7 @@ const CreatePlayer = ({
  * <li>Происходит при создании всех игроков при инициализации игры.</li>
  * </ol>
  *
+ * @param actionsNum Количество действий.
  * @param nickname Никнейм.
  * @param cards Массив карт.
  * @param heroes Массив героев.
@@ -122,6 +122,7 @@ const CreatePlayer = ({
  * @returns Публичные данные игрока.
  */
 const CreatePublicPlayer = ({
+    actionsNum = 0,
     nickname,
     cards,
     heroes = [],
@@ -134,6 +135,7 @@ const CreatePublicPlayer = ({
     selectedCoin,
     pickedCard = null,
 }: ICreatePublicPlayer = {} as ICreatePublicPlayer): IPublicPlayer => ({
+    actionsNum,
     nickname,
     cards,
     campCards,

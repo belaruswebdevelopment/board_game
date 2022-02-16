@@ -12,6 +12,7 @@ import { DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript/ca
 import { ConfigNames, MoveNames } from "../typescript/enums";
 import { IMyGameState } from "../typescript/game_data_interfaces";
 import { INumberValues } from "../typescript/object_values_interfaces";
+import { IPublicPlayer } from "../typescript/player_interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
 
@@ -224,64 +225,63 @@ export const DrawMarketCoins = (data: BoardProps<IMyGameState>): JSX.Element => 
  */
 export const DrawProfit = (data: BoardProps<IMyGameState>): JSX.Element => {
     const boardCells: JSX.Element[] = [],
-        config: IConfig | undefined = data.G.publicPlayers[Number(data.ctx.currentPlayer)].stack[0]?.config,
+        player: IPublicPlayer = data.G.publicPlayers[Number(data.ctx.currentPlayer)],
+        config: IConfig | undefined = player.stack[0]?.config,
         option = data.G.drawProfit;
     let caption = `Get `;
-    for (let i = 0; i < 1; i++) {
-        if (option === ConfigNames.PlaceThrudHero || option === ConfigNames.PlaceYludHero
-            || option === ConfigNames.PlaceOlwinCards) {
-            if (config !== undefined) {
-                caption += `suit to place ${data.G.actionsNum ?? 1} ${config.drawName} ${data.G.actionsNum > 1 ? `s` : ``} to ${data.G.actionsNum > 1 ? `different` : `that`} suit.`;
-                PlaceCardsProfit(data.G, data.ctx, data, boardCells);
-            }
-        } else if (option === ConfigNames.ExplorerDistinction) {
-            caption += `one card to your board.`;
-            ExplorerDistinctionProfit(data.G, data.ctx, data, boardCells);
-        } else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
-            caption += `${data.G.actionsNum} card${data.G.actionsNum > 1 ? `s` : ``} to discard from your board.`;
-            DiscardCardFromBoardProfit(data.G, data.ctx, data, boardCells);
-        } else if (option === ConfigNames.AndumiaAction || option === ConfigNames.BrisingamensAction) {
-            caption += `${data.G.actionsNum} card${data.G.actionsNum > 1 ? `s` : ``} from discard pile to your board.`;
-            PickDiscardCardProfit(data.G, data.ctx, data, boardCells);
-        } else if (option === ConfigNames.BrisingamensEndGameAction) {
-            caption += `one card to discard from your board.`;
-            DiscardAnyCardFromPlayerBoardProfit(data.G, data.ctx, data, boardCells);
-        } else if (option === ConfigNames.HofudAction) {
-            caption += `one warrior card to discard from your board.`;
-            DiscardSuitCardFromPlayerBoardProfit(data.G, data.ctx, data, boardCells);
-        } else if (option === ConfigNames.HoldaAction) {
-            caption += `one card from camp to your board.`;
-            PickCampCardHoldaProfit(data.G, data.ctx, data, boardCells);
-        } else if (option === ConfigNames.DiscardCard) {
-            caption += `one card to discard from current tavern.`;
-            DiscardCardProfit(data.G, data.ctx, data, boardCells);
-        } else if (option === ConfigNames.GetMjollnirProfit) {
-            caption += `suit to get Mjollnir profit from ranks on that suit.`;
-            GetMjollnirProfitProfit(data.G, data.ctx, data, boardCells);
-        } else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {
-            caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
-            StartEnlistmentMercenariesProfit(data.G, data.ctx, data, boardCells);
-        } else if (option === ConfigNames.EnlistmentMercenaries) {
-            caption += `mercenary to place it to your player board.`;
-            GetEnlistmentMercenariesProfit(data.G, data.ctx, data, boardCells);
-        } else if (option === ConfigNames.PlaceEnlistmentMercenaries) {
-            const card: PickedCardType =
-                data.G.publicPlayers[Number(data.ctx.currentPlayer)].pickedCard;
-            if (card !== null) {
-                caption += `suit to place ${card.name} to that suit.`;
-                PlaceEnlistmentMercenariesProfit(data.G, data.ctx, data, boardCells);
-            }
-        } else if (option === ConfigNames.AddCoinToPouchVidofnirVedrfolnir) {
-            caption += `${data.G.actionsNum} coin${data.G.actionsNum > 1 ? `s` : ``} to add to your pouch to fill it.`;
-            AddCoinToPouchProfit(data.G, data.ctx, data, boardCells);
-        } else {
-            if (config !== undefined) {
-                caption += `coin to upgrade up to ${config.value}.`;
-                if (option === ConfigNames.VidofnirVedrfolnirAction) {
-                    UpgradeCoinVidofnirVedrfolnirProfit(data.G, data.ctx, data, boardCells);
-                } else if (option === ConfigNames.UpgradeCoin) {
-                    UpgradeCoinProfit(data.G, data.ctx, data, boardCells);
-                }
+    if (option === ConfigNames.PlaceThrudHero || option === ConfigNames.PlaceYludHero
+        || option === ConfigNames.PlaceOlwinCards) {
+        if (config !== undefined) {
+            caption += `suit to place ${player.actionsNum ?? 1} ${config.drawName} ${player.actionsNum > 1 ? `s` : ``} to ${player.actionsNum > 1 ? `different` : `that`} suit.`;
+            PlaceCardsProfit(data.G, data.ctx, data, boardCells);
+        }
+    } else if (option === ConfigNames.ExplorerDistinction) {
+        caption += `one card to your board.`;
+        ExplorerDistinctionProfit(data.G, data.ctx, data, boardCells);
+    } else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
+        caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} to discard from your board.`;
+        DiscardCardFromBoardProfit(data.G, data.ctx, data, boardCells);
+    } else if (option === ConfigNames.AndumiaAction || option === ConfigNames.BrisingamensAction) {
+        caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} from discard pile to your board.`;
+        PickDiscardCardProfit(data.G, data.ctx, data, boardCells);
+    } else if (option === ConfigNames.BrisingamensEndGameAction) {
+        caption += `one card to discard from your board.`;
+        DiscardAnyCardFromPlayerBoardProfit(data.G, data.ctx, data, boardCells);
+    } else if (option === ConfigNames.HofudAction) {
+        caption += `one warrior card to discard from your board.`;
+        DiscardSuitCardFromPlayerBoardProfit(data.G, data.ctx, data, boardCells);
+    } else if (option === ConfigNames.HoldaAction) {
+        caption += `one card from camp to your board.`;
+        PickCampCardHoldaProfit(data.G, data.ctx, data, boardCells);
+    } else if (option === ConfigNames.DiscardCard) {
+        caption += `one card to discard from current tavern.`;
+        DiscardCardProfit(data.G, data.ctx, data, boardCells);
+    } else if (option === ConfigNames.GetMjollnirProfit) {
+        caption += `suit to get Mjollnir profit from ranks on that suit.`;
+        GetMjollnirProfitProfit(data.G, data.ctx, data, boardCells);
+    } else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {
+        caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
+        StartEnlistmentMercenariesProfit(data.G, data.ctx, data, boardCells);
+    } else if (option === ConfigNames.EnlistmentMercenaries) {
+        caption += `mercenary to place it to your player board.`;
+        GetEnlistmentMercenariesProfit(data.G, data.ctx, data, boardCells);
+    } else if (option === ConfigNames.PlaceEnlistmentMercenaries) {
+        const card: PickedCardType =
+            data.G.publicPlayers[Number(data.ctx.currentPlayer)].pickedCard;
+        if (card !== null) {
+            caption += `suit to place ${card.name} to that suit.`;
+            PlaceEnlistmentMercenariesProfit(data.G, data.ctx, data, boardCells);
+        }
+    } else if (option === ConfigNames.AddCoinToPouchVidofnirVedrfolnir) {
+        caption += `${player.actionsNum} coin${player.actionsNum > 1 ? `s` : ``} to add to your pouch to fill it.`;
+        AddCoinToPouchProfit(data.G, data.ctx, data, boardCells);
+    } else {
+        if (config !== undefined) {
+            caption += `coin to upgrade up to ${config.value}.`;
+            if (option === ConfigNames.VidofnirVedrfolnirAction) {
+                UpgradeCoinVidofnirVedrfolnirProfit(data.G, data.ctx, data, boardCells);
+            } else if (option === ConfigNames.UpgradeCoin) {
+                UpgradeCoinProfit(data.G, data.ctx, data, boardCells);
             }
         }
     }

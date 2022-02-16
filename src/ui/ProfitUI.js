@@ -21,7 +21,7 @@ export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
         for (const suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 if (suit !== config.suit
-                    && !(G.drawProfit === ConfigNames.DagdaAction && G.actionsNum === 1 && pickedCard !== null
+                    && !(G.drawProfit === ConfigNames.DagdaAction && player.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
                     const last = player.cards[suit].length - 1;
                     if (last !== -1 && player.cards[suit][last].type !== RusCardTypes.HERO) {

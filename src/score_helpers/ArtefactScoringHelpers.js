@@ -20,9 +20,16 @@ export const HrafnsmerkiScoring = (player) => {
     // TODO error!?
     return 0;
 };
-export const MjollnirScoring = (player, suit) => {
-    if (player !== undefined && suit !== undefined) {
-        return player.cards[suit].reduce(TotalRank, 0) * 2;
+export const MjollnirScoring = (player) => {
+    var _a;
+    if (player !== undefined) {
+        const suit = (_a = player.buffs.find((buff) => buff.suitIdForMjollnir !== undefined)) === null || _a === void 0 ? void 0 : _a.suitIdForMjollnir;
+        if (suit !== undefined) {
+            return player.cards[suit].reduce(TotalRank, 0) * 2;
+        }
+        else {
+            // TODO Error suitIdForMjollnir must be!
+        }
     }
     // TODO error!?
     return 0;

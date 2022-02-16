@@ -34,7 +34,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
         player.pickedCard = pickedCard;
         G.discardCardsDeck.push(pickedCard);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил в колоду сброса карту ${pickedCard.name}.`);
-        if (G.actionsNum === 2) {
+        if (player.actionsNum === 2) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda()]);
         }
     } else {
@@ -65,7 +65,7 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: string): 
         });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту Ольвин во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);
-        if (G.actionsNum === 2) {
+        if (player.actionsNum === 2) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.placeOlwinCards()]);
         }
         CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);

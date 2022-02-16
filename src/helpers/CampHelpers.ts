@@ -94,8 +94,8 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
         }
     }
     if (G.campDecks[G.campDecks.length - G.tierToEnd - 1].length) {
-        G.discardCampCardsDeck =
-            G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]);
+        G.discardCampCardsDeck.push(
+            ...G.discardCampCardsDeck.concat(G.campDecks[G.campDecks.length - G.tierToEnd - 1]));
         G.campDecks[G.campDecks.length - G.tierToEnd - 1].length = 0;
     }
     AddDataToLog(G, LogTypes.GAME, `Оставшиеся карты кэмпа сброшены.`);

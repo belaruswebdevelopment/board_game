@@ -20,14 +20,14 @@ export const OnPickCardsMove = (G, ctx) => {
             // TODO Do it before or after trading or not matter?
             CheckAndStartUlineActionsOrContinue(G, ctx);
             const tradingCoinPlacesLength = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
-            if (!G.actionsNum) {
+            if (!player.actionsNum) {
                 ActivateTrading(G, ctx);
             }
-            else if ((G.actionsNum === 2 && tradingCoinPlacesLength === 1)
-                || (G.actionsNum === 1 && !tradingCoinPlacesLength)) {
-                G.actionsNum--;
+            else if ((player.actionsNum === 2 && tradingCoinPlacesLength === 1)
+                || (player.actionsNum === 1 && !tradingCoinPlacesLength)) {
+                player.actionsNum--;
             }
-            else if (G.actionsNum === 2) {
+            else if (player.actionsNum === 2) {
                 // TODO Rework it to actions
                 (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setStage(Stages.PlaceTradingCoinsUline);
             }
@@ -45,8 +45,9 @@ export const OnPickCardsMove = (G, ctx) => {
  * @param ctx
  */
 export const CheckEndPickCardsPhase = (G, ctx) => {
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length && G.publicPlayersOrder.length
-        && !G.actionsNum && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (!player.stack.length && G.publicPlayersOrder.length
+        && !player.actionsNum && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
         && CheckIfCurrentTavernEmpty(G)) {
         const isLastTavern = G.tavernsNum - 1 === G.currentTavern;
         if (isLastTavern) {

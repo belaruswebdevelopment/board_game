@@ -6,6 +6,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
         G = {
             publicPlayers: [
                 {
+                    actionsNum: 0,
                     nickname: `Dan`,
                     boardCoins: [],
                     campCards: [],
@@ -59,6 +60,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     ],
                 },
                 {
+                    actionsNum: 0,
                     nickname: `Dan`,
                     boardCoins: [],
                     campCards: [],
@@ -137,6 +139,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
         expect(G).toEqual({
             publicPlayers: [
                 {
+                    actionsNum: 0,
                     nickname: `Dan`,
                     boardCoins: [],
                     campCards: [],
@@ -190,6 +193,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     ],
                 },
                 {
+                    actionsNum: 0,
                     nickname: `Dan`,
                     boardCoins: [],
                     campCards: [],
@@ -272,6 +276,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
         expect(G).toEqual({
             publicPlayers: [
                 {
+                    actionsNum: 0,
                     nickname: `Dan`,
                     boardCoins: [],
                     campCards: [],
@@ -325,6 +330,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                     ],
                 },
                 {
+                    actionsNum: 0,
                     nickname: `Dan`,
                     boardCoins: [],
                     campCards: [],

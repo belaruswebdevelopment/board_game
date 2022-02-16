@@ -18,13 +18,14 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  *
  * @param G
  * @param ctx
- * @param config Баф карты.
+ * @param buff Баф.
+ * @param value Значение бафа.
  */
-export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff): void => {
+export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?: string): void => {
     if (buff !== undefined) {
         const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
         player.buffs.push({
-            [buff.name]: true,
+            [buff.name]: value ?? true,
         });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил баф '${buff.name}'.`);
     }
@@ -70,7 +71,7 @@ export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
     if (config !== undefined) {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
         StartOrEndActionStage(G, ctx, config);
-        G.actionsNum = config.number ?? 1;
+        player.actionsNum = config.number ?? 1;
         if (config.name !== undefined) {
             G.drawProfit = config.name;
         } else {

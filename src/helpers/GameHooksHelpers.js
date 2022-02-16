@@ -71,7 +71,7 @@ export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
                     if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== Stages.PlaceTradingCoinsUline
                         && tradingCoinPlacesLength === 2) {
                         const handCoinsLength = player.handCoins.filter((coin) => coin !== null).length;
-                        G.actionsNum =
+                        player.actionsNum =
                             G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
                     }
                 }
@@ -178,10 +178,9 @@ export const EndGame = (ctx) => {
     (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.endGame();
 };
 export const EndTurnActions = (G, ctx) => {
-    if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        if (!G.actionsNum) {
-            return true;
-        }
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (!player.stack.length && !player.actionsNum) {
+        return true;
     }
 };
 /**
@@ -206,12 +205,13 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
 };
 export const StartOrEndActions = (G, ctx) => {
     var _a;
-    if (G.actionsNum) {
-        G.actionsNum--;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player.actionsNum) {
+        player.actionsNum--;
     }
     if (ctx.activePlayers === null
         || ctx.activePlayers !== null && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== undefined) {
-        G.publicPlayers[Number(ctx.currentPlayer)].stack.shift();
+        player.stack.shift();
         DrawCurrentProfit(G, ctx);
     }
 };

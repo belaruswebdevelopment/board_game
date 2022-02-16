@@ -18,6 +18,7 @@ export interface IBuffs {
     readonly goCamp?: true,
     readonly goCampOneTime?: true,
     readonly noHero?: true,
+    readonly suitIdForMjollnir?: string,
     readonly upgradeCoin?: true,
     readonly upgradeNextCoin?: true,
 }

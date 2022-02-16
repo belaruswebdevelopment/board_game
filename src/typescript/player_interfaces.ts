@@ -12,6 +12,7 @@ import { IPriority } from "./priority_interfaces";
  * <h3>Интерфейс для создания публичных данных игрока.</h3>
  */
 export interface ICreatePublicPlayer {
+    readonly actionsNum?: number,
     readonly nickname: string,
     readonly cards: IPlayerCards,
     readonly heroes?: IHero[],
@@ -44,6 +45,7 @@ export interface IPlayers {
  * <h3>Интерфейс для публичных данных игрока.</h3>
  */
 export interface IPublicPlayer {
+    actionsNum: number,
     readonly nickname: string,
     readonly cards: IPlayerCards,
     readonly heroes: IHero[],

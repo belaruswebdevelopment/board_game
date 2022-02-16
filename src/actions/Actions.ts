@@ -3,7 +3,7 @@ import { IsArtefactDiscardCard, IsMercenaryCard } from "../Camp";
 import { CreateCard, isActionDiscardCard, isCardNotActionAndNotNull } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
-import { DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
+import { AddBuffToPlayer, DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
 import { AddCampCardToPlayerCards } from "../helpers/CampCardHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
@@ -94,7 +94,9 @@ export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId
  * @param suit Название фракции.
  */
 export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
-    G.suitIdForMjollnir = suit;
+    AddBuffToPlayer(G, ctx, {
+        name: BuffNames.SuitIdForMjollnir,
+    }, suit);
     DeleteBuffFromPlayer(G, ctx, BuffNames.GetMjollnirProfit);
     AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} выбрал фракцию ${suitsConfig[suit].suitName} для эффекта артефакта Mjollnir.`);
 };
@@ -126,8 +128,9 @@ export const PassEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx): void
  * @param cardId Id карты.
  */
 export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
-    const pickedCard: DiscardCardTypes = G.discardCardsDeck.splice(cardId, 1)[0];
-    if (G.actionsNum === 2) {
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        pickedCard: DiscardCardTypes = G.discardCardsDeck.splice(cardId, 1)[0];
+    if (player.actionsNum === 2) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens()]);
     }
     let isAdded = false;
@@ -142,7 +145,7 @@ export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void
     if (isAdded && !isActionDiscardCard(pickedCard)) {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} взял карту ${pickedCard.name} из колоды сброса.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} взял карту ${pickedCard.name} из колоды сброса.`);
 };
 
 /**

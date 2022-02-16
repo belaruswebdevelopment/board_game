@@ -22,7 +22,7 @@ import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
  * @returns Данные игры.
  */
 export const SetupGame = (ctx) => {
-    const suitsNum = 5, tierToEnd = 2, campNum = 5, actionsNum = 0, log = true, debug = false, drawProfit = ``, suitIdForMjollnir = null, expansions = {
+    const suitsNum = 5, tierToEnd = 2, campNum = 5, log = true, debug = false, drawProfit = ``, expansions = {
         thingvellir: {
             active: true,
         },
@@ -101,7 +101,6 @@ export const SetupGame = (ctx) => {
         deckLength: decks[0].length,
     };
     return {
-        actionsNum,
         averageCards,
         botData,
         camp,
@@ -124,7 +123,6 @@ export const SetupGame = (ctx) => {
         logData,
         marketCoins,
         marketCoinsUnique,
-        suitIdForMjollnir,
         suitsNum,
         taverns,
         tavernsNum,

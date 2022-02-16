@@ -107,11 +107,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): 
                 .find((artefact: IArtefact): boolean => artefact.name === player.campCards[i].name);
             let currentArtefactScore = 0;
             if (artefact !== undefined) {
-                if (G.suitIdForMjollnir !== null) {
-                    currentArtefactScore = artefact.scoringRule(player, G.suitIdForMjollnir);
-                } else {
-                    currentArtefactScore = artefact.scoringRule(player);
-                }
+                currentArtefactScore = artefact.scoringRule(player);
             } else {
                 AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти артефакт ${player.campCards[i].name}.`);
             }

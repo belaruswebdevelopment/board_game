@@ -18,7 +18,7 @@ export interface IArtefact {
     readonly validators?: IValidatorsConfig,
     readonly actions?: IAction,
     readonly stack?: IStack[],
-    readonly scoringRule: (player?: IPublicPlayer, suit?: string) => number,
+    readonly scoringRule: (player?: IPublicPlayer) => number,
 }
 
 /**
