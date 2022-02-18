@@ -4,7 +4,7 @@ import { suitsConfig } from "../data/SuitData";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { HeroNames, MoveNames, Phases, Stages } from "../typescript/enums";
+import { HeroNames, MoveNames, Phases, Stages } from "../typescript_enums/enums";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 /**
  * <h3>Отрисовка планшета всех карт игрока.</h3>

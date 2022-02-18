@@ -4,14 +4,14 @@ import { isActionDiscardCard, isCardNotActionAndNotNull } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { IConfig } from "../typescript/action_interfaces";
-import { IBuffs } from "../typescript/buff_interfaces";
-import { CampCardTypes, CampDeckCardTypes } from "../typescript/camp_card_types";
-import { DeckCardTypes, DiscardCardTypes, PickedCardType, TavernCardTypes } from "../typescript/card_types";
-import { CoinType } from "../typescript/coin_types";
-import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { IConfig } from "../typescript_interfaces/action_interfaces";
+import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
+import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { CampCardTypes, CampDeckCardTypes } from "../typescript_types/camp_card_types";
+import { DeckCardTypes, DiscardCardTypes, PickedCardType, TavernCardTypes } from "../typescript_types/card_types";
+import { CoinType } from "../typescript_types/coin_types";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
 // TODO Add functions dock blocks

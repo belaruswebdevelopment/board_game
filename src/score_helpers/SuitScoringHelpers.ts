@@ -1,4 +1,4 @@
-import { PlayerCardsType } from "../typescript/card_types";
+import { PlayerCardsType } from "../typescript_types/card_types";
 import { ArithmeticSum, TotalPoints, TotalRank } from "./ScoreHelpers";
 
 export const BlacksmithScoring = (cards: PlayerCardsType[], potentialCardValue = 0): number =>

@@ -1,8 +1,8 @@
 import { AddDataToLog } from "./Logging";
-import { DeckCardTypes, TavernCardTypes } from "./typescript/card_types";
-import { LogTypes } from "./typescript/enums";
-import { IMyGameState } from "./typescript/game_data_interfaces";
-import { ITavernsConfig } from "./typescript/tavern_interfaces";
+import { LogTypes } from "./typescript_enums/enums";
+import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
+import { ITavernsConfig } from "./typescript_interfaces/tavern_interfaces";
+import { DeckCardTypes, TavernCardTypes } from "./typescript_types/card_types";
 
 /**
  * <h3>Проверяет все ли карты выбраны игроками в текущей таверне.</h1>

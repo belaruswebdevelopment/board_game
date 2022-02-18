@@ -6,7 +6,7 @@ import { ActivateTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
-import { LogTypes, RusCardTypes, Stages } from "../typescript/enums";
+import { LogTypes, RusCardTypes, Stages } from "../typescript_enums/enums";
 export const OnPickCardsMove = (G, ctx) => {
     var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];

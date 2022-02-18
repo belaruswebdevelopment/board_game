@@ -1,7 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { DiscardAnyCardFromPlayerBoardAction } from "../../../../actions/Actions";
-import { LogTypes, RusCardTypes } from "../../../../typescript/enums";
-import { IMyGameState } from "../../../../typescript/game_data_interfaces";
+import { LogTypes, RusCardTypes } from "../../../../typescript_enums/enums";
+import { IMyGameState } from "../../../../typescript_interfaces/game_data_interfaces";
 
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
     let G: Pick<Partial<IMyGameState>, `publicPlayers` | `discardCardsDeck` | `logData`>;

@@ -2,7 +2,7 @@ import { CompareCards } from "./bot_logic/BotCardLogic";
 import { isCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { ConfigNames, Phases, Stages } from "./typescript/enums";
+import { ConfigNames, Phases, Stages } from "./typescript_enums/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -62,7 +62,7 @@ export const enumerate = (G, ctx) => {
             }
             else if (ctx.phase === Phases.EnlistmentMercenaries) {
                 if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
-                    if (Math.floor(Math.random() * 2) === 0) {
+                    if (G.publicPlayersOrder.length === 1 || Math.floor(Math.random() * 2) === 0) {
                         activeStageOfCurrentPlayer = Stages.Default1;
                     }
                     else {

@@ -9,9 +9,9 @@ import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { DeckCardTypes, TavernCardTypes } from "../typescript/card_types";
-import { LogTypes, Stages, SuitNames } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
+import { LogTypes, Stages, SuitNames } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { DeckCardTypes, TavernCardTypes } from "../typescript_types/card_types";
 
 // TODO Add logging
 /**

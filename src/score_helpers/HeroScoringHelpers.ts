@@ -1,6 +1,6 @@
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { SuitNames } from "../typescript/enums";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { SuitNames } from "../typescript_enums/enums";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
 export const AstridScoring = (player?: IPublicPlayer): number => {

@@ -2,9 +2,9 @@ import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { UpgradeCoinAction } from "../actions/AutoActions";
 import { IsValidMove } from "../MoveValidator";
-import { Stages, SuitNames } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { Stages, SuitNames } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
 
 // TODO Add Place coins async
 /**

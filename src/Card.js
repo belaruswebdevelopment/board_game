@@ -1,6 +1,6 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypes } from "./typescript/enums";
+import { RusCardTypes } from "./typescript_enums/enums";
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
  * <p>Применения:</p>

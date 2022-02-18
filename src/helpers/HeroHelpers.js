@@ -1,7 +1,7 @@
 import { AddPickHeroAction } from "../actions/AutoActions";
 import { StackData } from "../data/StackData";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { HeroNames } from "../typescript/enums";
+import { HeroNames } from "../typescript_enums/enums";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
  * <h3>Добавляет действия в стэк при старте хода в фазе 'endTier'.</h3>

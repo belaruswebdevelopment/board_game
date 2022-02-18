@@ -1,7 +1,8 @@
 import { Ctx } from "boardgame.io";
 import { AddPickHeroAction, DiscardTradingCoinAction, GetClosedCoinIntoPlayerHandAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "../actions/AutoActions";
-import { IAction } from "../typescript/action_interfaces";
-import { IMyGameState } from "../typescript/game_data_interfaces";
+import { IAction } from "../typescript_interfaces/action_interfaces";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IActionFunctionTypes } from "../typescript_types/function_types";
 
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
@@ -13,10 +14,8 @@ import { IMyGameState } from "../typescript/game_data_interfaces";
  * @param actionName Название автоматических действий.
  * @returns Автоматические действие.
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
-const ActionDispatcherSwitcher = (actionName: string): Function | null => {
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    let action: Function | null;
+const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes => {
+    let action: IActionFunctionTypes;
     switch (actionName) {
         case AddPickHeroAction.name:
             action = AddPickHeroAction;
@@ -55,10 +54,11 @@ const ActionDispatcherSwitcher = (actionName: string): Function | null => {
  */
 export const StartAutoAction = (G: IMyGameState, ctx: Ctx, action: IAction | undefined): void => {
     if (action !== undefined) {
-        // eslint-disable-next-line @typescript-eslint/ban-types
-        const actionDispatcher: Function | null =
-            ActionDispatcherSwitcher(action.name);
-        // TODO Check need to add param Stack[0]!?
-        actionDispatcher?.(G, ctx, action.params);
+        const actionDispatcher: IActionFunctionTypes = ActionDispatcherSwitcher(action.name);
+        if (action.params !== undefined) {
+            actionDispatcher?.(G, ctx, ...action.params);
+        } else {
+            actionDispatcher?.(G, ctx);
+        }
     }
 };

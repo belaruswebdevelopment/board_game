@@ -2,15 +2,16 @@ import { BoardProps } from "boardgame.io/react";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { CampDeckCardTypes } from "../typescript/camp_card_types";
-import { DeckCardTypes } from "../typescript/card_types";
-import { CoinType } from "../typescript/coin_types";
-import { LogTypes, MoveNames, RusCardTypes } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IHero } from "../typescript/hero_card_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
-import { IBackground } from "../typescript/style_interfaces";
-import { ArgsTypes } from "../typescript/types";
+import { LogTypes, MoveNames, RusCardTypes } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IHeroCard } from "../typescript_interfaces/hero_card_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { IBackground } from "../typescript_interfaces/style_interfaces";
+import { CampDeckCardTypes } from "../typescript_types/camp_card_types";
+import { DeckCardTypes } from "../typescript_types/card_types";
+import { CoinType } from "../typescript_types/coin_types";
+import { IMoveFunctionTypes } from "../typescript_types/function_types";
+import { ArgsTypes } from "../typescript_types/types";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -29,7 +30,7 @@ import { ArgsTypes } from "../typescript/types";
  */
 export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], key: string, name: string,
     player: IPublicPlayer, actionName?: string, ...args: ArgsTypes): void => {
-    let action: ((...args: ArgsTypes) => void) | null = null;
+    let action: IMoveFunctionTypes;
     switch (actionName) {
         case MoveNames.StartEnlistmentMercenariesMove:
             action = data.moves.StartEnlistmentMercenariesMove;
@@ -67,12 +68,12 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param args Аргументы действия.
  */
 export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[],
-    card: DeckCardTypes | CampDeckCardTypes | IHero, id: number, player: IPublicPlayer | null, suit?: string | null,
+    card: DeckCardTypes | CampDeckCardTypes | IHeroCard, id: number, player: IPublicPlayer | null, suit?: string | null,
     actionName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         tdClasses = ``,
         spanClasses = ``,
-        action: ((...args: ArgsTypes) => void) | null = null;
+        action: IMoveFunctionTypes;
     switch (actionName) {
         case MoveNames.ClickHeroCardMove:
             action = data.moves.ClickHeroCardMove;
@@ -187,7 +188,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         span: JSX.Element | number | null = null,
         tdClasses = `bg-yellow-300`,
         spanClasses = ``,
-        action: ((...args: ArgsTypes) => void) | null = null;
+        action: IMoveFunctionTypes;
     switch (actionName) {
         case MoveNames.ClickBoardCoinMove:
             action = data.moves.ClickBoardCoinMove;
@@ -268,7 +269,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
 
 export const DrawSuit = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], suit: string, key: string,
     value: number | string, player: IPublicPlayer | null, actionName: string | null): void => {
-    let action: ((...args: ArgsTypes) => void) | null = null;
+    let action: IMoveFunctionTypes;
     switch (actionName) {
         case MoveNames.GetMjollnirProfitMove:
             action = data.moves.GetMjollnirProfitMove;

@@ -16,9 +16,9 @@ import { AddCoinToPouchMove, ClickCampCardHoldaMove, ClickCampCardMove, DiscardS
 import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, ClickHandCoinUlineMove, ClickHandTradingCoinUlineMove } from "./moves/CoinMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceOlwinCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
-import { Phases } from "./typescript/enums";
-import { IMyGameState } from "./typescript/game_data_interfaces";
-import { INext, IOrder } from "./typescript/game_interfaces";
+import { Phases } from "./typescript_enums/enums";
+import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
+import { INext, IOrder } from "./typescript_interfaces/game_interfaces";
 
 // TODO Add logging
 // TODO Add dock block

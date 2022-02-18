@@ -1,9 +1,9 @@
 import { Ctx } from "boardgame.io";
 import { isCardNotActionAndNotNull } from "../Card";
-import { IActionCard } from "../typescript/action_card_interfaces";
-import { ICard } from "../typescript/card_interfaces";
-import { DeckCardTypes, TavernCardTypes } from "../typescript/card_types";
-import { IMyGameState } from "../typescript/game_data_interfaces";
+import { IActionCard } from "../typescript_interfaces/action_card_interfaces";
+import { ICard } from "../typescript_interfaces/card_interfaces";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { DeckCardTypes, TavernCardTypes } from "../typescript_types/card_types";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
 // TODO Fix all types & move {...} to interfaces
@@ -119,7 +119,10 @@ export const GetAllPicks = (tavernsNum: number, playersNum: number): unknown => 
  * @param array
  * @returns
  */
-const GetCharacteristics = (array: number[]): { mean: number, variation: number; } => {
+const GetCharacteristics = (array: number[]): {
+    mean: number,
+    variation: number,
+} => {
     const mean: number = array.reduce((acc: number, item: number): number =>
         acc + item / array.length, 0),
         variation: number = array.reduce((acc: number, item: number): number =>
@@ -139,7 +142,10 @@ const GetCharacteristics = (array: number[]): { mean: number, variation: number;
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const isAllCardsEqual: { heuristic: (cards: TavernCardTypes[]) => boolean, weight: number; } = {
+const isAllCardsEqual: {
+    heuristic: (cards: TavernCardTypes[]) => boolean,
+    weight: number,
+} = {
     heuristic: (cards: TavernCardTypes[]): boolean => cards.every((card: TavernCardTypes): boolean =>
     (isCardNotActionAndNotNull(card) && isCardNotActionAndNotNull(cards[0]) && card.suit === cards[0].suit
         && CompareCards(card, cards[0]) === 0)),
@@ -285,8 +291,10 @@ export const Permute = (permutation: number[]): number[][] => {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const absoluteHeuristicsForTradingCoin: { heuristic: (cards: TavernCardTypes[]) => boolean, weight: number; }[] =
-    [isAllCardsEqual];
+const absoluteHeuristicsForTradingCoin: {
+    heuristic: (cards: TavernCardTypes[]) => boolean,
+    weight: number,
+}[] = [isAllCardsEqual];
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>

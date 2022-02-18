@@ -1,5 +1,5 @@
 import { ICard } from "./card_interfaces";
-import { MoveArgsTypes } from "./types";
+import { MoveArgsTypes } from "../typescript_types/types";
 
 /**
  * <h3>Интерфейс для средней карты фракции.</h3>

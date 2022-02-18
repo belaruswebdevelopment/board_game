@@ -1,5 +1,5 @@
 import { AddDataToLog } from "./Logging";
-import { LogTypes } from "./typescript/enums";
+import { LogTypes } from "./typescript_enums/enums";
 /**
  * <h3>Проверяет все ли карты выбраны игроками в текущей таверне.</h1>
  * <p>Применения:</p>

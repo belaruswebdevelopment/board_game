@@ -2,13 +2,13 @@ import { Ctx } from "boardgame.io";
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { DeleteBuffFromPlayer } from "./helpers/ActionHelpers";
 import { AddDataToLog } from "./Logging";
-import { IBuffs } from "./typescript/buff_interfaces";
-import { IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig } from "./typescript/coin_interfaces";
-import { CoinType } from "./typescript/coin_types";
-import { BuffNames, LogTypes, Stages } from "./typescript/enums";
-import { IMyGameState } from "./typescript/game_data_interfaces";
-import { INumberValues } from "./typescript/object_values_interfaces";
-import { IPublicPlayer } from "./typescript/player_interfaces";
+import { IBuffs } from "./typescript_interfaces/player_buff_interfaces";
+import { IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig } from "./typescript_interfaces/coin_interfaces";
+import { CoinType } from "./typescript_types/coin_types";
+import { BuffNames, LogTypes, Stages } from "./typescript_enums/enums";
+import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
+import { INumberValues } from "./typescript_interfaces/object_values_interfaces";
+import { IPublicPlayer } from "./typescript_interfaces/player_interfaces";
 
 /**
  * <h3>Создание всех монет.</h3>

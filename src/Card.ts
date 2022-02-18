@@ -1,11 +1,11 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
-import { IActionCard, ICreateActionCard } from "./typescript/action_card_interfaces";
-import { IAverageSuitCardData } from "./typescript/bot_interfaces";
-import { ICard, ICreateCard } from "./typescript/card_interfaces";
-import { DeckCardTypes, DiscardCardTypes, TavernCardTypes } from "./typescript/card_types";
-import { RusCardTypes } from "./typescript/enums";
-import { IDeckConfig } from "./typescript/interfaces";
+import { IActionCard, ICreateActionCard } from "./typescript_interfaces/action_card_interfaces";
+import { IAverageSuitCardData } from "./typescript_interfaces/bot_interfaces";
+import { ICard, ICreateCard } from "./typescript_interfaces/card_interfaces";
+import { RusCardTypes } from "./typescript_enums/enums";
+import { IDeckConfig } from "./typescript_interfaces/interfaces";
+import { DeckCardTypes, DiscardCardTypes, TavernCardTypes } from "./typescript_types/card_types";
 
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>

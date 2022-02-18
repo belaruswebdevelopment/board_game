@@ -1,4 +1,4 @@
-import { ArgsTypes } from "./types";
+import { ArgsTypes } from "../typescript_types/types";
 
 /**
  * <h3>Интерфейс для действия.</h3>

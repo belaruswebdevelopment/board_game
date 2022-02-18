@@ -1,10 +1,10 @@
 import { Ctx } from "boardgame.io";
-import { CoinType } from "../typescript/coin_types";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IResolveBoardCoins } from "../typescript/game_interfaces";
-import { INumberValues } from "../typescript/object_values_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
-import { IPriority } from "../typescript/priority_interfaces";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IResolveBoardCoins } from "../typescript_interfaces/game_interfaces";
+import { INumberValues } from "../typescript_interfaces/object_values_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { IPriority } from "../typescript_interfaces/priority_interfaces";
+import { CoinType } from "../typescript_types/coin_types";
 
 // TODO Add logging
 /**
@@ -18,8 +18,8 @@ import { IPriority } from "../typescript/priority_interfaces";
  * @param player Игрок.
  * @returns Максимальная монета игрока.
  */
-export const GetMaxCoinValue = (player: IPublicPlayer): number => (Math.max(...player.boardCoins
-    .filter((coin: CoinType): boolean => Boolean(coin?.value))
+export const GetMaxCoinValue = (player: IPublicPlayer): number =>
+(Math.max(...player.boardCoins.filter((coin: CoinType): boolean => Boolean(coin?.value))
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     .map((coin: CoinType): number => coin!.value),
     ...player.handCoins.filter((coin: CoinType): boolean => Boolean(coin?.value))

@@ -5,8 +5,8 @@ import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddHeroToCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { Stages } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
+import { Stages } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
 
 // TODO Add logging
 /**

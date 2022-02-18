@@ -1,8 +1,8 @@
 import { BlacksmithDistinctionAwarding, ExplorerDistinctionAwarding, HunterDistinctionAwarding, MinerDistinctionAwarding, WarriorDistinctionAwarding } from "../helpers/DistinctionAwardingHelpers";
 import { BlacksmithScoring, ExplorerScoring, HunterScoring, MinerScoring, WarriorScoring } from "../score_helpers/SuitScoringHelpers";
-import { RusSuitNames, SuitNames } from "../typescript/enums";
-import { IPointsValues, IRankValues } from "../typescript/object_values_interfaces";
-import { ISuit, ISuitConfig } from "../typescript/suit_interfaces";
+import { RusSuitNames, SuitNames } from "../typescript_enums/enums";
+import { IPointsValues, IRankValues } from "../typescript_interfaces/object_values_interfaces";
+import { ISuit, ISuitConfig } from "../typescript_interfaces/suit_interfaces";
 
 /**
  * <h3>Фракция кузнецов.</h3>

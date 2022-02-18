@@ -1,5 +1,5 @@
 import { DiscardAnyCardFromPlayerBoardAction } from "../../../../actions/Actions";
-import { LogTypes, RusCardTypes } from "../../../../typescript/enums";
+import { LogTypes, RusCardTypes } from "../../../../typescript_enums/enums";
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
     let G;
     beforeEach(() => {

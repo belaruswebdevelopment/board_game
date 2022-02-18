@@ -1,6 +1,6 @@
 import { suitsConfig } from "../data/SuitData";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { RusCardTypes } from "../typescript/enums";
+import { RusCardTypes } from "../typescript_enums/enums";
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
  * <p>Применения:</p>

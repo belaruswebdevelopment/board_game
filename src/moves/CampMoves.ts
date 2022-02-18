@@ -7,9 +7,9 @@ import { AddCampCardToCards } from "../helpers/CampCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { CampCardTypes } from "../typescript/camp_card_types";
-import { LogTypes, Stages } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
+import { LogTypes, Stages } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { CampCardTypes } from "../typescript_types/camp_card_types";
 
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>

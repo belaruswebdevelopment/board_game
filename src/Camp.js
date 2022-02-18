@@ -1,5 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypes } from "./typescript/enums";
+import { RusCardTypes } from "./typescript_enums/enums";
 /**
  * <h3>Создаёт все карты кэмпа из конфига.</h3>
  * <p>Применения:</p>
@@ -27,6 +27,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
                     rank: artefactConfig[campArtefactCard].rank,
                     points: artefactConfig[campArtefactCard].points,
                     buff: artefactConfig[campArtefactCard].buff,
+                    validators: artefactConfig[campArtefactCard].validators,
                     actions: artefactConfig[campArtefactCard].actions,
                     stack: artefactConfig[campArtefactCard].stack,
                 }));
@@ -84,7 +85,7 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @param stack Действия.
  * @returns Карта кэмпа артефакт.
  */
-export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, path, name, description, game, suit, rank, points, buff, actions, stack, } = {}) => ({
+export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, path, name, description, game, suit, rank, points, buff, validators, actions, stack, } = {}) => ({
     type,
     tier,
     path,
@@ -95,6 +96,7 @@ export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, pat
     rank,
     points,
     buff,
+    validators,
     actions,
     stack,
 });

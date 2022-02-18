@@ -1,6 +1,6 @@
 import { AddPickHeroAction, DiscardTradingCoinAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/AutoActions";
 import { DraupnirScoring, HrafnsmerkiScoring, MjollnirScoring, SvalinnScoring } from "../score_helpers/ArtefactScoringHelpers";
-import { ArtefactNames, BuffNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, BuffNames, SuitNames } from "../typescript_enums/enums";
 import { StackData } from "./StackData";
 /**
  * <h3>Данные об артефакте.</h3>

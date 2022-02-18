@@ -4,12 +4,12 @@ import { heroesConfig } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { AddDataToLog } from "./Logging";
-import { IBuffs } from "./typescript/buff_interfaces";
-import { IArtefact } from "./typescript/camp_card_interfaces";
-import { LogTypes, SuitNames } from "./typescript/enums";
-import { IMyGameState } from "./typescript/game_data_interfaces";
-import { IHeroData } from "./typescript/hero_card_interfaces";
-import { IPublicPlayer } from "./typescript/player_interfaces";
+import { IBuffs } from "./typescript_interfaces/player_buff_interfaces";
+import { IArtefact } from "./typescript_interfaces/camp_card_interfaces";
+import { LogTypes, SuitNames } from "./typescript_enums/enums";
+import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
+import { IHeroData } from "./typescript_interfaces/hero_card_interfaces";
+import { IPublicPlayer } from "./typescript_interfaces/player_interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>

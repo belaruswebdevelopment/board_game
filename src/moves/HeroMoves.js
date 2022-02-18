@@ -4,7 +4,7 @@ import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddHeroToCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { Stages } from "../typescript/enums";
+import { Stages } from "../typescript_enums/enums";
 // TODO Add logging
 /**
  * <h3>Выбор героя.</h3>

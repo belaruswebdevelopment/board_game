@@ -6,18 +6,19 @@ import { suitsConfig } from "./data/SuitData";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { IConfig } from "./typescript/action_interfaces";
-import { IBuffs } from "./typescript/buff_interfaces";
-import { CampCardTypes, CampDeckCardTypes } from "./typescript/camp_card_types";
-import { DeckCardTypes, PickedCardType, PlayerCardsType, TavernCardTypes } from "./typescript/card_types";
-import { CoinType } from "./typescript/coin_types";
-import { ConfigNames, MoveNames, Phases, RusCardTypes, ValidatorNames } from "./typescript/enums";
-import { IMyGameState } from "./typescript/game_data_interfaces";
-import { IValidatorsConfig } from "./typescript/hero_validator_interfaces";
-import { ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardIdArguments, ICurrentMoveSuitCardPlayerCurrentId, ICurrentMoveSuitCardPlayerIdArguments } from "./typescript/move_interfaces";
-import { IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveValidator, IMoveValidators } from "./typescript/move_validator_interfaces";
-import { MoveValidatorGetRangeTypes, ValidMoveIdParamTypes } from "./typescript/move_validator_types";
-import { IPublicPlayer } from "./typescript/player_interfaces";
+import { ConfigNames, MoveNames, Phases, RusCardTypes, ValidatorNames } from "./typescript_enums/enums";
+import { IConfig } from "./typescript_interfaces/action_interfaces";
+import { IBuffs } from "./typescript_interfaces/player_buff_interfaces";
+import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
+import { IValidatorsConfig } from "./typescript_interfaces/hero_validator_interfaces";
+import { ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardIdArguments, ICurrentMoveSuitCardPlayerCurrentId, ICurrentMoveSuitCardPlayerIdArguments } from "./typescript_interfaces/move_interfaces";
+import { IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveValidator, IMoveValidators } from "./typescript_interfaces/move_validator_interfaces";
+import { IPublicPlayer } from "./typescript_interfaces/player_interfaces";
+import { CampCardTypes, CampDeckCardTypes } from "./typescript_types/camp_card_types";
+import { DeckCardTypes, PickedCardType, PlayerCardsType, TavernCardTypes } from "./typescript_types/card_types";
+import { CoinType } from "./typescript_types/coin_types";
+import { MoveByTypes } from "./typescript_types/keyof_types";
+import { MoveValidatorGetRangeTypes, ValidMoveIdParamTypes } from "./typescript_types/move_validator_types";
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -62,7 +63,7 @@ export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: ICurr
  * @returns Валидный ли мув.
  */
 export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: string, id?: ValidMoveIdParamTypes): boolean => {
-    const validator: IMoveValidator | undefined = GetValidator(ctx.phase as keyof IMoveBy, stage);
+    const validator: IMoveValidator | undefined = GetValidator(ctx.phase as MoveByTypes, stage);
     let isValid = false;
     if (validator !== undefined) {
         if (typeof id === `number`) {
@@ -91,7 +92,7 @@ export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: string, id?: Valid
     return isValid;
 };
 
-export const GetValidator = (phase: keyof IMoveBy, stage: string) => {
+export const GetValidator = (phase: MoveByTypes, stage: string) => {
     let validator: IMoveValidator | undefined;
     switch (phase) {
         case Phases.PlaceCoins:

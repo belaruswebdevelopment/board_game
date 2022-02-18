@@ -7,13 +7,13 @@ import { ActivateTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
-import { IBuffs } from "../typescript/buff_interfaces";
-import { CampDeckCardTypes } from "../typescript/camp_card_types";
-import { CoinType } from "../typescript/coin_types";
-import { LogTypes, RusCardTypes, Stages } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { INext, IResolveBoardCoins } from "../typescript/game_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
+import { CampDeckCardTypes } from "../typescript_types/camp_card_types";
+import { CoinType } from "../typescript_types/coin_types";
+import { LogTypes, RusCardTypes, Stages } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { INext, IResolveBoardCoins } from "../typescript_interfaces/game_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
 
 export const OnPickCardsMove = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];

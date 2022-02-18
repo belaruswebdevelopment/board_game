@@ -1,7 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { IMyGameState } from "./game_data_interfaces";
 import { IPublicPlayer } from "./player_interfaces";
-import { DistinctionTypes } from "./types";
+import { DistinctionTypes } from "../typescript_types/types";
 
 /**
  * <h3>Интерфейс для преимуществ по фракциям.</h3>

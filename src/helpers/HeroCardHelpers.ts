@@ -1,10 +1,10 @@
 import { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IHero } from "../typescript/hero_card_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { LogTypes } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IHeroCard } from "../typescript_interfaces/hero_card_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
 import { AddBuffToPlayer } from "./ActionHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 
@@ -19,7 +19,7 @@ import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
  * @param ctx
  * @param hero Герой.
  */
-export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHero): void => {
+export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     if (hero.suit !== null) {
         const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
         player.cards[hero.suit].push(hero);
@@ -38,7 +38,7 @@ export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHero)
  * @param ctx
  * @param hero Герой.
  */
-export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IHero): void => {
+export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     player.pickedCard = hero;
     if (hero.active) {
@@ -61,7 +61,7 @@ export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IH
  * @param ctx
  * @param config Конфиг действий героя.
  */
-export const AddHeroToCards = (G: IMyGameState, ctx: Ctx, hero: IHero): void => {
+export const AddHeroToCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     AddHeroCardToPlayerHeroCards(G, ctx, hero);
     AddHeroCardToPlayerCards(G, ctx, hero);
     AddBuffToPlayer(G, ctx, hero.buff);

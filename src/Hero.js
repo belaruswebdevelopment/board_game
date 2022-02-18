@@ -1,4 +1,4 @@
-import { RusCardTypes } from "./typescript/enums";
+import { RusCardTypes } from "./typescript_enums/enums";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>

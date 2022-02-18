@@ -1,8 +1,8 @@
 import { IsMercenaryCard } from "../Camp";
-import { IBuffs } from "../typescript/buff_interfaces";
-import { PlayerCardsType } from "../typescript/card_types";
-import { CoinType } from "../typescript/coin_types";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { PlayerCardsType } from "../typescript_types/card_types";
+import { CoinType } from "../typescript_types/coin_types";
 import { TotalRank } from "./ScoreHelpers";
 
 export const DraupnirScoring = (player?: IPublicPlayer): number => {

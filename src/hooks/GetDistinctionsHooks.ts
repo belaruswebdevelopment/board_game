@@ -3,8 +3,8 @@ import { CheckDistinction } from "../Distinction";
 import { AddGetDistinctionsActionToStack } from "../helpers/ActionHelpers";
 import { RefillCamp } from "../helpers/CampHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { DistinctionTypes } from "../typescript/types";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { DistinctionTypes } from "../typescript_types/types";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'getDistinctions'.</h3>

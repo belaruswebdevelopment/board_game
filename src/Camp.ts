@@ -1,8 +1,8 @@
 import { suitsConfig } from "./data/SuitData";
-import { IArtefactCampCard, IArtefactConfig, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenaries, IMercenaryCampCard } from "./typescript/camp_card_interfaces";
-import { CampDeckCardTypes } from "./typescript/camp_card_types";
-import { DiscardCardTypes } from "./typescript/card_types";
-import { RusCardTypes } from "./typescript/enums";
+import { RusCardTypes } from "./typescript_enums/enums";
+import { IArtefactCampCard, IArtefactConfig, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenaries, IMercenaryCampCard } from "./typescript_interfaces/camp_card_interfaces";
+import { CampDeckCardTypes } from "./typescript_types/camp_card_types";
+import { DiscardCardTypes } from "./typescript_types/card_types";
 
 /**
  * <h3>Создаёт все карты кэмпа из конфига.</h3>
@@ -32,6 +32,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
                     rank: artefactConfig[campArtefactCard].rank,
                     points: artefactConfig[campArtefactCard].points,
                     buff: artefactConfig[campArtefactCard].buff,
+                    validators: artefactConfig[campArtefactCard].validators,
                     actions: artefactConfig[campArtefactCard].actions,
                     stack: artefactConfig[campArtefactCard].stack,
                 }));
@@ -102,6 +103,7 @@ export const CreateArtefactCampCard = ({
     rank,
     points,
     buff,
+    validators,
     actions,
     stack,
 }: ICreateArtefactCampCard = {} as ICreateArtefactCampCard):
@@ -116,6 +118,7 @@ export const CreateArtefactCampCard = ({
         rank,
         points,
         buff,
+        validators,
         actions,
         stack,
     });

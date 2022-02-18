@@ -9,9 +9,7 @@ import { AddPickHeroAction, DiscardTradingCoinAction, GetClosedCoinIntoPlayerHan
  * @param actionName Название автоматических действий.
  * @returns Автоматические действие.
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 const ActionDispatcherSwitcher = (actionName) => {
-    // eslint-disable-next-line @typescript-eslint/ban-types
     let action;
     switch (actionName) {
         case AddPickHeroAction.name:
@@ -50,10 +48,13 @@ const ActionDispatcherSwitcher = (actionName) => {
  */
 export const StartAutoAction = (G, ctx, action) => {
     if (action !== undefined) {
-        // eslint-disable-next-line @typescript-eslint/ban-types
         const actionDispatcher = ActionDispatcherSwitcher(action.name);
-        // TODO Check need to add param Stack[0]!?
-        actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx, action.params);
+        if (action.params !== undefined) {
+            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx, ...action.params);
+        }
+        else {
+            actionDispatcher === null || actionDispatcher === void 0 ? void 0 : actionDispatcher(G, ctx);
+        }
     }
 };
 //# sourceMappingURL=ActionDispatcherHelpers.js.map

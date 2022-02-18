@@ -10,7 +10,7 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
-import { BuffNames, LogTypes, RusCardTypes } from "../typescript/enums";
+import { BuffNames, LogTypes, RusCardTypes } from "../typescript_enums/enums";
 /**
  * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
  * <p>Применения:</p>
@@ -62,7 +62,8 @@ export const DiscardCardFromTavernAction = (G, ctx, cardId) => {
  */
 export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    player.pickedCard = player.campCards.filter((card) => IsMercenaryCard(card))[cardId];
+    player.pickedCard =
+        player.campCards.filter((card) => IsMercenaryCard(card))[cardId];
     const pickedCard = player.pickedCard;
     if (pickedCard !== null) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);

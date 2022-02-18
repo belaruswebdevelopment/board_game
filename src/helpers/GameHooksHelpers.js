@@ -1,6 +1,6 @@
 import { IsMercenaryCard } from "../Camp";
 import { AddDataToLog } from "../Logging";
-import { HeroNames, LogTypes, Phases, Stages } from "../typescript/enums";
+import { HeroNames, LogTypes, Phases, Stages } from "../typescript_enums/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
 /**
  * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>

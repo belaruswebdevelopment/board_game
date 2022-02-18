@@ -1,11 +1,3 @@
-
-/**
- * <h3>Интерфейс для бафа карт.</h3>
- */
-export interface IBuff {
-    readonly name: keyof IBuffs,
-}
-
 /**
  * <h3>Интерфейс для видов бафов у карт.</h3>
  */

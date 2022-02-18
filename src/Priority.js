@@ -1,5 +1,5 @@
 import { AddDataToLog } from "./Logging";
-import { LogTypes } from "./typescript/enums";
+import { LogTypes } from "./typescript_enums/enums";
 /**
  * <h3>Изменяет приоритет игроков для выбора карт из текущей таверны.</h3>
  * <p>Применения:</p>

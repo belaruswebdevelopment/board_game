@@ -1,5 +1,5 @@
+import { PlayerCardsType } from "../typescript_types/card_types";
 import { IActionCardConfig } from "./action_card_interfaces";
-import { PlayerCardsType } from "./card_types";
 import { ISuitConfig } from "./suit_interfaces";
 
 /**

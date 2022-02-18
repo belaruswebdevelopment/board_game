@@ -3,15 +3,16 @@ import { CompareCards } from "./bot_logic/BotCardLogic";
 import { isCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { IConfig } from "./typescript/action_interfaces";
-import { IMoves } from "./typescript/bot_interfaces";
-import { IBuffs } from "./typescript/buff_interfaces";
-import { TavernCardTypes } from "./typescript/card_types";
-import { ConfigNames, Phases, Stages } from "./typescript/enums";
-import { IMyGameState } from "./typescript/game_data_interfaces";
-import { IMoveBy, IMoveValidator } from "./typescript/move_validator_interfaces";
-import { MoveValidatorGetRangeTypes, ValidMoveIdParamTypes } from "./typescript/move_validator_types";
-import { MoveArgsTypes } from "./typescript/types";
+import { ConfigNames, Phases, Stages } from "./typescript_enums/enums";
+import { IConfig } from "./typescript_interfaces/action_interfaces";
+import { IMoves } from "./typescript_interfaces/bot_interfaces";
+import { IBuffs } from "./typescript_interfaces/player_buff_interfaces";
+import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
+import { IMoveValidator } from "./typescript_interfaces/move_validator_interfaces";
+import { TavernCardTypes } from "./typescript_types/card_types";
+import { MoveByTypes } from "./typescript_types/keyof_types";
+import { MoveValidatorGetRangeTypes, ValidMoveIdParamTypes } from "./typescript_types/move_validator_types";
+import { MoveArgsTypes } from "./typescript_types/types";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -67,7 +68,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                 }
             } else if (ctx.phase === Phases.EnlistmentMercenaries) {
                 if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
-                    if (Math.floor(Math.random() * 2) === 0) {
+                    if (G.publicPlayersOrder.length === 1 || Math.floor(Math.random() * 2) === 0) {
                         activeStageOfCurrentPlayer = Stages.Default1;
                     } else {
                         activeStageOfCurrentPlayer = Stages.Default2;
@@ -89,7 +90,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
         const validator: IMoveValidator | undefined =
-            GetValidator(ctx.phase as keyof IMoveBy, activeStageOfCurrentPlayer);
+            GetValidator(ctx.phase as MoveByTypes, activeStageOfCurrentPlayer);
         if (validator !== undefined) {
             const moveName: string = validator.moveName,
                 moveRangeData: MoveValidatorGetRangeTypes = validator.getRange(G, ctx, playerId),

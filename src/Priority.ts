@@ -1,8 +1,8 @@
 import { AddDataToLog } from "./Logging";
-import { LogTypes } from "./typescript/enums";
-import { IMyGameState } from "./typescript/game_data_interfaces";
-import { IPublicPlayer } from "./typescript/player_interfaces";
-import { ICreatePriority, IPrioritiesConfig, IPriority } from "./typescript/priority_interfaces";
+import { LogTypes } from "./typescript_enums/enums";
+import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
+import { IPublicPlayer } from "./typescript_interfaces/player_interfaces";
+import { ICreatePriority, IPrioritiesConfig, IPriority } from "./typescript_interfaces/priority_interfaces";
 
 /**
  * <h3>Изменяет приоритет игроков для выбора карт из текущей таверны.</h3>

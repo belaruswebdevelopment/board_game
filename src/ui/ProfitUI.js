@@ -3,7 +3,7 @@ import { isActionDiscardCard, isCardNotActionAndNotNull } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
+import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript_enums/enums";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 // TODO Add functions dock blocks
 export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {

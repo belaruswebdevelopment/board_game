@@ -2,9 +2,9 @@ import { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddGetMjollnirProfitActionsToStack } from "../helpers/CampHelpers";
 import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { IBuffs } from "../typescript/buff_interfaces";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>
@@ -17,8 +17,9 @@ import { IPublicPlayer } from "../typescript/player_interfaces";
  * @returns
  */
 export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        return G.publicPlayers[Number(ctx.currentPlayer)].buffs.find((buff: IBuffs): boolean =>
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (G.publicPlayersOrder.length && !player.stack.length) {
+        return player.buffs.find((buff: IBuffs): boolean =>
             buff.suitIdForMjollnir !== undefined) !== undefined;
     }
 };

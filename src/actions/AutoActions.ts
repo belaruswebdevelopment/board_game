@@ -3,13 +3,13 @@ import { ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { IConfig, IStack } from "../typescript/action_interfaces";
-import { IBuffs } from "../typescript/buff_interfaces";
-import { CoinType } from "../typescript/coin_types";
-import { LogTypes, Stages } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
-import { ArgsTypes } from "../typescript/types";
+import { LogTypes, Stages } from "../typescript_enums/enums";
+import { IConfig, IStack } from "../typescript_interfaces/action_interfaces";
+import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { CoinType } from "../typescript_types/coin_types";
+import { ArgsTypes } from "../typescript_types/types";
 
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
@@ -42,8 +42,8 @@ export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
         player.boardCoins.findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
     if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
         && tradingCoinIndex === -1) {
-        tradingCoinIndex = player.handCoins.findIndex((coin: CoinType): boolean =>
-            Boolean(coin?.isTriggerTrading));
+        tradingCoinIndex =
+            player.handCoins.findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
         player.handCoins.splice(tradingCoinIndex, 1, null);
     } else {
         player.boardCoins.splice(tradingCoinIndex, 1, null);

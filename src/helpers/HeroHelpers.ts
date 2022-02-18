@@ -2,11 +2,11 @@ import { Ctx } from "boardgame.io";
 import { AddPickHeroAction } from "../actions/AutoActions";
 import { StackData } from "../data/StackData";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { IBuffs } from "../typescript/buff_interfaces";
-import { PlayerCardsType } from "../typescript/card_types";
-import { HeroNames } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { HeroNames } from "../typescript_enums/enums";
+import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { PlayerCardsType } from "../typescript_types/card_types";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**
@@ -86,8 +86,7 @@ export const CheckAndMoveThrudOrPickHeroAction = (G: IMyGameState, ctx: Ctx, car
 export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player.buffs.find((buff: IBuffs): boolean => buff.noHero !== undefined) === undefined) {
-        const playerCards: PlayerCardsType[][] =
-            Object.values(player.cards),
+        const playerCards: PlayerCardsType[][] = Object.values(player.cards),
             isCanPickHero: boolean =
                 Math.min(...playerCards.map((item: PlayerCardsType[]): number =>
                     item.reduce(TotalRank, 0))) > player.heroes.length;

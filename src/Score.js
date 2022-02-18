@@ -3,7 +3,7 @@ import { heroesConfig } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { AddDataToLog } from "./Logging";
-import { LogTypes, SuitNames } from "./typescript/enums";
+import { LogTypes, SuitNames } from "./typescript_enums/enums";
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
  * <p>Применения:</p>

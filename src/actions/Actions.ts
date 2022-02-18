@@ -11,12 +11,12 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
-import { CampDeckCardTypes } from "../typescript/camp_card_types";
-import { ICard } from "../typescript/card_interfaces";
-import { DiscardCardTypes, PickedCardType, PlayerCardsType } from "../typescript/card_types";
-import { BuffNames, LogTypes, RusCardTypes } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { BuffNames, LogTypes, RusCardTypes } from "../typescript_enums/enums";
+import { ICard } from "../typescript_interfaces/card_interfaces";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { CampDeckCardTypes } from "../typescript_types/camp_card_types";
+import { DiscardCardTypes, PickedCardType, PlayerCardsType } from "../typescript_types/card_types";
 
 /**
  * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
@@ -71,8 +71,8 @@ export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, cardId: n
  */
 export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    player.pickedCard = player.campCards.filter((card: CampDeckCardTypes): boolean =>
-        IsMercenaryCard(card))[cardId];
+    player.pickedCard =
+        player.campCards.filter((card: CampDeckCardTypes): boolean => IsMercenaryCard(card))[cardId];
     const pickedCard: PickedCardType = player.pickedCard;
     if (pickedCard !== null) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);

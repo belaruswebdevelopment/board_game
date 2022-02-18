@@ -1,5 +1,5 @@
 import { IAction, IStack } from "./action_interfaces";
-import { IBuff } from "./buff_interfaces";
+import { IBuff } from "./card_buff_interfaces";
 import { IValidatorsConfig } from "./hero_validator_interfaces";
 import { IPublicPlayer } from "./player_interfaces";
 
@@ -24,7 +24,7 @@ export interface ICreateHero {
 /**
  * <h3>Интерфейс для героя.</h3>
  */
-export interface IHero {
+export interface IHeroCard {
     readonly type: string,
     readonly name: string,
     readonly description: string,

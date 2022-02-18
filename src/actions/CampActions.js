@@ -2,7 +2,7 @@ import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript/enums";
+import { LogTypes } from "../typescript_enums/enums";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
 /**
  * <h3>Действия, связанные с добавлением монет в кошелёк для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>

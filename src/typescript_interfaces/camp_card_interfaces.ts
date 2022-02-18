@@ -1,5 +1,5 @@
 import { IAction, IStack, IVariants } from "./action_interfaces";
-import { IBuff } from "./buff_interfaces";
+import { IBuff } from "./card_buff_interfaces";
 import { IValidatorsConfig } from "./hero_validator_interfaces";
 import { IPublicPlayer } from "./player_interfaces";
 
@@ -35,6 +35,7 @@ export interface IArtefactCampCard {
     readonly rank: null | number,
     readonly points: null | number,
     readonly buff?: IBuff,
+    readonly validators?: IValidatorsConfig,
     readonly actions?: IAction,
     readonly stack?: IStack[],
 }
@@ -61,6 +62,7 @@ export interface ICreateArtefactCampCard {
     readonly rank: null | number,
     readonly points: null | number,
     readonly buff?: IBuff,
+    readonly validators?: IValidatorsConfig,
     readonly actions?: IAction,
     readonly stack?: IStack[],
 }

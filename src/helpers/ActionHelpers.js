@@ -1,6 +1,6 @@
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript/enums";
+import { LogTypes } from "../typescript_enums/enums";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
  * <h3>Действия, связанные с добавлением бафов игроку.</h3>

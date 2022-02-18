@@ -2,12 +2,12 @@ import { Ctx } from "boardgame.io";
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
-import { IBuffs } from "./typescript/buff_interfaces";
-import { Phases } from "./typescript/enums";
-import { IMyGameState } from "./typescript/game_data_interfaces";
-import { IPlayerCards } from "./typescript/interfaces";
-import { ICreatePublicPlayer, IPlayer, IPublicPlayer } from "./typescript/player_interfaces";
-import { IPriority } from "./typescript/priority_interfaces";
+import { IBuffs } from "./typescript_interfaces/player_buff_interfaces";
+import { Phases } from "./typescript_enums/enums";
+import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
+import { IPlayerCards } from "./typescript_interfaces/interfaces";
+import { ICreatePublicPlayer, IPlayer, IPublicPlayer } from "./typescript_interfaces/player_interfaces";
+import { IPriority } from "./typescript_interfaces/priority_interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>

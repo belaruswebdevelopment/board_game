@@ -10,8 +10,7 @@
  * @param player Игрок.
  * @returns Максимальная монета игрока.
  */
-export const GetMaxCoinValue = (player) => (Math.max(...player.boardCoins
-    .filter((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.value))
+export const GetMaxCoinValue = (player) => (Math.max(...player.boardCoins.filter((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.value))
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     .map((coin) => coin.value), ...player.handCoins.filter((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.value))
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

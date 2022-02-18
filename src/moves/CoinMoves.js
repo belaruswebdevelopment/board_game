@@ -1,7 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { UpgradeCoinAction } from "../actions/AutoActions";
 import { IsValidMove } from "../MoveValidator";
-import { Stages, SuitNames } from "../typescript/enums";
+import { Stages, SuitNames } from "../typescript_enums/enums";
 // TODO Add Place coins async
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>

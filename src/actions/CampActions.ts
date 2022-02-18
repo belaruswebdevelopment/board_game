@@ -3,12 +3,12 @@ import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { IConfig } from "../typescript/action_interfaces";
-import { PlayerCardsType } from "../typescript/card_types";
-import { CoinType } from "../typescript/coin_types";
-import { LogTypes } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { IConfig } from "../typescript_interfaces/action_interfaces";
+import { LogTypes } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { PlayerCardsType } from "../typescript_types/card_types";
+import { CoinType } from "../typescript_types/coin_types";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
 
 /**

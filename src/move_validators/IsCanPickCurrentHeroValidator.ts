@@ -1,11 +1,11 @@
 import { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { PlayerCardsType } from "../typescript/card_types";
-import { RusCardTypes } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IValidatorsConfig } from "../typescript/hero_validator_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { RusCardTypes } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IValidatorsConfig } from "../typescript_interfaces/hero_validator_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { PlayerCardsType } from "../typescript_types/card_types";
 
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>

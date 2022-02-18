@@ -1,7 +1,7 @@
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
-import { HeroNames } from "../typescript/enums";
+import { HeroNames } from "../typescript_enums/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
  * <p>Применения:</p>

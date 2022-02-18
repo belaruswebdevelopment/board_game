@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { LogTypes } from "../typescript/enums";
+import { LogTypes } from "../typescript_enums/enums";
 /**
  * <h3>Отрисовка лог панели.</h3>
  * <p>Применения:</p>

@@ -2,10 +2,10 @@ import { Ctx } from "boardgame.io";
 import { suitsConfig } from "./data/SuitData";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { DeckCardTypes } from "./typescript/card_types";
-import { LogTypes, SuitNames } from "./typescript/enums";
-import { IMyGameState } from "./typescript/game_data_interfaces";
-import { DistinctionTypes } from "./typescript/types";
+import { LogTypes, SuitNames } from "./typescript_enums/enums";
+import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
+import { DeckCardTypes } from "./typescript_types/card_types";
+import { DistinctionTypes } from "./typescript_types/types";
 
 // TODO Rework 2 functions in one?
 /**

@@ -1,13 +1,15 @@
 import { CreateCard } from "../Card";
+import { heroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
+import { AddHeroCardToPlayerCards } from "../helpers/HeroCardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { isHeroCard } from "../Hero";
+import { CreateHero, isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
+import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript_enums/enums";
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
  * <p>Применения:</p>
@@ -53,6 +55,7 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
             name: CardNames.Olwin,
+            game: `thingvellir`,
         });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту Ольвин во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);
@@ -80,16 +83,17 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
 export const PlaceThrudAction = (G, ctx, suit) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], playerVariants = player.stack[0].variants;
     if (playerVariants !== undefined) {
-        const heroCard = CreateCard({
+        const heroCard = CreateHero({
             suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
             type: RusCardTypes.HERO,
             name: HeroNames.Thrud,
             game: `base`,
+            description: heroesConfig.Thrud.description,
         });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${HeroNames.Thrud} во фракцию ${suitsConfig[suit].suitName}.`);
-        AddCardToPlayer(G, ctx, heroCard);
+        AddHeroCardToPlayerCards(G, ctx, heroCard);
     }
     else {
         AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants' или не передан обязательный параметр 'stack[0].config.name'.`);
@@ -110,16 +114,17 @@ export const PlaceThrudAction = (G, ctx, suit) => {
 export const PlaceYludAction = (G, ctx, suit) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], playerVariants = player.stack[0].variants;
     if (playerVariants !== undefined) {
-        const heroCard = CreateCard({
+        const heroCard = CreateHero({
             suit,
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
             type: RusCardTypes.HERO,
             name: HeroNames.Ylud,
             game: `base`,
+            description: heroesConfig.Ylud.description,
         });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${HeroNames.Ylud} во фракцию ${suitsConfig[suit].suitName}.`);
-        AddCardToPlayer(G, ctx, heroCard);
+        AddHeroCardToPlayerCards(G, ctx, heroCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, heroCard);
         if (G.tierToEnd === 0) {
             DeleteBuffFromPlayer(G, ctx, BuffNames.EndTier);

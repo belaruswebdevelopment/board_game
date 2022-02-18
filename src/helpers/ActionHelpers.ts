@@ -1,11 +1,13 @@
 import { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
-import { IConfig } from "../typescript/action_interfaces";
-import { IBuff, IBuffs } from "../typescript/buff_interfaces";
-import { LogTypes } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { LogTypes } from "../typescript_enums/enums";
+import { IConfig } from "../typescript_interfaces/action_interfaces";
+import { IBuff } from "../typescript_interfaces/card_buff_interfaces";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { BuffTypes } from "../typescript_types/keyof_types";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**
@@ -41,7 +43,7 @@ export const AddPickCardActionToStack = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStackAfterCurrent(G, ctx, [{}]);
 };
 
-export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: keyof IBuffs): void => {
+export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         buffIndex: number = player.buffs.findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
     if (buffIndex !== -1) {

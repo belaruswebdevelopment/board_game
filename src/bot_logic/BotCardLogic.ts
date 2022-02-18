@@ -1,12 +1,12 @@
 import { Ctx } from "boardgame.io";
 import { CreateCard, isCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
-import { IAverageSuitCardData } from "../typescript/bot_interfaces";
-import { ICard } from "../typescript/card_interfaces";
-import { TavernCardTypes } from "../typescript/card_types";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
-import { ISuit } from "../typescript/suit_interfaces";
+import { IAverageSuitCardData } from "../typescript_interfaces/bot_interfaces";
+import { ICard } from "../typescript_interfaces/card_interfaces";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { ISuit } from "../typescript_interfaces/suit_interfaces";
+import { TavernCardTypes } from "../typescript_types/card_types";
 
 // Check all types in this file!
 /**

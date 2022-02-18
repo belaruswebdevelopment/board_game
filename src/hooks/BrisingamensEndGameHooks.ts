@@ -2,11 +2,11 @@ import { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { IBuffs } from "../typescript/buff_interfaces";
-import { Phases } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { INext } from "../typescript/game_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
+import { Phases } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { INext } from "../typescript_interfaces/game_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
 
 export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
     const brisingamensPlayerIndex: number =

@@ -1,10 +1,10 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { IsValidMove } from "../MoveValidator";
-import { CoinType } from "../typescript/coin_types";
-import { Stages } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { CoinType } from "../typescript_types/coin_types";
+import { Stages } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
 
 /**
  * <h3>Выкладка монет ботами.</h3>

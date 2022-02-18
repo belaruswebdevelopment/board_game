@@ -2,7 +2,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { LogTypes, MoveNames, RusCardTypes } from "../typescript/enums";
+import { LogTypes, MoveNames, RusCardTypes } from "../typescript_enums/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -19,7 +19,7 @@ import { LogTypes, MoveNames, RusCardTypes } from "../typescript/enums";
  * @param args Аргументы действия.
  */
 export const DrawButton = (data, boardCells, key, name, player, actionName, ...args) => {
-    let action = null;
+    let action;
     switch (actionName) {
         case MoveNames.StartEnlistmentMercenariesMove:
             action = data.moves.StartEnlistmentMercenariesMove;
@@ -49,7 +49,7 @@ export const DrawButton = (data, boardCells, key, name, player, actionName, ...a
  * @param args Аргументы действия.
  */
 export const DrawCard = (data, playerCells, card, id, player, suit, actionName, ...args) => {
-    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, action = null;
+    let styles = { background: `` }, tdClasses = ``, spanClasses = ``, action;
     switch (actionName) {
         case MoveNames.ClickHeroCardMove:
             action = data.moves.ClickHeroCardMove;
@@ -154,7 +154,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, actionName, 
  * @param args Аргументы действия.
  */
 export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses, additionalParam, actionName, ...args) => {
-    let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action = null;
+    let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action;
     switch (actionName) {
         case MoveNames.ClickBoardCoinMove:
             action = data.moves.ClickBoardCoinMove;
@@ -225,7 +225,7 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, className: spanClasses, children: span }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}coin ${id}${coin !== null ? ` ${coin.value}` : ` empty`}`));
 };
 export const DrawSuit = (data, boardCells, suit, key, value, player, actionName) => {
-    let action = null;
+    let action;
     switch (actionName) {
         case MoveNames.GetMjollnirProfitMove:
             action = data.moves.GetMjollnirProfitMove;

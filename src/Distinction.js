@@ -1,7 +1,7 @@
 import { suitsConfig } from "./data/SuitData";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { LogTypes, SuitNames } from "./typescript/enums";
+import { LogTypes, SuitNames } from "./typescript_enums/enums";
 // TODO Rework 2 functions in one?
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по шевронам конкретной фракции.</h3>

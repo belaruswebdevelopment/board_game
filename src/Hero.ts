@@ -1,5 +1,5 @@
-import { RusCardTypes } from "./typescript/enums";
-import { ICreateHero, IHero, IHeroConfig } from "./typescript/hero_card_interfaces";
+import { RusCardTypes } from "./typescript_enums/enums";
+import { ICreateHero, IHeroCard, IHeroConfig } from "./typescript_interfaces/hero_card_interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -12,8 +12,8 @@ import { ICreateHero, IHero, IHeroConfig } from "./typescript/hero_card_interfac
  * @param heroesConfig Конфиг героев.
  * @returns Массив всех героев.
  */
-export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig): IHero[] => {
-    const heroes: IHero[] = [];
+export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig): IHeroCard[] => {
+    const heroes: IHeroCard[] = [];
     for (const hero in heroesConfig) {
         if (configOptions.includes(heroesConfig[hero].game)) {
             heroes.push(CreateHero({
@@ -68,7 +68,7 @@ export const CreateHero = ({
     validators,
     actions,
     stack,
-}: ICreateHero = {} as ICreateHero): IHero => ({
+}: ICreateHero = {} as ICreateHero): IHeroCard => ({
     type,
     name,
     description,
@@ -83,5 +83,5 @@ export const CreateHero = ({
     stack,
 });
 
-export const isHeroCard = (card: unknown): card is IHero =>
-    (card as IHero).validators !== undefined;
+export const isHeroCard = (card: unknown): card is IHeroCard =>
+    (card as IHeroCard).validators !== undefined;

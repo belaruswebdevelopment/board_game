@@ -1,4 +1,4 @@
-import { ConfigNames, DrawNames, Stages, SuitNames } from "../typescript/enums";
+import { ConfigNames, DrawNames, Stages, SuitNames } from "../typescript_enums/enums";
 export const StackData = {
     addCoinToPouch: (number) => ({
         config: {

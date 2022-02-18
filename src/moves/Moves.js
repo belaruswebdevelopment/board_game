@@ -8,7 +8,7 @@ import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { LogTypes, Stages, SuitNames } from "../typescript/enums";
+import { LogTypes, Stages, SuitNames } from "../typescript_enums/enums";
 // TODO Add logging
 /**
  * <h3>Выбор карты из таверны.</h3>

@@ -1,4 +1,4 @@
-import { IArtefactCampCard, IMercenaryCampCard } from "./camp_card_interfaces";
+import { IArtefactCampCard, IMercenaryCampCard } from "../typescript_interfaces/camp_card_interfaces";
 
 /**
  * <h3>Типы данных для кэмпа.</h3>

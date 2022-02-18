@@ -2,7 +2,7 @@ import { ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { LogTypes, Stages } from "../typescript/enums";
+import { LogTypes, Stages } from "../typescript_enums/enums";
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
  * <p>Применения:</p>
@@ -32,7 +32,8 @@ export const DiscardTradingCoinAction = (G, ctx) => {
     let tradingCoinIndex = player.boardCoins.findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading));
     if (player.buffs.find((buff) => buff.everyTurn !== undefined)
         && tradingCoinIndex === -1) {
-        tradingCoinIndex = player.handCoins.findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading));
+        tradingCoinIndex =
+            player.handCoins.findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading));
         player.handCoins.splice(tradingCoinIndex, 1, null);
     }
     else {

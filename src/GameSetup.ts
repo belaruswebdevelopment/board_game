@@ -12,16 +12,16 @@ import { suitsConfig } from "./data/SuitData";
 import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
-import { IAverageCard, IBotData } from "./typescript/bot_interfaces";
-import { CampDeckCardTypes } from "./typescript/camp_card_types";
-import { ICard } from "./typescript/card_interfaces";
-import { DeckCardTypes } from "./typescript/card_types";
-import { ICoin } from "./typescript/coin_interfaces";
-import { IDistinctions } from "./typescript/distinction_interfaces";
-import { IExpansions, ILogData, IMyGameState } from "./typescript/game_data_interfaces";
-import { IHero } from "./typescript/hero_card_interfaces";
-import { IPlayers, IPublicPlayer } from "./typescript/player_interfaces";
-import { IPriority } from "./typescript/priority_interfaces";
+import { IAverageCard, IBotData } from "./typescript_interfaces/bot_interfaces";
+import { ICard } from "./typescript_interfaces/card_interfaces";
+import { ICoin } from "./typescript_interfaces/coin_interfaces";
+import { IDistinctions } from "./typescript_interfaces/distinction_interfaces";
+import { IExpansions, ILogData, IMyGameState } from "./typescript_interfaces/game_data_interfaces";
+import { IHeroCard } from "./typescript_interfaces/hero_card_interfaces";
+import { IPlayers, IPublicPlayer } from "./typescript_interfaces/player_interfaces";
+import { IPriority } from "./typescript_interfaces/priority_interfaces";
+import { CampDeckCardTypes } from "./typescript_types/camp_card_types";
+import { DeckCardTypes } from "./typescript_types/card_types";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -89,7 +89,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             heroesConfigOptions.push(expansion);
         }
     }
-    const heroes: IHero[] = BuildHeroes(heroesConfigOptions, heroesConfig),
+    const heroes: IHeroCard[] = BuildHeroes(heroesConfigOptions, heroesConfig),
         taverns: DeckCardTypes[][] = [],
         tavernsNum = 3,
         currentTavern = -1,

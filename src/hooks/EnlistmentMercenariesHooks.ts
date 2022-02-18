@@ -3,11 +3,11 @@ import { IsMercenaryCard } from "../Camp";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { IBuffs } from "../typescript/buff_interfaces";
-import { CampDeckCardTypes } from "../typescript/camp_card_types";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { INext } from "../typescript/game_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
+import { CampDeckCardTypes } from "../typescript_types/camp_card_types";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { INext } from "../typescript_interfaces/game_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>

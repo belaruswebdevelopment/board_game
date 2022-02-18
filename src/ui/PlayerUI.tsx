@@ -4,11 +4,11 @@ import { suitsConfig } from "../data/SuitData";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { PlayerCardsType } from "../typescript/card_types";
-import { CoinType } from "../typescript/coin_types";
-import { HeroNames, MoveNames, Phases, Stages } from "../typescript/enums";
-import { IMyGameState } from "../typescript/game_data_interfaces";
-import { IPublicPlayer } from "../typescript/player_interfaces";
+import { HeroNames, MoveNames, Phases, Stages } from "../typescript_enums/enums";
+import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { PlayerCardsType } from "../typescript_types/card_types";
+import { CoinType } from "../typescript_types/coin_types";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 
 /**

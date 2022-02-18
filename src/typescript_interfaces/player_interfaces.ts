@@ -1,10 +1,10 @@
+import { CampDeckCardTypes } from "../typescript_types/camp_card_types";
+import { PickedCardType } from "../typescript_types/card_types";
+import { CoinType } from "../typescript_types/coin_types";
 import { IStack } from "./action_interfaces";
-import { IBuffs } from "./buff_interfaces";
-import { CampDeckCardTypes } from "./camp_card_types";
-import { PickedCardType } from "./card_types";
+import { IBuffs } from "./player_buff_interfaces";
 import { ICoin } from "./coin_interfaces";
-import { CoinType } from "./coin_types";
-import { IHero } from "./hero_card_interfaces";
+import { IHeroCard } from "./hero_card_interfaces";
 import { IPlayerCards } from "./interfaces";
 import { IPriority } from "./priority_interfaces";
 
@@ -15,15 +15,15 @@ export interface ICreatePublicPlayer {
     readonly actionsNum?: number,
     readonly nickname: string,
     readonly cards: IPlayerCards,
-    readonly heroes?: IHero[],
+    readonly heroes?: IHeroCard[],
     readonly campCards?: CampDeckCardTypes[],
     readonly handCoins: ICoin[],
     readonly boardCoins: ICoin[],
     readonly stack?: IStack[],
     readonly priority: IPriority,
     readonly buffs?: IBuffs[],
-    readonly selectedCoin?: undefined,
-    readonly pickedCard?: null,
+    readonly selectedCoin?: undefined | number,
+    readonly pickedCard?: PickedCardType,
 }
 
 /**
@@ -48,7 +48,7 @@ export interface IPublicPlayer {
     actionsNum: number,
     readonly nickname: string,
     readonly cards: IPlayerCards,
-    readonly heroes: IHero[],
+    readonly heroes: IHeroCard[],
     readonly campCards: CampDeckCardTypes[],
     readonly handCoins: CoinType[],
     readonly boardCoins: CoinType[],

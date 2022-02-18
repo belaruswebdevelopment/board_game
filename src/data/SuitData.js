@@ -1,6 +1,6 @@
 import { BlacksmithDistinctionAwarding, ExplorerDistinctionAwarding, HunterDistinctionAwarding, MinerDistinctionAwarding, WarriorDistinctionAwarding } from "../helpers/DistinctionAwardingHelpers";
 import { BlacksmithScoring, ExplorerScoring, HunterScoring, MinerScoring, WarriorScoring } from "../score_helpers/SuitScoringHelpers";
-import { RusSuitNames, SuitNames } from "../typescript/enums";
+import { RusSuitNames, SuitNames } from "../typescript_enums/enums";
 /**
  * <h3>Фракция кузнецов.</h3>
  * <p>Применения:</p>

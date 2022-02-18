@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { IMyGameState } from "./game_data_interfaces";
-import { MoveValidatorGetRangeTypes, ValidMoveIdParamTypes } from "./move_validator_types";
+import { MoveValidatorGetRangeTypes, ValidMoveIdParamTypes } from "../typescript_types/move_validator_types";
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мувов.</h3>

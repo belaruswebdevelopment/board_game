@@ -1,4 +1,4 @@
-import { PlayerCardsType } from "./card_types";
+import { PlayerCardsType } from "../typescript_types/card_types";
 import { IDistinction } from "./distinction_interfaces";
 import { IPointsValues, IRankValues } from "./object_values_interfaces";
 

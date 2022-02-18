@@ -1,11 +1,11 @@
+import { LogTypes } from "../typescript_enums/enums";
+import { CampCardTypes, CampDeckCardTypes } from "../typescript_types/camp_card_types";
+import { DeckCardTypes, DiscardCardTypes, TavernCardTypes } from "../typescript_types/card_types";
 import { IAverageCard, IBotData } from "./bot_interfaces";
-import { CampCardTypes, CampDeckCardTypes } from "./camp_card_types";
 import { ICard } from "./card_interfaces";
-import { DeckCardTypes, DiscardCardTypes, TavernCardTypes } from "./card_types";
 import { ICoin } from "./coin_interfaces";
 import { IDistinctions } from "./distinction_interfaces";
-import { LogTypes } from "./enums";
-import { IHero } from "./hero_card_interfaces";
+import { IHeroCard } from "./hero_card_interfaces";
 import { IPlayers, IPublicPlayer } from "./player_interfaces";
 
 interface IExpansion {
@@ -48,7 +48,7 @@ export interface IMyGameState {
     readonly drawSize: number,
     exchangeOrder: (number | undefined)[],
     readonly expansions: IExpansions,
-    readonly heroes: IHero[],
+    readonly heroes: IHeroCard[],
     readonly log: boolean,
     readonly logData: ILogData[],
     readonly marketCoins: ICoin[],
