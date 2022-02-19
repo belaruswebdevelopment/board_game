@@ -1,7 +1,7 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypes } from "./typescript/enums";
-import { AdditionalCardTypes, DeckCardTypes, DiscardCardTypes, IActionCard, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, SuitTypes, TavernCardTypes } from "./typescript/interfaces";
+import { AdditionalCardTypes, DeckCardTypes, DiscardCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, SuitTypes, TavernCardTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
@@ -39,12 +39,13 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
             }
         }
     }
-    for (let i = 0; i < deckConfig.actions.length; i++) {
-        for (let j = 0; j < deckConfig.actions[i].amount()[data.players][data.tier]; j++) {
+    const actionCardConfig: IActionCardConfig[] = deckConfig.actions;
+    for (let i = 0; i < actionCardConfig.length; i++) {
+        for (let j = 0; j < actionCardConfig[i].amount()[data.players][data.tier]; j++) {
             cards.push(CreateActionCard({
-                value: deckConfig.actions[i].value,
-                stack: deckConfig.actions[i].stack,
-                name: `улучшение монеты на +${deckConfig.actions[i].value}`,
+                value: actionCardConfig[i].value,
+                stack: actionCardConfig[i].stack,
+                name: `улучшение монеты на +${actionCardConfig[i].value}`,
             }));
         }
     }
@@ -56,11 +57,12 @@ export const BuildAdditionalCards = (): ICard[] => {
     let cardName: AdditionalCardTypes;
     for (cardName in additionalCardsConfig) {
         if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, cardName)) {
+            const card: ICard = additionalCardsConfig[cardName];
             cards.push(CreateCard({
-                suit: additionalCardsConfig[cardName].suit,
-                rank: additionalCardsConfig[cardName].rank,
-                points: additionalCardsConfig[cardName].points,
-                name: additionalCardsConfig[cardName].name,
+                suit: card.suit,
+                rank: card.rank,
+                points: card.points,
+                name: card.name,
             }));
         }
     }

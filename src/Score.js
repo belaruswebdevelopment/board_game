@@ -68,8 +68,7 @@ export const FinalScoring = (G, ctx, player) => {
     let heroesScore = 0, dwerg_brothers = 0;
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
-        const heroData = Object.values(heroesConfig)
-            .find((hero) => hero.name === player.heroes[i].name);
+        const heroData = Object.values(heroesConfig).find((hero) => hero.name === player.heroes[i].name);
         if (heroData !== undefined) {
             if (player.heroes[i].name.startsWith(`Dwerg`)) {
                 dwerg_brothers += heroData.scoringRule(player);
@@ -93,8 +92,7 @@ export const FinalScoring = (G, ctx, player) => {
     if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
-            const artefact = Object.values(artefactsConfig)
-                .find((artefact) => artefact.name === player.campCards[i].name);
+            const artefact = Object.values(artefactsConfig).find((artefact) => artefact.name === player.campCards[i].name);
             let currentArtefactScore = 0;
             if (artefact !== undefined) {
                 currentArtefactScore = artefact.scoringRule(player);

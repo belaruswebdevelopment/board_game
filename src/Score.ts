@@ -76,8 +76,9 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): 
         dwerg_brothers = 0;
     const dwerg_brothers_scoring: number[] = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
-        const heroData: IHeroData | undefined = Object.values(heroesConfig)
-            .find((hero: IHeroData): boolean => hero.name === player.heroes[i].name);
+        const heroData: IHeroData | undefined =
+            Object.values(heroesConfig).find((hero: IHeroData): boolean =>
+                hero.name === player.heroes[i].name);
         if (heroData !== undefined) {
             if (player.heroes[i].name.startsWith(`Dwerg`)) {
                 dwerg_brothers += heroData.scoringRule(player);
@@ -99,8 +100,9 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): 
     if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
-            const artefact: IArtefact | undefined = Object.values(artefactsConfig)
-                .find((artefact: IArtefact): boolean => artefact.name === player.campCards[i].name);
+            const artefact: IArtefact | undefined =
+                Object.values(artefactsConfig).find((artefact: IArtefact): boolean =>
+                    artefact.name === player.campCards[i].name);
             let currentArtefactScore = 0;
             if (artefact !== undefined) {
                 currentArtefactScore = artefact.scoringRule(player);

@@ -25,16 +25,17 @@ import { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, IBuffs, ICon
  * @returns
  */
 export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: ICurrentMoveCoinsArguments): boolean => {
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     if (coinData.type === "hand") {
-        const handCoinPosition: number = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .filter((coin: CoinType, index: number): boolean =>
+        const handCoinPosition: number =
+            player.boardCoins.filter((coin: CoinType, index: number): boolean =>
                 coin === null && index <= coinData.coinId).length;
-        if (!G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .filter((coin: CoinType): boolean => coin !== null)[handCoinPosition - 1]?.isTriggerTrading) {
+        if (!player.handCoins.filter((coin: CoinType): boolean =>
+            coin !== null)[handCoinPosition - 1]?.isTriggerTrading) {
             return true;
         }
     } else {
-        if (!G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[coinData.coinId]?.isTriggerTrading) {
+        if (!player.boardCoins[coinData.coinId]?.isTriggerTrading) {
             return true;
         }
     }
@@ -175,14 +176,13 @@ export const moveValidators: IMoveValidators = {
                             isMinCoinsOnPosition = false;
                         if (hasPositionForMaxCoin) {
                             isTopCoinsOnPosition =
-                                allCoinsOrder[i].filter((coinIndex: number): boolean =>
-                                    handCoins[coinIndex] !== null
-                                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                    && handCoins[coinIndex]!.value > maxCoin.value).length <= 1;
+                                allCoinsOrder[i].filter((coinIndex: number): boolean => {
+                                    const handCoin: CoinType = handCoins[coinIndex];
+                                    return handCoin !== null && handCoin.value > maxCoin.value;
+                                }).length <= 1;
                         }
                         if (hasPositionForMinCoin) {
                             isMinCoinsOnPosition = handCoins.filter((coin: CoinType): boolean =>
-                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                 coin !== null && coin.value < minCoin.value).length <= 1;
                         }
                         if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
@@ -253,9 +253,8 @@ export const moveValidators: IMoveValidators = {
             let isValid = false;
             if (G !== undefined && ctx !== undefined) {
                 isValid = G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                    || (!G.campPicked
-                        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs
-                            .find((buff: IBuffs): boolean => buff.goCamp !== undefined))));
+                    || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                        .find((buff: IBuffs): boolean => buff.goCamp !== undefined))));
             }
             return isValid;
         },
@@ -700,29 +699,31 @@ export const moveValidators: IMoveValidators = {
                 [] as ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`];
             if (G !== undefined && ctx !== undefined) {
                 const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-                    handCoins = player.handCoins.filter((coin: CoinType): boolean => coin !== null);
+                    handCoins: CoinType[] =
+                        player.handCoins.filter((coin: CoinType): boolean => coin !== null);
                 let handCoinIndex = -1;
                 for (let j = 0; j < player.boardCoins.length; j++) {
-                    // TODO Check .? for all coins!!! and delete AS
+                    const boardCoin: CoinType = player.boardCoins[j];
                     if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
-                        && player.boardCoins[j] === null) {
+                        && boardCoin === null) {
                         handCoinIndex++;
-                        const handCoinId: number = player.handCoins.findIndex((coin: CoinType): boolean =>
-                            coin?.value === handCoins[handCoinIndex]?.value
-                            && coin?.isInitial === handCoins[handCoinIndex]?.isInitial);
-                        if (player.handCoins[handCoinId] && !G.publicPlayers[Number(ctx.currentPlayer)]
-                            .handCoins[handCoinId]?.isTriggerTrading) {
+                        const handCoinNotNull: CoinType = handCoins[handCoinIndex],
+                            handCoinId: number = player.handCoins.findIndex((coin: CoinType): boolean =>
+                                coin !== null && handCoinNotNull !== null && coin.value === handCoinNotNull.value
+                                && coin.isInitial === handCoinNotNull.isInitial),
+                            handCoin: CoinType = player.handCoins[handCoinId];
+                        if (handCoin !== null && handCoinNotNull !== null && !handCoin.isTriggerTrading) {
                             moveMainArgs.push({
                                 coinId: j,
                                 type: `hand`,
-                                isInitial: handCoins[handCoinIndex]?.isInitial as boolean,
+                                isInitial: handCoinNotNull.isInitial,
                             });
                         }
-                    } else if (player.boardCoins[j] && !player.boardCoins[j]?.isTriggerTrading) {
+                    } else if (boardCoin !== null && !boardCoin.isTriggerTrading) {
                         moveMainArgs.push({
                             coinId: j,
                             type: `board`,
-                            isInitial: player.boardCoins[j]?.isInitial as boolean,
+                            isInitial: boardCoin.isInitial,
                         });
                     }
                 }
@@ -731,7 +732,6 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            // TODO Check add TYPE!?
             const moveArguments: ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] =
                 currentMoveArguments as ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -928,7 +928,7 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.PlaceOlwinCardMove,
-        validate: (): boolean => true, // TODO Check it
+        validate: (): boolean => true,
     },
     PlaceThrudHeroMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<string[]>[`args`] => {
@@ -951,7 +951,7 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.PlaceThrudHeroMove,
-        validate: (): boolean => true, // TODO Check it
+        validate: (): boolean => true,
     },
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
         // TODO Rework if Uline in play or no 1 coin in game(& add param isInitial ?)
@@ -1108,9 +1108,12 @@ const ValidateByObjectCoinIdTypeIsInitialValues = (value: ICurrentMoveCoinsArgum
         value.coinId === coin.coinId && value.type === coin.type && value.isInitial === coin.isInitial) !== -1;
 
 const ValidateByObjectSuitCardIdValues = (value: ICurrentMoveSuitCardCurrentId,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    values: OptionalSuitPropertyTypes<number[]>): boolean => values[value.suit]!.includes(value.cardId);
+    values: OptionalSuitPropertyTypes<number[]>): boolean => {
+    const objectSuitCardIdValues: number[] | undefined = values[value.suit];
+    return objectSuitCardIdValues !== undefined && objectSuitCardIdValues.includes(value.cardId);
+};
 
 
 const ValidateByObjectSuitCardIdPlayerIdValues = (value: ICurrentMoveSuitCardPlayerCurrentId,
-    values: ICurrentMoveSuitCardPlayerIdArguments): boolean => values.suit === value.suit && values.playerId === value.playerId && values.cards.includes(value.cardId);
+    values: ICurrentMoveSuitCardPlayerIdArguments): boolean => values.suit === value.suit
+    && values.playerId === value.playerId && values.cards.includes(value.cardId);

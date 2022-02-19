@@ -1,5 +1,5 @@
 import { RusCardTypes } from "./typescript/enums";
-import { ICreateHero, IHeroCard, IHeroConfig, IHeroTypes } from "./typescript/interfaces";
+import { ICreateHero, IHeroCard, IHeroConfig, IHeroData, IHeroTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -17,19 +17,20 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
     let heroName: IHeroTypes;
     for (heroName in heroesConfig) {
         if (Object.prototype.hasOwnProperty.call(heroesConfig, heroName)) {
-            if (configOptions.includes(heroesConfig[heroName].game)) {
+            const heroData: IHeroData = heroesConfig[heroName];
+            if (configOptions.includes(heroData.game)) {
                 heroes.push(CreateHero({
                     type: RusCardTypes.HERO,
-                    name: heroesConfig[heroName].name,
-                    description: heroesConfig[heroName].description,
-                    game: heroesConfig[heroName].game,
-                    suit: heroesConfig[heroName].suit,
-                    rank: heroesConfig[heroName].rank,
-                    points: heroesConfig[heroName].points,
-                    buff: heroesConfig[heroName].buff,
-                    validators: heroesConfig[heroName].validators,
-                    actions: heroesConfig[heroName].actions,
-                    stack: heroesConfig[heroName].stack,
+                    name: heroData.name,
+                    description: heroData.description,
+                    game: heroData.game,
+                    suit: heroData.suit,
+                    rank: heroData.rank,
+                    points: heroData.points,
+                    buff: heroData.buff,
+                    validators: heroData.validators,
+                    actions: heroData.actions,
+                    stack: heroData.stack,
                 }));
             }
         }

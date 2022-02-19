@@ -36,12 +36,13 @@ export const BuildCards = (deckConfig, data) => {
             }
         }
     }
-    for (let i = 0; i < deckConfig.actions.length; i++) {
-        for (let j = 0; j < deckConfig.actions[i].amount()[data.players][data.tier]; j++) {
+    const actionCardConfig = deckConfig.actions;
+    for (let i = 0; i < actionCardConfig.length; i++) {
+        for (let j = 0; j < actionCardConfig[i].amount()[data.players][data.tier]; j++) {
             cards.push(CreateActionCard({
-                value: deckConfig.actions[i].value,
-                stack: deckConfig.actions[i].stack,
-                name: `улучшение монеты на +${deckConfig.actions[i].value}`,
+                value: actionCardConfig[i].value,
+                stack: actionCardConfig[i].stack,
+                name: `улучшение монеты на +${actionCardConfig[i].value}`,
             }));
         }
     }
@@ -52,11 +53,12 @@ export const BuildAdditionalCards = () => {
     let cardName;
     for (cardName in additionalCardsConfig) {
         if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, cardName)) {
+            const card = additionalCardsConfig[cardName];
             cards.push(CreateCard({
-                suit: additionalCardsConfig[cardName].suit,
-                rank: additionalCardsConfig[cardName].rank,
-                points: additionalCardsConfig[cardName].points,
-                name: additionalCardsConfig[cardName].name,
+                suit: card.suit,
+                rank: card.rank,
+                points: card.points,
+                name: card.name,
             }));
         }
     }

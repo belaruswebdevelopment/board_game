@@ -15,19 +15,20 @@ export const BuildHeroes = (configOptions, heroesConfig) => {
     let heroName;
     for (heroName in heroesConfig) {
         if (Object.prototype.hasOwnProperty.call(heroesConfig, heroName)) {
-            if (configOptions.includes(heroesConfig[heroName].game)) {
+            const heroData = heroesConfig[heroName];
+            if (configOptions.includes(heroData.game)) {
                 heroes.push(CreateHero({
                     type: RusCardTypes.HERO,
-                    name: heroesConfig[heroName].name,
-                    description: heroesConfig[heroName].description,
-                    game: heroesConfig[heroName].game,
-                    suit: heroesConfig[heroName].suit,
-                    rank: heroesConfig[heroName].rank,
-                    points: heroesConfig[heroName].points,
-                    buff: heroesConfig[heroName].buff,
-                    validators: heroesConfig[heroName].validators,
-                    actions: heroesConfig[heroName].actions,
-                    stack: heroesConfig[heroName].stack,
+                    name: heroData.name,
+                    description: heroData.description,
+                    game: heroData.game,
+                    suit: heroData.suit,
+                    rank: heroData.rank,
+                    points: heroData.points,
+                    buff: heroData.buff,
+                    validators: heroData.validators,
+                    actions: heroData.actions,
+                    stack: heroData.stack,
                 }));
             }
         }

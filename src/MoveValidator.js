@@ -23,16 +23,15 @@ import { ConfigNames, MoveNames, Phases, RusCardTypes, ValidatorNames } from "./
  */
 export const CoinUpgradeValidation = (G, ctx, coinData) => {
     var _a, _b;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (coinData.type === "hand") {
-        const handCoinPosition = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins
-            .filter((coin, index) => coin === null && index <= coinData.coinId).length;
-        if (!((_a = G.publicPlayers[Number(ctx.currentPlayer)].handCoins
-            .filter((coin) => coin !== null)[handCoinPosition - 1]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
+        const handCoinPosition = player.boardCoins.filter((coin, index) => coin === null && index <= coinData.coinId).length;
+        if (!((_a = player.handCoins.filter((coin) => coin !== null)[handCoinPosition - 1]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
             return true;
         }
     }
     else {
-        if (!((_b = G.publicPlayers[Number(ctx.currentPlayer)].boardCoins[coinData.coinId]) === null || _b === void 0 ? void 0 : _b.isTriggerTrading)) {
+        if (!((_b = player.boardCoins[coinData.coinId]) === null || _b === void 0 ? void 0 : _b.isTriggerTrading)) {
             return true;
         }
     }
@@ -161,14 +160,13 @@ export const moveValidators = {
                         let isTopCoinsOnPosition = false, isMinCoinsOnPosition = false;
                         if (hasPositionForMaxCoin) {
                             isTopCoinsOnPosition =
-                                allCoinsOrder[i].filter((coinIndex) => handCoins[coinIndex] !== null
-                                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                    && handCoins[coinIndex].value > maxCoin.value).length <= 1;
+                                allCoinsOrder[i].filter((coinIndex) => {
+                                    const handCoin = handCoins[coinIndex];
+                                    return handCoin !== null && handCoin.value > maxCoin.value;
+                                }).length <= 1;
                         }
                         if (hasPositionForMinCoin) {
-                            isMinCoinsOnPosition = handCoins.filter((coin) => 
-                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            coin !== null && coin.value < minCoin.value).length <= 1;
+                            isMinCoinsOnPosition = handCoins.filter((coin) => coin !== null && coin.value < minCoin.value).length <= 1;
                         }
                         if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
                             return allCoinsOrder[i];
@@ -237,9 +235,8 @@ export const moveValidators = {
             let isValid = false;
             if (G !== undefined && ctx !== undefined) {
                 isValid = G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                    || (!G.campPicked
-                        && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs
-                            .find((buff) => buff.goCamp !== undefined))));
+                    || (!G.campPicked && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                        .find((buff) => buff.goCamp !== undefined))));
             }
             return isValid;
         },
@@ -655,35 +652,30 @@ export const moveValidators = {
     ClickCoinToUpgradeMoveValidator: {
         // TODO Rework if Uline in play or no 1 coin in game (& add param isInitial?)
         getRange: (G, ctx) => {
-            var _a, _b, _c, _d;
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)], handCoins = player.handCoins.filter((coin) => coin !== null);
                 let handCoinIndex = -1;
                 for (let j = 0; j < player.boardCoins.length; j++) {
-                    // TODO Check .? for all coins!!! and delete AS
+                    const boardCoin = player.boardCoins[j];
                     if (player.buffs.find((buff) => buff.everyTurn !== undefined)
-                        && player.boardCoins[j] === null) {
+                        && boardCoin === null) {
                         handCoinIndex++;
-                        const handCoinId = player.handCoins.findIndex((coin) => {
-                            var _a, _b;
-                            return (coin === null || coin === void 0 ? void 0 : coin.value) === ((_a = handCoins[handCoinIndex]) === null || _a === void 0 ? void 0 : _a.value)
-                                && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === ((_b = handCoins[handCoinIndex]) === null || _b === void 0 ? void 0 : _b.isInitial);
-                        });
-                        if (player.handCoins[handCoinId] && !((_a = G.publicPlayers[Number(ctx.currentPlayer)]
-                            .handCoins[handCoinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
+                        const handCoinNotNull = handCoins[handCoinIndex], handCoinId = player.handCoins.findIndex((coin) => coin !== null && handCoinNotNull !== null && coin.value === handCoinNotNull.value
+                            && coin.isInitial === handCoinNotNull.isInitial), handCoin = player.handCoins[handCoinId];
+                        if (handCoin !== null && handCoinNotNull !== null && !handCoin.isTriggerTrading) {
                             moveMainArgs.push({
                                 coinId: j,
                                 type: `hand`,
-                                isInitial: (_b = handCoins[handCoinIndex]) === null || _b === void 0 ? void 0 : _b.isInitial,
+                                isInitial: handCoinNotNull.isInitial,
                             });
                         }
                     }
-                    else if (player.boardCoins[j] && !((_c = player.boardCoins[j]) === null || _c === void 0 ? void 0 : _c.isTriggerTrading)) {
+                    else if (boardCoin !== null && !boardCoin.isTriggerTrading) {
                         moveMainArgs.push({
                             coinId: j,
                             type: `board`,
-                            isInitial: (_d = player.boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isInitial,
+                            isInitial: boardCoin.isInitial,
                         });
                     }
                 }
@@ -691,7 +683,6 @@ export const moveValidators = {
             return moveMainArgs;
         },
         getValue: (G, ctx, currentMoveArguments) => {
-            // TODO Check add TYPE!?
             const moveArguments = currentMoveArguments;
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
@@ -869,7 +860,7 @@ export const moveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.PlaceOlwinCardMove,
-        validate: () => true, // TODO Check it
+        validate: () => true,
     },
     PlaceThrudHeroMoveValidator: {
         getRange: (G, ctx) => {
@@ -891,7 +882,7 @@ export const moveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.PlaceThrudHeroMove,
-        validate: () => true, // TODO Check it
+        validate: () => true,
     },
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
         // TODO Rework if Uline in play or no 1 coin in game(& add param isInitial ?)
@@ -1039,8 +1030,10 @@ export const moveBy = {
  */
 const ValidateByValues = (value, values) => values.includes(value);
 const ValidateByObjectCoinIdTypeIsInitialValues = (value, values) => values.findIndex((coin) => value.coinId === coin.coinId && value.type === coin.type && value.isInitial === coin.isInitial) !== -1;
-const ValidateByObjectSuitCardIdValues = (value, 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-values) => values[value.suit].includes(value.cardId);
-const ValidateByObjectSuitCardIdPlayerIdValues = (value, values) => values.suit === value.suit && values.playerId === value.playerId && values.cards.includes(value.cardId);
+const ValidateByObjectSuitCardIdValues = (value, values) => {
+    const objectSuitCardIdValues = values[value.suit];
+    return objectSuitCardIdValues !== undefined && objectSuitCardIdValues.includes(value.cardId);
+};
+const ValidateByObjectSuitCardIdPlayerIdValues = (value, values) => values.suit === value.suit
+    && values.playerId === value.playerId && values.cards.includes(value.cardId);
 //# sourceMappingURL=MoveValidator.js.map

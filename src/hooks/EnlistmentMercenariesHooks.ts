@@ -21,8 +21,9 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): b
             && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
             let allMercenariesPlayed = true;
             for (let i = 0; i < G.publicPlayers.length; i++) {
-                allMercenariesPlayed = G.publicPlayers[i].campCards
-                    .filter((card: CampDeckCardTypes): boolean => IsMercenaryCard(card)).length === 0;
+                allMercenariesPlayed =
+                    G.publicPlayers[i].campCards.filter((card: CampDeckCardTypes): boolean =>
+                        IsMercenaryCard(card)).length === 0;
                 if (!allMercenariesPlayed) {
                     break;
                 }

@@ -291,7 +291,7 @@ export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMy
                 const config: IConfig | undefined = player.stack[0].config;
                 let moveName: string | null;
                 if (config !== undefined && config.drawName !== undefined) {
-                    switch (config?.drawName) {
+                    switch (config.drawName) {
                         case DrawNames.Thrud:
                             moveName = MoveNames.PlaceThrudHeroMove;
                             break;
@@ -366,12 +366,10 @@ export const UpgradeCoinProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
         if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
             && boardCoin === null) {
             handCoinIndex++;
-            // TODO Delete ! or do check coin on null!?
-            const handCoinId: number = player.handCoins.findIndex((coin: CoinType): boolean =>
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                coin!.value === handCoins[handCoinIndex]!.value
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                && coin!.isInitial === handCoins[handCoinIndex]!.isInitial),
+            const handCoinNotNull: CoinType = handCoins[handCoinIndex],
+                handCoinId: number = player.handCoins.findIndex((coin: CoinType): boolean =>
+                    coin !== null && handCoinNotNull !== null && coin.value === handCoinNotNull.value
+                    && coin.isInitial === handCoinNotNull.isInitial),
                 handCoin: CoinType = player.handCoins[handCoinId];
             if (handCoin !== null && !handCoin.isTriggerTrading) {
                 DrawCoin(data, boardCells, `coin`, handCoin, j, player,
