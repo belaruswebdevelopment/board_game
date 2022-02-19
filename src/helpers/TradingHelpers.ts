@@ -1,12 +1,8 @@
 import { Ctx } from "boardgame.io";
 import { UpgradeCoinAction } from "../actions/AutoActions";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript_enums/enums";
-import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
-import { ICoin } from "../typescript_interfaces/coin_interfaces";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { CoinType } from "../typescript_types/coin_types";
+import { LogTypes } from "../typescript/enums";
+import { CoinType, IBuffs, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Активирует обмен монет.</h3>

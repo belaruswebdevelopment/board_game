@@ -1,4 +1,4 @@
-import { IActionCardConfig, IActionCardValues } from "../typescript_interfaces/action_card_interfaces";
+import { IActionCardConfig, IActionCardValues } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
 /**

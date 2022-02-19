@@ -1,10 +1,8 @@
 import { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript_enums/enums";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IHeroCard } from "../typescript_interfaces/hero_card_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { LogTypes } from "../typescript/enums";
+import { IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer } from "./ActionHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 

@@ -101,7 +101,7 @@ export const SetupGame = (ctx) => {
         deckLength: decks[0].length,
     };
     return {
-        averageCards,
+        averageCards: averageCards,
         botData,
         camp,
         campDecks,
@@ -113,7 +113,7 @@ export const SetupGame = (ctx) => {
         additionalCardsDeck,
         discardCampCardsDeck,
         discardCardsDeck,
-        distinctions,
+        distinctions: distinctions,
         drawProfit,
         drawSize,
         exchangeOrder,

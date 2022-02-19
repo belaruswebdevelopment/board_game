@@ -1,12 +1,6 @@
 import { Ctx } from "boardgame.io";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IResolveBoardCoins } from "../typescript_interfaces/game_interfaces";
-import { INumberValues } from "../typescript_interfaces/object_values_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { IPriority } from "../typescript_interfaces/priority_interfaces";
-import { CoinType } from "../typescript_types/coin_types";
+import { CoinType, IMyGameState, INumberValues, IPriority, IPublicPlayer, IResolveBoardCoins } from "../typescript/interfaces";
 
-// TODO Add logging
 /**
  * <h3>Находит максимальную монету игрока.</h3>
  * <p>Применения:</p>

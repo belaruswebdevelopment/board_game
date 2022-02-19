@@ -2,7 +2,7 @@ import { IsArtefactCardNotMercenary, IsMercenaryCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, LogTypes, Phases } from "../typescript_enums/enums";
+import { BuffNames, LogTypes, Phases } from "../typescript/enums";
 import { AddBuffToPlayer, DeleteBuffFromPlayer } from "./ActionHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";

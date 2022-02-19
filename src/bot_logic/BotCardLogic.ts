@@ -1,12 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { CreateCard, isCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
-import { IAverageSuitCardData } from "../typescript_interfaces/bot_interfaces";
-import { ICard } from "../typescript_interfaces/card_interfaces";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { ISuit } from "../typescript_interfaces/suit_interfaces";
-import { TavernCardTypes } from "../typescript_types/card_types";
+import { IAverageSuitCardData, ICard, IMyGameState, IPublicPlayer, ISuit, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -90,22 +85,22 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
  * @returns "Средняя" карта дворфа.
  */
 export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData): ICard => {
+    let totalRank = 0,
+        totalPoints = 0;
+    const rank: number | number[] = suitConfig.ranksValues()[data.players][data.tier],
+        points: number | number[] = suitConfig.pointsValues()[data.players][data.tier],
+        count = Array.isArray(points) ? points.length : points;
+    for (let i = 0; i < count; i++) {
+        totalRank += Array.isArray(rank) ? rank[i] : 1;
+        totalPoints += Array.isArray(points) ? points[i] : 1;
+    }
+    totalRank /= count;
+    totalPoints /= count;
     const avgCard: ICard = CreateCard({
         suit: suitConfig.suit,
-        rank: 0,
-        points: 0
-    }),
-        rank: number | number[] = suitConfig.ranksValues()[data.players][data.tier],
-        points: number | number[] = suitConfig.pointsValues()[data.players][data.tier];
-    const count = Array.isArray(points) ? points.length : points;
-    if (avgCard.points !== null) {
-        for (let i = 0; i < count; i++) {
-            avgCard.rank += Array.isArray(rank) ? rank[i] : 1;
-            avgCard.points += Array.isArray(points) ? points[i] : 1;
-        }
-        avgCard.rank /= count;
-        avgCard.points /= count;
-    }
+        rank: totalRank,
+        points: totalPoints,
+    });
     return avgCard;
 };
 
@@ -128,7 +123,7 @@ const PotentialScoring = (player: IPublicPlayer, card: TavernCardTypes): number 
             if (isCardNotActionAndNotNull(card) && card.suit === suit) {
                 score += suitsConfig[suit].scoringRule(player.cards[suit], card.points ?? 1);
             } else {
-                score += suitsConfig[suit].scoringRule(player.cards[suit]);
+                score += suitsConfig[suit as SuitTypes].scoringRule(player.cards[suit as SuitTypes]);
             }
         }
     }

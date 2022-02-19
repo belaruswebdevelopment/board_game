@@ -1,8 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypes } from "./typescript_enums/enums";
-import { IArtefactCampCard, IArtefactConfig, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenaries, IMercenaryCampCard } from "./typescript_interfaces/camp_card_interfaces";
-import { CampDeckCardTypes } from "./typescript_types/camp_card_types";
-import { DiscardCardTypes } from "./typescript_types/card_types";
+import { RusCardTypes } from "./typescript/enums";
+import { CampDeckCardTypes, DiscardCardTypes, IArtefactCampCard, IArtefactConfig, IArtefactTypes, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenary, IMercenaryCampCard, OptionalSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты кэмпа из конфига.</h3>
@@ -16,25 +14,26 @@ import { DiscardCardTypes } from "./typescript_types/card_types";
  * @param mercenariesConfig Файл конфига наёмников.
  * @returns Все карты кэмпа.
  */
-export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, mercenariesConfig: IMercenaries[][]):
+export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
+    mercenariesConfig: OptionalSuitPropertyTypes<IMercenary>[][]):
     CampDeckCardTypes[] => {
     const campCards: CampDeckCardTypes[] = [];
-    for (const campArtefactCard in artefactConfig) {
-        if (Object.prototype.hasOwnProperty.call(artefactConfig, campArtefactCard)) {
-            if (artefactConfig[campArtefactCard].tier === tier) {
+    for (const artefactName in artefactConfig) {
+        if (Object.prototype.hasOwnProperty.call(artefactConfig, artefactName)) {
+            if (artefactConfig[artefactName as IArtefactTypes].tier === tier) {
                 campCards.push(CreateArtefactCampCard({
                     tier,
-                    path: artefactConfig[campArtefactCard].name,
-                    name: artefactConfig[campArtefactCard].name,
-                    description: artefactConfig[campArtefactCard].description,
-                    game: artefactConfig[campArtefactCard].game,
-                    suit: artefactConfig[campArtefactCard].suit,
-                    rank: artefactConfig[campArtefactCard].rank,
-                    points: artefactConfig[campArtefactCard].points,
-                    buff: artefactConfig[campArtefactCard].buff,
-                    validators: artefactConfig[campArtefactCard].validators,
-                    actions: artefactConfig[campArtefactCard].actions,
-                    stack: artefactConfig[campArtefactCard].stack,
+                    path: artefactConfig[artefactName as IArtefactTypes].name,
+                    name: artefactConfig[artefactName as IArtefactTypes].name,
+                    description: artefactConfig[artefactName as IArtefactTypes].description,
+                    game: artefactConfig[artefactName as IArtefactTypes].game,
+                    suit: artefactConfig[artefactName as IArtefactTypes].suit,
+                    rank: artefactConfig[artefactName as IArtefactTypes].rank,
+                    points: artefactConfig[artefactName as IArtefactTypes].points,
+                    buff: artefactConfig[artefactName as IArtefactTypes].buff,
+                    validators: artefactConfig[artefactName as IArtefactTypes].validators,
+                    actions: artefactConfig[artefactName as IArtefactTypes].actions,
+                    stack: artefactConfig[artefactName as IArtefactTypes].stack,
                 }));
             }
         }
@@ -45,18 +44,20 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig, me
         for (const campMercenarySuit in mercenariesConfig[tier][i]) {
             if (Object.prototype.hasOwnProperty.call(mercenariesConfig[tier][i], campMercenarySuit)) {
                 path += campMercenarySuit + ` `;
-                name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
-                for (const campMercenaryCardProperty in mercenariesConfig[tier][i][campMercenarySuit]) {
-                    if (Object.prototype.hasOwnProperty
-                        .call(mercenariesConfig[tier][i][campMercenarySuit], campMercenaryCardProperty)) {
-                        if (campMercenaryCardProperty === `rank`) {
-                            name += `шевронов: ${mercenariesConfig[tier][i][campMercenarySuit].rank}, `;
-                        }
-                        if (campMercenaryCardProperty === `points`) {
-                            path += mercenariesConfig[tier][i][campMercenarySuit].points ?
-                                mercenariesConfig[tier][i][campMercenarySuit].points + ` ` : ``;
-                            name += `очков: ${mercenariesConfig[tier][i][campMercenarySuit].points ?
-                                mercenariesConfig[tier][i][campMercenarySuit].points + `) ` : `нет) `}`;
+                name += `(фракция: ${suitsConfig[campMercenarySuit as SuitTypes].suitName}, `;
+                for (const campMercenaryCardProperty in mercenariesConfig[tier][i][campMercenarySuit as SuitTypes]) {
+                    if (Object.prototype.hasOwnProperty.call(mercenariesConfig[tier][i][campMercenarySuit as
+                        SuitTypes], campMercenaryCardProperty)) {
+                        const mercenaryVariant: IMercenary | undefined =
+                            mercenariesConfig[tier][i][campMercenarySuit as SuitTypes];
+                        if (mercenaryVariant !== undefined) {
+                            if (campMercenaryCardProperty === `rank`) {
+                                name += `шевронов: ${mercenaryVariant.rank}, `;
+                            }
+                            if (campMercenaryCardProperty === `points`) {
+                                path += mercenaryVariant.points ? mercenaryVariant.points + ` ` : ``;
+                                name += `очков: ${mercenaryVariant.points ? mercenaryVariant.points + `) ` : `нет) `}`;
+                            }
                         }
                     }
                 }
@@ -144,7 +145,7 @@ export const CreateMercenaryCampCard = ({
     path,
     name,
     game = `thingvellir`,
-    variants
+    variants,
 }: ICreateMercenaryCampCard = {} as ICreateMercenaryCampCard): IMercenaryCampCard => ({
     type,
     tier,
@@ -155,7 +156,7 @@ export const CreateMercenaryCampCard = ({
 });
 
 export const IsArtefactDiscardCard = (card: DiscardCardTypes): card is IArtefactCampCard =>
-    (card as IArtefactCampCard).type === RusCardTypes.ARTEFACT;
+    (card as IArtefactCampCard).validators !== undefined;
 
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
@@ -171,4 +172,4 @@ export const IsArtefactCardNotMercenary = (card: IArtefactCampCard | IMercenaryC
     (card as IArtefactCampCard).suit !== undefined;
 
 export const IsMercenaryCard = (card: unknown): card is IMercenaryCampCard =>
-    (card as IMercenaryCampCard).variants !== undefined;
+    (card as IMercenaryCampCard).variants !== undefined && (card as IMercenaryCampCard).tier !== undefined;

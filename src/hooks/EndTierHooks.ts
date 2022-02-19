@@ -2,12 +2,8 @@ import { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
-import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
-import { HeroNames } from "../typescript_enums/enums";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { INext } from "../typescript_interfaces/game_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { PlayerCardsType } from "../typescript_types/card_types";
+import { HeroNames } from "../typescript/enums";
+import { IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
@@ -60,7 +56,7 @@ export const CheckEndTierOrder = (G: IMyGameState): void => {
             index: number =
                 cards.findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
         if (index !== -1) {
-            const suit: string | null = cards[index].suit;
+            const suit: SuitTypes | null = cards[index].suit;
             if (suit !== null) {
                 const yludCardIndex: number =
                     player.cards[suit].findIndex((card: PlayerCardsType): boolean =>

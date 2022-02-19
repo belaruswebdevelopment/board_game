@@ -2,11 +2,8 @@ import { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
-import { IStack } from "../typescript_interfaces/action_interfaces";
-import { LogTypes } from "../typescript_enums/enums";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { CampCardTypes, CampDeckCardTypes } from "../typescript_types/camp_card_types";
-import { TavernCardTypes } from "../typescript_types/card_types";
+import { LogTypes } from "../typescript/enums";
+import { CampCardTypes, CampDeckCardTypes, IMyGameState, IStack, TavernCardTypes } from "../typescript/interfaces";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**

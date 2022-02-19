@@ -11,12 +11,8 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
-import { BuffNames, LogTypes, RusCardTypes } from "../typescript_enums/enums";
-import { ICard } from "../typescript_interfaces/card_interfaces";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { CampDeckCardTypes } from "../typescript_types/camp_card_types";
-import { DiscardCardTypes, PickedCardType, PlayerCardsType } from "../typescript_types/card_types";
+import { BuffNames, LogTypes, RusCardTypes } from "../typescript/enums";
+import { CampDeckCardTypes, DiscardCardTypes, ICard, IMyGameState, IPublicPlayer, IVariant, PickedCardType, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
@@ -30,7 +26,8 @@ import { DiscardCardTypes, PickedCardType, PlayerCardsType } from "../typescript
  * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
+export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number):
+    void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         discardedCard: PlayerCardsType = player.cards[suit].splice(cardId, 1)[0];
     if (!isHeroCard(discardedCard)) {
@@ -93,7 +90,7 @@ export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId
  * @param ctx
  * @param suit Название фракции.
  */
-export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
+export const GetMjollnirProfitAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     AddBuffToPlayer(G, ctx, {
         name: BuffNames.SuitIdForMjollnir,
     }, suit);
@@ -159,31 +156,37 @@ export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void
  * @param ctx
  * @param suit Название фракции.
  */
-export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
+export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         pickedCard: PickedCardType = player.pickedCard;
     if (pickedCard !== null) {
         if (IsMercenaryCard(pickedCard)) {
             if (pickedCard.variants !== undefined) {
-                const mercenaryCard: ICard = CreateCard({
-                    type: RusCardTypes.MERCENARY,
-                    suit,
-                    rank: 1,
-                    points: pickedCard.variants[suit].points,
-                    name: pickedCard.name,
-                    tier: pickedCard.tier,
-                    path: pickedCard.path,
-                });
-                AddCardToPlayer(G, ctx, mercenaryCard);
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы 'Enlistment Mercenaries' завербовал наёмника '${mercenaryCard.name}'.`);
-                const cardIndex: number = player.campCards.findIndex((card: CampDeckCardTypes): boolean =>
-                    card.name === pickedCard.name);
-                player.campCards.splice(cardIndex, 1);
-                if (player.campCards.filter((card: CampDeckCardTypes): boolean =>
-                    IsMercenaryCard(card)).length) {
-                    AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
+                const cardVariants: IVariant | undefined = pickedCard.variants[suit];
+                if (cardVariants !== undefined) {
+                    const mercenaryCard: ICard = CreateCard({
+                        type: RusCardTypes.MERCENARY,
+                        suit,
+                        rank: 1,
+                        points: cardVariants.points,
+                        name: pickedCard.name,
+                        tier: pickedCard.tier,
+                        path: pickedCard.path,
+                    });
+                    AddCardToPlayer(G, ctx, mercenaryCard);
+                    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы 'Enlistment Mercenaries' завербовал наёмника '${mercenaryCard.name}'.`);
+                    const cardIndex: number =
+                        player.campCards.findIndex((card: CampDeckCardTypes): boolean =>
+                            card.name === pickedCard.name);
+                    player.campCards.splice(cardIndex, 1);
+                    if (player.campCards.filter((card: CampDeckCardTypes): boolean =>
+                        IsMercenaryCard(card)).length) {
+                        AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
+                    }
+                    CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
+                } else {
+                    // TODO Error!
                 }
-                CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
             } else {
                 AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
             }

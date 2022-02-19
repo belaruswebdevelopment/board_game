@@ -1,7 +1,7 @@
 import { isCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript_enums/enums";
+import { LogTypes } from "../typescript/enums";
 /**
  * <h3>Добавляет взятую карту в массив карт игрока.</h3>
  * <p>Применения:</p>

@@ -1,7 +1,7 @@
 import { AddPickHeroAction, DiscardTradingCoinAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/AutoActions";
 import { DraupnirScoring, HrafnsmerkiScoring, MjollnirScoring, SvalinnScoring } from "../score_helpers/ArtefactScoringHelpers";
-import { IArtefact, IArtefactConfig, IMercenaries } from "../typescript_interfaces/camp_card_interfaces";
-import { ArtefactNames, BuffNames, SuitNames } from "../typescript_enums/enums";
+import { ArtefactNames, BuffNames, SuitNames } from "../typescript/enums";
+import { IArtefact, IArtefactConfig, IMercenary, OptionalSuitPropertyTypes } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
 /**
@@ -256,7 +256,7 @@ const Vidofnir_Vedrfolnir: IArtefact = {
  * <li>Происходит при создании всех карт артефактов для кэмпа при инициализации игры.</li>
  * </ol>
  */
-export const mercenariesConfig: IMercenaries[][] = [
+export const mercenariesConfig: OptionalSuitPropertyTypes<IMercenary>[][] = [
     [
         {
             warrior: {

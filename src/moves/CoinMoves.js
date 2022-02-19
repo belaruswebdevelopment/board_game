@@ -1,8 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { UpgradeCoinAction } from "../actions/AutoActions";
 import { IsValidMove } from "../MoveValidator";
-import { Stages, SuitNames } from "../typescript_enums/enums";
-// TODO Add Place coins async
+import { Stages, SuitNames } from "../typescript/enums";
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>
  * <p>Применения:</p>
@@ -16,6 +15,7 @@ import { Stages, SuitNames } from "../typescript_enums/enums";
  * @returns
  */
 export const ClickBoardCoinMove = (G, ctx, coinId) => {
+    // TODO Add Place coins async
     const isValidMove = IsValidMove(G, ctx, Stages.Default2, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -26,14 +26,14 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
         player.handCoins[tempId] = player.boardCoins[coinId];
         player.boardCoins[coinId] = null;
     }
-    else if (player.selectedCoin !== undefined) {
+    else if (player.selectedCoin !== null) {
         const tempId = player.selectedCoin;
         player.boardCoins[coinId] = player.handCoins[tempId];
         player.handCoins[tempId] = null;
-        player.selectedCoin = undefined;
+        player.selectedCoin = null;
     }
     else {
-        // TODO Logging error because coin === null && player.selectedCoin === undefined must be checked by Validator
+        // TODO Logging error because coin === null && player.selectedCoin === null must be checked by Validator
     }
 };
 /**

@@ -2,8 +2,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { isActionDiscardCard, isCardNotActionAndNotNull } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { isHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript_enums/enums";
+import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 // TODO Add functions dock blocks
 export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
@@ -24,7 +25,7 @@ export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
                     && !(G.drawProfit === ConfigNames.DagdaAction && player.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
                     const last = player.cards[suit].length - 1;
-                    if (last !== -1 && player.cards[suit][last].type !== RusCardTypes.HERO) {
+                    if (last !== -1 && !isHeroCard(player.cards[suit][last])) {
                         DrawCard(data, boardCells, player.cards[suit][last], last, player, suit, MoveNames.DiscardCardMove, suit, last);
                     }
                 }
@@ -56,7 +57,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =>
                     if (Array.isArray(data)) {
                         isDrawRow = true;
                     }
-                    if (player.cards[suit][i].type !== RusCardTypes.HERO) {
+                    if (!isHeroCard(player.cards[suit][i])) {
                         isDrawRow = true;
                         DrawCard(data, playerCells, player.cards[suit][i], id, player, suit, MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
                     }
@@ -108,7 +109,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =
                 if (p !== Number(ctx.currentPlayer)) {
                     const player = G.publicPlayers[p];
                     if (player.cards[config.suit][i] !== undefined) {
-                        if (player.cards[config.suit][i].type !== RusCardTypes.HERO) {
+                        if (!isHeroCard(player.cards[config.suit][i])) {
                             isExit = false;
                             isDrawRow = true;
                             DrawCard(data, playersCells, player.cards[config.suit][i], i, player, config.suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, config.suit, p, i);
@@ -220,8 +221,14 @@ export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
                     const config = player.stack[0].config;
                     if (config !== undefined && config.drawName !== undefined) {
                         if (suit === ((_a = card.variants[suit]) === null || _a === void 0 ? void 0 : _a.suit)) {
-                            const value = (_b = card.variants[suit].points) !== null && _b !== void 0 ? _b : ``;
-                            DrawSuit(data, boardCells, suit, config.drawName, value, player, MoveNames.PlaceEnlistmentMercenariesMove);
+                            const cardVariants = card.variants[suit];
+                            if (cardVariants !== undefined) {
+                                const value = (_b = cardVariants.points) !== null && _b !== void 0 ? _b : ``;
+                                DrawSuit(data, boardCells, suit, config.drawName, value, player, MoveNames.PlaceEnlistmentMercenariesMove);
+                            }
+                            else {
+                                // TODO Error?
+                            }
                         }
                     }
                 }

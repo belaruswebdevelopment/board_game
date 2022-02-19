@@ -1,5 +1,5 @@
 import { BoardProps } from "boardgame.io/react";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
+import { IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -12,7 +12,14 @@ import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
  * @returns Дебаг панель.
  */
 export const DrawDebugData = (data: BoardProps<IMyGameState>): JSX.Element | null => {
-    const debugData: { G: { [key: string]: unknown; }, ctx: { [key: string]: unknown; }; } | undefined =
+    const debugData: {
+        G: {
+            [key: string]: unknown,
+        },
+        ctx: {
+            [key: string]: unknown,
+        };
+    } | undefined =
         GetDebugData(data);
     if (debugData === undefined) {
         return null;
@@ -36,8 +43,10 @@ export const DrawDebugData = (data: BoardProps<IMyGameState>): JSX.Element | nul
  * @param obj Информация.
  * @returns
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const DrawObjectData = (obj: { [key: string]: any; }): JSX.Element => {
+const DrawObjectData = (obj: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any,
+}): JSX.Element => {
     const values: JSX.Element[] = [];
     for (const [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {
@@ -94,7 +103,10 @@ const DrawObjectData = (obj: { [key: string]: any; }): JSX.Element => {
  * @param data Глобальные параметры.
  * @returns Данные для отрисовки дебаг информации.
  */
-const GetDebugData = (data: BoardProps<IMyGameState>): { ctx: Record<string, unknown>, G: Record<string, unknown>; }
+const GetDebugData = (data: BoardProps<IMyGameState>): {
+    ctx: Record<string, unknown>,
+    G: Record<string, unknown>,
+}
     | undefined => {
     if (data.G.debug) {
         const debugData: { G: { [key: string]: unknown; }, ctx: { [key: string]: unknown; }; } = {

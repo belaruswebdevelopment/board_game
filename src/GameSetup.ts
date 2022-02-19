@@ -12,16 +12,7 @@ import { suitsConfig } from "./data/SuitData";
 import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
-import { IAverageCard, IBotData } from "./typescript_interfaces/bot_interfaces";
-import { ICard } from "./typescript_interfaces/card_interfaces";
-import { ICoin } from "./typescript_interfaces/coin_interfaces";
-import { IDistinctions } from "./typescript_interfaces/distinction_interfaces";
-import { IExpansions, ILogData, IMyGameState } from "./typescript_interfaces/game_data_interfaces";
-import { IHeroCard } from "./typescript_interfaces/hero_card_interfaces";
-import { IPlayers, IPublicPlayer } from "./typescript_interfaces/player_interfaces";
-import { IPriority } from "./typescript_interfaces/priority_interfaces";
-import { CampDeckCardTypes } from "./typescript_types/camp_card_types";
-import { DeckCardTypes } from "./typescript_types/card_types";
+import { CampDeckCardTypes, DeckCardTypes, DistinctionTypes, IBotData, ICard, ICoin, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPriority, IPublicPlayer, OptionalSuitPropertyTypes, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -52,10 +43,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         // TODO Discard cards must be hidden from users?
         discardCardsDeck: DeckCardTypes[] = [],
         campDecks: CampDeckCardTypes[][] = [],
-        distinctions: IDistinctions = {};
+        distinctions: OptionalSuitPropertyTypes<DistinctionTypes> = {};
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            distinctions[suit] = null;
+            distinctions[suit as SuitTypes] = null;
         }
     }
     const winner: number[] = [],
@@ -116,14 +107,14 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             isInitial: false,
             isTriggerTrading: false,
         });
-    const averageCards: IAverageCard = {},
+    const averageCards: OptionalSuitPropertyTypes<ICard> = {},
         initHandCoinsId: number[] = Array(players[0].boardCoins.length).fill(undefined)
             .map((item: undefined, index: number): number => index),
         initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder: number[][] = [];
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
+            averageCards[suit as SuitTypes] = GetAverageSuitCard(suitsConfig[suit as SuitTypes], {
                 players: ctx.numPlayers,
                 tier: 0,
             });
@@ -139,7 +130,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         deckLength: decks[0].length,
     };
     return {
-        averageCards,
+        averageCards: averageCards as RequiredSuitPropertyTypes<ICard>,
         botData,
         camp,
         campDecks,
@@ -151,7 +142,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         additionalCardsDeck,
         discardCampCardsDeck,
         discardCardsDeck,
-        distinctions,
+        distinctions: distinctions as RequiredSuitPropertyTypes<DistinctionTypes>,
         drawProfit,
         drawSize,
         exchangeOrder,

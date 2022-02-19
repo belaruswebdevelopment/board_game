@@ -1,6 +1,6 @@
 import { suitsConfig } from "../data/SuitData";
+import { isHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { RusCardTypes } from "../typescript_enums/enums";
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
  * <p>Применения:</p>
@@ -23,7 +23,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G, ctx, id
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     if (validators.discardCard.suit !== suit) {
                         const player = G.publicPlayers[Number(ctx.currentPlayer)], last = player.cards[suit].length - 1;
-                        if (last >= 0 && player.cards[suit][last].type !== RusCardTypes.HERO) {
+                        if (last >= 0 && !isHeroCard(player.cards[suit][last])) {
                             cardsToDiscard.push(player.cards[suit][last]);
                         }
                     }

@@ -1,8 +1,5 @@
 import { IsMercenaryCard } from "../Camp";
-import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { PlayerCardsType } from "../typescript_types/card_types";
-import { CoinType } from "../typescript_types/coin_types";
+import { CoinType, IBuffs, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
 export const DraupnirScoring = (player?: IPublicPlayer): number => {
@@ -19,7 +16,7 @@ export const HrafnsmerkiScoring = (player?: IPublicPlayer): number => {
         let score = 0;
         for (const suit in player.cards) {
             if (Object.prototype.hasOwnProperty.call(player.cards, suit)) {
-                score += player.cards[suit].filter((card: PlayerCardsType): boolean =>
+                score += player.cards[suit as SuitTypes].filter((card: PlayerCardsType): boolean =>
                     IsMercenaryCard(card)).length * 5;
             }
         }
@@ -31,7 +28,7 @@ export const HrafnsmerkiScoring = (player?: IPublicPlayer): number => {
 
 export const MjollnirScoring = (player?: IPublicPlayer): number => {
     if (player !== undefined) {
-        const suit: string | undefined = player.buffs.find((buff: IBuffs): boolean =>
+        const suit: SuitTypes | undefined = player.buffs.find((buff: IBuffs): boolean =>
             buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
         if (suit !== undefined) {
             return player.cards[suit].reduce(TotalRank, 0) * 2;

@@ -1,14 +1,8 @@
 import { Ctx } from "boardgame.io";
 import { IsMercenaryCard } from "../Camp";
 import { AddDataToLog } from "../Logging";
-import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
-import { HeroNames, LogTypes, Phases, Stages } from "../typescript_enums/enums";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { INext } from "../typescript_interfaces/game_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { CampDeckCardTypes } from "../typescript_types/camp_card_types";
-import { PlayerCardsType } from "../typescript_types/card_types";
-import { CoinType } from "../typescript_types/coin_types";
+import { HeroNames, LogTypes, Phases, Stages } from "../typescript/enums";
+import { CampDeckCardTypes, CoinType, IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 
 /**

@@ -1,6 +1,4 @@
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IValidatorsConfig } from "../typescript_interfaces/hero_validator_interfaces";
-import { CardsHasStackValidators } from "../typescript_types/card_types";
+import { CardsHasStackValidators, IMyGameState, IValidatorsConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>

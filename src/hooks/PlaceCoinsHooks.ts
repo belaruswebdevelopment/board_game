@@ -4,11 +4,7 @@ import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
-import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
-import { CoinType } from "../typescript_types/coin_types";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { INext } from "../typescript_interfaces/game_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { CoinType, IBuffs, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>

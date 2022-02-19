@@ -3,15 +3,10 @@ import { BoardProps } from "boardgame.io/react";
 import { isActionDiscardCard, isCardNotActionAndNotNull } from "../Card";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { isHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { IConfig } from "../typescript_interfaces/action_interfaces";
-import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
-import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript_enums/enums";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { CampCardTypes, CampDeckCardTypes } from "../typescript_types/camp_card_types";
-import { DeckCardTypes, DiscardCardTypes, PickedCardType, TavernCardTypes } from "../typescript_types/card_types";
-import { CoinType } from "../typescript_types/coin_types";
+import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
+import { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, DiscardCardTypes, IBuffs, IConfig, IMyGameState, IPublicPlayer, IVariant, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
 // TODO Add functions dock blocks
@@ -38,10 +33,10 @@ export const DiscardCardFromBoardProfit = (G: IMyGameState, ctx: Ctx, data: Boar
                 if (suit !== config.suit
                     && !(G.drawProfit === ConfigNames.DagdaAction && player.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
-                    const last: number = player.cards[suit].length - 1;
-                    if (last !== -1 && player.cards[suit][last].type !== RusCardTypes.HERO) {
-                        DrawCard(data, boardCells, player.cards[suit][last], last, player, suit,
-                            MoveNames.DiscardCardMove, suit, last);
+                    const last: number = player.cards[suit as SuitTypes].length - 1;
+                    if (last !== -1 && !isHeroCard(player.cards[suit as SuitTypes][last])) {
+                        DrawCard(data, boardCells, player.cards[suit as SuitTypes][last], last,
+                            player, suit as SuitTypes, MoveNames.DiscardCardMove, suit, last);
                     }
                 }
             }
@@ -58,9 +53,9 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             playerHeaders.push(
-                <th className={`${suitsConfig[suit].suitColor}`}
-                    key={`${player.nickname} ${suitsConfig[suit].suitName}`}>
-                    <span style={Styles.Suits(suit)} className="bg-suit-icon">
+                <th className={`${suitsConfig[suit as SuitTypes].suitColor}`}
+                    key={`${player.nickname} ${suitsConfig[suit as SuitTypes].suitName}`}>
+                    <span style={Styles.Suits(suit as SuitTypes)} className="bg-suit-icon">
 
                     </span>
                 </th>
@@ -79,15 +74,16 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
         for (const suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 id = i + j;
-                if (player.cards[suit][i] !== undefined) {
+                if (player.cards[suit as SuitTypes][i] !== undefined) {
                     isExit = false;
                     if (Array.isArray(data)) {
                         isDrawRow = true;
                     }
-                    if (player.cards[suit][i].type !== RusCardTypes.HERO) {
+                    if (!isHeroCard(player.cards[suit as SuitTypes][i])) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, player.cards[suit][i], id, player, suit,
-                            MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
+                        DrawCard(data, playerCells, player.cards[suit as SuitTypes][i], id, player,
+                            suit as SuitTypes, MoveNames.DiscardCardFromPlayerBoardMove, suit,
+                            i);
                     } else {
                         playerCells.push(
                             <td key={`${player.nickname} empty card ${id}`}>
@@ -134,12 +130,12 @@ export const DiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
     for (let j = 0; j < G.drawSize; j++) {
         const card: TavernCardTypes = G.taverns[G.currentTavern][j];
         if (card !== null) {
-            let suit: null | string = null;
+            let suit: null | SuitTypes = null;
             if (isCardNotActionAndNotNull(card)) {
                 suit = card.suit;
             }
             DrawCard(data, boardCells, card, j,
-                G.publicPlayers[Number(ctx.currentPlayer)], suit,
+                G.publicPlayers[Number(ctx.currentPlayer)], suit as SuitTypes,
                 MoveNames.DiscardCard2PlayersMove, j);
         }
     }
@@ -154,9 +150,9 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, 
         for (let p = 0; p < G.publicPlayers.length; p++) {
             if (p !== Number(ctx.currentPlayer)) {
                 playersHeaders.push(
-                    <th className={`${suitsConfig[config.suit].suitColor} discard suit`}
-                        key={`${G.publicPlayers[p].nickname} ${suitsConfig[config.suit].suitName}`}>
-                        <span style={Styles.Suits(config.suit)} className="bg-suit-icon">
+                    <th className={`${suitsConfig[config.suit as SuitTypes].suitColor} discard suit`}
+                        key={`${G.publicPlayers[p].nickname} ${suitsConfig[config.suit as SuitTypes].suitName}`}>
+                        <span style={Styles.Suits(config.suit as SuitTypes)} className="bg-suit-icon">
                             {p + 1}
                         </span>
                     </th>
@@ -171,13 +167,13 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, 
             for (let p = 0; p < G.publicPlayers.length; p++) {
                 if (p !== Number(ctx.currentPlayer)) {
                     const player: IPublicPlayer = G.publicPlayers[p];
-                    if (player.cards[config.suit][i] !== undefined) {
-                        if (player.cards[config.suit][i].type !== RusCardTypes.HERO) {
+                    if (player.cards[config.suit as SuitTypes][i] !== undefined) {
+                        if (!isHeroCard(player.cards[config.suit as SuitTypes][i])) {
                             isExit = false;
                             isDrawRow = true;
-                            DrawCard(data, playersCells, player.cards[config.suit][i], i,
-                                player, config.suit, MoveNames.DiscardSuitCardFromPlayerBoardMove,
-                                config.suit, p, i);
+                            DrawCard(data, playersCells, player.cards[config.suit as SuitTypes][i],
+                                i, player, config.suit as SuitTypes,
+                                MoveNames.DiscardSuitCardFromPlayerBoardMove, config.suit, p, i);
                         }
                     } else {
                         playersCells.push(
@@ -218,7 +214,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, data: Board
     boardCells: JSX.Element[]): void => {
     for (let j = 0; j < 3; j++) {
         const card: DeckCardTypes = G.decks[1][j];
-        let suit: null | string = null;
+        let suit: null | SuitTypes = null;
         if (isCardNotActionAndNotNull(card)) {
             suit = card.suit;
         }
@@ -244,12 +240,12 @@ export const GetMjollnirProfitProfit = (G: IMyGameState, ctx: Ctx, data: BoardPr
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-            if (player.cards[suit].length) {
+            if (player.cards[suit as SuitTypes].length) {
                 const config: IConfig | undefined = player.stack[0].config;
                 if (config !== undefined && config.drawName !== undefined) {
                     const value: number | string =
-                        player.cards[suit].reduce(TotalRank, 0) * 2;
-                    DrawSuit(data, boardCells, suit, config.drawName, value, player,
+                        player.cards[suit as SuitTypes].reduce(TotalRank, 0) * 2;
+                    DrawSuit(data, boardCells, suit as SuitTypes, config.drawName, value, player,
                         MoveNames.GetMjollnirProfitMove);
                 }
             }
@@ -273,7 +269,7 @@ export const PickDiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProp
     boardCells: JSX.Element[]): void => {
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
         const card: DiscardCardTypes = G.discardCardsDeck[j];
-        let suit: null | string = null;
+        let suit: null | SuitTypes = null;
         if (!isActionDiscardCard(card)) {
             suit = card.suit;
         }
@@ -306,8 +302,9 @@ export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMy
                             moveName = null;
                             break;
                     }
-                    const value: number | string = player.stack[0].variants?.[suit].points ?? ``;
-                    DrawSuit(data, boardCells, suit, config.drawName, value, player, moveName);
+                    const value: number | string = player.stack[0].variants?.[suit as SuitTypes].points ?? ``;
+                    DrawSuit(data, boardCells, suit as SuitTypes, config.drawName, value, player,
+                        moveName);
                 }
             }
         }
@@ -324,10 +321,15 @@ export const PlaceEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
                 if (card.variants !== undefined) {
                     const config: IConfig | undefined = player.stack[0].config;
                     if (config !== undefined && config.drawName !== undefined) {
-                        if (suit === card.variants[suit]?.suit) {
-                            const value: number | string = card.variants[suit].points ?? ``;
-                            DrawSuit(data, boardCells, suit, config.drawName, value, player,
-                                MoveNames.PlaceEnlistmentMercenariesMove);
+                        if (suit === card.variants[suit as SuitTypes]?.suit) {
+                            const cardVariants: IVariant | undefined = card.variants[suit as SuitTypes];
+                            if (cardVariants !== undefined) {
+                                const value: number | string = cardVariants.points ?? ``;
+                                DrawSuit(data, boardCells, suit as SuitTypes, config.drawName, value, player,
+                                    MoveNames.PlaceEnlistmentMercenariesMove);
+                            } else {
+                                // TODO Error?
+                            }
                         }
                     }
                 }

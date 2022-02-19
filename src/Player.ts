@@ -2,12 +2,8 @@ import { Ctx } from "boardgame.io";
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
-import { IBuffs } from "./typescript_interfaces/player_buff_interfaces";
-import { Phases } from "./typescript_enums/enums";
-import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
-import { IPlayerCards } from "./typescript_interfaces/interfaces";
-import { ICreatePublicPlayer, IPlayer, IPublicPlayer } from "./typescript_interfaces/player_interfaces";
-import { IPriority } from "./typescript_interfaces/priority_interfaces";
+import { Phases } from "./typescript/enums";
+import { IBuffs, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, OptionalSuitPropertyTypes, PlayerCardsType, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -38,15 +34,15 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  * @returns Публичные данные игрока.
  */
 export const BuildPublicPlayer = (nickname: string, priority: IPriority): IPublicPlayer => {
-    const cards: IPlayerCards = {};
+    const cards: OptionalSuitPropertyTypes<PlayerCardsType[]> = {};
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            cards[suit] = [];
+            cards[suit as SuitTypes] = [];
         }
     }
     return CreatePublicPlayer({
         nickname,
-        cards: cards,
+        cards: cards as RequiredSuitPropertyTypes<PlayerCardsType[]>,
         handCoins: BuildCoins(initialPlayerCoinsConfig,
             { isInitial: true, isTriggerTrading: false }),
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
@@ -132,7 +128,7 @@ const CreatePublicPlayer = ({
     stack = [],
     priority,
     buffs = [],
-    selectedCoin,
+    selectedCoin = null,
     pickedCard = null,
 }: ICreatePublicPlayer = {} as ICreatePublicPlayer): IPublicPlayer => ({
     actionsNum,

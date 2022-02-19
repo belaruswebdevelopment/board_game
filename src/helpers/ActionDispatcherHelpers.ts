@@ -1,8 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { AddPickHeroAction, DiscardTradingCoinAction, GetClosedCoinIntoPlayerHandAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "../actions/AutoActions";
-import { IAction } from "../typescript_interfaces/action_interfaces";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IActionFunctionTypes } from "../typescript_types/function_types";
+import { IAction, IActionFunctionTypes, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>

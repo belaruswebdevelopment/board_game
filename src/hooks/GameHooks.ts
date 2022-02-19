@@ -1,10 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { IsMercenaryCard } from "../Camp";
 import { ScoreWinner } from "../Score";
-import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
-import { CampDeckCardTypes } from "../typescript_types/camp_card_types";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { CampDeckCardTypes, IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 export const CheckEndGame = (G: IMyGameState): boolean | void => {
     if (G.tierToEnd === 0) {

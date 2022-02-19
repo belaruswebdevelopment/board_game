@@ -3,12 +3,8 @@ import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { IConfig } from "../typescript_interfaces/action_interfaces";
-import { LogTypes } from "../typescript_enums/enums";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { PlayerCardsType } from "../typescript_types/card_types";
-import { CoinType } from "../typescript_types/coin_types";
+import { LogTypes } from "../typescript/enums";
+import { CoinType, IConfig, IMyGameState, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
 
 /**
@@ -45,7 +41,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: string, playerId: number, cardId: number):
+export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, playerId: number, cardId: number):
     void => {
     // TODO Rework it for players and fix it for bots?
     // Todo ctx.playerID === playerId???

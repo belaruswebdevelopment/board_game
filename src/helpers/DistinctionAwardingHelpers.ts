@@ -3,11 +3,8 @@ import { CreateCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { ICard } from "../typescript_interfaces/card_interfaces";
-import { CoinType } from "../typescript_types/coin_types";
-import { CardNames, LogTypes, SuitNames } from "../typescript_enums/enums";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { CardNames, LogTypes, SuitNames } from "../typescript/enums";
+import { CoinType, ICard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 

@@ -1,5 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypes } from "./typescript_enums/enums";
+import { RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты кэмпа из конфига.</h3>
  * <p>Применения:</p>
@@ -14,22 +14,22 @@ import { RusCardTypes } from "./typescript_enums/enums";
  */
 export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
     const campCards = [];
-    for (const campArtefactCard in artefactConfig) {
-        if (Object.prototype.hasOwnProperty.call(artefactConfig, campArtefactCard)) {
-            if (artefactConfig[campArtefactCard].tier === tier) {
+    for (const artefactName in artefactConfig) {
+        if (Object.prototype.hasOwnProperty.call(artefactConfig, artefactName)) {
+            if (artefactConfig[artefactName].tier === tier) {
                 campCards.push(CreateArtefactCampCard({
                     tier,
-                    path: artefactConfig[campArtefactCard].name,
-                    name: artefactConfig[campArtefactCard].name,
-                    description: artefactConfig[campArtefactCard].description,
-                    game: artefactConfig[campArtefactCard].game,
-                    suit: artefactConfig[campArtefactCard].suit,
-                    rank: artefactConfig[campArtefactCard].rank,
-                    points: artefactConfig[campArtefactCard].points,
-                    buff: artefactConfig[campArtefactCard].buff,
-                    validators: artefactConfig[campArtefactCard].validators,
-                    actions: artefactConfig[campArtefactCard].actions,
-                    stack: artefactConfig[campArtefactCard].stack,
+                    path: artefactConfig[artefactName].name,
+                    name: artefactConfig[artefactName].name,
+                    description: artefactConfig[artefactName].description,
+                    game: artefactConfig[artefactName].game,
+                    suit: artefactConfig[artefactName].suit,
+                    rank: artefactConfig[artefactName].rank,
+                    points: artefactConfig[artefactName].points,
+                    buff: artefactConfig[artefactName].buff,
+                    validators: artefactConfig[artefactName].validators,
+                    actions: artefactConfig[artefactName].actions,
+                    stack: artefactConfig[artefactName].stack,
                 }));
             }
         }
@@ -41,16 +41,16 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
                 path += campMercenarySuit + ` `;
                 name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
                 for (const campMercenaryCardProperty in mercenariesConfig[tier][i][campMercenarySuit]) {
-                    if (Object.prototype.hasOwnProperty
-                        .call(mercenariesConfig[tier][i][campMercenarySuit], campMercenaryCardProperty)) {
-                        if (campMercenaryCardProperty === `rank`) {
-                            name += `шевронов: ${mercenariesConfig[tier][i][campMercenarySuit].rank}, `;
-                        }
-                        if (campMercenaryCardProperty === `points`) {
-                            path += mercenariesConfig[tier][i][campMercenarySuit].points ?
-                                mercenariesConfig[tier][i][campMercenarySuit].points + ` ` : ``;
-                            name += `очков: ${mercenariesConfig[tier][i][campMercenarySuit].points ?
-                                mercenariesConfig[tier][i][campMercenarySuit].points + `) ` : `нет) `}`;
+                    if (Object.prototype.hasOwnProperty.call(mercenariesConfig[tier][i][campMercenarySuit], campMercenaryCardProperty)) {
+                        const mercenaryVariant = mercenariesConfig[tier][i][campMercenarySuit];
+                        if (mercenaryVariant !== undefined) {
+                            if (campMercenaryCardProperty === `rank`) {
+                                name += `шевронов: ${mercenaryVariant.rank}, `;
+                            }
+                            if (campMercenaryCardProperty === `points`) {
+                                path += mercenaryVariant.points ? mercenaryVariant.points + ` ` : ``;
+                                name += `очков: ${mercenaryVariant.points ? mercenaryVariant.points + `) ` : `нет) `}`;
+                            }
                         }
                     }
                 }
@@ -115,7 +115,7 @@ export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, pat
  * @param variants Варианты расположения карты наёмника.
  * @returns Карта кэмпа наёмник.
  */
-export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, path, name, game = `thingvellir`, variants } = {}) => ({
+export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, path, name, game = `thingvellir`, variants, } = {}) => ({
     type,
     tier,
     path,
@@ -123,7 +123,7 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, p
     game,
     variants,
 });
-export const IsArtefactDiscardCard = (card) => card.type === RusCardTypes.ARTEFACT;
+export const IsArtefactDiscardCard = (card) => card.validators !== undefined;
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>
@@ -135,5 +135,5 @@ export const IsArtefactDiscardCard = (card) => card.type === RusCardTypes.ARTEFA
  * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
  */
 export const IsArtefactCardNotMercenary = (card) => card.suit !== undefined;
-export const IsMercenaryCard = (card) => card.variants !== undefined;
+export const IsMercenaryCard = (card) => card.variants !== undefined && card.tier !== undefined;
 //# sourceMappingURL=Camp.js.map

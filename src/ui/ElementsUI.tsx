@@ -2,16 +2,8 @@ import { BoardProps } from "boardgame.io/react";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { LogTypes, MoveNames, RusCardTypes } from "../typescript_enums/enums";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IHeroCard } from "../typescript_interfaces/hero_card_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { IBackground } from "../typescript_interfaces/style_interfaces";
-import { CampDeckCardTypes } from "../typescript_types/camp_card_types";
-import { DeckCardTypes } from "../typescript_types/card_types";
-import { CoinType } from "../typescript_types/coin_types";
-import { IMoveFunctionTypes } from "../typescript_types/function_types";
-import { ArgsTypes } from "../typescript_types/types";
+import { LogTypes, MoveNames, RusCardTypes } from "../typescript/enums";
+import { ArgsTypes, CampDeckCardTypes, CoinType, DeckCardTypes, IBackground, IHeroCard, IMoveFunctionTypes, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -25,13 +17,13 @@ import { ArgsTypes } from "../typescript_types/types";
  * @param key Ключ.
  * @param name Имя кнопки.
  * @param player Игрок.
- * @param actionName Название действия.
+ * @param moveName Название действия.
  * @param args Аргументы действия.
  */
 export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], key: string, name: string,
-    player: IPublicPlayer, actionName?: string, ...args: ArgsTypes): void => {
+    player: IPublicPlayer, moveName?: string, ...args: ArgsTypes): void => {
     let action: IMoveFunctionTypes;
-    switch (actionName) {
+    switch (moveName) {
         case MoveNames.StartEnlistmentMercenariesMove:
             action = data.moves.StartEnlistmentMercenariesMove;
             break;
@@ -64,17 +56,17 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param id Id карты.
  * @param player Игрок.
  * @param suit Название фракции.
- * @param actionName Название действия.
+ * @param moveName Название действия.
  * @param args Аргументы действия.
  */
 export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[],
-    card: DeckCardTypes | CampDeckCardTypes | IHeroCard, id: number, player: IPublicPlayer | null, suit?: string | null,
-    actionName?: string, ...args: ArgsTypes): void => {
+    card: DeckCardTypes | CampDeckCardTypes | IHeroCard, id: number, player: IPublicPlayer | null,
+    suit?: SuitTypes | null, moveName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         tdClasses = ``,
         spanClasses = ``,
         action: IMoveFunctionTypes;
-    switch (actionName) {
+    switch (moveName) {
         case MoveNames.ClickHeroCardMove:
             action = data.moves.ClickHeroCardMove;
             break;
@@ -140,7 +132,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         }
         spanClasses = `bg-card`;
     }
-    if (actionName !== null) {
+    if (moveName !== null) {
         tdClasses += ` cursor-pointer`;
     }
     let description = ``,
@@ -178,18 +170,18 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param player Игрок.
  * @param coinClasses Дополнительный классы для монеты.
  * @param additionalParam Дополнительные параметры.
- * @param actionName Название действия.
+ * @param moveName Название действия.
  * @param args Аргументы действия.
  */
 export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], type: string, coin: CoinType,
     id: number, player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
-    actionName?: string, ...args: ArgsTypes): void => {
+    moveName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         span: JSX.Element | number | null = null,
         tdClasses = `bg-yellow-300`,
         spanClasses = ``,
         action: IMoveFunctionTypes;
-    switch (actionName) {
+    switch (moveName) {
         case MoveNames.ClickBoardCoinMove:
             action = data.moves.ClickBoardCoinMove;
             break;
@@ -214,7 +206,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         default:
             action = null;
     }
-    if (actionName !== null) {
+    if (moveName !== null) {
         tdClasses += ` cursor-pointer`;
     }
     if (type === `market`) {
@@ -267,10 +259,10 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     );
 };
 
-export const DrawSuit = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], suit: string, key: string,
-    value: number | string, player: IPublicPlayer | null, actionName: string | null): void => {
+export const DrawSuit = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], suit: SuitTypes, key: string,
+    value: number | string, player: IPublicPlayer | null, moveName: string | null): void => {
     let action: IMoveFunctionTypes;
-    switch (actionName) {
+    switch (moveName) {
         case MoveNames.GetMjollnirProfitMove:
             action = data.moves.GetMjollnirProfitMove;
             break;

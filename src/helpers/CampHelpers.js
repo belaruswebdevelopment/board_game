@@ -1,7 +1,7 @@
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern, tavernsConfig } from "../Tavern";
-import { LogTypes } from "../typescript_enums/enums";
+import { LogTypes } from "../typescript/enums";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
  * <h3>Добавляет действия в стэк при старте хода в фазе 'brisingamensEndGame'.</h3>

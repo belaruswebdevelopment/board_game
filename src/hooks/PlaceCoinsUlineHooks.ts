@@ -1,8 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { CheckPlayersBasicOrder } from "../Player";
-import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
+import { IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoinsUline'.</h3>

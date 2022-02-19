@@ -1,5 +1,5 @@
-import { RusCardTypes } from "./typescript_enums/enums";
-import { ICreateHero, IHeroCard, IHeroConfig } from "./typescript_interfaces/hero_card_interfaces";
+import { RusCardTypes } from "./typescript/enums";
+import { ICreateHero, IHeroCard, IHeroConfig, IHeroTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -14,20 +14,20 @@ import { ICreateHero, IHeroCard, IHeroConfig } from "./typescript_interfaces/her
  */
 export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig): IHeroCard[] => {
     const heroes: IHeroCard[] = [];
-    for (const hero in heroesConfig) {
-        if (configOptions.includes(heroesConfig[hero].game)) {
+    for (const heroName in heroesConfig) {
+        if (configOptions.includes(heroesConfig[heroName as IHeroTypes].game)) {
             heroes.push(CreateHero({
                 type: RusCardTypes.HERO,
-                name: heroesConfig[hero].name,
-                description: heroesConfig[hero].description,
-                game: heroesConfig[hero].game,
-                suit: heroesConfig[hero].suit,
-                rank: heroesConfig[hero].rank,
-                points: heroesConfig[hero].points,
-                buff: heroesConfig[hero].buff,
-                validators: heroesConfig[hero].validators,
-                actions: heroesConfig[hero].actions,
-                stack: heroesConfig[hero].stack,
+                name: heroesConfig[heroName as IHeroTypes].name,
+                description: heroesConfig[heroName as IHeroTypes].description,
+                game: heroesConfig[heroName as IHeroTypes].game,
+                suit: heroesConfig[heroName as IHeroTypes].suit,
+                rank: heroesConfig[heroName as IHeroTypes].rank,
+                points: heroesConfig[heroName as IHeroTypes].points,
+                buff: heroesConfig[heroName as IHeroTypes].buff,
+                validators: heroesConfig[heroName as IHeroTypes].validators,
+                actions: heroesConfig[heroName as IHeroTypes].actions,
+                stack: heroesConfig[heroName as IHeroTypes].stack,
             }));
         }
     }
@@ -83,5 +83,4 @@ export const CreateHero = ({
     stack,
 });
 
-export const isHeroCard = (card: unknown): card is IHeroCard =>
-    (card as IHeroCard).validators !== undefined;
+export const isHeroCard = (card: unknown): card is IHeroCard => (card as IHeroCard).active !== undefined;

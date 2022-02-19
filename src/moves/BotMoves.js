@@ -1,6 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { IsValidMove } from "../MoveValidator";
-import { Stages } from "../typescript_enums/enums";
+import { Stages } from "../typescript/enums";
 /**
  * <h3>Выкладка монет ботами.</h3>
  * <p>Применения:</p>

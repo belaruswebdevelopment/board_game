@@ -10,13 +10,8 @@ import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { CreateHero, isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript_enums/enums";
-import { IVariants } from "../typescript_interfaces/action_interfaces";
-import { ICard } from "../typescript_interfaces/card_interfaces";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IHeroCard } from "../typescript_interfaces/hero_card_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { PlayerCardsType } from "../typescript_types/card_types";
+import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
+import { ICard, IHeroCard, IMyGameState, IPublicPlayer, IVariant, PlayerCardsType, RequiredSuitPropertyTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
@@ -30,7 +25,7 @@ import { PlayerCardsType } from "../typescript_types/card_types";
  * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: string, cardId: number): void => {
+export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         pickedCard: PlayerCardsType = player.cards[suit].splice(cardId, 1)[0];
     if (!isHeroCard(pickedCard)) {
@@ -56,9 +51,9 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
  * @param ctx
  * @param suit Название фракции.
  */
-export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
+export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        playerVariants: IVariants | undefined = player.stack[0].variants;
+        playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = player.stack[0].variants;
     if (playerVariants !== undefined) {
         const olwinDouble: ICard = CreateCard({
             suit,
@@ -90,9 +85,9 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: string): 
  * @param config Конфиг действий героя.
  * @param suit Название фракции.
  */
-export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
+export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        playerVariants: IVariants | undefined = player.stack[0].variants;
+        playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = player.stack[0].variants;
     if (playerVariants !== undefined) {
         const heroCard: IHeroCard = CreateHero({
             suit,
@@ -122,9 +117,9 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: string): void 
  * @param config Конфиг действий героя.
  * @param suit Название фракции.
  */
-export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: string): void => {
+export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        playerVariants: IVariants | undefined = player.stack[0].variants;
+        playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = player.stack[0].variants;
     if (playerVariants !== undefined) {
         const heroCard: IHeroCard = CreateHero({
             suit,

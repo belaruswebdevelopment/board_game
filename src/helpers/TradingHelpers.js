@@ -1,6 +1,6 @@
 import { UpgradeCoinAction } from "../actions/AutoActions";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript_enums/enums";
+import { LogTypes } from "../typescript/enums";
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>

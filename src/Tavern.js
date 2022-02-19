@@ -1,5 +1,5 @@
 import { AddDataToLog } from "./Logging";
-import { LogTypes } from "./typescript_enums/enums";
+import { LogTypes } from "./typescript/enums";
 /**
  * <h3>Проверяет все ли карты выбраны игроками в текущей таверне.</h1>
  * <p>Применения:</p>
@@ -54,7 +54,7 @@ export const RefillTaverns = (G) => {
     for (let i = 0; i < G.tavernsNum; i++) {
         const refillDeck = G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
         if (refillDeck.length === G.drawSize) {
-            G.taverns[i] = refillDeck;
+            G.taverns[i].splice(0, G.taverns[i].length, ...refillDeck);
             AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[i].name} заполнена новыми картами.`);
         }
         else {

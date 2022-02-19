@@ -2,7 +2,7 @@ import { ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { LogTypes, Stages } from "../typescript_enums/enums";
+import { LogTypes, Stages } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
  * <p>Применения:</p>

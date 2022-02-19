@@ -1,7 +1,7 @@
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
-import { Phases } from "./typescript_enums/enums";
+import { Phases } from "./typescript/enums";
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
  * <p>Применения:</p>
@@ -106,7 +106,7 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * @param pickedCard Выбранная карта.
  * @returns Публичные данные игрока.
  */
-const CreatePublicPlayer = ({ actionsNum = 0, nickname, cards, heroes = [], campCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin, pickedCard = null, } = {}) => ({
+const CreatePublicPlayer = ({ actionsNum = 0, nickname, cards, heroes = [], campCards = [], handCoins, boardCoins, stack = [], priority, buffs = [], selectedCoin = null, pickedCard = null, } = {}) => ({
     actionsNum,
     nickname,
     cards,

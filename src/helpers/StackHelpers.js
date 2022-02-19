@@ -1,5 +1,5 @@
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
-import { ValidatorNames } from "../typescript_enums/enums";
+import { ValidatorNames } from "../typescript/enums";
 /**
  * <h3>Добавляет действия в стэк действий конкретного игрока после текущего.</h3>
  * <p>Применения:</p>

@@ -1,7 +1,7 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { DeleteBuffFromPlayer } from "./helpers/ActionHelpers";
 import { AddDataToLog } from "./Logging";
-import { BuffNames, LogTypes, Stages } from "./typescript_enums/enums";
+import { BuffNames, LogTypes, Stages } from "./typescript/enums";
 /**
  * <h3>Создание всех монет.</h3>
  * <p>Применения:</p>

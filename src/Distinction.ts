@@ -2,10 +2,8 @@ import { Ctx } from "boardgame.io";
 import { suitsConfig } from "./data/SuitData";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { LogTypes, SuitNames } from "./typescript_enums/enums";
-import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
-import { DeckCardTypes } from "./typescript_types/card_types";
-import { DistinctionTypes } from "./typescript_types/types";
+import { LogTypes, SuitNames } from "./typescript/enums";
+import { DeckCardTypes, DistinctionTypes, IMyGameState, SuitTypes } from "./typescript/interfaces";
 
 // TODO Rework 2 functions in one?
 /**
@@ -21,7 +19,7 @@ import { DistinctionTypes } from "./typescript_types/types";
  * @param suit Фракция.
  * @returns Индекс игрока с преимуществом по фракции, если имеется.
  */
-export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: string): DistinctionTypes => {
+export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): DistinctionTypes => {
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         playersRanks.push(G.publicPlayers[i].cards[suit].reduce(TotalRank, 0));
@@ -50,7 +48,7 @@ export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: str
  * @param suit Название фракции.
  * @returns Индексы игроков с преимуществом по фракции.
  */
-export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: string): number[] | undefined => {
+export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): number[] | undefined => {
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         playersRanks.push(G.publicPlayers[i].cards[suit].reduce(TotalRank, 0));
@@ -76,8 +74,8 @@ export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
     AddDataToLog(G, LogTypes.GAME, `Преимущество по фракциям в конце эпохи:`);
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
-            G.distinctions[suit] = result;
+            const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit as SuitTypes);
+            G.distinctions[suit as SuitTypes] = result;
             if (suit === SuitNames.EXPLORER && result === undefined) {
                 const discardedCard: DeckCardTypes = G.decks[1].splice(0, 1)[0];
                 G.discardCardsDeck.push(discardedCard);

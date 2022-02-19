@@ -1,11 +1,7 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
-import { IActionCard, ICreateActionCard } from "./typescript_interfaces/action_card_interfaces";
-import { IAverageSuitCardData } from "./typescript_interfaces/bot_interfaces";
-import { ICard, ICreateCard } from "./typescript_interfaces/card_interfaces";
-import { RusCardTypes } from "./typescript_enums/enums";
-import { IDeckConfig } from "./typescript_interfaces/interfaces";
-import { DeckCardTypes, DiscardCardTypes, TavernCardTypes } from "./typescript_types/card_types";
+import { RusCardTypes } from "./typescript/enums";
+import { AdditionalCardTypes, DeckCardTypes, DiscardCardTypes, IActionCard, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, SuitTypes, TavernCardTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
@@ -22,7 +18,8 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
     const cards: DeckCardTypes[] = [];
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            const points: number | number[] = deckConfig.suits[suit].pointsValues()[data.players][data.tier];
+            const points: number | number[] =
+                deckConfig.suits[suit as SuitTypes].pointsValues()[data.players][data.tier];
             let count = 0;
             if (Array.isArray(points)) {
                 count = points.length;
@@ -30,12 +27,13 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
                 count = points;
             }
             for (let j = 0; j < count; j++) {
-                const rank: number | number[] = deckConfig.suits[suit].ranksValues()[data.players][data.tier];
+                const rank: number | number[] =
+                    deckConfig.suits[suit as SuitTypes].ranksValues()[data.players][data.tier];
                 cards.push(CreateCard({
-                    suit: deckConfig.suits[suit].suit,
+                    suit: deckConfig.suits[suit as SuitTypes].suit,
                     rank: Array.isArray(rank) ? rank[j] : 1,
                     points: Array.isArray(points) ? points[j] : null,
-                    name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
+                    name: `(фракция: ${suitsConfig[deckConfig.suits[suit as SuitTypes].suit].suitName}, шевронов: ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
                 }));
             }
         }
@@ -54,13 +52,13 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
 
 export const BuildAdditionalCards = (): ICard[] => {
     const cards: ICard[] = [];
-    for (const card in additionalCardsConfig) {
-        if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, card)) {
+    for (const cardName in additionalCardsConfig) {
+        if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, cardName)) {
             cards.push(CreateCard({
-                suit: additionalCardsConfig[card].suit,
-                rank: additionalCardsConfig[card].rank,
-                points: additionalCardsConfig[card].points,
-                name: additionalCardsConfig[card].name,
+                suit: additionalCardsConfig[cardName as AdditionalCardTypes].suit,
+                rank: additionalCardsConfig[cardName as AdditionalCardTypes].rank,
+                points: additionalCardsConfig[cardName as AdditionalCardTypes].points,
+                name: additionalCardsConfig[cardName as AdditionalCardTypes].name,
             }));
         }
     }
@@ -134,7 +132,7 @@ export const CreateCard = ({
 });
 
 export const isActionDiscardCard = (card: DiscardCardTypes): card is IActionCard =>
-    (card as IActionCard).type === RusCardTypes.ACTION;
+    (card as IActionCard).value !== undefined;
 
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>

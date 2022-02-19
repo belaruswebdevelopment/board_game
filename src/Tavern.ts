@@ -1,8 +1,6 @@
 import { AddDataToLog } from "./Logging";
-import { LogTypes } from "./typescript_enums/enums";
-import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
-import { ITavernsConfig } from "./typescript_interfaces/tavern_interfaces";
-import { DeckCardTypes, TavernCardTypes } from "./typescript_types/card_types";
+import { LogTypes } from "./typescript/enums";
+import { DeckCardTypes, IMyGameState, ITavernsConfig, TavernCardTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Проверяет все ли карты выбраны игроками в текущей таверне.</h1>
@@ -62,7 +60,7 @@ export const RefillTaverns = (G: IMyGameState): void => {
         const refillDeck: DeckCardTypes[] =
             G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
         if (refillDeck.length === G.drawSize) {
-            G.taverns[i] = refillDeck;
+            G.taverns[i].splice(0, G.taverns[i].length, ...refillDeck);
             AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[i].name} заполнена новыми картами.`);
         } else {
             error = true;

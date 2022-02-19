@@ -2,7 +2,7 @@ import { CompareCards } from "./bot_logic/BotCardLogic";
 import { isCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { ConfigNames, Phases, Stages } from "./typescript_enums/enums";
+import { ConfigNames, Phases, Stages } from "./typescript/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>

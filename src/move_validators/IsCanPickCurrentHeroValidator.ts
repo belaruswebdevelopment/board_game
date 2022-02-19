@@ -1,11 +1,8 @@
 import { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
+import { isHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { RusCardTypes } from "../typescript_enums/enums";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IValidatorsConfig } from "../typescript_interfaces/hero_validator_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { PlayerCardsType } from "../typescript_types/card_types";
+import { IMyGameState, IPublicPlayer, IValidatorsConfig, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
@@ -30,9 +27,9 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     if (validators.discardCard.suit !== suit) {
                         const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-                            last: number = player.cards[suit].length - 1;
-                        if (last >= 0 && player.cards[suit][last].type !== RusCardTypes.HERO) {
-                            cardsToDiscard.push(player.cards[suit][last]);
+                            last: number = player.cards[suit as SuitTypes].length - 1;
+                        if (last >= 0 && !isHeroCard(player.cards[suit as SuitTypes][last])) {
+                            cardsToDiscard.push(player.cards[suit as SuitTypes][last]);
                         }
                     }
                 }

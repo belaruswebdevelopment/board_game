@@ -1,4 +1,4 @@
-import { PlayerCardsType } from "../typescript_types/card_types";
+import { PlayerCardsType } from "../typescript/interfaces";
 
 /**
  * <h3>Подсчитывает количество очков фракции в арифметической прогрессии, зависящих от числа шевронов.</h3>

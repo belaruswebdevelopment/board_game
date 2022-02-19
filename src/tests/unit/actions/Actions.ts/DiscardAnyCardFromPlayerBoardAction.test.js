@@ -1,5 +1,5 @@
 import { DiscardAnyCardFromPlayerBoardAction } from "../../../../actions/Actions";
-import { LogTypes, RusCardTypes } from "../../../../typescript_enums/enums";
+import { LogTypes, RusCardTypes } from "../../../../typescript/enums";
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
     let G;
     beforeEach(() => {
@@ -17,7 +17,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                         isExchangeable: true,
                         value: 5
                     },
-                    selectedCoin: undefined,
+                    selectedCoin: null,
                     stack: [],
                     cards: {
                         warrior: [
@@ -51,7 +51,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                                 tier: 0,
                                 path: ``,
                             },
-                        ]
+                        ],
+                        hunter: [],
+                        miner: [],
+                        blacksmith: [],
+                        explorer: [],
                     },
                     buffs: [
                         {
@@ -71,7 +75,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                         isExchangeable: true,
                         value: 5
                     },
-                    selectedCoin: undefined,
+                    selectedCoin: null,
                     stack: [],
                     cards: {
                         warrior: [
@@ -105,7 +109,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                                 tier: 0,
                                 path: ``,
                             },
-                        ]
+                        ],
+                        hunter: [],
+                        miner: [],
+                        blacksmith: [],
+                        explorer: [],
                     },
                     buffs: [
                         {
@@ -150,7 +158,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                         isExchangeable: true,
                         value: 5
                     },
-                    selectedCoin: undefined,
+                    selectedCoin: null,
                     stack: [],
                     cards: {
                         warrior: [
@@ -184,7 +192,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                                 tier: 0,
                                 path: ``,
                             },
-                        ]
+                        ],
+                        hunter: [],
+                        miner: [],
+                        blacksmith: [],
+                        explorer: [],
                     },
                     buffs: [
                         {
@@ -204,7 +216,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                         isExchangeable: true,
                         value: 5
                     },
-                    selectedCoin: undefined,
+                    selectedCoin: null,
                     stack: [],
                     cards: {
                         warrior: [
@@ -228,7 +240,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                                 tier: 0,
                                 path: ``,
                             },
-                        ]
+                        ],
+                        hunter: [],
+                        miner: [],
+                        blacksmith: [],
+                        explorer: [],
                     },
                     buffs: [],
                 },
@@ -287,7 +303,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                         isExchangeable: true,
                         value: 5
                     },
-                    selectedCoin: undefined,
+                    selectedCoin: null,
                     stack: [],
                     cards: {
                         warrior: [
@@ -341,7 +357,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                         isExchangeable: true,
                         value: 5
                     },
-                    selectedCoin: undefined,
+                    selectedCoin: null,
                     stack: [],
                     cards: {
                         warrior: [

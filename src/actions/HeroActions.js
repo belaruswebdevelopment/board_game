@@ -9,7 +9,7 @@ import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { CreateHero, isHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript_enums/enums";
+import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
  * <p>Применения:</p>

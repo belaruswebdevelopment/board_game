@@ -1,5 +1,5 @@
-import { ArtefactNames, CardNames, HeroNames, SuitNames } from "../typescript_enums/enums";
-import { IBackground, IStyles } from "../typescript_interfaces/style_interfaces";
+import { ArtefactNames, CardNames, HeroNames, SuitNames } from "../typescript/enums";
+import { IBackground, IStyles, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>
@@ -158,7 +158,7 @@ export const Styles: IStyles = {
             background: ``,
         };
     },
-    Cards: (suit: string | null, name: string, points: number | null): IBackground => {
+    Cards: (suit: SuitTypes | null, name: string, points: number | null): IBackground => {
         if (name === CardNames.ChiefBlacksmith || name === CardNames.Olwin) {
             switch (name) {
                 case CardNames.ChiefBlacksmith:
@@ -481,7 +481,7 @@ export const Styles: IStyles = {
     Priority: (): IBackground => ({
         background: `url(/img/priorities/Priority.png) no-repeat -34px -7px / 66px 36px`,
     }),
-    Suits: (suit: string): IBackground => ({
+    Suits: (suit: SuitTypes): IBackground => ({
         background: `url(/img/suits/${suit}.png) no-repeat 0px 0px / 24px 24px`,
     }),
     Taverns: (tavernId: number): IBackground => {

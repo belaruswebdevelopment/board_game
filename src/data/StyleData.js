@@ -1,4 +1,4 @@
-import { ArtefactNames, CardNames, HeroNames, SuitNames } from "../typescript_enums/enums";
+import { ArtefactNames, CardNames, HeroNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Путь к базовым картам.</h3>
  */

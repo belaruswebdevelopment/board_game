@@ -2,7 +2,7 @@ import { CreateCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { CardNames, LogTypes, SuitNames } from "../typescript_enums/enums";
+import { CardNames, LogTypes, SuitNames } from "../typescript/enums";
 import { GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 // TODO Add dock blocks

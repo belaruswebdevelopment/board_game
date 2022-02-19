@@ -4,12 +4,8 @@ import { heroesConfig } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { AddDataToLog } from "./Logging";
-import { IBuffs } from "./typescript_interfaces/player_buff_interfaces";
-import { IArtefact } from "./typescript_interfaces/camp_card_interfaces";
-import { LogTypes, SuitNames } from "./typescript_enums/enums";
-import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
-import { IHeroData } from "./typescript_interfaces/hero_card_interfaces";
-import { IPublicPlayer } from "./typescript_interfaces/player_interfaces";
+import { LogTypes, SuitNames } from "./typescript/enums";
+import { IArtefact, IBuffs, IHeroData, IMyGameState, IPublicPlayer, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -27,9 +23,8 @@ export const CurrentScoring = (player: IPublicPlayer): number => {
     let score = 0;
     for (const suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            score += suitsConfig[suit].scoringRule(player.cards[suit]);
+            score += suitsConfig[suit as SuitTypes].scoringRule(player.cards[suit as SuitTypes]);
         }
-
     }
     return score;
 };

@@ -1,4 +1,4 @@
-import { RusCardTypes } from "./typescript_enums/enums";
+import { RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -12,20 +12,20 @@ import { RusCardTypes } from "./typescript_enums/enums";
  */
 export const BuildHeroes = (configOptions, heroesConfig) => {
     const heroes = [];
-    for (const hero in heroesConfig) {
-        if (configOptions.includes(heroesConfig[hero].game)) {
+    for (const heroName in heroesConfig) {
+        if (configOptions.includes(heroesConfig[heroName].game)) {
             heroes.push(CreateHero({
                 type: RusCardTypes.HERO,
-                name: heroesConfig[hero].name,
-                description: heroesConfig[hero].description,
-                game: heroesConfig[hero].game,
-                suit: heroesConfig[hero].suit,
-                rank: heroesConfig[hero].rank,
-                points: heroesConfig[hero].points,
-                buff: heroesConfig[hero].buff,
-                validators: heroesConfig[hero].validators,
-                actions: heroesConfig[hero].actions,
-                stack: heroesConfig[hero].stack,
+                name: heroesConfig[heroName].name,
+                description: heroesConfig[heroName].description,
+                game: heroesConfig[heroName].game,
+                suit: heroesConfig[heroName].suit,
+                rank: heroesConfig[heroName].rank,
+                points: heroesConfig[heroName].points,
+                buff: heroesConfig[heroName].buff,
+                validators: heroesConfig[heroName].validators,
+                actions: heroesConfig[heroName].actions,
+                stack: heroesConfig[heroName].stack,
             }));
         }
     }
@@ -66,5 +66,5 @@ export const CreateHero = ({ type, name, description, game, suit, rank, points, 
     actions,
     stack,
 });
-export const isHeroCard = (card) => card.validators !== undefined;
+export const isHeroCard = (card) => card.active !== undefined;
 //# sourceMappingURL=Hero.js.map

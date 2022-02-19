@@ -5,14 +5,8 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
-import { IConfig } from "../typescript_interfaces/action_interfaces";
-import { IDrawBoardOptions } from "../typescript_interfaces/board_interfaces";
-import { ConfigNames, MoveNames } from "../typescript_enums/enums";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { INumberValues } from "../typescript_interfaces/object_values_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { CampCardTypes } from "../typescript_types/camp_card_types";
-import { DeckCardTypes, PickedCardType, TavernCardTypes } from "../typescript_types/card_types";
+import { ConfigNames, MoveNames } from "../typescript/enums";
+import { CampCardTypes, DeckCardTypes, IConfig, IDrawBoardOptions, IMyGameState, INumberValues, IPublicPlayer, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
 
@@ -100,7 +94,7 @@ export const DrawDistinctions = (data: BoardProps<IMyGameState>): JSX.Element =>
                 boardCells.push(
                     <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
                         onClick={() => data.moves.ClickDistinctionCardMove(suit)}
-                        title={suitsConfig[suit].distinction.description}>
+                        title={suitsConfig[suit as SuitTypes].distinction.description}>
                         <span style={Styles.Distinctions(suit)} className="bg-suit-distinction">
 
                         </span>
@@ -326,15 +320,16 @@ export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) =
                         </td>
                     );
                 } else {
-                    let tavernCardSuit: string | null = null;
+                    let suit: string | null = null;
                     if (isCardNotActionAndNotNull(tavernCard)) {
-                        tavernCardSuit = tavernCard.suit;
+                        suit = tavernCard.suit;
                     }
                     if (t === data.G.currentTavern) {
-                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit,
-                            MoveNames.ClickCardMove, j);
+                        DrawCard(data, boardCells, tavernCard, j, null,
+                            suit as SuitTypes, MoveNames.ClickCardMove, j);
                     } else {
-                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);
+                        DrawCard(data, boardCells, tavernCard, j, null,
+                            suit as SuitTypes);
                     }
                 }
             }

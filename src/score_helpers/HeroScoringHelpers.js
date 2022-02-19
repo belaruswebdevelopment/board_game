@@ -1,5 +1,5 @@
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
-import { SuitNames } from "../typescript_enums/enums";
+import { SuitNames } from "../typescript/enums";
 import { TotalRank } from "./ScoreHelpers";
 export const AstridScoring = (player) => {
     if (player !== undefined) {

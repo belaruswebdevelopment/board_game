@@ -5,7 +5,7 @@ import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
-import { ConfigNames, MoveNames } from "../typescript_enums/enums";
+import { ConfigNames, MoveNames } from "../typescript/enums";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
 /**
@@ -227,15 +227,15 @@ export const DrawTaverns = (data, gridClass) => {
                     boardCells.push(_jsx("td", { children: _jsx("span", { style: Styles.Taverns(t), className: "bg-tavern-icon" }, void 0) }, `${tavernsConfig[t].name} ${j}`));
                 }
                 else {
-                    let tavernCardSuit = null;
+                    let suit = null;
                     if (isCardNotActionAndNotNull(tavernCard)) {
-                        tavernCardSuit = tavernCard.suit;
+                        suit = tavernCard.suit;
                     }
                     if (t === data.G.currentTavern) {
-                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit, MoveNames.ClickCardMove, j);
+                        DrawCard(data, boardCells, tavernCard, j, null, suit, MoveNames.ClickCardMove, j);
                     }
                     else {
-                        DrawCard(data, boardCells, tavernCard, j, null, tavernCardSuit);
+                        DrawCard(data, boardCells, tavernCard, j, null, suit);
                     }
                 }
             }

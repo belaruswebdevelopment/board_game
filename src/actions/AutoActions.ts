@@ -3,13 +3,8 @@ import { ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { LogTypes, Stages } from "../typescript_enums/enums";
-import { IConfig, IStack } from "../typescript_interfaces/action_interfaces";
-import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { CoinType } from "../typescript_types/coin_types";
-import { ArgsTypes } from "../typescript_types/types";
+import { LogTypes, Stages } from "../typescript/enums";
+import { ArgsTypes, CoinType, IBuffs, IConfig, IMyGameState, IPublicPlayer, IStack, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
@@ -85,7 +80,7 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
     if (config !== undefined && config.suit !== undefined) {
         const value: Record<string, StageArg> = {};
         for (let i = 0; i < ctx.numPlayers; i++) {
-            if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[config.suit].length) {
+            if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[config.suit as SuitTypes].length) {
                 value[i] = {
                     stage: Stages.DiscardSuitCard,
                 };

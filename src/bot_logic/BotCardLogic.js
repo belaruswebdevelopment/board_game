@@ -75,20 +75,19 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
  * @returns "Средняя" карта дворфа.
  */
 export const GetAverageSuitCard = (suitConfig, data) => {
+    let totalRank = 0, totalPoints = 0;
+    const rank = suitConfig.ranksValues()[data.players][data.tier], points = suitConfig.pointsValues()[data.players][data.tier], count = Array.isArray(points) ? points.length : points;
+    for (let i = 0; i < count; i++) {
+        totalRank += Array.isArray(rank) ? rank[i] : 1;
+        totalPoints += Array.isArray(points) ? points[i] : 1;
+    }
+    totalRank /= count;
+    totalPoints /= count;
     const avgCard = CreateCard({
         suit: suitConfig.suit,
-        rank: 0,
-        points: 0
-    }), rank = suitConfig.ranksValues()[data.players][data.tier], points = suitConfig.pointsValues()[data.players][data.tier];
-    const count = Array.isArray(points) ? points.length : points;
-    if (avgCard.points !== null) {
-        for (let i = 0; i < count; i++) {
-            avgCard.rank += Array.isArray(rank) ? rank[i] : 1;
-            avgCard.points += Array.isArray(points) ? points[i] : 1;
-        }
-        avgCard.rank /= count;
-        avgCard.points /= count;
-    }
+        rank: totalRank,
+        points: totalPoints,
+    });
     return avgCard;
 };
 /**

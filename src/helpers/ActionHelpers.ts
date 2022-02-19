@@ -1,13 +1,8 @@
 import { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript_enums/enums";
-import { IConfig } from "../typescript_interfaces/action_interfaces";
-import { IBuff } from "../typescript_interfaces/card_buff_interfaces";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IBuffs } from "../typescript_interfaces/player_buff_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { BuffTypes } from "../typescript_types/keyof_types";
+import { LogTypes } from "../typescript/enums";
+import { BuffTypes, IBuff, IBuffs, IConfig, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**

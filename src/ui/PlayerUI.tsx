@@ -4,11 +4,8 @@ import { suitsConfig } from "../data/SuitData";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
-import { HeroNames, MoveNames, Phases, Stages } from "../typescript_enums/enums";
-import { IMyGameState } from "../typescript_interfaces/game_data_interfaces";
-import { IPublicPlayer } from "../typescript_interfaces/player_interfaces";
-import { PlayerCardsType } from "../typescript_types/card_types";
-import { CoinType } from "../typescript_types/coin_types";
+import { HeroNames, MoveNames, Phases, Stages } from "../typescript/enums";
+import { CoinType, IMyGameState, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 
 /**
@@ -36,17 +33,17 @@ export const DrawPlayersBoards = (data: BoardProps<IMyGameState>): JSX.Element[]
         for (const suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 playerHeaders[p].push(
-                    <th className={`${suitsConfig[suit].suitColor}`}
-                        key={`${player.nickname} ${suitsConfig[suit].suitName}`}>
-                        <span style={Styles.Suits(suit)} className="bg-suit-icon">
+                    <th className={`${suitsConfig[suit as SuitTypes].suitColor}`}
+                        key={`${player.nickname} ${suitsConfig[suit as SuitTypes].suitName}`}>
+                        <span style={Styles.Suits(suit as SuitTypes)} className="bg-suit-icon">
 
                         </span>
                     </th>
                 );
                 playerHeadersCount[p].push(
-                    <th className={`${suitsConfig[suit].suitColor} text-white`}
-                        key={`${player.nickname} ${suitsConfig[suit].suitName} count`}>
-                        <b>{player.cards[suit].reduce(TotalRank, 0)}</b>
+                    <th className={`${suitsConfig[suit as SuitTypes].suitColor} text-white`}
+                        key={`${player.nickname} ${suitsConfig[suit as SuitTypes].suitName} count`}>
+                        <b>{player.cards[suit as SuitTypes].reduce(TotalRank, 0)}</b>
                     </th>
                 );
             }
@@ -91,9 +88,10 @@ export const DrawPlayersBoards = (data: BoardProps<IMyGameState>): JSX.Element[]
             for (const suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     id = i + j;
-                    if (player.cards[suit][i] !== undefined) {
+                    if (player.cards[suit as SuitTypes][i] !== undefined) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, player.cards[suit][i], id, player, suit);
+                        DrawCard(data, playerCells, player.cards[suit as SuitTypes][i], id, player,
+                            suit as SuitTypes);
                     } else {
                         playerCells.push(
                             <td key={`${player.nickname} empty card ${id}`}>

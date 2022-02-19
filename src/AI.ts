@@ -3,16 +3,8 @@ import { CompareCards } from "./bot_logic/BotCardLogic";
 import { isCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { ConfigNames, Phases, Stages } from "./typescript_enums/enums";
-import { IConfig } from "./typescript_interfaces/action_interfaces";
-import { IMoves } from "./typescript_interfaces/bot_interfaces";
-import { IBuffs } from "./typescript_interfaces/player_buff_interfaces";
-import { IMyGameState } from "./typescript_interfaces/game_data_interfaces";
-import { IMoveValidator } from "./typescript_interfaces/move_validator_interfaces";
-import { TavernCardTypes } from "./typescript_types/card_types";
-import { MoveByTypes } from "./typescript_types/keyof_types";
-import { MoveValidatorGetRangeTypes, ValidMoveIdParamTypes } from "./typescript_types/move_validator_types";
-import { MoveArgsTypes } from "./typescript_types/types";
+import { ConfigNames, Phases, Stages } from "./typescript/enums";
+import { IBuffs, IConfig, IMoves, IMoveValidator, IMyGameState, MoveArgsTypes, MoveByTypes, MoveValidatorGetRangeTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>

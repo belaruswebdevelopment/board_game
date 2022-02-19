@@ -1,6 +1,6 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypes } from "./typescript_enums/enums";
+import { RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
  * <p>Применения:</p>
@@ -48,13 +48,13 @@ export const BuildCards = (deckConfig, data) => {
 };
 export const BuildAdditionalCards = () => {
     const cards = [];
-    for (const card in additionalCardsConfig) {
-        if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, card)) {
+    for (const cardName in additionalCardsConfig) {
+        if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, cardName)) {
             cards.push(CreateCard({
-                suit: additionalCardsConfig[card].suit,
-                rank: additionalCardsConfig[card].rank,
-                points: additionalCardsConfig[card].points,
-                name: additionalCardsConfig[card].name,
+                suit: additionalCardsConfig[cardName].suit,
+                rank: additionalCardsConfig[cardName].rank,
+                points: additionalCardsConfig[cardName].points,
+                name: additionalCardsConfig[cardName].name,
             }));
         }
     }
@@ -110,7 +110,7 @@ export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name
     tier,
     path,
 });
-export const isActionDiscardCard = (card) => card.type === RusCardTypes.ACTION;
+export const isActionDiscardCard = (card) => card.value !== undefined;
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
  * <p>Применения:</p>

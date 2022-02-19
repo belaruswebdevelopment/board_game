@@ -1,6 +1,6 @@
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript_enums/enums";
+import { LogTypes } from "../typescript/enums";
 import { AddBuffToPlayer } from "./ActionHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 /**
