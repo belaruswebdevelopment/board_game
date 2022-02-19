@@ -12,21 +12,24 @@ import { RusCardTypes } from "./typescript/enums";
  */
 export const BuildHeroes = (configOptions, heroesConfig) => {
     const heroes = [];
-    for (const heroName in heroesConfig) {
-        if (configOptions.includes(heroesConfig[heroName].game)) {
-            heroes.push(CreateHero({
-                type: RusCardTypes.HERO,
-                name: heroesConfig[heroName].name,
-                description: heroesConfig[heroName].description,
-                game: heroesConfig[heroName].game,
-                suit: heroesConfig[heroName].suit,
-                rank: heroesConfig[heroName].rank,
-                points: heroesConfig[heroName].points,
-                buff: heroesConfig[heroName].buff,
-                validators: heroesConfig[heroName].validators,
-                actions: heroesConfig[heroName].actions,
-                stack: heroesConfig[heroName].stack,
-            }));
+    let heroName;
+    for (heroName in heroesConfig) {
+        if (Object.prototype.hasOwnProperty.call(heroesConfig, heroName)) {
+            if (configOptions.includes(heroesConfig[heroName].game)) {
+                heroes.push(CreateHero({
+                    type: RusCardTypes.HERO,
+                    name: heroesConfig[heroName].name,
+                    description: heroesConfig[heroName].description,
+                    game: heroesConfig[heroName].game,
+                    suit: heroesConfig[heroName].suit,
+                    rank: heroesConfig[heroName].rank,
+                    points: heroesConfig[heroName].points,
+                    buff: heroesConfig[heroName].buff,
+                    validators: heroesConfig[heroName].validators,
+                    actions: heroesConfig[heroName].actions,
+                    stack: heroesConfig[heroName].stack,
+                }));
+            }
         }
     }
     return heroes;

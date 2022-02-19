@@ -35,9 +35,10 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  */
 export const BuildPublicPlayer = (nickname: string, priority: IPriority): IPublicPlayer => {
     const cards: OptionalSuitPropertyTypes<PlayerCardsType[]> = {};
-    for (const suit in suitsConfig) {
+    let suit: SuitTypes;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            cards[suit as SuitTypes] = [];
+            cards[suit] = [];
         }
     }
     return CreatePublicPlayer({

@@ -30,20 +30,21 @@ export const DrawPlayersBoards = (data: BoardProps<IMyGameState>): JSX.Element[]
         playerHeaders[p] = [];
         playerHeadersCount[p] = [];
         playerRows[p] = [];
-        for (const suit in suitsConfig) {
+        let suit: SuitTypes;
+        for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 playerHeaders[p].push(
-                    <th className={`${suitsConfig[suit as SuitTypes].suitColor}`}
-                        key={`${player.nickname} ${suitsConfig[suit as SuitTypes].suitName}`}>
-                        <span style={Styles.Suits(suit as SuitTypes)} className="bg-suit-icon">
+                    <th className={`${suitsConfig[suit].suitColor}`}
+                        key={`${player.nickname} ${suitsConfig[suit].suitName}`}>
+                        <span style={Styles.Suits(suit)} className="bg-suit-icon">
 
                         </span>
                     </th>
                 );
                 playerHeadersCount[p].push(
-                    <th className={`${suitsConfig[suit as SuitTypes].suitColor} text-white`}
-                        key={`${player.nickname} ${suitsConfig[suit as SuitTypes].suitName} count`}>
-                        <b>{player.cards[suit as SuitTypes].reduce(TotalRank, 0)}</b>
+                    <th className={`${suitsConfig[suit].suitColor} text-white`}
+                        key={`${player.nickname} ${suitsConfig[suit].suitName} count`}>
+                        <b>{player.cards[suit].reduce(TotalRank, 0)}</b>
                     </th>
                 );
             }
@@ -85,13 +86,13 @@ export const DrawPlayersBoards = (data: BoardProps<IMyGameState>): JSX.Element[]
                 id = 0,
                 j = 0;
             playerRows[p][i] = [];
-            for (const suit in suitsConfig) {
+            let suit: SuitTypes;
+            for (suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     id = i + j;
-                    if (player.cards[suit as SuitTypes][i] !== undefined) {
+                    if (player.cards[suit][i] !== undefined) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, player.cards[suit as SuitTypes][i], id, player,
-                            suit as SuitTypes);
+                        DrawCard(data, playerCells, player.cards[suit][i], id, player, suit);
                     } else {
                         playerCells.push(
                             <td key={`${player.nickname} empty card ${id}`}>

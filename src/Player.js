@@ -31,7 +31,8 @@ export const BuildPlayer = () => CreatePlayer({
  */
 export const BuildPublicPlayer = (nickname, priority) => {
     const cards = {};
-    for (const suit in suitsConfig) {
+    let suit;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             cards[suit] = [];
         }

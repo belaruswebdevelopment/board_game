@@ -18,7 +18,6 @@ import { IBuffs, IConfig, IMoves, IMoveValidator, IMyGameState, MoveArgsTypes, M
  * @returns Массив возможных мувов у ботов.
  */
 export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
-    // TODO Fix it, now just for bot can do RANDOM move
     const moves: IMoves[] = [];
     let playerId: number | undefined;
     if (ctx.phase !== null) {
@@ -27,7 +26,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
             if (ctx.phase === Phases.PlaceCoins) {
                 activeStageOfCurrentPlayer = Stages.Default3;
             } else if (ctx.phase === Phases.PlaceCoinsUline) {
-                // TODO BotPlaceCoinUline
+                // TODO Add BotPlaceCoinUline and others moves only for bots?!
                 activeStageOfCurrentPlayer = Stages.Default1;
             } else if (ctx.phase === Phases.PickCards) {
                 if (ctx.activePlayers === null) {

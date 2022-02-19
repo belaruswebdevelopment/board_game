@@ -14,7 +14,8 @@ import { RusCardTypes } from "./typescript/enums";
  */
 export const BuildCards = (deckConfig, data) => {
     const cards = [];
-    for (const suit in suitsConfig) {
+    let suit;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const points = deckConfig.suits[suit].pointsValues()[data.players][data.tier];
             let count = 0;
@@ -48,7 +49,8 @@ export const BuildCards = (deckConfig, data) => {
 };
 export const BuildAdditionalCards = () => {
     const cards = [];
-    for (const cardName in additionalCardsConfig) {
+    let cardName;
+    for (cardName in additionalCardsConfig) {
         if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, cardName)) {
             cards.push(CreateCard({
                 suit: additionalCardsConfig[cardName].suit,

@@ -72,10 +72,11 @@ export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: Su
  */
 export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
     AddDataToLog(G, LogTypes.GAME, `Преимущество по фракциям в конце эпохи:`);
-    for (const suit in suitsConfig) {
+    let suit: SuitTypes;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit as SuitTypes);
-            G.distinctions[suit as SuitTypes] = result;
+            const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
+            G.distinctions[suit] = result;
             if (suit === SuitNames.EXPLORER && result === undefined) {
                 const discardedCard: DeckCardTypes = G.decks[1].splice(0, 1)[0];
                 G.discardCardsDeck.push(discardedCard);

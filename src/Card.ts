@@ -16,10 +16,11 @@ import { AdditionalCardTypes, DeckCardTypes, DiscardCardTypes, IActionCard, IAve
  */
 export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData): DeckCardTypes[] => {
     const cards: DeckCardTypes[] = [];
-    for (const suit in suitsConfig) {
+    let suit: SuitTypes;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const points: number | number[] =
-                deckConfig.suits[suit as SuitTypes].pointsValues()[data.players][data.tier];
+                deckConfig.suits[suit].pointsValues()[data.players][data.tier];
             let count = 0;
             if (Array.isArray(points)) {
                 count = points.length;
@@ -28,12 +29,12 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
             }
             for (let j = 0; j < count; j++) {
                 const rank: number | number[] =
-                    deckConfig.suits[suit as SuitTypes].ranksValues()[data.players][data.tier];
+                    deckConfig.suits[suit].ranksValues()[data.players][data.tier];
                 cards.push(CreateCard({
-                    suit: deckConfig.suits[suit as SuitTypes].suit,
+                    suit: deckConfig.suits[suit].suit,
                     rank: Array.isArray(rank) ? rank[j] : 1,
                     points: Array.isArray(points) ? points[j] : null,
-                    name: `(фракция: ${suitsConfig[deckConfig.suits[suit as SuitTypes].suit].suitName}, шевронов: ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
+                    name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
                 }));
             }
         }
@@ -52,13 +53,14 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
 
 export const BuildAdditionalCards = (): ICard[] => {
     const cards: ICard[] = [];
-    for (const cardName in additionalCardsConfig) {
+    let cardName: AdditionalCardTypes;
+    for (cardName in additionalCardsConfig) {
         if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, cardName)) {
             cards.push(CreateCard({
-                suit: additionalCardsConfig[cardName as AdditionalCardTypes].suit,
-                rank: additionalCardsConfig[cardName as AdditionalCardTypes].rank,
-                points: additionalCardsConfig[cardName as AdditionalCardTypes].points,
-                name: additionalCardsConfig[cardName as AdditionalCardTypes].name,
+                suit: additionalCardsConfig[cardName].suit,
+                rank: additionalCardsConfig[cardName].rank,
+                points: additionalCardsConfig[cardName].points,
+                name: additionalCardsConfig[cardName].name,
             }));
         }
     }

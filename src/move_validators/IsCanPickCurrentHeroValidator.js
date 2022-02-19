@@ -19,7 +19,8 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G, ctx, id
     let isValidMove = false;
     if (validators !== undefined) {
         if (validators.discardCard !== undefined) {
-            for (const suit in suitsConfig) {
+            let suit;
+            for (suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     if (validators.discardCard.suit !== suit) {
                         const player = G.publicPlayers[Number(ctx.currentPlayer)], last = player.cards[suit].length - 1;

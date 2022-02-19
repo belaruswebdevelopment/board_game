@@ -44,9 +44,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         discardCardsDeck: DeckCardTypes[] = [],
         campDecks: CampDeckCardTypes[][] = [],
         distinctions: OptionalSuitPropertyTypes<DistinctionTypes> = {};
-    for (const suit in suitsConfig) {
+    let suit: SuitTypes;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            distinctions[suit as SuitTypes] = null;
+            distinctions[suit] = null;
         }
     }
     const winner: number[] = [],
@@ -112,9 +113,9 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             .map((item: undefined, index: number): number => index),
         initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder: number[][] = [];
-    for (const suit in suitsConfig) {
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            averageCards[suit as SuitTypes] = GetAverageSuitCard(suitsConfig[suit as SuitTypes], {
+            averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
                 players: ctx.numPlayers,
                 tier: 0,
             });

@@ -9,8 +9,8 @@ export const DraupnirScoring = (player) => {
 };
 export const HrafnsmerkiScoring = (player) => {
     if (player !== undefined) {
-        let score = 0;
-        for (const suit in player.cards) {
+        let score = 0, suit;
+        for (suit in player.cards) {
             if (Object.prototype.hasOwnProperty.call(player.cards, suit)) {
                 score += player.cards[suit].filter((card) => IsMercenaryCard(card)).length * 5;
             }

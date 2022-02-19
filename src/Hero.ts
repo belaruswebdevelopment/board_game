@@ -14,21 +14,24 @@ import { ICreateHero, IHeroCard, IHeroConfig, IHeroTypes } from "./typescript/in
  */
 export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig): IHeroCard[] => {
     const heroes: IHeroCard[] = [];
-    for (const heroName in heroesConfig) {
-        if (configOptions.includes(heroesConfig[heroName as IHeroTypes].game)) {
-            heroes.push(CreateHero({
-                type: RusCardTypes.HERO,
-                name: heroesConfig[heroName as IHeroTypes].name,
-                description: heroesConfig[heroName as IHeroTypes].description,
-                game: heroesConfig[heroName as IHeroTypes].game,
-                suit: heroesConfig[heroName as IHeroTypes].suit,
-                rank: heroesConfig[heroName as IHeroTypes].rank,
-                points: heroesConfig[heroName as IHeroTypes].points,
-                buff: heroesConfig[heroName as IHeroTypes].buff,
-                validators: heroesConfig[heroName as IHeroTypes].validators,
-                actions: heroesConfig[heroName as IHeroTypes].actions,
-                stack: heroesConfig[heroName as IHeroTypes].stack,
-            }));
+    let heroName: IHeroTypes;
+    for (heroName in heroesConfig) {
+        if (Object.prototype.hasOwnProperty.call(heroesConfig, heroName)) {
+            if (configOptions.includes(heroesConfig[heroName].game)) {
+                heroes.push(CreateHero({
+                    type: RusCardTypes.HERO,
+                    name: heroesConfig[heroName].name,
+                    description: heroesConfig[heroName].description,
+                    game: heroesConfig[heroName].game,
+                    suit: heroesConfig[heroName].suit,
+                    rank: heroesConfig[heroName].rank,
+                    points: heroesConfig[heroName].points,
+                    buff: heroesConfig[heroName].buff,
+                    validators: heroesConfig[heroName].validators,
+                    actions: heroesConfig[heroName].actions,
+                    stack: heroesConfig[heroName].stack,
+                }));
+            }
         }
     }
     return heroes;

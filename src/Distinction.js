@@ -65,7 +65,8 @@ export const CheckCurrentSuitDistinctions = (G, ctx, suit) => {
  */
 export const CheckDistinction = (G, ctx) => {
     AddDataToLog(G, LogTypes.GAME, `Преимущество по фракциям в конце эпохи:`);
-    for (const suit in suitsConfig) {
+    let suit;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const result = CheckCurrentSuitDistinction(G, ctx, suit);
             G.distinctions[suit] = result;

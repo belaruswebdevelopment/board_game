@@ -25,7 +25,8 @@ export const DrawPlayersBoards = (data) => {
         playerHeaders[p] = [];
         playerHeadersCount[p] = [];
         playerRows[p] = [];
-        for (const suit in suitsConfig) {
+        let suit;
+        for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 playerHeaders[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }, void 0) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
                 playerHeadersCount[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor} text-white`, children: _jsx("b", { children: player.cards[suit].reduce(TotalRank, 0) }, void 0) }, `${player.nickname} ${suitsConfig[suit].suitName} count`));
@@ -45,7 +46,8 @@ export const DrawPlayersBoards = (data) => {
             const playerCells = [];
             let isDrawRow = false, id = 0, j = 0;
             playerRows[p][i] = [];
-            for (const suit in suitsConfig) {
+            let suit;
+            for (suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     id = i + j;
                     if (player.cards[suit][i] !== undefined) {

@@ -29,7 +29,8 @@ export const SetupGame = (ctx) => {
     }, totalScore = [], logData = [], decks = [], additionalCardsDeck = BuildAdditionalCards(), 
     // TODO Discard cards must be hidden from users?
     discardCardsDeck = [], campDecks = [], distinctions = {};
-    for (const suit in suitsConfig) {
+    let suit;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             distinctions[suit] = null;
         }
@@ -83,7 +84,7 @@ export const SetupGame = (ctx) => {
     const averageCards = {}, initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined)
         .map((item, index) => index), initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder = [];
-    for (const suit in suitsConfig) {
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
                 players: ctx.numPlayers,

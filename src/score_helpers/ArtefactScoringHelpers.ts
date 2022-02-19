@@ -13,10 +13,11 @@ export const DraupnirScoring = (player?: IPublicPlayer): number => {
 
 export const HrafnsmerkiScoring = (player?: IPublicPlayer): number => {
     if (player !== undefined) {
-        let score = 0;
-        for (const suit in player.cards) {
+        let score = 0,
+            suit: SuitTypes;
+        for (suit in player.cards) {
             if (Object.prototype.hasOwnProperty.call(player.cards, suit)) {
-                score += player.cards[suit as SuitTypes].filter((card: PlayerCardsType): boolean =>
+                score += player.cards[suit].filter((card: PlayerCardsType): boolean =>
                     IsMercenaryCard(card)).length * 5;
             }
         }

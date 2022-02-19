@@ -19,7 +19,8 @@ export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
 export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], config = player.stack[0].config, pickedCard = player.pickedCard;
     if (config !== undefined) {
-        for (const suit in suitsConfig) {
+        let suit;
+        for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 if (suit !== config.suit
                     && !(G.drawProfit === ConfigNames.DagdaAction && player.actionsNum === 1 && pickedCard !== null
@@ -36,7 +37,8 @@ export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
 export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, boardCells) => {
     // TODO Discard cards must be hidden from others users?
     const player = G.publicPlayers[Number(ctx.currentPlayer)], playerHeaders = [], playerRows = [];
-    for (const suit in suitsConfig) {
+    let suit;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }, void 0) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
         }
@@ -49,7 +51,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =>
             playerRows[i] = [];
         }
         let j = 0;
-        for (const suit in suitsConfig) {
+        for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 id = i + j;
                 if (player.cards[suit][i] !== undefined) {
@@ -150,7 +152,8 @@ export const GetEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     }
 };
 export const GetMjollnirProfitProfit = (G, ctx, data, boardCells) => {
-    for (const suit in suitsConfig) {
+    let suit;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player.cards[suit].length) {
@@ -183,7 +186,8 @@ export const PickDiscardCardProfit = (G, ctx, data, boardCells) => {
 };
 export const PlaceCardsProfit = (G, ctx, data, boardCells) => {
     var _a, _b;
-    for (const suit in suitsConfig) {
+    let suit;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const player = G.publicPlayers[Number(ctx.currentPlayer)], pickedCard = player.pickedCard;
             if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
@@ -213,7 +217,8 @@ export const PlaceCardsProfit = (G, ctx, data, boardCells) => {
 };
 export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     var _a, _b;
-    for (const suit in suitsConfig) {
+    let suit;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const player = G.publicPlayers[Number(ctx.currentPlayer)], card = player.pickedCard;
             if (card !== null && `variants` in card) {
@@ -249,25 +254,25 @@ export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     }
 };
 export const UpgradeCoinProfit = (G, ctx, data, boardCells) => {
-    var _a, _b, _c, _d;
     const player = G.publicPlayers[Number(ctx.currentPlayer)], handCoins = player.handCoins.filter((coin) => coin !== null);
     let handCoinIndex = -1;
     for (let j = 0; j < player.boardCoins.length; j++) {
-        // TODO Check .? for all coins!!! and delete AS
+        const boardCoin = player.boardCoins[j];
         if (player.buffs.find((buff) => buff.everyTurn !== undefined)
-            && player.boardCoins[j] === null) {
+            && boardCoin === null) {
             handCoinIndex++;
-            const handCoinId = player.handCoins.findIndex((coin) => {
-                var _a, _b;
-                return (coin === null || coin === void 0 ? void 0 : coin.value) === ((_a = handCoins[handCoinIndex]) === null || _a === void 0 ? void 0 : _a.value)
-                    && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === ((_b = handCoins[handCoinIndex]) === null || _b === void 0 ? void 0 : _b.isInitial);
-            });
-            if (player.handCoins[handCoinId] && !((_a = player.handCoins[handCoinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
-                DrawCoin(data, boardCells, `coin`, player.handCoins[handCoinId], j, player, `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `hand`, (_b = handCoins[handCoinIndex]) === null || _b === void 0 ? void 0 : _b.isInitial);
+            // TODO Delete ! or do check coin on null!?
+            const handCoinId = player.handCoins.findIndex((coin) => 
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            coin.value === handCoins[handCoinIndex].value
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                && coin.isInitial === handCoins[handCoinIndex].isInitial), handCoin = player.handCoins[handCoinId];
+            if (handCoin !== null && !handCoin.isTriggerTrading) {
+                DrawCoin(data, boardCells, `coin`, handCoin, j, player, `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `hand`, handCoin.isInitial);
             }
         }
-        else if (player.boardCoins[j] && !((_c = player.boardCoins[j]) === null || _c === void 0 ? void 0 : _c.isTriggerTrading)) {
-            DrawCoin(data, boardCells, `coin`, player.boardCoins[j], j, player, `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `board`, (_d = player.boardCoins[j]) === null || _d === void 0 ? void 0 : _d.isInitial);
+        else if (boardCoin !== null && !boardCoin.isTriggerTrading) {
+            DrawCoin(data, boardCells, `coin`, boardCoin, j, player, `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `board`, boardCoin.isInitial);
         }
     }
 };

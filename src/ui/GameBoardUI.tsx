@@ -89,12 +89,13 @@ export const DrawCurrentPlayerTurn = (data: BoardProps<IMyGameState>): JSX.Eleme
 export const DrawDistinctions = (data: BoardProps<IMyGameState>): JSX.Element => {
     const boardCells: JSX.Element[] = [];
     for (let i = 0; i < 1; i++) {
-        for (const suit in suitsConfig) {
+        let suit: SuitTypes;
+        for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 boardCells.push(
                     <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
                         onClick={() => data.moves.ClickDistinctionCardMove(suit)}
-                        title={suitsConfig[suit as SuitTypes].distinction.description}>
+                        title={suitsConfig[suit].distinction.description}>
                         <span style={Styles.Distinctions(suit)} className="bg-suit-distinction">
 
                         </span>
@@ -320,16 +321,15 @@ export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) =
                         </td>
                     );
                 } else {
-                    let suit: string | null = null;
+                    let suit: SuitTypes | null = null;
                     if (isCardNotActionAndNotNull(tavernCard)) {
                         suit = tavernCard.suit;
                     }
                     if (t === data.G.currentTavern) {
-                        DrawCard(data, boardCells, tavernCard, j, null,
-                            suit as SuitTypes, MoveNames.ClickCardMove, j);
+                        DrawCard(data, boardCells, tavernCard, j, null, suit,
+                            MoveNames.ClickCardMove, j);
                     } else {
-                        DrawCard(data, boardCells, tavernCard, j, null,
-                            suit as SuitTypes);
+                        DrawCard(data, boardCells, tavernCard, j, null, suit);
                     }
                 }
             }

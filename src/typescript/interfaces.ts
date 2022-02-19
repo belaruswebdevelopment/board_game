@@ -59,7 +59,7 @@ export interface IAction {
 export interface IConfig {
     readonly number?: number,
     readonly coinId?: number,
-    readonly suit?: string,
+    readonly suit?: SuitTypes,
     readonly value?: number,
     readonly drawName?: string,
     readonly stageName?: string,
@@ -971,7 +971,7 @@ export type MoveValidatorGetRangeTypes = ICurrentMoveArgumentsStage<OptionalSuit
     | ICurrentMoveArgumentsStage<number[]>[`args`]
     | ICurrentMoveArgumentsStage<string[]>[`args`];
 
-export type ValidMoveIdParamTypes = number | string | number[] | ICurrentMoveSuitCardCurrentId
+export type ValidMoveIdParamTypes = number | SuitTypes | number[] | ICurrentMoveSuitCardCurrentId
     | ICurrentMoveSuitCardPlayerCurrentId | ICurrentMoveCoinsArguments | null;
 
 export type SuitTypes = keyof ISuitConfig;

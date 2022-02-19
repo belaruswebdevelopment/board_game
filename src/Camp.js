@@ -14,7 +14,8 @@ import { RusCardTypes } from "./typescript/enums";
  */
 export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
     const campCards = [];
-    for (const artefactName in artefactConfig) {
+    let artefactName;
+    for (artefactName in artefactConfig) {
         if (Object.prototype.hasOwnProperty.call(artefactConfig, artefactName)) {
             if (artefactConfig[artefactName].tier === tier) {
                 campCards.push(CreateArtefactCampCard({
@@ -35,8 +36,8 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
         }
     }
     for (let i = 0; i < mercenariesConfig[tier].length; i++) {
-        let name = ``, path = ``;
-        for (const campMercenarySuit in mercenariesConfig[tier][i]) {
+        let name = ``, path = ``, campMercenarySuit;
+        for (campMercenarySuit in mercenariesConfig[tier][i]) {
             if (Object.prototype.hasOwnProperty.call(mercenariesConfig[tier][i], campMercenarySuit)) {
                 path += campMercenarySuit + ` `;
                 name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;

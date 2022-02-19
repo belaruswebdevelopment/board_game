@@ -104,8 +104,8 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  */
 const PotentialScoring = (player, card) => {
     var _a, _b, _c, _d, _e;
-    let score = 0;
-    for (const suit in suitsConfig) {
+    let score = 0, suit;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             if (isCardNotActionAndNotNull(card) && card.suit === suit) {
                 score += suitsConfig[suit].scoringRule(player.cards[suit], (_a = card.points) !== null && _a !== void 0 ? _a : 1);

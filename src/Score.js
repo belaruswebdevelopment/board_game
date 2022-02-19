@@ -17,8 +17,8 @@ import { LogTypes, SuitNames } from "./typescript/enums";
  * @returns Текущий счёт указанного игрока.
  */
 export const CurrentScoring = (player) => {
-    let score = 0;
-    for (const suit in suitsConfig) {
+    let score = 0, suit;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             score += suitsConfig[suit].scoringRule(player.cards[suit]);
         }

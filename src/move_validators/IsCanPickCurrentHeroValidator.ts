@@ -23,13 +23,14 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
     let isValidMove = false;
     if (validators !== undefined) {
         if (validators.discardCard !== undefined) {
-            for (const suit in suitsConfig) {
+            let suit: SuitTypes;
+            for (suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     if (validators.discardCard.suit !== suit) {
                         const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-                            last: number = player.cards[suit as SuitTypes].length - 1;
-                        if (last >= 0 && !isHeroCard(player.cards[suit as SuitTypes][last])) {
-                            cardsToDiscard.push(player.cards[suit as SuitTypes][last]);
+                            last: number = player.cards[suit].length - 1;
+                        if (last >= 0 && !isHeroCard(player.cards[suit][last])) {
+                            cardsToDiscard.push(player.cards[suit][last]);
                         }
                     }
                 }

@@ -16,7 +16,6 @@ import { ConfigNames, Phases, Stages } from "./typescript/enums";
  */
 export const enumerate = (G, ctx) => {
     var _a, _b;
-    // TODO Fix it, now just for bot can do RANDOM move
     const moves = [];
     let playerId;
     if (ctx.phase !== null) {
@@ -26,7 +25,7 @@ export const enumerate = (G, ctx) => {
                 activeStageOfCurrentPlayer = Stages.Default3;
             }
             else if (ctx.phase === Phases.PlaceCoinsUline) {
-                // TODO BotPlaceCoinUline
+                // TODO Add BotPlaceCoinUline and others moves only for bots?!
                 activeStageOfCurrentPlayer = Stages.Default1;
             }
             else if (ctx.phase === Phases.PickCards) {

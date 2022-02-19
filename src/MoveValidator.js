@@ -313,7 +313,8 @@ export const moveValidators = {
         getRange: (G, ctx) => {
             const moveMainArgs = [];
             if (G !== undefined && ctx !== undefined) {
-                for (const suit in suitsConfig) {
+                let suit;
+                for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                         if (G.distinctions[suit] === ctx.currentPlayer) {
                             if (ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos]) {
@@ -427,8 +428,8 @@ export const moveValidators = {
             const moveMainArgs = {};
             if (G !== undefined && ctx !== undefined) {
                 for (let i = 0;; i++) {
-                    let isExit = true;
-                    for (const suit in suitsConfig) {
+                    let isExit = true, suit;
+                    for (suit in suitsConfig) {
                         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                             const player = G.publicPlayers[Number(ctx.currentPlayer)];
                             if (player.cards[suit][i] !== undefined) {
@@ -449,7 +450,8 @@ export const moveValidators = {
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, suitNames = [];
-            for (const suit in moveArguments) {
+            let suit;
+            for (suit in moveArguments) {
                 if (Object.prototype.hasOwnProperty.call(moveArguments, suit)) {
                     suitNames.push(suit);
                 }
@@ -755,15 +757,14 @@ export const moveValidators = {
             if (G !== undefined && ctx !== undefined) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)], config = player.stack[0].config, pickedCard = player.pickedCard;
                 if (config !== undefined) {
-                    for (const suit in suitsConfig) {
+                    let suit;
+                    for (suit in suitsConfig) {
                         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                            if (suit !== config.suit
-                                && !(G.drawProfit === ConfigNames.DagdaAction
-                                    && player.actionsNum === 1 && pickedCard !== null
-                                    && `suit` in pickedCard && suit === pickedCard.suit)) {
+                            if (suit !== config.suit && !(G.drawProfit === ConfigNames.DagdaAction
+                                && player.actionsNum === 1 && pickedCard !== null && `suit` in pickedCard
+                                && suit === pickedCard.suit)) {
                                 const last = player.cards[suit].length - 1;
-                                if (last !== -1 && player.cards[suit][last].type !==
-                                    RusCardTypes.HERO) {
+                                if (last !== -1 && !isHeroCard(player.cards[suit][last])) {
                                     moveMainArgs[suit] = [];
                                     (_a = moveMainArgs[suit]) === null || _a === void 0 ? void 0 : _a.push(last);
                                 }
@@ -775,19 +776,18 @@ export const moveValidators = {
             return moveMainArgs;
         },
         getValue: (G, ctx, currentMoveArguments) => {
-            const moveArguments = currentMoveArguments;
-            let suitName;
-            for (const suit in moveArguments) {
+            const moveArguments = currentMoveArguments, suitNamesArray = [];
+            let suit;
+            for (suit in moveArguments) {
                 if (Object.prototype.hasOwnProperty.call(moveArguments, suit)) {
-                    suitName = suit;
+                    suitNamesArray.push(suit);
                 }
             }
+            const suitName = suitNamesArray[Math.floor(Math.random() * suitNamesArray.length)];
             return {
                 suit: suitName,
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                cardId: moveArguments[suitName][Math.floor(
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                Math.random() * moveArguments[suitName].length)],
+                cardId: moveArguments[suitName][Math.floor(Math.random() * moveArguments[suitName].length)],
             };
         },
         moveName: MoveNames.DiscardCardMove,
@@ -1039,8 +1039,8 @@ export const moveBy = {
  */
 const ValidateByValues = (value, values) => values.includes(value);
 const ValidateByObjectCoinIdTypeIsInitialValues = (value, values) => values.findIndex((coin) => value.coinId === coin.coinId && value.type === coin.type && value.isInitial === coin.isInitial) !== -1;
-const ValidateByObjectSuitCardIdValues = (value, values) => 
+const ValidateByObjectSuitCardIdValues = (value, 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-values[value.suit].includes(value.cardId);
+values) => values[value.suit].includes(value.cardId);
 const ValidateByObjectSuitCardIdPlayerIdValues = (value, values) => values.suit === value.suit && values.playerId === value.playerId && values.cards.includes(value.cardId);
 //# sourceMappingURL=MoveValidator.js.map

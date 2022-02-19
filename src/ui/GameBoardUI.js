@@ -60,7 +60,8 @@ export const DrawCurrentPlayerTurn = (data) => (_jsxs("b", { children: ["Current
 export const DrawDistinctions = (data) => {
     const boardCells = [];
     for (let i = 0; i < 1; i++) {
-        for (const suit in suitsConfig) {
+        let suit;
+        for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => data.moves.ClickDistinctionCardMove(suit), title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }, void 0) }, `Distinction ${suit} card`));
             }

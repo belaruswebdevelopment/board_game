@@ -117,13 +117,14 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * @returns Потенциальное значение.
  */
 const PotentialScoring = (player: IPublicPlayer, card: TavernCardTypes): number => {
-    let score = 0;
-    for (const suit in suitsConfig) {
+    let score = 0,
+        suit: SuitTypes;
+    for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             if (isCardNotActionAndNotNull(card) && card.suit === suit) {
                 score += suitsConfig[suit].scoringRule(player.cards[suit], card.points ?? 1);
             } else {
-                score += suitsConfig[suit as SuitTypes].scoringRule(player.cards[suit as SuitTypes]);
+                score += suitsConfig[suit].scoringRule(player.cards[suit]);
             }
         }
     }
