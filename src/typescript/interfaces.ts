@@ -905,6 +905,11 @@ export interface ITavernsConfig {
     readonly [index: number]: ITavernInConfig,
 }
 
+export type StageTypes = keyof IMoveByPlaceCoinsOptions | keyof IMoveByPlaceCoinsUlineOptions
+    | keyof IMoveByPickCardsOptions | keyof IMoveByEnlistmentMercenariesOptions | keyof IMoveByEndTierOptions
+    | keyof IMoveByGetDistinctionsOptions | keyof IMoveByBrisingamensEndGameOptions
+    | keyof IMoveByGetMjollnirProfitOptions;
+
 /**
  * <h3>Типы данных для кэмпа.</h3>
  */
@@ -943,6 +948,8 @@ export type PlayerCardsType = ICard | IArtefactCampCard | IHeroCard;
  * <h3>Типы данных для карт таверн.</h3>
  */
 export type TavernCardTypes = DeckCardTypes | null;
+
+export type AllCardTypes = DeckCardTypes | CampDeckCardTypes | IHeroCard;
 
 /**
  * <h3>Типы данных для монет на столе или в руке.</h3>

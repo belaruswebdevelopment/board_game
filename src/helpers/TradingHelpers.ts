@@ -1,5 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { UpgradeCoinAction } from "../actions/AutoActions";
+import { isCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
 import { CoinType, IBuffs, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
@@ -20,7 +21,7 @@ export const ActivateTrading = (G: IMyGameState, ctx: Ctx): void => {
         const tradingCoins: ICoin[] = [];
         for (let i: number = G.tavernsNum; i < player.boardCoins.length; i++) {
             const coin: CoinType = player.boardCoins[i];
-            if (coin !== null) {
+            if (isCoin(coin)) {
                 tradingCoins.push(coin);
             }
         }
@@ -65,8 +66,7 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
             // }
         }
     }
-    if (player.buffs.find((buff: IBuffs): boolean =>
-        buff.upgradeNextCoin !== undefined)) {
+    if (player.buffs.find((buff: IBuffs): boolean => buff.upgradeNextCoin !== undefined) !== undefined) {
         value = coinsMaxValue;
         upgradingCoinId = G.tavernsNum + coinMinIndex;
         upgradingCoin = tradingCoins[coinMinIndex];

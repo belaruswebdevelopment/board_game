@@ -1,9 +1,12 @@
 import { BoardProps } from "boardgame.io/react";
+import { IsMercenaryCard } from "../Camp";
+import { isActionCard } from "../Card";
+import { isCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes, MoveNames, RusCardTypes } from "../typescript/enums";
-import { ArgsTypes, CampDeckCardTypes, CoinType, DeckCardTypes, IBackground, IHeroCard, IMoveFunctionTypes, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
+import { AllCardTypes, ArgsTypes, CoinType, IBackground, IMoveFunctionTypes, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -59,9 +62,8 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param moveName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[],
-    card: DeckCardTypes | CampDeckCardTypes | IHeroCard, id: number, player: IPublicPlayer | null,
-    suit?: SuitTypes | null, moveName?: string, ...args: ArgsTypes): void => {
+export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], card: AllCardTypes, id: number,
+    player: IPublicPlayer | null, suit?: SuitTypes | null, moveName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         tdClasses = ``,
         spanClasses = ``,
@@ -116,7 +118,8 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         if (suit === null) {
             tdClasses = `bg-gray-600`;
         }
-    } else if (card.type === RusCardTypes.MERCENARY || card.type === RusCardTypes.ARTEFACT) {
+        // TODO Fix it types!
+    } else if (IsMercenaryCard(card) || card.type === RusCardTypes.ARTEFACT) {
         if (`tier` in card && `path` in card) {
             styles = Styles.CampCards(card.tier, card.path);
         }
@@ -142,7 +145,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     }
     if (`points` in card) {
         value = card.points !== null ? String(card.points) : ``;
-    } else if (`value` in card) {
+    } else if (isActionCard(card)) {
         value = String(card.value);
     }
     playerCells.push(
@@ -210,7 +213,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         tdClasses += ` cursor-pointer`;
     }
     if (type === `market`) {
-        if (coin !== null) {
+        if (isCoin(coin)) {
             styles = Styles.Coin(coin.value, false);
             spanClasses = `bg-market-coin`;
             if (coinClasses !== null && coinClasses !== undefined) {
@@ -251,7 +254,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     }
     playerCells.push(
         <td className={tdClasses} onClick={() => action?.(...args)}
-            key={`${player?.nickname ? `player ${player.nickname} ` : ``}coin ${id}${coin !== null ? ` ${coin.value}` : ` empty`}`}>
+            key={`${player?.nickname ? `player ${player.nickname} ` : ``}coin ${id}${isCoin(coin) ? ` ${coin.value}` : ` empty`}`}>
             <span style={styles} className={spanClasses}>
                 {span}
             </span>

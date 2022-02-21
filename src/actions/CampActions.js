@@ -1,3 +1,4 @@
+import { isCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { isHeroCard } from "../Hero";
@@ -16,11 +17,16 @@ import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions"
  * @param coinId Id монеты.
  */
 export const AddCoinToPouchAction = (G, ctx, coinId) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
-    player.boardCoins[tempId] = player.handCoins[coinId];
-    player.handCoins[coinId] = null;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} положил монету ценностью '${player.boardCoins[tempId]}' в свой кошелёк.`);
-    StartVidofnirVedrfolnirAction(G, ctx);
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && !isCoin(coin));
+    if (tempId !== -1) {
+        player.boardCoins[tempId] = player.handCoins[coinId];
+        player.handCoins[coinId] = null;
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} положил монету ценностью '${player.boardCoins[tempId]}' в свой кошелёк.`);
+        StartVidofnirVedrfolnirAction(G, ctx);
+    }
+    else {
+        // TODO Error!
+    }
 };
 /**
  * <h3>Действия, связанные с сбросом карты из конкретной фракции игрока.</h3>
@@ -37,7 +43,7 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
  */
 export const DiscardSuitCardAction = (G, ctx, suit, playerId, cardId) => {
     // TODO Rework it for players and fix it for bots?
-    // Todo ctx.playerID === playerId???
+    // TODO ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         const player = G.publicPlayers[Number(playerId)], discardedCard = player.cards[suit].splice(cardId, 1)[0];
         if (!isHeroCard(discardedCard)) {

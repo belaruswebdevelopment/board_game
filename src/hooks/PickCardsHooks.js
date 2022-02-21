@@ -1,3 +1,4 @@
+import { IsMercenaryCard } from "../Camp";
 import { AddPickCardActionToStack, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
@@ -6,7 +7,7 @@ import { ActivateTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
-import { LogTypes, RusCardTypes, Stages } from "../typescript/enums";
+import { LogTypes, Stages } from "../typescript/enums";
 export const OnPickCardsMove = (G, ctx) => {
     var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -101,7 +102,7 @@ export const EndPickCardsActions = (G, ctx) => {
             let startThrud = true;
             if (G.expansions.thingvellir.active) {
                 for (let i = 0; i < G.publicPlayers.length; i++) {
-                    startThrud = G.publicPlayers[i].campCards.filter((card) => card.type === RusCardTypes.MERCENARY).length === 0;
+                    startThrud = G.publicPlayers[i].campCards.filter((card) => IsMercenaryCard(card)).length === 0;
                     if (!startThrud) {
                         break;
                     }

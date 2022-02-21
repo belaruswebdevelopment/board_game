@@ -4,7 +4,7 @@ import { isCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { ConfigNames, Phases, Stages } from "./typescript/enums";
-import { IBuffs, IConfig, IMoves, IMoveValidator, IMyGameState, MoveArgsTypes, MoveByTypes, MoveValidatorGetRangeTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import { IBuffs, IConfig, IMoves, IMoveValidator, IMyGameState, MoveArgsTypes, MoveByTypes, MoveValidatorGetRangeTypes, StageTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -21,7 +21,9 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
     const moves: IMoves[] = [];
     let playerId: number | undefined;
     if (ctx.phase !== null) {
-        let activeStageOfCurrentPlayer: string = ctx.activePlayers?.[Number(ctx.currentPlayer)] ?? `default`;
+        const currentStage: string | undefined = ctx.activePlayers?.[Number(ctx.currentPlayer)];
+        let activeStageOfCurrentPlayer: StageTypes | `default` =
+            currentStage !== undefined ? currentStage as StageTypes : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
             if (ctx.phase === Phases.PlaceCoins) {
                 activeStageOfCurrentPlayer = Stages.Default3;
@@ -79,38 +81,42 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                 activeStageOfCurrentPlayer = Stages.Default1;
             }
         }
-        // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
-        const validator: IMoveValidator | undefined =
-            GetValidator(ctx.phase as MoveByTypes, activeStageOfCurrentPlayer);
-        if (validator !== undefined) {
-            const moveName: string = validator.moveName,
-                moveRangeData: MoveValidatorGetRangeTypes = validator.getRange(G, ctx, playerId),
-                moveValue: ValidMoveIdParamTypes = validator.getValue(G, ctx, moveRangeData);
-            let moveValues: MoveArgsTypes = [];
-            if (typeof moveValue === `number`) {
-                moveValues = [moveValue];
-            } else if (typeof moveValue === `string`) {
-                moveValues = [moveValue];
-            } else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
-                if (`coinId` in moveValue) {
-                    moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
-                } else if (`playerId` in moveValue) {
-                    moveValues = [moveValue.suit, moveValue.playerId, moveValue.cardId];
-                } else if (`suit` in moveValue) {
-                    moveValues = [moveValue.suit, moveValue.cardId];
+        if (activeStageOfCurrentPlayer !== `default`) {
+            // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
+            const validator: IMoveValidator | null =
+                GetValidator(ctx.phase as MoveByTypes, activeStageOfCurrentPlayer);
+            if (validator !== null) {
+                const moveName: string = validator.moveName,
+                    moveRangeData: MoveValidatorGetRangeTypes = validator.getRange(G, ctx, playerId),
+                    moveValue: ValidMoveIdParamTypes = validator.getValue(G, ctx, moveRangeData);
+                let moveValues: MoveArgsTypes = [];
+                if (typeof moveValue === `number`) {
+                    moveValues = [moveValue];
+                } else if (typeof moveValue === `string`) {
+                    moveValues = [moveValue];
+                } else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
+                    if (`coinId` in moveValue) {
+                        moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
+                    } else if (`playerId` in moveValue) {
+                        moveValues = [moveValue.suit, moveValue.playerId, moveValue.cardId];
+                    } else if (`suit` in moveValue) {
+                        moveValues = [moveValue.suit, moveValue.cardId];
+                    }
+                } else if (moveValue === null) {
+                    moveValues = [];
+                } else if (Array.isArray(moveValue)) {
+                    moveValues = [moveValue];
                 }
-            } else if (moveValue === null) {
-                moveValues = [];
-            } else if (Array.isArray(moveValue)) {
-                moveValues = [moveValue];
+                moves.push({
+                    move: moveName,
+                    args: moveValues,
+                });
             }
-            moves.push({
-                move: moveName,
-                args: moveValues,
-            });
-        }
-        if (moves.length === 0) {
-            console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
+            if (moves.length === 0) {
+                console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
+            }
+        } else {
+            // TODO Error activeStageOfCurrentPlayer can't === `default`!
         }
     }
     return moves;
@@ -184,9 +190,18 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
  * @returns
  */
 export const objectives = (): {
-    isEarlyGame: { weight: number; checker: (G: IMyGameState) => boolean; };
-    isFirst: { weight: number; checker: (G: IMyGameState, ctx: Ctx) => boolean; };
-    isStronger: { weight: number; checker: (G: IMyGameState, ctx: Ctx) => boolean; };
+    isEarlyGame: {
+        weight: number,
+        checker: (G: IMyGameState) => boolean,
+    };
+    isFirst: {
+        weight: number,
+        checker: (G: IMyGameState, ctx: Ctx) => boolean,
+    };
+    isStronger: {
+        weight: number,
+        checker: (G: IMyGameState, ctx: Ctx) => boolean,
+    };
 } => ({
     isEarlyGame: {
         checker: (G: IMyGameState): boolean => {

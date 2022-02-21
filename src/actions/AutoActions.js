@@ -1,4 +1,4 @@
-import { ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
+import { isCoin, ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
@@ -29,15 +29,23 @@ export const AddPickHeroAction = (G, ctx) => {
  */
 export const DiscardTradingCoinAction = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    let tradingCoinIndex = player.boardCoins.findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading));
-    if (player.buffs.find((buff) => buff.everyTurn !== undefined)
+    let tradingCoinIndex = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true);
+    if (player.buffs.find((buff) => buff.everyTurn !== undefined) !== undefined
         && tradingCoinIndex === -1) {
         tradingCoinIndex =
-            player.handCoins.findIndex((coin) => Boolean(coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading));
-        player.handCoins.splice(tradingCoinIndex, 1, null);
+            player.handCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true);
+        if (tradingCoinIndex !== -1) {
+            player.handCoins.splice(tradingCoinIndex, 1, null);
+        }
+        else {
+            // TODO Error!
+        }
+    }
+    else if (tradingCoinIndex !== -1) {
+        player.boardCoins.splice(tradingCoinIndex, 1, null);
     }
     else {
-        player.boardCoins.splice(tradingCoinIndex, 1, null);
+        // TODO Error!
     }
     AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил монету активирующую обмен.`);
 };
@@ -103,16 +111,16 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
  * @param ctx
  */
 export const StartVidofnirVedrfolnirAction = (G, ctx) => {
-    var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)], number = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = player.handCoins.length;
-    if (player.buffs.find((buff) => buff.everyTurn !== undefined) && number > 0
-        && handCoinsNumber) {
+    if (player.buffs.find((buff) => buff.everyTurn !== undefined) !== undefined
+        && number > 0 && handCoinsNumber) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(number)]);
     }
     else {
         let coinsValue = 0, stack = [];
         for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
-            if (!((_a = player.boardCoins[j]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
+            const coin = player.boardCoins[j];
+            if (isCoin(coin) && !coin.isTriggerTrading) {
                 coinsValue++;
             }
         }

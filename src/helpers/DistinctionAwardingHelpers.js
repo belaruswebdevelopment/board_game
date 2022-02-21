@@ -30,12 +30,17 @@ export const ExplorerDistinctionAwarding = (G, ctx, player) => {
 export const HunterDistinctionAwarding = (G, ctx, player) => {
     if (G.tierToEnd !== 0) {
         const tradingCoinIndex = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === 0);
-        player.boardCoins[tradingCoinIndex] = CreateCoin({
-            value: 3,
-            isTriggerTrading: true,
-        });
-        G.distinctions[SuitNames.HUNTER] = undefined;
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
+        if (tradingCoinIndex !== -1) {
+            player.boardCoins[tradingCoinIndex] = CreateCoin({
+                value: 3,
+                isTriggerTrading: true,
+            });
+            G.distinctions[SuitNames.HUNTER] = undefined;
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
+        }
+        else {
+            // TODO Error!
+        }
     }
     return 0;
 };

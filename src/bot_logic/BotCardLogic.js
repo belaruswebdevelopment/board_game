@@ -1,4 +1,4 @@
-import { CreateCard, isCardNotActionAndNotNull } from "../Card";
+import { CreateCard, isActionCard, isCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 // Check all types in this file!
 /**
@@ -14,13 +14,13 @@ import { suitsConfig } from "../data/SuitData";
  * @returns Сравнительное значение.
  */
 export const CompareCards = (card1, card2) => {
+    var _a, _b;
     if (card1 === null || card2 === null) {
         return 0;
     }
     if (isCardNotActionAndNotNull(card1) && isCardNotActionAndNotNull(card2)) {
         if (card1.suit === card2.suit) {
-            const result = (card1.points !== undefined && card1.points !== null ?
-                card1.points : 1) - (card2.points !== undefined && card2.points !== null ? card2.points : 1);
+            const result = ((_a = card1.points) !== null && _a !== void 0 ? _a : 1) - ((_b = card2.points) !== null && _b !== void 0 ? _b : 1);
             if (result === 0) {
                 return result;
             }
@@ -115,7 +115,7 @@ const PotentialScoring = (player, card) => {
             }
         }
     }
-    if (card !== null && `value` in card) {
+    if (isActionCard(card)) {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {

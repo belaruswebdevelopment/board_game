@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { IsArtefactDiscardCard, IsMercenaryCard } from "../Camp";
-import { CreateCard, isActionDiscardCard, isCardNotActionAndNotNull } from "../Card";
+import { CreateCard, isActionCard, isCardNotActionAndNotNull } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddBuffToPlayer, DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
@@ -70,8 +70,8 @@ export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     player.pickedCard =
         player.campCards.filter((card: CampDeckCardTypes): boolean => IsMercenaryCard(card))[cardId];
-    const pickedCard: PickedCardType = player.pickedCard;
-    if (pickedCard !== null) {
+    const pickedCard: CampDeckCardTypes = player.pickedCard;
+    if (IsMercenaryCard(pickedCard)) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы ${ctx.phase} выбрал наёмника '${pickedCard.name}'.`);
     } else {
@@ -139,7 +139,7 @@ export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void
             AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
         }
     }
-    if (isAdded && !isActionDiscardCard(pickedCard)) {
+    if (isAdded && !isActionCard(pickedCard)) {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
     }
     AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} взял карту ${pickedCard.name} из колоды сброса.`);
@@ -159,41 +159,41 @@ export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void
 export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         pickedCard: PickedCardType = player.pickedCard;
-    if (pickedCard !== null) {
-        if (IsMercenaryCard(pickedCard)) {
-            if (pickedCard.variants !== undefined) {
-                const cardVariants: IVariant | undefined = pickedCard.variants[suit];
-                if (cardVariants !== undefined) {
-                    const mercenaryCard: ICard = CreateCard({
-                        type: RusCardTypes.MERCENARY,
-                        suit,
-                        rank: 1,
-                        points: cardVariants.points,
-                        name: pickedCard.name,
-                        tier: pickedCard.tier,
-                        path: pickedCard.path,
-                    });
-                    AddCardToPlayer(G, ctx, mercenaryCard);
-                    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы 'Enlistment Mercenaries' завербовал наёмника '${mercenaryCard.name}'.`);
-                    const cardIndex: number =
-                        player.campCards.findIndex((card: CampDeckCardTypes): boolean =>
-                            card.name === pickedCard.name);
+    if (IsMercenaryCard(pickedCard)) {
+        if (pickedCard.variants !== undefined) {
+            const cardVariants: IVariant | undefined = pickedCard.variants[suit];
+            if (cardVariants !== undefined) {
+                const mercenaryCard: ICard = CreateCard({
+                    type: RusCardTypes.MERCENARY,
+                    suit,
+                    rank: 1,
+                    points: cardVariants.points,
+                    name: pickedCard.name,
+                    tier: pickedCard.tier,
+                    path: pickedCard.path,
+                });
+                AddCardToPlayer(G, ctx, mercenaryCard);
+                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы 'Enlistment Mercenaries' завербовал наёмника '${mercenaryCard.name}'.`);
+                const cardIndex: number =
+                    player.campCards.findIndex((card: CampDeckCardTypes): boolean =>
+                        card.name === pickedCard.name);
+                if (cardIndex !== -1) {
                     player.campCards.splice(cardIndex, 1);
                     if (player.campCards.filter((card: CampDeckCardTypes): boolean =>
                         IsMercenaryCard(card)).length) {
                         AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
                     }
-                    CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
                 } else {
                     // TODO Error!
                 }
+                CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
             } else {
-                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
+                // TODO Error!
             }
         } else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Вместо карты наёмника взята карта другого типа.`);
+            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
         }
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не взята карта наёмника.`);
+        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Вместо карты наёмника взята карта другого типа.`);
     }
 };

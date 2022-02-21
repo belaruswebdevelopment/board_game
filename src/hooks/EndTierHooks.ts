@@ -50,22 +50,26 @@ export const CheckEndTierOrder = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
     const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
         Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
-    if (G.tierToEnd === 0) {
-        const player: IPublicPlayer = G.publicPlayers[yludIndex],
-            cards: PlayerCardsType[] = Object.values(player.cards).flat(),
-            index: number =
-                cards.findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
-        if (index !== -1) {
-            const suit: SuitTypes | null = cards[index].suit;
-            if (suit !== null) {
-                const yludCardIndex: number =
-                    player.cards[suit].findIndex((card: PlayerCardsType): boolean =>
-                        card.name === HeroNames.Ylud);
-                player.cards[suit].splice(yludCardIndex, 1);
+    if (yludIndex !== -1) {
+        if (G.tierToEnd === 0) {
+            const player: IPublicPlayer = G.publicPlayers[yludIndex],
+                cards: PlayerCardsType[] = Object.values(player.cards).flat(),
+                index: number =
+                    cards.findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
+            if (index !== -1) {
+                const suit: SuitTypes | null = cards[index].suit;
+                if (suit !== null) {
+                    const yludCardIndex: number =
+                        player.cards[suit].findIndex((card: PlayerCardsType): boolean =>
+                            card.name === HeroNames.Ylud);
+                    player.cards[suit].splice(yludCardIndex, 1);
+                }
             }
         }
+        G.publicPlayersOrder.push(String(yludIndex));
+    } else {
+        // TODO Error!
     }
-    G.publicPlayersOrder.push(String(yludIndex));
 };
 
 export const CheckEndEndTierTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {

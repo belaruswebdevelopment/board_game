@@ -1,10 +1,12 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { isActionDiscardCard, isCardNotActionAndNotNull } from "../Card";
+import { IsMercenaryCard } from "../Camp";
+import { isActionCard, isCardNotActionAndNotNull } from "../Card";
+import { isCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { isHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
+import { ConfigNames, DrawNames, MoveNames } from "../typescript/enums";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 // TODO Add functions dock blocks
 export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
@@ -146,7 +148,7 @@ export const ExplorerDistinctionProfit = (G, ctx, data, boardCells) => {
     }
 };
 export const GetEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], mercenaries = player.campCards.filter((card) => card.type === RusCardTypes.MERCENARY);
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], mercenaries = player.campCards.filter((card) => IsMercenaryCard(card));
     for (let j = 0; j < mercenaries.length; j++) {
         DrawCard(data, boardCells, mercenaries[j], j, player, null, MoveNames.GetEnlistmentMercenariesMove, j);
     }
@@ -178,7 +180,7 @@ export const PickDiscardCardProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
         const card = G.discardCardsDeck[j];
         let suit = null;
-        if (!isActionDiscardCard(card)) {
+        if (!isActionCard(card)) {
             suit = card.suit;
         }
         DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.PickDiscardCardMove, j);
@@ -254,20 +256,26 @@ export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     }
 };
 export const UpgradeCoinProfit = (G, ctx, data, boardCells) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], handCoins = player.handCoins.filter((coin) => coin !== null);
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], handCoins = player.handCoins.filter((coin) => isCoin(coin));
     let handCoinIndex = -1;
     for (let j = 0; j < player.boardCoins.length; j++) {
         const boardCoin = player.boardCoins[j];
-        if (player.buffs.find((buff) => buff.everyTurn !== undefined)
+        if (player.buffs.find((buff) => buff.everyTurn !== undefined) !== undefined
             && boardCoin === null) {
             handCoinIndex++;
-            const handCoinNotNull = handCoins[handCoinIndex], handCoinId = player.handCoins.findIndex((coin) => coin !== null && handCoinNotNull !== null && coin.value === handCoinNotNull.value
-                && coin.isInitial === handCoinNotNull.isInitial), handCoin = player.handCoins[handCoinId];
-            if (handCoin !== null && !handCoin.isTriggerTrading) {
-                DrawCoin(data, boardCells, `coin`, handCoin, j, player, `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `hand`, handCoin.isInitial);
+            const handCoinNotNull = handCoins[handCoinIndex], handCoinId = player.handCoins.findIndex((coin) => isCoin(handCoinNotNull) && (coin === null || coin === void 0 ? void 0 : coin.value) === handCoinNotNull.value
+                && coin.isInitial === handCoinNotNull.isInitial);
+            if (handCoinId !== -1) {
+                const handCoin = player.handCoins[handCoinId];
+                if (isCoin(handCoin) && !handCoin.isTriggerTrading) {
+                    DrawCoin(data, boardCells, `coin`, handCoin, j, player, `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `hand`, handCoin.isInitial);
+                }
+            }
+            else {
+                // TODO Is it need Error!?
             }
         }
-        else if (boardCoin !== null && !boardCoin.isTriggerTrading) {
+        else if (isCoin(boardCoin) && !boardCoin.isTriggerTrading) {
             DrawCoin(data, boardCells, `coin`, boardCoin, j, player, `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `board`, boardCoin.isInitial);
         }
     }
@@ -277,9 +285,9 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G, ctx, data, boardCells) =>
     if (config !== undefined) {
         for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
             const coin = player.boardCoins[j];
-            if (coin !== null) {
+            if (isCoin(coin)) {
                 if (!coin.isTriggerTrading && config.coinId !== j) {
-                    DrawCoin(data, boardCells, `coin`, player.boardCoins[j], j, player, `border-2`, null, MoveNames.UpgradeCoinVidofnirVedrfolnirMove, j, `board`, coin.isInitial);
+                    DrawCoin(data, boardCells, `coin`, coin, j, player, `border-2`, null, MoveNames.UpgradeCoinVidofnirVedrfolnirMove, j, `board`, coin.isInitial);
                 }
             }
         }

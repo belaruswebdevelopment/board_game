@@ -1,4 +1,5 @@
 import { Ctx } from "boardgame.io";
+import { isCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { isHeroCard } from "../Hero";
@@ -21,11 +22,15 @@ import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions"
 export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         tempId: number = player.boardCoins.findIndex((coin: CoinType, index: number): boolean =>
-            index >= G.tavernsNum && coin === null);
-    player.boardCoins[tempId] = player.handCoins[coinId];
-    player.handCoins[coinId] = null;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} положил монету ценностью '${player.boardCoins[tempId]}' в свой кошелёк.`);
-    StartVidofnirVedrfolnirAction(G, ctx);
+            index >= G.tavernsNum && !isCoin(coin));
+    if (tempId !== -1) {
+        player.boardCoins[tempId] = player.handCoins[coinId];
+        player.handCoins[coinId] = null;
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} положил монету ценностью '${player.boardCoins[tempId]}' в свой кошелёк.`);
+        StartVidofnirVedrfolnirAction(G, ctx);
+    } else {
+        // TODO Error!
+    }
 };
 
 /**
@@ -44,7 +49,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
 export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, playerId: number, cardId: number):
     void => {
     // TODO Rework it for players and fix it for bots?
-    // Todo ctx.playerID === playerId???
+    // TODO ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         const player: IPublicPlayer = G.publicPlayers[Number(playerId)],
             discardedCard: PlayerCardsType = player.cards[suit].splice(cardId, 1)[0];

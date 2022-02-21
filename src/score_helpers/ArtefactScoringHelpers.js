@@ -1,8 +1,9 @@
 import { IsMercenaryCard } from "../Camp";
+import { isCoin } from "../Coin";
 import { TotalRank } from "./ScoreHelpers";
 export const DraupnirScoring = (player) => {
     if (player !== undefined) {
-        return player.boardCoins.filter((coin) => Boolean(coin !== null && coin.value >= 15)).length * 6;
+        return player.boardCoins.filter((coin) => isCoin(coin) && coin.value >= 15).length * 6;
     }
     // TODO error!?
     return 0;

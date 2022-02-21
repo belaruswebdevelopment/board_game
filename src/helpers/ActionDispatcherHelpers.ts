@@ -50,7 +50,7 @@ const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes => {
  * @param ctx
  * @param action Объект автоматических действий.
  */
-export const StartAutoAction = (G: IMyGameState, ctx: Ctx, action: IAction | undefined): void => {
+export const StartAutoAction = (G: IMyGameState, ctx: Ctx, action?: IAction): void => {
     if (action !== undefined) {
         const actionDispatcher: IActionFunctionTypes = ActionDispatcherSwitcher(action.name);
         if (action.params !== undefined) {

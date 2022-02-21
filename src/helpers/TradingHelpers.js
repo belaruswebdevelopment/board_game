@@ -1,4 +1,5 @@
 import { UpgradeCoinAction } from "../actions/AutoActions";
+import { isCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
 /**
@@ -18,7 +19,7 @@ export const ActivateTrading = (G, ctx) => {
         const tradingCoins = [];
         for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
             const coin = player.boardCoins[i];
-            if (coin !== null) {
+            if (isCoin(coin)) {
                 tradingCoins.push(coin);
             }
         }
@@ -55,7 +56,7 @@ const Trading = (G, ctx, tradingCoins) => {
             // }
         }
     }
-    if (player.buffs.find((buff) => buff.upgradeNextCoin !== undefined)) {
+    if (player.buffs.find((buff) => buff.upgradeNextCoin !== undefined) !== undefined) {
         value = coinsMaxValue;
         upgradingCoinId = G.tavernsNum + coinMinIndex;
         upgradingCoin = tradingCoins[coinMinIndex];

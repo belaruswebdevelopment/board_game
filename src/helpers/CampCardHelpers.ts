@@ -23,10 +23,10 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     if (ctx.phase === Phases.PickCards && ctx.activePlayers === null && (ctx.currentPlayer === G.publicPlayersOrder[0]
-        || player.buffs.find((buff: IBuffs): boolean => buff.goCamp !== undefined))) {
+        || player.buffs.find((buff: IBuffs): boolean => buff.goCamp !== undefined) !== undefined)) {
         G.campPicked = true;
     }
-    if (player.buffs.find((buff: IBuffs): boolean => buff.goCampOneTime !== undefined)) {
+    if (player.buffs.find((buff: IBuffs): boolean => buff.goCampOneTime !== undefined) !== undefined) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
     if (IsArtefactCardNotMercenary(card) && card.suit !== null) {

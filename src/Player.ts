@@ -71,7 +71,8 @@ export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
                 G.publicPlayersOrder.push(String(i));
             }
         } else {
-            if (G.publicPlayers[i].buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)) {
+            if (G.publicPlayers[i].buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !==
+                undefined) {
                 G.publicPlayersOrder.push(String(i));
             }
         }

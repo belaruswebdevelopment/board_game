@@ -1,10 +1,10 @@
 import { Ctx, StageArg } from "boardgame.io";
-import { ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
+import { isCoin, ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { LogTypes, Stages } from "../typescript/enums";
-import { ArgsTypes, CoinType, IBuffs, IConfig, IMyGameState, IPublicPlayer, IStack, SuitTypes } from "../typescript/interfaces";
+import { ArgsTypes, CoinType, IBuffs, IConfig, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
@@ -34,14 +34,20 @@ export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx): void => {
 export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     let tradingCoinIndex: number =
-        player.boardCoins.findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
-    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
+        player.boardCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
+    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !== undefined
         && tradingCoinIndex === -1) {
         tradingCoinIndex =
-            player.handCoins.findIndex((coin: CoinType): boolean => Boolean(coin?.isTriggerTrading));
-        player.handCoins.splice(tradingCoinIndex, 1, null);
-    } else {
+            player.handCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
+        if (tradingCoinIndex !== -1) {
+            player.handCoins.splice(tradingCoinIndex, 1, null);
+        } else {
+            // TODO Error!
+        }
+    } else if (tradingCoinIndex !== -1) {
         player.boardCoins.splice(tradingCoinIndex, 1, null);
+    } else {
+        // TODO Error!
     }
     AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил монету активирующую обмен.`);
 };
@@ -80,7 +86,7 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
     if (config !== undefined && config.suit !== undefined) {
         const value: Record<string, StageArg> = {};
         for (let i = 0; i < ctx.numPlayers; i++) {
-            if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[config.suit as SuitTypes].length) {
+            if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[config.suit].length) {
                 value[i] = {
                     stage: Stages.DiscardSuitCard,
                 };
@@ -112,14 +118,15 @@ export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void =
         number: number = player.boardCoins.filter((coin: CoinType, index: number): boolean =>
             index >= G.tavernsNum && coin === null).length,
         handCoinsNumber: number = player.handCoins.length;
-    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) && number > 0
-        && handCoinsNumber) {
+    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !== undefined
+        && number > 0 && handCoinsNumber) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(number)]);
     } else {
         let coinsValue = 0,
             stack: IStack[] = [];
         for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
-            if (!player.boardCoins[j]?.isTriggerTrading) {
+            const coin: CoinType = player.boardCoins[j];
+            if (isCoin(coin) && !coin.isTriggerTrading) {
                 coinsValue++;
             }
         }

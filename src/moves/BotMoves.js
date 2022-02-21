@@ -1,4 +1,5 @@
 import { INVALID_MOVE } from "boardgame.io/core";
+import { isCoin } from "../Coin";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
 /**
@@ -19,7 +20,7 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     for (let i = 0; i < player.boardCoins.length; i++) {
-        const coinId = coinsOrder[i] || player.handCoins.findIndex((coin) => coin !== null);
+        const coinId = coinsOrder[i] || player.handCoins.findIndex((coin) => isCoin(coin));
         if (coinId !== -1) {
             player.boardCoins[i] = player.handCoins[coinId];
             player.handCoins[coinId] = null;

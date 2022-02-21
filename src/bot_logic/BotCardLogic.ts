@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { CreateCard, isCardNotActionAndNotNull } from "../Card";
+import { CreateCard, isActionCard, isCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { IAverageSuitCardData, ICard, IMyGameState, IPublicPlayer, ISuit, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
@@ -22,8 +22,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
     }
     if (isCardNotActionAndNotNull(card1) && isCardNotActionAndNotNull(card2)) {
         if (card1.suit === card2.suit) {
-            const result: number = (card1.points !== undefined && card1.points !== null ?
-                card1.points : 1) - (card2.points !== undefined && card2.points !== null ? card2.points : 1);
+            const result: number = (card1.points ?? 1) - (card2.points ?? 1);
             if (result === 0) {
                 return result;
             }
@@ -128,7 +127,7 @@ const PotentialScoring = (player: IPublicPlayer, card: TavernCardTypes): number 
             }
         }
     }
-    if (card !== null && `value` in card) {
+    if (isActionCard(card)) {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {

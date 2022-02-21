@@ -81,7 +81,7 @@ export const AddGetMjollnirProfitActionsToStack = (G: IMyGameState, ctx: Ctx): v
  * @param G
  */
 const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
-    // TODO Add LogTypes.ERROR logging ?
+    // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
     for (let i = 0; i < G.camp.length; i++) {
         if (G.camp[i] !== null) {
             const card: CampCardTypes = G.camp.splice(i, 1, null)[0];

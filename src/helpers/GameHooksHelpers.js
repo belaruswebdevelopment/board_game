@@ -1,4 +1,5 @@
 import { IsMercenaryCard } from "../Camp";
+import { isCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
 import { HeroNames, LogTypes, Phases, Stages } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
@@ -70,7 +71,7 @@ export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
                 if (tradingCoinPlacesLength > 0) {
                     if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== Stages.PlaceTradingCoinsUline
                         && tradingCoinPlacesLength === 2) {
-                        const handCoinsLength = player.handCoins.filter((coin) => coin !== null).length;
+                        const handCoinsLength = player.handCoins.filter((coin) => isCoin(coin)).length;
                         player.actionsNum =
                             G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
                     }
@@ -198,8 +199,13 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
         const player = G.publicPlayers[i], playerCards = Object.values(player.cards).flat(), thrud = playerCards.find((card) => card.name === HeroNames.Thrud);
         if (thrud !== undefined && thrud.suit !== null) {
             const thrudIndex = player.cards[thrud.suit].findIndex((card) => card.name === HeroNames.Thrud);
-            player.cards[thrud.suit].splice(thrudIndex, 1);
-            AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${player.nickname} уходит с игрового поля.`);
+            if (thrudIndex !== undefined) {
+                player.cards[thrud.suit].splice(thrudIndex, 1);
+                AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${player.nickname} уходит с игрового поля.`);
+            }
+            else {
+                // TODO Error!
+            }
         }
     }
 };

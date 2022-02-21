@@ -50,7 +50,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): 
     for (let i = 0; i < player.boardCoins.length; i++) {
         coinsValue += player.boardCoins[i]?.value ?? 0;
     }
-    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)) {
+    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !== undefined) {
         for (let i = 0; i < player.handCoins.length; i++) {
             coinsValue += player.handCoins[i]?.value ?? 0;
         }
@@ -60,7 +60,8 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): 
     const warriorsDistinction: number[] | undefined = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR),
         playerIndex: number =
             G.publicPlayers.findIndex((p: IPublicPlayer): boolean => p.nickname === player.nickname);
-    if (warriorsDistinction !== undefined && warriorsDistinction.includes(playerIndex)) {
+    if (warriorsDistinction !== undefined && playerIndex !== -1
+        && warriorsDistinction.includes(playerIndex)) {
         const warriorDistinctionScore: number = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
         score += warriorDistinctionScore;
         if (warriorDistinctionScore) {

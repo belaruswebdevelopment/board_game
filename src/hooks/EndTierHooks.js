@@ -45,17 +45,22 @@ export const CheckEndEndTierPhase = (G, ctx) => {
 export const CheckEndTierOrder = (G) => {
     G.publicPlayersOrder = [];
     const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
-    if (G.tierToEnd === 0) {
-        const player = G.publicPlayers[yludIndex], cards = Object.values(player.cards).flat(), index = cards.findIndex((card) => card.name === HeroNames.Ylud);
-        if (index !== -1) {
-            const suit = cards[index].suit;
-            if (suit !== null) {
-                const yludCardIndex = player.cards[suit].findIndex((card) => card.name === HeroNames.Ylud);
-                player.cards[suit].splice(yludCardIndex, 1);
+    if (yludIndex !== -1) {
+        if (G.tierToEnd === 0) {
+            const player = G.publicPlayers[yludIndex], cards = Object.values(player.cards).flat(), index = cards.findIndex((card) => card.name === HeroNames.Ylud);
+            if (index !== -1) {
+                const suit = cards[index].suit;
+                if (suit !== null) {
+                    const yludCardIndex = player.cards[suit].findIndex((card) => card.name === HeroNames.Ylud);
+                    player.cards[suit].splice(yludCardIndex, 1);
+                }
             }
         }
+        G.publicPlayersOrder.push(String(yludIndex));
     }
-    G.publicPlayersOrder.push(String(yludIndex));
+    else {
+        // TODO Error!
+    }
 };
 export const CheckEndEndTierTurn = (G, ctx) => {
     return EndTurnActions(G, ctx);

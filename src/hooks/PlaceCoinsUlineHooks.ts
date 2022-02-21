@@ -1,4 +1,5 @@
 import { Ctx } from "boardgame.io";
+import { isCoin } from "../Coin";
 import { CheckPlayersBasicOrder } from "../Player";
 import { IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
@@ -17,7 +18,9 @@ export const CheckEndPlaceCoinsUlinePhase = (G: IMyGameState): boolean | void =>
         const ulinePlayerIndex: number =
             G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
                 Boolean(player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
-        return G.publicPlayers[ulinePlayerIndex].boardCoins[G.currentTavern + 1] !== null;
+        if (ulinePlayerIndex !== - 1) {
+            return isCoin(G.publicPlayers[ulinePlayerIndex].boardCoins[G.currentTavern + 1]);
+        }
     }
 };
 

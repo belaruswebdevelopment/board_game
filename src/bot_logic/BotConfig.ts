@@ -22,16 +22,20 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
     let result: number[] = Array(taverns.length).fill(0);
     const temp: number[] = taverns.map((tavern: TavernCardTypes[]): number =>
         absoluteHeuristicsForTradingCoin.reduce((acc: number, item: {
-            heuristic: (cards: TavernCardTypes[]) => boolean; weight: number;
+            heuristic: (cards: TavernCardTypes[]) => boolean,
+            weight: number,
         }): number => acc + (tavern !== null && item.heuristic(tavern) ? item.weight : 0), 0));
     result = result.map((value: number, index: number) => value + temp[index]);
     const tempNumbers: number[][] =
         taverns.map((tavern: (DeckCardTypes | null)[]): number[] =>
-            tavern.map((card: ICard | IActionCard | null, index: number, arr: (DeckCardTypes | null)[]):
-                number => EvaluateCard(G, ctx, card, index, arr)));
+            tavern.map((card: ICard | IActionCard | null, index: number,
+                arr: (DeckCardTypes | null)[]): number =>
+                EvaluateCard(G, ctx, card, index, arr)));
     const tempChars: { mean: number; variation: number; }[] =
-        tempNumbers.map((element: number[]): { mean: number, variation: number; } =>
-            GetCharacteristics(element));
+        tempNumbers.map((element: number[]): {
+            mean: number,
+            variation: number,
+        } => GetCharacteristics(element));
     let maxIndex = 0,
         minIndex: number = tempChars.length - 1;
     for (let i = 1; i < temp.length; i++) {

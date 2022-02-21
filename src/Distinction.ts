@@ -56,7 +56,11 @@ export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: Su
     const max: number = Math.max(...playersRanks),
         maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max),
         playerDistinctionIndex: number = playersRanks.indexOf(maxPlayers[0]);
-    AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} получил игрок: ${G.publicPlayers[playerDistinctionIndex].nickname}.`);
+    if (playerDistinctionIndex !== -1) {
+        AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} получил игрок: ${G.publicPlayers[playerDistinctionIndex].nickname}.`);
+    } else {
+        // TODO Error!
+    }
     return maxPlayers;
 };
 

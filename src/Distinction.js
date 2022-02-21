@@ -50,7 +50,12 @@ export const CheckCurrentSuitDistinctions = (G, ctx, suit) => {
         playersRanks.push(G.publicPlayers[i].cards[suit].reduce(TotalRank, 0));
     }
     const max = Math.max(...playersRanks), maxPlayers = playersRanks.filter((count) => count === max), playerDistinctionIndex = playersRanks.indexOf(maxPlayers[0]);
-    AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} получил игрок: ${G.publicPlayers[playerDistinctionIndex].nickname}.`);
+    if (playerDistinctionIndex !== -1) {
+        AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} получил игрок: ${G.publicPlayers[playerDistinctionIndex].nickname}.`);
+    }
+    else {
+        // TODO Error!
+    }
     return maxPlayers;
 };
 /**

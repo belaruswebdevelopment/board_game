@@ -10,7 +10,11 @@ export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
         G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
             Boolean(player.buffs.find((buff: IBuffs): boolean =>
                 buff.discardCardEndGame !== undefined)));
-    G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
+    if (brisingamensPlayerIndex !== -1) {
+        G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
+    } else {
+        // TODO Error!
+    }
 };
 
 export const EndBrisingamensEndGameActions = (G: IMyGameState): void => {

@@ -15,11 +15,12 @@ import { ConfigNames, Phases, Stages } from "./typescript/enums";
  * @returns Массив возможных мувов у ботов.
  */
 export const enumerate = (G, ctx) => {
-    var _a, _b;
+    var _a;
     const moves = [];
     let playerId;
     if (ctx.phase !== null) {
-        let activeStageOfCurrentPlayer = (_b = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== null && _b !== void 0 ? _b : `default`;
+        const currentStage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)];
+        let activeStageOfCurrentPlayer = currentStage !== undefined ? currentStage : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
             if (ctx.phase === Phases.PlaceCoins) {
                 activeStageOfCurrentPlayer = Stages.Default3;
@@ -88,41 +89,46 @@ export const enumerate = (G, ctx) => {
                 activeStageOfCurrentPlayer = Stages.Default1;
             }
         }
-        // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
-        const validator = GetValidator(ctx.phase, activeStageOfCurrentPlayer);
-        if (validator !== undefined) {
-            const moveName = validator.moveName, moveRangeData = validator.getRange(G, ctx, playerId), moveValue = validator.getValue(G, ctx, moveRangeData);
-            let moveValues = [];
-            if (typeof moveValue === `number`) {
-                moveValues = [moveValue];
-            }
-            else if (typeof moveValue === `string`) {
-                moveValues = [moveValue];
-            }
-            else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
-                if (`coinId` in moveValue) {
-                    moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
+        if (activeStageOfCurrentPlayer !== `default`) {
+            // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
+            const validator = GetValidator(ctx.phase, activeStageOfCurrentPlayer);
+            if (validator !== null) {
+                const moveName = validator.moveName, moveRangeData = validator.getRange(G, ctx, playerId), moveValue = validator.getValue(G, ctx, moveRangeData);
+                let moveValues = [];
+                if (typeof moveValue === `number`) {
+                    moveValues = [moveValue];
                 }
-                else if (`playerId` in moveValue) {
-                    moveValues = [moveValue.suit, moveValue.playerId, moveValue.cardId];
+                else if (typeof moveValue === `string`) {
+                    moveValues = [moveValue];
                 }
-                else if (`suit` in moveValue) {
-                    moveValues = [moveValue.suit, moveValue.cardId];
+                else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
+                    if (`coinId` in moveValue) {
+                        moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
+                    }
+                    else if (`playerId` in moveValue) {
+                        moveValues = [moveValue.suit, moveValue.playerId, moveValue.cardId];
+                    }
+                    else if (`suit` in moveValue) {
+                        moveValues = [moveValue.suit, moveValue.cardId];
+                    }
                 }
+                else if (moveValue === null) {
+                    moveValues = [];
+                }
+                else if (Array.isArray(moveValue)) {
+                    moveValues = [moveValue];
+                }
+                moves.push({
+                    move: moveName,
+                    args: moveValues,
+                });
             }
-            else if (moveValue === null) {
-                moveValues = [];
+            if (moves.length === 0) {
+                console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
             }
-            else if (Array.isArray(moveValue)) {
-                moveValues = [moveValue];
-            }
-            moves.push({
-                move: moveName,
-                args: moveValues,
-            });
         }
-        if (moves.length === 0) {
-            console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
+        else {
+            // TODO Error activeStageOfCurrentPlayer can't === `default`!
         }
     }
     return moves;

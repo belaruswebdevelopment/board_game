@@ -1,11 +1,12 @@
 import { IsMercenaryCard } from "../Camp";
+import { isCoin } from "../Coin";
 import { CoinType, IBuffs, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
 export const DraupnirScoring = (player?: IPublicPlayer): number => {
     if (player !== undefined) {
         return player.boardCoins.filter((coin: CoinType): boolean =>
-            Boolean(coin !== null && coin.value >= 15)).length * 6;
+            isCoin(coin) && coin.value >= 15).length * 6;
     }
     // TODO error!?
     return 0;

@@ -82,7 +82,7 @@ export const CreateCoin = ({ value, isInitial = false, isTriggerTrading = false,
  * @param obj Пустой объект или монета.
  * @returns Является ли объект монетой, а не пустым объектом.
  */
-const isCoin = (obj) => obj.value !== undefined;
+export const isCoin = (coin) => coin.value !== undefined;
 /**
  * <h3>Возвращает все монеты со стола в руки игроков в начале фазы выставления монет.</h3>
  * <p>Применения:</p>
@@ -145,14 +145,14 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     // TODO Split into different functions!
     let upgradingCoin = {}, coin;
-    if (player.buffs.find((buff) => buff.upgradeNextCoin !== undefined)) {
+    if (player.buffs.find((buff) => buff.upgradeNextCoin !== undefined) !== undefined) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
     }
-    if (player.buffs.find((buff) => buff.coin !== undefined)) {
+    if (player.buffs.find((buff) => buff.coin !== undefined) !== undefined) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.Coin);
         // TODO Upgrade isInitial min coin or not or User must choose!?
-        if (player.buffs.find((buff) => buff.everyTurn !== undefined)) {
-            const allCoins = [], allHandCoins = player.handCoins.filter((coin) => coin !== null);
+        if (player.buffs.find((buff) => buff.everyTurn !== undefined) !== undefined) {
+            const allCoins = [], allHandCoins = player.handCoins.filter((coin) => isCoin(coin));
             for (let i = 0; i < player.boardCoins.length; i++) {
                 if (player.boardCoins[i] === null) {
                     allCoins.push(allHandCoins.splice(0, 1)[0]);
@@ -161,55 +161,44 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
                     allCoins.push(player.boardCoins[i]);
                 }
             }
-            const minCoinValue = Math.min(...allCoins.filter((coin) => coin !== null && !coin.isTriggerTrading)
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                .map((coin) => coin.value)), upgradingCoinInitial = allCoins.find((coin) => 
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            coin.value === minCoinValue && coin.isInitial);
-            if (upgradingCoinInitial !== null && upgradingCoinInitial !== undefined) {
+            const minCoinValue = Math.min(...allCoins.filter((coin) => isCoin(coin) && !coin.isTriggerTrading).map((coin) => coin.value)), upgradingCoinInitial = allCoins.find((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue && coin.isInitial);
+            if (isCoin(upgradingCoinInitial)) {
                 upgradingCoin = upgradingCoinInitial;
             }
             else {
-                coin = allCoins.find((coin) => 
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                coin.value === minCoinValue && !coin.isInitial);
-                if (coin !== null && coin !== undefined) {
+                coin = allCoins.find((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue && !coin.isInitial);
+                if (isCoin(coin)) {
                     upgradingCoin = coin;
                 }
             }
-            upgradingCoinId = allCoins.findIndex((coin) => 
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            isCoin(upgradingCoin) && coin.value === upgradingCoin.value);
+            upgradingCoinId = allCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
         }
         else {
-            const minCoinValue = Math.min(...player.boardCoins.filter((coin) => coin !== null && !coin.isTriggerTrading)
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                .map((coin) => coin.value));
+            const minCoinValue = Math.min(...player.boardCoins.filter((coin) => isCoin(coin) && !coin.isTriggerTrading).map((coin) => coin.value));
             coin = player.boardCoins.find((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue);
-            if (coin !== null && coin !== undefined) {
+            if (isCoin(coin)) {
                 upgradingCoin = coin;
-                upgradingCoinId = player.boardCoins.findIndex((coin) => isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
+                upgradingCoinId = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
             }
         }
     }
-    if (upgradingCoinId !== undefined && type !== undefined && isInitial !== undefined) {
+    if (upgradingCoinId !== undefined && upgradingCoinId !== -1 && type !== undefined && isInitial !== undefined) {
         if (type === `hand`) {
             const handCoinPosition = player.boardCoins.filter((coin, index) => coin === null && upgradingCoinId !== undefined && index <= upgradingCoinId).length;
-            coin = player.handCoins.filter((coin) => coin !== null)[handCoinPosition - 1];
-            if (coin !== null && coin !== undefined) {
+            coin = player.handCoins.filter((coin) => isCoin(coin))[handCoinPosition - 1];
+            if (isCoin(coin)) {
                 upgradingCoin = coin;
-                upgradingCoinId = player.handCoins.findIndex((coin) => isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value
-                    && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === isInitial);
+                upgradingCoinId = player.handCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === isInitial);
             }
         }
         else {
             coin = player.boardCoins[upgradingCoinId];
-            if (coin !== null && coin !== undefined) {
+            if (isCoin(coin)) {
                 upgradingCoin = coin;
             }
         }
         if (isCoin(upgradingCoin)) {
-            const buffValue = ((_a = player.buffs.find((buff) => buff.upgradeCoin !== undefined)) === null || _a === void 0 ? void 0 : _a.upgradeCoin) ? 2 : 0;
+            const buffValue = ((_a = player.buffs.find((buff) => buff.upgradeCoin !== undefined)) === null || _a === void 0 ? void 0 : _a.upgradeCoin) !== undefined ? 2 : 0;
             const newValue = upgradingCoin.value + value + buffValue;
             let upgradedCoin = null;
             if (G.marketCoins.length) {
@@ -239,7 +228,7 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
                 AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${isInitial}' с ценностью '${upgradingCoin.value}' на +${value} с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
                 let handCoinIndex = -1;
                 if (player.boardCoins[upgradingCoinId] === null) {
-                    handCoinIndex = player.handCoins.findIndex((coin) => isCoin(upgradingCoin) && (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
+                    handCoinIndex = player.handCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
                 }
                 else {
                     player.boardCoins[upgradingCoinId] = null;

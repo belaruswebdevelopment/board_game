@@ -25,7 +25,11 @@ export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): boole
 export const CheckGetMjollnirProfitOrder = (G: IMyGameState): void => {
     const mjollnirPlayerIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
         Boolean(player.buffs.find((buff: IBuffs): boolean => buff.getMjollnirProfit !== undefined)));
-    G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
+    if (mjollnirPlayerIndex !== -1) {
+        G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
+    } else {
+        // TODO Error!
+    }
 };
 
 export const OnGetMjollnirProfitMove = (G: IMyGameState, ctx: Ctx): void => {

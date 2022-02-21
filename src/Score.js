@@ -45,7 +45,7 @@ export const FinalScoring = (G, ctx, player) => {
     for (let i = 0; i < player.boardCoins.length; i++) {
         coinsValue += (_b = (_a = player.boardCoins[i]) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : 0;
     }
-    if (player.buffs.find((buff) => buff.everyTurn !== undefined)) {
+    if (player.buffs.find((buff) => buff.everyTurn !== undefined) !== undefined) {
         for (let i = 0; i < player.handCoins.length; i++) {
             coinsValue += (_d = (_c = player.handCoins[i]) === null || _c === void 0 ? void 0 : _c.value) !== null && _d !== void 0 ? _d : 0;
         }
@@ -53,7 +53,8 @@ export const FinalScoring = (G, ctx, player) => {
     score += coinsValue;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за монеты игрока ${player.nickname}: ${coinsValue}`);
     const warriorsDistinction = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR), playerIndex = G.publicPlayers.findIndex((p) => p.nickname === player.nickname);
-    if (warriorsDistinction !== undefined && warriorsDistinction.includes(playerIndex)) {
+    if (warriorsDistinction !== undefined && playerIndex !== -1
+        && warriorsDistinction.includes(playerIndex)) {
         const warriorDistinctionScore = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
         score += warriorDistinctionScore;
         if (warriorDistinctionScore) {

@@ -19,7 +19,12 @@ export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
 };
 export const CheckGetMjollnirProfitOrder = (G) => {
     const mjollnirPlayerIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.getMjollnirProfit !== undefined)));
-    G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
+    if (mjollnirPlayerIndex !== -1) {
+        G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
+    }
+    else {
+        // TODO Error!
+    }
 };
 export const OnGetMjollnirProfitMove = (G, ctx) => {
     StartOrEndActions(G, ctx);

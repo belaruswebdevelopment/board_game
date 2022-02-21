@@ -1,7 +1,7 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypes } from "./typescript/enums";
-import { AdditionalCardTypes, DeckCardTypes, DiscardCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, SuitTypes, TavernCardTypes } from "./typescript/interfaces";
+import { AdditionalCardTypes, DeckCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, SuitTypes, TavernCardTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
@@ -135,8 +135,7 @@ export const CreateCard = ({
     path,
 });
 
-export const isActionDiscardCard = (card: DiscardCardTypes): card is IActionCard =>
-    (card as IActionCard).value !== undefined;
+export const isActionCard = (card: unknown): card is IActionCard => (card as IActionCard).value !== undefined;
 
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>

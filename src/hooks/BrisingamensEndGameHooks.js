@@ -4,7 +4,12 @@ import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { Phases } from "../typescript/enums";
 export const CheckBrisingamensEndGameOrder = (G) => {
     const brisingamensPlayerIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.discardCardEndGame !== undefined)));
-    G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
+    if (brisingamensPlayerIndex !== -1) {
+        G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
+    }
+    else {
+        // TODO Error!
+    }
 };
 export const EndBrisingamensEndGameActions = (G) => {
     G.publicPlayersOrder = [];
