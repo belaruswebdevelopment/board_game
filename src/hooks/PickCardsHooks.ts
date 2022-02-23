@@ -1,37 +1,49 @@
 import { Ctx } from "boardgame.io";
 import { IsMercenaryCard } from "../Camp";
-import { AddPickCardActionToStack, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
+import { isCoin } from "../Coin";
+import { StackData } from "../data/StackData";
+import { AddPickCardActionToStack, DrawCurrentProfit, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
-import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, CheckAndStartUlineActionsOrContinue, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { ActivateTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
-import { LogTypes, Stages } from "../typescript/enums";
+import { LogTypes, Phases, Stages } from "../typescript/enums";
 import { CampDeckCardTypes, CoinType, IBuffs, IMyGameState, INext, IPublicPlayer, IResolveBoardCoins } from "../typescript/interfaces";
 
-export const OnPickCardsMove = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    StartOrEndActions(G, ctx);
-    if (!player.stack.length) {
-        if (ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
-            && !CheckIfCurrentTavernEmpty(G)) {
-            StartDiscardCardFromTavernActionFor2Players(G, ctx);
-        } else {
-            // TODO Do it before or after trading or not matter?
-            CheckAndStartUlineActionsOrContinue(G, ctx);
-            const tradingCoinPlacesLength: number =
-                player.boardCoins.filter((coin: CoinType, index: number): boolean =>
-                    index >= G.tavernsNum && coin === null).length;
-            if (!player.actionsNum) {
-                ActivateTrading(G, ctx);
-            } else if ((player.actionsNum === 2 && tradingCoinPlacesLength === 1)
-                || (player.actionsNum === 1 && !tradingCoinPlacesLength)) {
-                player.actionsNum--;
-            } else if (player.actionsNum === 2) {
-                // TODO Rework it to actions
-                ctx.events?.setStage(Stages.PlaceTradingCoinsUline);
+/**
+ * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При наличии героя Улина.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void => {
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+        ulinePlayerIndex: number = G.publicPlayers.findIndex((findPlayer: IPublicPlayer): boolean =>
+            Boolean(findPlayer.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
+    if (ulinePlayerIndex !== -1) {
+        if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
+            const coin: CoinType = player.boardCoins[G.currentTavern];
+            if (coin?.isTriggerTrading) {
+                const tradingCoinPlacesLength: number =
+                    player.boardCoins.filter((coin: CoinType, index: number): boolean =>
+                        index >= G.tavernsNum && coin === null).length;
+                if (tradingCoinPlacesLength > 0) {
+                    const handCoinsLength: number =
+                        player.handCoins.filter((coin: CoinType): boolean => isCoin(coin)).length;
+                    player.actionsNum =
+                        G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
+                    AddActionsToStackAfterCurrent(G, ctx,
+                        [StackData.placeTradingCoinsUline(player.actionsNum)]);
+                    DrawCurrentProfit(G, ctx);
+                }
             }
         }
     }
@@ -49,7 +61,7 @@ export const OnPickCardsMove = (G: IMyGameState, ctx: Ctx): void => {
  */
 export const CheckEndPickCardsPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (!player.stack.length && G.publicPlayersOrder.length
+    if (G.publicPlayersOrder.length && !player.stack.length
         && !player.actionsNum && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
         && CheckIfCurrentTavernEmpty(G)) {
         const isLastTavern: boolean = G.tavernsNum - 1 === G.currentTavern;
@@ -58,8 +70,6 @@ export const CheckEndPickCardsPhase = (G: IMyGameState, ctx: Ctx): boolean | INe
         } else {
             return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
         }
-    } else {
-        // TODO Log error Can't have every card empty not on last player's turn
     }
 };
 
@@ -88,11 +98,11 @@ export const CheckEndPickCardsTurn = (G: IMyGameState, ctx: Ctx): boolean | void
  * @param G
  * @param ctx
  */
-export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void => {
+export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void | never => {
     if (CheckIfCurrentTavernEmpty(G)) {
         AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[G.currentTavern].name} пустая.`);
     } else {
-        // TODO Add error log for future possible bugs? DO TESTS!!!!=)))
+        throw new Error(`Таверна ${tavernsConfig[G.currentTavern].name} не может не быть пустой в конце фазы ${Phases.PickCards}.`);
     }
     if (G.tavernsNum - 1 === G.currentTavern && G.decks[G.decks.length - G.tierToEnd].length === 0) {
         G.tierToEnd--;
@@ -118,6 +128,24 @@ export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void => {
     }
     G.publicPlayersOrder = [];
     ChangePlayersPriorities(G);
+};
+
+export const OnPickCardsMove = (G: IMyGameState, ctx: Ctx): void => {
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+    StartOrEndActions(G, ctx);
+    if (!player.stack.length) {
+        if (ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
+            && !CheckIfCurrentTavernEmpty(G)) {
+            StartDiscardCardFromTavernActionFor2Players(G, ctx);
+        } else {
+            if (ctx.activePlayers?.[Number(ctx.currentPlayer)] !== Stages.PlaceTradingCoinsUline) {
+                CheckAndStartUlineActionsOrContinue(G, ctx);
+            }
+            if (!player.actionsNum) {
+                ActivateTrading(G, ctx);
+            }
+        }
+    }
 };
 
 export const OnPickCardsTurnBegin = (G: IMyGameState, ctx: Ctx): void => {

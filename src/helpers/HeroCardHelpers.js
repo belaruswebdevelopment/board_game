@@ -41,7 +41,7 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал героя ${hero.name}.`);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить героя ${hero.name} из-за того, что он был уже выбран другим игроком.`);
+        throw new Error(`Не удалось добавить героя ${hero.name} из-за того, что он был уже выбран каким-то игроком.`);
     }
 };
 /**

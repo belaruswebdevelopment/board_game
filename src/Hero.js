@@ -70,5 +70,5 @@ export const CreateHero = ({ type, name, description, game, suit, rank, points, 
     actions,
     stack,
 });
-export const isHeroCard = (card) => card.active !== undefined;
+export const isHeroCard = (card) => card !== null && card.active !== undefined;
 //# sourceMappingURL=Hero.js.map

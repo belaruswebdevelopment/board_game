@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { IsArtefactDiscardCard, IsMercenaryCard } from "../Camp";
+import { IsArtefactCard, IsMercenaryCard } from "../Camp";
 import { CreateCard, isActionCard, isCardNotActionAndNotNull } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
@@ -27,7 +27,7 @@ import { CampDeckCardTypes, DiscardCardTypes, ICard, IMyGameState, IPublicPlayer
  * @param cardId Id карты.
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number):
-    void => {
+    void | never => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         discardedCard: PlayerCardsType = player.cards[suit].splice(cardId, 1)[0];
     if (!isHeroCard(discardedCard)) {
@@ -35,7 +35,7 @@ export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, s
         DeleteBuffFromPlayer(G, ctx, BuffNames.DiscardCardEndGame);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
+        throw new Error(`Сброшенная карта не может быть с типом 'герой'.`);
     }
 };
 
@@ -66,7 +66,7 @@ export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, cardId: n
  * @param ctx
  * @param cardId Id карты.
  */
-export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
+export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId: number): void | never => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     player.pickedCard =
         player.campCards.filter((card: CampDeckCardTypes): boolean => IsMercenaryCard(card))[cardId];
@@ -75,7 +75,7 @@ export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы ${ctx.phase} выбрал наёмника '${pickedCard.name}'.`);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не выбрана карта наёмника.`);
+        throw new Error(`Выбранная карта должна быть с типом 'наёмник'.`);
     }
 };
 
@@ -131,7 +131,7 @@ export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens()]);
     }
     let isAdded = false;
-    if (IsArtefactDiscardCard(pickedCard)) {
+    if (IsArtefactCard(pickedCard)) {
         isAdded = AddCampCardToPlayerCards(G, ctx, pickedCard);
     } else {
         isAdded = AddCardToPlayer(G, ctx, pickedCard);
@@ -156,7 +156,7 @@ export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void
  * @param ctx
  * @param suit Название фракции.
  */
-export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
+export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void | never => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         pickedCard: PickedCardType = player.pickedCard;
     if (IsMercenaryCard(pickedCard)) {
@@ -184,16 +184,16 @@ export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit
                         AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
                     }
                 } else {
-                    // TODO Error!
+                    throw new Error(`У игрока в 'campCards' отсутствует выбранная карта.`);
                 }
                 CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
             } else {
-                // TODO Error!
+                throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
             }
         } else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
+            throw new Error(`У выбранной карты отсутствует обязательный параметр 'stack[0].variants'.`);
         }
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Вместо карты наёмника взята карта другого типа.`);
+        throw new Error(`Выбранная карта должна быть с типом 'наёмник'.`);
     }
 };

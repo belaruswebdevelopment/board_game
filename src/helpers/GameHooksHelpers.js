@@ -1,7 +1,6 @@
 import { IsMercenaryCard } from "../Camp";
-import { isCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
-import { HeroNames, LogTypes, Phases, Stages } from "../typescript/enums";
+import { HeroNames, LogTypes, Phases } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
 /**
  * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
@@ -48,36 +47,6 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
         return {
             next: Phases.PickCards,
         };
-    }
-};
-/**
- * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При наличии героя Улина.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
-    var _a;
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], ulinePlayerIndex = G.publicPlayers.findIndex((findPlayer) => Boolean(findPlayer.buffs.find((buff) => buff.everyTurn !== undefined)));
-    if (ulinePlayerIndex !== -1) {
-        if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-            const coin = player.boardCoins[G.currentTavern];
-            if (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) {
-                const tradingCoinPlacesLength = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
-                if (tradingCoinPlacesLength > 0) {
-                    if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== Stages.PlaceTradingCoinsUline
-                        && tradingCoinPlacesLength === 2) {
-                        const handCoinsLength = player.handCoins.filter((coin) => isCoin(coin)).length;
-                        player.actionsNum =
-                            G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
-                    }
-                }
-            }
-        }
     }
 };
 /**
@@ -204,7 +173,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
                 AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${player.nickname} уходит с игрового поля.`);
             }
             else {
-                // TODO Error!
+                throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Thrud}.`);
             }
         }
     }

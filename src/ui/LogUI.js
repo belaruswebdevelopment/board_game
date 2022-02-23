@@ -23,8 +23,8 @@ export const DrawLogData = (data) => {
             else if (data.G.logData[i].type === LogTypes.PUBLIC) {
                 loggingData.push(_jsx("li", { className: "text-green-500", children: data.G.logData[i].value }, `Log ${i}`));
             }
-            else if (data.G.logData[i].type === LogTypes.ERROR) {
-                loggingData.push(_jsx("li", { className: "text-red-500", children: data.G.logData[i].value }, `Log ${i}`));
+            else {
+                throw new Error(`Попытка отобразить недопустимый тип логов.`);
             }
         }
         return (_jsxs("div", { className: "log ml-3 w-1/4 border overflow-y-auto", children: [_jsx("h3", { children: "Log data:" }, void 0), _jsx("ul", { className: "list-none p-0 ml-5", children: loggingData }, void 0)] }, void 0));

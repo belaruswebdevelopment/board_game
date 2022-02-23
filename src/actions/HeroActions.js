@@ -33,7 +33,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
         }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
+        throw new Error(`Сброшенная карта не может быть с типом 'герой'.`);
     }
 };
 /**
@@ -48,8 +48,8 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
  * @param suit Название фракции.
  */
 export const PlaceOlwinCardsAction = (G, ctx, suit) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], playerVariants = player.stack[0].variants;
-    if (playerVariants !== undefined) {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], config = player.stack[0].config, playerVariants = player.stack[0].variants;
+    if (playerVariants !== undefined && (config === null || config === void 0 ? void 0 : config.drawName) !== undefined) {
         const olwinDouble = CreateCard({
             suit,
             rank: playerVariants[suit].rank,
@@ -57,7 +57,7 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
             name: CardNames.Olwin,
             game: `thingvellir`,
         });
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту Ольвин во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${config.drawName} во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);
         if (player.actionsNum === 2) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.placeOlwinCards()]);
@@ -65,7 +65,7 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не найден обязательный параметр 'stack[0].variants'.`);
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].variants' и/или 'stack[0].config.drawName'.`);
     }
 };
 /**
@@ -81,8 +81,8 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
  * @param suit Название фракции.
  */
 export const PlaceThrudAction = (G, ctx, suit) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], playerVariants = player.stack[0].variants;
-    if (playerVariants !== undefined) {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], config = player.stack[0].config, playerVariants = player.stack[0].variants;
+    if (playerVariants !== undefined && (config === null || config === void 0 ? void 0 : config.drawName) !== undefined) {
         const heroCard = CreateHero({
             suit,
             rank: playerVariants[suit].rank,
@@ -92,11 +92,11 @@ export const PlaceThrudAction = (G, ctx, suit) => {
             game: `base`,
             description: heroesConfig.Thrud.description,
         });
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${HeroNames.Thrud} во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${config.drawName} во фракцию ${suitsConfig[suit].suitName}.`);
         AddHeroCardToPlayerCards(G, ctx, heroCard);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants' или не передан обязательный параметр 'stack[0].config.name'.`);
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].variants' и/или 'stack[0].config.drawName'.`);
     }
 };
 /**
@@ -112,8 +112,8 @@ export const PlaceThrudAction = (G, ctx, suit) => {
  * @param suit Название фракции.
  */
 export const PlaceYludAction = (G, ctx, suit) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], playerVariants = player.stack[0].variants;
-    if (playerVariants !== undefined) {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], config = player.stack[0].config, playerVariants = player.stack[0].variants;
+    if (playerVariants !== undefined && (config === null || config === void 0 ? void 0 : config.drawName) !== undefined) {
         const heroCard = CreateHero({
             suit,
             rank: playerVariants[suit].rank,
@@ -123,7 +123,7 @@ export const PlaceYludAction = (G, ctx, suit) => {
             game: `base`,
             description: heroesConfig.Ylud.description,
         });
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${HeroNames.Ylud} во фракцию ${suitsConfig[suit].suitName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${config.drawName} во фракцию ${suitsConfig[suit].suitName}.`);
         AddHeroCardToPlayerCards(G, ctx, heroCard);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, heroCard);
         if (G.tierToEnd === 0) {
@@ -131,7 +131,7 @@ export const PlaceYludAction = (G, ctx, suit) => {
         }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants' или не передан обязательный параметр 'stack[0].config.name'.`);
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].variants' и/или 'stack[0].config.name'.`);
     }
 };
 //# sourceMappingURL=HeroActions.js.map

@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { IsArtefactCardNotMercenary, IsMercenaryCard } from "../Camp";
+import { IsArtefactCard, IsMercenaryCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
@@ -29,12 +29,12 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
     if (player.buffs.find((buff: IBuffs): boolean => buff.goCampOneTime !== undefined) !== undefined) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
-    if (IsArtefactCardNotMercenary(card) && card.suit !== null) {
+    if (IsArtefactCard(card) && card.suit !== null) {
         AddCampCardToPlayerCards(G, ctx, card);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
     } else {
         AddCampCardToPlayer(G, ctx, card);
-        if (IsArtefactCardNotMercenary(card)) {
+        if (IsArtefactCard(card)) {
             AddBuffToPlayer(G, ctx, card.buff);
         }
     }
@@ -55,13 +55,13 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
  * @param ctx
  * @param card Карта кэмпа.
  */
-export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
-    if (!IsArtefactCardNotMercenary(card) || (IsArtefactCardNotMercenary(card) && card.suit === null)) {
+export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void | never => {
+    if (!IsArtefactCard(card) || (IsArtefactCard(card) && card.suit === null)) {
         const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
         player.campCards.push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту кэмпа ${card.name}.`);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить карту артефакта ${card.name} в массив карт кэмпа игрока из-за её принадлежности к фракции ${card.suit}.`);
+        throw new Error(`Не удалось добавить карту артефакта ${card.name} в массив карт кэмпа игрока из-за её принадлежности к фракции ${card.suit}.`);
     }
 };
 
@@ -77,14 +77,13 @@ export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCar
  * @param card Карта кэмпа.
  * @returns Добавлен ли артефакт на планшет игрока.
  */
-export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtefactCampCard): boolean => {
+export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtefactCampCard): boolean | never => {
     if (card.suit !== null) {
         const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
         player.cards[card.suit].push(card);
         AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} выбрал карту кэмпа '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
         return true;
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить артефакт ${card.name} на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
-        return false;
+        throw new Error(`Не удалось добавить артефакт ${card.name} на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
     }
 };

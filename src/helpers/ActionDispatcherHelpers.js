@@ -31,7 +31,7 @@ const ActionDispatcherSwitcher = (actionName) => {
             action = UpgradeCoinAction;
             break;
         default:
-            action = null;
+            throw new Error(`Нет такого действия.`);
     }
     return action;
 };

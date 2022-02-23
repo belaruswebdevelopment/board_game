@@ -59,6 +59,11 @@ export const StackData = {
             drawName: DrawNames.EnlistmentMercenaries,
         },
     }),
+    getDistinctions: (): IStack => ({
+        config: {
+            drawName: DrawNames.GetMjollnirProfit,
+        },
+    }),
     getMjollnirProfit: (): IStack => ({
         config: {
             name: ConfigNames.GetMjollnirProfit,
@@ -70,6 +75,11 @@ export const StackData = {
             stageName: Stages.PickCampCardHolda,
             drawName: DrawNames.Holda,
             name: ConfigNames.HoldaAction,
+        },
+    }),
+    pickCard: (): IStack => ({
+        config: {
+            drawName: DrawNames.PickCard,
         },
     }),
     pickDiscardCardAndumia: (): IStack => ({
@@ -164,6 +174,12 @@ export const StackData = {
             suit,
         },
     }),
+    placeTradingCoinsUline: (number?: number): IStack => ({
+        config: {
+            stageName: Stages.PlaceTradingCoinsUline,
+            number,
+        },
+    }),
     placeYludHero: (): IStack => ({
         variants: {
             blacksmith: {
@@ -200,6 +216,7 @@ export const StackData = {
     pickHero: (): IStack => ({
         config: {
             stageName: Stages.PickHero,
+            drawName: DrawNames.PickHero,
         },
     }),
     placeEnlistmentMercenaries: (): IStack => ({

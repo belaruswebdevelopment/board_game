@@ -114,7 +114,7 @@ export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name
     tier,
     path,
 });
-export const isActionCard = (card) => card.value !== undefined;
+export const isActionCard = (card) => card !== null && card.value !== undefined;
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
  * <p>Применения:</p>

@@ -94,7 +94,7 @@ export const CreateCoin = ({
  * @param obj Пустой объект или монета.
  * @returns Является ли объект монетой, а не пустым объектом.
  */
-export const isCoin = (coin: unknown): coin is ICoin => (coin as ICoin).value !== undefined;
+export const isCoin = (coin: unknown): coin is ICoin => coin !== null && (coin as ICoin).value !== undefined;
 
 /**
  * <h3>Возвращает все монеты со стола в руки игроков в начале фазы выставления монет.</h3>

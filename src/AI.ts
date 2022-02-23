@@ -116,7 +116,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                 console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
             }
         } else {
-            // TODO Error activeStageOfCurrentPlayer can't === `default`!
+            throw new Error(`Variable 'activeStageOfCurrentPlayer' can't be 'default'.`);
         }
     }
     return moves;

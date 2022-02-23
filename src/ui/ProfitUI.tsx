@@ -11,7 +11,7 @@ import { ConfigNames, DrawNames, MoveNames } from "../typescript/enums";
 import { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, DiscardCardTypes, IBuffs, IConfig, IMyGameState, IPublicPlayer, IVariant, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
-// TODO Add functions dock blocks
+// TODO Add functions dock blocks and Errors!
 export const AddCoinToPouchProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -145,7 +145,7 @@ export const DiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
 };
 
 export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
-    boardCells: JSX.Element[]): void => {
+    boardCells: JSX.Element[]): void | never => {
     const playersHeaders: JSX.Element[] = [],
         playersRows: JSX.Element[][] = [],
         config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config;
@@ -209,7 +209,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, 
             </td>
         );
     } else {
-        // TODO Errors logging!?
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config' и/или 'stack[0].config.suit'.`);
     }
 };
 
@@ -283,7 +283,7 @@ export const PickDiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProp
 };
 
 export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>, boardCells: JSX.Element[]):
-    void => {
+    void | never => {
     let suit: SuitTypes;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -304,8 +304,7 @@ export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMy
                             moveName = MoveNames.PlaceOlwinCardMove;
                             break;
                         default:
-                            moveName = null;
-                            break;
+                            throw new Error(`Нет такого мува.`);
                     }
                     const value: number | string = player.stack[0].variants?.[suit].points ?? ``;
                     DrawSuit(data, boardCells, suit, config.drawName, value, player, moveName);
@@ -316,9 +315,10 @@ export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMy
 };
 
 export const PlaceEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
-    boardCells: JSX.Element[]): void => {
+    boardCells: JSX.Element[]): void | never => {
     let suit: SuitTypes;
     for (suit in suitsConfig) {
+        // TODO Add all Errors for hasOwnProperty!!!!!!!!!!!!!!!!!!!?
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
                 card: PickedCardType = player.pickedCard;
@@ -333,11 +333,17 @@ export const PlaceEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
                                 DrawSuit(data, boardCells, suit, config.drawName, value, player,
                                     MoveNames.PlaceEnlistmentMercenariesMove);
                             } else {
-                                // TODO Error?
+                                throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
                             }
                         }
+                    } else {
+                        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config' и/или 'stack[0].config.drawName'.`);
                     }
+                } else {
+                    throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants'.`);
                 }
+            } else {
+                throw new Error(`Выбранная карта должна быть с типом 'наёмник'.`);
             }
         }
     }
@@ -405,5 +411,7 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G: IMyGameState, ctx: Ctx, d
                 }
             }
         }
+    } else {
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config'.`);
     }
 };

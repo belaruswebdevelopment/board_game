@@ -107,7 +107,7 @@ export const DiscardCardFromTavernJarnglofi = (G) => {
         DiscardCardFromTavern(G, cardIndex);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны при пике артефакта Jarnglofi.`);
+        throw new Error(`Не удалось сбросить лишнюю карту из таверны при пике артефакта Jarnglofi.`);
     }
 };
 /**
@@ -130,7 +130,7 @@ export const DiscardCardIfCampCardPicked = (G) => {
             G.campPicked = false;
         }
         else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
+            throw new Error(`Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
         }
     }
 };
@@ -167,7 +167,6 @@ export const RefillEmptyCampCards = (G) => {
         return null;
     });
     const isEmptyCampCards = emptyCampCards.length === 0;
-    // TODO Add LogTypes.ERROR logging ?
     let isEmptyCurrentTierCampDeck = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
         emptyCampCards.forEach((cardIndex) => {

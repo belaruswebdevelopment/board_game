@@ -1,4 +1,4 @@
-import { IsArtefactDiscardCard, IsMercenaryCard } from "../Camp";
+import { IsArtefactCard, IsMercenaryCard } from "../Camp";
 import { CreateCard, isActionCard, isCardNotActionAndNotNull } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
@@ -31,7 +31,7 @@ export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, suit, cardId) => {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
+        throw new Error(`Сброшенная карта не может быть с типом 'герой'.`);
     }
 };
 /**
@@ -70,7 +70,7 @@ export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы ${ctx.phase} выбрал наёмника '${pickedCard.name}'.`);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не выбрана карта наёмника.`);
+        throw new Error(`Выбранная карта должна быть с типом 'наёмник'.`);
     }
 };
 /**
@@ -122,7 +122,7 @@ export const PickDiscardCard = (G, ctx, cardId) => {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens()]);
     }
     let isAdded = false;
-    if (IsArtefactDiscardCard(pickedCard)) {
+    if (IsArtefactCard(pickedCard)) {
         isAdded = AddCampCardToPlayerCards(G, ctx, pickedCard);
     }
     else {
@@ -172,20 +172,20 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
                     }
                 }
                 else {
-                    // TODO Error!
+                    throw new Error(`У игрока в 'campCards' отсутствует выбранная карта.`);
                 }
                 CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
             }
             else {
-                // TODO Error!
+                throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
             }
         }
         else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].variants'.`);
+            throw new Error(`У выбранной карты отсутствует обязательный параметр 'stack[0].variants'.`);
         }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Вместо карты наёмника взята карта другого типа.`);
+        throw new Error(`Выбранная карта должна быть с типом 'наёмник'.`);
     }
 };
 //# sourceMappingURL=Actions.js.map

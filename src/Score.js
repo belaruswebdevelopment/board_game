@@ -81,7 +81,7 @@ export const FinalScoring = (G, ctx, player) => {
             }
         }
         else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти героя ${player.heroes[i].name}.`);
+            throw new Error(`Не удалось найти героя ${player.heroes[i].name}.`);
         }
     }
     if (dwerg_brothers) {
@@ -99,7 +99,7 @@ export const FinalScoring = (G, ctx, player) => {
                 currentArtefactScore = artefact.scoringRule(player);
             }
             else {
-                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти артефакт ${player.campCards[i].name}.`);
+                throw new Error(`Не удалось найти артефакт ${player.campCards[i].name}.`);
             }
             if (currentArtefactScore) {
                 artifactsScore += currentArtefactScore;

@@ -1,4 +1,4 @@
-import { IsArtefactCardNotMercenary, IsMercenaryCard } from "../Camp";
+import { IsArtefactCard, IsMercenaryCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
@@ -26,13 +26,13 @@ export const AddCampCardToCards = (G, ctx, card) => {
     if (player.buffs.find((buff) => buff.goCampOneTime !== undefined) !== undefined) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
-    if (IsArtefactCardNotMercenary(card) && card.suit !== null) {
+    if (IsArtefactCard(card) && card.suit !== null) {
         AddCampCardToPlayerCards(G, ctx, card);
         CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
     }
     else {
         AddCampCardToPlayer(G, ctx, card);
-        if (IsArtefactCardNotMercenary(card)) {
+        if (IsArtefactCard(card)) {
             AddBuffToPlayer(G, ctx, card.buff);
         }
     }
@@ -53,13 +53,13 @@ export const AddCampCardToCards = (G, ctx, card) => {
  * @param card Карта кэмпа.
  */
 export const AddCampCardToPlayer = (G, ctx, card) => {
-    if (!IsArtefactCardNotMercenary(card) || (IsArtefactCardNotMercenary(card) && card.suit === null)) {
+    if (!IsArtefactCard(card) || (IsArtefactCard(card) && card.suit === null)) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         player.campCards.push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту кэмпа ${card.name}.`);
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить карту артефакта ${card.name} в массив карт кэмпа игрока из-за её принадлежности к фракции ${card.suit}.`);
+        throw new Error(`Не удалось добавить карту артефакта ${card.name} в массив карт кэмпа игрока из-за её принадлежности к фракции ${card.suit}.`);
     }
 };
 /**
@@ -82,8 +82,7 @@ export const AddCampCardToPlayerCards = (G, ctx, card) => {
         return true;
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось добавить артефакт ${card.name} на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
-        return false;
+        throw new Error(`Не удалось добавить артефакт ${card.name} на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
     }
 };
 //# sourceMappingURL=CampCardHelpers.js.map

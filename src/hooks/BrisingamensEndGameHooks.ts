@@ -2,10 +2,10 @@ import { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { Phases } from "../typescript/enums";
+import { BuffNames, Phases } from "../typescript/enums";
 import { IBuffs, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
-export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
+export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void | never => {
     const brisingamensPlayerIndex: number =
         G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
             Boolean(player.buffs.find((buff: IBuffs): boolean =>
@@ -13,7 +13,7 @@ export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
     if (brisingamensPlayerIndex !== -1) {
         G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
     } else {
-        // TODO Error!
+        throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.DiscardCardEndGame}.`);
     }
 };
 

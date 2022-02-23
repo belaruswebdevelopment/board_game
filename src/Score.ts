@@ -42,7 +42,7 @@ export const CurrentScoring = (player: IPublicPlayer): number => {
  * @param player Игрок.
  * @returns Финальный счёт указанного игрока.
  */
-export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number | never => {
     AddDataToLog(G, LogTypes.GAME, `Результаты игры игрока ${player.nickname}:`);
     let score: number = CurrentScoring(player),
         coinsValue = 0;
@@ -89,7 +89,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): 
                 AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${player.heroes[i].name} игрока ${player.nickname}: ${currentHeroScore}.`);
             }
         } else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти героя ${player.heroes[i].name}.`);
+            throw new Error(`Не удалось найти героя ${player.heroes[i].name}.`);
         }
     }
     if (dwerg_brothers) {
@@ -108,7 +108,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): 
             if (artefact !== undefined) {
                 currentArtefactScore = artefact.scoringRule(player);
             } else {
-                AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось найти артефакт ${player.campCards[i].name}.`);
+                throw new Error(`Не удалось найти артефакт ${player.campCards[i].name}.`);
             }
             if (currentArtefactScore) {
                 artifactsScore += currentArtefactScore;

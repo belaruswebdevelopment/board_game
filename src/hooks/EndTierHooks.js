@@ -1,7 +1,7 @@
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
-import { HeroNames } from "../typescript/enums";
+import { BuffNames, HeroNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
  * <p>Применения:</p>
@@ -29,7 +29,7 @@ export const CheckEndEndTierPhase = (G, ctx) => {
             }
         }
         else {
-            // TODO Error logging buff Ylud must be
+            throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Ylud}.`);
         }
     }
 };
@@ -59,7 +59,7 @@ export const CheckEndTierOrder = (G) => {
         G.publicPlayersOrder.push(String(yludIndex));
     }
     else {
-        // TODO Error!
+        throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.EndTier}.`);
     }
 };
 export const CheckEndEndTierTurn = (G, ctx) => {

@@ -31,7 +31,7 @@ export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx): void => {
  * @param G
  * @param ctx
  */
-export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
+export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void | never => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     let tradingCoinIndex: number =
         player.boardCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
@@ -42,12 +42,12 @@ export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
         if (tradingCoinIndex !== -1) {
             player.handCoins.splice(tradingCoinIndex, 1, null);
         } else {
-            // TODO Error!
+            throw new Error(`У игрока в 'handCoins' отсутствует обменная монета при наличии бафа 'everyTurn'.`);
         }
     } else if (tradingCoinIndex !== -1) {
         player.boardCoins.splice(tradingCoinIndex, 1, null);
     } else {
-        // TODO Error!
+        throw new Error(`У игрока не может отсутствовать обменная монета.`);
     }
     AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил монету активирующую обмен.`);
 };
@@ -81,7 +81,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): vo
  * @param G
  * @param ctx
  */
-export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
+export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void | never => {
     const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[1].config;
     if (config !== undefined && config.suit !== undefined) {
         const value: Record<string, StageArg> = {};
@@ -99,7 +99,7 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
             maxMoves: 1,
         });
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.suit'.`);
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[1].config' и/или 'stack[1].config.suit'.`);
     }
 };
 
@@ -113,7 +113,7 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
  * @param G
  * @param ctx
  */
-export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void => {
+export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void | never => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         number: number = player.boardCoins.filter((coin: CoinType, index: number): boolean =>
             index >= G.tavernsNum && coin === null).length,
@@ -135,7 +135,7 @@ export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void =
         } else if (coinsValue === 2) {
             stack = [StackData.upgradeCoinVidofnirVedrfolnir(3)];
         } else {
-            // TODO log error!?
+            throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта 'VidofnirVedrfolnir', а не ${coinsValue} монет(ы).`);
         }
         AddActionsToStackAfterCurrent(G, ctx, stack);
     }

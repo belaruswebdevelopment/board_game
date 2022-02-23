@@ -54,7 +54,7 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  * @returns
  */
 export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number, type: string,
-    isInitial: boolean): string | void => {
+    isInitial: boolean): string | void | never => {
     const isValidMove: boolean = IsValidMove(G, ctx, Stages.UpgradeCoin, {
         coinId,
         type,
@@ -77,7 +77,7 @@ export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx:
     if (value !== undefined) {
         UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
     } else {
-        // TODO Error logging!
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config.value'.`);
     }
 };
 

@@ -9,7 +9,7 @@ import { GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 // TODO Add dock blocks
-export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number | never => {
     if (G.tierToEnd !== 0) {
         const card: ICard | undefined = G.additionalCardsDeck.find((card: ICard): boolean =>
             card.name === CardNames.ChiefBlacksmith);
@@ -18,7 +18,7 @@ export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player:
             G.distinctions[SuitNames.BLACKSMITH] = undefined;
             AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
         } else {
-            // TODO Log error!
+            throw new Error(`В игре отсутствует обязательная карта ${CardNames.ChiefBlacksmith}.`);
         }
     }
     return 0;
@@ -32,7 +32,7 @@ export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: I
     return 0;
 };
 
-export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
+export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number | never => {
     if (G.tierToEnd !== 0) {
         const tradingCoinIndex: number =
             player.boardCoins.findIndex((coin: CoinType): boolean => coin?.value === 0);
@@ -44,7 +44,7 @@ export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPu
             G.distinctions[SuitNames.HUNTER] = undefined;
             AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
         } else {
-            // TODO Error!
+            throw new Error(`У игрока не может отсутствовать обменная монета в первую эпоху.`);
         }
     }
     return 0;

@@ -7,9 +7,8 @@ import { suitsConfig } from "../data/SuitData";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { LogTypes, Stages, SuitNames } from "../typescript/enums";
+import { Stages, SuitNames } from "../typescript/enums";
 import { DeckCardTypes, IMyGameState, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 /**
@@ -24,13 +23,13 @@ import { DeckCardTypes, IMyGameState, SuitTypes, TavernCardTypes } from "../type
  * @param cardId Id карты.
  * @returns
  */
-export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
+export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void | never => {
     const isValidMove: boolean = IsValidMove(G, ctx, Stages.Default1, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
     const card: TavernCardTypes = G.taverns[G.currentTavern][cardId];
-    G.taverns[G.currentTavern][cardId] = null;
+    G.taverns[G.currentTavern].splice(cardId, 1, null);
     if (card !== null) {
         const isAdded: boolean = AddCardToPlayer(G, ctx, card);
         if (!isCardNotActionAndNotNull(card)) {
@@ -41,7 +40,7 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
             }
         }
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта.`);
+        throw new Error(`Не существует кликнутая карта.`);
     }
 };
 

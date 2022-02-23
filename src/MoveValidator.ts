@@ -10,7 +10,7 @@ import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFrom
 import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ConfigNames, MoveNames, Phases, ValidatorNames } from "./typescript/enums";
-import { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, IBuffs, IConfig, ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardPlayerCurrentId, ICurrentMoveSuitCardPlayerIdArguments, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveValidator, IMoveValidators, IMyGameState, IPublicPlayer, IValidatorsConfig, MoveByTypes, MoveValidatorGetRangeTypes, OptionalSuitPropertyTypes, PickedCardType, PlayerCardsType, StageTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, IBuffs, IConfig, ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardPlayerCurrentId, ICurrentMoveSuitCardPlayerIdArguments, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveValidator, IMoveValidators, IMyGameState, IPublicPlayer, IValidatorsConfig, MoveByTypes, MoveValidatorGetRangeTypes, OptionalSuitPropertyTypes, PickedCardType, StageTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -84,7 +84,7 @@ export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: StageTypes, id?: V
     return isValid;
 };
 
-export const GetValidator = (phase: MoveByTypes, stage: StageTypes): IMoveValidator | null => {
+export const GetValidator = (phase: MoveByTypes, stage: StageTypes): IMoveValidator | null | never => {
     let validator: IMoveValidator | null;
     switch (phase) {
         case Phases.PlaceCoins:
@@ -112,12 +112,12 @@ export const GetValidator = (phase: MoveByTypes, stage: StageTypes): IMoveValida
             validator = moveBy[phase][stage as keyof IMoveByGetMjollnirProfitOptions];
             break;
         default:
-            validator = null;
-            break;
+            throw new Error(`Нет такого валидатора.`);
     }
     return validator;
 };
 
+// TODO MOVE ALL SAME VALIDATING LOGIC FROM GET RANGE/GET VALUE TO VALIDATE!
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -129,12 +129,12 @@ export const GetValidator = (phase: MoveByTypes, stage: StageTypes): IMoveValida
 export const moveValidators: IMoveValidators = {
     // TODO Add all validators to all moves
     BotsPlaceAllCoinsMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[][]>[`args`] => {
-            let moveMainArgs: ICurrentMoveArgumentsStage<number[][]>[`args`] = [];
+        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[][]>[`args`] | never => {
             if (G !== undefined) {
-                moveMainArgs = G.botData.allCoinsOrder;
+                return G.botData.allCoinsOrder;
+            } else {
+                throw new Error(`Function param 'G' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -204,8 +204,8 @@ export const moveValidators: IMoveValidators = {
     },
     ClickBoardCoinMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
                 const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.boardCoins.length; j++) {
                     if (player.selectedCoin !== null || (player.selectedCoin === null
@@ -213,8 +213,10 @@ export const moveValidators: IMoveValidators = {
                         moveMainArgs.push(j);
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -222,28 +224,30 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickBoardCoinMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
                 const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-                isValid = player.selectedCoin !== null || (player.selectedCoin === null
+                return player.selectedCoin !== null || (player.selectedCoin === null
                     && isCoin(player.boardCoins[id]));
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
-            return isValid;
         },
     },
     ClickCampCardMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
                 for (let j = 0; j < G.campNum; j++) {
                     const campCard: CampCardTypes = G.camp[j];
                     if (campCard !== null) {
                         moveMainArgs.push(j);
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -251,27 +255,29 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickCampCardMove,
-        validate: (G?: IMyGameState, ctx?: Ctx): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx): boolean | never => {
             if (G !== undefined && ctx !== undefined) {
-                isValid = G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
+                return G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
                     || (!G.campPicked && G.publicPlayers[Number(ctx.currentPlayer)].buffs
                         .find((buff: IBuffs): boolean => buff.goCamp !== undefined) !== undefined));
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return isValid;
         },
     },
     ClickCardMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
                 for (let j = 0; j < G.drawSize; j++) {
                     if (G.taverns[G.currentTavern][j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -335,9 +341,9 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     ClickDistinctionCardMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -349,8 +355,10 @@ export const moveValidators: IMoveValidators = {
                         }
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -358,28 +366,30 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickDistinctionCardMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `string`) {
-                isValid = Object.keys(G.distinctions).includes(id)
+                return Object.keys(G.distinctions).includes(id)
                     && G.distinctions[id] === ctx.currentPlayer
                     && ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos];
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
-            return isValid;
         }
     },
     ClickHandCoinMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [],
+                    player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
                     if (player.handCoins[j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -387,26 +397,28 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickHandCoinMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                isValid = isCoin(G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id]);
+                return isCoin(G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id]);
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
-            return isValid;
         },
     },
     ClickHandCoinUlineMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
                 const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
                     if (isCoin(player.handCoins[j])) {
                         moveMainArgs.push(j);
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -414,27 +426,29 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickHandCoinUlineMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
                 const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-                isValid = player.selectedCoin === null && isCoin(player.handCoins[id]);
+                return player.selectedCoin === null && isCoin(player.handCoins[id]);
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
-            return isValid;
         },
     },
     ClickHandTradingCoinUlineMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
                 const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
                     if (isCoin(player.handCoins[j])) {
                         moveMainArgs.push(j);
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -442,20 +456,20 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickHandTradingCoinUlineMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
                 const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-                isValid = player.selectedCoin === null && isCoin(player.handCoins[id]);
+                return player.selectedCoin === null && isCoin(player.handCoins[id]);
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
-            return isValid;
         },
     },
     DiscardCardFromPlayerBoardMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx):
-            ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] = {};
+            ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] = {};
                 for (let i = 0; ; i++) {
                     let isExit = true,
                         suit: SuitTypes;
@@ -475,8 +489,10 @@ export const moveValidators: IMoveValidators = {
                         break;
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -500,16 +516,18 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     DiscardCard2PlayersMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
                 for (let j = 0; j < G.drawSize; j++) {
                     if (G.taverns[G.currentTavern][j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -517,26 +535,28 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.DiscardCard2PlayersMove,
-        validate: (G?: IMyGameState, ctx?: Ctx): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx): boolean | never => {
             if (ctx !== undefined) {
-                isValid = ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1];
+                return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1];
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return isValid;
         },
     },
     GetEnlistmentMercenariesMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
                 const mercenaries: CampDeckCardTypes[] =
                     G.publicPlayers[Number(ctx.currentPlayer)].campCards
                         .filter((card: CampDeckCardTypes): boolean => IsMercenaryCard(card));
                 for (let j = 0; j < mercenaries.length; j++) {
                     moveMainArgs.push(j);
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -547,9 +567,9 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     GetMjollnirProfitMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -558,8 +578,10 @@ export const moveValidators: IMoveValidators = {
                         }
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -584,21 +606,21 @@ export const moveValidators: IMoveValidators = {
         getRange: (): ICurrentMoveArgumentsStage<null>[`args`] => null,
         getValue: (): ValidMoveIdParamTypes => null,
         moveName: MoveNames.PassEnlistmentMercenariesMove,
-        validate: (G?: IMyGameState, ctx?: Ctx): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx): boolean | never => {
             if (G !== undefined && ctx !== undefined) {
                 const mercenariesCount = G.publicPlayers[Number(ctx.currentPlayer)].campCards
                     .filter((card: CampDeckCardTypes): boolean => IsMercenaryCard(card)).length;
-                isValid = ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
+                return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                     && mercenariesCount > 0;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return isValid;
         },
     },
     PlaceEnlistmentMercenariesMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -612,8 +634,10 @@ export const moveValidators: IMoveValidators = {
                         }
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -624,17 +648,19 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     PlaceYludHeroMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                         moveMainArgs.push(suit);
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -648,22 +674,22 @@ export const moveValidators: IMoveValidators = {
         getRange: (): ICurrentMoveArgumentsStage<null>[`args`] => null,
         getValue: (): ValidMoveIdParamTypes => null,
         moveName: MoveNames.StartEnlistmentMercenariesMove,
-        validate: (G?: IMyGameState, ctx?: Ctx): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx): boolean | never => {
             if (G !== undefined && ctx !== undefined) {
                 const mercenariesCount = G.publicPlayers[Number(ctx.currentPlayer)].campCards
                     .filter((card: CampDeckCardTypes): boolean => IsMercenaryCard(card)).length;
-                isValid = ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
+                return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                     && mercenariesCount > 0;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return isValid;
         },
     },
     // start
     AddCoinToPouchMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
                 const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
                     if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !==
@@ -671,8 +697,10 @@ export const moveValidators: IMoveValidators = {
                         moveMainArgs.push(j);
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -683,16 +711,18 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     ClickCampCardHoldaMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
                 for (let j = 0; j < G.campNum; j++) {
                     if (G.camp[j] !== null) {
                         moveMainArgs.push(j);
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes): number => {
             const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
@@ -703,10 +733,11 @@ export const moveValidators: IMoveValidators = {
     },
     ClickCoinToUpgradeMoveValidator: {
         // TODO Rework if Uline in play or no 1 coin in game (& add param isInitial?)
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] =
-                [] as ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`];
+        getRange: (G?: IMyGameState, ctx?: Ctx):
+            ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] =
+                    [] as ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`];
                 const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
                     handCoins: CoinType[] =
                         player.handCoins.filter((coin: CoinType): boolean => isCoin(coin));
@@ -740,8 +771,10 @@ export const moveValidators: IMoveValidators = {
                         });
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -750,26 +783,28 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickCoinToUpgradeMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `object` && id !== null
                 && `coinId` in id) {
-                isValid = CoinUpgradeValidation(G, ctx, id);
+                return CoinUpgradeValidation(G, ctx, id);
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
-            return isValid;
         },
     },
     ClickHeroCardMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
                 for (let i = 0; i < G.heroes.length; i++) {
                     if (G.heroes[i].active) {
                         moveMainArgs.push(i);
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -777,9 +812,9 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickHeroCardMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
+                let isValid = false;
                 const validators: IValidatorsConfig | undefined = G.heroes[id].validators;
                 if (validators !== undefined) {
                     for (const validator in validators) {
@@ -800,15 +835,17 @@ export const moveValidators: IMoveValidators = {
                 } else {
                     isValid = true;
                 }
+                return isValid;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
-            return isValid;
         },
     },
     DiscardCardMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx):
-            ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] = {};
+            ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] = {};
                 const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
                     config: IConfig | undefined = player.stack[0].config,
                     pickedCard: PickedCardType = player.pickedCard;
@@ -828,8 +865,10 @@ export const moveValidators: IMoveValidators = {
                         }
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -854,18 +893,17 @@ export const moveValidators: IMoveValidators = {
     },
     DiscardSuitCardFromPlayerBoardMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number):
-            ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] = {
-                playerId: playerId as number,
-                suit: `` as SuitTypes,
-                cards: [],
-            };
+            ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] | never => {
             if (G !== undefined && ctx !== undefined && playerId !== undefined) {
                 const player: IPublicPlayer = G.publicPlayers[playerId],
                     config: IConfig | undefined = player.stack[0].config;
                 if (config !== undefined && config.suit !== undefined) {
-                    moveMainArgs.suit = config.suit;
                     if (player.stack[0] !== undefined) {
+                        const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] = {
+                            playerId: playerId,
+                            suit: config.suit,
+                            cards: [],
+                        };
                         for (let i = 0; i < player.cards[config.suit].length; i++) {
                             if (player.cards[config.suit][i] !== undefined) {
                                 if (!isHeroCard(player.cards[config.suit][i])) {
@@ -873,25 +911,36 @@ export const moveValidators: IMoveValidators = {
                                 }
                             }
                         }
+                        return moveMainArgs;
+                    } else {
+                        throw new Error(`'player.stack[0]' is undefined.`);
                     }
+                } else {
+                    throw new Error(`'config' and/or 'config.suit' is undefined.`);
                 }
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' and/or 'playerId' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
-            ValidMoveIdParamTypes => {
+            ValidMoveIdParamTypes | never => {
             const moveArguments: ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] =
                 currentMoveArguments as ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`],
-                player: IPublicPlayer = G.publicPlayers[moveArguments.playerId],
-                minValue: number = Math.min(
-                    ...player.cards[moveArguments.suit].filter((card: PlayerCardsType): boolean =>
-                        !isHeroCard(card)).map((card: PlayerCardsType): number => card.points as number)),
-                minCardIndex: number =
-                    player.cards[moveArguments.suit].findIndex((card: PlayerCardsType): boolean =>
-                        !isHeroCard(card) && card.points === minValue);
-            if (minCardIndex !== -1) {
-                // TODO Error?!
-            }
+                player: IPublicPlayer = G.publicPlayers[moveArguments.playerId];
+            let minCardIndex = 0,
+                minCardValue: number | null = player.cards[moveArguments.suit][0].points;
+            // TODO Check if array not empty and FOR ALL VALIDATORS TOO!!!
+            moveArguments.cards.forEach((value: number, index: number) => {
+                const cardPoints: number | null = player.cards[moveArguments.suit][value].points;
+                if (cardPoints !== null && minCardValue !== null) {
+                    if (cardPoints < minCardValue) {
+                        minCardIndex = index;
+                        minCardValue = cardPoints;
+                    }
+                } else {
+                    // TODO Error warriors must have points numbers!
+                }
+            });
             return {
                 playerId: moveArguments.playerId,
                 suit: moveArguments.suit,
@@ -899,18 +948,20 @@ export const moveValidators: IMoveValidators = {
             };
         },
         moveName: MoveNames.DiscardSuitCardFromPlayerBoardMove,
-        // TODO validate Not bot playerId === ctx.currentPlayer & for Bot playerId exists in playersNum?
+        // TODO validate Not bot playerId === ctx.currentPlayer & for Bot playerId exists in playersNum and card not hero?
         validate: (): boolean => true,
     },
     PickDiscardCardMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
                 for (let j = 0; j < G.discardCardsDeck.length; j++) {
                     moveMainArgs.push(j);
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -921,9 +972,9 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     PlaceOlwinCardMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -933,8 +984,10 @@ export const moveValidators: IMoveValidators = {
                         }
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -945,9 +998,9 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     PlaceThrudHeroMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -957,8 +1010,10 @@ export const moveValidators: IMoveValidators = {
                         }
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -970,9 +1025,10 @@ export const moveValidators: IMoveValidators = {
     },
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
         // TODO Rework if Uline in play or no 1 coin in game(& add param isInitial ?)
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] = [];
+        getRange: (G?: IMyGameState, ctx?: Ctx):
+            ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
+                const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] = [];
                 const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
                     config: IConfig | undefined = player.stack[0].config;
                 if (config !== undefined) {
@@ -989,8 +1045,10 @@ export const moveValidators: IMoveValidators = {
                         }
                     }
                 }
+                return moveMainArgs;
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -999,14 +1057,14 @@ export const moveValidators: IMoveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean => {
-            let isValid = false;
+        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
             if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `object` && id !== null
                 && `coinId` in id) {
-                isValid = G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config?.coinId !== id.coinId
+                return G.publicPlayers[Number(ctx.currentPlayer)].stack[0].config?.coinId !== id.coinId
                     && CoinUpgradeValidation(G, ctx, id);
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
-            return isValid;
         },
     },
     // end

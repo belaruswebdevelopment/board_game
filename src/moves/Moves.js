@@ -6,9 +6,8 @@ import { suitsConfig } from "../data/SuitData";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { LogTypes, Stages, SuitNames } from "../typescript/enums";
+import { Stages, SuitNames } from "../typescript/enums";
 /**
  * <h3>Выбор карты из таверны.</h3>
  * <p>Применения:</p>
@@ -27,7 +26,7 @@ export const ClickCardMove = (G, ctx, cardId) => {
         return INVALID_MOVE;
     }
     const card = G.taverns[G.currentTavern][cardId];
-    G.taverns[G.currentTavern][cardId] = null;
+    G.taverns[G.currentTavern].splice(cardId, 1, null);
     if (card !== null) {
         const isAdded = AddCardToPlayer(G, ctx, card);
         if (!isCardNotActionAndNotNull(card)) {
@@ -40,7 +39,7 @@ export const ClickCardMove = (G, ctx, cardId) => {
         }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта.`);
+        throw new Error(`Не существует кликнутая карта.`);
     }
 };
 /**

@@ -31,7 +31,7 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
             playersBoardsCoinsUI: JSX.Element[][] = DrawPlayersBoardsCoins(this.props),
             playersHandsCoinsUI: JSX.Element[][] = DrawPlayersHandsCoins(this.props),
             playersBoardsUI: JSX.Element[][] = DrawPlayersBoards(this.props),
-            logUI: JSX.Element | null = DrawLogData(this.props),
+            logUI: JSX.Element | null | never = DrawLogData(this.props),
             debugUI: JSX.Element | null = DrawDebugData(this.props);
         return (
             <div className="flex">

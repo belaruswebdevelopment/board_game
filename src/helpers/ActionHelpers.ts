@@ -30,22 +30,21 @@ export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?:
 
 // TODO Rework it!?
 export const AddGetDistinctionsActionToStack = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStackAfterCurrent(G, ctx, [{}]);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
 };
 
-// TODO Rework it!?
 export const AddPickCardActionToStack = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStackAfterCurrent(G, ctx, [{}]);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.pickCard()]);
 };
 
-export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): void => {
+export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): void | never => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         buffIndex: number = player.buffs.findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
     if (buffIndex !== -1) {
         player.buffs.splice(buffIndex, 1);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} потерял баф '${buffName}'.`);
     } else {
-        // TODO Log error?
+        throw new Error(`У игрока в 'buffs' отсутствует баф ${buffName}.`);
     }
 };
 
@@ -95,7 +94,6 @@ const StartOrEndActionStage = (G: IMyGameState, ctx: Ctx, config: IConfig): void
         ctx.events?.setStage(config.stageName);
         AddDataToLog(G, LogTypes.GAME, `Начало стадии ${config.stageName}.`);
     } else if (ctx.activePlayers !== null && ctx.activePlayers[Number(ctx.currentPlayer)]) {
-        // TODO Is it need!?
         ctx.events?.endStage();
     }
 };

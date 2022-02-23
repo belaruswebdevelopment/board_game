@@ -1,6 +1,7 @@
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddGetMjollnirProfitActionsToStack } from "../helpers/CampHelpers";
 import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { BuffNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>
  * <p>Применения:</p>
@@ -23,7 +24,7 @@ export const CheckGetMjollnirProfitOrder = (G) => {
         G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
     }
     else {
-        // TODO Error!
+        throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.GetMjollnirProfit}.`);
     }
 };
 export const OnGetMjollnirProfitMove = (G, ctx) => {

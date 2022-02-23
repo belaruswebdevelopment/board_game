@@ -87,4 +87,5 @@ export const CreateHero = ({
     stack,
 });
 
-export const isHeroCard = (card: unknown): card is IHeroCard => (card as IHeroCard).active !== undefined;
+export const isHeroCard = (card: unknown): card is IHeroCard =>
+    card !== null && (card as IHeroCard).active !== undefined;

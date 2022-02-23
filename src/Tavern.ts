@@ -32,16 +32,15 @@ export const CheckIfCurrentTavernEmpty = (G: IMyGameState): boolean =>
  * @param discardCardIndex Индекс сбрасываемой карты в таверне.
  * @returns Сброшена ли карта из таверны.
  */
-export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number): boolean => {
+export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number): boolean | never => {
     const discardedCard: TavernCardTypes = G.taverns[G.currentTavern][discardCardIndex];
     if (discardedCard !== null) {
         G.discardCardsDeck.push(discardedCard);
-        G.taverns[G.currentTavern][discardCardIndex] = null;
+        G.taverns[G.currentTavern].splice(discardCardIndex, 1, null);
         AddDataToLog(G, LogTypes.GAME, `Карта ${discardedCard.name} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
         return true;
     }
-    AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны.`);
-    return false;
+    throw new Error(`Не удалось сбросить лишнюю карту из таверны.`);
 };
 
 /**
@@ -54,7 +53,7 @@ export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number)
  *
  * @param G
  */
-export const RefillTaverns = (G: IMyGameState): void => {
+export const RefillTaverns = (G: IMyGameState): void | never => {
     let error = false;
     for (let i = 0; i < G.tavernsNum; i++) {
         const refillDeck: DeckCardTypes[] =
@@ -64,7 +63,7 @@ export const RefillTaverns = (G: IMyGameState): void => {
             AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[i].name} заполнена новыми картами.`);
         } else {
             error = true;
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Таверна ${tavernsConfig[i].name} не заполнена новыми картами из-за их нехватки в колоде.`);
+            throw new Error(`Таверна ${tavernsConfig[i].name} не заполнена новыми картами из-за их нехватки в колоде.`);
         }
     }
     if (!error) {

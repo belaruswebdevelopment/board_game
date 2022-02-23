@@ -1,12 +1,12 @@
 import { IsMercenaryCard } from "../Camp";
 import { isCoin } from "../Coin";
+import { BuffNames } from "../typescript/enums";
 import { TotalRank } from "./ScoreHelpers";
 export const DraupnirScoring = (player) => {
     if (player !== undefined) {
         return player.boardCoins.filter((coin) => isCoin(coin) && coin.value >= 15).length * 6;
     }
-    // TODO error!?
-    return 0;
+    throw new Error(`Function param 'player' is undefined.`);
 };
 export const HrafnsmerkiScoring = (player) => {
     if (player !== undefined) {
@@ -18,8 +18,7 @@ export const HrafnsmerkiScoring = (player) => {
         }
         return score;
     }
-    // TODO error!?
-    return 0;
+    throw new Error(`Function param 'player' is undefined.`);
 };
 export const MjollnirScoring = (player) => {
     var _a;
@@ -29,17 +28,15 @@ export const MjollnirScoring = (player) => {
             return player.cards[suit].reduce(TotalRank, 0) * 2;
         }
         else {
-            // TODO Error suitIdForMjollnir must be!
+            throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.SuitIdForMjollnir}.`);
         }
     }
-    // TODO error!?
-    return 0;
+    throw new Error(`Function param 'player' is undefined.`);
 };
 export const SvalinnScoring = (player) => {
     if (player !== undefined) {
         return player.heroes.length * 5;
     }
-    // TODO error!?
-    return 0;
+    throw new Error(`Function param 'player' is undefined.`);
 };
 //# sourceMappingURL=ArtefactScoringHelpers.js.map

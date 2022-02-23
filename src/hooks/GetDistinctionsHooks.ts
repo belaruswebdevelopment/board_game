@@ -3,7 +3,7 @@ import { CheckDistinction } from "../Distinction";
 import { AddGetDistinctionsActionToStack } from "../helpers/ActionHelpers";
 import { RefillCamp } from "../helpers/CampHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { DistinctionTypes, IMyGameState } from "../typescript/interfaces";
+import { DistinctionTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'getDistinctions'.</h3>
@@ -38,11 +38,11 @@ export const CheckAndResolveDistinctionsOrders = (G: IMyGameState, ctx: Ctx): vo
  * @returns
  */
 export const CheckEndGetDistinctionsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    if (G.publicPlayersOrder.length) {
-        if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-            return Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
-                distinction === undefined);
-        }
+    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (G.publicPlayersOrder.length && !player.stack.length && !player.actionsNum
+        && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
+        return Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
+            distinction === undefined);
     }
 };
 

@@ -1,13 +1,12 @@
 import { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, DiscardSuitCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
-import { IsArtefactCardNotMercenary } from "../Camp";
+import { IsArtefactCard } from "../Camp";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddCampCardToCards } from "../helpers/CampCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { LogTypes, Stages } from "../typescript/enums";
+import { Stages } from "../typescript/enums";
 import { CampCardTypes, IMyGameState, SuitTypes } from "../typescript/interfaces";
 
 /**
@@ -42,7 +41,7 @@ export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  * @returns
  */
 export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
-    string | void => {
+    string | void | never => {
     const isValidMove: boolean = IsValidMove(G, ctx, Stages.PickCampCardHolda, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -50,14 +49,14 @@ export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx:
     // TODO Move to function with Camp same logic
     const campCard: CampCardTypes = G.camp[cardId];
     if (campCard !== null) {
-        G.camp[cardId] = null;
+        G.camp.splice(cardId, 1, null);
         AddCampCardToCards(G, ctx, campCard);
-        if (IsArtefactCardNotMercenary(campCard)) {
+        if (IsArtefactCard(campCard)) {
             AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
             StartAutoAction(G, ctx, campCard.actions);
         }
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
+        throw new Error(`Не существует кликнутая карта кэмпа.`);
     }
 };
 
@@ -73,7 +72,8 @@ export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx:
  * @param cardId Id выбираемой карты из кэмпа.
  * @returns
  */
-export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
+export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+    string | void | never => {
     const isValidMove: boolean = IsValidMove(G, ctx, Stages.Default2, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -83,12 +83,12 @@ export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
     if (campCard !== null) {
         G.camp[cardId] = null;
         AddCampCardToCards(G, ctx, campCard);
-        if (IsArtefactCardNotMercenary(campCard)) {
+        if (IsArtefactCard(campCard)) {
             AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
             StartAutoAction(G, ctx, campCard.actions);
         }
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
+        throw new Error(`Не существует кликнутая карта кэмпа.`);
     }
 };
 

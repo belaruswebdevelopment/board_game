@@ -128,7 +128,7 @@ export const enumerate = (G, ctx) => {
             }
         }
         else {
-            // TODO Error activeStageOfCurrentPlayer can't === `default`!
+            throw new Error(`Variable 'activeStageOfCurrentPlayer' can't be 'default'.`);
         }
     }
     return moves;

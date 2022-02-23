@@ -77,7 +77,7 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
         UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
     }
     else {
-        // TODO Error logging!
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config.value'.`);
     }
 };
 /**

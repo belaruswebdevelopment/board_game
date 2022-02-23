@@ -78,11 +78,13 @@ export var DrawNames;
     DrawNames["EnlistmentMercenaries"] = "Enlistment Mercenaries";
     DrawNames["Mjollnir"] = "Mjollnir";
     // TODO Add it and new to all Stack actions and give normal names to all?!
-    DrawNames["GetMjollnirProfit"] = "getMjollnirProfit";
+    DrawNames["GetMjollnirProfit"] = "Get Mjollnir profit";
     DrawNames["Hofud"] = "Hofud";
     DrawNames["Holda"] = "Holda";
     DrawNames["Olwin"] = "Olwin";
+    DrawNames["PickCard"] = "Pick card or camp card";
     DrawNames["PickCardByExplorerDistinction"] = "Pick card by Explorer distinction";
+    DrawNames["PickHero"] = "Pick hero card";
     DrawNames["PlaceEnlistmentMercenaries"] = "Place Enlistment Mercenaries";
     DrawNames["StartOrPassEnlistmentMercenaries"] = "Start or Pass Enlistment Mercenaries";
     DrawNames["Thrud"] = "Thrud";

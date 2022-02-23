@@ -8,7 +8,7 @@ import { isHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ConfigNames, DrawNames, MoveNames } from "../typescript/enums";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
-// TODO Add functions dock blocks
+// TODO Add functions dock blocks and Errors!
 export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     for (let j = 0; j < player.handCoins.length; j++) {
@@ -134,7 +134,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =
         boardCells.push(_jsx("td", { children: _jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playersHeaders }, void 0) }, void 0), _jsx("tbody", { children: playersRows }, void 0)] }, void 0) }, `Discard ${config.suit} suit cardboard`));
     }
     else {
-        // TODO Errors logging!?
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config' и/или 'stack[0].config.suit'.`);
     }
 };
 export const ExplorerDistinctionProfit = (G, ctx, data, boardCells) => {
@@ -207,8 +207,7 @@ export const PlaceCardsProfit = (G, ctx, data, boardCells) => {
                             moveName = MoveNames.PlaceOlwinCardMove;
                             break;
                         default:
-                            moveName = null;
-                            break;
+                            throw new Error(`Нет такого мува.`);
                     }
                     const value = (_b = (_a = player.stack[0].variants) === null || _a === void 0 ? void 0 : _a[suit].points) !== null && _b !== void 0 ? _b : ``;
                     DrawSuit(data, boardCells, suit, config.drawName, value, player, moveName);
@@ -221,6 +220,7 @@ export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     var _a, _b;
     let suit;
     for (suit in suitsConfig) {
+        // TODO Add all Errors for hasOwnProperty!!!!!!!!!!!!!!!!!!!?
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const player = G.publicPlayers[Number(ctx.currentPlayer)], card = player.pickedCard;
             if (card !== null && `variants` in card) {
@@ -234,11 +234,20 @@ export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
                                 DrawSuit(data, boardCells, suit, config.drawName, value, player, MoveNames.PlaceEnlistmentMercenariesMove);
                             }
                             else {
-                                // TODO Error?
+                                throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
                             }
                         }
                     }
+                    else {
+                        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config' и/или 'stack[0].config.drawName'.`);
+                    }
                 }
+                else {
+                    throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants'.`);
+                }
+            }
+            else {
+                throw new Error(`Выбранная карта должна быть с типом 'наёмник'.`);
             }
         }
     }
@@ -291,6 +300,9 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G, ctx, data, boardCells) =>
                 }
             }
         }
+    }
+    else {
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config'.`);
     }
 };
 //# sourceMappingURL=ProfitUI.js.map

@@ -61,6 +61,7 @@ export interface IConfig {
     readonly coinId?: number,
     readonly suit?: SuitTypes,
     readonly value?: number,
+    // TODO Do we need it!?!?!?
     readonly drawName?: string,
     readonly stageName?: string,
     readonly name?: string,
@@ -134,7 +135,7 @@ export interface IArtefact {
     readonly validators?: IValidatorsConfig,
     readonly actions?: IAction,
     readonly stack?: IStack[],
-    readonly scoringRule: (player?: IPublicPlayer) => number,
+    readonly scoringRule: (player?: IPublicPlayer) => number | never,
 }
 
 /**
@@ -480,7 +481,7 @@ export interface IHeroData {
     readonly validators?: IValidatorsConfig,
     readonly actions?: IAction,
     readonly stack?: IStack[],
-    readonly scoringRule: (player?: IPublicPlayer) => number,
+    readonly scoringRule: (player?: IPublicPlayer) => number | never,
 }
 
 /**
@@ -531,15 +532,13 @@ export interface ICurrentMoveSuitCardCurrentId {
     readonly cardId: number,
 }
 
-export interface ICurrentMoveSuitCardPlayerCurrentId {
+export interface ICurrentMoveSuitCardPlayerCurrentId extends ICurrentMoveSuitCardCurrentId {
     readonly playerId: number,
-    readonly suit: SuitTypes,
-    readonly cardId: number,
 }
 
 export interface ICurrentMoveSuitCardPlayerIdArguments {
     readonly playerId: number,
-    suit: SuitTypes,
+    readonly suit: SuitTypes,
     readonly cards: number[],
 }
 
@@ -674,10 +673,11 @@ export interface IMoveByGetMjollnirProfitOptions {
  * <h3>Интерфейс для валидатора мувов.</h3>
  */
 export interface IMoveValidator {
-    readonly getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number) => MoveValidatorGetRangeTypes,
-    readonly getValue: (G: IMyGameState, ctx: Ctx, moveRangeData: MoveValidatorGetRangeTypes) => ValidMoveIdParamTypes,
+    readonly getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number) => MoveValidatorGetRangeTypes | never,
+    readonly getValue: (G: IMyGameState, ctx: Ctx, moveRangeData: MoveValidatorGetRangeTypes) =>
+        ValidMoveIdParamTypes | never,
     readonly moveName: string,
-    readonly validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes) => boolean,
+    readonly validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes) => boolean | never,
 }
 
 /**
@@ -846,19 +846,19 @@ export interface IBackground {
  */
 export interface IStyles {
     readonly Camp: () => IBackground,
-    readonly CampCards: (tier: number, cardPath: string) => IBackground,
-    readonly Cards: (suit: SuitTypes | null, name: string, points: number | null) => IBackground,
+    readonly CampCards: (tier: number, cardPath: string) => IBackground | never,
+    readonly Cards: (suit: SuitTypes | null, name: string, points: number | null) => IBackground | never,
     readonly Coin: (value: number, initial: boolean) => IBackground,
     readonly CoinBack: () => IBackground,
-    readonly Distinctions: (distinction: string) => IBackground,
+    readonly Distinctions: (distinction: string) => IBackground | never,
     readonly DistinctionsBack: () => IBackground,
     readonly Exchange: () => IBackground,
-    readonly Heroes: (game: string, heroName: string) => IBackground,
+    readonly Heroes: (game: string, heroName: string) => IBackground | never,
     readonly HeroBack: () => IBackground,
     readonly Priorities: (priority: number) => IBackground,
     readonly Priority: () => IBackground,
     readonly Suits: (suit: SuitTypes) => IBackground,
-    readonly Taverns: (tavernId: number) => IBackground,
+    readonly Taverns: (tavernId: number) => IBackground | never,
 }
 
 /**

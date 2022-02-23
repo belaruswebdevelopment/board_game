@@ -32,12 +32,11 @@ export const DiscardCardFromTavern = (G, discardCardIndex) => {
     const discardedCard = G.taverns[G.currentTavern][discardCardIndex];
     if (discardedCard !== null) {
         G.discardCardsDeck.push(discardedCard);
-        G.taverns[G.currentTavern][discardCardIndex] = null;
+        G.taverns[G.currentTavern].splice(discardCardIndex, 1, null);
         AddDataToLog(G, LogTypes.GAME, `Карта ${discardedCard.name} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
         return true;
     }
-    AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны.`);
-    return false;
+    throw new Error(`Не удалось сбросить лишнюю карту из таверны.`);
 };
 /**
  * <h3>Автоматически заполняет все таверны картами текущей эпохи.</h3>
@@ -59,7 +58,7 @@ export const RefillTaverns = (G) => {
         }
         else {
             error = true;
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Таверна ${tavernsConfig[i].name} не заполнена новыми картами из-за их нехватки в колоде.`);
+            throw new Error(`Таверна ${tavernsConfig[i].name} не заполнена новыми картами из-за их нехватки в колоде.`);
         }
     }
     if (!error) {

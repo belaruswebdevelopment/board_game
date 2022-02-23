@@ -2,7 +2,7 @@ import { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
-import { HeroNames } from "../typescript/enums";
+import { BuffNames, HeroNames } from "../typescript/enums";
 import { IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 
 /**
@@ -15,7 +15,7 @@ import { IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitTypes 
  * @param G
  * @param ctx
  */
-export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
+export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void | never => {
     if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
         const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
             Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
@@ -32,7 +32,7 @@ export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext
                 return CheckEndGameLastActions(G);
             }
         } else {
-            // TODO Error logging buff Ylud must be
+            throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Ylud}.`);
         }
     }
 };
@@ -46,7 +46,7 @@ export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext
  *
  * @param G
  */
-export const CheckEndTierOrder = (G: IMyGameState): void => {
+export const CheckEndTierOrder = (G: IMyGameState): void | never => {
     G.publicPlayersOrder = [];
     const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
         Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
@@ -68,7 +68,7 @@ export const CheckEndTierOrder = (G: IMyGameState): void => {
         }
         G.publicPlayersOrder.push(String(yludIndex));
     } else {
-        // TODO Error!
+        throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.EndTier}.`);
     }
 };
 

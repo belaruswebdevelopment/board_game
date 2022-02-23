@@ -19,7 +19,7 @@ import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions"
  * @param ctx
  * @param coinId Id монеты.
  */
-export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number): void => {
+export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number): void | never => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         tempId: number = player.boardCoins.findIndex((coin: CoinType, index: number): boolean =>
             index >= G.tavernsNum && !isCoin(coin));
@@ -29,7 +29,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} положил монету ценностью '${player.boardCoins[tempId]}' в свой кошелёк.`);
         StartVidofnirVedrfolnirAction(G, ctx);
     } else {
-        // TODO Error!
+        throw new Error(`У игрока в 'boardCoins' отсутствует монета для добавления в кошель для обмена для действия артефакта 'VidofnirVedrfolnir'.`);
     }
 };
 
@@ -47,7 +47,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
  * @param cardId Id сбрасываемой карты.
  */
 export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, playerId: number, cardId: number):
-    void => {
+    void | never => {
     // TODO Rework it for players and fix it for bots?
     // TODO ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
@@ -58,10 +58,11 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
             AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил карту ${discardedCard.name} в колоду сброса.`);
             player.stack = [];
         } else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
+            throw new Error(`Сброшенная карта не может быть с типом 'герой'.`);
         }
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.`);
+        // TODO Need it!?
+        throw new Error(`Отсутствует обязательный параметр 'ctx.playerID'.`);
     }
 };
 
@@ -79,18 +80,17 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
  * @param isInitial Является ли монета базовой.
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, coinId: number, type: string,
-    isInitial: boolean): void => {
+    isInitial: boolean): void | never => {
     const playerConfig: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[0]?.config;
     if (playerConfig !== undefined) {
         if (playerConfig.value === 3) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
-        }
-        if (playerConfig.value !== undefined) {
+        } else if (playerConfig.value !== undefined) {
             UpgradeCoinAction(G, ctx, playerConfig.value, coinId, type, isInitial);
         } else {
-            // TODO Error logging!
+            throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config.value'.`);
         }
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].config'.`);
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config'.`);
     }
 };

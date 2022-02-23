@@ -147,7 +147,7 @@ export const BoardGame: Game<IMyGameState> = {
             },
             onBegin: (G: IMyGameState, ctx: Ctx): void => ResolveCurrentTavernOrders(G, ctx),
             endIf: (G: IMyGameState, ctx: Ctx) => CheckEndPickCardsPhase(G, ctx),
-            onEnd: (G: IMyGameState, ctx: Ctx): void => EndPickCardsActions(G, ctx),
+            onEnd: (G: IMyGameState, ctx: Ctx): void | never => EndPickCardsActions(G, ctx),
         },
         enlistmentMercenaries: {
             turn: {
@@ -287,7 +287,7 @@ export const BoardGame: Game<IMyGameState> = {
                 PlaceYludHeroMove,
             },
             onBegin: (G: IMyGameState): void => CheckEndTierOrder(G),
-            endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void => CheckEndEndTierPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void | never => CheckEndEndTierPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndEndTierActions(G, ctx),
         },
         getDistinctions: {
@@ -376,7 +376,7 @@ export const BoardGame: Game<IMyGameState> = {
             moves: {
                 DiscardCardFromPlayerBoardMove,
             },
-            onBegin: (G: IMyGameState): void => CheckBrisingamensEndGameOrder(G),
+            onBegin: (G: IMyGameState): void | never => CheckBrisingamensEndGameOrder(G),
             endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void => StartGetMjollnirProfitOrEndGame(G, ctx),
             onEnd: (G: IMyGameState): void => EndBrisingamensEndGameActions(G),
         },
@@ -391,7 +391,7 @@ export const BoardGame: Game<IMyGameState> = {
             moves: {
                 GetMjollnirProfitMove,
             },
-            onBegin: (G: IMyGameState): void => CheckGetMjollnirProfitOrder(G),
+            onBegin: (G: IMyGameState): void | never => CheckGetMjollnirProfitOrder(G),
             endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndGetMjollnirProfitPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => StartEndGame(G, ctx),
         },

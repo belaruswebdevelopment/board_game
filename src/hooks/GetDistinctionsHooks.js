@@ -31,10 +31,10 @@ export const CheckAndResolveDistinctionsOrders = (G, ctx) => {
  * @returns
  */
 export const CheckEndGetDistinctionsPhase = (G, ctx) => {
-    if (G.publicPlayersOrder.length) {
-        if (!G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-            return Object.values(G.distinctions).every((distinction) => distinction === undefined);
-        }
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (G.publicPlayersOrder.length && !player.stack.length && !player.actionsNum
+        && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
+        return Object.values(G.distinctions).every((distinction) => distinction === undefined);
     }
 };
 /**

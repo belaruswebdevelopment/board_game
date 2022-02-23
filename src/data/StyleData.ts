@@ -42,7 +42,7 @@ export const Styles: IStyles = {
     Camp: (): IBackground => ({
         background: `${campCardsPath}.png) no-repeat 0px 3px / 24px 18px`,
     }),
-    CampCards: (tier: number, cardPath: string): IBackground => {
+    CampCards: (tier: number, cardPath: string): IBackground | never => {
         if (tier === 0) {
             switch (cardPath) {
                 case ArtefactNames.Draupnir:
@@ -94,9 +94,7 @@ export const Styles: IStyles = {
                         background: `${campCardsPath}${tier}.png) no-repeat -96px -96px / 128px 144px`,
                     };
                 default:
-                    return {
-                        background: ``,
-                    };
+                    throw new Error(`Нет такой карты кэмпа во 1-й эпохе.`);
             }
         } else if (tier === 1) {
             switch (cardPath) {
@@ -149,16 +147,12 @@ export const Styles: IStyles = {
                         background: `${campCardsPath}${tier}.png) no-repeat -96px -96px / 128px 144px`,
                     };
                 default:
-                    return {
-                        background: ``,
-                    };
+                    throw new Error(`Нет такой карты кэмпа во 2-й эпохе.`);
             }
         }
-        return {
-            background: ``,
-        };
+        throw new Error(`Нет такой карты кэмпа.`);
     },
-    Cards: (suit: SuitTypes | null, name: string, points: number | null): IBackground => {
+    Cards: (suit: SuitTypes | null, name: string, points: number | null): IBackground | never => {
         if (name === CardNames.ChiefBlacksmith || name === CardNames.Olwin) {
             switch (name) {
                 case CardNames.ChiefBlacksmith:
@@ -170,15 +164,12 @@ export const Styles: IStyles = {
                         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
                     };
                 default:
-                    return {
-                        background: ``,
-                    };
+                    throw new Error(`Нет такой карты среди дополнительных карт.`);
             }
-        } else if (suit) {
+        } else if (suit !== null) {
             switch (suit) {
                 case SuitNames.BLACKSMITH:
                     return {
-                        //
                         background: `${basicCardsPath}0.png) no-repeat 0px 0px / 288px 288px`,
                     };
                 case SuitNames.HUNTER:
@@ -200,9 +191,7 @@ export const Styles: IStyles = {
                                 background: `${basicCardsPath}0.png) no-repeat -224px -48px / 288px 288px`,
                             };
                         default:
-                            return {
-                                background: ``,
-                            };
+                            throw new Error(`Нет такой карты во фракции ${SuitNames.MINER}.`);
                     }
                 case SuitNames.WARRIOR:
                     switch (points) {
@@ -239,9 +228,7 @@ export const Styles: IStyles = {
                                 background: `${basicCardsPath}0.png) no-repeat -32px -240px / 288px 288px`,
                             };
                         default:
-                            return {
-                                background: ``,
-                            };
+                            throw new Error(`Нет такой карты во фракции ${SuitNames.WARRIOR}.`);
                     }
                 case SuitNames.EXPLORER:
                     switch (points) {
@@ -278,14 +265,10 @@ export const Styles: IStyles = {
                                 background: `${basicCardsPath}0.png) no-repeat -96px -240px / 288px 288px`,
                             };
                         default:
-                            return {
-                                background: ``,
-                            };
+                            throw new Error(`Нет такой карты во фракции ${SuitNames.EXPLORER}.`);
                     }
                 default:
-                    return {
-                        background: ``,
-                    };
+                    throw new Error(`Нет такой карты.`);
             }
         } else {
             switch (name) {
@@ -298,9 +281,7 @@ export const Styles: IStyles = {
                         background: `${basicCardsPath}1.png) no-repeat -128px -240px / 288px 288px`,
                     };
                 default:
-                    return {
-                        background: ``,
-                    };
+                    throw new Error(`Нет такой карты улучшения монеты.`);
             }
         }
     },
@@ -310,7 +291,7 @@ export const Styles: IStyles = {
     CoinBack: (): IBackground => ({
         background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
     }),
-    Distinctions: (distinction: string): IBackground => {
+    Distinctions: (distinction: string): IBackground | never => {
         switch (distinction) {
             case SuitNames.BLACKSMITH:
                 return {
@@ -333,9 +314,7 @@ export const Styles: IStyles = {
                     background: `${distinctionsPath} no-repeat 0px 0px / 96px 150px`,
                 };
             default:
-                return {
-                    background: ``,
-                };
+                throw new Error(`Нет такого преимущества конца эпохи.`);
         }
     },
     DistinctionsBack: (): IBackground => ({
@@ -344,7 +323,7 @@ export const Styles: IStyles = {
     Exchange: (): IBackground => ({
         background: `url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px`,
     }),
-    Heroes: (game: string, heroName: string): IBackground => {
+    Heroes: (game: string, heroName: string): IBackground | never => {
         if (game === `base`) {
             switch (heroName) {
                 case HeroNames.Bonfur:
@@ -436,9 +415,7 @@ export const Styles: IStyles = {
                         background: `${heroesBasicPath}heroes.png) no-repeat 0px -96px / 288px 144px`,
                     };
                 default:
-                    return {
-                        background: ``,
-                    };
+                    throw new Error(`Нет такого героя в базовой игре.`);
             }
         } else if (game === `thingvellir`) {
             switch (heroName) {
@@ -463,14 +440,10 @@ export const Styles: IStyles = {
                         background: `${heroesThingvellirPath}heroes.png) no-repeat -96px -50px / 128px 100px`,
                     };
                 default:
-                    return {
-                        background: ``,
-                    };
+                    throw new Error(`Нет такого героя в дополнении 'thingvellir'.`);
             }
         }
-        return {
-            background: "",
-        };
+        throw new Error(`Нет такого героя.`);
     },
     HeroBack: (): IBackground => ({
         background: `url(/img/cards/heroes/HeroBack.png) no-repeat 6px 3px / 12px 18px`,
@@ -484,7 +457,7 @@ export const Styles: IStyles = {
     Suits: (suit: SuitTypes): IBackground => ({
         background: `url(/img/suits/${suit}.png) no-repeat 0px 0px / 24px 24px`,
     }),
-    Taverns: (tavernId: number): IBackground => {
+    Taverns: (tavernId: number): IBackground | never => {
         switch (tavernId) {
             case 0:
                 return {
@@ -499,9 +472,7 @@ export const Styles: IStyles = {
                     background: `${tavernsPath} no-repeat -50px -9px / 75px 42px`,
                 };
             default:
-                return {
-                    background: ``,
-                };
+                throw new Error(`Нет такой таверны.`);
         }
     },
 };

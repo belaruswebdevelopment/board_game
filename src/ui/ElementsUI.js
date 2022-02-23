@@ -1,11 +1,11 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { IsMercenaryCard } from "../Camp";
+import { IsArtefactCard, IsMercenaryCard } from "../Camp";
 import { isActionCard } from "../Card";
 import { isCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { AddDataToLog } from "../Logging";
-import { LogTypes, MoveNames, RusCardTypes } from "../typescript/enums";
+import { isHeroCard } from "../Hero";
+import { MoveNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -31,7 +31,7 @@ export const DrawButton = (data, boardCells, key, name, player, moveName, ...arg
             action = data.moves.PassEnlistmentMercenariesMove;
             break;
         default:
-            action = null;
+            throw new Error(`Нет такого мува.`);
     }
     boardCells.push(_jsx("td", { className: "cursor-pointer", onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded", children: name }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `Player ${player.nickname} ` : ``}${key}`));
 };
@@ -53,47 +53,52 @@ export const DrawButton = (data, boardCells, key, name, player, moveName, ...arg
  */
 export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ...args) => {
     let styles = { background: `` }, tdClasses = ``, spanClasses = ``, action;
-    switch (moveName) {
-        case MoveNames.ClickHeroCardMove:
-            action = data.moves.ClickHeroCardMove;
-            break;
-        case MoveNames.ClickCampCardMove:
-            action = data.moves.ClickCampCardMove;
-            break;
-        case MoveNames.ClickCardMove:
-            action = data.moves.ClickCardMove;
-            break;
-        case MoveNames.ClickCardToPickDistinctionMove:
-            action = data.moves.ClickCardToPickDistinctionMove;
-            break;
-        case MoveNames.DiscardCardMove:
-            action = data.moves.DiscardCardMove;
-            break;
-        case MoveNames.PickDiscardCardMove:
-            action = data.moves.PickDiscardCardMove;
-            break;
-        case MoveNames.DiscardCard2PlayersMove:
-            action = data.moves.DiscardCard2PlayersMove;
-            break;
-        case MoveNames.DiscardCardFromPlayerBoardMove:
-            action = data.moves.DiscardCardFromPlayerBoardMove;
-            break;
-        case MoveNames.DiscardSuitCardFromPlayerBoardMove:
-            action = data.moves.DiscardSuitCardFromPlayerBoardMove;
-            break;
-        case MoveNames.ClickCampCardHoldaMove:
-            action = data.moves.ClickCampCardHoldaMove;
-            break;
-        case MoveNames.GetEnlistmentMercenariesMove:
-            action = data.moves.GetEnlistmentMercenariesMove;
-            break;
-        default:
-            action = null;
+    if (moveName !== undefined) {
+        switch (moveName) {
+            case MoveNames.ClickHeroCardMove:
+                action = data.moves.ClickHeroCardMove;
+                break;
+            case MoveNames.ClickCampCardMove:
+                action = data.moves.ClickCampCardMove;
+                break;
+            case MoveNames.ClickCardMove:
+                action = data.moves.ClickCardMove;
+                break;
+            case MoveNames.ClickCardToPickDistinctionMove:
+                action = data.moves.ClickCardToPickDistinctionMove;
+                break;
+            case MoveNames.DiscardCardMove:
+                action = data.moves.DiscardCardMove;
+                break;
+            case MoveNames.PickDiscardCardMove:
+                action = data.moves.PickDiscardCardMove;
+                break;
+            case MoveNames.DiscardCard2PlayersMove:
+                action = data.moves.DiscardCard2PlayersMove;
+                break;
+            case MoveNames.DiscardCardFromPlayerBoardMove:
+                action = data.moves.DiscardCardFromPlayerBoardMove;
+                break;
+            case MoveNames.DiscardSuitCardFromPlayerBoardMove:
+                action = data.moves.DiscardSuitCardFromPlayerBoardMove;
+                break;
+            case MoveNames.ClickCampCardHoldaMove:
+                action = data.moves.ClickCampCardHoldaMove;
+                break;
+            case MoveNames.GetEnlistmentMercenariesMove:
+                action = data.moves.GetEnlistmentMercenariesMove;
+                break;
+            default:
+                throw new Error(`Нет такого мува.`);
+        }
+    }
+    else {
+        action = null;
     }
     if (suit !== null && suit !== undefined) {
         tdClasses = suitsConfig[suit].suitColor;
     }
-    if (card.type === RusCardTypes.HERO && `game` in card) {
+    if (isHeroCard(card)) {
         styles = Styles.Heroes(card.game, card.name);
         if (player === null && `active` in card && !card.active) {
             spanClasses = `bg-hero-inactive`;
@@ -104,19 +109,16 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         if (suit === null) {
             tdClasses = `bg-gray-600`;
         }
-        // TODO Fix it types!
     }
-    else if (IsMercenaryCard(card) || card.type === RusCardTypes.ARTEFACT) {
-        if (`tier` in card && `path` in card) {
-            styles = Styles.CampCards(card.tier, card.path);
-        }
+    else if (IsMercenaryCard(card) || IsArtefactCard(card)) {
+        styles = Styles.CampCards(card.tier, card.path);
         spanClasses = `bg-camp`;
         if (suit === null) {
             tdClasses = `bg-yellow-200`;
         }
     }
     else {
-        if (`suit` in card && `points` in card && card.suit !== null) {
+        if (!isActionCard(card)) {
             styles = Styles.Cards(card.suit, card.name, card.points);
         }
         else {
@@ -124,7 +126,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         }
         spanClasses = `bg-card`;
     }
-    if (moveName !== null) {
+    if (action !== null) {
         tdClasses += ` cursor-pointer`;
     }
     let description = ``, value = ``;
@@ -159,32 +161,37 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
  */
 export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses, additionalParam, moveName, ...args) => {
     let styles = { background: `` }, span = null, tdClasses = `bg-yellow-300`, spanClasses = ``, action;
-    switch (moveName) {
-        case MoveNames.ClickBoardCoinMove:
-            action = data.moves.ClickBoardCoinMove;
-            break;
-        case MoveNames.ClickHandCoinMove:
-            action = data.moves.ClickHandCoinMove;
-            break;
-        case MoveNames.ClickHandCoinUlineMove:
-            action = data.moves.ClickHandCoinUlineMove;
-            break;
-        case MoveNames.ClickHandTradingCoinUlineMove:
-            action = data.moves.ClickHandTradingCoinUlineMove;
-            break;
-        case MoveNames.ClickCoinToUpgradeMove:
-            action = data.moves.ClickCoinToUpgradeMove;
-            break;
-        case MoveNames.AddCoinToPouchMove:
-            action = data.moves.AddCoinToPouchMove;
-            break;
-        case MoveNames.UpgradeCoinVidofnirVedrfolnirMove:
-            action = data.moves.UpgradeCoinVidofnirVedrfolnirMove;
-            break;
-        default:
-            action = null;
+    if (moveName !== undefined) {
+        switch (moveName) {
+            case MoveNames.ClickBoardCoinMove:
+                action = data.moves.ClickBoardCoinMove;
+                break;
+            case MoveNames.ClickHandCoinMove:
+                action = data.moves.ClickHandCoinMove;
+                break;
+            case MoveNames.ClickHandCoinUlineMove:
+                action = data.moves.ClickHandCoinUlineMove;
+                break;
+            case MoveNames.ClickHandTradingCoinUlineMove:
+                action = data.moves.ClickHandTradingCoinUlineMove;
+                break;
+            case MoveNames.ClickCoinToUpgradeMove:
+                action = data.moves.ClickCoinToUpgradeMove;
+                break;
+            case MoveNames.AddCoinToPouchMove:
+                action = data.moves.AddCoinToPouchMove;
+                break;
+            case MoveNames.UpgradeCoinVidofnirVedrfolnirMove:
+                action = data.moves.UpgradeCoinVidofnirVedrfolnirMove;
+                break;
+            default:
+                throw new Error(`Нет такого мува.`);
+        }
     }
-    if (moveName !== null) {
+    else {
+        action = null;
+    }
+    if (action !== null) {
         tdClasses += ` cursor-pointer`;
     }
     if (type === `market`) {
@@ -196,7 +203,7 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
             }
         }
         else {
-            AddDataToLog(data.G, LogTypes.ERROR, `ОШИБКА: Монета на рынке не может быть 'null'.`);
+            throw new Error(`Монета на рынке не может отсутствовать.`);
         }
     }
     else {
@@ -253,7 +260,7 @@ export const DrawSuit = (data, boardCells, suit, key, value, player, moveName) =
             action = data.moves.PlaceEnlistmentMercenariesMove;
             break;
         default:
-            action = null;
+            throw new Error(`Нет такого мува.`);
     }
     boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { className: "whitespace-nowrap text-white", children: value }, void 0) }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}choose ${suit} suit to ${key}`));
 };

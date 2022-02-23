@@ -109,14 +109,14 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
  * @param discardCardIndex Индекс сбрасываемой карты в таверне.
  * @returns Сброшена ли карта из таверны.
  */
-export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void => {
+export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void | never => {
     const cardIndex: number =
         G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
     if (cardIndex !== -1) {
         AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
         DiscardCardFromTavern(G, cardIndex);
     } else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны при пике артефакта Jarnglofi.`);
+        throw new Error(`Не удалось сбросить лишнюю карту из таверны при пике артефакта Jarnglofi.`);
     }
 };
 
@@ -129,7 +129,7 @@ export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void => {
  *
  * @param G
  */
-export const DiscardCardIfCampCardPicked = (G: IMyGameState): void => {
+export const DiscardCardIfCampCardPicked = (G: IMyGameState): void | never => {
     if (G.campPicked) {
         const discardCardIndex: number =
             G.taverns[G.currentTavern].findIndex((card: TavernCardTypes): boolean => card !== null);
@@ -140,7 +140,7 @@ export const DiscardCardIfCampCardPicked = (G: IMyGameState): void => {
         if (isCardDiscarded) {
             G.campPicked = false;
         } else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
+            throw new Error(`Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
         }
     }
 };
@@ -180,7 +180,6 @@ export const RefillEmptyCampCards = (G: IMyGameState): void => {
             return null;
         });
     const isEmptyCampCards: boolean = emptyCampCards.length === 0;
-    // TODO Add LogTypes.ERROR logging ?
     let isEmptyCurrentTierCampDeck: boolean = G.campDecks[G.campDecks.length - G.tierToEnd].length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
         emptyCampCards.forEach((cardIndex: number | null): void => {

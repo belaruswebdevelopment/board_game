@@ -12,7 +12,7 @@ import { IAction, IActionFunctionTypes, IMyGameState } from "../typescript/inter
  * @param actionName Название автоматических действий.
  * @returns Автоматические действие.
  */
-const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes => {
+const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes | never => {
     let action: IActionFunctionTypes;
     switch (actionName) {
         case AddPickHeroAction.name:
@@ -34,7 +34,7 @@ const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes => {
             action = UpgradeCoinAction;
             break;
         default:
-            action = null;
+            throw new Error(`Нет такого действия.`);
     }
     return action;
 };
@@ -52,7 +52,7 @@ const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes => {
  */
 export const StartAutoAction = (G: IMyGameState, ctx: Ctx, action?: IAction): void => {
     if (action !== undefined) {
-        const actionDispatcher: IActionFunctionTypes = ActionDispatcherSwitcher(action.name);
+        const actionDispatcher: IActionFunctionTypes | never = ActionDispatcherSwitcher(action.name);
         if (action.params !== undefined) {
             actionDispatcher?.(G, ctx, ...action.params);
         } else {

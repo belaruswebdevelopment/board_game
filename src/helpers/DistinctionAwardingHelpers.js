@@ -15,7 +15,7 @@ export const BlacksmithDistinctionAwarding = (G, ctx, player) => {
             AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
         }
         else {
-            // TODO Log error!
+            throw new Error(`В игре отсутствует обязательная карта ${CardNames.ChiefBlacksmith}.`);
         }
     }
     return 0;
@@ -39,7 +39,7 @@ export const HunterDistinctionAwarding = (G, ctx, player) => {
             AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
         }
         else {
-            // TODO Error!
+            throw new Error(`У игрока не может отсутствовать обменная монета в первую эпоху.`);
         }
     }
     return 0;

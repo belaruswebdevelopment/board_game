@@ -38,14 +38,14 @@ export const DiscardTradingCoinAction = (G, ctx) => {
             player.handCoins.splice(tradingCoinIndex, 1, null);
         }
         else {
-            // TODO Error!
+            throw new Error(`У игрока в 'handCoins' отсутствует обменная монета при наличии бафа 'everyTurn'.`);
         }
     }
     else if (tradingCoinIndex !== -1) {
         player.boardCoins.splice(tradingCoinIndex, 1, null);
     }
     else {
-        // TODO Error!
+        throw new Error(`У игрока не может отсутствовать обменная монета.`);
     }
     AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил монету активирующую обмен.`);
 };
@@ -97,7 +97,7 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
         });
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'config.suit'.`);
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[1].config' и/или 'stack[1].config.suit'.`);
     }
 };
 /**
@@ -131,7 +131,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
             stack = [StackData.upgradeCoinVidofnirVedrfolnir(3)];
         }
         else {
-            // TODO log error!?
+            throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта 'VidofnirVedrfolnir', а не ${coinsValue} монет(ы).`);
         }
         AddActionsToStackAfterCurrent(G, ctx, stack);
     }

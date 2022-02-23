@@ -1,9 +1,8 @@
 import { Ctx } from "boardgame.io";
 import { IsMercenaryCard } from "../Camp";
-import { isCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
-import { HeroNames, LogTypes, Phases, Stages } from "../typescript/enums";
-import { CampDeckCardTypes, CoinType, IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
+import { HeroNames, LogTypes, Phases } from "../typescript/enums";
+import { CampDeckCardTypes, IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 
 /**
@@ -50,41 +49,6 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G: IMyGameState): I
         return {
             next: Phases.PickCards,
         };
-    }
-};
-
-/**
- * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При наличии героя Улина.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        ulinePlayerIndex: number = G.publicPlayers.findIndex((findPlayer: IPublicPlayer): boolean =>
-            Boolean(findPlayer.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
-    if (ulinePlayerIndex !== -1) {
-        if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-            const coin: CoinType = player.boardCoins[G.currentTavern];
-            if (coin?.isTriggerTrading) {
-                const tradingCoinPlacesLength: number =
-                    player.boardCoins.filter((coin: CoinType, index: number): boolean =>
-                        index >= G.tavernsNum && coin === null).length;
-                if (tradingCoinPlacesLength > 0) {
-                    if (ctx.activePlayers?.[Number(ctx.currentPlayer)] !== Stages.PlaceTradingCoinsUline
-                        && tradingCoinPlacesLength === 2) {
-                        const handCoinsLength: number =
-                            player.handCoins.filter((coin: CoinType): boolean => isCoin(coin)).length;
-                        player.actionsNum =
-                            G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
-                    }
-                }
-            }
-        }
     }
 };
 
@@ -211,7 +175,7 @@ export const EndTurnActions = (G: IMyGameState, ctx: Ctx): boolean | void => {
  * @param G
  * @param ctx
  */
-export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx): void => {
+export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx): void | never => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player: IPublicPlayer = G.publicPlayers[i],
             playerCards: PlayerCardsType[] = Object.values(player.cards).flat(),
@@ -225,7 +189,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx
                 player.cards[thrud.suit].splice(thrudIndex, 1);
                 AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${player.nickname} уходит с игрового поля.`);
             } else {
-                // TODO Error!
+                throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Thrud}.`);
             }
         }
     }

@@ -1,14 +1,14 @@
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { Phases } from "../typescript/enums";
+import { BuffNames, Phases } from "../typescript/enums";
 export const CheckBrisingamensEndGameOrder = (G) => {
     const brisingamensPlayerIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.discardCardEndGame !== undefined)));
     if (brisingamensPlayerIndex !== -1) {
         G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
     }
     else {
-        // TODO Error!
+        throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.DiscardCardEndGame}.`);
     }
 };
 export const EndBrisingamensEndGameActions = (G) => {

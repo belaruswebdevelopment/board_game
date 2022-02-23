@@ -135,7 +135,8 @@ export const CreateCard = ({
     path,
 });
 
-export const isActionCard = (card: unknown): card is IActionCard => (card as IActionCard).value !== undefined;
+export const isActionCard = (card: unknown): card is IActionCard =>
+    card !== null && (card as IActionCard).value !== undefined;
 
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>

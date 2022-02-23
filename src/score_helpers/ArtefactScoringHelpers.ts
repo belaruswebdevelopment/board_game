@@ -1,18 +1,18 @@
 import { IsMercenaryCard } from "../Camp";
 import { isCoin } from "../Coin";
+import { BuffNames } from "../typescript/enums";
 import { CoinType, IBuffs, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
-export const DraupnirScoring = (player?: IPublicPlayer): number => {
+export const DraupnirScoring = (player?: IPublicPlayer): number | never => {
     if (player !== undefined) {
         return player.boardCoins.filter((coin: CoinType): boolean =>
             isCoin(coin) && coin.value >= 15).length * 6;
     }
-    // TODO error!?
-    return 0;
+    throw new Error(`Function param 'player' is undefined.`);
 };
 
-export const HrafnsmerkiScoring = (player?: IPublicPlayer): number => {
+export const HrafnsmerkiScoring = (player?: IPublicPlayer): number | never => {
     if (player !== undefined) {
         let score = 0,
             suit: SuitTypes;
@@ -24,28 +24,25 @@ export const HrafnsmerkiScoring = (player?: IPublicPlayer): number => {
         }
         return score;
     }
-    // TODO error!?
-    return 0;
+    throw new Error(`Function param 'player' is undefined.`);
 };
 
-export const MjollnirScoring = (player?: IPublicPlayer): number => {
+export const MjollnirScoring = (player?: IPublicPlayer): number | never => {
     if (player !== undefined) {
         const suit: SuitTypes | undefined = player.buffs.find((buff: IBuffs): boolean =>
             buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
         if (suit !== undefined) {
             return player.cards[suit].reduce(TotalRank, 0) * 2;
         } else {
-            // TODO Error suitIdForMjollnir must be!
+            throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.SuitIdForMjollnir}.`);
         }
     }
-    // TODO error!?
-    return 0;
+    throw new Error(`Function param 'player' is undefined.`);
 };
 
-export const SvalinnScoring = (player?: IPublicPlayer): number => {
+export const SvalinnScoring = (player?: IPublicPlayer): number | never => {
     if (player !== undefined) {
         return player.heroes.length * 5;
     }
-    // TODO error!?
-    return 0;
+    throw new Error(`Function param 'player' is undefined.`);
 };

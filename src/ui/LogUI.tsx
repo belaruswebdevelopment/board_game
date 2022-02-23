@@ -12,7 +12,7 @@ import { IMyGameState } from "../typescript/interfaces";
  * @param data Глобальные параметры.
  * @returns Поле для вывода логов.
  */
-export const DrawLogData = (data: BoardProps<IMyGameState>): JSX.Element | null => {
+export const DrawLogData = (data: BoardProps<IMyGameState>): JSX.Element | null | never => {
     if (data.G.log) {
         const loggingData: JSX.Element[] = [];
         for (let i: number = data.G.logData.length - 1; i >= 0; i--) {
@@ -34,12 +34,8 @@ export const DrawLogData = (data: BoardProps<IMyGameState>): JSX.Element | null 
                         {data.G.logData[i].value}
                     </li>
                 );
-            } else if (data.G.logData[i].type === LogTypes.ERROR) {
-                loggingData.push(
-                    <li key={`Log ${i}`} className="text-red-500">
-                        {data.G.logData[i].value}
-                    </li>
-                );
+            } else {
+                throw new Error(`Попытка отобразить недопустимый тип логов.`);
             }
         }
         return (

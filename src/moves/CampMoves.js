@@ -1,12 +1,11 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, DiscardSuitCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
-import { IsArtefactCardNotMercenary } from "../Camp";
+import { IsArtefactCard } from "../Camp";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddCampCardToCards } from "../helpers/CampCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { AddDataToLog } from "../Logging";
 import { IsValidMove } from "../MoveValidator";
-import { LogTypes, Stages } from "../typescript/enums";
+import { Stages } from "../typescript/enums";
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -45,15 +44,15 @@ export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
     // TODO Move to function with Camp same logic
     const campCard = G.camp[cardId];
     if (campCard !== null) {
-        G.camp[cardId] = null;
+        G.camp.splice(cardId, 1, null);
         AddCampCardToCards(G, ctx, campCard);
-        if (IsArtefactCardNotMercenary(campCard)) {
+        if (IsArtefactCard(campCard)) {
             AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
             StartAutoAction(G, ctx, campCard.actions);
         }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
+        throw new Error(`Не существует кликнутая карта кэмпа.`);
     }
 };
 /**
@@ -78,13 +77,13 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
     if (campCard !== null) {
         G.camp[cardId] = null;
         AddCampCardToCards(G, ctx, campCard);
-        if (IsArtefactCardNotMercenary(campCard)) {
+        if (IsArtefactCard(campCard)) {
             AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
             StartAutoAction(G, ctx, campCard.actions);
         }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не существует кликнутая карта кэмпа.`);
+        throw new Error(`Не существует кликнутая карта кэмпа.`);
     }
 };
 /**

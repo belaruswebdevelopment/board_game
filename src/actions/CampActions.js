@@ -25,7 +25,7 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
         StartVidofnirVedrfolnirAction(G, ctx);
     }
     else {
-        // TODO Error!
+        throw new Error(`У игрока в 'boardCoins' отсутствует монета для добавления в кошель для обмена для действия артефакта 'VidofnirVedrfolnir'.`);
     }
 };
 /**
@@ -52,11 +52,12 @@ export const DiscardSuitCardAction = (G, ctx, suit, playerId, cardId) => {
             player.stack = [];
         }
         else {
-            AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Сброшенная карта не может быть с типом 'герой'.`);
+            throw new Error(`Сброшенная карта не может быть с типом 'герой'.`);
         }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'ctx.playerID'.`);
+        // TODO Need it!?
+        throw new Error(`Отсутствует обязательный параметр 'ctx.playerID'.`);
     }
 };
 /**
@@ -79,15 +80,15 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, coinId, type, isInit
         if (playerConfig.value === 3) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
         }
-        if (playerConfig.value !== undefined) {
+        else if (playerConfig.value !== undefined) {
             UpgradeCoinAction(G, ctx, playerConfig.value, coinId, type, isInitial);
         }
         else {
-            // TODO Error logging!
+            throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config.value'.`);
         }
     }
     else {
-        AddDataToLog(G, LogTypes.ERROR, `ОШИБКА: Не передан обязательный параметр 'stack[0].config'.`);
+        throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config'.`);
     }
 };
 //# sourceMappingURL=CampActions.js.map

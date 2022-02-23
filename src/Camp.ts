@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
 import { RusCardTypes } from "./typescript/enums";
-import { CampDeckCardTypes, DiscardCardTypes, IArtefact, IArtefactCampCard, IArtefactConfig, IArtefactTypes, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenary, IMercenaryCampCard, OptionalSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import { CampDeckCardTypes, IArtefact, IArtefactCampCard, IArtefactConfig, IArtefactTypes, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenary, IMercenaryCampCard, OptionalSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты кэмпа из конфига.</h3>
@@ -158,9 +158,6 @@ export const CreateMercenaryCampCard = ({
     variants,
 });
 
-export const IsArtefactDiscardCard = (card: DiscardCardTypes): card is IArtefactCampCard =>
-    (card as IArtefactCampCard).validators !== undefined;
-
 /**
  * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
  * <p>Применения:</p>
@@ -171,8 +168,8 @@ export const IsArtefactDiscardCard = (card: DiscardCardTypes): card is IArtefact
  * @param card Карта.
  * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
  */
-export const IsArtefactCardNotMercenary = (card: IArtefactCampCard | IMercenaryCampCard): card is IArtefactCampCard =>
-    (card as IArtefactCampCard).suit !== undefined;
+export const IsArtefactCard = (card: unknown): card is IArtefactCampCard => card !== null
+    && (card as IArtefactCampCard).description !== undefined && (card as IArtefactCampCard).tier !== undefined;
 
-export const IsMercenaryCard = (card: unknown): card is IMercenaryCampCard =>
-    (card as IMercenaryCampCard).variants !== undefined && (card as IMercenaryCampCard).tier !== undefined;
+export const IsMercenaryCard = (card: unknown): card is IMercenaryCampCard => card !== null
+    && (card as IMercenaryCampCard).variants !== undefined && (card as IMercenaryCampCard).tier !== undefined;

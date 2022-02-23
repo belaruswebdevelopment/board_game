@@ -24,8 +24,8 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
     }
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     for (let i = 0; i < player.boardCoins.length; i++) {
-        const coinId: number =
-            coinsOrder[i] || player.handCoins.findIndex((coin: CoinType): boolean => isCoin(coin));
+        const coinId: number = coinsOrder[i]
+            || player.handCoins.findIndex((coin: CoinType): boolean => isCoin(coin));
         if (coinId !== -1) {
             player.boardCoins[i] = player.handCoins[coinId];
             player.handCoins[coinId] = null;
