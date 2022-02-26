@@ -1,5 +1,5 @@
-import { IsArtefactCard, IsMercenaryCard } from "../Camp";
-import { CreateCard, isActionCard, isCardNotActionAndNotNull } from "../Card";
+import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
+import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddBuffToPlayer, DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
@@ -7,10 +7,10 @@ import { AddCampCardToPlayerCards } from "../helpers/CampCardHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { isHeroCard } from "../Hero";
+import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
-import { BuffNames, LogTypes, RusCardTypes } from "../typescript/enums";
+import { BuffNames, GameNames, LogTypes, RusCardTypes } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с отправкой любой указанной карты со стола игрока в колоду сброса.</h3>
  * <p>Применения:</p>
@@ -25,7 +25,7 @@ import { BuffNames, LogTypes, RusCardTypes } from "../typescript/enums";
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, suit, cardId) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], discardedCard = player.cards[suit].splice(cardId, 1)[0];
-    if (!isHeroCard(discardedCard)) {
+    if (!IsHeroCard(discardedCard)) {
         G.discardCardsDeck.push(discardedCard);
         DeleteBuffFromPlayer(G, ctx, BuffNames.DiscardCardEndGame);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
@@ -63,9 +63,9 @@ export const DiscardCardFromTavernAction = (G, ctx, cardId) => {
 export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     player.pickedCard =
-        player.campCards.filter((card) => IsMercenaryCard(card))[cardId];
+        player.campCards.filter((card) => IsMercenaryCampCard(card))[cardId];
     const pickedCard = player.pickedCard;
-    if (IsMercenaryCard(pickedCard)) {
+    if (IsMercenaryCampCard(pickedCard)) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы ${ctx.phase} выбрал наёмника '${pickedCard.name}'.`);
     }
@@ -127,11 +127,11 @@ export const PickDiscardCard = (G, ctx, cardId) => {
     }
     else {
         isAdded = AddCardToPlayer(G, ctx, pickedCard);
-        if (!isCardNotActionAndNotNull(pickedCard)) {
+        if (!IsCardNotActionAndNotNull(pickedCard)) {
             AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack);
         }
     }
-    if (isAdded && !isActionCard(pickedCard)) {
+    if (isAdded && !IsActionCard(pickedCard)) {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
     }
     AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} взял карту ${pickedCard.name} из колоды сброса.`);
@@ -149,7 +149,7 @@ export const PickDiscardCard = (G, ctx, cardId) => {
  */
 export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], pickedCard = player.pickedCard;
-    if (IsMercenaryCard(pickedCard)) {
+    if (IsMercenaryCampCard(pickedCard)) {
         if (pickedCard.variants !== undefined) {
             const cardVariants = pickedCard.variants[suit];
             if (cardVariants !== undefined) {
@@ -161,13 +161,14 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
                     name: pickedCard.name,
                     tier: pickedCard.tier,
                     path: pickedCard.path,
+                    game: GameNames.Thingvellir,
                 });
                 AddCardToPlayer(G, ctx, mercenaryCard);
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы 'Enlistment Mercenaries' завербовал наёмника '${mercenaryCard.name}'.`);
                 const cardIndex = player.campCards.findIndex((card) => card.name === pickedCard.name);
                 if (cardIndex !== -1) {
                     player.campCards.splice(cardIndex, 1);
-                    if (player.campCards.filter((card) => IsMercenaryCard(card)).length) {
+                    if (player.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
                         AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
                     }
                 }

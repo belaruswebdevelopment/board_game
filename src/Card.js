@@ -1,6 +1,6 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypes } from "./typescript/enums";
+import { GameNames, RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
  * <p>Применения:</p>
@@ -32,6 +32,7 @@ export const BuildCards = (deckConfig, data) => {
                     rank: Array.isArray(rank) ? rank[j] : 1,
                     points: Array.isArray(points) ? points[j] : null,
                     name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: ${Array.isArray(rank) ? rank[j] : 1}, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
+                    game: GameNames.Basic,
                 }));
             }
         }
@@ -59,11 +60,13 @@ export const BuildAdditionalCards = () => {
                 rank: card.rank,
                 points: card.points,
                 name: card.name,
+                game: GameNames.Basic,
             }));
         }
     }
     return cards;
 };
+export const CheckIsMercenaryCampCardInPlayerCards = (card) => card !== null && card.type === RusCardTypes.MERCENARY;
 /**
  * <h3>Создание карты улучшения монеты.</h3>
  * <p>Применения:</p>
@@ -104,7 +107,7 @@ const CreateActionCard = ({ type = RusCardTypes.ACTION, value, stack, name, } = 
  * @param path URL путь.
  * @returns Карта дворфа.
  */
-export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name = ``, game = ``, tier = 0, path = ``, } = {}) => ({
+export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name, game, tier = 0, path = ``, } = {}) => ({
     type,
     suit,
     rank,
@@ -114,7 +117,7 @@ export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name
     tier,
     path,
 });
-export const isActionCard = (card) => card !== null && card.value !== undefined;
+export const IsActionCard = (card) => card !== null && card.value !== undefined;
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
  * <p>Применения:</p>
@@ -125,5 +128,5 @@ export const isActionCard = (card) => card !== null && card.value !== undefined;
  * @param card Карта.
  * @returns Является ли объект картой дворфа, а не картой обмена монеты.
  */
-export const isCardNotActionAndNotNull = (card) => card !== null && card.suit !== undefined;
+export const IsCardNotActionAndNotNull = (card) => card !== null && card.suit !== undefined;
 //# sourceMappingURL=Card.js.map

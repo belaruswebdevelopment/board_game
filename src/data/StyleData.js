@@ -1,4 +1,4 @@
-import { ArtefactNames, CardNames, HeroNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CardNames, GameNames, HeroNames, SuitNames } from "../typescript/enums";
 /**
  * <h3>Путь к базовым картам.</h3>
  */
@@ -319,7 +319,7 @@ export const Styles = {
         background: `url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px`,
     }),
     Heroes: (game, heroName) => {
-        if (game === `base`) {
+        if (game === GameNames.Basic) {
             switch (heroName) {
                 case HeroNames.Bonfur:
                     return {
@@ -413,7 +413,7 @@ export const Styles = {
                     throw new Error(`Нет такого героя в базовой игре.`);
             }
         }
-        else if (game === `thingvellir`) {
+        else if (game === GameNames.Thingvellir) {
             switch (heroName) {
                 case HeroNames.Andumia:
                     return {

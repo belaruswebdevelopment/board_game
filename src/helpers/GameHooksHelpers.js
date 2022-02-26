@@ -1,4 +1,4 @@
-import { IsMercenaryCard } from "../Camp";
+import { IsMercenaryCampCard } from "../Camp";
 import { AddDataToLog } from "../Logging";
 import { HeroNames, LogTypes, Phases } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
@@ -117,7 +117,7 @@ export const CheckEndTierActionsOrEndGameLastActions = (G) => {
 const CheckEnlistmentMercenaries = (G) => {
     let count = false;
     for (let i = 0; i < G.publicPlayers.length; i++) {
-        if (G.publicPlayers[i].campCards.filter((card) => IsMercenaryCard(card)).length) {
+        if (G.publicPlayers[i].campCards.filter((card) => IsMercenaryCampCard(card)).length) {
             count = true;
             break;
         }

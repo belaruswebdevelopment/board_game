@@ -1,5 +1,5 @@
 import { suitsConfig } from "../data/SuitData";
-import { isHeroCard } from "../Hero";
+import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>
@@ -24,7 +24,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G, ctx, id
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     if (validators.discardCard.suit !== suit) {
                         const player = G.publicPlayers[Number(ctx.currentPlayer)], last = player.cards[suit].length - 1;
-                        if (last >= 0 && !isHeroCard(player.cards[suit][last])) {
+                        if (last >= 0 && !IsHeroCard(player.cards[suit][last])) {
                             cardsToDiscard.push(player.cards[suit][last]);
                         }
                     }

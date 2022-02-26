@@ -1,12 +1,13 @@
 import { BoardProps } from "boardgame.io/react";
-import { IsArtefactCard, IsMercenaryCard } from "../Camp";
-import { isActionCard } from "../Card";
+import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
+import { CheckIsMercenaryCampCardInPlayerCards, IsActionCard } from "../Card";
 import { isCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { isHeroCard } from "../Hero";
+import { IsHeroCard } from "../Hero";
 import { MoveNames } from "../typescript/enums";
 import { AllCardTypes, ArgsTypes, CoinType, IBackground, IMoveFunctionTypes, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
+
 
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -112,7 +113,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     if (suit !== null && suit !== undefined) {
         tdClasses = suitsConfig[suit].suitColor;
     }
-    if (isHeroCard(card)) {
+    if (IsHeroCard(card)) {
         styles = Styles.Heroes(card.game, card.name);
         if (player === null && `active` in card && !card.active) {
             spanClasses = `bg-hero-inactive`;
@@ -122,14 +123,15 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         if (suit === null) {
             tdClasses = `bg-gray-600`;
         }
-    } else if (IsMercenaryCard(card) || IsArtefactCard(card)) {
+    } else if (IsMercenaryCampCard(card) || IsArtefactCard(card)
+        || (!IsActionCard(card) && CheckIsMercenaryCampCardInPlayerCards(card))) {
         styles = Styles.CampCards(card.tier, card.path);
         spanClasses = `bg-camp`;
         if (suit === null) {
             tdClasses = `bg-yellow-200`;
         }
     } else {
-        if (!isActionCard(card)) {
+        if (!IsActionCard(card)) {
             styles = Styles.Cards(card.suit, card.name, card.points);
         } else {
             styles = Styles.Cards(null, card.name, null);
@@ -146,7 +148,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     }
     if (`points` in card) {
         value = card.points !== null ? String(card.points) : ``;
-    } else if (isActionCard(card)) {
+    } else if (IsActionCard(card)) {
         value = String(card.value);
     }
     playerCells.push(

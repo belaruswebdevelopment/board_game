@@ -1,7 +1,7 @@
 import { isCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { isHeroCard } from "../Hero";
+import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
@@ -46,7 +46,7 @@ export const DiscardSuitCardAction = (G, ctx, suit, playerId, cardId) => {
     // TODO ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
         const player = G.publicPlayers[Number(playerId)], discardedCard = player.cards[suit].splice(cardId, 1)[0];
-        if (!isHeroCard(discardedCard)) {
+        if (!IsHeroCard(discardedCard)) {
             G.discardCardsDeck.push(discardedCard);
             AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил карту ${discardedCard.name} в колоду сброса.`);
             player.stack = [];

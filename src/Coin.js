@@ -198,8 +198,7 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
             }
         }
         if (isCoin(upgradingCoin)) {
-            const buffValue = ((_a = player.buffs.find((buff) => buff.upgradeCoin !== undefined)) === null || _a === void 0 ? void 0 : _a.upgradeCoin) !== undefined ? 2 : 0;
-            const newValue = upgradingCoin.value + value + buffValue;
+            const buffValue = ((_a = player.buffs.find((buff) => buff.upgradeCoin !== undefined)) === null || _a === void 0 ? void 0 : _a.upgradeCoin) !== undefined ? 2 : 0, newValue = upgradingCoin.value + value + buffValue;
             let upgradedCoin = null;
             if (G.marketCoins.length) {
                 if (newValue > G.marketCoins[G.marketCoins.length - 1].value) {

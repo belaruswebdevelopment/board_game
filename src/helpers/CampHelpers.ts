@@ -115,6 +115,7 @@ export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void | never =>
     if (cardIndex !== -1) {
         AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${tavernsConfig[G.currentTavern].name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
         DiscardCardFromTavern(G, cardIndex);
+        G.mustDiscardTavernCardJarnglofi = false;
     } else {
         throw new Error(`Не удалось сбросить лишнюю карту из таверны при пике артефакта Jarnglofi.`);
     }

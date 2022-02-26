@@ -1,6 +1,7 @@
 import { Ctx } from "boardgame.io";
-import { CreateCard, isActionCard, isCardNotActionAndNotNull } from "../Card";
+import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
+import { GameNames } from "../typescript/enums";
 import { IAverageSuitCardData, ICard, IMyGameState, IPublicPlayer, ISuit, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 // Check all types in this file!
@@ -20,7 +21,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
     if (card1 === null || card2 === null) {
         return 0;
     }
-    if (isCardNotActionAndNotNull(card1) && isCardNotActionAndNotNull(card2)) {
+    if (IsCardNotActionAndNotNull(card1) && IsCardNotActionAndNotNull(card2)) {
         if (card1.suit === card2.suit) {
             const result: number = (card1.points ?? 1) - (card2.points ?? 1);
             if (result === 0) {
@@ -99,6 +100,8 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
         suit: suitConfig.suit,
         rank: totalRank,
         points: totalPoints,
+        name: `Average card`,
+        game: GameNames.Basic,
     });
     return avgCard;
 };
@@ -120,14 +123,14 @@ const PotentialScoring = (player: IPublicPlayer, card: TavernCardTypes): number 
         suit: SuitTypes;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            if (isCardNotActionAndNotNull(card) && card.suit === suit) {
+            if (IsCardNotActionAndNotNull(card) && card.suit === suit) {
                 score += suitsConfig[suit].scoringRule(player.cards[suit], card.points ?? 1);
             } else {
                 score += suitsConfig[suit].scoringRule(player.cards[suit]);
             }
         }
     }
-    if (isActionCard(card)) {
+    if (IsActionCard(card)) {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {

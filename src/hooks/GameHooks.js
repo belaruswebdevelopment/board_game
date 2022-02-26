@@ -1,4 +1,4 @@
-import { IsMercenaryCard } from "../Camp";
+import { IsMercenaryCampCard } from "../Camp";
 import { ScoreWinner } from "../Score";
 export const CheckEndGame = (G) => {
     if (G.tierToEnd === 0) {
@@ -16,7 +16,7 @@ export const CheckEndGame = (G) => {
         }
         let allMercenariesPlayed = true;
         for (let i = 0; i < G.publicPlayers.length; i++) {
-            allMercenariesPlayed = G.publicPlayers[i].campCards.filter((card) => IsMercenaryCard(card)).length === 0;
+            allMercenariesPlayed = G.publicPlayers[i].campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
             if (!allMercenariesPlayed) {
                 break;
             }

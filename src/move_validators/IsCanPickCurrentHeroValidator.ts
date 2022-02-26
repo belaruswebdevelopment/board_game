@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
-import { isHeroCard } from "../Hero";
+import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { IMyGameState, IPublicPlayer, IValidatorsConfig, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 
@@ -29,7 +29,7 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
                     if (validators.discardCard.suit !== suit) {
                         const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
                             last: number = player.cards[suit].length - 1;
-                        if (last >= 0 && !isHeroCard(player.cards[suit][last])) {
+                        if (last >= 0 && !IsHeroCard(player.cards[suit][last])) {
                             cardsToDiscard.push(player.cards[suit][last]);
                         }
                     }

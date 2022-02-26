@@ -1,10 +1,10 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { IsArtefactCard, IsMercenaryCard } from "../Camp";
-import { isActionCard } from "../Card";
+import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
+import { CheckIsMercenaryCampCardInPlayerCards, IsActionCard } from "../Card";
 import { isCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { isHeroCard } from "../Hero";
+import { IsHeroCard } from "../Hero";
 import { MoveNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
@@ -98,7 +98,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
     if (suit !== null && suit !== undefined) {
         tdClasses = suitsConfig[suit].suitColor;
     }
-    if (isHeroCard(card)) {
+    if (IsHeroCard(card)) {
         styles = Styles.Heroes(card.game, card.name);
         if (player === null && `active` in card && !card.active) {
             spanClasses = `bg-hero-inactive`;
@@ -110,7 +110,8 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
             tdClasses = `bg-gray-600`;
         }
     }
-    else if (IsMercenaryCard(card) || IsArtefactCard(card)) {
+    else if (IsMercenaryCampCard(card) || IsArtefactCard(card)
+        || (!IsActionCard(card) && CheckIsMercenaryCampCardInPlayerCards(card))) {
         styles = Styles.CampCards(card.tier, card.path);
         spanClasses = `bg-camp`;
         if (suit === null) {
@@ -118,7 +119,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         }
     }
     else {
-        if (!isActionCard(card)) {
+        if (!IsActionCard(card)) {
             styles = Styles.Cards(card.suit, card.name, card.points);
         }
         else {
@@ -136,7 +137,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
     if (`points` in card) {
         value = card.points !== null ? String(card.points) : ``;
     }
-    else if (isActionCard(card)) {
+    else if (IsActionCard(card)) {
         value = String(card.value);
     }
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses, children: _jsx("b", { children: value }, void 0) }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`));

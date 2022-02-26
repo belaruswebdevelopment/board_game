@@ -40,9 +40,13 @@ export const CurrentScoring = (player: IPublicPlayer): number => {
  * @param G
  * @param ctx
  * @param player Игрок.
+ * @param playerId Id игрока.
+ * @param warriorDistinctions Массив игроков с преимуществом по фракции воины.
  * @returns Финальный счёт указанного игрока.
  */
-export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number | never => {
+export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer, playerId: number,
+    warriorDistinctions: number[]):
+    number | never => {
     AddDataToLog(G, LogTypes.GAME, `Результаты игры игрока ${player.nickname}:`);
     let score: number = CurrentScoring(player),
         coinsValue = 0;
@@ -57,11 +61,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): 
     }
     score += coinsValue;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за монеты игрока ${player.nickname}: ${coinsValue}`);
-    const warriorsDistinction: number[] | undefined = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR),
-        playerIndex: number =
-            G.publicPlayers.findIndex((p: IPublicPlayer): boolean => p.nickname === player.nickname);
-    if (warriorsDistinction !== undefined && playerIndex !== -1
-        && warriorsDistinction.includes(playerIndex)) {
+    if (warriorDistinctions.length && warriorDistinctions.includes(playerId)) {
         const warriorDistinctionScore: number = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
         score += warriorDistinctionScore;
         if (warriorDistinctionScore) {
@@ -134,9 +134,12 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): 
  * @returns Финальные данные о победителях, если закончилась игра.
  */
 export const ScoreWinner = (G: IMyGameState, ctx: Ctx): IMyGameState | void => {
+    G.drawProfit = ``;
     AddDataToLog(G, LogTypes.GAME, `Финальные результаты игры:`);
+    const warriorDistinctions: number[] = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR);
     for (let i = 0; i < ctx.numPlayers; i++) {
-        G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i]));
+        G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i], i,
+            warriorDistinctions));
     }
     const maxScore: number = Math.max(...G.totalScore),
         maxPlayers: number = G.totalScore.filter((score: number): boolean => score === maxScore).length;

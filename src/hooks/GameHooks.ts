@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { IsMercenaryCard } from "../Camp";
+import { IsMercenaryCampCard } from "../Camp";
 import { ScoreWinner } from "../Score";
 import { CampDeckCardTypes, IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
@@ -25,7 +25,7 @@ export const CheckEndGame = (G: IMyGameState): boolean | void => {
         let allMercenariesPlayed = true;
         for (let i = 0; i < G.publicPlayers.length; i++) {
             allMercenariesPlayed = G.publicPlayers[i].campCards.filter((card: CampDeckCardTypes): boolean =>
-                IsMercenaryCard(card)).length === 0;
+                IsMercenaryCampCard(card)).length === 0;
             if (!allMercenariesPlayed) {
                 break;
             }

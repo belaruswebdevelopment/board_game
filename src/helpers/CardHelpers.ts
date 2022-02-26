@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { isCardNotActionAndNotNull } from "../Card";
+import { IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
@@ -22,7 +22,7 @@ import { DeckCardTypes, IMyGameState, IPublicPlayer } from "../typescript/interf
 export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes): boolean => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     player.pickedCard = card;
-    if (isCardNotActionAndNotNull(card)) {
+    if (IsCardNotActionAndNotNull(card)) {
         player.cards[card.suit].push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
         return true;

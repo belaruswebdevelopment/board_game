@@ -1,4 +1,4 @@
-import { IsMercenaryCard } from "../Camp";
+import { CheckIsMercenaryCampCardInPlayerCards } from "../Card";
 import { isCoin } from "../Coin";
 import { BuffNames } from "../typescript/enums";
 import { CoinType, IBuffs, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
@@ -19,7 +19,7 @@ export const HrafnsmerkiScoring = (player?: IPublicPlayer): number | never => {
         for (suit in player.cards) {
             if (Object.prototype.hasOwnProperty.call(player.cards, suit)) {
                 score += player.cards[suit].filter((card: PlayerCardsType): boolean =>
-                    IsMercenaryCard(card)).length * 5;
+                    CheckIsMercenaryCampCardInPlayerCards(card)).length * 5;
             }
         }
         return score;

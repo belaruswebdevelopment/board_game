@@ -11,6 +11,7 @@ import { suitsConfig } from "./data/SuitData";
 import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
+import { GameNames } from "./typescript/enums";
 /**
  * <h3>Инициализация игры.</h3>
  * <p>Применения:</p>
@@ -35,7 +36,7 @@ export const SetupGame = (ctx) => {
             distinctions[suit] = null;
         }
     }
-    const winner = [], campPicked = false, discardCampCardsDeck = [];
+    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [];
     let camp = [];
     if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
@@ -58,7 +59,7 @@ export const SetupGame = (ctx) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         decks[i] = ctx.random.Shuffle(decks[i]);
     }
-    const heroesConfigOptions = [`base`];
+    const heroesConfigOptions = [GameNames.Basic];
     for (const expansion in expansions) {
         if (expansions[expansion].active) {
             heroesConfigOptions.push(expansion);
@@ -108,6 +109,7 @@ export const SetupGame = (ctx) => {
         campDecks,
         campNum,
         campPicked,
+        mustDiscardTavernCardJarnglofi,
         currentTavern,
         debug,
         decks,

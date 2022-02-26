@@ -93,6 +93,11 @@ export const enum DrawNames {
     Ylud = `Ylud`,
 }
 
+export const enum GameNames {
+    Basic = `Basic`,
+    Thingvellir = `Thingvellir`,
+}
+
 /**
  * <h3>Перечисление для названий героев.</h3>
  */
@@ -130,7 +135,6 @@ export const enum HeroNames {
  * <h3>Перечисление для типов логов.</h3>
  */
 export const enum LogTypes {
-    ERROR = `error`,
     GAME = `game`,
     PRIVATE = `private`,
     PUBLIC = `public`,

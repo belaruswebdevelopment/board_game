@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { CompareCards } from "./bot_logic/BotCardLogic";
-import { isCardNotActionAndNotNull } from "./Card";
+import { IsCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { ConfigNames, Phases, Stages } from "./typescript/enums";
@@ -36,8 +36,9 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                     if (G.expansions.thingvellir.active
                         && (ctx.currentPlayer === G.publicPlayersOrder[0]
                             || (!G.campPicked
-                                && Boolean(G.publicPlayers[Number(ctx.currentPlayer)].buffs
-                                    .find((buff: IBuffs): boolean => buff.goCamp !== undefined))))) {
+                                && G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                                    .find((buff: IBuffs): boolean =>
+                                        buff.goCamp !== undefined) !== undefined))) {
                         pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                     }
                     if (pickCardOrCampCard === `card`) {
@@ -145,7 +146,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
             currentTavern.findIndex((card: TavernCardTypes): boolean => card !== null),
             tavernCard: TavernCardTypes = currentTavern[cardIndex];
         if (currentTavern.every((card: TavernCardTypes): boolean =>
-            card === null || (isCardNotActionAndNotNull(card) && isCardNotActionAndNotNull(tavernCard)
+            card === null || (IsCardNotActionAndNotNull(card) && IsCardNotActionAndNotNull(tavernCard)
                 && card.suit === tavernCard.suit && CompareCards(card, tavernCard) === 0))) {
             return 1;
         }
@@ -160,7 +161,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
                 continue;
             }
             if (G.decks[0].length > 18) {
-                if (isCardNotActionAndNotNull(tavernCard)) {
+                if (IsCardNotActionAndNotNull(tavernCard)) {
                     if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
                         && currentTavern.some((card: TavernCardTypes): boolean => card !== null
                             && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {

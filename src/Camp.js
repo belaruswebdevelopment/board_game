@@ -1,5 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypes } from "./typescript/enums";
+import { GameNames, RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты кэмпа из конфига.</h3>
  * <p>Применения:</p>
@@ -118,7 +118,7 @@ export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, pat
  * @param variants Варианты расположения карты наёмника.
  * @returns Карта кэмпа наёмник.
  */
-export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, path, name, game = `thingvellir`, variants, } = {}) => ({
+export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, path, name, game = GameNames.Thingvellir, variants, } = {}) => ({
     type,
     tier,
     path,
@@ -138,6 +138,6 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, p
  */
 export const IsArtefactCard = (card) => card !== null
     && card.description !== undefined && card.tier !== undefined;
-export const IsMercenaryCard = (card) => card !== null
+export const IsMercenaryCampCard = (card) => card !== null
     && card.variants !== undefined && card.tier !== undefined;
 //# sourceMappingURL=Camp.js.map

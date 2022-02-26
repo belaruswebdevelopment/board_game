@@ -1,5 +1,6 @@
-import { CreateCard, isActionCard, isCardNotActionAndNotNull } from "../Card";
+import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
+import { GameNames } from "../typescript/enums";
 // Check all types in this file!
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -18,7 +19,7 @@ export const CompareCards = (card1, card2) => {
     if (card1 === null || card2 === null) {
         return 0;
     }
-    if (isCardNotActionAndNotNull(card1) && isCardNotActionAndNotNull(card2)) {
+    if (IsCardNotActionAndNotNull(card1) && IsCardNotActionAndNotNull(card2)) {
         if (card1.suit === card2.suit) {
             const result = ((_a = card1.points) !== null && _a !== void 0 ? _a : 1) - ((_b = card2.points) !== null && _b !== void 0 ? _b : 1);
             if (result === 0) {
@@ -87,6 +88,8 @@ export const GetAverageSuitCard = (suitConfig, data) => {
         suit: suitConfig.suit,
         rank: totalRank,
         points: totalPoints,
+        name: `Average card`,
+        game: GameNames.Basic,
     });
     return avgCard;
 };
@@ -107,7 +110,7 @@ const PotentialScoring = (player, card) => {
     let score = 0, suit;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            if (isCardNotActionAndNotNull(card) && card.suit === suit) {
+            if (IsCardNotActionAndNotNull(card) && card.suit === suit) {
                 score += suitsConfig[suit].scoringRule(player.cards[suit], (_a = card.points) !== null && _a !== void 0 ? _a : 1);
             }
             else {
@@ -115,7 +118,7 @@ const PotentialScoring = (player, card) => {
             }
         }
     }
-    if (isActionCard(card)) {
+    if (IsActionCard(card)) {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {

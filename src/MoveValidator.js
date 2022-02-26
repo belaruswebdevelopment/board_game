@@ -1,10 +1,10 @@
 import { CompareCards, EvaluateCard } from "./bot_logic/BotCardLogic";
 import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
-import { IsMercenaryCard } from "./Camp";
-import { isCardNotActionAndNotNull } from "./Card";
+import { IsMercenaryCampCard } from "./Camp";
+import { IsCardNotActionAndNotNull } from "./Card";
 import { isCoin } from "./Coin";
 import { suitsConfig } from "./data/SuitData";
-import { isHeroCard } from "./Hero";
+import { IsHeroCard } from "./Hero";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
@@ -287,7 +287,7 @@ export const moveValidators = {
                 const uniqueArrLength = uniqueArr.length;
                 for (let j = 0; j < uniqueArrLength; j++) {
                     const uniqueCard = uniqueArr[j];
-                    if (isCardNotActionAndNotNull(tavernCard) && isCardNotActionAndNotNull(uniqueCard)
+                    if (IsCardNotActionAndNotNull(tavernCard) && IsCardNotActionAndNotNull(uniqueCard)
                         && tavernCard.suit === uniqueCard.suit
                         && CompareCards(tavernCard, uniqueCard) === 0) {
                         flag = false;
@@ -461,7 +461,7 @@ export const moveValidators = {
                             const player = G.publicPlayers[Number(ctx.currentPlayer)];
                             if (player.cards[suit][i] !== undefined) {
                                 isExit = false;
-                                if (!isHeroCard(player.cards[suit][i])) {
+                                if (!IsHeroCard(player.cards[suit][i])) {
                                     moveMainArgs[suit] = [];
                                     (_a = moveMainArgs[suit]) === null || _a === void 0 ? void 0 : _a.push(i);
                                 }
@@ -530,7 +530,7 @@ export const moveValidators = {
             if (G !== undefined && ctx !== undefined) {
                 const moveMainArgs = [];
                 const mercenaries = G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                    .filter((card) => IsMercenaryCard(card));
+                    .filter((card) => IsMercenaryCampCard(card));
                 for (let j = 0; j < mercenaries.length; j++) {
                     moveMainArgs.push(j);
                 }
@@ -590,7 +590,7 @@ export const moveValidators = {
         validate: (G, ctx) => {
             if (G !== undefined && ctx !== undefined) {
                 const mercenariesCount = G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                    .filter((card) => IsMercenaryCard(card)).length;
+                    .filter((card) => IsMercenaryCampCard(card)).length;
                 return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                     && mercenariesCount > 0;
             }
@@ -660,7 +660,7 @@ export const moveValidators = {
         validate: (G, ctx) => {
             if (G !== undefined && ctx !== undefined) {
                 const mercenariesCount = G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                    .filter((card) => IsMercenaryCard(card)).length;
+                    .filter((card) => IsMercenaryCampCard(card)).length;
                 return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                     && mercenariesCount > 0;
             }
@@ -838,7 +838,7 @@ export const moveValidators = {
                                 && player.actionsNum === 1 && pickedCard !== null && `suit` in pickedCard
                                 && suit === pickedCard.suit)) {
                                 const last = player.cards[suit].length - 1;
-                                if (last !== -1 && !isHeroCard(player.cards[suit][last])) {
+                                if (last !== -1 && !IsHeroCard(player.cards[suit][last])) {
                                     moveMainArgs[suit] = [];
                                     (_a = moveMainArgs[suit]) === null || _a === void 0 ? void 0 : _a.push(last);
                                 }
@@ -883,7 +883,7 @@ export const moveValidators = {
                         };
                         for (let i = 0; i < player.cards[config.suit].length; i++) {
                             if (player.cards[config.suit][i] !== undefined) {
-                                if (!isHeroCard(player.cards[config.suit][i])) {
+                                if (!IsHeroCard(player.cards[config.suit][i])) {
                                     moveMainArgs.cards.push(i);
                                 }
                             }

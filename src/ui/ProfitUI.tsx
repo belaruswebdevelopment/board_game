@@ -1,11 +1,11 @@
 import { Ctx } from "boardgame.io";
 import { BoardProps } from "boardgame.io/react";
-import { IsMercenaryCard } from "../Camp";
-import { isActionCard, isCardNotActionAndNotNull } from "../Card";
+import { IsMercenaryCampCard } from "../Camp";
+import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { isCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { isHeroCard } from "../Hero";
+import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ConfigNames, DrawNames, MoveNames } from "../typescript/enums";
 import { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, DiscardCardTypes, IBuffs, IConfig, IMyGameState, IPublicPlayer, IVariant, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
@@ -37,7 +37,7 @@ export const DiscardCardFromBoardProfit = (G: IMyGameState, ctx: Ctx, data: Boar
                     && !(G.drawProfit === ConfigNames.DagdaAction && player.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
                     const last: number = player.cards[suit].length - 1;
-                    if (last !== -1 && !isHeroCard(player.cards[suit][last])) {
+                    if (last !== -1 && !IsHeroCard(player.cards[suit][last])) {
                         DrawCard(data, boardCells, player.cards[suit][last], last, player, suit,
                             MoveNames.DiscardCardMove, suit, last);
                     }
@@ -83,7 +83,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
                     if (Array.isArray(data)) {
                         isDrawRow = true;
                     }
-                    if (!isHeroCard(player.cards[suit][i])) {
+                    if (!IsHeroCard(player.cards[suit][i])) {
                         isDrawRow = true;
                         DrawCard(data, playerCells, player.cards[suit][i], id, player, suit,
                             MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
@@ -134,7 +134,7 @@ export const DiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
         const card: TavernCardTypes = G.taverns[G.currentTavern][j];
         if (card !== null) {
             let suit: SuitTypes | null = null;
-            if (isCardNotActionAndNotNull(card)) {
+            if (IsCardNotActionAndNotNull(card)) {
                 suit = card.suit;
             }
             DrawCard(data, boardCells, card, j,
@@ -171,7 +171,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, 
                 if (p !== Number(ctx.currentPlayer)) {
                     const player: IPublicPlayer = G.publicPlayers[p];
                     if (player.cards[config.suit][i] !== undefined) {
-                        if (!isHeroCard(player.cards[config.suit][i])) {
+                        if (!IsHeroCard(player.cards[config.suit][i])) {
                             isExit = false;
                             isDrawRow = true;
                             DrawCard(data, playersCells, player.cards[config.suit][i],
@@ -218,7 +218,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, data: Board
     for (let j = 0; j < 3; j++) {
         const card: DeckCardTypes = G.decks[1][j];
         let suit: null | SuitTypes = null;
-        if (isCardNotActionAndNotNull(card)) {
+        if (IsCardNotActionAndNotNull(card)) {
             suit = card.suit;
         }
         DrawCard(data, boardCells, G.decks[1][j], j,
@@ -231,7 +231,7 @@ export const GetEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data: 
     boardCells: JSX.Element[]): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         mercenaries: CampDeckCardTypes[] = player.campCards.filter((card: CampDeckCardTypes): boolean =>
-            IsMercenaryCard(card));
+            IsMercenaryCampCard(card));
     for (let j = 0; j < mercenaries.length; j++) {
         DrawCard(data, boardCells, mercenaries[j], j, player, null,
             MoveNames.GetEnlistmentMercenariesMove, j);
@@ -274,7 +274,7 @@ export const PickDiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProp
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
         const card: DiscardCardTypes = G.discardCardsDeck[j];
         let suit: null | SuitTypes = null;
-        if (!isActionCard(card)) {
+        if (!IsActionCard(card)) {
             suit = card.suit;
         }
         DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)],

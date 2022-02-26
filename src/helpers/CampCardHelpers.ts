@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { IsArtefactCard, IsMercenaryCard } from "../Camp";
+import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
@@ -39,7 +39,7 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
         }
     }
     if (ctx.phase === Phases.EnlistmentMercenaries
-        && player.campCards.filter((card: CampDeckCardTypes): boolean => IsMercenaryCard(card)).length) {
+        && player.campCards.filter((card: CampDeckCardTypes): boolean => IsMercenaryCampCard(card)).length) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
     }
 };

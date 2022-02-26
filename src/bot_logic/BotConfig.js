@@ -1,4 +1,4 @@
-import { isCardNotActionAndNotNull } from "../Card";
+import { IsCardNotActionAndNotNull } from "../Card";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 // TODO Fix all types & move {...} to interfaces
 /**
@@ -109,7 +109,7 @@ const GetCharacteristics = (array) => {
  * @TODO Саше: сделать описание функции и параметров.
  */
 const isAllCardsEqual = {
-    heuristic: (cards) => cards.every((card) => (isCardNotActionAndNotNull(card) && isCardNotActionAndNotNull(cards[0]) && card.suit === cards[0].suit
+    heuristic: (cards) => cards.every((card) => (IsCardNotActionAndNotNull(card) && IsCardNotActionAndNotNull(cards[0]) && card.suit === cards[0].suit
         && CompareCards(card, cards[0]) === 0)),
     weight: -100,
 };

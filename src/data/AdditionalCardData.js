@@ -1,8 +1,8 @@
-import { CardNames, RusCardTypes, SuitNames } from "../typescript/enums";
+import { CardNames, GameNames, RusCardTypes, SuitNames } from "../typescript/enums";
 // TODO Rework in IAdditionalCard!?
 const ChiefBlacksmith = {
     type: RusCardTypes.BASIC,
-    game: ``,
+    game: GameNames.Basic,
     tier: 0,
     path: ``,
     name: CardNames.ChiefBlacksmith,

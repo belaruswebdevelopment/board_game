@@ -1,4 +1,4 @@
-import { IsMercenaryCard } from "../Camp";
+import { IsMercenaryCampCard } from "../Camp";
 import { isCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddPickCardActionToStack, DrawCurrentProfit, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
@@ -103,7 +103,7 @@ export const EndPickCardsActions = (G, ctx) => {
             let startThrud = true;
             if (G.expansions.thingvellir.active) {
                 for (let i = 0; i < G.publicPlayers.length; i++) {
-                    startThrud = G.publicPlayers[i].campCards.filter((card) => IsMercenaryCard(card)).length === 0;
+                    startThrud = G.publicPlayers[i].campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
                     if (!startThrud) {
                         break;
                     }
@@ -114,6 +114,7 @@ export const EndPickCardsActions = (G, ctx) => {
             }
         }
     }
+    G.mustDiscardTavernCardJarnglofi = null;
     G.publicPlayersOrder = [];
     ChangePlayersPriorities(G);
 };
@@ -145,7 +146,12 @@ export const OnPickCardsTurnEnd = (G, ctx) => {
         if (G.expansions.thingvellir.active) {
             DiscardCardIfCampCardPicked(G);
             if (ctx.playOrder.length < ctx.numPlayers) {
-                DiscardCardFromTavernJarnglofi(G);
+                if (G.mustDiscardTavernCardJarnglofi === null) {
+                    G.mustDiscardTavernCardJarnglofi = true;
+                }
+                if (G.mustDiscardTavernCardJarnglofi) {
+                    DiscardCardFromTavernJarnglofi(G);
+                }
             }
         }
     }

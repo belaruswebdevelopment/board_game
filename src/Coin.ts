@@ -227,9 +227,9 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
         }
         if (isCoin(upgradingCoin)) {
             const buffValue: number = player.buffs.find((buff: IBuffs): boolean =>
-                buff.upgradeCoin !== undefined)?.upgradeCoin !== undefined ? 2 : 0;
-            const newValue = upgradingCoin.value + value + buffValue;
-            let upgradedCoin = null;
+                buff.upgradeCoin !== undefined)?.upgradeCoin !== undefined ? 2 : 0,
+                newValue: number = upgradingCoin.value + value + buffValue;
+            let upgradedCoin: ICoin | null = null;
             if (G.marketCoins.length) {
                 if (newValue > G.marketCoins[G.marketCoins.length - 1].value) {
                     upgradedCoin = G.marketCoins[G.marketCoins.length - 1];

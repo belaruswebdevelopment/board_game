@@ -1,4 +1,4 @@
-import { ArtefactNames, CardNames, HeroNames, SuitNames } from "../typescript/enums";
+import { ArtefactNames, CardNames, GameNames, HeroNames, SuitNames } from "../typescript/enums";
 import { IBackground, IStyles, SuitTypes } from "../typescript/interfaces";
 
 /**
@@ -324,7 +324,7 @@ export const Styles: IStyles = {
         background: `url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px`,
     }),
     Heroes: (game: string, heroName: string): IBackground | never => {
-        if (game === `base`) {
+        if (game === GameNames.Basic) {
             switch (heroName) {
                 case HeroNames.Bonfur:
                     return {
@@ -417,7 +417,7 @@ export const Styles: IStyles = {
                 default:
                     throw new Error(`Нет такого героя в базовой игре.`);
             }
-        } else if (game === `thingvellir`) {
+        } else if (game === GameNames.Thingvellir) {
             switch (heroName) {
                 case HeroNames.Andumia:
                     return {

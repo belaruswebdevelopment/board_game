@@ -1,10 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { IsMercenaryCard } from "../Camp";
-import { isActionCard, isCardNotActionAndNotNull } from "../Card";
+import { IsMercenaryCampCard } from "../Camp";
+import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { isCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
-import { isHeroCard } from "../Hero";
+import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { ConfigNames, DrawNames, MoveNames } from "../typescript/enums";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
@@ -28,7 +28,7 @@ export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
                     && !(G.drawProfit === ConfigNames.DagdaAction && player.actionsNum === 1 && pickedCard !== null
                         && `suit` in pickedCard && suit === pickedCard.suit)) {
                     const last = player.cards[suit].length - 1;
-                    if (last !== -1 && !isHeroCard(player.cards[suit][last])) {
+                    if (last !== -1 && !IsHeroCard(player.cards[suit][last])) {
                         DrawCard(data, boardCells, player.cards[suit][last], last, player, suit, MoveNames.DiscardCardMove, suit, last);
                     }
                 }
@@ -61,7 +61,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =>
                     if (Array.isArray(data)) {
                         isDrawRow = true;
                     }
-                    if (!isHeroCard(player.cards[suit][i])) {
+                    if (!IsHeroCard(player.cards[suit][i])) {
                         isDrawRow = true;
                         DrawCard(data, playerCells, player.cards[suit][i], id, player, suit, MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
                     }
@@ -89,7 +89,7 @@ export const DiscardCardProfit = (G, ctx, data, boardCells) => {
         const card = G.taverns[G.currentTavern][j];
         if (card !== null) {
             let suit = null;
-            if (isCardNotActionAndNotNull(card)) {
+            if (IsCardNotActionAndNotNull(card)) {
                 suit = card.suit;
             }
             DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.DiscardCard2PlayersMove, j);
@@ -113,7 +113,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =
                 if (p !== Number(ctx.currentPlayer)) {
                     const player = G.publicPlayers[p];
                     if (player.cards[config.suit][i] !== undefined) {
-                        if (!isHeroCard(player.cards[config.suit][i])) {
+                        if (!IsHeroCard(player.cards[config.suit][i])) {
                             isExit = false;
                             isDrawRow = true;
                             DrawCard(data, playersCells, player.cards[config.suit][i], i, player, config.suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, config.suit, p, i);
@@ -141,14 +141,14 @@ export const ExplorerDistinctionProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < 3; j++) {
         const card = G.decks[1][j];
         let suit = null;
-        if (isCardNotActionAndNotNull(card)) {
+        if (IsCardNotActionAndNotNull(card)) {
             suit = card.suit;
         }
         DrawCard(data, boardCells, G.decks[1][j], j, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.ClickCardToPickDistinctionMove, j);
     }
 };
 export const GetEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], mercenaries = player.campCards.filter((card) => IsMercenaryCard(card));
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], mercenaries = player.campCards.filter((card) => IsMercenaryCampCard(card));
     for (let j = 0; j < mercenaries.length; j++) {
         DrawCard(data, boardCells, mercenaries[j], j, player, null, MoveNames.GetEnlistmentMercenariesMove, j);
     }
@@ -180,7 +180,7 @@ export const PickDiscardCardProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
         const card = G.discardCardsDeck[j];
         let suit = null;
-        if (!isActionCard(card)) {
+        if (!IsActionCard(card)) {
             suit = card.suit;
         }
         DrawCard(data, boardCells, card, j, G.publicPlayers[Number(ctx.currentPlayer)], suit, MoveNames.PickDiscardCardMove, j);

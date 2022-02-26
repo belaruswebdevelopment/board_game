@@ -260,8 +260,8 @@ export interface ICreateCard {
     readonly suit: SuitTypes,
     readonly rank: number,
     readonly points: number | null,
-    readonly name?: string,
-    readonly game?: string,
+    readonly name: string,
+    readonly game: string,
     readonly tier?: number,
     readonly path?: string,
 }
@@ -346,6 +346,7 @@ export interface IMyGameState {
     readonly camp: CampCardTypes[],
     readonly campDecks: CampDeckCardTypes[][],
     readonly campNum: number,
+    mustDiscardTavernCardJarnglofi: boolean | null,
     campPicked: boolean,
     currentTavern: number,
     readonly debug: boolean,

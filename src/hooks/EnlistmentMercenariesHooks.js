@@ -1,4 +1,4 @@
-import { IsMercenaryCard } from "../Camp";
+import { IsMercenaryCampCard } from "../Camp";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
@@ -19,7 +19,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
             let allMercenariesPlayed = true;
             for (let i = 0; i < G.publicPlayers.length; i++) {
                 allMercenariesPlayed =
-                    G.publicPlayers[i].campCards.filter((card) => IsMercenaryCard(card)).length === 0;
+                    G.publicPlayers[i].campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
                 if (!allMercenariesPlayed) {
                     break;
                 }
@@ -47,7 +47,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
         return EndTurnActions(G, ctx);
     }
     else if (!player.stack.length) {
-        return player.campCards.filter((card) => IsMercenaryCard(card)).length === 0;
+        return player.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
     }
 };
 export const EndEnlistmentMercenariesActions = (G, ctx) => {
@@ -82,12 +82,12 @@ export const OnEnlistmentMercenariesTurnEnd = (G, ctx) => {
 export const PrepareMercenaryPhaseOrders = (G) => {
     const players = G.publicPlayers.map((player) => player), playersIndexes = [];
     players.sort((nextPlayer, currentPlayer) => {
-        if (nextPlayer.campCards.filter((card) => IsMercenaryCard(card)).length <
-            currentPlayer.campCards.filter((card) => IsMercenaryCard(card)).length) {
+        if (nextPlayer.campCards.filter((card) => IsMercenaryCampCard(card)).length <
+            currentPlayer.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
             return 1;
         }
-        else if (nextPlayer.campCards.filter((card) => IsMercenaryCard(card)).length >
-            currentPlayer.campCards.filter((card) => IsMercenaryCard(card)).length) {
+        else if (nextPlayer.campCards.filter((card) => IsMercenaryCampCard(card)).length >
+            currentPlayer.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
             return -1;
         }
         if (nextPlayer.priority.value < currentPlayer.priority.value) {
@@ -99,7 +99,7 @@ export const PrepareMercenaryPhaseOrders = (G) => {
         return 0;
     });
     players.forEach((playerSorted) => {
-        if (playerSorted.campCards.filter((card) => IsMercenaryCard(card)).length) {
+        if (playerSorted.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
             playersIndexes.push(String(G.publicPlayers.findIndex((player) => player.nickname === playerSorted.nickname)));
         }
     });

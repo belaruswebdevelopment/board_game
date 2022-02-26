@@ -1,4 +1,4 @@
-import { IsMercenaryCard } from "../Camp";
+import { CheckIsMercenaryCampCardInPlayerCards } from "../Card";
 import { isCoin } from "../Coin";
 import { BuffNames } from "../typescript/enums";
 import { TotalRank } from "./ScoreHelpers";
@@ -13,7 +13,7 @@ export const HrafnsmerkiScoring = (player) => {
         let score = 0, suit;
         for (suit in player.cards) {
             if (Object.prototype.hasOwnProperty.call(player.cards, suit)) {
-                score += player.cards[suit].filter((card) => IsMercenaryCard(card)).length * 5;
+                score += player.cards[suit].filter((card) => CheckIsMercenaryCampCardInPlayerCards(card)).length * 5;
             }
         }
         return score;

@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { IsMercenaryCard } from "../Camp";
+import { IsMercenaryCampCard } from "../Camp";
 import { AddDataToLog } from "../Logging";
 import { HeroNames, LogTypes, Phases } from "../typescript/enums";
 import { CampDeckCardTypes, IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
@@ -127,7 +127,7 @@ const CheckEnlistmentMercenaries = (G: IMyGameState): boolean | INext => {
     let count = false;
     for (let i = 0; i < G.publicPlayers.length; i++) {
         if (G.publicPlayers[i].campCards.filter((card: CampDeckCardTypes): boolean =>
-            IsMercenaryCard(card)).length) {
+            IsMercenaryCampCard(card)).length) {
             count = true;
             break;
         }

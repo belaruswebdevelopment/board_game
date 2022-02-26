@@ -1,4 +1,4 @@
-import { IsArtefactCard, IsMercenaryCard } from "../Camp";
+import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
@@ -37,7 +37,7 @@ export const AddCampCardToCards = (G, ctx, card) => {
         }
     }
     if (ctx.phase === Phases.EnlistmentMercenaries
-        && player.campCards.filter((card) => IsMercenaryCard(card)).length) {
+        && player.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
     }
 };

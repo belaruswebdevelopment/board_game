@@ -2,7 +2,7 @@ import { Ctx } from "boardgame.io";
 import { isCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { isHeroCard } from "../Hero";
+import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
 import { CoinType, IConfig, IMyGameState, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
@@ -53,7 +53,7 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
     if (ctx.playerID !== undefined) {
         const player: IPublicPlayer = G.publicPlayers[Number(playerId)],
             discardedCard: PlayerCardsType = player.cards[suit].splice(cardId, 1)[0];
-        if (!isHeroCard(discardedCard)) {
+        if (!IsHeroCard(discardedCard)) {
             G.discardCardsDeck.push(discardedCard);
             AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил карту ${discardedCard.name} в колоду сброса.`);
             player.stack = [];

@@ -1,5 +1,5 @@
 import { suitsConfig } from "./data/SuitData";
-import { RusCardTypes } from "./typescript/enums";
+import { GameNames, RusCardTypes } from "./typescript/enums";
 import { CampDeckCardTypes, IArtefact, IArtefactCampCard, IArtefactConfig, IArtefactTypes, ICreateArtefactCampCard, ICreateMercenaryCampCard, IMercenary, IMercenaryCampCard, OptionalSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
@@ -147,7 +147,7 @@ export const CreateMercenaryCampCard = ({
     tier,
     path,
     name,
-    game = `thingvellir`,
+    game = GameNames.Thingvellir,
     variants,
 }: ICreateMercenaryCampCard = {} as ICreateMercenaryCampCard): IMercenaryCampCard => ({
     type,
@@ -171,5 +171,5 @@ export const CreateMercenaryCampCard = ({
 export const IsArtefactCard = (card: unknown): card is IArtefactCampCard => card !== null
     && (card as IArtefactCampCard).description !== undefined && (card as IArtefactCampCard).tier !== undefined;
 
-export const IsMercenaryCard = (card: unknown): card is IMercenaryCampCard => card !== null
+export const IsMercenaryCampCard = (card: unknown): card is IMercenaryCampCard => card !== null
     && (card as IMercenaryCampCard).variants !== undefined && (card as IMercenaryCampCard).tier !== undefined;

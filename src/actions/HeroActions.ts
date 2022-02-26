@@ -8,9 +8,9 @@ import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { AddHeroCardToPlayerCards } from "../helpers/HeroCardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { CreateHero, isHeroCard } from "../Hero";
+import { CreateHero, IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, CardNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
+import { BuffNames, CardNames, GameNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
 import { ICard, IConfig, IHeroCard, IMyGameState, IPublicPlayer, IVariant, PlayerCardsType, RequiredSuitPropertyTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
@@ -29,7 +29,7 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
     void | never => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         pickedCard: PlayerCardsType = player.cards[suit].splice(cardId, 1)[0];
-    if (!isHeroCard(pickedCard)) {
+    if (!IsHeroCard(pickedCard)) {
         player.pickedCard = pickedCard;
         G.discardCardsDeck.push(pickedCard);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил в колоду сброса карту ${pickedCard.name}.`);
@@ -62,7 +62,7 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
             rank: playerVariants[suit].rank,
             points: playerVariants[suit].points,
             name: CardNames.Olwin,
-            game: `thingvellir`,
+            game: GameNames.Thingvellir,
         });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${config.drawName} во фракцию ${suitsConfig[suit].suitName}.`);
         AddCardToPlayer(G, ctx, olwinDouble);
@@ -98,7 +98,7 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): vo
             points: playerVariants[suit].points,
             type: RusCardTypes.HERO,
             name: HeroNames.Thrud,
-            game: `base`,
+            game: GameNames.Basic,
             description: heroesConfig.Thrud.description,
         });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${config.drawName} во фракцию ${suitsConfig[suit].suitName}.`);
@@ -131,7 +131,7 @@ export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): voi
             points: playerVariants[suit].points,
             type: RusCardTypes.HERO,
             name: HeroNames.Ylud,
-            game: `base`,
+            game: GameNames.Basic,
             description: heroesConfig.Ylud.description,
         });
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${config.drawName} во фракцию ${suitsConfig[suit].suitName}.`);

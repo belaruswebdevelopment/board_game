@@ -93,6 +93,11 @@ export var DrawNames;
     DrawNames["UpgradeCoinWarriorDistinction"] = "Upgrade coin Warrior distinction";
     DrawNames["Ylud"] = "Ylud";
 })(DrawNames || (DrawNames = {}));
+export var GameNames;
+(function (GameNames) {
+    GameNames["Basic"] = "Basic";
+    GameNames["Thingvellir"] = "Thingvellir";
+})(GameNames || (GameNames = {}));
 /**
  * <h3>Перечисление для названий героев.</h3>
  */
@@ -131,7 +136,6 @@ export var HeroNames;
  */
 export var LogTypes;
 (function (LogTypes) {
-    LogTypes["ERROR"] = "error";
     LogTypes["GAME"] = "game";
     LogTypes["PRIVATE"] = "private";
     LogTypes["PUBLIC"] = "public";

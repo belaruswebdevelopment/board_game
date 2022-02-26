@@ -35,9 +35,11 @@ export const CurrentScoring = (player) => {
  * @param G
  * @param ctx
  * @param player Игрок.
+ * @param playerId Id игрока.
+ * @param warriorDistinctions Массив игроков с преимуществом по фракции воины.
  * @returns Финальный счёт указанного игрока.
  */
-export const FinalScoring = (G, ctx, player) => {
+export const FinalScoring = (G, ctx, player, playerId, warriorDistinctions) => {
     var _a, _b, _c, _d;
     AddDataToLog(G, LogTypes.GAME, `Результаты игры игрока ${player.nickname}:`);
     let score = CurrentScoring(player), coinsValue = 0;
@@ -52,9 +54,7 @@ export const FinalScoring = (G, ctx, player) => {
     }
     score += coinsValue;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за монеты игрока ${player.nickname}: ${coinsValue}`);
-    const warriorsDistinction = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR), playerIndex = G.publicPlayers.findIndex((p) => p.nickname === player.nickname);
-    if (warriorsDistinction !== undefined && playerIndex !== -1
-        && warriorsDistinction.includes(playerIndex)) {
+    if (warriorDistinctions.length && warriorDistinctions.includes(playerId)) {
         const warriorDistinctionScore = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, player);
         score += warriorDistinctionScore;
         if (warriorDistinctionScore) {
@@ -124,9 +124,11 @@ export const FinalScoring = (G, ctx, player) => {
  * @returns Финальные данные о победителях, если закончилась игра.
  */
 export const ScoreWinner = (G, ctx) => {
+    G.drawProfit = ``;
     AddDataToLog(G, LogTypes.GAME, `Финальные результаты игры:`);
+    const warriorDistinctions = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR);
     for (let i = 0; i < ctx.numPlayers; i++) {
-        G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i]));
+        G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i], i, warriorDistinctions));
     }
     const maxScore = Math.max(...G.totalScore), maxPlayers = G.totalScore.filter((score) => score === maxScore).length;
     let winners = 0;
