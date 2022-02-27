@@ -3,9 +3,9 @@ import { DiscardAnyCardFromPlayerBoardAction } from "../../../../actions/Actions
 import { LogTypes, RusCardTypes } from "../../../../typescript/enums";
 import { IMyGameState } from "../../../../typescript/interfaces";
 
-describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
+describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
     let G: Pick<Partial<IMyGameState>, `publicPlayers` | `discardCardsDeck` | `logData`>;
-    beforeEach(() => {
+    beforeEach((): void => {
         G = {
             publicPlayers: [
                 {
@@ -53,6 +53,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                                 game: `basic`,
                                 tier: 0,
                                 path: ``,
+                                active: true,
                             },
                         ],
                         hunter: [],
@@ -111,6 +112,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                                 game: `basic`,
                                 tier: 0,
                                 path: ``,
+                                active: true,
                             },
                         ],
                         hunter: [],
@@ -145,9 +147,10 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             ],
         };
     });
-    it(`should remove non-hero discarded card from player's cards`, () => {
-        DiscardAnyCardFromPlayerBoardAction(G as IMyGameState, { currentPlayer: '1' } as Ctx, `warrior`,
-            1);
+    it(`should remove non-hero discarded card from player's cards`, (): void => {
+        DiscardAnyCardFromPlayerBoardAction(G as IMyGameState, {
+            currentPlayer: '1',
+        } as Ctx, `warrior`, 1);
         expect(G).toEqual({
             publicPlayers: [
                 {
@@ -195,6 +198,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                                 game: `basic`,
                                 tier: 0,
                                 path: ``,
+                                active: true,
                             },
                         ],
                         hunter: [],
@@ -243,6 +247,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                                 game: `basic`,
                                 tier: 0,
                                 path: ``,
+                                active: true,
                             },
                         ],
                         hunter: [],
@@ -282,18 +287,20 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan сбросил карту Test в колоду сброса.`,
+                    value: "Игрок Dan потерял баф 'discardCardEndGame'.",
                 },
                 {
                     type: LogTypes.GAME,
-                    value: "Игрок Dan потерял баф 'discardCardEndGame'.",
+                    value: `Игрок Dan отправил карту Test в колоду сброса.`,
                 },
             ],
         });
     });
-    it(`shouldn't remove hero discarded card from player's cards and must throw Error`, () => {
-        DiscardAnyCardFromPlayerBoardAction(G as IMyGameState, { currentPlayer: '1' } as Ctx, `warrior`,
-            2);
-        expect(DiscardAnyCardFromPlayerBoardAction).toThrowError(`Сброшенная карта не может быть с типом 'герой'.`);
+    it(`shouldn't remove hero discarded card from player's cards and must throw Error`, (): void => {
+        expect((): void => {
+            DiscardAnyCardFromPlayerBoardAction(G as IMyGameState, {
+                currentPlayer: '1',
+            } as Ctx, `warrior`, 2);
+        }).toThrowError(`Сброшенная карта не может быть с типом 'герой'.`);
     });
 });

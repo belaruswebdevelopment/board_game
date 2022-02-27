@@ -28,7 +28,6 @@ export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?:
     }
 };
 
-// TODO Rework it!?
 export const AddGetDistinctionsActionToStack = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
 };

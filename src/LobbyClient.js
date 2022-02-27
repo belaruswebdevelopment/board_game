@@ -14,6 +14,6 @@ import { GameBoard } from "./GameBoard";
 const LobbyClient = () => _jsx(Lobby, { gameServer: `http://${window.location.hostname}:8000`, lobbyServer: `http://${window.location.hostname}:8000`, gameComponents: [{
             game: BoardGame,
             board: GameBoard,
-        }] }, void 0);
+        }] });
 export default LobbyClient;
 //# sourceMappingURL=LobbyClient.js.map

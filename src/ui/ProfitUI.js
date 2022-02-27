@@ -42,13 +42,12 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =>
     let suit;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }, void 0) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
+            playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
         }
     }
     for (let i = 0;; i++) {
         const playerCells = [];
-        let isDrawRow = false;
-        let isExit = true, id = 0;
+        let isDrawRow = false, isExit = true, id = 0;
         if (!Array.isArray(data) && playerRows !== undefined) {
             playerRows[i] = [];
         }
@@ -82,7 +81,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =>
             break;
         }
     }
-    boardCells.push(_jsx("td", { children: _jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playerHeaders }, void 0) }, void 0), _jsx("tbody", { children: playerRows }, void 0)] }, void 0) }, `${player.nickname} discard card`));
+    boardCells.push(_jsx("td", { children: _jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playerHeaders }) }), _jsx("tbody", { children: playerRows })] }) }, `${player.nickname} discard card`));
 };
 export const DiscardCardProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < G.drawSize; j++) {
@@ -102,7 +101,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =
     if (config !== undefined && config.suit !== undefined) {
         for (let p = 0; p < G.publicPlayers.length; p++) {
             if (p !== Number(ctx.currentPlayer)) {
-                playersHeaders.push(_jsx("th", { className: `${suitsConfig[config.suit].suitColor} discard suit`, children: _jsx("span", { style: Styles.Suits(config.suit), className: "bg-suit-icon", children: p + 1 }, void 0) }, `${G.publicPlayers[p].nickname} ${suitsConfig[config.suit].suitName}`));
+                playersHeaders.push(_jsx("th", { className: `${suitsConfig[config.suit].suitColor} discard suit`, children: _jsx("span", { style: Styles.Suits(config.suit), className: "bg-suit-icon", children: p + 1 }) }, `${G.publicPlayers[p].nickname} ${suitsConfig[config.suit].suitName}`));
             }
         }
         for (let i = 0;; i++) {
@@ -131,7 +130,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =
                 break;
             }
         }
-        boardCells.push(_jsx("td", { children: _jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playersHeaders }, void 0) }, void 0), _jsx("tbody", { children: playersRows }, void 0)] }, void 0) }, `Discard ${config.suit} suit cardboard`));
+        boardCells.push(_jsx("td", { children: _jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playersHeaders }) }), _jsx("tbody", { children: playersRows })] }) }, `Discard ${config.suit} suit cardboard`));
     }
     else {
         throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config' и/или 'stack[0].config.suit'.`);

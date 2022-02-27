@@ -68,6 +68,7 @@ export var ConfigNames;
  */
 export var DrawNames;
 (function (DrawNames) {
+    // TODO Give normal names to all?!
     DrawNames["AddCoinToPouchVidofnirVedrfolnir"] = "Add coin to pouch Vidofnir Vedrfolnir";
     DrawNames["Andumia"] = "Andumia";
     DrawNames["Bonfur"] = "Bonfur";
@@ -77,7 +78,6 @@ export var DrawNames;
     DrawNames["DiscardTavernCard"] = "Discard tavern card";
     DrawNames["EnlistmentMercenaries"] = "Enlistment Mercenaries";
     DrawNames["Mjollnir"] = "Mjollnir";
-    // TODO Add it and new to all Stack actions and give normal names to all?!
     DrawNames["GetMjollnirProfit"] = "Get Mjollnir profit";
     DrawNames["Hofud"] = "Hofud";
     DrawNames["Holda"] = "Holda";
@@ -95,8 +95,8 @@ export var DrawNames;
 })(DrawNames || (DrawNames = {}));
 export var GameNames;
 (function (GameNames) {
-    GameNames["Basic"] = "Basic";
-    GameNames["Thingvellir"] = "Thingvellir";
+    GameNames["Basic"] = "basic";
+    GameNames["Thingvellir"] = "thingvellir";
 })(GameNames || (GameNames = {}));
 /**
  * <h3>Перечисление для названий героев.</h3>

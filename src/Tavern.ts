@@ -54,7 +54,6 @@ export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number)
  * @param G
  */
 export const RefillTaverns = (G: IMyGameState): void | never => {
-    let error = false;
     for (let i = 0; i < G.tavernsNum; i++) {
         const refillDeck: DeckCardTypes[] =
             G.decks[G.decks.length - G.tierToEnd].splice(0, G.drawSize);
@@ -62,13 +61,10 @@ export const RefillTaverns = (G: IMyGameState): void | never => {
             G.taverns[i].splice(0, G.taverns[i].length, ...refillDeck);
             AddDataToLog(G, LogTypes.GAME, `Таверна ${tavernsConfig[i].name} заполнена новыми картами.`);
         } else {
-            error = true;
             throw new Error(`Таверна ${tavernsConfig[i].name} не заполнена новыми картами из-за их нехватки в колоде.`);
         }
     }
-    if (!error) {
-        AddDataToLog(G, LogTypes.GAME, `Все таверны заполнены новыми картами.`);
-    }
+    AddDataToLog(G, LogTypes.GAME, `Все таверны заполнены новыми картами.`);
 };
 
 /**

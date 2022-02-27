@@ -1,5 +1,5 @@
 import { BoardProps } from "boardgame.io/react";
-import { IMyGameState } from "../typescript/interfaces";
+import { IDebugData, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -12,15 +12,7 @@ import { IMyGameState } from "../typescript/interfaces";
  * @returns Дебаг панель.
  */
 export const DrawDebugData = (data: BoardProps<IMyGameState>): JSX.Element | null => {
-    const debugData: {
-        G: {
-            [key: string]: unknown,
-        },
-        ctx: {
-            [key: string]: unknown,
-        };
-    } | undefined =
-        GetDebugData(data);
+    const debugData: IDebugData | undefined = GetDebugData(data);
     if (debugData === undefined) {
         return null;
     } else {
@@ -103,13 +95,9 @@ const DrawObjectData = (obj: {
  * @param data Глобальные параметры.
  * @returns Данные для отрисовки дебаг информации.
  */
-const GetDebugData = (data: BoardProps<IMyGameState>): {
-    ctx: Record<string, unknown>,
-    G: Record<string, unknown>,
-}
-    | undefined => {
+const GetDebugData = (data: BoardProps<IMyGameState>): IDebugData | undefined => {
     if (data.G.debug) {
-        const debugData: { G: { [key: string]: unknown; }, ctx: { [key: string]: unknown; }; } = {
+        const debugData: IDebugData = {
             G: {},
             ctx: {},
         };

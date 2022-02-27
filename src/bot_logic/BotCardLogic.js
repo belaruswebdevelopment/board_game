@@ -46,7 +46,7 @@ export const CompareCards = (card1, card2) => {
  * @returns Сравнительное значение.
  */
 export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
-    if (compareCard !== null && `suit` in compareCard) {
+    if (IsCardNotActionAndNotNull(compareCard)) {
         if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
             return CompareCards(compareCard, G.averageCards[compareCard.suit]);
         }
@@ -57,10 +57,9 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
         temp.forEach((player) => player.splice(Number(ctx.currentPlayer), 1));
         return result - Math.max(...temp.map((player) => Math.max(...player)));
     }
-    if (compareCard !== null && `suit` in compareCard) {
+    if (IsCardNotActionAndNotNull(compareCard)) {
         return CompareCards(compareCard, G.averageCards[compareCard.suit]);
     }
-    // TODO FIX IT, UNREACHABLE!? 0 === DEFAULT?!
     return 0;
 };
 /**

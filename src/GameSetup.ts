@@ -110,11 +110,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             isInitial: false,
             isTriggerTrading: false,
         });
-    const averageCards: OptionalSuitPropertyTypes<ICard> = {},
-        initHandCoinsId: number[] = Array(players[0].boardCoins.length).fill(undefined)
-            .map((item: undefined, index: number): number => index),
-        initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
-    let allCoinsOrder: number[][] = [];
+    const averageCards: OptionalSuitPropertyTypes<ICard> = {};
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
@@ -123,6 +119,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             });
         }
     }
+    const initHandCoinsId: number[] = Array(players[0].boardCoins.length).fill(undefined)
+        .map((item: undefined, index: number): number => index),
+        initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
+    let allCoinsOrder: number[][] = [];
     for (let i = 0; i < initCoinsOrder.length; i++) {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
     }

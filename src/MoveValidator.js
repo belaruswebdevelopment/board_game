@@ -122,7 +122,6 @@ export const GetValidator = (phase, stage) => {
  * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveValidators = {
-    // TODO Add all validators to all moves
     BotsPlaceAllCoinsMoveValidator: {
         getRange: (G) => {
             if (G !== undefined) {
@@ -182,8 +181,7 @@ export const moveValidators = {
                     return allCoinsOrder[i];
                 }
             }
-            // TODO FIx it!
-            return [];
+            throw new Error(`Отсутствует вариант выкладки монет для ботов.`);
         },
         moveName: MoveNames.BotsPlaceAllCoinsMove,
         validate: () => true,
@@ -191,8 +189,7 @@ export const moveValidators = {
     ClickBoardCoinMoveValidator: {
         getRange: (G, ctx) => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs = [];
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.boardCoins.length; j++) {
                     if (player.selectedCoin !== null || (player.selectedCoin === null
                         && isCoin(player.boardCoins[j]))) {
@@ -210,16 +207,7 @@ export const moveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickBoardCoinMove,
-        validate: (G, ctx, id) => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                return player.selectedCoin !== null || (player.selectedCoin === null
-                    && isCoin(player.boardCoins[id]));
-            }
-            else {
-                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
-            }
-        },
+        validate: () => true,
     },
     ClickCampCardMoveValidator: {
         getRange: (G) => {
@@ -300,8 +288,7 @@ export const moveValidators = {
                 }
                 flag = true;
             }
-            // TODO FIX it!
-            return -1;
+            throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
         moveName: MoveNames.ClickCardMove,
         validate: () => true,
@@ -347,23 +334,14 @@ export const moveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickDistinctionCardMove,
-        validate: (G, ctx, id) => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `string`) {
-                return Object.keys(G.distinctions).includes(id)
-                    && G.distinctions[id] === ctx.currentPlayer
-                    && ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos];
-            }
-            else {
-                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
-            }
-        }
+        validate: () => true,
     },
     ClickHandCoinMoveValidator: {
         getRange: (G, ctx) => {
             if (G !== undefined && ctx !== undefined) {
                 const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
-                    if (player.handCoins[j] !== null) {
+                    if (isCoin(player.handCoins[j])) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -378,20 +356,12 @@ export const moveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickHandCoinMove,
-        validate: (G, ctx, id) => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                return isCoin(G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id]);
-            }
-            else {
-                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
-            }
-        },
+        validate: () => true,
     },
     ClickHandCoinUlineMoveValidator: {
         getRange: (G, ctx) => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs = [];
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
                     if (isCoin(player.handCoins[j])) {
                         moveMainArgs.push(j);
@@ -408,21 +378,12 @@ export const moveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickHandCoinUlineMove,
-        validate: (G, ctx, id) => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                return player.selectedCoin === null && isCoin(player.handCoins[id]);
-            }
-            else {
-                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
-            }
-        },
+        validate: () => true,
     },
     ClickHandTradingCoinUlineMoveValidator: {
         getRange: (G, ctx) => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs = [];
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
                     if (isCoin(player.handCoins[j])) {
                         moveMainArgs.push(j);
@@ -439,15 +400,7 @@ export const moveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickHandTradingCoinUlineMove,
-        validate: (G, ctx, id) => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                return player.selectedCoin === null && isCoin(player.handCoins[id]);
-            }
-            else {
-                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
-            }
-        },
+        validate: () => true,
     },
     DiscardCardFromPlayerBoardMoveValidator: {
         getRange: (G, ctx) => {
@@ -486,12 +439,16 @@ export const moveValidators = {
                     suitNames.push(suit);
                 }
             }
-            const suitName = suitNames[Math.floor(Math.random() * suitNames.length)];
-            return {
-                suit: suitName,
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                cardId: moveArguments[suitName][Math.floor(Math.random() * moveArguments[suitName].length)],
-            };
+            const suitName = suitNames[Math.floor(Math.random() * suitNames.length)], moveArgument = moveArguments[suitName];
+            if (moveArgument !== undefined) {
+                return {
+                    suit: suitName,
+                    cardId: moveArgument[Math.floor(Math.random() * moveArgument.length)],
+                };
+            }
+            else {
+                throw new Error(`Отсутствует обязательный параметр 'moveArguments[suitName]'.`);
+            }
         },
         moveName: MoveNames.DiscardCardFromPlayerBoardMove,
         validate: () => true,
@@ -516,20 +473,12 @@ export const moveValidators = {
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.DiscardCard2PlayersMove,
-        validate: (G, ctx) => {
-            if (ctx !== undefined) {
-                return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1];
-            }
-            else {
-                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
-            }
-        },
+        validate: () => true,
     },
     GetEnlistmentMercenariesMoveValidator: {
         getRange: (G, ctx) => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs = [];
-                const mercenaries = G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                const moveMainArgs = [], mercenaries = G.publicPlayers[Number(ctx.currentPlayer)].campCards
                     .filter((card) => IsMercenaryCampCard(card));
                 for (let j = 0; j < mercenaries.length; j++) {
                     moveMainArgs.push(j);
@@ -576,8 +525,7 @@ export const moveValidators = {
                 return moveArguments[index];
             }
             else {
-                // TODO Error! FIX RETURN!
-                return null;
+                throw new Error(`Должна быть хотя бы одна фракция с максимальным количеством шевронов.`);
             }
         },
         moveName: MoveNames.GetMjollnirProfitMove,
@@ -657,24 +605,13 @@ export const moveValidators = {
         getRange: () => null,
         getValue: () => null,
         moveName: MoveNames.StartEnlistmentMercenariesMove,
-        validate: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                const mercenariesCount = G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                    .filter((card) => IsMercenaryCampCard(card)).length;
-                return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
-                    && mercenariesCount > 0;
-            }
-            else {
-                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
-            }
-        },
+        validate: () => true,
     },
     // start
     AddCoinToPouchMoveValidator: {
         getRange: (G, ctx) => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs = [];
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
                     if (player.buffs.find((buff) => buff.everyTurn !== undefined) !==
                         undefined && isCoin(player.handCoins[j])) {
@@ -720,13 +657,11 @@ export const moveValidators = {
         // TODO Rework if Uline in play or no 1 coin in game (& add param isInitial?)
         getRange: (G, ctx) => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs = [];
-                const player = G.publicPlayers[Number(ctx.currentPlayer)], handCoins = player.handCoins.filter((coin) => isCoin(coin));
+                const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)], handCoins = player.handCoins.filter((coin) => isCoin(coin));
                 let handCoinIndex = -1;
                 for (let j = 0; j < player.boardCoins.length; j++) {
                     const boardCoin = player.boardCoins[j];
-                    if (player.buffs.find((buff) => buff.everyTurn !== undefined) !==
-                        undefined && boardCoin === null) {
+                    if (player.buffs.find((buff) => buff.everyTurn !== undefined) !== undefined && boardCoin === null) {
                         handCoinIndex++;
                         const handCoinNotNull = handCoins[handCoinIndex], handCoinId = player.handCoins.findIndex((coin) => isCoin(handCoinNotNull) && (coin === null || coin === void 0 ? void 0 : coin.value) === handCoinNotNull.value
                             && coin.isInitial === handCoinNotNull.isInitial);
@@ -739,9 +674,6 @@ export const moveValidators = {
                                     isInitial: handCoin.isInitial,
                                 });
                             }
-                        }
-                        else {
-                            // TODO Is it need Error!?
                         }
                     }
                     else if (isCoin(boardCoin) && !boardCoin.isTriggerTrading) {
@@ -828,8 +760,7 @@ export const moveValidators = {
         getRange: (G, ctx) => {
             var _a;
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs = {};
-                const player = G.publicPlayers[Number(ctx.currentPlayer)], config = player.stack[0].config, pickedCard = player.pickedCard;
+                const moveMainArgs = {}, player = G.publicPlayers[Number(ctx.currentPlayer)], config = player.stack[0].config, pickedCard = player.pickedCard;
                 if (config !== undefined) {
                     let suit;
                     for (suit in suitsConfig) {
@@ -860,12 +791,16 @@ export const moveValidators = {
                     suitNamesArray.push(suit);
                 }
             }
-            const suitName = suitNamesArray[Math.floor(Math.random() * suitNamesArray.length)];
-            return {
-                suit: suitName,
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                cardId: moveArguments[suitName][Math.floor(Math.random() * moveArguments[suitName].length)],
-            };
+            const suitName = suitNamesArray[Math.floor(Math.random() * suitNamesArray.length)], moveArgument = moveArguments[suitName];
+            if (moveArgument !== undefined) {
+                return {
+                    suit: suitName,
+                    cardId: moveArgument[Math.floor(Math.random() * moveArgument.length)],
+                };
+            }
+            else {
+                throw new Error(`Отсутствует обязательный параметр 'moveArguments[suitName]'.`);
+            }
         },
         moveName: MoveNames.DiscardCardMove,
         validate: () => true,
@@ -915,7 +850,7 @@ export const moveValidators = {
                     }
                 }
                 else {
-                    // TODO Error warriors must have points numbers!
+                    throw new Error(`Фракция должна иметь параметр 'points'.`);
                 }
             });
             return {
@@ -1004,8 +939,7 @@ export const moveValidators = {
         // TODO Rework if Uline in play or no 1 coin in game(& add param isInitial ?)
         getRange: (G, ctx) => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs = [];
-                const player = G.publicPlayers[Number(ctx.currentPlayer)], config = player.stack[0].config;
+                const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)], config = player.stack[0].config;
                 if (config !== undefined) {
                     for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
                         const coin = player.boardCoins[j];

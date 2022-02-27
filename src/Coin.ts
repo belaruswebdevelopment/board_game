@@ -22,8 +22,8 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
     const coins: ICoin[] = [];
     for (let i = 0; i < coinConfig.length; i++) {
         const config: IMarketCoinConfig | IInitialTradingCoinConfig = coinConfig[i],
-            count: number = options.players !== undefined && !isInitialPlayerCoinsConfigNotMarket(config) ?
-                config.count()[options.players] : 1;
+            count: number = options.players !== undefined
+                && !isInitialPlayerCoinsConfigNotMarket(config) ? config.count()[options.players] : 1;
         if (options.players !== undefined && options.count !== undefined) {
             options.count.push({
                 value: config.value,
@@ -156,9 +156,8 @@ export const ReturnCoinToPlayerHands = (player: IPublicPlayer, coinId: number): 
  */
 export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingCoinId?: number, type?: string,
     isInitial?: boolean): void => {
-    // TODO add LogTypes.ERROR logging
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    // TODO Split into different functions!
+    // TODO Split into different functions!?
     let upgradingCoin: Record<string, unknown> | ICoin = {},
         coin: CoinType | undefined;
     if (player.buffs.find((buff: IBuffs): boolean => buff.upgradeNextCoin !== undefined) !== undefined) {
@@ -229,7 +228,7 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
             const buffValue: number = player.buffs.find((buff: IBuffs): boolean =>
                 buff.upgradeCoin !== undefined)?.upgradeCoin !== undefined ? 2 : 0,
                 newValue: number = upgradingCoin.value + value + buffValue;
-            let upgradedCoin: ICoin | null = null;
+            let upgradedCoin: CoinType = null;
             if (G.marketCoins.length) {
                 if (newValue > G.marketCoins[G.marketCoins.length - 1].value) {
                     upgradedCoin = G.marketCoins[G.marketCoins.length - 1];

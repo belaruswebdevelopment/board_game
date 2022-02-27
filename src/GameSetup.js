@@ -82,9 +82,7 @@ export const SetupGame = (ctx) => {
         isInitial: false,
         isTriggerTrading: false,
     });
-    const averageCards = {}, initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined)
-        .map((item, index) => index), initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
-    let allCoinsOrder = [];
+    const averageCards = {};
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
@@ -93,6 +91,9 @@ export const SetupGame = (ctx) => {
             });
         }
     }
+    const initHandCoinsId = Array(players[0].boardCoins.length).fill(undefined)
+        .map((item, index) => index), initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);
+    let allCoinsOrder = [];
     for (let i = 0; i < initCoinsOrder.length; i++) {
         allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
     }

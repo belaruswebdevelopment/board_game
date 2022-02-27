@@ -68,8 +68,8 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
     }
     for (let i = 0; ; i++) {
         const playerCells: JSX.Element[] = [];
-        let isDrawRow = false;
-        let isExit = true,
+        let isDrawRow = false,
+            isExit = true,
             id = 0;
         if (!Array.isArray(data) && playerRows !== undefined) {
             playerRows[i] = [];

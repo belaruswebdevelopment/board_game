@@ -10,7 +10,7 @@ import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFrom
 import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { ConfigNames, MoveNames, Phases, ValidatorNames } from "./typescript/enums";
-import { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, IBuffs, IConfig, ICurrentMoveArgumentsStage, ICurrentMoveCoinsArguments, ICurrentMoveSuitCardCurrentId, ICurrentMoveSuitCardPlayerCurrentId, ICurrentMoveSuitCardPlayerIdArguments, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveValidator, IMoveValidators, IMyGameState, IPublicPlayer, IValidatorsConfig, MoveByTypes, MoveValidatorGetRangeTypes, OptionalSuitPropertyTypes, PickedCardType, StageTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, IBuffs, IConfig, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveSuitCardPlayerCurrentId, IMoveSuitCardPlayerIdArguments, IMoveValidator, IMoveValidators, IMyGameState, IPublicPlayer, IValidatorsConfig, MoveByTypes, MoveValidatorGetRangeTypes, OptionalSuitPropertyTypes, PickedCardType, StageTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -26,7 +26,7 @@ import { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, IBuffs, ICon
  * @param type
  * @returns
  */
-export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: ICurrentMoveCoinsArguments): boolean => {
+export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMoveCoinsArguments): boolean => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     if (coinData.type === "hand") {
         const handCoinPosition: number =
@@ -66,10 +66,10 @@ export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: StageTypes, id?: V
         } else if (typeof id === `object` && !Array.isArray(id) && id !== null) {
             if (`coinId` in id) {
                 isValid = ValidateByObjectCoinIdTypeIsInitialValues(id, validator.getRange(G, ctx) as
-                    ICurrentMoveCoinsArguments[]);
+                    IMoveCoinsArguments[]);
             } else if (`playerId` in id) {
                 isValid = ValidateByObjectSuitCardIdPlayerIdValues(id,
-                    validator.getRange(G, ctx, id.playerId) as ICurrentMoveSuitCardPlayerIdArguments);
+                    validator.getRange(G, ctx, id.playerId) as IMoveSuitCardPlayerIdArguments);
             } else if (`suit` in id) {
                 isValid = ValidateByObjectSuitCardIdValues(id, validator.getRange(G, ctx) as
                     OptionalSuitPropertyTypes<number[]>);
@@ -127,9 +127,8 @@ export const GetValidator = (phase: MoveByTypes, stage: StageTypes): IMoveValida
  * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveValidators: IMoveValidators = {
-    // TODO Add all validators to all moves
     BotsPlaceAllCoinsMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[][]>[`args`] | never => {
+        getRange: (G?: IMyGameState): IMoveArgumentsStage<number[][]>[`args`] | never => {
             if (G !== undefined) {
                 return G.botData.allCoinsOrder;
             } else {
@@ -137,8 +136,8 @@ export const moveValidators: IMoveValidators = {
             }
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
-            ValidMoveIdParamTypes => {
-            const allCoinsOrder: ICurrentMoveArgumentsStage<number[][]>[`args`] = currentMoveArguments as number[][],
+            ValidMoveIdParamTypes | never => {
+            const allCoinsOrder: IMoveArgumentsStage<number[][]>[`args`] = currentMoveArguments as number[][],
                 hasLowestPriority: boolean = HasLowestPriority(G, Number(ctx.currentPlayer));
             let resultsForCoins: number[] = CheckHeuristicsForCoinsPlacement(G, ctx);
             if (hasLowestPriority) {
@@ -196,17 +195,16 @@ export const moveValidators: IMoveValidators = {
                     return allCoinsOrder[i];
                 }
             }
-            // TODO FIx it!
-            return [];
+            throw new Error(`Отсутствует вариант выкладки монет для ботов.`);
         },
         moveName: MoveNames.BotsPlaceAllCoinsMove,
         validate: (): boolean => true,
     },
     ClickBoardCoinMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
-                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
+                    player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.boardCoins.length; j++) {
                     if (player.selectedCoin !== null || (player.selectedCoin === null
                         && isCoin(player.boardCoins[j]))) {
@@ -220,24 +218,16 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickBoardCoinMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-                return player.selectedCoin !== null || (player.selectedCoin === null
-                    && isCoin(player.boardCoins[id]));
-            } else {
-                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
-            }
-        },
+        validate: (): boolean => true,
     },
     ClickCampCardMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
+        getRange: (G?: IMyGameState): IMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
                 for (let j = 0; j < G.campNum; j++) {
                     const campCard: CampCardTypes = G.camp[j];
                     if (campCard !== null) {
@@ -251,7 +241,7 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickCampCardMove,
@@ -266,9 +256,9 @@ export const moveValidators: IMoveValidators = {
         },
     },
     ClickCardMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
+        getRange: (G?: IMyGameState): IMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
                 for (let j = 0; j < G.drawSize; j++) {
                     if (G.taverns[G.currentTavern][j] !== null) {
                         moveMainArgs.push(j);
@@ -280,8 +270,8 @@ export const moveValidators: IMoveValidators = {
             }
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
-            ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
+            ValidMoveIdParamTypes | never => {
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
                 uniqueArr: DeckCardTypes[] = [],
                 tavern: TavernCardTypes[] = G.taverns[G.currentTavern];
             let flag = true;
@@ -318,15 +308,14 @@ export const moveValidators: IMoveValidators = {
                 }
                 flag = true;
             }
-            // TODO FIX it!
-            return -1;
+            throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
         moveName: MoveNames.ClickCardMove,
         validate: (): boolean => true,
     },
     ClickCardToPickDistinctionMoveValidator: {
-        getRange: (): ICurrentMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+        getRange: (): IMoveArgumentsStage<number[]>[`args`] => {
+            const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
             for (let j = 0; j < 3; j++) {
                 moveMainArgs.push(j);
             }
@@ -334,16 +323,16 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickCardToPickDistinctionMove,
         validate: (): boolean => true,
     },
     ClickDistinctionCardMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -362,27 +351,19 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
+            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickDistinctionCardMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `string`) {
-                return Object.keys(G.distinctions).includes(id)
-                    && G.distinctions[id] === ctx.currentPlayer
-                    && ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos];
-            } else {
-                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
-            }
-        }
+        validate: (): boolean => true,
     },
     ClickHandCoinMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [],
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
                     player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
-                    if (player.handCoins[j] !== null) {
+                    if (isCoin(player.handCoins[j])) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -393,23 +374,17 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickHandCoinMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                return isCoin(G.publicPlayers[Number(ctx.currentPlayer)].handCoins[id]);
-            } else {
-                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
-            }
-        },
+        validate: (): boolean => true,
     },
     ClickHandCoinUlineMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
-                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
+                    player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
                     if (isCoin(player.handCoins[j])) {
                         moveMainArgs.push(j);
@@ -422,24 +397,17 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickHandCoinUlineMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-                return player.selectedCoin === null && isCoin(player.handCoins[id]);
-            } else {
-                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
-            }
-        },
+        validate: (): boolean => true,
     },
     ClickHandTradingCoinUlineMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
-                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
+                    player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
                     if (isCoin(player.handCoins[j])) {
                         moveMainArgs.push(j);
@@ -452,24 +420,17 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickHandTradingCoinUlineMove,
-        validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes): boolean | never => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-                return player.selectedCoin === null && isCoin(player.handCoins[id]);
-            } else {
-                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
-            }
-        },
+        validate: (): boolean => true,
     },
     DiscardCardFromPlayerBoardMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx):
-            ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] | never => {
+            IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] = {};
+                const moveMainArgs: IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] = {};
                 for (let i = 0; ; i++) {
                     let isExit = true,
                         suit: SuitTypes;
@@ -495,9 +456,9 @@ export const moveValidators: IMoveValidators = {
             }
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
-            ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] =
-                currentMoveArguments as ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`],
+            ValidMoveIdParamTypes | never => {
+            const moveArguments: IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] =
+                currentMoveArguments as IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`],
                 suitNames: SuitTypes[] = [];
             let suit: SuitTypes;
             for (suit in moveArguments) {
@@ -505,20 +466,24 @@ export const moveValidators: IMoveValidators = {
                     suitNames.push(suit);
                 }
             }
-            const suitName: SuitTypes = suitNames[Math.floor(Math.random() * suitNames.length)];
-            return {
-                suit: suitName,
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                cardId: moveArguments[suitName]![Math.floor(Math.random() * moveArguments[suitName]!.length)],
-            };
+            const suitName: SuitTypes = suitNames[Math.floor(Math.random() * suitNames.length)],
+                moveArgument: number[] | undefined = moveArguments[suitName];
+            if (moveArgument !== undefined) {
+                return {
+                    suit: suitName,
+                    cardId: moveArgument[Math.floor(Math.random() * moveArgument.length)],
+                };
+            } else {
+                throw new Error(`Отсутствует обязательный параметр 'moveArguments[suitName]'.`);
+            }
         },
         moveName: MoveNames.DiscardCardFromPlayerBoardMove,
         validate: (): boolean => true,
     },
     DiscardCard2PlayersMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
+        getRange: (G?: IMyGameState): IMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
                 for (let j = 0; j < G.drawSize; j++) {
                     if (G.taverns[G.currentTavern][j] !== null) {
                         moveMainArgs.push(j);
@@ -531,25 +496,19 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.DiscardCard2PlayersMove,
-        validate: (G?: IMyGameState, ctx?: Ctx): boolean | never => {
-            if (ctx !== undefined) {
-                return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1];
-            } else {
-                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
-            }
-        },
+        validate: (): boolean => true,
     },
     GetEnlistmentMercenariesMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
-                const mercenaries: CampDeckCardTypes[] =
-                    G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                        .filter((card: CampDeckCardTypes): boolean => IsMercenaryCampCard(card));
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
+                    mercenaries: CampDeckCardTypes[] =
+                        G.publicPlayers[Number(ctx.currentPlayer)].campCards
+                            .filter((card: CampDeckCardTypes): boolean => IsMercenaryCampCard(card));
                 for (let j = 0; j < mercenaries.length; j++) {
                     moveMainArgs.push(j);
                 }
@@ -560,16 +519,16 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.GetEnlistmentMercenariesMove,
         validate: (): boolean => true,
     },
     GetMjollnirProfitMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -584,8 +543,8 @@ export const moveValidators: IMoveValidators = {
             }
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
-            ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[],
+            ValidMoveIdParamTypes | never => {
+            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[],
                 totalSuitsRanks: number[] = [];
             for (let j = 0; j < moveArguments.length; j++) {
                 totalSuitsRanks.push(G.publicPlayers[Number(ctx.currentPlayer)]
@@ -595,15 +554,14 @@ export const moveValidators: IMoveValidators = {
             if (index !== -1) {
                 return moveArguments[index];
             } else {
-                // TODO Error! FIX RETURN!
-                return null;
+                throw new Error(`Должна быть хотя бы одна фракция с максимальным количеством шевронов.`);
             }
         },
         moveName: MoveNames.GetMjollnirProfitMove,
         validate: (): boolean => true,
     },
     PassEnlistmentMercenariesMoveValidator: {
-        getRange: (): ICurrentMoveArgumentsStage<null>[`args`] => null,
+        getRange: (): IMoveArgumentsStage<null>[`args`] => null,
         getValue: (): ValidMoveIdParamTypes => null,
         moveName: MoveNames.PassEnlistmentMercenariesMove,
         validate: (G?: IMyGameState, ctx?: Ctx): boolean | never => {
@@ -618,9 +576,9 @@ export const moveValidators: IMoveValidators = {
         },
     },
     PlaceEnlistmentMercenariesMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -641,16 +599,16 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
+            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.PlaceEnlistmentMercenariesMove,
         validate: (): boolean => true,
     },
     PlaceYludHeroMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -664,33 +622,24 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
+            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.PlaceYludHeroMove,
         validate: (): boolean => true,
     },
     StartEnlistmentMercenariesMoveValidator: {
-        getRange: (): ICurrentMoveArgumentsStage<null>[`args`] => null,
+        getRange: (): IMoveArgumentsStage<null>[`args`] => null,
         getValue: (): ValidMoveIdParamTypes => null,
         moveName: MoveNames.StartEnlistmentMercenariesMove,
-        validate: (G?: IMyGameState, ctx?: Ctx): boolean | never => {
-            if (G !== undefined && ctx !== undefined) {
-                const mercenariesCount = G.publicPlayers[Number(ctx.currentPlayer)].campCards
-                    .filter((card: CampDeckCardTypes): boolean => IsMercenaryCampCard(card)).length;
-                return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
-                    && mercenariesCount > 0;
-            } else {
-                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
-            }
-        },
+        validate: (): boolean => true,
     },
     // start
     AddCoinToPouchMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
-                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
+                    player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
                     if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !==
                         undefined && isCoin(player.handCoins[j])) {
@@ -704,16 +653,16 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.AddCoinToPouchMove,
         validate: (): boolean => true,
     },
     ClickCampCardHoldaMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
                 for (let j = 0; j < G.campNum; j++) {
                     if (G.camp[j] !== null) {
                         moveMainArgs.push(j);
@@ -725,7 +674,7 @@ export const moveValidators: IMoveValidators = {
             }
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes): number => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickCampCardHoldaMove,
@@ -734,18 +683,18 @@ export const moveValidators: IMoveValidators = {
     ClickCoinToUpgradeMoveValidator: {
         // TODO Rework if Uline in play or no 1 coin in game (& add param isInitial?)
         getRange: (G?: IMyGameState, ctx?: Ctx):
-            ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] | never => {
+            IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] =
-                    [] as ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`];
-                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+                const moveMainArgs: IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] =
+                    [] as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`],
+                    player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
                     handCoins: CoinType[] =
                         player.handCoins.filter((coin: CoinType): boolean => isCoin(coin));
                 let handCoinIndex = -1;
                 for (let j = 0; j < player.boardCoins.length; j++) {
                     const boardCoin: CoinType = player.boardCoins[j];
-                    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !==
-                        undefined && boardCoin === null) {
+                    if (player.buffs.find((buff: IBuffs): boolean =>
+                        buff.everyTurn !== undefined) !== undefined && boardCoin === null) {
                         handCoinIndex++;
                         const handCoinNotNull: CoinType = handCoins[handCoinIndex],
                             handCoinId: number = player.handCoins.findIndex((coin: CoinType): boolean =>
@@ -760,8 +709,6 @@ export const moveValidators: IMoveValidators = {
                                     isInitial: handCoin.isInitial,
                                 });
                             }
-                        } else {
-                            // TODO Is it need Error!?
                         }
                     } else if (isCoin(boardCoin) && !boardCoin.isTriggerTrading) {
                         moveMainArgs.push({
@@ -778,8 +725,8 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] =
-                currentMoveArguments as ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`];
+            const moveArguments: IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] =
+                currentMoveArguments as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickCoinToUpgradeMove,
@@ -793,9 +740,9 @@ export const moveValidators: IMoveValidators = {
         },
     },
     ClickHeroCardMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
+        getRange: (G?: IMyGameState): IMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
                 for (let i = 0; i < G.heroes.length; i++) {
                     if (G.heroes[i].active) {
                         moveMainArgs.push(i);
@@ -808,7 +755,7 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.ClickHeroCardMove,
@@ -843,10 +790,10 @@ export const moveValidators: IMoveValidators = {
     },
     DiscardCardMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx):
-            ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] | never => {
+            IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] = {};
-                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+                const moveMainArgs: IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] = {},
+                    player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
                     config: IConfig | undefined = player.stack[0].config,
                     pickedCard: PickedCardType = player.pickedCard;
                 if (config !== undefined) {
@@ -871,9 +818,9 @@ export const moveValidators: IMoveValidators = {
             }
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
-            ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] =
-                currentMoveArguments as ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`],
+            ValidMoveIdParamTypes | never => {
+            const moveArguments: IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] =
+                currentMoveArguments as IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`],
                 suitNamesArray: SuitTypes[] = [];
             let suit: SuitTypes;
             for (suit in moveArguments) {
@@ -881,25 +828,29 @@ export const moveValidators: IMoveValidators = {
                     suitNamesArray.push(suit);
                 }
             }
-            const suitName: SuitTypes = suitNamesArray[Math.floor(Math.random() * suitNamesArray.length)];
-            return {
-                suit: suitName,
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                cardId: moveArguments[suitName]![Math.floor(Math.random() * moveArguments[suitName]!.length)],
-            };
+            const suitName: SuitTypes = suitNamesArray[Math.floor(Math.random() * suitNamesArray.length)],
+                moveArgument: number[] | undefined = moveArguments[suitName];
+            if (moveArgument !== undefined) {
+                return {
+                    suit: suitName,
+                    cardId: moveArgument[Math.floor(Math.random() * moveArgument.length)],
+                };
+            } else {
+                throw new Error(`Отсутствует обязательный параметр 'moveArguments[suitName]'.`);
+            }
         },
         moveName: MoveNames.DiscardCardMove,
         validate: (): boolean => true,
     },
     DiscardSuitCardFromPlayerBoardMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number):
-            ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] | never => {
+            IMoveArgumentsStage<IMoveSuitCardPlayerIdArguments>[`args`] | never => {
             if (G !== undefined && ctx !== undefined && playerId !== undefined) {
                 const player: IPublicPlayer = G.publicPlayers[playerId],
                     config: IConfig | undefined = player.stack[0].config;
                 if (config !== undefined && config.suit !== undefined) {
                     if (player.stack[0] !== undefined) {
-                        const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] = {
+                        const moveMainArgs: IMoveArgumentsStage<IMoveSuitCardPlayerIdArguments>[`args`] = {
                             playerId: playerId,
                             suit: config.suit,
                             cards: [],
@@ -924,8 +875,8 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes | never => {
-            const moveArguments: ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`] =
-                currentMoveArguments as ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`],
+            const moveArguments: IMoveArgumentsStage<IMoveSuitCardPlayerIdArguments>[`args`] =
+                currentMoveArguments as IMoveArgumentsStage<IMoveSuitCardPlayerIdArguments>[`args`],
                 player: IPublicPlayer = G.publicPlayers[moveArguments.playerId];
             let minCardIndex = 0,
                 minCardValue: number | null = player.cards[moveArguments.suit][0].points;
@@ -938,7 +889,7 @@ export const moveValidators: IMoveValidators = {
                         minCardValue = cardPoints;
                     }
                 } else {
-                    // TODO Error warriors must have points numbers!
+                    throw new Error(`Фракция должна иметь параметр 'points'.`);
                 }
             });
             return {
@@ -952,9 +903,9 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     PickDiscardCardMoveValidator: {
-        getRange: (G?: IMyGameState): ICurrentMoveArgumentsStage<number[]>[`args`] | never => {
+        getRange: (G?: IMyGameState): IMoveArgumentsStage<number[]>[`args`] | never => {
             if (G !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<number[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
                 for (let j = 0; j < G.discardCardsDeck.length; j++) {
                     moveMainArgs.push(j);
                 }
@@ -965,16 +916,16 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
+            const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.PickDiscardCardMove,
         validate: (): boolean => true,
     },
     PlaceOlwinCardMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -991,16 +942,16 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
+            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.PlaceOlwinCardMove,
         validate: (): boolean => true,
     },
     PlaceThrudHeroMoveValidator: {
-        getRange: (G?: IMyGameState, ctx?: Ctx): ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = [];
+                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
                 let suit: SuitTypes;
                 for (suit in suitsConfig) {
                     if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -1017,7 +968,7 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
+            const moveArguments: IMoveArgumentsStage<SuitTypes[]>[`args`] = currentMoveArguments as SuitTypes[];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.PlaceThrudHeroMove,
@@ -1026,10 +977,10 @@ export const moveValidators: IMoveValidators = {
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
         // TODO Rework if Uline in play or no 1 coin in game(& add param isInitial ?)
         getRange: (G?: IMyGameState, ctx?: Ctx):
-            ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] | never => {
+            IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] | never => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] = [];
-                const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
+                const moveMainArgs: IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] = [],
+                    player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
                     config: IConfig | undefined = player.stack[0].config;
                 if (config !== undefined) {
                     for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
@@ -1052,8 +1003,8 @@ export const moveValidators: IMoveValidators = {
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
-            const moveArguments: ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`] =
-                currentMoveArguments as ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`];
+            const moveArguments: IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] =
+                currentMoveArguments as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`];
             return moveArguments[Math.floor(Math.random() * moveArguments.length)];
         },
         moveName: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
@@ -1176,17 +1127,17 @@ export const moveBy: IMoveBy = {
  */
 const ValidateByValues = <T>(value: T, values: T[]): boolean => values.includes(value);
 
-const ValidateByObjectCoinIdTypeIsInitialValues = (value: ICurrentMoveCoinsArguments,
-    values: ICurrentMoveCoinsArguments[]): boolean => values.findIndex((coin: ICurrentMoveCoinsArguments) =>
+const ValidateByObjectCoinIdTypeIsInitialValues = (value: IMoveCoinsArguments,
+    values: IMoveCoinsArguments[]): boolean => values.findIndex((coin: IMoveCoinsArguments) =>
         value.coinId === coin.coinId && value.type === coin.type && value.isInitial === coin.isInitial) !== -1;
 
-const ValidateByObjectSuitCardIdValues = (value: ICurrentMoveSuitCardCurrentId,
+const ValidateByObjectSuitCardIdValues = (value: IMoveSuitCardCurrentId,
     values: OptionalSuitPropertyTypes<number[]>): boolean => {
     const objectSuitCardIdValues: number[] | undefined = values[value.suit];
     return objectSuitCardIdValues !== undefined && objectSuitCardIdValues.includes(value.cardId);
 };
 
 
-const ValidateByObjectSuitCardIdPlayerIdValues = (value: ICurrentMoveSuitCardPlayerCurrentId,
-    values: ICurrentMoveSuitCardPlayerIdArguments): boolean => values.suit === value.suit
+const ValidateByObjectSuitCardIdPlayerIdValues = (value: IMoveSuitCardPlayerCurrentId,
+    values: IMoveSuitCardPlayerIdArguments): boolean => values.suit === value.suit
     && values.playerId === value.playerId && values.cards.includes(value.cardId);

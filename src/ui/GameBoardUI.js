@@ -24,17 +24,17 @@ export const DrawCamp = (data) => {
         for (let j = 0; j < data.G.campNum; j++) {
             const campCard = data.G.camp[j];
             if (campCard === null) {
-                boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }, void 0) }, `Camp ${j} icon`));
+                boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }) }, `Camp ${j} icon`));
             }
             else {
                 DrawCard(data, boardCells, campCard, j, null, null, MoveNames.ClickCampCardMove, j);
             }
         }
     }
-    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }, void 0), _jsxs("span", { children: ["Camp ", data.G.campDecks.length - data.G.tierToEnd + 1 > data.G.campDecks.length ?
+    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: ["Camp ", data.G.campDecks.length - data.G.tierToEnd + 1 > data.G.campDecks.length ?
                                 data.G.campDecks.length : data.G.campDecks.length - data.G.tierToEnd + 1, "(", data.G.campDecks.length - data.G.tierToEnd !== 2 ?
                                 data.G.campDecks[data.G.campDecks.length - data.G.tierToEnd].length : 0, data.G.campDecks.length - data.G.tierToEnd === 0 ? `/` +
-                                data.G.campDecks.reduce((count, current) => count + current.length, 0) : ``, " cards left)"] }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));
+                                data.G.campDecks.reduce((count, current) => count + current.length, 0) : ``, " cards left)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
 };
 /**
  * <h3>Отрисовка игровой информации о текущем игроке и текущем ходе.</h3>
@@ -46,7 +46,7 @@ export const DrawCamp = (data) => {
  * @param data Глобальные параметры.
  * @returns Поле информации о текущем ходу.
  */
-export const DrawCurrentPlayerTurn = (data) => (_jsxs("b", { children: ["Current player: ", _jsxs("span", { className: "italic", children: ["Player ", Number(data.ctx.currentPlayer) + 1] }, void 0), " | Turn: ", _jsx("span", { className: "italic", children: data.ctx.turn }, void 0)] }, void 0));
+export const DrawCurrentPlayerTurn = (data) => (_jsxs("b", { children: ["Current player: ", _jsxs("span", { className: "italic", children: ["Player ", Number(data.ctx.currentPlayer) + 1] }), " | Turn: ", _jsx("span", { className: "italic", children: data.ctx.turn })] }));
 /**
  * <h3>Отрисовка преимуществ по фракциям в конце эпохи.</h3>
  * <p>Применения:</p>
@@ -63,11 +63,11 @@ export const DrawDistinctions = (data) => {
         let suit;
         for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => data.moves.ClickDistinctionCardMove(suit), title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }, void 0) }, `Distinction ${suit} card`));
+                boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => data.moves.ClickDistinctionCardMove(suit), title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
             }
         }
     }
-    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }, void 0), " ", _jsx("span", { children: "Distinctions" }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));
+    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }), " ", _jsx("span", { children: "Distinctions" })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
 };
 /**
  * <h3>Отрисовка всех героев.</h3>
@@ -93,7 +93,7 @@ export const DrawHeroes = (data) => {
         }
         boardRows[i].push(_jsx("tr", { children: boardCells }, `Heroes row ${i}`));
     }
-    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }, void 0), " ", _jsxs("span", { children: ["Heroes (", data.G.heroes.length, " left)"] }, void 0)] }, void 0), _jsx("tbody", { children: boardRows }, void 0)] }, void 0));
+    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }), " ", _jsxs("span", { children: ["Heroes (", data.G.heroes.length, " left)"] })] }), _jsx("tbody", { children: boardRows })] }));
 };
 /**
  * <h3>Отрисовка рынка монет.</h3>
@@ -119,7 +119,7 @@ export const DrawMarketCoins = (data) => {
         }
         boardRows[i].push(_jsx("tr", { children: boardCells }, `Market coins row ${i}`));
     }
-    return (_jsxs("table", { children: [_jsx("caption", { children: _jsxs("span", { className: "block", children: [_jsx("span", { style: Styles.Exchange(), className: "bg-top-market-coin-icon" }, void 0), " Market coins (", data.G.marketCoins.length, " left)"] }, void 0) }, void 0), _jsx("tbody", { children: boardRows }, void 0)] }, void 0));
+    return (_jsxs("table", { children: [_jsx("caption", { children: _jsxs("span", { className: "block", children: [_jsx("span", { style: Styles.Exchange(), className: "bg-top-market-coin-icon" }), " Market coins (", data.G.marketCoins.length, " left)"] }) }), _jsx("tbody", { children: boardRows })] }));
 };
 /**
  * <h3>Отрисовка профита от карт и героев.</h3>
@@ -204,7 +204,7 @@ export const DrawProfit = (data) => {
             }
         }
     }
-    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }, void 0), " ", _jsx("span", { children: caption }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, void 0));
+    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }), " ", _jsx("span", { children: caption })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
 };
 /**
  * <h3>Отрисовка карт таверн.</h3>
@@ -225,7 +225,7 @@ export const DrawTaverns = (data, gridClass) => {
             for (let j = 0; j < data.G.drawSize; j++) {
                 const tavernCard = data.G.taverns[t][j];
                 if (tavernCard === null) {
-                    boardCells.push(_jsx("td", { children: _jsx("span", { style: Styles.Taverns(t), className: "bg-tavern-icon" }, void 0) }, `${tavernsConfig[t].name} ${j}`));
+                    boardCells.push(_jsx("td", { children: _jsx("span", { style: Styles.Taverns(t), className: "bg-tavern-icon" }) }, `${tavernsConfig[t].name} ${j}`));
                 }
                 else {
                     let suit = null;
@@ -240,7 +240,7 @@ export const DrawTaverns = (data, gridClass) => {
                     }
                 }
             }
-            tavernsBoards.push(_jsxs("table", { className: `${gridClass} justify-self-center`, children: [_jsxs("caption", { className: "whitespace-nowrap", children: [_jsx("span", { style: Styles.Taverns(t), className: "bg-top-tavern-icon" }, void 0), " ", _jsx("b", { children: tavernsConfig[t].name }, void 0)] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, void 0) }, void 0)] }, `Tavern ${tavernsConfig[t].name} board`));
+            tavernsBoards.push(_jsxs("table", { className: `${gridClass} justify-self-center`, children: [_jsxs("caption", { className: "whitespace-nowrap", children: [_jsx("span", { style: Styles.Taverns(t), className: "bg-top-tavern-icon" }), " ", _jsx("b", { children: tavernsConfig[t].name })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }, `Tavern ${tavernsConfig[t].name} board`));
         }
     }
     return tavernsBoards;
@@ -258,7 +258,7 @@ export const DrawTaverns = (data, gridClass) => {
 export const DrawTierCards = (data) => (_jsxs("b", { children: ["Tier: ", _jsxs("span", { className: "italic", children: [data.G.decks.length - data.G.tierToEnd + 1 > data.G.decks.length ? data.G.decks.length :
                     data.G.decks.length - data.G.tierToEnd + 1, "/", data.G.decks.length, " (", data.G.decks.length - data.G.tierToEnd
                     !== 2 ? data.G.decks[data.G.decks.length - data.G.tierToEnd].length : 0, data.G.decks.length - data.G.tierToEnd === 0 ? `/`
-                    + data.G.decks.reduce((count, current) => count + current.length, 0) : ``, " cards left)"] }, void 0)] }, void 0));
+                    + data.G.decks.reduce((count, current) => count + current.length, 0) : ``, " cards left)"] })] }));
 /**
  * <h3>Отрисовка игровой информации о текущем статусе игры.</h3>
  * <p>Применения:</p>
@@ -290,6 +290,6 @@ export const DrawWinner = (data) => {
     else {
         winner = `Game is started`;
     }
-    return (_jsxs("b", { children: ["Game status: ", _jsx("span", { className: "italic", children: winner.trim() }, void 0)] }, void 0));
+    return (_jsxs("b", { children: ["Game status: ", _jsx("span", { className: "italic", children: winner.trim() })] }));
 };
 //# sourceMappingURL=GameBoardUI.js.map

@@ -33,12 +33,10 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
             } else if (ctx.phase === Phases.PickCards) {
                 if (ctx.activePlayers === null) {
                     let pickCardOrCampCard = `card`;
-                    if (G.expansions.thingvellir.active
-                        && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                            || (!G.campPicked
-                                && G.publicPlayers[Number(ctx.currentPlayer)].buffs
-                                    .find((buff: IBuffs): boolean =>
-                                        buff.goCamp !== undefined) !== undefined))) {
+                    if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
+                        || (!G.campPicked && G.publicPlayers[Number(ctx.currentPlayer)].buffs
+                            .find((buff: IBuffs): boolean =>
+                                buff.goCamp !== undefined) !== undefined))) {
                         pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                     }
                     if (pickCardOrCampCard === `card`) {

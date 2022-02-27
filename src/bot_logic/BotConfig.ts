@@ -1,9 +1,8 @@
 import { Ctx } from "boardgame.io";
 import { IsCardNotActionAndNotNull } from "../Card";
-import { DeckCardTypes, IActionCard, ICard, IMyGameState, TavernCardTypes } from "../typescript/interfaces";
+import { ICardCharacteristics, IHeuristic, IMyGameState, TavernCardTypes } from "../typescript/interfaces";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
-// TODO Fix all types & move {...} to interfaces
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -17,25 +16,19 @@ import { CompareCards, EvaluateCard } from "./BotCardLogic";
  * @returns
  */
 export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): number[] => {
-    const taverns: TavernCardTypes[][] = G.taverns/*,
+    const taverns: TavernCardTypes[][] = G.taverns,
+        temp: number[] = taverns.map((tavern: TavernCardTypes[]): number =>
+            absoluteHeuristicsForTradingCoin.reduce((acc: number, item: IHeuristic<TavernCardTypes[]>):
+                number => acc + (item.heuristic(tavern) ? item.weight : 0), 0)),
+        result: number[] =
+            Array(taverns.length).fill(0).map((value: number, index: number) =>
+                value + temp[index]),
+        tempNumbers: number[][] = taverns.map((tavern: TavernCardTypes[]): number[] =>
+            tavern.map((card: TavernCardTypes, index: number, arr: TavernCardTypes[]): number =>
+                EvaluateCard(G, ctx, card, index, arr))),
+        tempChars: ICardCharacteristics[] = tempNumbers.map((element: number[]): ICardCharacteristics =>
+            GetCharacteristics(element))/*,
         averageCards: ICard[] = G.averageCards*/;
-    let result: number[] = Array(taverns.length).fill(0);
-    const temp: number[] = taverns.map((tavern: TavernCardTypes[]): number =>
-        absoluteHeuristicsForTradingCoin.reduce((acc: number, item: {
-            heuristic: (cards: TavernCardTypes[]) => boolean,
-            weight: number,
-        }): number => acc + (tavern !== null && item.heuristic(tavern) ? item.weight : 0), 0));
-    result = result.map((value: number, index: number) => value + temp[index]);
-    const tempNumbers: number[][] =
-        taverns.map((tavern: (DeckCardTypes | null)[]): number[] =>
-            tavern.map((card: ICard | IActionCard | null, index: number,
-                arr: (DeckCardTypes | null)[]): number =>
-                EvaluateCard(G, ctx, card, index, arr)));
-    const tempChars: { mean: number; variation: number; }[] =
-        tempNumbers.map((element: number[]): {
-            mean: number,
-            variation: number,
-        } => GetCharacteristics(element));
     let maxIndex = 0,
         minIndex: number = tempChars.length - 1;
     for (let i = 1; i < temp.length; i++) {
@@ -63,13 +56,7 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
  * @param stat2
  * @returns
  */
-const CompareCharacteristics = (stat1: {
-    variation: number,
-    mean: number,
-}, stat2: {
-    variation: number,
-    mean: number,
-}): number => {
+const CompareCharacteristics = (stat1: ICardCharacteristics, stat2: ICardCharacteristics): number => {
     const eps = 0.0001,
         tempVariation: number = stat1.variation - stat2.variation;
     if (Math.abs(tempVariation) < eps) {
@@ -79,33 +66,31 @@ const CompareCharacteristics = (stat1: {
 };
 
 /**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <h3>Получает все комбинации взятия карт из всех таверн.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * <li>При формировании данных для ботов.</li>
  * </oL>
  *
- * @TODO Саше: сделать описание функции и параметров.
- * @param tavernsNum
- * @param playersNum
- * @returns
+ * @param tavernsNum Количество таверн.
+ * @param playersNum Количество игроков.
+ * @returns Перечень всех комбинаций взятия карт.
  */
-export const GetAllPicks = (tavernsNum: number, playersNum: number): unknown => {
+export const GetAllPicks = (tavernsNum: number, playersNum: number): number[][] => {
     const temp: number[][] = [],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        cartesian = (...a: any) => {
-            if (a.length === 1) {
-                a = a.flat();
-            }
-            return a.reduce((a: number[][], b: number[][]): number[][] =>
-                a.flatMap((d: number[]): number[][] => b.map((e: number[]): number[] =>
-                    [d, e].flat())));
-        };
+        cartesian = (...arrays: number[][]): number[][] =>
+            arrays.reduce((accSets: number[][], set: number[]): number[][] =>
+                // TODO It's only validation or can be!?
+                // if (a.length === 1) {
+                //     a = a.flat();
+                // }
+                accSets.flatMap((accSet: number[]): number[][] =>
+                    set.map((value: number): number[] => [...accSet, value])), [[]]);
     for (let i = 0; i < tavernsNum; i++) {
         temp[i] = Array(playersNum).fill(undefined)
-            .map((item: number, index: number): number => index);
+            .map((item: undefined, index: number): number => index);
     }
-    return cartesian(temp);
+    return cartesian(...temp);
 };
 
 //may be to add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
@@ -120,10 +105,7 @@ export const GetAllPicks = (tavernsNum: number, playersNum: number): unknown => 
  * @param array
  * @returns
  */
-const GetCharacteristics = (array: number[]): {
-    mean: number,
-    variation: number,
-} => {
+const GetCharacteristics = (array: number[]): ICardCharacteristics => {
     const mean: number = array.reduce((acc: number, item: number): number =>
         acc + item / array.length, 0),
         variation: number = array.reduce((acc: number, item: number): number =>
@@ -143,10 +125,7 @@ const GetCharacteristics = (array: number[]): {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const isAllCardsEqual: {
-    heuristic: (cards: TavernCardTypes[]) => boolean,
-    weight: number,
-} = {
+const isAllCardsEqual: IHeuristic<TavernCardTypes[]> = {
     heuristic: (cards: TavernCardTypes[]): boolean => cards.every((card: TavernCardTypes): boolean =>
     (IsCardNotActionAndNotNull(card) && IsCardNotActionAndNotNull(cards[0]) && card.suit === cards[0].suit
         && CompareCards(card, cards[0]) === 0)),
@@ -162,7 +141,7 @@ const isAllCardsEqual: {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-// const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number; } = {
+// const isAllAverage: IHeuristic<number[]> = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 0),
 //     weight: 20,
 // };
@@ -175,7 +154,7 @@ const isAllCardsEqual: {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-// const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
+// const isAllWorse: IHeuristic<number[]> = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === -1),
 //     weight: 40,
 // };
@@ -188,7 +167,7 @@ const isAllCardsEqual: {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-// const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
+// const isOnlyOneWorse: IHeuristic<number[]> = {
 //     heuristic: (array: number[]): boolean =>
 //         (array.filter((item: number): boolean => item === -1).length === 1),
 //     weight: -100,
@@ -202,7 +181,7 @@ const isAllCardsEqual: {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-// const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: number; } = {
+// const isOnlyWorseOrBetter: IHeuristic<number[]> = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item !== 0),
 //     weight: -50,
 // };
@@ -240,8 +219,7 @@ export const k_combinations = (set: number[], k: number): number[][] => {
         head = set.slice(i, i + 1);
         // We take smaller combinations from the subsequent elements
         tailCombs = k_combinations(set.slice(i + 1), k - 1);
-        // For each (k-1)-combination we join it with the current
-        // and store it to the set of k-combinations.
+        // For each (k-1)-combination we join it with the current and store it to the set of k-combinations.
         for (let j = 0; j < tailCombs.length; j++) {
             combs.push(head.concat(tailCombs[j]));
         }
@@ -262,8 +240,8 @@ export const k_combinations = (set: number[], k: number): number[][] => {
  */
 export const Permute = (permutation: number[]): number[][] => {
     const length: number = permutation.length,
-        result: number[][] = [permutation.slice()];
-    const c: number[] = new Array(length).fill(0);
+        result: number[][] = [permutation.slice()],
+        c: number[] = new Array(length).fill(0);
     let i = 1,
         k: number,
         p: number;
@@ -292,10 +270,7 @@ export const Permute = (permutation: number[]): number[][] => {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-const absoluteHeuristicsForTradingCoin: {
-    heuristic: (cards: TavernCardTypes[]) => boolean,
-    weight: number,
-}[] = [isAllCardsEqual];
+const absoluteHeuristicsForTradingCoin: IHeuristic<TavernCardTypes[]>[] = [isAllCardsEqual];
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -305,8 +280,6 @@ const absoluteHeuristicsForTradingCoin: {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-//const relativeHeuristicsForTradingCoin: (((array: number[]) => boolean) | {
-//    heuristic: (array: number[]) => boolean,
-//    weight: number
-//})[] = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
-//console.log(relativeHeuristicsForTradingCoin ?? "");
+// const relativeHeuristicsForTradingCoin: (((array: number[]) => boolean) | IHeuristic<number[]>)[] =
+// [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
+// console.log(relativeHeuristicsForTradingCoin ?? "");

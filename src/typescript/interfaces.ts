@@ -1,6 +1,21 @@
 import { Ctx } from "boardgame.io";
 import { LogTypes } from "./enums";
 
+export interface IDebugData {
+    G: Record<string, unknown>,
+    ctx: Record<string, unknown>,
+}
+
+export interface ICardCharacteristics {
+    variation: number,
+    mean: number,
+}
+
+export interface IHeuristic<T> {
+    heuristic: (array: T) => boolean,
+    weight: number,
+}
+
 /**
  * <h3>Интерфейс для конфига дек.</h3>
  */
@@ -107,7 +122,7 @@ export interface IAverageSuitCardData {
  */
 export interface IBotData {
     readonly allCoinsOrder: number[][],
-    readonly allPicks: unknown,
+    readonly allPicks: number[][],
     readonly maxIter: number,
     readonly deckLength: number,
 }
@@ -515,11 +530,11 @@ export interface IValidatorsConfig {
     readonly pickDiscardCardToStack?: Record<string, never>,
 }
 
-export interface ICurrentMoveArgumentsStage<T> {
+export interface IMoveArgumentsStage<T> {
     readonly args: T,
 }
 
-export interface ICurrentMoveCoinsArguments {
+export interface IMoveCoinsArguments {
     readonly coinId: number,
     readonly type: string,
     readonly isInitial: boolean,
@@ -528,16 +543,16 @@ export interface ICurrentMoveCoinsArguments {
 /**
  * <h3>Интерфейс для выбранного аргумента мувов с фракциями для ботов.</h3>
  */
-export interface ICurrentMoveSuitCardCurrentId {
+export interface IMoveSuitCardCurrentId {
     readonly suit: SuitTypes,
     readonly cardId: number,
 }
 
-export interface ICurrentMoveSuitCardPlayerCurrentId extends ICurrentMoveSuitCardCurrentId {
+export interface IMoveSuitCardPlayerCurrentId extends IMoveSuitCardCurrentId {
     readonly playerId: number,
 }
 
-export interface ICurrentMoveSuitCardPlayerIdArguments {
+export interface IMoveSuitCardPlayerIdArguments {
     readonly playerId: number,
     readonly suit: SuitTypes,
     readonly cards: number[],
@@ -971,16 +986,16 @@ export type IHeroTypes = keyof IHeroConfig;
 
 export type AdditionalCardTypes = keyof IAdditionalCardsConfig;
 
-export type MoveValidatorGetRangeTypes = ICurrentMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`]
-    | ICurrentMoveArgumentsStage<ICurrentMoveSuitCardPlayerIdArguments>[`args`]
-    | ICurrentMoveArgumentsStage<number[][]>[`args`]
-    | ICurrentMoveArgumentsStage<ICurrentMoveCoinsArguments[]>[`args`]
-    | ICurrentMoveArgumentsStage<null>[`args`]
-    | ICurrentMoveArgumentsStage<number[]>[`args`]
-    | ICurrentMoveArgumentsStage<string[]>[`args`];
+export type MoveValidatorGetRangeTypes = IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`]
+    | IMoveArgumentsStage<IMoveSuitCardPlayerIdArguments>[`args`]
+    | IMoveArgumentsStage<number[][]>[`args`]
+    | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`]
+    | IMoveArgumentsStage<null>[`args`]
+    | IMoveArgumentsStage<number[]>[`args`]
+    | IMoveArgumentsStage<string[]>[`args`];
 
-export type ValidMoveIdParamTypes = number | SuitTypes | number[] | ICurrentMoveSuitCardCurrentId
-    | ICurrentMoveSuitCardPlayerCurrentId | ICurrentMoveCoinsArguments | null;
+export type ValidMoveIdParamTypes = number | SuitTypes | number[] | IMoveSuitCardCurrentId
+    | IMoveSuitCardPlayerCurrentId | IMoveCoinsArguments | null;
 
 export type SuitTypes = keyof ISuitConfig;
 

@@ -45,8 +45,7 @@ export const CurrentScoring = (player: IPublicPlayer): number => {
  * @returns Финальный счёт указанного игрока.
  */
 export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer, playerId: number,
-    warriorDistinctions: number[]):
-    number | never => {
+    warriorDistinctions: number[]): number | never => {
     AddDataToLog(G, LogTypes.GAME, `Результаты игры игрока ${player.nickname}:`);
     let score: number = CurrentScoring(player),
         coinsValue = 0;
@@ -138,8 +137,7 @@ export const ScoreWinner = (G: IMyGameState, ctx: Ctx): IMyGameState | void => {
     AddDataToLog(G, LogTypes.GAME, `Финальные результаты игры:`);
     const warriorDistinctions: number[] = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR);
     for (let i = 0; i < ctx.numPlayers; i++) {
-        G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i], i,
-            warriorDistinctions));
+        G.totalScore.push(FinalScoring(G, ctx, G.publicPlayers[i], i, warriorDistinctions));
     }
     const maxScore: number = Math.max(...G.totalScore),
         maxPlayers: number = G.totalScore.filter((score: number): boolean => score === maxScore).length;

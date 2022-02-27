@@ -81,12 +81,12 @@ export const DrawPlayersBoards = (data: BoardProps<IMyGameState>): JSX.Element[]
             }
         }
         for (let i = 0; ; i++) {
+            playerRows[p][i] = [];
             const playerCells: JSX.Element[] = [];
             let isDrawRow = false,
                 id = 0,
-                j = 0;
-            playerRows[p][i] = [];
-            let suit: SuitTypes;
+                j = 0,
+                suit: SuitTypes;
             for (suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     id = i + j;
@@ -329,8 +329,8 @@ export const DrawPlayersHandsCoins = (data: BoardProps<IMyGameState>): JSX.Eleme
             break;
     }
     for (let p = 0; p < data.ctx.numPlayers; p++) {
-        const player: IPublicPlayer = data.G.publicPlayers[p];
-        const playerCells: JSX.Element[] = [];
+        const player: IPublicPlayer = data.G.publicPlayers[p],
+            playerCells: JSX.Element[] = [];
         playersHandsCoins[p] = [];
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < player.handCoins.length; j++) {

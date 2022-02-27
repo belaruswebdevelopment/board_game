@@ -17,8 +17,8 @@ import { BuffNames, LogTypes, Stages } from "./typescript/enums";
 export const BuildCoins = (coinConfig, options) => {
     const coins = [];
     for (let i = 0; i < coinConfig.length; i++) {
-        const config = coinConfig[i], count = options.players !== undefined && !isInitialPlayerCoinsConfigNotMarket(config) ?
-            config.count()[options.players] : 1;
+        const config = coinConfig[i], count = options.players !== undefined
+            && !isInitialPlayerCoinsConfigNotMarket(config) ? config.count()[options.players] : 1;
         if (options.players !== undefined && options.count !== undefined) {
             options.count.push({
                 value: config.value,
@@ -141,9 +141,8 @@ export const ReturnCoinToPlayerHands = (player, coinId) => {
  */
 export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => {
     var _a;
-    // TODO add LogTypes.ERROR logging
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    // TODO Split into different functions!
+    // TODO Split into different functions!?
     let upgradingCoin = {}, coin;
     if (player.buffs.find((buff) => buff.upgradeNextCoin !== undefined) !== undefined) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);

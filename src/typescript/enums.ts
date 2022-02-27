@@ -67,6 +67,7 @@ export const enum ConfigNames {
  * <h3>Перечисление для описаний отображения действий.</h3>
  */
 export const enum DrawNames {
+    // TODO Give normal names to all?!
     AddCoinToPouchVidofnirVedrfolnir = `Add coin to pouch Vidofnir Vedrfolnir`,
     Andumia = `Andumia`,
     Bonfur = `Bonfur`,
@@ -76,7 +77,6 @@ export const enum DrawNames {
     DiscardTavernCard = `Discard tavern card`,
     EnlistmentMercenaries = `Enlistment Mercenaries`,
     Mjollnir = `Mjollnir`,
-    // TODO Add it and new to all Stack actions and give normal names to all?!
     GetMjollnirProfit = `Get Mjollnir profit`,
     Hofud = `Hofud`,
     Holda = `Holda`,
@@ -94,8 +94,8 @@ export const enum DrawNames {
 }
 
 export const enum GameNames {
-    Basic = `Basic`,
-    Thingvellir = `Thingvellir`,
+    Basic = `basic`,
+    Thingvellir = `thingvellir`,
 }
 
 /**

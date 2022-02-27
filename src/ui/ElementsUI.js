@@ -33,7 +33,7 @@ export const DrawButton = (data, boardCells, key, name, player, moveName, ...arg
         default:
             throw new Error(`Нет такого мува.`);
     }
-    boardCells.push(_jsx("td", { className: "cursor-pointer", onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded", children: name }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `Player ${player.nickname} ` : ``}${key}`));
+    boardCells.push(_jsx("td", { className: "cursor-pointer", onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded", children: name }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `Player ${player.nickname} ` : ``}${key}`));
 };
 /**
  * <h3>Отрисовка карт.</h3>
@@ -140,7 +140,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
     else if (IsActionCard(card)) {
         value = String(card.value);
     }
-    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses, children: _jsx("b", { children: value }, void 0) }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`));
+    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, title: description !== null && description !== void 0 ? description : card.name, className: spanClasses, children: _jsx("b", { children: value }) }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}${suit} card ${id} ${card.name}`));
 };
 /**
  * <h3>Отрисовка монет.</h3>
@@ -200,7 +200,7 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
             styles = Styles.Coin(coin.value, false);
             spanClasses = `bg-market-coin`;
             if (coinClasses !== null && coinClasses !== undefined) {
-                span = (_jsx("span", { className: coinClasses, children: additionalParam }, void 0));
+                span = (_jsx("span", { className: coinClasses, children: additionalParam }));
             }
         }
         else {
@@ -225,16 +225,16 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
         else {
             styles = Styles.CoinBack();
             if (type === `back-small-market-coin`) {
-                span = (_jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }, void 0));
+                span = (_jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }));
             }
             else if (type === `back-tavern-icon`) {
                 if (additionalParam !== null && additionalParam !== undefined) {
-                    span = (_jsx("span", { style: Styles.Taverns(additionalParam), className: "bg-tavern-icon" }, void 0));
+                    span = (_jsx("span", { style: Styles.Taverns(additionalParam), className: "bg-tavern-icon" }));
                 }
             }
         }
     }
-    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, className: spanClasses, children: span }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}coin ${id}${isCoin(coin) ? ` ${coin.value}` : ` empty`}`));
+    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, className: spanClasses, children: span }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}coin ${id}${isCoin(coin) ? ` ${coin.value}` : ` empty`}`));
 };
 export const DrawSuit = (data, boardCells, suit, key, value, player, moveName) => {
     let action;
@@ -263,6 +263,6 @@ export const DrawSuit = (data, boardCells, suit, key, value, player, moveName) =
         default:
             throw new Error(`Нет такого мува.`);
     }
-    boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { className: "whitespace-nowrap text-white", children: value }, void 0) }, void 0) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}choose ${suit} suit to ${key}`));
+    boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { className: "whitespace-nowrap text-white", children: value }) }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}choose ${suit} suit to ${key}`));
 };
 //# sourceMappingURL=ElementsUI.js.map

@@ -28,25 +28,24 @@ export const DrawPlayersBoards = (data) => {
         let suit;
         for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                playerHeaders[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }, void 0) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
-                playerHeadersCount[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor} text-white`, children: _jsx("b", { children: player.cards[suit].reduce(TotalRank, 0) }, void 0) }, `${player.nickname} ${suitsConfig[suit].suitName} count`));
+                playerHeaders[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
+                playerHeadersCount[p].push(_jsx("th", { className: `${suitsConfig[suit].suitColor} text-white`, children: _jsx("b", { children: player.cards[suit].reduce(TotalRank, 0) }) }, `${player.nickname} ${suitsConfig[suit].suitName} count`));
             }
         }
         for (let s = 0; s < 1 + Number(data.G.expansions.thingvellir.active); s++) {
             if (s === 0) {
-                playerHeaders[p].push(_jsx("th", { className: "bg-gray-600", children: _jsx("span", { style: Styles.HeroBack(), className: "bg-hero-icon" }, void 0) }, `${player.nickname} hero icon`));
-                playerHeadersCount[p].push(_jsx("th", { className: "bg-gray-600 text-white", children: _jsx("b", { children: player.heroes.length }, void 0) }, `${player.nickname} hero count`));
+                playerHeaders[p].push(_jsx("th", { className: "bg-gray-600", children: _jsx("span", { style: Styles.HeroBack(), className: "bg-hero-icon" }) }, `${player.nickname} hero icon`));
+                playerHeadersCount[p].push(_jsx("th", { className: "bg-gray-600 text-white", children: _jsx("b", { children: player.heroes.length }) }, `${player.nickname} hero count`));
             }
             else {
-                playerHeaders[p].push(_jsx("th", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }, void 0) }, `${player.nickname} camp icon`));
-                playerHeadersCount[p].push(_jsx("th", { className: "bg-yellow-200 text-white", children: _jsx("b", { children: player.campCards.length }, void 0) }, `${player.nickname} camp counts`));
+                playerHeaders[p].push(_jsx("th", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }) }, `${player.nickname} camp icon`));
+                playerHeadersCount[p].push(_jsx("th", { className: "bg-yellow-200 text-white", children: _jsx("b", { children: player.campCards.length }) }, `${player.nickname} camp counts`));
             }
         }
         for (let i = 0;; i++) {
-            const playerCells = [];
-            let isDrawRow = false, id = 0, j = 0;
             playerRows[p][i] = [];
-            let suit;
+            const playerCells = [];
+            let isDrawRow = false, id = 0, j = 0, suit;
             for (suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     id = i + j;
@@ -94,7 +93,7 @@ export const DrawPlayersBoards = (data) => {
                 break;
             }
         }
-        playersBoards[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", data.G.winner.length ? `Final: ${data.G.totalScore[p]}` : CurrentScoring(player), " points"] }, void 0), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders[p] }, void 0), _jsx("tr", { children: playerHeadersCount[p] }, void 0)] }, void 0), _jsx("tbody", { children: playerRows[p] }, void 0)] }, `${player.nickname} board`));
+        playersBoards[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", data.G.winner.length ? `Final: ${data.G.totalScore[p]}` : CurrentScoring(player), " points"] }), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders[p] }), _jsx("tr", { children: playerHeadersCount[p] })] }), _jsx("tbody", { children: playerRows[p] })] }, `${player.nickname} board`));
     }
     return playersBoards;
 };
@@ -125,7 +124,7 @@ export const DrawPlayersBoardsCoins = (data) => {
             playerRows[p][i] = [];
             if (i === 0) {
                 for (let j = 0; j < data.G.tavernsNum; j++) {
-                    playerHeaders[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Taverns(j), className: "bg-tavern-icon" }, void 0) }, `Tavern ${tavernsConfig[j].name}`));
+                    playerHeaders[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Taverns(j), className: "bg-tavern-icon" }) }, `Tavern ${tavernsConfig[j].name}`));
                     if (player.boardCoins[coinIndex] === null) {
                         if (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins) {
                             DrawCoin(data, playerCells, `back-tavern-icon`, player.boardCoins[coinIndex], coinIndex, player, null, j, MoveNames.ClickBoardCoinMove, j);
@@ -152,11 +151,11 @@ export const DrawPlayersBoardsCoins = (data) => {
             else if (i === 1) {
                 for (let j = data.G.tavernsNum; j <= player.boardCoins.length; j++) {
                     if (j === player.boardCoins.length) {
-                        playerFooters[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Priority(), className: "bg-priority-icon" }, void 0) }, `${player.nickname} priority icon`));
-                        playerCells.push(_jsx("td", { className: "bg-gray-300", children: _jsx("span", { style: Styles.Priorities(player.priority.value), className: "bg-priority" }, void 0) }, `${player.nickname} priority gem`));
+                        playerFooters[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Priority(), className: "bg-priority-icon" }) }, `${player.nickname} priority icon`));
+                        playerCells.push(_jsx("td", { className: "bg-gray-300", children: _jsx("span", { style: Styles.Priorities(player.priority.value), className: "bg-priority" }) }, `${player.nickname} priority gem`));
                     }
                     else {
-                        playerFooters[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }, void 0) }, `${player.nickname} exchange icon ${j}`));
+                        playerFooters[p].push(_jsx("th", { children: _jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }) }, `${player.nickname} exchange icon ${j}`));
                         const coin = player.boardCoins[coinIndex];
                         if (coin === null) {
                             if (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins) {
@@ -187,7 +186,7 @@ export const DrawPlayersBoardsCoins = (data) => {
             }
             playerRows[p][i].push(_jsx("tr", { children: playerCells }, `${player.nickname} board coins row ${i}`));
         }
-        playersBoardsCoins[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") played coins"] }, void 0), _jsx("thead", { children: _jsx("tr", { children: playerHeaders[p] }, void 0) }, void 0), _jsx("tbody", { children: playerRows[p] }, void 0), _jsx("tfoot", { children: _jsx("tr", { children: playerFooters[p] }, void 0) }, void 0)] }, `${player.nickname} board coins`));
+        playersBoardsCoins[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") played coins"] }), _jsx("thead", { children: _jsx("tr", { children: playerHeaders[p] }) }), _jsx("tbody", { children: playerRows[p] }), _jsx("tfoot", { children: _jsx("tr", { children: playerFooters[p] }) })] }, `${player.nickname} board coins`));
     }
     return playersBoardsCoins;
 };
@@ -221,13 +220,12 @@ export const DrawPlayersHandsCoins = (data) => {
             break;
     }
     for (let p = 0; p < data.ctx.numPlayers; p++) {
-        const player = data.G.publicPlayers[p];
-        const playerCells = [];
+        const player = data.G.publicPlayers[p], playerCells = [];
         playersHandsCoins[p] = [];
         for (let i = 0; i < 1; i++) {
             for (let j = 0; j < player.handCoins.length; j++) {
                 if (player.handCoins[j] === null) {
-                    playerCells.push(_jsx("td", { className: "bg-yellow-300", children: _jsx("span", { className: "bg-coin bg-yellow-300 border-2" }, void 0) }, `${player.nickname} hand coin ${j} empty`));
+                    playerCells.push(_jsx("td", { className: "bg-yellow-300", children: _jsx("span", { className: "bg-coin bg-yellow-300 border-2" }) }, `${player.nickname} hand coin ${j} empty`));
                 }
                 else {
                     if (Number(data.ctx.currentPlayer) === p || data.G.winner.length) {
@@ -251,7 +249,7 @@ export const DrawPlayersHandsCoins = (data) => {
                 }
             }
         }
-        playersHandsCoins[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") coins"] }, void 0), _jsx("tbody", { children: _jsx("tr", { children: playerCells }, void 0) }, void 0)] }, `${player.nickname} hand coins`));
+        playersHandsCoins[p].push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") coins"] }), _jsx("tbody", { children: _jsx("tr", { children: playerCells }) })] }, `${player.nickname} hand coins`));
     }
     return playersHandsCoins;
 };

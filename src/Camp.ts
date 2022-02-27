@@ -15,8 +15,7 @@ import { CampDeckCardTypes, IArtefact, IArtefactCampCard, IArtefactConfig, IArte
  * @returns Все карты кэмпа.
  */
 export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
-    mercenariesConfig: OptionalSuitPropertyTypes<IMercenary>[][]):
-    CampDeckCardTypes[] => {
+    mercenariesConfig: OptionalSuitPropertyTypes<IMercenary>[][]): CampDeckCardTypes[] => {
     const campCards: CampDeckCardTypes[] = [];
     let artefactName: IArtefactTypes;
     for (artefactName in artefactConfig) {
@@ -110,22 +109,21 @@ export const CreateArtefactCampCard = ({
     validators,
     actions,
     stack,
-}: ICreateArtefactCampCard = {} as ICreateArtefactCampCard):
-    IArtefactCampCard => ({
-        type,
-        tier,
-        path,
-        name,
-        description,
-        game,
-        suit,
-        rank,
-        points,
-        buff,
-        validators,
-        actions,
-        stack,
-    });
+}: ICreateArtefactCampCard = {} as ICreateArtefactCampCard): IArtefactCampCard => ({
+    type,
+    tier,
+    path,
+    name,
+    description,
+    game,
+    suit,
+    rank,
+    points,
+    buff,
+    validators,
+    actions,
+    stack,
+});
 
 /**
  * <h3>Создание карты наёмника для кэмпа.</h3>

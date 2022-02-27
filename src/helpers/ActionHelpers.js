@@ -24,7 +24,6 @@ export const AddBuffToPlayer = (G, ctx, buff, value) => {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил баф '${buff.name}'.`);
     }
 };
-// TODO Rework it!?
 export const AddGetDistinctionsActionToStack = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
 };

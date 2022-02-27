@@ -1,6 +1,5 @@
 import { IsCardNotActionAndNotNull } from "../Card";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
-// TODO Fix all types & move {...} to interfaces
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -14,13 +13,8 @@ import { CompareCards, EvaluateCard } from "./BotCardLogic";
  * @returns
  */
 export const CheckHeuristicsForCoinsPlacement = (G, ctx) => {
-    const taverns = G.taverns /*,
-        averageCards: ICard[] = G.averageCards*/;
-    let result = Array(taverns.length).fill(0);
-    const temp = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (tavern !== null && item.heuristic(tavern) ? item.weight : 0), 0));
-    result = result.map((value, index) => value + temp[index]);
-    const tempNumbers = taverns.map((tavern) => tavern.map((card, index, arr) => EvaluateCard(G, ctx, card, index, arr)));
-    const tempChars = tempNumbers.map((element) => GetCharacteristics(element));
+    const taverns = G.taverns, temp = taverns.map((tavern) => absoluteHeuristicsForTradingCoin.reduce((acc, item) => acc + (item.heuristic(tavern) ? item.weight : 0), 0)), result = Array(taverns.length).fill(0).map((value, index) => value + temp[index]), tempNumbers = taverns.map((tavern) => tavern.map((card, index, arr) => EvaluateCard(G, ctx, card, index, arr))), tempChars = tempNumbers.map((element) => GetCharacteristics(element)) /*,
+averageCards: ICard[] = G.averageCards*/;
     let maxIndex = 0, minIndex = tempChars.length - 1;
     for (let i = 1; i < temp.length; i++) {
         if (CompareCharacteristics(tempChars[maxIndex], tempChars[i]) < 0) {
@@ -54,31 +48,28 @@ const CompareCharacteristics = (stat1, stat2) => {
     return tempVariation;
 };
 /**
- * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <h3>Получает все комбинации взятия карт из всех таверн.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * <li>При формировании данных для ботов.</li>
  * </oL>
  *
- * @TODO Саше: сделать описание функции и параметров.
- * @param tavernsNum
- * @param playersNum
- * @returns
+ * @param tavernsNum Количество таверн.
+ * @param playersNum Количество игроков.
+ * @returns Перечень всех комбинаций взятия карт.
  */
 export const GetAllPicks = (tavernsNum, playersNum) => {
-    const temp = [], 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    cartesian = (...a) => {
-        if (a.length === 1) {
-            a = a.flat();
-        }
-        return a.reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
-    };
+    const temp = [], cartesian = (...arrays) => arrays.reduce((accSets, set) => 
+    // TODO It's only validation or can be!?
+    // if (a.length === 1) {
+    //     a = a.flat();
+    // }
+    accSets.flatMap((accSet) => set.map((value) => [...accSet, value])), [[]]);
     for (let i = 0; i < tavernsNum; i++) {
         temp[i] = Array(playersNum).fill(undefined)
             .map((item, index) => index);
     }
-    return cartesian(temp);
+    return cartesian(...temp);
 };
 //may be to add different kinds of variation (1-order, 2-order, 4-order, ..., infinity-order)
 /**
@@ -122,7 +113,7 @@ const isAllCardsEqual = {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-// const isAllAverage: { heuristic: (array: number[]) => boolean, weight: number; } = {
+// const isAllAverage: IHeuristic<number[]> = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === 0),
 //     weight: 20,
 // };
@@ -134,7 +125,7 @@ const isAllCardsEqual = {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-// const isAllWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
+// const isAllWorse: IHeuristic<number[]> = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item === -1),
 //     weight: 40,
 // };
@@ -146,7 +137,7 @@ const isAllCardsEqual = {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-// const isOnlyOneWorse: { heuristic: (array: number[]) => boolean, weight: number; } = {
+// const isOnlyOneWorse: IHeuristic<number[]> = {
 //     heuristic: (array: number[]): boolean =>
 //         (array.filter((item: number): boolean => item === -1).length === 1),
 //     weight: -100,
@@ -159,7 +150,7 @@ const isAllCardsEqual = {
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-// const isOnlyWorseOrBetter: { heuristic: (array: number[]) => boolean, weight: number; } = {
+// const isOnlyWorseOrBetter: IHeuristic<number[]> = {
 //     heuristic: (array: number[]): boolean => array.every((item: number): boolean => item !== 0),
 //     weight: -50,
 // };
@@ -195,8 +186,7 @@ export const k_combinations = (set, k) => {
         head = set.slice(i, i + 1);
         // We take smaller combinations from the subsequent elements
         tailCombs = k_combinations(set.slice(i + 1), k - 1);
-        // For each (k-1)-combination we join it with the current
-        // and store it to the set of k-combinations.
+        // For each (k-1)-combination we join it with the current and store it to the set of k-combinations.
         for (let j = 0; j < tailCombs.length; j++) {
             combs.push(head.concat(tailCombs[j]));
         }
@@ -215,8 +205,7 @@ export const k_combinations = (set, k) => {
  * @returns
  */
 export const Permute = (permutation) => {
-    const length = permutation.length, result = [permutation.slice()];
-    const c = new Array(length).fill(0);
+    const length = permutation.length, result = [permutation.slice()], c = new Array(length).fill(0);
     let i = 1, k, p;
     while (i < length) {
         if (c[i] < i) {
@@ -252,9 +241,7 @@ const absoluteHeuristicsForTradingCoin = [isAllCardsEqual];
  * </oL>
  * @TODO Саше: сделать описание функции и параметров.
  */
-//const relativeHeuristicsForTradingCoin: (((array: number[]) => boolean) | {
-//    heuristic: (array: number[]) => boolean,
-//    weight: number
-//})[] = [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
-//console.log(relativeHeuristicsForTradingCoin ?? "");
+// const relativeHeuristicsForTradingCoin: (((array: number[]) => boolean) | IHeuristic<number[]>)[] =
+// [isAllWorse, isAllAverage, isAllBetter, isOnlyOneWorse, isOnlyWorseOrBetter];
+// console.log(relativeHeuristicsForTradingCoin ?? "");
 //# sourceMappingURL=BotConfig.js.map
