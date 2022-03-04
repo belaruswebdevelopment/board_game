@@ -1,9 +1,10 @@
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames, Phases } from "../typescript/enums";
 export const CheckBrisingamensEndGameOrder = (G) => {
-    const brisingamensPlayerIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.discardCardEndGame !== undefined)));
+    const brisingamensPlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
     if (brisingamensPlayerIndex !== -1) {
         G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
     }
@@ -33,8 +34,8 @@ export const OnBrisingamensEndGameTurnBegin = (G, ctx) => {
  */
 export const StartGetMjollnirProfitOrEndGame = (G, ctx) => {
     if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        if (G.publicPlayers[Number(G.publicPlayersOrder[0])].buffs.find((buff) => buff.discardCardEndGame !== undefined) === undefined) {
-            const buffIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.getMjollnirProfit !== undefined)));
+        if (!CheckPlayerHasBuff(G.publicPlayers[Number(G.publicPlayersOrder[0])], BuffNames.EveryTurn)) {
+            const buffIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
             if (buffIndex !== -1) {
                 return {
                     next: Phases.GetMjollnirProfit,

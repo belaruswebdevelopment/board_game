@@ -1,15 +1,15 @@
 import type { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames, Phases } from "../typescript/enums";
-import type { IBuffs, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
+import type { IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
 export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void | never => {
     const brisingamensPlayerIndex: number =
         G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            Boolean(player.buffs.find((buff: IBuffs): boolean =>
-                buff.discardCardEndGame !== undefined)));
+            CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
     if (brisingamensPlayerIndex !== -1) {
         G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
     } else {
@@ -42,11 +42,10 @@ export const OnBrisingamensEndGameTurnBegin = (G: IMyGameState, ctx: Ctx): void 
  */
 export const StartGetMjollnirProfitOrEndGame = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        if (G.publicPlayers[Number(G.publicPlayersOrder[0])].buffs.find((buff: IBuffs): boolean =>
-            buff.discardCardEndGame !== undefined) === undefined) {
+        if (!CheckPlayerHasBuff(G.publicPlayers[Number(G.publicPlayersOrder[0])],
+            BuffNames.EveryTurn)) {
             const buffIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-                Boolean(player.buffs.find((buff: IBuffs): boolean =>
-                    buff.getMjollnirProfit !== undefined)));
+                CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
             if (buffIndex !== -1) {
                 return {
                     next: Phases.GetMjollnirProfit,

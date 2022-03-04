@@ -3,7 +3,7 @@ import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, LogTypes, Phases } from "../typescript/enums";
-import { AddBuffToPlayer, DeleteBuffFromPlayer } from "./ActionHelpers";
+import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
@@ -20,10 +20,10 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 export const AddCampCardToCards = (G, ctx, card) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (ctx.phase === Phases.PickCards && ctx.activePlayers === null && (ctx.currentPlayer === G.publicPlayersOrder[0]
-        || player.buffs.find((buff) => buff.goCamp !== undefined) !== undefined)) {
+        || CheckPlayerHasBuff(player, BuffNames.GoCamp))) {
         G.campPicked = true;
     }
-    if (player.buffs.find((buff) => buff.goCampOneTime !== undefined) !== undefined) {
+    if (CheckPlayerHasBuff(player, BuffNames.GoCampOneTime)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
     }
     if (IsArtefactCard(card) && card.suit !== null) {

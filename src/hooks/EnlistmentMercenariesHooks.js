@@ -1,7 +1,9 @@
 import { IsMercenaryCampCard } from "../Camp";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { BuffNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
  * <p>Применения:</p>
@@ -52,7 +54,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
 };
 export const EndEnlistmentMercenariesActions = (G, ctx) => {
     if (G.tierToEnd === 0) {
-        const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
+        const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex === -1) {
             RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
         }

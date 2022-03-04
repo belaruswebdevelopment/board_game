@@ -2,8 +2,9 @@ import type { Ctx } from "boardgame.io";
 import { AddPickHeroAction } from "../actions/AutoActions";
 import { StackData } from "../data/StackData";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { HeroNames } from "../typescript/enums";
-import type { IBuffs, IMyGameState, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
+import { BuffNames, HeroNames } from "../typescript/enums";
+import type { IMyGameState, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
+import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**
@@ -82,7 +83,7 @@ export const CheckAndMoveThrudOrPickHeroAction = (G: IMyGameState, ctx: Ctx, car
  */
 export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player.buffs.find((buff: IBuffs): boolean => buff.noHero !== undefined) === undefined) {
+    if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
         const playerCards: PlayerCardsType[][] = Object.values(player.cards),
             isCanPickHero: boolean =
                 Math.min(...playerCards.map((item: PlayerCardsType[]): number =>

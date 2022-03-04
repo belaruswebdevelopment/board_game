@@ -1,5 +1,6 @@
 import { IsCoin, ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, LogTypes, Stages } from "../typescript/enums";
@@ -30,8 +31,7 @@ export const AddPickHeroAction = (G, ctx) => {
 export const DiscardTradingCoinAction = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     let tradingCoinIndex = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true);
-    if (player.buffs.find((buff) => buff.everyTurn !== undefined) !== undefined
-        && tradingCoinIndex === -1) {
+    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && tradingCoinIndex === -1) {
         tradingCoinIndex =
             player.handCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true);
         if (tradingCoinIndex !== -1) {
@@ -112,8 +112,7 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
  */
 export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)], number = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = player.handCoins.length;
-    if (player.buffs.find((buff) => buff.everyTurn !== undefined) !== undefined
-        && number > 0 && handCoinsNumber) {
+    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && number > 0 && handCoinsNumber) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(number)]);
     }
     else {

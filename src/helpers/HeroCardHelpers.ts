@@ -3,7 +3,7 @@ import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
 import type { IHeroCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
-import { AddBuffToPlayer } from "./ActionHelpers";
+import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 
 /**

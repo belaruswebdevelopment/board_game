@@ -3,9 +3,10 @@ import { artefactsConfig } from "./data/CampData";
 import { heroesConfig } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
+import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { AddDataToLog } from "./Logging";
-import { LogTypes, SuitNames } from "./typescript/enums";
-import type { IArtefact, IBuffs, IHeroData, IMyGameState, IPublicPlayer, SuitTypes } from "./typescript/interfaces";
+import { BuffNames, LogTypes, SuitNames } from "./typescript/enums";
+import type { IArtefact, IHeroData, IMyGameState, IPublicPlayer, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -53,7 +54,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer, p
     for (let i = 0; i < player.boardCoins.length; i++) {
         coinsValue += player.boardCoins[i]?.value ?? 0;
     }
-    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !== undefined) {
+    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
         for (let i = 0; i < player.handCoins.length; i++) {
             coinsValue += player.handCoins[i]?.value ?? 0;
         }

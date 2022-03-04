@@ -5,10 +5,11 @@ import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
-import type { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, DiscardCardTypes, IBuffs, IConfig, IMyGameState, IPublicPlayer, IVariant, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import { BuffNames, ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
+import type { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, DiscardCardTypes, IConfig, IMyGameState, IPublicPlayer, IVariant, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
 // TODO Add functions dock blocks and Errors!
@@ -16,8 +17,7 @@ export const AddCoinToPouchProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps
     boardCells: JSX.Element[]): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     for (let j = 0; j < player.handCoins.length; j++) {
-        if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)
-            && player.handCoins[j] !== null) {
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && player.handCoins[j] !== null) {
             DrawCoin(data, boardCells, `coin`, player.handCoins[j], j, player,
                 `border-2`, null, MoveNames.AddCoinToPouchMove, j);
         }
@@ -371,8 +371,7 @@ export const UpgradeCoinProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
     let handCoinIndex = -1;
     for (let j = 0; j < player.boardCoins.length; j++) {
         const boardCoin: CoinType = player.boardCoins[j];
-        if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !== undefined
-            && boardCoin === null) {
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && boardCoin === null) {
             handCoinIndex++;
             const handCoinNotNull: CoinType = handCoins[handCoinIndex],
                 handCoinId: number = player.handCoins.findIndex((coin: CoinType): boolean =>

@@ -4,11 +4,12 @@ import { IsMercenaryCampCard } from "./Camp";
 import { IsCardNotActionAndNotNull } from "./Card";
 import { IsCoin } from "./Coin";
 import { suitsConfig } from "./data/SuitData";
+import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { IsHeroCard } from "./Hero";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { ConfigNames, MoveNames, Phases, ValidatorNames } from "./typescript/enums";
+import { BuffNames, ConfigNames, MoveNames, Phases, ValidatorNames } from "./typescript/enums";
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -613,8 +614,8 @@ export const moveValidators = {
             if (G !== undefined && ctx !== undefined) {
                 const moveMainArgs = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
-                    if (player.buffs.find((buff) => buff.everyTurn !== undefined) !==
-                        undefined && IsCoin(player.handCoins[j])) {
+                    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)
+                        && IsCoin(player.handCoins[j])) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -661,7 +662,7 @@ export const moveValidators = {
                 let handCoinIndex = -1;
                 for (let j = 0; j < player.boardCoins.length; j++) {
                     const boardCoin = player.boardCoins[j];
-                    if (player.buffs.find((buff) => buff.everyTurn !== undefined) !== undefined && boardCoin === null) {
+                    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && boardCoin === null) {
                         handCoinIndex++;
                         const handCoinNotNull = handCoins[handCoinIndex], handCoinId = player.handCoins.findIndex((coin) => IsCoin(handCoinNotNull) && (coin === null || coin === void 0 ? void 0 : coin.value) === handCoinNotNull.value
                             && coin.isInitial === handCoinNotNull.isInitial);

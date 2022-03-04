@@ -1,4 +1,5 @@
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
 import { BuffNames, HeroNames } from "../typescript/enums";
@@ -14,7 +15,7 @@ import { BuffNames, HeroNames } from "../typescript/enums";
  */
 export const CheckEndEndTierPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
+        const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex !== -1 || (G.tierToEnd === 0 && yludIndex === -1)) {
             let nextPhase = true;
             if (yludIndex !== -1) {
@@ -44,7 +45,7 @@ export const CheckEndEndTierPhase = (G, ctx) => {
  */
 export const CheckEndTierOrder = (G) => {
     G.publicPlayersOrder = [];
-    const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
+    const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex !== -1) {
         if (G.tierToEnd === 0) {
             const player = G.publicPlayers[yludIndex], cards = Object.values(player.cards).flat(), index = cards.findIndex((card) => card.name === HeroNames.Ylud);

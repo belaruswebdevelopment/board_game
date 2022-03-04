@@ -1,9 +1,11 @@
 import type { Ctx } from "boardgame.io";
 import { IsMercenaryCampCard } from "../Camp";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import type { CampDeckCardTypes, IBuffs, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
+import { BuffNames } from "../typescript/enums";
+import type { CampDeckCardTypes, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -59,7 +61,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): bo
 export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void => {
     if (G.tierToEnd === 0) {
         const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
+            CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex === -1) {
             RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
         }

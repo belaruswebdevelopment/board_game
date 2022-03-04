@@ -34,7 +34,7 @@ export const MjollnirScoring = (player?: IPublicPlayer): number | never => {
         if (suit !== undefined) {
             return player.cards[suit].reduce(TotalRank, 0) * 2;
         } else {
-            throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.SuitIdForMjollnir}.`);
+            throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.SuitIdForMjollnir}'.`);
         }
     }
     throw new Error(`Function param 'player' is undefined.`);

@@ -1,7 +1,8 @@
 import { IsMercenaryCampCard } from "../Camp";
 import { AddDataToLog } from "../Logging";
-import { HeroNames, LogTypes, Phases } from "../typescript/enums";
+import { BuffNames, HeroNames, LogTypes, Phases } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
+import { CheckPlayerHasBuff } from "./BuffHelpers";
 /**
  * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
  * <p>Применения:</p>
@@ -37,7 +38,7 @@ export const AfterLastTavernEmptyActions = (G) => {
  * @param G
  */
 export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
-    const ulinePlayerIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.everyTurn !== undefined)));
+    const ulinePlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
     if (ulinePlayerIndex !== -1) {
         return {
             next: Phases.PlaceCoinsUline,
@@ -66,13 +67,13 @@ export const CheckEndGameLastActions = (G) => {
     }
     else {
         if (G.expansions.thingvellir.active) {
-            const brisingamensBuffIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.discardCardEndGame !== undefined)));
+            const brisingamensBuffIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
             if (brisingamensBuffIndex !== -1) {
                 return {
                     next: Phases.BrisingamensEndGame,
                 };
             }
-            const mjollnirBuffIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.getMjollnirProfit !== undefined)));
+            const mjollnirBuffIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
             if (mjollnirBuffIndex !== -1) {
                 return {
                     next: Phases.GetMjollnirProfit,
@@ -94,7 +95,7 @@ export const CheckEndGameLastActions = (G) => {
 * @param ctx
 */
 export const CheckEndTierActionsOrEndGameLastActions = (G) => {
-    const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
+    const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex !== -1) {
         return {
             next: Phases.EndTier,

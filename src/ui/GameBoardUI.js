@@ -46,7 +46,7 @@ export const DrawCamp = (data) => {
  * @param data Глобальные параметры.
  * @returns Поле информации о текущем ходу.
  */
-export const DrawCurrentPlayerTurn = (data) => (_jsxs("b", { children: ["Current player: ", _jsxs("span", { className: "italic", children: ["Player ", Number(data.ctx.currentPlayer) + 1] }), " | Turn12312: ", _jsx("span", { className: "italic", children: data.ctx.turn })] }));
+export const DrawCurrentPlayerTurn = (data) => (_jsxs("b", { children: ["Current player: ", _jsxs("span", { className: "italic", children: ["Player ", Number(data.ctx.currentPlayer) + 1] }), " | Turn: ", _jsx("span", { className: "italic", children: data.ctx.turn })] }));
 /**
  * <h3>Отрисовка преимуществ по фракциям в конце эпохи.</h3>
  * <p>Применения:</p>

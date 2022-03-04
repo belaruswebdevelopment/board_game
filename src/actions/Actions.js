@@ -2,7 +2,7 @@ import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
 import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
-import { AddBuffToPlayer, DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
+import { AddBuffToPlayer, DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddCampCardToPlayerCards } from "../helpers/CampCardHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";

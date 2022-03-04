@@ -2,8 +2,9 @@ import type { Ctx } from "boardgame.io";
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
-import { Phases } from "./typescript/enums";
-import type { IBuffs, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, OptionalSuitPropertyTypes, PlayerCardsType, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
+import { BuffNames, Phases } from "./typescript/enums";
+import type { ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, OptionalSuitPropertyTypes, PlayerCardsType, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -65,14 +66,13 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority): IPubli
 export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
+        const player: IPublicPlayer = G.publicPlayers[i];
         if (ctx.phase !== Phases.PlaceCoinsUline) {
-            if (G.publicPlayers[i].buffs.find((buff: IBuffs): boolean =>
-                buff.everyTurn !== undefined) === undefined) {
+            if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                 G.publicPlayersOrder.push(String(i));
             }
         } else {
-            if (G.publicPlayers[i].buffs.find((buff: IBuffs): boolean =>
-                buff.everyTurn !== undefined) !== undefined) {
+            if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                 G.publicPlayersOrder.push(String(i));
             }
         }

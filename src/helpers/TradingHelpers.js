@@ -2,7 +2,7 @@ import { UpgradeCoinAction } from "../actions/AutoActions";
 import { IsCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, LogTypes } from "../typescript/enums";
-import { DeleteBuffFromPlayer } from "./ActionHelpers";
+import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
@@ -57,7 +57,7 @@ const Trading = (G, ctx, tradingCoins) => {
             // }
         }
     }
-    if (player.buffs.find((buff) => buff.upgradeNextCoin !== undefined) !== undefined) {
+    if (CheckPlayerHasBuff(player, BuffNames.UpgradeNextCoin)) {
         value = coinsMaxValue;
         upgradingCoinId = G.tavernsNum + coinMinIndex;
         upgradingCoin = tradingCoins[coinMinIndex];

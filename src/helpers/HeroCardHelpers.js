@@ -1,7 +1,7 @@
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
-import { AddBuffToPlayer } from "./ActionHelpers";
+import { AddBuffToPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 /**
  * <h3>Добавляет героя в массив карт игрока.</h3>

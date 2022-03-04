@@ -1,5 +1,5 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
-import { DeleteBuffFromPlayer } from "./helpers/ActionHelpers";
+import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./helpers/BuffHelpers";
 import { AddDataToLog } from "./Logging";
 import { BuffNames, LogTypes, Stages } from "./typescript/enums";
 /**
@@ -140,14 +140,13 @@ export const ReturnCoinToPlayerHands = (player, coinId) => {
  * @param isInitial Является ли обменная монета базовой.
  */
 export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => {
-    var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     // TODO Split into different functions!?
     let upgradingCoin = {}, coin;
-    if (player.buffs.find((buff) => buff.coin !== undefined) !== undefined) {
+    if (CheckPlayerHasBuff(player, BuffNames.Coin)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.Coin);
         // TODO Upgrade isInitial min coin or not or User must choose!?
-        if (player.buffs.find((buff) => buff.everyTurn !== undefined) !== undefined) {
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
             const allCoins = [], allHandCoins = player.handCoins.filter((coin) => IsCoin(coin));
             for (let i = 0; i < player.boardCoins.length; i++) {
                 if (player.boardCoins[i] === null) {
@@ -207,7 +206,7 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
             }
         }
         if (IsCoin(upgradingCoin)) {
-            const buffValue = ((_a = player.buffs.find((buff) => buff.upgradeCoin !== undefined)) === null || _a === void 0 ? void 0 : _a.upgradeCoin) !== undefined ? 2 : 0, newValue = upgradingCoin.value + value + buffValue;
+            const buffValue = CheckPlayerHasBuff(player, BuffNames.UpgradeCoin) ? 2 : 0, newValue = upgradingCoin.value + value + buffValue;
             let upgradedCoin = null;
             if (G.marketCoins.length) {
                 if (newValue > G.marketCoins[G.marketCoins.length - 1].value) {

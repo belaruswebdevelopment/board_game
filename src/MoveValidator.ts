@@ -5,11 +5,12 @@ import { IsMercenaryCampCard } from "./Camp";
 import { IsCardNotActionAndNotNull } from "./Card";
 import { IsCoin } from "./Coin";
 import { suitsConfig } from "./data/SuitData";
+import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { IsHeroCard } from "./Hero";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { ConfigNames, MoveNames, Phases, ValidatorNames } from "./typescript/enums";
+import { BuffNames, ConfigNames, MoveNames, Phases, ValidatorNames } from "./typescript/enums";
 import type { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, IBuffs, IConfig, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveSuitCardPlayerCurrentId, IMoveSuitCardPlayerIdArguments, IMoveValidator, IMoveValidators, IMyGameState, IPublicPlayer, IValidatorsConfig, MoveByTypes, MoveValidatorGetRangeTypes, OptionalSuitPropertyTypes, PickedCardType, StageTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 
 /**
@@ -641,8 +642,8 @@ export const moveValidators: IMoveValidators = {
                 const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
                     player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
                 for (let j = 0; j < player.handCoins.length; j++) {
-                    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !==
-                        undefined && IsCoin(player.handCoins[j])) {
+                    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)
+                        && IsCoin(player.handCoins[j])) {
                         moveMainArgs.push(j);
                     }
                 }
@@ -693,8 +694,7 @@ export const moveValidators: IMoveValidators = {
                 let handCoinIndex = -1;
                 for (let j = 0; j < player.boardCoins.length; j++) {
                     const boardCoin: CoinType = player.boardCoins[j];
-                    if (player.buffs.find((buff: IBuffs): boolean =>
-                        buff.everyTurn !== undefined) !== undefined && boardCoin === null) {
+                    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && boardCoin === null) {
                         handCoinIndex++;
                         const handCoinNotNull: CoinType = handCoins[handCoinIndex],
                             handCoinId: number = player.handCoins.findIndex((coin: CoinType): boolean =>

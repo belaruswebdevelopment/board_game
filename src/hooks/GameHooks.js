@@ -1,16 +1,18 @@
 import { IsMercenaryCampCard } from "../Camp";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ScoreWinner } from "../Score";
+import { BuffNames } from "../typescript/enums";
 export const CheckEndGame = (G) => {
     if (G.tierToEnd === 0) {
-        const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
+        const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex !== -1) {
             return false;
         }
-        const brisingamensIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.discardCardEndGame !== undefined)));
+        const brisingamensIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
         if (brisingamensIndex !== -1) {
             return false;
         }
-        const mjollnirIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.getMjollnirProfit !== undefined)));
+        const mjollnirIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
         if (mjollnirIndex !== -1) {
             return false;
         }

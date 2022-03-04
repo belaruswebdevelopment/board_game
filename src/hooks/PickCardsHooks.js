@@ -2,6 +2,7 @@ import { IsMercenaryCampCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddPickCardActionToStack, DrawCurrentProfit, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
 import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
@@ -10,7 +11,7 @@ import { ActivateTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
-import { LogTypes, Phases, Stages } from "../typescript/enums";
+import { BuffNames, LogTypes, Phases, Stages } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
  * <p>Применения:</p>
@@ -22,7 +23,7 @@ import { LogTypes, Phases, Stages } from "../typescript/enums";
  * @param ctx
  */
 const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], ulinePlayerIndex = G.publicPlayers.findIndex((findPlayer) => Boolean(findPlayer.buffs.find((buff) => buff.everyTurn !== undefined)));
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], ulinePlayerIndex = G.publicPlayers.findIndex((findPlayer) => CheckPlayerHasBuff(findPlayer, BuffNames.EveryTurn));
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
             const coin = player.boardCoins[G.currentTavern];
@@ -98,7 +99,7 @@ export const EndPickCardsActions = (G, ctx) => {
         G.tierToEnd--;
     }
     if (G.tierToEnd === 0) {
-        const yludIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.endTier !== undefined)));
+        const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex !== -1) {
             let startThrud = true;
             if (G.expansions.thingvellir.active) {

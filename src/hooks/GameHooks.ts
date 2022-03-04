@@ -1,24 +1,24 @@
 import type { Ctx } from "boardgame.io";
 import { IsMercenaryCampCard } from "../Camp";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ScoreWinner } from "../Score";
-import type { CampDeckCardTypes, IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import { BuffNames } from "../typescript/enums";
+import type { CampDeckCardTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 export const CheckEndGame = (G: IMyGameState): boolean | void => {
     if (G.tierToEnd === 0) {
         const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
+            CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex !== -1) {
             return false;
         }
         const brisingamensIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            Boolean(player.buffs.find((buff: IBuffs): boolean =>
-                buff.discardCardEndGame !== undefined)));
+            CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
         if (brisingamensIndex !== -1) {
             return false;
         }
         const mjollnirIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            Boolean(player.buffs.find((buff: IBuffs): boolean =>
-                buff.getMjollnirProfit !== undefined)));
+            CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
         if (mjollnirIndex !== -1) {
             return false;
         }

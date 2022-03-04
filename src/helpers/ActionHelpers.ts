@@ -2,31 +2,10 @@ import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
-import type { BuffTypes, IBuff, IBuffs, IConfig, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { IConfig, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
-/**
- * <h3>Действия, связанные с добавлением бафов игроку.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При выборе конкретных героев, добавляющих бафы игроку.</li>
- * <li>При выборе конкретных артефактов, добавляющих бафы игроку.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- * @param buff Баф.
- * @param value Значение бафа.
- */
-export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?: string): void => {
-    if (buff !== undefined) {
-        const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-        player.buffs.push({
-            [buff.name]: value ?? true,
-        });
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил баф '${buff.name}'.`);
-    }
-};
+
 
 export const AddGetDistinctionsActionToStack = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
@@ -34,17 +13,6 @@ export const AddGetDistinctionsActionToStack = (G: IMyGameState, ctx: Ctx): void
 
 export const AddPickCardActionToStack = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.pickCard()]);
-};
-
-export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): void | never => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        buffIndex: number = player.buffs.findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
-    if (buffIndex !== -1) {
-        player.buffs.splice(buffIndex, 1);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} потерял баф '${buffName}'.`);
-    } else {
-        throw new Error(`У игрока в 'buffs' отсутствует баф ${buffName}.`);
-    }
 };
 
 /**

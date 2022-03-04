@@ -1,4 +1,5 @@
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddGetMjollnirProfitActionsToStack } from "../helpers/CampHelpers";
 import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames } from "../typescript/enums";
@@ -15,11 +16,11 @@ import { BuffNames } from "../typescript/enums";
 export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (G.publicPlayersOrder.length && !player.stack.length) {
-        return player.buffs.find((buff) => buff.suitIdForMjollnir !== undefined) !== undefined;
+        return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
     }
 };
 export const CheckGetMjollnirProfitOrder = (G) => {
-    const mjollnirPlayerIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.getMjollnirProfit !== undefined)));
+    const mjollnirPlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
     if (mjollnirPlayerIndex !== -1) {
         G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
     }

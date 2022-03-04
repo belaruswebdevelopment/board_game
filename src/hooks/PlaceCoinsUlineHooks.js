@@ -1,5 +1,7 @@
 import { IsCoin } from "../Coin";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
+import { BuffNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoinsUline'.</h3>
  * <p>Применения:</p>
@@ -12,7 +14,7 @@ import { CheckPlayersBasicOrder } from "../Player";
  */
 export const CheckEndPlaceCoinsUlinePhase = (G) => {
     if (G.publicPlayersOrder.length) {
-        const ulinePlayerIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.everyTurn !== undefined)));
+        const ulinePlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
         if (ulinePlayerIndex !== -1) {
             return IsCoin(G.publicPlayers[ulinePlayerIndex].boardCoins[G.currentTavern + 1]);
         }

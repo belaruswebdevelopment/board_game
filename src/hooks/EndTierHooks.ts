@@ -1,9 +1,10 @@
 import type { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
 import { BuffNames, HeroNames } from "../typescript/enums";
-import type { IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
+import type { IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
@@ -18,7 +19,7 @@ import type { IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitT
 export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void | never => {
     if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
         const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
+            CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex !== -1 || (G.tierToEnd === 0 && yludIndex === -1)) {
             let nextPhase = true;
             if (yludIndex !== -1) {
@@ -49,7 +50,7 @@ export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext
 export const CheckEndTierOrder = (G: IMyGameState): void | never => {
     G.publicPlayersOrder = [];
     const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-        Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
+        CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex !== -1) {
         if (G.tierToEnd === 0) {
             const player: IPublicPlayer = G.publicPlayers[yludIndex],

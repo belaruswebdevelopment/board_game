@@ -4,16 +4,16 @@ import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
+import { BuffNames, ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 // TODO Add functions dock blocks and Errors!
 export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     for (let j = 0; j < player.handCoins.length; j++) {
-        if (player.buffs.find((buff) => buff.everyTurn !== undefined)
-            && player.handCoins[j] !== null) {
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && player.handCoins[j] !== null) {
             DrawCoin(data, boardCells, `coin`, player.handCoins[j], j, player, `border-2`, null, MoveNames.AddCoinToPouchMove, j);
         }
     }
@@ -268,8 +268,7 @@ export const UpgradeCoinProfit = (G, ctx, data, boardCells) => {
     let handCoinIndex = -1;
     for (let j = 0; j < player.boardCoins.length; j++) {
         const boardCoin = player.boardCoins[j];
-        if (player.buffs.find((buff) => buff.everyTurn !== undefined) !== undefined
-            && boardCoin === null) {
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && boardCoin === null) {
             handCoinIndex++;
             const handCoinNotNull = handCoins[handCoinIndex], handCoinId = player.handCoins.findIndex((coin) => IsCoin(handCoinNotNull) && (coin === null || coin === void 0 ? void 0 : coin.value) === handCoinNotNull.value
                 && coin.isInitial === handCoinNotNull.isInitial);

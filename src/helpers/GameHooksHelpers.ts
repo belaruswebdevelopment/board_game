@@ -1,9 +1,10 @@
 import type { Ctx } from "boardgame.io";
 import { IsMercenaryCampCard } from "../Camp";
 import { AddDataToLog } from "../Logging";
-import { HeroNames, LogTypes, Phases } from "../typescript/enums";
-import type { CampDeckCardTypes, IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
+import { BuffNames, HeroNames, LogTypes, Phases } from "../typescript/enums";
+import type { CampDeckCardTypes, IMyGameState, INext, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
+import { CheckPlayerHasBuff } from "./BuffHelpers";
 
 /**
  * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
@@ -40,7 +41,7 @@ export const AfterLastTavernEmptyActions = (G: IMyGameState): boolean | INext =>
  */
 export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G: IMyGameState): INext => {
     const ulinePlayerIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-        Boolean(player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
+        CheckPlayerHasBuff(player, BuffNames.EveryTurn));
     if (ulinePlayerIndex !== -1) {
         return {
             next: Phases.PlaceCoinsUline,
@@ -70,16 +71,14 @@ export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
         if (G.expansions.thingvellir.active) {
             const brisingamensBuffIndex: number =
                 G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-                    Boolean(player.buffs.find((buff: IBuffs): boolean =>
-                        buff.discardCardEndGame !== undefined)));
+                    CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
             if (brisingamensBuffIndex !== -1) {
                 return {
                     next: Phases.BrisingamensEndGame,
                 };
             }
             const mjollnirBuffIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-                Boolean(player.buffs.find((buff: IBuffs): boolean =>
-                    buff.getMjollnirProfit !== undefined)));
+                CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
             if (mjollnirBuffIndex !== -1) {
                 return {
                     next: Phases.GetMjollnirProfit,
@@ -103,7 +102,7 @@ export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
 */
 export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState): boolean | INext => {
     const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-        Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
+        CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex !== -1) {
         return {
             next: Phases.EndTier,

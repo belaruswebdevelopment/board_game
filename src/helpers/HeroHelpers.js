@@ -1,7 +1,8 @@
 import { AddPickHeroAction } from "../actions/AutoActions";
 import { StackData } from "../data/StackData";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { HeroNames } from "../typescript/enums";
+import { BuffNames, HeroNames } from "../typescript/enums";
+import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
  * <h3>Добавляет действия в стэк при старте хода в фазе 'endTier'.</h3>
@@ -74,7 +75,7 @@ export const CheckAndMoveThrudOrPickHeroAction = (G, ctx, card) => {
  */
 export const CheckPickHero = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player.buffs.find((buff) => buff.noHero !== undefined) === undefined) {
+    if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
         const playerCards = Object.values(player.cards), isCanPickHero = Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) > player.heroes.length;
         if (isCanPickHero) {
             AddPickHeroAction(G, ctx);

@@ -1,7 +1,8 @@
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
-import { Phases } from "./typescript/enums";
+import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
+import { BuffNames, Phases } from "./typescript/enums";
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
  * <p>Применения:</p>
@@ -59,13 +60,14 @@ export const BuildPublicPlayer = (nickname, priority) => {
 export const CheckPlayersBasicOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
+        const player = G.publicPlayers[i];
         if (ctx.phase !== Phases.PlaceCoinsUline) {
-            if (G.publicPlayers[i].buffs.find((buff) => buff.everyTurn !== undefined) === undefined) {
+            if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                 G.publicPlayersOrder.push(String(i));
             }
         }
         else {
-            if (G.publicPlayers[i].buffs.find((buff) => buff.everyTurn !== undefined) !== undefined) {
+            if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                 G.publicPlayersOrder.push(String(i));
             }
         }

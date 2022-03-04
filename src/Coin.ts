@@ -1,9 +1,9 @@
 import type { Ctx } from "boardgame.io";
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
-import { DeleteBuffFromPlayer } from "./helpers/ActionHelpers";
+import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./helpers/BuffHelpers";
 import { AddDataToLog } from "./Logging";
 import { BuffNames, LogTypes, Stages } from "./typescript/enums";
-import type { CoinType, IBuffs, IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig, IMyGameState, INumberValues, IPublicPlayer } from "./typescript/interfaces";
+import type { CoinType, IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig, IMyGameState, INumberValues, IPublicPlayer } from "./typescript/interfaces";
 
 /**
  * <h3>Создание всех монет.</h3>
@@ -160,10 +160,10 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
     // TODO Split into different functions!?
     let upgradingCoin: Record<string, unknown> | ICoin = {},
         coin: CoinType | undefined;
-    if (player.buffs.find((buff: IBuffs): boolean => buff.coin !== undefined) !== undefined) {
+    if (CheckPlayerHasBuff(player, BuffNames.Coin)) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.Coin);
         // TODO Upgrade isInitial min coin or not or User must choose!?
-        if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !== undefined) {
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
             const allCoins: CoinType[] = [],
                 allHandCoins: CoinType[] =
                     player.handCoins.filter((coin: CoinType): boolean => IsCoin(coin));
@@ -234,8 +234,7 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
             }
         }
         if (IsCoin(upgradingCoin)) {
-            const buffValue: number = player.buffs.find((buff: IBuffs): boolean =>
-                buff.upgradeCoin !== undefined)?.upgradeCoin !== undefined ? 2 : 0,
+            const buffValue: number = CheckPlayerHasBuff(player, BuffNames.UpgradeCoin) ? 2 : 0,
                 newValue: number = upgradingCoin.value + value + buffValue;
             let upgradedCoin: CoinType = null;
             if (G.marketCoins.length) {

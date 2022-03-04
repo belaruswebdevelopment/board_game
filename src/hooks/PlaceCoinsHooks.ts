@@ -1,10 +1,12 @@
 import type { Ctx } from "boardgame.io";
 import { ReturnCoinsToPlayerHands } from "../Coin";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
-import type { CoinType, IBuffs, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
+import { BuffNames } from "../typescript/enums";
+import type { CoinType, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
@@ -20,9 +22,9 @@ export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): void | INext
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
         const isEveryPlayersHandCoinsEmpty: boolean =
             G.publicPlayers.filter((player: IPublicPlayer): boolean =>
-                Boolean(player.buffs.find((buff: IBuffs): boolean =>
-                    buff.everyTurn !== undefined) === undefined)).every((player: IPublicPlayer): boolean =>
-                        player.handCoins.every((coin: CoinType): boolean => coin === null));
+                !CheckPlayerHasBuff(player, BuffNames.EveryTurn))
+                .every((player: IPublicPlayer): boolean =>
+                    player.handCoins.every((coin: CoinType): boolean => coin === null));
         if (isEveryPlayersHandCoinsEmpty) {
             return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
         }

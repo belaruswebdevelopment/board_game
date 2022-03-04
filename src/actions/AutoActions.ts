@@ -1,10 +1,11 @@
 import type { Ctx, StageArg } from "boardgame.io";
 import { IsCoin, ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, LogTypes, Stages } from "../typescript/enums";
-import type { ArgsTypes, CoinType, IBuffs, IConfig, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
+import type { ArgsTypes, CoinType, IConfig, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
@@ -35,8 +36,7 @@ export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void | neve
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
     let tradingCoinIndex: number =
         player.boardCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
-    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !== undefined
-        && tradingCoinIndex === -1) {
+    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && tradingCoinIndex === -1) {
         tradingCoinIndex =
             player.handCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
         if (tradingCoinIndex !== -1) {
@@ -118,8 +118,7 @@ export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void |
         number: number = player.boardCoins.filter((coin: CoinType, index: number): boolean =>
             index >= G.tavernsNum && coin === null).length,
         handCoinsNumber: number = player.handCoins.length;
-    if (player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined) !== undefined
-        && number > 0 && handCoinsNumber) {
+    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && number > 0 && handCoinsNumber) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(number)]);
     } else {
         let coinsValue = 0,

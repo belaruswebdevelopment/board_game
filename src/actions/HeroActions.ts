@@ -3,7 +3,7 @@ import { CreateCard } from "../Card";
 import { heroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
-import { DeleteBuffFromPlayer } from "../helpers/ActionHelpers";
+import { DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { AddHeroCardToPlayerCards } from "../helpers/HeroCardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";

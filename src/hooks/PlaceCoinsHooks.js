@@ -1,8 +1,10 @@
 import { ReturnCoinsToPlayerHands } from "../Coin";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
+import { BuffNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
  * <p>Применения:</p>
@@ -15,7 +17,8 @@ import { RefillTaverns } from "../Tavern";
  */
 export const CheckEndPlaceCoinsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        const isEveryPlayersHandCoinsEmpty = G.publicPlayers.filter((player) => Boolean(player.buffs.find((buff) => buff.everyTurn !== undefined) === undefined)).every((player) => player.handCoins.every((coin) => coin === null));
+        const isEveryPlayersHandCoinsEmpty = G.publicPlayers.filter((player) => !CheckPlayerHasBuff(player, BuffNames.EveryTurn))
+            .every((player) => player.handCoins.every((coin) => coin === null));
         if (isEveryPlayersHandCoinsEmpty) {
             return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
         }

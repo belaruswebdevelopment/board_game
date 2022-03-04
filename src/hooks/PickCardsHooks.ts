@@ -3,6 +3,7 @@ import { IsMercenaryCampCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddPickCardActionToStack, DrawCurrentProfit, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
+import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
 import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
@@ -11,8 +12,8 @@ import { ActivateTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
 import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
-import { LogTypes, Phases, Stages } from "../typescript/enums";
-import type { CampDeckCardTypes, CoinType, IBuffs, IMyGameState, INext, IPublicPlayer, IResolveBoardCoins } from "../typescript/interfaces";
+import { BuffNames, LogTypes, Phases, Stages } from "../typescript/enums";
+import type { CampDeckCardTypes, CoinType, IMyGameState, INext, IPublicPlayer, IResolveBoardCoins } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
@@ -27,7 +28,7 @@ import type { CampDeckCardTypes, CoinType, IBuffs, IMyGameState, INext, IPublicP
 const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         ulinePlayerIndex: number = G.publicPlayers.findIndex((findPlayer: IPublicPlayer): boolean =>
-            Boolean(findPlayer.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
+            CheckPlayerHasBuff(findPlayer, BuffNames.EveryTurn));
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
             const coin: CoinType = player.boardCoins[G.currentTavern];
@@ -109,7 +110,7 @@ export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void | never => 
     }
     if (G.tierToEnd === 0) {
         const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            Boolean(player.buffs.find((buff: IBuffs): boolean => buff.endTier !== undefined)));
+            CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex !== -1) {
             let startThrud = true;
             if (G.expansions.thingvellir.active) {
