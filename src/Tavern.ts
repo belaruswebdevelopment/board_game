@@ -1,6 +1,6 @@
 import { AddDataToLog } from "./Logging";
 import { LogTypes } from "./typescript/enums";
-import { DeckCardTypes, IMyGameState, ITavernsConfig, TavernCardTypes } from "./typescript/interfaces";
+import type { DeckCardTypes, IMyGameState, ITavernsConfig, TavernCardTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Проверяет все ли карты выбраны игроками в текущей таверне.</h1>
@@ -37,7 +37,7 @@ export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number)
     if (discardedCard !== null) {
         G.discardCardsDeck.push(discardedCard);
         G.taverns[G.currentTavern].splice(discardCardIndex, 1, null);
-        AddDataToLog(G, LogTypes.GAME, `Карта ${discardedCard.name} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
+        AddDataToLog(G, LogTypes.GAME, `Карта '${discardedCard.name}' из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
         return true;
     }
     throw new Error(`Не удалось сбросить лишнюю карту из таверны.`);

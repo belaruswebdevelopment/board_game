@@ -1,9 +1,9 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { IsMercenaryCampCard } from "../Camp";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { CampDeckCardTypes, IBuffs, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
+import type { CampDeckCardTypes, IBuffs, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>

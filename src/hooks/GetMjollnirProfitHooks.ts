@@ -1,9 +1,9 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddGetMjollnirProfitActionsToStack } from "../helpers/CampHelpers";
 import { EndGame, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames } from "../typescript/enums";
-import { IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'getMjollnirProfit'.</h3>

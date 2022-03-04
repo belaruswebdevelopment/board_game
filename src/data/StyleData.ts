@@ -1,5 +1,5 @@
 import { ArtefactNames, CardNames, GameNames, HeroNames, SuitNames } from "../typescript/enums";
-import { IBackground, IStyles, SuitTypes } from "../typescript/interfaces";
+import type { IBackground, IStyles, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Путь к базовым картам.</h3>

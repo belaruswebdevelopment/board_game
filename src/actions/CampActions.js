@@ -1,9 +1,9 @@
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript/enums";
+import { LogTypes, RusCardTypes } from "../typescript/enums";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
 /**
  * <h3>Действия, связанные с добавлением монет в кошелёк для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
@@ -17,7 +17,7 @@ import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions"
  * @param coinId Id монеты.
  */
 export const AddCoinToPouchAction = (G, ctx, coinId) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && !isCoin(coin));
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && !IsCoin(coin));
     if (tempId !== -1) {
         player.boardCoins[tempId] = player.handCoins[coinId];
         player.handCoins[coinId] = null;
@@ -48,11 +48,11 @@ export const DiscardSuitCardAction = (G, ctx, suit, playerId, cardId) => {
         const player = G.publicPlayers[Number(playerId)], discardedCard = player.cards[suit].splice(cardId, 1)[0];
         if (!IsHeroCard(discardedCard)) {
             G.discardCardsDeck.push(discardedCard);
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил карту ${discardedCard.name} в колоду сброса.`);
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил карту '${discardedCard.name}' в колоду сброса.`);
             player.stack = [];
         }
         else {
-            throw new Error(`Сброшенная карта не может быть с типом 'герой'.`);
+            throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
         }
     }
     else {

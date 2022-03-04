@@ -1,10 +1,10 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { CreateCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CardNames, LogTypes, SuitNames } from "../typescript/enums";
-import { CoinType, ICard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CoinType, ICard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 

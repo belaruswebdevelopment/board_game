@@ -1,9 +1,9 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { BuildCoins } from "./Coin";
 import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { Phases } from "./typescript/enums";
-import { IBuffs, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, OptionalSuitPropertyTypes, PlayerCardsType, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { IBuffs, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, OptionalSuitPropertyTypes, PlayerCardsType, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>

@@ -33,7 +33,7 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
         }
     }
     else {
-        throw new Error(`Сброшенная карта не может быть с типом 'герой'.`);
+        throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
     }
 };
 /**

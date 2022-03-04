@@ -1,8 +1,8 @@
-import { isCoin, ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
+import { IsCoin, ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { LogTypes, Stages } from "../typescript/enums";
+import { BuffNames, LogTypes, Stages } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
  * <p>Применения:</p>
@@ -38,7 +38,7 @@ export const DiscardTradingCoinAction = (G, ctx) => {
             player.handCoins.splice(tradingCoinIndex, 1, null);
         }
         else {
-            throw new Error(`У игрока в 'handCoins' отсутствует обменная монета при наличии бафа 'everyTurn'.`);
+            throw new Error(`У игрока в 'handCoins' отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
         }
     }
     else if (tradingCoinIndex !== -1) {
@@ -120,7 +120,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         let coinsValue = 0, stack = [];
         for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
             const coin = player.boardCoins[j];
-            if (isCoin(coin) && !coin.isTriggerTrading) {
+            if (IsCoin(coin) && !coin.isTriggerTrading) {
                 coinsValue++;
             }
         }

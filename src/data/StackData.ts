@@ -1,5 +1,5 @@
 import { ConfigNames, DrawNames, Stages, SuitNames } from "../typescript/enums";
-import { IStack, SuitTypes } from "../typescript/interfaces";
+import type { IStack, SuitTypes } from "../typescript/interfaces";
 
 export const StackData = {
     addCoinToPouch: (number: number): IStack => ({

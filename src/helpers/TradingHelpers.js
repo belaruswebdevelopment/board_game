@@ -1,7 +1,8 @@
 import { UpgradeCoinAction } from "../actions/AutoActions";
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript/enums";
+import { BuffNames, LogTypes } from "../typescript/enums";
+import { DeleteBuffFromPlayer } from "./ActionHelpers";
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
@@ -19,7 +20,7 @@ export const ActivateTrading = (G, ctx) => {
         const tradingCoins = [];
         for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
             const coin = player.boardCoins[i];
-            if (isCoin(coin)) {
+            if (IsCoin(coin)) {
                 tradingCoins.push(coin);
             }
         }
@@ -60,6 +61,7 @@ const Trading = (G, ctx, tradingCoins) => {
         value = coinsMaxValue;
         upgradingCoinId = G.tavernsNum + coinMinIndex;
         upgradingCoin = tradingCoins[coinMinIndex];
+        DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
     }
     else {
         value = coinsMinValue;

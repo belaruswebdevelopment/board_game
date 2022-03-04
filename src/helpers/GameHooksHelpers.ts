@@ -1,8 +1,8 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { IsMercenaryCampCard } from "../Camp";
 import { AddDataToLog } from "../Logging";
 import { HeroNames, LogTypes, Phases } from "../typescript/enums";
-import { CampDeckCardTypes, IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
+import type { CampDeckCardTypes, IBuffs, IMyGameState, INext, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 
 /**

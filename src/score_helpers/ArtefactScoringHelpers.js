@@ -1,10 +1,10 @@
 import { CheckIsMercenaryCampCardInPlayerCards } from "../Card";
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { BuffNames } from "../typescript/enums";
 import { TotalRank } from "./ScoreHelpers";
 export const DraupnirScoring = (player) => {
     if (player !== undefined) {
-        return player.boardCoins.filter((coin) => isCoin(coin) && coin.value >= 15).length * 6;
+        return player.boardCoins.filter((coin) => IsCoin(coin) && coin.value >= 15).length * 6;
     }
     throw new Error(`Function param 'player' is undefined.`);
 };

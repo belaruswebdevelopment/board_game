@@ -1,6 +1,6 @@
-import { BoardProps } from "boardgame.io/react";
+import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { LogTypes } from "../typescript/enums";
-import { IMyGameState } from "../typescript/interfaces";
+import type { IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка лог панели.</h3>

@@ -1,7 +1,7 @@
-import { Ctx } from "boardgame.io";
-import { isCoin } from "../Coin";
+import type { Ctx } from "boardgame.io";
+import { IsCoin } from "../Coin";
 import { CheckPlayersBasicOrder } from "../Player";
-import { IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoinsUline'.</h3>
@@ -19,7 +19,7 @@ export const CheckEndPlaceCoinsUlinePhase = (G: IMyGameState): boolean | void =>
             G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
                 Boolean(player.buffs.find((buff: IBuffs): boolean => buff.everyTurn !== undefined)));
         if (ulinePlayerIndex !== - 1) {
-            return isCoin(G.publicPlayers[ulinePlayerIndex].boardCoins[G.currentTavern + 1]);
+            return IsCoin(G.publicPlayers[ulinePlayerIndex].boardCoins[G.currentTavern + 1]);
         }
     }
 };

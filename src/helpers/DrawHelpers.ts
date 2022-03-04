@@ -1,4 +1,4 @@
-import { IDrawBoardOptions } from "../typescript/interfaces";
+import type { IDrawBoardOptions } from "../typescript/interfaces";
 
 /**
  * h3>Отрисовка сегмента игрового поля по указанным данным.</h3>

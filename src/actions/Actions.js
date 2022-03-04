@@ -28,10 +28,10 @@ export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, suit, cardId) => {
     if (!IsHeroCard(discardedCard)) {
         G.discardCardsDeck.push(discardedCard);
         DeleteBuffFromPlayer(G, ctx, BuffNames.DiscardCardEndGame);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил карту ${discardedCard.name} в колоду сброса.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил карту '${discardedCard.name}' в колоду сброса.`);
     }
     else {
-        throw new Error(`Сброшенная карта не может быть с типом 'герой'.`);
+        throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
     }
 };
 /**
@@ -67,10 +67,10 @@ export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
     const pickedCard = player.pickedCard;
     if (IsMercenaryCampCard(pickedCard)) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeEnlistmentMercenaries()]);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы ${ctx.phase} выбрал наёмника '${pickedCard.name}'.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы '${ctx.phase}' выбрал наёмника '${pickedCard.name}'.`);
     }
     else {
-        throw new Error(`Выбранная карта должна быть с типом 'наёмник'.`);
+        throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
     }
 };
 /**
@@ -102,7 +102,7 @@ export const GetMjollnirProfitAction = (G, ctx, suit) => {
  * @param ctx
  */
 export const PassEnlistmentMercenariesAction = (G, ctx) => {
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} пасанул во время фазы ${ctx.phase}.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} пасанул во время фазы '${ctx.phase}'.`);
 };
 /**
  * <h3>Действия, связанные с взятием карт из колоды сброса.</h3>
@@ -134,7 +134,7 @@ export const PickDiscardCard = (G, ctx, cardId) => {
     if (isAdded && !IsActionCard(pickedCard)) {
         CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} взял карту ${pickedCard.name} из колоды сброса.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} взял карту '${pickedCard.name}' из колоды сброса.`);
 };
 /**
  * <h3>Игрок выбирает фракцию для вербовки указанного наёмника.</h3>
@@ -163,7 +163,7 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
                     path: pickedCard.path,
                     game: GameNames.Thingvellir,
                 });
-                AddCardToPlayer(G, ctx, mercenaryCard);
+                const isAdded = AddCardToPlayer(G, ctx, mercenaryCard);
                 AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} во время фазы 'Enlistment Mercenaries' завербовал наёмника '${mercenaryCard.name}'.`);
                 const cardIndex = player.campCards.findIndex((card) => card.name === pickedCard.name);
                 if (cardIndex !== -1) {
@@ -175,7 +175,9 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
                 else {
                     throw new Error(`У игрока в 'campCards' отсутствует выбранная карта.`);
                 }
-                CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
+                if (isAdded) {
+                    CheckAndMoveThrudOrPickHeroAction(G, ctx, mercenaryCard);
+                }
             }
             else {
                 throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
@@ -186,7 +188,7 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
         }
     }
     else {
-        throw new Error(`Выбранная карта должна быть с типом 'наёмник'.`);
+        throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
     }
 };
 //# sourceMappingURL=Actions.js.map

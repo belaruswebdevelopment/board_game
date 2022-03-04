@@ -1,12 +1,12 @@
-import { BoardProps } from "boardgame.io/react";
+import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
 import { CheckIsMercenaryCampCardInPlayerCards, IsActionCard } from "../Card";
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { IsHeroCard } from "../Hero";
 import { MoveNames } from "../typescript/enums";
-import { AllCardTypes, ArgsTypes, CoinType, IBackground, IMoveFunctionTypes, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
+import type { AllCardTypes, ArgsTypes, CoinType, IBackground, IMoveFunctionTypes, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
 
 
 /**
@@ -220,7 +220,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         tdClasses += ` cursor-pointer`;
     }
     if (type === `market`) {
-        if (isCoin(coin)) {
+        if (IsCoin(coin)) {
             styles = Styles.Coin(coin.value, false);
             spanClasses = `bg-market-coin`;
             if (coinClasses !== null && coinClasses !== undefined) {
@@ -261,7 +261,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     }
     playerCells.push(
         <td className={tdClasses} onClick={() => action?.(...args)}
-            key={`${player?.nickname ? `player ${player.nickname} ` : ``}coin ${id}${isCoin(coin) ? ` ${coin.value}` : ` empty`}`}>
+            key={`${player?.nickname ? `player ${player.nickname} ` : ``}coin ${id}${IsCoin(coin) ? ` ${coin.value}` : ` empty`}`}>
             <span style={styles} className={spanClasses}>
                 {span}
             </span>

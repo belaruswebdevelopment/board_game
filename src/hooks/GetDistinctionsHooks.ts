@@ -1,9 +1,9 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { CheckDistinction } from "../Distinction";
 import { AddGetDistinctionsActionToStack } from "../helpers/ActionHelpers";
 import { RefillCamp } from "../helpers/CampHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { DistinctionTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { DistinctionTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'getDistinctions'.</h3>

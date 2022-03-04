@@ -1,6 +1,6 @@
-import { Ctx } from "boardgame.io";
-import { isCoin } from "../Coin";
-import { CoinType, ICoin, IMyGameState, INumberValues, IPriority, IPublicPlayer, IResolveBoardCoins } from "../typescript/interfaces";
+import type { Ctx } from "boardgame.io";
+import { IsCoin } from "../Coin";
+import type { CoinType, ICoin, IMyGameState, INumberValues, IPriority, IPublicPlayer, IResolveBoardCoins } from "../typescript/interfaces";
 
 /**
  * <h3>Находит максимальную монету игрока.</h3>
@@ -15,9 +15,9 @@ import { CoinType, ICoin, IMyGameState, INumberValues, IPriority, IPublicPlayer,
  */
 export const GetMaxCoinValue = (player: IPublicPlayer): number =>
 (Math.max(...player.boardCoins.filter((coin: CoinType): boolean =>
-    isCoin(coin)).map((coin: CoinType): number => (coin as ICoin).value),
+    IsCoin(coin)).map((coin: CoinType): number => (coin as ICoin).value),
     ...player.handCoins.filter((coin: CoinType): boolean =>
-        isCoin(coin)).map((coin: CoinType): number => (coin as ICoin).value)));
+        IsCoin(coin)).map((coin: CoinType): number => (coin as ICoin).value)));
 
 /**
  * <h3>Определяет по расположению монет игроками порядок ходов и порядок обмена кристаллов приоритета.</h3>
@@ -36,7 +36,7 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
         exchangeOrder: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const coin: CoinType = G.publicPlayers[i].boardCoins[G.currentTavern];
-        if (isCoin(coin)) {
+        if (IsCoin(coin)) {
             coinValues[i] = coin.value;
             playersOrderNumbers.push(i);
             exchangeOrder.push(i);
@@ -44,7 +44,7 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
         for (let j: number = playersOrderNumbers.length - 1; j > 0; j--) {
             const coin: CoinType = G.publicPlayers[playersOrderNumbers[j]].boardCoins[G.currentTavern],
                 prevCoin: CoinType = G.publicPlayers[playersOrderNumbers[j - 1]].boardCoins[G.currentTavern];
-            if (isCoin(coin) && isCoin(prevCoin)) {
+            if (IsCoin(coin) && IsCoin(prevCoin)) {
                 if (coin.value > prevCoin.value) {
                     [playersOrderNumbers[j], playersOrderNumbers[j - 1]] = [playersOrderNumbers[j - 1], playersOrderNumbers[j]];
                 } else if (coin.value === prevCoin.value) {

@@ -1,8 +1,8 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../data/SuitData";
 import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { IMyGameState, IPublicPlayer, IValidatorsConfig, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
+import type { IMyGameState, IPublicPlayer, IValidatorsConfig, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью сброса карт с планшета игрока.</h3>

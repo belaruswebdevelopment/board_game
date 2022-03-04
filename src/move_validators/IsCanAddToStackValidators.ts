@@ -1,4 +1,4 @@
-import { CardsHasStackValidators, IMyGameState, IValidatorsConfig } from "../typescript/interfaces";
+import type { CardsHasStackValidators, IMyGameState, IValidatorsConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с возможностью взятия карт из кэмпа.</h3>

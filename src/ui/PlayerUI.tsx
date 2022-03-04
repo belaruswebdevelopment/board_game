@@ -1,11 +1,11 @@
-import { BoardProps } from "boardgame.io/react";
+import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { HeroNames, MoveNames, Phases, Stages } from "../typescript/enums";
-import { CoinType, IMyGameState, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
+import type { CoinType, IMyGameState, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 
 /**

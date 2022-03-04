@@ -1,5 +1,5 @@
 import { RusCardTypes } from "./typescript/enums";
-import { ICreateHero, IHeroCard, IHeroConfig, IHeroData, IHeroTypes } from "./typescript/interfaces";
+import type { ICreateHero, IHeroCard, IHeroConfig, IHeroData, IHeroTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>

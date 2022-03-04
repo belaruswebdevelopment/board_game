@@ -1,7 +1,7 @@
 import { AddPickHeroAction, DiscardTradingCoinAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/AutoActions";
 import { DraupnirScoring, HrafnsmerkiScoring, MjollnirScoring, SvalinnScoring } from "../score_helpers/ArtefactScoringHelpers";
 import { ArtefactNames, BuffNames, GameNames, SuitNames } from "../typescript/enums";
-import { IArtefact, IArtefactConfig, IMercenary, OptionalSuitPropertyTypes } from "../typescript/interfaces";
+import type { IArtefact, IArtefactConfig, IMercenary, OptionalSuitPropertyTypes } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
 /**

@@ -1,10 +1,10 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { ReturnCoinsToPlayerHands } from "../Coin";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
-import { CoinType, IBuffs, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
+import type { CoinType, IBuffs, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>

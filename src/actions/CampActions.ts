@@ -1,11 +1,11 @@
-import { Ctx } from "boardgame.io";
-import { isCoin } from "../Coin";
+import type { Ctx } from "boardgame.io";
+import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript/enums";
-import { CoinType, IConfig, IMyGameState, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
+import { LogTypes, RusCardTypes } from "../typescript/enums";
+import type { CoinType, IConfig, IMyGameState, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
 
 /**
@@ -22,7 +22,7 @@ import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions"
 export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number): void | never => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
         tempId: number = player.boardCoins.findIndex((coin: CoinType, index: number): boolean =>
-            index >= G.tavernsNum && !isCoin(coin));
+            index >= G.tavernsNum && !IsCoin(coin));
     if (tempId !== -1) {
         player.boardCoins[tempId] = player.handCoins[coinId];
         player.handCoins[coinId] = null;
@@ -55,10 +55,10 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
             discardedCard: PlayerCardsType = player.cards[suit].splice(cardId, 1)[0];
         if (!IsHeroCard(discardedCard)) {
             G.discardCardsDeck.push(discardedCard);
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил карту ${discardedCard.name} в колоду сброса.`);
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил карту '${discardedCard.name}' в колоду сброса.`);
             player.stack = [];
         } else {
-            throw new Error(`Сброшенная карта не может быть с типом 'герой'.`);
+            throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
         }
     } else {
         // TODO Need it!?

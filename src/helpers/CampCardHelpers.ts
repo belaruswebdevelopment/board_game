@@ -1,10 +1,10 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, LogTypes, Phases } from "../typescript/enums";
-import { CampDeckCardTypes, IArtefactCampCard, IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CampDeckCardTypes, IArtefactCampCard, IBuffs, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer, DeleteBuffFromPlayer } from "./ActionHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
@@ -81,9 +81,10 @@ export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtef
     if (card.suit !== null) {
         const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
         player.cards[card.suit].push(card);
+        player.pickedCard = card;
         AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} выбрал карту кэмпа '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
         return true;
     } else {
-        throw new Error(`Не удалось добавить артефакт ${card.name} на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
+        throw new Error(`Не удалось добавить артефакт '${card.name}' на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
     }
 };

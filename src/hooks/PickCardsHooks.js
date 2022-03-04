@@ -1,5 +1,5 @@
 import { IsMercenaryCampCard } from "../Camp";
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddPickCardActionToStack, DrawCurrentProfit, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
@@ -29,7 +29,7 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
             if (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) {
                 const tradingCoinPlacesLength = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
                 if (tradingCoinPlacesLength > 0) {
-                    const handCoinsLength = player.handCoins.filter((coin) => isCoin(coin)).length;
+                    const handCoinsLength = player.handCoins.filter((coin) => IsCoin(coin)).length;
                     player.actionsNum =
                         G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
                     AddActionsToStackAfterCurrent(G, ctx, [StackData.placeTradingCoinsUline(player.actionsNum)]);

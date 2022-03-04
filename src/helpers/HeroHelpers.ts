@@ -1,9 +1,9 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { AddPickHeroAction } from "../actions/AutoActions";
 import { StackData } from "../data/StackData";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { HeroNames } from "../typescript/enums";
-import { IBuffs, IMyGameState, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
+import type { IBuffs, IMyGameState, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**

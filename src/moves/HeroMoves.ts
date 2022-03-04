@@ -1,4 +1,4 @@
-import { Ctx, Move } from "boardgame.io";
+import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardCardsFromPlayerBoardAction, PlaceOlwinCardsAction, PlaceThrudAction, PlaceYludAction } from "../actions/HeroActions";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
@@ -6,7 +6,7 @@ import { AddHeroToCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
-import { IMyGameState, SuitTypes } from "../typescript/interfaces";
+import type { IMyGameState, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор героя.</h3>

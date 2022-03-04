@@ -1,6 +1,6 @@
-import { BoardProps } from "boardgame.io/react";
+import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import React from "react";
-import { IMyGameState } from "./typescript/interfaces";
+import type { IMyGameState } from "./typescript/interfaces";
 import { DrawDebugData } from "./ui/DebugUI";
 import { DrawCamp, DrawCurrentPlayerTurn, DrawDistinctions, DrawHeroes, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
 import { DrawLogData } from "./ui/LogUI";

@@ -1,6 +1,6 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { IsCardNotActionAndNotNull } from "../Card";
-import { ICardCharacteristics, IHeuristic, IMyGameState, TavernCardTypes } from "../typescript/interfaces";
+import type { ICardCharacteristics, IHeuristic, IMyGameState, TavernCardTypes } from "../typescript/interfaces";
 import { CompareCards, EvaluateCard } from "./BotCardLogic";
 
 /**

@@ -1,9 +1,9 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "./data/SuitData";
 import { AddDataToLog } from "./Logging";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { LogTypes, SuitNames } from "./typescript/enums";
-import { DeckCardTypes, DistinctionTypes, IMyGameState, SuitTypes } from "./typescript/interfaces";
+import type { DeckCardTypes, DistinctionTypes, IMyGameState, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Высчитывает наличие игрока с преимуществом по шевронам конкретной фракции.</h3>

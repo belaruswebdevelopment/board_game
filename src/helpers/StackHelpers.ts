@@ -1,7 +1,7 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
 import { ValidatorNames } from "../typescript/enums";
-import { CardsHasStack, IMyGameState, IStack, IValidatorsConfig } from "../typescript/interfaces";
+import type { CardsHasStack, IMyGameState, IStack, IValidatorsConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет действия в стэк действий конкретного игрока после текущего.</h3>

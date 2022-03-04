@@ -1,8 +1,8 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { GameNames } from "../typescript/enums";
-import { IAverageSuitCardData, ICard, IMyGameState, IPublicPlayer, ISuit, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { IAverageSuitCardData, ICard, IMyGameState, IPublicPlayer, ISuit, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**

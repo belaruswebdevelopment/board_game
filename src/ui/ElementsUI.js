@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
 import { CheckIsMercenaryCampCardInPlayerCards, IsActionCard } from "../Card";
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { IsHeroCard } from "../Hero";
@@ -196,7 +196,7 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
         tdClasses += ` cursor-pointer`;
     }
     if (type === `market`) {
-        if (isCoin(coin)) {
+        if (IsCoin(coin)) {
             styles = Styles.Coin(coin.value, false);
             spanClasses = `bg-market-coin`;
             if (coinClasses !== null && coinClasses !== undefined) {
@@ -234,7 +234,7 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
             }
         }
     }
-    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, className: spanClasses, children: span }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}coin ${id}${isCoin(coin) ? ` ${coin.value}` : ` empty`}`));
+    playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, className: spanClasses, children: span }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}coin ${id}${IsCoin(coin) ? ` ${coin.value}` : ` empty`}`));
 };
 export const DrawSuit = (data, boardCells, suit, key, value, player, moveName) => {
     let action;

@@ -33,7 +33,7 @@ export const DiscardCardFromTavern = (G, discardCardIndex) => {
     if (discardedCard !== null) {
         G.discardCardsDeck.push(discardedCard);
         G.taverns[G.currentTavern].splice(discardCardIndex, 1, null);
-        AddDataToLog(G, LogTypes.GAME, `Карта ${discardedCard.name} из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
+        AddDataToLog(G, LogTypes.GAME, `Карта '${discardedCard.name}' из таверны ${tavernsConfig[G.currentTavern].name} убрана в сброс.`);
         return true;
     }
     throw new Error(`Не удалось сбросить лишнюю карту из таверны.`);

@@ -1,14 +1,14 @@
-import { Ctx } from "boardgame.io";
-import { BoardProps } from "boardgame.io/react";
+import type { Ctx } from "boardgame.io";
+import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { IsMercenaryCampCard } from "../Camp";
 import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { ConfigNames, DrawNames, MoveNames } from "../typescript/enums";
-import { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, DiscardCardTypes, IBuffs, IConfig, IMyGameState, IPublicPlayer, IVariant, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import { ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
+import type { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, DiscardCardTypes, IBuffs, IConfig, IMyGameState, IPublicPlayer, IVariant, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
 // TODO Add functions dock blocks and Errors!
@@ -343,7 +343,7 @@ export const PlaceEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
                     throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants'.`);
                 }
             } else {
-                throw new Error(`Выбранная карта должна быть с типом 'наёмник'.`);
+                throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
             }
         }
     }
@@ -367,7 +367,7 @@ export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
 export const UpgradeCoinProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
     const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        handCoins: CoinType[] = player.handCoins.filter((coin: CoinType): boolean => isCoin(coin));
+        handCoins: CoinType[] = player.handCoins.filter((coin: CoinType): boolean => IsCoin(coin));
     let handCoinIndex = -1;
     for (let j = 0; j < player.boardCoins.length; j++) {
         const boardCoin: CoinType = player.boardCoins[j];
@@ -376,11 +376,11 @@ export const UpgradeCoinProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
             handCoinIndex++;
             const handCoinNotNull: CoinType = handCoins[handCoinIndex],
                 handCoinId: number = player.handCoins.findIndex((coin: CoinType): boolean =>
-                    isCoin(handCoinNotNull) && coin?.value === handCoinNotNull.value
+                    IsCoin(handCoinNotNull) && coin?.value === handCoinNotNull.value
                     && coin.isInitial === handCoinNotNull.isInitial);
             if (handCoinId !== -1) {
                 const handCoin: CoinType = player.handCoins[handCoinId];
-                if (isCoin(handCoin) && !handCoin.isTriggerTrading) {
+                if (IsCoin(handCoin) && !handCoin.isTriggerTrading) {
                     DrawCoin(data, boardCells, `coin`, handCoin, j, player,
                         `border-2`, null, MoveNames.ClickCoinToUpgradeMove,
                         j, `hand`, handCoin.isInitial);
@@ -388,7 +388,7 @@ export const UpgradeCoinProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
             } else {
                 // TODO Is it need Error!?
             }
-        } else if (isCoin(boardCoin) && !boardCoin.isTriggerTrading) {
+        } else if (IsCoin(boardCoin) && !boardCoin.isTriggerTrading) {
             DrawCoin(data, boardCells, `coin`, boardCoin, j, player,
                 `border-2`, null, MoveNames.ClickCoinToUpgradeMove,
                 j, `board`, boardCoin.isInitial);
@@ -403,7 +403,7 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G: IMyGameState, ctx: Ctx, d
     if (config !== undefined) {
         for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
             const coin: CoinType = player.boardCoins[j];
-            if (isCoin(coin)) {
+            if (IsCoin(coin)) {
                 if (!coin.isTriggerTrading && config.coinId !== j) {
                     DrawCoin(data, boardCells, `coin`, coin, j, player, `border-2`,
                         null, MoveNames.UpgradeCoinVidofnirVedrfolnirMove, j,

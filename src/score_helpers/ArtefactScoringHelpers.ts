@@ -1,13 +1,13 @@
 import { CheckIsMercenaryCampCardInPlayerCards } from "../Card";
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { BuffNames } from "../typescript/enums";
-import { CoinType, IBuffs, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
+import type { CoinType, IBuffs, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
 export const DraupnirScoring = (player?: IPublicPlayer): number | never => {
     if (player !== undefined) {
         return player.boardCoins.filter((coin: CoinType): boolean =>
-            isCoin(coin) && coin.value >= 15).length * 6;
+            IsCoin(coin) && coin.value >= 15).length * 6;
     }
     throw new Error(`Function param 'player' is undefined.`);
 };

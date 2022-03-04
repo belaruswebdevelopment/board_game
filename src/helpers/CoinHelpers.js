@@ -1,4 +1,4 @@
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 /**
  * <h3>Находит максимальную монету игрока.</h3>
  * <p>Применения:</p>
@@ -10,7 +10,7 @@ import { isCoin } from "../Coin";
  * @param player Игрок.
  * @returns Максимальная монета игрока.
  */
-export const GetMaxCoinValue = (player) => (Math.max(...player.boardCoins.filter((coin) => isCoin(coin)).map((coin) => coin.value), ...player.handCoins.filter((coin) => isCoin(coin)).map((coin) => coin.value)));
+export const GetMaxCoinValue = (player) => (Math.max(...player.boardCoins.filter((coin) => IsCoin(coin)).map((coin) => coin.value), ...player.handCoins.filter((coin) => IsCoin(coin)).map((coin) => coin.value)));
 /**
  * <h3>Определяет по расположению монет игроками порядок ходов и порядок обмена кристаллов приоритета.</h3>
  * <p>Применения:</p>
@@ -26,14 +26,14 @@ export const ResolveBoardCoins = (G, ctx) => {
     const playersOrderNumbers = [], coinValues = [], exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const coin = G.publicPlayers[i].boardCoins[G.currentTavern];
-        if (isCoin(coin)) {
+        if (IsCoin(coin)) {
             coinValues[i] = coin.value;
             playersOrderNumbers.push(i);
             exchangeOrder.push(i);
         }
         for (let j = playersOrderNumbers.length - 1; j > 0; j--) {
             const coin = G.publicPlayers[playersOrderNumbers[j]].boardCoins[G.currentTavern], prevCoin = G.publicPlayers[playersOrderNumbers[j - 1]].boardCoins[G.currentTavern];
-            if (isCoin(coin) && isCoin(prevCoin)) {
+            if (IsCoin(coin) && IsCoin(prevCoin)) {
                 if (coin.value > prevCoin.value) {
                     [playersOrderNumbers[j], playersOrderNumbers[j - 1]] = [playersOrderNumbers[j - 1], playersOrderNumbers[j]];
                 }

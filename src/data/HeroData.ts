@@ -1,7 +1,7 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeCoinAction } from "../actions/AutoActions";
 import { AstridScoring, IdunnScoring } from "../score_helpers/HeroScoringHelpers";
 import { BuffNames, GameNames, HeroNames, SuitNames } from "../typescript/enums";
-import { IHeroConfig, IHeroData } from "../typescript/interfaces";
+import type { IHeroConfig, IHeroData } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
 /**

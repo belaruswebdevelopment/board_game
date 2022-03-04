@@ -1,10 +1,10 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { CompareCards } from "./bot_logic/BotCardLogic";
 import { IsCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { ConfigNames, Phases, Stages } from "./typescript/enums";
-import { IBuffs, IConfig, IMoves, IMoveValidator, IMyGameState, MoveArgsTypes, MoveByTypes, MoveValidatorGetRangeTypes, StageTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import type { IBuffs, IConfig, IMoves, IMoveValidator, IMyGameState, MoveArgsTypes, MoveByTypes, MoveValidatorGetRangeTypes, StageTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>

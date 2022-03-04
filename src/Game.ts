@@ -1,4 +1,4 @@
-import { Ctx, Game } from "boardgame.io";
+import type { Ctx, Game } from "boardgame.io";
 import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
@@ -17,7 +17,7 @@ import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickHandCoinMove, ClickHan
 import { ClickHeroCardMove, DiscardCardMove, PlaceOlwinCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
 import { Phases } from "./typescript/enums";
-import { IMyGameState, INext, IOrder } from "./typescript/interfaces";
+import type { IMyGameState, INext, IOrder } from "./typescript/interfaces";
 
 // TODO Add logging
 // TODO Add dock block

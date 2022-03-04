@@ -1,4 +1,4 @@
-import { BoardProps } from "boardgame.io/react";
+import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { IsCardNotActionAndNotNull } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
@@ -6,7 +6,7 @@ import { suitsConfig } from "../data/SuitData";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, MoveNames } from "../typescript/enums";
-import { CampCardTypes, DeckCardTypes, IConfig, IDrawBoardOptions, IMyGameState, INumberValues, IPublicPlayer, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CampCardTypes, DeckCardTypes, IConfig, IDrawBoardOptions, IMyGameState, INumberValues, IPublicPlayer, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
 

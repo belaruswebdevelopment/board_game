@@ -1,4 +1,4 @@
-import { Ctx, Move } from "boardgame.io";
+import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, DiscardSuitCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsArtefactCard } from "../Camp";
@@ -7,7 +7,7 @@ import { AddCampCardToCards } from "../helpers/CampCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
-import { CampCardTypes, IMyGameState, SuitTypes } from "../typescript/interfaces";
+import type { CampCardTypes, IMyGameState, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>

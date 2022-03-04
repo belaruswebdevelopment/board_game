@@ -78,11 +78,12 @@ export const AddCampCardToPlayerCards = (G, ctx, card) => {
     if (card.suit !== null) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         player.cards[card.suit].push(card);
+        player.pickedCard = card;
         AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} выбрал карту кэмпа '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
         return true;
     }
     else {
-        throw new Error(`Не удалось добавить артефакт ${card.name} на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
+        throw new Error(`Не удалось добавить артефакт '${card.name}' на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
     }
 };
 //# sourceMappingURL=CampCardHelpers.js.map

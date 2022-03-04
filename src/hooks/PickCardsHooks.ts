@@ -1,6 +1,6 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { IsMercenaryCampCard } from "../Camp";
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddPickCardActionToStack, DrawCurrentProfit, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
@@ -12,7 +12,7 @@ import { AddDataToLog } from "../Logging";
 import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, tavernsConfig } from "../Tavern";
 import { LogTypes, Phases, Stages } from "../typescript/enums";
-import { CampDeckCardTypes, CoinType, IBuffs, IMyGameState, INext, IPublicPlayer, IResolveBoardCoins } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CoinType, IBuffs, IMyGameState, INext, IPublicPlayer, IResolveBoardCoins } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость старта действий по выкладке монет при наличии героя Улина.</h3>
@@ -37,7 +37,7 @@ const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void =>
                         index >= G.tavernsNum && coin === null).length;
                 if (tradingCoinPlacesLength > 0) {
                     const handCoinsLength: number =
-                        player.handCoins.filter((coin: CoinType): boolean => isCoin(coin)).length;
+                        player.handCoins.filter((coin: CoinType): boolean => IsCoin(coin)).length;
                     player.actionsNum =
                         G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
                     AddActionsToStackAfterCurrent(G, ctx,

@@ -1,4 +1,4 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { LogTypes } from "./enums";
 
 export interface IDebugData {

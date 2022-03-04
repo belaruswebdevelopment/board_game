@@ -1,6 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { UpgradeCoinAction } from "../actions/AutoActions";
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { IsValidMove } from "../MoveValidator";
 import { Stages, SuitNames } from "../typescript/enums";
 /**
@@ -22,7 +22,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
         return INVALID_MOVE;
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (isCoin(player.boardCoins[coinId])) {
+    if (IsCoin(player.boardCoins[coinId])) {
         const tempId = player.handCoins.indexOf(null);
         player.handCoins[tempId] = player.boardCoins[coinId];
         player.boardCoins[coinId] = null;

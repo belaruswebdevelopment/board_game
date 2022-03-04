@@ -1,4 +1,4 @@
-import { IInitialTradingCoinConfig, IMarketCoinConfig, INumberValues } from "../typescript/interfaces";
+import type { IInitialTradingCoinConfig, IMarketCoinConfig, INumberValues } from "../typescript/interfaces";
 
 /**
  * <h3>Проверка, является ли объект конфигом базовых монет или конфигом монет рынка.</h3>

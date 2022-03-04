@@ -1,5 +1,5 @@
-import { BoardProps } from "boardgame.io/react";
-import { IDebugData, IMyGameState } from "../typescript/interfaces";
+import type { BoardProps } from "boardgame.io/dist/types/packages/react";
+import type { IDebugData, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>

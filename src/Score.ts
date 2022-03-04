@@ -1,11 +1,11 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { artefactsConfig } from "./data/CampData";
 import { heroesConfig } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { AddDataToLog } from "./Logging";
 import { LogTypes, SuitNames } from "./typescript/enums";
-import { IArtefact, IBuffs, IHeroData, IMyGameState, IPublicPlayer, SuitTypes } from "./typescript/interfaces";
+import type { IArtefact, IBuffs, IHeroData, IMyGameState, IPublicPlayer, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>

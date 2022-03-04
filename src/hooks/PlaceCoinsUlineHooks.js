@@ -1,4 +1,4 @@
-import { isCoin } from "../Coin";
+import { IsCoin } from "../Coin";
 import { CheckPlayersBasicOrder } from "../Player";
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoinsUline'.</h3>
@@ -14,7 +14,7 @@ export const CheckEndPlaceCoinsUlinePhase = (G) => {
     if (G.publicPlayersOrder.length) {
         const ulinePlayerIndex = G.publicPlayers.findIndex((player) => Boolean(player.buffs.find((buff) => buff.everyTurn !== undefined)));
         if (ulinePlayerIndex !== -1) {
-            return isCoin(G.publicPlayers[ulinePlayerIndex].boardCoins[G.currentTavern + 1]);
+            return IsCoin(G.publicPlayers[ulinePlayerIndex].boardCoins[G.currentTavern + 1]);
         }
     }
 };

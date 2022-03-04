@@ -1,9 +1,9 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames, Phases } from "../typescript/enums";
-import { IBuffs, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
+import type { IBuffs, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
 export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void | never => {
     const brisingamensPlayerIndex: number =

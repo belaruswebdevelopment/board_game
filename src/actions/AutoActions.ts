@@ -1,10 +1,10 @@
-import { Ctx, StageArg } from "boardgame.io";
-import { isCoin, ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
+import type { Ctx, StageArg } from "boardgame.io";
+import { IsCoin, ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
-import { LogTypes, Stages } from "../typescript/enums";
-import { ArgsTypes, CoinType, IBuffs, IConfig, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
+import { BuffNames, LogTypes, Stages } from "../typescript/enums";
+import type { ArgsTypes, CoinType, IBuffs, IConfig, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
@@ -42,7 +42,7 @@ export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void | neve
         if (tradingCoinIndex !== -1) {
             player.handCoins.splice(tradingCoinIndex, 1, null);
         } else {
-            throw new Error(`У игрока в 'handCoins' отсутствует обменная монета при наличии бафа 'everyTurn'.`);
+            throw new Error(`У игрока в 'handCoins' отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
         }
     } else if (tradingCoinIndex !== -1) {
         player.boardCoins.splice(tradingCoinIndex, 1, null);
@@ -126,7 +126,7 @@ export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void |
             stack: IStack[] = [];
         for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
             const coin: CoinType = player.boardCoins[j];
-            if (isCoin(coin) && !coin.isTriggerTrading) {
+            if (IsCoin(coin) && !coin.isTriggerTrading) {
                 coinsValue++;
             }
         }

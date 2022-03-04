@@ -1,8 +1,8 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
-import { BuffTypes, IBuff, IBuffs, IConfig, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { BuffTypes, IBuff, IBuffs, IConfig, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**

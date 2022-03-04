@@ -1,9 +1,9 @@
-import { Ctx } from "boardgame.io";
+import type { Ctx } from "boardgame.io";
 import { IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
-import { DeckCardTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { DeckCardTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет взятую карту в массив карт игрока.</h3>
