@@ -26,28 +26,27 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
     }
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
-        if (IsCoin(player.boardCoins[coinId])) {
-            const tempId: number = player.handCoins.indexOf(null),
-                boardCoin: CoinType | undefined = player.boardCoins[coinId];
-            if (boardCoin !== undefined) {
+        const boardCoin: CoinType | undefined = player.boardCoins[coinId];
+        if (boardCoin !== undefined) {
+            if (IsCoin(player.boardCoins[coinId])) {
+                const tempId: number = player.handCoins.indexOf(null);
                 player.handCoins[tempId] = boardCoin;
                 player.boardCoins[coinId] = null;
+            } else if (player.selectedCoin !== null) {
+                const tempId: number = player.selectedCoin,
+                    handCoin: CoinType | undefined = player.handCoins[tempId];
+                if (handCoin !== undefined) {
+                    player.boardCoins[coinId] = handCoin;
+                    player.handCoins[tempId] = null;
+                    player.selectedCoin = null;
+                } else {
+                    throw new Error(`В массиве монет игрока в руке отсутствует нужная монета ${tempId}.`);
+                }
             } else {
-                throw new Error(`В массиве монет игрока на поле отсутствует нужная монета ${coinId}.`);
-            }
-        } else if (player.selectedCoin !== null) {
-            const tempId: number = player.selectedCoin,
-                handCoin: CoinType | undefined = player.handCoins[tempId];
-            if (handCoin !== undefined) {
-                player.boardCoins[coinId] = handCoin;
-                player.handCoins[tempId] = null;
-                player.selectedCoin = null;
-            } else {
-                throw new Error(`В массиве монет игрока в руке отсутствует нужная монета ${tempId
-                    }.`);
+                throw new Error(`Неразрешённый мув - это должно проверяться в MoveValidator.`);
             }
         } else {
-            // TODO Logging error because coin === null && player.selectedCoin === null must be checked by Validator
+            throw new Error(`В массиве монет игрока на поле отсутствует нужная монета ${coinId}.`);
         }
     } else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);

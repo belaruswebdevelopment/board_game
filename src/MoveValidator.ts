@@ -251,9 +251,13 @@ export const moveValidators: IMoveValidators = {
                 if (player !== undefined) {
                     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
                     for (let j = 0; j < player.boardCoins.length; j++) {
-                        if (player.selectedCoin !== null || (player.selectedCoin === null
-                            && IsCoin(player.boardCoins[j]))) {
-                            moveMainArgs.push(j);
+                        const boardCoin: CoinType | undefined = player.boardCoins[j];
+                        if (boardCoin !== undefined) {
+                            if (IsCoin(boardCoin) || player.selectedCoin !== null) {
+                                moveMainArgs.push(j);
+                            }
+                        } else {
+                            throw new Error(`В массиве монет игрока на столе отсутствует монета ${j}.`);
                         }
                     }
                     return moveMainArgs;

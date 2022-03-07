@@ -23,29 +23,30 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
-        if (IsCoin(player.boardCoins[coinId])) {
-            const tempId = player.handCoins.indexOf(null), boardCoin = player.boardCoins[coinId];
-            if (boardCoin !== undefined) {
+        const boardCoin = player.boardCoins[coinId];
+        if (boardCoin !== undefined) {
+            if (IsCoin(player.boardCoins[coinId])) {
+                const tempId = player.handCoins.indexOf(null);
                 player.handCoins[tempId] = boardCoin;
                 player.boardCoins[coinId] = null;
             }
-            else {
-                throw new Error(`В массиве монет игрока на поле отсутствует нужная монета ${coinId}.`);
+            else if (player.selectedCoin !== null) {
+                const tempId = player.selectedCoin, handCoin = player.handCoins[tempId];
+                if (handCoin !== undefined) {
+                    player.boardCoins[coinId] = handCoin;
+                    player.handCoins[tempId] = null;
+                    player.selectedCoin = null;
+                }
+                else {
+                    throw new Error(`В массиве монет игрока в руке отсутствует нужная монета ${tempId}.`);
+                }
             }
-        }
-        else if (player.selectedCoin !== null) {
-            const tempId = player.selectedCoin, handCoin = player.handCoins[tempId];
-            if (handCoin !== undefined) {
-                player.boardCoins[coinId] = handCoin;
-                player.handCoins[tempId] = null;
-                player.selectedCoin = null;
-            }
             else {
-                throw new Error(`В массиве монет игрока в руке отсутствует нужная монета ${tempId}.`);
+                throw new Error(`Неразрешённый мув - это должно проверяться в MoveValidator.`);
             }
         }
         else {
-            // TODO Logging error because coin === null && player.selectedCoin === null must be checked by Validator
+            throw new Error(`В массиве монет игрока на поле отсутствует нужная монета ${coinId}.`);
         }
     }
     else {
