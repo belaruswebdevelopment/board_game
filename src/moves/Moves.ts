@@ -9,7 +9,7 @@ import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages, SuitNames } from "../typescript/enums";
-import type { DeckCardTypes, IMyGameState, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { DeckCardTypes, IMyGameState, IPublicPlayer, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор карты из таверны.</h3>
@@ -28,19 +28,29 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const card: TavernCardTypes = G.taverns[G.currentTavern][cardId];
-    G.taverns[G.currentTavern].splice(cardId, 1, null);
-    if (card !== null) {
-        const isAdded: boolean = AddCardToPlayer(G, ctx, card);
-        if (!IsCardNotActionAndNotNull(card)) {
-            AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
-        } else {
-            if (isAdded) {
-                CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
+    const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
+    if (currentTavern !== undefined) {
+        const card: TavernCardTypes | undefined = currentTavern[cardId];
+        if (card !== undefined) {
+            // TODO Check it "?"
+            G.taverns[G.currentTavern]?.splice(cardId, 1, null);
+            if (card !== null) {
+                const isAdded: boolean = AddCardToPlayer(G, ctx, card);
+                if (!IsCardNotActionAndNotNull(card)) {
+                    AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
+                } else {
+                    if (isAdded) {
+                        CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
+                    }
+                }
+            } else {
+                throw new Error(`Не существует кликнутая карта.`);
             }
+        } else {
+            throw new Error(`Отсутствует карта ${cardId} текущей таверны.`);
         }
     } else {
-        throw new Error(`Не существует кликнутая карта.`);
+        throw new Error(`Отсутствует текущая таверна.`);
     }
 };
 
@@ -61,17 +71,31 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const isAdded: boolean = AddCardToPlayer(G, ctx, G.decks[1][cardId]),
-        pickedCard: DeckCardTypes = G.decks[1].splice(cardId, 1)[0];
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    G.decks[1] = ctx.random!.Shuffle(G.decks[1]);
-    if (IsCardNotActionAndNotNull(pickedCard)) {
-        if (isAdded) {
-            G.distinctions[SuitNames.EXPLORER] = undefined;
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
+    const deck1: DeckCardTypes[] | undefined = G.decks[1];
+    if (deck1 !== undefined) {
+        const card: DeckCardTypes | undefined = deck1[cardId];
+        if (card !== undefined) {
+            // TODO Check it "?"
+            const pickedCard: DeckCardTypes | undefined = G.decks[1]?.splice(cardId, 1)[0],
+                isAdded: boolean = AddCardToPlayer(G, ctx, card);
+            if (pickedCard !== undefined) {
+                G.decks[1] = ctx.random!.Shuffle(deck1);
+                if (IsCardNotActionAndNotNull(pickedCard)) {
+                    if (isAdded) {
+                        G.distinctions[SuitNames.EXPLORER] = undefined;
+                        CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
+                    }
+                } else {
+                    AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack, pickedCard);
+                }
+            } else {
+                throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 2.`);
+            }
+        } else {
+            throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 1.`);
         }
     } else {
-        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack, pickedCard);
+        throw new Error(`Отсутствует колода карт 2 эпохи.`);
     }
 };
 
@@ -93,7 +117,12 @@ export const ClickDistinctionCardMove: Move<IMyGameState> = (G: IMyGameState, ct
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    suitsConfig[suit].distinction.awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        suitsConfig[suit].distinction.awarding(G, ctx, player);
+    } else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
 };
 
 /**

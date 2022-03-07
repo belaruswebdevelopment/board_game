@@ -32,9 +32,14 @@ export const CheckAndResolveDistinctionsOrders = (G, ctx) => {
  */
 export const CheckEndGetDistinctionsPhase = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (G.publicPlayersOrder.length && !player.stack.length && !player.actionsNum
-        && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        return Object.values(G.distinctions).every((distinction) => distinction === undefined);
+    if (player !== undefined) {
+        if (G.publicPlayersOrder.length && !player.stack.length && !player.actionsNum
+            && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
+            return Object.values(G.distinctions).every((distinction) => distinction === undefined);
+        }
+    }
+    else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 /**
@@ -60,7 +65,8 @@ export const CheckNextGetDistinctionsTurn = (G, ctx) => {
  * @param G
  */
 export const EndGetDistinctionsPhaseActions = (G) => {
-    if (G.expansions.thingvellir.active) {
+    var _a;
+    if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
         RefillCamp(G);
     }
     G.publicPlayersOrder = [];

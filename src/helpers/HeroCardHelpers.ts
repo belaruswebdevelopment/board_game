@@ -19,9 +19,13 @@ import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
  */
 export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     if (hero.suit !== null) {
-        const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-        player.cards[hero.suit].push(hero);
-        AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
+        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            player.cards[hero.suit].push(hero);
+            AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
+        }
+    } else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 
@@ -37,14 +41,18 @@ export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroC
  * @param hero Герой.
  */
 export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void | never => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    player.pickedCard = hero;
-    if (hero.active) {
-        hero.active = false;
-        player.heroes.push(hero);
-        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал героя ${hero.name}.`);
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        player.pickedCard = hero;
+        if (hero.active) {
+            hero.active = false;
+            player.heroes.push(hero);
+            AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал героя ${hero.name}.`);
+        } else {
+            throw new Error(`Не удалось добавить героя ${hero.name} из-за того, что он был уже выбран каким-то игроком.`);
+        }
     } else {
-        throw new Error(`Не удалось добавить героя ${hero.name} из-за того, что он был уже выбран каким-то игроком.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 
@@ -57,7 +65,7 @@ export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IH
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param hero Карта героя.
  */
 export const AddHeroToCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     AddHeroCardToPlayerHeroCards(G, ctx, hero);

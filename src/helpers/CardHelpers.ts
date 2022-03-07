@@ -20,13 +20,17 @@ import type { DeckCardTypes, IMyGameState, IPublicPlayer } from "../typescript/i
  * @returns Добавлена ли карта на планшет игрока.
  */
 export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes): boolean => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    player.pickedCard = card;
-    if (IsCardNotActionAndNotNull(card)) {
-        player.cards[card.suit].push(card);
-        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
-        return true;
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        player.pickedCard = card;
+        if (IsCardNotActionAndNotNull(card)) {
+            player.cards[card.suit].push(card);
+            AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
+            return true;
+        }
+        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}'.`);
+        return false;
+    } else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}'.`);
-    return false;
 };

@@ -6,7 +6,7 @@ import { AddHeroToCards } from "../helpers/HeroCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
-import type { IMyGameState, SuitTypes } from "../typescript/interfaces";
+import type { IHeroCard, IMyGameState, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор героя.</h3>
@@ -25,9 +25,14 @@ export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    AddHeroToCards(G, ctx, G.heroes[heroId]);
-    AddActionsToStackAfterCurrent(G, ctx, G.heroes[heroId].stack, G.heroes[heroId]);
-    StartAutoAction(G, ctx, G.heroes[heroId].actions);
+    const hero: IHeroCard | undefined = G.heroes[heroId];
+    if (hero !== undefined) {
+        AddHeroToCards(G, ctx, hero);
+        AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
+        StartAutoAction(G, ctx, hero.actions);
+    } else {
+        throw new Error(`Не существует кликнутая карта героя.`);
+    }
 };
 
 /**

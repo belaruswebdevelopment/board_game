@@ -16,15 +16,26 @@ import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 export const ActivateTrading = (G, ctx) => {
     var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if ((_a = player.boardCoins[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading) {
-        const tradingCoins = [];
-        for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
-            const coin = player.boardCoins[i];
-            if (IsCoin(coin)) {
-                tradingCoins.push(coin);
+    if (player !== undefined) {
+        if ((_a = player.boardCoins[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading) {
+            const tradingCoins = [];
+            for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
+                const boardCoin = player.boardCoins[i];
+                if (boardCoin !== undefined) {
+                    const coin = boardCoin;
+                    if (IsCoin(coin)) {
+                        tradingCoins.push(coin);
+                    }
+                }
+                else {
+                    throw new Error(`В массиве монет игрока на поле отсутствует монета ${i}.`);
+                }
             }
+            Trading(G, ctx, tradingCoins);
         }
-        Trading(G, ctx, tradingCoins);
+    }
+    else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 /**
@@ -39,35 +50,59 @@ export const ActivateTrading = (G, ctx) => {
  * @param tradingCoins Монеты для обмена.
  */
 const Trading = (G, ctx, tradingCoins) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], coinsValues = tradingCoins.map((coin) => coin.value), coinsMaxValue = Math.max(...coinsValues), coinsMinValue = Math.min(...coinsValues);
-    let upgradingCoinId, upgradingCoin, coinMaxIndex = 0, coinMinIndex = 0, value;
-    AddDataToLog(G, LogTypes.GAME, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') игрока ${player.nickname}.`);
-    // TODO trading isInitial first or playerChoose?
-    for (let i = 0; i < tradingCoins.length; i++) {
-        if (tradingCoins[i].value === coinsMaxValue) {
-            coinMaxIndex = i;
-            // if (tradingCoins[i].isInitial) {
-            //     break;
-            // }
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        const coinsValues = tradingCoins.map((coin) => coin.value), coinsMaxValue = Math.max(...coinsValues), coinsMinValue = Math.min(...coinsValues);
+        let upgradingCoinId, upgradingCoin, coinMaxIndex = 0, coinMinIndex = 0, value;
+        AddDataToLog(G, LogTypes.GAME, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') игрока ${player.nickname}.`);
+        // TODO trading isInitial first or playerChoose?
+        for (let i = 0; i < tradingCoins.length; i++) {
+            const tradingCoin = tradingCoins[i];
+            if (tradingCoin !== undefined) {
+                if (tradingCoin.value === coinsMaxValue) {
+                    coinMaxIndex = i;
+                    // if (tradingCoin.isInitial) {
+                    //     break;
+                    // }
+                }
+                if (tradingCoin.value === coinsMinValue) {
+                    coinMinIndex = i;
+                    // if (tradingCoin.isInitial) {
+                    //     break;
+                    // }
+                }
+            }
+            else {
+                throw new Error(`В массиве обменных монет игрока отсутствует монета ${i}.`);
+            }
         }
-        if (tradingCoins[i].value === coinsMinValue) {
-            coinMinIndex = i;
-            // if (tradingCoins[i].isInitial) {
-            //     break;
-            // }
+        if (CheckPlayerHasBuff(player, BuffNames.UpgradeNextCoin)) {
+            value = coinsMaxValue;
+            upgradingCoinId = G.tavernsNum + coinMinIndex;
+            const minTradingCoin = tradingCoins[coinMinIndex];
+            if (minTradingCoin !== undefined) {
+                upgradingCoin = minTradingCoin;
+                DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
+            }
+            else {
+                throw new Error(`В массиве обменных монет игрока отсутствует минимальная монета ${coinMinIndex}.`);
+            }
         }
-    }
-    if (CheckPlayerHasBuff(player, BuffNames.UpgradeNextCoin)) {
-        value = coinsMaxValue;
-        upgradingCoinId = G.tavernsNum + coinMinIndex;
-        upgradingCoin = tradingCoins[coinMinIndex];
-        DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
+        else {
+            value = coinsMinValue;
+            upgradingCoinId = G.tavernsNum + coinMaxIndex;
+            const maxTradingCoin = tradingCoins[coinMaxIndex];
+            if (maxTradingCoin !== undefined) {
+                upgradingCoin = maxTradingCoin;
+            }
+            else {
+                throw new Error(`В массиве обменных монет игрока отсутствует максимальная монета ${coinMaxIndex}.`);
+            }
+        }
+        UpgradeCoinAction(G, ctx, value, upgradingCoinId, `board`, upgradingCoin.isInitial);
     }
     else {
-        value = coinsMinValue;
-        upgradingCoinId = G.tavernsNum + coinMaxIndex;
-        upgradingCoin = tradingCoins[coinMaxIndex];
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
-    UpgradeCoinAction(G, ctx, value, upgradingCoinId, `board`, upgradingCoin.isInitial);
 };
 //# sourceMappingURL=TradingHelpers.js.map

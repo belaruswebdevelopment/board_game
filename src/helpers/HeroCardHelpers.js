@@ -17,8 +17,13 @@ import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
     if (hero.suit !== null) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
-        player.cards[hero.suit].push(hero);
-        AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
+        if (player !== undefined) {
+            player.cards[hero.suit].push(hero);
+            AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
+        }
+    }
+    else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 /**
@@ -34,14 +39,19 @@ export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
  */
 export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    player.pickedCard = hero;
-    if (hero.active) {
-        hero.active = false;
-        player.heroes.push(hero);
-        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал героя ${hero.name}.`);
+    if (player !== undefined) {
+        player.pickedCard = hero;
+        if (hero.active) {
+            hero.active = false;
+            player.heroes.push(hero);
+            AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал героя ${hero.name}.`);
+        }
+        else {
+            throw new Error(`Не удалось добавить героя ${hero.name} из-за того, что он был уже выбран каким-то игроком.`);
+        }
     }
     else {
-        throw new Error(`Не удалось добавить героя ${hero.name} из-за того, что он был уже выбран каким-то игроком.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 /**
@@ -53,7 +63,7 @@ export const AddHeroCardToPlayerHeroCards = (G, ctx, hero) => {
  *
  * @param G
  * @param ctx
- * @param config Конфиг действий героя.
+ * @param hero Карта героя.
  */
 export const AddHeroToCards = (G, ctx, hero) => {
     AddHeroCardToPlayerHeroCards(G, ctx, hero);

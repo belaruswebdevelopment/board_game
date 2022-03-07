@@ -18,13 +18,18 @@ import { LogTypes } from "../typescript/enums";
  */
 export const AddCardToPlayer = (G, ctx, card) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    player.pickedCard = card;
-    if (IsCardNotActionAndNotNull(card)) {
-        player.cards[card.suit].push(card);
-        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
-        return true;
+    if (player !== undefined) {
+        player.pickedCard = card;
+        if (IsCardNotActionAndNotNull(card)) {
+            player.cards[card.suit].push(card);
+            AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
+            return true;
+        }
+        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}'.`);
+        return false;
     }
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту '${card.name}'.`);
-    return false;
+    else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
 };
 //# sourceMappingURL=CardHelpers.js.map

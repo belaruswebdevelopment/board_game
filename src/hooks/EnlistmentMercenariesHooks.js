@@ -16,19 +16,29 @@ import { BuffNames } from "../typescript/enums";
  */
 export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
-        if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
-            && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-            let allMercenariesPlayed = true;
-            for (let i = 0; i < G.publicPlayers.length; i++) {
-                allMercenariesPlayed =
-                    G.publicPlayers[i].campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
-                if (!allMercenariesPlayed) {
-                    break;
+        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
+                let allMercenariesPlayed = true;
+                for (let i = 0; i < G.publicPlayers.length; i++) {
+                    const playerI = G.publicPlayers[i];
+                    if (playerI !== undefined) {
+                        allMercenariesPlayed = playerI.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
+                        if (!allMercenariesPlayed) {
+                            break;
+                        }
+                    }
+                    else {
+                        throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+                    }
+                }
+                if (allMercenariesPlayed) {
+                    return CheckEndTierActionsOrEndGameLastActions(G);
                 }
             }
-            if (allMercenariesPlayed) {
-                return CheckEndTierActionsOrEndGameLastActions(G);
-            }
+        }
+        else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
         }
     }
 };
@@ -45,11 +55,16 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
  */
 export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1 && !player.stack.length) {
-        return EndTurnActions(G, ctx);
+    if (player !== undefined) {
+        if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1 && !player.stack.length) {
+            return EndTurnActions(G, ctx);
+        }
+        else if (!player.stack.length) {
+            return player.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
+        }
     }
-    else if (!player.stack.length) {
-        return player.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
+    else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 export const EndEnlistmentMercenariesActions = (G, ctx) => {
@@ -79,7 +94,6 @@ export const OnEnlistmentMercenariesTurnEnd = (G, ctx) => {
 * </ol>
 *
 * @param G
-* @param ctx
 */
 export const PrepareMercenaryPhaseOrders = (G) => {
     const players = G.publicPlayers.map((player) => player), playersIndexes = [];
@@ -107,7 +121,13 @@ export const PrepareMercenaryPhaseOrders = (G) => {
     });
     G.publicPlayersOrder = playersIndexes;
     if (playersIndexes.length > 1) {
-        G.publicPlayersOrder.push(playersIndexes[0]);
+        const playerIndex = playersIndexes[0];
+        if (playerIndex !== undefined) {
+            G.publicPlayersOrder.push(playerIndex);
+        }
+        else {
+            throw new Error(`В массиве индексов игроков отсутствует индекс '0'.`);
+        }
     }
 };
 //# sourceMappingURL=EnlistmentMercenariesHooks.js.map

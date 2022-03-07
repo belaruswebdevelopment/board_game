@@ -11,12 +11,18 @@ import { BuffNames } from "../typescript/enums";
  * </ol>
  *
  * @param G
+ * @param ctx
  * @returns
  */
 export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (G.publicPlayersOrder.length && !player.stack.length) {
-        return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
+    if (player !== undefined) {
+        if (G.publicPlayersOrder.length && !player.stack.length) {
+            return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
+        }
+    }
+    else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 export const CheckGetMjollnirProfitOrder = (G) => {

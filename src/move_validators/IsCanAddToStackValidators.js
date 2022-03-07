@@ -6,16 +6,14 @@
  * </ol>
  *
  * @param G
- * @param ctx
+ * @param card Карта.
  */
 export const IsCanPickPickCampCardToStack = (G, card) => {
     const validators = card.validators;
     let isValidMove = false;
-    if (validators !== undefined) {
-        if (validators.pickCampCardToStack !== undefined) {
-            if (G.camp.length > 0) {
-                isValidMove = true;
-            }
+    if ((validators === null || validators === void 0 ? void 0 : validators.pickCampCardToStack) !== undefined) {
+        if (G.camp.length > 0) {
+            isValidMove = true;
         }
     }
     return isValidMove;
@@ -29,16 +27,14 @@ export const IsCanPickPickCampCardToStack = (G, card) => {
  * </ol>
  *
  * @param G
- * @param ctx
+ * @param card Карта.
  */
 export const IsCanPickPickDiscardCardToStack = (G, card) => {
     const validators = card.validators;
     let isValidMove = false;
-    if (validators !== undefined) {
-        if (validators.pickDiscardCardToStack !== undefined) {
-            if (G.discardCardsDeck.length > 0) {
-                isValidMove = true;
-            }
+    if ((validators === null || validators === void 0 ? void 0 : validators.pickDiscardCardToStack) !== undefined) {
+        if (G.discardCardsDeck.length > 0) {
+            isValidMove = true;
         }
     }
     return isValidMove;

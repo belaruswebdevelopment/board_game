@@ -41,18 +41,27 @@ export const OnBrisingamensEndGameTurnBegin = (G: IMyGameState, ctx: Ctx): void 
  * @returns
  */
 export const StartGetMjollnirProfitOrEndGame = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
-    if (G.publicPlayersOrder.length && !G.publicPlayers[Number(ctx.currentPlayer)].stack.length) {
-        if (!CheckPlayerHasBuff(G.publicPlayers[Number(G.publicPlayersOrder[0])],
-            BuffNames.EveryTurn)) {
-            const buffIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-                CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
-            if (buffIndex !== -1) {
-                return {
-                    next: Phases.GetMjollnirProfit,
-                };
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        if (G.publicPlayersOrder.length && !player.stack.length) {
+            const firstPlayer: IPublicPlayer | undefined = G.publicPlayers[Number(G.publicPlayersOrder[0])];
+            if (firstPlayer !== undefined) {
+                if (!CheckPlayerHasBuff(firstPlayer, BuffNames.EveryTurn)) {
+                    const buffIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+                        CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
+                    if (buffIndex !== -1) {
+                        return {
+                            next: Phases.GetMjollnirProfit,
+                        };
+                    } else {
+                        return true;
+                    }
+                }
             } else {
-                return true;
+                throw new Error(`В массиве игроков отсутствует игрок с первым ходом.`);
             }
         }
+    } else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };

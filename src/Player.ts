@@ -66,15 +66,19 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority): IPubli
 export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const player: IPublicPlayer = G.publicPlayers[i];
-        if (ctx.phase !== Phases.PlaceCoinsUline) {
-            if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                G.publicPlayersOrder.push(String(i));
+        const player: IPublicPlayer | undefined = G.publicPlayers[i];
+        if (player !== undefined) {
+            if (ctx.phase !== Phases.PlaceCoinsUline) {
+                if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                    G.publicPlayersOrder.push(String(i));
+                }
+            } else {
+                if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                    G.publicPlayersOrder.push(String(i));
+                }
             }
         } else {
-            if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                G.publicPlayersOrder.push(String(i));
-            }
+            throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
         }
     }
 };

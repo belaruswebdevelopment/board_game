@@ -1,7 +1,6 @@
 import { heroesConfig } from "../../data/HeroData";
 import { suitsConfig } from "../../data/SuitData";
-import { tavernsConfig } from "../../Tavern";
-import { BuffNames, ConfigNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames } from "../../typescript/enums";
+import { BuffNames, ConfigNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames, TavernNames } from "../../typescript/enums";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCard, PlaceEnlistmentMercenariesAction } from "../Actions";
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
     it(`should remove non-hero discarded card from player's cards`, () => {
@@ -110,6 +109,26 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             }, SuitNames.WARRIOR, 0);
         }).toThrowError(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
     });
+    it(`shouldn't remove non-exists player's card and must throw Error`, () => {
+        const G = {
+            publicPlayers: [
+                {
+                    cards: {
+                        warrior: [],
+                        hunter: [],
+                        miner: [],
+                        blacksmith: [],
+                        explorer: [],
+                    },
+                },
+            ],
+        };
+        expect(() => {
+            DiscardAnyCardFromPlayerBoardAction(G, {
+                currentPlayer: `0`,
+            }, SuitNames.WARRIOR, 0);
+        }).toThrowError(`В массиве карт игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
+    });
 });
 describe(`Test DiscardCardFromTavernAction method`, () => {
     it(`should remove non-null card from tavern`, () => {
@@ -177,7 +196,7 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Карта 'Test' из таверны ${tavernsConfig[0].name} убрана в сброс.`,
+                    value: `Карта 'Test' из таверны ${TavernNames.LaughingGoblin} убрана в сброс.`,
                 },
             ],
         });
@@ -316,6 +335,21 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
             ],
         });
     });
+    it(`shouldn't remove non-exists player's camp card and must throw Error`, () => {
+        const G = {
+            publicPlayers: [
+                {
+                    campCards: [],
+                },
+            ],
+        };
+        expect(() => {
+            GetEnlistmentMercenariesAction(G, {
+                currentPlayer: `0`,
+                phase: Phases.EnlistmentMercenaries,
+            }, 0);
+        }).toThrowError(`В массиве карт кэмпа игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
+    });
     // Unreal to reproduce
     // it(`shouldn't remove null card from tavern and must throw Error`, (): void => {
     //     expect((): void => {
@@ -366,7 +400,7 @@ describe(`Test GetMjollnirProfitAction method`, () => {
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan выбрал фракцию ${suitsConfig[SuitNames.HUNTER].suitName} для эффекта артефакта Mjollnir.`,
+                    value: `Игрок Dan выбрал фракцию ${suitsConfig[SuitNames.HUNTER].suitName} для эффекта артефакта 'Mjollnir'.`,
                 },
             ],
         });
@@ -1240,6 +1274,19 @@ describe(`Test PickDiscardCard method`, () => {
             ],
         });
     });
+    it(`shouldn't remove non-exists discard card and must throw Error`, () => {
+        const G = {
+            publicPlayers: [
+                {},
+            ],
+            discardCardsDeck: [],
+        };
+        expect(() => {
+            PickDiscardCard(G, {
+                currentPlayer: `0`,
+            }, 0);
+        }).toThrowError(`В массиве колоды сброса отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
+    });
 });
 describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
     it(`should get mercenary card from player's camp cards to place`, () => {
@@ -2069,7 +2116,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
             PlaceEnlistmentMercenariesAction(G, {
                 currentPlayer: `0`,
             }, SuitNames.EXPLORER);
-        }).toThrowError(`У игрока в 'campCards' отсутствует выбранная карта.`);
+        }).toThrowError(`У игрока в массиве карт кэмпа отсутствует выбранная карта.`);
     });
     it(`shouldn't use non-existing suit in picked mercenary card and must throw Error`, () => {
         const G = {
@@ -2101,17 +2148,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
             PlaceEnlistmentMercenariesAction(G, {
                 currentPlayer: `0`,
             }, SuitNames.HUNTER);
-        }).toThrowError(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
+        }).toThrowError(`У выбранной карты наёмника отсутствует принадлежность к выбранной фракции '${SuitNames.HUNTER}'.`);
     });
-    // Unreal to reproduce
-    // it(`shouldn't exists mercenary card with non-existing param 'stack[0].variants' and must throw Error`,
-    //     (): void => {
-    //         expect((): void => {
-    //             PlaceEnlistmentMercenariesAction(G as IMyGameState, {
-    //                 currentPlayer: `0`,
-    //                 phase: Phases.EnlistmentMercenaries,
-    //             } as Ctx, SuitNames.BLACKSMITH);
-    //         }).toThrowError(`У выбранной карты отсутствует обязательный параметр 'stack[0].variants'.`);
-    //     });
 });
 //# sourceMappingURL=Action.test.js.map

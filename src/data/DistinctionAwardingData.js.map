@@ -1,1 +1,0 @@
-{"version":3,"file":"DistinctionAwardingData.js","sourceRoot":"","sources":["DistinctionAwardingData.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,6BAA6B,EAAE,2BAA2B,EAAE,yBAAyB,EAAE,wBAAwB,EAAE,0BAA0B,EAAE,MAAM,uCAAuC,CAAC;AAGpM,MAAM,CAAC,MAAM,uBAAuB,GAAoD;IACpF,OAAO,EAAE,0BAA0B;IACnC,MAAM,EAAE,yBAAyB;IACjC,KAAK,EAAE,wBAAwB;IAC/B,UAAU,EAAE,6BAA6B;IACzC,QAAQ,EAAE,2BAA2B;CACxC,CAAC"}

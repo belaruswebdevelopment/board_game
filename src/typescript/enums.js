@@ -250,4 +250,10 @@ export var ValidatorNames;
     ValidatorNames["PickDiscardCardToStack"] = "pickDiscardCardToStack";
     ValidatorNames["PickCampCardToStack"] = "pickCampCardToStack";
 })(ValidatorNames || (ValidatorNames = {}));
+export var TavernNames;
+(function (TavernNames) {
+    TavernNames["LaughingGoblin"] = "\u00AB\u0412\u0435\u0441\u0451\u043B\u044B\u0439 \u0433\u043E\u0431\u043B\u0438\u043D\u00BB";
+    TavernNames["DancingDragon"] = "\u00AB\u041F\u0430\u0440\u044F\u0449\u0438\u0439 \u0434\u0440\u0430\u043A\u043E\u043D\u00BB";
+    TavernNames["ShiningHorse"] = "\u00AB\u0412\u0435\u0441\u0451\u043B\u044B\u0439 \u0433\u043E\u0431\u043B\u0438\u043D\u00BB";
+})(TavernNames || (TavernNames = {}));
 //# sourceMappingURL=enums.js.map

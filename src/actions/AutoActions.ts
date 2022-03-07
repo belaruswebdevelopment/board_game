@@ -5,7 +5,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, LogTypes, Stages } from "../typescript/enums";
-import type { ArgsTypes, CoinType, IConfig, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
+import type { ArgsTypes, CoinType, IMyGameState, IPublicPlayer, IStack, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
@@ -18,8 +18,13 @@ import type { ArgsTypes, CoinType, IConfig, IMyGameState, IPublicPlayer, IStack 
  * @param ctx
  */
 export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx): void => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.pickHero()]);
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${G.publicPlayers[Number(ctx.currentPlayer)].nickname} должен выбрать нового героя.`);
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.pickHero()]);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен выбрать нового героя.`);
+    } else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
 };
 
 /**
@@ -33,23 +38,27 @@ export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void | never => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    let tradingCoinIndex: number =
-        player.boardCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
-    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && tradingCoinIndex === -1) {
-        tradingCoinIndex =
-            player.handCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
-        if (tradingCoinIndex !== -1) {
-            player.handCoins.splice(tradingCoinIndex, 1, null);
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        let tradingCoinIndex: number =
+            player.boardCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && tradingCoinIndex === -1) {
+            tradingCoinIndex =
+                player.handCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
+            if (tradingCoinIndex !== -1) {
+                player.handCoins.splice(tradingCoinIndex, 1, null);
+            } else {
+                throw new Error(`В массиве монет игрока в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
+            }
+        } else if (tradingCoinIndex !== -1) {
+            player.boardCoins.splice(tradingCoinIndex, 1, null);
         } else {
-            throw new Error(`У игрока в 'handCoins' отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
+            throw new Error(`У игрока не может отсутствовать обменная монета.`);
         }
-    } else if (tradingCoinIndex !== -1) {
-        player.boardCoins.splice(tradingCoinIndex, 1, null);
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил монету активирующую обмен.`);
     } else {
-        throw new Error(`У игрока не может отсутствовать обменная монета.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил монету активирующую обмен.`);
 };
 
 /**
@@ -63,11 +72,15 @@ export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void | neve
  * @param ctx
  */
 export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    for (let i = 0; i < player.boardCoins.length; i++) {
-        if (i > G.currentTavern) {
-            ReturnCoinToPlayerHands(player, i);
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        for (let i = 0; i < player.boardCoins.length; i++) {
+            if (i > G.currentTavern) {
+                ReturnCoinToPlayerHands(player, i);
+            }
         }
+    } else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 
@@ -82,24 +95,34 @@ export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): vo
  * @param ctx
  */
 export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void | never => {
-    const config: IConfig | undefined = G.publicPlayers[Number(ctx.currentPlayer)].stack[1].config;
-    if (config !== undefined && config.suit !== undefined) {
-        const value: Record<string, StageArg> = {};
-        for (let i = 0; i < ctx.numPlayers; i++) {
-            if (i !== Number(ctx.currentPlayer) && G.publicPlayers[i].cards[config.suit].length) {
-                value[i] = {
-                    stage: Stages.DiscardSuitCard,
-                };
-                AddActionsToStackAfterCurrent(G, ctx, [StackData.discardSuitCard(i)]);
+    const currentPlayer: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (currentPlayer !== undefined) {
+        const suit: SuitTypes | undefined = currentPlayer.stack[1]?.config?.suit;
+        if (suit !== undefined) {
+            const value: Record<string, StageArg> = {};
+            for (let i = 0; i < ctx.numPlayers; i++) {
+                const player: IPublicPlayer | undefined = G.publicPlayers[i];
+                if (player !== undefined) {
+                    if (i !== Number(ctx.currentPlayer) && player.cards[suit].length) {
+                        value[i] = {
+                            stage: Stages.DiscardSuitCard,
+                        };
+                        AddActionsToStackAfterCurrent(G, ctx, [StackData.discardSuitCard(i)]);
+                    }
+                } else {
+                    throw new Error(`В массиве игроков отсутствует игрок.`);
+                }
             }
+            ctx.events?.setActivePlayers({
+                value,
+                minMoves: 1,
+                maxMoves: 1,
+            });
+        } else {
+            throw new Error(`У конфига действия игрока отсутствует обязательный параметр принадлежности сбрасываемой карты к конкретной фракции.`);
         }
-        ctx.events?.setActivePlayers({
-            value,
-            minMoves: 1,
-            maxMoves: 1,
-        });
     } else {
-        throw new Error(`У игрока отсутствует обязательный параметр 'stack[1].config' и/или 'stack[1].config.suit'.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 
@@ -114,29 +137,37 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void | ne
  * @param ctx
  */
 export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void | never => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        number: number = player.boardCoins.filter((coin: CoinType, index: number): boolean =>
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        const number: number = player.boardCoins.filter((coin: CoinType, index: number): boolean =>
             index >= G.tavernsNum && coin === null).length,
-        handCoinsNumber: number = player.handCoins.length;
-    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && number > 0 && handCoinsNumber) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(number)]);
-    } else {
-        let coinsValue = 0,
-            stack: IStack[] = [];
-        for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
-            const coin: CoinType = player.boardCoins[j];
-            if (IsCoin(coin) && !coin.isTriggerTrading) {
-                coinsValue++;
-            }
-        }
-        if (coinsValue === 1) {
-            stack = [StackData.upgradeCoinVidofnirVedrfolnir(5)];
-        } else if (coinsValue === 2) {
-            stack = [StackData.upgradeCoinVidofnirVedrfolnir(3)];
+            handCoinsNumber: number = player.handCoins.length;
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && number > 0 && handCoinsNumber) {
+            AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(number)]);
         } else {
-            throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта 'VidofnirVedrfolnir', а не ${coinsValue} монет(ы).`);
+            let coinsValue = 0,
+                stack: IStack[] = [];
+            for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
+                const coin: CoinType | undefined = player.boardCoins[j];
+                if (coin !== undefined) {
+                    if (IsCoin(coin) && !coin.isTriggerTrading) {
+                        coinsValue++;
+                    }
+                } else {
+                    throw new Error(`В массиве монет игрока на поле отсутствует нужная монета.`);
+                }
+            }
+            if (coinsValue === 1) {
+                stack = [StackData.upgradeCoinVidofnirVedrfolnir(5)];
+            } else if (coinsValue === 2) {
+                stack = [StackData.upgradeCoinVidofnirVedrfolnir(3)];
+            } else {
+                throw new Error(`У игрока должно быть ровно 1-2 монеты в кошеле для обмена для действия артефакта 'VidofnirVedrfolnir', а не ${coinsValue} монет(ы).`);
+            }
+            AddActionsToStackAfterCurrent(G, ctx, stack);
         }
-        AddActionsToStackAfterCurrent(G, ctx, stack);
+    } else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 

@@ -18,11 +18,15 @@ import type { BuffTypes, IBuff, IBuffs, IMyGameState, IPublicPlayer } from "../t
  */
 export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?: string): void => {
     if (buff !== undefined) {
-        const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-        player.buffs.push({
-            [buff.name]: value ?? true,
-        });
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил баф '${buff.name}'.`);
+        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            player.buffs.push({
+                [buff.name]: value ?? true,
+            });
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил баф '${buff.name}'.`);
+        } else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        }
     }
 };
 
@@ -30,12 +34,17 @@ export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffTypes): 
     player.buffs.find((buff: IBuffs): boolean => buff[buffName] !== undefined) !== undefined;
 
 export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): void | never => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        buffIndex: number = player.buffs.findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
-    if (buffIndex !== -1) {
-        player.buffs.splice(buffIndex, 1);
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} потерял баф '${buffName}'.`);
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        const buffIndex: number =
+            player.buffs.findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
+        if (buffIndex !== -1) {
+            player.buffs.splice(buffIndex, 1);
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} потерял баф '${buffName}'.`);
+        } else {
+            throw new Error(`У игрока в 'buffs' отсутствует баф ${buffName}.`);
+        }
     } else {
-        throw new Error(`У игрока в 'buffs' отсутствует баф ${buffName}.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };

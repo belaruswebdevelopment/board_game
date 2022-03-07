@@ -35,13 +35,17 @@ export const AddEndTierActionsToStack = (G: IMyGameState, ctx: Ctx): void => {
  */
 export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardsType): boolean => {
     if (card.suit !== null) {
-        const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-            index: number = player.cards[card.suit].findIndex((card: PlayerCardsType): boolean =>
+        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            const index: number = player.cards[card.suit].findIndex((card: PlayerCardsType): boolean =>
                 card.name === HeroNames.Thrud);
-        if (index !== -1) {
-            player.cards[card.suit].splice(index, 1);
+            if (index !== -1) {
+                player.cards[card.suit].splice(index, 1);
+            }
+            return index !== -1;
+        } else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
         }
-        return index !== -1;
     }
     return false;
 };
@@ -82,15 +86,19 @@ export const CheckAndMoveThrudOrPickHeroAction = (G: IMyGameState, ctx: Ctx, car
  * @param ctx
  */
 export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
-        const playerCards: PlayerCardsType[][] = Object.values(player.cards),
-            isCanPickHero: boolean =
-                Math.min(...playerCards.map((item: PlayerCardsType[]): number =>
-                    item.reduce(TotalRank, 0))) > player.heroes.length;
-        if (isCanPickHero) {
-            AddPickHeroAction(G, ctx);
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
+            const playerCards: PlayerCardsType[][] = Object.values(player.cards),
+                isCanPickHero: boolean =
+                    Math.min(...playerCards.map((item: PlayerCardsType[]): number =>
+                        item.reduce(TotalRank, 0))) > player.heroes.length;
+            if (isCanPickHero) {
+                AddPickHeroAction(G, ctx);
+            }
         }
+    } else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 

@@ -16,7 +16,13 @@ export const CheckEndPlaceCoinsUlinePhase = (G) => {
     if (G.publicPlayersOrder.length) {
         const ulinePlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
         if (ulinePlayerIndex !== -1) {
-            return IsCoin(G.publicPlayers[ulinePlayerIndex].boardCoins[G.currentTavern + 1]);
+            const ulinePlayer = G.publicPlayers[ulinePlayerIndex];
+            if (ulinePlayer !== undefined) {
+                return IsCoin(ulinePlayer.boardCoins[G.currentTavern + 1]);
+            }
+            else {
+                throw new Error(`В массиве игроков отсутствует игрок с бафом 'BuffNames.EveryTurn'.`);
+            }
         }
     }
 };

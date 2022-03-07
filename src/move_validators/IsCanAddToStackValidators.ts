@@ -8,16 +8,14 @@ import type { CardsHasStackValidators, IMyGameState, IValidatorsConfig } from ".
  * </ol>
  *
  * @param G
- * @param ctx
+ * @param card Карта.
  */
 export const IsCanPickPickCampCardToStack = (G: IMyGameState, card: CardsHasStackValidators): boolean => {
     const validators: IValidatorsConfig | undefined = card.validators;
     let isValidMove = false;
-    if (validators !== undefined) {
-        if (validators.pickCampCardToStack !== undefined) {
-            if (G.camp.length > 0) {
-                isValidMove = true;
-            }
+    if (validators?.pickCampCardToStack !== undefined) {
+        if (G.camp.length > 0) {
+            isValidMove = true;
         }
     }
     return isValidMove;
@@ -32,16 +30,14 @@ export const IsCanPickPickCampCardToStack = (G: IMyGameState, card: CardsHasStac
  * </ol>
  *
  * @param G
- * @param ctx
+ * @param card Карта.
  */
 export const IsCanPickPickDiscardCardToStack = (G: IMyGameState, card: CardsHasStackValidators): boolean => {
     const validators: IValidatorsConfig | undefined = card.validators;
     let isValidMove = false;
-    if (validators !== undefined) {
-        if (validators.pickDiscardCardToStack !== undefined) {
-            if (G.discardCardsDeck.length > 0) {
-                isValidMove = true;
-            }
+    if (validators?.pickDiscardCardToStack !== undefined) {
+        if (G.discardCardsDeck.length > 0) {
+            isValidMove = true;
         }
     }
     return isValidMove;

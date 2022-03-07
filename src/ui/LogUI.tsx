@@ -1,6 +1,6 @@
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { LogTypes } from "../typescript/enums";
-import type { IMyGameState } from "../typescript/interfaces";
+import type { ILogData, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка лог панели.</h3>
@@ -16,26 +16,29 @@ export const DrawLogData = (data: BoardProps<IMyGameState>): JSX.Element | null 
     if (data.G.log) {
         const loggingData: JSX.Element[] = [];
         for (let i: number = data.G.logData.length - 1; i >= 0; i--) {
-            if (data.G.logData[i].type === LogTypes.PRIVATE) {
-                loggingData.push(
-                    <li key={`Log ${i}`} className="text-black">
-                        {data.G.logData[i].value}
-                    </li>
-                );
-            } else if (data.G.logData[i].type === LogTypes.GAME) {
-                loggingData.push(
-                    <li key={`Log ${i}`} className="text-blue-500">
-                        {data.G.logData[i].value}
-                    </li>
-                );
-            } else if (data.G.logData[i].type === LogTypes.PUBLIC) {
-                loggingData.push(
-                    <li key={`Log ${i}`} className="text-green-500">
-                        {data.G.logData[i].value}
-                    </li>
-                );
-            } else {
-                throw new Error(`Попытка отобразить недопустимый тип логов.`);
+            const log: ILogData | undefined = data.G.logData[i];
+            if (log !== undefined) {
+                if (log.type === LogTypes.PRIVATE) {
+                    loggingData.push(
+                        <li key={`Log ${i}`} className="text-black">
+                            {log.value}
+                        </li>
+                    );
+                } else if (log.type === LogTypes.GAME) {
+                    loggingData.push(
+                        <li key={`Log ${i}`} className="text-blue-500">
+                            {log.value}
+                        </li>
+                    );
+                } else if (log.type === LogTypes.PUBLIC) {
+                    loggingData.push(
+                        <li key={`Log ${i}`} className="text-green-500">
+                            {log.value}
+                        </li>
+                    );
+                } else {
+                    throw new Error(`Попытка отобразить недопустимый тип логов.`);
+                }
             }
         }
         return (

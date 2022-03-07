@@ -29,19 +29,23 @@ export const AddPickCardActionToStack = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)],
-        config: IConfig | undefined = player.stack[0]?.config;
-    if (config !== undefined) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
-        StartOrEndActionStage(G, ctx, config);
-        player.actionsNum = config.number ?? 1;
-        if (config.name !== undefined) {
-            G.drawProfit = config.name;
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        const config: IConfig | undefined = player.stack[0]?.config;
+        if (config !== undefined) {
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
+            StartOrEndActionStage(G, ctx, config);
+            player.actionsNum = config.number ?? 1;
+            if (config.name !== undefined) {
+                G.drawProfit = config.name;
+            } else {
+                G.drawProfit = ``;
+            }
         } else {
             G.drawProfit = ``;
         }
     } else {
-        G.drawProfit = ``;
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 
@@ -60,7 +64,7 @@ const StartOrEndActionStage = (G: IMyGameState, ctx: Ctx, config: IConfig): void
     if (config.stageName !== undefined) {
         ctx.events?.setStage(config.stageName);
         AddDataToLog(G, LogTypes.GAME, `Начало стадии ${config.stageName}.`);
-    } else if (ctx.activePlayers !== null && ctx.activePlayers[Number(ctx.currentPlayer)]) {
+    } else if (ctx.activePlayers?.[Number(ctx.currentPlayer)] !== undefined) {
         ctx.events?.endStage();
     }
 };

@@ -47,15 +47,39 @@ export const CompareCards = (card1, card2) => {
  */
 export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
     if (IsCardNotActionAndNotNull(compareCard)) {
-        if (G.decks[0].length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
-            return CompareCards(compareCard, G.averageCards[compareCard.suit]);
+        const deckTier1 = G.decks[0];
+        if (deckTier1 !== undefined) {
+            if (deckTier1.length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
+                return CompareCards(compareCard, G.averageCards[compareCard.suit]);
+            }
+        }
+        else {
+            throw new Error(`В массиве колод карт отсутствует колода 1 эпохи.`);
         }
     }
-    if (G.decks[G.decks.length - 1].length < G.botData.deckLength) {
-        const temp = tavern.map((card) => G.publicPlayers.map((player) => PotentialScoring(player, card))), result = temp[cardId][Number(ctx.currentPlayer)];
-        temp.splice(cardId, 1);
-        temp.forEach((player) => player.splice(Number(ctx.currentPlayer), 1));
-        return result - Math.max(...temp.map((player) => Math.max(...player)));
+    const deckTier2 = G.decks[1];
+    if (deckTier2 !== undefined) {
+        if (deckTier2.length < G.botData.deckLength) {
+            const temp = tavern.map((card) => G.publicPlayers.map((player) => PotentialScoring(player, card)));
+            const tavernCardResults = temp[cardId];
+            if (tavernCardResults !== undefined) {
+                const result = tavernCardResults[Number(ctx.currentPlayer)];
+                if (result !== undefined) {
+                    temp.splice(cardId, 1);
+                    temp.forEach((player) => player.splice(Number(ctx.currentPlayer), 1));
+                    return result - Math.max(...temp.map((player) => Math.max(...player)));
+                }
+                else {
+                    throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат для текущего игрока.`);
+                }
+            }
+            else {
+                throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
+            }
+        }
+    }
+    else {
+        throw new Error(`В массиве колод карт отсутствует колода 2 эпохи.`);
     }
     if (IsCardNotActionAndNotNull(compareCard)) {
         return CompareCards(compareCard, G.averageCards[compareCard.suit]);
@@ -75,22 +99,42 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
  * @returns "Средняя" карта дворфа.
  */
 export const GetAverageSuitCard = (suitConfig, data) => {
-    let totalRank = 0, totalPoints = 0;
-    const rank = suitConfig.ranksValues()[data.players][data.tier], points = suitConfig.pointsValues()[data.players][data.tier], count = Array.isArray(points) ? points.length : points;
-    for (let i = 0; i < count; i++) {
-        totalRank += Array.isArray(rank) ? rank[i] : 1;
-        totalPoints += Array.isArray(points) ? points[i] : 1;
+    let totalPoints = 0;
+    const pointsValuesPlayers = suitConfig.pointsValues()[data.players];
+    if (pointsValuesPlayers !== undefined) {
+        const points = pointsValuesPlayers[data.tier];
+        if (points !== undefined) {
+            const count = Array.isArray(points) ? points.length : points;
+            for (let i = 0; i < count; i++) {
+                if (Array.isArray(points)) {
+                    const pointsValue = points[i];
+                    if (pointsValue !== undefined) {
+                        totalPoints += pointsValue;
+                    }
+                    else {
+                        throw new Error(`Отсутствует значение ${i} в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
+                    }
+                }
+                else {
+                    totalPoints += 1;
+                }
+            }
+            totalPoints /= count;
+            return CreateCard({
+                suit: suitConfig.suit,
+                rank: 1,
+                points: totalPoints,
+                name: `Average card`,
+                game: GameNames.Basic,
+            });
+        }
+        else {
+            throw new Error(`Отсутствует массив значений карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
+        }
     }
-    totalRank /= count;
-    totalPoints /= count;
-    const avgCard = CreateCard({
-        suit: suitConfig.suit,
-        rank: totalRank,
-        points: totalPoints,
-        name: `Average card`,
-        game: GameNames.Basic,
-    });
-    return avgCard;
+    else {
+        throw new Error(`Отсутствует массив значений карт для указанного числа игроков - '${data.players}'.`);
+    }
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>

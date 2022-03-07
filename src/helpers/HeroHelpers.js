@@ -31,11 +31,17 @@ export const AddEndTierActionsToStack = (G, ctx) => {
  */
 export const CheckAndMoveThrud = (G, ctx, card) => {
     if (card.suit !== null) {
-        const player = G.publicPlayers[Number(ctx.currentPlayer)], index = player.cards[card.suit].findIndex((card) => card.name === HeroNames.Thrud);
-        if (index !== -1) {
-            player.cards[card.suit].splice(index, 1);
+        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            const index = player.cards[card.suit].findIndex((card) => card.name === HeroNames.Thrud);
+            if (index !== -1) {
+                player.cards[card.suit].splice(index, 1);
+            }
+            return index !== -1;
         }
-        return index !== -1;
+        else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        }
     }
     return false;
 };
@@ -75,11 +81,16 @@ export const CheckAndMoveThrudOrPickHeroAction = (G, ctx, card) => {
  */
 export const CheckPickHero = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
-        const playerCards = Object.values(player.cards), isCanPickHero = Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) > player.heroes.length;
-        if (isCanPickHero) {
-            AddPickHeroAction(G, ctx);
+    if (player !== undefined) {
+        if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
+            const playerCards = Object.values(player.cards), isCanPickHero = Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) > player.heroes.length;
+            if (isCanPickHero) {
+                AddPickHeroAction(G, ctx);
+            }
         }
+    }
+    else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 /**

@@ -43,16 +43,21 @@ export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
     }
     // TODO Move to function with Camp same logic
     const campCard = G.camp[cardId];
-    if (campCard !== null) {
-        G.camp.splice(cardId, 1, null);
-        AddCampCardToCards(G, ctx, campCard);
-        if (IsArtefactCard(campCard)) {
-            AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
-            StartAutoAction(G, ctx, campCard.actions);
+    if (campCard !== undefined) {
+        if (campCard !== null) {
+            G.camp.splice(cardId, 1, null);
+            AddCampCardToCards(G, ctx, campCard);
+            if (IsArtefactCard(campCard)) {
+                AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
+                StartAutoAction(G, ctx, campCard.actions);
+            }
+        }
+        else {
+            throw new Error(`Не существует кликнутая карта кэмпа.`);
         }
     }
     else {
-        throw new Error(`Не существует кликнутая карта кэмпа.`);
+        throw new Error(`Отсутствует кликнутая карта кэмпа.`);
     }
 };
 /**
@@ -74,16 +79,21 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
     }
     // TODO Move to function with Holda same logic
     const campCard = G.camp[cardId];
-    if (campCard !== null) {
-        G.camp[cardId] = null;
-        AddCampCardToCards(G, ctx, campCard);
-        if (IsArtefactCard(campCard)) {
-            AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
-            StartAutoAction(G, ctx, campCard.actions);
+    if (campCard !== undefined) {
+        if (campCard !== null) {
+            G.camp[cardId] = null;
+            AddCampCardToCards(G, ctx, campCard);
+            if (IsArtefactCard(campCard)) {
+                AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
+                StartAutoAction(G, ctx, campCard.actions);
+            }
+        }
+        else {
+            throw new Error(`Не существует кликнутая карта кэмпа.`);
         }
     }
     else {
-        throw new Error(`Не существует кликнутая карта кэмпа.`);
+        throw new Error(`Отсутствует кликнутая карта кэмпа.`);
     }
 };
 /**

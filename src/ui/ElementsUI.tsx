@@ -29,10 +29,10 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
     let action: IMoveFunctionTypes;
     switch (moveName) {
         case MoveNames.StartEnlistmentMercenariesMove:
-            action = data.moves.StartEnlistmentMercenariesMove;
+            action = data.moves.StartEnlistmentMercenariesMove!;
             break;
         case MoveNames.PassEnlistmentMercenariesMove:
-            action = data.moves.PassEnlistmentMercenariesMove;
+            action = data.moves.PassEnlistmentMercenariesMove!;
             break;
         default:
             throw new Error(`Нет такого мува.`);
@@ -72,37 +72,37 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     if (moveName !== undefined) {
         switch (moveName) {
             case MoveNames.ClickHeroCardMove:
-                action = data.moves.ClickHeroCardMove;
+                action = data.moves.ClickHeroCardMove!;
                 break;
             case MoveNames.ClickCampCardMove:
-                action = data.moves.ClickCampCardMove;
+                action = data.moves.ClickCampCardMove!;
                 break;
             case MoveNames.ClickCardMove:
-                action = data.moves.ClickCardMove;
+                action = data.moves.ClickCardMove!;
                 break;
             case MoveNames.ClickCardToPickDistinctionMove:
-                action = data.moves.ClickCardToPickDistinctionMove;
+                action = data.moves.ClickCardToPickDistinctionMove!;
                 break;
             case MoveNames.DiscardCardMove:
-                action = data.moves.DiscardCardMove;
+                action = data.moves.DiscardCardMove!;
                 break;
             case MoveNames.PickDiscardCardMove:
-                action = data.moves.PickDiscardCardMove;
+                action = data.moves.PickDiscardCardMove!;
                 break;
             case MoveNames.DiscardCard2PlayersMove:
-                action = data.moves.DiscardCard2PlayersMove;
+                action = data.moves.DiscardCard2PlayersMove!;
                 break;
             case MoveNames.DiscardCardFromPlayerBoardMove:
-                action = data.moves.DiscardCardFromPlayerBoardMove;
+                action = data.moves.DiscardCardFromPlayerBoardMove!;
                 break;
             case MoveNames.DiscardSuitCardFromPlayerBoardMove:
-                action = data.moves.DiscardSuitCardFromPlayerBoardMove;
+                action = data.moves.DiscardSuitCardFromPlayerBoardMove!;
                 break;
             case MoveNames.ClickCampCardHoldaMove:
-                action = data.moves.ClickCampCardHoldaMove;
+                action = data.moves.ClickCampCardHoldaMove!;
                 break;
             case MoveNames.GetEnlistmentMercenariesMove:
-                action = data.moves.GetEnlistmentMercenariesMove;
+                action = data.moves.GetEnlistmentMercenariesMove!;
                 break;
             default:
                 throw new Error(`Нет такого мува.`);
@@ -190,25 +190,25 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     if (moveName !== undefined) {
         switch (moveName) {
             case MoveNames.ClickBoardCoinMove:
-                action = data.moves.ClickBoardCoinMove;
+                action = data.moves.ClickBoardCoinMove!;
                 break;
             case MoveNames.ClickHandCoinMove:
-                action = data.moves.ClickHandCoinMove;
+                action = data.moves.ClickHandCoinMove!;
                 break;
             case MoveNames.ClickHandCoinUlineMove:
-                action = data.moves.ClickHandCoinUlineMove;
+                action = data.moves.ClickHandCoinUlineMove!;
                 break;
             case MoveNames.ClickHandTradingCoinUlineMove:
-                action = data.moves.ClickHandTradingCoinUlineMove;
+                action = data.moves.ClickHandTradingCoinUlineMove!;
                 break;
             case MoveNames.ClickCoinToUpgradeMove:
-                action = data.moves.ClickCoinToUpgradeMove;
+                action = data.moves.ClickCoinToUpgradeMove!;
                 break;
             case MoveNames.AddCoinToPouchMove:
-                action = data.moves.AddCoinToPouchMove;
+                action = data.moves.AddCoinToPouchMove!;
                 break;
             case MoveNames.UpgradeCoinVidofnirVedrfolnirMove:
-                action = data.moves.UpgradeCoinVidofnirVedrfolnirMove;
+                action = data.moves.UpgradeCoinVidofnirVedrfolnirMove!;
                 break;
             default:
                 throw new Error(`Нет такого мува.`);
@@ -274,25 +274,25 @@ export const DrawSuit = (data: BoardProps<IMyGameState>, boardCells: JSX.Element
     let action: IMoveFunctionTypes;
     switch (moveName) {
         case MoveNames.GetMjollnirProfitMove:
-            action = data.moves.GetMjollnirProfitMove;
+            action = data.moves.GetMjollnirProfitMove!;
             break;
         case MoveNames.ClickHandCoinMove:
-            action = data.moves.ClickHandCoinMove;
+            action = data.moves.ClickHandCoinMove!;
             break;
         case MoveNames.ClickHandCoinUlineMove:
-            action = data.moves.ClickHandCoinUlineMove;
+            action = data.moves.ClickHandCoinUlineMove!;
             break;
         case MoveNames.PlaceThrudHeroMove:
-            action = data.moves.PlaceThrudHeroMove;
+            action = data.moves.PlaceThrudHeroMove!;
             break;
         case MoveNames.PlaceYludHeroMove:
-            action = data.moves.PlaceYludHeroMove;
+            action = data.moves.PlaceYludHeroMove!;
             break;
         case MoveNames.PlaceOlwinCardMove:
-            action = data.moves.PlaceOlwinCardMove;
+            action = data.moves.PlaceOlwinCardMove!;
             break;
         case MoveNames.PlaceEnlistmentMercenariesMove:
-            action = data.moves.PlaceEnlistmentMercenariesMove;
+            action = data.moves.PlaceEnlistmentMercenariesMove!;
             break;
         default:
             throw new Error(`Нет такого мува.`);

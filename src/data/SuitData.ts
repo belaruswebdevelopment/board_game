@@ -1,7 +1,7 @@
 import { BlacksmithDistinctionAwarding, ExplorerDistinctionAwarding, HunterDistinctionAwarding, MinerDistinctionAwarding, WarriorDistinctionAwarding } from "../helpers/DistinctionAwardingHelpers";
 import { BlacksmithScoring, ExplorerScoring, HunterScoring, MinerScoring, WarriorScoring } from "../score_helpers/SuitScoringHelpers";
 import { RusSuitNames, SuitNames } from "../typescript/enums";
-import type { IPointsValues, IRankValues, ISuit, ISuitConfig } from "../typescript/interfaces";
+import type { IPointsValues, ISuit, ISuitConfig } from "../typescript/interfaces";
 
 /**
  * <h3>Фракция кузнецов.</h3>
@@ -16,24 +16,6 @@ const blacksmith: ISuit = {
     suitName: RusSuitNames.BLACKSMITH,
     suitColor: `bg-purple-600`,
     description: `Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).`,
-    ranksValues: (): IRankValues => ({
-        2: {
-            0: 8,
-            1: 8,
-        },
-        3: {
-            0: 8,
-            1: 8,
-        },
-        4: {
-            0: 8,
-            1: 8,
-        },
-        5: {
-            0: 10,
-            1: 10,
-        },
-    }),
     pointsValues: (): IPointsValues => ({
         2: {
             0: 8,
@@ -71,24 +53,6 @@ const explorer: ISuit = {
     suitName: RusSuitNames.EXPLORER,
     suitColor: `bg-blue-500`,
     description: `Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.`,
-    ranksValues: (): IRankValues => ({
-        2: {
-            0: 7,
-            1: 7,
-        },
-        3: {
-            0: 7,
-            1: 7,
-        },
-        4: {
-            0: 7,
-            1: 7,
-        },
-        5: {
-            0: 8,
-            1: 8,
-        },
-    }),
     pointsValues: (): IPointsValues => ({
         2: {
             0: [5, 6, 7, 8, 9, 10, 11],
@@ -126,24 +90,6 @@ const hunter: ISuit = {
     suitName: RusSuitNames.HUNTER,
     suitColor: `bg-green-600`,
     description: `Их показатель храбрости равен квадрату числа карт охотников в армии игрока.`,
-    ranksValues: (): IRankValues => ({
-        2: {
-            0: 6,
-            1: 6,
-        },
-        3: {
-            0: 6,
-            1: 6,
-        },
-        4: {
-            0: 6,
-            1: 6,
-        },
-        5: {
-            0: 8,
-            1: 8,
-        },
-    }),
     pointsValues: (): IPointsValues => ({
         2: {
             0: 6,
@@ -181,24 +127,6 @@ const miner: ISuit = {
     suitName: RusSuitNames.MINER,
     suitColor: `bg-yellow-600`,
     description: `Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии игрока.`,
-    ranksValues: (): IRankValues => ({
-        2: {
-            0: 6,
-            1: 6,
-        },
-        3: {
-            0: 6,
-            1: 6,
-        },
-        4: {
-            0: 6,
-            1: 6,
-        },
-        5: {
-            0: 8,
-            1: 8,
-        },
-    }),
     pointsValues: (): IPointsValues => ({
         2: {
             0: [0, 0, 1, 1, 2, 2],
@@ -236,24 +164,6 @@ const warrior: ISuit = {
     suitName: RusSuitNames.WARRIOR,
     suitColor: `bg-red-600`,
     description: `Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты. В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной монеты к показателю храбрости своих воинов.`,
-    ranksValues: (): IRankValues => ({
-        2: {
-            0: 8,
-            1: 8,
-        },
-        3: {
-            0: 8,
-            1: 8,
-        },
-        4: {
-            0: 8,
-            1: 8,
-        },
-        5: {
-            0: 9,
-            1: 9,
-        },
-    }),
     pointsValues: (): IPointsValues => ({
         2: {
             0: [3, 4, 5, 6, 6, 7, 8, 9],

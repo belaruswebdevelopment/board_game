@@ -38,11 +38,15 @@ export const CheckAndResolveDistinctionsOrders = (G: IMyGameState, ctx: Ctx): vo
  * @returns
  */
 export const CheckEndGetDistinctionsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (G.publicPlayersOrder.length && !player.stack.length && !player.actionsNum
-        && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        return Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
-            distinction === undefined);
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        if (G.publicPlayersOrder.length && !player.stack.length && !player.actionsNum
+            && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
+            return Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
+                distinction === undefined);
+        }
+    } else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 
@@ -70,7 +74,7 @@ export const CheckNextGetDistinctionsTurn = (G: IMyGameState, ctx: Ctx): boolean
  * @param G
  */
 export const EndGetDistinctionsPhaseActions = (G: IMyGameState): void => {
-    if (G.expansions.thingvellir.active) {
+    if (G.expansions.thingvellir?.active) {
         RefillCamp(G);
     }
     G.publicPlayersOrder = [];

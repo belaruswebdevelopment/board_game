@@ -23,20 +23,26 @@ export const AddPickCardActionToStack = (G, ctx) => {
  */
 export const DrawCurrentProfit = (G, ctx) => {
     var _a, _b;
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], config = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config;
-    if (config !== undefined) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
-        StartOrEndActionStage(G, ctx, config);
-        player.actionsNum = (_b = config.number) !== null && _b !== void 0 ? _b : 1;
-        if (config.name !== undefined) {
-            G.drawProfit = config.name;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        const config = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config;
+        if (config !== undefined) {
+            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
+            StartOrEndActionStage(G, ctx, config);
+            player.actionsNum = (_b = config.number) !== null && _b !== void 0 ? _b : 1;
+            if (config.name !== undefined) {
+                G.drawProfit = config.name;
+            }
+            else {
+                G.drawProfit = ``;
+            }
         }
         else {
             G.drawProfit = ``;
         }
     }
     else {
-        G.drawProfit = ``;
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 /**
@@ -51,13 +57,13 @@ export const DrawCurrentProfit = (G, ctx) => {
  * @param config Конфиг действий героя.
  */
 const StartOrEndActionStage = (G, ctx, config) => {
-    var _a, _b;
+    var _a, _b, _c;
     if (config.stageName !== undefined) {
         (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setStage(config.stageName);
         AddDataToLog(G, LogTypes.GAME, `Начало стадии ${config.stageName}.`);
     }
-    else if (ctx.activePlayers !== null && ctx.activePlayers[Number(ctx.currentPlayer)]) {
-        (_b = ctx.events) === null || _b === void 0 ? void 0 : _b.endStage();
+    else if (((_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) !== undefined) {
+        (_c = ctx.events) === null || _c === void 0 ? void 0 : _c.endStage();
     }
 };
 /**

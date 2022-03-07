@@ -10,9 +10,10 @@ import { ValidatorNames } from "../typescript/enums";
  * @param G
  * @param ctx
  * @param stack Стэк действий.
+ * @param card Карта.
  */
 export const AddActionsToStackAfterCurrent = (G, ctx, stack, card) => {
-    var _a;
+    var _a, _b;
     let isValid = false;
     if (stack !== undefined) {
         if (card !== undefined && `validators` in card) {
@@ -43,8 +44,19 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack, card) => {
         }
         if (isValid) {
             for (let i = stack.length - 1; i >= 0; i--) {
-                const playerId = (_a = stack[i].playerId) !== null && _a !== void 0 ? _a : Number(ctx.currentPlayer);
-                G.publicPlayers[playerId].stack.splice(1, 0, stack[i]);
+                const playerId = (_b = (_a = stack[i]) === null || _a === void 0 ? void 0 : _a.playerId) !== null && _b !== void 0 ? _b : Number(ctx.currentPlayer), player = G.publicPlayers[playerId];
+                if (player !== undefined) {
+                    const stackI = stack[i];
+                    if (stackI !== undefined) {
+                        player.stack.splice(1, 0, stackI);
+                    }
+                    else {
+                        throw new Error(`В массиве новых действий отсутствует стэк ${i}.`);
+                    }
+                }
+                else {
+                    throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+                }
             }
         }
     }

@@ -22,15 +22,24 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player: IPublicPlayer = G.publicPlayers[Number(ctx.currentPlayer)];
-    for (let i = 0; i < player.boardCoins.length; i++) {
-        const coinId: number = coinsOrder[i]
-            || player.handCoins.findIndex((coin: CoinType): boolean => IsCoin(coin));
-        if (coinId !== -1) {
-            player.boardCoins[i] = player.handCoins[coinId];
-            player.handCoins[coinId] = null;
-        } else {
-            // TODO LogTypes.ERROR ?
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        for (let i = 0; i < player.boardCoins.length; i++) {
+            const coinId: number = coinsOrder[i]
+                || player.handCoins.findIndex((coin: CoinType): boolean => IsCoin(coin));
+            if (coinId !== -1) {
+                const handCoin: CoinType | undefined = player.handCoins[coinId];
+                if (handCoin !== undefined) {
+                    player.boardCoins[i] = handCoin;
+                    player.handCoins[coinId] = null;
+                } else {
+                    throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
+                }
+            } else {
+                // TODO LogTypes.ERROR ?
+            }
         }
+    } else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };

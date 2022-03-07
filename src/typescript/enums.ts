@@ -249,3 +249,9 @@ export const enum ValidatorNames {
     PickDiscardCardToStack = `pickDiscardCardToStack`,
     PickCampCardToStack = `pickCampCardToStack`,
 }
+
+export const enum TavernNames {
+    LaughingGoblin = `«Весёлый гоблин»`,
+    DancingDragon = `«Парящий дракон»`,
+    ShiningHorse = `«Весёлый гоблин»`,
+}

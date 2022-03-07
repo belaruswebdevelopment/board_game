@@ -391,7 +391,7 @@ describe(`Test DiscardTradingCoinAction method`, (): void => {
             DiscardTradingCoinAction(G as IMyGameState, {
                 currentPlayer: `0`,
             } as Ctx);
-        }).toThrowError(`У игрока в 'handCoins' отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
+        }).toThrowError(`В массиве монет игрока в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
     });
 });
 

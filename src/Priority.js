@@ -14,16 +14,28 @@ export const ChangePlayersPriorities = (G) => {
     for (let i = 0; i < G.exchangeOrder.length; i++) {
         const exchangeOrder = G.exchangeOrder[i];
         if (exchangeOrder !== undefined) {
-            tempPriorities[i] = G.publicPlayers[exchangeOrder].priority;
+            const exchangePlayer = G.publicPlayers[exchangeOrder];
+            if (exchangePlayer !== undefined) {
+                tempPriorities[i] = exchangePlayer.priority;
+            }
+            else {
+                throw new Error(`В массиве игроков отсутствует игрок ${exchangeOrder}.`);
+            }
         }
-    }
-    if (tempPriorities.length) {
-        AddDataToLog(G, LogTypes.GAME, `Обмен кристаллами между игроками:`);
-        for (let i = 0; i < G.exchangeOrder.length; i++) {
-            const tempPriority = tempPriorities[i];
-            if (tempPriority !== undefined && G.publicPlayers[i].priority.value !== tempPriority.value) {
-                G.publicPlayers[i].priority = tempPriority;
-                AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${G.publicPlayers[i].nickname} получил кристалл с приоритетом ${tempPriority.value}.`);
+        if (tempPriorities.length) {
+            AddDataToLog(G, LogTypes.GAME, `Обмен кристаллами между игроками:`);
+            for (let i = 0; i < G.exchangeOrder.length; i++) {
+                const tempPriority = tempPriorities[i], player = G.publicPlayers[i];
+                if (player !== undefined) {
+                    if (tempPriority !== undefined && player.priority.value !== tempPriority.value) {
+                        // TODO Check it "!"
+                        G.publicPlayers[i].priority = tempPriority;
+                        AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} получил кристалл с приоритетом ${tempPriority.value}.`);
+                    }
+                }
+                else {
+                    throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+                }
             }
         }
     }
@@ -55,7 +67,15 @@ export const CreatePriority = ({ value, isExchangeable = true, } = {}) => ({
  * @param numPlayers Количество игроков.
  * @returns Массив базовых кристаллов.
  */
-export const GeneratePrioritiesForPlayerNumbers = (numPlayers) => prioritiesConfig[numPlayers].map((priority) => priority);
+export const GeneratePrioritiesForPlayerNumbers = (numPlayers) => {
+    const priorityConfig = prioritiesConfig[numPlayers];
+    if (priorityConfig !== undefined) {
+        return priorityConfig.map((priority) => priority);
+    }
+    else {
+        throw new Error(`В массиве конфига приоритетов отсутствует конфиг для количества игроков - ${numPlayers}.`);
+    }
+};
 /**
  * <h3>Определяет наличие у выбранного игрока наименьшего кристалла.</h3>
  * <p>Применения:</p>
@@ -68,8 +88,15 @@ export const GeneratePrioritiesForPlayerNumbers = (numPlayers) => prioritiesConf
  * @returns Имеет ли игрок наименьший кристалл.
  */
 export const HasLowestPriority = (G, playerId) => {
-    const tempPriorities = G.publicPlayers.map((player) => player.priority.value), minPriority = Math.min(...tempPriorities), priority = G.publicPlayers[playerId].priority;
-    return priority.value === minPriority;
+    const tempPriorities = G.publicPlayers.map((player) => player.priority.value), minPriority = Math.min(...tempPriorities);
+    const player = G.publicPlayers[playerId];
+    if (player !== undefined) {
+        const priority = player.priority;
+        return priority.value === minPriority;
+    }
+    else {
+        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+    }
 };
 /**
  * <h3>Массив кристаллов приоритетов.</h3>

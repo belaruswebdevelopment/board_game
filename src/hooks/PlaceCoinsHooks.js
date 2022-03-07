@@ -36,8 +36,14 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
  * @returns
  */
 export const CheckEndPlaceCoinsTurn = (G, ctx) => {
-    if (G.publicPlayers[Number(ctx.currentPlayer)].handCoins.every((coin) => coin === null)) {
-        return true;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        if (player.handCoins.every((coin) => coin === null)) {
+            return true;
+        }
+    }
+    else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 export const OnPlaceCoinsTurnEnd = (G) => {
@@ -54,10 +60,11 @@ export const OnPlaceCoinsTurnEnd = (G) => {
  * @param ctx
  */
 export const PreparationPhaseActions = (G, ctx) => {
+    var _a;
     G.currentTavern = -1;
     if (ctx.turn !== 0) {
         ReturnCoinsToPlayerHands(G);
-        if (G.expansions.thingvellir.active) {
+        if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
             RefillEmptyCampCards(G);
         }
         RefillTaverns(G);

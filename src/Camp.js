@@ -36,35 +36,46 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
             }
         }
     }
-    for (let i = 0; i < mercenariesConfig[tier].length; i++) {
-        let name = ``, path = ``, campMercenarySuit;
-        const mercenaryData = mercenariesConfig[tier][i];
-        for (campMercenarySuit in mercenaryData) {
-            if (Object.prototype.hasOwnProperty.call(mercenaryData, campMercenarySuit)) {
-                path += campMercenarySuit + ` `;
-                name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
-                for (const campMercenaryCardProperty in mercenaryData[campMercenarySuit]) {
-                    if (Object.prototype.hasOwnProperty.call(mercenaryData[campMercenarySuit], campMercenaryCardProperty)) {
-                        const mercenaryVariant = mercenaryData[campMercenarySuit];
-                        if (mercenaryVariant !== undefined) {
-                            if (campMercenaryCardProperty === `rank`) {
-                                name += `шевронов: ${mercenaryVariant.rank}, `;
-                            }
-                            if (campMercenaryCardProperty === `points`) {
-                                path += mercenaryVariant.points ? mercenaryVariant.points + ` ` : ``;
-                                name += `очков: ${mercenaryVariant.points ? mercenaryVariant.points + `) ` : `нет) `}`;
+    const mercenariesConfigTier = mercenariesConfig[tier];
+    if (mercenariesConfigTier !== undefined) {
+        for (let i = 0; i < mercenariesConfigTier.length; i++) {
+            let name = ``, path = ``, campMercenarySuit;
+            const mercenaryData = mercenariesConfigTier[i];
+            if (mercenaryData !== undefined) {
+                for (campMercenarySuit in mercenaryData) {
+                    if (Object.prototype.hasOwnProperty.call(mercenaryData, campMercenarySuit)) {
+                        path += campMercenarySuit + ` `;
+                        name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
+                        for (const campMercenaryCardProperty in mercenaryData[campMercenarySuit]) {
+                            if (Object.prototype.hasOwnProperty.call(mercenaryData[campMercenarySuit], campMercenaryCardProperty)) {
+                                const mercenaryVariant = mercenaryData[campMercenarySuit];
+                                if (mercenaryVariant !== undefined) {
+                                    if (campMercenaryCardProperty === `rank`) {
+                                        name += `шевронов: ${mercenaryVariant.rank}, `;
+                                    }
+                                    if (campMercenaryCardProperty === `points`) {
+                                        path += mercenaryVariant.points ? mercenaryVariant.points + ` ` : ``;
+                                        name += `очков: ${mercenaryVariant.points ? mercenaryVariant.points + `) ` : `нет) `}`;
+                                    }
+                                }
                             }
                         }
                     }
                 }
+                campCards.push(CreateMercenaryCampCard({
+                    tier,
+                    path: path.trim(),
+                    name: name.trim(),
+                    variants: mercenaryData,
+                }));
+            }
+            else {
+                throw new Error(`Отсутствует массив значений карты наёмника ${i} в указанной эпохе - '${tier}'.`);
             }
         }
-        campCards.push(CreateMercenaryCampCard({
-            tier,
-            path: path.trim(),
-            name: name.trim(),
-            variants: mercenaryData,
-        }));
+    }
+    else {
+        throw new Error(`Отсутствует массив значений карт наёмников в указанной эпохе - '${tier}'.`);
     }
     return campCards;
 };
@@ -84,6 +95,8 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @param suit Название фракции.
  * @param rank Шевроны.
  * @param points Очки.
+ * @param buff Баф.
+ * @param validators Валидаторы.
  * @param actions Действия.
  * @param stack Действия.
  * @returns Карта кэмпа артефакт.

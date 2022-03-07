@@ -18,9 +18,16 @@ export const CheckEndGame = (G) => {
         }
         let allMercenariesPlayed = true;
         for (let i = 0; i < G.publicPlayers.length; i++) {
-            allMercenariesPlayed = G.publicPlayers[i].campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
-            if (!allMercenariesPlayed) {
-                break;
+            const player = G.publicPlayers[i];
+            if (player !== undefined) {
+                allMercenariesPlayed =
+                    player.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
+                if (!allMercenariesPlayed) {
+                    break;
+                }
+            }
+            else {
+                throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
             }
         }
         return allMercenariesPlayed;

@@ -6,14 +6,14 @@ import { BuildAdditionalCards, BuildCards } from "./Card";
 import { BuildCoins } from "./Coin";
 import { actionCardsConfigArray } from "./data/ActionCardData";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
-import { marketCoinsConfig } from "./data/CoinData";
+import { initialPlayerCoinsConfig, marketCoinsConfig } from "./data/CoinData";
 import { heroesConfig } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
 import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { GameNames } from "./typescript/enums";
-import type { CampDeckCardTypes, DeckCardTypes, DistinctionTypes, IBotData, ICard, ICoin, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPriority, IPublicPlayer, OptionalSuitPropertyTypes, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICard, ICoin, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPriority, IPublicPlayer, OptionalSuitPropertyTypes, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -56,14 +56,23 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         mustDiscardTavernCardJarnglofi = null,
         discardCampCardsDeck: CampDeckCardTypes[] = [];
     let camp: CampDeckCardTypes[] = [];
-    if (expansions.thingvellir.active) {
+    if (expansions.thingvellir?.active) {
         for (let i = 0; i < tierToEnd; i++) {
             // TODO Camp cards must be hidden from users?
             campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            campDecks[i] = ctx.random!.Shuffle(campDecks[i]);
+            const campDeck: CampDeckCardTypes[] | undefined = campDecks[i];
+            if (campDeck !== undefined) {
+                campDecks[i] = ctx.random!.Shuffle(campDeck);
+            } else {
+                throw new Error(`Колода карт кэмпа ${i} эпохи не может отсутствовать.`);
+            }
         }
-        camp = campDecks[0].splice(0, campNum);
+        const campDeck0: CampDeckCardTypes[] | undefined = campDecks[0]?.splice(0, campNum);
+        if (campDeck0 !== undefined) {
+            camp = campDeck0;
+        } else {
+            throw new Error(`Колода карт кэмпа 1 эпохи не может отсутствовать.`);
+        }
     }
     for (let i = 0; i < tierToEnd; i++) {
         // TODO Deck cards must be hidden from users?
@@ -74,13 +83,20 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             players: ctx.numPlayers,
             tier: i,
         });
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        decks[i] = ctx.random!.Shuffle(decks[i]);
+        const deck: DeckCardTypes[] | undefined = decks[i];
+        if (deck !== undefined) {
+            decks[i] = ctx.random!.Shuffle(deck);
+        } else {
+            throw new Error(`Колода карт ${i} эпохи не может отсутствовать.`);
+        }
     }
     const heroesConfigOptions: string[] = [GameNames.Basic];
-    for (const expansion in expansions) {
-        if (expansions[expansion].active) {
-            heroesConfigOptions.push(expansion);
+    let expansion: ExpansionTypes;
+    for (expansion in expansions) {
+        if (Object.prototype.hasOwnProperty.call(expansions, expansion)) {
+            if (expansions[expansion].active) {
+                heroesConfigOptions.push(expansion);
+            }
         }
     }
     const heroes: IHeroCard[] = BuildHeroes(heroesConfigOptions, heroesConfig),
@@ -90,7 +106,12 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         drawSize: number = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
         // TODO Taverns cards must be hidden from users?
-        taverns[i] = decks[0].splice(0, drawSize);
+        const deck0: DeckCardTypes[] | undefined = decks[0]?.splice(0, drawSize);
+        if (deck0 !== undefined) {
+            taverns[i] = deck0;
+        } else {
+            throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
+        }
     }
     const players: IPlayers = {},
         publicPlayers: IPublicPlayer[] = [],
@@ -99,9 +120,13 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
     for (let i = 0; i < ctx.numPlayers; i++) {
         const randomPriorityIndex: number = Math.floor(Math.random() * priorities.length),
-            priority: IPriority = priorities.splice(randomPriorityIndex, 1)[0];
-        players[i] = BuildPlayer();
-        publicPlayers[i] = BuildPublicPlayer(`Dan` + i, priority);
+            priority: IPriority | undefined = priorities.splice(randomPriorityIndex, 1)[0];
+        if (priority !== undefined) {
+            players[i] = BuildPlayer();
+            publicPlayers[i] = BuildPublicPlayer(`Dan` + i, priority);
+        } else {
+            throw new Error(`Отсутствует приоритет ${i}.`);
+        }
     }
     const marketCoinsUnique: ICoin[] = [],
         marketCoins: ICoin[] = BuildCoins(marketCoinsConfig, {
@@ -119,18 +144,30 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             });
         }
     }
-    const initHandCoinsId: number[] = Array(players[0].boardCoins.length).fill(undefined)
+    const initHandCoinsId: number[] = Array(initialPlayerCoinsConfig.length).fill(undefined)
         .map((item: undefined, index: number): number => index),
         initCoinsOrder: number[][] = k_combinations(initHandCoinsId, tavernsNum);
     let allCoinsOrder: number[][] = [];
     for (let i = 0; i < initCoinsOrder.length; i++) {
-        allCoinsOrder = allCoinsOrder.concat(Permute(initCoinsOrder[i]));
+        const coinsOrder: number[] | undefined = initCoinsOrder[i];
+        if (coinsOrder !== undefined) {
+            allCoinsOrder = allCoinsOrder.concat(Permute(coinsOrder));
+        } else {
+            throw new Error(`Отсутствует порядок выкладки монет ${i}.`);
+        }
+    }
+    const cardDeck0: DeckCardTypes[] | undefined = decks[0];
+    let length: number;
+    if (cardDeck0 !== undefined) {
+        length = cardDeck0.length;
+    } else {
+        throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
     }
     const botData: IBotData = {
         allCoinsOrder,
         allPicks: GetAllPicks(tavernsNum, ctx.numPlayers),
         maxIter: 1000,
-        deckLength: decks[0].length,
+        deckLength: length,
     };
     return {
         averageCards: averageCards as RequiredSuitPropertyTypes<ICard>,

@@ -21,25 +21,38 @@ import { Stages, SuitNames } from "../typescript/enums";
  * @returns
  */
 export const ClickCardMove = (G, ctx, cardId) => {
+    var _a;
     const isValidMove = IsValidMove(G, ctx, Stages.Default1, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const card = G.taverns[G.currentTavern][cardId];
-    G.taverns[G.currentTavern].splice(cardId, 1, null);
-    if (card !== null) {
-        const isAdded = AddCardToPlayer(G, ctx, card);
-        if (!IsCardNotActionAndNotNull(card)) {
-            AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
+    const currentTavern = G.taverns[G.currentTavern];
+    if (currentTavern !== undefined) {
+        const card = currentTavern[cardId];
+        if (card !== undefined) {
+            // TODO Check it "?"
+            (_a = G.taverns[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.splice(cardId, 1, null);
+            if (card !== null) {
+                const isAdded = AddCardToPlayer(G, ctx, card);
+                if (!IsCardNotActionAndNotNull(card)) {
+                    AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
+                }
+                else {
+                    if (isAdded) {
+                        CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
+                    }
+                }
+            }
+            else {
+                throw new Error(`Не существует кликнутая карта.`);
+            }
         }
         else {
-            if (isAdded) {
-                CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
-            }
+            throw new Error(`Отсутствует карта ${cardId} текущей таверны.`);
         }
     }
     else {
-        throw new Error(`Не существует кликнутая карта.`);
+        throw new Error(`Отсутствует текущая таверна.`);
     }
 };
 /**
@@ -54,21 +67,39 @@ export const ClickCardMove = (G, ctx, cardId) => {
  * @param cardId Id карты.
  */
 export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
+    var _a;
     const isValidMove = IsValidMove(G, ctx, Stages.PickDistinctionCard, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const isAdded = AddCardToPlayer(G, ctx, G.decks[1][cardId]), pickedCard = G.decks[1].splice(cardId, 1)[0];
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    G.decks[1] = ctx.random.Shuffle(G.decks[1]);
-    if (IsCardNotActionAndNotNull(pickedCard)) {
-        if (isAdded) {
-            G.distinctions[SuitNames.EXPLORER] = undefined;
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
+    const deck1 = G.decks[1];
+    if (deck1 !== undefined) {
+        const card = deck1[cardId];
+        if (card !== undefined) {
+            // TODO Check it "?"
+            const pickedCard = (_a = G.decks[1]) === null || _a === void 0 ? void 0 : _a.splice(cardId, 1)[0], isAdded = AddCardToPlayer(G, ctx, card);
+            if (pickedCard !== undefined) {
+                G.decks[1] = ctx.random.Shuffle(deck1);
+                if (IsCardNotActionAndNotNull(pickedCard)) {
+                    if (isAdded) {
+                        G.distinctions[SuitNames.EXPLORER] = undefined;
+                        CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
+                    }
+                }
+                else {
+                    AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack, pickedCard);
+                }
+            }
+            else {
+                throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 2.`);
+            }
+        }
+        else {
+            throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 1.`);
         }
     }
     else {
-        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack, pickedCard);
+        throw new Error(`Отсутствует колода карт 2 эпохи.`);
     }
 };
 /**
@@ -88,7 +119,13 @@ export const ClickDistinctionCardMove = (G, ctx, suit) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    suitsConfig[suit].distinction.awarding(G, ctx, G.publicPlayers[Number(ctx.currentPlayer)]);
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player !== undefined) {
+        suitsConfig[suit].distinction.awarding(G, ctx, player);
+    }
+    else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
 };
 /**
  * <h3>Убирает карту в колоду сброса в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>

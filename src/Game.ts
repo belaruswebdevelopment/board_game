@@ -21,6 +21,7 @@ import type { IMyGameState, INext, IOrder } from "./typescript/interfaces";
 
 // TODO Add logging
 // TODO Add dock block
+// TODO Add all logs errors and other text in ENUMS!
 /**
  * <h3>Параметры порядка хода.</h3>
  * <p>Применения:</p>

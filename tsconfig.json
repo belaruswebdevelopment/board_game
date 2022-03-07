@@ -25,6 +25,7 @@
     //    "noEmit": true,
     "jsx": "react-jsx",
     "preserveValueImports": true,
+    "noUncheckedIndexedAccess": true,
   },
   "include": [
     "src",

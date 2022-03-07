@@ -341,7 +341,7 @@ interface IExpansion {
  * <h3>Интерфейс для дополнений к игре.</h3>
  */
 export interface IExpansions {
-    readonly [name: string]: IExpansion,
+    readonly thingvellir: IExpansion,
 }
 
 /**
@@ -734,7 +734,7 @@ export interface IMoveValidators {
 /**
  * <h3>Интерфейс для числовых индексов и массивов числовых значений.</h3>
  */
-interface INumberArrayValues {
+export interface INumberArrayValues {
     readonly [index: number]: number[],
 }
 
@@ -750,13 +750,6 @@ export interface INumberValues {
  */
 export interface IPointsValues {
     readonly [index: number]: INumberValues | INumberArrayValues,
-}
-
-/**
- * <h3>Интерфейс для значений шевронов карт.</h3>
- */
-export interface IRankValues {
-    readonly [index: number]: INumberValues,
 }
 
 /**
@@ -885,7 +878,6 @@ export interface ISuit {
     readonly suitName: string,
     readonly suitColor: string,
     readonly description: string,
-    readonly ranksValues: () => IRankValues,
     readonly pointsValues: () => IPointsValues,
     readonly scoringRule: (cards: PlayerCardsType[], potentialCardValue?: number) => number,
     readonly distinction: IDistinction,
@@ -910,7 +902,7 @@ export interface ISuitConfig {
 /**
  * <h3>Интерфейс для конфига конкретной таверны.</h3>
  */
-interface ITavernInConfig {
+export interface ITavernInConfig {
     readonly name: string,
 }
 
@@ -998,6 +990,8 @@ export type ValidMoveIdParamTypes = number | SuitTypes | number[] | IMoveSuitCar
     | IMoveSuitCardPlayerCurrentId | IMoveCoinsArguments | null;
 
 export type SuitTypes = keyof ISuitConfig;
+
+export type ExpansionTypes = keyof IExpansions;
 
 export type OptionalSuitPropertyTypes<Type> = {
     [Property in SuitTypes]?: Type;

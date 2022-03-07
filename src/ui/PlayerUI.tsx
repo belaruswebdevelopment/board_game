@@ -5,7 +5,7 @@ import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { HeroNames, MoveNames, Phases, Stages } from "../typescript/enums";
-import type { CoinType, IMyGameState, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CoinType, IHeroCard, IMyGameState, IPublicPlayer, ITavernInConfig, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 
 /**
@@ -25,137 +25,153 @@ export const DrawPlayersBoards = (data: BoardProps<IMyGameState>): JSX.Element[]
         playerHeadersCount: JSX.Element[][] = [],
         playerRows: JSX.Element[][][] = [];
     for (let p = 0; p < data.ctx.numPlayers; p++) {
-        const player: IPublicPlayer = data.G.publicPlayers[p];
-        playersBoards[p] = [];
-        playerHeaders[p] = [];
-        playerHeadersCount[p] = [];
-        playerRows[p] = [];
-        let suit: SuitTypes;
-        for (suit in suitsConfig) {
-            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                playerHeaders[p].push(
-                    <th className={`${suitsConfig[suit].suitColor}`}
-                        key={`${player.nickname} ${suitsConfig[suit].suitName}`}>
-                        <span style={Styles.Suits(suit)} className="bg-suit-icon">
-
-                        </span>
-                    </th>
-                );
-                playerHeadersCount[p].push(
-                    <th className={`${suitsConfig[suit].suitColor} text-white`}
-                        key={`${player.nickname} ${suitsConfig[suit].suitName} count`}>
-                        <b>{player.cards[suit].reduce(TotalRank, 0)}</b>
-                    </th>
-                );
-            }
-        }
-        for (let s = 0; s < 1 + Number(data.G.expansions.thingvellir.active); s++) {
-            if (s === 0) {
-                playerHeaders[p].push(
-                    <th className="bg-gray-600" key={`${player.nickname} hero icon`}>
-                        <span style={Styles.HeroBack()} className="bg-hero-icon">
-
-                        </span>
-                    </th>
-                );
-                playerHeadersCount[p].push(
-                    <th className="bg-gray-600 text-white"
-                        key={`${player.nickname} hero count`}>
-                        <b>{player.heroes.length}</b>
-                    </th>
-                );
-            } else {
-                playerHeaders[p].push(
-                    <th className="bg-yellow-200" key={`${player.nickname} camp icon`}>
-                        <span style={Styles.Camp()} className="bg-camp-icon">
-
-                        </span>
-                    </th>
-                );
-                playerHeadersCount[p].push(
-                    <th className="bg-yellow-200 text-white"
-                        key={`${player.nickname} camp counts`}>
-                        <b>{player.campCards.length}</b>
-                    </th>
-                );
-            }
-        }
-        for (let i = 0; ; i++) {
-            playerRows[p][i] = [];
-            const playerCells: JSX.Element[] = [];
-            let isDrawRow = false,
-                id = 0,
-                j = 0,
-                suit: SuitTypes;
+        const player: IPublicPlayer | undefined = data.G.publicPlayers[p];
+        if (player !== undefined) {
+            playersBoards[p] = [];
+            playerHeaders[p] = [];
+            playerHeadersCount[p] = [];
+            playerRows[p] = [];
+            let suit: SuitTypes;
             for (suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                    id = i + j;
-                    if (player.cards[suit][i] !== undefined) {
-                        isDrawRow = true;
-                        DrawCard(data, playerCells, player.cards[suit][i], id, player, suit);
-                    } else {
-                        playerCells.push(
-                            <td key={`${player.nickname} empty card ${id}`}>
+                    // TODO Check it "?"
+                    playerHeaders[p]?.push(
+                        <th className={`${suitsConfig[suit].suitColor}`}
+                            key={`${player.nickname} ${suitsConfig[suit].suitName}`}>
+                            <span style={Styles.Suits(suit)} className="bg-suit-icon">
 
-                            </td>
-                        );
-                    }
-                    j++;
+                            </span>
+                        </th>
+                    );
+                    // TODO Check it "?"
+                    playerHeadersCount[p]?.push(
+                        <th className={`${suitsConfig[suit].suitColor} text-white`}
+                            key={`${player.nickname} ${suitsConfig[suit].suitName} count`}>
+                            <b>{player.cards[suit].reduce(TotalRank, 0)}</b>
+                        </th>
+                    );
                 }
             }
-            for (let k = 0; k < 1 + Number(data.G.expansions.thingvellir.active); k++) {
-                id += k + 1;
-                if (k === 0) {
-                    const playerCards: PlayerCardsType[] = Object.values(player.cards).flat();
-                    // TODO Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
-                    if (player.heroes[i] !== undefined && (!player.heroes[i].suit
-                        && !((player.heroes[i].name === HeroNames.Ylud
-                            && playerCards.findIndex((card: { name: string, }): boolean =>
-                                card.name === HeroNames.Ylud) !== -1)
-                            || (player.heroes[i].name === HeroNames.Thrud
-                                && playerCards.findIndex((card: { name: string; }): boolean =>
-                                    card.name === HeroNames.Thrud) !== -1)))) {
-                        isDrawRow = true;
-                        DrawCard(data, playerCells, player.heroes[i], id, player);
-                    } else {
-                        playerCells.push(
-                            <td key={`${player.nickname} hero ${i}`}>
+            for (let s = 0; s < 1 + Number(data.G.expansions.thingvellir.active); s++) {
+                if (s === 0) {
+                    // TODO Check it "?"
+                    playerHeaders[p]?.push(
+                        <th className="bg-gray-600" key={`${player.nickname} hero icon`}>
+                            <span style={Styles.HeroBack()} className="bg-hero-icon">
 
-                            </td>
-                        );
-                    }
+                            </span>
+                        </th>
+                    );
+                    // TODO Check it "?"
+                    playerHeadersCount[p]?.push(
+                        <th className="bg-gray-600 text-white"
+                            key={`${player.nickname} hero count`}>
+                            <b>{player.heroes.length}</b>
+                        </th>
+                    );
                 } else {
-                    if (player.campCards[i] !== undefined) {
-                        isDrawRow = true;
-                        DrawCard(data, playerCells, player.campCards[i], id, player);
-                    } else {
-                        playerCells.push(
-                            <td key={`${player.nickname} camp card ${i}`}>
+                    // TODO Check it "?"
+                    playerHeaders[p]?.push(
+                        <th className="bg-yellow-200" key={`${player.nickname} camp icon`}>
+                            <span style={Styles.Camp()} className="bg-camp-icon">
 
-                            </td>
-                        );
-                    }
+                            </span>
+                        </th>
+                    );
+                    // TODO Check it "?"
+                    playerHeadersCount[p]?.push(
+                        <th className="bg-yellow-200 text-white"
+                            key={`${player.nickname} camp counts`}>
+                            <b>{player.campCards.length}</b>
+                        </th>
+                    );
                 }
             }
-            if (isDrawRow) {
-                playerRows[p][i].push(
-                    <tr key={`${player.nickname} board row ${i}`}>{playerCells}</tr>
-                );
-            } else {
-                break;
+            for (let i = 0; ; i++) {
+                // TODO Check it "!"
+                playerRows[p]![i] = [];
+                const playerCells: JSX.Element[] = [];
+                let isDrawRow = false,
+                    id = 0,
+                    j = 0,
+                    suit: SuitTypes;
+                for (suit in suitsConfig) {
+                    if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
+                        id = i + j;
+                        const card: PlayerCardsType | undefined = player.cards[suit][i];
+                        if (card !== undefined) {
+                            isDrawRow = true;
+                            DrawCard(data, playerCells, card, id, player, suit);
+                        } else {
+                            playerCells.push(
+                                <td key={`${player.nickname} empty card ${id}`}>
+
+                                </td>
+                            );
+                        }
+                        j++;
+                    }
+                }
+                for (let k = 0; k < 1 + Number(data.G.expansions.thingvellir?.active); k++) {
+                    id += k + 1;
+                    if (k === 0) {
+                        const playerCards: PlayerCardsType[] = Object.values(player.cards).flat(),
+                            hero: IHeroCard | undefined = player.heroes[i];
+                        // TODO Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
+                        if (hero !== undefined && !hero.suit
+                            && !((hero.name === HeroNames.Ylud
+                                && playerCards.findIndex((card: { name: string, }): boolean =>
+                                    card.name === HeroNames.Ylud) !== -1)
+                                || (hero.name === HeroNames.Thrud
+                                    && playerCards.findIndex((card: { name: string; }): boolean =>
+                                        card.name === HeroNames.Thrud) !== -1))) {
+                            isDrawRow = true;
+                            DrawCard(data, playerCells, hero, id, player);
+                        } else {
+                            playerCells.push(
+                                <td key={`${player.nickname} hero ${i}`}>
+
+                                </td>
+                            );
+                        }
+                    } else {
+                        const campCard: CampDeckCardTypes | undefined = player.campCards[i];
+                        if (campCard !== undefined) {
+                            isDrawRow = true;
+                            DrawCard(data, playerCells, campCard, id, player);
+                        } else {
+                            playerCells.push(
+                                <td key={`${player.nickname} camp card ${i}`}>
+
+                                </td>
+                            );
+                        }
+                    }
+                }
+                if (isDrawRow) {
+                    // TODO Check it "?"
+                    playerRows[p]?.[i]?.push(
+                        <tr key={`${player.nickname} board row ${i}`}>{playerCells}</tr>
+                    );
+                } else {
+                    break;
+                }
             }
+            // TODO Check it "?"
+            playersBoards[p]?.push(
+                <table className="mx-auto" key={`${player.nickname} board`}>
+                    <caption>Player {p + 1} ({player.nickname}) cards, {data.G.winner.length ? `Final: ${data.G.totalScore[p]}` : CurrentScoring(player)} points
+                    </caption>
+                    <thead>
+                        <tr>{playerHeaders[p]}</tr>
+                        <tr>{playerHeadersCount[p]}</tr>
+                    </thead>
+                    <tbody>{playerRows[p]}</tbody>
+                </table>
+            );
+        } else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
         }
-        playersBoards[p].push(
-            <table className="mx-auto" key={`${player.nickname} board`}>
-                <caption>Player {p + 1} ({player.nickname}) cards, {data.G.winner.length ? `Final: ${data.G.totalScore[p]}` : CurrentScoring(player)} points
-                </caption>
-                <thead>
-                    <tr>{playerHeaders[p]}</tr>
-                    <tr>{playerHeadersCount[p]}</tr>
-                </thead>
-                <tbody>{playerRows[p]}</tbody>
-            </table>
-        );
     }
     return playersBoards;
 };
@@ -178,123 +194,151 @@ export const DrawPlayersBoardsCoins = (data: BoardProps<IMyGameState>): JSX.Elem
         playerFooters: JSX.Element[][] = [],
         playerRows: JSX.Element[][][] = [];
     for (let p = 0; p < data.ctx.numPlayers; p++) {
-        const player: IPublicPlayer = data.G.publicPlayers[p];
-        let coinIndex = 0;
-        playersBoardsCoins[p] = [];
-        playerHeaders[p] = [];
-        playerFooters[p] = [];
-        playerRows[p] = [];
-        for (let i = 0; i < 2; i++) {
-            const playerCells: JSX.Element[] = [];
-            playerRows[p][i] = [];
-            if (i === 0) {
-                for (let j = 0; j < data.G.tavernsNum; j++) {
-                    playerHeaders[p].push(
-                        <th key={`Tavern ${tavernsConfig[j].name}`}>
-                            <span style={Styles.Taverns(j)} className="bg-tavern-icon">
+        const player: IPublicPlayer | undefined = data.G.publicPlayers[p];
+        if (player !== undefined) {
+            let coinIndex = 0;
+            playersBoardsCoins[p] = [];
+            playerHeaders[p] = [];
+            playerFooters[p] = [];
+            playerRows[p] = [];
+            for (let i = 0; i < 2; i++) {
+                const playerCells: JSX.Element[] = [];
+                // TODO Check it "!"
+                playerRows[p]![i] = [];
+                if (i === 0) {
+                    for (let j = 0; j < data.G.tavernsNum; j++) {
+                        const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[j];
+                        if (currentTavernConfig !== undefined) {
+                            // TODO Check it "?"
+                            playerHeaders[p]?.push(
+                                <th key={`Tavern ${currentTavernConfig.name}`}>
+                                    <span style={Styles.Taverns(j)} className="bg-tavern-icon">
 
-                            </span>
-                        </th>
-                    );
-                    if (player.boardCoins[coinIndex] === null) {
-                        if (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins) {
-                            DrawCoin(data, playerCells, `back-tavern-icon`,
-                                player.boardCoins[coinIndex], coinIndex, player, null,
-                                j, MoveNames.ClickBoardCoinMove, j);
+                                    </span>
+                                </th>
+                            );
                         } else {
-                            DrawCoin(data, playerCells, `back-tavern-icon`, player.boardCoins[coinIndex],
-                                coinIndex, player, null, j);
+                            throw new Error(`Отсутствует конфиг таверны ${j}.`);
                         }
-                    } else if (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins) {
-                        DrawCoin(data, playerCells, `coin`, player.boardCoins[coinIndex], coinIndex,
-                            player, null, null, MoveNames.ClickBoardCoinMove,
-                            j);
-                    } else {
-                        if (data.G.winner.length
-                            || (data.ctx.phase !== Phases.PlaceCoins && data.G.currentTavern >= j)) {
-                            DrawCoin(data, playerCells, `coin`, player.boardCoins[coinIndex], coinIndex,
-                                player);
+                        const boardCoin: CoinType | undefined = player.boardCoins[coinIndex];
+                        if (boardCoin !== undefined) {
+                            if (player.boardCoins[coinIndex] === null) {
+                                if (Number(data.ctx.currentPlayer) === p
+                                    && data.ctx.phase === Phases.PlaceCoins) {
+                                    DrawCoin(data, playerCells, `back-tavern-icon`,
+                                        boardCoin, coinIndex, player, null,
+                                        j, MoveNames.ClickBoardCoinMove, j);
+                                } else {
+                                    DrawCoin(data, playerCells, `back-tavern-icon`, boardCoin,
+                                        coinIndex, player, null, j);
+                                }
+                            } else if (Number(data.ctx.currentPlayer) === p
+                                && data.ctx.phase === Phases.PlaceCoins) {
+                                DrawCoin(data, playerCells, `coin`, boardCoin, coinIndex, player,
+                                    null, null, MoveNames.ClickBoardCoinMove,
+                                    j);
+                            } else {
+                                if (data.G.winner.length
+                                    || (data.ctx.phase !== Phases.PlaceCoins && data.G.currentTavern >= j)) {
+                                    DrawCoin(data, playerCells, `coin`, boardCoin, coinIndex, player);
+                                } else {
+                                    DrawCoin(data, playerCells, `back`, boardCoin, coinIndex, player);
+                                }
+                            }
+                            coinIndex++;
                         } else {
-                            DrawCoin(data, playerCells, `back`, player.boardCoins[coinIndex], coinIndex,
-                                player);
+                            throw new Error(`В массиве монет игрока на столе отсутствует монета ${coinIndex}.`);
                         }
                     }
-                    coinIndex++;
-                }
-            } else if (i === 1) {
-                for (let j: number = data.G.tavernsNum; j <= player.boardCoins.length; j++) {
-                    if (j === player.boardCoins.length) {
-                        playerFooters[p].push(
-                            <th key={`${player.nickname} priority icon`}>
-                                <span style={Styles.Priority()} className="bg-priority-icon">
+                } else if (i === 1) {
+                    for (let j: number = data.G.tavernsNum; j <= player.boardCoins.length; j++) {
+                        if (j === player.boardCoins.length) {
+                            // TODO Check it "?"
+                            playerFooters[p]?.push(
+                                <th key={`${player.nickname} priority icon`}>
+                                    <span style={Styles.Priority()} className="bg-priority-icon">
 
-                                </span>
-                            </th>
-                        );
-                        playerCells.push(
-                            <td key={`${player.nickname} priority gem`}
-                                className="bg-gray-300">
-                                <span style={Styles.Priorities(player.priority.value)}
-                                    className="bg-priority">
+                                    </span>
+                                </th>
+                            );
+                            playerCells.push(
+                                <td key={`${player.nickname} priority gem`}
+                                    className="bg-gray-300">
+                                    <span style={Styles.Priorities(player.priority.value)}
+                                        className="bg-priority">
 
-                                </span>
-                            </td>
-                        );
-                    } else {
-                        playerFooters[p].push(
-                            <th key={`${player.nickname} exchange icon ${j}`}>
-                                <span style={Styles.Exchange()} className="bg-small-market-coin">
-
-                                </span>
-                            </th>
-                        );
-                        const coin: CoinType = player.boardCoins[coinIndex];
-                        if (coin === null) {
-                            if (Number(data.ctx.currentPlayer) === p && data.ctx.phase === Phases.PlaceCoins) {
-                                DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex,
-                                    player, null, null,
-                                    MoveNames.ClickBoardCoinMove, j);
-                            } else {
-                                DrawCoin(data, playerCells, `back-small-market-coin`, coin, coinIndex,
-                                    player);
-                            }
-                        } else if (Number(data.ctx.currentPlayer) === p
-                            && data.ctx.phase === Phases.PlaceCoins) {
-                            DrawCoin(data, playerCells, `coin`, coin, coinIndex, player, null,
-                                null, MoveNames.ClickBoardCoinMove, j);
+                                    </span>
+                                </td>
+                            );
                         } else {
-                            if (data.G.winner.length || (data.ctx.phase !== Phases.PlaceCoins
-                                && Number(data.ctx.currentPlayer) === p
-                                && player.boardCoins[data.G.currentTavern] !== null
-                                && player.boardCoins[data.G.currentTavern]?.isTriggerTrading)) {
-                                DrawCoin(data, playerCells, `coin`, coin, coinIndex, player);
+                            // TODO Check it "?"
+                            playerFooters[p]?.push(
+                                <th key={`${player.nickname} exchange icon ${j}`}>
+                                    <span style={Styles.Exchange()} className="bg-small-market-coin">
+
+                                    </span>
+                                </th>
+                            );
+                            const boardCoin: CoinType | undefined = player.boardCoins[coinIndex];
+                            if (boardCoin !== undefined) {
+                                if (boardCoin === null) {
+                                    if (Number(data.ctx.currentPlayer) === p
+                                        && data.ctx.phase === Phases.PlaceCoins) {
+                                        DrawCoin(data, playerCells, `back-small-market-coin`, boardCoin,
+                                            coinIndex, player, null, null,
+                                            MoveNames.ClickBoardCoinMove, j);
+                                    } else {
+                                        DrawCoin(data, playerCells, `back-small-market-coin`, boardCoin,
+                                            coinIndex, player);
+                                    }
+                                } else if (Number(data.ctx.currentPlayer) === p
+                                    && data.ctx.phase === Phases.PlaceCoins) {
+                                    DrawCoin(data, playerCells, `coin`, boardCoin, coinIndex, player,
+                                        null, null,
+                                        MoveNames.ClickBoardCoinMove, j);
+                                } else {
+                                    if (data.G.winner.length || (data.ctx.phase !== Phases.PlaceCoins
+                                        && Number(data.ctx.currentPlayer) === p
+                                        && player.boardCoins[data.G.currentTavern] !== null
+                                        && player.boardCoins[data.G.currentTavern]?.isTriggerTrading)) {
+                                        DrawCoin(data, playerCells, `coin`, boardCoin, coinIndex,
+                                            player);
+                                    } else {
+                                        DrawCoin(data, playerCells, `back`, boardCoin, coinIndex,
+                                            player);
+                                    }
+                                }
+                                coinIndex++;
                             } else {
-                                DrawCoin(data, playerCells, `back`, coin, coinIndex, player);
+                                throw new Error(`В массиве монет игрока на столе отсутствует монета ${coinIndex}.`);
                             }
                         }
-                        coinIndex++;
                     }
                 }
+                // TODO Check it "?"
+                playerRows[p]?.[i]?.push(<tr
+                    key={`${player.nickname} board coins row ${i}`}>{playerCells}</tr>);
             }
-            playerRows[p][i].push(<tr
-                key={`${player.nickname} board coins row ${i}`}>{playerCells}</tr>);
+            // TODO Check it "?"
+            playersBoardsCoins[p]?.push(
+                <table className="mx-auto" key={`${player.nickname} board coins`}>
+                    <caption>
+                        Player {p + 1} ({player.nickname}) played coins
+                    </caption>
+                    <thead>
+                        <tr>{playerHeaders[p]}</tr>
+                    </thead>
+                    <tbody>
+                        {playerRows[p]}
+                    </tbody>
+                    <tfoot>
+                        <tr>{playerFooters[p]}</tr>
+                    </tfoot>
+                </table>
+            );
+        } else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
         }
-        playersBoardsCoins[p].push(
-            <table className="mx-auto" key={`${player.nickname} board coins`}>
-                <caption>
-                    Player {p + 1} ({player.nickname}) played coins
-                </caption>
-                <thead>
-                    <tr>{playerHeaders[p]}</tr>
-                </thead>
-                <tbody>
-                    {playerRows[p]}
-                </tbody>
-                <tfoot>
-                    <tr>{playerFooters[p]}</tr>
-                </tfoot>
-            </table>
-        );
     }
     return playersBoardsCoins;
 };
@@ -329,50 +373,60 @@ export const DrawPlayersHandsCoins = (data: BoardProps<IMyGameState>): JSX.Eleme
             break;
     }
     for (let p = 0; p < data.ctx.numPlayers; p++) {
-        const player: IPublicPlayer = data.G.publicPlayers[p],
+        const player: IPublicPlayer | undefined = data.G.publicPlayers[p],
             playerCells: JSX.Element[] = [];
         playersHandsCoins[p] = [];
-        for (let i = 0; i < 1; i++) {
-            for (let j = 0; j < player.handCoins.length; j++) {
-                if (player.handCoins[j] === null) {
-                    playerCells.push(
-                        <td key={`${player.nickname} hand coin ${j} empty`}
-                            className="bg-yellow-300">
-                            <span className="bg-coin bg-yellow-300 border-2">
+        if (player !== undefined) {
+            for (let i = 0; i < 1; i++) {
+                for (let j = 0; j < player.handCoins.length; j++) {
+                    if (player.handCoins[j] === null) {
+                        playerCells.push(
+                            <td key={`${player.nickname} hand coin ${j} empty`}
+                                className="bg-yellow-300">
+                                <span className="bg-coin bg-yellow-300 border-2">
 
-                            </span>
-                        </td>
-                    );
-                } else {
-                    if (Number(data.ctx.currentPlayer) === p || data.G.winner.length) {
-                        let coinClasses = `border-2`;
-                        if (data.G.publicPlayers[p].selectedCoin === j) {
-                            coinClasses = `border-2 border-green-400`;
-                        }
-                        if (!data.G.winner.length && (data.ctx.phase === Phases.PlaceCoins
-                            || data.ctx.phase === Phases.PlaceCoinsUline || (data.ctx.activePlayers
-                                && data.ctx.activePlayers[Number(data.ctx.currentPlayer)] ===
-                                Stages.PlaceTradingCoinsUline))) {
-                            DrawCoin(data, playerCells, `coin`, player.handCoins[j], j, player,
-                                coinClasses, null, moveName, j);
-                        } else {
-                            DrawCoin(data, playerCells, `coin`, player.handCoins[j], j, player,
-                                coinClasses);
-                        }
+                                </span>
+                            </td>
+                        );
                     } else {
-                        DrawCoin(data, playerCells, `back`, player.handCoins[j], j, player);
+                        const handCoin: CoinType | undefined = player.handCoins[j];
+                        if (handCoin !== undefined) {
+                            if (Number(data.ctx.currentPlayer) === p || data.G.winner.length) {
+                                let coinClasses = `border-2`;
+                                if (player.selectedCoin === j) {
+                                    coinClasses = `border-2 border-green-400`;
+                                }
+                                if (!data.G.winner.length && (data.ctx.phase === Phases.PlaceCoins
+                                    || data.ctx.phase === Phases.PlaceCoinsUline || (data.ctx.activePlayers
+                                        && data.ctx.activePlayers[Number(data.ctx.currentPlayer)] ===
+                                        Stages.PlaceTradingCoinsUline))) {
+                                    DrawCoin(data, playerCells, `coin`, handCoin, j, player,
+                                        coinClasses, null, moveName, j);
+                                } else {
+                                    DrawCoin(data, playerCells, `coin`, handCoin, j, player,
+                                        coinClasses);
+                                }
+                            } else {
+                                DrawCoin(data, playerCells, `back`, handCoin, j, player);
+                            }
+                        } else {
+                            throw new Error(`В массиве монет игрока в руке отсутствует монета ${j}.`);
+                        }
                     }
                 }
             }
+            // TODO Check it "?"
+            playersHandsCoins[p]?.push(
+                <table className="mx-auto" key={`${player.nickname} hand coins`}>
+                    <caption>Player {p + 1} ({player.nickname}) coins</caption>
+                    <tbody>
+                        <tr>{playerCells}</tr>
+                    </tbody>
+                </table>
+            );
+        } else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
         }
-        playersHandsCoins[p].push(
-            <table className="mx-auto" key={`${player.nickname} hand coins`}>
-                <caption>Player {p + 1} ({player.nickname}) coins</caption>
-                <tbody>
-                    <tr>{playerCells}</tr>
-                </tbody>
-            </table>
-        );
     }
     return playersHandsCoins;
 };
