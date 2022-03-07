@@ -89,9 +89,8 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
     for (let i = 0; i < coinValues.length; i++) {
         const coinValue: number | undefined = coinValues[i];
         if (coinValue !== undefined) {
-            counts[coinValue] = 1 + (counts[coinValue] || 0);
-        } else {
-            throw new Error(`В массиве значений монет отсутствует ${i}.`);
+            const value: number = counts[coinValue] ?? 0;
+            counts[coinValue] = 1 + value;
         }
     }
     for (const prop in counts) {

@@ -253,5 +253,5 @@ export const enum ValidatorNames {
 export const enum TavernNames {
     LaughingGoblin = `«Весёлый гоблин»`,
     DancingDragon = `«Парящий дракон»`,
-    ShiningHorse = `«Весёлый гоблин»`,
+    ShiningHorse = `«Гарцующий конь»`,
 }

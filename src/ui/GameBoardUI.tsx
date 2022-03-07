@@ -23,51 +23,46 @@ import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardF
 export const DrawCamp = (data: BoardProps<IMyGameState>): JSX.Element => {
     const boardCells: JSX.Element[] = [],
         campDeck: CampDeckCardTypes[] | undefined = data.G.campDecks[data.G.campDecks.length - data.G.tierToEnd];
-    if (campDeck !== undefined) {
-        for (let i = 0; i < 1; i++) {
-            for (let j = 0; j < data.G.campNum; j++) {
-                const campCard: CampCardTypes | undefined = data.G.camp[j];
-                if (campCard !== undefined) {
-                    if (campCard === null) {
-                        boardCells.push(
-                            <td className="bg-yellow-200" key={`Camp ${j} icon`}>
-                                <span style={Styles.Camp()} className="bg-camp-icon">
+    for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < data.G.campNum; j++) {
+            const campCard: CampCardTypes | undefined = data.G.camp[j];
+            if (campCard !== undefined) {
+                if (campCard === null) {
+                    boardCells.push(
+                        <td className="bg-yellow-200" key={`Camp ${j} icon`}>
+                            <span style={Styles.Camp()} className="bg-camp-icon">
 
-                                </span>
-                            </td>
-                        );
-                    } else {
-                        DrawCard(data, boardCells, campCard, j, null, null,
-                            MoveNames.ClickCampCardMove, j);
-                    }
+                            </span>
+                        </td>
+                    );
                 } else {
-                    throw new Error(`В массиве карт кэмпа отсутствует карта ${j}.`);
+                    DrawCard(data, boardCells, campCard, j, null, null,
+                        MoveNames.ClickCampCardMove, j);
                 }
+            } else {
+                throw new Error(`В массиве карт кэмпа отсутствует карта ${j}.`);
             }
         }
-        return (
-            <table>
-                <caption>
-                    <span style={Styles.Camp()} className="bg-top-camp-icon">
-
-                    </span>
-                    <span>Camp {data.G.campDecks.length - data.G.tierToEnd + 1 > data.G.campDecks.length ?
-                        data.G.campDecks.length : data.G.campDecks.length - data.G.tierToEnd + 1}
-                        ({data.G.campDecks.length - data.G.tierToEnd !== 2 ? campDeck.length : 0}
-                        {data.G.campDecks.length - data.G.tierToEnd === 0 ? `/` +
-                            data.G.campDecks.reduce((count: number, current: CampCardTypes[]) =>
-                                count + current.length, 0) : ``} cards left)
-                    </span>
-                </caption>
-                <tbody>
-                    <tr>{boardCells}</tr>
-                </tbody>
-            </table>
-        );
-    } else {
-        throw new Error(`В массиве дек карт кэмпа отсутствует дека ${data.G.campDecks.length - data.G.tierToEnd
-            }.`);
     }
+    return (
+        <table>
+            <caption>
+                <span style={Styles.Camp()} className="bg-top-camp-icon">
+
+                </span>
+                <span>Camp {data.G.campDecks.length - data.G.tierToEnd + 1 > data.G.campDecks.length ?
+                    data.G.campDecks.length : data.G.campDecks.length - data.G.tierToEnd + 1}
+                    ({campDeck !== undefined ? campDeck.length : 0}
+                    {data.G.campDecks.length - data.G.tierToEnd === 0 ? `/` +
+                        data.G.campDecks.reduce((count: number, current: CampCardTypes[]) =>
+                            count + current.length, 0) : ``} cards left)
+                </span>
+            </caption>
+            <tbody>
+                <tr>{boardCells}</tr>
+            </tbody>
+        </table>
+    );
 };
 
 /**
@@ -357,7 +352,8 @@ export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) =
                                     DrawCard(data, boardCells, tavernCard, j, null, suit,
                                         MoveNames.ClickCardMove, j);
                                 } else {
-                                    DrawCard(data, boardCells, tavernCard, j, null, suit);
+                                    DrawCard(data, boardCells, tavernCard, j, null,
+                                        suit);
                                 }
                             }
                         } else {
@@ -400,20 +396,16 @@ export const DrawTaverns = (data: BoardProps<IMyGameState>, gridClass: string) =
  */
 export const DrawTierCards = (data: BoardProps<IMyGameState>): JSX.Element => {
     const deck: DeckCardTypes[] | undefined = data.G.decks[data.G.decks.length - data.G.tierToEnd];
-    if (deck !== undefined) {
-        return (
-            <b>Tier: <span className="italic">
-                {data.G.decks.length - data.G.tierToEnd + 1 > data.G.decks.length ? data.G.decks.length :
-                    data.G.decks.length - data.G.tierToEnd + 1}/{data.G.decks.length}
-                ({data.G.decks.length - data.G.tierToEnd !== 2 ? deck.length : 0}
-                {data.G.decks.length - data.G.tierToEnd === 0 ? `/`
-                    + data.G.decks.reduce((count: number, current: DeckCardTypes[]) =>
-                        count + current.length, 0) : ``} cards left)
-            </span></b>
-        );
-    } else {
-        throw new Error(`В массиве дек карт отсутствует дека ${data.G.decks.length - data.G.tierToEnd}.`);
-    }
+    return (
+        <b>Tier: <span className="italic">
+            {data.G.decks.length - data.G.tierToEnd + 1 > data.G.decks.length ? data.G.decks.length :
+                data.G.decks.length - data.G.tierToEnd + 1}/{data.G.decks.length}
+            ({deck !== undefined ? deck.length : 0}
+            {data.G.decks.length - data.G.tierToEnd === 0 ? `/`
+                + data.G.decks.reduce((count: number, current: DeckCardTypes[]) =>
+                    count + current.length, 0) : ``} cards left)
+        </span></b>
+    );
 };
 
 /**

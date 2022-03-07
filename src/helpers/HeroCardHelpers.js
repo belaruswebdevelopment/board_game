@@ -21,9 +21,9 @@ export const AddHeroCardToPlayerCards = (G, ctx, hero) => {
             player.cards[hero.suit].push(hero);
             AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
         }
-    }
-    else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        }
     }
 };
 /**

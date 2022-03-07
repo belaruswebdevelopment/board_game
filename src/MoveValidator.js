@@ -146,9 +146,9 @@ export const moveValidators = {
                 resultsForCoins = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
             }
             const minResultForCoins = Math.min(...resultsForCoins), maxResultForCoins = Math.max(...resultsForCoins);
-            const deck1 = G.decks[1];
-            if (deck1 !== undefined) {
-                const tradingProfit = deck1.length > 9 ? 1 : 0;
+            const deck = G.decks[G.decks.length - 1];
+            if (deck !== undefined) {
+                const tradingProfit = deck.length > 9 ? 1 : 0;
                 let [positionForMinCoin, positionForMaxCoin] = [-1, -1];
                 if (minResultForCoins <= 0) {
                     positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
@@ -231,7 +231,7 @@ export const moveValidators = {
                 throw new Error(`Отсутствует вариант выкладки монет для ботов.`);
             }
             else {
-                throw new Error(`В массиве дек карт отсутствует дека 2 эпохи.`);
+                throw new Error(`В массиве дек карт отсутствует дека ${G.decks.length - 1} эпохи.`);
             }
         },
         moveName: MoveNames.BotsPlaceAllCoinsMove,

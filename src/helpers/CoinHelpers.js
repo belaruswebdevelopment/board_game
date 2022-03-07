@@ -23,6 +23,7 @@ export const GetMaxCoinValue = (player) => (Math.max(...player.boardCoins.filter
  * @returns Порядок ходов игроков & порядок изменения ходов игроками.
  */
 export const ResolveBoardCoins = (G, ctx) => {
+    var _a;
     const playersOrderNumbers = [], coinValues = [], exchangeOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI = G.publicPlayers[i];
@@ -82,10 +83,8 @@ export const ResolveBoardCoins = (G, ctx) => {
     for (let i = 0; i < coinValues.length; i++) {
         const coinValue = coinValues[i];
         if (coinValue !== undefined) {
-            counts[coinValue] = 1 + (counts[coinValue] || 0);
-        }
-        else {
-            throw new Error(`В массиве значений монет отсутствует ${i}.`);
+            const value = (_a = counts[coinValue]) !== null && _a !== void 0 ? _a : 0;
+            counts[coinValue] = 1 + value;
         }
     }
     for (const prop in counts) {

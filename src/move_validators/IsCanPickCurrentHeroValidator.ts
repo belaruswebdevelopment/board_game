@@ -39,9 +39,9 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
                             } else {
                                 throw new Error(`В массиве карт фракции ${suit} отсутствует последняя карта ${last}.`);
                             }
+                        } else {
+                            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
                         }
-                    } else {
-                        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
                     }
                 }
             }

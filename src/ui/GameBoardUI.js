@@ -20,30 +20,25 @@ import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardF
  */
 export const DrawCamp = (data) => {
     const boardCells = [], campDeck = data.G.campDecks[data.G.campDecks.length - data.G.tierToEnd];
-    if (campDeck !== undefined) {
-        for (let i = 0; i < 1; i++) {
-            for (let j = 0; j < data.G.campNum; j++) {
-                const campCard = data.G.camp[j];
-                if (campCard !== undefined) {
-                    if (campCard === null) {
-                        boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }) }, `Camp ${j} icon`));
-                    }
-                    else {
-                        DrawCard(data, boardCells, campCard, j, null, null, MoveNames.ClickCampCardMove, j);
-                    }
+    for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < data.G.campNum; j++) {
+            const campCard = data.G.camp[j];
+            if (campCard !== undefined) {
+                if (campCard === null) {
+                    boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }) }, `Camp ${j} icon`));
                 }
                 else {
-                    throw new Error(`В массиве карт кэмпа отсутствует карта ${j}.`);
+                    DrawCard(data, boardCells, campCard, j, null, null, MoveNames.ClickCampCardMove, j);
                 }
             }
+            else {
+                throw new Error(`В массиве карт кэмпа отсутствует карта ${j}.`);
+            }
         }
-        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: ["Camp ", data.G.campDecks.length - data.G.tierToEnd + 1 > data.G.campDecks.length ?
-                                    data.G.campDecks.length : data.G.campDecks.length - data.G.tierToEnd + 1, "(", data.G.campDecks.length - data.G.tierToEnd !== 2 ? campDeck.length : 0, data.G.campDecks.length - data.G.tierToEnd === 0 ? `/` +
-                                    data.G.campDecks.reduce((count, current) => count + current.length, 0) : ``, " cards left)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
     }
-    else {
-        throw new Error(`В массиве дек карт кэмпа отсутствует дека ${data.G.campDecks.length - data.G.tierToEnd}.`);
-    }
+    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: ["Camp ", data.G.campDecks.length - data.G.tierToEnd + 1 > data.G.campDecks.length ?
+                                data.G.campDecks.length : data.G.campDecks.length - data.G.tierToEnd + 1, "(", campDeck !== undefined ? campDeck.length : 0, data.G.campDecks.length - data.G.tierToEnd === 0 ? `/` +
+                                data.G.campDecks.reduce((count, current) => count + current.length, 0) : ``, " cards left)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
 };
 /**
  * <h3>Отрисовка игровой информации о текущем игроке и текущем ходе.</h3>
@@ -304,14 +299,9 @@ export const DrawTaverns = (data, gridClass) => {
  */
 export const DrawTierCards = (data) => {
     const deck = data.G.decks[data.G.decks.length - data.G.tierToEnd];
-    if (deck !== undefined) {
-        return (_jsxs("b", { children: ["Tier: ", _jsxs("span", { className: "italic", children: [data.G.decks.length - data.G.tierToEnd + 1 > data.G.decks.length ? data.G.decks.length :
-                            data.G.decks.length - data.G.tierToEnd + 1, "/", data.G.decks.length, "(", data.G.decks.length - data.G.tierToEnd !== 2 ? deck.length : 0, data.G.decks.length - data.G.tierToEnd === 0 ? `/`
-                            + data.G.decks.reduce((count, current) => count + current.length, 0) : ``, " cards left)"] })] }));
-    }
-    else {
-        throw new Error(`В массиве дек карт отсутствует дека ${data.G.decks.length - data.G.tierToEnd}.`);
-    }
+    return (_jsxs("b", { children: ["Tier: ", _jsxs("span", { className: "italic", children: [data.G.decks.length - data.G.tierToEnd + 1 > data.G.decks.length ? data.G.decks.length :
+                        data.G.decks.length - data.G.tierToEnd + 1, "/", data.G.decks.length, "(", deck !== undefined ? deck.length : 0, data.G.decks.length - data.G.tierToEnd === 0 ? `/`
+                        + data.G.decks.reduce((count, current) => count + current.length, 0) : ``, " cards left)"] })] }));
 };
 /**
  * <h3>Отрисовка игровой информации о текущем статусе игры.</h3>
