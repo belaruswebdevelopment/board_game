@@ -64,7 +64,6 @@ export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
     }
 };
 export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, boardCells) => {
-    var _a;
     // TODO Discard cards must be hidden from others users?
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
@@ -78,27 +77,16 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =>
         for (let i = 0;; i++) {
             const playerCells = [];
             let isDrawRow = false, isExit = true, id = 0;
-            if (!Array.isArray(data)) {
-                playerRows[i] = [];
-            }
             let j = 0;
             for (suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     id = i + j;
-                    if (player.cards[suit][i] !== undefined) {
+                    const card = player.cards[suit][i];
+                    if (card !== undefined) {
                         isExit = false;
-                        if (Array.isArray(data)) {
+                        if (!IsHeroCard(card)) {
                             isDrawRow = true;
-                        }
-                        if (!IsHeroCard(player.cards[suit][i])) {
-                            isDrawRow = true;
-                            const card = player.cards[suit][i];
-                            if (card !== undefined) {
-                                DrawCard(data, playerCells, card, id, player, suit, MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
-                            }
-                            else {
-                                throw new Error(`В массиве карт фракции ${suit} отсутствует карта ${i}.`);
-                            }
+                            DrawCard(data, playerCells, card, id, player, suit, MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
                         }
                         else {
                             playerCells.push(_jsx("td", {}, `${player.nickname} empty card ${id}`));
@@ -111,8 +99,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =>
                 }
             }
             if (isDrawRow) {
-                // TODO Check it "?"
-                (_a = playerRows[i]) === null || _a === void 0 ? void 0 : _a.push(_jsx("tr", { children: playerCells }, `${player.nickname} board row ${i}`));
+                playerRows.push(_jsx("tr", { children: playerCells }, `${player.nickname} board row ${i}`));
             }
             if (isExit) {
                 break;
@@ -154,7 +141,7 @@ export const DiscardCardProfit = (G, ctx, data, boardCells) => {
     }
 };
 export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, data, boardCells) => {
-    var _a, _b, _c;
+    var _a, _b;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const playersHeaders = [], playersRows = [], suit = (_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.suit;
@@ -172,23 +159,17 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =
             }
             for (let i = 0;; i++) {
                 let isDrawRow = false, isExit = true;
-                playersRows[i] = [];
                 const playersCells = [];
                 for (let p = 0; p < G.publicPlayers.length; p++) {
                     if (p !== Number(ctx.currentPlayer)) {
                         const playerP2 = G.publicPlayers[p];
                         if (playerP2 !== undefined) {
-                            if (playerP2.cards[suit][i] !== undefined) {
-                                if (!IsHeroCard(playerP2.cards[suit][i])) {
+                            const card = playerP2.cards[suit][i];
+                            if (card !== undefined) {
+                                if (!IsHeroCard(card)) {
                                     isExit = false;
                                     isDrawRow = true;
-                                    const card = playerP2.cards[suit][i];
-                                    if (card !== undefined) {
-                                        DrawCard(data, playersCells, card, i, playerP2, suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, suit, p, i);
-                                    }
-                                    else {
-                                        throw new Error(`В массиве карт фракции ${suit} игрока отсутствует карта ${i}.`);
-                                    }
+                                    DrawCard(data, playersCells, card, i, playerP2, suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, suit, p, i);
                                 }
                             }
                             else {
@@ -201,8 +182,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =
                     }
                 }
                 if (isDrawRow) {
-                    // TODO Check it "?"
-                    (_c = playersRows[i]) === null || _c === void 0 ? void 0 : _c.push(_jsx("tr", { children: playersCells }, `Discard suit cardboard row ${i}`));
+                    playersRows.push(_jsx("tr", { children: playersCells }, `Discard suit cardboard row ${i}`));
                 }
                 if (isExit) {
                     break;

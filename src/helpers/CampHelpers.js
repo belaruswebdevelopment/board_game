@@ -88,16 +88,23 @@ const AddRemainingCampCardsToDiscard = (G) => {
     var _a;
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
     for (let i = 0; i < G.camp.length; i++) {
-        if (G.camp[i] !== null) {
-            const card = G.camp.splice(i, 1, null)[0];
-            if (card !== undefined) {
-                if (card !== null) {
-                    G.discardCampCardsDeck.push(card);
+        const campCard = G.camp[i];
+        if (campCard !== undefined) {
+            if (campCard !== null) {
+                const discardedCard = G.camp.splice(i, 1, null)[0];
+                if (discardedCard !== undefined) {
+                    if (discardedCard !== null) {
+                        G.discardCampCardsDeck.push(discardedCard);
+                    }
+                }
+                else {
+                    G.camp.splice(i, 1, null)[0];
+                    throw new Error(`В массиве карт кэмпа отсутствует карта кэмпа ${i} для сброса.`);
                 }
             }
-            else {
-                throw new Error(`Отсутствует карта кэмпа в картах кэмпа.`);
-            }
+        }
+        else {
+            throw new Error(`В массиве карт кэмпа отсутствует карта кэмпа ${i}.`);
         }
     }
     const campDeck = G.campDecks[G.campDecks.length - G.tierToEnd - 1];

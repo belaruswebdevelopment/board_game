@@ -4,7 +4,7 @@ import { BuffNames } from "../typescript/enums";
 import type { CoinType, IBuffs, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
-export const DraupnirScoring = (player?: IPublicPlayer): number | never => {
+export const DraupnirScoring = (player?: IPublicPlayer): number => {
     if (player !== undefined) {
         return player.boardCoins.filter((coin: CoinType): boolean =>
             IsCoin(coin) && coin.value >= 15).length * 6;
@@ -12,7 +12,7 @@ export const DraupnirScoring = (player?: IPublicPlayer): number | never => {
     throw new Error(`Function param 'player' is undefined.`);
 };
 
-export const HrafnsmerkiScoring = (player?: IPublicPlayer): number | never => {
+export const HrafnsmerkiScoring = (player?: IPublicPlayer): number => {
     if (player !== undefined) {
         let score = 0,
             suit: SuitTypes;
@@ -27,7 +27,7 @@ export const HrafnsmerkiScoring = (player?: IPublicPlayer): number | never => {
     throw new Error(`Function param 'player' is undefined.`);
 };
 
-export const MjollnirScoring = (player?: IPublicPlayer): number | never => {
+export const MjollnirScoring = (player?: IPublicPlayer): number => {
     if (player !== undefined) {
         const suit: SuitTypes | undefined = player.buffs.find((buff: IBuffs): boolean =>
             buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
@@ -40,7 +40,7 @@ export const MjollnirScoring = (player?: IPublicPlayer): number | never => {
     throw new Error(`Function param 'player' is undefined.`);
 };
 
-export const SvalinnScoring = (player?: IPublicPlayer): number | never => {
+export const SvalinnScoring = (player?: IPublicPlayer): number => {
     if (player !== undefined) {
         return player.heroes.length * 5;
     }

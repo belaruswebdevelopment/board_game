@@ -25,8 +25,7 @@ import type { ICard, IHeroCard, IMyGameState, IPublicPlayer, IVariant, PlayerCar
  * @param suit Название фракции.
  * @param cardId Id карты.
  */
-export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number):
-    void | never => {
+export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const pickedCard: PlayerCardsType | undefined = player.cards[suit].splice(cardId, 1)[0];
@@ -102,7 +101,7 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
  * @param ctx
  * @param suit Название фракции.
  */
-export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void | never => {
+export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = player.stack[0]?.variants;
@@ -142,7 +141,7 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): vo
  * @param ctx
  * @param suit Название фракции.
  */
-export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void | never => {
+export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = player.stack[0]?.variants;

@@ -28,7 +28,7 @@ export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): boole
     }
 };
 
-export const CheckGetMjollnirProfitOrder = (G: IMyGameState): void | never => {
+export const CheckGetMjollnirProfitOrder = (G: IMyGameState): void => {
     const mjollnirPlayerIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
         CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
     if (mjollnirPlayerIndex !== -1) {

@@ -335,8 +335,7 @@ export const objectives = () => ({
                             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
                         }
                     }
-                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
-                    const totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
                     if (totalScoreCurPlayer !== undefined) {
                         if (totalScoreCurPlayer === top1) {
                             if (top2 !== undefined) {
@@ -387,8 +386,7 @@ export const objectives = () => ({
                             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
                         }
                     }
-                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2);
-                    const totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
+                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
                     if (totalScoreCurPlayer !== undefined) {
                         if (totalScoreCurPlayer === top1) {
                             if (top2 !== undefined) {

@@ -111,7 +111,7 @@ export const CheckEndPickCardsTurn = (G: IMyGameState, ctx: Ctx): boolean | void
  * @param G
  * @param ctx
  */
-export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void | never => {
+export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void => {
     const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[G.currentTavern];
     if (currentTavernConfig !== undefined) {
         if (CheckIfCurrentTavernEmpty(G)) {

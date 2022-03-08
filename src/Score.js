@@ -70,21 +70,21 @@ export const FinalScoring = (G, ctx, player, playerId, warriorDistinctions) => {
     let heroesScore = 0, dwerg_brothers = 0;
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
-        const currentHero = player.heroes[i];
-        if (currentHero !== undefined) {
-            const heroData = Object.values(heroesConfig).find((hero) => hero.name === currentHero.name);
+        const hero = player.heroes[i];
+        if (hero !== undefined) {
+            const heroData = Object.values(heroesConfig).find((heroObj) => heroObj.name === hero.name);
             if (heroData !== undefined) {
-                if (currentHero.name.startsWith(`Dwerg`)) {
+                if (hero.name.startsWith(`Dwerg`)) {
                     dwerg_brothers += heroData.scoringRule(player);
                 }
                 else {
                     const currentHeroScore = heroData.scoringRule(player);
                     heroesScore += currentHeroScore;
-                    AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${currentHero.name} игрока ${player.nickname}: ${currentHeroScore}.`);
+                    AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${hero.name} игрока ${player.nickname}: ${currentHeroScore}.`);
                 }
             }
             else {
-                throw new Error(`Не удалось найти героя ${currentHero.name}.`);
+                throw new Error(`Не удалось найти героя ${hero.name}.`);
             }
         }
         else {

@@ -27,7 +27,7 @@ import type { CampDeckCardTypes, DiscardCardTypes, ICard, IMyGameState, IPublicP
  * @param cardId Id карты.
  */
 export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number):
-    void | never => {
+    void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const discardedCard: PlayerCardsType | undefined = player.cards[suit].splice(cardId, 1)[0];
@@ -79,7 +79,7 @@ export const DiscardCardFromTavernAction = (G: IMyGameState, ctx: Ctx, cardId: n
  * @param ctx
  * @param cardId Id карты.
  */
-export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId: number): void | never => {
+export const GetEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const pickedCard: CampDeckCardTypes | undefined =
@@ -195,7 +195,7 @@ export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void
  * @param ctx
  * @param suit Название фракции.
  */
-export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void | never => {
+export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const pickedCard: PickedCardType = player.pickedCard;

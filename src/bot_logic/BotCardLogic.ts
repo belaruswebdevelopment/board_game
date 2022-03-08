@@ -49,7 +49,7 @@ export const CompareCards = (card1: TavernCardTypes, card2: TavernCardTypes): nu
  * @returns Сравнительное значение.
  */
 export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardTypes, cardId: number,
-    tavern: TavernCardTypes[]): number | never => {
+    tavern: TavernCardTypes[]): number => {
     if (IsCardNotActionAndNotNull(compareCard)) {
         const deckTier1: DeckCardTypes[] | undefined = G.decks[0];
         if (deckTier1 !== undefined) {
@@ -102,7 +102,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
  * @param data ????????????????????????????????????????????????????????????????????
  * @returns "Средняя" карта дворфа.
  */
-export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData): ICard | never => {
+export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData): ICard => {
     let totalPoints = 0;
     const pointsValuesPlayers: INumberValues | INumberArrayValues | undefined = suitConfig.pointsValues()[data.players];
     if (pointsValuesPlayers !== undefined) {

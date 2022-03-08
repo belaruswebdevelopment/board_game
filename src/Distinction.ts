@@ -18,7 +18,7 @@ import type { DeckCardTypes, DistinctionTypes, IMyGameState, IPublicPlayer, Suit
  * @param suit Фракция.
  * @returns Индекс игрока с преимуществом по фракции, если имеется.
  */
-export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): DistinctionTypes | never => {
+export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): DistinctionTypes => {
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI: IPublicPlayer | undefined = G.publicPlayers[i];
@@ -66,7 +66,7 @@ export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: Sui
  * @param suit Название фракции.
  * @returns Индексы игроков с преимуществом по фракции.
  */
-export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): number[] | never => {
+export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): number[] => {
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI: IPublicPlayer | undefined = G.publicPlayers[i];

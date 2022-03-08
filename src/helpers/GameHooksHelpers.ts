@@ -197,7 +197,7 @@ export const EndTurnActions = (G: IMyGameState, ctx: Ctx): boolean | void => {
  * @param G
  * @param ctx
  */
-export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx): void | never => {
+export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx): void => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player: IPublicPlayer | undefined = G.publicPlayers[i];
         if (player !== undefined) {

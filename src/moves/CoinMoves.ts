@@ -68,7 +68,7 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  * @returns
  */
 export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number, type: string,
-    isInitial: boolean): string | void | never => {
+    isInitial: boolean): string | void => {
     const isValidMove: boolean = IsValidMove(G, ctx, Stages.UpgradeCoin, {
         coinId,
         type,

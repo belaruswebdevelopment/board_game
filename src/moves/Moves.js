@@ -21,7 +21,6 @@ import { Stages, SuitNames } from "../typescript/enums";
  * @returns
  */
 export const ClickCardMove = (G, ctx, cardId) => {
-    var _a;
     const isValidMove = IsValidMove(G, ctx, Stages.Default1, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -30,8 +29,7 @@ export const ClickCardMove = (G, ctx, cardId) => {
     if (currentTavern !== undefined) {
         const card = currentTavern[cardId];
         if (card !== undefined) {
-            // TODO Check it "?"
-            (_a = G.taverns[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.splice(cardId, 1, null);
+            G.taverns[G.currentTavern].splice(cardId, 1, null);
             if (card !== null) {
                 const isAdded = AddCardToPlayer(G, ctx, card);
                 if (!IsCardNotActionAndNotNull(card)) {
@@ -67,7 +65,6 @@ export const ClickCardMove = (G, ctx, cardId) => {
  * @param cardId Id карты.
  */
 export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
-    var _a;
     const isValidMove = IsValidMove(G, ctx, Stages.PickDistinctionCard, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -76,8 +73,7 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     if (deck1 !== undefined) {
         const card = deck1[cardId];
         if (card !== undefined) {
-            // TODO Check it "?"
-            const pickedCard = (_a = G.decks[1]) === null || _a === void 0 ? void 0 : _a.splice(cardId, 1)[0], isAdded = AddCardToPlayer(G, ctx, card);
+            const pickedCard = G.decks[1].splice(cardId, 1)[0], isAdded = AddCardToPlayer(G, ctx, card);
             if (pickedCard !== undefined) {
                 G.decks[1] = ctx.random.Shuffle(deck1);
                 if (IsCardNotActionAndNotNull(pickedCard)) {

@@ -6,7 +6,7 @@ import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames, Phases } from "../typescript/enums";
 import type { IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
-export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void | never => {
+export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
     const brisingamensPlayerIndex: number =
         G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
             CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));

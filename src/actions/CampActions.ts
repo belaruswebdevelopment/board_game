@@ -19,7 +19,7 @@ import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions"
  * @param ctx
  * @param coinId Id монеты.
  */
-export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number): void | never => {
+export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const tempId: number = player.boardCoins.findIndex((coin: CoinType, index: number): boolean =>
@@ -56,7 +56,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
  * @param cardId Id сбрасываемой карты.
  */
 export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, playerId: number, cardId: number):
-    void | never => {
+    void => {
     // TODO Rework it for players and fix it for bots?
     // TODO ctx.playerID === playerId???
     if (ctx.playerID !== undefined) {
@@ -98,7 +98,7 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
  * @param isInitial Является ли монета базовой.
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, coinId: number, type: string,
-    isInitial: boolean): void | never => {
+    isInitial: boolean): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const value: number | undefined = player.stack[0]?.config?.value;

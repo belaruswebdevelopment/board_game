@@ -150,7 +150,7 @@ export interface IArtefact {
     readonly validators?: IValidatorsConfig,
     readonly actions?: IAction,
     readonly stack?: IStack[],
-    readonly scoringRule: (player?: IPublicPlayer) => number | never,
+    readonly scoringRule: (player?: IPublicPlayer) => number,
 }
 
 /**
@@ -497,7 +497,7 @@ export interface IHeroData {
     readonly validators?: IValidatorsConfig,
     readonly actions?: IAction,
     readonly stack?: IStack[],
-    readonly scoringRule: (player?: IPublicPlayer) => number | never,
+    readonly scoringRule: (player?: IPublicPlayer) => number,
 }
 
 /**
@@ -689,11 +689,11 @@ export interface IMoveByGetMjollnirProfitOptions {
  * <h3>Интерфейс для валидатора мувов.</h3>
  */
 export interface IMoveValidator {
-    readonly getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number) => MoveValidatorGetRangeTypes | never,
+    readonly getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number) => MoveValidatorGetRangeTypes,
     readonly getValue: (G: IMyGameState, ctx: Ctx, moveRangeData: MoveValidatorGetRangeTypes) =>
-        ValidMoveIdParamTypes | never,
+        ValidMoveIdParamTypes,
     readonly moveName: string,
-    readonly validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes) => boolean | never,
+    readonly validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes) => boolean,
 }
 
 /**
@@ -855,19 +855,19 @@ export interface IBackground {
  */
 export interface IStyles {
     readonly Camp: () => IBackground,
-    readonly CampCards: (tier: number, cardPath: string) => IBackground | never,
-    readonly Cards: (suit: SuitTypes | null, name: string, points: number | null) => IBackground | never,
+    readonly CampCards: (tier: number, cardPath: string) => IBackground,
+    readonly Cards: (suit: SuitTypes | null, name: string, points: number | null) => IBackground,
     readonly Coin: (value: number, initial: boolean) => IBackground,
     readonly CoinBack: () => IBackground,
-    readonly Distinctions: (distinction: string) => IBackground | never,
+    readonly Distinctions: (distinction: string) => IBackground,
     readonly DistinctionsBack: () => IBackground,
     readonly Exchange: () => IBackground,
-    readonly Heroes: (game: string, heroName: string) => IBackground | never,
+    readonly Heroes: (game: string, heroName: string) => IBackground,
     readonly HeroBack: () => IBackground,
     readonly Priorities: (priority: number) => IBackground,
     readonly Priority: () => IBackground,
     readonly Suits: (suit: SuitTypes) => IBackground,
-    readonly Taverns: (tavernId: number) => IBackground | never,
+    readonly Taverns: (tavernId: number) => IBackground,
 }
 
 /**

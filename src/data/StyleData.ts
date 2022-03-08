@@ -42,7 +42,7 @@ export const Styles: IStyles = {
     Camp: (): IBackground => ({
         background: `${campCardsPath}.png) no-repeat 0px 3px / 24px 18px`,
     }),
-    CampCards: (tier: number, cardPath: string): IBackground | never => {
+    CampCards: (tier: number, cardPath: string): IBackground => {
         if (tier === 0) {
             switch (cardPath) {
                 case ArtefactNames.Draupnir:
@@ -152,7 +152,7 @@ export const Styles: IStyles = {
         }
         throw new Error(`Нет такой карты кэмпа.`);
     },
-    Cards: (suit: SuitTypes | null, name: string, points: number | null): IBackground | never => {
+    Cards: (suit: SuitTypes | null, name: string, points: number | null): IBackground => {
         if (name === CardNames.ChiefBlacksmith || name === CardNames.Olwin) {
             switch (name) {
                 case CardNames.ChiefBlacksmith:
@@ -291,7 +291,7 @@ export const Styles: IStyles = {
     CoinBack: (): IBackground => ({
         background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
     }),
-    Distinctions: (distinction: string): IBackground | never => {
+    Distinctions: (distinction: string): IBackground => {
         switch (distinction) {
             case SuitNames.BLACKSMITH:
                 return {
@@ -323,7 +323,7 @@ export const Styles: IStyles = {
     Exchange: (): IBackground => ({
         background: `url(/img/taverns/Exchange.jpg) no-repeat -27px -63px / 87px 87px`,
     }),
-    Heroes: (game: string, heroName: string): IBackground | never => {
+    Heroes: (game: string, heroName: string): IBackground => {
         if (game === GameNames.Basic) {
             switch (heroName) {
                 case HeroNames.Bonfur:
@@ -457,7 +457,7 @@ export const Styles: IStyles = {
     Suits: (suit: SuitTypes): IBackground => ({
         background: `url(/img/suits/${suit}.png) no-repeat 0px 0px / 24px 24px`,
     }),
-    Taverns: (tavernId: number): IBackground | never => {
+    Taverns: (tavernId: number): IBackground => {
         switch (tavernId) {
             case 0:
                 return {

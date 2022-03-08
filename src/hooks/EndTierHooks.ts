@@ -16,7 +16,7 @@ import type { IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitTypes } f
  * @param G
  * @param ctx
  */
-export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void | never => {
+export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         if (G.publicPlayersOrder.length && !player.stack.length) {
@@ -57,7 +57,7 @@ export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext
  *
  * @param G
  */
-export const CheckEndTierOrder = (G: IMyGameState): void | never => {
+export const CheckEndTierOrder = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
     const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
         CheckPlayerHasBuff(player, BuffNames.EndTier));

@@ -37,7 +37,7 @@ export const CheckIfCurrentTavernEmpty = (G: IMyGameState): boolean => {
  * @param discardCardIndex Индекс сбрасываемой карты в таверне.
  * @returns Сброшена ли карта из таверны.
  */
-export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number): boolean | never => {
+export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number): boolean => {
     const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
     if (currentTavern !== undefined) {
         const discardedCard: TavernCardTypes | undefined = currentTavern[discardCardIndex];
@@ -73,7 +73,7 @@ export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number)
  *
  * @param G
  */
-export const RefillTaverns = (G: IMyGameState): void | never => {
+export const RefillTaverns = (G: IMyGameState): void => {
     for (let i = 0; i < G.tavernsNum; i++) {
         const deck: DeckCardTypes[] | undefined = G.decks[G.decks.length - G.tierToEnd];
         if (deck !== undefined) {

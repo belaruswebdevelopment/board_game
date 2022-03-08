@@ -15,7 +15,7 @@ import { CompareCards, EvaluateCard } from "./BotCardLogic";
  * @param ctx
  * @returns
  */
-export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): number[] | never => {
+export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): number[] => {
     const taverns: TavernCardTypes[][] = G.taverns,
         temp: number[] = taverns.map((tavern: TavernCardTypes[]): number =>
             absoluteHeuristicsForTradingCoin.reduce((acc: number, item: IHeuristic<TavernCardTypes[]>):

@@ -33,7 +33,7 @@ export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?:
 export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffTypes): boolean =>
     player.buffs.find((buff: IBuffs): boolean => buff[buffName] !== undefined) !== undefined;
 
-export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): void | never => {
+export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const buffIndex: number =

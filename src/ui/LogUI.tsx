@@ -12,7 +12,7 @@ import type { ILogData, IMyGameState } from "../typescript/interfaces";
  * @param data Глобальные параметры.
  * @returns Поле для вывода логов.
  */
-export const DrawLogData = (data: BoardProps<IMyGameState>): JSX.Element | null | never => {
+export const DrawLogData = (data: BoardProps<IMyGameState>): JSX.Element | null => {
     if (data.G.log) {
         const loggingData: JSX.Element[] = [];
         for (let i: number = data.G.logData.length - 1; i >= 0; i--) {

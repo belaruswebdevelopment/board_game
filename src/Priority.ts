@@ -30,7 +30,6 @@ export const ChangePlayersPriorities = (G: IMyGameState): void => {
                     player: IPublicPlayer | undefined = G.publicPlayers[i];
                 if (player !== undefined) {
                     if (tempPriority !== undefined && player.priority.value !== tempPriority.value) {
-                        // TODO Check it "!"
                         G.publicPlayers[i]!.priority = tempPriority;
                         AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} получил кристалл с приоритетом ${tempPriority.value}.`);
                     }

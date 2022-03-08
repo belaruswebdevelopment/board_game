@@ -46,7 +46,7 @@ export const CurrentScoring = (player: IPublicPlayer): number => {
  * @returns Финальный счёт указанного игрока.
  */
 export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer, playerId: number,
-    warriorDistinctions: number[]): number | never => {
+    warriorDistinctions: number[]): number => {
     AddDataToLog(G, LogTypes.GAME, `Результаты игры игрока ${player.nickname}:`);
     let score: number = CurrentScoring(player),
         coinsValue = 0;
@@ -77,21 +77,21 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer, p
         dwerg_brothers = 0;
     const dwerg_brothers_scoring: number[] = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
-        const currentHero: IHeroCard | undefined = player.heroes[i];
-        if (currentHero !== undefined) {
+        const hero: IHeroCard | undefined = player.heroes[i];
+        if (hero !== undefined) {
             const heroData: IHeroData | undefined =
-                Object.values(heroesConfig).find((hero: IHeroData): boolean =>
-                    hero.name === currentHero.name);
+                Object.values(heroesConfig).find((heroObj: IHeroData): boolean =>
+                    heroObj.name === hero.name);
             if (heroData !== undefined) {
-                if (currentHero.name.startsWith(`Dwerg`)) {
+                if (hero.name.startsWith(`Dwerg`)) {
                     dwerg_brothers += heroData.scoringRule(player);
                 } else {
                     const currentHeroScore: number = heroData.scoringRule(player);
                     heroesScore += currentHeroScore;
-                    AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${currentHero.name} игрока ${player.nickname}: ${currentHeroScore}.`);
+                    AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${hero.name} игрока ${player.nickname}: ${currentHeroScore}.`);
                 }
             } else {
-                throw new Error(`Не удалось найти героя ${currentHero.name}.`);
+                throw new Error(`Не удалось найти героя ${hero.name}.`);
             }
         } else {
             throw new Error(`Не существует карта героя ${i}.`);

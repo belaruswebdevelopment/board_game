@@ -335,8 +335,8 @@ export const objectives = (): {
                         }
                     }
                     const [top1, top2]: number[] =
-                        totalScore.sort((a: number, b: number): number => b - a).slice(0, 2);
-                    const totalScoreCurPlayer: number | undefined = totalScore[Number(ctx.currentPlayer)];
+                        totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
+                        totalScoreCurPlayer: number | undefined = totalScore[Number(ctx.currentPlayer)];
                     if (totalScoreCurPlayer !== undefined) {
                         if (totalScoreCurPlayer === top1) {
                             if (top2 !== undefined) {
@@ -383,8 +383,8 @@ export const objectives = (): {
                         }
                     }
                     const [top1, top2]: number[] =
-                        totalScore.sort((a: number, b: number): number => b - a).slice(0, 2);
-                    const totalScoreCurPlayer: number | undefined = totalScore[Number(ctx.currentPlayer)];
+                        totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
+                        totalScoreCurPlayer: number | undefined = totalScore[Number(ctx.currentPlayer)];
                     if (totalScoreCurPlayer !== undefined) {
                         if (totalScoreCurPlayer === top1) {
                             if (top2 !== undefined) {

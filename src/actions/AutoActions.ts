@@ -37,7 +37,7 @@ export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx): void => {
  * @param G
  * @param ctx
  */
-export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void | never => {
+export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         let tradingCoinIndex: number =
@@ -94,7 +94,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): vo
  * @param G
  * @param ctx
  */
-export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void | never => {
+export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
     const currentPlayer: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (currentPlayer !== undefined) {
         const suit: SuitTypes | undefined = currentPlayer.stack[1]?.config?.suit;
@@ -136,7 +136,7 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void | ne
  * @param G
  * @param ctx
  */
-export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void | never => {
+export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const number: number = player.boardCoins.filter((coin: CoinType, index: number): boolean =>

@@ -84,11 +84,9 @@ export const DrawDistinctions = (data) => {
  * @returns Поле героев.
  */
 export const DrawHeroes = (data) => {
-    var _a;
     const boardRows = [], drawData = DrawBoard(data.G.heroes.length);
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells = [];
-        boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j, hero = data.G.heroes[increment];
             if (hero !== undefined) {
@@ -101,8 +99,7 @@ export const DrawHeroes = (data) => {
                 break;
             }
         }
-        // TODO Check it "?"
-        (_a = boardRows[i]) === null || _a === void 0 ? void 0 : _a.push(_jsx("tr", { children: boardCells }, `Heroes row ${i}`));
+        boardRows.push(_jsx("tr", { children: boardCells }, `Heroes row ${i}`));
     }
     return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }), " ", _jsxs("span", { children: ["Heroes (", data.G.heroes.length, " left)"] })] }), _jsx("tbody", { children: boardRows })] }));
 };
@@ -117,11 +114,9 @@ export const DrawHeroes = (data) => {
  * @returns Поле рынка монет.
  */
 export const DrawMarketCoins = (data) => {
-    var _a;
     const boardRows = [], drawData = DrawBoard(data.G.marketCoinsUnique.length), countMarketCoins = CountMarketCoins(data.G);
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells = [];
-        boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j, marketCoin = data.G.marketCoinsUnique[increment];
             if (marketCoin !== undefined) {
@@ -135,8 +130,7 @@ export const DrawMarketCoins = (data) => {
                 throw new Error(`В массиве монет рынка героев отсутствует монета ${increment}.`);
             }
         }
-        // TODO Check it "?"
-        (_a = boardRows[i]) === null || _a === void 0 ? void 0 : _a.push(_jsx("tr", { children: boardCells }, `Market coins row ${i}`));
+        boardRows.push(_jsx("tr", { children: boardCells }, `Market coins row ${i}`));
     }
     return (_jsxs("table", { children: [_jsx("caption", { children: _jsxs("span", { className: "block", children: [_jsx("span", { style: Styles.Exchange(), className: "bg-top-market-coin-icon" }), " Market coins (", data.G.marketCoins.length, " left)"] }) }), _jsx("tbody", { children: boardRows })] }));
 };

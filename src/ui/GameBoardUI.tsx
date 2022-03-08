@@ -133,11 +133,10 @@ export const DrawDistinctions = (data: BoardProps<IMyGameState>): JSX.Element =>
  * @returns Поле героев.
  */
 export const DrawHeroes = (data: BoardProps<IMyGameState>): JSX.Element => {
-    const boardRows: JSX.Element[][] = [],
+    const boardRows: JSX.Element[] = [],
         drawData: IDrawBoardOptions = DrawBoard(data.G.heroes.length);
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
-        boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
                 hero: IHeroCard | undefined = data.G.heroes[increment];
@@ -151,8 +150,7 @@ export const DrawHeroes = (data: BoardProps<IMyGameState>): JSX.Element => {
                 break;
             }
         }
-        // TODO Check it "?"
-        boardRows[i]?.push(
+        boardRows.push(
             <tr key={`Heroes row ${i}`}>{boardCells}</tr>
         );
     }
@@ -181,12 +179,11 @@ export const DrawHeroes = (data: BoardProps<IMyGameState>): JSX.Element => {
  * @returns Поле рынка монет.
  */
 export const DrawMarketCoins = (data: BoardProps<IMyGameState>): JSX.Element => {
-    const boardRows: JSX.Element[][] = [],
+    const boardRows: JSX.Element[] = [],
         drawData: IDrawBoardOptions = DrawBoard(data.G.marketCoinsUnique.length),
         countMarketCoins: INumberValues = CountMarketCoins(data.G);
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells: JSX.Element[] = [];
-        boardRows[i] = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
                 marketCoin: ICoin | undefined = data.G.marketCoinsUnique[increment];
@@ -203,8 +200,7 @@ export const DrawMarketCoins = (data: BoardProps<IMyGameState>): JSX.Element => 
                 throw new Error(`В массиве монет рынка героев отсутствует монета ${increment}.`);
             }
         }
-        // TODO Check it "?"
-        boardRows[i]?.push(
+        boardRows.push(
             <tr key={`Market coins row ${i}`}>{boardCells}</tr>
         );
     }

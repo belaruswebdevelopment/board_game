@@ -22,7 +22,8 @@ export const AddCoinToPouchProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps
             if (handCoin !== undefined) {
                 if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && handCoin !== null) {
                     DrawCoin(data, boardCells, `coin`, handCoin, j, player,
-                        `border-2`, null, MoveNames.AddCoinToPouchMove, j);
+                        `border-2`, null, MoveNames.AddCoinToPouchMove,
+                        j);
                 }
             } else {
                 throw new Error(`В массиве монет игрока на столе отсутствует монета ${j}.`);
@@ -73,7 +74,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const playerHeaders: JSX.Element[] = [],
-            playerRows: JSX.Element[][] = [];
+            playerRows: JSX.Element[] = [];
         let suit: SuitTypes;
         for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -92,27 +93,17 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
             let isDrawRow = false,
                 isExit = true,
                 id = 0;
-            if (!Array.isArray(data)) {
-                playerRows[i] = [];
-            }
             let j = 0;
             for (suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     id = i + j;
-                    if (player.cards[suit][i] !== undefined) {
+                    const card: PlayerCardsType | undefined = player.cards[suit][i];
+                    if (card !== undefined) {
                         isExit = false;
-                        if (Array.isArray(data)) {
+                        if (!IsHeroCard(card)) {
                             isDrawRow = true;
-                        }
-                        if (!IsHeroCard(player.cards[suit][i])) {
-                            isDrawRow = true;
-                            const card: PlayerCardsType | undefined = player.cards[suit][i];
-                            if (card !== undefined) {
-                                DrawCard(data, playerCells, card, id, player, suit,
-                                    MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
-                            } else {
-                                throw new Error(`В массиве карт фракции ${suit} отсутствует карта ${i}.`);
-                            }
+                            DrawCard(data, playerCells, card, id, player, suit,
+                                MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
                         } else {
                             playerCells.push(
                                 <td key={`${player.nickname} empty card ${id}`}>
@@ -131,8 +122,7 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, d
                 }
             }
             if (isDrawRow) {
-                // TODO Check it "?"
-                playerRows[i]?.push(
+                playerRows.push(
                     <tr key={`${player.nickname} board row ${i}`}>
                         {playerCells}
                     </tr>
@@ -188,11 +178,11 @@ export const DiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
 };
 
 export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
-    boardCells: JSX.Element[]): void | never => {
+    boardCells: JSX.Element[]): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         const playersHeaders: JSX.Element[] = [],
-            playersRows: JSX.Element[][] = [],
+            playersRows: JSX.Element[] = [],
             suit: SuitTypes | undefined = player.stack[0]?.config?.suit;
         if (suit !== undefined) {
             for (let p = 0; p < G.publicPlayers.length; p++) {
@@ -215,24 +205,18 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, 
             for (let i = 0; ; i++) {
                 let isDrawRow = false,
                     isExit = true;
-                playersRows[i] = [];
                 const playersCells: JSX.Element[] = [];
                 for (let p = 0; p < G.publicPlayers.length; p++) {
                     if (p !== Number(ctx.currentPlayer)) {
                         const playerP2: IPublicPlayer | undefined = G.publicPlayers[p];
                         if (playerP2 !== undefined) {
-                            if (playerP2.cards[suit][i] !== undefined) {
-                                if (!IsHeroCard(playerP2.cards[suit][i])) {
+                            const card: PlayerCardsType | undefined = playerP2.cards[suit][i];
+                            if (card !== undefined) {
+                                if (!IsHeroCard(card)) {
                                     isExit = false;
                                     isDrawRow = true;
-                                    const card: PlayerCardsType | undefined = playerP2.cards[suit][i];
-                                    if (card !== undefined) {
-                                        DrawCard(data, playersCells, card, i, playerP2,
-                                            suit, MoveNames.DiscardSuitCardFromPlayerBoardMove,
-                                            suit, p, i);
-                                    } else {
-                                        throw new Error(`В массиве карт фракции ${suit} игрока отсутствует карта ${i}.`);
-                                    }
+                                    DrawCard(data, playersCells, card, i, playerP2, suit,
+                                        MoveNames.DiscardSuitCardFromPlayerBoardMove, suit, p, i);
                                 }
                             } else {
                                 playersCells.push(
@@ -247,8 +231,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx, 
                     }
                 }
                 if (isDrawRow) {
-                    // TODO Check it "?"
-                    playersRows[i]?.push(
+                    playersRows.push(
                         <tr key={`Discard suit cardboard row ${i}`}>
                             {playersCells}
                         </tr>
@@ -379,8 +362,8 @@ export const PickDiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProp
             }
             const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player !== undefined) {
-                DrawCard(data, boardCells, card, j, player, suit, MoveNames.PickDiscardCardMove,
-                    j);
+                DrawCard(data, boardCells, card, j, player, suit,
+                    MoveNames.PickDiscardCardMove, j);
             } else {
                 throw new Error(`В массиве игроков отсутствует текущий игрок.`);
             }
@@ -391,7 +374,7 @@ export const PickDiscardCardProfit = (G: IMyGameState, ctx: Ctx, data: BoardProp
 };
 
 export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>, boardCells: JSX.Element[]):
-    void | never => {
+    void => {
     let suit: SuitTypes;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -429,7 +412,7 @@ export const PlaceCardsProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMy
 };
 
 export const PlaceEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
-    boardCells: JSX.Element[]): void | never => {
+    boardCells: JSX.Element[]): void => {
     let suit: SuitTypes;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {

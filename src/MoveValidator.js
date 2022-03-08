@@ -333,7 +333,7 @@ export const moveValidators = {
                     if (currentTavern !== undefined) {
                         const card = currentTavern[j];
                         if (card !== undefined) {
-                            if (currentTavern[j] !== null) {
+                            if (card !== null) {
                                 moveMainArgs.push(j);
                             }
                         }
@@ -573,9 +573,10 @@ export const moveValidators = {
                         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                             const player = G.publicPlayers[Number(ctx.currentPlayer)];
                             if (player !== undefined) {
-                                if (player.cards[suit][i] !== undefined) {
+                                const card = player.cards[suit][i];
+                                if (card !== undefined) {
                                     isExit = false;
-                                    if (!IsHeroCard(player.cards[suit][i])) {
+                                    if (!IsHeroCard(card)) {
                                         moveMainArgs[suit] = [];
                                         (_a = moveMainArgs[suit]) === null || _a === void 0 ? void 0 : _a.push(i);
                                     }
@@ -639,7 +640,7 @@ export const moveValidators = {
                     if (currentTavern !== undefined) {
                         const card = currentTavern[j];
                         if (card == undefined) {
-                            if (currentTavern[j] !== null) {
+                            if (card !== null) {
                                 moveMainArgs.push(j);
                             }
                         }
@@ -896,8 +897,14 @@ export const moveValidators = {
             if (G !== undefined && ctx !== undefined) {
                 const moveMainArgs = [];
                 for (let j = 0; j < G.campNum; j++) {
-                    if (G.camp[j] !== null) {
-                        moveMainArgs.push(j);
+                    const campCard = G.camp[j];
+                    if (campCard !== undefined) {
+                        if (campCard !== null) {
+                            moveMainArgs.push(j);
+                        }
+                    }
+                    else {
+                        throw new Error(`В массиве карт кэмпа игрока отсутствует карта ${j}.`);
                     }
                 }
                 return moveMainArgs;
@@ -1149,8 +1156,9 @@ export const moveValidators = {
                             cards: [],
                         };
                         for (let i = 0; i < player.cards[suit].length; i++) {
-                            if (player.cards[suit][i] !== undefined) {
-                                if (!IsHeroCard(player.cards[suit][i])) {
+                            const card = player.cards[suit][i];
+                            if (card !== undefined) {
+                                if (!IsHeroCard(card)) {
                                     moveMainArgs.cards.push(i);
                                 }
                             }

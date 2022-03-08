@@ -91,15 +91,22 @@ export const AddGetMjollnirProfitActionsToStack = (G: IMyGameState, ctx: Ctx): v
 const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
     for (let i = 0; i < G.camp.length; i++) {
-        if (G.camp[i] !== null) {
-            const card: CampCardTypes | undefined = G.camp.splice(i, 1, null)[0];
-            if (card !== undefined) {
-                if (card !== null) {
-                    G.discardCampCardsDeck.push(card);
+        const campCard: CampCardTypes | undefined = G.camp[i];
+        if (campCard !== undefined) {
+            if (campCard !== null) {
+                const discardedCard: CampCardTypes | undefined =
+                    G.camp.splice(i, 1, null)[0];
+                if (discardedCard !== undefined) {
+                    if (discardedCard !== null) {
+                        G.discardCampCardsDeck.push(discardedCard);
+                    }
+                } else {
+                    G.camp.splice(i, 1, null)[0];
+                    throw new Error(`В массиве карт кэмпа отсутствует карта кэмпа ${i} для сброса.`);
                 }
-            } else {
-                throw new Error(`Отсутствует карта кэмпа в картах кэмпа.`);
             }
+        } else {
+            throw new Error(`В массиве карт кэмпа отсутствует карта кэмпа ${i}.`);
         }
     }
     const campDeck: CampDeckCardTypes[] | undefined = G.campDecks[G.campDecks.length - G.tierToEnd - 1];
@@ -126,7 +133,7 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
  * @param G
  * @returns Сброшена ли карта из таверны.
  */
-export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void | never => {
+export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void => {
     const tavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
     if (tavern !== undefined) {
         const cardIndex: number = tavern.findIndex((card: TavernCardTypes): boolean => card !== null);
@@ -156,7 +163,7 @@ export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void | never =>
  *
  * @param G
  */
-export const DiscardCardIfCampCardPicked = (G: IMyGameState): void | never => {
+export const DiscardCardIfCampCardPicked = (G: IMyGameState): void => {
     if (G.campPicked) {
         const tavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
         if (tavern !== undefined) {

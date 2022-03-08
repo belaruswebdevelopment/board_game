@@ -25,7 +25,7 @@ import type { AllCardTypes, ArgsTypes, CoinType, IBackground, IMoveFunctionTypes
  * @param args Аргументы действия.
  */
 export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], key: string, name: string,
-    player: IPublicPlayer, moveName?: string, ...args: ArgsTypes): void | never => {
+    player: IPublicPlayer, moveName?: string, ...args: ArgsTypes): void => {
     let action: IMoveFunctionTypes;
     switch (moveName) {
         case MoveNames.StartEnlistmentMercenariesMove:
@@ -64,7 +64,7 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param args Аргументы действия.
  */
 export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], card: AllCardTypes, id: number,
-    player: IPublicPlayer | null, suit?: SuitTypes | null, moveName?: string, ...args: ArgsTypes): void | never => {
+    player: IPublicPlayer | null, suit?: SuitTypes | null, moveName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         tdClasses = ``,
         spanClasses = ``,
@@ -181,7 +181,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  */
 export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], type: string, coin: CoinType,
     id: number, player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
-    moveName?: string, ...args: ArgsTypes): void | never => {
+    moveName?: string, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         span: JSX.Element | number | null = null,
         tdClasses = `bg-yellow-300`,
@@ -270,7 +270,7 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
 };
 
 export const DrawSuit = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], suit: SuitTypes, key: string,
-    value: number | string, player: IPublicPlayer | null, moveName: string | null): void | never => {
+    value: number | string, player: IPublicPlayer | null, moveName: string | null): void => {
     let action: IMoveFunctionTypes;
     switch (moveName) {
         case MoveNames.GetMjollnirProfitMove:

@@ -23,7 +23,7 @@ import type { DeckCardTypes, IMyGameState, IPublicPlayer, SuitTypes, TavernCardT
  * @param cardId Id карты.
  * @returns
  */
-export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void | never => {
+export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean = IsValidMove(G, ctx, Stages.Default1, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -32,8 +32,7 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
     if (currentTavern !== undefined) {
         const card: TavernCardTypes | undefined = currentTavern[cardId];
         if (card !== undefined) {
-            // TODO Check it "?"
-            G.taverns[G.currentTavern]?.splice(cardId, 1, null);
+            G.taverns[G.currentTavern]!.splice(cardId, 1, null);
             if (card !== null) {
                 const isAdded: boolean = AddCardToPlayer(G, ctx, card);
                 if (!IsCardNotActionAndNotNull(card)) {
@@ -75,8 +74,7 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
     if (deck1 !== undefined) {
         const card: DeckCardTypes | undefined = deck1[cardId];
         if (card !== undefined) {
-            // TODO Check it "?"
-            const pickedCard: DeckCardTypes | undefined = G.decks[1]?.splice(cardId, 1)[0],
+            const pickedCard: DeckCardTypes | undefined = G.decks[1]!.splice(cardId, 1)[0],
                 isAdded: boolean = AddCardToPlayer(G, ctx, card);
             if (pickedCard !== undefined) {
                 G.decks[1] = ctx.random!.Shuffle(deck1);

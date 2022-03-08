@@ -12,7 +12,7 @@ import type { IAction, IActionFunctionTypes, IMyGameState } from "../typescript/
  * @param actionName Название автоматических действий.
  * @returns Автоматические действие.
  */
-const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes | never => {
+const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes => {
     let action: IActionFunctionTypes;
     switch (actionName) {
         case AddPickHeroAction.name:
@@ -52,7 +52,7 @@ const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes | ne
  */
 export const StartAutoAction = (G: IMyGameState, ctx: Ctx, action?: IAction): void => {
     if (action !== undefined) {
-        const actionDispatcher: IActionFunctionTypes | never = ActionDispatcherSwitcher(action.name);
+        const actionDispatcher: IActionFunctionTypes = ActionDispatcherSwitcher(action.name);
         if (action.params !== undefined) {
             actionDispatcher?.(G, ctx, ...action.params);
         } else {

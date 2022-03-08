@@ -9,7 +9,7 @@ import { GetMaxCoinValue } from "./CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 // TODO Add dock blocks
-export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number | never => {
+export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         const card: ICard | undefined = G.additionalCardsDeck.find((card: ICard): boolean =>
             card.name === CardNames.ChiefBlacksmith);
@@ -32,7 +32,7 @@ export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: I
     return 0;
 };
 
-export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number | never => {
+export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer): number => {
     if (G.tierToEnd !== 0) {
         const tradingCoinIndex: number =
             player.boardCoins.findIndex((coin: CoinType): boolean => coin?.value === 0);

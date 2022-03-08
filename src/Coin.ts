@@ -177,7 +177,7 @@ export const ReturnCoinToPlayerHands = (player: IPublicPlayer, coinId: number): 
  * @param isInitial Является ли обменная монета базовой.
  */
 export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingCoinId?: number, type?: string,
-    isInitial?: boolean): void | never => {
+    isInitial?: boolean): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
         // TODO Split into different functions!?
@@ -207,9 +207,10 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
                         }
                     }
                 }
-                const minCoinValue: number = Math.min(...allCoins.filter((coin: CoinType): boolean =>
-                    IsCoin(coin) && !coin.isTriggerTrading).map((coin: CoinType): number =>
-                        (coin as ICoin).value)),
+                const minCoinValue: number =
+                    Math.min(...allCoins.filter((coin: CoinType): boolean =>
+                        IsCoin(coin) && !coin.isTriggerTrading).map((coin: CoinType): number =>
+                            (coin as ICoin).value)),
                     upgradingCoinInitial: CoinType | undefined =
                         allCoins.find((coin: CoinType): boolean | undefined =>
                             coin?.value === minCoinValue && coin.isInitial);
@@ -252,8 +253,8 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
                     const handCoinPosition: number =
                         player.boardCoins.filter((coin: CoinType, index: number): boolean =>
                             coin === null && upgradingCoinId !== undefined && index <= upgradingCoinId).length;
-                    coin =
-                        player.handCoins.filter((coin: CoinType): boolean => IsCoin(coin))[handCoinPosition - 1];
+                    coin = player.handCoins.filter((coin: CoinType): boolean =>
+                        IsCoin(coin))[handCoinPosition - 1];
                     if (IsCoin(coin)) {
                         upgradingCoin = coin;
                         upgradingCoinId = player.handCoins.findIndex((coin: CoinType): boolean =>
