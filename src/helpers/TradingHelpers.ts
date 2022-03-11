@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { UpgradeCoinAction } from "../actions/AutoActions";
 import { IsCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, LogTypes } from "../typescript/enums";
+import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
 import type { CoinType, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 
@@ -19,20 +19,25 @@ import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 export const ActivateTrading = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
-        if (player.boardCoins[G.currentTavern]?.isTriggerTrading) {
-            const tradingCoins: ICoin[] = [];
-            for (let i: number = G.tavernsNum; i < player.boardCoins.length; i++) {
-                const boardCoin: CoinType | undefined = player.boardCoins[i];
-                if (boardCoin !== undefined) {
-                    const coin: CoinType = boardCoin;
-                    if (IsCoin(coin)) {
-                        tradingCoins.push(coin);
+        const boardCoinCurrentTavern: CoinType | undefined = player.boardCoins[G.currentTavern];
+        if (boardCoinCurrentTavern !== undefined) {
+            if (boardCoinCurrentTavern?.isTriggerTrading) {
+                const tradingCoins: ICoin[] = [];
+                for (let i: number = G.tavernsNum; i < player.boardCoins.length; i++) {
+                    const boardCoin: CoinType | undefined = player.boardCoins[i];
+                    if (boardCoin !== undefined) {
+                        const coin: CoinType = boardCoin;
+                        if (IsCoin(coin)) {
+                            tradingCoins.push(coin);
+                        }
+                    } else {
+                        throw new Error(`В массиве монет игрока на поле отсутствует монета ${i}.`);
                     }
-                } else {
-                    throw new Error(`В массиве монет игрока на поле отсутствует монета ${i}.`);
                 }
+                Trading(G, ctx, tradingCoins);
             }
-            Trading(G, ctx, tradingCoins);
+        } else {
+            throw new Error(`В массиве монет игрока отсутствует монета текущей таверны ${G.currentTavern}.`);
         }
     } else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
@@ -103,7 +108,7 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
                     }.`);
             }
         }
-        UpgradeCoinAction(G, ctx, value, upgradingCoinId, `board`, upgradingCoin.isInitial);
+        UpgradeCoinAction(G, ctx, value, upgradingCoinId, CoinTypes.Board, upgradingCoin.isInitial);
     } else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }

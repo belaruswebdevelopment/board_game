@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { LogTypes } from "./enums";
+import { LogTypes, MoveNames } from "./enums";
 
 export interface IDebugData {
     G: Record<string, unknown>,
@@ -692,7 +692,7 @@ export interface IMoveValidator {
     readonly getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number) => MoveValidatorGetRangeTypes,
     readonly getValue: (G: IMyGameState, ctx: Ctx, moveRangeData: MoveValidatorGetRangeTypes) =>
         ValidMoveIdParamTypes,
-    readonly moveName: string,
+    readonly moveName: MoveNames,
     readonly validate: (G?: IMyGameState, ctx?: Ctx, id?: ValidMoveIdParamTypes) => boolean,
 }
 
@@ -977,6 +977,8 @@ export type IArtefactTypes = keyof IArtefactConfig;
 export type IHeroTypes = keyof IHeroConfig;
 
 export type AdditionalCardTypes = keyof IAdditionalCardsConfig;
+
+export type MoveValidatorTypes = keyof IMoveValidators;
 
 export type MoveValidatorGetRangeTypes = IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`]
     | IMoveArgumentsStage<IMoveSuitCardPlayerIdArguments>[`args`]

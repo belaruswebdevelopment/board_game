@@ -6,11 +6,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param G
+ * @param ctx
  * @returns Дебаг панель.
  */
-export const DrawDebugData = (data) => {
-    const debugData = GetDebugData(data);
+export const DrawDebugData = (G, ctx) => {
+    const debugData = GetDebugData(G, ctx);
     if (debugData === undefined) {
         return null;
     }
@@ -53,19 +54,20 @@ const DrawObjectData = (obj) => {
  * <li>Используется в отображении дебаг панели.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param G
+ * @param ctx
  * @returns Данные для отрисовки дебаг информации.
  */
-const GetDebugData = (data) => {
-    if (data.G.debug) {
+const GetDebugData = (G, ctx) => {
+    if (G.debug) {
         const debugData = {
             G: {},
             ctx: {},
         };
-        for (const [key, value] of Object.entries(data.G)) {
+        for (const [key, value] of Object.entries(G)) {
             debugData.G[key] = value;
         }
-        for (const [key, value] of Object.entries(data.ctx)) {
+        for (const [key, value] of Object.entries(ctx)) {
             debugData.ctx[key] = value;
         }
         return debugData;

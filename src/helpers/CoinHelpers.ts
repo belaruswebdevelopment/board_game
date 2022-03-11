@@ -103,8 +103,14 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
             } else {
                 throw new Error(`В массиве значений монет отсутствует ${prop}.`);
             }
-            const tiePlayers: IPublicPlayer[] = G.publicPlayers.filter((player: IPublicPlayer): boolean =>
-                player.boardCoins[G.currentTavern]?.value === Number(prop) && player.priority.isExchangeable);
+            const tiePlayers: IPublicPlayer[] = G.publicPlayers.filter((player: IPublicPlayer): boolean => {
+                const boardCoinCurrentTavern: CoinType | undefined = player.boardCoins[G.currentTavern];
+                if (boardCoinCurrentTavern !== undefined) {
+                    return boardCoinCurrentTavern?.value === Number(prop) && player.priority.isExchangeable;
+                } else {
+                    throw new Error(`В массиве монет игрока отсутствует монета текущей таверны ${G.currentTavern}.`);
+                }
+            });
             while (tiePlayers.length > 1) {
                 const tiePlayersPriorities: number[] =
                     tiePlayers.map((player: IPublicPlayer): number => player.priority.value),

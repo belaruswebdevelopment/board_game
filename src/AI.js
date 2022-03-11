@@ -2,7 +2,7 @@ import { CompareCards } from "./bot_logic/BotCardLogic";
 import { IsCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { ConfigNames, Phases, Stages } from "./typescript/enums";
+import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
  * <p>Применения:</p>
@@ -15,7 +15,7 @@ import { ConfigNames, Phases, Stages } from "./typescript/enums";
  * @returns Массив возможных мувов у ботов.
  */
 export const enumerate = (G, ctx) => {
-    var _a, _b, _c, _d;
+    var _a, _b, _c;
     const moves = [];
     let playerId;
     if (ctx.phase !== null) {
@@ -48,19 +48,28 @@ export const enumerate = (G, ctx) => {
                     else {
                         activeStageOfCurrentPlayer = Stages.DiscardSuitCard;
                         // TODO Bot can't do async turns...?
-                        if (((_d = (_c = player.stack[0]) === null || _c === void 0 ? void 0 : _c.config) === null || _d === void 0 ? void 0 : _d.suit) !== undefined) {
-                            for (let p = 0; p < G.publicPlayers.length; p++) {
-                                const playerP = G.publicPlayers[p];
-                                if (playerP !== undefined) {
-                                    if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
-                                        playerId = p;
-                                        break;
+                        const stack = player.stack[0];
+                        if (stack !== undefined) {
+                            if (((_c = stack.config) === null || _c === void 0 ? void 0 : _c.suit) !== undefined) {
+                                for (let p = 0; p < G.publicPlayers.length; p++) {
+                                    const playerP = G.publicPlayers[p];
+                                    if (playerP !== undefined) {
+                                        if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
+                                            playerId = p;
+                                            break;
+                                        }
+                                    }
+                                    else {
+                                        throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
                                     }
                                 }
-                                else {
-                                    throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
-                                }
                             }
+                            else {
+                                throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.suit'.`);
+                            }
+                        }
+                        else {
+                            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
                         }
                     }
                 }

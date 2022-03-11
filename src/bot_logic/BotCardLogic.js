@@ -149,7 +149,7 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  * @returns Потенциальное значение.
  */
 const PotentialScoring = (player, card) => {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c;
     let score = 0, suit;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -165,8 +165,20 @@ const PotentialScoring = (player, card) => {
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
-        score += (_c = (_b = player.boardCoins[i]) === null || _b === void 0 ? void 0 : _b.value) !== null && _c !== void 0 ? _c : 0;
-        score += (_e = (_d = player.handCoins[i]) === null || _d === void 0 ? void 0 : _d.value) !== null && _e !== void 0 ? _e : 0;
+        const boardCoin = player.boardCoins[i];
+        if (boardCoin !== undefined) {
+            score += (_b = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _b !== void 0 ? _b : 0;
+        }
+        else {
+            throw new Error(`В массиве монет игрока на столе отсутствует монета ${i}.`);
+        }
+        const handCoin = player.handCoins[i];
+        if (handCoin !== undefined) {
+            score += (_c = handCoin === null || handCoin === void 0 ? void 0 : handCoin.value) !== null && _c !== void 0 ? _c : 0;
+        }
+        else {
+            throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
+        }
     }
     return score;
 };

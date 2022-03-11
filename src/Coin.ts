@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./helpers/BuffHelpers";
 import { AddDataToLog } from "./Logging";
-import { BuffNames, LogTypes, Stages } from "./typescript/enums";
+import { BuffNames, CoinTypes, LogTypes, Stages } from "./typescript/enums";
 import type { CoinType, IBuildCoinsOptions, ICoin, ICreateCoin, IInitialTradingCoinConfig, IMarketCoinConfig, IMyGameState, INumberValues, IPublicPlayer } from "./typescript/interfaces";
 
 /**
@@ -226,9 +226,9 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
                 upgradingCoinId = allCoins.findIndex((coin: CoinType): boolean =>
                     coin?.value === upgradingCoin.value);
                 if (player.boardCoins[upgradingCoinId] === null) {
-                    type = `hand`;
+                    type = CoinTypes.Hand;
                 } else {
-                    type = `board`;
+                    type = CoinTypes.Board;
                 }
             } else {
                 const minCoinValue: number =
@@ -240,7 +240,7 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
                     upgradingCoin = coin;
                     upgradingCoinId = player.boardCoins.findIndex((coin: CoinType): boolean =>
                         coin?.value === upgradingCoin.value);
-                    type = `board`;
+                    type = CoinTypes.Board;
                 }
             }
             if (IsCoin(upgradingCoin)) {
@@ -249,7 +249,7 @@ export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingC
         }
         if (upgradingCoinId !== undefined && upgradingCoinId !== -1 && type !== undefined && isInitial !== undefined) {
             if (!IsCoin(upgradingCoin)) {
-                if (type === `hand`) {
+                if (type === CoinTypes.Hand) {
                     const handCoinPosition: number =
                         player.boardCoins.filter((coin: CoinType, index: number): boolean =>
                             coin === null && upgradingCoinId !== undefined && index <= upgradingCoinId).length;

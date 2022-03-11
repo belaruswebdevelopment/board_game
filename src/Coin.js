@@ -1,7 +1,7 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./helpers/BuffHelpers";
 import { AddDataToLog } from "./Logging";
-import { BuffNames, LogTypes, Stages } from "./typescript/enums";
+import { BuffNames, CoinTypes, LogTypes, Stages } from "./typescript/enums";
 /**
  * <h3>Создание всех монет.</h3>
  * <p>Применения:</p>
@@ -210,10 +210,10 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
                 }
                 upgradingCoinId = allCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
                 if (player.boardCoins[upgradingCoinId] === null) {
-                    type = `hand`;
+                    type = CoinTypes.Hand;
                 }
                 else {
-                    type = `board`;
+                    type = CoinTypes.Board;
                 }
             }
             else {
@@ -222,7 +222,7 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
                 if (IsCoin(coin)) {
                     upgradingCoin = coin;
                     upgradingCoinId = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
-                    type = `board`;
+                    type = CoinTypes.Board;
                 }
             }
             if (IsCoin(upgradingCoin)) {
@@ -231,7 +231,7 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
         }
         if (upgradingCoinId !== undefined && upgradingCoinId !== -1 && type !== undefined && isInitial !== undefined) {
             if (!IsCoin(upgradingCoin)) {
-                if (type === `hand`) {
+                if (type === CoinTypes.Hand) {
                     const handCoinPosition = player.boardCoins.filter((coin, index) => coin === null && upgradingCoinId !== undefined && index <= upgradingCoinId).length;
                     coin = player.handCoins.filter((coin) => IsCoin(coin))[handCoinPosition - 1];
                     if (IsCoin(coin)) {

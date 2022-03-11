@@ -33,13 +33,13 @@ export const OnBrisingamensEndGameTurnBegin = (G, ctx) => {
  * @returns
  */
 export const StartGetMjollnirProfitOrEndGame = (G, ctx) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (G.publicPlayersOrder.length && !player.stack.length) {
-            const firstPlayer = G.publicPlayers[Number(G.publicPlayersOrder[0])];
-            if (firstPlayer !== undefined) {
-                if (!CheckPlayerHasBuff(firstPlayer, BuffNames.EveryTurn)) {
-                    const buffIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
+    if (G.publicPlayersOrder.length) {
+        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            if (!CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame) && !player.stack.length
+                && !player.actionsNum) {
+                if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                    const buffIndex = G.publicPlayers.findIndex((playerB) => CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
                     if (buffIndex !== -1) {
                         return {
                             next: Phases.GetMjollnirProfit,
@@ -50,13 +50,10 @@ export const StartGetMjollnirProfitOrEndGame = (G, ctx) => {
                     }
                 }
             }
-            else {
-                throw new Error(`В массиве игроков отсутствует игрок с первым ходом.`);
-            }
         }
-    }
-    else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        else {
+            throw new Error(`В массиве игроков отсутствует игрок с первым ходом.`);
+        }
     }
 };
 //# sourceMappingURL=BrisingamensEndGameHooks.js.map

@@ -14,36 +14,38 @@ import { BuffNames, HeroNames } from "../typescript/enums";
  * @param ctx
  */
 export const CheckEndEndTierPhase = (G, ctx) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (G.publicPlayersOrder.length && !player.stack.length) {
-            const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
-            if (yludIndex !== -1 || (G.tierToEnd === 0 && yludIndex === -1)) {
-                let nextPhase = true;
-                if (yludIndex !== -1) {
-                    const yludPlayer = G.publicPlayers[yludIndex];
-                    if (yludPlayer !== undefined) {
-                        const index = Object.values(yludPlayer.cards).flat()
-                            .findIndex((card) => card.name === HeroNames.Ylud);
-                        if (index === -1) {
-                            nextPhase = false;
+    if (G.publicPlayersOrder.length) {
+        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            if (!player.stack.length && !player.actionsNum) {
+                const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
+                if (yludIndex !== -1 || (G.tierToEnd === 0 && yludIndex === -1)) {
+                    let nextPhase = true;
+                    if (yludIndex !== -1) {
+                        const yludPlayer = G.publicPlayers[yludIndex];
+                        if (yludPlayer !== undefined) {
+                            const index = Object.values(yludPlayer.cards).flat()
+                                .findIndex((card) => card.name === HeroNames.Ylud);
+                            if (index === -1) {
+                                nextPhase = false;
+                            }
+                        }
+                        else {
+                            throw new Error(`В массиве игроков отсутствует игрок с картой героя ${HeroNames.Ylud}.`);
                         }
                     }
-                    else {
-                        throw new Error(`В массиве игроков отсутствует игрок с картой героя ${HeroNames.Ylud}.`);
+                    if (nextPhase) {
+                        return CheckEndGameLastActions(G);
                     }
                 }
-                if (nextPhase) {
-                    return CheckEndGameLastActions(G);
+                else {
+                    throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Ylud}.`);
                 }
             }
-            else {
-                throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Ylud}.`);
-            }
         }
-    }
-    else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        }
     }
 };
 /**

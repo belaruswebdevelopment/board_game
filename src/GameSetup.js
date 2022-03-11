@@ -23,7 +23,7 @@ import { GameNames } from "./typescript/enums";
  * @returns Данные игры.
  */
 export const SetupGame = (ctx) => {
-    var _a, _b, _c;
+    var _a;
     const suitsNum = 5, tierToEnd = 2, campNum = 5, log = true, debug = false, drawProfit = ``, expansions = {
         thingvellir: {
             active: true,
@@ -51,9 +51,9 @@ export const SetupGame = (ctx) => {
                 throw new Error(`Колода карт кэмпа ${i} эпохи не может отсутствовать.`);
             }
         }
-        const campDeck0 = (_b = campDecks[0]) === null || _b === void 0 ? void 0 : _b.splice(0, campNum);
+        const campDeck0 = campDecks[0];
         if (campDeck0 !== undefined) {
-            camp = campDeck0;
+            camp = campDeck0.splice(0, campNum);
         }
         else {
             throw new Error(`Колода карт кэмпа 1 эпохи не может отсутствовать.`);
@@ -88,9 +88,9 @@ export const SetupGame = (ctx) => {
     const heroes = BuildHeroes(heroesConfigOptions, heroesConfig), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
         // TODO Taverns cards must be hidden from users?
-        const deck0 = (_c = decks[0]) === null || _c === void 0 ? void 0 : _c.splice(0, drawSize);
+        const deck0 = decks[0];
         if (deck0 !== undefined) {
-            taverns[i] = deck0;
+            taverns[i] = deck0 === null || deck0 === void 0 ? void 0 : deck0.splice(0, drawSize);
         }
         else {
             throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);

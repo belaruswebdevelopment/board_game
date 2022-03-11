@@ -62,22 +62,23 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
  * @param ctx
  */
 export const CheckEndPickCardsPhase = (G, ctx) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (G.publicPlayersOrder.length && !player.stack.length
-            && !player.actionsNum && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
-            && CheckIfCurrentTavernEmpty(G)) {
-            const isLastTavern = G.tavernsNum - 1 === G.currentTavern;
-            if (isLastTavern) {
-                return AfterLastTavernEmptyActions(G);
-            }
-            else {
-                return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
+    if (G.publicPlayersOrder.length) {
+        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
+                && !player.actionsNum && CheckIfCurrentTavernEmpty(G)) {
+                const isLastTavern = G.tavernsNum - 1 === G.currentTavern;
+                if (isLastTavern) {
+                    return AfterLastTavernEmptyActions(G);
+                }
+                else {
+                    return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
+                }
             }
         }
-    }
-    else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        }
     }
 };
 /**

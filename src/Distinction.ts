@@ -118,12 +118,17 @@ export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
             const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
             G.distinctions[suit] = result;
             if (suit === SuitNames.EXPLORER && result === undefined) {
-                const discardedCard: DeckCardTypes | undefined = G.decks[1]?.splice(0, 1)[0];
-                if (discardedCard !== undefined) {
-                    G.discardCardsDeck.push(discardedCard);
-                    AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
+                const deck1: DeckCardTypes[] | undefined = G.decks[1];
+                if (deck1 !== undefined) {
+                    const discardedCard: DeckCardTypes | undefined = deck1.splice(0, 1)[0];
+                    if (discardedCard !== undefined) {
+                        G.discardCardsDeck.push(discardedCard);
+                        AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
+                    } else {
+                        throw new Error(`Отсутствует сбрасываемая карта из колоды 2 эпохи при отсутствии преимущества по фракции разведчиков.`);
+                    }
                 } else {
-                    throw new Error(`Отсутствует сбрасываемая карта из колоды 2 эпохи при отсутствии преимущества по фракции разведчиков.`);
+                    throw new Error(`В массиве дек арт отсутствует дека 2 эпохи.`);
                 }
             }
         }

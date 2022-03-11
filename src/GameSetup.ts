@@ -67,9 +67,9 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
                 throw new Error(`Колода карт кэмпа ${i} эпохи не может отсутствовать.`);
             }
         }
-        const campDeck0: CampDeckCardTypes[] | undefined = campDecks[0]?.splice(0, campNum);
+        const campDeck0: CampDeckCardTypes[] | undefined = campDecks[0];
         if (campDeck0 !== undefined) {
-            camp = campDeck0;
+            camp = campDeck0.splice(0, campNum);
         } else {
             throw new Error(`Колода карт кэмпа 1 эпохи не может отсутствовать.`);
         }
@@ -106,9 +106,9 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         drawSize: number = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
         // TODO Taverns cards must be hidden from users?
-        const deck0: DeckCardTypes[] | undefined = decks[0]?.splice(0, drawSize);
+        const deck0: DeckCardTypes[] | undefined = decks[0];
         if (deck0 !== undefined) {
-            taverns[i] = deck0;
+            taverns[i] = deck0?.splice(0, drawSize);
         } else {
             throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
         }

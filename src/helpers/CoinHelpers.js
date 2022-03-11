@@ -98,7 +98,15 @@ export const ResolveBoardCoins = (G, ctx) => {
             else {
                 throw new Error(`В массиве значений монет отсутствует ${prop}.`);
             }
-            const tiePlayers = G.publicPlayers.filter((player) => { var _a; return ((_a = player.boardCoins[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.value) === Number(prop) && player.priority.isExchangeable; });
+            const tiePlayers = G.publicPlayers.filter((player) => {
+                const boardCoinCurrentTavern = player.boardCoins[G.currentTavern];
+                if (boardCoinCurrentTavern !== undefined) {
+                    return (boardCoinCurrentTavern === null || boardCoinCurrentTavern === void 0 ? void 0 : boardCoinCurrentTavern.value) === Number(prop) && player.priority.isExchangeable;
+                }
+                else {
+                    throw new Error(`В массиве монет игрока отсутствует монета текущей таверны ${G.currentTavern}.`);
+                }
+            });
             while (tiePlayers.length > 1) {
                 const tiePlayersPriorities = tiePlayers.map((player) => player.priority.value), maxPriority = Math.max(...tiePlayersPriorities), minPriority = Math.min(...tiePlayersPriorities), maxIndex = G.publicPlayers.findIndex((player) => player.priority.value === maxPriority), minIndex = G.publicPlayers.findIndex((player) => player.priority.value === minPriority);
                 tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === maxPriority), 1);

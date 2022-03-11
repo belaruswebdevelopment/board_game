@@ -36,15 +36,13 @@ export const CheckIfCurrentTavernEmpty = (G) => {
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavern = (G, discardCardIndex) => {
-    var _a;
     const currentTavern = G.taverns[G.currentTavern];
     if (currentTavern !== undefined) {
         const discardedCard = currentTavern[discardCardIndex];
         if (discardedCard !== undefined) {
             if (discardedCard !== null) {
                 G.discardCardsDeck.push(discardedCard);
-                // TODO Check "?"
-                (_a = G.taverns[G.currentTavern]) === null || _a === void 0 ? void 0 : _a.splice(discardCardIndex, 1, null);
+                currentTavern.splice(discardCardIndex, 1, null);
                 const currentTavernConfig = tavernsConfig[G.currentTavern];
                 if (currentTavernConfig !== undefined) {
                     AddDataToLog(G, LogTypes.GAME, `Карта '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
@@ -75,7 +73,6 @@ export const DiscardCardFromTavern = (G, discardCardIndex) => {
  * @param G
  */
 export const RefillTaverns = (G) => {
-    var _a;
     for (let i = 0; i < G.tavernsNum; i++) {
         const deck = G.decks[G.decks.length - G.tierToEnd];
         if (deck !== undefined) {
@@ -84,8 +81,7 @@ export const RefillTaverns = (G) => {
                 if (refillDeck.length === G.drawSize) {
                     const currentTavern = G.taverns[i];
                     if (currentTavern !== undefined) {
-                        // TODO Check "?"
-                        (_a = G.taverns[i]) === null || _a === void 0 ? void 0 : _a.splice(0, currentTavern.length, ...refillDeck);
+                        currentTavern.splice(0, currentTavern.length, ...refillDeck);
                         AddDataToLog(G, LogTypes.GAME, `Таверна ${currentTavernConfig.name} заполнена новыми картами.`);
                     }
                     else {

@@ -17,34 +17,36 @@ import type { IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitTypes } f
  * @param ctx
  */
 export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (G.publicPlayersOrder.length && !player.stack.length) {
-            const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-                CheckPlayerHasBuff(player, BuffNames.EndTier));
-            if (yludIndex !== -1 || (G.tierToEnd === 0 && yludIndex === -1)) {
-                let nextPhase = true;
-                if (yludIndex !== -1) {
-                    const yludPlayer: IPublicPlayer | undefined = G.publicPlayers[yludIndex];
-                    if (yludPlayer !== undefined) {
-                        const index: number = Object.values(yludPlayer.cards).flat()
-                            .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
-                        if (index === -1) {
-                            nextPhase = false;
+    if (G.publicPlayersOrder.length) {
+        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            if (!player.stack.length && !player.actionsNum) {
+                const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+                    CheckPlayerHasBuff(player, BuffNames.EndTier));
+                if (yludIndex !== -1 || (G.tierToEnd === 0 && yludIndex === -1)) {
+                    let nextPhase = true;
+                    if (yludIndex !== -1) {
+                        const yludPlayer: IPublicPlayer | undefined = G.publicPlayers[yludIndex];
+                        if (yludPlayer !== undefined) {
+                            const index: number = Object.values(yludPlayer.cards).flat()
+                                .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
+                            if (index === -1) {
+                                nextPhase = false;
+                            }
+                        } else {
+                            throw new Error(`В массиве игроков отсутствует игрок с картой героя ${HeroNames.Ylud}.`);
                         }
-                    } else {
-                        throw new Error(`В массиве игроков отсутствует игрок с картой героя ${HeroNames.Ylud}.`);
                     }
+                    if (nextPhase) {
+                        return CheckEndGameLastActions(G);
+                    }
+                } else {
+                    throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Ylud}.`);
                 }
-                if (nextPhase) {
-                    return CheckEndGameLastActions(G);
-                }
-            } else {
-                throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Ylud}.`);
             }
+        } else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
         }
-    } else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 

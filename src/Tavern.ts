@@ -44,8 +44,7 @@ export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number)
         if (discardedCard !== undefined) {
             if (discardedCard !== null) {
                 G.discardCardsDeck.push(discardedCard);
-                // TODO Check "?"
-                G.taverns[G.currentTavern]?.splice(discardCardIndex, 1, null);
+                currentTavern.splice(discardCardIndex, 1, null);
                 const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[G.currentTavern];
                 if (currentTavernConfig !== undefined) {
                     AddDataToLog(G, LogTypes.GAME, `Карта '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
@@ -83,8 +82,7 @@ export const RefillTaverns = (G: IMyGameState): void => {
                 if (refillDeck.length === G.drawSize) {
                     const currentTavern: TavernCardTypes[] | undefined = G.taverns[i];
                     if (currentTavern !== undefined) {
-                        // TODO Check "?"
-                        G.taverns[i]?.splice(0, currentTavern.length, ...refillDeck);
+                        currentTavern.splice(0, currentTavern.length, ...refillDeck);
                         AddDataToLog(G, LogTypes.GAME, `Таверна ${currentTavernConfig.name} заполнена новыми картами.`);
                     } else {
                         throw new Error(`Отсутствует текущая таверна.`);

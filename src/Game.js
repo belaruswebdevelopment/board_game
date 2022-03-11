@@ -63,7 +63,7 @@ export const BoardGame = {
             },
             next: Phases.PickCards,
             onBegin: (G, ctx) => CheckUlinePlaceCoinsOrder(G, ctx),
-            endIf: (G) => CheckEndPlaceCoinsUlinePhase(G),
+            endIf: (G, ctx) => CheckEndPlaceCoinsUlinePhase(G, ctx),
             onEnd: (G) => EndPlaceCoinsUlineActions(G),
         },
         pickCards: {

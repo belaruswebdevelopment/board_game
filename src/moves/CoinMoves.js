@@ -68,7 +68,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
-    var _a, _b;
+    var _a;
     const isValidMove = IsValidMove(G, ctx, Stages.UpgradeCoin, {
         coinId,
         type,
@@ -90,12 +90,18 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
-        const value = (_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.value;
-        if (value !== undefined) {
-            UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
+        const stack = player.stack[0];
+        if (stack !== undefined) {
+            const value = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.value;
+            if (value !== undefined) {
+                UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
+            }
+            else {
+                throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.value'.`);
+            }
         }
         else {
-            throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config.value'.`);
+            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
         }
     }
     else {

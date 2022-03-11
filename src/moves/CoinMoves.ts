@@ -4,7 +4,7 @@ import { UpgradeCoinAction } from "../actions/AutoActions";
 import { IsCoin } from "../Coin";
 import { IsValidMove } from "../MoveValidator";
 import { Stages, SuitNames } from "../typescript/enums";
-import type { CoinType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CoinType, IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>
@@ -89,11 +89,16 @@ export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx:
     }
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
-        const value: number | undefined = player.stack[0]?.config?.value;
-        if (value !== undefined) {
-            UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
+        const stack: IStack | undefined = player.stack[0];
+        if (stack !== undefined) {
+            const value: number | undefined = stack.config?.value;
+            if (value !== undefined) {
+                UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
+            } else {
+                throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.value'.`);
+            }
         } else {
-            throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config.value'.`);
+            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
         }
     } else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);

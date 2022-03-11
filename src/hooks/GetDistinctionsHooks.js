@@ -31,15 +31,17 @@ export const CheckAndResolveDistinctionsOrders = (G, ctx) => {
  * @returns
  */
 export const CheckEndGetDistinctionsPhase = (G, ctx) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (G.publicPlayersOrder.length && !player.stack.length && !player.actionsNum
-            && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-            return Object.values(G.distinctions).every((distinction) => distinction === undefined);
+    if (G.publicPlayersOrder.length) {
+        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
+                && !player.actionsNum) {
+                return Object.values(G.distinctions).every((distinction) => distinction === undefined);
+            }
         }
-    }
-    else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        }
     }
 };
 /**

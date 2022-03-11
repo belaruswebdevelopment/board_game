@@ -85,7 +85,6 @@ export const AddGetMjollnirProfitActionsToStack = (G, ctx) => {
  * @param G
  */
 const AddRemainingCampCardsToDiscard = (G) => {
-    var _a;
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
     for (let i = 0; i < G.camp.length; i++) {
         const campCard = G.camp[i];
@@ -111,8 +110,7 @@ const AddRemainingCampCardsToDiscard = (G) => {
     if (campDeck !== undefined) {
         if (campDeck.length) {
             G.discardCampCardsDeck.push(...G.discardCampCardsDeck.concat(campDeck));
-            // TODO Check "?"
-            (_a = G.campDecks[G.campDecks.length - G.tierToEnd - 1]) === null || _a === void 0 ? void 0 : _a.splice(0);
+            campDeck.splice(0);
         }
         AddDataToLog(G, LogTypes.GAME, `Оставшиеся карты кэмпа сброшены.`);
     }

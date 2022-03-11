@@ -5,7 +5,7 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { LogTypes, RusCardTypes } from "../typescript/enums";
-import type { CoinType, IMyGameState, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
+import type { CoinType, IMyGameState, IPublicPlayer, IStack, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
 
 /**
@@ -101,15 +101,20 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, c
     isInitial: boolean): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
-        const value: number | undefined = player.stack[0]?.config?.value;
-        if (value !== undefined) {
-            if (value === 3) {
-                AddActionsToStackAfterCurrent(G, ctx,
-                    [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
+        const stack: IStack | undefined = player.stack[0];
+        if (stack !== undefined) {
+            const value: number | undefined = stack.config?.value;
+            if (value !== undefined) {
+                if (value === 3) {
+                    AddActionsToStackAfterCurrent(G, ctx,
+                        [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
+                }
+                UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
+            } else {
+                throw new Error(`У конфига действия игрока отсутствует обязательный параметр значения улучшаемой монеты 'VidofnirVedrfolnir'.`);
             }
-            UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
         } else {
-            throw new Error(`У конфига действия игрока отсутствует обязательный параметр значения улучшаемой монеты 'VidofnirVedrfolnir'.`);
+            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
         }
     } else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);

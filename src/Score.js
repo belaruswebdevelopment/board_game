@@ -41,16 +41,28 @@ export const CurrentScoring = (player) => {
  * @returns Финальный счёт указанного игрока.
  */
 export const FinalScoring = (G, ctx, player, playerId, warriorDistinctions) => {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c;
     AddDataToLog(G, LogTypes.GAME, `Результаты игры игрока ${player.nickname}:`);
     let score = CurrentScoring(player), coinsValue = 0;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за карты дворфов игрока ${player.nickname}: ${score}`);
     for (let i = 0; i < player.boardCoins.length; i++) {
-        coinsValue += (_b = (_a = player.boardCoins[i]) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : 0;
+        const boardCoin = player.boardCoins[i];
+        if (boardCoin !== undefined) {
+            coinsValue += (_a = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _a !== void 0 ? _a : 0;
+        }
+        else {
+            throw new Error(`В массиве монет игрока на столе отсутствует монета ${i}.`);
+        }
     }
     if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
         for (let i = 0; i < player.handCoins.length; i++) {
-            coinsValue += (_d = (_c = player.handCoins[i]) === null || _c === void 0 ? void 0 : _c.value) !== null && _d !== void 0 ? _d : 0;
+            const handCoin = player.handCoins[i];
+            if (handCoin !== undefined) {
+                coinsValue += (_b = handCoin === null || handCoin === void 0 ? void 0 : handCoin.value) !== null && _b !== void 0 ? _b : 0;
+            }
+            else {
+                throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
+            }
         }
     }
     score += coinsValue;
@@ -103,7 +115,7 @@ export const FinalScoring = (G, ctx, player, playerId, warriorDistinctions) => {
     }
     score += heroesScore;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за героев игрока ${player.nickname}: ${heroesScore}.`);
-    if ((_e = G.expansions.thingvellir) === null || _e === void 0 ? void 0 : _e.active) {
+    if ((_c = G.expansions.thingvellir) === null || _c === void 0 ? void 0 : _c.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
             const campCard = player.campCards[i];

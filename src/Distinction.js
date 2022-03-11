@@ -114,7 +114,6 @@ export const CheckCurrentSuitDistinctions = (G, ctx, suit) => {
  * @param ctx
  */
 export const CheckDistinction = (G, ctx) => {
-    var _a;
     AddDataToLog(G, LogTypes.GAME, `Преимущество по фракциям в конце эпохи:`);
     let suit;
     for (suit in suitsConfig) {
@@ -122,13 +121,19 @@ export const CheckDistinction = (G, ctx) => {
             const result = CheckCurrentSuitDistinction(G, ctx, suit);
             G.distinctions[suit] = result;
             if (suit === SuitNames.EXPLORER && result === undefined) {
-                const discardedCard = (_a = G.decks[1]) === null || _a === void 0 ? void 0 : _a.splice(0, 1)[0];
-                if (discardedCard !== undefined) {
-                    G.discardCardsDeck.push(discardedCard);
-                    AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
+                const deck1 = G.decks[1];
+                if (deck1 !== undefined) {
+                    const discardedCard = deck1.splice(0, 1)[0];
+                    if (discardedCard !== undefined) {
+                        G.discardCardsDeck.push(discardedCard);
+                        AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
+                    }
+                    else {
+                        throw new Error(`Отсутствует сбрасываемая карта из колоды 2 эпохи при отсутствии преимущества по фракции разведчиков.`);
+                    }
                 }
                 else {
-                    throw new Error(`Отсутствует сбрасываемая карта из колоды 2 эпохи при отсутствии преимущества по фракции разведчиков.`);
+                    throw new Error(`В массиве дек арт отсутствует дека 2 эпохи.`);
                 }
             }
         }

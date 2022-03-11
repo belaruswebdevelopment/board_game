@@ -18,13 +18,15 @@ import type { IMyGameState, IPublicPlayer } from "../typescript/interfaces";
  * @returns
  */
 export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (G.publicPlayersOrder.length && !player.stack.length) {
-            return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
+    if (G.publicPlayersOrder.length) {
+        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            if (!player.stack.length && !player.actionsNum) {
+                return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
+            }
+        } else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
         }
-    } else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
 

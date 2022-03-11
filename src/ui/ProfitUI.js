@@ -7,17 +7,24 @@ import { suitsConfig } from "../data/SuitData";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
-import { BuffNames, ConfigNames, DrawNames, MoveNames, RusCardTypes } from "../typescript/enums";
+import { BuffNames, CoinTypes, ConfigNames, DrawNames, MoveNames, MoveValidatorNames, RusCardTypes } from "../typescript/enums";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
-// TODO Add functions dock blocks and Errors!
-export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const AddCoinToPouchProfit = (G, ctx, validatorName, data, boardCells) => {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], moveMainArgs = [];
     if (player !== undefined) {
         for (let j = 0; j < player.handCoins.length; j++) {
             const handCoin = player.handCoins[j];
             if (handCoin !== undefined) {
-                if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && handCoin !== null) {
-                    DrawCoin(data, boardCells, `coin`, handCoin, j, player, `border-2`, null, MoveNames.AddCoinToPouchMove, j);
+                if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && IsCoin(handCoin)) {
+                    if (data !== undefined && boardCells !== undefined) {
+                        DrawCoin(data, boardCells, `coin`, handCoin, j, player, `border-2`, null, MoveNames.AddCoinToPouchMove, j);
+                    }
+                    else if (validatorName === MoveValidatorNames.AddCoinToPouchMoveValidator) {
+                        moveMainArgs.push(j);
+                    }
+                    else {
+                        throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                    }
                 }
             }
             else {
@@ -28,50 +35,85 @@ export const AddCoinToPouchProfit = (G, ctx, data, boardCells) => {
     else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
 };
-export const DiscardCardFromBoardProfit = (G, ctx, data, boardCells) => {
-    var _a, _b;
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const DiscardCardFromBoardProfit = (G, ctx, validatorName, data, boardCells) => {
+    var _a;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], moveMainArgs = {};
     if (player !== undefined) {
-        const configSuit = (_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.suit, pickedCard = player.pickedCard;
-        if (configSuit !== undefined) {
-            let suit;
-            for (suit in suitsConfig) {
-                if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                    if (suit !== configSuit
-                        && !(G.drawProfit === ConfigNames.DagdaAction && player.actionsNum === 1 && pickedCard !== null
-                            && `suit` in pickedCard && suit === pickedCard.suit)) {
-                        const last = player.cards[suit].length - 1;
-                        if (last !== -1 && !IsHeroCard(player.cards[suit][last])) {
-                            const card = player.cards[suit][last];
-                            if (card !== undefined) {
-                                DrawCard(data, boardCells, card, last, player, suit, MoveNames.DiscardCardMove, suit, last);
-                            }
-                            else {
-                                throw new Error(`В массиве карт фракции ${suit} отсутствует последняя карта ${last}.`);
+        const stack = player.stack[0];
+        if (stack !== undefined) {
+            const configSuit = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.suit, pickedCard = player.pickedCard;
+            if (configSuit !== undefined) {
+                let suit;
+                for (suit in suitsConfig) {
+                    if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
+                        if (suit !== configSuit
+                            && !(G.drawProfit === ConfigNames.DagdaAction && player.actionsNum === 1
+                                && pickedCard !== null && `suit` in pickedCard && suit === pickedCard.suit)) {
+                            const last = player.cards[suit].length - 1;
+                            if (last !== -1) {
+                                const card = player.cards[suit][last];
+                                if (card !== undefined) {
+                                    if (!IsHeroCard(card)) {
+                                        if (data !== undefined && boardCells !== undefined) {
+                                            DrawCard(data, boardCells, card, last, player, suit, MoveNames.DiscardCardMove, suit, last);
+                                        }
+                                        else if (validatorName === MoveValidatorNames.DiscardCardMoveValidator) {
+                                            moveMainArgs[suit] = [];
+                                            const moveMainArgsFoSuit = moveMainArgs[suit];
+                                            if (moveMainArgsFoSuit !== undefined) {
+                                                moveMainArgsFoSuit.push(last);
+                                            }
+                                            else {
+                                                throw new Error(`Массив значений должен содержать фракцию ${suit}.`);
+                                            }
+                                        }
+                                        else {
+                                            throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                                        }
+                                    }
+                                }
+                                else {
+                                    throw new Error(`В массиве карт фракции ${suit} отсутствует последняя карта ${last}.`);
+                                }
                             }
                         }
                     }
                 }
             }
+            else {
+                throw new Error(`Отсутствует обязательный параметр 'stack[0].config.suit'.`);
+            }
         }
         else {
-            throw new Error(`Отсутствует обязательный параметр 'stack[0].config.suit'.`);
+            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
         }
     }
     else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
 };
-export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, boardCells) => {
+export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, validatorName, data, boardCells) => {
+    var _a;
     // TODO Discard cards must be hidden from others users?
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], moveMainArgs = {};
     if (player !== undefined) {
         const playerHeaders = [], playerRows = [];
         let suit;
         for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
+                if (data !== undefined) {
+                    playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
+                }
+                else if (validatorName !== null) {
+                    moveMainArgs[suit] = [];
+                }
             }
         }
         for (let i = 0;; i++) {
@@ -86,32 +128,52 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, data, boardCells) =>
                         isExit = false;
                         if (!IsHeroCard(card)) {
                             isDrawRow = true;
-                            DrawCard(data, playerCells, card, id, player, suit, MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
+                            if (data !== undefined && boardCells !== undefined) {
+                                DrawCard(data, playerCells, card, id, player, suit, MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
+                            }
+                            else if (validatorName === MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) {
+                                (_a = moveMainArgs[suit]) === null || _a === void 0 ? void 0 : _a.push(i);
+                            }
                         }
                         else {
-                            playerCells.push(_jsx("td", {}, `${player.nickname} empty card ${id}`));
+                            if (data !== undefined) {
+                                playerCells.push(_jsx("td", {}, `${player.nickname} empty card ${id}`));
+                            }
                         }
                     }
                     else {
-                        playerCells.push(_jsx("td", {}, `${player.nickname} empty card ${id}`));
+                        if (data !== undefined) {
+                            playerCells.push(_jsx("td", {}, `${player.nickname} empty card ${id}`));
+                        }
                     }
                     j++;
                 }
             }
             if (isDrawRow) {
-                playerRows.push(_jsx("tr", { children: playerCells }, `${player.nickname} board row ${i}`));
+                if (data !== undefined) {
+                    playerRows.push(_jsx("tr", { children: playerCells }, `${player.nickname} board row ${i}`));
+                }
             }
             if (isExit) {
                 break;
             }
         }
-        boardCells.push(_jsx("td", { children: _jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playerHeaders }) }), _jsx("tbody", { children: playerRows })] }) }, `${player.nickname} discard card`));
+        if (data !== undefined && boardCells !== undefined) {
+            boardCells.push(_jsx("td", { children: _jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playerHeaders }) }), _jsx("tbody", { children: playerRows })] }) }, `${player.nickname} discard card`));
+        }
+        else if (validatorName !== null) {
+            return moveMainArgs;
+        }
+        else {
+            throw new Error(`Функция должна возвращать значение.`);
+        }
     }
     else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
-export const DiscardCardProfit = (G, ctx, data, boardCells) => {
+export const DiscardCardProfit = (G, ctx, validatorName, data, boardCells) => {
+    const moveMainArgs = [];
     for (let j = 0; j < G.drawSize; j++) {
         const currentTavern = G.taverns[G.currentTavern];
         if (currentTavern !== undefined) {
@@ -124,7 +186,15 @@ export const DiscardCardProfit = (G, ctx, data, boardCells) => {
                     }
                     const player = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player !== undefined) {
-                        DrawCard(data, boardCells, card, j, player, suit, MoveNames.DiscardCard2PlayersMove, j);
+                        if (data !== undefined && boardCells !== undefined) {
+                            DrawCard(data, boardCells, card, j, player, suit, MoveNames.DiscardCard2PlayersMove, j);
+                        }
+                        else if (validatorName === MoveValidatorNames.DiscardCard2PlayersMoveValidator) {
+                            moveMainArgs.push(j);
+                        }
+                        else {
+                            throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                        }
                     }
                     else {
                         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
@@ -139,66 +209,119 @@ export const DiscardCardProfit = (G, ctx, data, boardCells) => {
             throw new Error(`В массиве таверн отсутствует текущая таверна.`);
         }
     }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
 };
-export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, data, boardCells) => {
-    var _a, _b;
+export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, validatorName, playerId, data, boardCells) => {
+    var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
-        const playersHeaders = [], playersRows = [], suit = (_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.suit;
-        if (suit !== undefined) {
-            for (let p = 0; p < G.publicPlayers.length; p++) {
-                if (p !== Number(ctx.currentPlayer)) {
-                    const playerP1 = G.publicPlayers[p];
-                    if (playerP1 !== undefined) {
-                        playersHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor} discard suit`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: p + 1 }) }, `${playerP1.nickname} ${suitsConfig[suit].suitName}`));
+        const playersHeaders = [], playersRows = [];
+        const stack = player.stack[0];
+        if (stack !== undefined) {
+            const suit = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.suit;
+            if (suit !== undefined) {
+                let moveMainArgs = {
+                    playerId: undefined,
+                    suit,
+                    cards: [],
+                };
+                if (validatorName !== null) {
+                    if (playerId !== null) {
+                        moveMainArgs = {
+                            playerId,
+                            suit,
+                            cards: [],
+                        };
                     }
                     else {
-                        throw new Error(`В массиве игроков отсутствует игрок 1 ${p}.`);
+                        throw new Error(`Отсутствует обязательный параметр 'playerId'.`);
                     }
                 }
-            }
-            for (let i = 0;; i++) {
-                let isDrawRow = false, isExit = true;
-                const playersCells = [];
                 for (let p = 0; p < G.publicPlayers.length; p++) {
                     if (p !== Number(ctx.currentPlayer)) {
-                        const playerP2 = G.publicPlayers[p];
-                        if (playerP2 !== undefined) {
-                            const card = playerP2.cards[suit][i];
-                            if (card !== undefined) {
-                                if (!IsHeroCard(card)) {
-                                    isExit = false;
-                                    isDrawRow = true;
-                                    DrawCard(data, playersCells, card, i, playerP2, suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, suit, p, i);
-                                }
-                            }
-                            else {
-                                playersCells.push(_jsx("td", {}, `${playerP2.nickname} discard suit cardboard row ${i}`));
+                        const playerP1 = G.publicPlayers[p];
+                        if (playerP1 !== undefined) {
+                            if (data !== undefined) {
+                                playersHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor} discard suit`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: p + 1 }) }, `${playerP1.nickname} ${suitsConfig[suit].suitName}`));
                             }
                         }
                         else {
-                            throw new Error(`В массиве игроков отсутствует игрок 2 ${p}.`);
+                            throw new Error(`В массиве игроков отсутствует игрок 1 ${p}.`);
                         }
                     }
                 }
-                if (isDrawRow) {
-                    playersRows.push(_jsx("tr", { children: playersCells }, `Discard suit cardboard row ${i}`));
+                for (let i = 0;; i++) {
+                    let isDrawRow = false, isExit = true;
+                    const playersCells = [];
+                    for (let p = 0; p < G.publicPlayers.length; p++) {
+                        if (p !== Number(ctx.currentPlayer)) {
+                            const playerP2 = G.publicPlayers[p];
+                            if (playerP2 !== undefined) {
+                                const card = playerP2.cards[suit][i];
+                                if (card !== undefined) {
+                                    if (!IsHeroCard(card)) {
+                                        isExit = false;
+                                        isDrawRow = true;
+                                        if (data !== undefined) {
+                                            DrawCard(data, playersCells, card, i, playerP2, suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, suit, p, i);
+                                        }
+                                        else if (p === playerId && validatorName ===
+                                            MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator) {
+                                            if (moveMainArgs.cards !== undefined) {
+                                                moveMainArgs.cards.push(i);
+                                            }
+                                            else {
+                                                throw new Error(`Отсутствует параметр 'cards'.`);
+                                            }
+                                        }
+                                    }
+                                }
+                                else {
+                                    if (data !== undefined) {
+                                        playersCells.push(_jsx("td", {}, `${playerP2.nickname} discard suit cardboard row ${i}`));
+                                    }
+                                }
+                            }
+                            else {
+                                throw new Error(`В массиве игроков отсутствует игрок 2 ${p}.`);
+                            }
+                        }
+                    }
+                    if (isDrawRow) {
+                        if (data !== undefined) {
+                            playersRows.push(_jsx("tr", { children: playersCells }, `Discard suit cardboard row ${i}`));
+                        }
+                    }
+                    if (isExit) {
+                        break;
+                    }
                 }
-                if (isExit) {
-                    break;
+                if (data !== undefined && boardCells !== undefined) {
+                    boardCells.push(_jsx("td", { children: _jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playersHeaders }) }), _jsx("tbody", { children: playersRows })] }) }, `Discard ${suit} suit cardboard`));
+                }
+                else if (validatorName !== null) {
+                    return moveMainArgs;
+                }
+                else {
+                    throw new Error(`Функция должна возвращать значение.`);
                 }
             }
-            boardCells.push(_jsx("td", { children: _jsxs("table", { children: [_jsx("thead", { children: _jsx("tr", { children: playersHeaders }) }), _jsx("tbody", { children: playersRows })] }) }, `Discard ${suit} suit cardboard`));
+            else {
+                throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config.suit'.`);
+            }
         }
         else {
-            throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config.suit'.`);
+            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
         }
     }
     else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
 };
-export const ExplorerDistinctionProfit = (G, ctx, data, boardCells) => {
+export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCells) => {
+    const moveMainArgs = [];
     for (let j = 0; j < 3; j++) {
         const deck1 = G.decks[1];
         if (deck1 !== undefined) {
@@ -210,7 +333,15 @@ export const ExplorerDistinctionProfit = (G, ctx, data, boardCells) => {
                 }
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player !== undefined) {
-                    DrawCard(data, boardCells, card, j, player, suit, MoveNames.ClickCardToPickDistinctionMove, j);
+                    if (data !== undefined && boardCells !== undefined) {
+                        DrawCard(data, boardCells, card, j, player, suit, MoveNames.ClickCardToPickDistinctionMove, j);
+                    }
+                    else if (validatorName === MoveValidatorNames.ClickCardToPickDistinctionMoveValidator) {
+                        moveMainArgs.push(j);
+                    }
+                    else {
+                        throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                    }
                 }
                 else {
                     throw new Error(`В массиве игроков отсутствует текущий игрок.`);
@@ -224,15 +355,26 @@ export const ExplorerDistinctionProfit = (G, ctx, data, boardCells) => {
             throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
         }
     }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
 };
-export const GetEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const GetEnlistmentMercenariesProfit = (G, ctx, validatorName, data, boardCells) => {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], moveMainArgs = [];
     if (player !== undefined) {
         const mercenaries = player.campCards.filter((card) => IsMercenaryCampCard(card));
         for (let j = 0; j < mercenaries.length; j++) {
             const card = mercenaries[j];
             if (card !== undefined) {
-                DrawCard(data, boardCells, card, j, player, null, MoveNames.GetEnlistmentMercenariesMove, j);
+                if (data !== undefined && boardCells !== undefined) {
+                    DrawCard(data, boardCells, card, j, player, null, MoveNames.GetEnlistmentMercenariesMove, j);
+                }
+                else if (validatorName === MoveValidatorNames.GetEnlistmentMercenariesMoveValidator) {
+                    moveMainArgs.push(j);
+                }
+                else {
+                    throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                }
             }
             else {
                 throw new Error(`В массиве карт кэмпа игрока отсутствует карта наёмника ${j}.`);
@@ -242,22 +384,40 @@ export const GetEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
 };
-export const GetMjollnirProfitProfit = (G, ctx, data, boardCells) => {
-    var _a, _b;
+export const GetMjollnirProfitProfit = (G, ctx, validatorName, data, boardCells) => {
+    var _a;
+    const moveMainArgs = [];
     let suit;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player !== undefined) {
                 if (player.cards[suit].length) {
-                    const drawName = (_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.drawName;
-                    if (drawName !== undefined) {
-                        const value = player.cards[suit].reduce(TotalRank, 0) * 2;
-                        DrawSuit(data, boardCells, suit, drawName, value, player, MoveNames.GetMjollnirProfitMove);
+                    const stack = player.stack[0];
+                    if (stack !== undefined) {
+                        const drawName = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.drawName;
+                        if (drawName !== undefined) {
+                            if (data !== undefined && boardCells !== undefined) {
+                                const value = player.cards[suit].reduce(TotalRank, 0) * 2;
+                                DrawSuit(data, boardCells, suit, drawName, value, player, MoveNames.GetMjollnirProfitMove);
+                            }
+                            else if (validatorName === MoveValidatorNames.GetMjollnirProfitMoveValidator) {
+                                moveMainArgs.push(suit);
+                            }
+                            else {
+                                throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                            }
+                        }
+                        else {
+                            throw new Error(`Отсутствует обязательный параметр 'config.drawName'.`);
+                        }
                     }
                     else {
-                        throw new Error(`Отсутствует обязательный параметр 'player.stack[0].config.drawName'.`);
+                        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
                     }
                 }
             }
@@ -266,15 +426,27 @@ export const GetMjollnirProfitProfit = (G, ctx, data, boardCells) => {
             }
         }
     }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
 };
-export const PickCampCardHoldaProfit = (G, ctx, data, boardCells) => {
+export const PickCampCardHoldaProfit = (G, ctx, validatorName, data, boardCells) => {
+    const moveMainArgs = [];
     for (let j = 0; j < G.campNum; j++) {
         const card = G.camp[j];
         if (card !== undefined) {
             if (card !== null) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player !== undefined) {
-                    DrawCard(data, boardCells, card, j, player, null, MoveNames.ClickCampCardHoldaMove, j);
+                    if (data !== undefined && boardCells !== undefined) {
+                        DrawCard(data, boardCells, card, j, player, null, MoveNames.ClickCampCardHoldaMove, j);
+                    }
+                    else if (validatorName === MoveValidatorNames.ClickCampCardHoldaMoveValidator) {
+                        moveMainArgs.push(j);
+                    }
+                    else {
+                        throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                    }
                 }
                 else {
                     throw new Error(`В массиве игроков отсутствует текущий игрок.`);
@@ -285,8 +457,12 @@ export const PickCampCardHoldaProfit = (G, ctx, data, boardCells) => {
             throw new Error(`В массиве карт кэмпа отсутствует карта ${j}.`);
         }
     }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
 };
-export const PickDiscardCardProfit = (G, ctx, data, boardCells) => {
+export const PickDiscardCardProfit = (G, ctx, validatorName, data, boardCells) => {
+    const moveMainArgs = [];
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
         const card = G.discardCardsDeck[j];
         if (card !== undefined) {
@@ -296,7 +472,15 @@ export const PickDiscardCardProfit = (G, ctx, data, boardCells) => {
             }
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player !== undefined) {
-                DrawCard(data, boardCells, card, j, player, suit, MoveNames.PickDiscardCardMove, j);
+                if (data !== undefined && boardCells !== undefined) {
+                    DrawCard(data, boardCells, card, j, player, suit, MoveNames.PickDiscardCardMove, j);
+                }
+                else if (validatorName === MoveValidatorNames.PickDiscardCardMoveValidator) {
+                    moveMainArgs.push(j);
+                }
+                else {
+                    throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                }
             }
             else {
                 throw new Error(`В массиве игроков отсутствует текущий игрок.`);
@@ -306,9 +490,13 @@ export const PickDiscardCardProfit = (G, ctx, data, boardCells) => {
             throw new Error(`В массиве карт сброса отсутствует карта ${j}.`);
         }
     }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
 };
-export const PlaceCardsProfit = (G, ctx, data, boardCells) => {
-    var _a, _b, _c, _d, _e;
+export const PlaceCardsProfit = (G, ctx, validatorName, data, boardCells) => {
+    var _a, _b, _c;
+    const moveMainArgs = [];
     let suit;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -316,27 +504,43 @@ export const PlaceCardsProfit = (G, ctx, data, boardCells) => {
             if (player !== undefined) {
                 const pickedCard = player.pickedCard;
                 if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
-                    const drawName = (_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.drawName;
-                    if (drawName !== undefined) {
-                        let moveName;
-                        switch (drawName) {
-                            case DrawNames.Thrud:
-                                moveName = MoveNames.PlaceThrudHeroMove;
-                                break;
-                            case DrawNames.Ylud:
-                                moveName = MoveNames.PlaceYludHeroMove;
-                                break;
-                            case DrawNames.Olwin:
-                                moveName = MoveNames.PlaceOlwinCardMove;
-                                break;
-                            default:
-                                throw new Error(`Нет такого мува.`);
+                    const stack = player.stack[0];
+                    if (stack !== undefined) {
+                        const drawName = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.drawName;
+                        if (drawName !== undefined) {
+                            let moveName;
+                            switch (drawName) {
+                                case DrawNames.Thrud:
+                                    moveName = MoveNames.PlaceThrudHeroMove;
+                                    break;
+                                case DrawNames.Ylud:
+                                    moveName = MoveNames.PlaceYludHeroMove;
+                                    break;
+                                case DrawNames.Olwin:
+                                    moveName = MoveNames.PlaceOlwinCardMove;
+                                    break;
+                                default:
+                                    throw new Error(`Нет такого мува.`);
+                            }
+                            if (data !== undefined && boardCells !== undefined) {
+                                const value = (_c = (_b = stack.variants) === null || _b === void 0 ? void 0 : _b[suit].points) !== null && _c !== void 0 ? _c : ``;
+                                DrawSuit(data, boardCells, suit, drawName, value, player, moveName);
+                            }
+                            else if (validatorName === MoveValidatorNames.PlaceThrudHeroMoveValidator
+                                || validatorName === MoveValidatorNames.PlaceOlwinCardMoveValidator
+                                || validatorName === MoveValidatorNames.PlaceYludHeroMoveValidator) {
+                                moveMainArgs.push(suit);
+                            }
+                            else {
+                                throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                            }
                         }
-                        const value = (_e = (_d = (_c = player.stack[0]) === null || _c === void 0 ? void 0 : _c.variants) === null || _d === void 0 ? void 0 : _d[suit].points) !== null && _e !== void 0 ? _e : ``;
-                        DrawSuit(data, boardCells, suit, drawName, value, player, moveName);
+                        else {
+                            throw new Error(`Отсутствует обязательный параметр 'config.drawName'.`);
+                        }
                     }
                     else {
-                        throw new Error(`Отсутствует обязательный параметр 'player.stack[0].config.drawName'.`);
+                        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
                     }
                 }
             }
@@ -345,9 +549,13 @@ export const PlaceCardsProfit = (G, ctx, data, boardCells) => {
             }
         }
     }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
 };
-export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
-    var _a, _b, _c, _d;
+export const PlaceEnlistmentMercenariesProfit = (G, ctx, validatorName, data, boardCells) => {
+    var _a, _b;
+    const moveMainArgs = [];
     let suit;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -356,21 +564,36 @@ export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
                 const card = player.pickedCard;
                 if (card !== null && `variants` in card) {
                     if (card.variants !== undefined) {
-                        const drawName = (_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.drawName;
-                        if (drawName !== undefined) {
-                            if (suit === ((_c = card.variants[suit]) === null || _c === void 0 ? void 0 : _c.suit)) {
+                        const stack = player.stack[0];
+                        if (stack !== undefined) {
+                            const drawName = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.drawName;
+                            if (drawName !== undefined) {
                                 const cardVariants = card.variants[suit];
                                 if (cardVariants !== undefined) {
-                                    const value = (_d = cardVariants.points) !== null && _d !== void 0 ? _d : ``;
-                                    DrawSuit(data, boardCells, suit, drawName, value, player, MoveNames.PlaceEnlistmentMercenariesMove);
+                                    if (suit === cardVariants.suit) {
+                                        if (data !== undefined && boardCells !== undefined) {
+                                            const value = (_b = cardVariants.points) !== null && _b !== void 0 ? _b : ``;
+                                            DrawSuit(data, boardCells, suit, drawName, value, player, MoveNames.PlaceEnlistmentMercenariesMove);
+                                        }
+                                        else if (validatorName ===
+                                            MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator) {
+                                            moveMainArgs.push(suit);
+                                        }
+                                        else {
+                                            throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                                        }
+                                    }
+                                    else {
+                                        throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
+                                    }
                                 }
-                                else {
-                                    throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
-                                }
+                            }
+                            else {
+                                throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config.drawName'.`);
                             }
                         }
                         else {
-                            throw new Error(`У игрока отсутствует обязательный параметр 'stack[0].config.drawName'.`);
+                            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
                         }
                     }
                     else {
@@ -385,6 +608,9 @@ export const PlaceEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
                 throw new Error(`В массиве игроков отсутствует текущий игрок.`);
             }
         }
+    }
+    if (validatorName !== null) {
+        return moveMainArgs;
     }
 };
 export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
@@ -404,8 +630,8 @@ export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
         }
     }
 };
-export const UpgradeCoinProfit = (G, ctx, data, boardCells) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+export const UpgradeCoinProfit = (G, ctx, validatorName, data, boardCells) => {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], moveMainArgs = [];
     if (player !== undefined) {
         const handCoins = player.handCoins.filter((coin) => IsCoin(coin));
         let handCoinIndex = -1;
@@ -422,7 +648,19 @@ export const UpgradeCoinProfit = (G, ctx, data, boardCells) => {
                             const handCoin = player.handCoins[handCoinId];
                             if (handCoin !== undefined) {
                                 if (IsCoin(handCoin) && !handCoin.isTriggerTrading) {
-                                    DrawCoin(data, boardCells, `coin`, handCoin, j, player, `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `hand`, handCoin.isInitial);
+                                    if (data !== undefined && boardCells !== undefined) {
+                                        DrawCoin(data, boardCells, `coin`, handCoin, j, player, `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, CoinTypes.Hand, handCoin.isInitial);
+                                    }
+                                    else if (validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator) {
+                                        moveMainArgs.push({
+                                            coinId: j,
+                                            type: CoinTypes.Hand,
+                                            isInitial: handCoin.isInitial,
+                                        });
+                                    }
+                                    else {
+                                        throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                                    }
                                 }
                             }
                             else {
@@ -430,8 +668,7 @@ export const UpgradeCoinProfit = (G, ctx, data, boardCells) => {
                             }
                         }
                         else {
-                            // TODO Is it need Error!?
-                            console.log(`Test me!`);
+                            throw new Error(`В массиве монет игрока в руке отсутствует нужная монета.`);
                         }
                     }
                     else {
@@ -439,28 +676,18 @@ export const UpgradeCoinProfit = (G, ctx, data, boardCells) => {
                     }
                 }
                 else if (IsCoin(boardCoin) && !boardCoin.isTriggerTrading) {
-                    DrawCoin(data, boardCells, `coin`, boardCoin, j, player, `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, `board`, boardCoin.isInitial);
-                }
-            }
-            else {
-                throw new Error(`В массиве монет игрока на столе отсутствует монета ${j}.`);
-            }
-        }
-    }
-    else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-    }
-};
-export const UpgradeCoinVidofnirVedrfolnirProfit = (G, ctx, data, boardCells) => {
-    var _a, _b;
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
-            const boardCoin = player.boardCoins[j];
-            if (boardCoin !== undefined) {
-                if (IsCoin(boardCoin)) {
-                    if (!boardCoin.isTriggerTrading && ((_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.coinId) !== j) {
-                        DrawCoin(data, boardCells, `coin`, boardCoin, j, player, `border-2`, null, MoveNames.UpgradeCoinVidofnirVedrfolnirMove, j, `board`, boardCoin.isInitial);
+                    if (data !== undefined && boardCells !== undefined) {
+                        DrawCoin(data, boardCells, `coin`, boardCoin, j, player, `border-2`, null, MoveNames.ClickCoinToUpgradeMove, j, CoinTypes.Board, boardCoin.isInitial);
+                    }
+                    else if (validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator) {
+                        moveMainArgs.push({
+                            coinId: j,
+                            type: CoinTypes.Board,
+                            isInitial: boardCoin.isInitial,
+                        });
+                    }
+                    else {
+                        throw new Error(`Функция должна иметь один из ключевых параметров.`);
                     }
                 }
             }
@@ -471,6 +698,46 @@ export const UpgradeCoinVidofnirVedrfolnirProfit = (G, ctx, data, boardCells) =>
     }
     else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    if (validatorName !== null) {
+        return moveMainArgs;
+    }
+};
+export const UpgradeCoinVidofnirVedrfolnirProfit = (G, ctx, validatorName, data, boardCells) => {
+    var _a, _b;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], moveMainArgs = [];
+    if (player !== undefined) {
+        for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
+            const boardCoin = player.boardCoins[j];
+            if (boardCoin !== undefined) {
+                if (IsCoin(boardCoin)) {
+                    if (!boardCoin.isTriggerTrading && ((_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.coinId) !== j) {
+                        if (data !== undefined && boardCells !== undefined) {
+                            DrawCoin(data, boardCells, `coin`, boardCoin, j, player, `border-2`, null, MoveNames.UpgradeCoinVidofnirVedrfolnirMove, j, CoinTypes.Board, boardCoin.isInitial);
+                        }
+                        else if (validatorName === MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator) {
+                            moveMainArgs.push({
+                                coinId: j,
+                                type: CoinTypes.Board,
+                                isInitial: boardCoin.isInitial,
+                            });
+                        }
+                        else {
+                            throw new Error(`Функция должна иметь один из ключевых параметров.`);
+                        }
+                    }
+                }
+            }
+            else {
+                throw new Error(`В массиве монет игрока на столе отсутствует монета ${j}.`);
+            }
+        }
+    }
+    else {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    if (validatorName !== null) {
+        return moveMainArgs;
     }
 };
 //# sourceMappingURL=ProfitUI.js.map

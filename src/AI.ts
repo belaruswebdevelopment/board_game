@@ -3,8 +3,8 @@ import { CompareCards } from "./bot_logic/BotCardLogic";
 import { IsCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
-import { ConfigNames, Phases, Stages } from "./typescript/enums";
-import type { IBuffs, IMoves, IMoveValidator, IMyGameState, IPublicPlayer, MoveArgsTypes, MoveByTypes, MoveValidatorGetRangeTypes, StageTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
+import type { IBuffs, IMoves, IMoveValidator, IMyGameState, IPublicPlayer, IStack, MoveArgsTypes, MoveByTypes, MoveValidatorGetRangeTypes, StageTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -48,18 +48,25 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                     } else {
                         activeStageOfCurrentPlayer = Stages.DiscardSuitCard;
                         // TODO Bot can't do async turns...?
-                        if (player.stack[0]?.config?.suit !== undefined) {
-                            for (let p = 0; p < G.publicPlayers.length; p++) {
-                                const playerP: IPublicPlayer | undefined = G.publicPlayers[p];
-                                if (playerP !== undefined) {
-                                    if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
-                                        playerId = p;
-                                        break;
+                        const stack: IStack | undefined = player.stack[0];
+                        if (stack !== undefined) {
+                            if (stack.config?.suit !== undefined) {
+                                for (let p = 0; p < G.publicPlayers.length; p++) {
+                                    const playerP: IPublicPlayer | undefined = G.publicPlayers[p];
+                                    if (playerP !== undefined) {
+                                        if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
+                                            playerId = p;
+                                            break;
+                                        }
+                                    } else {
+                                        throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
                                     }
-                                } else {
-                                    throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
                                 }
+                            } else {
+                                throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.suit'.`);
                             }
+                        } else {
+                            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
                         }
                     }
                 } else {
@@ -92,7 +99,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
             const validator: IMoveValidator | null =
                 GetValidator(ctx.phase as MoveByTypes, activeStageOfCurrentPlayer);
             if (validator !== null) {
-                const moveName: string = validator.moveName,
+                const moveName: MoveNames = validator.moveName,
                     moveRangeData: MoveValidatorGetRangeTypes = validator.getRange(G, ctx, playerId),
                     moveValue: ValidMoveIdParamTypes = validator.getValue(G, ctx, moveRangeData);
                 let moveValues: MoveArgsTypes = [];

@@ -4,14 +4,14 @@ import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
 import { IsMercenaryCampCard } from "./Camp";
 import { IsCardNotActionAndNotNull } from "./Card";
 import { IsCoin } from "./Coin";
-import { suitsConfig } from "./data/SuitData";
-import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
-import { IsHeroCard } from "./Hero";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { BuffNames, ConfigNames, MoveNames, Phases, ValidatorNames } from "./typescript/enums";
-import type { CampCardTypes, CampDeckCardTypes, CoinType, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveSuitCardPlayerCurrentId, IMoveSuitCardPlayerIdArguments, IMoveValidator, IMoveValidators, IMyGameState, IPublicPlayer, IValidatorsConfig, MoveByTypes, MoveValidatorGetRangeTypes, OptionalSuitPropertyTypes, PickedCardType, PlayerCardsType, StageTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import { MoveNames, MoveValidatorNames, Phases, ValidatorNames } from "./typescript/enums";
+import type { CampDeckCardTypes, CoinType, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveSuitCardPlayerCurrentId, IMoveSuitCardPlayerIdArguments, IMoveValidator, IMoveValidators, IMyGameState, IPublicPlayer, IValidatorsConfig, MoveByTypes, MoveValidatorGetRangeTypes, OptionalSuitPropertyTypes, PlayerCardsType, StageTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import { DrawCamp, DrawDistinctions, DrawHeroes, DrawTaverns } from "./ui/GameBoardUI";
+import { DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ui/ProfitUI";
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -170,15 +170,22 @@ export const moveValidators: IMoveValidators = {
                         const allCoinsOrderI: number[] | undefined = allCoinsOrder[i];
                         if (allCoinsOrderI !== undefined) {
                             const hasTrading: boolean =
-                                allCoinsOrderI.some((coinId: number): boolean =>
-                                    Boolean(handCoins[coinId]?.isTriggerTrading));
+                                allCoinsOrderI.some((coinId: number): boolean => {
+                                    const handCoin: CoinType | undefined = handCoins[coinId];
+                                    if (handCoin !== undefined) {
+                                        return Boolean(handCoins[coinId]?.isTriggerTrading);
+                                    } else {
+                                        throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
+                                    }
+                                });
+                            // TODO How tradingProfit can be < 0?
                             if (tradingProfit < 0) {
                                 if (hasTrading) {
                                     continue;
                                 }
                                 return allCoinsOrderI;
                             } else if (tradingProfit > 0) {
-                                if (!hasTrading) {
+                                if (!hasTrading && handCoins.every(coin => IsCoin(coin))) {
                                     continue;
                                 }
                                 if (positionForMaxCoin !== undefined && positionForMinCoin !== undefined) {
@@ -191,7 +198,7 @@ export const moveValidators: IMoveValidators = {
                                         const maxCoin: CoinType | undefined = handCoins[coinsOrderPositionForMaxCoin],
                                             minCoin: CoinType | undefined = handCoins[coinsOrderPositionForMinCoin];
                                         if (maxCoin !== undefined && minCoin !== undefined) {
-                                            if (maxCoin && minCoin) {
+                                            if (IsCoin(maxCoin) && IsCoin(minCoin)) {
                                                 let isTopCoinsOnPosition = false,
                                                     isMinCoinsOnPosition = false;
                                                 if (hasPositionForMaxCoin) {
@@ -227,6 +234,7 @@ export const moveValidators: IMoveValidators = {
                                     throw new Error(`Отсутствуют значения выкладки для минимальной и/или максимальной монеты.`);
                                 }
                             } else {
+                                // TODO Why if trading profit === 0 we not checked min max coins positions!?
                                 return allCoinsOrderI;
                             }
                         } else {
@@ -247,23 +255,8 @@ export const moveValidators: IMoveValidators = {
     ClickBoardCoinMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-                    for (let j = 0; j < player.boardCoins.length; j++) {
-                        const boardCoin: CoinType | undefined = player.boardCoins[j];
-                        if (boardCoin !== undefined) {
-                            if (IsCoin(boardCoin) || player.selectedCoin !== null) {
-                                moveMainArgs.push(j);
-                            }
-                        } else {
-                            throw new Error(`В массиве монет игрока на столе отсутствует монета ${j}.`);
-                        }
-                    }
-                    return moveMainArgs;
-                } else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
+                return DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.ClickBoardCoinMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -284,18 +277,8 @@ export const moveValidators: IMoveValidators = {
     ClickCampCardMoveValidator: {
         getRange: (G?: IMyGameState): IMoveArgumentsStage<number[]>[`args`] => {
             if (G !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-                for (let j = 0; j < G.campNum; j++) {
-                    const campCard: CampCardTypes | undefined = G.camp[j];
-                    if (campCard !== undefined) {
-                        if (campCard !== null) {
-                            moveMainArgs.push(j);
-                        }
-                    } else {
-                        throw new Error(`В массиве карт кэмпа отсутствует карта ${j}.`);
-                    }
-                }
-                return moveMainArgs;
+                return DrawCamp(G, MoveValidatorNames.ClickCampCardMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' is undefined.`);
             }
@@ -329,23 +312,8 @@ export const moveValidators: IMoveValidators = {
     ClickCardMoveValidator: {
         getRange: (G?: IMyGameState): IMoveArgumentsStage<number[]>[`args`] => {
             if (G !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-                for (let j = 0; j < G.drawSize; j++) {
-                    const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
-                    if (currentTavern !== undefined) {
-                        const card: TavernCardTypes | undefined = currentTavern[j];
-                        if (card !== undefined) {
-                            if (card !== null) {
-                                moveMainArgs.push(j);
-                            }
-                        } else {
-                            throw new Error(`В массиве карт текущей таверны отсутствует карта ${j}.`);
-                        }
-                    } else {
-                        throw new Error(`В массиве таверн отсутствует текущая таверна.`);
-                    }
-                }
-                return moveMainArgs;
+                return DrawTaverns(G, MoveValidatorNames.ClickCardMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' is undefined.`);
             }
@@ -414,12 +382,14 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     ClickCardToPickDistinctionMoveValidator: {
-        getRange: (): IMoveArgumentsStage<number[]>[`args`] => {
-            const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-            for (let j = 0; j < 3; j++) {
-                moveMainArgs.push(j);
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
+            if (G !== undefined && ctx !== undefined) {
+                return ExplorerDistinctionProfit(G, ctx,
+                    MoveValidatorNames.ClickCardToPickDistinctionMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
+            } else {
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
-            return moveMainArgs;
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
@@ -437,19 +407,8 @@ export const moveValidators: IMoveValidators = {
     ClickDistinctionCardMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
-                let suit: SuitTypes;
-                for (suit in suitsConfig) {
-                    if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                        if (G.distinctions[suit] === ctx.currentPlayer) {
-                            if (ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos]) {
-                                moveMainArgs.push(suit);
-                                break;
-                            }
-                        }
-                    }
-                }
-                return moveMainArgs;
+                return DrawDistinctions(G, ctx, MoveValidatorNames.ClickDistinctionCardMoveValidator) as
+                    IMoveArgumentsStage<SuitTypes[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -471,18 +430,8 @@ export const moveValidators: IMoveValidators = {
     ClickHandCoinMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-                    for (let j = 0; j < player.handCoins.length; j++) {
-                        if (IsCoin(player.handCoins[j])) {
-                            moveMainArgs.push(j);
-                        }
-                    }
-                    return moveMainArgs;
-                } else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
+                return DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.ClickHandCoinMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -503,18 +452,9 @@ export const moveValidators: IMoveValidators = {
     ClickHandCoinUlineMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-                    for (let j = 0; j < player.handCoins.length; j++) {
-                        if (IsCoin(player.handCoins[j])) {
-                            moveMainArgs.push(j);
-                        }
-                    }
-                    return moveMainArgs;
-                } else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
+                return DrawPlayersHandsCoins(G, ctx,
+                    MoveValidatorNames.ClickHandCoinUlineMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -535,18 +475,9 @@ export const moveValidators: IMoveValidators = {
     ClickHandTradingCoinUlineMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-                    for (let j = 0; j < player.handCoins.length; j++) {
-                        if (IsCoin(player.handCoins[j])) {
-                            moveMainArgs.push(j);
-                        }
-                    }
-                    return moveMainArgs;
-                } else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
+                return DrawPlayersHandsCoins(G, ctx,
+                    MoveValidatorNames.ClickHandTradingCoinUlineMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -568,32 +499,9 @@ export const moveValidators: IMoveValidators = {
         getRange: (G?: IMyGameState, ctx?: Ctx):
             IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] = {};
-                for (let i = 0; ; i++) {
-                    let isExit = true,
-                        suit: SuitTypes;
-                    for (suit in suitsConfig) {
-                        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                            const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                            if (player !== undefined) {
-                                const card: PlayerCardsType | undefined = player.cards[suit][i];
-                                if (card !== undefined) {
-                                    isExit = false;
-                                    if (!IsHeroCard(card)) {
-                                        moveMainArgs[suit] = [];
-                                        moveMainArgs[suit]?.push(i);
-                                    }
-                                }
-                            } else {
-                                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                            }
-                        }
-                    }
-                    if (isExit) {
-                        break;
-                    }
-                }
-                return moveMainArgs;
+                return DiscardAnyCardFromPlayerBoardProfit(G, ctx,
+                    MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) as
+                    IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -634,27 +542,12 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     DiscardCard2PlayersMoveValidator: {
-        getRange: (G?: IMyGameState): IMoveArgumentsStage<number[]>[`args`] => {
-            if (G !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-                for (let j = 0; j < G.drawSize; j++) {
-                    const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
-                    if (currentTavern !== undefined) {
-                        const card: TavernCardTypes | undefined = currentTavern[j];
-                        if (card == undefined) {
-                            if (card !== null) {
-                                moveMainArgs.push(j);
-                            }
-                        } else {
-                            throw new Error(`В массиве карт текущей таверны отсутствует карта ${j}.`);
-                        }
-                    } else {
-                        throw new Error(`В массиве таверн отсутствует текущая таверна.`);
-                    }
-                }
-                return moveMainArgs;
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
+            if (G !== undefined && ctx !== undefined) {
+                return DiscardCardProfit(G, ctx, MoveValidatorNames.DiscardCard2PlayersMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
-                throw new Error(`Function param 'G' is undefined.`);
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
@@ -673,19 +566,9 @@ export const moveValidators: IMoveValidators = {
     GetEnlistmentMercenariesMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [],
-                        mercenaries: CampDeckCardTypes[] =
-                            player.campCards.filter((card: CampDeckCardTypes): boolean =>
-                                IsMercenaryCampCard(card));
-                    for (let j = 0; j < mercenaries.length; j++) {
-                        moveMainArgs.push(j);
-                    }
-                    return moveMainArgs;
-                } else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
+                return GetEnlistmentMercenariesProfit(G, ctx,
+                    MoveValidatorNames.GetEnlistmentMercenariesMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -706,21 +589,9 @@ export const moveValidators: IMoveValidators = {
     GetMjollnirProfitMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
-                let suit: SuitTypes;
-                for (suit in suitsConfig) {
-                    if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                        if (player !== undefined) {
-                            if (player.cards[suit].length) {
-                                moveMainArgs.push(suit);
-                            }
-                        } else {
-                            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                        }
-                    }
-                }
-                return moveMainArgs;
+                return GetMjollnirProfitProfit(G, ctx,
+                    MoveValidatorNames.GetMjollnirProfitMoveValidator) as
+                    IMoveArgumentsStage<SuitTypes[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -782,26 +653,9 @@ export const moveValidators: IMoveValidators = {
     PlaceEnlistmentMercenariesMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
-                let suit: SuitTypes;
-                for (suit in suitsConfig) {
-                    if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                        if (player !== undefined) {
-                            const card: PickedCardType = player.pickedCard;
-                            if (card !== null && `variants` in card) {
-                                if (card.variants !== undefined) {
-                                    if (suit === card.variants[suit]?.suit) {
-                                        moveMainArgs.push(suit);
-                                    }
-                                }
-                            }
-                        } else {
-                            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                        }
-                    }
-                }
-                return moveMainArgs;
+                return PlaceEnlistmentMercenariesProfit(G, ctx,
+                    MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator) as
+                    IMoveArgumentsStage<SuitTypes[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -823,14 +677,8 @@ export const moveValidators: IMoveValidators = {
     PlaceYludHeroMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
-                let suit: SuitTypes;
-                for (suit in suitsConfig) {
-                    if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                        moveMainArgs.push(suit);
-                    }
-                }
-                return moveMainArgs;
+                return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceYludHeroMoveValidator) as
+                    IMoveArgumentsStage<SuitTypes[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -859,19 +707,8 @@ export const moveValidators: IMoveValidators = {
     AddCoinToPouchMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-                    for (let j = 0; j < player.handCoins.length; j++) {
-                        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)
-                            && IsCoin(player.handCoins[j])) {
-                            moveMainArgs.push(j);
-                        }
-                    }
-                    return moveMainArgs;
-                } else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
+                return AddCoinToPouchProfit(G, ctx, MoveValidatorNames.AddCoinToPouchMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -892,18 +729,9 @@ export const moveValidators: IMoveValidators = {
     ClickCampCardHoldaMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-                for (let j = 0; j < G.campNum; j++) {
-                    const campCard: CampCardTypes | undefined = G.camp[j];
-                    if (campCard !== undefined) {
-                        if (campCard !== null) {
-                            moveMainArgs.push(j);
-                        }
-                    } else {
-                        throw new Error(`В массиве карт кэмпа игрока отсутствует карта ${j}.`);
-                    }
-                }
-                return moveMainArgs;
+                return PickCampCardHoldaProfit(G, ctx,
+                    MoveValidatorNames.ClickCampCardHoldaMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -921,60 +749,11 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     ClickCoinToUpgradeMoveValidator: {
-        // TODO Rework if Uline in play or no 1 coin in game (& add param isInitial?)
         getRange: (G?: IMyGameState, ctx?: Ctx):
             IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const moveMainArgs: IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] =
-                        [] as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`],
-                        handCoins: CoinType[] =
-                            player.handCoins.filter((coin: CoinType): boolean => IsCoin(coin));
-                    let handCoinIndex = -1;
-                    for (let j = 0; j < player.boardCoins.length; j++) {
-                        const boardCoin: CoinType | undefined = player.boardCoins[j];
-                        if (boardCoin !== undefined) {
-                            if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && boardCoin === null) {
-                                handCoinIndex++;
-                                const handCoinNotNull: CoinType | undefined = handCoins[handCoinIndex];
-                                if (handCoinNotNull !== undefined) {
-                                    const handCoinId: number =
-                                        player.handCoins.findIndex((coin: CoinType): boolean =>
-                                            IsCoin(handCoinNotNull) && coin?.value === handCoinNotNull.value
-                                            && coin.isInitial === handCoinNotNull.isInitial);
-                                    if (handCoinId !== -1) {
-                                        const handCoin: CoinType | undefined = player.handCoins[handCoinId];
-                                        if (handCoin !== undefined) {
-                                            if (IsCoin(handCoin) && !handCoin.isTriggerTrading) {
-                                                moveMainArgs.push({
-                                                    coinId: j,
-                                                    type: `hand`,
-                                                    isInitial: handCoin.isInitial,
-                                                });
-                                            }
-                                        } else {
-                                            throw new Error(`В массиве монет игрока в руке 2 отсутствует монета ${handCoinId}.`);
-                                        }
-                                    }
-                                } else {
-                                    throw new Error(`В массиве монет игрока в руке 1 отсутствует монета ${handCoinIndex}.`);
-                                }
-                            } else if (IsCoin(boardCoin) && !boardCoin.isTriggerTrading) {
-                                moveMainArgs.push({
-                                    coinId: j,
-                                    type: `board`,
-                                    isInitial: boardCoin.isInitial,
-                                });
-                            }
-                        } else {
-                            throw new Error(`В массиве монет игрока на столе отсутствует монета ${j}.`);
-                        }
-                    }
-                    return moveMainArgs;
-                } else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
+                return UpgradeCoinProfit(G, ctx, MoveValidatorNames.ClickCoinToUpgradeMoveValidator) as
+                    IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -1004,18 +783,8 @@ export const moveValidators: IMoveValidators = {
     ClickHeroCardMoveValidator: {
         getRange: (G?: IMyGameState): IMoveArgumentsStage<number[]>[`args`] => {
             if (G !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-                for (let i = 0; i < G.heroes.length; i++) {
-                    const hero: IHeroCard | undefined = G.heroes[i];
-                    if (hero !== undefined) {
-                        if (hero.active) {
-                            moveMainArgs.push(i);
-                        }
-                    } else {
-                        throw new Error(`В массиве карт героев отсутствует герой ${i}.`);
-                    }
-                }
-                return moveMainArgs;
+                return DrawHeroes(G, MoveValidatorNames.ClickHeroCardMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' is undefined.`);
             }
@@ -1069,33 +838,8 @@ export const moveValidators: IMoveValidators = {
         getRange: (G?: IMyGameState, ctx?: Ctx):
             IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const moveMainArgs: IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] = {},
-                        configSuit: SuitTypes | undefined = player.stack[0]?.config?.suit,
-                        pickedCard: PickedCardType = player.pickedCard;
-                    if (configSuit !== undefined) {
-                        let suit: SuitTypes;
-                        for (suit in suitsConfig) {
-                            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                                if (suit !== configSuit && !(G.drawProfit === ConfigNames.DagdaAction
-                                    && player.actionsNum === 1 && pickedCard !== null && `suit` in pickedCard
-                                    && suit === pickedCard.suit)) {
-                                    const last: number = player.cards[suit].length - 1;
-                                    if (last !== -1 && !IsHeroCard(player.cards[suit][last])) {
-                                        moveMainArgs[suit] = [];
-                                        moveMainArgs[suit]?.push(last);
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        throw new Error(`Отсутствует обязательный параметр 'stack[0].config.suit'.`);
-                    }
-                    return moveMainArgs;
-                } else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
+                return DiscardCardFromBoardProfit(G, ctx, MoveValidatorNames.DiscardCardMoveValidator) as
+                    IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -1140,30 +884,9 @@ export const moveValidators: IMoveValidators = {
         getRange: (G?: IMyGameState, ctx?: Ctx, playerId?: number):
             IMoveArgumentsStage<IMoveSuitCardPlayerIdArguments>[`args`] => {
             if (G !== undefined && ctx !== undefined && playerId !== undefined) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[playerId];
-                if (player !== undefined) {
-                    const suit: SuitTypes | undefined = player.stack[0]?.config?.suit;
-                    if (suit !== undefined) {
-                        const moveMainArgs: IMoveArgumentsStage<IMoveSuitCardPlayerIdArguments>[`args`] = {
-                            playerId: playerId,
-                            suit: suit,
-                            cards: [],
-                        };
-                        for (let i = 0; i < player.cards[suit].length; i++) {
-                            const card: PlayerCardsType | undefined = player.cards[suit][i];
-                            if (card !== undefined) {
-                                if (!IsHeroCard(card)) {
-                                    moveMainArgs.cards.push(i);
-                                }
-                            }
-                        }
-                        return moveMainArgs;
-                    } else {
-                        throw new Error(`'stack[0].config.suit' is undefined.`);
-                    }
-                } else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
+                return DiscardSuitCardFromPlayerBoardProfit(G, ctx,
+                    MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator, playerId) as
+                    IMoveArgumentsStage<IMoveSuitCardPlayerIdArguments>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' and/or 'playerId' is undefined.`);
             }
@@ -1216,15 +939,12 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     PickDiscardCardMoveValidator: {
-        getRange: (G?: IMyGameState): IMoveArgumentsStage<number[]>[`args`] => {
-            if (G !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-                for (let j = 0; j < G.discardCardsDeck.length; j++) {
-                    moveMainArgs.push(j);
-                }
-                return moveMainArgs;
+        getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<number[]>[`args`] => {
+            if (G !== undefined && ctx !== undefined) {
+                return PickDiscardCardProfit(G, ctx, MoveValidatorNames.PickDiscardCardMoveValidator) as
+                    IMoveArgumentsStage<number[]>[`args`];
             } else {
-                throw new Error(`Function param 'G' is undefined.`);
+                throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
@@ -1243,22 +963,8 @@ export const moveValidators: IMoveValidators = {
     PlaceOlwinCardMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
-                let suit: SuitTypes;
-                for (suit in suitsConfig) {
-                    if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                        if (player !== undefined) {
-                            const pickedCard: PickedCardType = player.pickedCard;
-                            if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
-                                moveMainArgs.push(suit);
-                            }
-                        } else {
-                            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                        }
-                    }
-                }
-                return moveMainArgs;
+                return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceOlwinCardMoveValidator) as
+                    IMoveArgumentsStage<SuitTypes[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
@@ -1280,22 +986,8 @@ export const moveValidators: IMoveValidators = {
     PlaceThrudHeroMoveValidator: {
         getRange: (G?: IMyGameState, ctx?: Ctx): IMoveArgumentsStage<SuitTypes[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
-                let suit: SuitTypes;
-                for (suit in suitsConfig) {
-                    if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                        if (player !== undefined) {
-                            const pickedCard: PickedCardType = player.pickedCard;
-                            if (pickedCard === null || ("suit" in pickedCard && suit !== pickedCard.suit)) {
-                                moveMainArgs.push(suit);
-                            }
-                        } else {
-                            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                        }
-                    }
-                }
-                return moveMainArgs;
+                return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceThrudHeroMoveValidator) as
+                    IMoveArgumentsStage<SuitTypes[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
@@ -1316,34 +1008,12 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
-        // TODO Rework if Uline in play or no 1 coin in game(& add param isInitial ?)
         getRange: (G?: IMyGameState, ctx?: Ctx):
             IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] => {
             if (G !== undefined && ctx !== undefined) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const moveMainArgs: IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] = [];
-                    for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
-                        const coin: CoinType | undefined = player.boardCoins[j];
-                        if (coin !== undefined) {
-                            if (IsCoin(coin)) {
-                                if (!coin.isTriggerTrading && player.stack[0]?.config?.coinId !== j) {
-                                    moveMainArgs.push({
-                                        coinId: j,
-                                        type: `board`,
-                                        isInitial: coin.isInitial,
-                                    });
-                                }
-                            }
-                        } else {
-                            throw new Error(`В массиве монет игрока на поле отсутствует нужная монета.`);
-                        }
-                    }
-
-                    return moveMainArgs;
-                } else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
+                return UpgradeCoinVidofnirVedrfolnirProfit(G, ctx,
+                    MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator) as
+                    IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`];
             } else {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }

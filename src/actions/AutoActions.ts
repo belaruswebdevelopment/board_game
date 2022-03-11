@@ -97,29 +97,34 @@ export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): vo
 export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
     const currentPlayer: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (currentPlayer !== undefined) {
-        const suit: SuitTypes | undefined = currentPlayer.stack[1]?.config?.suit;
-        if (suit !== undefined) {
-            const value: Record<string, StageArg> = {};
-            for (let i = 0; i < ctx.numPlayers; i++) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[i];
-                if (player !== undefined) {
-                    if (i !== Number(ctx.currentPlayer) && player.cards[suit].length) {
-                        value[i] = {
-                            stage: Stages.DiscardSuitCard,
-                        };
-                        AddActionsToStackAfterCurrent(G, ctx, [StackData.discardSuitCard(i)]);
+        const stack1: IStack | undefined = currentPlayer.stack[1];
+        if (stack1 !== undefined) {
+            const suit: SuitTypes | undefined = stack1.config?.suit;
+            if (suit !== undefined) {
+                const value: Record<string, StageArg> = {};
+                for (let i = 0; i < ctx.numPlayers; i++) {
+                    const player: IPublicPlayer | undefined = G.publicPlayers[i];
+                    if (player !== undefined) {
+                        if (i !== Number(ctx.currentPlayer) && player.cards[suit].length) {
+                            value[i] = {
+                                stage: Stages.DiscardSuitCard,
+                            };
+                            AddActionsToStackAfterCurrent(G, ctx, [StackData.discardSuitCard(i)]);
+                        }
+                    } else {
+                        throw new Error(`В массиве игроков отсутствует игрок.`);
                     }
-                } else {
-                    throw new Error(`В массиве игроков отсутствует игрок.`);
                 }
+                ctx.events?.setActivePlayers({
+                    value,
+                    minMoves: 1,
+                    maxMoves: 1,
+                });
+            } else {
+                throw new Error(`У конфига действия игрока отсутствует обязательный параметр принадлежности сбрасываемой карты к конкретной фракции.`);
             }
-            ctx.events?.setActivePlayers({
-                value,
-                minMoves: 1,
-                maxMoves: 1,
-            });
         } else {
-            throw new Error(`У конфига действия игрока отсутствует обязательный параметр принадлежности сбрасываемой карты к конкретной фракции.`);
+            throw new Error(`В массиве стека действий игрока отсутствует 1 действие.`);
         }
     } else {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);

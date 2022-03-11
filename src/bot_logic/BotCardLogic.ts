@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { GameNames } from "../typescript/enums";
-import type { DeckCardTypes, IAverageSuitCardData, ICard, IMyGameState, INumberArrayValues, INumberValues, IPublicPlayer, ISuit, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CoinType, DeckCardTypes, IAverageSuitCardData, ICard, IMyGameState, INumberArrayValues, INumberValues, IPublicPlayer, ISuit, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -165,8 +165,18 @@ const PotentialScoring = (player: IPublicPlayer, card: TavernCardTypes): number 
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
-        score += player.boardCoins[i]?.value ?? 0;
-        score += player.handCoins[i]?.value ?? 0;
+        const boardCoin: CoinType | undefined = player.boardCoins[i];
+        if (boardCoin !== undefined) {
+            score += boardCoin?.value ?? 0;
+        } else {
+            throw new Error(`В массиве монет игрока на столе отсутствует монета ${i}.`);
+        }
+        const handCoin: CoinType | undefined = player.handCoins[i];
+        if (handCoin !== undefined) {
+            score += handCoin?.value ?? 0;
+        } else {
+            throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
+        }
     }
     return score;
 };

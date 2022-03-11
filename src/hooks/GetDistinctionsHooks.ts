@@ -38,16 +38,19 @@ export const CheckAndResolveDistinctionsOrders = (G: IMyGameState, ctx: Ctx): vo
  * @returns
  */
 export const CheckEndGetDistinctionsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (G.publicPlayersOrder.length && !player.stack.length && !player.actionsNum
-            && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-            return Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
-                distinction === undefined);
+    if (G.publicPlayersOrder.length) {
+        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+        if (player !== undefined) {
+            if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
+                && !player.actionsNum) {
+                return Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
+                    distinction === undefined);
+            }
+        } else {
+            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
         }
-    } else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+
 };
 
 /**

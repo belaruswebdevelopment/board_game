@@ -97,18 +97,24 @@ export const DiscardSuitCardAction = (G, ctx, suit, playerId, cardId) => {
  * @param isInitial Является ли монета базовой.
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, coinId, type, isInitial) => {
-    var _a, _b;
+    var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player !== undefined) {
-        const value = (_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.value;
-        if (value !== undefined) {
-            if (value === 3) {
-                AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
+        const stack = player.stack[0];
+        if (stack !== undefined) {
+            const value = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.value;
+            if (value !== undefined) {
+                if (value === 3) {
+                    AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
+                }
+                UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
             }
-            UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
+            else {
+                throw new Error(`У конфига действия игрока отсутствует обязательный параметр значения улучшаемой монеты 'VidofnirVedrfolnir'.`);
+            }
         }
         else {
-            throw new Error(`У конфига действия игрока отсутствует обязательный параметр значения улучшаемой монеты 'VidofnirVedrfolnir'.`);
+            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
         }
     }
     else {

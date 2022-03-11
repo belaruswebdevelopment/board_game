@@ -1,4 +1,4 @@
-import type { BoardProps } from "boardgame.io/dist/types/packages/react";
+import type { Ctx } from "boardgame.io";
 import type { IDebugData, IMyGameState } from "../typescript/interfaces";
 
 /**
@@ -8,11 +8,12 @@ import type { IDebugData, IMyGameState } from "../typescript/interfaces";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param G
+ * @param ctx
  * @returns Дебаг панель.
  */
-export const DrawDebugData = (data: BoardProps<IMyGameState>): JSX.Element | null => {
-    const debugData: IDebugData | undefined = GetDebugData(data);
+export const DrawDebugData = (G: IMyGameState, ctx: Ctx): JSX.Element | null => {
+    const debugData: IDebugData | undefined = GetDebugData(G, ctx);
     if (debugData === undefined) {
         return null;
     } else {
@@ -92,19 +93,20 @@ const DrawObjectData = (obj: {
  * <li>Используется в отображении дебаг панели.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param G
+ * @param ctx
  * @returns Данные для отрисовки дебаг информации.
  */
-const GetDebugData = (data: BoardProps<IMyGameState>): IDebugData | undefined => {
-    if (data.G.debug) {
+const GetDebugData = (G: IMyGameState, ctx: Ctx): IDebugData | undefined => {
+    if (G.debug) {
         const debugData: IDebugData = {
             G: {},
             ctx: {},
         };
-        for (const [key, value] of Object.entries(data.G)) {
+        for (const [key, value] of Object.entries(G)) {
             debugData.G[key] = value;
         }
-        for (const [key, value] of Object.entries(data.ctx)) {
+        for (const [key, value] of Object.entries(ctx)) {
             debugData.ctx[key] = value;
         }
         return debugData;

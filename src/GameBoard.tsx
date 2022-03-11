@@ -17,22 +17,28 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
     render() {
         const gridClass = `col-span-4`,
             classes = `col-span-4 text-center underline border`,
-            tierCardsUI: JSX.Element = DrawTierCards(this.props),
-            currentPlayerTurnUI: JSX.Element = DrawCurrentPlayerTurn(this.props),
-            winnerUI: JSX.Element = DrawWinner(this.props),
-            marketCoinsUI: JSX.Element = DrawMarketCoins(this.props),
-            drawHeroesUI: JSX.Element = DrawHeroes(this.props),
-            drawCampUI: JSX.Element | null = this.props.G.expansions.thingvellir?.active ? DrawCamp(this.props) :
-                null,
-            drawDistinctionsUI: JSX.Element = DrawDistinctions(this.props),
-            drawDistinctionProfitUI: JSX.Element | string = this.props.G.drawProfit ? DrawProfit(this.props) :
-                this.props.G.drawProfit,
-            tavernsUI: JSX.Element[] = DrawTaverns(this.props, gridClass),
-            playersBoardsCoinsUI: JSX.Element[] = DrawPlayersBoardsCoins(this.props),
-            playersHandsCoinsUI: JSX.Element[] = DrawPlayersHandsCoins(this.props),
-            playersBoardsUI: JSX.Element[] = DrawPlayersBoards(this.props),
-            logUI: JSX.Element | null = DrawLogData(this.props),
-            debugUI: JSX.Element | null = DrawDebugData(this.props);
+            tierCardsUI: JSX.Element = DrawTierCards(this.props.G),
+            currentPlayerTurnUI: JSX.Element = DrawCurrentPlayerTurn(this.props.ctx),
+            winnerUI: JSX.Element = DrawWinner(this.props.G, this.props.ctx),
+            marketCoinsUI: JSX.Element = DrawMarketCoins(this.props.G, this.props),
+            drawHeroesUI: JSX.Element = DrawHeroes(this.props.G, null, this.props) as JSX.Element,
+            drawCampUI: JSX.Element | null = this.props.G.expansions.thingvellir?.active ?
+                (DrawCamp(this.props.G, null, this.props) as JSX.Element) : null,
+            drawDistinctionsUI: JSX.Element =
+                DrawDistinctions(this.props.G, this.props.ctx, null, this.props) as JSX.Element,
+            drawDistinctionProfitUI: JSX.Element | string = this.props.G.drawProfit ?
+                DrawProfit(this.props.G, this.props.ctx, this.props) : this.props.G.drawProfit,
+            tavernsUI: JSX.Element[] =
+                DrawTaverns(this.props.G, null, this.props, gridClass) as JSX.Element[],
+            playersBoardsCoinsUI: JSX.Element[] =
+                DrawPlayersBoardsCoins(this.props.G, this.props.ctx, null, this.props) as
+                JSX.Element[],
+            playersHandsCoinsUI: JSX.Element[] =
+                DrawPlayersHandsCoins(this.props.G, this.props.ctx, null, this.props) as JSX.
+                Element[],
+            playersBoardsUI: JSX.Element[] = DrawPlayersBoards(this.props.G, this.props.ctx, this.props),
+            logUI: JSX.Element | null = DrawLogData(this.props.G),
+            debugUI: JSX.Element | null = DrawDebugData(this.props.G, this.props.ctx);
         return (
             <div className="flex">
                 <div className="grid auto-cols-min grid-cols-1 md:grid-cols-12 gap-1">

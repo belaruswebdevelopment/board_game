@@ -38,6 +38,11 @@ export var CardNames;
     CardNames["ChiefBlacksmith"] = "Chief blacksmith";
     CardNames["Olwin"] = "Olwin";
 })(CardNames || (CardNames = {}));
+export var CoinTypes;
+(function (CoinTypes) {
+    CoinTypes["Hand"] = "hand";
+    CoinTypes["Board"] = "board";
+})(CoinTypes || (CoinTypes = {}));
 /**
  * <h3>Перечисление для названия отображения действий в конфиге.</h3>
  */
@@ -256,4 +261,35 @@ export var TavernNames;
     TavernNames["DancingDragon"] = "\u00AB\u041F\u0430\u0440\u044F\u0449\u0438\u0439 \u0434\u0440\u0430\u043A\u043E\u043D\u00BB";
     TavernNames["ShiningHorse"] = "\u00AB\u0413\u0430\u0440\u0446\u0443\u044E\u0449\u0438\u0439 \u043A\u043E\u043D\u044C\u00BB";
 })(TavernNames || (TavernNames = {}));
+export var MoveValidatorNames;
+(function (MoveValidatorNames) {
+    MoveValidatorNames["BotsPlaceAllCoinsMoveValidator"] = "BotsPlaceAllCoinsMoveValidator";
+    MoveValidatorNames["ClickBoardCoinMoveValidator"] = "ClickBoardCoinMoveValidator";
+    MoveValidatorNames["ClickCampCardMoveValidator"] = "ClickCampCardMoveValidator";
+    MoveValidatorNames["ClickCardMoveValidator"] = "ClickCardMoveValidator";
+    MoveValidatorNames["ClickCardToPickDistinctionMoveValidator"] = "ClickCardToPickDistinctionMoveValidator";
+    MoveValidatorNames["ClickDistinctionCardMoveValidator"] = "ClickDistinctionCardMoveValidator";
+    MoveValidatorNames["ClickHandCoinMoveValidator"] = "ClickHandCoinMoveValidator";
+    MoveValidatorNames["ClickHandCoinUlineMoveValidator"] = "ClickHandCoinUlineMoveValidator";
+    MoveValidatorNames["ClickHandTradingCoinUlineMoveValidator"] = "ClickHandTradingCoinUlineMoveValidator";
+    MoveValidatorNames["DiscardCardFromPlayerBoardMoveValidator"] = "DiscardCardFromPlayerBoardMoveValidator";
+    MoveValidatorNames["DiscardCard2PlayersMoveValidator"] = "DiscardCard2PlayersMoveValidator";
+    MoveValidatorNames["GetEnlistmentMercenariesMoveValidator"] = "GetEnlistmentMercenariesMoveValidator";
+    MoveValidatorNames["GetMjollnirProfitMoveValidator"] = "GetMjollnirProfitMoveValidator";
+    MoveValidatorNames["PassEnlistmentMercenariesMoveValidator"] = "PassEnlistmentMercenariesMoveValidator";
+    MoveValidatorNames["PlaceEnlistmentMercenariesMoveValidator"] = "PlaceEnlistmentMercenariesMoveValidator";
+    MoveValidatorNames["PlaceYludHeroMoveValidator"] = "PlaceYludHeroMoveValidator";
+    MoveValidatorNames["StartEnlistmentMercenariesMoveValidator"] = "StartEnlistmentMercenariesMoveValidator";
+    // start
+    MoveValidatorNames["AddCoinToPouchMoveValidator"] = "AddCoinToPouchMoveValidator";
+    MoveValidatorNames["ClickCampCardHoldaMoveValidator"] = "ClickCampCardHoldaMoveValidator";
+    MoveValidatorNames["ClickCoinToUpgradeMoveValidator"] = "ClickCoinToUpgradeMoveValidator";
+    MoveValidatorNames["ClickHeroCardMoveValidator"] = "ClickHeroCardMoveValidator";
+    MoveValidatorNames["DiscardCardMoveValidator"] = "DiscardCardMoveValidator";
+    MoveValidatorNames["DiscardSuitCardFromPlayerBoardMoveValidator"] = "DiscardSuitCardFromPlayerBoardMoveValidator";
+    MoveValidatorNames["PickDiscardCardMoveValidator"] = "PickDiscardCardMoveValidator";
+    MoveValidatorNames["PlaceOlwinCardMoveValidator"] = "PlaceOlwinCardMoveValidator";
+    MoveValidatorNames["PlaceThrudHeroMoveValidator"] = "PlaceThrudHeroMoveValidator";
+    MoveValidatorNames["UpgradeCoinVidofnirVedrfolnirMoveValidator"] = "UpgradeCoinVidofnirVedrfolnirMoveValidator";
+})(MoveValidatorNames || (MoveValidatorNames = {}));
 //# sourceMappingURL=enums.js.map

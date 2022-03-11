@@ -6,7 +6,7 @@ import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { AddDataToLog } from "./Logging";
 import { BuffNames, LogTypes, SuitNames } from "./typescript/enums";
-import type { CampDeckCardTypes, IArtefact, IHeroCard, IHeroData, IMyGameState, IPublicPlayer, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, CoinType, IArtefact, IHeroCard, IHeroData, IMyGameState, IPublicPlayer, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
@@ -52,11 +52,21 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, player: IPublicPlayer, p
         coinsValue = 0;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за карты дворфов игрока ${player.nickname}: ${score}`);
     for (let i = 0; i < player.boardCoins.length; i++) {
-        coinsValue += player.boardCoins[i]?.value ?? 0;
+        const boardCoin: CoinType | undefined = player.boardCoins[i];
+        if (boardCoin !== undefined) {
+            coinsValue += boardCoin?.value ?? 0;
+        } else {
+            throw new Error(`В массиве монет игрока на столе отсутствует монета ${i}.`);
+        }
     }
     if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
         for (let i = 0; i < player.handCoins.length; i++) {
-            coinsValue += player.handCoins[i]?.value ?? 0;
+            const handCoin: CoinType | undefined = player.handCoins[i];
+            if (handCoin !== undefined) {
+                coinsValue += handCoin?.value ?? 0;
+            } else {
+                throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
+            }
         }
     }
     score += coinsValue;

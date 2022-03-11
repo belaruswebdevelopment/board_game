@@ -21,7 +21,8 @@ export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): b
     if (G.publicPlayersOrder.length) {
         const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player !== undefined) {
-            if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length) {
+            if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
+                && !player.actionsNum) {
                 let allMercenariesPlayed = true;
                 for (let i = 0; i < G.publicPlayers.length; i++) {
                     const playerI: IPublicPlayer | undefined = G.publicPlayers[i];

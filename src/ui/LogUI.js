@@ -7,14 +7,14 @@ import { LogTypes } from "../typescript/enums";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param G
  * @returns Поле для вывода логов.
  */
-export const DrawLogData = (data) => {
-    if (data.G.log) {
+export const DrawLogData = (G) => {
+    if (G.log) {
         const loggingData = [];
-        for (let i = data.G.logData.length - 1; i >= 0; i--) {
-            const log = data.G.logData[i];
+        for (let i = G.logData.length - 1; i >= 0; i--) {
+            const log = G.logData[i];
             if (log !== undefined) {
                 if (log.type === LogTypes.PRIVATE) {
                     loggingData.push(_jsx("li", { className: "text-black", children: log.value }, `Log ${i}`));

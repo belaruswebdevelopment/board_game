@@ -1,4 +1,3 @@
-import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import { LogTypes } from "../typescript/enums";
 import type { ILogData, IMyGameState } from "../typescript/interfaces";
 
@@ -9,14 +8,14 @@ import type { ILogData, IMyGameState } from "../typescript/interfaces";
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
- * @param data Глобальные параметры.
+ * @param G
  * @returns Поле для вывода логов.
  */
-export const DrawLogData = (data: BoardProps<IMyGameState>): JSX.Element | null => {
-    if (data.G.log) {
+export const DrawLogData = (G: IMyGameState): JSX.Element | null => {
+    if (G.log) {
         const loggingData: JSX.Element[] = [];
-        for (let i: number = data.G.logData.length - 1; i >= 0; i--) {
-            const log: ILogData | undefined = data.G.logData[i];
+        for (let i: number = G.logData.length - 1; i >= 0; i--) {
+            const log: ILogData | undefined = G.logData[i];
             if (log !== undefined) {
                 if (log.type === LogTypes.PRIVATE) {
                     loggingData.push(

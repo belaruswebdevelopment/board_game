@@ -87,6 +87,8 @@ export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
                 const mjollnirBuffIndex: number =
                     G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
                         CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
+                console.log(mjollnirBuffIndex);
+
                 if (mjollnirBuffIndex !== -1) {
                     return {
                         next: Phases.GetMjollnirProfit,
@@ -210,7 +212,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx
                         card.name === HeroNames.Thrud);
                 if (thrudIndex !== -1) {
                     player.cards[thrud.suit].splice(thrudIndex, 1);
-                    AddDataToLog(G, LogTypes.GAME, `Герой Труд игрока ${player.nickname} уходит с игрового поля.`);
+                    AddDataToLog(G, LogTypes.GAME, `Герой ${HeroNames.Thrud} игрока ${player.nickname} уходит с игрового поля.`);
                 } else {
                     throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Thrud}.`);
                 }

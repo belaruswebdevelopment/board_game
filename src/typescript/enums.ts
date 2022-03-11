@@ -38,6 +38,11 @@ export const enum CardNames {
     Olwin = `Olwin`,
 }
 
+export const enum CoinTypes {
+    Hand = `hand`,
+    Board = `board`,
+}
+
 /**
  * <h3>Перечисление для названия отображения действий в конфиге.</h3>
  */
@@ -254,4 +259,35 @@ export const enum TavernNames {
     LaughingGoblin = `«Весёлый гоблин»`,
     DancingDragon = `«Парящий дракон»`,
     ShiningHorse = `«Гарцующий конь»`,
+}
+
+export const enum MoveValidatorNames {
+    BotsPlaceAllCoinsMoveValidator = `BotsPlaceAllCoinsMoveValidator`,
+    ClickBoardCoinMoveValidator = `ClickBoardCoinMoveValidator`,
+    ClickCampCardMoveValidator = `ClickCampCardMoveValidator`,
+    ClickCardMoveValidator = `ClickCardMoveValidator`,
+    ClickCardToPickDistinctionMoveValidator = `ClickCardToPickDistinctionMoveValidator`,
+    ClickDistinctionCardMoveValidator = `ClickDistinctionCardMoveValidator`,
+    ClickHandCoinMoveValidator = `ClickHandCoinMoveValidator`,
+    ClickHandCoinUlineMoveValidator = `ClickHandCoinUlineMoveValidator`,
+    ClickHandTradingCoinUlineMoveValidator = `ClickHandTradingCoinUlineMoveValidator`,
+    DiscardCardFromPlayerBoardMoveValidator = `DiscardCardFromPlayerBoardMoveValidator`,
+    DiscardCard2PlayersMoveValidator = `DiscardCard2PlayersMoveValidator`,
+    GetEnlistmentMercenariesMoveValidator = `GetEnlistmentMercenariesMoveValidator`,
+    GetMjollnirProfitMoveValidator = `GetMjollnirProfitMoveValidator`,
+    PassEnlistmentMercenariesMoveValidator = `PassEnlistmentMercenariesMoveValidator`,
+    PlaceEnlistmentMercenariesMoveValidator = `PlaceEnlistmentMercenariesMoveValidator`,
+    PlaceYludHeroMoveValidator = `PlaceYludHeroMoveValidator`,
+    StartEnlistmentMercenariesMoveValidator = `StartEnlistmentMercenariesMoveValidator`,
+    // start
+    AddCoinToPouchMoveValidator = `AddCoinToPouchMoveValidator`,
+    ClickCampCardHoldaMoveValidator = `ClickCampCardHoldaMoveValidator`,
+    ClickCoinToUpgradeMoveValidator = `ClickCoinToUpgradeMoveValidator`,
+    ClickHeroCardMoveValidator = `ClickHeroCardMoveValidator`,
+    DiscardCardMoveValidator = `DiscardCardMoveValidator`,
+    DiscardSuitCardFromPlayerBoardMoveValidator = `DiscardSuitCardFromPlayerBoardMoveValidator`,
+    PickDiscardCardMoveValidator = `PickDiscardCardMoveValidator`,
+    PlaceOlwinCardMoveValidator = `PlaceOlwinCardMoveValidator`,
+    PlaceThrudHeroMoveValidator = `PlaceThrudHeroMoveValidator`,
+    UpgradeCoinVidofnirVedrfolnirMoveValidator = `UpgradeCoinVidofnirVedrfolnirMoveValidator`,
 }
