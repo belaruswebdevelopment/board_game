@@ -19,38 +19,35 @@ import type { IConditions, IHeroCard, IMyGameState, IPublicPlayer, IValidatorsCo
 export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGameState, ctx: Ctx, id: number):
     boolean => {
     const hero: IHeroCard | undefined = G.heroes[id];
-    if (hero !== undefined) {
-        const validators: IValidatorsConfig | undefined = hero.validators,
-            cardsToDiscard: PlayerCardsType[] = [];
-        let isValidMove = false;
-        if (validators?.discardCard !== undefined) {
-            let suit: SuitTypes;
-            for (suit in suitsConfig) {
-                if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                    if (validators.discardCard.suit !== suit) {
-                        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                        if (player !== undefined) {
-                            const last: number = player.cards[suit].length - 1,
-                                card: PlayerCardsType | undefined = player.cards[suit][last];
-                            if (card !== undefined) {
-                                if (last >= 0 && !IsHeroCard(card)) {
-                                    cardsToDiscard.push(card);
-                                }
-                            } else {
-                                throw new Error(`В массиве карт фракции ${suit} отсутствует последняя карта ${last}.`);
-                            }
-                        } else {
-                            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                        }
+    if (hero === undefined) {
+        throw new Error(`Не существует карта героя ${id}.`);
+    }
+    const validators: IValidatorsConfig | undefined = hero.validators,
+        cardsToDiscard: PlayerCardsType[] = [];
+    let isValidMove = false;
+    if (validators?.discardCard !== undefined) {
+        let suit: SuitTypes;
+        for (suit in suitsConfig) {
+            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
+                if (validators.discardCard.suit !== suit) {
+                    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                    if (player === undefined) {
+                        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                    }
+                    const last: number = player.cards[suit].length - 1,
+                        card: PlayerCardsType | undefined = player.cards[suit][last];
+                    if (card === undefined) {
+                        throw new Error(`В массиве карт фракции ${suit} отсутствует последняя карта ${last}.`);
+                    }
+                    if (last >= 0 && !IsHeroCard(card)) {
+                        cardsToDiscard.push(card);
                     }
                 }
             }
-            isValidMove = cardsToDiscard.length >= (validators.discardCard.number ?? 1);
         }
-        return isValidMove;
-    } else {
-        throw new Error(`Не существует карта героя ${id}.`);
+        isValidMove = cardsToDiscard.length >= (validators.discardCard.number ?? 1);
     }
+    return isValidMove;
 };
 
 /**
@@ -67,34 +64,31 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G: IMyGame
  */
 export const IsCanPickHeroWithConditionsValidator = (G: IMyGameState, ctx: Ctx, id: number): boolean => {
     const hero: IHeroCard | undefined = G.heroes[id];
-    if (hero !== undefined) {
-        const conditions: IConditions | undefined = hero.validators?.conditions;
-        let isValidMove = false;
-        for (const condition in conditions) {
-            if (Object.prototype.hasOwnProperty.call(conditions, condition)) {
-                if (condition === `suitCountMin`) {
-                    let ranks = 0;
-                    for (const key in conditions[condition]) {
-                        if (Object.prototype.hasOwnProperty.call(conditions[condition], key)) {
-                            if (key === `suit`) {
-                                const player: IPublicPlayer | undefined =
-                                    G.publicPlayers[Number(ctx.currentPlayer)];
-                                if (player !== undefined) {
-                                    ranks = player.cards[conditions[condition][key]].reduce(TotalRank,
-                                        0);
-                                } else {
-                                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                                }
-                            } else if (key === `value`) {
-                                isValidMove = ranks >= conditions[condition][key];
+    if (hero === undefined) {
+        throw new Error(`Не существует карта героя ${id}.`);
+    }
+    const conditions: IConditions | undefined = hero.validators?.conditions;
+    let isValidMove = false;
+    for (const condition in conditions) {
+        if (Object.prototype.hasOwnProperty.call(conditions, condition)) {
+            if (condition === `suitCountMin`) {
+                let ranks = 0;
+                for (const key in conditions[condition]) {
+                    if (Object.prototype.hasOwnProperty.call(conditions[condition], key)) {
+                        if (key === `suit`) {
+                            const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                            if (player === undefined) {
+                                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
                             }
+                            ranks = player.cards[conditions[condition][key]].reduce(TotalRank,
+                                0);
+                        } else if (key === `value`) {
+                            isValidMove = ranks >= conditions[condition][key];
                         }
                     }
                 }
             }
         }
-        return isValidMove;
-    } else {
-        throw new Error(`Не существует карта героя ${id}.`);
     }
+    return isValidMove;
 };

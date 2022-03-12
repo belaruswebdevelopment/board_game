@@ -196,15 +196,13 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
         tdClasses += ` cursor-pointer`;
     }
     if (type === `market`) {
-        if (IsCoin(coin)) {
-            styles = Styles.Coin(coin.value, false);
-            spanClasses = `bg-market-coin`;
-            if (coinClasses !== null && coinClasses !== undefined) {
-                span = (_jsx("span", { className: coinClasses, children: additionalParam }));
-            }
-        }
-        else {
+        if (!IsCoin(coin)) {
             throw new Error(`Монета на рынке не может отсутствовать.`);
+        }
+        styles = Styles.Coin(coin.value, false);
+        spanClasses = `bg-market-coin`;
+        if (coinClasses !== null && coinClasses !== undefined) {
+            span = (_jsx("span", { className: coinClasses, children: additionalParam }));
         }
     }
     else {

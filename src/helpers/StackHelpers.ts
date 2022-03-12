@@ -47,16 +47,14 @@ export const AddActionsToStackAfterCurrent = (G: IMyGameState, ctx: Ctx, stack?:
             for (let i: number = stack.length - 1; i >= 0; i--) {
                 const playerId: number = stack[i]?.playerId ?? Number(ctx.currentPlayer),
                     player: IPublicPlayer | undefined = G.publicPlayers[playerId];
-                if (player !== undefined) {
-                    const stackI: IStack | undefined = stack[i];
-                    if (stackI !== undefined) {
-                        player.stack.splice(1, 0, stackI);
-                    } else {
-                        throw new Error(`В массиве новых действий отсутствует стэк ${i}.`);
-                    }
-                } else {
+                if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
                 }
+                const stackI: IStack | undefined = stack[i];
+                if (stackI === undefined) {
+                    throw new Error(`В массиве новых действий отсутствует стэк ${i}.`);
+                }
+                player.stack.splice(1, 0, stackI);
             }
         }
     }

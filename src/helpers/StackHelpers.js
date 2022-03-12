@@ -45,18 +45,14 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack, card) => {
         if (isValid) {
             for (let i = stack.length - 1; i >= 0; i--) {
                 const playerId = (_b = (_a = stack[i]) === null || _a === void 0 ? void 0 : _a.playerId) !== null && _b !== void 0 ? _b : Number(ctx.currentPlayer), player = G.publicPlayers[playerId];
-                if (player !== undefined) {
-                    const stackI = stack[i];
-                    if (stackI !== undefined) {
-                        player.stack.splice(1, 0, stackI);
-                    }
-                    else {
-                        throw new Error(`В массиве новых действий отсутствует стэк ${i}.`);
-                    }
-                }
-                else {
+                if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
                 }
+                const stackI = stack[i];
+                if (stackI === undefined) {
+                    throw new Error(`В массиве новых действий отсутствует стэк ${i}.`);
+                }
+                player.stack.splice(1, 0, stackI);
             }
         }
     }

@@ -16,28 +16,22 @@ import { BuffNames, HeroNames } from "../typescript/enums";
 export const CheckEndPlaceCoinsUlinePhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player !== undefined) {
-            const ulinePlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
-            if (ulinePlayerIndex !== -1) {
-                const ulinePlayer = G.publicPlayers[ulinePlayerIndex];
-                if (ulinePlayer !== undefined) {
-                    if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-                        const boardCoin = ulinePlayer.boardCoins[G.currentTavern + 1];
-                        if (boardCoin !== undefined) {
-                            return IsCoin(boardCoin);
-                        }
-                        else {
-                            throw new Error(`В массиве монет игрока на столе отсутствует монета для выкладки при наличии героя ${HeroNames.Uline}.`);
-                        }
-                    }
-                }
-                else {
-                    throw new Error(`В массиве игроков отсутствует игрок с бафом 'BuffNames.EveryTurn'.`);
-                }
-            }
-        }
-        else {
+        if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        }
+        const ulinePlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
+        if (ulinePlayerIndex !== -1) {
+            const ulinePlayer = G.publicPlayers[ulinePlayerIndex];
+            if (ulinePlayer === undefined) {
+                throw new Error(`В массиве игроков отсутствует игрок с бафом 'BuffNames.EveryTurn'.`);
+            }
+            if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
+                const boardCoin = ulinePlayer.boardCoins[G.currentTavern + 1];
+                if (boardCoin === undefined) {
+                    throw new Error(`В массиве монет игрока на столе отсутствует монета для выкладки при наличии героя ${HeroNames.Uline}.`);
+                }
+                return IsCoin(boardCoin);
+            }
         }
     }
 };

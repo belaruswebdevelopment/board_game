@@ -22,29 +22,27 @@ export const BuildCoins = (coinConfig: IMarketCoinConfig[] | IInitialTradingCoin
     const coins: ICoin[] = [];
     for (let i = 0; i < coinConfig.length; i++) {
         const config: IMarketCoinConfig | IInitialTradingCoinConfig | undefined = coinConfig[i];
-        if (config !== undefined) {
-            const count: number | undefined = options.players !== undefined
-                && !isInitialPlayerCoinsConfigNotMarket(config) ? config.count()[options.players] : 1;
-            if (count !== undefined) {
-                if (options.players !== undefined && options.count !== undefined) {
-                    options.count.push({
-                        value: config.value,
-                        isInitial: false,
-                        isTriggerTrading: false,
-                    });
-                }
-                for (let c = 0; c < count; c++) {
-                    coins.push(CreateCoin({
-                        value: config.value,
-                        isInitial: options.isInitial,
-                        isTriggerTrading: isInitialPlayerCoinsConfigNotMarket(config) ? config.isTriggerTrading : false,
-                    }));
-                }
-            } else {
-                throw new Error(`В конфиге монет для монеты ${i} отсутствует количество нужных монет для количества игроков - ${options.players}.`);
-            }
-        } else {
+        if (config === undefined) {
             throw new Error(`В массиве конфига монет отсутствует монета ${i}.`);
+        }
+        const count: number | undefined = options.players !== undefined
+            && !isInitialPlayerCoinsConfigNotMarket(config) ? config.count()[options.players] : 1;
+        if (count === undefined) {
+            throw new Error(`В конфиге монет для монеты ${i} отсутствует количество нужных монет для количества игроков - ${options.players}.`);
+        }
+        if (options.players !== undefined && options.count !== undefined) {
+            options.count.push({
+                value: config.value,
+                isInitial: false,
+                isTriggerTrading: false,
+            });
+        }
+        for (let c = 0; c < count; c++) {
+            coins.push(CreateCoin({
+                value: config.value,
+                isInitial: options.isInitial,
+                isTriggerTrading: isInitialPlayerCoinsConfigNotMarket(config) ? config.isTriggerTrading : false,
+            }));
         }
     }
     return coins;
@@ -64,12 +62,11 @@ export const CountMarketCoins = (G: IMyGameState): INumberValues => {
     const repeated: INumberValues = {};
     for (let i = 0; i < G.marketCoinsUnique.length; i++) {
         const marketCoin: ICoin | undefined = G.marketCoinsUnique[i];
-        if (marketCoin !== undefined) {
-            const temp: number = marketCoin.value;
-            repeated[temp] = G.marketCoins.filter((coin: ICoin): boolean => coin.value === temp).length;
-        } else {
+        if (marketCoin === undefined) {
             throw new Error(`В массиве монет рынка отсутствует монета ${i}.`);
         }
+        const temp: number = marketCoin.value;
+        repeated[temp] = G.marketCoins.filter((coin: ICoin): boolean => coin.value === temp).length;
     }
     return repeated;
 };
@@ -121,15 +118,14 @@ export const IsCoin = (coin: unknown): coin is ICoin => coin !== null && (coin a
 export const ReturnCoinsToPlayerHands = (G: IMyGameState): void => {
     for (let i = 0; i < G.publicPlayers.length; i++) {
         const player: IPublicPlayer | undefined = G.publicPlayers[i];
-        if (player !== undefined) {
-            for (let j = 0; j < player.boardCoins.length; j++) {
-                const isCoinReturned: boolean = ReturnCoinToPlayerHands(player, j);
-                if (!isCoinReturned) {
-                    break;
-                }
-            }
-        } else {
+        if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+        }
+        for (let j = 0; j < player.boardCoins.length; j++) {
+            const isCoinReturned: boolean = ReturnCoinToPlayerHands(player, j);
+            if (!isCoinReturned) {
+                break;
+            }
         }
     }
     AddDataToLog(G, LogTypes.GAME, `Все монеты вернулись в руки игроков.`);
@@ -153,13 +149,12 @@ export const ReturnCoinToPlayerHands = (player: IPublicPlayer, coinId: number): 
         return false;
     }
     const coin: CoinType | undefined = player.boardCoins[coinId];
-    if (coin !== undefined) {
-        player.handCoins[tempCoinId] = coin;
-        player.boardCoins[coinId] = null;
-        return true;
-    } else {
+    if (coin === undefined) {
         throw new Error(`В массиве монет игрока на поле отсутствует нужная монета ${coinId}.`);
     }
+    player.handCoins[tempCoinId] = coin;
+    player.boardCoins[coinId] = null;
+    return true;
 };
 
 /**
@@ -179,175 +174,168 @@ export const ReturnCoinToPlayerHands = (player: IPublicPlayer, coinId: number): 
 export const UpgradeCoin = (G: IMyGameState, ctx: Ctx, value: number, upgradingCoinId?: number, type?: string,
     isInitial?: boolean): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        // TODO Split into different functions!?
-        let upgradingCoin: Record<string, unknown> | ICoin = {},
-            coin: CoinType | undefined;
-        if (CheckPlayerHasBuff(player, BuffNames.Coin)) {
-            DeleteBuffFromPlayer(G, ctx, BuffNames.Coin);
-            // TODO Upgrade isInitial min coin or not or User must choose!?
-            if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                const allCoins: CoinType[] = [],
-                    allHandCoins: CoinType[] =
-                        player.handCoins.filter((coin: CoinType): boolean => IsCoin(coin));
-                for (let i = 0; i < player.boardCoins.length; i++) {
-                    if (player.boardCoins[i] === null) {
-                        const handCoin: CoinType | undefined = allHandCoins.splice(0, 1)[0];
-                        if (handCoin !== undefined) {
-                            allCoins.push(handCoin);
-                        } else {
-                            throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
-                        }
-                    } else {
-                        const boardCoin: CoinType | undefined = player.boardCoins[i];
-                        if (boardCoin !== undefined) {
-                            allCoins.push(boardCoin);
-                        } else {
-                            throw new Error(`В массиве монет игрока на поле отсутствует монета ${i}.`);
-                        }
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    // TODO Split into different functions!?
+    let upgradingCoin: Record<string, unknown> | ICoin = {},
+        coin: CoinType | undefined;
+    if (CheckPlayerHasBuff(player, BuffNames.Coin)) {
+        DeleteBuffFromPlayer(G, ctx, BuffNames.Coin);
+        // TODO Upgrade isInitial min coin or not or User must choose!?
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+            const allCoins: CoinType[] = [],
+                allHandCoins: CoinType[] =
+                    player.handCoins.filter((coin: CoinType): boolean => IsCoin(coin));
+            for (let i = 0; i < player.boardCoins.length; i++) {
+                if (player.boardCoins[i] === null) {
+                    const handCoin: CoinType | undefined = allHandCoins.splice(0, 1)[0];
+                    if (handCoin === undefined) {
+                        throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
                     }
-                }
-                const minCoinValue: number =
-                    Math.min(...allCoins.filter((coin: CoinType): boolean =>
-                        IsCoin(coin) && !coin.isTriggerTrading).map((coin: CoinType): number =>
-                            (coin as ICoin).value)),
-                    upgradingCoinInitial: CoinType | undefined =
-                        allCoins.find((coin: CoinType): boolean | undefined =>
-                            coin?.value === minCoinValue && coin.isInitial);
-                if (IsCoin(upgradingCoinInitial)) {
-                    upgradingCoin = upgradingCoinInitial;
+                    allCoins.push(handCoin);
                 } else {
-                    coin = allCoins.find((coin: CoinType): boolean =>
-                        coin?.value === minCoinValue && !coin.isInitial);
-                    if (IsCoin(coin)) {
-                        upgradingCoin = coin;
+                    const boardCoin: CoinType | undefined = player.boardCoins[i];
+                    if (boardCoin === undefined) {
+                        throw new Error(`В массиве монет игрока на поле отсутствует монета ${i}.`);
                     }
+                    allCoins.push(boardCoin);
                 }
-                upgradingCoinId = allCoins.findIndex((coin: CoinType): boolean =>
-                    coin?.value === upgradingCoin.value);
-                if (player.boardCoins[upgradingCoinId] === null) {
-                    type = CoinTypes.Hand;
-                } else {
-                    type = CoinTypes.Board;
-                }
+            }
+            const minCoinValue: number =
+                Math.min(...allCoins.filter((coin: CoinType): boolean =>
+                    IsCoin(coin) && !coin.isTriggerTrading).map((coin: CoinType): number =>
+                        (coin as ICoin).value)),
+                upgradingCoinInitial: CoinType | undefined =
+                    allCoins.find((coin: CoinType): boolean | undefined =>
+                        coin?.value === minCoinValue && coin.isInitial);
+            if (IsCoin(upgradingCoinInitial)) {
+                upgradingCoin = upgradingCoinInitial;
             } else {
-                const minCoinValue: number =
-                    Math.min(...player.boardCoins.filter((coin: CoinType): boolean =>
-                        IsCoin(coin) && !coin.isTriggerTrading).map((coin: CoinType): number =>
-                            (coin as ICoin).value));
-                coin = player.boardCoins.find((coin: CoinType): boolean => coin?.value === minCoinValue);
+                coin = allCoins.find((coin: CoinType): boolean =>
+                    coin?.value === minCoinValue && !coin.isInitial);
                 if (IsCoin(coin)) {
                     upgradingCoin = coin;
-                    upgradingCoinId = player.boardCoins.findIndex((coin: CoinType): boolean =>
-                        coin?.value === upgradingCoin.value);
-                    type = CoinTypes.Board;
                 }
             }
-            if (IsCoin(upgradingCoin)) {
-                isInitial = upgradingCoin.isInitial;
-            }
-        }
-        if (upgradingCoinId !== undefined && upgradingCoinId !== -1 && type !== undefined && isInitial !== undefined) {
-            if (!IsCoin(upgradingCoin)) {
-                if (type === CoinTypes.Hand) {
-                    const handCoinPosition: number =
-                        player.boardCoins.filter((coin: CoinType, index: number): boolean =>
-                            coin === null && upgradingCoinId !== undefined && index <= upgradingCoinId).length;
-                    coin = player.handCoins.filter((coin: CoinType): boolean =>
-                        IsCoin(coin))[handCoinPosition - 1];
-                    if (IsCoin(coin)) {
-                        upgradingCoin = coin;
-                        upgradingCoinId = player.handCoins.findIndex((coin: CoinType): boolean =>
-                            coin?.value === upgradingCoin.value && coin?.isInitial === isInitial);
-                    }
-                } else {
-                    coin = player.boardCoins[upgradingCoinId];
-                    if (IsCoin(coin)) {
-                        upgradingCoin = coin;
-                    }
-                }
-            }
-            if (IsCoin(upgradingCoin)) {
-                const buffValue: number = CheckPlayerHasBuff(player, BuffNames.UpgradeCoin) ? 2 : 0,
-                    newValue: number = upgradingCoin.value + value + buffValue;
-                let upgradedCoin: CoinType = null;
-                if (G.marketCoins.length) {
-                    const lastMarketCoin = G.marketCoins[G.marketCoins.length - 1];
-                    if (lastMarketCoin !== undefined) {
-                        if (newValue > lastMarketCoin.value) {
-                            upgradedCoin = lastMarketCoin;
-                            G.marketCoins.splice(G.marketCoins.length - 1, 1);
-                        } else {
-                            for (let i = 0; i < G.marketCoins.length; i++) {
-                                const marketCoin = G.marketCoins[i];
-                                if (marketCoin !== undefined) {
-                                    if (marketCoin.value < newValue) {
-                                        upgradedCoin = marketCoin;
-                                    } else if (marketCoin.value >= newValue) {
-                                        upgradedCoin = marketCoin;
-                                        G.marketCoins.splice(i, 1);
-                                        break;
-                                    }
-                                    if (i === G.marketCoins.length - 1) {
-                                        G.marketCoins.splice(i, 1);
-                                    }
-                                } else {
-                                    throw new Error(`В массиве монет рынка отсутствует монета ${i}.`);
-                                }
-                            }
-                        }
-                    } else {
-                        throw new Error(`В массиве монет рынка отсутствует последняя монета.`);
-                    }
-                }
-                // TODO Check coin returned to public or private player's coins
-                AddDataToLog(G, LogTypes.GAME, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на +${value}.`);
-                if (upgradedCoin !== null) {
-                    AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${isInitial}' с ценностью '${upgradingCoin.value}' на +${value} с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
-                    let handCoinIndex = -1;
-                    if (player.boardCoins[upgradingCoinId] === null) {
-                        handCoinIndex = player.handCoins.findIndex((coin: CoinType): boolean =>
-                            coin?.value === upgradingCoin.value);
-                    } else {
-                        player.boardCoins[upgradingCoinId] = null;
-                    }
-                    if ((ctx.activePlayers?.[Number(ctx.currentPlayer)]) === Stages.PlaceTradingCoinsUline) {
-                        const emptyCoinIndex: number = player.handCoins.indexOf(null);
-                        player.handCoins[emptyCoinIndex] = upgradedCoin;
-                        AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока ${player.nickname}.`);
-                    } else {
-                        if (handCoinIndex === -1) {
-                            player.boardCoins[upgradingCoinId] = upgradedCoin;
-                            AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока ${player.nickname}.`);
-                        } else {
-                            player.handCoins[handCoinIndex] = upgradedCoin;
-                            AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока ${player.nickname}.`);
-                        }
-                    }
-                    if (!upgradingCoin.isInitial) {
-                        let returningIndex = 0;
-                        for (let i = 0; i < G.marketCoins.length; i++) {
-                            returningIndex = i;
-                            const marketCoinReturn = G.marketCoins[i];
-                            if (marketCoinReturn !== undefined) {
-                                if (marketCoinReturn.value > upgradingCoin.value) {
-                                    break;
-                                }
-                            } else {
-                                throw new Error(`В массиве монет рынка отсутствует монета ${i}.`);
-                            }
-                        }
-                        G.marketCoins.splice(returningIndex, 0, upgradingCoin);
-                        AddDataToLog(G, LogTypes.GAME, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
-                    }
-                } else {
-                    AddDataToLog(G, LogTypes.PRIVATE, `На рынке монет нет доступных монет для обмена.`);
-                }
+            upgradingCoinId = allCoins.findIndex((coin: CoinType): boolean =>
+                coin?.value === upgradingCoin.value);
+            if (player.boardCoins[upgradingCoinId] === null) {
+                type = CoinTypes.Hand;
+            } else {
+                type = CoinTypes.Board;
             }
         } else {
-            throw new Error(`Отсутствует обязательный параметр 'upgradingCoinId' и/или 'type' и/или 'isInitial'.`);
+            const minCoinValue: number =
+                Math.min(...player.boardCoins.filter((coin: CoinType): boolean =>
+                    IsCoin(coin) && !coin.isTriggerTrading).map((coin: CoinType): number =>
+                        (coin as ICoin).value));
+            coin = player.boardCoins.find((coin: CoinType): boolean => coin?.value === minCoinValue);
+            if (IsCoin(coin)) {
+                upgradingCoin = coin;
+                upgradingCoinId = player.boardCoins.findIndex((coin: CoinType): boolean =>
+                    coin?.value === upgradingCoin.value);
+                type = CoinTypes.Board;
+            }
         }
-    } else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        if (IsCoin(upgradingCoin)) {
+            isInitial = upgradingCoin.isInitial;
+        }
+    }
+    if (upgradingCoinId === undefined || upgradingCoinId === -1 || type === undefined || isInitial === undefined) {
+        throw new Error(`Отсутствует обязательный параметр 'upgradingCoinId' и/или 'type' и/или 'isInitial'.`);
+    }
+    if (!IsCoin(upgradingCoin)) {
+        if (type === CoinTypes.Hand) {
+            const handCoinPosition: number =
+                player.boardCoins.filter((coin: CoinType, index: number): boolean =>
+                    coin === null && upgradingCoinId !== undefined && index <= upgradingCoinId).length;
+            coin = player.handCoins.filter((coin: CoinType): boolean =>
+                IsCoin(coin))[handCoinPosition - 1];
+            if (IsCoin(coin)) {
+                upgradingCoin = coin;
+                upgradingCoinId = player.handCoins.findIndex((coin: CoinType): boolean =>
+                    coin?.value === upgradingCoin.value && coin?.isInitial === isInitial);
+            }
+        } else {
+            coin = player.boardCoins[upgradingCoinId];
+            if (IsCoin(coin)) {
+                upgradingCoin = coin;
+            }
+        }
+    }
+    if (IsCoin(upgradingCoin)) {
+        const buffValue: number = CheckPlayerHasBuff(player, BuffNames.UpgradeCoin) ? 2 : 0,
+            newValue: number = upgradingCoin.value + value + buffValue;
+        let upgradedCoin: CoinType = null;
+        if (G.marketCoins.length) {
+            const lastMarketCoin = G.marketCoins[G.marketCoins.length - 1];
+            if (lastMarketCoin === undefined) {
+                throw new Error(`В массиве монет рынка отсутствует последняя монета.`);
+            }
+            if (newValue > lastMarketCoin.value) {
+                upgradedCoin = lastMarketCoin;
+                G.marketCoins.splice(G.marketCoins.length - 1, 1);
+            } else {
+                for (let i = 0; i < G.marketCoins.length; i++) {
+                    const marketCoin = G.marketCoins[i];
+                    if (marketCoin === undefined) {
+                        throw new Error(`В массиве монет рынка отсутствует монета ${i}.`);
+                    }
+                    if (marketCoin.value < newValue) {
+                        upgradedCoin = marketCoin;
+                    } else if (marketCoin.value >= newValue) {
+                        upgradedCoin = marketCoin;
+                        G.marketCoins.splice(i, 1);
+                        break;
+                    }
+                    if (i === G.marketCoins.length - 1) {
+                        G.marketCoins.splice(i, 1);
+                    }
+                }
+            }
+        }
+        // TODO Check coin returned to public or private player's coins
+        AddDataToLog(G, LogTypes.GAME, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на +${value}.`);
+        if (upgradedCoin !== null) {
+            AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${isInitial}' с ценностью '${upgradingCoin.value}' на +${value} с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
+            let handCoinIndex = -1;
+            if (player.boardCoins[upgradingCoinId] === null) {
+                handCoinIndex = player.handCoins.findIndex((coin: CoinType): boolean =>
+                    coin?.value === upgradingCoin.value);
+            } else {
+                player.boardCoins[upgradingCoinId] = null;
+            }
+            if ((ctx.activePlayers?.[Number(ctx.currentPlayer)]) === Stages.PlaceTradingCoinsUline) {
+                const emptyCoinIndex: number = player.handCoins.indexOf(null);
+                player.handCoins[emptyCoinIndex] = upgradedCoin;
+                AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока ${player.nickname}.`);
+            } else {
+                if (handCoinIndex === -1) {
+                    player.boardCoins[upgradingCoinId] = upgradedCoin;
+                    AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока ${player.nickname}.`);
+                } else {
+                    player.handCoins[handCoinIndex] = upgradedCoin;
+                    AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока ${player.nickname}.`);
+                }
+            }
+            if (!upgradingCoin.isInitial) {
+                let returningIndex = 0;
+                for (let i = 0; i < G.marketCoins.length; i++) {
+                    returningIndex = i;
+                    const marketCoinReturn = G.marketCoins[i];
+                    if (marketCoinReturn === undefined) {
+                        throw new Error(`В массиве монет рынка отсутствует монета ${i}.`);
+                    }
+                    if (marketCoinReturn.value > upgradingCoin.value) {
+                        break;
+                    }
+                }
+                G.marketCoins.splice(returningIndex, 0, upgradingCoin);
+                AddDataToLog(G, LogTypes.GAME, `Монета с ценностью '${upgradingCoin.value}' вернулась на рынок.`);
+            }
+        } else {
+            AddDataToLog(G, LogTypes.PRIVATE, `На рынке монет нет доступных монет для обмена.`);
+        }
     }
 };

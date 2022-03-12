@@ -43,21 +43,17 @@ export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
     }
     // TODO Move to function with Camp same logic
     const campCard = G.camp[cardId];
-    if (campCard !== undefined) {
-        if (campCard !== null) {
-            G.camp.splice(cardId, 1, null);
-            AddCampCardToCards(G, ctx, campCard);
-            if (IsArtefactCard(campCard)) {
-                AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
-                StartAutoAction(G, ctx, campCard.actions);
-            }
-        }
-        else {
-            throw new Error(`Не существует кликнутая карта кэмпа.`);
-        }
-    }
-    else {
+    if (campCard === undefined) {
         throw new Error(`Отсутствует кликнутая карта кэмпа.`);
+    }
+    if (campCard === null) {
+        throw new Error(`Не существует кликнутая карта кэмпа.`);
+    }
+    G.camp.splice(cardId, 1, null);
+    AddCampCardToCards(G, ctx, campCard);
+    if (IsArtefactCard(campCard)) {
+        AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
+        StartAutoAction(G, ctx, campCard.actions);
     }
 };
 /**
@@ -79,21 +75,17 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
     }
     // TODO Move to function with Holda same logic
     const campCard = G.camp[cardId];
-    if (campCard !== undefined) {
-        if (campCard !== null) {
-            G.camp[cardId] = null;
-            AddCampCardToCards(G, ctx, campCard);
-            if (IsArtefactCard(campCard)) {
-                AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
-                StartAutoAction(G, ctx, campCard.actions);
-            }
-        }
-        else {
-            throw new Error(`Не существует кликнутая карта кэмпа.`);
-        }
-    }
-    else {
+    if (campCard === undefined) {
         throw new Error(`Отсутствует кликнутая карта кэмпа.`);
+    }
+    if (campCard === null) {
+        throw new Error(`Не существует кликнутая карта кэмпа.`);
+    }
+    G.camp[cardId] = null;
+    AddCampCardToCards(G, ctx, campCard);
+    if (IsArtefactCard(campCard)) {
+        AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
+        StartAutoAction(G, ctx, campCard.actions);
     }
 };
 /**

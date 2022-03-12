@@ -5,12 +5,10 @@ import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames, Phases } from "../typescript/enums";
 export const CheckBrisingamensEndGameOrder = (G) => {
     const brisingamensPlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
-    if (brisingamensPlayerIndex !== -1) {
-        G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
-    }
-    else {
+    if (brisingamensPlayerIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.DiscardCardEndGame}.`);
     }
+    G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
 };
 export const EndBrisingamensEndGameActions = (G) => {
     G.publicPlayersOrder = [];
@@ -35,24 +33,22 @@ export const OnBrisingamensEndGameTurnBegin = (G, ctx) => {
 export const StartGetMjollnirProfitOrEndGame = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player !== undefined) {
-            if (!CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame) && !player.stack.length
-                && !player.actionsNum) {
-                if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                    const buffIndex = G.publicPlayers.findIndex((playerB) => CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
-                    if (buffIndex !== -1) {
-                        return {
-                            next: Phases.GetMjollnirProfit,
-                        };
-                    }
-                    else {
-                        return true;
-                    }
+        if (player === undefined) {
+            throw new Error(`В массиве игроков отсутствует игрок с первым ходом.`);
+        }
+        if (!CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame) && !player.stack.length
+            && !player.actionsNum) {
+            if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                const buffIndex = G.publicPlayers.findIndex((playerB) => CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
+                if (buffIndex !== -1) {
+                    return {
+                        next: Phases.GetMjollnirProfit,
+                    };
+                }
+                else {
+                    return true;
                 }
             }
-        }
-        else {
-            throw new Error(`В массиве игроков отсутствует игрок с первым ходом.`);
         }
     }
 };

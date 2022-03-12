@@ -40,14 +40,13 @@ export const CheckAndResolveDistinctionsOrders = (G: IMyGameState, ctx: Ctx): vo
 export const CheckEndGetDistinctionsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.publicPlayersOrder.length) {
         const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player !== undefined) {
-            if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
-                && !player.actionsNum) {
-                return Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
-                    distinction === undefined);
-            }
-        } else {
+        if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        }
+        if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
+            && !player.actionsNum) {
+            return Object.values(G.distinctions).every((distinction: DistinctionTypes): boolean =>
+                distinction === undefined);
         }
     }
 

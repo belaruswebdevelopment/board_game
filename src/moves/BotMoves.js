@@ -19,27 +19,21 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
         return INVALID_MOVE;
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        for (let i = 0; i < player.boardCoins.length; i++) {
-            const coinId = coinsOrder[i]
-                || player.handCoins.findIndex((coin) => IsCoin(coin));
-            if (coinId !== -1) {
-                const handCoin = player.handCoins[coinId];
-                if (handCoin !== undefined) {
-                    player.boardCoins[i] = handCoin;
-                    player.handCoins[coinId] = null;
-                }
-                else {
-                    throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
-                }
-            }
-            else {
-                // TODO LogTypes.ERROR ?
-            }
-        }
-    }
-    else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    for (let i = 0; i < player.boardCoins.length; i++) {
+        const coinId = coinsOrder[i]
+            || player.handCoins.findIndex((coin) => IsCoin(coin));
+        if (coinId === -1) {
+            throw new Error(`В массиве монет игрока в руке отсутствует монета.`);
+        }
+        const handCoin = player.handCoins[coinId];
+        if (handCoin === undefined) {
+            throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
+        }
+        player.boardCoins[i] = handCoin;
+        player.handCoins[coinId] = null;
     }
 };
 //# sourceMappingURL=BotMoves.js.map

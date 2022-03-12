@@ -24,25 +24,23 @@ export const AddPickCardActionToStack = (G, ctx) => {
 export const DrawCurrentProfit = (G, ctx) => {
     var _a, _b;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        const config = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config;
-        if (config !== undefined) {
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
-            StartOrEndActionStage(G, ctx, config);
-            player.actionsNum = (_b = config.number) !== null && _b !== void 0 ? _b : 1;
-            if (config.name !== undefined) {
-                G.drawProfit = config.name;
-            }
-            else {
-                G.drawProfit = ``;
-            }
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    const config = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config;
+    if (config !== undefined) {
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
+        StartOrEndActionStage(G, ctx, config);
+        player.actionsNum = (_b = config.number) !== null && _b !== void 0 ? _b : 1;
+        if (config.name !== undefined) {
+            G.drawProfit = config.name;
         }
         else {
             G.drawProfit = ``;
         }
     }
     else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        G.drawProfit = ``;
     }
 };
 /**

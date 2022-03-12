@@ -9,14 +9,12 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 export const BlacksmithDistinctionAwarding = (G, ctx, player) => {
     if (G.tierToEnd !== 0) {
         const card = G.additionalCardsDeck.find((card) => card.name === CardNames.ChiefBlacksmith);
-        if (card !== undefined) {
-            player.cards[SuitNames.BLACKSMITH].push(card);
-            G.distinctions[SuitNames.BLACKSMITH] = undefined;
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
-        }
-        else {
+        if (card === undefined) {
             throw new Error(`В игре отсутствует обязательная карта ${CardNames.ChiefBlacksmith}.`);
         }
+        player.cards[SuitNames.BLACKSMITH].push(card);
+        G.distinctions[SuitNames.BLACKSMITH] = undefined;
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
     }
     return 0;
 };
@@ -30,17 +28,15 @@ export const ExplorerDistinctionAwarding = (G, ctx, player) => {
 export const HunterDistinctionAwarding = (G, ctx, player) => {
     if (G.tierToEnd !== 0) {
         const tradingCoinIndex = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === 0);
-        if (tradingCoinIndex !== -1) {
-            player.boardCoins[tradingCoinIndex] = CreateCoin({
-                value: 3,
-                isTriggerTrading: true,
-            });
-            G.distinctions[SuitNames.HUNTER] = undefined;
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
-        }
-        else {
+        if (tradingCoinIndex === -1) {
             throw new Error(`У игрока не может отсутствовать обменная монета в первую эпоху.`);
         }
+        player.boardCoins[tradingCoinIndex] = CreateCoin({
+            value: 3,
+            isTriggerTrading: true,
+        });
+        G.distinctions[SuitNames.HUNTER] = undefined;
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} обменял по знаку отличия охотников свою монету с номиналом 0 на особую монету с номиналом 3.`);
     }
     return 0;
 };

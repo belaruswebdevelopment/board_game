@@ -23,23 +23,20 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
         return INVALID_MOVE;
     }
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        for (let i = 0; i < player.boardCoins.length; i++) {
-            const coinId: number = coinsOrder[i]
-                || player.handCoins.findIndex((coin: CoinType): boolean => IsCoin(coin));
-            if (coinId !== -1) {
-                const handCoin: CoinType | undefined = player.handCoins[coinId];
-                if (handCoin !== undefined) {
-                    player.boardCoins[i] = handCoin;
-                    player.handCoins[coinId] = null;
-                } else {
-                    throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
-                }
-            } else {
-                // TODO LogTypes.ERROR ?
-            }
-        }
-    } else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    for (let i = 0; i < player.boardCoins.length; i++) {
+        const coinId: number = coinsOrder[i]
+            || player.handCoins.findIndex((coin: CoinType): boolean => IsCoin(coin));
+        if (coinId === -1) {
+            throw new Error(`В массиве монет игрока в руке отсутствует монета.`);
+        }
+        const handCoin: CoinType | undefined = player.handCoins[coinId];
+        if (handCoin === undefined) {
+            throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
+        }
+        player.boardCoins[i] = handCoin;
+        player.handCoins[coinId] = null;
     }
 };

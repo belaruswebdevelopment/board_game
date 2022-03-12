@@ -23,14 +23,12 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
         return INVALID_MOVE;
     }
     const hero = G.heroes[heroId];
-    if (hero !== undefined) {
-        AddHeroToCards(G, ctx, hero);
-        AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
-        StartAutoAction(G, ctx, hero.actions);
-    }
-    else {
+    if (hero === undefined) {
         throw new Error(`Не существует кликнутая карта героя.`);
     }
+    AddHeroToCards(G, ctx, hero);
+    AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
+    StartAutoAction(G, ctx, hero.actions);
 };
 /**
  * <h3>Сброс карты с верха планшета игрока при выборе героя.</h3>

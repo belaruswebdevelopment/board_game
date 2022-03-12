@@ -33,16 +33,14 @@ export const AddBrisingamensEndGameActionsToStack = (G: IMyGameState, ctx: Ctx):
 */
 const AddCardToCamp = (G: IMyGameState, cardIndex: number): void => {
     const campDeck: CampDeckCardTypes[] | undefined = G.campDecks[G.campDecks.length - G.tierToEnd];
-    if (campDeck !== undefined) {
-        const newCampCard: CampDeckCardTypes | undefined = campDeck.splice(0, 1)[0];
-        if (newCampCard !== undefined) {
-            G.camp.splice(cardIndex, 1, newCampCard);
-        } else {
-            throw new Error(`Отсутствует карта кэмпа в колоде карт кэмпа текущей эпохи.`);
-        }
-    } else {
+    if (campDeck === undefined) {
         throw new Error(`Отсутствует колода карт кэмпа текущей эпохи.`);
     }
+    const newCampCard: CampDeckCardTypes | undefined = campDeck.splice(0, 1)[0];
+    if (newCampCard === undefined) {
+        throw new Error(`Отсутствует карта кэмпа в колоде карт кэмпа текущей эпохи.`);
+    }
+    G.camp.splice(cardIndex, 1, newCampCard);
 };
 
 /**
@@ -92,34 +90,28 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
     // TODO Add LogTypes.ERROR logging? Must be only 1-2 discarded card in specific condition!?
     for (let i = 0; i < G.camp.length; i++) {
         const campCard: CampCardTypes | undefined = G.camp[i];
-        if (campCard !== undefined) {
-            if (campCard !== null) {
-                const discardedCard: CampCardTypes | undefined =
-                    G.camp.splice(i, 1, null)[0];
-                if (discardedCard !== undefined) {
-                    if (discardedCard !== null) {
-                        G.discardCampCardsDeck.push(discardedCard);
-                    }
-                } else {
-                    G.camp.splice(i, 1, null)[0];
-                    throw new Error(`В массиве карт кэмпа отсутствует карта кэмпа ${i} для сброса.`);
-                }
-            }
-        } else {
+        if (campCard === undefined) {
             throw new Error(`В массиве карт кэмпа отсутствует карта кэмпа ${i}.`);
+        }
+        if (campCard !== null) {
+            const discardedCard: CampCardTypes | undefined = G.camp.splice(i, 1, null)[0];
+            if (discardedCard === undefined) {
+                throw new Error(`В массиве карт кэмпа отсутствует карта кэмпа ${i} для сброса.`);
+            }
+            if (discardedCard !== null) {
+                G.discardCampCardsDeck.push(discardedCard);
+            }
         }
     }
     const campDeck: CampDeckCardTypes[] | undefined = G.campDecks[G.campDecks.length - G.tierToEnd - 1];
-    if (campDeck !== undefined) {
-        if (campDeck.length) {
-            G.discardCampCardsDeck.push(
-                ...G.discardCampCardsDeck.concat(campDeck));
-            campDeck.splice(0);
-        }
-        AddDataToLog(G, LogTypes.GAME, `Оставшиеся карты кэмпа сброшены.`);
-    } else {
+    if (campDeck === undefined) {
         throw new Error(`Отсутствует колода карт кэмпа текущей эпохи.`);
     }
+    if (campDeck.length) {
+        G.discardCampCardsDeck.push(...G.discardCampCardsDeck.concat(campDeck));
+        campDeck.splice(0);
+    }
+    AddDataToLog(G, LogTypes.GAME, `Оставшиеся карты кэмпа сброшены.`);
 };
 
 /**
@@ -134,23 +126,20 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
  */
 export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void => {
     const tavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
-    if (tavern !== undefined) {
-        const cardIndex: number = tavern.findIndex((card: TavernCardTypes): boolean => card !== null);
-        if (cardIndex !== -1) {
-            const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[G.currentTavern];
-            if (currentTavernConfig !== undefined) {
-                AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
-                DiscardCardFromTavern(G, cardIndex);
-                G.mustDiscardTavernCardJarnglofi = false;
-            } else {
-                throw new Error(`Отсутствует конфиг текущей таверны.`);
-            }
-        } else {
-            throw new Error(`Не удалось сбросить лишнюю карту из таверны при пике артефакта Jarnglofi.`);
-        }
-    } else {
+    if (tavern === undefined) {
         throw new Error(`Отсутствует текущая таверна.`);
     }
+    const cardIndex: number = tavern.findIndex((card: TavernCardTypes): boolean => card !== null);
+    if (cardIndex === -1) {
+        throw new Error(`Не удалось сбросить лишнюю карту из таверны при пике артефакта Jarnglofi.`);
+    }
+    const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[G.currentTavern];
+    if (currentTavernConfig === undefined) {
+        throw new Error(`Отсутствует конфиг текущей таверны.`);
+    }
+    AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
+    DiscardCardFromTavern(G, cardIndex);
+    G.mustDiscardTavernCardJarnglofi = false;
 };
 
 /**
@@ -165,21 +154,18 @@ export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void => {
 export const DiscardCardIfCampCardPicked = (G: IMyGameState): void => {
     if (G.campPicked) {
         const tavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
-        if (tavern !== undefined) {
-            const discardCardIndex: number =
-                tavern.findIndex((card: TavernCardTypes): boolean => card !== null);
-            let isCardDiscarded = false;
-            if (discardCardIndex !== -1) {
-                isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
-            }
-            if (isCardDiscarded) {
-                G.campPicked = false;
-            } else {
-                throw new Error(`Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
-            }
-        } else {
+        if (tavern === undefined) {
             throw new Error(`Отсутствует текущая таверна.`);
         }
+        const discardCardIndex: number = tavern.findIndex((card: TavernCardTypes): boolean => card !== null);
+        let isCardDiscarded = false;
+        if (discardCardIndex !== -1) {
+            isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
+        }
+        if (!isCardDiscarded) {
+            throw new Error(`Не удалось сбросить лишнюю карту из таверны после выбора карты кэмпа в конце пиков из таверны.`);
+        }
+        G.campPicked = false;
     }
 };
 
@@ -219,18 +205,17 @@ export const RefillEmptyCampCards = (G: IMyGameState): void => {
         });
     const isEmptyCampCards: boolean = emptyCampCards.length === 0,
         campDeck: CampDeckCardTypes[] | undefined = G.campDecks[G.campDecks.length - G.tierToEnd];
-    if (campDeck !== undefined) {
-        let isEmptyCurrentTierCampDeck: boolean = campDeck.length === 0;
-        if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
-            emptyCampCards.forEach((cardIndex: number | null): void => {
-                isEmptyCurrentTierCampDeck = campDeck.length === 0;
-                if (cardIndex !== null && !isEmptyCurrentTierCampDeck) {
-                    AddCardToCamp(G, cardIndex);
-                }
-            });
-            AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами.`);
-        }
-    } else {
+    if (campDeck === undefined) {
         throw new Error(`Отсутствует колода карт кэмпа текущей эпохи.`);
+    }
+    let isEmptyCurrentTierCampDeck: boolean = campDeck.length === 0;
+    if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {
+        emptyCampCards.forEach((cardIndex: number | null): void => {
+            isEmptyCurrentTierCampDeck = campDeck.length === 0;
+            if (cardIndex !== null && !isEmptyCurrentTierCampDeck) {
+                AddCardToCamp(G, cardIndex);
+            }
+        });
+        AddDataToLog(G, LogTypes.GAME, `Кэмп заполнен новыми картами.`);
     }
 };

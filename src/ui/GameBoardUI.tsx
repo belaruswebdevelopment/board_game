@@ -31,27 +31,26 @@ export const DrawCamp = (G: IMyGameState, validatorName: MoveValidatorTypes | nu
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
             const campCard: CampCardTypes | undefined = G.camp[j];
-            if (campCard !== undefined) {
-                if (campCard === null) {
-                    if (data !== undefined) {
-                        boardCells.push(
-                            <td className="bg-yellow-200" key={`Camp ${j} icon`}>
-                                <span style={Styles.Camp()} className="bg-camp-icon">
+            if (campCard === undefined) {
+                throw new Error(`В массиве карт кэмпа отсутствует карта ${j}.`);
+            }
+            if (campCard === null) {
+                if (data !== undefined) {
+                    boardCells.push(
+                        <td className="bg-yellow-200" key={`Camp ${j} icon`}>
+                            <span style={Styles.Camp()} className="bg-camp-icon">
 
-                                </span>
-                            </td>
-                        );
-                    }
-                } else {
-                    if (data !== undefined) {
-                        DrawCard(data, boardCells, campCard, j, null, null,
-                            MoveNames.ClickCampCardMove, j);
-                    } else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator) {
-                        moveMainArgs.push(j);
-                    }
+                            </span>
+                        </td>
+                    );
                 }
             } else {
-                throw new Error(`В массиве карт кэмпа отсутствует карта ${j}.`);
+                if (data !== undefined) {
+                    DrawCard(data, boardCells, campCard, j, null, null,
+                        MoveNames.ClickCampCardMove, j);
+                } else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator) {
+                    moveMainArgs.push(j);
+                }
             }
         }
     }
@@ -190,19 +189,18 @@ export const DrawHeroes = (G: IMyGameState, validatorName: MoveValidatorTypes | 
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
                 hero: IHeroCard | undefined = G.heroes[increment];
-            if (hero !== undefined) {
-                if (data !== undefined) {
-                    if (hero.active) {
-                        DrawCard(data, boardCells, hero, increment, null, null,
-                            MoveNames.ClickHeroCardMove, increment);
-                    } else {
-                        DrawCard(data, boardCells, hero, increment, null);
-                    }
-                } else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
-                    moveMainArgs.push(increment);
-                }
-            } else {
+            if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой ${increment}.`);
+            }
+            if (data !== undefined) {
+                if (hero.active) {
+                    DrawCard(data, boardCells, hero, increment, null, null,
+                        MoveNames.ClickHeroCardMove, increment);
+                } else {
+                    DrawCard(data, boardCells, hero, increment, null);
+                }
+            } else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
+                moveMainArgs.push(increment);
             }
             if (increment + 1 === G.heroes.length) {
                 break;
@@ -254,17 +252,16 @@ export const DrawMarketCoins = (G: IMyGameState, data: BoardProps<IMyGameState>)
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment: number = i * drawData.boardCols + j,
                 marketCoin: ICoin | undefined = G.marketCoinsUnique[increment];
-            if (marketCoin !== undefined) {
-                const tempCoinValue = marketCoin.value,
-                    coinClassName: string = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
-                DrawCoin(data, boardCells, `market`, marketCoin, increment, null,
-                    coinClassName, countMarketCoins[tempCoinValue],
-                    MoveNames.ClickHandCoinMove, j);
-                if (increment + 1 === G.marketCoinsUnique.length) {
-                    break;
-                }
-            } else {
+            if (marketCoin === undefined) {
                 throw new Error(`В массиве монет рынка героев отсутствует монета ${increment}.`);
+            }
+            const tempCoinValue = marketCoin.value,
+                coinClassName: string = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
+            DrawCoin(data, boardCells, `market`, marketCoin, increment, null,
+                coinClassName, countMarketCoins[tempCoinValue],
+                MoveNames.ClickHandCoinMove, j);
+            if (increment + 1 === G.marketCoinsUnique.length) {
+                break;
             }
         }
         boardRows.push(
@@ -301,85 +298,83 @@ export const DrawMarketCoins = (G: IMyGameState, data: BoardProps<IMyGameState>)
 export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>): JSX.Element => {
     const boardCells: JSX.Element[] = [],
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        const stack: IStack | undefined = player.stack[0];
-        if (stack !== undefined) {
-            const config: IConfig | undefined = stack.config,
-                option = G.drawProfit;
-            let caption = `Get `;
-            if (option === ConfigNames.PlaceThrudHero || option === ConfigNames.PlaceYludHero
-                || option === ConfigNames.PlaceOlwinCards) {
-                if (config !== undefined) {
-                    caption += `suit to place ${player.actionsNum} ${config.drawName} ${player.actionsNum > 1 ? `s` : ``} to ${player.actionsNum > 1 ? `different` : `that`} suit.`;
-                    PlaceCardsProfit(G, ctx, null, data, boardCells);
-                }
-            } else if (option === ConfigNames.ExplorerDistinction) {
-                caption += `one card to your board.`;
-                ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
-            } else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
-                caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} to discard from your board.`;
-                DiscardCardFromBoardProfit(G, ctx, null, data, boardCells);
-            } else if (option === ConfigNames.AndumiaAction || option === ConfigNames.BrisingamensAction) {
-                caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} from discard pile to your board.`;
-                PickDiscardCardProfit(G, ctx, null, data, boardCells);
-            } else if (option === ConfigNames.BrisingamensEndGameAction) {
-                caption += `one card to discard from your board.`;
-                DiscardAnyCardFromPlayerBoardProfit(G, ctx, null, data, boardCells);
-            } else if (option === ConfigNames.HofudAction) {
-                caption += `one warrior card to discard from your board.`;
-                DiscardSuitCardFromPlayerBoardProfit(G, ctx, null, null, data, boardCells);
-            } else if (option === ConfigNames.HoldaAction) {
-                caption += `one card from camp to your board.`;
-                PickCampCardHoldaProfit(G, ctx, null, data, boardCells);
-            } else if (option === ConfigNames.DiscardCard) {
-                caption += `one card to discard from current tavern.`;
-                DiscardCardProfit(G, ctx, null, data, boardCells);
-            } else if (option === ConfigNames.GetMjollnirProfit) {
-                caption += `suit to get Mjollnir profit from ranks on that suit.`;
-                GetMjollnirProfitProfit(G, ctx, null, data, boardCells);
-            } else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {
-                caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
-                StartEnlistmentMercenariesProfit(G, ctx, data, boardCells);
-            } else if (option === ConfigNames.EnlistmentMercenaries) {
-                caption += `mercenary to place it to your player board.`;
-                GetEnlistmentMercenariesProfit(G, ctx, null, data, boardCells);
-            } else if (option === ConfigNames.PlaceEnlistmentMercenaries) {
-                const card: PickedCardType = player.pickedCard;
-                if (card !== null) {
-                    caption += `suit to place ${card.name} to that suit.`;
-                    PlaceEnlistmentMercenariesProfit(G, ctx, null, data, boardCells);
-                }
-            } else if (option === ConfigNames.AddCoinToPouchVidofnirVedrfolnir) {
-                caption += `${player.actionsNum} coin${player.actionsNum > 1 ? `s` : ``} to add to your pouch to fill it.`;
-                AddCoinToPouchProfit(G, ctx, null, data, boardCells);
-            } else {
-                if (config !== undefined) {
-                    caption += `coin to upgrade up to ${config.value}.`;
-                    if (option === ConfigNames.VidofnirVedrfolnirAction) {
-                        UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, null, data, boardCells);
-                    } else if (option === ConfigNames.UpgradeCoin) {
-                        UpgradeCoinProfit(G, ctx, null, data, boardCells);
-                    }
-                }
-            }
-            return (
-                <table>
-                    <caption>
-                        <span style={Styles.DistinctionsBack()} className="bg-top-distinctions-icon">
-
-                        </span> <span>{caption}</span>
-                    </caption>
-                    <tbody>
-                        <tr>{boardCells}</tr>
-                    </tbody>
-                </table>
-            );
-        } else {
-            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-        }
-    } else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    const stack: IStack | undefined = player.stack[0];
+    if (stack === undefined) {
+        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
+    }
+    const config: IConfig | undefined = stack.config,
+        option = G.drawProfit;
+    let caption = `Get `;
+    if (option === ConfigNames.PlaceThrudHero || option === ConfigNames.PlaceYludHero
+        || option === ConfigNames.PlaceOlwinCards) {
+        if (config !== undefined) {
+            caption += `suit to place ${player.actionsNum} ${config.drawName} ${player.actionsNum > 1 ? `s` : ``} to ${player.actionsNum > 1 ? `different` : `that`} suit.`;
+            PlaceCardsProfit(G, ctx, null, data, boardCells);
+        }
+    } else if (option === ConfigNames.ExplorerDistinction) {
+        caption += `one card to your board.`;
+        ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
+    } else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
+        caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} to discard from your board.`;
+        DiscardCardFromBoardProfit(G, ctx, null, data, boardCells);
+    } else if (option === ConfigNames.AndumiaAction || option === ConfigNames.BrisingamensAction) {
+        caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} from discard pile to your board.`;
+        PickDiscardCardProfit(G, ctx, null, data, boardCells);
+    } else if (option === ConfigNames.BrisingamensEndGameAction) {
+        caption += `one card to discard from your board.`;
+        DiscardAnyCardFromPlayerBoardProfit(G, ctx, null, data, boardCells);
+    } else if (option === ConfigNames.HofudAction) {
+        caption += `one warrior card to discard from your board.`;
+        DiscardSuitCardFromPlayerBoardProfit(G, ctx, null, null, data, boardCells);
+    } else if (option === ConfigNames.HoldaAction) {
+        caption += `one card from camp to your board.`;
+        PickCampCardHoldaProfit(G, ctx, null, data, boardCells);
+    } else if (option === ConfigNames.DiscardCard) {
+        caption += `one card to discard from current tavern.`;
+        DiscardCardProfit(G, ctx, null, data, boardCells);
+    } else if (option === ConfigNames.GetMjollnirProfit) {
+        caption += `suit to get Mjollnir profit from ranks on that suit.`;
+        GetMjollnirProfitProfit(G, ctx, null, data, boardCells);
+    } else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {
+        caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
+        StartEnlistmentMercenariesProfit(G, ctx, data, boardCells);
+    } else if (option === ConfigNames.EnlistmentMercenaries) {
+        caption += `mercenary to place it to your player board.`;
+        GetEnlistmentMercenariesProfit(G, ctx, null, data, boardCells);
+    } else if (option === ConfigNames.PlaceEnlistmentMercenaries) {
+        const card: PickedCardType = player.pickedCard;
+        if (card !== null) {
+            caption += `suit to place ${card.name} to that suit.`;
+            PlaceEnlistmentMercenariesProfit(G, ctx, null, data, boardCells);
+        }
+    } else if (option === ConfigNames.AddCoinToPouchVidofnirVedrfolnir) {
+        caption += `${player.actionsNum} coin${player.actionsNum > 1 ? `s` : ``} to add to your pouch to fill it.`;
+        AddCoinToPouchProfit(G, ctx, null, data, boardCells);
+    } else {
+        if (config !== undefined) {
+            caption += `coin to upgrade up to ${config.value}.`;
+            if (option === ConfigNames.VidofnirVedrfolnirAction) {
+                UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, null, data, boardCells);
+            } else if (option === ConfigNames.UpgradeCoin) {
+                UpgradeCoinProfit(G, ctx, null, data, boardCells);
+            }
+        }
+    }
+    return (
+        <table>
+            <caption>
+                <span style={Styles.DistinctionsBack()} className="bg-top-distinctions-icon">
+
+                </span> <span>{caption}</span>
+            </caption>
+            <tbody>
+                <tr>{boardCells}</tr>
+            </tbody>
+        </table>
+    );
 };
 
 /**
@@ -401,68 +396,64 @@ export const DrawTaverns = (G: IMyGameState, validatorName: MoveValidatorTypes |
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let t = 0; t < G.tavernsNum; t++) {
         const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[t];
-        if (currentTavernConfig !== undefined) {
-            for (let i = 0; i < 1; i++) {
-                const boardCells: JSX.Element[] = [];
-                for (let j = 0; j < G.drawSize; j++) {
-                    const tavern: TavernCardTypes[] | undefined = G.taverns[t];
-                    if (tavern !== undefined) {
-                        const tavernCard: TavernCardTypes | undefined = tavern[j];
-                        if (tavernCard !== undefined) {
-                            if (tavernCard === null) {
-                                if (data !== undefined) {
-                                    boardCells.push(
-                                        <td key={`${currentTavernConfig.name} ${j}`}>
-                                            <span style={Styles.Taverns(t)} className="bg-tavern-icon">
+        if (currentTavernConfig === undefined) {
+            throw new Error(`Отсутствует конфиг таверны ${t}.`);
+        }
+        for (let i = 0; i < 1; i++) {
+            const boardCells: JSX.Element[] = [];
+            for (let j = 0; j < G.drawSize; j++) {
+                const tavern: TavernCardTypes[] | undefined = G.taverns[t];
+                if (tavern === undefined) {
+                    throw new Error(`В массиве таверн отсутствует таверна ${t}.`);
+                }
+                const tavernCard: TavernCardTypes | undefined = tavern[j];
+                if (tavernCard === undefined) {
+                    throw new Error(`В массиве карт таверны ${t} отсутствует карта ${j}.`);
+                }
+                if (tavernCard === null) {
+                    if (data !== undefined) {
+                        boardCells.push(
+                            <td key={`${currentTavernConfig.name} ${j}`}>
+                                <span style={Styles.Taverns(t)} className="bg-tavern-icon">
 
-                                            </span>
-                                        </td>
-                                    );
-                                }
-                            } else {
-                                let suit: SuitTypes | null = null;
-                                if (IsCardNotActionAndNotNull(tavernCard)) {
-                                    suit = tavernCard.suit;
-                                }
-                                if (t === G.currentTavern) {
-                                    if (data !== undefined) {
-                                        DrawCard(data, boardCells, tavernCard, j, null,
-                                            suit, MoveNames.ClickCardMove, j);
-                                    } else if (validatorName === MoveValidatorNames.ClickCardMoveValidator) {
-                                        moveMainArgs.push(j);
-                                    }
-                                } else {
-                                    if (data !== undefined) {
-                                        DrawCard(data, boardCells, tavernCard, j, null,
-                                            suit);
-                                    }
-                                }
-                            }
-                        } else {
-                            throw new Error(`В массиве карт таверны ${t} отсутствует карта ${j}.`);
+                                </span>
+                            </td>
+                        );
+                    }
+                } else {
+                    let suit: SuitTypes | null = null;
+                    if (IsCardNotActionAndNotNull(tavernCard)) {
+                        suit = tavernCard.suit;
+                    }
+                    if (t === G.currentTavern) {
+                        if (data !== undefined) {
+                            DrawCard(data, boardCells, tavernCard, j, null, suit,
+                                MoveNames.ClickCardMove, j);
+                        } else if (validatorName === MoveValidatorNames.ClickCardMoveValidator) {
+                            moveMainArgs.push(j);
                         }
                     } else {
-                        throw new Error(`В массиве таверн отсутствует таверна ${t}.`);
+                        if (data !== undefined) {
+                            DrawCard(data, boardCells, tavernCard, j, null, suit);
+                        }
                     }
                 }
-                if (data !== undefined) {
-                    tavernsBoards.push(
-                        <table className={`${gridClass} justify-self-center`}
-                            key={`Tavern ${currentTavernConfig.name} board`}>
-                            <caption className="whitespace-nowrap">
-                                <span style={Styles.Taverns(t)} className="bg-top-tavern-icon">
-
-                                </span> <b>{currentTavernConfig.name}</b>
-                            </caption>
-                            <tbody>
-                                <tr>{boardCells}</tr>
-                            </tbody>
-                        </table>
-                    );
-                }
             }
-        } else {
-            throw new Error(`Отсутствует конфиг таверны ${t}.`);
+            if (data !== undefined) {
+                tavernsBoards.push(
+                    <table className={`${gridClass} justify-self-center`}
+                        key={`Tavern ${currentTavernConfig.name} board`}>
+                        <caption className="whitespace-nowrap">
+                            <span style={Styles.Taverns(t)} className="bg-top-tavern-icon">
+
+                            </span> <b>{currentTavernConfig.name}</b>
+                        </caption>
+                        <tbody>
+                            <tr>{boardCells}</tr>
+                        </tbody>
+                    </table>
+                );
+            }
         }
     }
     if (data !== undefined) {
@@ -514,25 +505,22 @@ export const DrawWinner = (G: IMyGameState, ctx: Ctx): JSX.Element => {
         if (G.winner !== undefined) {
             if (G.winner.length === 1) {
                 const winnerIndex: number | undefined = G.winner[0];
-                if (winnerIndex !== undefined) {
-                    const winnerPlayer = G.publicPlayers[winnerIndex];
-                    if (winnerPlayer !== undefined) {
-                        winner = `Winner: Player ${winnerPlayer.nickname}`;
-                    } else {
-                        throw new Error(`Отсутствует игрок победитель ${winnerIndex}.`);
-                    }
-                } else {
+                if (winnerIndex === undefined) {
                     throw new Error(`Отсутствует индекс игрока победителя.`);
                 }
+                const winnerPlayer = G.publicPlayers[winnerIndex];
+                if (winnerPlayer === undefined) {
+                    throw new Error(`Отсутствует игрок победитель ${winnerIndex}.`);
+                }
+                winner = `Winner: Player ${winnerPlayer.nickname}`;
             } else {
                 winner = "Winners: ";
                 G.winner.forEach((playerId: number, index: number): void => {
                     const winnerPlayerI: IPublicPlayer | undefined = G.publicPlayers[playerId];
-                    if (winnerPlayerI !== undefined) {
-                        winner += `${index + 1}) Player ${winnerPlayerI.nickname}; `;
-                    } else {
+                    if (winnerPlayerI === undefined) {
                         throw new Error(`Отсутствует игрок победитель ${playerId}.`);
                     }
+                    winner += `${index + 1}) Player ${winnerPlayerI.nickname}; `;
                 });
             }
         } else {

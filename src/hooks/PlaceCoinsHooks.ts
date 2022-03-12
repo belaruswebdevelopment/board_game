@@ -44,12 +44,11 @@ export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): void | INext
  */
 export const CheckEndPlaceCoinsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (player.handCoins.every((coin: CoinType): boolean => coin === null)) {
-            return true;
-        }
-    } else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    if (player.handCoins.every((coin: CoinType): boolean => coin === null)) {
+        return true;
     }
 };
 

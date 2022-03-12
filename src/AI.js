@@ -31,50 +31,42 @@ export const enumerate = (G, ctx) => {
             }
             else if (ctx.phase === Phases.PickCards) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    if (ctx.activePlayers === null) {
-                        let pickCardOrCampCard = `card`;
-                        if (((_b = G.expansions.thingvellir) === null || _b === void 0 ? void 0 : _b.active) && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                            || (!G.campPicked && player.buffs.find((buff) => buff.goCamp !== undefined) !== undefined))) {
-                            pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
-                        }
-                        if (pickCardOrCampCard === `card`) {
-                            activeStageOfCurrentPlayer = Stages.Default1;
-                        }
-                        else {
-                            activeStageOfCurrentPlayer = Stages.Default2;
-                        }
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                }
+                if (ctx.activePlayers === null) {
+                    let pickCardOrCampCard = `card`;
+                    if (((_b = G.expansions.thingvellir) === null || _b === void 0 ? void 0 : _b.active) && (ctx.currentPlayer === G.publicPlayersOrder[0]
+                        || (!G.campPicked && player.buffs.find((buff) => buff.goCamp !== undefined) !== undefined))) {
+                        pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
+                    }
+                    if (pickCardOrCampCard === `card`) {
+                        activeStageOfCurrentPlayer = Stages.Default1;
                     }
                     else {
-                        activeStageOfCurrentPlayer = Stages.DiscardSuitCard;
-                        // TODO Bot can't do async turns...?
-                        const stack = player.stack[0];
-                        if (stack !== undefined) {
-                            if (((_c = stack.config) === null || _c === void 0 ? void 0 : _c.suit) !== undefined) {
-                                for (let p = 0; p < G.publicPlayers.length; p++) {
-                                    const playerP = G.publicPlayers[p];
-                                    if (playerP !== undefined) {
-                                        if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
-                                            playerId = p;
-                                            break;
-                                        }
-                                    }
-                                    else {
-                                        throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
-                                    }
-                                }
-                            }
-                            else {
-                                throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.suit'.`);
-                            }
-                        }
-                        else {
-                            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-                        }
+                        activeStageOfCurrentPlayer = Stages.Default2;
                     }
                 }
                 else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                    activeStageOfCurrentPlayer = Stages.DiscardSuitCard;
+                    // TODO Bot can't do async turns...?
+                    const stack = player.stack[0];
+                    if (stack === undefined) {
+                        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
+                    }
+                    if (((_c = stack.config) === null || _c === void 0 ? void 0 : _c.suit) === undefined) {
+                        throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.suit'.`);
+                    }
+                    for (let p = 0; p < G.publicPlayers.length; p++) {
+                        const playerP = G.publicPlayers[p];
+                        if (playerP === undefined) {
+                            throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
+                        }
+                        if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
+                            playerId = p;
+                            break;
+                        }
+                    }
                 }
             }
             else if (ctx.phase === Phases.EnlistmentMercenaries) {
@@ -106,46 +98,44 @@ export const enumerate = (G, ctx) => {
                 activeStageOfCurrentPlayer = Stages.Default1;
             }
         }
-        if (activeStageOfCurrentPlayer !== `default`) {
-            // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
-            const validator = GetValidator(ctx.phase, activeStageOfCurrentPlayer);
-            if (validator !== null) {
-                const moveName = validator.moveName, moveRangeData = validator.getRange(G, ctx, playerId), moveValue = validator.getValue(G, ctx, moveRangeData);
-                let moveValues = [];
-                if (typeof moveValue === `number`) {
-                    moveValues = [moveValue];
-                }
-                else if (typeof moveValue === `string`) {
-                    moveValues = [moveValue];
-                }
-                else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
-                    if (`coinId` in moveValue) {
-                        moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
-                    }
-                    else if (`playerId` in moveValue) {
-                        moveValues = [moveValue.suit, moveValue.playerId, moveValue.cardId];
-                    }
-                    else if (`suit` in moveValue) {
-                        moveValues = [moveValue.suit, moveValue.cardId];
-                    }
-                }
-                else if (moveValue === null) {
-                    moveValues = [];
-                }
-                else if (Array.isArray(moveValue)) {
-                    moveValues = [moveValue];
-                }
-                moves.push({
-                    move: moveName,
-                    args: moveValues,
-                });
-            }
-            if (moves.length === 0) {
-                console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
-            }
-        }
-        else {
+        if (activeStageOfCurrentPlayer === `default`) {
             throw new Error(`Variable 'activeStageOfCurrentPlayer' can't be 'default'.`);
+        }
+        // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
+        const validator = GetValidator(ctx.phase, activeStageOfCurrentPlayer);
+        if (validator !== null) {
+            const moveName = validator.moveName, moveRangeData = validator.getRange(G, ctx, playerId), moveValue = validator.getValue(G, ctx, moveRangeData);
+            let moveValues = [];
+            if (typeof moveValue === `number`) {
+                moveValues = [moveValue];
+            }
+            else if (typeof moveValue === `string`) {
+                moveValues = [moveValue];
+            }
+            else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
+                if (`coinId` in moveValue) {
+                    moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
+                }
+                else if (`playerId` in moveValue) {
+                    moveValues = [moveValue.suit, moveValue.playerId, moveValue.cardId];
+                }
+                else if (`suit` in moveValue) {
+                    moveValues = [moveValue.suit, moveValue.cardId];
+                }
+            }
+            else if (moveValue === null) {
+                moveValues = [];
+            }
+            else if (Array.isArray(moveValue)) {
+                moveValues = [moveValue];
+            }
+            moves.push({
+                move: moveName,
+                args: moveValues,
+            });
+        }
+        if (moves.length === 0) {
+            console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
         }
     }
     return moves;
@@ -166,60 +156,52 @@ export const iterations = (G, ctx) => {
     const maxIter = G.botData.maxIter;
     if (ctx.phase === Phases.PickCards) {
         const currentTavern = G.taverns[G.currentTavern];
-        if (currentTavern !== undefined) {
-            if (currentTavern.filter((card) => card !== null).length === 1) {
-                return 1;
+        if (currentTavern === undefined) {
+            throw new Error(`Отсутствует текущая таверна.`);
+        }
+        if (currentTavern.filter((card) => card !== null).length === 1) {
+            return 1;
+        }
+        const cardIndex = currentTavern.findIndex((card) => card !== null), tavernNotNullCard = currentTavern[cardIndex];
+        if (tavernNotNullCard === undefined) {
+            throw new Error(`Отсутствует карта ${cardIndex} в текущей таверне 1.`);
+        }
+        if (currentTavern.every((card) => card === null || (IsCardNotActionAndNotNull(card) && IsCardNotActionAndNotNull(tavernNotNullCard)
+            && card.suit === tavernNotNullCard.suit && CompareCards(card, tavernNotNullCard) === 0))) {
+            return 1;
+        }
+        let efficientMovesCount = 0;
+        for (let i = 0; i < currentTavern.length; i++) {
+            const tavernCard = currentTavern[i];
+            if (tavernCard === undefined) {
+                throw new Error(`Отсутствует карта ${cardIndex} в текущей таверне 2.`);
             }
-            const cardIndex = currentTavern.findIndex((card) => card !== null), tavernNotNullCard = currentTavern[cardIndex];
-            if (tavernNotNullCard !== undefined) {
-                if (currentTavern.every((card) => card === null || (IsCardNotActionAndNotNull(card) && IsCardNotActionAndNotNull(tavernNotNullCard)
-                    && card.suit === tavernNotNullCard.suit && CompareCards(card, tavernNotNullCard) === 0))) {
-                    return 1;
-                }
-                let efficientMovesCount = 0;
-                for (let i = 0; i < currentTavern.length; i++) {
-                    const tavernCard = currentTavern[i];
-                    if (tavernCard !== undefined) {
-                        if (tavernCard === null) {
-                            continue;
-                        }
-                        if (currentTavern.some((card) => CompareCards(tavernCard, card) === -1)) {
-                            continue;
-                        }
-                        const deck0 = G.decks[0];
-                        if (deck0 !== undefined) {
-                            if (deck0.length > 18) {
-                                if (IsCardNotActionAndNotNull(tavernCard)) {
-                                    if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
-                                        && currentTavern.some((card) => card !== null
-                                            && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {
-                                        continue;
-                                    }
-                                }
-                            }
-                            efficientMovesCount++;
-                            if (efficientMovesCount > 1) {
-                                return maxIter;
-                            }
-                        }
-                        else {
-                            throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
-                        }
-                    }
-                    else {
-                        throw new Error(`Отсутствует карта ${cardIndex} в текущей таверне 2.`);
+            if (tavernCard === null) {
+                continue;
+            }
+            if (currentTavern.some((card) => CompareCards(tavernCard, card) === -1)) {
+                continue;
+            }
+            const deck0 = G.decks[0];
+            if (deck0 === undefined) {
+                throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
+            }
+            if (deck0.length > 18) {
+                if (IsCardNotActionAndNotNull(tavernCard)) {
+                    if (CompareCards(tavernCard, G.averageCards[tavernCard.suit]) === -1
+                        && currentTavern.some((card) => card !== null
+                            && CompareCards(card, G.averageCards[tavernCard.suit]) > -1)) {
+                        continue;
                     }
                 }
-                if (efficientMovesCount === 1) {
-                    return 1;
-                }
             }
-            else {
-                throw new Error(`Отсутствует карта ${cardIndex} в текущей таверне 1.`);
+            efficientMovesCount++;
+            if (efficientMovesCount > 1) {
+                return maxIter;
             }
         }
-        else {
-            throw new Error(`Отсутствует текущая таверна.`);
+        if (efficientMovesCount === 1) {
+            return 1;
         }
     }
     return maxIter;
@@ -237,12 +219,10 @@ export const objectives = () => ({
     isEarlyGame: {
         checker: (G) => {
             const deck0 = G.decks[0];
-            if (deck0 !== undefined) {
-                return deck0.length > 0;
-            }
-            else {
+            if (deck0 === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
             }
+            return deck0.length > 0;
         },
         weight: -100.0,
     },
@@ -325,48 +305,38 @@ export const objectives = () => ({
                 return false;
             }
             const deck1 = G.decks[1];
-            if (deck1 !== undefined) {
-                const tavern0 = G.taverns[0];
-                if (tavern0 !== undefined) {
-                    if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
-                        return false;
-                    }
-                    if (tavern0.some((card) => card === null)) {
-                        return false;
-                    }
-                    const totalScore = [];
-                    for (let i = 0; i < ctx.numPlayers; i++) {
-                        const player = G.publicPlayers[i];
-                        if (player !== undefined) {
-                            totalScore.push(CurrentScoring(player));
-                        }
-                        else {
-                            throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
-                        }
-                    }
-                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
-                    if (totalScoreCurPlayer !== undefined) {
-                        if (totalScoreCurPlayer === top1) {
-                            if (top2 !== undefined) {
-                                return totalScoreCurPlayer >= Math.floor(1.05 * top2);
-                            }
-                            else {
-                                throw new Error(`В массиве общего счёта отсутствует счёт топ 2 игрока.`);
-                            }
-                        }
-                    }
-                    else {
-                        throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока.`);
-                    }
-                    return false;
-                }
-                else {
-                    throw new Error(`В массиве таверн отсутствует первая таверна.`);
-                }
-            }
-            else {
+            if (deck1 === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
             }
+            const tavern0 = G.taverns[0];
+            if (tavern0 === undefined) {
+                throw new Error(`В массиве таверн отсутствует первая таверна.`);
+            }
+            if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
+                return false;
+            }
+            if (tavern0.some((card) => card === null)) {
+                return false;
+            }
+            const totalScore = [];
+            for (let i = 0; i < ctx.numPlayers; i++) {
+                const player = G.publicPlayers[i];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+                }
+                totalScore.push(CurrentScoring(player));
+            }
+            const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
+            if (totalScoreCurPlayer === undefined) {
+                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока.`);
+            }
+            if (totalScoreCurPlayer === top1) {
+                if (top2 === undefined) {
+                    throw new Error(`В массиве общего счёта отсутствует счёт топ 2 игрока.`);
+                }
+                return totalScoreCurPlayer >= Math.floor(1.05 * top2);
+            }
+            return false;
         },
         weight: 0.5,
     },
@@ -376,48 +346,38 @@ export const objectives = () => ({
                 return false;
             }
             const deck1 = G.decks[1];
-            if (deck1 !== undefined) {
-                const tavern0 = G.taverns[0];
-                if (tavern0 !== undefined) {
-                    if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
-                        return false;
-                    }
-                    if (tavern0.some((card) => card === null)) {
-                        return false;
-                    }
-                    const totalScore = [];
-                    for (let i = 0; i < ctx.numPlayers; i++) {
-                        const player = G.publicPlayers[i];
-                        if (player !== undefined) {
-                            totalScore.push(CurrentScoring(player));
-                        }
-                        else {
-                            throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
-                        }
-                    }
-                    const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
-                    if (totalScoreCurPlayer !== undefined) {
-                        if (totalScoreCurPlayer === top1) {
-                            if (top2 !== undefined) {
-                                return totalScoreCurPlayer >= Math.floor(1.10 * top2);
-                            }
-                            else {
-                                throw new Error(`В массиве общего счёта отсутствует счёт топ 2 игрока.`);
-                            }
-                        }
-                    }
-                    else {
-                        throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока.`);
-                    }
-                    return false;
-                }
-                else {
-                    throw new Error(`В массиве таверн отсутствует первая таверна.`);
-                }
-            }
-            else {
+            if (deck1 === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека 2 эпохи.`);
             }
+            const tavern0 = G.taverns[0];
+            if (tavern0 === undefined) {
+                throw new Error(`В массиве таверн отсутствует первая таверна.`);
+            }
+            if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
+                return false;
+            }
+            if (tavern0.some((card) => card === null)) {
+                return false;
+            }
+            const totalScore = [];
+            for (let i = 0; i < ctx.numPlayers; i++) {
+                const player = G.publicPlayers[i];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+                }
+                totalScore.push(CurrentScoring(player));
+            }
+            const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
+            if (totalScoreCurPlayer === undefined) {
+                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока.`);
+            }
+            if (totalScoreCurPlayer === top1) {
+                if (top2 === undefined) {
+                    throw new Error(`В массиве общего счёта отсутствует счёт топ 2 игрока.`);
+                }
+                return totalScoreCurPlayer >= Math.floor(1.10 * top2);
+            }
+            return false;
         },
         weight: 0.5,
     },
@@ -436,20 +396,16 @@ export const objectives = () => ({
  */
 export const playoutDepth = (G, ctx) => {
     const deck1 = G.decks[1];
-    if (deck1 !== undefined) {
-        const tavern0 = G.taverns[0];
-        if (tavern0 !== undefined) {
-            if (deck1.length < G.botData.deckLength) {
-                return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 20;
-            }
-            return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 2;
-        }
-        else {
-            throw new Error(`В массиве таверн отсутствует первая таверна.`);
-        }
-    }
-    else {
+    if (deck1 === undefined) {
         throw new Error(`В массиве дек карт отсутствует дека 2 эпохи.`);
     }
+    const tavern0 = G.taverns[0];
+    if (tavern0 === undefined) {
+        throw new Error(`В массиве таверн отсутствует первая таверна.`);
+    }
+    if (deck1.length < G.botData.deckLength) {
+        return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 20;
+    }
+    return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 2;
 };
 //# sourceMappingURL=AI.js.map

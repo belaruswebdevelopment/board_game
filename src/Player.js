@@ -61,20 +61,18 @@ export const CheckPlayersBasicOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player = G.publicPlayers[i];
-        if (player !== undefined) {
-            if (ctx.phase !== Phases.PlaceCoinsUline) {
-                if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                    G.publicPlayersOrder.push(String(i));
-                }
-            }
-            else {
-                if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                    G.publicPlayersOrder.push(String(i));
-                }
+        if (player === undefined) {
+            throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+        }
+        if (ctx.phase !== Phases.PlaceCoinsUline) {
+            if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                G.publicPlayersOrder.push(String(i));
             }
         }
         else {
-            throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+            if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                G.publicPlayersOrder.push(String(i));
+            }
         }
     }
 };

@@ -37,13 +37,11 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
  */
 export const CheckEndPlaceCoinsTurn = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (player.handCoins.every((coin) => coin === null)) {
-            return true;
-        }
-    }
-    else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    if (player.handCoins.every((coin) => coin === null)) {
+        return true;
     }
 };
 export const OnPlaceCoinsTurnEnd = (G) => {

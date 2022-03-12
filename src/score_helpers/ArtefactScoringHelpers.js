@@ -24,12 +24,10 @@ export const MjollnirScoring = (player) => {
     var _a;
     if (player !== undefined) {
         const suit = (_a = player.buffs.find((buff) => buff.suitIdForMjollnir !== undefined)) === null || _a === void 0 ? void 0 : _a.suitIdForMjollnir;
-        if (suit !== undefined) {
-            return player.cards[suit].reduce(TotalRank, 0) * 2;
-        }
-        else {
+        if (suit === undefined) {
             throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.SuitIdForMjollnir}'.`);
         }
+        return player.cards[suit].reduce(TotalRank, 0) * 2;
     }
     throw new Error(`Function param 'player' is undefined.`);
 };

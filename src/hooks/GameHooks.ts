@@ -25,15 +25,13 @@ export const CheckEndGame = (G: IMyGameState): boolean | void => {
         let allMercenariesPlayed = true;
         for (let i = 0; i < G.publicPlayers.length; i++) {
             const player: IPublicPlayer | undefined = G.publicPlayers[i];
-            if (player !== undefined) {
-                allMercenariesPlayed =
-                    player.campCards.filter((card: CampDeckCardTypes): boolean =>
-                        IsMercenaryCampCard(card)).length === 0;
-                if (!allMercenariesPlayed) {
-                    break;
-                }
-            } else {
+            if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+            }
+            allMercenariesPlayed = player.campCards.filter((card: CampDeckCardTypes): boolean =>
+                IsMercenaryCampCard(card)).length === 0;
+            if (!allMercenariesPlayed) {
+                break;
             }
         }
         return allMercenariesPlayed;

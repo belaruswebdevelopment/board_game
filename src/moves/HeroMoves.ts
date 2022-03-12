@@ -26,13 +26,12 @@ export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
         return INVALID_MOVE;
     }
     const hero: IHeroCard | undefined = G.heroes[heroId];
-    if (hero !== undefined) {
-        AddHeroToCards(G, ctx, hero);
-        AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
-        StartAutoAction(G, ctx, hero.actions);
-    } else {
+    if (hero === undefined) {
         throw new Error(`Не существует кликнутая карта героя.`);
     }
+    AddHeroToCards(G, ctx, hero);
+    AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);
+    StartAutoAction(G, ctx, hero.actions);
 };
 
 /**

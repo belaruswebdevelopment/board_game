@@ -31,11 +31,10 @@ export const MjollnirScoring = (player?: IPublicPlayer): number => {
     if (player !== undefined) {
         const suit: SuitTypes | undefined = player.buffs.find((buff: IBuffs): boolean =>
             buff.suitIdForMjollnir !== undefined)?.suitIdForMjollnir;
-        if (suit !== undefined) {
-            return player.cards[suit].reduce(TotalRank, 0) * 2;
-        } else {
+        if (suit === undefined) {
             throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.SuitIdForMjollnir}'.`);
         }
+        return player.cards[suit].reduce(TotalRank, 0) * 2;
     }
     throw new Error(`Function param 'player' is undefined.`);
 };

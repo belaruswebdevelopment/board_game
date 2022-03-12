@@ -15,23 +15,21 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
 export const AfterLastTavernEmptyActions = (G) => {
     var _a;
     const deck = G.decks[G.decks.length - G.tierToEnd];
-    if (deck !== undefined) {
-        if (deck.length === 0) {
-            if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
-                return CheckEnlistmentMercenaries(G);
-            }
-            else {
-                return CheckEndTierActionsOrEndGameLastActions(G);
-            }
+    if (deck === undefined) {
+        throw new Error(`Отсутствует колода карт текущей эпохи.`);
+    }
+    if (deck.length === 0) {
+        if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
+            return CheckEnlistmentMercenaries(G);
         }
         else {
-            return {
-                next: Phases.PlaceCoins,
-            };
+            return CheckEndTierActionsOrEndGameLastActions(G);
         }
     }
     else {
-        throw new Error(`Отсутствует колода карт текущей эпохи.`);
+        return {
+            next: Phases.PlaceCoins,
+        };
     }
 };
 /**
@@ -68,33 +66,30 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
 export const CheckEndGameLastActions = (G) => {
     var _a;
     const deck1 = G.decks[0], deck2 = G.decks[1];
-    if (deck1 !== undefined && deck2 !== undefined) {
-        if (!deck1.length && deck2.length) {
-            return {
-                next: Phases.GetDistinctions,
-            };
-        }
-        else {
-            if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
-                const brisingamensBuffIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
-                if (brisingamensBuffIndex !== -1) {
-                    return {
-                        next: Phases.BrisingamensEndGame,
-                    };
-                }
-                const mjollnirBuffIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
-                console.log(mjollnirBuffIndex);
-                if (mjollnirBuffIndex !== -1) {
-                    return {
-                        next: Phases.GetMjollnirProfit,
-                    };
-                }
-            }
-            return true;
-        }
+    if (deck1 === undefined || deck2 === undefined) {
+        throw new Error(`Отсутствует колода карт 1 и/или 2 эпох.`);
+    }
+    if (!deck1.length && deck2.length) {
+        return {
+            next: Phases.GetDistinctions,
+        };
     }
     else {
-        throw new Error(`Отсутствует колода карт 1 и/или 2 эпох.`);
+        if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
+            const brisingamensBuffIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
+            if (brisingamensBuffIndex !== -1) {
+                return {
+                    next: Phases.BrisingamensEndGame,
+                };
+            }
+            const mjollnirBuffIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
+            if (mjollnirBuffIndex !== -1) {
+                return {
+                    next: Phases.GetMjollnirProfit,
+                };
+            }
+        }
+        return true;
     }
 };
 /**
@@ -131,14 +126,12 @@ const CheckEnlistmentMercenaries = (G) => {
     let count = false;
     for (let i = 0; i < G.publicPlayers.length; i++) {
         const player = G.publicPlayers[i];
-        if (player !== undefined) {
-            if (player.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
-                count = true;
-                break;
-            }
-        }
-        else {
+        if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+        }
+        if (player.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
+            count = true;
+            break;
         }
     }
     if (count) {
@@ -152,12 +145,10 @@ const CheckEnlistmentMercenaries = (G) => {
 };
 export const ClearPlayerPickedCard = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        player.pickedCard = null;
-    }
-    else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    player.pickedCard = null;
 };
 /**
  * <h3>Завершает игру.</h3>
@@ -174,13 +165,11 @@ export const EndGame = (ctx) => {
 };
 export const EndTurnActions = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (!player.stack.length && !player.actionsNum) {
-            return true;
-        }
-    }
-    else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    if (!player.stack.length && !player.actionsNum) {
+        return true;
     }
 };
 /**
@@ -196,38 +185,32 @@ export const EndTurnActions = (G, ctx) => {
 export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player = G.publicPlayers[i];
-        if (player !== undefined) {
-            const playerCards = Object.values(player.cards).flat(), thrud = playerCards.find((card) => card.name === HeroNames.Thrud);
-            if (thrud !== undefined && thrud.suit !== null) {
-                const thrudIndex = player.cards[thrud.suit].findIndex((card) => card.name === HeroNames.Thrud);
-                if (thrudIndex !== -1) {
-                    player.cards[thrud.suit].splice(thrudIndex, 1);
-                    AddDataToLog(G, LogTypes.GAME, `Герой ${HeroNames.Thrud} игрока ${player.nickname} уходит с игрового поля.`);
-                }
-                else {
-                    throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Thrud}.`);
-                }
-            }
-        }
-        else {
+        if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+        }
+        const playerCards = Object.values(player.cards).flat(), thrud = playerCards.find((card) => card.name === HeroNames.Thrud);
+        if (thrud !== undefined && thrud.suit !== null) {
+            const thrudIndex = player.cards[thrud.suit].findIndex((card) => card.name === HeroNames.Thrud);
+            if (thrudIndex === -1) {
+                throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Thrud}.`);
+            }
+            player.cards[thrud.suit].splice(thrudIndex, 1);
+            AddDataToLog(G, LogTypes.GAME, `Герой ${HeroNames.Thrud} игрока ${player.nickname} уходит с игрового поля.`);
         }
     }
 };
 export const StartOrEndActions = (G, ctx) => {
     var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (player.actionsNum) {
-            player.actionsNum--;
-        }
-        if (ctx.activePlayers === null || ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== undefined) {
-            player.stack.shift();
-            DrawCurrentProfit(G, ctx);
-        }
-    }
-    else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    if (player.actionsNum) {
+        player.actionsNum--;
+    }
+    if (ctx.activePlayers === null || ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== undefined) {
+        player.stack.shift();
+        DrawCurrentProfit(G, ctx);
     }
 };
 //# sourceMappingURL=GameHooksHelpers.js.map

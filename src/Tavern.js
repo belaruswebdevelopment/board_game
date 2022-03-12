@@ -14,12 +14,10 @@ import { LogTypes, TavernNames } from "./typescript/enums";
  */
 export const CheckIfCurrentTavernEmpty = (G) => {
     const currentTavern = G.taverns[G.currentTavern];
-    if (currentTavern !== undefined) {
-        return currentTavern.every((card) => card === null);
-    }
-    else {
+    if (currentTavern === undefined) {
         throw new Error(`Отсутствует текущая таверна.`);
     }
+    return currentTavern.every((card) => card === null);
 };
 /**
  * <h3>Убирает карту из таверны в стопку сброса.</h3>
@@ -37,30 +35,24 @@ export const CheckIfCurrentTavernEmpty = (G) => {
  */
 export const DiscardCardFromTavern = (G, discardCardIndex) => {
     const currentTavern = G.taverns[G.currentTavern];
-    if (currentTavern !== undefined) {
-        const discardedCard = currentTavern[discardCardIndex];
-        if (discardedCard !== undefined) {
-            if (discardedCard !== null) {
-                G.discardCardsDeck.push(discardedCard);
-                currentTavern.splice(discardCardIndex, 1, null);
-                const currentTavernConfig = tavernsConfig[G.currentTavern];
-                if (currentTavernConfig !== undefined) {
-                    AddDataToLog(G, LogTypes.GAME, `Карта '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
-                    return true;
-                }
-                else {
-                    throw new Error(`Отсутствует конфиг текущей таверны.`);
-                }
-            }
-            throw new Error(`Не удалось сбросить лишнюю карту из таверны.`);
-        }
-        else {
-            throw new Error(`В текущей таверне отсутствует карта ${discardCardIndex}.`);
-        }
-    }
-    else {
+    if (currentTavern === undefined) {
         throw new Error(`Отсутствует текущая таверна.`);
     }
+    const discardedCard = currentTavern[discardCardIndex];
+    if (discardedCard === undefined) {
+        throw new Error(`В текущей таверне отсутствует карта ${discardCardIndex}.`);
+    }
+    if (discardedCard !== null) {
+        G.discardCardsDeck.push(discardedCard);
+        currentTavern.splice(discardCardIndex, 1, null);
+        const currentTavernConfig = tavernsConfig[G.currentTavern];
+        if (currentTavernConfig === undefined) {
+            throw new Error(`Отсутствует конфиг текущей таверны.`);
+        }
+        AddDataToLog(G, LogTypes.GAME, `Карта '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
+        return true;
+    }
+    throw new Error(`Не удалось сбросить лишнюю карту из таверны.`);
 };
 /**
  * <h3>Автоматически заполняет все таверны картами текущей эпохи.</h3>
@@ -75,30 +67,22 @@ export const DiscardCardFromTavern = (G, discardCardIndex) => {
 export const RefillTaverns = (G) => {
     for (let i = 0; i < G.tavernsNum; i++) {
         const deck = G.decks[G.decks.length - G.tierToEnd];
-        if (deck !== undefined) {
-            const refillDeck = deck.splice(0, G.drawSize), currentTavernConfig = tavernsConfig[i];
-            if (currentTavernConfig !== undefined) {
-                if (refillDeck.length === G.drawSize) {
-                    const currentTavern = G.taverns[i];
-                    if (currentTavern !== undefined) {
-                        currentTavern.splice(0, currentTavern.length, ...refillDeck);
-                        AddDataToLog(G, LogTypes.GAME, `Таверна ${currentTavernConfig.name} заполнена новыми картами.`);
-                    }
-                    else {
-                        throw new Error(`Отсутствует текущая таверна.`);
-                    }
-                }
-                else {
-                    throw new Error(`Таверна ${currentTavernConfig.name} не заполнена новыми картами из-за их нехватки в колоде.`);
-                }
-            }
-            else {
-                throw new Error(`Отсутствует конфиг текущей таверны.`);
-            }
-        }
-        else {
+        if (deck === undefined) {
             throw new Error(`Отсутствует колода карт текущей эпохи.`);
         }
+        const refillDeck = deck.splice(0, G.drawSize), currentTavernConfig = tavernsConfig[i];
+        if (currentTavernConfig === undefined) {
+            throw new Error(`Отсутствует конфиг текущей таверны.`);
+        }
+        if (refillDeck.length !== G.drawSize) {
+            throw new Error(`Таверна ${currentTavernConfig.name} не заполнена новыми картами из-за их нехватки в колоде.`);
+        }
+        const currentTavern = G.taverns[i];
+        if (currentTavern === undefined) {
+            throw new Error(`Отсутствует текущая таверна.`);
+        }
+        currentTavern.splice(0, currentTavern.length, ...refillDeck);
+        AddDataToLog(G, LogTypes.GAME, `Таверна ${currentTavernConfig.name} заполнена новыми картами.`);
     }
     AddDataToLog(G, LogTypes.GAME, `Все таверны заполнены новыми картами.`);
 };

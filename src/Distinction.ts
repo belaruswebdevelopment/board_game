@@ -22,35 +22,31 @@ export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: Sui
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI: IPublicPlayer | undefined = G.publicPlayers[i];
-        if (playerI !== undefined) {
-            playersRanks.push(playerI.cards[suit].reduce(TotalRank, 0));
-        } else {
+        if (playerI === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
         }
+        playersRanks.push(playerI.cards[suit].reduce(TotalRank, 0));
     }
     const max: number = Math.max(...playersRanks);
-    if (max !== 0) {
-        const maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max);
-        if (maxPlayers.length === 1) {
-            const maxPlayerIndex: number | undefined = maxPlayers[0];
-            if (maxPlayerIndex !== undefined) {
-                const playerDistinctionIndex: number = playersRanks.indexOf(maxPlayerIndex),
-                    playerDist: IPublicPlayer | undefined = G.publicPlayers[playerDistinctionIndex];
-                if (playerDist !== undefined) {
-                    AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} получил игрок: ${playerDist.nickname}.`);
-                } else {
-                    throw new Error(`В массиве игроков отсутствует игрок ${playerDistinctionIndex}.`);
-                }
-                return String(playerDistinctionIndex);
-            } else {
-                throw new Error(`Отсутствует игрок с максимальным количеством шевронов выбранной фракции ${suit}.`);
-            }
-        } else {
-            AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} никто не получил.`);
-            return undefined;
-        }
-    } else {
+    if (max === 0) {
         throw new Error(`Должны быть карты во фракции ${suitsConfig[suit].suitName} хотя бы у 1 игрока.`);
+    }
+    const maxPlayers: number[] = playersRanks.filter((count: number): boolean => count === max);
+    if (maxPlayers.length === 1) {
+        const maxPlayerIndex: number | undefined = maxPlayers[0];
+        if (maxPlayerIndex === undefined) {
+            throw new Error(`Отсутствует игрок с максимальным количеством шевронов выбранной фракции ${suit}.`);
+        }
+        const playerDistinctionIndex: number = playersRanks.indexOf(maxPlayerIndex),
+            playerDist: IPublicPlayer | undefined = G.publicPlayers[playerDistinctionIndex];
+        if (playerDist === undefined) {
+            throw new Error(`В массиве игроков отсутствует игрок ${playerDistinctionIndex}.`);
+        }
+        AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} получил игрок: ${playerDist.nickname}.`);
+        return String(playerDistinctionIndex);
+    } else {
+        AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} никто не получил.`);
+        return undefined;
     }
 };
 
@@ -70,34 +66,30 @@ export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: Su
     const playersRanks: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI: IPublicPlayer | undefined = G.publicPlayers[i];
-        if (playerI !== undefined) {
-            playersRanks.push(playerI.cards[suit].reduce(TotalRank, 0));
-        } else {
+        if (playerI === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
         }
+        playersRanks.push(playerI.cards[suit].reduce(TotalRank, 0));
     }
     const max: number = Math.max(...playersRanks);
-    if (max !== 0) {
-        const maxPlayers: number[] = [];
-        playersRanks.forEach((value: number, index: number) => {
-            if (value === max) {
-                maxPlayers.push(index);
-                const playerIndex: IPublicPlayer | undefined = G.publicPlayers[index];
-                if (playerIndex !== undefined) {
-                    AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} получил игрок: ${playerIndex.nickname}.`);
-                } else {
-                    throw new Error(`В массиве игроков отсутствует игрок ${index}.`);
-                }
-            }
-        });
-        if (maxPlayers.length) {
-            return maxPlayers;
-        } else {
-            throw new Error(`Преимущество по фракции ${suitsConfig[suit].suitName} должно быть хотя бы у 1 игрока.`);
-        }
-    } else {
+    if (max === 0) {
         throw new Error(`Должны быть карты во фракции ${suitsConfig[suit].suitName} хотя бы у 1 игрока.`);
     }
+    const maxPlayers: number[] = [];
+    playersRanks.forEach((value: number, index: number) => {
+        if (value === max) {
+            maxPlayers.push(index);
+            const playerIndex: IPublicPlayer | undefined = G.publicPlayers[index];
+            if (playerIndex === undefined) {
+                throw new Error(`В массиве игроков отсутствует игрок ${index}.`);
+            }
+            AddDataToLog(G, LogTypes.PUBLIC, `Преимущество по фракции ${suitsConfig[suit].suitName} получил игрок: ${playerIndex.nickname}.`);
+        }
+    });
+    if (!maxPlayers.length) {
+        throw new Error(`Преимущество по фракции ${suitsConfig[suit].suitName} должно быть хотя бы у 1 игрока.`);
+    }
+    return maxPlayers;
 };
 
 /**
@@ -119,17 +111,15 @@ export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
             G.distinctions[suit] = result;
             if (suit === SuitNames.EXPLORER && result === undefined) {
                 const deck1: DeckCardTypes[] | undefined = G.decks[1];
-                if (deck1 !== undefined) {
-                    const discardedCard: DeckCardTypes | undefined = deck1.splice(0, 1)[0];
-                    if (discardedCard !== undefined) {
-                        G.discardCardsDeck.push(discardedCard);
-                        AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
-                    } else {
-                        throw new Error(`Отсутствует сбрасываемая карта из колоды 2 эпохи при отсутствии преимущества по фракции разведчиков.`);
-                    }
-                } else {
+                if (deck1 === undefined) {
                     throw new Error(`В массиве дек арт отсутствует дека 2 эпохи.`);
                 }
+                const discardedCard: DeckCardTypes | undefined = deck1.splice(0, 1)[0];
+                if (discardedCard === undefined) {
+                    throw new Error(`Отсутствует сбрасываемая карта из колоды 2 эпохи при отсутствии преимущества по фракции разведчиков.`);
+                }
+                G.discardCardsDeck.push(discardedCard);
+                AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: ${discardedCard.name}.`);
             }
         }
     }

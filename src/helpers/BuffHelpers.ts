@@ -19,14 +19,13 @@ import type { BuffTypes, IBuff, IBuffs, IMyGameState, IPublicPlayer } from "../t
 export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?: string): void => {
     if (buff !== undefined) {
         const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player !== undefined) {
-            player.buffs.push({
-                [buff.name]: value ?? true,
-            });
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил баф '${buff.name}'.`);
-        } else {
+        if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок.`);
         }
+        player.buffs.push({
+            [buff.name]: value ?? true,
+        });
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил баф '${buff.name}'.`);
     }
 };
 
@@ -35,16 +34,14 @@ export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffTypes): 
 
 export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        const buffIndex: number =
-            player.buffs.findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
-        if (buffIndex !== -1) {
-            player.buffs.splice(buffIndex, 1);
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} потерял баф '${buffName}'.`);
-        } else {
-            throw new Error(`У игрока в 'buffs' отсутствует баф ${buffName}.`);
-        }
-    } else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    const buffIndex: number =
+        player.buffs.findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
+    if (buffIndex === -1) {
+        throw new Error(`У игрока в 'buffs' отсутствует баф ${buffName}.`);
+    }
+    player.buffs.splice(buffIndex, 1);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} потерял баф '${buffName}'.`);
 };

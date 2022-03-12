@@ -24,25 +24,35 @@ import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardF
  * @returns
  */
 export const CoinUpgradeValidation = (G, ctx, coinData) => {
-    var _a, _b;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (coinData.type === "hand") {
-            const handCoinPosition = player.boardCoins.filter((coin, index) => coin === null && index <= coinData.coinId).length;
-            if (!((_a = player.handCoins.filter((coin) => IsCoin(coin))[handCoinPosition - 1]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading)) {
-                return true;
-            }
-        }
-        else {
-            if (!((_b = player.boardCoins[coinData.coinId]) === null || _b === void 0 ? void 0 : _b.isTriggerTrading)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    if (coinData.type === "hand") {
+        const handCoinPosition = player.boardCoins.filter((coin, index) => coin === null && index <= coinData.coinId).length - 1, handCoin = player.handCoins.filter((coin) => IsCoin(coin))[handCoinPosition];
+        if (handCoin === undefined) {
+            throw new Error(`В массиве монет игрока в руке отсутствует монета ${handCoinPosition}.`);
+        }
+        if (handCoin === null) {
+            throw new Error(`Выбранная для улучшения монета игрока в руке ${handCoinPosition} не может отсутствовать там.`);
+        }
+        if (!handCoin.isTriggerTrading) {
+            return true;
+        }
+    }
+    else {
+        const boardCoin = player.boardCoins[coinData.coinId];
+        if (boardCoin === undefined) {
+            throw new Error(`В массиве монет игрока на столе отсутствует монета ${coinData.coinId}.`);
+        }
+        if (boardCoin === null) {
+            throw new Error(`Выбранная для улучшения монета игрока на столе ${coinData.coinId} не может отсутствовать там.`);
+        }
+        if (!boardCoin.isTriggerTrading) {
+            return true;
+        }
+    }
+    return false;
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -132,12 +142,10 @@ export const GetValidator = (phase, stage) => {
 export const moveValidators = {
     BotsPlaceAllCoinsMoveValidator: {
         getRange: (G) => {
-            if (G !== undefined) {
-                return G.botData.allCoinsOrder;
-            }
-            else {
+            if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
+            return G.botData.allCoinsOrder;
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const allCoinsOrder = currentMoveArguments, hasLowestPriority = HasLowestPriority(G, Number(ctx.currentPlayer));
@@ -147,345 +155,282 @@ export const moveValidators = {
             }
             const minResultForCoins = Math.min(...resultsForCoins), maxResultForCoins = Math.max(...resultsForCoins);
             const deck = G.decks[G.decks.length - 1];
-            if (deck !== undefined) {
-                const tradingProfit = deck.length > 9 ? 1 : 0;
-                let [positionForMinCoin, positionForMaxCoin] = [-1, -1];
-                if (minResultForCoins <= 0) {
-                    positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
+            if (deck === undefined) {
+                throw new Error(`В массиве дек карт отсутствует дека ${G.decks.length - 1} эпохи.`);
+            }
+            const tradingProfit = deck.length > 9 ? 1 : 0;
+            let [positionForMinCoin, positionForMaxCoin] = [-1, -1];
+            if (minResultForCoins <= 0) {
+                positionForMinCoin = resultsForCoins.indexOf(minResultForCoins);
+            }
+            if (maxResultForCoins >= 0) {
+                positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
+            }
+            const player = G.publicPlayers[Number(ctx.currentPlayer)];
+            if (player === undefined) {
+                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            }
+            const handCoins = player.handCoins;
+            for (let i = 0; i < allCoinsOrder.length; i++) {
+                const allCoinsOrderI = allCoinsOrder[i];
+                if (allCoinsOrderI === undefined) {
+                    throw new Error(`В массиве выкладки монет отсутствует выкладка ${i}.`);
                 }
-                if (maxResultForCoins >= 0) {
-                    positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
+                const hasTrading = allCoinsOrderI.some((coinId) => {
+                    var _a;
+                    const handCoin = handCoins[coinId];
+                    if (handCoin === undefined) {
+                        throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
+                    }
+                    return Boolean((_a = handCoins[coinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading);
+                });
+                // TODO How tradingProfit can be < 0?
+                if (tradingProfit < 0) {
+                    if (hasTrading) {
+                        continue;
+                    }
+                    return allCoinsOrderI;
                 }
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const handCoins = player.handCoins;
-                    for (let i = 0; i < allCoinsOrder.length; i++) {
-                        const allCoinsOrderI = allCoinsOrder[i];
-                        if (allCoinsOrderI !== undefined) {
-                            const hasTrading = allCoinsOrderI.some((coinId) => {
-                                var _a;
-                                const handCoin = handCoins[coinId];
-                                if (handCoin !== undefined) {
-                                    return Boolean((_a = handCoins[coinId]) === null || _a === void 0 ? void 0 : _a.isTriggerTrading);
-                                }
-                                else {
-                                    throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
-                                }
-                            });
-                            // TODO How tradingProfit can be < 0?
-                            if (tradingProfit < 0) {
-                                if (hasTrading) {
-                                    continue;
-                                }
-                                return allCoinsOrderI;
-                            }
-                            else if (tradingProfit > 0) {
-                                if (!hasTrading && handCoins.every(coin => IsCoin(coin))) {
-                                    continue;
-                                }
-                                if (positionForMaxCoin !== undefined && positionForMinCoin !== undefined) {
-                                    const hasPositionForMaxCoin = positionForMaxCoin !== -1, hasPositionForMinCoin = positionForMinCoin !== -1, coinsOrderPositionForMaxCoin = allCoinsOrderI[positionForMaxCoin], coinsOrderPositionForMinCoin = allCoinsOrderI[positionForMinCoin];
-                                    if (coinsOrderPositionForMaxCoin !== undefined
-                                        && coinsOrderPositionForMinCoin !== undefined) {
-                                        const maxCoin = handCoins[coinsOrderPositionForMaxCoin], minCoin = handCoins[coinsOrderPositionForMinCoin];
-                                        if (maxCoin !== undefined && minCoin !== undefined) {
-                                            if (IsCoin(maxCoin) && IsCoin(minCoin)) {
-                                                let isTopCoinsOnPosition = false, isMinCoinsOnPosition = false;
-                                                if (hasPositionForMaxCoin) {
-                                                    isTopCoinsOnPosition =
-                                                        allCoinsOrderI.filter((coinIndex) => {
-                                                            const handCoin = handCoins[coinIndex];
-                                                            if (handCoin !== undefined) {
-                                                                return IsCoin(handCoin)
-                                                                    && handCoin.value > maxCoin.value;
-                                                            }
-                                                            else {
-                                                                throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinIndex}.`);
-                                                            }
-                                                        }).length <= 1;
-                                                }
-                                                if (hasPositionForMinCoin) {
-                                                    isMinCoinsOnPosition =
-                                                        handCoins.filter((coin) => IsCoin(coin) && coin.value < minCoin.value).length <= 1;
-                                                }
-                                                if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
-                                                    return allCoinsOrderI;
-                                                    //console.log(`#` + i.toString().padStart(2) + `: ` + allCoinsOrder[i].map(item => handCoins[item].value));
-                                                }
-                                            }
-                                            else {
-                                                throw new Error(`В массиве выкладки монет отсутствует выкладка для максимальной ${coinsOrderPositionForMaxCoin} и/или минимальной ${coinsOrderPositionForMinCoin} монеты.`);
-                                            }
-                                        }
-                                        else {
-                                            throw new Error(`В массиве монет игрока в руке отсутствует максимальная и/или минимальная монета.`);
-                                        }
-                                    }
-                                }
-                                else {
-                                    throw new Error(`Отсутствуют значения выкладки для минимальной и/или максимальной монеты.`);
-                                }
-                            }
-                            else {
-                                // TODO Why if trading profit === 0 we not checked min max coins positions!?
-                                return allCoinsOrderI;
-                            }
+                else if (tradingProfit > 0) {
+                    if (!hasTrading && handCoins.every(coin => IsCoin(coin))) {
+                        continue;
+                    }
+                    if (positionForMaxCoin === undefined || positionForMinCoin === undefined) {
+                        throw new Error(`Отсутствуют значения выкладки для минимальной и/или максимальной монеты.`);
+                    }
+                    const hasPositionForMaxCoin = positionForMaxCoin !== -1, hasPositionForMinCoin = positionForMinCoin !== -1, coinsOrderPositionForMaxCoin = allCoinsOrderI[positionForMaxCoin], coinsOrderPositionForMinCoin = allCoinsOrderI[positionForMinCoin];
+                    if (coinsOrderPositionForMaxCoin !== undefined
+                        && coinsOrderPositionForMinCoin !== undefined) {
+                        const maxCoin = handCoins[coinsOrderPositionForMaxCoin], minCoin = handCoins[coinsOrderPositionForMinCoin];
+                        if (maxCoin === undefined || minCoin === undefined) {
+                            throw new Error(`В массиве монет игрока в руке отсутствует максимальная и/или минимальная монета.`);
                         }
-                        else {
-                            throw new Error(`В массиве выкладки монет отсутствует выкладка ${i}.`);
+                        if (!IsCoin(maxCoin) || !IsCoin(minCoin)) {
+                            throw new Error(`В массиве выкладки монет отсутствует выкладка для максимальной ${coinsOrderPositionForMaxCoin} и/или минимальной ${coinsOrderPositionForMinCoin} монеты.`);
+                        }
+                        let isTopCoinsOnPosition = false, isMinCoinsOnPosition = false;
+                        if (hasPositionForMaxCoin) {
+                            isTopCoinsOnPosition = allCoinsOrderI.filter((coinIndex) => {
+                                const handCoin = handCoins[coinIndex];
+                                if (handCoin === undefined) {
+                                    throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinIndex}.`);
+                                }
+                                return IsCoin(handCoin) && handCoin.value > maxCoin.value;
+                            }).length <= 1;
+                        }
+                        if (hasPositionForMinCoin) {
+                            isMinCoinsOnPosition = handCoins.filter((coin) => IsCoin(coin) && coin.value < minCoin.value).length <= 1;
+                        }
+                        if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
+                            return allCoinsOrderI;
+                            //console.log(`#` + i.toString().padStart(2) + `: ` + allCoinsOrder[i].map(item => handCoins[item].value));
                         }
                     }
                 }
                 else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                    // TODO Why if trading profit === 0 we not checked min max coins positions!?
+                    return allCoinsOrderI;
                 }
-                throw new Error(`Отсутствует вариант выкладки монет для ботов.`);
             }
-            else {
-                throw new Error(`В массиве дек карт отсутствует дека ${G.decks.length - 1} эпохи.`);
-            }
+            throw new Error(`Отсутствует вариант выкладки монет для ботов.`);
         },
         moveName: MoveNames.BotsPlaceAllCoinsMove,
         validate: () => true,
     },
     ClickBoardCoinMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.ClickBoardCoinMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.ClickBoardCoinMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.ClickBoardCoinMove,
         validate: () => true,
     },
     ClickCampCardMoveValidator: {
         getRange: (G) => {
-            if (G !== undefined) {
-                return DrawCamp(G, MoveValidatorNames.ClickCampCardMoveValidator);
-            }
-            else {
+            if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
+            return DrawCamp(G, MoveValidatorNames.ClickCampCardMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.ClickCampCardMove,
         validate: (G, ctx) => {
             var _a;
-            if (G !== undefined && ctx !== undefined) {
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    return ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                        || (!G.campPicked && player.buffs.find((buff) => buff.goCamp !== undefined) !== undefined));
-                }
-                else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            const player = G.publicPlayers[Number(ctx.currentPlayer)];
+            if (player === undefined) {
+                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            }
+            return ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) && (ctx.currentPlayer === G.publicPlayersOrder[0]
+                || (!G.campPicked && player.buffs.find((buff) => buff.goCamp !== undefined) !== undefined));
         },
     },
     ClickCardMoveValidator: {
         getRange: (G) => {
-            if (G !== undefined) {
-                return DrawTaverns(G, MoveValidatorNames.ClickCardMoveValidator);
-            }
-            else {
+            if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
+            return DrawTaverns(G, MoveValidatorNames.ClickCardMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, uniqueArr = [], currentTavern = G.taverns[G.currentTavern];
-            if (currentTavern !== undefined) {
-                let flag = true;
-                for (let i = 0; i < moveArguments.length; i++) {
-                    const moveArgument = moveArguments[i];
-                    if (moveArgument !== undefined) {
-                        const tavernCard = currentTavern[moveArgument];
-                        if (tavernCard !== undefined) {
-                            if (tavernCard === null) {
-                                continue;
-                            }
-                            if (currentTavern.some((card) => CompareCards(tavernCard, card) < 0)) {
-                                continue;
-                            }
-                            const isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, moveArgument, currentTavern) < 0, isExistCardNotWorse = currentTavern.some((card) => (card !== null)
-                                && (EvaluateCard(G, ctx, tavernCard, moveArgument, currentTavern) >= 0));
-                            if (isCurrentCardWorse && isExistCardNotWorse) {
-                                continue;
-                            }
-                            const uniqueArrLength = uniqueArr.length;
-                            for (let j = 0; j < uniqueArrLength; j++) {
-                                const uniqueCard = uniqueArr[j];
-                                if (uniqueCard !== undefined) {
-                                    if (IsCardNotActionAndNotNull(tavernCard)
-                                        && IsCardNotActionAndNotNull(uniqueCard)
-                                        && tavernCard.suit === uniqueCard.suit
-                                        && CompareCards(tavernCard, uniqueCard) === 0) {
-                                        flag = false;
-                                        break;
-                                    }
-                                }
-                                else {
-                                    throw new Error(`В массиве уникальных карт отсутствует карта ${j}.`);
-                                }
-                            }
-                            if (flag) {
-                                uniqueArr.push(tavernCard);
-                                return moveArgument;
-                            }
-                            flag = true;
-                        }
-                        else {
-                            throw new Error(`В массиве карт текущей таверны отсутствует карта ${moveArgument}.`);
-                        }
-                    }
-                    else {
-                        throw new Error(`В массиве аргументов мува отсутствует аргумент ${i}.`);
-                    }
-                }
-                throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
-            }
-            else {
+            if (currentTavern === undefined) {
                 throw new Error(`В массиве таверн отсутствует текущая таверна.`);
             }
+            let flag = true;
+            for (let i = 0; i < moveArguments.length; i++) {
+                const moveArgument = moveArguments[i];
+                if (moveArgument === undefined) {
+                    throw new Error(`В массиве аргументов мува отсутствует аргумент ${i}.`);
+                }
+                const tavernCard = currentTavern[moveArgument];
+                if (tavernCard === undefined) {
+                    throw new Error(`В массиве карт текущей таверны отсутствует карта ${moveArgument}.`);
+                }
+                if (tavernCard === null) {
+                    continue;
+                }
+                if (currentTavern.some((card) => CompareCards(tavernCard, card) < 0)) {
+                    continue;
+                }
+                const isCurrentCardWorse = EvaluateCard(G, ctx, tavernCard, moveArgument, currentTavern) < 0, isExistCardNotWorse = currentTavern.some((card) => (card !== null)
+                    && (EvaluateCard(G, ctx, tavernCard, moveArgument, currentTavern) >= 0));
+                if (isCurrentCardWorse && isExistCardNotWorse) {
+                    continue;
+                }
+                const uniqueArrLength = uniqueArr.length;
+                for (let j = 0; j < uniqueArrLength; j++) {
+                    const uniqueCard = uniqueArr[j];
+                    if (uniqueCard === undefined) {
+                        throw new Error(`В массиве уникальных карт отсутствует карта ${j}.`);
+                    }
+                    if (IsCardNotActionAndNotNull(tavernCard)
+                        && IsCardNotActionAndNotNull(uniqueCard)
+                        && tavernCard.suit === uniqueCard.suit
+                        && CompareCards(tavernCard, uniqueCard) === 0) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    uniqueArr.push(tavernCard);
+                    return moveArgument;
+                }
+                flag = true;
+            }
+            throw new Error(`Отсутствует вариант выбора карты из таверны для ботов.`);
         },
         moveName: MoveNames.ClickCardMove,
         validate: () => true,
     },
     ClickCardToPickDistinctionMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return ExplorerDistinctionProfit(G, ctx, MoveValidatorNames.ClickCardToPickDistinctionMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return ExplorerDistinctionProfit(G, ctx, MoveValidatorNames.ClickCardToPickDistinctionMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.ClickCardToPickDistinctionMove,
         validate: () => true,
     },
     ClickDistinctionCardMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return DrawDistinctions(G, ctx, MoveValidatorNames.ClickDistinctionCardMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return DrawDistinctions(G, ctx, MoveValidatorNames.ClickDistinctionCardMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.ClickDistinctionCardMove,
         validate: () => true,
     },
     ClickHandCoinMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.ClickHandCoinMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.ClickHandCoinMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.ClickHandCoinMove,
         validate: () => true,
     },
     ClickHandCoinUlineMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.ClickHandCoinUlineMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.ClickHandCoinUlineMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.ClickHandCoinUlineMove,
         validate: () => true,
     },
     ClickHandTradingCoinUlineMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.ClickHandTradingCoinUlineMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.ClickHandTradingCoinUlineMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.ClickHandTradingCoinUlineMove,
         validate: () => true,
     },
     DiscardCardFromPlayerBoardMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return DiscardAnyCardFromPlayerBoardProfit(G, ctx, MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return DiscardAnyCardFromPlayerBoardProfit(G, ctx, MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, suitNames = [];
@@ -496,113 +441,89 @@ export const moveValidators = {
                 }
             }
             const suitName = suitNames[Math.floor(Math.random() * suitNames.length)];
-            if (suitName !== undefined) {
-                const moveArgumentForSuit = moveArguments[suitName];
-                if (moveArgumentForSuit !== undefined) {
-                    const moveArgument = moveArgumentForSuit[Math.floor(Math.random() * moveArgumentForSuit.length)];
-                    if (moveArgument !== undefined) {
-                        return {
-                            suit: suitName,
-                            cardId: moveArgument,
-                        };
-                    }
-                    else {
-                        throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
-                    }
-                }
-                else {
-                    throw new Error(`Отсутствует обязательный параметр 'moveArguments[suitName]'.`);
-                }
-            }
-            else {
+            if (suitName === undefined) {
                 throw new Error(`Отсутствует выбранная случайно фракция для сброса карты.`);
             }
+            const moveArgumentForSuit = moveArguments[suitName];
+            if (moveArgumentForSuit === undefined) {
+                throw new Error(`Отсутствует обязательный параметр 'moveArguments[suitName]'.`);
+            }
+            const moveArgument = moveArgumentForSuit[Math.floor(Math.random() * moveArgumentForSuit.length)];
+            if (moveArgument === undefined) {
+                throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
+            }
+            return {
+                suit: suitName,
+                cardId: moveArgument,
+            };
         },
         moveName: MoveNames.DiscardCardFromPlayerBoardMove,
         validate: () => true,
     },
     DiscardCard2PlayersMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return DiscardCardProfit(G, ctx, MoveValidatorNames.DiscardCard2PlayersMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return DiscardCardProfit(G, ctx, MoveValidatorNames.DiscardCard2PlayersMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.DiscardCard2PlayersMove,
         validate: () => true,
     },
     GetEnlistmentMercenariesMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return GetEnlistmentMercenariesProfit(G, ctx, MoveValidatorNames.GetEnlistmentMercenariesMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return GetEnlistmentMercenariesProfit(G, ctx, MoveValidatorNames.GetEnlistmentMercenariesMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.GetEnlistmentMercenariesMove,
         validate: () => true,
     },
     GetMjollnirProfitMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return GetMjollnirProfitProfit(G, ctx, MoveValidatorNames.GetMjollnirProfitMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return GetMjollnirProfitProfit(G, ctx, MoveValidatorNames.GetMjollnirProfitMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, totalSuitsRanks = [];
             for (let j = 0; j < moveArguments.length; j++) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const moveArgumentI = moveArguments[j];
-                    if (moveArgumentI !== undefined) {
-                        totalSuitsRanks.push(player.cards[moveArgumentI]
-                            .reduce(TotalRank, 0) * 2);
-                    }
-                    else {
-                        throw new Error(`В массиве аргументов мува отсутствует аргумент ${j}.`);
-                    }
-                }
-                else {
+                if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует текущий игрок.`);
                 }
+                const moveArgumentI = moveArguments[j];
+                if (moveArgumentI === undefined) {
+                    throw new Error(`В массиве аргументов мува отсутствует аргумент ${j}.`);
+                }
+                totalSuitsRanks.push(player.cards[moveArgumentI]
+                    .reduce(TotalRank, 0) * 2);
             }
             const index = totalSuitsRanks.indexOf(Math.max(...totalSuitsRanks));
-            if (index !== -1) {
-                const moveArgument = moveArguments[index];
-                if (moveArgument !== undefined) {
-                    return moveArgument;
-                }
-                else {
-                    throw new Error(`В массиве аргументов мува отсутствует аргумент ${index}.`);
-                }
-            }
-            else {
+            if (index === -1) {
                 throw new Error(`Должна быть хотя бы одна фракция с максимальным количеством шевронов.`);
             }
+            const moveArgument = moveArguments[index];
+            if (moveArgument === undefined) {
+                throw new Error(`В массиве аргументов мува отсутствует аргумент ${index}.`);
+            }
+            return moveArgument;
         },
         moveName: MoveNames.GetMjollnirProfitMove,
         validate: () => true,
@@ -612,60 +533,48 @@ export const moveValidators = {
         getValue: () => null,
         moveName: MoveNames.PassEnlistmentMercenariesMove,
         validate: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    const mercenariesCount = player.campCards.filter((card) => IsMercenaryCampCard(card)).length;
-                    return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
-                        && mercenariesCount > 0;
-                }
-                else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            const player = G.publicPlayers[Number(ctx.currentPlayer)];
+            if (player === undefined) {
+                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            }
+            const mercenariesCount = player.campCards.filter((card) => IsMercenaryCampCard(card)).length;
+            return ctx.playOrderPos === 0 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
+                && mercenariesCount > 0;
         },
     },
     PlaceEnlistmentMercenariesMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return PlaceEnlistmentMercenariesProfit(G, ctx, MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return PlaceEnlistmentMercenariesProfit(G, ctx, MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.PlaceEnlistmentMercenariesMove,
         validate: () => true,
     },
     PlaceYludHeroMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceYludHeroMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceYludHeroMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.PlaceYludHeroMove,
         validate: () => true,
@@ -679,139 +588,115 @@ export const moveValidators = {
     // start
     AddCoinToPouchMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return AddCoinToPouchProfit(G, ctx, MoveValidatorNames.AddCoinToPouchMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return AddCoinToPouchProfit(G, ctx, MoveValidatorNames.AddCoinToPouchMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.AddCoinToPouchMove,
         validate: () => true,
     },
     ClickCampCardHoldaMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return PickCampCardHoldaProfit(G, ctx, MoveValidatorNames.ClickCampCardHoldaMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return PickCampCardHoldaProfit(G, ctx, MoveValidatorNames.ClickCampCardHoldaMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.ClickCampCardHoldaMove,
         validate: () => true,
     },
     ClickCoinToUpgradeMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return UpgradeCoinProfit(G, ctx, MoveValidatorNames.ClickCoinToUpgradeMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return UpgradeCoinProfit(G, ctx, MoveValidatorNames.ClickCoinToUpgradeMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.ClickCoinToUpgradeMove,
         validate: (G, ctx, id) => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `object` && id !== null
-                && `coinId` in id) {
-                return CoinUpgradeValidation(G, ctx, id);
-            }
-            else {
+            if (G === undefined || ctx === undefined || id === undefined || typeof id !== `object` || id === null
+                || !(`coinId` in id)) {
                 throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
+            return CoinUpgradeValidation(G, ctx, id);
         },
     },
     ClickHeroCardMoveValidator: {
         getRange: (G) => {
-            if (G !== undefined) {
-                return DrawHeroes(G, MoveValidatorNames.ClickHeroCardMoveValidator);
-            }
-            else {
+            if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
+            return DrawHeroes(G, MoveValidatorNames.ClickHeroCardMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.ClickHeroCardMove,
         validate: (G, ctx, id) => {
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `number`) {
-                let isValid = false;
-                const hero = G.heroes[id];
-                if (hero !== undefined) {
-                    const validators = hero.validators;
-                    if (validators !== undefined) {
-                        for (const validator in validators) {
-                            if (Object.prototype.hasOwnProperty.call(validators, validator)) {
-                                switch (validator) {
-                                    case ValidatorNames.Conditions:
-                                        isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
-                                        break;
-                                    case ValidatorNames.DiscardCard:
-                                        isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
-                                        break;
-                                    default:
-                                        isValid = true;
-                                        break;
-                                }
-                            }
+            if (G === undefined || ctx === undefined || id === undefined || typeof id !== `number`) {
+                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
+            }
+            let isValid = false;
+            const hero = G.heroes[id];
+            if (hero === undefined) {
+                throw new Error(`В массиве карт героев отсутствует герой ${id}.`);
+            }
+            const validators = hero.validators;
+            if (validators !== undefined) {
+                for (const validator in validators) {
+                    if (Object.prototype.hasOwnProperty.call(validators, validator)) {
+                        switch (validator) {
+                            case ValidatorNames.Conditions:
+                                isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
+                                break;
+                            case ValidatorNames.DiscardCard:
+                                isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
+                                break;
+                            default:
+                                isValid = true;
+                                break;
                         }
                     }
-                    else {
-                        isValid = true;
-                    }
-                    return isValid;
-                }
-                else {
-                    throw new Error(`В массиве карт героев отсутствует герой ${id}.`);
                 }
             }
             else {
-                throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
+                isValid = true;
             }
+            return isValid;
         },
     },
     DiscardCardMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return DiscardCardFromBoardProfit(G, ctx, MoveValidatorNames.DiscardCardMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return DiscardCardFromBoardProfit(G, ctx, MoveValidatorNames.DiscardCardMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, suitNamesArray = [];
@@ -822,83 +707,65 @@ export const moveValidators = {
                 }
             }
             const suitName = suitNamesArray[Math.floor(Math.random() * suitNamesArray.length)];
-            if (suitName !== undefined) {
-                const moveArgumentForSuit = moveArguments[suitName];
-                if (moveArgumentForSuit !== undefined) {
-                    const moveArgument = moveArgumentForSuit[Math.floor(Math.random() * moveArgumentForSuit.length)];
-                    if (moveArgument !== undefined) {
-                        return {
-                            suit: suitName,
-                            cardId: moveArgument,
-                        };
-                    }
-                    else {
-                        throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
-                    }
-                }
-                else {
-                    throw new Error(`Отсутствует обязательный параметр 'moveArguments[suitName]'.`);
-                }
-            }
-            else {
+            if (suitName === undefined) {
                 throw new Error(`Отсутствует выбранная случайно фракция для сброса карты.`);
             }
+            const moveArgumentForSuit = moveArguments[suitName];
+            if (moveArgumentForSuit === undefined) {
+                throw new Error(`Отсутствует обязательный параметр 'moveArguments[suitName]'.`);
+            }
+            const moveArgument = moveArgumentForSuit[Math.floor(Math.random() * moveArgumentForSuit.length)];
+            if (moveArgument === undefined) {
+                throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
+            }
+            return {
+                suit: suitName,
+                cardId: moveArgument,
+            };
         },
         moveName: MoveNames.DiscardCardMove,
         validate: () => true,
     },
     DiscardSuitCardFromPlayerBoardMoveValidator: {
         getRange: (G, ctx, playerId) => {
-            if (G !== undefined && ctx !== undefined && playerId !== undefined) {
-                return DiscardSuitCardFromPlayerBoardProfit(G, ctx, MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator, playerId);
-            }
-            else {
+            if (G === undefined || ctx === undefined || playerId === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' and/or 'playerId' is undefined.`);
             }
+            return DiscardSuitCardFromPlayerBoardProfit(G, ctx, MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator, playerId);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, player = G.publicPlayers[moveArguments.playerId];
-            if (player !== undefined) {
-                const cardFirst = player.cards[moveArguments.suit][0];
-                if (cardFirst !== undefined) {
-                    let minCardIndex = 0, minCardValue = cardFirst.points;
-                    moveArguments.cards.forEach((value, index) => {
-                        const card = player.cards[moveArguments.suit][value];
-                        if (card !== undefined) {
-                            const cardPoints = card.points;
-                            if (cardPoints !== null && minCardValue !== null) {
-                                if (cardPoints < minCardValue) {
-                                    minCardIndex = index;
-                                    minCardValue = cardPoints;
-                                }
-                            }
-                            else {
-                                throw new Error(`Фракция должна иметь параметр 'points'.`);
-                            }
-                        }
-                        else {
-                            throw new Error(`В массиве карт игрока во фракции ${moveArguments.suit} отсутствует карта ${value}.`);
-                        }
-                    });
-                    const cardIndex = moveArguments.cards[minCardIndex];
-                    if (cardIndex !== undefined) {
-                        return {
-                            playerId: moveArguments.playerId,
-                            suit: moveArguments.suit,
-                            cardId: cardIndex,
-                        };
-                    }
-                    else {
-                        throw new Error(`В массиве аргументов для 'cardId' отсутствует значение ${minCardIndex}.`);
-                    }
-                }
-                else {
-                    throw new Error(`В массиве карт игрока во фракции ${moveArguments.suit} отсутствует первая карта.`);
-                }
-            }
-            else {
+            if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует игрок ${moveArguments.playerId}.`);
             }
+            const cardFirst = player.cards[moveArguments.suit][0];
+            if (cardFirst === undefined) {
+                throw new Error(`В массиве карт игрока во фракции ${moveArguments.suit} отсутствует первая карта.`);
+            }
+            let minCardIndex = 0, minCardValue = cardFirst.points;
+            moveArguments.cards.forEach((value, index) => {
+                const card = player.cards[moveArguments.suit][value];
+                if (card === undefined) {
+                    throw new Error(`В массиве карт игрока во фракции ${moveArguments.suit} отсутствует карта ${value}.`);
+                }
+                const cardPoints = card.points;
+                if (cardPoints === null || minCardValue === null) {
+                    throw new Error(`Фракция должна иметь параметр 'points'.`);
+                }
+                if (cardPoints < minCardValue) {
+                    minCardIndex = index;
+                    minCardValue = cardPoints;
+                }
+            });
+            const cardIndex = moveArguments.cards[minCardIndex];
+            if (cardIndex === undefined) {
+                throw new Error(`В массиве аргументов для 'cardId' отсутствует значение ${minCardIndex}.`);
+            }
+            return {
+                playerId: moveArguments.playerId,
+                suit: moveArguments.suit,
+                cardId: cardIndex,
+            };
         },
         moveName: MoveNames.DiscardSuitCardFromPlayerBoardMove,
         // TODO validate Not bot playerId === ctx.currentPlayer & for Bot playerId exists in playersNum and card not hero?
@@ -906,102 +773,82 @@ export const moveValidators = {
     },
     PickDiscardCardMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return PickDiscardCardProfit(G, ctx, MoveValidatorNames.PickDiscardCardMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return PickDiscardCardProfit(G, ctx, MoveValidatorNames.PickDiscardCardMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.PickDiscardCardMove,
         validate: () => true,
     },
     PlaceOlwinCardMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceOlwinCardMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceOlwinCardMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.PlaceOlwinCardMove,
         validate: () => true,
     },
     PlaceThrudHeroMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceThrudHeroMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
+            return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceThrudHeroMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             // TODO Move same logic for SuitTypes & number to functions and use it in getValue
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.PlaceThrudHeroMove,
         validate: () => true,
     },
     UpgradeCoinVidofnirVedrfolnirMoveValidator: {
         getRange: (G, ctx) => {
-            if (G !== undefined && ctx !== undefined) {
-                return UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator);
-            }
-            else {
+            if (G === undefined || ctx === undefined) {
                 throw new Error(`Function param 'G' and/or 'ctx' is undefined.`);
             }
+            return UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
-            if (moveArgument !== undefined) {
-                return moveArgument;
-            }
-            else {
+            if (moveArgument === undefined) {
                 throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
             }
+            return moveArgument;
         },
         moveName: MoveNames.UpgradeCoinVidofnirVedrfolnirMove,
         validate: (G, ctx, id) => {
             var _a, _b;
-            if (G !== undefined && ctx !== undefined && id !== undefined && typeof id === `object` && id !== null
-                && `coinId` in id) {
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player !== undefined) {
-                    return ((_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.coinId) !== id.coinId && CoinUpgradeValidation(G, ctx, id);
-                }
-                else {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
-            }
-            else {
+            if (G === undefined || ctx === undefined || id === undefined || typeof id !== `object` || id === null
+                || !(`coinId` in id)) {
                 throw new Error(`Function param 'G' and/or 'ctx' and/or 'id' is undefined.`);
             }
+            const player = G.publicPlayers[Number(ctx.currentPlayer)];
+            if (player === undefined) {
+                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            }
+            return ((_b = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.coinId) !== id.coinId && CoinUpgradeValidation(G, ctx, id);
         },
     },
     // end

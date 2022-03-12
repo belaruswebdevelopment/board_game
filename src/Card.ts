@@ -21,66 +21,60 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             const pointValuesPlayers: INumberValues | INumberArrayValues | undefined =
                 deckConfig.suits[suit].pointsValues()[data.players];
-            if (pointValuesPlayers !== undefined) {
-                const points: number | number[] | undefined = pointValuesPlayers[data.tier];
-                if (points !== undefined) {
-                    let count = 0;
-                    if (Array.isArray(points)) {
-                        count = points.length;
-                    } else {
-                        count = points;
-                    }
-                    for (let j = 0; j < count; j++) {
-                        let currentPoints: number | null;
-                        if (Array.isArray(points)) {
-                            const cardPoints: number | undefined = points[j];
-                            if (cardPoints !== undefined) {
-                                currentPoints = cardPoints;
-                            } else {
-                                throw new Error(`Отсутствует значение очков карты ${j}.`);
-                            }
-                        } else {
-                            currentPoints = null;
-                        }
-                        cards.push(CreateCard({
-                            suit: deckConfig.suits[suit].suit,
-                            rank: 1,
-                            points: currentPoints,
-                            name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
-                            game: GameNames.Basic,
-                        }));
-                    }
-                } else {
-                    throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - ${data.tier}.`);
-                }
-            } else {
+            if (pointValuesPlayers === undefined) {
                 throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}'.`);
+            }
+            const points: number | number[] | undefined = pointValuesPlayers[data.tier];
+            if (points === undefined) {
+                throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - ${data.tier}.`);
+            }
+            let count = 0;
+            if (Array.isArray(points)) {
+                count = points.length;
+            } else {
+                count = points;
+            }
+            for (let j = 0; j < count; j++) {
+                let currentPoints: number | null;
+                if (Array.isArray(points)) {
+                    const cardPoints: number | undefined = points[j];
+                    if (cardPoints === undefined) {
+                        throw new Error(`Отсутствует значение очков карты ${j}.`);
+                    }
+                    currentPoints = cardPoints;
+                } else {
+                    currentPoints = null;
+                }
+                cards.push(CreateCard({
+                    suit: deckConfig.suits[suit].suit,
+                    rank: 1,
+                    points: currentPoints,
+                    name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
+                    game: GameNames.Basic,
+                }));
             }
         }
     }
     const actionCardConfig: IActionCardConfig[] = deckConfig.actions;
     for (let i = 0; i < actionCardConfig.length; i++) {
         const currentActionCardConfig: IActionCardConfig | undefined = actionCardConfig[i];
-        if (currentActionCardConfig !== undefined) {
-            const amountPlayersValue: INumberValues | undefined = currentActionCardConfig.amount()[data.players];
-            if (amountPlayersValue !== undefined) {
-                const amountTierValue: number | undefined = amountPlayersValue[data.tier];
-                if (amountTierValue !== undefined) {
-                    for (let j = 0; j < amountTierValue; j++) {
-                        cards.push(CreateActionCard({
-                            value: currentActionCardConfig.value,
-                            stack: currentActionCardConfig.stack,
-                            name: `улучшение монеты на +${currentActionCardConfig.value}`,
-                        }));
-                    }
-                } else {
-                    throw new Error(`Отсутствует массив значений количества карт улучшения монет для указанного числа игроков - '${data.players}' для эпохи ${data.tier}.`);
-                }
-            } else {
-                throw new Error(`Отсутствует массив значений количества карт улучшения монет для указанного числа игроков - '${data.players}'.`);
-            }
-        } else {
+        if (currentActionCardConfig === undefined) {
             throw new Error(`В массиве конфигов карт улучшения монет отсутствует значение ${i}.`);
+        }
+        const amountPlayersValue: INumberValues | undefined = currentActionCardConfig.amount()[data.players];
+        if (amountPlayersValue === undefined) {
+            throw new Error(`Отсутствует массив значений количества карт улучшения монет для указанного числа игроков - '${data.players}'.`);
+        }
+        const amountTierValue: number | undefined = amountPlayersValue[data.tier];
+        if (amountTierValue === undefined) {
+            throw new Error(`Отсутствует массив значений количества карт улучшения монет для указанного числа игроков - '${data.players}' для эпохи ${data.tier}.`);
+        }
+        for (let j = 0; j < amountTierValue; j++) {
+            cards.push(CreateActionCard({
+                value: currentActionCardConfig.value,
+                stack: currentActionCardConfig.stack,
+                name: `улучшение монеты на +${currentActionCardConfig.value}`,
+            }));
         }
     }
     return cards;

@@ -48,38 +48,30 @@ export const CompareCards = (card1, card2) => {
 export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
     if (IsCardNotActionAndNotNull(compareCard)) {
         const deckTier1 = G.decks[0];
-        if (deckTier1 !== undefined) {
-            if (deckTier1.length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
-                return CompareCards(compareCard, G.averageCards[compareCard.suit]);
-            }
-        }
-        else {
+        if (deckTier1 === undefined) {
             throw new Error(`В массиве колод карт отсутствует колода 1 эпохи.`);
+        }
+        if (deckTier1.length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
+            return CompareCards(compareCard, G.averageCards[compareCard.suit]);
         }
     }
     const deckTier2 = G.decks[1];
-    if (deckTier2 !== undefined) {
-        if (deckTier2.length < G.botData.deckLength) {
-            const temp = tavern.map((card) => G.publicPlayers.map((player) => PotentialScoring(player, card)));
-            const tavernCardResults = temp[cardId];
-            if (tavernCardResults !== undefined) {
-                const result = tavernCardResults[Number(ctx.currentPlayer)];
-                if (result !== undefined) {
-                    temp.splice(cardId, 1);
-                    temp.forEach((player) => player.splice(Number(ctx.currentPlayer), 1));
-                    return result - Math.max(...temp.map((player) => Math.max(...player)));
-                }
-                else {
-                    throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат для текущего игрока.`);
-                }
-            }
-            else {
-                throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
-            }
-        }
-    }
-    else {
+    if (deckTier2 === undefined) {
         throw new Error(`В массиве колод карт отсутствует колода 2 эпохи.`);
+    }
+    if (deckTier2.length < G.botData.deckLength) {
+        const temp = tavern.map((card) => G.publicPlayers.map((player) => PotentialScoring(player, card)));
+        const tavernCardResults = temp[cardId];
+        if (tavernCardResults === undefined) {
+            throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
+        }
+        const result = tavernCardResults[Number(ctx.currentPlayer)];
+        if (result === undefined) {
+            throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат для текущего игрока.`);
+        }
+        temp.splice(cardId, 1);
+        temp.forEach((player) => player.splice(Number(ctx.currentPlayer), 1));
+        return result - Math.max(...temp.map((player) => Math.max(...player)));
     }
     if (IsCardNotActionAndNotNull(compareCard)) {
         return CompareCards(compareCard, G.averageCards[compareCard.suit]);
@@ -101,40 +93,34 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
 export const GetAverageSuitCard = (suitConfig, data) => {
     let totalPoints = 0;
     const pointsValuesPlayers = suitConfig.pointsValues()[data.players];
-    if (pointsValuesPlayers !== undefined) {
-        const points = pointsValuesPlayers[data.tier];
-        if (points !== undefined) {
-            const count = Array.isArray(points) ? points.length : points;
-            for (let i = 0; i < count; i++) {
-                if (Array.isArray(points)) {
-                    const pointsValue = points[i];
-                    if (pointsValue !== undefined) {
-                        totalPoints += pointsValue;
-                    }
-                    else {
-                        throw new Error(`Отсутствует значение ${i} в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
-                    }
-                }
-                else {
-                    totalPoints += 1;
-                }
-            }
-            totalPoints /= count;
-            return CreateCard({
-                suit: suitConfig.suit,
-                rank: 1,
-                points: totalPoints,
-                name: `Average card`,
-                game: GameNames.Basic,
-            });
-        }
-        else {
-            throw new Error(`Отсутствует массив значений карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
-        }
-    }
-    else {
+    if (pointsValuesPlayers === undefined) {
         throw new Error(`Отсутствует массив значений карт для указанного числа игроков - '${data.players}'.`);
     }
+    const points = pointsValuesPlayers[data.tier];
+    if (points === undefined) {
+        throw new Error(`Отсутствует массив значений карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
+    }
+    const count = Array.isArray(points) ? points.length : points;
+    for (let i = 0; i < count; i++) {
+        if (Array.isArray(points)) {
+            const pointsValue = points[i];
+            if (pointsValue === undefined) {
+                throw new Error(`Отсутствует значение ${i} в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
+            }
+            totalPoints += pointsValue;
+        }
+        else {
+            totalPoints += 1;
+        }
+    }
+    totalPoints /= count;
+    return CreateCard({
+        suit: suitConfig.suit,
+        rank: 1,
+        points: totalPoints,
+        name: `Average card`,
+        game: GameNames.Basic,
+    });
 };
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -166,19 +152,15 @@ const PotentialScoring = (player, card) => {
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
         const boardCoin = player.boardCoins[i];
-        if (boardCoin !== undefined) {
-            score += (_b = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _b !== void 0 ? _b : 0;
-        }
-        else {
+        if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока на столе отсутствует монета ${i}.`);
         }
+        score += (_b = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _b !== void 0 ? _b : 0;
         const handCoin = player.handCoins[i];
-        if (handCoin !== undefined) {
-            score += (_c = handCoin === null || handCoin === void 0 ? void 0 : handCoin.value) !== null && _c !== void 0 ? _c : 0;
-        }
-        else {
+        if (handCoin === undefined) {
             throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
         }
+        score += (_c = handCoin === null || handCoin === void 0 ? void 0 : handCoin.value) !== null && _c !== void 0 ? _c : 0;
     }
     return score;
 };

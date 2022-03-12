@@ -29,27 +29,24 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
         return INVALID_MOVE;
     }
     const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
-    if (currentTavern !== undefined) {
-        const card: TavernCardTypes | undefined = currentTavern[cardId];
-        if (card !== undefined) {
-            G.taverns[G.currentTavern]!.splice(cardId, 1, null);
-            if (card !== null) {
-                const isAdded: boolean = AddCardToPlayer(G, ctx, card);
-                if (!IsCardNotActionAndNotNull(card)) {
-                    AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
-                } else {
-                    if (isAdded) {
-                        CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
-                    }
-                }
-            } else {
-                throw new Error(`Не существует кликнутая карта.`);
-            }
-        } else {
-            throw new Error(`Отсутствует карта ${cardId} текущей таверны.`);
-        }
-    } else {
+    if (currentTavern === undefined) {
         throw new Error(`Отсутствует текущая таверна.`);
+    }
+    const card: TavernCardTypes | undefined = currentTavern[cardId];
+    if (card === undefined) {
+        throw new Error(`Отсутствует карта ${cardId} текущей таверны.`);
+    }
+    G.taverns[G.currentTavern]!.splice(cardId, 1, null);
+    if (card === null) {
+        throw new Error(`Не существует кликнутая карта.`);
+    }
+    const isAdded: boolean = AddCardToPlayer(G, ctx, card);
+    if (!IsCardNotActionAndNotNull(card)) {
+        AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
+    } else {
+        if (isAdded) {
+            CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
+        }
     }
 };
 
@@ -71,29 +68,26 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
         return INVALID_MOVE;
     }
     const deck1: DeckCardTypes[] | undefined = G.decks[1];
-    if (deck1 !== undefined) {
-        const card: DeckCardTypes | undefined = deck1[cardId];
-        if (card !== undefined) {
-            const pickedCard: DeckCardTypes | undefined = G.decks[1]!.splice(cardId, 1)[0],
-                isAdded: boolean = AddCardToPlayer(G, ctx, card);
-            if (pickedCard !== undefined) {
-                G.decks[1] = ctx.random!.Shuffle(deck1);
-                if (IsCardNotActionAndNotNull(pickedCard)) {
-                    if (isAdded) {
-                        G.distinctions[SuitNames.EXPLORER] = undefined;
-                        CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-                    }
-                } else {
-                    AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack, pickedCard);
-                }
-            } else {
-                throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 2.`);
-            }
-        } else {
-            throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 1.`);
+    if (deck1 === undefined) {
+        throw new Error(`Отсутствует колода карт 2 эпохи.`);
+    }
+    const card: DeckCardTypes | undefined = deck1[cardId];
+    if (card === undefined) {
+        throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 1.`);
+    }
+    const pickedCard: DeckCardTypes | undefined = G.decks[1]!.splice(cardId, 1)[0],
+        isAdded: boolean = AddCardToPlayer(G, ctx, card);
+    if (pickedCard === undefined) {
+        throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 2.`);
+    }
+    G.decks[1] = ctx.random!.Shuffle(deck1);
+    if (IsCardNotActionAndNotNull(pickedCard)) {
+        if (isAdded) {
+            G.distinctions[SuitNames.EXPLORER] = undefined;
+            CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
         }
     } else {
-        throw new Error(`Отсутствует колода карт 2 эпохи.`);
+        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack, pickedCard);
     }
 };
 
@@ -116,11 +110,10 @@ export const ClickDistinctionCardMove: Move<IMyGameState> = (G: IMyGameState, ct
         return INVALID_MOVE;
     }
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        suitsConfig[suit].distinction.awarding(G, ctx, player);
-    } else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    suitsConfig[suit].distinction.awarding(G, ctx, player);
 };
 
 /**

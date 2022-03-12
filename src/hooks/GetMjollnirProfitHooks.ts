@@ -20,12 +20,11 @@ import type { IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.publicPlayersOrder.length) {
         const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player !== undefined) {
-            if (!player.stack.length && !player.actionsNum) {
-                return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
-            }
-        } else {
+        if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        }
+        if (!player.stack.length && !player.actionsNum) {
+            return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
         }
     }
 };
@@ -33,11 +32,10 @@ export const CheckEndGetMjollnirProfitPhase = (G: IMyGameState, ctx: Ctx): boole
 export const CheckGetMjollnirProfitOrder = (G: IMyGameState): void => {
     const mjollnirPlayerIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
         CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
-    if (mjollnirPlayerIndex !== -1) {
-        G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
-    } else {
+    if (mjollnirPlayerIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.GetMjollnirProfit}.`);
     }
+    G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
 };
 
 export const OnGetMjollnirProfitMove = (G: IMyGameState, ctx: Ctx): void => {

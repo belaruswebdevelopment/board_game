@@ -23,11 +23,10 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
         result: number[] =
             Array(taverns.length).fill(0).map((value: number, index: number) => {
                 const num: number | undefined = temp[index];
-                if (num !== undefined) {
-                    return value + num;
-                } else {
+                if (num === undefined) {
                     throw new Error(`Отсутствует значение ${index}.`);
                 }
+                return value + num;
             }),
         tempNumbers: number[][] = taverns.map((tavern: TavernCardTypes[]): number[] =>
             tavern.map((card: TavernCardTypes, index: number, arr: TavernCardTypes[]): number =>
@@ -40,21 +39,19 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
     for (let i = 1; i < temp.length; i++) {
         const maxCard: ICardCharacteristics | undefined = tempChars[maxIndex],
             tempCard1: ICardCharacteristics | undefined = tempChars[i];
-        if (maxCard !== undefined && tempCard1 !== undefined) {
-            if (CompareCharacteristics(maxCard, tempCard1) < 0) {
-                maxIndex = i;
-            }
-        } else {
+        if (maxCard === undefined || tempCard1 === undefined) {
             throw new Error(`Отсутствует значение 1 ${maxIndex} и/или ${i}.`);
+        }
+        if (CompareCharacteristics(maxCard, tempCard1) < 0) {
+            maxIndex = i;
         }
         const minCard: ICardCharacteristics | undefined = tempChars[minIndex],
             tempCard2: ICardCharacteristics | undefined = tempChars[tempChars.length - 1 - i];
-        if (minCard !== undefined && tempCard2 !== undefined) {
-            if (CompareCharacteristics(minCard, tempCard2) > 0) {
-                minIndex = tempChars.length - 1 - i;
-            }
-        } else {
+        if (minCard === undefined || tempCard2 === undefined) {
             throw new Error(`Отсутствует значение 2 ${maxIndex} и/или ${tempChars.length - 1 - i}.`);
+        }
+        if (CompareCharacteristics(minCard, tempCard2) > 0) {
+            minIndex = tempChars.length - 1 - i;
         }
     }
     result[maxIndex] += 10;
@@ -229,11 +226,10 @@ export const k_combinations = (set: number[], k: number): number[][] => {
     if (k === 1) {
         for (let i = 0; i < set.length; i++) {
             const num1: number | undefined = set[i];
-            if (num1 !== undefined) {
-                combs.push([num1]);
-            } else {
+            if (num1 === undefined) {
                 throw new Error(`Отсутствует значение ${i}.`);
             }
+            combs.push([num1]);
         }
         return combs;
     }
@@ -245,11 +241,10 @@ export const k_combinations = (set: number[], k: number): number[][] => {
         // For each (k-1)-combination we join it with the current and store it to the set of k-combinations.
         for (let j = 0; j < tailCombs.length; j++) {
             const num2: number[] | undefined = tailCombs[j];
-            if (num2 !== undefined) {
-                combs.push(head.concat(num2));
-            } else {
+            if (num2 === undefined) {
                 throw new Error(`Отсутствует значение ${i}.`);
             }
+            combs.push(head.concat(num2));
         }
     }
     return combs;
@@ -275,31 +270,28 @@ export const Permute = (permutation: number[]): number[][] => {
         p: number;
     while (i < length) {
         const num: number | undefined = c[i];
-        if (num !== undefined) {
-            if (num < i) {
-                k = i % 2 && num;
-                const permI: number | undefined = permutation[i];
-                if (permI !== undefined) {
-                    p = permI;
-                    const permK: number | undefined = permutation[k];
-                    if (permK !== undefined) {
-                        permutation[i] = permK;
-                        permutation[k] = p;
-                        ++c[i];
-                        i = 1;
-                        result.push(permutation.slice());
-                    } else {
-                        throw new Error(`Отсутствует значение 3 ${i}.`);
-                    }
-                } else {
-                    throw new Error(`Отсутствует значение 2 ${i}.`);
-                }
-            } else {
-                c[i] = 0;
-                ++i;
-            }
-        } else {
+        if (num === undefined) {
             throw new Error(`Отсутствует значение 1 ${i}.`);
+        }
+        if (num < i) {
+            k = i % 2 && num;
+            const permI: number | undefined = permutation[i];
+            if (permI === undefined) {
+                throw new Error(`Отсутствует значение 2 ${i}.`);
+            }
+            p = permI;
+            const permK: number | undefined = permutation[k];
+            if (permK === undefined) {
+                throw new Error(`Отсутствует значение 3 ${i}.`);
+            }
+            permutation[i] = permK;
+            permutation[k] = p;
+            ++c[i];
+            i = 1;
+            result.push(permutation.slice());
+        } else {
+            c[i] = 0;
+            ++i;
         }
     }
     return result;

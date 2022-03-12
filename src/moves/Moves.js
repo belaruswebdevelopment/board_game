@@ -26,31 +26,25 @@ export const ClickCardMove = (G, ctx, cardId) => {
         return INVALID_MOVE;
     }
     const currentTavern = G.taverns[G.currentTavern];
-    if (currentTavern !== undefined) {
-        const card = currentTavern[cardId];
-        if (card !== undefined) {
-            G.taverns[G.currentTavern].splice(cardId, 1, null);
-            if (card !== null) {
-                const isAdded = AddCardToPlayer(G, ctx, card);
-                if (!IsCardNotActionAndNotNull(card)) {
-                    AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
-                }
-                else {
-                    if (isAdded) {
-                        CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
-                    }
-                }
-            }
-            else {
-                throw new Error(`Не существует кликнутая карта.`);
-            }
-        }
-        else {
-            throw new Error(`Отсутствует карта ${cardId} текущей таверны.`);
-        }
+    if (currentTavern === undefined) {
+        throw new Error(`Отсутствует текущая таверна.`);
+    }
+    const card = currentTavern[cardId];
+    if (card === undefined) {
+        throw new Error(`Отсутствует карта ${cardId} текущей таверны.`);
+    }
+    G.taverns[G.currentTavern].splice(cardId, 1, null);
+    if (card === null) {
+        throw new Error(`Не существует кликнутая карта.`);
+    }
+    const isAdded = AddCardToPlayer(G, ctx, card);
+    if (!IsCardNotActionAndNotNull(card)) {
+        AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
     }
     else {
-        throw new Error(`Отсутствует текущая таверна.`);
+        if (isAdded) {
+            CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
+        }
     }
 };
 /**
@@ -70,32 +64,26 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
         return INVALID_MOVE;
     }
     const deck1 = G.decks[1];
-    if (deck1 !== undefined) {
-        const card = deck1[cardId];
-        if (card !== undefined) {
-            const pickedCard = G.decks[1].splice(cardId, 1)[0], isAdded = AddCardToPlayer(G, ctx, card);
-            if (pickedCard !== undefined) {
-                G.decks[1] = ctx.random.Shuffle(deck1);
-                if (IsCardNotActionAndNotNull(pickedCard)) {
-                    if (isAdded) {
-                        G.distinctions[SuitNames.EXPLORER] = undefined;
-                        CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-                    }
-                }
-                else {
-                    AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack, pickedCard);
-                }
-            }
-            else {
-                throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 2.`);
-            }
-        }
-        else {
-            throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 1.`);
+    if (deck1 === undefined) {
+        throw new Error(`Отсутствует колода карт 2 эпохи.`);
+    }
+    const card = deck1[cardId];
+    if (card === undefined) {
+        throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 1.`);
+    }
+    const pickedCard = G.decks[1].splice(cardId, 1)[0], isAdded = AddCardToPlayer(G, ctx, card);
+    if (pickedCard === undefined) {
+        throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 2.`);
+    }
+    G.decks[1] = ctx.random.Shuffle(deck1);
+    if (IsCardNotActionAndNotNull(pickedCard)) {
+        if (isAdded) {
+            G.distinctions[SuitNames.EXPLORER] = undefined;
+            CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
         }
     }
     else {
-        throw new Error(`Отсутствует колода карт 2 эпохи.`);
+        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack, pickedCard);
     }
 };
 /**
@@ -116,12 +104,10 @@ export const ClickDistinctionCardMove = (G, ctx, suit) => {
         return INVALID_MOVE;
     }
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        suitsConfig[suit].distinction.awarding(G, ctx, player);
-    }
-    else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    suitsConfig[suit].distinction.awarding(G, ctx, player);
 };
 /**
  * <h3>Убирает карту в колоду сброса в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>

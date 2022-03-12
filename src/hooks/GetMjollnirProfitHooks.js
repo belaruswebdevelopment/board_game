@@ -17,24 +17,20 @@ import { BuffNames } from "../typescript/enums";
 export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player !== undefined) {
-            if (!player.stack.length && !player.actionsNum) {
-                return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
-            }
-        }
-        else {
+        if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        }
+        if (!player.stack.length && !player.actionsNum) {
+            return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
         }
     }
 };
 export const CheckGetMjollnirProfitOrder = (G) => {
     const mjollnirPlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
-    if (mjollnirPlayerIndex !== -1) {
-        G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
-    }
-    else {
+    if (mjollnirPlayerIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.GetMjollnirProfit}.`);
     }
+    G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
 };
 export const OnGetMjollnirProfitMove = (G, ctx) => {
     StartOrEndActions(G, ctx);

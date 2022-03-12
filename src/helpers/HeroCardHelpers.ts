@@ -20,12 +20,11 @@ import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     if (hero.suit !== null) {
         const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player !== undefined) {
-            player.cards[hero.suit].push(hero);
-            AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
-        } else {
+        if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок.`);
         }
+        player.cards[hero.suit].push(hero);
+        AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} добавил героя ${hero.name} во фракцию ${suitsConfig[hero.suit].suitName}.`);
     }
 };
 
@@ -42,18 +41,16 @@ export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroC
  */
 export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        player.pickedCard = hero;
-        if (hero.active) {
-            hero.active = false;
-            player.heroes.push(hero);
-            AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал героя ${hero.name}.`);
-        } else {
-            throw new Error(`Не удалось добавить героя ${hero.name} из-за того, что он был уже выбран каким-то игроком.`);
-        }
-    } else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    player.pickedCard = hero;
+    if (!hero.active) {
+        throw new Error(`Не удалось добавить героя ${hero.name} из-за того, что он был уже выбран каким-то игроком.`);
+    }
+    hero.active = false;
+    player.heroes.push(hero);
+    AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал героя ${hero.name}.`);
 };
 
 /**

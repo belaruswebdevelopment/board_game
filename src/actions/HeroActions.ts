@@ -27,24 +27,21 @@ import type { ICard, IHeroCard, IMyGameState, IPublicPlayer, IStack, IVariant, P
  */
 export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        const pickedCard: PlayerCardsType | undefined = player.cards[suit].splice(cardId, 1)[0];
-        if (pickedCard !== undefined) {
-            if (!IsHeroCard(pickedCard)) {
-                player.pickedCard = pickedCard;
-                G.discardCardsDeck.push(pickedCard);
-                AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил в колоду сброса карту '${pickedCard.name}'.`);
-                if (player.actionsNum === 2) {
-                    AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda()]);
-                }
-            } else {
-                throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
-            }
-        } else {
-            throw new Error(`В массиве карт игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
-        }
-    } else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    const pickedCard: PlayerCardsType | undefined = player.cards[suit].splice(cardId, 1)[0];
+    if (pickedCard === undefined) {
+        throw new Error(`В массиве карт игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
+    }
+    if (IsHeroCard(pickedCard)) {
+        throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
+    }
+    player.pickedCard = pickedCard;
+    G.discardCardsDeck.push(pickedCard);
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил в колоду сброса карту '${pickedCard.name}'.`);
+    if (player.actionsNum === 2) {
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda()]);
     }
 };
 
@@ -61,38 +58,34 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
  */
 export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        const stack: IStack | undefined = player.stack[0];
-        if (stack !== undefined) {
-            const playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = stack.variants;
-            if (playerVariants !== undefined) {
-                const olwinDouble: ICard = CreateCard({
-                    suit,
-                    rank: playerVariants[suit].rank,
-                    points: playerVariants[suit].points,
-                    name: CardNames.Olwin,
-                    game: GameNames.Thingvellir,
-                });
-                const drawName: string | undefined = stack.config?.drawName;
-                if (drawName !== undefined) {
-                    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${drawName} во фракцию ${suitsConfig[suit].suitName}.`);
-                    AddCardToPlayer(G, ctx, olwinDouble);
-                    if (player.actionsNum === 2) {
-                        AddActionsToStackAfterCurrent(G, ctx, [StackData.placeOlwinCards()]);
-                    }
-                    CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
-                } else {
-                    throw new Error(`У конфига действия игрока отсутствует обязательный параметр описания отрисовки профита.`);
-                }
-            } else {
-                throw new Error(`У конфига действия игрока отсутствует обязательный параметр вариантов выкладки карты ${CardNames.Olwin}.`);
-            }
-        } else {
-            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-        }
-    } else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    const stack: IStack | undefined = player.stack[0];
+    if (stack === undefined) {
+        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
+    }
+    const playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = stack.variants;
+    if (playerVariants === undefined) {
+        throw new Error(`У конфига действия игрока отсутствует обязательный параметр вариантов выкладки карты ${CardNames.Olwin}.`);
+    }
+    const olwinDouble: ICard = CreateCard({
+        suit,
+        rank: playerVariants[suit].rank,
+        points: playerVariants[suit].points,
+        name: CardNames.Olwin,
+        game: GameNames.Thingvellir,
+    });
+    const drawName: string | undefined = stack.config?.drawName;
+    if (drawName === undefined) {
+        throw new Error(`У конфига действия игрока отсутствует обязательный параметр описания отрисовки профита.`);
+    }
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${drawName} во фракцию ${suitsConfig[suit].suitName}.`);
+    AddCardToPlayer(G, ctx, olwinDouble);
+    if (player.actionsNum === 2) {
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.placeOlwinCards()]);
+    }
+    CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
 };
 
 /**
@@ -108,36 +101,32 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
  */
 export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        const stack: IStack | undefined = player.stack[0];
-        if (stack !== undefined) {
-            const playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = stack.variants;
-            if (playerVariants !== undefined) {
-                const heroCard: IHeroCard = CreateHero({
-                    suit,
-                    rank: playerVariants[suit].rank,
-                    points: playerVariants[suit].points,
-                    type: RusCardTypes.HERO,
-                    name: HeroNames.Thrud,
-                    game: GameNames.Basic,
-                    description: heroesConfig.Thrud.description,
-                });
-                const drawName: string | undefined = stack.config?.drawName;
-                if (drawName !== undefined) {
-                    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${drawName} во фракцию ${suitsConfig[suit].suitName}.`);
-                    AddHeroCardToPlayerCards(G, ctx, heroCard);
-                } else {
-                    throw new Error(`У конфига действия игрока отсутствует обязательный параметр описания отрисовки профита.`);
-                }
-            } else {
-                throw new Error(`У конфига действия игрока отсутствует обязательный параметр вариантов выкладки карты ${HeroNames.Thrud}.`);
-            }
-        } else {
-            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-        }
-    } else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    const stack: IStack | undefined = player.stack[0];
+    if (stack === undefined) {
+        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
+    }
+    const playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = stack.variants;
+    if (playerVariants === undefined) {
+        throw new Error(`У конфига действия игрока отсутствует обязательный параметр вариантов выкладки карты ${HeroNames.Thrud}.`);
+    }
+    const heroCard: IHeroCard = CreateHero({
+        suit,
+        rank: playerVariants[suit].rank,
+        points: playerVariants[suit].points,
+        type: RusCardTypes.HERO,
+        name: HeroNames.Thrud,
+        game: GameNames.Basic,
+        description: heroesConfig.Thrud.description,
+    });
+    const drawName: string | undefined = stack.config?.drawName;
+    if (drawName === undefined) {
+        throw new Error(`У конфига действия игрока отсутствует обязательный параметр описания отрисовки профита.`);
+    }
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${drawName} во фракцию ${suitsConfig[suit].suitName}.`);
+    AddHeroCardToPlayerCards(G, ctx, heroCard);
 };
 
 /**
@@ -153,38 +142,34 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): vo
  */
 export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        const stack: IStack | undefined = player.stack[0];
-        if (stack !== undefined) {
-            const playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = stack.variants;
-            if (playerVariants !== undefined) {
-                const heroCard: IHeroCard = CreateHero({
-                    suit,
-                    rank: playerVariants[suit].rank,
-                    points: playerVariants[suit].points,
-                    type: RusCardTypes.HERO,
-                    name: HeroNames.Ylud,
-                    game: GameNames.Basic,
-                    description: heroesConfig.Ylud.description,
-                });
-                const drawName: string | undefined = stack.config?.drawName;
-                if (drawName !== undefined) {
-                    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${drawName} во фракцию ${suitsConfig[suit].suitName}.`);
-                    AddHeroCardToPlayerCards(G, ctx, heroCard);
-                    CheckAndMoveThrudOrPickHeroAction(G, ctx, heroCard);
-                    if (G.tierToEnd === 0) {
-                        DeleteBuffFromPlayer(G, ctx, BuffNames.EndTier);
-                    }
-                } else {
-                    throw new Error(`У конфига действия игрока отсутствует обязательный параметр описания отрисовки профита.`);
-                }
-            } else {
-                throw new Error(`У конфига действия игрока отсутствует обязательный параметр вариантов выкладки карты ${HeroNames.Ylud}.`);
-            }
-        } else {
-            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-        }
-    } else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    const stack: IStack | undefined = player.stack[0];
+    if (stack === undefined) {
+        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
+    }
+    const playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = stack.variants;
+    if (playerVariants === undefined) {
+        throw new Error(`У конфига действия игрока отсутствует обязательный параметр вариантов выкладки карты ${HeroNames.Ylud}.`);
+    }
+    const heroCard: IHeroCard = CreateHero({
+        suit,
+        rank: playerVariants[suit].rank,
+        points: playerVariants[suit].points,
+        type: RusCardTypes.HERO,
+        name: HeroNames.Ylud,
+        game: GameNames.Basic,
+        description: heroesConfig.Ylud.description,
+    });
+    const drawName: string | undefined = stack.config?.drawName;
+    if (drawName === undefined) {
+        throw new Error(`У конфига действия игрока отсутствует обязательный параметр описания отрисовки профита.`);
+    }
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${drawName} во фракцию ${suitsConfig[suit].suitName}.`);
+    AddHeroCardToPlayerCards(G, ctx, heroCard);
+    CheckAndMoveThrudOrPickHeroAction(G, ctx, heroCard);
+    if (G.tierToEnd === 0) {
+        DeleteBuffFromPlayer(G, ctx, BuffNames.EndTier);
     }
 };

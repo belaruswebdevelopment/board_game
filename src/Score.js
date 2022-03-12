@@ -47,22 +47,18 @@ export const FinalScoring = (G, ctx, player, playerId, warriorDistinctions) => {
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за карты дворфов игрока ${player.nickname}: ${score}`);
     for (let i = 0; i < player.boardCoins.length; i++) {
         const boardCoin = player.boardCoins[i];
-        if (boardCoin !== undefined) {
-            coinsValue += (_a = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _a !== void 0 ? _a : 0;
-        }
-        else {
+        if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока на столе отсутствует монета ${i}.`);
         }
+        coinsValue += (_a = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _a !== void 0 ? _a : 0;
     }
     if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
         for (let i = 0; i < player.handCoins.length; i++) {
             const handCoin = player.handCoins[i];
-            if (handCoin !== undefined) {
-                coinsValue += (_b = handCoin === null || handCoin === void 0 ? void 0 : handCoin.value) !== null && _b !== void 0 ? _b : 0;
-            }
-            else {
+            if (handCoin === undefined) {
                 throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
             }
+            coinsValue += (_b = handCoin === null || handCoin === void 0 ? void 0 : handCoin.value) !== null && _b !== void 0 ? _b : 0;
         }
     }
     score += coinsValue;
@@ -83,35 +79,29 @@ export const FinalScoring = (G, ctx, player, playerId, warriorDistinctions) => {
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
         const hero = player.heroes[i];
-        if (hero !== undefined) {
-            const heroData = Object.values(heroesConfig).find((heroObj) => heroObj.name === hero.name);
-            if (heroData !== undefined) {
-                if (hero.name.startsWith(`Dwerg`)) {
-                    dwerg_brothers += heroData.scoringRule(player);
-                }
-                else {
-                    const currentHeroScore = heroData.scoringRule(player);
-                    heroesScore += currentHeroScore;
-                    AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${hero.name} игрока ${player.nickname}: ${currentHeroScore}.`);
-                }
-            }
-            else {
-                throw new Error(`Не удалось найти героя ${hero.name}.`);
-            }
+        if (hero === undefined) {
+            throw new Error(`Не существует карта героя ${i}.`);
+        }
+        const heroData = Object.values(heroesConfig).find((heroObj) => heroObj.name === hero.name);
+        if (heroData === undefined) {
+            throw new Error(`Не удалось найти героя ${hero.name}.`);
+        }
+        if (hero.name.startsWith(`Dwerg`)) {
+            dwerg_brothers += heroData.scoringRule(player);
         }
         else {
-            throw new Error(`Не существует карта героя ${i}.`);
+            const currentHeroScore = heroData.scoringRule(player);
+            heroesScore += currentHeroScore;
+            AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя ${hero.name} игрока ${player.nickname}: ${currentHeroScore}.`);
         }
     }
     if (dwerg_brothers) {
         const dwerg_brother_value = dwerg_brothers_scoring[dwerg_brothers];
-        if (dwerg_brother_value !== undefined) {
-            heroesScore += dwerg_brother_value;
-            AddDataToLog(G, LogTypes.PRIVATE, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) игрока ${player.nickname}: ${dwerg_brothers_scoring[dwerg_brothers]}.`);
-        }
-        else {
+        if (dwerg_brother_value === undefined) {
             throw new Error(`Не существует количества очков за количество героев братьев Двергов ${dwerg_brothers}.`);
         }
+        heroesScore += dwerg_brother_value;
+        AddDataToLog(G, LogTypes.PRIVATE, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) игрока ${player.nickname}: ${dwerg_brothers_scoring[dwerg_brothers]}.`);
     }
     score += heroesScore;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за героев игрока ${player.nickname}: ${heroesScore}.`);
@@ -119,22 +109,18 @@ export const FinalScoring = (G, ctx, player, playerId, warriorDistinctions) => {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
             const campCard = player.campCards[i];
-            if (campCard !== undefined) {
-                const artefact = Object.values(artefactsConfig).find((artefact) => artefact.name === campCard.name);
-                let currentArtefactScore = 0;
-                if (artefact !== undefined) {
-                    currentArtefactScore = artefact.scoringRule(player);
-                }
-                else {
-                    throw new Error(`Не удалось найти артефакт ${campCard.name}.`);
-                }
-                if (currentArtefactScore) {
-                    artifactsScore += currentArtefactScore;
-                    AddDataToLog(G, LogTypes.PRIVATE, `Очки за артефакт ${campCard.name} игрока ${player.nickname}: ${currentArtefactScore}.`);
-                }
-            }
-            else {
+            if (campCard === undefined) {
                 throw new Error(`В массиве карт кэмпа игрока отсутствует карта ${i}.`);
+            }
+            const artefact = Object.values(artefactsConfig).find((artefact) => artefact.name === campCard.name);
+            let currentArtefactScore = 0;
+            if (artefact === undefined) {
+                throw new Error(`Не удалось найти артефакт ${campCard.name}.`);
+            }
+            currentArtefactScore = artefact.scoringRule(player);
+            if (currentArtefactScore) {
+                artifactsScore += currentArtefactScore;
+                AddDataToLog(G, LogTypes.PRIVATE, `Очки за артефакт ${campCard.name} игрока ${player.nickname}: ${currentArtefactScore}.`);
             }
         }
         score += artifactsScore;
@@ -160,29 +146,25 @@ export const ScoreWinner = (G, ctx) => {
     const warriorDistinctions = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR);
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI = G.publicPlayers[i];
-        if (playerI !== undefined) {
-            G.totalScore.push(FinalScoring(G, ctx, playerI, i, warriorDistinctions));
-        }
-        else {
+        if (playerI === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
         }
+        G.totalScore.push(FinalScoring(G, ctx, playerI, i, warriorDistinctions));
     }
     const maxScore = Math.max(...G.totalScore), maxPlayers = G.totalScore.filter((score) => score === maxScore).length;
     let winners = 0;
     for (let i = ctx.numPlayers - 1; i >= 0; i--) {
         const playerCtxI = G.publicPlayers[i];
-        if (playerCtxI !== undefined) {
-            if (maxScore === G.totalScore[i] && maxPlayers > winners) {
-                G.winner.push(i);
-                winners++;
-                AddDataToLog(G, LogTypes.GAME, `Определился победитель: игрок ${playerCtxI.nickname}.`);
-                if (maxPlayers === winners) {
-                    break;
-                }
-            }
-        }
-        else {
+        if (playerCtxI === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+        }
+        if (maxScore === G.totalScore[i] && maxPlayers > winners) {
+            G.winner.push(i);
+            winners++;
+            AddDataToLog(G, LogTypes.GAME, `Определился победитель: игрок ${playerCtxI.nickname}.`);
+            if (maxPlayers === winners) {
+                break;
+            }
         }
     }
     if (G.winner.length) {

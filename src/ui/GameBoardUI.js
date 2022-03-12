@@ -25,23 +25,21 @@ export const DrawCamp = (G, validatorName, data) => {
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
             const campCard = G.camp[j];
-            if (campCard !== undefined) {
-                if (campCard === null) {
-                    if (data !== undefined) {
-                        boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }) }, `Camp ${j} icon`));
-                    }
-                }
-                else {
-                    if (data !== undefined) {
-                        DrawCard(data, boardCells, campCard, j, null, null, MoveNames.ClickCampCardMove, j);
-                    }
-                    else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator) {
-                        moveMainArgs.push(j);
-                    }
+            if (campCard === undefined) {
+                throw new Error(`В массиве карт кэмпа отсутствует карта ${j}.`);
+            }
+            if (campCard === null) {
+                if (data !== undefined) {
+                    boardCells.push(_jsx("td", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }) }, `Camp ${j} icon`));
                 }
             }
             else {
-                throw new Error(`В массиве карт кэмпа отсутствует карта ${j}.`);
+                if (data !== undefined) {
+                    DrawCard(data, boardCells, campCard, j, null, null, MoveNames.ClickCampCardMove, j);
+                }
+                else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator) {
+                    moveMainArgs.push(j);
+                }
             }
         }
     }
@@ -132,21 +130,19 @@ export const DrawHeroes = (G, validatorName, data) => {
         const boardCells = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j, hero = G.heroes[increment];
-            if (hero !== undefined) {
-                if (data !== undefined) {
-                    if (hero.active) {
-                        DrawCard(data, boardCells, hero, increment, null, null, MoveNames.ClickHeroCardMove, increment);
-                    }
-                    else {
-                        DrawCard(data, boardCells, hero, increment, null);
-                    }
+            if (hero === undefined) {
+                throw new Error(`В массиве карт героев отсутствует герой ${increment}.`);
+            }
+            if (data !== undefined) {
+                if (hero.active) {
+                    DrawCard(data, boardCells, hero, increment, null, null, MoveNames.ClickHeroCardMove, increment);
                 }
-                else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
-                    moveMainArgs.push(increment);
+                else {
+                    DrawCard(data, boardCells, hero, increment, null);
                 }
             }
-            else {
-                throw new Error(`В массиве карт героев отсутствует герой ${increment}.`);
+            else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
+                moveMainArgs.push(increment);
             }
             if (increment + 1 === G.heroes.length) {
                 break;
@@ -183,15 +179,13 @@ export const DrawMarketCoins = (G, data) => {
         const boardCells = [];
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j, marketCoin = G.marketCoinsUnique[increment];
-            if (marketCoin !== undefined) {
-                const tempCoinValue = marketCoin.value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
-                DrawCoin(data, boardCells, `market`, marketCoin, increment, null, coinClassName, countMarketCoins[tempCoinValue], MoveNames.ClickHandCoinMove, j);
-                if (increment + 1 === G.marketCoinsUnique.length) {
-                    break;
-                }
-            }
-            else {
+            if (marketCoin === undefined) {
                 throw new Error(`В массиве монет рынка героев отсутствует монета ${increment}.`);
+            }
+            const tempCoinValue = marketCoin.value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
+            DrawCoin(data, boardCells, `market`, marketCoin, increment, null, coinClassName, countMarketCoins[tempCoinValue], MoveNames.ClickHandCoinMove, j);
+            if (increment + 1 === G.marketCoinsUnique.length) {
+                break;
             }
         }
         boardRows.push(_jsx("tr", { children: boardCells }, `Market coins row ${i}`));
@@ -212,89 +206,85 @@ export const DrawMarketCoins = (G, data) => {
  */
 export const DrawProfit = (G, ctx, data) => {
     const boardCells = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        const stack = player.stack[0];
-        if (stack !== undefined) {
-            const config = stack.config, option = G.drawProfit;
-            let caption = `Get `;
-            if (option === ConfigNames.PlaceThrudHero || option === ConfigNames.PlaceYludHero
-                || option === ConfigNames.PlaceOlwinCards) {
-                if (config !== undefined) {
-                    caption += `suit to place ${player.actionsNum} ${config.drawName} ${player.actionsNum > 1 ? `s` : ``} to ${player.actionsNum > 1 ? `different` : `that`} suit.`;
-                    PlaceCardsProfit(G, ctx, null, data, boardCells);
-                }
-            }
-            else if (option === ConfigNames.ExplorerDistinction) {
-                caption += `one card to your board.`;
-                ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
-            }
-            else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
-                caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} to discard from your board.`;
-                DiscardCardFromBoardProfit(G, ctx, null, data, boardCells);
-            }
-            else if (option === ConfigNames.AndumiaAction || option === ConfigNames.BrisingamensAction) {
-                caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} from discard pile to your board.`;
-                PickDiscardCardProfit(G, ctx, null, data, boardCells);
-            }
-            else if (option === ConfigNames.BrisingamensEndGameAction) {
-                caption += `one card to discard from your board.`;
-                DiscardAnyCardFromPlayerBoardProfit(G, ctx, null, data, boardCells);
-            }
-            else if (option === ConfigNames.HofudAction) {
-                caption += `one warrior card to discard from your board.`;
-                DiscardSuitCardFromPlayerBoardProfit(G, ctx, null, null, data, boardCells);
-            }
-            else if (option === ConfigNames.HoldaAction) {
-                caption += `one card from camp to your board.`;
-                PickCampCardHoldaProfit(G, ctx, null, data, boardCells);
-            }
-            else if (option === ConfigNames.DiscardCard) {
-                caption += `one card to discard from current tavern.`;
-                DiscardCardProfit(G, ctx, null, data, boardCells);
-            }
-            else if (option === ConfigNames.GetMjollnirProfit) {
-                caption += `suit to get Mjollnir profit from ranks on that suit.`;
-                GetMjollnirProfitProfit(G, ctx, null, data, boardCells);
-            }
-            else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {
-                caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
-                StartEnlistmentMercenariesProfit(G, ctx, data, boardCells);
-            }
-            else if (option === ConfigNames.EnlistmentMercenaries) {
-                caption += `mercenary to place it to your player board.`;
-                GetEnlistmentMercenariesProfit(G, ctx, null, data, boardCells);
-            }
-            else if (option === ConfigNames.PlaceEnlistmentMercenaries) {
-                const card = player.pickedCard;
-                if (card !== null) {
-                    caption += `suit to place ${card.name} to that suit.`;
-                    PlaceEnlistmentMercenariesProfit(G, ctx, null, data, boardCells);
-                }
-            }
-            else if (option === ConfigNames.AddCoinToPouchVidofnirVedrfolnir) {
-                caption += `${player.actionsNum} coin${player.actionsNum > 1 ? `s` : ``} to add to your pouch to fill it.`;
-                AddCoinToPouchProfit(G, ctx, null, data, boardCells);
-            }
-            else {
-                if (config !== undefined) {
-                    caption += `coin to upgrade up to ${config.value}.`;
-                    if (option === ConfigNames.VidofnirVedrfolnirAction) {
-                        UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, null, data, boardCells);
-                    }
-                    else if (option === ConfigNames.UpgradeCoin) {
-                        UpgradeCoinProfit(G, ctx, null, data, boardCells);
-                    }
-                }
-            }
-            return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }), " ", _jsx("span", { children: caption })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
-        }
-        else {
-            throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-        }
-    }
-    else {
+    if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    const stack = player.stack[0];
+    if (stack === undefined) {
+        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
+    }
+    const config = stack.config, option = G.drawProfit;
+    let caption = `Get `;
+    if (option === ConfigNames.PlaceThrudHero || option === ConfigNames.PlaceYludHero
+        || option === ConfigNames.PlaceOlwinCards) {
+        if (config !== undefined) {
+            caption += `suit to place ${player.actionsNum} ${config.drawName} ${player.actionsNum > 1 ? `s` : ``} to ${player.actionsNum > 1 ? `different` : `that`} suit.`;
+            PlaceCardsProfit(G, ctx, null, data, boardCells);
+        }
+    }
+    else if (option === ConfigNames.ExplorerDistinction) {
+        caption += `one card to your board.`;
+        ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
+    }
+    else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
+        caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} to discard from your board.`;
+        DiscardCardFromBoardProfit(G, ctx, null, data, boardCells);
+    }
+    else if (option === ConfigNames.AndumiaAction || option === ConfigNames.BrisingamensAction) {
+        caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} from discard pile to your board.`;
+        PickDiscardCardProfit(G, ctx, null, data, boardCells);
+    }
+    else if (option === ConfigNames.BrisingamensEndGameAction) {
+        caption += `one card to discard from your board.`;
+        DiscardAnyCardFromPlayerBoardProfit(G, ctx, null, data, boardCells);
+    }
+    else if (option === ConfigNames.HofudAction) {
+        caption += `one warrior card to discard from your board.`;
+        DiscardSuitCardFromPlayerBoardProfit(G, ctx, null, null, data, boardCells);
+    }
+    else if (option === ConfigNames.HoldaAction) {
+        caption += `one card from camp to your board.`;
+        PickCampCardHoldaProfit(G, ctx, null, data, boardCells);
+    }
+    else if (option === ConfigNames.DiscardCard) {
+        caption += `one card to discard from current tavern.`;
+        DiscardCardProfit(G, ctx, null, data, boardCells);
+    }
+    else if (option === ConfigNames.GetMjollnirProfit) {
+        caption += `suit to get Mjollnir profit from ranks on that suit.`;
+        GetMjollnirProfitProfit(G, ctx, null, data, boardCells);
+    }
+    else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {
+        caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
+        StartEnlistmentMercenariesProfit(G, ctx, data, boardCells);
+    }
+    else if (option === ConfigNames.EnlistmentMercenaries) {
+        caption += `mercenary to place it to your player board.`;
+        GetEnlistmentMercenariesProfit(G, ctx, null, data, boardCells);
+    }
+    else if (option === ConfigNames.PlaceEnlistmentMercenaries) {
+        const card = player.pickedCard;
+        if (card !== null) {
+            caption += `suit to place ${card.name} to that suit.`;
+            PlaceEnlistmentMercenariesProfit(G, ctx, null, data, boardCells);
+        }
+    }
+    else if (option === ConfigNames.AddCoinToPouchVidofnirVedrfolnir) {
+        caption += `${player.actionsNum} coin${player.actionsNum > 1 ? `s` : ``} to add to your pouch to fill it.`;
+        AddCoinToPouchProfit(G, ctx, null, data, boardCells);
+    }
+    else {
+        if (config !== undefined) {
+            caption += `coin to upgrade up to ${config.value}.`;
+            if (option === ConfigNames.VidofnirVedrfolnirAction) {
+                UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, null, data, boardCells);
+            }
+            else if (option === ConfigNames.UpgradeCoin) {
+                UpgradeCoinProfit(G, ctx, null, data, boardCells);
+            }
+        }
+    }
+    return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }), " ", _jsx("span", { children: caption })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
 };
 /**
  * <h3>Отрисовка карт таверн.</h3>
@@ -313,54 +303,48 @@ export const DrawTaverns = (G, validatorName, data, gridClass) => {
     const tavernsBoards = [], moveMainArgs = [];
     for (let t = 0; t < G.tavernsNum; t++) {
         const currentTavernConfig = tavernsConfig[t];
-        if (currentTavernConfig !== undefined) {
-            for (let i = 0; i < 1; i++) {
-                const boardCells = [];
-                for (let j = 0; j < G.drawSize; j++) {
-                    const tavern = G.taverns[t];
-                    if (tavern !== undefined) {
-                        const tavernCard = tavern[j];
-                        if (tavernCard !== undefined) {
-                            if (tavernCard === null) {
-                                if (data !== undefined) {
-                                    boardCells.push(_jsx("td", { children: _jsx("span", { style: Styles.Taverns(t), className: "bg-tavern-icon" }) }, `${currentTavernConfig.name} ${j}`));
-                                }
-                            }
-                            else {
-                                let suit = null;
-                                if (IsCardNotActionAndNotNull(tavernCard)) {
-                                    suit = tavernCard.suit;
-                                }
-                                if (t === G.currentTavern) {
-                                    if (data !== undefined) {
-                                        DrawCard(data, boardCells, tavernCard, j, null, suit, MoveNames.ClickCardMove, j);
-                                    }
-                                    else if (validatorName === MoveValidatorNames.ClickCardMoveValidator) {
-                                        moveMainArgs.push(j);
-                                    }
-                                }
-                                else {
-                                    if (data !== undefined) {
-                                        DrawCard(data, boardCells, tavernCard, j, null, suit);
-                                    }
-                                }
-                            }
+        if (currentTavernConfig === undefined) {
+            throw new Error(`Отсутствует конфиг таверны ${t}.`);
+        }
+        for (let i = 0; i < 1; i++) {
+            const boardCells = [];
+            for (let j = 0; j < G.drawSize; j++) {
+                const tavern = G.taverns[t];
+                if (tavern === undefined) {
+                    throw new Error(`В массиве таверн отсутствует таверна ${t}.`);
+                }
+                const tavernCard = tavern[j];
+                if (tavernCard === undefined) {
+                    throw new Error(`В массиве карт таверны ${t} отсутствует карта ${j}.`);
+                }
+                if (tavernCard === null) {
+                    if (data !== undefined) {
+                        boardCells.push(_jsx("td", { children: _jsx("span", { style: Styles.Taverns(t), className: "bg-tavern-icon" }) }, `${currentTavernConfig.name} ${j}`));
+                    }
+                }
+                else {
+                    let suit = null;
+                    if (IsCardNotActionAndNotNull(tavernCard)) {
+                        suit = tavernCard.suit;
+                    }
+                    if (t === G.currentTavern) {
+                        if (data !== undefined) {
+                            DrawCard(data, boardCells, tavernCard, j, null, suit, MoveNames.ClickCardMove, j);
                         }
-                        else {
-                            throw new Error(`В массиве карт таверны ${t} отсутствует карта ${j}.`);
+                        else if (validatorName === MoveValidatorNames.ClickCardMoveValidator) {
+                            moveMainArgs.push(j);
                         }
                     }
                     else {
-                        throw new Error(`В массиве таверн отсутствует таверна ${t}.`);
+                        if (data !== undefined) {
+                            DrawCard(data, boardCells, tavernCard, j, null, suit);
+                        }
                     }
                 }
-                if (data !== undefined) {
-                    tavernsBoards.push(_jsxs("table", { className: `${gridClass} justify-self-center`, children: [_jsxs("caption", { className: "whitespace-nowrap", children: [_jsx("span", { style: Styles.Taverns(t), className: "bg-top-tavern-icon" }), " ", _jsx("b", { children: currentTavernConfig.name })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }, `Tavern ${currentTavernConfig.name} board`));
-                }
             }
-        }
-        else {
-            throw new Error(`Отсутствует конфиг таверны ${t}.`);
+            if (data !== undefined) {
+                tavernsBoards.push(_jsxs("table", { className: `${gridClass} justify-self-center`, children: [_jsxs("caption", { className: "whitespace-nowrap", children: [_jsx("span", { style: Styles.Taverns(t), className: "bg-top-tavern-icon" }), " ", _jsx("b", { children: currentTavernConfig.name })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }, `Tavern ${currentTavernConfig.name} board`));
+            }
         }
     }
     if (data !== undefined) {
@@ -406,29 +390,23 @@ export const DrawWinner = (G, ctx) => {
         if (G.winner !== undefined) {
             if (G.winner.length === 1) {
                 const winnerIndex = G.winner[0];
-                if (winnerIndex !== undefined) {
-                    const winnerPlayer = G.publicPlayers[winnerIndex];
-                    if (winnerPlayer !== undefined) {
-                        winner = `Winner: Player ${winnerPlayer.nickname}`;
-                    }
-                    else {
-                        throw new Error(`Отсутствует игрок победитель ${winnerIndex}.`);
-                    }
-                }
-                else {
+                if (winnerIndex === undefined) {
                     throw new Error(`Отсутствует индекс игрока победителя.`);
                 }
+                const winnerPlayer = G.publicPlayers[winnerIndex];
+                if (winnerPlayer === undefined) {
+                    throw new Error(`Отсутствует игрок победитель ${winnerIndex}.`);
+                }
+                winner = `Winner: Player ${winnerPlayer.nickname}`;
             }
             else {
                 winner = "Winners: ";
                 G.winner.forEach((playerId, index) => {
                     const winnerPlayerI = G.publicPlayers[playerId];
-                    if (winnerPlayerI !== undefined) {
-                        winner += `${index + 1}) Player ${winnerPlayerI.nickname}; `;
-                    }
-                    else {
+                    if (winnerPlayerI === undefined) {
                         throw new Error(`Отсутствует игрок победитель ${playerId}.`);
                     }
+                    winner += `${index + 1}) Player ${winnerPlayerI.nickname}; `;
                 });
             }
         }

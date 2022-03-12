@@ -36,53 +36,51 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
         exchangeOrder: number[] = [];
     for (let i = 0; i < ctx.numPlayers; i++) {
         const playerI: IPublicPlayer | undefined = G.publicPlayers[i];
-        if (playerI !== undefined) {
-            const coin: CoinType | undefined = playerI.boardCoins[G.currentTavern];
-            if (coin !== undefined) {
-                if (IsCoin(coin)) {
-                    coinValues[i] = coin.value;
-                    playersOrderNumbers.push(i);
-                    exchangeOrder.push(i);
+        if (playerI === undefined) {
+            throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+        }
+        const coin: CoinType | undefined = playerI.boardCoins[G.currentTavern];
+        if (coin !== undefined) {
+            if (IsCoin(coin)) {
+                coinValues[i] = coin.value;
+                playersOrderNumbers.push(i);
+                exchangeOrder.push(i);
+            }
+            for (let j: number = playersOrderNumbers.length - 1; j > 0; j--) {
+                const playersOrderNumberCur: number | undefined = playersOrderNumbers[j],
+                    playersOrderNumberPrev: number | undefined = playersOrderNumbers[j - 1];
+                if (playersOrderNumberCur === undefined || playersOrderNumberPrev === undefined) {
+                    throw new Error(`В массиве порядка хода игроков отсутствуют ${j} и/или ${j - 1}.`);
                 }
-                for (let j: number = playersOrderNumbers.length - 1; j > 0; j--) {
-                    const playersOrderNumberCur: number | undefined = playersOrderNumbers[j],
-                        playersOrderNumberPrev: number | undefined = playersOrderNumbers[j - 1];
-                    if (playersOrderNumberCur !== undefined && playersOrderNumberPrev !== undefined) {
-                        const playerCur: IPublicPlayer | undefined = G.publicPlayers[playersOrderNumberCur],
-                            playerPrev: IPublicPlayer | undefined = G.publicPlayers[playersOrderNumberPrev];
-                        if (playerCur !== undefined && playerPrev !== undefined) {
-                            const coin: CoinType | undefined = playerCur.boardCoins[G.currentTavern],
-                                prevCoin: CoinType | undefined = playerPrev.boardCoins[G.currentTavern];
-                            if (coin !== undefined && prevCoin !== undefined) {
-                                if (IsCoin(coin) && IsCoin(prevCoin)) {
-                                    // TODO Move same logic 1place: [playersOrderNumbers[j], playersOrderNumbers[j - 1]] = [playersOrderNumberPrev, playersOrderNumberCur]
-                                    if (coin.value > prevCoin.value) {
-                                        [playersOrderNumbers[j], playersOrderNumbers[j - 1]] = [playersOrderNumberPrev, playersOrderNumberCur];
-                                    } else if (coin.value === prevCoin.value) {
-                                        const priority: IPriority = playerCur.priority,
-                                            prevPriority: IPriority = playerPrev.priority;
-                                        if (priority.value > prevPriority.value) {
-                                            [playersOrderNumbers[j], playersOrderNumbers[j - 1]] = [playersOrderNumberPrev, playersOrderNumberCur];
-                                        }
-                                    } else {
-                                        break;
-                                    }
-                                }
-                            } else {
-                                throw new Error(`В массиве монет игроков ${playersOrderNumberCur} и/или ${playersOrderNumberPrev} на столе отсутствует монета в позиции ${G.currentTavern}.`);
-                            }
-                        } else {
-                            throw new Error(`В массиве игроков отсутствует игроки ${playersOrderNumberCur} и/или ${playersOrderNumberPrev}.`);
+                const playerCur: IPublicPlayer | undefined = G.publicPlayers[playersOrderNumberCur],
+                    playerPrev: IPublicPlayer | undefined = G.publicPlayers[playersOrderNumberPrev];
+                if (playerCur === undefined || playerPrev === undefined) {
+                    throw new Error(`В массиве игроков отсутствует игроки ${playersOrderNumberCur} и/или ${playersOrderNumberPrev}.`);
+                }
+                const coin: CoinType | undefined = playerCur.boardCoins[G.currentTavern],
+                    prevCoin: CoinType | undefined = playerPrev.boardCoins[G.currentTavern];
+                if (coin === undefined || prevCoin === undefined) {
+                    throw new Error(`В массиве монет игроков ${playersOrderNumberCur} и/или ${playersOrderNumberPrev} на столе отсутствует монета в позиции ${G.currentTavern}.`);
+                }
+                if (IsCoin(coin) && IsCoin(prevCoin)) {
+                    // TODO Move same logic 1place: [playersOrderNumbers[j], playersOrderNumbers[j - 1]] = [playersOrderNumberPrev, playersOrderNumberCur]
+                    if (coin.value > prevCoin.value) {
+                        [playersOrderNumbers[j], playersOrderNumbers[j - 1]] =
+                            [playersOrderNumberPrev, playersOrderNumberCur];
+                    } else if (coin.value === prevCoin.value) {
+                        const priority: IPriority = playerCur.priority,
+                            prevPriority: IPriority = playerPrev.priority;
+                        if (priority.value > prevPriority.value) {
+                            [playersOrderNumbers[j], playersOrderNumbers[j - 1]] =
+                                [playersOrderNumberPrev, playersOrderNumberCur];
                         }
                     } else {
-                        throw new Error(`В массиве порядка хода игроков отсутствуют ${j} и/или ${j - 1}.`);
+                        break;
                     }
                 }
-            } else {
-                throw new Error(`В массиве монет игрока ${i} на столе отсутствует монета в позиции ${G.currentTavern}.`);
             }
         } else {
-            throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+            throw new Error(`В массиве монет игрока ${i} на столе отсутствует монета в позиции ${G.currentTavern}.`);
         }
     }
     const counts: INumberValues = {};
@@ -96,20 +94,18 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
     for (const prop in counts) {
         if (Object.prototype.hasOwnProperty.call(counts, prop)) {
             const value: number | undefined = counts[prop];
-            if (value !== undefined) {
-                if (value <= 1) {
-                    continue;
-                }
-            } else {
+            if (value === undefined) {
                 throw new Error(`В массиве значений монет отсутствует ${prop}.`);
+            }
+            if (value <= 1) {
+                continue;
             }
             const tiePlayers: IPublicPlayer[] = G.publicPlayers.filter((player: IPublicPlayer): boolean => {
                 const boardCoinCurrentTavern: CoinType | undefined = player.boardCoins[G.currentTavern];
-                if (boardCoinCurrentTavern !== undefined) {
-                    return boardCoinCurrentTavern?.value === Number(prop) && player.priority.isExchangeable;
-                } else {
+                if (boardCoinCurrentTavern === undefined) {
                     throw new Error(`В массиве монет игрока отсутствует монета текущей таверны ${G.currentTavern}.`);
                 }
+                return boardCoinCurrentTavern?.value === Number(prop) && player.priority.isExchangeable;
             });
             while (tiePlayers.length > 1) {
                 const tiePlayersPriorities: number[] =
@@ -128,11 +124,10 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
                     player.priority.value === minPriority), 1);
                 const exchangeOrderMax: number | undefined = exchangeOrder[maxIndex],
                     exchangeOrderMin: number | undefined = exchangeOrder[minIndex];
-                if (exchangeOrderMax !== undefined && exchangeOrderMin !== undefined) {
-                    [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrderMax, exchangeOrderMin];
-                } else {
+                if (exchangeOrderMax === undefined || exchangeOrderMin === undefined) {
                     throw new Error(`В массиве изменений порядка хода игроков отсутствует ${exchangeOrder[maxIndex]} и/или ${exchangeOrder[minIndex]}.`);
                 }
+                [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrderMax, exchangeOrderMin];
             }
         }
     }

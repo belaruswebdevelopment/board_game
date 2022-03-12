@@ -30,22 +30,21 @@ export const AddPickCardActionToStack = (G: IMyGameState, ctx: Ctx): void => {
  */
 export const DrawCurrentProfit = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        const config: IConfig | undefined = player.stack[0]?.config;
-        if (config !== undefined) {
-            AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
-            StartOrEndActionStage(G, ctx, config);
-            player.actionsNum = config.number ?? 1;
-            if (config.name !== undefined) {
-                G.drawProfit = config.name;
-            } else {
-                G.drawProfit = ``;
-            }
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    const config: IConfig | undefined = player.stack[0]?.config;
+    if (config !== undefined) {
+        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
+        StartOrEndActionStage(G, ctx, config);
+        player.actionsNum = config.number ?? 1;
+        if (config.name !== undefined) {
+            G.drawProfit = config.name;
         } else {
             G.drawProfit = ``;
         }
     } else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        G.drawProfit = ``;
     }
 };
 

@@ -19,32 +19,29 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  */
 export const AddCampCardToCards = (G, ctx, card) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player !== undefined) {
-        if (ctx.phase === Phases.PickCards && ctx.activePlayers === null
-            && (ctx.currentPlayer === G.publicPlayersOrder[0]
-                || CheckPlayerHasBuff(player, BuffNames.GoCamp))) {
-            G.campPicked = true;
-        }
-        if (CheckPlayerHasBuff(player, BuffNames.GoCampOneTime)) {
-            DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
-        }
-        if (IsArtefactCard(card) && card.suit !== null) {
-            AddCampCardToPlayerCards(G, ctx, card);
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
-        }
-        else {
-            AddCampCardToPlayer(G, ctx, card);
-            if (IsArtefactCard(card)) {
-                AddBuffToPlayer(G, ctx, card.buff);
-            }
-        }
-        if (ctx.phase === Phases.EnlistmentMercenaries
-            && player.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
-            AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
-        }
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    if (ctx.phase === Phases.PickCards && ctx.activePlayers === null
+        && (ctx.currentPlayer === G.publicPlayersOrder[0] || CheckPlayerHasBuff(player, BuffNames.GoCamp))) {
+        G.campPicked = true;
+    }
+    if (CheckPlayerHasBuff(player, BuffNames.GoCampOneTime)) {
+        DeleteBuffFromPlayer(G, ctx, BuffNames.GoCampOneTime);
+    }
+    if (IsArtefactCard(card) && card.suit !== null) {
+        AddCampCardToPlayerCards(G, ctx, card);
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
     }
     else {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        AddCampCardToPlayer(G, ctx, card);
+        if (IsArtefactCard(card)) {
+            AddBuffToPlayer(G, ctx, card.buff);
+        }
+    }
+    if (ctx.phase === Phases.EnlistmentMercenaries
+        && player.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
     }
 };
 /**
@@ -59,19 +56,15 @@ export const AddCampCardToCards = (G, ctx, card) => {
  * @param card Карта кэмпа.
  */
 export const AddCampCardToPlayer = (G, ctx, card) => {
-    if (!IsArtefactCard(card) || (IsArtefactCard(card) && card.suit === null)) {
-        const player = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player !== undefined) {
-            player.campCards.push(card);
-            AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту кэмпа ${card.name}.`);
-        }
-        else {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-        }
-    }
-    else {
+    if (IsArtefactCard(card) && card.suit !== null) {
         throw new Error(`Не удалось добавить карту артефакта ${card.name} в массив карт кэмпа игрока из-за её принадлежности к фракции ${card.suit}.`);
     }
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    player.campCards.push(card);
+    AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту кэмпа ${card.name}.`);
 };
 /**
  * <h3>Добавляет карту кэмпа в конкретную фракцию игрока.</h3>
@@ -86,20 +79,16 @@ export const AddCampCardToPlayer = (G, ctx, card) => {
  * @returns Добавлен ли артефакт на планшет игрока.
  */
 export const AddCampCardToPlayerCards = (G, ctx, card) => {
-    if (card.suit !== null) {
-        const player = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player !== undefined) {
-            player.cards[card.suit].push(card);
-            player.pickedCard = card;
-            AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} выбрал карту кэмпа '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
-            return true;
-        }
-        else {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-        }
-    }
-    else {
+    if (card.suit === null) {
         throw new Error(`Не удалось добавить артефакт '${card.name}' на планшет карт фракций игрока из-за отсутствия принадлежности его к конкретной фракции.`);
     }
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    player.cards[card.suit].push(card);
+    player.pickedCard = card;
+    AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} выбрал карту кэмпа '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
+    return true;
 };
 //# sourceMappingURL=CampCardHelpers.js.map
