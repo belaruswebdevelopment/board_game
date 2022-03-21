@@ -1,12 +1,13 @@
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
-import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
-import { CheckIsMercenaryCampCardInPlayerCards, IsActionCard } from "../Card";
+import { IsArtefactCard, IsMercenaryCampCard, IsMercenaryPlayerCard } from "../Camp";
+import { IsActionCard } from "../Card";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { IsHeroCard } from "../Hero";
-import { MoveNames } from "../typescript/enums";
-import type { AllCardTypes, ArgsTypes, CoinType, IBackground, IMoveFunctionTypes, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
+import { ArtefactNames, MoveNames } from "../typescript/enums";
+import type { AllCardTypes, ArgsTypes, IBackground, IMoveFunctionTypes, IMyGameState, IPublicPlayer, PublicPlayerBoardCoinTypes, SuitTypes } from "../typescript/interfaces";
 
 
 /**
@@ -64,7 +65,7 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
  * @param args Аргументы действия.
  */
 export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], card: AllCardTypes, id: number,
-    player: IPublicPlayer | null, suit?: SuitTypes | null, moveName?: MoveNames, ...args: ArgsTypes): void => {
+    player: IPublicPlayer | null, suit: SuitTypes | null, moveName?: MoveNames, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         tdClasses = ``,
         spanClasses = ``,
@@ -110,7 +111,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     } else {
         action = null;
     }
-    if (suit !== null && suit !== undefined) {
+    if (suit !== null) {
         tdClasses = suitsConfig[suit].suitColor;
     }
     if (IsHeroCard(card)) {
@@ -123,8 +124,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         if (suit === null) {
             tdClasses = `bg-gray-600`;
         }
-    } else if (IsMercenaryCampCard(card) || IsArtefactCard(card)
-        || (!IsActionCard(card) && CheckIsMercenaryCampCardInPlayerCards(card))) {
+    } else if (IsMercenaryCampCard(card) || IsArtefactCard(card) || IsMercenaryPlayerCard(card)) {
         styles = Styles.CampCards(card.tier, card.path);
         spanClasses = `bg-camp`;
         if (suit === null) {
@@ -147,7 +147,11 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
         description = card.description;
     }
     if (`points` in card) {
-        value = card.points !== null ? String(card.points) : ``;
+        if (IsArtefactCard(card) && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
+            value = String(GetOdroerirTheMythicCauldronCoinsValues(data.G));
+        } else {
+            value = card.points !== null ? String(card.points) : ``;
+        }
     } else if (IsActionCard(card)) {
         value = String(card.value);
     }
@@ -179,9 +183,9 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param moveName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], type: string, coin: CoinType,
-    id: number, player: IPublicPlayer | null, coinClasses?: string | null, additionalParam?: number | null,
-    moveName?: MoveNames, ...args: ArgsTypes): void => {
+export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], type: string,
+    coin: PublicPlayerBoardCoinTypes, id: number, player: IPublicPlayer | null, coinClasses?: string | null,
+    additionalParam?: number | null, moveName?: MoveNames, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         span: JSX.Element | number | null = null,
         tdClasses = `bg-yellow-300`,
@@ -230,6 +234,13 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
                 {additionalParam}
             </span>);
         }
+    } else if (type === `hidden-coin`) {
+        spanClasses = `bg-coin`;
+        if (IsCoin(coin) && coinClasses !== null && coinClasses !== undefined) {
+            styles = Styles.CoinBack();
+            span = (<span style={Styles.CoinSmall(coin.value, coin.isInitial)} className={coinClasses}>
+            </span>);
+        }
     } else {
         spanClasses = `bg-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
@@ -239,21 +250,17 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             if (coin === null) {
                 styles = Styles.CoinBack();
             } else {
-                if (coin.isInitial !== undefined) {
+                if (IsCoin(coin) && coin.isInitial !== undefined) {
                     styles = Styles.Coin(coin.value, coin.isInitial);
                 }
             }
         } else {
             styles = Styles.CoinBack();
             if (type === `back-small-market-coin`) {
-                span = (<span style={Styles.Exchange()} className="bg-small-market-coin">
-
-                </span>);
+                span = (<span style={Styles.Exchange()} className="bg-small-market-coin"></span>);
             } else if (type === `back-tavern-icon`) {
                 if (additionalParam !== null && additionalParam !== undefined) {
-                    span = (<span style={Styles.Taverns(additionalParam)} className="bg-tavern-icon">
-
-                    </span>);
+                    span = (<span style={Styles.Taverns(additionalParam)} className="bg-tavern-icon"></span>);
                 }
             }
         }

@@ -1,6 +1,9 @@
+import { IsCardNotActionAndNotNull } from "../Card";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
+import { AddCardToPlayer } from "./CardHelpers";
+import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 export const AddGetDistinctionsActionToStack = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
@@ -13,7 +16,7 @@ export const AddPickCardActionToStack = (G, ctx) => {
  * <p>Применения:</p>
  * <ol>
  * <li>При выборе конкретных героев, дающих профит.</li>
- * <li>При выборе конкретных карт кэмпа, дающих профит.</li>
+ * <li>При выборе конкретных карт лагеря, дающих профит.</li>
  * <li>При выборе конкретных карт улучшения монет, дающих профит.</li>
  * <li>При игровых моментах, дающих профит.</li>
  * </ol>
@@ -43,6 +46,19 @@ export const DrawCurrentProfit = (G, ctx) => {
         G.drawProfit = ``;
     }
 };
+export const PickCardOrActionCardActions = (G, ctx, card) => {
+    const isAdded = AddCardToPlayer(G, ctx, card);
+    if (IsCardNotActionAndNotNull(card)) {
+        if (isAdded) {
+            CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
+        }
+    }
+    else {
+        AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
+        G.discardCardsDeck.push(card);
+    }
+    return isAdded;
+};
 /**
  * <h3>Действия, связанные со стартом конкретной стадии.</h3>
  * <p>Применения:</p>
@@ -65,10 +81,10 @@ const StartOrEndActionStage = (G, ctx, config) => {
     }
 };
 /**
- * <h3>Действия, связанные с сбросом карты из таверны при выборе карты кэмпа при игре на 2-х игроков.</h3>
+ * <h3>Действия, связанные с сбросом карты из таверны при выборе карты лагеря при игре на 2-х игроков.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>После выбора карт кэмпа, если играет 2-а игрока.</li>
+ * <li>После выбора карт лагеря, если играет 2-а игрока.</li>
  * </ol>
  *
  * @param G

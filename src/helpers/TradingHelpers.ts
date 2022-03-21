@@ -3,8 +3,9 @@ import { UpgradeCoinAction } from "../actions/AutoActions";
 import { IsCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
-import type { CoinType, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { ICoin, IMyGameState, IPublicPlayer, PublicPlayerBoardCoinTypes } from "../typescript/interfaces";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
+import { IsMultiplayer } from "./MultiplayerHelpers";
 
 /**
  * <h3>Активирует обмен монет.</h3>
@@ -21,23 +22,29 @@ export const ActivateTrading = (G: IMyGameState, ctx: Ctx): void => {
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
-    const boardCoinCurrentTavern: CoinType | undefined = player.boardCoins[G.currentTavern];
+    const boardCoinCurrentTavern: PublicPlayerBoardCoinTypes | undefined = player.boardCoins[G.currentTavern];
     if (boardCoinCurrentTavern === undefined) {
         throw new Error(`В массиве монет игрока отсутствует монета текущей таверны ${G.currentTavern}.`);
     }
     if (boardCoinCurrentTavern?.isTriggerTrading) {
-        const tradingCoins: ICoin[] = [];
+        const multiplayer: boolean = IsMultiplayer(G),
+            tradingCoins: ICoin[] = [];
         for (let i: number = G.tavernsNum; i < player.boardCoins.length; i++) {
-            const boardCoin: CoinType | undefined = player.boardCoins[i];
+            const boardCoin: PublicPlayerBoardCoinTypes | undefined = player.boardCoins[i];
             if (boardCoin === undefined) {
                 throw new Error(`В массиве монет игрока на поле отсутствует монета ${i}.`);
             }
-            const coin: CoinType = boardCoin;
+            const coin: PublicPlayerBoardCoinTypes = boardCoin;
             if (IsCoin(coin)) {
                 tradingCoins.push(coin);
             }
         }
         Trading(G, ctx, tradingCoins);
+        if (multiplayer) {
+            for (let i: number = G.tavernsNum; i < player.boardCoins.length; i++) {
+                player.boardCoins[i] = {};
+            }
+        }
     }
 };
 

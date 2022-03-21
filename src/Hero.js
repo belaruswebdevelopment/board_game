@@ -18,7 +18,6 @@ export const BuildHeroes = (configOptions, heroesConfig) => {
             const heroData = heroesConfig[heroName];
             if (configOptions.includes(heroData.game)) {
                 heroes.push(CreateHero({
-                    type: RusCardTypes.HERO,
                     name: heroData.name,
                     description: heroData.description,
                     game: heroData.game,
@@ -56,7 +55,7 @@ export const BuildHeroes = (configOptions, heroesConfig) => {
  * @param stack Действия.
  * @returns Герой.
  */
-export const CreateHero = ({ type, name, description, game, suit, rank, points, active = true, buff, validators, actions, stack, } = {}) => ({
+export const CreateHero = ({ type = RusCardTypes.HERO, name, description, game, suit = null, rank = null, points = null, active = true, buff, validators, actions, stack, } = {}) => ({
     type,
     name,
     description,

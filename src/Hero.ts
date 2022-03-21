@@ -20,7 +20,6 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
             const heroData: IHeroData = heroesConfig[heroName];
             if (configOptions.includes(heroData.game)) {
                 heroes.push(CreateHero({
-                    type: RusCardTypes.HERO,
                     name: heroData.name,
                     description: heroData.description,
                     game: heroData.game,
@@ -60,13 +59,13 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
  * @returns Герой.
  */
 export const CreateHero = ({
-    type,
+    type = RusCardTypes.HERO,
     name,
     description,
     game,
-    suit,
-    rank,
-    points,
+    suit = null,
+    rank = null,
+    points = null,
     active = true,
     buff,
     validators,

@@ -4,7 +4,7 @@ import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames, Phases } from "../typescript/enums";
 export const CheckBrisingamensEndGameOrder = (G) => {
-    const brisingamensPlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
+    const brisingamensPlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
     if (brisingamensPlayerIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.DiscardCardEndGame}.`);
     }
@@ -31,23 +31,22 @@ export const OnBrisingamensEndGameTurnBegin = (G, ctx) => {
  * @returns
  */
 export const StartGetMjollnirProfitOrEndGame = (G, ctx) => {
-    if (G.publicPlayersOrder.length) {
+    if (G.publicPlayersOrder.length && ctx.playOrder.length === 1 && G.publicPlayersOrder[0] === ctx.playOrder[0]
+        && ctx.currentPlayer === ctx.playOrder[0]) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с первым ходом.`);
         }
         if (!CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame) && !player.stack.length
             && !player.actionsNum) {
-            if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                const buffIndex = G.publicPlayers.findIndex((playerB) => CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
-                if (buffIndex !== -1) {
-                    return {
-                        next: Phases.GetMjollnirProfit,
-                    };
-                }
-                else {
-                    return true;
-                }
+            const buffIndex = Object.values(G.publicPlayers).findIndex((playerB) => CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
+            if (buffIndex !== -1) {
+                return {
+                    next: Phases.GetMjollnirProfit,
+                };
+            }
+            else {
+                return true;
             }
         }
     }

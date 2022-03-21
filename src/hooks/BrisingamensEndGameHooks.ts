@@ -7,8 +7,9 @@ import { BuffNames, Phases } from "../typescript/enums";
 import type { IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
 export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
-    const brisingamensPlayerIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-        CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
+    const brisingamensPlayerIndex: number =
+        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
+            CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
     if (brisingamensPlayerIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.DiscardCardEndGame}.`);
     }
@@ -39,23 +40,23 @@ export const OnBrisingamensEndGameTurnBegin = (G: IMyGameState, ctx: Ctx): void 
  * @returns
  */
 export const StartGetMjollnirProfitOrEndGame = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
-    if (G.publicPlayersOrder.length) {
+    if (G.publicPlayersOrder.length && ctx.playOrder.length === 1 && G.publicPlayersOrder[0] === ctx.playOrder[0]
+        && ctx.currentPlayer === ctx.playOrder[0]) {
         const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с первым ходом.`);
         }
         if (!CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame) && !player.stack.length
             && !player.actionsNum) {
-            if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                const buffIndex: number = G.publicPlayers.findIndex((playerB: IPublicPlayer): boolean =>
+            const buffIndex: number =
+                Object.values(G.publicPlayers).findIndex((playerB: IPublicPlayer): boolean =>
                     CheckPlayerHasBuff(playerB, BuffNames.GetMjollnirProfit));
-                if (buffIndex !== -1) {
-                    return {
-                        next: Phases.GetMjollnirProfit,
-                    };
-                } else {
-                    return true;
-                }
+            if (buffIndex !== -1) {
+                return {
+                    next: Phases.GetMjollnirProfit,
+                };
+            } else {
+                return true;
             }
         }
     }

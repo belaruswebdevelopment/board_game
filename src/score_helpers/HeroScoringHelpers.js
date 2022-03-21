@@ -1,16 +1,26 @@
 import { GetMaxCoinValue } from "../helpers/CoinHelpers";
 import { SuitNames } from "../typescript/enums";
 import { TotalRank } from "./ScoreHelpers";
-export const AstridScoring = (player) => {
-    if (player !== undefined) {
-        return GetMaxCoinValue(player);
+export const AstridScoring = (G, playerId) => {
+    if (G === undefined) {
+        throw new Error(`Function param 'G' is undefined.`);
     }
-    throw new Error(`Function param 'player' is undefined.`);
+    if (playerId === undefined) {
+        throw new Error(`Function param 'playerId' is undefined.`);
+    }
+    return GetMaxCoinValue(G, playerId);
 };
-export const IdunnScoring = (player) => {
-    if (player !== undefined) {
-        return player.cards[SuitNames.EXPLORER].reduce(TotalRank, 0) * 2;
+export const IdunnScoring = (G, playerId) => {
+    if (G === undefined) {
+        throw new Error(`Function param 'G' is undefined.`);
     }
-    throw new Error(`Function param 'player' is undefined.`);
+    if (playerId === undefined) {
+        throw new Error(`Function param 'playerId' is undefined.`);
+    }
+    const player = G.publicPlayers[playerId];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+    }
+    return player.cards[SuitNames.EXPLORER].reduce(TotalRank, 0) * 2;
 };
 //# sourceMappingURL=HeroScoringHelpers.js.map

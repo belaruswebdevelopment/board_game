@@ -15,7 +15,6 @@ const Aegur = {
     game: GameNames.Basic,
     suit: SuitNames.BLACKSMITH,
     rank: 2,
-    points: null,
     scoringRule: () => 0,
 };
 /**
@@ -27,10 +26,8 @@ const Aegur = {
  */
 const Andumia = {
     name: HeroNames.Andumia,
-    description: `Adds 12 points to your Final Bravery Value. When you recruit her, immediately look at all the cards in the discard pile and keep one (Royal Offering card or Dwarf card). - If it is a Royal Offering card, its effect is immediately applied, then the card is returned to the discard. - If it is a Dwarf card, place it in your army. Its placement can trigger the recruitment of a Hero card.`,
+    description: `Прибавьте 12 победных очков к итоговому показателю храбрости. Как только вы призвали Аннумию, сразу же посмотрите все карты в стопке сброса карт эпохи 1 и 2 (но не в стопке сброса карт лагеря) и выберите одну карту. - Если выбрана королевская награда, сразу примените её эффект и верните карту в сброс. - Если выбран дворф, поместите его в свою армию. Призовите героя, если создали новую линию 5 шевронов.`,
     game: GameNames.Thingvellir,
-    suit: null,
-    rank: null,
     points: 12,
     validators: {
         pickDiscardCardToStack: {},
@@ -51,7 +48,6 @@ const Aral = {
     game: GameNames.Basic,
     suit: SuitNames.HUNTER,
     rank: 2,
-    points: null,
     scoringRule: () => 0,
 };
 /**
@@ -65,9 +61,6 @@ const Astrid = {
     name: HeroNames.Astrid,
     description: `Прибавьте к своему итоговому показателю храбрости номинал своей самой ценной монеты.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
-    points: null,
     scoringRule: AstridScoring,
 };
 /**
@@ -83,7 +76,6 @@ const Bonfur = {
     game: GameNames.Basic,
     suit: SuitNames.BLACKSMITH,
     rank: 3,
-    points: null,
     validators: {
         discardCard: {
             suit: SuitNames.BLACKSMITH,
@@ -91,6 +83,19 @@ const Bonfur = {
     },
     stack: [StackData.discardCardFromBoardBonfur()],
     scoringRule: () => 0,
+};
+const Crovax_The_Doppelganger = {
+    name: HeroNames.Crovax_The_Doppelganger,
+    description: `Кровакс — нейтральный герой, добавляющий 25 очков к итоговому показателю храбрости. Поместите его в свою командную зону и немедленно сбросьте последнюю карту дворфа из выбранной вами колонки. Это та же сила, что и у Бонфура, поэтому все правила, применимые к Бонфуру, применимы и к Кроваксу.`,
+    game: GameNames.Thingvellir,
+    points: 25,
+    validators: {
+        discardCard: {
+            suit: null,
+        },
+    },
+    stack: [StackData.discardCardFromBoardCrovaxTheDoppelganger()],
+    scoringRule: () => 25,
 };
 /**
  * <h3>Данные о герое.</h3>
@@ -105,7 +110,6 @@ const Dagda = {
     game: GameNames.Basic,
     suit: SuitNames.HUNTER,
     rank: 3,
-    points: null,
     validators: {
         discardCard: {
             suit: SuitNames.BLACKSMITH,
@@ -126,9 +130,6 @@ const Dwerg_Aesir = {
     name: HeroNames.Dwerg_Aesir,
     description: `В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: 1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
-    points: null,
     scoringRule: () => 1,
 };
 /**
@@ -142,9 +143,6 @@ const Dwerg_Bergelmir = {
     name: HeroNames.Dwerg_Bergelmir,
     description: `В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: 1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
-    points: null,
     scoringRule: () => 1,
 };
 /**
@@ -158,9 +156,6 @@ const Dwerg_Jungir = {
     name: HeroNames.Dwerg_Jungir,
     description: `В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: 1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
-    points: null,
     scoringRule: () => 1,
 };
 /**
@@ -174,9 +169,6 @@ const Dwerg_Sigmir = {
     name: HeroNames.Dwerg_Sigmir,
     description: `В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: 1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
-    points: null,
     scoringRule: () => 1,
 };
 /**
@@ -190,9 +182,6 @@ const Dwerg_Ymir = {
     name: HeroNames.Dwerg_Ymir,
     description: `В зависимости от количества братьев, призванных игроком, прибавьте к итоговому показателю храбрости: 1 - 13, 2 - 40, 3 - 81, 4 - 108, 5 - 135.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
-    points: null,
     scoringRule: () => 1,
 };
 /**
@@ -206,8 +195,6 @@ const Grid = {
     name: HeroNames.Grid,
     description: `Прибавьте 7 очков к своему итоговому показателю храбрости. Когда вы призвали Грид и положили её карту в свою командную зону, сразу же улучшите на + 7 номинал одной из своих монет.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
     points: 7,
     stack: [StackData.upgradeCoin(7)],
     scoringRule: () => 7,
@@ -221,10 +208,8 @@ const Grid = {
  */
 const Holda = {
     name: HeroNames.Holda,
-    description: `Adds 12 points to your Final Bravery Value. When you recruit her, immediately choose a Mercenary or Artifact card available at the Camp.`,
+    description: `Прибавьте 12 победных очков к итоговому показателю храбрости. Как только вы призвали Хольду, сразу же возьмите карту наёмника или артефакта из лагеря.`,
     game: GameNames.Thingvellir,
-    suit: null,
-    rank: null,
     points: 12,
     buff: {
         name: BuffNames.GoCampOneTime,
@@ -284,10 +269,8 @@ const Idunn = {
  */
 const Jarika = {
     name: HeroNames.Jarika,
-    description: `Adds 8 points to your Final Bravery Value. As a neutral Hero, place her in your Command Zone. During a coin transformation or a coin trade(Royal Offering, Warrior Distinction, Grid), increase the value of the desired sum by + 2.`,
+    description: `Прибавьте 8 победных очков к итоговому показателю храбрости. Ярика – нейтральный герой, поэтому, призвав её, положите карту в свою командную зону. Во время каждого улучшения или обмена монет увеличьте номинал монеты дополнительно на +2.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
     points: 8,
     buff: {
         name: BuffNames.UpgradeCoin,
@@ -303,10 +286,8 @@ const Jarika = {
  */
 const Khrad = {
     name: HeroNames.Khrad,
-    description: `Adds 4 points to your Final Bravery Value. When you recruit him, immediately add + 10 to your lowest value coin (except the Trading coin).`,
+    description: `Прибавьте 4 победных очка к итоговому показателю храбрости. Как только вы призвали Крада, сразу же улучшите одну свою монету с наименьшим номиналом на +10. Обменная монета с номиналом 0 не может быть улучшена.`,
     game: GameNames.Thingvellir,
-    suit: null,
-    rank: null,
     points: 4,
     buff: {
         name: BuffNames.Coin,
@@ -358,10 +339,8 @@ const Lokdur = {
  */
 const Olwin = {
     name: HeroNames.Olwin,
-    description: `Adds 9 points to your Final Bravery Value. When you recruit him, also take his two doubles whose Bravery value is 0 and then place each of these cards in two different columns of your choice. Their placement may result in the recruitment of a Hero card. «Olwin's double» cards are considered Dwarf cards of the class in which they are placed and can be destroyed by the powers of Dagda, Bonfur, Brisingamens, and Hofud.`,
+    description: `Прибавьте 9 победных очков к итоговому показателю храбрости. Как только вы призвали Ольвюна, сразу же возьмите две карты «Двойник Ольвюна» и положите их в две разные колонки своей армии. В результате размещения Двойников Ольвюна могут возникнуть новые линии 5 шевронов, в этом случае игрок может призвать новых героев. Призрачные двойники обладают значением храбрости 0, но могут стать дворфами любого воинского класса. Они могут быть отправлены в сброс эффектами карт «Дагда», «Бонфур», «Брисингамен» и «Хёфуд». Двойники Ольвюна не являются героями. Если карта «Двойник Ольвюна» единственная в колонке, то положите на неё жетон воинского класса для напоминания о воинском классе колонки.`,
     game: GameNames.Thingvellir,
-    suit: null,
-    rank: null,
     points: 9,
     stack: [StackData.placeOlwinCards(2)],
     scoringRule: () => 9,
@@ -377,8 +356,6 @@ const Skaa = {
     name: HeroNames.Skaa,
     description: `Прибавьте 17 очков к своему итоговому показателю храбрости.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
     points: 17,
     scoringRule: () => 17,
 };
@@ -409,8 +386,6 @@ const Thrud = {
     name: HeroNames.Thrud,
     description: `Призвав этого героя, поместите её карту по своему выбору в любую колонку класса своей армии. На карту Труд нельзя положить никакую другую карту дворфа. Если карта дворфа или героя помещается в колонку, где расположена Труд, то игрок должен взять карту Труд в руку, поместить карту дворфа или героя и затем вернуть карту Труд в армию, в любую колонку по своему выбору. Игрок получает право призвать нового героя, если, разместив карту Труд, создал необходимую для этого новую линию 5 шевронов. В конце эпохи 1, при распределении карт знаков отличия, шеврон Труд учитывается в том воинском классе, где она расположена. В эпоху 2, после посещения последней таверны, но перед подсчётом итогового показателя храбрости, карта Труд перемещается из армии в командную зону. Труд прибавляет 13 очков к итоговому показателю храбрости игрока.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
     points: 13,
     stack: [StackData.placeThrudHero()],
     scoringRule: () => 13,
@@ -426,8 +401,6 @@ const Uline = {
     name: HeroNames.Uline,
     description: `Прибавьте 9 очков к своему итоговому показателю храбрости. Как только вы призвали Улину и положили её карту в свою командную зону, сразу же берите в руку монеты, которые всё ещё лежат лицом вниз на вашем планшете. С этого момента и каждый раз во время подготовки к раунду на этапе «Ставки» игрок не выкладывает свои монеты на планшет, а держит их в своей руке. Во время посещения таверны на этапе «Открытие ставок», игрок ждёт, пока все другие эльвеланды откроют свои ставки и только после этого он выбирает монету из своей руки и кладёт её лицом вверх в область соответствующей таверны на своём планшете. Затем раунд продолжается в порядке, соответствующем ставкам игроков. Если игрок активировал своей ставкой обмен монет, то последним действием своего хода он выбирает из руки две монеты, номиналы которых он суммирует для получения новой монеты. Обмен происходит по обычным правилам, однако новую монету игрок сразу же берёт в руку, а не кладёт в кошель своего планшета. Во время улучшения монеты: • если игрок выбрал монету из руки, то новую монету он берёт так же в руку, • если игрок выбрал монету, лежащую на планшете, то новую монету он кладёт в то же место. Игрок может сделать ставку монетами из руки в таверне, которую посетит в ходе раунда. Монеты, лежащие на планшете, должны оставаться на нём до конца текущего раунда.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
     points: 9,
     actions: {
         name: GetClosedCoinIntoPlayerHandAction.name,
@@ -448,9 +421,6 @@ const Ylud = {
     name: HeroNames.Ylud,
     description: `Поместите эту карту в свою командную зону. В эпоху 1, сразу после посещения последней таверны, но до смотра войск, поместите карту Илуд в колонку любого воинского класса вашей армии. При распределении знаков отличий во время смотра войск, шеврон Илуд учитывается в качестве шеврона этого класса. Илуд остаётся в этой колонке до конца эпохи 2. Если вы призвали Илуд во время эпохи 2, поместите её карту в свою командную зону. В эпоху 2, сразу после посещения последней таверны, но до подсчёта итогового показателя храбрости: • если Илуд в командной зоне, то игрок помещает её в колонку любого воинского класса своей армии, • если Илуд в армии, игрок может переместить её в другую колонку воинского класса по своему выбору. Илуд будет учитываться в качестве дворфа того класса, где располагается. В конце эпохи 2, в зависимости от местоположения Илуд, она будет учитываться как кузнец или охотник, разведчик 11, воин 7, горняк 1. Если Илуд в колонке воинов, то её шеврон учитывается в сумме шевронов воинов при определении преимущества. Игрок получает право призвать нового героя, если с помощью карты Илуд завершит новую линию 5 шевронов. Если игрок обладает обеими картами героев Илуд и Труд, то при их активации важно учесть следующий порядок. После посещения последней таверны в эпоху 2 игрок сначала помещает Илуд в свою армию. В этот момент игрок может призвать нового героя, если с помощью Илуд создал линию 5 шевронов. Затем игрок перемещает Труд из армии в свою командную зону.`,
     game: GameNames.Basic,
-    suit: null,
-    rank: null,
-    points: null,
     buff: {
         name: BuffNames.EndTier,
     },
@@ -465,10 +435,8 @@ const Ylud = {
  */
 const Zolkur = {
     name: HeroNames.Zolkur,
-    description: `Adds 10 points to your Final Bravery Value. When you recruit him, immediately place him on the coins of your pouch. During your next trade, you trade the lower value coin instead of the higher as in a standard exchange. Then return Zolkur's card to the Command Zone.`,
+    description: `Прибавьте 10 победных очков к итоговому показателю храбрости. Как только вы призвали Солькура, сразу же положите его карту на монеты в кошеле. Во время следующего обмена, в отличие от стандартных правил, обменяйте монету с наименьшим номиналом, а не с наибольшим. После обмена положите карту «Солькур» в командную зону.`,
     game: GameNames.Thingvellir,
-    suit: null,
-    rank: null,
     points: 10,
     buff: {
         name: BuffNames.UpgradeNextCoin,
@@ -521,6 +489,7 @@ export const heroesConfig = {
     Uline,
     Ylud,
     Jarika,
+    Crovax_The_Doppelganger,
     Andumia,
     Holda,
     Khrad,

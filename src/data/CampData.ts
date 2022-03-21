@@ -1,6 +1,6 @@
-import { AddPickHeroAction, DiscardTradingCoinAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/AutoActions";
-import { DraupnirScoring, HrafnsmerkiScoring, MjollnirScoring, SvalinnScoring } from "../score_helpers/ArtefactScoringHelpers";
-import { ArtefactNames, BuffNames, GameNames, SuitNames } from "../typescript/enums";
+import { AddPickHeroAction, DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/AutoActions";
+import { DraupnirScoring, HrafnsmerkiScoring, MjollnirScoring, OdroerirTheMythicCauldronScoring, SvalinnScoring } from "../score_helpers/ArtefactScoringHelpers";
+import { ArtefactNames, BuffNames, SuitNames } from "../typescript/enums";
 import type { IArtefact, IArtefactConfig, IMercenary, OptionalSuitPropertyTypes } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
@@ -13,12 +13,8 @@ import { StackData } from "./StackData";
  */
 const Brisingamens: IArtefact = {
     name: ArtefactNames.Brisingamens,
-    description: `Immediately look at all cards in the discard pile and choose two (Royal Offering cards and / or Dwarf cards). In the order of your choice: - perform coin transformation if you have chosen Royal Offering cards. - place the Dwarf cards in your army. This can result in a Hero card being recruited. At the end of Age 2, before counting points, discard a Dwarf card of your choice from your army. This card can be taken anywhere, in any column, but it cannot be a Hero card.`,
-    game: GameNames.Thingvellir,
+    description: `Взяв этот артефакт, сразу же посмотрите все карты в стопке сброса карт эпохи 1 и 2 (но не в стопке сброса карт лагеря) и выберите две карты. Это могут быть карты королевская награда и/или дворф в любом сочетании. В желаемом порядке выполните следующие действия: - улучшите монету, если выбрали карту королевская награда, - сразу же поместите в свою армию карту дворфа и призовите героя, если создали новую линию 5 шевронов. В конце эпохи 2 перед подсчётом победных очков сбросьте одну карту дворфа из своей армии. Эта карта может быть сброшена из колонки любого воинского класса по выбору игрока, но нельзя сбрасывать карту героя.`,
     tier: 1,
-    suit: null,
-    rank: null,
-    points: null,
     buff: {
         name: BuffNames.DiscardCardEndGame,
     },
@@ -38,12 +34,8 @@ const Brisingamens: IArtefact = {
  */
 const Draupnir: IArtefact = {
     name: ArtefactNames.Draupnir,
-    description: `At the end of Age 2, when counting points, add to your Final Bravery Value: 6 points per coin of value 15 or more owned.`,
-    game: GameNames.Thingvellir,
+    description: `Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 6 победных очков за каждую свою монету с номиналом 15 или выше.`,
     tier: 0,
-    suit: null,
-    rank: null,
-    points: null,
     scoringRule: DraupnirScoring,
 };
 
@@ -56,12 +48,8 @@ const Draupnir: IArtefact = {
  */
 const Fafnir_Baleygr: IArtefact = {
     name: ArtefactNames.Fafnir_Baleygr,
-    description: `After taking possession of it and throughout the game, you can go to the Camp on your turn instead of taking a card from the tavern being resolved if the Elvaland that won the bid did not go.`,
-    game: GameNames.Thingvellir,
+    description: `Игрок, владеющий этим артефактом, может брать карты из лагеря вместо таверны, если лагерь не посещал игрок, который получил первенство на этапе «Открытие ставок».`,
     tier: 0,
-    suit: null,
-    rank: null,
-    points: null,
     buff: {
         name: BuffNames.GoCamp,
     },
@@ -77,12 +65,8 @@ const Fafnir_Baleygr: IArtefact = {
  */
 const Gjallarhorn: IArtefact = {
     name: ArtefactNames.Gjallarhorn,
-    description: `Immediately recruit a Hero card regardless of your rank line number. To recruit your next Hero card, you will need to validate the golden rule: to have a number of rank lines greater than your number of Hero cards owned.`,
-    game: GameNames.Thingvellir,
+    description: `Взяв этот артефакт, сразу же призовите в свою армию нового героя, независимо от количества завершённых линий 5 шевронов. Данное исключение действует только один раз. Чтобы призвать следующего героя игроку будет необходимо соблюсти основное правило: можно призвать нового героя, если собранных линий 5 шевронов на 1 больше, чем героев в армии игрока. Гьяллархорн позволяет игроку призывать героя, даже если он обладает картой мегингьорд. Нельзя призвать героя, если игрок не может выполнить условия, необходимые для призыва.`,
     tier: 1,
-    suit: null,
-    rank: null,
-    points: null,
     actions: {
         name: AddPickHeroAction.name,
     },
@@ -98,12 +82,8 @@ const Gjallarhorn: IArtefact = {
  */
 const Hofud: IArtefact = {
     name: ArtefactNames.Hofud,
-    description: `Immediately, each other Elvaland choose and discards a Warrior card from their army. The discarded card can be any card in the Warrior column except a Hero card.`,
-    game: GameNames.Thingvellir,
+    description: `Когда один из игроков получает этот артефакт, остальные игроки сразу же сбрасывают по одной карте воинов из своих армий. Игроки могут выбрать любую карту класса воин, за исключением карт героев. `,
     tier: 1,
-    suit: null,
-    rank: null,
-    points: null,
     actions: {
         name: StartDiscardSuitCardAction.name,
     },
@@ -120,12 +100,8 @@ const Hofud: IArtefact = {
  */
 const Hrafnsmerki: IArtefact = {
     name: ArtefactNames.Hrafnsmerki,
-    description: `At the end of Age 2, when counting points, add to your Final Bravery Value: 5 points per Mercenary card in your possession.`,
-    game: GameNames.Thingvellir,
+    description: `Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 5 победных очков за каждую свою карту наёмника.`,
     tier: 1,
-    suit: null,
-    rank: null,
-    points: null,
     scoringRule: HrafnsmerkiScoring,
 };
 
@@ -138,12 +114,8 @@ const Hrafnsmerki: IArtefact = {
  */
 const Jarnglofi: IArtefact = {
     name: ArtefactNames.Jarnglofi,
-    description: `Immediately discard your trading coin (0 or Special Hunter 3). Warning! If this coin was placed on an unresolved tavern, your bid not be present when it is resolved, and you will not take any cards. At the end of Age 2, when counting points, add 24 points to your Final Bravery Value.`,
-    game: GameNames.Thingvellir,
+    description: `Взяв этот артефакт, сразу же положите в сброс свою обменную монету (с номиналом 0 или 3). Если обменная монета была использована в качестве ставки в таверне, которую ещё не посещали, то игрок всё равно должен её сбросить. В этом случае он лишается ставки и во время посещения таверны не сможет взять ни одной карты. Во время подсчёта победных очков в конце эпохи 2 прибавьте 24 победных очка к своему итоговому показателю храбрости.`,
     tier: 1,
-    suit: null,
-    rank: null,
-    points: null,
     actions: {
         name: DiscardTradingCoinAction.name,
     },
@@ -159,12 +131,8 @@ const Jarnglofi: IArtefact = {
  */
 const Megingjord: IArtefact = {
     name: ArtefactNames.Megingjord,
-    description: `During the rest of the game, you can no longer recruit a Hero card by making rank lines. So making rank lines has no effect for you. At the end of Age 2, when counting points, add 28 points to your Final Bravery Value.`,
-    game: GameNames.Thingvellir,
+    description: `С момента получения этого артефакта и до конца игры владелец не может призывать героев в свою армию после создания линии 5 шевронов. Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 28 победных очков. Гьяллархорн позволяет игроку призывать героев, даже если он владеет Мегингьордом.`,
     tier: 0,
-    suit: null,
-    rank: null,
-    points: null,
     buff: {
         name: BuffNames.NoHero,
     },
@@ -180,16 +148,22 @@ const Megingjord: IArtefact = {
  */
 const Mjollnir: IArtefact = {
     name: ArtefactNames.Mjollnir,
-    description: `At the end of Age 2, when counting points, add to your Final Bravery Value: 2 points per rank in the class of your choice.`,
-    game: GameNames.Thingvellir,
+    description: `Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 2 победных очка за каждый шеврон в колонке одного воинского класса по выбору игрока.`,
     tier: 1,
-    suit: null,
-    rank: null,
-    points: null,
     buff: {
         name: BuffNames.GetMjollnirProfit,
     },
     scoringRule: MjollnirScoring,
+};
+
+const Odroerir_The_Mythic_Cauldron: IArtefact = {
+    name: ArtefactNames.Odroerir_The_Mythic_Cauldron,
+    description: `Во время подготовки отложите Одрерир в сторону. Перемешайте карты Лагеря 2-й эпохи, затем положите Одрерир на верх колоды. Таким образом, в начале Эпохи 2 Одрерир будет среди 5 доступных карт лагеря. Как только эльвеланд берет карту из лагеря, положите самую маленькую монету из Королевской сокровищницы на Одрерир. Делайте это до тех пор, пока эльвеланд не возьмет карту Одрерир с монетами на ней. Карта Одрерир с ее монетами находится в командной зоне. В конце игры Одрерир прибавляет сумму всех монет к вашему итоговому значению храбрости.`,
+    tier: 1,
+    actions: {
+        name: FinishOdroerirTheMythicCauldronAction.name,
+    },
+    scoringRule: OdroerirTheMythicCauldronScoring,
 };
 
 /**
@@ -201,12 +175,8 @@ const Mjollnir: IArtefact = {
  */
 const Svalinn: IArtefact = {
     name: ArtefactNames.Svalinn,
-    description: `At the end of Age 2, when counting points, add to your Final Bravery Value: 5 points per Hero card in your possession.`,
-    game: GameNames.Thingvellir,
+    description: `Во время подсчёта победных очков в конце эпохи 2 прибавьте к своему итоговому показателю храбрости 5 победных очков за каждую свою карту героя.`,
     tier: 0,
-    suit: null,
-    rank: null,
-    points: null,
     scoringRule: SvalinnScoring,
 };
 
@@ -219,8 +189,7 @@ const Svalinn: IArtefact = {
  */
 const Vegvisir: IArtefact = {
     name: ArtefactNames.Vegvisir,
-    description: `Immediately place this Artifact in the Explorer column of your army. Its pose can trigger the recruitment of a Hero card if it completes a rank line. This artifact counts as an Explorer rank and adds 13 points to your Explorer Bravery Rating.`,
-    game: GameNames.Thingvellir,
+    description: `Взяв карту этого артефакта, сразу же положите её в колонку разведчиков своей армии. Если таким образом создаётся новая линия 5 шевронов, сразу же призовите нового героя. Карта Вегвисир обладает одним шевроном и прибавляет 13 победных очков к показателю храбрости разведчиков. `,
     tier: 0,
     suit: SuitNames.EXPLORER,
     rank: 1,
@@ -237,12 +206,8 @@ const Vegvisir: IArtefact = {
  */
 const Vidofnir_Vedrfolnir: IArtefact = {
     name: ArtefactNames.Vidofnir_Vedrfolnir,
-    description: `Immediately reveal the coins from your pouch and transform one of these coins with a +2 and the other with a +3. If one of the coins on the trade is the trading coin (the 0 or the Special Hunter 3) then apply a +5 transform to the other coin. Perform coin transformations in any order you want.`,
-    game: GameNames.Thingvellir,
+    description: `Взяв этот артефакт, сразу же откройте монеты в вашем кошеле и улучшите на +2 одну из них и на +3 другую. Улучшение монет можно производить в любой очерёдности. Если одна из монет в кошеле обменная (0 или особая обменная монета Охотников с номиналом 3), тогда улучшите на +5 вторую монету в кошеле.`,
     tier: 0,
-    suit: null,
-    rank: null,
-    points: null,
     actions: {
         name: StartVidofnirVedrfolnirAction.name,
     },
@@ -250,10 +215,10 @@ const Vidofnir_Vedrfolnir: IArtefact = {
 };
 
 /**
- * <h3>Конфиг карт наёмников для кэмпа.</h3>
+ * <h3>Конфиг карт наёмников для лагеря.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт артефактов для кэмпа при инициализации игры.</li>
+ * <li>Происходит при создании всех карт артефактов для лагеря при инициализации игры.</li>
  * </ol>
  */
 export const mercenariesConfig: OptionalSuitPropertyTypes<IMercenary>[][] = [
@@ -408,10 +373,10 @@ export const mercenariesConfig: OptionalSuitPropertyTypes<IMercenary>[][] = [
 ];
 
 /**
- * <h3>Конфиг карт артефактов для кэмпа.</h3>
+ * <h3>Конфиг карт артефактов для лагеря.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт артефактов для кэмпа при инициализации игры.</li>
+ * <li>Происходит при создании всех карт артефактов для лагеря при инициализации игры.</li>
  * </ol>
  */
 export const artefactsConfig: IArtefactConfig = {
@@ -424,6 +389,7 @@ export const artefactsConfig: IArtefactConfig = {
     Jarnglofi,
     Megingjord,
     Mjollnir,
+    Odroerir_The_Mythic_Cauldron,
     Svalinn,
     Vegvisir,
     Vidofnir_Vedrfolnir,

@@ -1,54 +1,57 @@
 import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
-import { IsCardNotActionAndNotNull } from "../Card";
+import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, MoveNames, MoveValidatorNames } from "../typescript/enums";
-import type { CampCardTypes, CampDeckCardTypes, DeckCardTypes, ICoin, IConfig, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMyGameState, INumberValues, IPublicPlayer, IStack, ITavernInConfig, MoveValidatorTypes, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CampCardTypes, DiscardCardTypes, ICoin, IConfig, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMyGameState, INumberValues, IPublicPlayer, IStack, ITavernInConfig, MoveValidatorTypes, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
-import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PickCampCardHoldaProfit, PickDiscardCardProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
 
 /**
- * <h3>Отрисовка карт кэмпа.</h3>
+ * <h3>Отрисовка карт лагеря.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Отрисовка игрового поля.</li>
  * </ol>
  *
  * @param G
+ * @param ctx
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
- * @returns Поле кэмпа | данные для списка доступных аргументов мува.
+ * @returns Поле лагеря | данные для списка доступных аргументов мува.
  */
-export const DrawCamp = (G: IMyGameState, validatorName: MoveValidatorTypes | null,
+export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorTypes | null,
     data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
     const boardCells: JSX.Element[] = [],
-        campDeck: CampDeckCardTypes[] | undefined = G.campDecks[G.campDecks.length - G.tierToEnd],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
             const campCard: CampCardTypes | undefined = G.camp[j];
             if (campCard === undefined) {
-                throw new Error(`В массиве карт кэмпа отсутствует карта ${j}.`);
+                throw new Error(`В массиве карт лагеря отсутствует карта ${j}.`);
             }
             if (campCard === null) {
                 if (data !== undefined) {
                     boardCells.push(
                         <td className="bg-yellow-200" key={`Camp ${j} icon`}>
-                            <span style={Styles.Camp()} className="bg-camp-icon">
-
-                            </span>
+                            <span style={Styles.Camp()} className="bg-camp-icon"></span>
                         </td>
                     );
                 }
             } else {
                 if (data !== undefined) {
-                    DrawCard(data, boardCells, campCard, j, null, null,
+                    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                    if (player === undefined) {
+                        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                    }
+                    DrawCard(data, boardCells, campCard, j, player, null,
                         MoveNames.ClickCampCardMove, j);
-                } else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator) {
+                } else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator
+                    || validatorName === MoveValidatorNames.ClickCampCardHoldaMoveValidator) {
                     moveMainArgs.push(j);
                 }
             }
@@ -58,15 +61,13 @@ export const DrawCamp = (G: IMyGameState, validatorName: MoveValidatorTypes | nu
         return (
             <table>
                 <caption>
-                    <span style={Styles.Camp()} className="bg-top-camp-icon">
-
-                    </span>
-                    <span>Camp {G.campDecks.length - G.tierToEnd + 1 > G.campDecks.length ?
-                        G.campDecks.length : G.campDecks.length - G.tierToEnd + 1}
-                        ({campDeck !== undefined ? campDeck.length : 0}
-                        {G.campDecks.length - G.tierToEnd === 0 ? `/` +
-                            G.campDecks.reduce((count: number, current: CampCardTypes[]) =>
-                                count + current.length, 0) : ``} cards left)
+                    <span style={Styles.Camp()} className="bg-top-camp-icon"></span>
+                    <span><span style={Styles.CampBack(G.campDeckLength.length - G.tierToEnd + 1 >
+                        G.campDeckLength.length ? 1 : G.campDeckLength.length - G.tierToEnd)}
+                        className="bg-top-card-back-icon"></span>Camp
+                        ({G.campDeckLength[G.campDeckLength.length - G.tierToEnd] ?? 0}
+                        {(G.campDeckLength.length - G.tierToEnd === 0 ? `/` +
+                            (G.campDeckLength[0] + G.campDeckLength[1]) : ``)} cards)
                     </span>
                 </caption>
                 <tbody>
@@ -124,9 +125,8 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveV
                             <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
                                 onClick={() => data.moves.ClickDistinctionCardMove?.(suit)}
                                 title={suitsConfig[suit].distinction.description}>
-                                <span style={Styles.Distinctions(suit)} className="bg-suit-distinction">
-
-                                </span>
+                                <span style={Styles.Distinctions(suit)}
+                                    className="bg-suit-distinction"></span>
                             </td>
                         );
                     } else if (validatorName === MoveValidatorNames.ClickDistinctionCardMoveValidator) {
@@ -138,7 +138,6 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveV
                             <td className="bg-green-500" key={`Distinction ${suit} card`}
                                 title={suitsConfig[suit].distinction.description}>
                                 <span style={Styles.Distinctions(suit)} className="bg-suit-distinction">
-
                                 </span>
                             </td>
                         );
@@ -151,9 +150,65 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveV
         return (
             <table>
                 <caption>
-                    <span style={Styles.DistinctionsBack()} className="bg-top-distinctions-icon">
+                    <span style={Styles.DistinctionsBack()} className="bg-top-distinctions-icon"></span>
+                    <span>Distinctions</span>
+                </caption>
+                <tbody>
+                    <tr>{boardCells}</tr>
+                </tbody>
+            </table>
+        );
+    } else if (validatorName !== null) {
+        return moveMainArgs;
+    } else {
+        throw new Error(`Функция должна возвращать значение.`);
+    }
+};
 
-                    </span> <span>Distinctions</span>
+/**
+ * <h3>Отрисовка колоды сброса карт.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param validatorName Название валидатора.
+ * @param data Глобальные параметры.
+ * @returns Поле колоды сброса карт.
+ */
+export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorTypes | null,
+    data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
+    const boardCells: JSX.Element[] = [],
+        moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
+    for (let j = 0; j < G.discardCardsDeck.length; j++) {
+        const card: DiscardCardTypes | undefined = G.discardCardsDeck[j];
+        if (card === undefined) {
+            throw new Error(`В массиве колоды сброса карт отсутствует карта ${j}.`);
+        }
+        let suit: null | SuitTypes = null;
+        if (!IsActionCard(card)) {
+            suit = card.suit;
+        }
+        if (data !== undefined) {
+            const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+            if (player === undefined) {
+                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            }
+            DrawCard(data, boardCells, card, j, player, suit,
+                MoveNames.PickDiscardCardMove, j);
+        } else if (validatorName === MoveValidatorNames.PickDiscardCardMoveValidator) {
+            moveMainArgs.push(j);
+        }
+    }
+    if (data !== undefined) {
+        return (
+            <table>
+                <caption className="whitespace-nowrap">
+                    <span style={Styles.CardBack(0)} className="bg-top-card-back-icon"></span>
+                    <span style={Styles.CardBack(1)} className="bg-top-card-back-icon"></span>
+                    <span>Discard cards ({G.discardCardsDeck.length} cards)</span>
                 </caption>
                 <tbody>
                     <tr>{boardCells}</tr>
@@ -175,11 +230,12 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveV
  * </ol>
  *
  * @param G
+ * @param ctx
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @returns Поле героев.
  */
-export const DrawHeroes = (G: IMyGameState, validatorName: MoveValidatorTypes | null,
+export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorTypes | null,
     data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
     const boardRows: JSX.Element[] = [],
         drawData: IDrawBoardOptions = DrawBoard(G.heroes.length),
@@ -192,12 +248,17 @@ export const DrawHeroes = (G: IMyGameState, validatorName: MoveValidatorTypes | 
             if (hero === undefined) {
                 throw new Error(`В массиве карт героев отсутствует герой ${increment}.`);
             }
+            const suit: null | SuitTypes = hero.suit;
             if (data !== undefined) {
                 if (hero.active) {
-                    DrawCard(data, boardCells, hero, increment, null, null,
+                    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                    if (player === undefined) {
+                        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                    }
+                    DrawCard(data, boardCells, hero, increment, player, suit,
                         MoveNames.ClickHeroCardMove, increment);
                 } else {
-                    DrawCard(data, boardCells, hero, increment, null);
+                    DrawCard(data, boardCells, hero, increment, null, suit);
                 }
             } else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
                 moveMainArgs.push(increment);
@@ -216,9 +277,8 @@ export const DrawHeroes = (G: IMyGameState, validatorName: MoveValidatorTypes | 
         return (
             <table>
                 <caption>
-                    <span style={Styles.HeroBack()} className="bg-top-hero-icon">
-
-                    </span> <span>Heroes ({G.heroes.length} left)</span>
+                    <span style={Styles.HeroBack()} className="bg-top-hero-icon"></span>
+                    <span>Heroes ({G.heroes.length} cards)</span>
                 </caption>
                 <tbody>
                     {boardRows}
@@ -272,9 +332,8 @@ export const DrawMarketCoins = (G: IMyGameState, data: BoardProps<IMyGameState>)
         <table>
             <caption>
                 <span className="block">
-                    <span style={Styles.Exchange()} className="bg-top-market-coin-icon">
-
-                    </span> Market coins ({G.marketCoins.length} left)</span>
+                    <span style={Styles.Exchange()} className="bg-top-market-coin-icon"></span>
+                    Market coins ({G.marketCoins.length} coins)</span>
             </caption>
             <tbody>
                 {boardRows}
@@ -317,21 +376,16 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
     } else if (option === ConfigNames.ExplorerDistinction) {
         caption += `one card to your board.`;
         ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
-    } else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction) {
+    } else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction
+        || option === ConfigNames.CrovaxTheDoppelgangerAction) {
         caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} to discard from your board.`;
         DiscardCardFromBoardProfit(G, ctx, null, data, boardCells);
-    } else if (option === ConfigNames.AndumiaAction || option === ConfigNames.BrisingamensAction) {
-        caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} from discard pile to your board.`;
-        PickDiscardCardProfit(G, ctx, null, data, boardCells);
     } else if (option === ConfigNames.BrisingamensEndGameAction) {
         caption += `one card to discard from your board.`;
         DiscardAnyCardFromPlayerBoardProfit(G, ctx, null, data, boardCells);
     } else if (option === ConfigNames.HofudAction) {
         caption += `one warrior card to discard from your board.`;
         DiscardSuitCardFromPlayerBoardProfit(G, ctx, null, null, data, boardCells);
-    } else if (option === ConfigNames.HoldaAction) {
-        caption += `one card from camp to your board.`;
-        PickCampCardHoldaProfit(G, ctx, null, data, boardCells);
     } else if (option === ConfigNames.DiscardCard) {
         caption += `one card to discard from current tavern.`;
         DiscardCardProfit(G, ctx, null, data, boardCells);
@@ -366,9 +420,8 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
     return (
         <table>
             <caption>
-                <span style={Styles.DistinctionsBack()} className="bg-top-distinctions-icon">
-
-                </span> <span>{caption}</span>
+                <span style={Styles.DistinctionsBack()} className="bg-top-distinctions-icon"></span>
+                <span>{caption}</span>
             </caption>
             <tbody>
                 <tr>{boardCells}</tr>
@@ -385,12 +438,13 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
  * </ol>
  *
  * @param G
+ * @param ctx
  * @param validatorName Название валидатора.
  * @param data Глобальные параметры.
  * @param gridClass Класс для отрисовки таверны.
  * @returns Поле таверн.
  */
-export const DrawTaverns = (G: IMyGameState, validatorName: MoveValidatorTypes | null,
+export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorTypes | null,
     data?: BoardProps<IMyGameState>, gridClass?: string): JSX.Element[] | IMoveArgumentsStage<number[]>[`args`] => {
     const tavernsBoards: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
@@ -414,9 +468,7 @@ export const DrawTaverns = (G: IMyGameState, validatorName: MoveValidatorTypes |
                     if (data !== undefined) {
                         boardCells.push(
                             <td key={`${currentTavernConfig.name} ${j}`}>
-                                <span style={Styles.Taverns(t)} className="bg-tavern-icon">
-
-                                </span>
+                                <span style={Styles.Taverns(t)} className="bg-tavern-icon"></span>
                             </td>
                         );
                     }
@@ -427,7 +479,11 @@ export const DrawTaverns = (G: IMyGameState, validatorName: MoveValidatorTypes |
                     }
                     if (t === G.currentTavern) {
                         if (data !== undefined) {
-                            DrawCard(data, boardCells, tavernCard, j, null, suit,
+                            const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                            if (player === undefined) {
+                                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                            }
+                            DrawCard(data, boardCells, tavernCard, j, player, suit,
                                 MoveNames.ClickCardMove, j);
                         } else if (validatorName === MoveValidatorNames.ClickCardMoveValidator) {
                             moveMainArgs.push(j);
@@ -444,9 +500,8 @@ export const DrawTaverns = (G: IMyGameState, validatorName: MoveValidatorTypes |
                     <table className={`${gridClass} justify-self-center`}
                         key={`Tavern ${currentTavernConfig.name} board`}>
                         <caption className="whitespace-nowrap">
-                            <span style={Styles.Taverns(t)} className="bg-top-tavern-icon">
-
-                            </span> <b>{currentTavernConfig.name}</b>
+                            <span style={Styles.Taverns(t)} className="bg-top-tavern-icon"></span>
+                            <b>{currentTavernConfig.name}</b>
                         </caption>
                         <tbody>
                             <tr>{boardCells}</tr>
@@ -476,14 +531,12 @@ export const DrawTaverns = (G: IMyGameState, validatorName: MoveValidatorTypes |
  * @returns Поле информации о количестве карт по эпохам.
  */
 export const DrawTierCards = (G: IMyGameState): JSX.Element => {
-    const deck: DeckCardTypes[] | undefined = G.decks[G.decks.length - G.tierToEnd];
     return (
         <b>Tier: <span className="italic">
-            {G.decks.length - G.tierToEnd + 1 > G.decks.length ? G.decks.length :
-                G.decks.length - G.tierToEnd + 1}/{G.decks.length}
-            ({deck !== undefined ? deck.length : 0}{G.decks.length - G.tierToEnd === 0 ? `/`
-                + G.decks.reduce((count: number, current: DeckCardTypes[]) =>
-                    count + current.length, 0) : ``} cards left)
+            {G.deckLength.length - G.tierToEnd + 1 > G.deckLength.length ? G.deckLength.length :
+                G.deckLength.length - G.tierToEnd + 1}/{G.deckLength.length}
+            ({G.deckLength[G.deckLength.length - G.tierToEnd] ?? 0}{G.deckLength.length - G.tierToEnd === 0 ? `/`
+                + (G.deckLength[0] + G.deckLength[1]) : ``} cards)
         </span></b>
     );
 };

@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { AddPickHeroAction, DiscardTradingCoinAction, GetClosedCoinIntoPlayerHandAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "../actions/AutoActions";
+import { AddPickHeroAction, DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, GetClosedCoinIntoPlayerHandAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "../actions/AutoActions";
 import type { IAction, IActionFunctionTypes, IMyGameState } from "../typescript/interfaces";
 
 /**
@@ -20,6 +20,9 @@ const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes => {
             break;
         case DiscardTradingCoinAction.name:
             action = DiscardTradingCoinAction;
+            break;
+        case FinishOdroerirTheMythicCauldronAction.name:
+            action = FinishOdroerirTheMythicCauldronAction;
             break;
         case GetClosedCoinIntoPlayerHandAction.name:
             action = GetClosedCoinIntoPlayerHandAction;

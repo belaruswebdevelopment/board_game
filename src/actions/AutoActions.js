@@ -1,6 +1,7 @@
 import { IsCoin, ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
+import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, LogTypes, Stages } from "../typescript/enums";
@@ -26,33 +27,48 @@ export const AddPickHeroAction = (G, ctx) => {
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты кэмпа артефакта Jarnglofi.</li>
+ * <li>При выборе карты лагеря артефакта Jarnglofi.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  */
 export const DiscardTradingCoinAction = (G, ctx) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    let handCoins;
+    if (multiplayer) {
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
+        }
+        handCoins = privatePlayer.handCoins;
+    }
+    else {
+        handCoins = player.handCoins;
+    }
     let tradingCoinIndex = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true);
     if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && tradingCoinIndex === -1) {
-        tradingCoinIndex =
-            player.handCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true);
+        tradingCoinIndex = handCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true);
         if (tradingCoinIndex === -1) {
             throw new Error(`В массиве монет игрока в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
         }
-        player.handCoins.splice(tradingCoinIndex, 1, null);
-    }
-    else if (tradingCoinIndex !== -1) {
-        player.boardCoins.splice(tradingCoinIndex, 1, null);
+        handCoins.splice(tradingCoinIndex, 1, null);
     }
     else {
-        throw new Error(`У игрока не может отсутствовать обменная монета.`);
+        if (tradingCoinIndex === -1) {
+            throw new Error(`У игрока не может отсутствовать обменная монета.`);
+        }
+        if (multiplayer && privatePlayer !== undefined) {
+            privatePlayer.boardCoins.splice(tradingCoinIndex, 1, null);
+        }
+        player.boardCoins.splice(tradingCoinIndex, 1, null);
     }
     AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил монету активирующую обмен.`);
+};
+export const FinishOdroerirTheMythicCauldronAction = (G) => {
+    G.odroerirTheMythicCauldron = false;
 };
 /**
  * <h3>Действия, связанные с возвращением закрытых монет со стола в руку.</h3>
@@ -71,7 +87,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
         if (i > G.currentTavern) {
-            ReturnCoinToPlayerHands(player, i);
+            ReturnCoinToPlayerHands(G, Number(ctx.currentPlayer), i);
         }
     }
 };
@@ -79,7 +95,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
  * <h3>Старт действия, связанные с сбросом карты из конкретной фракции игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты кэмпа артефакта Hofud.</li>
+ * <li>При выборе карты лагеря артефакта Hofud.</li>
  * </ol>
  *
  * @param G
@@ -98,6 +114,9 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
     const suit = (_a = stack1.config) === null || _a === void 0 ? void 0 : _a.suit;
     if (suit === undefined) {
         throw new Error(`У конфига действия игрока отсутствует обязательный параметр принадлежности сбрасываемой карты к конкретной фракции.`);
+    }
+    if (suit === null) {
+        throw new Error(`У конфига действия игрока не задан обязательный параметр принадлежности сбрасываемой карты к конкретной фракции.`);
     }
     const value = {};
     for (let i = 0; i < ctx.numPlayers; i++) {
@@ -122,27 +141,49 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
  * <h3>Действия, связанные со стартом способности артефакта Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При старте способности карты кэмпа артефакта Vidofnir Vedrfolnir.</li>
+ * <li>При старте способности карты лагеря артефакта Vidofnir Vedrfolnir.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  */
 export const StartVidofnirVedrfolnirAction = (G, ctx) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
-    const number = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = player.handCoins.length;
+    let handCoins;
+    if (multiplayer) {
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
+        }
+        handCoins = privatePlayer.handCoins;
+    }
+    else {
+        handCoins = player.handCoins;
+    }
+    const number = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = handCoins.filter((coin) => IsCoin(coin)).length;
     if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && number > 0 && handCoinsNumber) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(number)]);
     }
     else {
         let coinsValue = 0, stack = [];
         for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
-            const coin = player.boardCoins[j];
-            if (coin === undefined) {
-                throw new Error(`В массиве монет игрока на поле отсутствует нужная монета.`);
+            let coin;
+            if (multiplayer && privatePlayer !== undefined) {
+                coin = privatePlayer.boardCoins[j];
+                if (coin === undefined) {
+                    throw new Error(`В массиве приватных монет игрока на поле отсутствует монета ${j}.`);
+                }
+                if (IsCoin(coin)) {
+                    player.boardCoins[j] = coin;
+                }
+            }
+            else {
+                coin = player.boardCoins[j];
+                if (coin === undefined) {
+                    throw new Error(`В массиве монет игрока на поле отсутствует монета ${j}.`);
+                }
             }
             if (IsCoin(coin) && !coin.isTriggerTrading) {
                 coinsValue++;

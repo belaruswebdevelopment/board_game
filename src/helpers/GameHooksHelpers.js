@@ -11,16 +11,17 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
  * </oL>
  *
  * @param G
+ * @param ctx
  */
-export const AfterLastTavernEmptyActions = (G) => {
+export const AfterLastTavernEmptyActions = (G, ctx) => {
     var _a;
-    const deck = G.decks[G.decks.length - G.tierToEnd];
+    const deck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
     if (deck === undefined) {
         throw new Error(`Отсутствует колода карт текущей эпохи.`);
     }
     if (deck.length === 0) {
         if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
-            return CheckEnlistmentMercenaries(G);
+            return CheckEnlistmentMercenaries(G, ctx);
         }
         else {
             return CheckEndTierActionsOrEndGameLastActions(G);
@@ -42,7 +43,7 @@ export const AfterLastTavernEmptyActions = (G) => {
  * @param G
  */
 export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
-    const ulinePlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
+    const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
     if (ulinePlayerIndex !== -1) {
         return {
             next: Phases.PlaceCoinsUline,
@@ -65,9 +66,12 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
  */
 export const CheckEndGameLastActions = (G) => {
     var _a;
-    const deck1 = G.decks[0], deck2 = G.decks[1];
-    if (deck1 === undefined || deck2 === undefined) {
-        throw new Error(`Отсутствует колода карт 1 и/или 2 эпох.`);
+    const deck1 = G.secret.decks[0], deck2 = G.secret.decks[1];
+    if (deck1 === undefined) {
+        throw new Error(`Отсутствует колода карт 1 эпохи.`);
+    }
+    if (deck2 === undefined) {
+        throw new Error(`Отсутствует колода карт 2 эпохи.`);
     }
     if (!deck1.length && deck2.length) {
         return {
@@ -76,13 +80,13 @@ export const CheckEndGameLastActions = (G) => {
     }
     else {
         if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
-            const brisingamensBuffIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
+            const brisingamensBuffIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
             if (brisingamensBuffIndex !== -1) {
                 return {
                     next: Phases.BrisingamensEndGame,
                 };
             }
-            const mjollnirBuffIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
+            const mjollnirBuffIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
             if (mjollnirBuffIndex !== -1) {
                 return {
                     next: Phases.GetMjollnirProfit,
@@ -103,7 +107,7 @@ export const CheckEndGameLastActions = (G) => {
 * @param G
 */
 export const CheckEndTierActionsOrEndGameLastActions = (G) => {
-    const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
+    const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex !== -1) {
         return {
             next: Phases.EndTier,
@@ -122,9 +126,9 @@ export const CheckEndTierActionsOrEndGameLastActions = (G) => {
  *
  * @param G
  */
-const CheckEnlistmentMercenaries = (G) => {
+const CheckEnlistmentMercenaries = (G, ctx) => {
     let count = false;
-    for (let i = 0; i < G.publicPlayers.length; i++) {
+    for (let i = 0; i < ctx.numPlayers; i++) {
         const player = G.publicPlayers[i];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);

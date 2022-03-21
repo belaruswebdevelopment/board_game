@@ -4,9 +4,14 @@ import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CardNames, LogTypes, SuitNames } from "../typescript/enums";
 import { GetMaxCoinValue } from "./CoinHelpers";
+import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 // TODO Add dock blocks
-export const BlacksmithDistinctionAwarding = (G, ctx, player) => {
+export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
+    const player = G.publicPlayers[playerId];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+    }
     if (G.tierToEnd !== 0) {
         const card = G.additionalCardsDeck.find((card) => card.name === CardNames.ChiefBlacksmith);
         if (card === undefined) {
@@ -15,17 +20,37 @@ export const BlacksmithDistinctionAwarding = (G, ctx, player) => {
         player.cards[SuitNames.BLACKSMITH].push(card);
         G.distinctions[SuitNames.BLACKSMITH] = undefined;
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия кузнецов карту Главного кузнеца.`);
+        CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
     }
     return 0;
 };
-export const ExplorerDistinctionAwarding = (G, ctx, player) => {
+export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
+    const player = G.publicPlayers[playerId];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+    }
     if (G.tierToEnd !== 0) {
+        for (let j = 0; j < 3; j++) {
+            const deck1 = G.secret.decks[1];
+            if (deck1 === undefined) {
+                throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
+            }
+            const card = deck1[j];
+            if (card === undefined) {
+                throw new Error(`В массиве карт 2 эпохи отсутствует карта ${j}.`);
+            }
+            G.explorerDistinctionCards.push(card);
+        }
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDistinctionCard()]);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
     }
     return 0;
 };
-export const HunterDistinctionAwarding = (G, ctx, player) => {
+export const HunterDistinctionAwarding = (G, ctx, playerId) => {
+    const player = G.publicPlayers[playerId];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует ${playerId} игрок.`);
+    }
     if (G.tierToEnd !== 0) {
         const tradingCoinIndex = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === 0);
         if (tradingCoinIndex === -1) {
@@ -40,7 +65,11 @@ export const HunterDistinctionAwarding = (G, ctx, player) => {
     }
     return 0;
 };
-export const MinerDistinctionAwarding = (G, ctx, player) => {
+export const MinerDistinctionAwarding = (G, ctx, playerId) => {
+    const player = G.publicPlayers[playerId];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+    }
     if (G.tierToEnd !== 0) {
         player.priority = CreatePriority({
             value: 6,
@@ -56,13 +85,17 @@ export const MinerDistinctionAwarding = (G, ctx, player) => {
     }
     return 0;
 };
-export const WarriorDistinctionAwarding = (G, ctx, player) => {
+export const WarriorDistinctionAwarding = (G, ctx, playerId) => {
+    const player = G.publicPlayers[playerId];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+    }
     if (G.tierToEnd !== 0) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinWarriorDistinction()]);
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил по знаку отличия воинов возможность улучшить одну из своих монет на +5:`);
     }
     else {
-        return GetMaxCoinValue(player);
+        return GetMaxCoinValue(G, playerId);
     }
     return 0;
 };

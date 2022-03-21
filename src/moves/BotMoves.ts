@@ -1,9 +1,10 @@
 import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { IsCoin } from "../Coin";
+import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
-import type { CoinType, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CoinType, IMyGameState, IPlayer, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Выкладка монет ботами.</h3>
@@ -22,21 +23,31 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const multiplayer = IsMultiplayer(G),
+        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    let handCoins: CoinType[];
+    if (multiplayer) {
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
+        }
+        handCoins = privatePlayer.handCoins;
+    } else {
+        handCoins = player.handCoins;
+    }
     for (let i = 0; i < player.boardCoins.length; i++) {
         const coinId: number = coinsOrder[i]
-            || player.handCoins.findIndex((coin: CoinType): boolean => IsCoin(coin));
-        if (coinId === -1) {
-            throw new Error(`В массиве монет игрока в руке отсутствует монета.`);
+            || handCoins.findIndex((coin: CoinType): boolean => IsCoin(coin));
+        if (coinId !== -1) {
+            const handCoin: CoinType | undefined = handCoins[coinId];
+            if (handCoin === undefined) {
+                throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
+            }
+            player.boardCoins[i] = handCoin;
+            handCoins[coinId] = null;
         }
-        const handCoin: CoinType | undefined = player.handCoins[coinId];
-        if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
-        }
-        player.boardCoins[i] = handCoin;
-        player.handCoins[coinId] = null;
     }
 };

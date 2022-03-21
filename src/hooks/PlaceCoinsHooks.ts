@@ -1,12 +1,13 @@
 import type { Ctx } from "boardgame.io";
-import { ReturnCoinsToPlayerHands } from "../Coin";
+import { IsCoin, ReturnCoinsToPlayerHands } from "../Coin";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
+import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { BuffNames } from "../typescript/enums";
-import type { CoinType, IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
+import type { CoinType, IMyGameState, INext, IPlayer, IPublicPlayer, PublicPlayerBoardCoinTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
@@ -20,11 +21,22 @@ import type { CoinType, IMyGameState, INext, IPublicPlayer } from "../typescript
  */
 export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): void | INext => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        const isEveryPlayersHandCoinsEmpty: boolean =
-            G.publicPlayers.filter((player: IPublicPlayer): boolean =>
-                !CheckPlayerHasBuff(player, BuffNames.EveryTurn))
-                .every((player: IPublicPlayer): boolean =>
-                    player.handCoins.every((coin: CoinType): boolean => coin === null));
+        const multiplayer = IsMultiplayer(G);
+        let isEveryPlayersHandCoinsEmpty = false;
+        if (multiplayer) {
+            isEveryPlayersHandCoinsEmpty =
+                Object.values(G.publicPlayers).filter((player: IPublicPlayer): boolean =>
+                    !CheckPlayerHasBuff(player, BuffNames.EveryTurn))
+                    .every((player: IPublicPlayer): boolean =>
+                        player.boardCoins.every((coin: PublicPlayerBoardCoinTypes): boolean =>
+                            !IsCoin(coin) && coin !== null));
+        } else {
+            isEveryPlayersHandCoinsEmpty =
+                Object.values(G.publicPlayers).filter((player: IPublicPlayer): boolean =>
+                    !CheckPlayerHasBuff(player, BuffNames.EveryTurn))
+                    .every((player: IPublicPlayer): boolean =>
+                        player.handCoins.every((coin: CoinType): boolean => coin === null));
+        }
         if (isEveryPlayersHandCoinsEmpty) {
             return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
         }
@@ -43,11 +55,22 @@ export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): void | INext
  * @returns
  */
 export const CheckEndPlaceCoinsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const multiplayer = IsMultiplayer(G),
+        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
-    if (player.handCoins.every((coin: CoinType): boolean => coin === null)) {
+    let handCoins: CoinType[];
+    if (multiplayer) {
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
+        }
+        handCoins = privatePlayer.handCoins;
+    } else {
+        handCoins = player.handCoins;
+    }
+    if (handCoins.every((coin: CoinType): boolean => coin === null)) {
         return true;
     }
 };
@@ -69,7 +92,7 @@ export const OnPlaceCoinsTurnEnd = (G: IMyGameState): void => {
 export const PreparationPhaseActions = (G: IMyGameState, ctx: Ctx): void => {
     G.currentTavern = -1;
     if (ctx.turn !== 0) {
-        ReturnCoinsToPlayerHands(G);
+        ReturnCoinsToPlayerHands(G, ctx);
         if (G.expansions.thingvellir?.active) {
             RefillEmptyCampCards(G);
         }

@@ -2,22 +2,22 @@ import { IsMercenaryCampCard } from "../Camp";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ScoreWinner } from "../Score";
 import { BuffNames } from "../typescript/enums";
-export const CheckEndGame = (G) => {
+export const CheckEndGame = (G, ctx) => {
     if (G.tierToEnd === 0) {
-        const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
+        const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex !== -1) {
             return false;
         }
-        const brisingamensIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
+        const brisingamensIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
         if (brisingamensIndex !== -1) {
             return false;
         }
-        const mjollnirIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
+        const mjollnirIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
         if (mjollnirIndex !== -1) {
             return false;
         }
         let allMercenariesPlayed = true;
-        for (let i = 0; i < G.publicPlayers.length; i++) {
+        for (let i = 0; i < ctx.numPlayers; i++) {
             const player = G.publicPlayers[i];
             if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует игрок ${i}.`);

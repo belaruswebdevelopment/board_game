@@ -26,7 +26,7 @@ export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
     }
 };
 export const CheckGetMjollnirProfitOrder = (G) => {
-    const mjollnirPlayerIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
+    const mjollnirPlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
     if (mjollnirPlayerIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.GetMjollnirProfit}.`);
     }

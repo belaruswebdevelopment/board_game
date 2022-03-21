@@ -1,4 +1,5 @@
 import type { Ctx } from "boardgame.io";
+import { IsArtefactCard, IsMercenaryPlayerCard } from "../Camp";
 import { CreateCard } from "../Card";
 import { heroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
@@ -30,16 +31,20 @@ export const DiscardCardsFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, sui
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
-    const pickedCard: PlayerCardsType | undefined = player.cards[suit].splice(cardId, 1)[0];
-    if (pickedCard === undefined) {
+    const discardedCard: PlayerCardsType | undefined = player.cards[suit].splice(cardId, 1)[0];
+    if (discardedCard === undefined) {
         throw new Error(`В массиве карт игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
     }
-    if (IsHeroCard(pickedCard)) {
+    if (IsHeroCard(discardedCard)) {
         throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
     }
-    player.pickedCard = pickedCard;
-    G.discardCardsDeck.push(pickedCard);
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил в колоду сброса карту '${pickedCard.name}'.`);
+    player.pickedCard = discardedCard;
+    if (IsMercenaryPlayerCard(discardedCard) || IsArtefactCard(discardedCard)) {
+        G.discardCampCardsDeck.push(discardedCard);
+    } else {
+        G.discardCardsDeck.push(discardedCard);
+    }
+    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил в колоду сброса карту '${discardedCard.name}'.`);
     if (player.actionsNum === 2) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda()]);
     }

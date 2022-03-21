@@ -4,16 +4,16 @@ import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, LogTypes, Phases } from "../typescript/enums";
-import type { CampDeckCardTypes, IArtefactCampCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { CampDeckCardTypes, IArtefactCampCard, ICoin, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { AddBuffToPlayer, CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**
- * <h3>Действия, связанные с добавлением карт кэмпа в массив карт игрока.</h3>
+ * <h3>Действия, связанные с добавлением карт лагеря в массив карт игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карт кэмпа, добавляющихся на планшет игрока.</li>
+ * <li>При выборе карт лагеря, добавляющихся на планшет игрока.</li>
  * </ol>
  *
  * @param G
@@ -49,38 +49,38 @@ export const AddCampCardToCards = (G: IMyGameState, ctx: Ctx, card: CampDeckCard
 };
 
 /**
- * <h3>Добавляет взятую из кэмпа карту в массив карт кэмпа игрока.</h3>
+ * <h3>Добавляет взятую из лагеря карту в массив карт лагеря игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при взятии карты кэмпа игроком.</li>
+ * <li>Происходит при взятии карты лагеря игроком.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param card Карта кэмпа.
+ * @param card Карта лагеря.
  */
 export const AddCampCardToPlayer = (G: IMyGameState, ctx: Ctx, card: CampDeckCardTypes): void => {
     if (IsArtefactCard(card) && card.suit !== null) {
-        throw new Error(`Не удалось добавить карту артефакта ${card.name} в массив карт кэмпа игрока из-за её принадлежности к фракции ${card.suit}.`);
+        throw new Error(`Не удалось добавить карту артефакта ${card.name} в массив карт лагеря игрока из-за её принадлежности к фракции ${card.suit}.`);
     }
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
     player.campCards.push(card);
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту кэмпа ${card.name}.`);
+    AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} выбрал карту лагеря ${card.name}.`);
 };
 
 /**
- * <h3>Добавляет карту кэмпа в конкретную фракцию игрока.</h3>
+ * <h3>Добавляет карту лагеря в конкретную фракцию игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при добавлении карты кэмпа в конкретную фракцию игрока.</li>
+ * <li>Происходит при добавлении карты лагеря в конкретную фракцию игрока.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param card Карта кэмпа.
+ * @param card Карта лагеря.
  * @returns Добавлен ли артефакт на планшет игрока.
  */
 export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtefactCampCard): boolean => {
@@ -93,6 +93,10 @@ export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtef
     }
     player.cards[card.suit].push(card);
     player.pickedCard = card;
-    AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} выбрал карту кэмпа '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
+    AddDataToLog(G, LogTypes.PRIVATE, `Игрок ${player.nickname} выбрал карту лагеря '${card.name}' во фракцию ${suitsConfig[card.suit].suitName}.`);
     return true;
 };
+
+export const GetOdroerirTheMythicCauldronCoinsValues = (G: IMyGameState): number =>
+    G.odroerirTheMythicCauldronCoins.reduce((prev: number, curr: ICoin): number =>
+        prev + curr.value, 0);

@@ -2,10 +2,11 @@ import type { Ctx, StageArg } from "boardgame.io";
 import { IsCoin, ReturnCoinToPlayerHands, UpgradeCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
+import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, LogTypes, Stages } from "../typescript/enums";
-import type { ArgsTypes, CoinType, IMyGameState, IPublicPlayer, IStack, SuitTypes } from "../typescript/interfaces";
+import type { ArgsTypes, CoinType, IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerBoardCoinTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с взятием героя.</h3>
@@ -30,32 +31,51 @@ export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx): void => {
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты кэмпа артефакта Jarnglofi.</li>
+ * <li>При выборе карты лагеря артефакта Jarnglofi.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  */
 export const DiscardTradingCoinAction = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const multiplayer = IsMultiplayer(G),
+        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
+    let handCoins: CoinType[];
+    if (multiplayer) {
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
+        }
+        handCoins = privatePlayer.handCoins;
+    } else {
+        handCoins = player.handCoins;
+    }
     let tradingCoinIndex: number =
-        player.boardCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
+        player.boardCoins.findIndex((coin: PublicPlayerBoardCoinTypes): boolean =>
+            coin?.isTriggerTrading === true);
     if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && tradingCoinIndex === -1) {
-        tradingCoinIndex =
-            player.handCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
+        tradingCoinIndex = handCoins.findIndex((coin: CoinType): boolean => coin?.isTriggerTrading === true);
         if (tradingCoinIndex === -1) {
             throw new Error(`В массиве монет игрока в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
         }
-        player.handCoins.splice(tradingCoinIndex, 1, null);
-    } else if (tradingCoinIndex !== -1) {
-        player.boardCoins.splice(tradingCoinIndex, 1, null);
+        handCoins.splice(tradingCoinIndex, 1, null);
     } else {
-        throw new Error(`У игрока не может отсутствовать обменная монета.`);
+        if (tradingCoinIndex === -1) {
+            throw new Error(`У игрока не может отсутствовать обменная монета.`);
+        }
+        if (multiplayer && privatePlayer !== undefined) {
+            privatePlayer.boardCoins.splice(tradingCoinIndex, 1, null);
+        }
+        player.boardCoins.splice(tradingCoinIndex, 1, null);
     }
     AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил монету активирующую обмен.`);
+};
+
+export const FinishOdroerirTheMythicCauldronAction = (G: IMyGameState): void => {
+    G.odroerirTheMythicCauldron = false;
 };
 
 /**
@@ -75,7 +95,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): vo
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
         if (i > G.currentTavern) {
-            ReturnCoinToPlayerHands(player, i);
+            ReturnCoinToPlayerHands(G, Number(ctx.currentPlayer), i);
         }
     }
 };
@@ -84,7 +104,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): vo
  * <h3>Старт действия, связанные с сбросом карты из конкретной фракции игрока.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При выборе карты кэмпа артефакта Hofud.</li>
+ * <li>При выборе карты лагеря артефакта Hofud.</li>
  * </ol>
  *
  * @param G
@@ -99,9 +119,12 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
     if (stack1 === undefined) {
         throw new Error(`В массиве стека действий игрока отсутствует 1 действие.`);
     }
-    const suit: SuitTypes | undefined = stack1.config?.suit;
+    const suit: SuitTypes | null | undefined = stack1.config?.suit;
     if (suit === undefined) {
         throw new Error(`У конфига действия игрока отсутствует обязательный параметр принадлежности сбрасываемой карты к конкретной фракции.`);
+    }
+    if (suit === null) {
+        throw new Error(`У конфига действия игрока не задан обязательный параметр принадлежности сбрасываемой карты к конкретной фракции.`);
     }
     const value: Record<string, StageArg> = {};
     for (let i = 0; i < ctx.numPlayers; i++) {
@@ -127,29 +150,52 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
  * <h3>Действия, связанные со стартом способности артефакта Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>При старте способности карты кэмпа артефакта Vidofnir Vedrfolnir.</li>
+ * <li>При старте способности карты лагеря артефакта Vidofnir Vedrfolnir.</li>
  * </ol>
  *
  * @param G
  * @param ctx
  */
 export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    const multiplayer = IsMultiplayer(G),
+        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
+        privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
-    const number: number = player.boardCoins.filter((coin: CoinType, index: number): boolean =>
-        index >= G.tavernsNum && coin === null).length,
-        handCoinsNumber: number = player.handCoins.length;
+    let handCoins: CoinType[];
+    if (multiplayer) {
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
+        }
+        handCoins = privatePlayer.handCoins;
+    } else {
+        handCoins = player.handCoins;
+    }
+    const number: number =
+        player.boardCoins.filter((coin: PublicPlayerBoardCoinTypes, index: number): boolean =>
+            index >= G.tavernsNum && coin === null).length,
+        handCoinsNumber: number = handCoins.filter((coin: CoinType): boolean => IsCoin(coin)).length;
     if (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && number > 0 && handCoinsNumber) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(number)]);
     } else {
         let coinsValue = 0,
             stack: IStack[] = [];
         for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {
-            const coin: CoinType | undefined = player.boardCoins[j];
-            if (coin === undefined) {
-                throw new Error(`В массиве монет игрока на поле отсутствует нужная монета.`);
+            let coin: PublicPlayerBoardCoinTypes | undefined;
+            if (multiplayer && privatePlayer !== undefined) {
+                coin = privatePlayer.boardCoins[j];
+                if (coin === undefined) {
+                    throw new Error(`В массиве приватных монет игрока на поле отсутствует монета ${j}.`);
+                }
+                if (IsCoin(coin)) {
+                    player.boardCoins[j] = coin;
+                }
+            } else {
+                coin = player.boardCoins[j];
+                if (coin === undefined) {
+                    throw new Error(`В массиве монет игрока на поле отсутствует монета ${j}.`);
+                }
             }
             if (IsCoin(coin) && !coin.isTriggerTrading) {
                 coinsValue++;

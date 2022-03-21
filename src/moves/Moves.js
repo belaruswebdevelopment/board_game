@@ -1,10 +1,8 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCard, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
-import { IsCardNotActionAndNotNull } from "../Card";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
-import { AddCardToPlayer } from "../helpers/CardHelpers";
-import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
+import { PickCardOrActionCardActions } from "../helpers/ActionHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages, SuitNames } from "../typescript/enums";
@@ -33,19 +31,11 @@ export const ClickCardMove = (G, ctx, cardId) => {
     if (card === undefined) {
         throw new Error(`Отсутствует карта ${cardId} текущей таверны.`);
     }
-    G.taverns[G.currentTavern].splice(cardId, 1, null);
     if (card === null) {
         throw new Error(`Не существует кликнутая карта.`);
     }
-    const isAdded = AddCardToPlayer(G, ctx, card);
-    if (!IsCardNotActionAndNotNull(card)) {
-        AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
-    }
-    else {
-        if (isAdded) {
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
-        }
-    }
+    currentTavern.splice(cardId, 1, null);
+    PickCardOrActionCardActions(G, ctx, card);
 };
 /**
  * <h3>Выбор базовой карты из новой эпохи по преимуществу по фракции разведчиков.</h3>
@@ -63,7 +53,7 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const deck1 = G.decks[1];
+    const deck1 = G.secret.decks[1];
     if (deck1 === undefined) {
         throw new Error(`Отсутствует колода карт 2 эпохи.`);
     }
@@ -71,19 +61,16 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     if (card === undefined) {
         throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 1.`);
     }
-    const pickedCard = G.decks[1].splice(cardId, 1)[0], isAdded = AddCardToPlayer(G, ctx, card);
+    const pickedCard = deck1.splice(cardId, 1)[0];
     if (pickedCard === undefined) {
         throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 2.`);
     }
-    G.decks[1] = ctx.random.Shuffle(deck1);
-    if (IsCardNotActionAndNotNull(pickedCard)) {
-        if (isAdded) {
-            G.distinctions[SuitNames.EXPLORER] = undefined;
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, pickedCard);
-        }
-    }
-    else {
-        AddActionsToStackAfterCurrent(G, ctx, pickedCard.stack, pickedCard);
+    G.deckLength[1] = deck1.length;
+    G.secret.decks[1] = ctx.random.Shuffle(deck1);
+    G.explorerDistinctionCards.splice(0);
+    const isAdded = PickCardOrActionCardActions(G, ctx, card);
+    if (isAdded) {
+        G.distinctions[SuitNames.EXPLORER] = undefined;
     }
 };
 /**
@@ -103,11 +90,7 @@ export const ClickDistinctionCardMove = (G, ctx, suit) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-    }
-    suitsConfig[suit].distinction.awarding(G, ctx, player);
+    suitsConfig[suit].distinction.awarding(G, ctx, Number(ctx.currentPlayer));
 };
 /**
  * <h3>Убирает карту в колоду сброса в конце игры по выбору игрока при финальном действии артефакта Brisingamens.</h3>
@@ -132,10 +115,10 @@ export const DiscardCardFromPlayerBoardMove = (G, ctx, suit, cardId) => {
     DiscardAnyCardFromPlayerBoardAction(G, ctx, suit, cardId);
 };
 /**
- * <h3>Сбрасывает карту из таверны при выборе карты из кэмпа на двоих игроков.</h3>
+ * <h3>Сбрасывает карту из таверны при выборе карты из лагеря на двоих игроков.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Применяется при выборе первым игроком карты из кэмпа.</li>
+ * <li>Применяется при выборе первым игроком карты из лагеря.</li>
  * </ol>
  *
  * @param G

@@ -28,7 +28,7 @@ export const ChangePlayersPriorities = (G) => {
                     throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
                 }
                 if (tempPriority !== undefined && player.priority.value !== tempPriority.value) {
-                    G.publicPlayers[i].priority = tempPriority;
+                    player.priority = tempPriority;
                     AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} получил кристалл с приоритетом ${tempPriority.value}.`);
                 }
             }
@@ -81,7 +81,7 @@ export const GeneratePrioritiesForPlayerNumbers = (numPlayers) => {
  * @returns Имеет ли игрок наименьший кристалл.
  */
 export const HasLowestPriority = (G, playerId) => {
-    const tempPriorities = G.publicPlayers.map((player) => player.priority.value), minPriority = Math.min(...tempPriorities);
+    const tempPriorities = Object.values(G.publicPlayers).map((player) => player.priority.value), minPriority = Math.min(...tempPriorities);
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);

@@ -3,6 +3,7 @@ import { IsCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
+import { IsMultiplayer } from "./MultiplayerHelpers";
 /**
  * <h3>Активирует обмен монет.</h3>
  * <p>Применения:</p>
@@ -23,7 +24,7 @@ export const ActivateTrading = (G, ctx) => {
         throw new Error(`В массиве монет игрока отсутствует монета текущей таверны ${G.currentTavern}.`);
     }
     if (boardCoinCurrentTavern === null || boardCoinCurrentTavern === void 0 ? void 0 : boardCoinCurrentTavern.isTriggerTrading) {
-        const tradingCoins = [];
+        const multiplayer = IsMultiplayer(G), tradingCoins = [];
         for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
             const boardCoin = player.boardCoins[i];
             if (boardCoin === undefined) {
@@ -35,6 +36,11 @@ export const ActivateTrading = (G, ctx) => {
             }
         }
         Trading(G, ctx, tradingCoins);
+        if (multiplayer) {
+            for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
+                player.boardCoins[i] = {};
+            }
+        }
     }
 };
 /**

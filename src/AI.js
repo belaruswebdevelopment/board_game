@@ -57,7 +57,7 @@ export const enumerate = (G, ctx) => {
                     if (((_c = stack.config) === null || _c === void 0 ? void 0 : _c.suit) === undefined) {
                         throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.suit'.`);
                     }
-                    for (let p = 0; p < G.publicPlayers.length; p++) {
+                    for (let p = 0; p < ctx.numPlayers; p++) {
                         const playerP = G.publicPlayers[p];
                         if (playerP === undefined) {
                             throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
@@ -182,7 +182,7 @@ export const iterations = (G, ctx) => {
             if (currentTavern.some((card) => CompareCards(tavernCard, card) === -1)) {
                 continue;
             }
-            const deck0 = G.decks[0];
+            const deck0 = G.secret.decks[0];
             if (deck0 === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
             }
@@ -218,7 +218,7 @@ export const iterations = (G, ctx) => {
 export const objectives = () => ({
     isEarlyGame: {
         checker: (G) => {
-            const deck0 = G.decks[0];
+            const deck0 = G.secret.decks[0];
             if (deck0 === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
             }
@@ -231,7 +231,7 @@ export const objectives = () => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            if (G.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
+            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
             {
                 return false;
             }
@@ -255,7 +255,7 @@ export const objectives = () => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            if (G.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
+            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
             {
                 return false;
             }
@@ -279,7 +279,7 @@ export const objectives = () => ({
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            if (G.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
+            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
             {
                 return false;
             }
@@ -304,7 +304,7 @@ export const objectives = () => ({
             if (ctx.phase !== Phases.PickCards) {
                 return false;
             }
-            const deck1 = G.decks[1];
+            const deck1 = G.secret.decks[1];
             if (deck1 === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
             }
@@ -345,7 +345,7 @@ export const objectives = () => ({
             if (ctx.phase !== Phases.PickCards) {
                 return false;
             }
-            const deck1 = G.decks[1];
+            const deck1 = G.secret.decks[1];
             if (deck1 === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека 2 эпохи.`);
             }
@@ -395,7 +395,7 @@ export const objectives = () => ({
  * @returns
  */
 export const playoutDepth = (G, ctx) => {
-    const deck1 = G.decks[1];
+    const deck1 = G.secret.decks[1];
     if (deck1 === undefined) {
         throw new Error(`В массиве дек карт отсутствует дека 2 эпохи.`);
     }

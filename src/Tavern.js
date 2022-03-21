@@ -6,7 +6,7 @@ import { LogTypes, TavernNames } from "./typescript/enums";
  * <ol>
  * <li>Проверяет после каждого выбора карты дворфа из таверны.</li>
  * <li>Проверяет после каждого выбора карты улучшения монеты из таверны.</li>
- * <li>Проверяет после каждого выбора карты кэмпа из таверны.</li>
+ * <li>Проверяет после каждого выбора карты лагеря из таверны.</li>
  * </ol>
  *
  * @param G
@@ -19,13 +19,29 @@ export const CheckIfCurrentTavernEmpty = (G) => {
     }
     return currentTavern.every((card) => card === null);
 };
+export const DiscardCardIfTavernHasCardFor2Players = (G) => {
+    const tavern = G.taverns[G.currentTavern];
+    if (tavern === undefined) {
+        throw new Error(`Отсутствует текущая таверна.`);
+    }
+    const cardIndex = tavern.findIndex((card) => card !== null);
+    if (cardIndex === -1) {
+        throw new Error(`Не удалось сбросить лишнюю карту из таверны при пике артефакта Jarnglofi.`);
+    }
+    const currentTavernConfig = tavernsConfig[G.currentTavern];
+    if (currentTavernConfig === undefined) {
+        throw new Error(`Отсутствует конфиг текущей таверны.`);
+    }
+    AddDataToLog(G, LogTypes.GAME, `Карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за наличия двух игроков в игре.`);
+    DiscardCardFromTavern(G, cardIndex);
+};
 /**
  * <h3>Убирает карту из таверны в стопку сброса.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При игре на 2-х игроков убирает не выбранную карту.</li>
- * <li>Убирает оставшуюся карту при выборе карты из кэмпа.</li>
- * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из кэмпа.</li>
+ * <li>Убирает оставшуюся карту при выборе карты из лагеря.</li>
+ * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из лагеря.</li>
  * <li>Игрок пике артефакта Jarnglofi.</li>
  * </ol>
  *
@@ -52,7 +68,7 @@ export const DiscardCardFromTavern = (G, discardCardIndex) => {
         AddDataToLog(G, LogTypes.GAME, `Карта '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
         return true;
     }
-    throw new Error(`Не удалось сбросить лишнюю карту из таверны.`);
+    throw new Error(`Не удалось сбросить карту ${discardCardIndex} из таверны.`);
 };
 /**
  * <h3>Автоматически заполняет все таверны картами текущей эпохи.</h3>
@@ -66,7 +82,7 @@ export const DiscardCardFromTavern = (G, discardCardIndex) => {
  */
 export const RefillTaverns = (G) => {
     for (let i = 0; i < G.tavernsNum; i++) {
-        const deck = G.decks[G.decks.length - G.tierToEnd];
+        const deck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
         if (deck === undefined) {
             throw new Error(`Отсутствует колода карт текущей эпохи.`);
         }
@@ -77,6 +93,7 @@ export const RefillTaverns = (G) => {
         if (refillDeck.length !== G.drawSize) {
             throw new Error(`Таверна ${currentTavernConfig.name} не заполнена новыми картами из-за их нехватки в колоде.`);
         }
+        G.deckLength[G.secret.decks.length - G.tierToEnd] = deck.length;
         const currentTavern = G.taverns[i];
         if (currentTavern === undefined) {
             throw new Error(`Отсутствует текущая таверна.`);

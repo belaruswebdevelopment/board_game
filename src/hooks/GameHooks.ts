@@ -5,25 +5,28 @@ import { ScoreWinner } from "../Score";
 import { BuffNames } from "../typescript/enums";
 import type { CampDeckCardTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
-export const CheckEndGame = (G: IMyGameState): boolean | void => {
+export const CheckEndGame = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.tierToEnd === 0) {
-        const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            CheckPlayerHasBuff(player, BuffNames.EndTier));
+        const yludIndex: number =
+            Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
+                CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex !== -1) {
             return false;
         }
-        const brisingamensIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
+        const brisingamensIndex: number =
+            Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
+                CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
         if (brisingamensIndex !== -1) {
             return false;
         }
-        const mjollnirIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-            CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
+        const mjollnirIndex: number =
+            Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
+                CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
         if (mjollnirIndex !== -1) {
             return false;
         }
         let allMercenariesPlayed = true;
-        for (let i = 0; i < G.publicPlayers.length; i++) {
+        for (let i = 0; i < ctx.numPlayers; i++) {
             const player: IPublicPlayer | undefined = G.publicPlayers[i];
             if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует игрок ${i}.`);

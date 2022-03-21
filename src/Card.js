@@ -95,7 +95,6 @@ export const BuildAdditionalCards = () => {
     }
     return cards;
 };
-export const CheckIsMercenaryCampCardInPlayerCards = (card) => card !== null && card.type === RusCardTypes.MERCENARY;
 /**
  * <h3>Создание карты улучшения монеты.</h3>
  * <p>Применения:</p>

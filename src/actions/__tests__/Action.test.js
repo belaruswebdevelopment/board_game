@@ -1,30 +1,18 @@
-import { heroesConfig } from "../../data/HeroData";
 import { suitsConfig } from "../../data/SuitData";
-import { BuffNames, ConfigNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames, TavernNames } from "../../typescript/enums";
+import { ArtefactNames, BuffNames, ConfigNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames, TavernNames } from "../../typescript/enums";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCard, PlaceEnlistmentMercenariesAction } from "../Actions";
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
-    it(`should remove non-hero discarded card from player's cards`, () => {
+    it(`should remove non-hero discarded card from player's cards to cards discard`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     cards: {
                         warrior: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.WARRIOR,
-                                rank: 1,
-                                points: 10,
                                 name: `Test`,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
                             },
                         ],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
                     },
                     buffs: [
                         {
@@ -32,7 +20,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                         },
                     ],
                 },
-            ],
+            },
             discardCardsDeck: [],
             logData: [],
         };
@@ -40,68 +28,157 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             currentPlayer: `0`,
         }, SuitNames.WARRIOR, 0);
         expect(G).toEqual({
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     cards: {
                         warrior: [],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
                     },
                     buffs: [],
                 },
-            ],
+            },
             discardCardsDeck: [
                 {
-                    type: RusCardTypes.BASIC,
-                    suit: SuitNames.WARRIOR,
-                    rank: 1,
-                    points: 10,
                     name: `Test`,
-                    game: GameNames.Basic,
-                    tier: 0,
-                    path: ``,
                 },
             ],
             logData: [
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan потерял баф '${BuffNames.DiscardCardEndGame}'.`,
+                    value: `Игрок Dan отправил карту 'Test' в колоду сброса карт.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan отправил карту 'Test' в колоду сброса.`,
+                    value: `Игрок Dan потерял баф '${BuffNames.DiscardCardEndGame}'.`,
+                },
+            ],
+        });
+    });
+    it(`should remove artefact discarded card from player's cards to camp cards discard`, () => {
+        const G = {
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    cards: {
+                        warrior: [
+                            {
+                                name: ArtefactNames.Brisingamens,
+                                description: `Test`,
+                                tier: 0,
+                            },
+                        ],
+                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
+                },
+            },
+            discardCampCardsDeck: [],
+            logData: [],
+        };
+        DiscardAnyCardFromPlayerBoardAction(G, {
+            currentPlayer: `0`,
+        }, SuitNames.WARRIOR, 0);
+        expect(G).toEqual({
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    cards: {
+                        warrior: [],
+                    },
+                    buffs: [],
+                },
+            },
+            discardCampCardsDeck: [
+                {
+                    name: ArtefactNames.Brisingamens,
+                    description: `Test`,
+                    tier: 0,
+                },
+            ],
+            logData: [
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок Dan отправил карту '${ArtefactNames.Brisingamens}' в колоду сброса карт лагеря.`,
+                },
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок Dan потерял баф '${BuffNames.DiscardCardEndGame}'.`,
+                },
+            ],
+        });
+    });
+    it(`should remove mercenary player discarded card from player's cards to camp cards discard`, () => {
+        const G = {
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    cards: {
+                        warrior: [
+                            {
+                                name: `Test`,
+                                variants: {},
+                                suit: SuitNames.WARRIOR,
+                            },
+                        ],
+                    },
+                    buffs: [
+                        {
+                            discardCardEndGame: true,
+                        },
+                    ],
+                },
+            },
+            discardCampCardsDeck: [],
+            logData: [],
+        };
+        DiscardAnyCardFromPlayerBoardAction(G, {
+            currentPlayer: `0`,
+        }, SuitNames.WARRIOR, 0);
+        expect(G).toEqual({
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    cards: {
+                        warrior: [],
+                    },
+                    buffs: [],
+                },
+            },
+            discardCampCardsDeck: [
+                {
+                    name: `Test`,
+                    variants: {},
+                    suit: SuitNames.WARRIOR,
+                },
+            ],
+            logData: [
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок Dan отправил карту 'Test' в колоду сброса карт лагеря.`,
+                },
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок Dan потерял баф '${BuffNames.DiscardCardEndGame}'.`,
                 },
             ],
         });
     });
     it(`shouldn't remove hero discarded card from player's cards and must throw Error`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     cards: {
                         warrior: [
                             {
-                                type: RusCardTypes.HERO,
-                                suit: SuitNames.WARRIOR,
-                                rank: 1,
-                                points: 8,
-                                name: ``,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
-                                active: true,
+                                active: false,
                             },
                         ],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
                     },
                 },
-            ],
+            },
         };
         expect(() => {
             DiscardAnyCardFromPlayerBoardAction(G, {
@@ -111,17 +188,13 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
     });
     it(`shouldn't remove non-exists player's card and must throw Error`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     cards: {
                         warrior: [],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
                     },
                 },
-            ],
+            },
         };
         expect(() => {
             DiscardAnyCardFromPlayerBoardAction(G, {
@@ -133,62 +206,42 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
 describe(`Test DiscardCardFromTavernAction method`, () => {
     it(`should remove non-null card from tavern`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                 },
-            ],
+            },
             currentTavern: 0,
             taverns: [
                 [
                     {
-                        type: RusCardTypes.BASIC,
-                        suit: SuitNames.WARRIOR,
-                        rank: 1,
-                        points: 10,
                         name: `Test`,
-                        game: GameNames.Basic,
-                        tier: 0,
-                        path: ``,
                     },
-                    null,
-                    null,
-                    null,
-                    null,
                 ],
-                [null, null, null, null, null],
-                [null, null, null, null, null],
             ],
             discardCardsDeck: [],
+            tavernCardDiscarded2Players: false,
             logData: [],
         };
         DiscardCardFromTavernAction(G, {
             currentPlayer: `0`,
         }, 0);
         expect(G).toEqual({
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                 },
-            ],
+            },
             currentTavern: 0,
             taverns: [
-                [null, null, null, null, null],
-                [null, null, null, null, null],
-                [null, null, null, null, null],
+                [null],
             ],
             discardCardsDeck: [
                 {
-                    type: RusCardTypes.BASIC,
-                    suit: SuitNames.WARRIOR,
-                    rank: 1,
-                    points: 10,
                     name: `Test`,
-                    game: GameNames.Basic,
-                    tier: 0,
-                    path: ``,
                 },
             ],
+            tavernCardDiscarded2Players: true,
             logData: [
                 {
                     type: LogTypes.GAME,
@@ -203,16 +256,14 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
     });
     it(`shouldn't remove null card from tavern and must throw Error`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                 },
-            ],
+            },
             currentTavern: 0,
             taverns: [
-                [null, null, null, null, null],
-                [null, null, null, null, null],
-                [null, null, null, null, null],
+                [null],
             ],
             logData: [],
         };
@@ -220,47 +271,47 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             DiscardCardFromTavernAction(G, {
                 currentPlayer: `0`,
             }, 0);
-        }).toThrowError(`Не удалось сбросить лишнюю карту из таверны.`);
+        }).toThrowError(`Не удалось сбросить карту 0 из таверны`);
+    });
+    it(`shouldn't remove non-exists card from tavern and must throw Error`, () => {
+        const G = {
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                },
+            },
+            currentTavern: 0,
+            taverns: [
+                [],
+            ],
+            logData: [],
+        };
+        expect(() => {
+            DiscardCardFromTavernAction(G, {
+                currentPlayer: `0`,
+            }, 0);
+        }).toThrowError(`В текущей таверне отсутствует карта 0.`);
     });
 });
 describe(`Test GetEnlistmentMercenariesAction method`, () => {
     it(`should get mercenary card from player's camp cards to place`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            type: RusCardTypes.MERCENARY,
-                            tier: 0,
-                            path: ``,
                             name: `Test`,
-                            game: GameNames.Thingvellir,
-                            variants: {
-                                warrior: {
-                                    suit: SuitNames.WARRIOR,
-                                    rank: 1,
-                                    points: 6,
-                                },
-                                blacksmith: {
-                                    suit: SuitNames.BLACKSMITH,
-                                    rank: 1,
-                                    points: null,
-                                },
-                            },
+                            tier: 0,
+                            variants: {},
                         },
                     ],
                     pickedCard: null,
                     stack: [
-                        {
-                            config: {
-                                name: ConfigNames.EnlistmentMercenaries,
-                                drawName: DrawNames.EnlistmentMercenaries,
-                            },
-                        },
+                        {},
                     ],
                 },
-            ],
+            },
             logData: [],
         };
         GetEnlistmentMercenariesAction(G, {
@@ -268,56 +319,23 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
             phase: Phases.EnlistmentMercenaries,
         }, 0);
         expect(G).toEqual({
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            type: RusCardTypes.MERCENARY,
-                            tier: 0,
-                            path: ``,
                             name: `Test`,
-                            game: GameNames.Thingvellir,
-                            variants: {
-                                warrior: {
-                                    suit: SuitNames.WARRIOR,
-                                    rank: 1,
-                                    points: 6,
-                                },
-                                blacksmith: {
-                                    suit: SuitNames.BLACKSMITH,
-                                    rank: 1,
-                                    points: null,
-                                },
-                            },
+                            tier: 0,
+                            variants: {},
                         },
                     ],
                     pickedCard: {
-                        type: RusCardTypes.MERCENARY,
-                        tier: 0,
-                        path: ``,
                         name: `Test`,
-                        game: GameNames.Thingvellir,
-                        variants: {
-                            warrior: {
-                                suit: SuitNames.WARRIOR,
-                                rank: 1,
-                                points: 6,
-                            },
-                            blacksmith: {
-                                suit: SuitNames.BLACKSMITH,
-                                rank: 1,
-                                points: null,
-                            },
-                        },
+                        tier: 0,
+                        variants: {},
                     },
                     stack: [
-                        {
-                            config: {
-                                name: ConfigNames.EnlistmentMercenaries,
-                                drawName: DrawNames.EnlistmentMercenaries,
-                            },
-                        },
+                        {},
                         {
                             config: {
                                 name: ConfigNames.PlaceEnlistmentMercenaries,
@@ -326,7 +344,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
                         },
                     ],
                 },
-            ],
+            },
             logData: [
                 {
                     type: LogTypes.GAME,
@@ -337,18 +355,18 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
     });
     it(`shouldn't remove non-exists player's camp card and must throw Error`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     campCards: [],
                 },
-            ],
+            },
         };
         expect(() => {
             GetEnlistmentMercenariesAction(G, {
                 currentPlayer: `0`,
                 phase: Phases.EnlistmentMercenaries,
             }, 0);
-        }).toThrowError(`В массиве карт кэмпа игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
+        }).toThrowError(`В массиве карт лагеря игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
     });
     // Unreal to reproduce
     // it(`shouldn't remove null card from tavern and must throw Error`, (): void => {
@@ -363,8 +381,8 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
 describe(`Test GetMjollnirProfitAction method`, () => {
     it(`should get suit for end game Mjollnir profit`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     buffs: [
                         {
@@ -372,15 +390,15 @@ describe(`Test GetMjollnirProfitAction method`, () => {
                         },
                     ],
                 },
-            ],
+            },
             logData: [],
         };
         GetMjollnirProfitAction(G, {
             currentPlayer: `0`,
         }, SuitNames.HUNTER);
         expect(G).toEqual({
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     buffs: [
                         {
@@ -388,7 +406,7 @@ describe(`Test GetMjollnirProfitAction method`, () => {
                         },
                     ],
                 },
-            ],
+            },
             logData: [
                 {
                     type: LogTypes.GAME,
@@ -409,11 +427,11 @@ describe(`Test GetMjollnirProfitAction method`, () => {
 describe(`Test PassEnlistmentMercenariesAction method`, () => {
     it(`should first player pass on the beginning of 'enlistmentMercenaries' phase`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                 },
-            ],
+            },
             logData: [],
         };
         PassEnlistmentMercenariesAction(G, {
@@ -421,11 +439,11 @@ describe(`Test PassEnlistmentMercenariesAction method`, () => {
             phase: Phases.EnlistmentMercenaries,
         });
         expect(G).toEqual({
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                 },
-            ],
+            },
             logData: [
                 {
                     type: LogTypes.GAME,
@@ -438,42 +456,22 @@ describe(`Test PassEnlistmentMercenariesAction method`, () => {
 describe(`Test PickDiscardCard method`, () => {
     it(`should pick non-action discarded card from discard deck`, () => {
         const G = {
-            publicPlayers: [
-                {
-                    actionsNum: 2,
+            publicPlayers: {
+                0: {
+                    actionsNum: 1,
                     nickname: `Dan`,
                     pickedCard: null,
                     heroes: [],
-                    stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: 2,
-                            },
-                        },
-                    ],
                     cards: {
                         warrior: [],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
                     },
                     buffs: [],
                 },
-            ],
+            },
             discardCardsDeck: [
                 {
-                    type: RusCardTypes.BASIC,
-                    suit: SuitNames.WARRIOR,
-                    rank: 1,
-                    points: 10,
                     name: `Test`,
-                    game: GameNames.Basic,
-                    tier: 0,
-                    path: ``,
+                    suit: SuitNames.WARRIOR,
                 },
             ],
             logData: [],
@@ -482,60 +480,26 @@ describe(`Test PickDiscardCard method`, () => {
             currentPlayer: `0`,
         }, 0);
         expect(G).toEqual({
-            publicPlayers: [
-                {
-                    actionsNum: 2,
+            publicPlayers: {
+                0: {
+                    actionsNum: 1,
                     nickname: `Dan`,
                     pickedCard: {
-                        type: RusCardTypes.BASIC,
-                        suit: SuitNames.WARRIOR,
-                        rank: 1,
-                        points: 10,
                         name: `Test`,
-                        game: GameNames.Basic,
-                        tier: 0,
-                        path: ``,
+                        suit: SuitNames.WARRIOR,
                     },
                     heroes: [],
-                    stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: 2,
-                            },
-                        },
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: undefined,
-                            },
-                        },
-                    ],
                     cards: {
                         warrior: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.WARRIOR,
-                                rank: 1,
-                                points: 10,
                                 name: `Test`,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
+                                suit: SuitNames.WARRIOR,
                             },
                         ],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
                     },
                     buffs: [],
                 },
-            ],
+            },
             discardCardsDeck: [],
             logData: [
                 {
@@ -551,27 +515,18 @@ describe(`Test PickDiscardCard method`, () => {
     });
     it(`should pick action discarded card from discard deck`, () => {
         const G = {
-            publicPlayers: [
-                {
-                    actionsNum: 2,
+            publicPlayers: {
+                0: {
+                    actionsNum: 1,
                     nickname: `Dan`,
                     pickedCard: null,
                     stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: 2,
-                            },
-                        },
+                        {},
                     ],
                 },
-            ],
+            },
             discardCardsDeck: [
                 {
-                    type: RusCardTypes.ACTION,
-                    value: 5,
                     stack: [
                         {
                             config: {
@@ -591,13 +546,11 @@ describe(`Test PickDiscardCard method`, () => {
             currentPlayer: `0`,
         }, 0);
         expect(G).toEqual({
-            publicPlayers: [
-                {
-                    actionsNum: 2,
+            publicPlayers: {
+                0: {
+                    actionsNum: 1,
                     nickname: `Dan`,
                     pickedCard: {
-                        type: RusCardTypes.ACTION,
-                        value: 5,
                         stack: [
                             {
                                 config: {
@@ -606,19 +559,12 @@ describe(`Test PickDiscardCard method`, () => {
                                     value: 5,
                                     drawName: DrawNames.UpgradeCoin,
                                 },
-                            },
+                            }
                         ],
                         name: `Test`,
                     },
                     stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: 2,
-                            },
-                        },
+                        {},
                         {
                             config: {
                                 name: ConfigNames.UpgradeCoin,
@@ -627,18 +573,24 @@ describe(`Test PickDiscardCard method`, () => {
                                 drawName: DrawNames.UpgradeCoin,
                             },
                         },
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: undefined,
-                            },
-                        },
                     ],
                 },
+            },
+            discardCardsDeck: [
+                {
+                    stack: [
+                        {
+                            config: {
+                                name: ConfigNames.UpgradeCoin,
+                                stageName: Stages.UpgradeCoin,
+                                value: 5,
+                                drawName: DrawNames.UpgradeCoin,
+                            },
+                        }
+                    ],
+                    name: `Test`,
+                },
             ],
-            discardCardsDeck: [],
             logData: [
                 {
                     type: LogTypes.PUBLIC,
@@ -651,172 +603,27 @@ describe(`Test PickDiscardCard method`, () => {
             ],
         });
     });
-    it(`should pick artefact discarded card from discard deck`, () => {
+    it(`should add action to stack if actionsNum = 2`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     actionsNum: 2,
                     nickname: `Dan`,
                     heroes: [],
                     pickedCard: null,
                     stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: 2,
-                            },
-                        },
+                        {},
                     ],
                     cards: {
                         warrior: [],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
                     },
                     buffs: [],
                 },
-            ],
+            },
             discardCardsDeck: [
                 {
-                    type: RusCardTypes.ARTEFACT,
-                    tier: 0,
-                    path: ``,
                     name: `Test`,
-                    description: `Test`,
-                    game: GameNames.Thingvellir,
-                    suit: SuitNames.EXPLORER,
-                    rank: 1,
-                    points: 13,
-                    buff: undefined,
-                    validators: undefined,
-                    actions: undefined,
-                    stack: undefined,
-                },
-            ],
-            logData: [],
-        };
-        PickDiscardCard(G, {
-            currentPlayer: `0`,
-        }, 0);
-        expect(G).toEqual({
-            publicPlayers: [
-                {
-                    actionsNum: 2,
-                    nickname: `Dan`,
-                    heroes: [],
-                    pickedCard: {
-                        type: RusCardTypes.ARTEFACT,
-                        tier: 0,
-                        path: ``,
-                        name: `Test`,
-                        description: `Test`,
-                        game: GameNames.Thingvellir,
-                        suit: SuitNames.EXPLORER,
-                        rank: 1,
-                        points: 13,
-                        buff: undefined,
-                        validators: undefined,
-                        actions: undefined,
-                        stack: undefined,
-                    },
-                    stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: 2,
-                            },
-                        },
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: undefined,
-                            },
-                        },
-                    ],
-                    cards: {
-                        warrior: [],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [
-                            {
-                                type: RusCardTypes.ARTEFACT,
-                                tier: 0,
-                                path: ``,
-                                name: `Test`,
-                                description: `Test`,
-                                game: GameNames.Thingvellir,
-                                suit: SuitNames.EXPLORER,
-                                rank: 1,
-                                points: 13,
-                                buff: undefined,
-                                validators: undefined,
-                                actions: undefined,
-                                stack: undefined,
-                            },
-                        ],
-                    },
-                    buffs: [],
-                },
-            ],
-            discardCardsDeck: [],
-            logData: [
-                {
-                    type: LogTypes.PRIVATE,
-                    value: `Игрок Dan выбрал карту кэмпа 'Test' во фракцию ${suitsConfig[SuitNames.EXPLORER].suitName}.`,
-                },
-                {
-                    type: LogTypes.GAME,
-                    value: `Игрок Dan взял карту 'Test' из колоды сброса.`,
-                },
-            ],
-        });
-    });
-    it(`shouldn't add action to stack if actionsNum = 1`, () => {
-        const G = {
-            publicPlayers: [
-                {
-                    actionsNum: 1,
-                    nickname: `Dan`,
-                    heroes: [],
-                    pickedCard: null,
-                    stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: undefined,
-                            },
-                        },
-                    ],
-                    cards: {
-                        warrior: [],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
-                    },
-                    buffs: [],
-                },
-            ],
-            discardCardsDeck: [
-                {
-                    type: RusCardTypes.BASIC,
                     suit: SuitNames.WARRIOR,
-                    rank: 1,
-                    points: 10,
-                    name: `Test`,
-                    game: GameNames.Basic,
-                    tier: 0,
-                    path: ``,
                 },
             ],
             logData: [],
@@ -825,22 +632,17 @@ describe(`Test PickDiscardCard method`, () => {
             currentPlayer: `0`,
         }, 0);
         expect(G).toEqual({
-            publicPlayers: [
-                {
-                    actionsNum: 1,
+            publicPlayers: {
+                0: {
+                    actionsNum: 2,
                     nickname: `Dan`,
                     heroes: [],
                     pickedCard: {
-                        type: RusCardTypes.BASIC,
-                        suit: SuitNames.WARRIOR,
-                        rank: 1,
-                        points: 10,
                         name: `Test`,
-                        game: GameNames.Basic,
-                        tier: 0,
-                        path: ``,
+                        suit: SuitNames.WARRIOR,
                     },
                     stack: [
+                        {},
                         {
                             config: {
                                 stageName: Stages.PickDiscardCard,
@@ -853,24 +655,14 @@ describe(`Test PickDiscardCard method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.WARRIOR,
-                                rank: 1,
-                                points: 10,
                                 name: `Test`,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
-                            }
+                                suit: SuitNames.WARRIOR,
+                            },
                         ],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
                     },
                     buffs: [],
                 },
-            ],
+            },
             discardCardsDeck: [],
             logData: [
                 {
@@ -886,86 +678,46 @@ describe(`Test PickDiscardCard method`, () => {
     });
     it(`should pick hero`, () => {
         const G = {
-            publicPlayers: [
-                {
-                    actionsNum: 2,
+            publicPlayers: {
+                0: {
+                    actionsNum: 1,
                     nickname: `Dan`,
                     heroes: [],
                     pickedCard: null,
                     stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: 2,
-                            },
-                        },
+                        {},
                     ],
                     cards: {
                         warrior: [],
                         hunter: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.HUNTER,
                                 rank: 1,
-                                points: null,
-                                name: ``,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
                             },
                         ],
                         miner: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.MINER,
                                 rank: 1,
-                                points: 0,
-                                name: ``,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
                             },
                         ],
                         blacksmith: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.BLACKSMITH,
                                 rank: 1,
-                                points: null,
-                                name: ``,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
                             },
                         ],
                         explorer: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.EXPLORER,
                                 rank: 1,
-                                points: 12,
-                                name: ``,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
                             },
                         ],
                     },
                     buffs: [],
                 },
-            ],
+            },
             discardCardsDeck: [
                 {
-                    type: RusCardTypes.BASIC,
+                    name: `Test`,
                     suit: SuitNames.WARRIOR,
                     rank: 1,
-                    points: 10,
-                    name: `Test`,
-                    game: GameNames.Basic,
-                    tier: 0,
-                    path: ``,
                 },
             ],
             logData: [],
@@ -974,110 +726,57 @@ describe(`Test PickDiscardCard method`, () => {
             currentPlayer: `0`,
         }, 0);
         expect(G).toEqual({
-            publicPlayers: [
-                {
-                    actionsNum: 2,
+            publicPlayers: {
+                0: {
+                    actionsNum: 1,
                     nickname: `Dan`,
                     heroes: [],
                     pickedCard: {
-                        type: RusCardTypes.BASIC,
-                        suit: SuitNames.WARRIOR,
-                        rank: 1,
-                        points: 10,
                         name: `Test`,
-                        game: GameNames.Basic,
-                        tier: 0,
-                        path: ``,
+                        rank: 1,
+                        suit: SuitNames.WARRIOR,
                     },
                     stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: 2,
-                            },
-                        },
+                        {},
                         {
                             config: {
                                 stageName: Stages.PickHero,
                                 drawName: DrawNames.PickHero,
                             },
                         },
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: undefined,
-                            },
-                        },
                     ],
                     cards: {
                         warrior: [
                             {
-                                type: RusCardTypes.BASIC,
+                                name: `Test`,
                                 suit: SuitNames.WARRIOR,
                                 rank: 1,
-                                points: 10,
-                                name: `Test`,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
                             },
                         ],
                         hunter: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.HUNTER,
                                 rank: 1,
-                                points: null,
-                                name: ``,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
                             },
                         ],
                         miner: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.MINER,
                                 rank: 1,
-                                points: 0,
-                                name: ``,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
                             },
                         ],
                         blacksmith: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.BLACKSMITH,
                                 rank: 1,
-                                points: null,
-                                name: ``,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
                             },
                         ],
                         explorer: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.EXPLORER,
                                 rank: 1,
-                                points: 12,
-                                name: ``,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
                             },
                         ],
                     },
                     buffs: [],
                 },
-            ],
+            },
             discardCardsDeck: [],
             logData: [
                 {
@@ -1097,63 +796,34 @@ describe(`Test PickDiscardCard method`, () => {
     });
     it(`should move thrud`, () => {
         const G = {
-            publicPlayers: [
-                {
-                    actionsNum: 2,
+            publicPlayers: {
+                0: {
+                    actionsNum: 1,
                     nickname: `Dan`,
                     heroes: [
                         {
                             suit: SuitNames.HUNTER,
-                            rank: 1,
-                            points: null,
-                            type: RusCardTypes.HERO,
                             name: HeroNames.Thrud,
-                            game: GameNames.Basic,
-                            description: heroesConfig.Thrud.description,
-                            active: true,
                         },
                     ],
                     pickedCard: null,
                     stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: 2,
-                            },
-                        },
+                        {},
                     ],
                     cards: {
-                        warrior: [],
                         hunter: [
                             {
                                 suit: SuitNames.HUNTER,
-                                rank: 1,
-                                points: null,
-                                type: RusCardTypes.HERO,
                                 name: HeroNames.Thrud,
-                                game: GameNames.Basic,
-                                description: heroesConfig.Thrud.description,
-                                active: true,
                             },
                         ],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
                     },
                 },
-            ],
+            },
             discardCardsDeck: [
                 {
-                    type: RusCardTypes.BASIC,
                     suit: SuitNames.HUNTER,
-                    rank: 1,
-                    points: null,
                     name: `Test`,
-                    game: GameNames.Basic,
-                    tier: 0,
-                    path: ``,
                 },
             ],
             logData: [],
@@ -1162,41 +832,22 @@ describe(`Test PickDiscardCard method`, () => {
             currentPlayer: `0`,
         }, 0);
         expect(G).toEqual({
-            publicPlayers: [
-                {
-                    actionsNum: 2,
+            publicPlayers: {
+                0: {
+                    actionsNum: 1,
                     nickname: `Dan`,
                     heroes: [
                         {
                             suit: SuitNames.HUNTER,
-                            rank: 1,
-                            points: null,
-                            type: RusCardTypes.HERO,
                             name: HeroNames.Thrud,
-                            game: GameNames.Basic,
-                            description: heroesConfig.Thrud.description,
-                            active: true,
                         },
                     ],
                     pickedCard: {
-                        type: RusCardTypes.BASIC,
                         suit: SuitNames.HUNTER,
-                        rank: 1,
-                        points: null,
                         name: `Test`,
-                        game: GameNames.Basic,
-                        tier: 0,
-                        path: ``,
                     },
                     stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: 2,
-                            },
-                        },
+                        {},
                         {
                             variants: {
                                 blacksmith: {
@@ -1232,35 +883,17 @@ describe(`Test PickDiscardCard method`, () => {
                                 suit: SuitNames.HUNTER,
                             },
                         },
-                        {
-                            config: {
-                                stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
-                                drawName: DrawNames.Brisingamens,
-                                number: undefined,
-                            },
-                        },
                     ],
                     cards: {
-                        warrior: [],
                         hunter: [
                             {
-                                type: RusCardTypes.BASIC,
                                 suit: SuitNames.HUNTER,
-                                rank: 1,
-                                points: null,
                                 name: `Test`,
-                                game: GameNames.Basic,
-                                tier: 0,
-                                path: ``,
                             },
                         ],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
                     },
                 },
-            ],
+            },
             discardCardsDeck: [],
             logData: [
                 {
@@ -1276,9 +909,9 @@ describe(`Test PickDiscardCard method`, () => {
     });
     it(`shouldn't remove non-exists discard card and must throw Error`, () => {
         const G = {
-            publicPlayers: [
-                {},
-            ],
+            publicPlayers: {
+                0: {},
+            },
             discardCardsDeck: [],
         };
         expect(() => {
@@ -1291,35 +924,14 @@ describe(`Test PickDiscardCard method`, () => {
 describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
     it(`should get mercenary card from player's camp cards to place`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            type: RusCardTypes.MERCENARY,
-                            tier: 0,
-                            path: ``,
-                            name: ``,
-                            game: GameNames.Thingvellir,
-                            variants: {
-                                warrior: {
-                                    suit: SuitNames.WARRIOR,
-                                    rank: 1,
-                                    points: 6,
-                                },
-                                explorer: {
-                                    suit: SuitNames.EXPLORER,
-                                    rank: 1,
-                                    points: 8,
-                                },
-                            },
-                        },
-                        {
-                            type: RusCardTypes.MERCENARY,
                             tier: 0,
                             path: ``,
                             name: `Test`,
-                            game: GameNames.Thingvellir,
                             variants: {
                                 warrior: {
                                     suit: SuitNames.WARRIOR,
@@ -1336,10 +948,49 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     ],
                     heroes: [],
                     pickedCard: {
-                        type: RusCardTypes.MERCENARY,
                         tier: 0,
                         path: ``,
                         name: `Test`,
+                        variants: {
+                            warrior: {
+                                suit: SuitNames.WARRIOR,
+                                rank: 1,
+                                points: 6,
+                            },
+                            blacksmith: {
+                                suit: SuitNames.BLACKSMITH,
+                                rank: 1,
+                                points: null,
+                            },
+                        },
+                    },
+                    cards: {
+                        blacksmith: [],
+                        miner: [],
+                    },
+                    buffs: [],
+                },
+            },
+            logData: [],
+        };
+        PlaceEnlistmentMercenariesAction(G, {
+            currentPlayer: `0`,
+            phase: Phases.EnlistmentMercenaries,
+        }, SuitNames.BLACKSMITH);
+        expect(G).toEqual({
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    campCards: [],
+                    heroes: [],
+                    pickedCard: {
+                        type: RusCardTypes.MERCENARYPLAYERCARD,
+                        suit: SuitNames.BLACKSMITH,
+                        rank: 1,
+                        points: null,
+                        name: `Test`,
+                        tier: 0,
+                        path: ``,
                         game: GameNames.Thingvellir,
                         variants: {
                             warrior: {
@@ -1354,87 +1005,10 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                             },
                         },
                     },
-                    stack: [
-                        {
-                            config: {
-                                name: ConfigNames.PlaceEnlistmentMercenaries,
-                                drawName: DrawNames.PlaceEnlistmentMercenaries,
-                            },
-                        },
-                    ],
                     cards: {
-                        warrior: [],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
-                    },
-                    buffs: [],
-                },
-            ],
-            logData: [],
-        };
-        PlaceEnlistmentMercenariesAction(G, {
-            currentPlayer: `0`,
-            phase: Phases.EnlistmentMercenaries,
-        }, SuitNames.BLACKSMITH);
-        expect(G).toEqual({
-            publicPlayers: [
-                {
-                    nickname: `Dan`,
-                    campCards: [
-                        {
-                            type: RusCardTypes.MERCENARY,
-                            tier: 0,
-                            path: ``,
-                            name: ``,
-                            game: GameNames.Thingvellir,
-                            variants: {
-                                warrior: {
-                                    suit: SuitNames.WARRIOR,
-                                    rank: 1,
-                                    points: 6,
-                                },
-                                explorer: {
-                                    suit: SuitNames.EXPLORER,
-                                    rank: 1,
-                                    points: 8,
-                                },
-                            },
-                        },
-                    ],
-                    heroes: [],
-                    pickedCard: {
-                        type: RusCardTypes.MERCENARY,
-                        suit: SuitNames.BLACKSMITH,
-                        rank: 1,
-                        points: null,
-                        name: `Test`,
-                        tier: 0,
-                        path: ``,
-                        game: GameNames.Thingvellir,
-                    },
-                    stack: [
-                        {
-                            config: {
-                                name: ConfigNames.PlaceEnlistmentMercenaries,
-                                drawName: DrawNames.PlaceEnlistmentMercenaries,
-                            },
-                        },
-                        {
-                            config: {
-                                name: ConfigNames.EnlistmentMercenaries,
-                                drawName: DrawNames.EnlistmentMercenaries,
-                            },
-                        },
-                    ],
-                    cards: {
-                        warrior: [],
-                        hunter: [],
-                        miner: [],
                         blacksmith: [
                             {
-                                type: RusCardTypes.MERCENARY,
+                                type: RusCardTypes.MERCENARYPLAYERCARD,
                                 suit: SuitNames.BLACKSMITH,
                                 rank: 1,
                                 points: null,
@@ -1442,13 +1016,25 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                                 tier: 0,
                                 path: ``,
                                 game: GameNames.Thingvellir,
+                                variants: {
+                                    warrior: {
+                                        suit: SuitNames.WARRIOR,
+                                        rank: 1,
+                                        points: 6,
+                                    },
+                                    blacksmith: {
+                                        suit: SuitNames.BLACKSMITH,
+                                        rank: 1,
+                                        points: null,
+                                    },
+                                },
                             },
                         ],
-                        explorer: [],
+                        miner: [],
                     },
                     buffs: [],
                 },
-            ],
+            },
             logData: [
                 {
                     type: LogTypes.PUBLIC,
@@ -1463,35 +1049,14 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
     });
     it(`should get mercenary card from player's camp cards to place and pick hero`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            type: RusCardTypes.MERCENARY,
-                            tier: 0,
-                            path: ``,
-                            name: ``,
-                            game: GameNames.Thingvellir,
-                            variants: {
-                                warrior: {
-                                    suit: SuitNames.WARRIOR,
-                                    rank: 1,
-                                    points: 6,
-                                },
-                                explorer: {
-                                    suit: SuitNames.EXPLORER,
-                                    rank: 1,
-                                    points: 8,
-                                },
-                            },
-                        },
-                        {
-                            type: RusCardTypes.MERCENARY,
                             tier: 0,
                             path: ``,
                             name: `Test`,
-                            game: GameNames.Thingvellir,
                             variants: {
                                 warrior: {
                                     suit: SuitNames.WARRIOR,
@@ -1508,10 +1073,71 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     ],
                     heroes: [],
                     pickedCard: {
-                        type: RusCardTypes.MERCENARY,
                         tier: 0,
                         path: ``,
                         name: `Test`,
+                        variants: {
+                            warrior: {
+                                suit: SuitNames.WARRIOR,
+                                rank: 1,
+                                points: 6,
+                            },
+                            blacksmith: {
+                                suit: SuitNames.BLACKSMITH,
+                                rank: 1,
+                                points: null,
+                            },
+                        },
+                    },
+                    stack: [
+                        {},
+                    ],
+                    cards: {
+                        warrior: [],
+                        hunter: [
+                            {
+                                rank: 1,
+                            },
+                        ],
+                        miner: [
+                            {
+                                rank: 1,
+                            },
+                        ],
+                        blacksmith: [
+                            {
+                                rank: 1,
+                            },
+                        ],
+                        explorer: [
+                            {
+                                rank: 1,
+                            },
+                        ],
+                    },
+                    buffs: [],
+                },
+            },
+            logData: [],
+        };
+        PlaceEnlistmentMercenariesAction(G, {
+            currentPlayer: `0`,
+            phase: Phases.EnlistmentMercenaries,
+        }, SuitNames.WARRIOR);
+        expect(G).toEqual({
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    campCards: [],
+                    heroes: [],
+                    pickedCard: {
+                        type: RusCardTypes.MERCENARYPLAYERCARD,
+                        suit: SuitNames.WARRIOR,
+                        rank: 1,
+                        points: 6,
+                        name: `Test`,
+                        tier: 0,
+                        path: ``,
                         game: GameNames.Thingvellir,
                         variants: {
                             warrior: {
@@ -1527,133 +1153,18 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                         },
                     },
                     stack: [
-                        {
-                            config: {
-                                name: ConfigNames.PlaceEnlistmentMercenaries,
-                                drawName: DrawNames.PlaceEnlistmentMercenaries,
-                            },
-                        },
-                    ],
-                    cards: {
-                        warrior: [],
-                        hunter: [
-                            {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.HUNTER,
-                                rank: 1,
-                                points: null,
-                                name: `Test`,
-                                tier: 0,
-                                path: ``,
-                                game: GameNames.Thingvellir,
-                            },
-                        ],
-                        miner: [
-                            {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.MINER,
-                                rank: 1,
-                                points: 0,
-                                name: `Test`,
-                                tier: 0,
-                                path: ``,
-                                game: GameNames.Thingvellir,
-                            },
-                        ],
-                        blacksmith: [
-                            {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.BLACKSMITH,
-                                rank: 1,
-                                points: null,
-                                name: `Test`,
-                                tier: 0,
-                                path: ``,
-                                game: GameNames.Thingvellir,
-                            },
-                        ],
-                        explorer: [
-                            {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.EXPLORER,
-                                rank: 1,
-                                points: 11,
-                                name: `Test`,
-                                tier: 0,
-                                path: ``,
-                                game: GameNames.Thingvellir,
-                            },
-                        ],
-                    },
-                    buffs: [],
-                },
-            ],
-            logData: [],
-        };
-        PlaceEnlistmentMercenariesAction(G, {
-            currentPlayer: `0`,
-            phase: Phases.EnlistmentMercenaries,
-        }, SuitNames.WARRIOR);
-        expect(G).toEqual({
-            publicPlayers: [
-                {
-                    nickname: `Dan`,
-                    campCards: [
-                        {
-                            type: RusCardTypes.MERCENARY,
-                            tier: 0,
-                            path: ``,
-                            name: ``,
-                            game: GameNames.Thingvellir,
-                            variants: {
-                                warrior: {
-                                    suit: SuitNames.WARRIOR,
-                                    rank: 1,
-                                    points: 6,
-                                },
-                                explorer: {
-                                    suit: SuitNames.EXPLORER,
-                                    rank: 1,
-                                    points: 8,
-                                },
-                            },
-                        },
-                    ],
-                    heroes: [],
-                    pickedCard: {
-                        type: RusCardTypes.MERCENARY,
-                        suit: SuitNames.WARRIOR,
-                        rank: 1,
-                        points: 6,
-                        name: `Test`,
-                        tier: 0,
-                        path: ``,
-                        game: GameNames.Thingvellir,
-                    },
-                    stack: [
-                        {
-                            config: {
-                                name: ConfigNames.PlaceEnlistmentMercenaries,
-                                drawName: DrawNames.PlaceEnlistmentMercenaries,
-                            },
-                        },
+                        {},
                         {
                             config: {
                                 stageName: Stages.PickHero,
                                 drawName: DrawNames.PickHero,
                             },
                         },
-                        {
-                            config: {
-                                name: ConfigNames.EnlistmentMercenaries,
-                                drawName: DrawNames.EnlistmentMercenaries,
-                            },
-                        },
                     ],
                     cards: {
                         warrior: [
                             {
-                                type: RusCardTypes.MERCENARY,
+                                type: RusCardTypes.MERCENARYPLAYERCARD,
                                 suit: SuitNames.WARRIOR,
                                 rank: 1,
                                 points: 6,
@@ -1661,60 +1172,44 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                                 tier: 0,
                                 path: ``,
                                 game: GameNames.Thingvellir,
+                                variants: {
+                                    warrior: {
+                                        suit: SuitNames.WARRIOR,
+                                        rank: 1,
+                                        points: 6,
+                                    },
+                                    blacksmith: {
+                                        suit: SuitNames.BLACKSMITH,
+                                        rank: 1,
+                                        points: null,
+                                    },
+                                },
                             },
                         ],
                         hunter: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.HUNTER,
                                 rank: 1,
-                                points: null,
-                                name: `Test`,
-                                tier: 0,
-                                path: ``,
-                                game: GameNames.Thingvellir,
                             },
                         ],
                         miner: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.MINER,
                                 rank: 1,
-                                points: 0,
-                                name: `Test`,
-                                tier: 0,
-                                path: ``,
-                                game: GameNames.Thingvellir,
                             },
                         ],
                         blacksmith: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.BLACKSMITH,
                                 rank: 1,
-                                points: null,
-                                name: `Test`,
-                                tier: 0,
-                                path: ``,
-                                game: GameNames.Thingvellir,
                             },
                         ],
                         explorer: [
                             {
-                                type: RusCardTypes.BASIC,
-                                suit: SuitNames.EXPLORER,
                                 rank: 1,
-                                points: 11,
-                                name: `Test`,
-                                tier: 0,
-                                path: ``,
-                                game: GameNames.Thingvellir,
                             },
                         ],
                     },
                     buffs: [],
                 },
-            ],
+            },
             logData: [
                 {
                     type: LogTypes.PUBLIC,
@@ -1733,16 +1228,14 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
     });
     it(`should get mercenary card from player's camp cards to place and move Thrud`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            type: RusCardTypes.MERCENARY,
                             tier: 0,
                             path: ``,
                             name: `Test`,
-                            game: GameNames.Thingvellir,
                             variants: {
                                 warrior: {
                                     suit: SuitNames.WARRIOR,
@@ -1758,10 +1251,54 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                         },
                     ],
                     pickedCard: {
-                        type: RusCardTypes.MERCENARY,
                         tier: 0,
                         path: ``,
                         name: `Test`,
+                        variants: {
+                            warrior: {
+                                suit: SuitNames.WARRIOR,
+                                rank: 1,
+                                points: 6,
+                            },
+                            explorer: {
+                                suit: SuitNames.EXPLORER,
+                                rank: 1,
+                                points: 8,
+                            },
+                        },
+                    },
+                    stack: [
+                        {},
+                    ],
+                    cards: {
+                        warrior: [
+                            {
+                                suit: SuitNames.WARRIOR,
+                                name: HeroNames.Thrud,
+                            },
+                        ],
+                    },
+                },
+            },
+            logData: [],
+        };
+        PlaceEnlistmentMercenariesAction(G, {
+            currentPlayer: `0`,
+            phase: Phases.EnlistmentMercenaries,
+        }, SuitNames.WARRIOR);
+        expect(G).toEqual({
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    campCards: [],
+                    pickedCard: {
+                        type: RusCardTypes.MERCENARYPLAYERCARD,
+                        suit: SuitNames.WARRIOR,
+                        rank: 1,
+                        points: 6,
+                        name: `Test`,
+                        tier: 0,
+                        path: ``,
                         game: GameNames.Thingvellir,
                         variants: {
                             warrior: {
@@ -1777,61 +1314,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                         },
                     },
                     stack: [
-                        {
-                            config: {
-                                name: ConfigNames.PlaceEnlistmentMercenaries,
-                                drawName: DrawNames.PlaceEnlistmentMercenaries,
-                            },
-                        },
-                    ],
-                    cards: {
-                        warrior: [
-                            {
-                                suit: SuitNames.WARRIOR,
-                                rank: 1,
-                                points: 9,
-                                type: RusCardTypes.HERO,
-                                name: HeroNames.Thrud,
-                                game: GameNames.Basic,
-                                description: heroesConfig.Thrud.description,
-                                active: true,
-                            },
-                        ],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
-                    },
-                },
-            ],
-            logData: [],
-        };
-        PlaceEnlistmentMercenariesAction(G, {
-            currentPlayer: `0`,
-            phase: Phases.EnlistmentMercenaries,
-        }, SuitNames.WARRIOR);
-        expect(G).toEqual({
-            publicPlayers: [
-                {
-                    nickname: `Dan`,
-                    campCards: [],
-                    pickedCard: {
-                        type: RusCardTypes.MERCENARY,
-                        suit: SuitNames.WARRIOR,
-                        rank: 1,
-                        points: 6,
-                        name: `Test`,
-                        tier: 0,
-                        path: ``,
-                        game: GameNames.Thingvellir,
-                    },
-                    stack: [
-                        {
-                            config: {
-                                name: ConfigNames.PlaceEnlistmentMercenaries,
-                                drawName: DrawNames.PlaceEnlistmentMercenaries,
-                            },
-                        },
+                        {},
                         {
                             variants: {
                                 blacksmith: {
@@ -1871,7 +1354,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     cards: {
                         warrior: [
                             {
-                                type: RusCardTypes.MERCENARY,
+                                type: RusCardTypes.MERCENARYPLAYERCARD,
                                 suit: SuitNames.WARRIOR,
                                 rank: 1,
                                 points: 6,
@@ -1879,15 +1362,23 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                                 tier: 0,
                                 path: ``,
                                 game: GameNames.Thingvellir,
+                                variants: {
+                                    warrior: {
+                                        suit: SuitNames.WARRIOR,
+                                        rank: 1,
+                                        points: 6,
+                                    },
+                                    explorer: {
+                                        suit: SuitNames.EXPLORER,
+                                        rank: 1,
+                                        points: 8,
+                                    },
+                                },
                             },
                         ],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
                     },
                 },
-            ],
+            },
             logData: [
                 {
                     type: LogTypes.PUBLIC,
@@ -1900,18 +1391,20 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
             ],
         });
     });
-    it(`shouldn't get new mercenary card from player's camp cards to place`, () => {
+    it(`should get new mercenary card from player's camp cards to place`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            type: RusCardTypes.MERCENARY,
+                            tier: 0,
+                            variants: {},
+                        },
+                        {
                             tier: 0,
                             path: ``,
                             name: `Test`,
-                            game: GameNames.Thingvellir,
                             variants: {
                                 warrior: {
                                     suit: SuitNames.WARRIOR,
@@ -1928,10 +1421,57 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                     ],
                     heroes: [],
                     pickedCard: {
-                        type: RusCardTypes.MERCENARY,
                         tier: 0,
                         path: ``,
                         name: `Test`,
+                        variants: {
+                            warrior: {
+                                suit: SuitNames.WARRIOR,
+                                rank: 1,
+                                points: 6,
+                            },
+                            blacksmith: {
+                                suit: SuitNames.BLACKSMITH,
+                                rank: 1,
+                                points: null,
+                            },
+                        },
+                    },
+                    stack: [
+                        {},
+                    ],
+                    cards: {
+                        blacksmith: [],
+                        miner: [],
+                    },
+                    buffs: [],
+                },
+            },
+            logData: [],
+        };
+        PlaceEnlistmentMercenariesAction(G, {
+            currentPlayer: `0`,
+            phase: Phases.EnlistmentMercenaries,
+        }, SuitNames.BLACKSMITH);
+        expect(G).toEqual({
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    campCards: [
+                        {
+                            tier: 0,
+                            variants: {},
+                        },
+                    ],
+                    heroes: [],
+                    pickedCard: {
+                        type: RusCardTypes.MERCENARYPLAYERCARD,
+                        suit: SuitNames.BLACKSMITH,
+                        rank: 1,
+                        points: null,
+                        name: `Test`,
+                        tier: 0,
+                        path: ``,
                         game: GameNames.Thingvellir,
                         variants: {
                             warrior: {
@@ -1947,60 +1487,18 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                         },
                     },
                     stack: [
+                        {},
                         {
                             config: {
-                                name: ConfigNames.PlaceEnlistmentMercenaries,
-                                drawName: DrawNames.PlaceEnlistmentMercenaries,
+                                name: ConfigNames.EnlistmentMercenaries,
+                                drawName: DrawNames.EnlistmentMercenaries,
                             },
-                        },
+                        }
                     ],
                     cards: {
-                        warrior: [],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
-                        explorer: [],
-                    },
-                    buffs: [],
-                },
-            ],
-            logData: [],
-        };
-        PlaceEnlistmentMercenariesAction(G, {
-            currentPlayer: `0`,
-            phase: Phases.EnlistmentMercenaries,
-        }, SuitNames.BLACKSMITH);
-        expect(G).toEqual({
-            publicPlayers: [
-                {
-                    nickname: `Dan`,
-                    campCards: [],
-                    heroes: [],
-                    pickedCard: {
-                        type: RusCardTypes.MERCENARY,
-                        suit: SuitNames.BLACKSMITH,
-                        rank: 1,
-                        points: null,
-                        name: `Test`,
-                        tier: 0,
-                        path: ``,
-                        game: GameNames.Thingvellir,
-                    },
-                    stack: [
-                        {
-                            config: {
-                                name: ConfigNames.PlaceEnlistmentMercenaries,
-                                drawName: DrawNames.PlaceEnlistmentMercenaries,
-                            },
-                        },
-                    ],
-                    cards: {
-                        warrior: [],
-                        hunter: [],
-                        miner: [],
                         blacksmith: [
                             {
-                                type: RusCardTypes.MERCENARY,
+                                type: RusCardTypes.MERCENARYPLAYERCARD,
                                 suit: SuitNames.BLACKSMITH,
                                 rank: 1,
                                 points: null,
@@ -2008,13 +1506,25 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                                 tier: 0,
                                 path: ``,
                                 game: GameNames.Thingvellir,
+                                variants: {
+                                    warrior: {
+                                        suit: SuitNames.WARRIOR,
+                                        rank: 1,
+                                        points: 6,
+                                    },
+                                    blacksmith: {
+                                        suit: SuitNames.BLACKSMITH,
+                                        rank: 1,
+                                        points: null,
+                                    },
+                                },
                             },
                         ],
-                        explorer: [],
+                        miner: [],
                     },
                     buffs: [],
                 },
-            ],
+            },
             logData: [
                 {
                     type: LogTypes.PUBLIC,
@@ -2030,25 +1540,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
     // Unreal Errors to reproduce
     it(`shouldn't get non-mercenary card from player's camp cards to place and must throw Error`, () => {
         const G = {
-            publicPlayers: [
-                {
-                    pickedCard: {
-                        type: RusCardTypes.ARTEFACT,
-                        tier: 0,
-                        path: ``,
-                        name: `Test`,
-                        description: `Test`,
-                        game: GameNames.Thingvellir,
-                        suit: SuitNames.EXPLORER,
-                        rank: 1,
-                        points: 13,
-                        buff: undefined,
-                        validators: undefined,
-                        actions: undefined,
-                        stack: undefined,
-                    },
+            publicPlayers: {
+                0: {
+                    pickedCard: {},
                 },
-            ],
+            },
         };
         expect(() => {
             PlaceEnlistmentMercenariesAction(G, {
@@ -2058,36 +1554,20 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
     });
     it(`shouldn't get mercenary card which not exists in player's camp cards to place and must throw Error`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     campCards: [
                         {
-                            type: RusCardTypes.MERCENARY,
                             tier: 0,
-                            path: ``,
                             name: ``,
-                            game: GameNames.Thingvellir,
-                            variants: {
-                                warrior: {
-                                    suit: SuitNames.WARRIOR,
-                                    rank: 1,
-                                    points: 6,
-                                },
-                                explorer: {
-                                    suit: SuitNames.EXPLORER,
-                                    rank: 1,
-                                    points: 8,
-                                },
-                            },
+                            variants: {},
                         },
                     ],
                     pickedCard: {
-                        type: RusCardTypes.MERCENARY,
                         tier: 0,
                         path: ``,
                         name: `Test`,
-                        game: GameNames.Thingvellir,
                         variants: {
                             warrior: {
                                 suit: SuitNames.WARRIOR,
@@ -2102,47 +1582,28 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                         },
                     },
                     cards: {
-                        warrior: [],
-                        hunter: [],
-                        miner: [],
-                        blacksmith: [],
                         explorer: [],
                     },
                 },
-            ],
+            },
             logData: [],
         };
         expect(() => {
             PlaceEnlistmentMercenariesAction(G, {
                 currentPlayer: `0`,
             }, SuitNames.EXPLORER);
-        }).toThrowError(`У игрока в массиве карт кэмпа отсутствует выбранная карта.`);
+        }).toThrowError(`У игрока в массиве карт лагеря отсутствует выбранная карта.`);
     });
     it(`shouldn't use non-existing suit in picked mercenary card and must throw Error`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     pickedCard: {
-                        type: RusCardTypes.MERCENARY,
                         tier: 0,
-                        path: ``,
-                        name: `Test`,
-                        game: GameNames.Thingvellir,
-                        variants: {
-                            warrior: {
-                                suit: SuitNames.WARRIOR,
-                                rank: 1,
-                                points: 6,
-                            },
-                            blacksmith: {
-                                suit: SuitNames.BLACKSMITH,
-                                rank: 1,
-                                points: null,
-                            },
-                        },
+                        variants: {},
                     },
                 },
-            ],
+            },
         };
         expect(() => {
             PlaceEnlistmentMercenariesAction(G, {

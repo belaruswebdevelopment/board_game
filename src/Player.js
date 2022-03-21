@@ -30,7 +30,7 @@ export const BuildPlayer = () => CreatePlayer({
  * @param priority Кристалл.
  * @returns Публичные данные игрока.
  */
-export const BuildPublicPlayer = (nickname, priority) => {
+export const BuildPublicPlayer = (nickname, priority, multiplayer) => {
     const cards = {};
     let suit;
     for (suit in suitsConfig) {
@@ -38,10 +38,14 @@ export const BuildPublicPlayer = (nickname, priority) => {
             cards[suit] = [];
         }
     }
+    let handCoins = [];
+    if (!multiplayer) {
+        handCoins = BuildCoins(initialPlayerCoinsConfig, { isInitial: true, isTriggerTrading: false });
+    }
     return CreatePublicPlayer({
         nickname,
         cards: cards,
-        handCoins: BuildCoins(initialPlayerCoinsConfig, { isInitial: true, isTriggerTrading: false }),
+        handCoins,
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
         priority,
     });
@@ -102,7 +106,7 @@ const CreatePlayer = ({ handCoins, boardCoins, } = {}) => ({
  * @param nickname Никнейм.
  * @param cards Массив карт.
  * @param heroes Массив героев.
- * @param campCards Массив карт кэмпа.
+ * @param campCards Массив карт лагеря.
  * @param handCoins Массив монет в руке.
  * @param boardCoins Массив монет на столе.
  * @param stack Стэк действий.

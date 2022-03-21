@@ -4,7 +4,7 @@ import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { BuffNames, Phases } from "./typescript/enums";
-import type { ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, OptionalSuitPropertyTypes, PlayerCardsType, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { ICoin, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, OptionalSuitPropertyTypes, PlayerCardsType, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -34,7 +34,7 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  * @param priority Кристалл.
  * @returns Публичные данные игрока.
  */
-export const BuildPublicPlayer = (nickname: string, priority: IPriority): IPublicPlayer => {
+export const BuildPublicPlayer = (nickname: string, priority: IPriority, multiplayer: boolean): IPublicPlayer => {
     const cards: OptionalSuitPropertyTypes<PlayerCardsType[]> = {};
     let suit: SuitTypes;
     for (suit in suitsConfig) {
@@ -42,11 +42,15 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority): IPubli
             cards[suit] = [];
         }
     }
+    let handCoins: ICoin[] = [];
+    if (!multiplayer) {
+        handCoins = BuildCoins(initialPlayerCoinsConfig,
+            { isInitial: true, isTriggerTrading: false });
+    }
     return CreatePublicPlayer({
         nickname,
         cards: cards as RequiredSuitPropertyTypes<PlayerCardsType[]>,
-        handCoins: BuildCoins(initialPlayerCoinsConfig,
-            { isInitial: true, isTriggerTrading: false }),
+        handCoins,
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
         priority,
     });
@@ -112,7 +116,7 @@ const CreatePlayer = ({
  * @param nickname Никнейм.
  * @param cards Массив карт.
  * @param heroes Массив героев.
- * @param campCards Массив карт кэмпа.
+ * @param campCards Массив карт лагеря.
  * @param handCoins Массив монет в руке.
  * @param boardCoins Массив монет на столе.
  * @param stack Стэк действий.

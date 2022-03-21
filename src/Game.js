@@ -393,7 +393,7 @@ export const BoardGame = {
             onEnd: (G, ctx) => StartEndGame(G, ctx),
         },
     },
-    endIf: (G) => CheckEndGame(G),
+    endIf: (G, ctx) => CheckEndGame(G, ctx),
     onEnd: (G, ctx) => ReturnEndGameData(G, ctx),
     ai: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -3,7 +3,7 @@ import { IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
-import type { DeckCardTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import type { DeckCardTypes, IMercenaryPlayerCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Добавляет взятую карту в массив карт игрока.</h3>
@@ -19,7 +19,7 @@ import type { DeckCardTypes, IMyGameState, IPublicPlayer } from "../typescript/i
  * @param card Карта.
  * @returns Добавлена ли карта на планшет игрока.
  */
-export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes): boolean => {
+export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes | IMercenaryPlayerCard): boolean => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);

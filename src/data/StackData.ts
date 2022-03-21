@@ -12,7 +12,6 @@ export const StackData = {
     }),
     brisingamensEndGameAction: (): IStack => ({
         config: {
-            name: ConfigNames.BrisingamensEndGameAction,
             drawName: DrawNames.BrisingamensEndGame,
         },
     }),
@@ -22,6 +21,14 @@ export const StackData = {
             drawName: DrawNames.Bonfur,
             name: ConfigNames.BonfurAction,
             suit: SuitNames.BLACKSMITH,
+        },
+    }),
+    discardCardFromBoardCrovaxTheDoppelganger: (): IStack => ({
+        config: {
+            stageName: Stages.DiscardBoardCard,
+            drawName: DrawNames.CrovaxTheDoppelganger,
+            name: ConfigNames.CrovaxTheDoppelgangerAction,
+            suit: null,
         },
     }),
     discardCardFromBoardDagda: (number?: number): IStack => ({
@@ -74,7 +81,6 @@ export const StackData = {
         config: {
             stageName: Stages.PickCampCardHolda,
             drawName: DrawNames.Holda,
-            name: ConfigNames.HoldaAction,
         },
     }),
     pickCard: (): IStack => ({
@@ -86,7 +92,6 @@ export const StackData = {
         config: {
             stageName: Stages.PickDiscardCard,
             drawName: DrawNames.Andumia,
-            name: ConfigNames.AndumiaAction,
         },
     }),
     pickDiscardCardBrisingamens: (number?: number): IStack => ({
@@ -177,6 +182,7 @@ export const StackData = {
     placeTradingCoinsUline: (number?: number): IStack => ({
         config: {
             stageName: Stages.PlaceTradingCoinsUline,
+            drawName: DrawNames.PlaceTradingCoinsUline,
             number,
         },
     }),

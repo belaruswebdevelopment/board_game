@@ -20,7 +20,7 @@ export const CheckEndEndTierPhase = (G, ctx) => {
             throw new Error(`В массиве игроков отсутствует текущий игрок.`);
         }
         if (!player.stack.length && !player.actionsNum) {
-            const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
+            const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
             if (G.tierToEnd !== 0 && yludIndex === -1) {
                 throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Ylud}.`);
             }
@@ -53,7 +53,7 @@ export const CheckEndEndTierPhase = (G, ctx) => {
  */
 export const CheckEndTierOrder = (G) => {
     G.publicPlayersOrder = [];
-    const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
+    const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.EndTier}.`);
     }

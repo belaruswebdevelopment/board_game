@@ -24,16 +24,16 @@ import { GameNames } from "./typescript/enums";
  */
 export const SetupGame = (ctx) => {
     var _a;
-    const suitsNum = 5, tierToEnd = 2, campNum = 5, log = true, debug = false, drawProfit = ``, expansions = {
+    const suitsNum = 5, tierToEnd = 2, campNum = 5, multiplayer = true, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = ``, expansions = {
         thingvellir: {
             active: true,
         },
-    }, totalScore = [], logData = [], 
-    // TODO Deck cards must be hidden from users?
-    decks = [], additionalCardsDeck = BuildAdditionalCards(), discardCardsDeck = [], campDecks = [], distinctions = {};
+    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], additionalCardsDeck = BuildAdditionalCards(), discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {};
     let suit;
-    // const secret = {
-    // };
+    const secret = {
+        campDecks: [],
+        decks: [],
+    };
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             distinctions[suit] = null;
@@ -41,36 +41,41 @@ export const SetupGame = (ctx) => {
     }
     const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [];
     let camp = [];
+    const campDeckLength = [0, 0];
     if ((_a = expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
         for (let i = 0; i < tierToEnd; i++) {
-            // TODO Camp cards must be hidden from users?
-            campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
-            const campDeck = campDecks[i];
+            secret.campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
+            let campDeck = secret.campDecks[i];
             if (campDeck === undefined) {
-                throw new Error(`Колода карт кэмпа ${i} эпохи не может отсутствовать.`);
+                throw new Error(`Колода карт лагеря ${i} эпохи не может отсутствовать.`);
             }
-            campDecks[i] = ctx.random.Shuffle(campDeck);
+            campDeck = ctx.random.Shuffle(campDeck);
+            secret.campDecks[i] = campDeck;
+            campDeckLength[i] = campDeck.length;
         }
-        const campDeck0 = campDecks[0];
+        const campDeck0 = secret.campDecks[0];
         if (campDeck0 === undefined) {
-            throw new Error(`Колода карт кэмпа 1 эпохи не может отсутствовать.`);
+            throw new Error(`Колода карт лагеря 1 эпохи не может отсутствовать.`);
         }
         camp = campDeck0.splice(0, campNum);
+        campDeckLength[0] = campDeck0.length;
     }
+    const deckLength = [0, 0];
     for (let i = 0; i < tierToEnd; i++) {
         // TODO Deck cards must be hidden from users?
-        decks[i] = BuildCards({
+        secret.decks[i] = BuildCards({
             suits: suitsConfig,
             actions: actionCardsConfigArray
         }, {
             players: ctx.numPlayers,
             tier: i,
         });
-        const deck = decks[i];
+        const deck = secret.decks[i];
         if (deck === undefined) {
             throw new Error(`Колода карт ${i} эпохи не может отсутствовать.`);
         }
-        decks[i] = ctx.random.Shuffle(deck);
+        deckLength[i] = deck.length;
+        secret.decks[i] = ctx.random.Shuffle(deck);
     }
     const heroesConfigOptions = [GameNames.Basic];
     let expansion;
@@ -84,20 +89,23 @@ export const SetupGame = (ctx) => {
     const heroes = BuildHeroes(heroesConfigOptions, heroesConfig), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
         // TODO Taverns cards must be hidden from users?
-        const deck0 = decks[0];
+        const deck0 = secret.decks[0];
         if (deck0 === undefined) {
             throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
         }
         taverns[i] = deck0.splice(0, drawSize);
+        deckLength[0] = deck0.length;
     }
-    const players = {}, publicPlayers = [], publicPlayersOrder = [], exchangeOrder = [], priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
+    const players = {}, publicPlayers = {}, publicPlayersOrder = [], exchangeOrder = [], priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
     for (let i = 0; i < ctx.numPlayers; i++) {
         const randomPriorityIndex = Math.floor(Math.random() * priorities.length), priority = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
             throw new Error(`Отсутствует приоритет ${i}.`);
         }
-        players[i] = BuildPlayer();
-        publicPlayers[i] = BuildPublicPlayer(`Dan` + i, priority);
+        if (multiplayer) {
+            players[i] = BuildPlayer();
+        }
+        publicPlayers[i] = BuildPublicPlayer(`Dan` + i, priority, multiplayer);
     }
     const marketCoinsUnique = [], marketCoins = BuildCoins(marketCoinsConfig, {
         count: marketCoinsUnique,
@@ -124,7 +132,7 @@ export const SetupGame = (ctx) => {
         }
         allCoinsOrder = allCoinsOrder.concat(Permute(coinsOrder));
     }
-    const cardDeck0 = decks[0];
+    const cardDeck0 = secret.decks[0];
     if (cardDeck0 === undefined) {
         throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
     }
@@ -135,16 +143,22 @@ export const SetupGame = (ctx) => {
         deckLength: cardDeck0.length,
     };
     return {
+        multiplayer,
+        odroerirTheMythicCauldron,
+        tavernCardDiscarded2Players,
         averageCards: averageCards,
         botData,
+        odroerirTheMythicCauldronCoins,
         camp,
-        campDecks,
+        explorerDistinctionCards,
+        deckLength,
+        campDeckLength,
+        secret,
         campNum,
         campPicked,
         mustDiscardTavernCardJarnglofi,
         currentTavern,
         debug,
-        decks,
         additionalCardsDeck,
         discardCampCardsDeck,
         discardCardsDeck,

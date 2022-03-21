@@ -1,7 +1,7 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
 import { GameNames, RusCardTypes } from "./typescript/enums";
-import type { AdditionalCardTypes, DeckCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, INumberArrayValues, INumberValues, PlayerCardsType, SuitTypes } from "./typescript/interfaces";
+import type { AdditionalCardTypes, DeckCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, INumberArrayValues, INumberValues, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
@@ -97,9 +97,6 @@ export const BuildAdditionalCards = (): ICard[] => {
     }
     return cards;
 };
-
-export const CheckIsMercenaryCampCardInPlayerCards = (card: PlayerCardsType): boolean =>
-    card !== null && card.type === RusCardTypes.MERCENARY;
 
 /**
  * <h3>Создание карты улучшения монеты.</h3>

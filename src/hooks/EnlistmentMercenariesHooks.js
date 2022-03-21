@@ -23,7 +23,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
             && !player.actionsNum) {
             let allMercenariesPlayed = true;
-            for (let i = 0; i < G.publicPlayers.length; i++) {
+            for (let i = 0; i < ctx.numPlayers; i++) {
                 const playerI = G.publicPlayers[i];
                 if (playerI === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
@@ -64,7 +64,7 @@ export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
 };
 export const EndEnlistmentMercenariesActions = (G, ctx) => {
     if (G.tierToEnd === 0) {
-        const yludIndex = G.publicPlayers.findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
+        const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex === -1) {
             RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
         }
@@ -91,8 +91,8 @@ export const OnEnlistmentMercenariesTurnEnd = (G, ctx) => {
 * @param G
 */
 export const PrepareMercenaryPhaseOrders = (G) => {
-    const players = G.publicPlayers.map((player) => player), playersIndexes = [];
-    players.sort((nextPlayer, currentPlayer) => {
+    const sortedPlayers = Object.values(G.publicPlayers).map((player) => player), playersIndexes = [];
+    sortedPlayers.sort((nextPlayer, currentPlayer) => {
         if (nextPlayer.campCards.filter((card) => IsMercenaryCampCard(card)).length <
             currentPlayer.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
             return 1;
@@ -109,9 +109,10 @@ export const PrepareMercenaryPhaseOrders = (G) => {
         }
         return 0;
     });
-    players.forEach((playerSorted) => {
+    sortedPlayers.forEach((playerSorted) => {
         if (playerSorted.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
-            playersIndexes.push(String(G.publicPlayers.findIndex((player) => player.nickname === playerSorted.nickname)));
+            playersIndexes.push(String(Object.values(G.publicPlayers)
+                .findIndex((player) => player.nickname === playerSorted.nickname)));
         }
     });
     G.publicPlayersOrder = playersIndexes;

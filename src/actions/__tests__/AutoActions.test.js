@@ -1,22 +1,22 @@
 import { BuffNames, DrawNames, LogTypes, Stages } from "../../typescript/enums";
-import { AddPickHeroAction, DiscardTradingCoinAction, GetClosedCoinIntoPlayerHandAction } from "../AutoActions";
+import { AddPickHeroAction, DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, GetClosedCoinIntoPlayerHandAction } from "../AutoActions";
 describe(`Test AddPickHeroAction method`, () => {
     it(`should add pick hero action to stack`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     stack: [],
                 },
-            ],
+            },
             logData: [],
         };
         AddPickHeroAction(G, {
             currentPlayer: `0`,
         });
         expect(G).toEqual({
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     stack: [
                         {
@@ -27,7 +27,7 @@ describe(`Test AddPickHeroAction method`, () => {
                         }
                     ],
                 },
-            ],
+            },
             logData: [
                 {
                     type: LogTypes.GAME,
@@ -40,74 +40,32 @@ describe(`Test AddPickHeroAction method`, () => {
 describe(`Test DiscardTradingCoinAction method`, () => {
     it(`should discard trading coin from board`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     boardCoins: [
                         {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 2,
-                        },
-                        {
-                            isInitial: true,
                             isTriggerTrading: true,
-                            value: 0,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 3,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 5,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 4,
                         },
                     ],
                     buffs: [],
                 },
-            ],
+            },
             logData: [],
         };
         DiscardTradingCoinAction(G, {
             currentPlayer: `0`,
         });
         expect(G).toEqual({
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     boardCoins: [
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 2,
-                        },
                         null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 3,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 5,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 4,
-                        },
                     ],
                     buffs: [],
                 },
-            ],
+            },
             logData: [
                 {
                     type: LogTypes.GAME,
@@ -118,34 +76,12 @@ describe(`Test DiscardTradingCoinAction method`, () => {
     });
     it(`should discard trading coin from board if player has Uline but trading coin on the board`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     boardCoins: [
                         {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 2,
-                        },
-                        {
-                            isInitial: true,
                             isTriggerTrading: true,
-                            value: 0,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 3,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 5,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 4,
                         },
                     ],
                     buffs: [
@@ -154,38 +90,18 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                         },
                     ],
                 },
-            ],
+            },
             logData: [],
         };
         DiscardTradingCoinAction(G, {
             currentPlayer: `0`,
         });
         expect(G).toEqual({
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
                     boardCoins: [
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 2,
-                        },
                         null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 3,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 5,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 4,
-                        },
                     ],
                     buffs: [
                         {
@@ -193,7 +109,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                         },
                     ],
                 },
-            ],
+            },
             logData: [
                 {
                     type: LogTypes.GAME,
@@ -204,42 +120,14 @@ describe(`Test DiscardTradingCoinAction method`, () => {
     });
     it(`should discard trading coin from hand if player has Uline but trading coin in the hand`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
-                    boardCoins: [
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 2,
-                        },
-                        null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 3,
-                        },
-                        null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 4,
-                        },
-                    ],
+                    boardCoins: [],
                     handCoins: [
-                        null,
                         {
-                            isInitial: true,
                             isTriggerTrading: true,
-                            value: 0,
                         },
-                        null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 5,
-                        },
-                        null,
                     ],
                     buffs: [
                         {
@@ -247,44 +135,18 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                         },
                     ],
                 },
-            ],
+            },
             logData: [],
         };
         DiscardTradingCoinAction(G, {
             currentPlayer: `0`,
         });
         expect(G).toEqual({
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     nickname: `Dan`,
-                    boardCoins: [
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 2,
-                        },
-                        null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 3,
-                        },
-                        null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 4,
-                        },
-                    ],
+                    boardCoins: [],
                     handCoins: [
-                        null,
-                        null,
-                        null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 5,
-                        },
                         null,
                     ],
                     buffs: [
@@ -293,7 +155,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                         },
                     ],
                 },
-            ],
+            },
             logData: [
                 {
                     type: LogTypes.GAME,
@@ -305,34 +167,12 @@ describe(`Test DiscardTradingCoinAction method`, () => {
     // Unreal Errors to reproduce
     it(`shouldn't discard trading coin if player hasn't trading coin`, () => {
         const G = {
-            publicPlayers: [
-                {
-                    boardCoins: [
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 2,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 5,
-                        },
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 3,
-                        },
-                        null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 4,
-                        },
-                    ],
+            publicPlayers: {
+                0: {
+                    boardCoins: [],
                     buffs: [],
                 },
-            ],
+            },
         };
         expect(() => {
             DiscardTradingCoinAction(G, {
@@ -342,45 +182,17 @@ describe(`Test DiscardTradingCoinAction method`, () => {
     });
     it(`shouldn't discard trading coin if player has Uline but player hasn't trading coin`, () => {
         const G = {
-            publicPlayers: [
-                {
-                    boardCoins: [
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 2,
-                        },
-                        null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 3,
-                        },
-                        null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 4,
-                        },
-                    ],
-                    handCoins: [
-                        null,
-                        null,
-                        null,
-                        {
-                            isInitial: true,
-                            isTriggerTrading: false,
-                            value: 5,
-                        },
-                        null,
-                    ],
+            publicPlayers: {
+                0: {
+                    boardCoins: [],
+                    handCoins: [],
                     buffs: [
                         {
                             everyTurn: true,
                         },
                     ],
                 },
-            ],
+            },
         };
         expect(() => {
             DiscardTradingCoinAction(G, {
@@ -389,11 +201,22 @@ describe(`Test DiscardTradingCoinAction method`, () => {
         }).toThrowError(`В массиве монет игрока в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
     });
 });
+describe(`Test FinishOdroerirTheMythicCauldronAction method`, () => {
+    it(`should finish odroerirTheMythicCauldron action`, () => {
+        const G = {
+            odroerirTheMythicCauldron: true,
+        };
+        FinishOdroerirTheMythicCauldronAction(G);
+        expect(G).toEqual({
+            odroerirTheMythicCauldron: false,
+        });
+    });
+});
 describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
     it(`should return all board coins to hand`, () => {
         const G = {
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     boardCoins: [
                         {
                             isInitial: true,
@@ -429,15 +252,15 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
                         null,
                     ],
                 },
-            ],
+            },
             currentTavern: 0,
         };
         GetClosedCoinIntoPlayerHandAction(G, {
             currentPlayer: `0`,
         });
         expect(G).toEqual({
-            publicPlayers: [
-                {
+            publicPlayers: {
+                0: {
                     boardCoins: [
                         {
                             isInitial: true,
@@ -473,7 +296,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
                         null,
                     ],
                 },
-            ],
+            },
             currentTavern: 0,
         });
     });

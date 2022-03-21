@@ -30,12 +30,15 @@ export const IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator = (G, ctx, id
                     if (player === undefined) {
                         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
                     }
-                    const last = player.cards[suit].length - 1, card = player.cards[suit][last];
-                    if (card === undefined) {
-                        throw new Error(`В массиве карт фракции ${suit} отсутствует последняя карта ${last}.`);
-                    }
-                    if (last >= 0 && !IsHeroCard(card)) {
-                        cardsToDiscard.push(card);
+                    const last = player.cards[suit].length - 1;
+                    if (last >= 0) {
+                        const card = player.cards[suit][last];
+                        if (card === undefined) {
+                            throw new Error(`В массиве карт фракции ${suit} отсутствует последняя карта ${last}.`);
+                        }
+                        if (!IsHeroCard(card)) {
+                            cardsToDiscard.push(card);
+                        }
                     }
                 }
             }

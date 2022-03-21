@@ -1,12 +1,14 @@
 import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
+import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { HeroNames, MoveNames, MoveValidatorNames, Phases, Stages } from "../typescript/enums";
-import type { CampDeckCardTypes, CoinType, IHeroCard, IMoveArgumentsStage, IMyGameState, IPublicPlayer, ITavernInConfig, MoveValidatorTypes, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CoinType, IHeroCard, IMoveArgumentsStage, IMyGameState, IPlayer, IPublicPlayer, ITavernInConfig, MoveValidatorTypes, PlayerCardsType, PublicPlayerBoardCoinTypes, SuitTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 
 /**
@@ -30,7 +32,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
             playerHeadersCount: JSX.Element[] = [],
             player: IPublicPlayer | undefined = G.publicPlayers[p];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
         }
         let suit: SuitTypes;
         for (suit in suitsConfig) {
@@ -38,9 +40,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
                 playerHeaders.push(
                     <th className={`${suitsConfig[suit].suitColor}`}
                         key={`${player.nickname} ${suitsConfig[suit].suitName}`}>
-                        <span style={Styles.Suits(suit)} className="bg-suit-icon">
-
-                        </span>
+                        <span style={Styles.Suits(suit)} className="bg-suit-icon"></span>
                     </th>
                 );
                 playerHeadersCount.push(
@@ -55,9 +55,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
             if (s === 0) {
                 playerHeaders.push(
                     <th className="bg-gray-600" key={`${player.nickname} hero icon`}>
-                        <span style={Styles.HeroBack()} className="bg-hero-icon">
-
-                        </span>
+                        <span style={Styles.HeroBack()} className="bg-hero-icon"></span>
                     </th>
                 );
                 playerHeadersCount.push(
@@ -69,9 +67,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
             } else {
                 playerHeaders.push(
                     <th className="bg-yellow-200" key={`${player.nickname} camp icon`}>
-                        <span style={Styles.Camp()} className="bg-camp-icon">
-
-                        </span>
+                        <span style={Styles.Camp()} className="bg-camp-icon"></span>
                     </th>
                 );
                 playerHeadersCount.push(
@@ -97,9 +93,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
                         DrawCard(data, playerCells, card, id, player, suit);
                     } else {
                         playerCells.push(
-                            <td key={`${player.nickname} empty card ${id}`}>
-
-                            </td>
+                            <td key={`${player.nickname} empty card ${id}`}></td>
                         );
                     }
                     j++;
@@ -111,32 +105,26 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
                     const playerCards: PlayerCardsType[] = Object.values(player.cards).flat(),
                         hero: IHeroCard | undefined = player.heroes[i];
                     // TODO Draw heroes from the beginning if player has suit heroes (or draw them with opacity)
-                    if (hero !== undefined && !hero.suit
-                        && !((hero.name === HeroNames.Ylud
-                            && playerCards.findIndex((card: { name: string, }): boolean =>
-                                card.name === HeroNames.Ylud) !== -1)
-                            || (hero.name === HeroNames.Thrud
-                                && playerCards.findIndex((card: { name: string; }): boolean =>
+                    if (hero !== undefined && !hero.suit && !((hero.name === HeroNames.Ylud
+                        && playerCards.findIndex((card: PlayerCardsType): boolean =>
+                            card.name === HeroNames.Ylud) !== -1) || (hero.name === HeroNames.Thrud
+                                && playerCards.findIndex((card: PlayerCardsType): boolean =>
                                     card.name === HeroNames.Thrud) !== -1))) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, hero, id, player);
+                        DrawCard(data, playerCells, hero, id, player, null);
                     } else {
                         playerCells.push(
-                            <td key={`${player.nickname} hero ${i}`}>
-
-                            </td>
+                            <td key={`${player.nickname} hero ${i}`}></td>
                         );
                     }
                 } else {
                     const campCard: CampDeckCardTypes | undefined = player.campCards[i];
                     if (campCard !== undefined) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, campCard, id, player);
+                        DrawCard(data, playerCells, campCard, id, player, null);
                     } else {
                         playerCells.push(
-                            <td key={`${player.nickname} camp card ${i}`}>
-
-                            </td>
+                            <td key={`${player.nickname} camp card ${i}`}></td>
                         );
                     }
                 }
@@ -181,17 +169,18 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, data: BoardProps<IM
 export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorTypes | null,
     data?: BoardProps<IMyGameState>): JSX.Element[] | IMoveArgumentsStage<number[]>[`args`] => {
     // TODO Your coins always public for you only, others private, but you see previous/current tavern coins for all players (and your's transparent for non opened coins)
-    const playersBoardsCoins: JSX.Element[] = [],
+    const multiplayer = IsMultiplayer(G),
+        playersBoardsCoins: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     for (let p = 0; p < ctx.numPlayers; p++) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[p];
+        const player: IPublicPlayer | undefined = G.publicPlayers[p],
+            privatePlayer: IPlayer | undefined = G.players[p];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
         }
         const playerRows: JSX.Element[] = [],
             playerHeaders: JSX.Element[] = [],
             playerFooters: JSX.Element[] = [];
-        let coinIndex = 0;
         for (let i = 0; i < 2; i++) {
             const playerCells: JSX.Element[] = [];
             for (let j = 0; j < G.tavernsNum; j++) {
@@ -203,36 +192,28 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                         }
                         playerHeaders.push(
                             <th key={`Tavern ${currentTavernConfig.name}`}>
-                                <span style={Styles.Taverns(j)} className="bg-tavern-icon">
-
-                                </span>
+                                <span style={Styles.Taverns(j)} className="bg-tavern-icon"></span>
                             </th>
                         );
                     } else {
                         if (j === G.tavernsNum - 1) {
                             playerFooters.push(
                                 <th key={`${player.nickname} priority icon`}>
-                                    <span style={Styles.Priority()} className="bg-priority-icon">
-
-                                    </span>
+                                    <span style={Styles.Priority()} className="bg-priority-icon"></span>
                                 </th>
                             );
                             playerCells.push(
                                 <td key={`${player.nickname} priority gem`}
                                     className="bg-gray-300">
                                     <span style={Styles.Priorities(player.priority.value)}
-                                        className="bg-priority">
-
-                                    </span>
+                                        className="bg-priority"></span>
                                 </td>
                             );
                         } else {
                             if (data !== undefined) {
                                 playerFooters.push(
                                     <th key={`${player.nickname} exchange icon ${j}`}>
-                                        <span style={Styles.Exchange()} className="bg-small-market-coin">
-
-                                        </span>
+                                        <span style={Styles.Exchange()} className="bg-small-market-coin"></span>
                                     </th>
                                 );
                             }
@@ -241,69 +222,86 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                 }
                 if (i === 0 || (i === 1 && j !== G.tavernsNum - 1)) {
                     const id: number = j + G.tavernsNum * i,
-                        boardCoin: CoinType | undefined = player.boardCoins[coinIndex];
-                    if (boardCoin === undefined) {
-                        throw new Error(`В массиве монет игрока на столе отсутствует монета ${coinIndex}.`);
+                        publicBoardCoin: PublicPlayerBoardCoinTypes | undefined = player.boardCoins[id],
+                        privateBoardCoin: PublicPlayerBoardCoinTypes | undefined = privatePlayer?.boardCoins[id];
+                    if (publicBoardCoin === undefined) {
+                        throw new Error(`В массиве монет игрока на столе отсутствует монета ${j}.`);
                     }
-                    if (boardCoin === null) {
-                        if (Number(ctx.currentPlayer) === p && ctx.phase === Phases.PlaceCoins
-                            && player.selectedCoin !== null) {
+                    if (publicBoardCoin !== null) {
+                        if (ctx.phase === Phases.PlaceCoins && Number(ctx.currentPlayer) === p
+                            && ((multiplayer && privateBoardCoin !== undefined)
+                                || (!multiplayer && publicBoardCoin !== undefined))) {
+                            if (data !== undefined) {
+                                if (!multiplayer && !IsCoin(publicBoardCoin)
+                                    || (multiplayer && !IsCoin(privateBoardCoin))) {
+                                    throw new Error(`Монета на столе текущего игрока не может быть закрытой для него.`);
+                                }
+                                DrawCoin(data, playerCells, `coin`, privateBoardCoin ?? publicBoardCoin,
+                                    id, player, null, null,
+                                    MoveNames.ClickBoardCoinMove, id);
+                            } else if (validatorName === MoveValidatorNames.ClickBoardCoinMoveValidator) {
+                                moveMainArgs.push(id);
+                            }
+                        } else {
+                            if (data !== undefined) {
+                                const currentTavernBoardCoin: PublicPlayerBoardCoinTypes | undefined =
+                                    player.boardCoins[G.currentTavern];
+                                if ((G.winner.length || (ctx.phase !== Phases.PlaceCoins
+                                    && ((i === 0 && G.currentTavern >= j)
+                                        || (i === 1 && Number(ctx.currentPlayer) === p
+                                            && IsCoin(publicBoardCoin)
+                                            && currentTavernBoardCoin?.isTriggerTrading))))) {
+                                    DrawCoin(data, playerCells, `coin`, publicBoardCoin, id, player);
+                                } else {
+                                    if (multiplayer && privateBoardCoin !== undefined) {
+                                        if (IsCoin(publicBoardCoin)) {
+                                            DrawCoin(data, playerCells, `coin`, publicBoardCoin, id,
+                                                player);
+                                        } else {
+                                            DrawCoin(data, playerCells, `hidden-coin`, privateBoardCoin, id,
+                                                player, `bg-small-coin`);
+                                        }
+                                    } else {
+                                        if (IsCoin(publicBoardCoin)) {
+                                            DrawCoin(data, playerCells, `coin`, publicBoardCoin, id,
+                                                player);
+                                        } else {
+                                            DrawCoin(data, playerCells, `back`, publicBoardCoin, id,
+                                                player);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        if (ctx.phase === Phases.PlaceCoins && player.selectedCoin !== null
+                            && ((!multiplayer && (Number(ctx.currentPlayer) === p))
+                                || (multiplayer && (Number(ctx.currentPlayer) === p)))) {
                             if (data !== undefined) {
                                 if (i === 0) {
-                                    DrawCoin(data, playerCells, `back-tavern-icon`,
-                                        boardCoin, coinIndex, player, null,
-                                        id, MoveNames.ClickBoardCoinMove, id);
+                                    DrawCoin(data, playerCells, `back-tavern-icon`, publicBoardCoin, id,
+                                        player, null, id,
+                                        MoveNames.ClickBoardCoinMove, id);
                                 } else {
-                                    DrawCoin(data, playerCells, `back-small-market-coin`, boardCoin,
-                                        coinIndex, player, null, null,
+                                    DrawCoin(data, playerCells, `back-small-market-coin`, publicBoardCoin,
+                                        id, player, null, null,
                                         MoveNames.ClickBoardCoinMove, id);
                                 }
                             } else if (validatorName === MoveValidatorNames.ClickBoardCoinMoveValidator) {
-                                moveMainArgs.push(coinIndex);
+                                moveMainArgs.push(id);
                             }
                         } else {
                             if (data !== undefined) {
                                 if (i === 0) {
-                                    DrawCoin(data, playerCells, `back-tavern-icon`, boardCoin,
-                                        coinIndex, player, null, id);
+                                    DrawCoin(data, playerCells, `back-tavern-icon`, publicBoardCoin, id,
+                                        player, null, id);
                                 } else {
-                                    DrawCoin(data, playerCells, `back-small-market-coin`, boardCoin,
-                                        coinIndex, player);
+                                    DrawCoin(data, playerCells, `back-small-market-coin`, publicBoardCoin,
+                                        id, player);
                                 }
-                            }
-                        }
-                    } else if (Number(ctx.currentPlayer) === p && ctx.phase === Phases.PlaceCoins) {
-                        if (data !== undefined) {
-                            DrawCoin(data, playerCells, `coin`, boardCoin, coinIndex, player,
-                                null, null, MoveNames.ClickBoardCoinMove,
-                                id);
-                        } else if (validatorName === MoveValidatorNames.ClickBoardCoinMoveValidator) {
-                            moveMainArgs.push(coinIndex);
-                        }
-                    } else {
-                        if (data !== undefined) {
-                            const currentTavernBoardCoin: CoinType | undefined = player.boardCoins[G.currentTavern];
-                            if (currentTavernBoardCoin !== undefined) {
-                                if (G.winner.length || (ctx.phase !== Phases.PlaceCoins
-                                    && ((i === 0 && G.currentTavern >= j)
-                                        || (i === 1 && Number(ctx.currentPlayer) === p
-                                            && currentTavernBoardCoin?.isTriggerTrading)))) {
-                                    DrawCoin(data, playerCells, `coin`, boardCoin, coinIndex,
-                                        player);
-                                } else {
-                                    DrawCoin(data, playerCells, `back`, boardCoin, coinIndex,
-                                        player);
-                                }
-                            } else {
-                                if (G.currentTavern !== -1) {
-                                    throw new Error(`В массиве монет игрока на столе отсутствует монета текущей таверны ${G.currentTavern}.`);
-                                }
-                                DrawCoin(data, playerCells, `back`, boardCoin, coinIndex,
-                                    player);
                             }
                         }
                     }
-                    coinIndex++;
                 }
             }
             if (data !== undefined) {
@@ -356,8 +354,8 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
  */
 export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorTypes | null,
     data?: BoardProps<IMyGameState>): JSX.Element[] | IMoveArgumentsStage<number[]>[`args`] => {
-    // TODO Your coins always public for you only, others always private!
-    const playersHandsCoins: JSX.Element[] = [],
+    const multiplayer = IsMultiplayer(G),
+        playersHandsCoins: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
     let moveName: MoveNames | undefined;
     switch (ctx.phase) {
@@ -376,55 +374,61 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
     }
     for (let p = 0; p < ctx.numPlayers; p++) {
         const player: IPublicPlayer | undefined = G.publicPlayers[p],
+            privatePlayer: IPlayer | undefined = G.players[p],
             playerCells: JSX.Element[] = [];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
         }
         for (let i = 0; i < 1; i++) {
-            for (let j = 0; j < player.handCoins.length; j++) {
-                const handCoin: CoinType | undefined = player.handCoins[j];
-                if (handCoin === undefined) {
-                    throw new Error(`В массиве монет игрока в руке отсутствует монета ${j}.`);
-                }
-                if (handCoin === null) {
-                    if (data !== undefined) {
-                        playerCells.push(
-                            <td key={`${player.nickname} hand coin ${j} empty`}
-                                className="bg-yellow-300">
-                                <span className="bg-coin bg-yellow-300 border-2">
-
-                                </span>
-                            </td>
-                        );
-                    }
+            for (let j = 0; j < 5; j++) {
+                let handCoin: CoinType | undefined;
+                if (multiplayer) {
+                    handCoin = privatePlayer?.handCoins[j];
                 } else {
-                    if (Number(ctx.currentPlayer) === p || G.winner.length) {
-                        let coinClasses = `border-2`;
-                        if (player.selectedCoin === j) {
-                            coinClasses = `border-2 border-green-400`;
-                        }
-                        if (!G.winner.length && (ctx.phase === Phases.PlaceCoins
-                            || ctx.phase === Phases.PlaceCoinsUline || (ctx.activePlayers
-                                && ctx.activePlayers[Number(ctx.currentPlayer)] ===
+                    handCoin = player.handCoins[j];
+                    if (handCoin === undefined) {
+                        throw new Error(`В массиве монет игрока в руке отсутствует монета ${j}.`);
+                    }
+                }
+                if (handCoin !== undefined && IsCoin(handCoin)
+                    && ((!multiplayer && Number(ctx.currentPlayer) === p) || multiplayer)) {
+                    let coinClasses = `border-2`;
+                    if (player.selectedCoin === j) {
+                        coinClasses = `border-2 border-green-400`;
+                    }
+                    if (Number(ctx.currentPlayer) === p
+                        && (ctx.phase === Phases.PlaceCoins || ctx.phase === Phases.PlaceCoinsUline
+                            || (ctx.activePlayers && ctx.activePlayers[Number(ctx.currentPlayer)] ===
                                 Stages.PlaceTradingCoinsUline))) {
-                            if (data !== undefined) {
-                                DrawCoin(data, playerCells, `coin`, handCoin, j, player,
-                                    coinClasses, null, moveName, j);
-                            } else if (validatorName === MoveValidatorNames.ClickHandCoinMoveValidator
-                                || validatorName === MoveValidatorNames.ClickHandCoinUlineMoveValidator
-                                || validatorName ===
-                                MoveValidatorNames.ClickHandTradingCoinUlineMoveValidator) {
-                                moveMainArgs.push(j);
-                            }
-                        } else {
-                            if (data !== undefined) {
-                                DrawCoin(data, playerCells, `coin`, handCoin, j, player,
-                                    coinClasses);
-                            }
+                        if (data !== undefined) {
+                            DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses,
+                                null, moveName, j);
+                        } else if (validatorName === MoveValidatorNames.ClickHandCoinMoveValidator
+                            || validatorName === MoveValidatorNames.ClickHandCoinUlineMoveValidator
+                            || validatorName === MoveValidatorNames.ClickHandTradingCoinUlineMoveValidator) {
+                            moveMainArgs.push(j);
                         }
                     } else {
                         if (data !== undefined) {
+                            DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses);
+                        }
+                    }
+                } else {
+                    if (data !== undefined) {
+                        const boardCoinsLength: number =
+                            player.boardCoins.filter((coin: PublicPlayerBoardCoinTypes): boolean =>
+                                coin !== null).length;
+                        if (handCoin !== undefined && IsCoin(handCoin)) {
                             DrawCoin(data, playerCells, `back`, handCoin, j, player);
+                        } else if (handCoin === undefined && (j < (5 - boardCoinsLength))) {
+                            DrawCoin(data, playerCells, `back`, null, j, player);
+                        } else {
+                            playerCells.push(
+                                <td key={`${player.nickname} hand coin ${j} empty`}
+                                    className="bg-yellow-300">
+                                    <span className="bg-coin bg-yellow-300 border-2"></span>
+                                </td>
+                            );
                         }
                     }
                 }

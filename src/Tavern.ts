@@ -8,7 +8,7 @@ import type { DeckCardTypes, IMyGameState, ITavernInConfig, ITavernsConfig, Tave
  * <ol>
  * <li>Проверяет после каждого выбора карты дворфа из таверны.</li>
  * <li>Проверяет после каждого выбора карты улучшения монеты из таверны.</li>
- * <li>Проверяет после каждого выбора карты кэмпа из таверны.</li>
+ * <li>Проверяет после каждого выбора карты лагеря из таверны.</li>
  * </ol>
  *
  * @param G
@@ -22,13 +22,30 @@ export const CheckIfCurrentTavernEmpty = (G: IMyGameState): boolean => {
     return currentTavern.every((card: TavernCardTypes): boolean => card === null);
 };
 
+export const DiscardCardIfTavernHasCardFor2Players = (G: IMyGameState): void => {
+    const tavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
+    if (tavern === undefined) {
+        throw new Error(`Отсутствует текущая таверна.`);
+    }
+    const cardIndex: number = tavern.findIndex((card: TavernCardTypes): boolean => card !== null);
+    if (cardIndex === -1) {
+        throw new Error(`Не удалось сбросить лишнюю карту из таверны при пике артефакта Jarnglofi.`);
+    }
+    const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[G.currentTavern];
+    if (currentTavernConfig === undefined) {
+        throw new Error(`Отсутствует конфиг текущей таверны.`);
+    }
+    AddDataToLog(G, LogTypes.GAME, `Карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за наличия двух игроков в игре.`);
+    DiscardCardFromTavern(G, cardIndex);
+};
+
 /**
  * <h3>Убирает карту из таверны в стопку сброса.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При игре на 2-х игроков убирает не выбранную карту.</li>
- * <li>Убирает оставшуюся карту при выборе карты из кэмпа.</li>
- * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из кэмпа.</li>
+ * <li>Убирает оставшуюся карту при выборе карты из лагеря.</li>
+ * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из лагеря.</li>
  * <li>Игрок пике артефакта Jarnglofi.</li>
  * </ol>
  *
@@ -55,7 +72,7 @@ export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number)
         AddDataToLog(G, LogTypes.GAME, `Карта '${discardedCard.name}' из таверны ${currentTavernConfig.name} убрана в сброс.`);
         return true;
     }
-    throw new Error(`Не удалось сбросить лишнюю карту из таверны.`);
+    throw new Error(`Не удалось сбросить карту ${discardCardIndex} из таверны.`);
 };
 
 /**
@@ -70,7 +87,7 @@ export const DiscardCardFromTavern = (G: IMyGameState, discardCardIndex: number)
  */
 export const RefillTaverns = (G: IMyGameState): void => {
     for (let i = 0; i < G.tavernsNum; i++) {
-        const deck: DeckCardTypes[] | undefined = G.decks[G.decks.length - G.tierToEnd];
+        const deck: DeckCardTypes[] | undefined = G.secret.decks[G.secret.decks.length - G.tierToEnd];
         if (deck === undefined) {
             throw new Error(`Отсутствует колода карт текущей эпохи.`);
         }
@@ -82,6 +99,7 @@ export const RefillTaverns = (G: IMyGameState): void => {
         if (refillDeck.length !== G.drawSize) {
             throw new Error(`Таверна ${currentTavernConfig.name} не заполнена новыми картами из-за их нехватки в колоде.`);
         }
+        G.deckLength[G.secret.decks.length - G.tierToEnd] = deck.length;
         const currentTavern: TavernCardTypes[] | undefined = G.taverns[i];
         if (currentTavern === undefined) {
             throw new Error(`Отсутствует текущая таверна.`);

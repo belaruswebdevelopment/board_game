@@ -14,15 +14,16 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
  * </oL>
  *
  * @param G
+ * @param ctx
  */
-export const AfterLastTavernEmptyActions = (G: IMyGameState): boolean | INext => {
-    const deck: DeckCardTypes[] | undefined = G.decks[G.decks.length - G.tierToEnd];
+export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): boolean | INext => {
+    const deck: DeckCardTypes[] | undefined = G.secret.decks[G.secret.decks.length - G.tierToEnd];
     if (deck === undefined) {
         throw new Error(`Отсутствует колода карт текущей эпохи.`);
     }
     if (deck.length === 0) {
         if (G.expansions.thingvellir?.active) {
-            return CheckEnlistmentMercenaries(G);
+            return CheckEnlistmentMercenaries(G, ctx);
         } else {
             return CheckEndTierActionsOrEndGameLastActions(G);
         }
@@ -43,8 +44,9 @@ export const AfterLastTavernEmptyActions = (G: IMyGameState): boolean | INext =>
  * @param G
  */
 export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G: IMyGameState): INext => {
-    const ulinePlayerIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
-        CheckPlayerHasBuff(player, BuffNames.EveryTurn));
+    const ulinePlayerIndex: number =
+        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
+            CheckPlayerHasBuff(player, BuffNames.EveryTurn));
     if (ulinePlayerIndex !== -1) {
         return {
             next: Phases.PlaceCoinsUline,
@@ -66,10 +68,13 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G: IMyGameState): I
  * @param G
  */
 export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
-    const deck1: DeckCardTypes[] | undefined = G.decks[0],
-        deck2: DeckCardTypes[] | undefined = G.decks[1];
-    if (deck1 === undefined || deck2 === undefined) {
-        throw new Error(`Отсутствует колода карт 1 и/или 2 эпох.`);
+    const deck1: DeckCardTypes[] | undefined = G.secret.decks[0],
+        deck2: DeckCardTypes[] | undefined = G.secret.decks[1];
+    if (deck1 === undefined) {
+        throw new Error(`Отсутствует колода карт 1 эпохи.`);
+    }
+    if (deck2 === undefined) {
+        throw new Error(`Отсутствует колода карт 2 эпохи.`);
     }
     if (!deck1.length && deck2.length) {
         return {
@@ -78,7 +83,7 @@ export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
     } else {
         if (G.expansions.thingvellir?.active) {
             const brisingamensBuffIndex: number =
-                G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+                Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
                     CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
             if (brisingamensBuffIndex !== -1) {
                 return {
@@ -86,7 +91,7 @@ export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
                 };
             }
             const mjollnirBuffIndex: number =
-                G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+                Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
                     CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
             if (mjollnirBuffIndex !== -1) {
                 return {
@@ -109,7 +114,7 @@ export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
 * @param G
 */
 export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState): boolean | INext => {
-    const yludIndex: number = G.publicPlayers.findIndex((player: IPublicPlayer): boolean =>
+    const yludIndex: number = Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
         CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex !== -1) {
         return {
@@ -129,9 +134,9 @@ export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState): boolea
  *
  * @param G
  */
-const CheckEnlistmentMercenaries = (G: IMyGameState): boolean | INext => {
+const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): boolean | INext => {
     let count = false;
-    for (let i = 0; i < G.publicPlayers.length; i++) {
+    for (let i = 0; i < ctx.numPlayers; i++) {
         const player: IPublicPlayer | undefined = G.publicPlayers[i];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);

@@ -1,5 +1,10 @@
 import type { Ctx } from "boardgame.io";
-import { LogTypes, MoveNames } from "./enums";
+import { ArtefactNames, GameNames, HeroNames, LogTypes, MoveNames, RusCardTypes } from "./enums";
+
+export interface ISecret {
+    campDecks: CampDeckCardTypes[][],
+    decks: DeckCardTypes[][],
+}
 
 export interface IDebugData {
     G: Record<string, unknown>,
@@ -28,7 +33,7 @@ export interface IDeckConfig {
  * <h3>Интерфейс для карты улучшения монеты.</h3>
  */
 export interface IActionCard {
-    readonly type: string,
+    readonly type: RusCardTypes.ACTION,
     readonly value: number,
     readonly stack: IStack[],
     readonly name: string,
@@ -54,7 +59,7 @@ export interface IActionCardValues {
  * <h3>Интерфейс для создания карты улучшения монеты.</h3>
  */
 export interface ICreateActionCard {
-    readonly type?: string,
+    readonly type?: RusCardTypes.ACTION,
     readonly value: number,
     readonly stack: IStack[],
     readonly name: string,
@@ -74,7 +79,7 @@ export interface IAction {
 export interface IConfig {
     readonly number?: number,
     readonly coinId?: number,
-    readonly suit?: SuitTypes,
+    readonly suit?: SuitTypes | null,
     readonly value?: number,
     // TODO Do we need it!?!?!?
     readonly drawName?: string,
@@ -136,33 +141,33 @@ export interface IMoves {
 }
 
 /**
- * <h3>Интерфейс для данных карт кэмпа артефакт.</h3>
+ * <h3>Интерфейс для данных карт лагеря артефакт.</h3>
  */
 export interface IArtefact {
-    readonly name: string,
+    readonly name: ArtefactNames,
     readonly description: string,
-    readonly game: string,
+    readonly game?: GameNames,
     readonly tier: number,
-    readonly suit: SuitTypes | null,
-    readonly rank: number | null,
-    readonly points: number | null,
+    readonly suit?: SuitTypes | null,
+    readonly rank?: number | null,
+    readonly points?: number | null,
     readonly buff?: IBuff,
     readonly validators?: IValidatorsConfig,
     readonly actions?: IAction,
     readonly stack?: IStack[],
-    readonly scoringRule: (player?: IPublicPlayer) => number,
+    readonly scoringRule: (player?: IPublicPlayer, G?: IMyGameState) => number,
 }
 
 /**
- * <h3>Интерфейс для карты кэмпа артефакта.</h3>
+ * <h3>Интерфейс для карты лагеря артефакта.</h3>
  */
 export interface IArtefactCampCard {
-    readonly type: string,
+    readonly type: RusCardTypes.ARTEFACT,
     readonly tier: number,
     readonly path: string,
-    readonly name: string,
+    readonly name: ArtefactNames,
     readonly description: string,
-    readonly game: string,
+    readonly game: GameNames,
     readonly suit: SuitTypes | null,
     readonly rank: number | null,
     readonly points: number | null,
@@ -173,7 +178,7 @@ export interface IArtefactCampCard {
 }
 
 /**
- * <h3>Интерфейс для конфига данных карт кэмпа артефакт.</h3>
+ * <h3>Интерфейс для конфига данных карт лагеря артефакт.</h3>
  */
 export interface IArtefactConfig {
     readonly Brisingamens: IArtefact,
@@ -185,24 +190,25 @@ export interface IArtefactConfig {
     readonly Jarnglofi: IArtefact,
     readonly Megingjord: IArtefact,
     readonly Mjollnir: IArtefact,
+    readonly Odroerir_The_Mythic_Cauldron: IArtefact,
     readonly Svalinn: IArtefact,
     readonly Vegvisir: IArtefact,
     readonly Vidofnir_Vedrfolnir: IArtefact,
 }
 
 /**
- * <h3>Интерфейс для создания карты кэмпа артефакта.</h3>
+ * <h3>Интерфейс для создания карты лагеря артефакта.</h3>
  */
 export interface ICreateArtefactCampCard {
-    readonly type?: string,
+    readonly type?: RusCardTypes.ARTEFACT,
     readonly tier: number,
     readonly path: string,
-    readonly name: string,
+    readonly name: ArtefactNames,
     readonly description: string,
-    readonly game: string,
-    readonly suit: SuitTypes | null,
-    readonly rank: number | null,
-    readonly points: number | null,
+    readonly game?: GameNames,
+    readonly suit?: SuitTypes | null,
+    readonly rank?: number | null,
+    readonly points?: number | null,
     readonly buff?: IBuff,
     readonly validators?: IValidatorsConfig,
     readonly actions?: IAction,
@@ -210,19 +216,19 @@ export interface ICreateArtefactCampCard {
 }
 
 /**
- * <h3>Интерфейс для создания карты кэмпа наёмника.</h3>
+ * <h3>Интерфейс для создания карты лагеря наёмника.</h3>
  */
 export interface ICreateMercenaryCampCard {
-    readonly type?: string,
+    readonly type?: RusCardTypes.MERCENARY,
     readonly tier: number,
     readonly path: string,
     readonly name: string,
-    readonly game?: string,
+    readonly game?: GameNames,
     readonly variants: OptionalSuitPropertyTypes<IVariant>,
 }
 
 /**
- * <h3>Интерфейс для данных карт кэмпа наёмник.</h3>
+ * <h3>Интерфейс для данных карт лагеря наёмник.</h3>
  */
 export interface IMercenary {
     readonly suit: SuitTypes,
@@ -231,14 +237,14 @@ export interface IMercenary {
 }
 
 /**
- * <h3>Интерфейс для карты кэмпа наёмника.</h3>
+ * <h3>Интерфейс для карты лагеря наёмника.</h3>
  */
 export interface IMercenaryCampCard {
-    readonly type: string,
+    readonly type: RusCardTypes.MERCENARY,
     readonly tier: number,
     readonly path: string,
     readonly name: string,
-    readonly game: string,
+    readonly game: GameNames,
     readonly variants: OptionalSuitPropertyTypes<IVariant>,
 }
 
@@ -257,28 +263,52 @@ export interface IAdditionalCardsConfig {
  * <h3>Интерфейс для карты дворфа.</h3>
  */
 export interface ICard {
-    readonly type: string,
+    readonly type: RusCardTypes.BASIC,
     readonly suit: SuitTypes,
     readonly rank: number,
     readonly points: number | null,
     readonly name: string,
-    readonly game: string,
+    readonly game: GameNames,
     readonly tier: number,
     readonly path: string,
+}
+
+export interface IMercenaryPlayerCard {
+    readonly type: RusCardTypes.MERCENARYPLAYERCARD,
+    readonly suit: SuitTypes,
+    readonly rank: number,
+    readonly points: number | null,
+    readonly name: string,
+    readonly game: GameNames,
+    readonly tier: number,
+    readonly path: string,
+    readonly variants: OptionalSuitPropertyTypes<IVariant>,
 }
 
 /**
  * <h3>Интерфейс для создания карты дворфа.</h3>
  */
 export interface ICreateCard {
-    readonly type?: string,
+    readonly type?: RusCardTypes.BASIC,
     readonly suit: SuitTypes,
     readonly rank: number,
     readonly points: number | null,
     readonly name: string,
-    readonly game: string,
+    readonly game: GameNames,
     readonly tier?: number,
     readonly path?: string,
+}
+
+export interface ICreateMercenaryPlayerCard {
+    readonly type?: RusCardTypes.MERCENARYPLAYERCARD,
+    readonly suit: SuitTypes,
+    readonly rank: number,
+    readonly points: number | null,
+    readonly name: string,
+    readonly game?: GameNames,
+    readonly tier: number,
+    readonly path: string,
+    readonly variants: OptionalSuitPropertyTypes<IVariant>,
 }
 
 /**
@@ -299,6 +329,10 @@ export interface ICoin {
     readonly isInitial: boolean,
     readonly isTriggerTrading: boolean,
 }
+
+export type ClosedCoinType = Record<string, never>;
+
+export type PublicPlayerBoardCoinTypes = CoinType | ClosedCoinType;
 
 /**
  * <h3>Интерфейс для создания монеты.</h3>
@@ -356,18 +390,23 @@ export interface ILogData {
  * <h3>Интерфейс для игровых пользовательских данных G.</h3>
  */
 export interface IMyGameState {
+    readonly multiplayer: boolean,
+    odroerirTheMythicCauldron: boolean,
+    readonly odroerirTheMythicCauldronCoins: ICoin[],
     readonly averageCards: RequiredSuitPropertyTypes<ICard>,
     readonly botData: IBotData,
+    readonly deckLength: [number, number],
+    readonly campDeckLength: [number, number],
+    readonly explorerDistinctionCards: DeckCardTypes[],
     readonly camp: CampCardTypes[],
-    readonly campDecks: CampDeckCardTypes[][],
+    readonly secret: ISecret,
     readonly campNum: number,
     mustDiscardTavernCardJarnglofi: boolean | null,
     campPicked: boolean,
     currentTavern: number,
     readonly debug: boolean,
-    readonly decks: DeckCardTypes[][],
     readonly additionalCardsDeck: ICard[],
-    readonly discardCampCardsDeck: CampDeckCardTypes[],
+    readonly discardCampCardsDeck: DiscardCampCardTypes[],
     readonly discardCardsDeck: DiscardCardTypes[],
     readonly distinctions: RequiredSuitPropertyTypes<DistinctionTypes>,
     drawProfit: string,
@@ -380,12 +419,13 @@ export interface IMyGameState {
     readonly marketCoins: ICoin[],
     readonly marketCoinsUnique: ICoin[],
     readonly suitsNum: number,
+    tavernCardDiscarded2Players: boolean,
     readonly taverns: TavernCardTypes[][],
     readonly tavernsNum: number,
     tierToEnd: number,
     readonly totalScore: number[],
     readonly players: IPlayers,
-    readonly publicPlayers: IPublicPlayer[],
+    readonly publicPlayers: IPublicPlayers,
     publicPlayersOrder: string[],
     readonly winner: number[],
 }
@@ -418,13 +458,13 @@ export interface IResolveBoardCoins {
  * <h3>Интерфейс для создания героя.</h3>
  */
 export interface ICreateHero {
-    readonly type: string,
-    readonly name: string,
+    readonly type?: RusCardTypes.HERO,
+    readonly name: HeroNames,
     readonly description: string,
-    readonly game: string,
-    readonly suit: SuitTypes | null,
-    readonly rank: number | null,
-    readonly points: number | null,
+    readonly game: GameNames,
+    readonly suit?: SuitTypes | null,
+    readonly rank?: number | null,
+    readonly points?: number | null,
     readonly active?: boolean,
     readonly buff?: IBuff,
     readonly validators?: IValidatorsConfig,
@@ -436,10 +476,10 @@ export interface ICreateHero {
  * <h3>Интерфейс для героя.</h3>
  */
 export interface IHeroCard {
-    readonly type: string,
-    readonly name: string,
+    readonly type: RusCardTypes.HERO,
+    readonly name: HeroNames,
     readonly description: string,
-    readonly game: string,
+    readonly game: GameNames,
     readonly suit: SuitTypes | null,
     readonly rank: number | null,
     readonly points: number | null,
@@ -476,6 +516,7 @@ export interface IHeroConfig {
     readonly Uline: IHeroData,
     readonly Ylud: IHeroData,
     readonly Jarika: IHeroData,
+    readonly Crovax_The_Doppelganger: IHeroData,
     readonly Andumia: IHeroData,
     readonly Holda: IHeroData,
     readonly Khrad: IHeroData,
@@ -487,17 +528,17 @@ export interface IHeroConfig {
  * <h3>Интерфейс для данных карты героя.</h3>
  */
 export interface IHeroData {
-    readonly name: string,
+    readonly name: HeroNames,
     readonly description: string,
-    readonly game: string,
-    readonly suit: SuitTypes | null,
-    readonly rank: number | null,
-    readonly points: number | null,
+    readonly game: GameNames,
+    readonly suit?: SuitTypes | null,
+    readonly rank?: number | null,
+    readonly points?: number | null,
     readonly buff?: IBuff,
     readonly validators?: IValidatorsConfig,
     readonly actions?: IAction,
     readonly stack?: IStack[],
-    readonly scoringRule: (player?: IPublicPlayer) => number,
+    readonly scoringRule: (G?: IMyGameState, playerId?: number) => number,
 }
 
 /**
@@ -516,7 +557,7 @@ export interface IConditions {
 }
 
 interface IDiscardCard {
-    readonly suit: SuitTypes,
+    readonly suit: SuitTypes | null,
     readonly number?: number,
 }
 
@@ -791,8 +832,8 @@ export interface ICreatePublicPlayer {
  * <h3>Интерфейс для приватных данных игрока.</h3>
  */
 export interface IPlayer {
-    readonly handCoins: ICoin[],
-    readonly boardCoins: ICoin[],
+    readonly handCoins: CoinType[],
+    readonly boardCoins: CoinType[],
 }
 
 /**
@@ -800,6 +841,13 @@ export interface IPlayer {
  */
 export interface IPlayers {
     [index: number]: IPlayer,
+}
+
+/**
+ * <h3>Интерфейс для объекта, хранящего открытые данные всех игроков.</h3>
+ */
+export interface IPublicPlayers {
+    [index: number]: IPublicPlayer,
 }
 
 /**
@@ -812,7 +860,7 @@ export interface IPublicPlayer {
     readonly heroes: IHeroCard[],
     readonly campCards: CampDeckCardTypes[],
     readonly handCoins: CoinType[],
-    readonly boardCoins: CoinType[],
+    readonly boardCoins: PublicPlayerBoardCoinTypes[],
     stack: IStack[],
     priority: IPriority,
     readonly buffs: IBuffs[],
@@ -855,9 +903,12 @@ export interface IBackground {
  */
 export interface IStyles {
     readonly Camp: () => IBackground,
+    readonly CampBack: (tier: number) => IBackground,
     readonly CampCards: (tier: number, cardPath: string) => IBackground,
+    readonly CardBack: (tier: number) => IBackground,
     readonly Cards: (suit: SuitTypes | null, name: string, points: number | null) => IBackground,
     readonly Coin: (value: number, initial: boolean) => IBackground,
+    readonly CoinSmall: (value: number, initial: boolean) => IBackground,
     readonly CoinBack: () => IBackground,
     readonly Distinctions: (distinction: string) => IBackground,
     readonly DistinctionsBack: () => IBackground,
@@ -885,7 +936,7 @@ export interface ISuit {
 
 export interface IDistinction {
     readonly description: string,
-    readonly awarding: (G: IMyGameState, ctx: Ctx, player: IPublicPlayer) => number,
+    readonly awarding: (G: IMyGameState, ctx: Ctx, playerId: number) => number,
 }
 
 /**
@@ -919,12 +970,12 @@ export type StageTypes = keyof IMoveByPlaceCoinsOptions | keyof IMoveByPlaceCoin
     | keyof IMoveByGetMjollnirProfitOptions;
 
 /**
- * <h3>Типы данных для кэмпа.</h3>
+ * <h3>Типы данных для лагеря.</h3>
  */
 export type CampCardTypes = CampDeckCardTypes | null;
 
 /**
- * <h3>Типы данных для карт колоды кэмпа.</h3>
+ * <h3>Типы данных для карт колоды лагеря.</h3>
  */
 export type CampDeckCardTypes = IArtefactCampCard | IMercenaryCampCard;
 
@@ -936,7 +987,9 @@ export type DeckCardTypes = ICard | IActionCard;
 /**
  * <h3>Типы данных для карт колоды сброса.</h3>
  */
-export type DiscardCardTypes = DeckCardTypes | IArtefactCampCard;
+export type DiscardCardTypes = DeckCardTypes;
+
+export type DiscardCampCardTypes = CampDeckCardTypes | IMercenaryPlayerCard;
 
 export type CardsHasStack = IHeroCard | IArtefactCampCard | IActionCard;
 
@@ -945,19 +998,19 @@ export type CardsHasStackValidators = IHeroCard | IArtefactCampCard;
 /**
  * <h3>Типы данных для карт выбранных игроком.</h3>
  */
-export type PickedCardType = DeckCardTypes | CampDeckCardTypes | IHeroCard | null;
+export type PickedCardType = DeckCardTypes | CampDeckCardTypes | IHeroCard | IMercenaryPlayerCard | null;
 
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>
  */
-export type PlayerCardsType = ICard | IArtefactCampCard | IHeroCard;
+export type PlayerCardsType = ICard | IArtefactCampCard | IHeroCard | IMercenaryPlayerCard;
 
 /**
  * <h3>Типы данных для карт таверн.</h3>
  */
 export type TavernCardTypes = DeckCardTypes | null;
 
-export type AllCardTypes = DeckCardTypes | CampDeckCardTypes | IHeroCard;
+export type AllCardTypes = DeckCardTypes | CampDeckCardTypes | IHeroCard | IMercenaryPlayerCard;
 
 /**
  * <h3>Типы данных для монет на столе или в руке.</h3>

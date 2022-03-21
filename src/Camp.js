@@ -1,7 +1,7 @@
 import { suitsConfig } from "./data/SuitData";
 import { GameNames, RusCardTypes } from "./typescript/enums";
 /**
- * <h3>Создаёт все карты кэмпа из конфига.</h3>
+ * <h3>Создаёт все карты лагеря из конфига.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит при инициализации игры.</li>
@@ -10,7 +10,7 @@ import { GameNames, RusCardTypes } from "./typescript/enums";
  * @param tier Эпоха.
  * @param artefactConfig Файл конфига карт артефактов.
  * @param mercenariesConfig Файл конфига наёмников.
- * @returns Все карты кэмпа.
+ * @returns Все карты лагеря.
  */
 export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
     const campCards = [];
@@ -24,7 +24,6 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
                     path: artefactData.name,
                     name: artefactData.name,
                     description: artefactData.description,
-                    game: artefactData.game,
                     suit: artefactData.suit,
                     rank: artefactData.rank,
                     points: artefactData.points,
@@ -76,10 +75,10 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
     return campCards;
 };
 /**
- * <h3>Создание карты артефакта для кэмпа.</h3>
+ * <h3>Создание карты артефакта для лагеря.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт артефактов кэмпа во время инициализации игры.</li>
+ * <li>Происходит при создании всех карт артефактов лагеря во время инициализации игры.</li>
  * </ol>
  *
  * @param type Тип.
@@ -95,9 +94,9 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
  * @param validators Валидаторы.
  * @param actions Действия.
  * @param stack Действия.
- * @returns Карта кэмпа артефакт.
+ * @returns Карта лагеря артефакт.
  */
-export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, path, name, description, game, suit, rank, points, buff, validators, actions, stack, } = {}) => ({
+export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, path, name, description, game = GameNames.Thingvellir, suit = null, rank = null, points = null, buff, validators, actions, stack, } = {}) => ({
     type,
     tier,
     path,
@@ -113,10 +112,10 @@ export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, pat
     stack,
 });
 /**
- * <h3>Создание карты наёмника для кэмпа.</h3>
+ * <h3>Создание карты наёмника для лагеря.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Происходит при создании всех карт наёмников кэмпа во время инициализации игры.</li>
+ * <li>Происходит при создании всех карт наёмников лагеря во время инициализации игры.</li>
  * </ol>
  *
  * @param type Тип.
@@ -125,7 +124,7 @@ export const CreateArtefactCampCard = ({ type = RusCardTypes.ARTEFACT, tier, pat
  * @param name Название.
  * @param game Игра/дополнение.
  * @param variants Варианты расположения карты наёмника.
- * @returns Карта кэмпа наёмник.
+ * @returns Карта лагеря наёмник.
  */
 export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, path, name, game = GameNames.Thingvellir, variants, } = {}) => ({
     type,
@@ -136,17 +135,48 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, p
     variants,
 });
 /**
- * <h3>Проверка, является ли объект картой кэмпа артефакта или картой кэмпа наёмника.</h3>
+ * <h3>Создание карты наёмника в руке игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при выкладке карты наёмника в руку игрока.</li>
+ * </ol>
+ *
+ * @param type Тип.
+ * @param suit Название фракции.
+ * @param rank Шевроны.
+ * @param points Очки.
+ * @param name Название.
+ * @param game Игра/дополнение.
+ * @param tier Эпоха.
+ * @param path URL путь.
+ * @param variants Варианты расположения карты наёмника.
+ * @returns Карта наёмника в руке игрока.
+ */
+export const CreateMercenaryPlayerCard = ({ type = RusCardTypes.MERCENARYPLAYERCARD, suit, rank, points, name, game = GameNames.Thingvellir, tier, path, variants, } = {}) => ({
+    type,
+    suit,
+    rank,
+    points,
+    name,
+    game,
+    tier,
+    path,
+    variants,
+});
+/**
+ * <h3>Проверка, является ли объект картой лагеря артефакта или картой лагеря наёмника.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При проверках в функциях.</li>
  * </ol>
  *
  * @param card Карта.
- * @returns Является ли объект картой кэмпа артефакта или картой кэмпа наёмника.
+ * @returns Является ли объект картой лагеря артефакта или картой лагеря наёмника.
  */
 export const IsArtefactCard = (card) => card !== null
     && card.description !== undefined && card.tier !== undefined;
 export const IsMercenaryCampCard = (card) => card !== null
     && card.variants !== undefined && card.tier !== undefined;
+export const IsMercenaryPlayerCard = (card) => card !== null
+    && card.variants !== undefined && card.suit !== undefined;
 //# sourceMappingURL=Camp.js.map

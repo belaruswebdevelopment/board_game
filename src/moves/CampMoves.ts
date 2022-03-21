@@ -1,13 +1,9 @@
 import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { AddCoinToPouchAction, DiscardSuitCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
-import { IsArtefactCard } from "../Camp";
-import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
-import { AddCampCardToCards } from "../helpers/CampCardHelpers";
-import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { AddCoinToPouchAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
-import type { CampCardTypes, IMyGameState, SuitTypes } from "../typescript/interfaces";
+import type { IMyGameState, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
@@ -29,15 +25,15 @@ export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
 };
 
 /**
- * <h3>Выбор карты из кэмпа по действию персонажа Хольда.</h3>
+ * <h3>Выбор карты из лагеря по действию персонажа Хольда.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Срабатывает при выборе карты из кэмпа по действию персонажа Хольда.</li>
+ * <li>Срабатывает при выборе карты из лагеря по действию персонажа Хольда.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param cardId Id выбираемой карты из кэмпа.
+ * @param cardId Id выбираемой карты из лагеря.
  * @returns
  */
 export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
@@ -46,32 +42,19 @@ export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx:
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    // TODO Move to function with Camp same logic
-    const campCard: CampCardTypes | undefined = G.camp[cardId];
-    if (campCard === undefined) {
-        throw new Error(`Отсутствует кликнутая карта кэмпа.`);
-    }
-    if (campCard === null) {
-        throw new Error(`Не существует кликнутая карта кэмпа.`);
-    }
-    G.camp.splice(cardId, 1, null);
-    AddCampCardToCards(G, ctx, campCard);
-    if (IsArtefactCard(campCard)) {
-        AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
-        StartAutoAction(G, ctx, campCard.actions);
-    }
+    PickCampCardAction(G, ctx, cardId);
 };
 
 /**
- * <h3>Выбор карты из кэмпа.</h3>
+ * <h3>Выбор карты из лагеря.</h3>
  * <p>Применения:</p>
  * <ol>
- * <li>Срабатывает при выборе карты из кэмпа.</li>
+ * <li>Срабатывает при выборе карты из лагеря.</li>
  * </ol>
  *
  * @param G
  * @param ctx
- * @param cardId Id выбираемой карты из кэмпа.
+ * @param cardId Id выбираемой карты из лагеря.
  * @returns
  */
 export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
@@ -79,20 +62,7 @@ export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    // TODO Move to function with Holda same logic
-    const campCard: CampCardTypes | undefined = G.camp[cardId];
-    if (campCard === undefined) {
-        throw new Error(`Отсутствует кликнутая карта кэмпа.`);
-    }
-    if (campCard === null) {
-        throw new Error(`Не существует кликнутая карта кэмпа.`);
-    }
-    G.camp[cardId] = null;
-    AddCampCardToCards(G, ctx, campCard);
-    if (IsArtefactCard(campCard)) {
-        AddActionsToStackAfterCurrent(G, ctx, campCard.stack, campCard);
-        StartAutoAction(G, ctx, campCard.actions);
-    }
+    PickCampCardAction(G, ctx, cardId);
 };
 
 /**

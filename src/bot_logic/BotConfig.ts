@@ -39,16 +39,22 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
     for (let i = 1; i < temp.length; i++) {
         const maxCard: ICardCharacteristics | undefined = tempChars[maxIndex],
             tempCard1: ICardCharacteristics | undefined = tempChars[i];
-        if (maxCard === undefined || tempCard1 === undefined) {
-            throw new Error(`Отсутствует значение 1 ${maxIndex} и/или ${i}.`);
+        if (maxCard === undefined) {
+            throw new Error(`Отсутствует значение максимальной карты ${maxIndex}.`);
+        }
+        if (tempCard1 === undefined) {
+            throw new Error(`Отсутствует значение 1 темп карты ${i}.`);
         }
         if (CompareCharacteristics(maxCard, tempCard1) < 0) {
             maxIndex = i;
         }
         const minCard: ICardCharacteristics | undefined = tempChars[minIndex],
             tempCard2: ICardCharacteristics | undefined = tempChars[tempChars.length - 1 - i];
-        if (minCard === undefined || tempCard2 === undefined) {
-            throw new Error(`Отсутствует значение 2 ${maxIndex} и/или ${tempChars.length - 1 - i}.`);
+        if (minCard === undefined) {
+            throw new Error(`Отсутствует значение минимальной карты ${minIndex}.`);
+        }
+        if (tempCard2 === undefined) {
+            throw new Error(`Отсутствует значение 2 темп карты ${tempChars.length - 1 - i}.`);
         }
         if (CompareCharacteristics(minCard, tempCard2) > 0) {
             minIndex = tempChars.length - 1 - i;

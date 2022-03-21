@@ -1,4 +1,4 @@
-import { AddPickHeroAction, DiscardTradingCoinAction, GetClosedCoinIntoPlayerHandAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "../actions/AutoActions";
+import { AddPickHeroAction, DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, GetClosedCoinIntoPlayerHandAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "../actions/AutoActions";
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
  * <p>Применения:</p>
@@ -17,6 +17,9 @@ const ActionDispatcherSwitcher = (actionName) => {
             break;
         case DiscardTradingCoinAction.name:
             action = DiscardTradingCoinAction;
+            break;
+        case FinishOdroerirTheMythicCauldronAction.name:
+            action = FinishOdroerirTheMythicCauldronAction;
             break;
         case GetClosedCoinIntoPlayerHandAction.name:
             action = GetClosedCoinIntoPlayerHandAction;

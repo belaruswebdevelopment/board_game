@@ -1,5 +1,6 @@
 import { isInitialPlayerCoinsConfigNotMarket } from "./data/CoinData";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./helpers/BuffHelpers";
+import { IsMultiplayer } from "./helpers/MultiplayerHelpers";
 import { AddDataToLog } from "./Logging";
 import { BuffNames, CoinTypes, LogTypes, Stages } from "./typescript/enums";
 /**
@@ -94,6 +95,38 @@ export const CreateCoin = ({ value, isInitial = false, isTriggerTrading = false,
  * @returns Является ли объект монетой, а не пустым объектом.
  */
 export const IsCoin = (coin) => coin !== null && coin.value !== undefined;
+export const ReturnCoinsToPlayerBoard = (G, playerId) => {
+    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+    }
+    let handCoins;
+    if (multiplayer) {
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует игрок ${playerId}.`);
+        }
+        handCoins = privatePlayer.handCoins;
+    }
+    else {
+        handCoins = player.handCoins;
+    }
+    for (let i = 0; i < handCoins.length; i++) {
+        const handCoin = handCoins[i];
+        if (handCoin === undefined) {
+            throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
+        }
+        if (IsCoin(handCoin)) {
+            const tempCoinId = player.boardCoins.indexOf(null);
+            if (tempCoinId !== -1) {
+                if (multiplayer && privatePlayer !== undefined) {
+                    privatePlayer.boardCoins[tempCoinId] = handCoin;
+                }
+                player.boardCoins[tempCoinId] = handCoin;
+                handCoins[i] = null;
+            }
+        }
+    }
+};
 /**
  * <h3>Возвращает все монеты со стола в руки игроков в начале фазы выставления монет.</h3>
  * <p>Применения:</p>
@@ -102,15 +135,16 @@ export const IsCoin = (coin) => coin !== null && coin.value !== undefined;
  * </ol>
  *
  * @param G
+ * @param ctx
  */
-export const ReturnCoinsToPlayerHands = (G) => {
-    for (let i = 0; i < G.publicPlayers.length; i++) {
+export const ReturnCoinsToPlayerHands = (G, ctx) => {
+    for (let i = 0; i < ctx.numPlayers; i++) {
         const player = G.publicPlayers[i];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
         }
         for (let j = 0; j < player.boardCoins.length; j++) {
-            const isCoinReturned = ReturnCoinToPlayerHands(player, j);
+            const isCoinReturned = ReturnCoinToPlayerHands(G, i, j);
             if (!isCoinReturned) {
                 break;
             }
@@ -126,12 +160,27 @@ export const ReturnCoinsToPlayerHands = (G) => {
  * <li>При возврате монет в руку, когда взят герой Улина.</li>
  * </ol>
  *
- * @param player Игрок.
+ * @param G
+ * @param playerId Id игрока.
  * @param coinId Id монеты.
  * @returns Вернулась ли монета в руку.
  */
-export const ReturnCoinToPlayerHands = (player, coinId) => {
-    const tempCoinId = player.handCoins.indexOf(null);
+export const ReturnCoinToPlayerHands = (G, playerId, coinId) => {
+    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+    }
+    let handCoins;
+    if (multiplayer) {
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует игрок ${playerId}.`);
+        }
+        handCoins = privatePlayer.handCoins;
+    }
+    else {
+        handCoins = player.handCoins;
+    }
+    const tempCoinId = handCoins.indexOf(null);
     if (tempCoinId === -1) {
         return false;
     }
@@ -139,7 +188,26 @@ export const ReturnCoinToPlayerHands = (player, coinId) => {
     if (coin === undefined) {
         throw new Error(`В массиве монет игрока на поле отсутствует нужная монета ${coinId}.`);
     }
-    player.handCoins[tempCoinId] = coin;
+    if (IsCoin(coin)) {
+        handCoins[tempCoinId] = coin;
+    }
+    else {
+        if (multiplayer && privatePlayer !== undefined && (coinId >= G.tavernsNum)) {
+            const privateBoardCoin = privatePlayer.boardCoins[coinId];
+            if (privateBoardCoin === undefined) {
+                throw new Error(`В массиве монет приватного игрока на поле отсутствует монета ${coinId}.`);
+            }
+            if (IsCoin(privateBoardCoin)) {
+                handCoins[tempCoinId] = privateBoardCoin;
+            }
+            else {
+                throw new Error(`В массиве монет приватного игрока на поле нет монеты ${coinId}.`);
+            }
+        }
+    }
+    if (multiplayer && privatePlayer !== undefined) {
+        privatePlayer.boardCoins[coinId] = null;
+    }
     player.boardCoins[coinId] = null;
     return true;
 };
@@ -159,9 +227,19 @@ export const ReturnCoinToPlayerHands = (player, coinId) => {
  */
 export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => {
     var _a;
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    let handCoins;
+    if (multiplayer) {
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
+        }
+        handCoins = privatePlayer.handCoins;
+    }
+    else {
+        handCoins = player.handCoins;
     }
     // TODO Split into different functions!?
     let upgradingCoin = {}, coin;
@@ -169,7 +247,7 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
         DeleteBuffFromPlayer(G, ctx, BuffNames.Coin);
         // TODO Upgrade isInitial min coin or not or User must choose!?
         if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-            const allCoins = [], allHandCoins = player.handCoins.filter((coin) => IsCoin(coin));
+            const allCoins = [], allHandCoins = handCoins.filter((coin) => IsCoin(coin));
             for (let i = 0; i < player.boardCoins.length; i++) {
                 if (player.boardCoins[i] === null) {
                     const handCoin = allHandCoins.splice(0, 1)[0];
@@ -183,7 +261,9 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
                     if (boardCoin === undefined) {
                         throw new Error(`В массиве монет игрока на поле отсутствует монета ${i}.`);
                     }
-                    allCoins.push(boardCoin);
+                    if (IsCoin(boardCoin)) {
+                        allCoins.push(boardCoin);
+                    }
                 }
             }
             const minCoinValue = Math.min(...allCoins.filter((coin) => IsCoin(coin) && !coin.isTriggerTrading).map((coin) => coin.value)), upgradingCoinInitial = allCoins.find((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue && coin.isInitial);
@@ -205,7 +285,8 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
             }
         }
         else {
-            const minCoinValue = Math.min(...player.boardCoins.filter((coin) => IsCoin(coin) && !coin.isTriggerTrading).map((coin) => coin.value));
+            const minCoinValue = Math.min(...player.boardCoins.filter((coin) => IsCoin(coin) && !coin.isTriggerTrading)
+                .map((coin) => coin.value));
             coin = player.boardCoins.find((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue);
             if (IsCoin(coin)) {
                 upgradingCoin = coin;
@@ -217,16 +298,25 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
             isInitial = upgradingCoin.isInitial;
         }
     }
-    if (upgradingCoinId === undefined || upgradingCoinId === -1 || type === undefined || isInitial === undefined) {
-        throw new Error(`Отсутствует обязательный параметр 'upgradingCoinId' и/или 'type' и/или 'isInitial'.`);
+    if (upgradingCoinId === undefined) {
+        throw new Error(`Отсутствует обязательный параметр 'upgradingCoinId'.`);
+    }
+    if (upgradingCoinId === -1) {
+        throw new Error(`Не найден обязательный параметр 'upgradingCoinId'.`);
+    }
+    if (type === undefined) {
+        throw new Error(`Отсутствует обязательный параметр 'type'.`);
+    }
+    if (isInitial === undefined) {
+        throw new Error(`Отсутствует обязательный параметр 'isInitial'.`);
     }
     if (!IsCoin(upgradingCoin)) {
         if (type === CoinTypes.Hand) {
             const handCoinPosition = player.boardCoins.filter((coin, index) => coin === null && upgradingCoinId !== undefined && index <= upgradingCoinId).length;
-            coin = player.handCoins.filter((coin) => IsCoin(coin))[handCoinPosition - 1];
+            coin = handCoins.filter((coin) => IsCoin(coin))[handCoinPosition - 1];
             if (IsCoin(coin)) {
                 upgradingCoin = coin;
-                upgradingCoinId = player.handCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === isInitial);
+                upgradingCoinId = handCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value && (coin === null || coin === void 0 ? void 0 : coin.isInitial) === isInitial);
             }
         }
         else {
@@ -268,29 +358,33 @@ export const UpgradeCoin = (G, ctx, value, upgradingCoinId, type, isInitial) => 
                 }
             }
         }
-        // TODO Check coin returned to public or private player's coins
         AddDataToLog(G, LogTypes.GAME, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на +${value}.`);
         if (upgradedCoin !== null) {
             AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${isInitial}' с ценностью '${upgradingCoin.value}' на +${value} с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
             let handCoinIndex = -1;
             if (player.boardCoins[upgradingCoinId] === null) {
-                handCoinIndex = player.handCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
+                handCoinIndex = handCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === upgradingCoin.value);
             }
             else {
                 player.boardCoins[upgradingCoinId] = null;
             }
             if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PlaceTradingCoinsUline) {
-                const emptyCoinIndex = player.handCoins.indexOf(null);
-                player.handCoins[emptyCoinIndex] = upgradedCoin;
+                const emptyCoinIndex = handCoins.indexOf(null);
+                handCoins[emptyCoinIndex] = upgradedCoin;
                 AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока ${player.nickname}.`);
             }
             else {
                 if (handCoinIndex === -1) {
-                    player.boardCoins[upgradingCoinId] = upgradedCoin;
+                    if (multiplayer && privatePlayer !== undefined) {
+                        privatePlayer.boardCoins[upgradingCoinId] = upgradedCoin;
+                    }
+                    else {
+                        player.boardCoins[upgradingCoinId] = upgradedCoin;
+                    }
                     AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока ${player.nickname}.`);
                 }
                 else {
-                    player.handCoins[handCoinIndex] = upgradedCoin;
+                    handCoins[handCoinIndex] = upgradedCoin;
                     AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока ${player.nickname}.`);
                 }
             }

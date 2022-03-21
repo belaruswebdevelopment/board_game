@@ -7,7 +7,7 @@ import type { IBackground, IStyles, SuitTypes } from "../typescript/interfaces";
 const basicCardsPath = `url(/img/cards/basic/basic`;
 
 /**
- * <h3>Путь к картам кэмпа.</h3>
+ * <h3>Путь к картам лагеря.</h3>
  */
 const campCardsPath = `url(/img/cards/camp/Camp`;
 
@@ -26,6 +26,8 @@ const heroesBasicPath = `url(/img/cards/heroes/basic/`;
  */
 const heroesThingvellirPath = `url(/img/cards/heroes/thingvellir/`;
 
+const promosPath = `url(/img/cards/promos/promo_thingvellir.png)`;
+
 /**
  * <h3>Путь к изображениям таверн.</h3>
  */
@@ -41,6 +43,9 @@ const tavernsPath = `url(/img/taverns/Taverns.png)`;
 export const Styles: IStyles = {
     Camp: (): IBackground => ({
         background: `${campCardsPath}.png) no-repeat 0px 3px / 24px 18px`,
+    }),
+    CampBack: (tier: number): IBackground => ({
+        background: `url(/img/cards/camp/CampBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
     CampCards: (tier: number, cardPath: string): IBackground => {
         if (tier === 0) {
@@ -94,7 +99,7 @@ export const Styles: IStyles = {
                         background: `${campCardsPath}${tier}.png) no-repeat -96px -96px / 128px 144px`,
                     };
                 default:
-                    throw new Error(`Нет такой карты кэмпа во 1-й эпохе.`);
+                    throw new Error(`Нет такой карты лагеря во 1-й эпохе.`);
             }
         } else if (tier === 1) {
             switch (cardPath) {
@@ -122,6 +127,10 @@ export const Styles: IStyles = {
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat -32px -48px / 128px 144px`,
                     };
+                case ArtefactNames.Odroerir_The_Mythic_Cauldron:
+                    return {
+                        background: `${promosPath} no-repeat -39px -4px / 76px 58px`,
+                    };
                 case `hunter blacksmith`:
                     return {
                         background: `${campCardsPath}${tier}.png) no-repeat -64px -48px / 128px 144px`,
@@ -147,11 +156,14 @@ export const Styles: IStyles = {
                         background: `${campCardsPath}${tier}.png) no-repeat -96px -96px / 128px 144px`,
                     };
                 default:
-                    throw new Error(`Нет такой карты кэмпа во 2-й эпохе.`);
+                    throw new Error(`Нет такой карты лагеря во 2-й эпохе.`);
             }
         }
-        throw new Error(`Нет такой карты кэмпа.`);
+        throw new Error(`Нет такой карты лагеря.`);
     },
+    CardBack: (tier: number): IBackground => ({
+        background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
+    }),
     Cards: (suit: SuitTypes | null, name: string, points: number | null): IBackground => {
         if (name === CardNames.ChiefBlacksmith || name === CardNames.Olwin) {
             switch (name) {
@@ -287,6 +299,9 @@ export const Styles: IStyles = {
     },
     Coin: (value: number, initial: boolean): IBackground => ({
         background: `url(/img/coins/Coin${value}${initial ? `Initial` : ``}.jpg) no-repeat 0px 0px / 40px 40px`,
+    }),
+    CoinSmall: (value: number, initial: boolean): IBackground => ({
+        background: `url(/img/coins/Coin${value}${initial ? `Initial` : ``}.jpg) no-repeat 0px 0px / 32px 32px`,
     }),
     CoinBack: (): IBackground => ({
         background: `url(/img/coins/CoinBack.png) no-repeat center center / 40px 40px`,
@@ -438,6 +453,10 @@ export const Styles: IStyles = {
                 case HeroNames.Zolkur:
                     return {
                         background: `${heroesThingvellirPath}heroes.png) no-repeat -96px -50px / 128px 100px`,
+                    };
+                case HeroNames.Crovax_The_Doppelganger:
+                    return {
+                        background: `${promosPath} no-repeat -4px -4px / 76px 58px`,
                     };
                 default:
                     throw new Error(`Нет такого героя в дополнении 'thingvellir'.`);

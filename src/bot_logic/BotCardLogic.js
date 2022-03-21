@@ -1,5 +1,6 @@
 import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
+import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { GameNames } from "../typescript/enums";
 // Check all types in this file!
 /**
@@ -47,7 +48,7 @@ export const CompareCards = (card1, card2) => {
  */
 export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
     if (IsCardNotActionAndNotNull(compareCard)) {
-        const deckTier1 = G.decks[0];
+        const deckTier1 = G.secret.decks[0];
         if (deckTier1 === undefined) {
             throw new Error(`В массиве колод карт отсутствует колода 1 эпохи.`);
         }
@@ -55,12 +56,12 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
             return CompareCards(compareCard, G.averageCards[compareCard.suit]);
         }
     }
-    const deckTier2 = G.decks[1];
+    const deckTier2 = G.secret.decks[1];
     if (deckTier2 === undefined) {
         throw new Error(`В массиве колод карт отсутствует колода 2 эпохи.`);
     }
     if (deckTier2.length < G.botData.deckLength) {
-        const temp = tavern.map((card) => G.publicPlayers.map((player) => PotentialScoring(player, card)));
+        const temp = tavern.map((card) => Object.values(G.publicPlayers).map((player, index) => PotentialScoring(G, index, card)));
         const tavernCardResults = temp[cardId];
         if (tavernCardResults === undefined) {
             throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат выбранной карты таверны для текущего игрока.`);
@@ -130,12 +131,27 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  * </oL>
  *
  * @TODO Саше: сделать описание функции и параметров.
+ * @param G
  * @param player Игрок.
  * @param card Карта.
  * @returns Потенциальное значение.
  */
-const PotentialScoring = (player, card) => {
+const PotentialScoring = (G, playerId, card) => {
     var _a, _b, _c;
+    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+    }
+    let handCoins;
+    if (multiplayer) {
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует игрок ${playerId}.`);
+        }
+        handCoins = privatePlayer.handCoins;
+    }
+    else {
+        handCoins = player.handCoins;
+    }
     let score = 0, suit;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -156,7 +172,7 @@ const PotentialScoring = (player, card) => {
             throw new Error(`В массиве монет игрока на столе отсутствует монета ${i}.`);
         }
         score += (_b = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _b !== void 0 ? _b : 0;
-        const handCoin = player.handCoins[i];
+        const handCoin = handCoins[i];
         if (handCoin === undefined) {
             throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
         }

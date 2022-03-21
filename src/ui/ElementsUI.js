@@ -1,11 +1,12 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { IsArtefactCard, IsMercenaryCampCard } from "../Camp";
-import { CheckIsMercenaryCampCardInPlayerCards, IsActionCard } from "../Card";
+import { IsArtefactCard, IsMercenaryCampCard, IsMercenaryPlayerCard } from "../Camp";
+import { IsActionCard } from "../Card";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
+import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { IsHeroCard } from "../Hero";
-import { MoveNames } from "../typescript/enums";
+import { ArtefactNames, MoveNames } from "../typescript/enums";
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -95,7 +96,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
     else {
         action = null;
     }
-    if (suit !== null && suit !== undefined) {
+    if (suit !== null) {
         tdClasses = suitsConfig[suit].suitColor;
     }
     if (IsHeroCard(card)) {
@@ -110,8 +111,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
             tdClasses = `bg-gray-600`;
         }
     }
-    else if (IsMercenaryCampCard(card) || IsArtefactCard(card)
-        || (!IsActionCard(card) && CheckIsMercenaryCampCardInPlayerCards(card))) {
+    else if (IsMercenaryCampCard(card) || IsArtefactCard(card) || IsMercenaryPlayerCard(card)) {
         styles = Styles.CampCards(card.tier, card.path);
         spanClasses = `bg-camp`;
         if (suit === null) {
@@ -135,7 +135,12 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
         description = card.description;
     }
     if (`points` in card) {
-        value = card.points !== null ? String(card.points) : ``;
+        if (IsArtefactCard(card) && card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron) {
+            value = String(GetOdroerirTheMythicCauldronCoinsValues(data.G));
+        }
+        else {
+            value = card.points !== null ? String(card.points) : ``;
+        }
     }
     else if (IsActionCard(card)) {
         value = String(card.value);
@@ -205,6 +210,13 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
             span = (_jsx("span", { className: coinClasses, children: additionalParam }));
         }
     }
+    else if (type === `hidden-coin`) {
+        spanClasses = `bg-coin`;
+        if (IsCoin(coin) && coinClasses !== null && coinClasses !== undefined) {
+            styles = Styles.CoinBack();
+            span = (_jsx("span", { style: Styles.CoinSmall(coin.value, coin.isInitial), className: coinClasses }));
+        }
+    }
     else {
         spanClasses = `bg-coin`;
         if (coinClasses !== null && coinClasses !== undefined) {
@@ -215,7 +227,7 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
                 styles = Styles.CoinBack();
             }
             else {
-                if (coin.isInitial !== undefined) {
+                if (IsCoin(coin) && coin.isInitial !== undefined) {
                     styles = Styles.Coin(coin.value, coin.isInitial);
                 }
             }
