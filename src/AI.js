@@ -78,7 +78,7 @@ export const enumerate = (G, ctx) => {
                         activeStageOfCurrentPlayer = Stages.Default2;
                     }
                 }
-                else if (G.drawProfit === ConfigNames.EnlistmentMercenaries) {
+                else if (G.drawProfit === ``) {
                     activeStageOfCurrentPlayer = Stages.Default3;
                 }
                 else if (G.drawProfit === ConfigNames.PlaceEnlistmentMercenaries) {
@@ -115,9 +115,6 @@ export const enumerate = (G, ctx) => {
             else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
                 if (`coinId` in moveValue) {
                     moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
-                }
-                else if (`playerId` in moveValue) {
-                    moveValues = [moveValue.suit, moveValue.playerId, moveValue.cardId];
                 }
                 else if (`suit` in moveValue) {
                     moveValues = [moveValue.suit, moveValue.cardId];

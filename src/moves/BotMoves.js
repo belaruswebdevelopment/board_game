@@ -15,7 +15,7 @@ import { Stages } from "../typescript/enums";
  * @param coinsOrder Порядок выкладки монет.
  */
 export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.Default3, coinsOrder);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default3, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

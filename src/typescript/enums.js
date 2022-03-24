@@ -55,7 +55,6 @@ export var ConfigNames;
     ConfigNames["BrisingamensEndGameAction"] = "BrisingamensEndGameAction";
     ConfigNames["CrovaxTheDoppelgangerAction"] = "CrovaxTheDoppelgangerAction";
     ConfigNames["DagdaAction"] = "DagdaAction";
-    ConfigNames["DiscardCard"] = "discardCard";
     ConfigNames["EnlistmentMercenaries"] = "enlistmentMercenaries";
     ConfigNames["ExplorerDistinction"] = "explorerDistinction";
     ConfigNames["GetMjollnirProfit"] = "getMjollnirProfit";

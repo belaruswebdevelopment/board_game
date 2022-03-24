@@ -10,7 +10,7 @@ import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { IsHeroCard } from "../Hero";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { BuffNames, CoinTypes, ConfigNames, DrawNames, MoveNames, MoveValidatorNames, RusCardTypes } from "../typescript/enums";
-import type { CampDeckCardTypes, CoinType, DeckCardTypes, IMoveArgumentsStage, IMoveCoinsArguments, IMoveSuitCardPlayerIdArguments, IMyGameState, IPlayer, IPublicPlayer, IStack, IVariant, MoveValidatorTypes, OptionalSuitPropertyTypes, PickedCardType, PlayerCardsType, PublicPlayerBoardCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { CoinType, DeckCardTypes, IMoveArgumentsStage, IMoveCoinsArguments, IMoveSuitCardPlayerIdArguments, IMyGameState, IPlayer, IPublicPlayer, IStack, IVariant, MoveValidatorTypes, OptionalSuitPropertyTypes, PickedCardType, PlayerCardsType, PublicPlayerBoardCoinTypes, SuitTypes } from "../typescript/interfaces";
 import { DrawButton, DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
 export const AddCoinToPouchProfit = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorTypes | null,
@@ -121,7 +121,6 @@ export const DiscardCardFromBoardProfit = (G: IMyGameState, ctx: Ctx, validatorN
 export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx,
     validatorName: MoveValidatorTypes | null, data?: BoardProps<IMyGameState>,
     boardCells?: JSX.Element[]): void | IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] => {
-    // TODO Discard cards must be hidden from others users?
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         moveMainArgs: IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`] = {};
     if (player === undefined) {
@@ -215,42 +214,6 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx,
     }
 };
 
-export const DiscardCardProfit = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorTypes | null,
-    data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): void | IMoveArgumentsStage<number[]>[`args`] => {
-    const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-    for (let j = 0; j < G.drawSize; j++) {
-        const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
-        if (currentTavern === undefined) {
-            throw new Error(`В массиве таверн отсутствует текущая таверна.`);
-        }
-        const card: TavernCardTypes | undefined = currentTavern[j];
-        if (card === undefined) {
-            throw new Error(`В массиве карт текущей таверны отсутствует карта ${j}.`);
-        }
-        if (card !== null) {
-            let suit: SuitTypes | null = null;
-            if (IsCardNotActionAndNotNull(card)) {
-                suit = card.suit;
-            }
-            const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-            if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-            }
-            if (data !== undefined && boardCells !== undefined) {
-                DrawCard(data, boardCells, card, j, player, suit,
-                    MoveNames.DiscardCard2PlayersMove, j);
-            } else if (validatorName === MoveValidatorNames.DiscardCard2PlayersMoveValidator) {
-                moveMainArgs.push(j);
-            } else {
-                throw new Error(`Функция должна иметь один из ключевых параметров.`);
-            }
-        }
-    }
-    if (validatorName !== null) {
-        return moveMainArgs;
-    }
-};
-
 export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx,
     validatorName: MoveValidatorTypes | null, playerId: number | null, data?: BoardProps<IMyGameState>,
     boardCells?: JSX.Element[]): void | IMoveArgumentsStage<IMoveSuitCardPlayerIdArguments>[`args`] => {
@@ -321,7 +284,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G: IMyGameState, ctx: Ctx,
                         isDrawRow = true;
                         if (data !== undefined) {
                             DrawCard(data, playersCells, card, i, playerP2, suit,
-                                MoveNames.DiscardSuitCardFromPlayerBoardMove, suit, p, i);
+                                MoveNames.DiscardSuitCardFromPlayerBoardMove, suit, i);
                         } else if (p === playerId && validatorName ===
                             MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator) {
                             if (moveMainArgs.cards === undefined) {
@@ -390,34 +353,6 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
             DrawCard(data, boardCells, card, j, player, suit,
                 MoveNames.ClickCardToPickDistinctionMove, j);
         } else if (validatorName === MoveValidatorNames.ClickCardToPickDistinctionMoveValidator) {
-            moveMainArgs.push(j);
-        } else {
-            throw new Error(`Функция должна иметь один из ключевых параметров.`);
-        }
-    }
-    if (validatorName !== null) {
-        return moveMainArgs;
-    }
-};
-
-export const GetEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorTypes | null,
-    data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): void | IMoveArgumentsStage<number[]>[`args`] => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
-        moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-    }
-    const mercenaries: CampDeckCardTypes[] =
-        player.campCards.filter((card: CampDeckCardTypes): boolean => IsMercenaryCampCard(card));
-    for (let j = 0; j < mercenaries.length; j++) {
-        const card: CampDeckCardTypes | undefined = mercenaries[j];
-        if (card === undefined) {
-            throw new Error(`В массиве карт лагеря игрока отсутствует карта наёмника ${j}.`);
-        }
-        if (data !== undefined && boardCells !== undefined) {
-            DrawCard(data, boardCells, card, j, player, null,
-                MoveNames.GetEnlistmentMercenariesMove, j);
-        } else if (validatorName === MoveValidatorNames.GetEnlistmentMercenariesMoveValidator) {
             moveMainArgs.push(j);
         } else {
             throw new Error(`Функция должна иметь один из ключевых параметров.`);

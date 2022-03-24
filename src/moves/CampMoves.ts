@@ -17,7 +17,8 @@ import type { IMyGameState, SuitTypes } from "../typescript/interfaces";
  * @param coinId Id монеты.
  */
 export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number): string | void => {
-    const isValidMove: boolean = IsValidMove(G, ctx, Stages.AddCoinToPouch, coinId);
+    const isValidMove: boolean =
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.AddCoinToPouch, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -38,7 +39,8 @@ export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  */
 export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     string | void => {
-    const isValidMove: boolean = IsValidMove(G, ctx, Stages.PickCampCardHolda, cardId);
+    const isValidMove: boolean =
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PickCampCardHolda, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -58,7 +60,8 @@ export const ClickCampCardHoldaMove: Move<IMyGameState> = (G: IMyGameState, ctx:
  * @returns
  */
 export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
-    const isValidMove: boolean = IsValidMove(G, ctx, Stages.Default2, cardId);
+    const isValidMove: boolean =
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default2, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -80,16 +83,17 @@ export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
  * @returns
  */
 export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes,
-    playerId: number, cardId: number): string | void => {
-    const isValidMove: boolean = IsValidMove(G, ctx, Stages.DiscardSuitCard, {
-        playerId,
-        suit,
-        cardId,
-    });
+    cardId: number): string | void => {
+    const isValidMove: boolean =
+        ctx.playerID !== ctx.currentPlayer && IsValidMove(G, ctx, Stages.DiscardSuitCard, {
+            playerId: Number(ctx.playerID),
+            suit,
+            cardId,
+        });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    DiscardSuitCardAction(G, ctx, suit, playerId, cardId);
+    DiscardSuitCardAction(G, ctx, suit, cardId);
 };
 
 /**
@@ -108,11 +112,12 @@ export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGam
  */
 export const UpgradeCoinVidofnirVedrfolnirMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
     type: string, isInitial: boolean): string | void => {
-    const isValidMove: boolean = IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
-        coinId,
-        type,
-        isInitial,
-    });
+    const isValidMove: boolean =
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
+            coinId,
+            type,
+            isInitial,
+        });
     if (!isValidMove) {
         return INVALID_MOVE;
     }

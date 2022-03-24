@@ -20,17 +20,17 @@ export const ChangePlayersPriorities = (G) => {
             }
             tempPriorities[i] = exchangePlayer.priority;
         }
-        if (tempPriorities.length) {
-            AddDataToLog(G, LogTypes.GAME, `Обмен кристаллами между игроками:`);
-            for (let i = 0; i < G.exchangeOrder.length; i++) {
-                const tempPriority = tempPriorities[i], player = G.publicPlayers[i];
-                if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
-                }
-                if (tempPriority !== undefined && player.priority.value !== tempPriority.value) {
-                    player.priority = tempPriority;
-                    AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} получил кристалл с приоритетом ${tempPriority.value}.`);
-                }
+    }
+    if (tempPriorities.length) {
+        AddDataToLog(G, LogTypes.GAME, `Обмен кристаллами между игроками:`);
+        for (let i = 0; i < G.exchangeOrder.length; i++) {
+            const tempPriority = tempPriorities[i], player = G.publicPlayers[i];
+            if (player === undefined) {
+                throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+            }
+            if (tempPriority !== undefined && player.priority.value !== tempPriority.value) {
+                player.priority = tempPriority;
+                AddDataToLog(G, LogTypes.PUBLIC, `Игрок ${player.nickname} получил кристалл с приоритетом ${tempPriority.value}.`);
             }
         }
     }

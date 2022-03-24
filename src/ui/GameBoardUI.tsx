@@ -1,15 +1,16 @@
 import type { Ctx } from "boardgame.io";
 import type { BoardProps } from "boardgame.io/dist/types/packages/react";
+import { IsArtefactCard } from "../Camp";
 import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
-import { ConfigNames, MoveNames, MoveValidatorNames } from "../typescript/enums";
+import { ConfigNames, MoveNames, MoveValidatorNames, Phases, Stages } from "../typescript/enums";
 import type { CampCardTypes, DiscardCardTypes, ICoin, IConfig, IDrawBoardOptions, IHeroCard, IMoveArgumentsStage, IMyGameState, INumberValues, IPublicPlayer, IStack, ITavernInConfig, MoveValidatorTypes, PickedCardType, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin } from "./ElementsUI";
-import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetMjollnirProfitProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
 
 /**
  * <h3>Отрисовка карт лагеря.</h3>
@@ -43,16 +44,27 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidator
                     );
                 }
             } else {
-                if (data !== undefined) {
-                    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                    if (player === undefined) {
-                        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                }
+                let suit: SuitTypes | null = null;
+                if (IsArtefactCard(campCard)) {
+                    suit = campCard.suit;
+                }
+                if ((ctx.phase === Phases.PickCards && ctx.activePlayers === null)
+                    || (ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.PickCampCardHolda)) {
+                    if (data !== undefined) {
+                        DrawCard(data, boardCells, campCard, j, player, suit,
+                            MoveNames.ClickCampCardMove, j);
+                    } else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator
+                        || validatorName === MoveValidatorNames.ClickCampCardHoldaMoveValidator) {
+                        moveMainArgs.push(j);
                     }
-                    DrawCard(data, boardCells, campCard, j, player, null,
-                        MoveNames.ClickCampCardMove, j);
-                } else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator
-                    || validatorName === MoveValidatorNames.ClickCampCardHoldaMoveValidator) {
-                    moveMainArgs.push(j);
+                } else {
+                    if (data !== undefined) {
+                        DrawCard(data, boardCells, campCard, j, player, suit);
+                    }
                 }
             }
         }
@@ -118,8 +130,8 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveV
         let suit: SuitTypes;
         for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                if (G.distinctions[suit] === ctx.currentPlayer
-                    && ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos]) {
+                if (ctx.phase === Phases.GetDistinctions && ctx.activePlayers === null
+                    && G.distinctions[suit] === ctx.currentPlayer) {
                     if (data !== undefined) {
                         boardCells.push(
                             <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
@@ -137,8 +149,8 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveV
                         boardCells.push(
                             <td className="bg-green-500" key={`Distinction ${suit} card`}
                                 title={suitsConfig[suit].distinction.description}>
-                                <span style={Styles.Distinctions(suit)} className="bg-suit-distinction">
-                                </span>
+                                <span style={Styles.Distinctions(suit)}
+                                    className="bg-suit-distinction"></span>
                             </td>
                         );
                     }
@@ -191,15 +203,21 @@ export const DrawDiscardedCards = (G: IMyGameState, ctx: Ctx, validatorName: Mov
         if (!IsActionCard(card)) {
             suit = card.suit;
         }
-        if (data !== undefined) {
+        if (ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.PickDiscardCard) {
             const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует текущий игрок.`);
             }
-            DrawCard(data, boardCells, card, j, player, suit,
-                MoveNames.PickDiscardCardMove, j);
-        } else if (validatorName === MoveValidatorNames.PickDiscardCardMoveValidator) {
-            moveMainArgs.push(j);
+            if (data !== undefined) {
+                DrawCard(data, boardCells, card, j, player, suit,
+                    MoveNames.PickDiscardCardMove, j);
+            } else if (validatorName === MoveValidatorNames.PickDiscardCardMoveValidator) {
+                moveMainArgs.push(j);
+            }
+        } else {
+            if (data !== undefined) {
+                DrawCard(data, boardCells, card, j, null, suit);
+            }
         }
     }
     if (data !== undefined) {
@@ -249,19 +267,21 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidat
                 throw new Error(`В массиве карт героев отсутствует герой ${increment}.`);
             }
             const suit: null | SuitTypes = hero.suit;
-            if (data !== undefined) {
-                if (hero.active) {
-                    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                    if (player === undefined) {
-                        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                    }
+            if (hero.active && ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.PickHero) {
+                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                }
+                if (data !== undefined) {
                     DrawCard(data, boardCells, hero, increment, player, suit,
                         MoveNames.ClickHeroCardMove, increment);
-                } else {
+                } else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
+                    moveMainArgs.push(increment);
+                }
+            } else {
+                if (data !== undefined) {
                     DrawCard(data, boardCells, hero, increment, null, suit);
                 }
-            } else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
-                moveMainArgs.push(increment);
             }
             if (increment + 1 === G.heroes.length) {
                 break;
@@ -386,18 +406,12 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
     } else if (option === ConfigNames.HofudAction) {
         caption += `one warrior card to discard from your board.`;
         DiscardSuitCardFromPlayerBoardProfit(G, ctx, null, null, data, boardCells);
-    } else if (option === ConfigNames.DiscardCard) {
-        caption += `one card to discard from current tavern.`;
-        DiscardCardProfit(G, ctx, null, data, boardCells);
     } else if (option === ConfigNames.GetMjollnirProfit) {
         caption += `suit to get Mjollnir profit from ranks on that suit.`;
         GetMjollnirProfitProfit(G, ctx, null, data, boardCells);
     } else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {
         caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
         StartEnlistmentMercenariesProfit(G, ctx, data, boardCells);
-    } else if (option === ConfigNames.EnlistmentMercenaries) {
-        caption += `mercenary to place it to your player board.`;
-        GetEnlistmentMercenariesProfit(G, ctx, null, data, boardCells);
     } else if (option === ConfigNames.PlaceEnlistmentMercenaries) {
         const card: PickedCardType = player.pickedCard;
         if (card !== null) {
@@ -478,15 +492,26 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: MoveValida
                         suit = tavernCard.suit;
                     }
                     if (t === G.currentTavern) {
-                        if (data !== undefined) {
-                            const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                            if (player === undefined) {
-                                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                        const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                        if (player === undefined) {
+                            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                        }
+                        if (ctx.phase === Phases.PickCards && ctx.activePlayers === null
+                            && ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos]) {
+                            if (data !== undefined) {
+                                DrawCard(data, boardCells, tavernCard, j, player, suit,
+                                    MoveNames.ClickCardMove, j);
+                            } else if (validatorName === MoveValidatorNames.ClickCardMoveValidator) {
+                                moveMainArgs.push(j);
                             }
-                            DrawCard(data, boardCells, tavernCard, j, player, suit,
-                                MoveNames.ClickCardMove, j);
-                        } else if (validatorName === MoveValidatorNames.ClickCardMoveValidator) {
-                            moveMainArgs.push(j);
+                        } else if (ctx.phase === Phases.PickCards
+                            && ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.DiscardCard) {
+                            if (data !== undefined) {
+                                DrawCard(data, boardCells, tavernCard, j, player, suit,
+                                    MoveNames.DiscardCard2PlayersMove, j);
+                            } else if (validatorName === MoveValidatorNames.DiscardCard2PlayersMoveValidator) {
+                                moveMainArgs.push(j);
+                            }
                         }
                     } else {
                         if (data !== undefined) {

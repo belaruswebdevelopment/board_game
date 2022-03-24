@@ -150,8 +150,6 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
                     player.priority.value === maxPriority), 1);
                 tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
                     player.priority.value === minPriority), 1);
-                tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
-                    player.priority.value === minPriority), 1);
                 const exchangeOrderMax: number | undefined = exchangeOrder[maxIndex],
                     exchangeOrderMin: number | undefined = exchangeOrder[minIndex];
                 if (exchangeOrderMax === undefined) {

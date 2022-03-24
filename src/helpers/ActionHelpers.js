@@ -73,7 +73,9 @@ export const PickCardOrActionCardActions = (G, ctx, card) => {
 const StartOrEndActionStage = (G, ctx, config) => {
     var _a, _b, _c;
     if (config.stageName !== undefined) {
-        (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setStage(config.stageName);
+        (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({
+            currentPlayer: config.stageName,
+        });
         AddDataToLog(G, LogTypes.GAME, `Начало стадии ${config.stageName}.`);
     }
     else if (((_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) !== undefined) {

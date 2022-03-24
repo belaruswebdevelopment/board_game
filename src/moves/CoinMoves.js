@@ -18,7 +18,7 @@ import { Stages, SuitNames } from "../typescript/enums";
  */
 export const ClickBoardCoinMove = (G, ctx, coinId) => {
     // TODO Add Place coins async
-    const isValidMove = IsValidMove(G, ctx, Stages.Default2, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default2, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -45,8 +45,8 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
     else {
         handCoins = player.handCoins;
     }
-    if ((multiplayer && !IsCoin(publicBoardCoin) && publicBoardCoin !== null && IsCoin(privateBoardCoin)) ||
-        (!multiplayer && IsCoin(publicBoardCoin))) {
+    if ((multiplayer && !IsCoin(publicBoardCoin) && publicBoardCoin !== null && IsCoin(privateBoardCoin))
+        || (!multiplayer && IsCoin(publicBoardCoin))) {
         const tempId = handCoins.indexOf(null);
         if (IsCoin(publicBoardCoin)) {
             handCoins[tempId] = publicBoardCoin;
@@ -66,9 +66,12 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
         if (handCoin === undefined) {
             throw new Error(`В массиве монет игрока в руке отсутствует нужная монета ${tempSelectedId}.`);
         }
-        player.boardCoins[coinId] = {};
         if (multiplayer && privatePlayer !== undefined) {
+            player.boardCoins[coinId] = {};
             privatePlayer.boardCoins[coinId] = handCoin;
+        }
+        else {
+            player.boardCoins[coinId] = handCoin;
         }
         handCoins[tempSelectedId] = null;
         player.selectedCoin = null;
@@ -93,7 +96,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
  */
 export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
     var _a;
-    const isValidMove = IsValidMove(G, ctx, Stages.UpgradeCoin, {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.UpgradeCoin, {
         coinId,
         type,
         isInitial,
@@ -139,7 +142,7 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
  * @returns
  */
 export const ClickHandCoinMove = (G, ctx, coinId) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.Default1, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -162,7 +165,7 @@ export const ClickHandCoinMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickHandCoinUlineMove = (G, ctx, coinId) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.Default1, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -210,7 +213,7 @@ export const ClickHandCoinUlineMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickHandTradingCoinUlineMove = (G, ctx, coinId) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.PlaceTradingCoinsUline, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PlaceTradingCoinsUline, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

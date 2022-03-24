@@ -1,4 +1,4 @@
-/* import { Client } from "boardgame.io/react";
+import { Client } from "boardgame.io/react";
 import { BoardGame } from "./Game";
 import { GameBoard } from "./GameBoard";
 
@@ -6,10 +6,10 @@ const App = Client({
     // debug: false,
     game: BoardGame,
     board: GameBoard,
-    numPlayers: 2,
+    numPlayers: 5,
 });
 
-export default App; */
+export default App;
 
 /*import React from "react";
 import {Client} from "boardgame.io/react";
@@ -121,7 +121,7 @@ render(<App/>, document.getElementById("root"));
 export default App;
 */
 
-import React from "react";
+/* import React from "react";
 import LobbyClient from "./LobbyClient";
 
 class App extends React.Component {
@@ -134,4 +134,4 @@ class App extends React.Component {
     }
 }
 
-export default App;
+export default App; */

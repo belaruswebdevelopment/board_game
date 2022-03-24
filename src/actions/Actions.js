@@ -82,7 +82,7 @@ export const GetEnlistmentMercenariesAction = (G, ctx, cardId) => {
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
-    const pickedCard = player.campCards.filter((card) => IsMercenaryCampCard(card))[cardId];
+    const pickedCard = player.campCards[cardId];
     if (pickedCard === undefined) {
         throw new Error(`В массиве карт лагеря игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
     }

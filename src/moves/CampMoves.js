@@ -14,7 +14,7 @@ import { Stages } from "../typescript/enums";
  * @param coinId Id монеты.
  */
 export const AddCoinToPouchMove = (G, ctx, coinId) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.AddCoinToPouch, coinId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.AddCoinToPouch, coinId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -33,7 +33,7 @@ export const AddCoinToPouchMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.PickCampCardHolda, cardId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PickCampCardHolda, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -52,7 +52,7 @@ export const ClickCampCardHoldaMove = (G, ctx, cardId) => {
  * @returns
  */
 export const ClickCampCardMove = (G, ctx, cardId) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.Default2, cardId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default2, cardId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -72,16 +72,16 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
-export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, playerId, cardId) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.DiscardSuitCard, {
-        playerId,
+export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, cardId) => {
+    const isValidMove = ctx.playerID !== ctx.currentPlayer && IsValidMove(G, ctx, Stages.DiscardSuitCard, {
+        playerId: Number(ctx.playerID),
         suit,
         cardId,
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    DiscardSuitCardAction(G, ctx, suit, playerId, cardId);
+    DiscardSuitCardAction(G, ctx, suit, cardId);
 };
 /**
  * <h3>Выбор монеты для улучшения по артефакту Vidofnir Vedrfolnir.</h3>
@@ -98,7 +98,7 @@ export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, playerId, cardI
  * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnirMove = (G, ctx, coinId, type, isInitial) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
         coinId,
         type,
         isInitial,

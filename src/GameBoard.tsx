@@ -40,7 +40,8 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
             playersHandsCoinsUI: JSX.Element[] =
                 DrawPlayersHandsCoins(this.props.G, this.props.ctx, null, this.props) as JSX.
                 Element[],
-            playersBoardsUI: JSX.Element[] = DrawPlayersBoards(this.props.G, this.props.ctx, this.props),
+            playersBoardsUI: JSX.Element[] =
+                DrawPlayersBoards(this.props.G, this.props.ctx, null, this.props) as JSX.Element[],
             logUI: JSX.Element | null = DrawLogData(this.props.G),
             debugUI: JSX.Element | null = DrawDebugData(this.props.G, this.props.ctx);
         return (
@@ -66,8 +67,8 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
                     </div>
                     <div className={`${gridClass} h-full flex flex-col justify-evenly`}>
                         {drawDistinctionsUI}
-                        {drawDistinctionProfitUI}
                         {drawCampUI}
+                        {drawDistinctionProfitUI}
                     </div>
                     {tavernsUI}
                     <div className="col-span-full flex flex-col gap-1">

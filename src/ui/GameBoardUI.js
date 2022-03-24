@@ -1,13 +1,14 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { IsArtefactCard } from "../Camp";
 import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { CountMarketCoins } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
 import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
-import { ConfigNames, MoveNames, MoveValidatorNames } from "../typescript/enums";
+import { ConfigNames, MoveNames, MoveValidatorNames, Phases, Stages } from "../typescript/enums";
 import { DrawCard, DrawCoin } from "./ElementsUI";
-import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetMjollnirProfitProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
 /**
  * <h3>Отрисовка карт лагеря.</h3>
  * <p>Применения:</p>
@@ -22,7 +23,7 @@ import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardF
  * @returns Поле лагеря | данные для списка доступных аргументов мува.
  */
 export const DrawCamp = (G, ctx, validatorName, data) => {
-    var _a;
+    var _a, _b;
     const boardCells = [], moveMainArgs = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
@@ -36,23 +37,35 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
                 }
             }
             else {
-                if (data !== undefined) {
-                    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                    if (player === undefined) {
-                        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                    }
-                    DrawCard(data, boardCells, campCard, j, player, null, MoveNames.ClickCampCardMove, j);
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
                 }
-                else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator
-                    || validatorName === MoveValidatorNames.ClickCampCardHoldaMoveValidator) {
-                    moveMainArgs.push(j);
+                let suit = null;
+                if (IsArtefactCard(campCard)) {
+                    suit = campCard.suit;
+                }
+                if ((ctx.phase === Phases.PickCards && ctx.activePlayers === null)
+                    || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickCampCardHolda)) {
+                    if (data !== undefined) {
+                        DrawCard(data, boardCells, campCard, j, player, suit, MoveNames.ClickCampCardMove, j);
+                    }
+                    else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator
+                        || validatorName === MoveValidatorNames.ClickCampCardHoldaMoveValidator) {
+                        moveMainArgs.push(j);
+                    }
+                }
+                else {
+                    if (data !== undefined) {
+                        DrawCard(data, boardCells, campCard, j, player, suit);
+                    }
                 }
             }
         }
     }
     if (data !== undefined) {
         return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: [_jsx("span", { style: Styles.CampBack(G.campDeckLength.length - G.tierToEnd + 1 >
-                                        G.campDeckLength.length ? 1 : G.campDeckLength.length - G.tierToEnd), className: "bg-top-card-back-icon" }), "Camp (", (_a = G.campDeckLength[G.campDeckLength.length - G.tierToEnd]) !== null && _a !== void 0 ? _a : 0, (G.campDeckLength.length - G.tierToEnd === 0 ? `/` +
+                                        G.campDeckLength.length ? 1 : G.campDeckLength.length - G.tierToEnd), className: "bg-top-card-back-icon" }), "Camp (", (_b = G.campDeckLength[G.campDeckLength.length - G.tierToEnd]) !== null && _b !== void 0 ? _b : 0, (G.campDeckLength.length - G.tierToEnd === 0 ? `/` +
                                     (G.campDeckLength[0] + G.campDeckLength[1]) : ``), " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
     }
     else if (validatorName !== null) {
@@ -92,8 +105,8 @@ export const DrawDistinctions = (G, ctx, validatorName, data) => {
         let suit;
         for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                if (G.distinctions[suit] === ctx.currentPlayer
-                    && ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos]) {
+                if (ctx.phase === Phases.GetDistinctions && ctx.activePlayers === null
+                    && G.distinctions[suit] === ctx.currentPlayer) {
                     if (data !== undefined) {
                         boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suit); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                     }
@@ -133,6 +146,7 @@ export const DrawDistinctions = (G, ctx, validatorName, data) => {
  * @returns Поле колоды сброса карт.
  */
 export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
+    var _a;
     const boardCells = [], moveMainArgs = [];
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
         const card = G.discardCardsDeck[j];
@@ -143,15 +157,22 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
         if (!IsActionCard(card)) {
             suit = card.suit;
         }
-        if (data !== undefined) {
+        if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickDiscardCard) {
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует текущий игрок.`);
             }
-            DrawCard(data, boardCells, card, j, player, suit, MoveNames.PickDiscardCardMove, j);
+            if (data !== undefined) {
+                DrawCard(data, boardCells, card, j, player, suit, MoveNames.PickDiscardCardMove, j);
+            }
+            else if (validatorName === MoveValidatorNames.PickDiscardCardMoveValidator) {
+                moveMainArgs.push(j);
+            }
         }
-        else if (validatorName === MoveValidatorNames.PickDiscardCardMoveValidator) {
-            moveMainArgs.push(j);
+        else {
+            if (data !== undefined) {
+                DrawCard(data, boardCells, card, j, null, suit);
+            }
         }
     }
     if (data !== undefined) {
@@ -178,6 +199,7 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
  * @returns Поле героев.
  */
 export const DrawHeroes = (G, ctx, validatorName, data) => {
+    var _a;
     const boardRows = [], drawData = DrawBoard(G.heroes.length), moveMainArgs = [];
     for (let i = 0; i < drawData.boardRows; i++) {
         const boardCells = [];
@@ -187,20 +209,22 @@ export const DrawHeroes = (G, ctx, validatorName, data) => {
                 throw new Error(`В массиве карт героев отсутствует герой ${increment}.`);
             }
             const suit = hero.suit;
-            if (data !== undefined) {
-                if (hero.active) {
-                    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                    if (player === undefined) {
-                        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                    }
+            if (hero.active && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickHero) {
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                }
+                if (data !== undefined) {
                     DrawCard(data, boardCells, hero, increment, player, suit, MoveNames.ClickHeroCardMove, increment);
                 }
-                else {
-                    DrawCard(data, boardCells, hero, increment, null, suit);
+                else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
+                    moveMainArgs.push(increment);
                 }
             }
-            else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
-                moveMainArgs.push(increment);
+            else {
+                if (data !== undefined) {
+                    DrawCard(data, boardCells, hero, increment, null, suit);
+                }
             }
             if (increment + 1 === G.heroes.length) {
                 break;
@@ -297,10 +321,6 @@ export const DrawProfit = (G, ctx, data) => {
         caption += `one warrior card to discard from your board.`;
         DiscardSuitCardFromPlayerBoardProfit(G, ctx, null, null, data, boardCells);
     }
-    else if (option === ConfigNames.DiscardCard) {
-        caption += `one card to discard from current tavern.`;
-        DiscardCardProfit(G, ctx, null, data, boardCells);
-    }
     else if (option === ConfigNames.GetMjollnirProfit) {
         caption += `suit to get Mjollnir profit from ranks on that suit.`;
         GetMjollnirProfitProfit(G, ctx, null, data, boardCells);
@@ -308,10 +328,6 @@ export const DrawProfit = (G, ctx, data) => {
     else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {
         caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
         StartEnlistmentMercenariesProfit(G, ctx, data, boardCells);
-    }
-    else if (option === ConfigNames.EnlistmentMercenaries) {
-        caption += `mercenary to place it to your player board.`;
-        GetEnlistmentMercenariesProfit(G, ctx, null, data, boardCells);
     }
     else if (option === ConfigNames.PlaceEnlistmentMercenaries) {
         const card = player.pickedCard;
@@ -352,6 +368,7 @@ export const DrawProfit = (G, ctx, data) => {
  * @returns Поле таверн.
  */
 export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
+    var _a;
     const tavernsBoards = [], moveMainArgs = [];
     for (let t = 0; t < G.tavernsNum; t++) {
         const currentTavernConfig = tavernsConfig[t];
@@ -380,15 +397,27 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                         suit = tavernCard.suit;
                     }
                     if (t === G.currentTavern) {
-                        if (data !== undefined) {
-                            const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                            if (player === undefined) {
-                                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                            }
-                            DrawCard(data, boardCells, tavernCard, j, player, suit, MoveNames.ClickCardMove, j);
+                        const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                        if (player === undefined) {
+                            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
                         }
-                        else if (validatorName === MoveValidatorNames.ClickCardMoveValidator) {
-                            moveMainArgs.push(j);
+                        if (ctx.phase === Phases.PickCards && ctx.activePlayers === null
+                            && ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos]) {
+                            if (data !== undefined) {
+                                DrawCard(data, boardCells, tavernCard, j, player, suit, MoveNames.ClickCardMove, j);
+                            }
+                            else if (validatorName === MoveValidatorNames.ClickCardMoveValidator) {
+                                moveMainArgs.push(j);
+                            }
+                        }
+                        else if (ctx.phase === Phases.PickCards
+                            && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.DiscardCard) {
+                            if (data !== undefined) {
+                                DrawCard(data, boardCells, tavernCard, j, player, suit, MoveNames.DiscardCard2PlayersMove, j);
+                            }
+                            else if (validatorName === MoveValidatorNames.DiscardCard2PlayersMoveValidator) {
+                                moveMainArgs.push(j);
+                            }
                         }
                     }
                     else {

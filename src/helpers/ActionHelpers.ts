@@ -75,7 +75,9 @@ export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: Dec
  */
 const StartOrEndActionStage = (G: IMyGameState, ctx: Ctx, config: IConfig): void => {
     if (config.stageName !== undefined) {
-        ctx.events?.setStage(config.stageName);
+        ctx.events?.setActivePlayers({
+            currentPlayer: config.stageName,
+        });
         AddDataToLog(G, LogTypes.GAME, `Начало стадии ${config.stageName}.`);
     } else if (ctx.activePlayers?.[Number(ctx.currentPlayer)] !== undefined) {
         ctx.events?.endStage();

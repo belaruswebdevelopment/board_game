@@ -70,17 +70,13 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, playerId: number, cardId: number):
-    void => {
-    // TODO Rework it for players and fix it for bots?
-    // TODO ctx.playerID === playerId???
+export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number): void => {
     if (ctx.playerID === undefined) {
-        // TODO Need it!?
         throw new Error(`Отсутствует обязательный параметр 'ctx.playerID'.`);
     }
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(playerId)];
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.playerID)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+        throw new Error(`В массиве игроков отсутствует игрок ${ctx.playerID}.`);
     }
     const discardedCard: PlayerCardsType | undefined = player.cards[suit].splice(cardId, 1)[0];
     if (discardedCard === undefined) {

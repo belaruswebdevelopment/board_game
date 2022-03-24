@@ -368,15 +368,24 @@ describe(`Test GetEnlistmentMercenariesAction method`, () => {
             }, 0);
         }).toThrowError(`В массиве карт лагеря игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
     });
-    // Unreal to reproduce
-    // it(`shouldn't remove null card from tavern and must throw Error`, (): void => {
-    //     expect((): void => {
-    //         GetEnlistmentMercenariesAction(G as IMyGameState, {
-    //             currentPlayer: `0`,
-    //             phase: Phases.EnlistmentMercenaries,
-    //         } as Ctx, 0);
-    //     }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
-    // });
+    it(`shouldn't remove null card from tavern and must throw Error`, () => {
+        const G = {
+            publicPlayers: {
+                0: {
+                    campCards: [
+                        {},
+                    ],
+                    pickedCard: null,
+                },
+            },
+        };
+        expect(() => {
+            GetEnlistmentMercenariesAction(G, {
+                currentPlayer: `0`,
+                phase: Phases.EnlistmentMercenaries,
+            }, 0);
+        }).toThrowError(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
+    });
 });
 describe(`Test GetMjollnirProfitAction method`, () => {
     it(`should get suit for end game Mjollnir profit`, () => {
@@ -1537,7 +1546,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
             ],
         });
     });
-    // Unreal Errors to reproduce
     it(`shouldn't get non-mercenary card from player's camp cards to place and must throw Error`, () => {
         const G = {
             publicPlayers: {

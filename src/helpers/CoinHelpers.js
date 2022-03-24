@@ -127,7 +127,6 @@ export const ResolveBoardCoins = (G, ctx) => {
                 const tiePlayersPriorities = tiePlayers.map((player) => player.priority.value), maxPriority = Math.max(...tiePlayersPriorities), minPriority = Math.min(...tiePlayersPriorities), maxIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === maxPriority), minIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === minPriority);
                 tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === maxPriority), 1);
                 tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === minPriority), 1);
-                tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === minPriority), 1);
                 const exchangeOrderMax = exchangeOrder[maxIndex], exchangeOrderMin = exchangeOrder[minIndex];
                 if (exchangeOrderMax === undefined) {
                     throw new Error(`В массиве изменений порядка хода игроков отсутствует максимальная ${exchangeOrder[maxIndex]}.`);

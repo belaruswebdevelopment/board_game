@@ -9,8 +9,8 @@ import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { MoveNames, MoveValidatorNames, Phases, ValidatorNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawTaverns } from "./ui/GameBoardUI";
-import { DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
-import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ui/ProfitUI";
+import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetMjollnirProfitProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ui/ProfitUI";
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -527,7 +527,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return DiscardCardProfit(G, ctx, MoveValidatorNames.DiscardCard2PlayersMoveValidator);
+            return DrawTaverns(G, ctx, MoveValidatorNames.DiscardCard2PlayersMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -547,7 +547,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return GetEnlistmentMercenariesProfit(G, ctx, MoveValidatorNames.GetEnlistmentMercenariesMoveValidator);
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.GetEnlistmentMercenariesMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];

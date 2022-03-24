@@ -18,7 +18,7 @@ import { Stages } from "../typescript/enums";
  * @returns
  */
 export const ClickHeroCardMove = (G, ctx, heroId) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.PickHero, heroId);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PickHero, heroId);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -43,7 +43,7 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
  * @param cardId Id карты.
  */
 export const DiscardCardMove = (G, ctx, suit, cardId) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.DiscardBoardCard, {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.DiscardBoardCard, {
         suit,
         cardId,
     });
@@ -64,7 +64,7 @@ export const DiscardCardMove = (G, ctx, suit, cardId) => {
  * @param suit Название фракции.
  */
 export const PlaceOlwinCardMove = (G, ctx, suit) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.PlaceOlwinCards, suit);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PlaceOlwinCards, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -82,7 +82,7 @@ export const PlaceOlwinCardMove = (G, ctx, suit) => {
  * @param suit Название фракции.
  */
 export const PlaceThrudHeroMove = (G, ctx, suit) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.PlaceThrudHero, suit);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PlaceThrudHero, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -100,7 +100,7 @@ export const PlaceThrudHeroMove = (G, ctx, suit) => {
  * @param suit Название фракции.
  */
 export const PlaceYludHeroMove = (G, ctx, suit) => {
-    const isValidMove = IsValidMove(G, ctx, Stages.Default1, suit);
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1, suit);
     if (!isValidMove) {
         return INVALID_MOVE;
     }

@@ -112,7 +112,6 @@ export const DiscardCardFromBoardProfit = (G, ctx, validatorName, data, boardCel
 };
 export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, validatorName, data, boardCells) => {
     var _a;
-    // TODO Discard cards must be hidden from others users?
     const player = G.publicPlayers[Number(ctx.currentPlayer)], moveMainArgs = {};
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
@@ -183,41 +182,6 @@ export const DiscardAnyCardFromPlayerBoardProfit = (G, ctx, validatorName, data,
         throw new Error(`Функция должна возвращать значение.`);
     }
 };
-export const DiscardCardProfit = (G, ctx, validatorName, data, boardCells) => {
-    const moveMainArgs = [];
-    for (let j = 0; j < G.drawSize; j++) {
-        const currentTavern = G.taverns[G.currentTavern];
-        if (currentTavern === undefined) {
-            throw new Error(`В массиве таверн отсутствует текущая таверна.`);
-        }
-        const card = currentTavern[j];
-        if (card === undefined) {
-            throw new Error(`В массиве карт текущей таверны отсутствует карта ${j}.`);
-        }
-        if (card !== null) {
-            let suit = null;
-            if (IsCardNotActionAndNotNull(card)) {
-                suit = card.suit;
-            }
-            const player = G.publicPlayers[Number(ctx.currentPlayer)];
-            if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-            }
-            if (data !== undefined && boardCells !== undefined) {
-                DrawCard(data, boardCells, card, j, player, suit, MoveNames.DiscardCard2PlayersMove, j);
-            }
-            else if (validatorName === MoveValidatorNames.DiscardCard2PlayersMoveValidator) {
-                moveMainArgs.push(j);
-            }
-            else {
-                throw new Error(`Функция должна иметь один из ключевых параметров.`);
-            }
-        }
-    }
-    if (validatorName !== null) {
-        return moveMainArgs;
-    }
-};
 export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, validatorName, playerId, data, boardCells) => {
     var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -277,7 +241,7 @@ export const DiscardSuitCardFromPlayerBoardProfit = (G, ctx, validatorName, play
                         isExit = false;
                         isDrawRow = true;
                         if (data !== undefined) {
-                            DrawCard(data, playersCells, card, i, playerP2, suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, suit, p, i);
+                            DrawCard(data, playersCells, card, i, playerP2, suit, MoveNames.DiscardSuitCardFromPlayerBoardMove, suit, i);
                         }
                         else if (p === playerId && validatorName ===
                             MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator) {
@@ -333,31 +297,6 @@ export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCell
             DrawCard(data, boardCells, card, j, player, suit, MoveNames.ClickCardToPickDistinctionMove, j);
         }
         else if (validatorName === MoveValidatorNames.ClickCardToPickDistinctionMoveValidator) {
-            moveMainArgs.push(j);
-        }
-        else {
-            throw new Error(`Функция должна иметь один из ключевых параметров.`);
-        }
-    }
-    if (validatorName !== null) {
-        return moveMainArgs;
-    }
-};
-export const GetEnlistmentMercenariesProfit = (G, ctx, validatorName, data, boardCells) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)], moveMainArgs = [];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-    }
-    const mercenaries = player.campCards.filter((card) => IsMercenaryCampCard(card));
-    for (let j = 0; j < mercenaries.length; j++) {
-        const card = mercenaries[j];
-        if (card === undefined) {
-            throw new Error(`В массиве карт лагеря игрока отсутствует карта наёмника ${j}.`);
-        }
-        if (data !== undefined && boardCells !== undefined) {
-            DrawCard(data, boardCells, card, j, player, null, MoveNames.GetEnlistmentMercenariesMove, j);
-        }
-        else if (validatorName === MoveValidatorNames.GetEnlistmentMercenariesMoveValidator) {
             moveMainArgs.push(j);
         }
         else {

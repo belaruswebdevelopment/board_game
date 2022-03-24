@@ -11,8 +11,8 @@ import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { MoveNames, MoveValidatorNames, Phases, ValidatorNames } from "./typescript/enums";
 import type { CampDeckCardTypes, CoinType, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveSuitCardPlayerCurrentId, IMoveSuitCardPlayerIdArguments, IMoveValidator, IMoveValidators, IMyGameState, IPlayer, IPublicPlayer, IValidatorsConfig, MoveByTypes, MoveValidatorGetRangeTypes, OptionalSuitPropertyTypes, PlayerCardsType, PublicPlayerBoardCoinTypes, StageTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawTaverns } from "./ui/GameBoardUI";
-import { DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
-import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardCardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetEnlistmentMercenariesProfit, GetMjollnirProfitProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ui/ProfitUI";
+import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
+import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetMjollnirProfitProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ui/ProfitUI";
 
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
@@ -584,7 +584,7 @@ export const moveValidators: IMoveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return DiscardCardProfit(G, ctx, MoveValidatorNames.DiscardCard2PlayersMoveValidator) as
+            return DrawTaverns(G, ctx, MoveValidatorNames.DiscardCard2PlayersMoveValidator) as
                 IMoveArgumentsStage<number[]>[`args`];
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
@@ -607,8 +607,7 @@ export const moveValidators: IMoveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return GetEnlistmentMercenariesProfit(G, ctx,
-                MoveValidatorNames.GetEnlistmentMercenariesMoveValidator) as
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.GetEnlistmentMercenariesMoveValidator) as
                 IMoveArgumentsStage<number[]>[`args`];
         },
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):

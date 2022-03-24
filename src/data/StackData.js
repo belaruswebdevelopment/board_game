@@ -54,13 +54,11 @@ export const StackData = {
     discardTavernCard: () => ({
         config: {
             stageName: Stages.DiscardCard,
-            name: ConfigNames.DiscardCard,
             drawName: DrawNames.DiscardTavernCard,
         },
     }),
     enlistmentMercenaries: () => ({
         config: {
-            name: ConfigNames.EnlistmentMercenaries,
             drawName: DrawNames.EnlistmentMercenaries,
         },
     }),

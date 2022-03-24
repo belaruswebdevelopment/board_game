@@ -54,7 +54,6 @@ export const enum ConfigNames {
     BrisingamensEndGameAction = `BrisingamensEndGameAction`,
     CrovaxTheDoppelgangerAction = `CrovaxTheDoppelgangerAction`,
     DagdaAction = `DagdaAction`,
-    DiscardCard = `discardCard`,
     EnlistmentMercenaries = `enlistmentMercenaries`,
     ExplorerDistinction = `explorerDistinction`,
     GetMjollnirProfit = `getMjollnirProfit`,

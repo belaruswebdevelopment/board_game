@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { IsMercenaryCampCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -21,44 +22,51 @@ import { DrawCard, DrawCoin } from "./ElementsUI";
  * @returns Игровые поля для планшета всех карт игрока.
  * @constructor
  */
-export const DrawPlayersBoards = (G, ctx, data) => {
+export const DrawPlayersBoards = (G, ctx, validatorName, data) => {
     var _a;
     const playersBoards = [];
+    const moveMainArgs = [];
     for (let p = 0; p < ctx.numPlayers; p++) {
         const playerRows = [], playerHeaders = [], playerHeadersCount = [], player = G.publicPlayers[p];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
         }
         let suit;
-        for (suit in suitsConfig) {
-            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
-                playerHeadersCount.push(_jsx("th", { className: `${suitsConfig[suit].suitColor} text-white`, children: _jsx("b", { children: player.cards[suit].reduce(TotalRank, 0) }) }, `${player.nickname} ${suitsConfig[suit].suitName} count`));
+        if (data !== undefined) {
+            for (suit in suitsConfig) {
+                if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
+                    playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}`, children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
+                    playerHeadersCount.push(_jsx("th", { className: `${suitsConfig[suit].suitColor} text-white`, children: _jsx("b", { children: player.cards[suit].reduce(TotalRank, 0) }) }, `${player.nickname} ${suitsConfig[suit].suitName} count`));
+                }
             }
-        }
-        for (let s = 0; s < 1 + Number(G.expansions.thingvellir.active); s++) {
-            if (s === 0) {
-                playerHeaders.push(_jsx("th", { className: "bg-gray-600", children: _jsx("span", { style: Styles.HeroBack(), className: "bg-hero-icon" }) }, `${player.nickname} hero icon`));
-                playerHeadersCount.push(_jsx("th", { className: "bg-gray-600 text-white", children: _jsx("b", { children: player.heroes.length }) }, `${player.nickname} hero count`));
-            }
-            else {
-                playerHeaders.push(_jsx("th", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }) }, `${player.nickname} camp icon`));
-                playerHeadersCount.push(_jsx("th", { className: "bg-yellow-200 text-white", children: _jsx("b", { children: player.campCards.length }) }, `${player.nickname} camp counts`));
+            for (let s = 0; s < 1 + Number(G.expansions.thingvellir.active); s++) {
+                if (s === 0) {
+                    playerHeaders.push(_jsx("th", { className: "bg-gray-600", children: _jsx("span", { style: Styles.HeroBack(), className: "bg-hero-icon" }) }, `${player.nickname} hero icon`));
+                    playerHeadersCount.push(_jsx("th", { className: "bg-gray-600 text-white", children: _jsx("b", { children: player.heroes.length }) }, `${player.nickname} hero count`));
+                }
+                else {
+                    playerHeaders.push(_jsx("th", { className: "bg-yellow-200", children: _jsx("span", { style: Styles.Camp(), className: "bg-camp-icon" }) }, `${player.nickname} camp icon`));
+                    playerHeadersCount.push(_jsx("th", { className: "bg-yellow-200 text-white", children: _jsx("b", { children: player.campCards.length }) }, `${player.nickname} camp counts`));
+                }
             }
         }
         for (let i = 0;; i++) {
             const playerCells = [];
-            let isDrawRow = false, id = 0, j = 0, suit;
+            let isDrawRow = false, id = 0, j = 0;
             for (suit in suitsConfig) {
                 if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                     id = i + j;
                     const card = player.cards[suit][i];
                     if (card !== undefined) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, card, id, player, suit);
+                        if (data !== undefined) {
+                            DrawCard(data, playerCells, card, id, player, suit);
+                        }
                     }
                     else {
-                        playerCells.push(_jsx("td", {}, `${player.nickname} empty card ${id}`));
+                        if (data !== undefined) {
+                            playerCells.push(_jsx("td", {}, `${player.nickname} empty card ${id}`));
+                        }
                     }
                     j++;
                 }
@@ -72,33 +80,64 @@ export const DrawPlayersBoards = (G, ctx, data) => {
                         && playerCards.findIndex((card) => card.name === HeroNames.Ylud) !== -1) || (hero.name === HeroNames.Thrud
                         && playerCards.findIndex((card) => card.name === HeroNames.Thrud) !== -1))) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, hero, id, player, null);
+                        if (data !== undefined) {
+                            DrawCard(data, playerCells, hero, id, player, null);
+                        }
                     }
                     else {
-                        playerCells.push(_jsx("td", {}, `${player.nickname} hero ${i}`));
+                        if (data !== undefined) {
+                            playerCells.push(_jsx("td", {}, `${player.nickname} hero ${i}`));
+                        }
                     }
                 }
                 else {
                     const campCard = player.campCards[i];
                     if (campCard !== undefined) {
                         isDrawRow = true;
-                        DrawCard(data, playerCells, campCard, id, player, null);
+                        if (IsMercenaryCampCard(campCard) && ctx.phase === Phases.EnlistmentMercenaries
+                            && ctx.activePlayers === null && Number(ctx.currentPlayer) === p) {
+                            if (data !== undefined) {
+                                DrawCard(data, playerCells, campCard, id, player, null, MoveNames.GetEnlistmentMercenariesMove, i);
+                            }
+                            else if (validatorName === MoveValidatorNames.GetEnlistmentMercenariesMoveValidator) {
+                                moveMainArgs.push(i);
+                            }
+                        }
+                        else {
+                            if (data !== undefined) {
+                                DrawCard(data, playerCells, campCard, id, player, null);
+                            }
+                        }
                     }
                     else {
-                        playerCells.push(_jsx("td", {}, `${player.nickname} camp card ${i}`));
+                        if (data !== undefined) {
+                            playerCells.push(_jsx("td", {}, `${player.nickname} camp card ${i}`));
+                        }
                     }
                 }
             }
             if (isDrawRow) {
-                playerRows.push(_jsx("tr", { children: playerCells }, `${player.nickname} board row ${i}`));
+                if (data !== undefined) {
+                    playerRows.push(_jsx("tr", { children: playerCells }, `${player.nickname} board row ${i}`));
+                }
             }
             else {
                 break;
             }
         }
-        playersBoards.push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", G.winner.length ? `Final: ${G.totalScore[p]}` : CurrentScoring(player), " points"] }), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders }), _jsx("tr", { children: playerHeadersCount })] }), _jsx("tbody", { children: playerRows })] }, `${player.nickname} board`));
+        if (data !== undefined) {
+            playersBoards.push(_jsxs("table", { className: "mx-auto", children: [_jsxs("caption", { children: ["Player ", p + 1, " (", player.nickname, ") cards, ", G.winner.length ? `Final: ${G.totalScore[p]}` : CurrentScoring(player), " points"] }), _jsxs("thead", { children: [_jsx("tr", { children: playerHeaders }), _jsx("tr", { children: playerHeadersCount })] }), _jsx("tbody", { children: playerRows })] }, `${player.nickname} board`));
+        }
     }
-    return playersBoards;
+    if (data !== undefined) {
+        return playersBoards;
+    }
+    else if (validatorName !== null) {
+        return moveMainArgs;
+    }
+    else {
+        throw new Error(`Функция должна возвращать значение.`);
+    }
 };
 /**
  * <h3>Отрисовка планшета монет, выложенных игроком на стол.</h3>
@@ -115,7 +154,6 @@ export const DrawPlayersBoards = (G, ctx, data) => {
  * @constructor
  */
 export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
-    // TODO Your coins always public for you only, others private, but you see previous/current tavern coins for all players (and your's transparent for non opened coins)
     const multiplayer = IsMultiplayer(G), playersBoardsCoins = [], moveMainArgs = [];
     for (let p = 0; p < ctx.numPlayers; p++) {
         const player = G.publicPlayers[p], privatePlayer = G.players[p];
@@ -186,12 +224,12 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                                         }
                                     }
                                     else {
-                                        if (IsCoin(publicBoardCoin)) {
-                                            DrawCoin(data, playerCells, `coin`, publicBoardCoin, id, player);
-                                        }
-                                        else {
-                                            DrawCoin(data, playerCells, `back`, publicBoardCoin, id, player);
-                                        }
+                                        // if (IsCoin(publicBoardCoin)) {
+                                        //     DrawCoin(data, playerCells, `coin`, publicBoardCoin, id,
+                                        //         player);
+                                        // } else {
+                                        DrawCoin(data, playerCells, `back`, publicBoardCoin, id, player);
+                                        // }
                                     }
                                 }
                             }

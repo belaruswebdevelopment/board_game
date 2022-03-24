@@ -24,7 +24,7 @@ import { GameNames } from "./typescript/enums";
  */
 export const SetupGame = (ctx) => {
     var _a;
-    const suitsNum = 5, tierToEnd = 2, campNum = 5, multiplayer = true, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = ``, expansions = {
+    const suitsNum = 5, tierToEnd = 2, campNum = 5, multiplayer = false, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = ``, expansions = {
         thingvellir: {
             active: true,
         },

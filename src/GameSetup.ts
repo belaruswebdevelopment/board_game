@@ -29,7 +29,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     const suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
-        multiplayer = true,
+        multiplayer = false,
         odroerirTheMythicCauldron = false,
         log = true,
         debug = false,

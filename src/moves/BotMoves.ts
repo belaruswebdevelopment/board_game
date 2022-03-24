@@ -19,7 +19,8 @@ import type { CoinType, IMyGameState, IPlayer, IPublicPlayer } from "../typescri
  */
 export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]):
     string | void => {
-    const isValidMove: boolean = IsValidMove(G, ctx, Stages.Default3, coinsOrder);
+    const isValidMove: boolean =
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default3, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
