@@ -177,8 +177,9 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                                 && !(configSuit === SuitNames.HUNTER && player.actionsNum === 1
                                     && pickedCard !== null && `suit` in pickedCard && suit === pickedCard.suit)) {
                                 if (data !== undefined) {
+                                    const suitArg: SuitTypes = suit;
                                     DrawCard(data, playerCells, card, id, player, suit,
-                                        MoveNames.DiscardCardMove, suit, last);
+                                        MoveNames.DiscardCardMove, suitArg, last);
                                 } else if (validatorName === MoveValidatorNames.DiscardCardMoveValidator) {
                                     if (moveMainArgs === undefined || typeof moveMainArgs !== `object`
                                         || Array.isArray(moveMainArgs) || `cards` in moveMainArgs) {
@@ -195,8 +196,9 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                         } else if (p === Number(ctx.currentPlayer)
                             && ctx.phase === Phases.BrisingamensEndGame && !IsHeroCard(card)) {
                             if (data !== undefined) {
+                                const suitArg: SuitTypes = suit;
                                 DrawCard(data, playerCells, card, id, player, suit,
-                                    MoveNames.DiscardCardFromPlayerBoardMove, suit, i);
+                                    MoveNames.DiscardCardFromPlayerBoardMove, suitArg, i);
                             } else if (validatorName === MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) {
                                 if (moveMainArgs === undefined || typeof moveMainArgs !== `object`
                                     || Array.isArray(moveMainArgs) || `cards` in moveMainArgs) {

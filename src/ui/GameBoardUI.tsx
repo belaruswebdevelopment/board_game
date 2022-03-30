@@ -149,9 +149,10 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveV
                 if (ctx.phase === Phases.GetDistinctions && ctx.activePlayers === null
                     && G.distinctions[suit] === ctx.currentPlayer) {
                     if (data !== undefined) {
+                        const suitArg: SuitTypes = suit;
                         boardCells.push(
                             <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
-                                onClick={() => data.moves.ClickDistinctionCardMove?.(suit)}
+                                onClick={() => data.moves.ClickDistinctionCardMove?.(suitArg)}
                                 title={suitsConfig[suit].distinction.description}>
                                 <span style={Styles.Distinctions(suit)}
                                     className="bg-suit-distinction"></span>
