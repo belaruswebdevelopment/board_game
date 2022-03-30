@@ -34,9 +34,14 @@ export const enum BuffNames {
     UpgradeNextCoin = `upgradeNextCoin`,
 }
 
+export const enum ButtonNames {
+    Start = `Старт`,
+    Pass = `Пас`,
+}
+
 export const enum CardNames {
-    ChiefBlacksmith = `Chief blacksmith`,
-    Olwin = `Olwin`,
+    ChiefBlacksmith = `Главный кузнец`,
+    OlwinsDouble = `Двойник Ольвюна`,
 }
 
 export const enum CoinTypes {
@@ -48,23 +53,8 @@ export const enum CoinTypes {
  * <h3>Перечисление для названия отображения действий в конфиге.</h3>
  */
 export const enum ConfigNames {
-    AddCoinToPouchVidofnirVedrfolnir = `AddCoinToPouchVidofnirVedrfolnir`,
-    BonfurAction = `BonfurAction`,
-    BrisingamensAction = `BrisingamensAction`,
-    BrisingamensEndGameAction = `BrisingamensEndGameAction`,
-    CrovaxTheDoppelgangerAction = `CrovaxTheDoppelgangerAction`,
-    DagdaAction = `DagdaAction`,
-    EnlistmentMercenaries = `enlistmentMercenaries`,
     ExplorerDistinction = `explorerDistinction`,
-    GetMjollnirProfit = `getMjollnirProfit`,
-    HofudAction = `HofudAction`,
-    PlaceEnlistmentMercenaries = `placeEnlistmentMercenaries`,
-    PlaceOlwinCards = `placeOlwinCards`,
-    PlaceThrudHero = `placeThrudHero`,
-    PlaceYludHero = `placeYludHero`,
     StartOrPassEnlistmentMercenaries = `startOrPassEnlistmentMercenaries`,
-    UpgradeCoin = `upgradeCoin`,
-    VidofnirVedrfolnirAction = `VidofnirVedrfolnirAction`,
 }
 
 /**
@@ -88,6 +78,7 @@ export const enum DrawNames {
     Olwin = `Olwin`,
     PickCard = `Pick card or camp card`,
     PickCardByExplorerDistinction = `Pick card by Explorer distinction`,
+    PickConcreteCoinToUpgrade = `Pick concrete coin to upgrade`,
     PickHero = `Pick hero card`,
     PlaceEnlistmentMercenaries = `Place Enlistment Mercenaries`,
     PlaceTradingCoinsUline = `Place Trading Coins Uline`,
@@ -159,6 +150,7 @@ export const enum MoveNames {
     ClickCardMove = `ClickCardMove`,
     ClickCardToPickDistinctionMove = `ClickCardToPickDistinctionMove`,
     ClickCoinToUpgradeMove = `ClickCoinToUpgradeMove`,
+    ClickConcreteCoinToUpgradeMove = `ClickConcreteCoinToUpgradeMove`,
     ClickDistinctionCardMove = `ClickDistinctionCardMove`,
     ClickHandCoinMove = `ClickHandCoinMove`,
     ClickHandCoinUlineMove = `ClickHandCoinUlineMove`,
@@ -230,6 +222,7 @@ export const enum Stages {
     DiscardBoardCard = `discardBoardCard`,
     DiscardSuitCard = `discardSuitCard`,
     PickCampCardHolda = `pickCampCardHolda`,
+    PickConcreteCoinToUpgrade = `pickConcreteCoinToUpgrade`,
     PickDiscardCard = `pickDiscardCard`,
     PickDistinctionCard = `pickDistinctionCard`,
     PickHero = `pickHero`,
@@ -285,6 +278,7 @@ export const enum MoveValidatorNames {
     // start
     AddCoinToPouchMoveValidator = `AddCoinToPouchMoveValidator`,
     ClickCampCardHoldaMoveValidator = `ClickCampCardHoldaMoveValidator`,
+    PickConcreteCoinToUpgradeMoveValidator = `PickConcreteCoinToUpgradeMoveValidator`,
     ClickCoinToUpgradeMoveValidator = `ClickCoinToUpgradeMoveValidator`,
     ClickHeroCardMoveValidator = `ClickHeroCardMoveValidator`,
     DiscardCardMoveValidator = `DiscardCardMoveValidator`,

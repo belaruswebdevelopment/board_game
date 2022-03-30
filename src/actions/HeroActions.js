@@ -6,7 +6,7 @@ import { suitsConfig } from "../data/SuitData";
 import { DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
 import { AddHeroCardToPlayerCards } from "../helpers/HeroCardHelpers";
-import { CheckAndMoveThrudOrPickHeroAction } from "../helpers/HeroHelpers";
+import { CheckAndMoveThrudOrPickHeroAction, CheckPickHero } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { CreateHero, IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
@@ -70,13 +70,13 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
     }
     const playerVariants = stack.variants;
     if (playerVariants === undefined) {
-        throw new Error(`У конфига действия игрока отсутствует обязательный параметр вариантов выкладки карты ${CardNames.Olwin}.`);
+        throw new Error(`У конфига действия игрока отсутствует обязательный параметр вариантов выкладки карты ${CardNames.OlwinsDouble}.`);
     }
     const olwinDouble = CreateCard({
         suit,
         rank: playerVariants[suit].rank,
         points: playerVariants[suit].points,
-        name: CardNames.Olwin,
+        name: CardNames.OlwinsDouble,
         game: GameNames.Thingvellir,
     });
     const drawName = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.drawName;
@@ -130,6 +130,7 @@ export const PlaceThrudAction = (G, ctx, suit) => {
     }
     AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${drawName} во фракцию ${suitsConfig[suit].suitName}.`);
     AddHeroCardToPlayerCards(G, ctx, heroCard);
+    CheckPickHero(G, ctx);
 };
 /**
  * <h3>Действия, связанные с проверкой расположением конкретного героя на игровом поле игрока.</h3>

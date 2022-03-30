@@ -1,7 +1,7 @@
 import { IsMercenaryCampCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
-import { AddPickCardActionToStack, DrawCurrentProfit, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
+import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
@@ -165,7 +165,7 @@ export const OnPickCardsMove = (G, ctx) => {
     if (!player.stack.length) {
         if (ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
             && !CheckIfCurrentTavernEmpty(G) && !G.tavernCardDiscarded2Players) {
-            StartDiscardCardFromTavernActionFor2Players(G, ctx);
+            AddActionsToStackAfterCurrent(G, ctx, [StackData.discardTavernCard()]);
             DrawCurrentProfit(G, ctx);
         }
         else {
@@ -183,7 +183,7 @@ export const OnPickCardsMove = (G, ctx) => {
     }
 };
 export const OnPickCardsTurnBegin = (G, ctx) => {
-    AddPickCardActionToStack(G, ctx);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.pickCard()]);
     const multiplayer = IsMultiplayer(G);
     if (multiplayer) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];

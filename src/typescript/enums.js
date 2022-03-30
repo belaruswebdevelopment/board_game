@@ -34,10 +34,15 @@ export var BuffNames;
     BuffNames["UpgradeCoin"] = "upgradeCoin";
     BuffNames["UpgradeNextCoin"] = "upgradeNextCoin";
 })(BuffNames || (BuffNames = {}));
+export var ButtonNames;
+(function (ButtonNames) {
+    ButtonNames["Start"] = "\u0421\u0442\u0430\u0440\u0442";
+    ButtonNames["Pass"] = "\u041F\u0430\u0441";
+})(ButtonNames || (ButtonNames = {}));
 export var CardNames;
 (function (CardNames) {
-    CardNames["ChiefBlacksmith"] = "Chief blacksmith";
-    CardNames["Olwin"] = "Olwin";
+    CardNames["ChiefBlacksmith"] = "\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u043A\u0443\u0437\u043D\u0435\u0446";
+    CardNames["OlwinsDouble"] = "\u0414\u0432\u043E\u0439\u043D\u0438\u043A \u041E\u043B\u044C\u0432\u044E\u043D\u0430";
 })(CardNames || (CardNames = {}));
 export var CoinTypes;
 (function (CoinTypes) {
@@ -49,23 +54,8 @@ export var CoinTypes;
  */
 export var ConfigNames;
 (function (ConfigNames) {
-    ConfigNames["AddCoinToPouchVidofnirVedrfolnir"] = "AddCoinToPouchVidofnirVedrfolnir";
-    ConfigNames["BonfurAction"] = "BonfurAction";
-    ConfigNames["BrisingamensAction"] = "BrisingamensAction";
-    ConfigNames["BrisingamensEndGameAction"] = "BrisingamensEndGameAction";
-    ConfigNames["CrovaxTheDoppelgangerAction"] = "CrovaxTheDoppelgangerAction";
-    ConfigNames["DagdaAction"] = "DagdaAction";
-    ConfigNames["EnlistmentMercenaries"] = "enlistmentMercenaries";
     ConfigNames["ExplorerDistinction"] = "explorerDistinction";
-    ConfigNames["GetMjollnirProfit"] = "getMjollnirProfit";
-    ConfigNames["HofudAction"] = "HofudAction";
-    ConfigNames["PlaceEnlistmentMercenaries"] = "placeEnlistmentMercenaries";
-    ConfigNames["PlaceOlwinCards"] = "placeOlwinCards";
-    ConfigNames["PlaceThrudHero"] = "placeThrudHero";
-    ConfigNames["PlaceYludHero"] = "placeYludHero";
     ConfigNames["StartOrPassEnlistmentMercenaries"] = "startOrPassEnlistmentMercenaries";
-    ConfigNames["UpgradeCoin"] = "upgradeCoin";
-    ConfigNames["VidofnirVedrfolnirAction"] = "VidofnirVedrfolnirAction";
 })(ConfigNames || (ConfigNames = {}));
 /**
  * <h3>Перечисление для описаний отображения действий.</h3>
@@ -89,6 +79,7 @@ export var DrawNames;
     DrawNames["Olwin"] = "Olwin";
     DrawNames["PickCard"] = "Pick card or camp card";
     DrawNames["PickCardByExplorerDistinction"] = "Pick card by Explorer distinction";
+    DrawNames["PickConcreteCoinToUpgrade"] = "Pick concrete coin to upgrade";
     DrawNames["PickHero"] = "Pick hero card";
     DrawNames["PlaceEnlistmentMercenaries"] = "Place Enlistment Mercenaries";
     DrawNames["PlaceTradingCoinsUline"] = "Place Trading Coins Uline";
@@ -160,6 +151,7 @@ export var MoveNames;
     MoveNames["ClickCardMove"] = "ClickCardMove";
     MoveNames["ClickCardToPickDistinctionMove"] = "ClickCardToPickDistinctionMove";
     MoveNames["ClickCoinToUpgradeMove"] = "ClickCoinToUpgradeMove";
+    MoveNames["ClickConcreteCoinToUpgradeMove"] = "ClickConcreteCoinToUpgradeMove";
     MoveNames["ClickDistinctionCardMove"] = "ClickDistinctionCardMove";
     MoveNames["ClickHandCoinMove"] = "ClickHandCoinMove";
     MoveNames["ClickHandCoinUlineMove"] = "ClickHandCoinUlineMove";
@@ -231,6 +223,7 @@ export var Stages;
     Stages["DiscardBoardCard"] = "discardBoardCard";
     Stages["DiscardSuitCard"] = "discardSuitCard";
     Stages["PickCampCardHolda"] = "pickCampCardHolda";
+    Stages["PickConcreteCoinToUpgrade"] = "pickConcreteCoinToUpgrade";
     Stages["PickDiscardCard"] = "pickDiscardCard";
     Stages["PickDistinctionCard"] = "pickDistinctionCard";
     Stages["PickHero"] = "pickHero";
@@ -286,6 +279,7 @@ export var MoveValidatorNames;
     // start
     MoveValidatorNames["AddCoinToPouchMoveValidator"] = "AddCoinToPouchMoveValidator";
     MoveValidatorNames["ClickCampCardHoldaMoveValidator"] = "ClickCampCardHoldaMoveValidator";
+    MoveValidatorNames["PickConcreteCoinToUpgradeMoveValidator"] = "PickConcreteCoinToUpgradeMoveValidator";
     MoveValidatorNames["ClickCoinToUpgradeMoveValidator"] = "ClickCoinToUpgradeMoveValidator";
     MoveValidatorNames["ClickHeroCardMoveValidator"] = "ClickHeroCardMoveValidator";
     MoveValidatorNames["DiscardCardMoveValidator"] = "DiscardCardMoveValidator";

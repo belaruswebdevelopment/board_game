@@ -7,8 +7,8 @@ import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { LogTypes, RusCardTypes } from "../typescript/enums";
-import type { CampCardTypes, CoinType, ICoin, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardsType, PublicPlayerBoardCoinTypes, SuitTypes } from "../typescript/interfaces";
+import { CoinTypes, LogTypes, RusCardTypes, SuitNames } from "../typescript/enums";
+import type { CampCardTypes, CoinType, ICoin, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardsType, PublicPlayerBoardCoinTypes } from "../typescript/interfaces";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
 
 /**
@@ -66,11 +66,10 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
  *
  * @param G
  * @param ctx
- * @param suit Название фракции.
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number): void => {
+export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     if (ctx.playerID === undefined) {
         throw new Error(`Отсутствует обязательный параметр 'ctx.playerID'.`);
     }
@@ -78,7 +77,8 @@ export const DiscardSuitCardAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок ${ctx.playerID}.`);
     }
-    const discardedCard: PlayerCardsType | undefined = player.cards[suit].splice(cardId, 1)[0];
+    const discardedCard: PlayerCardsType | undefined =
+        player.cards[SuitNames.WARRIOR].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
         throw new Error(`В массиве карт игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
     }
@@ -137,7 +137,7 @@ export const PickCampCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): v
  * @param type Тип монеты.
  * @param isInitial Является ли монета базовой.
  */
-export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, coinId: number, type: string,
+export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, coinId: number, type: CoinTypes,
     isInitial: boolean): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {

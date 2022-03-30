@@ -157,13 +157,13 @@ export const Styles = {
         background: `url(/img/cards/basic/CardBack${tier}.png) no-repeat 6px 3px / 12px 18px`,
     }),
     Cards: (suit, name, points) => {
-        if (name === CardNames.ChiefBlacksmith || name === CardNames.Olwin) {
+        if (name === CardNames.ChiefBlacksmith || name === CardNames.OlwinsDouble) {
             switch (name) {
                 case CardNames.ChiefBlacksmith:
                     return {
                         background: `${distinctionsPath} no-repeat -32px -0px / 96px 150px`,
                     };
-                case CardNames.Olwin:
+                case CardNames.OlwinsDouble:
                     return {
                         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
                     };
@@ -172,6 +172,7 @@ export const Styles = {
             }
         }
         else if (suit !== null) {
+            // TODO Add images for different cards in same suit by unique id in card name -> use this names for keys
             switch (suit) {
                 case SuitNames.BLACKSMITH:
                     return {

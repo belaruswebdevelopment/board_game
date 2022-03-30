@@ -1,8 +1,9 @@
 import type { Ctx } from "boardgame.io";
+import { StackData } from "../data/StackData";
 import { CheckDistinction } from "../Distinction";
-import { AddGetDistinctionsActionToStack } from "../helpers/ActionHelpers";
 import { RefillCamp } from "../helpers/CampHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import type { DistinctionTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
@@ -87,7 +88,7 @@ export const OnGetDistinctionsMove = (G: IMyGameState, ctx: Ctx): void => {
 };
 
 export const OnGetDistinctionsTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddGetDistinctionsActionToStack(G, ctx);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
 };
 
 export const OnGetDistinctionsTurnEnd = (G: IMyGameState, ctx: Ctx): void => {

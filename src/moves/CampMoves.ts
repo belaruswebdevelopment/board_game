@@ -2,8 +2,8 @@ import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
-import { Stages } from "../typescript/enums";
-import type { IMyGameState, SuitTypes } from "../typescript/interfaces";
+import { CoinTypes, Stages } from "../typescript/enums";
+import type { IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
@@ -77,23 +77,21 @@ export const ClickCampCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
  *
  * @param G
  * @param ctx
- * @param suit Название фракции.
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
-export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes,
-    cardId: number): string | void => {
+export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
+    string | void => {
     const isValidMove: boolean =
         ctx.playerID !== ctx.currentPlayer && IsValidMove(G, ctx, Stages.DiscardSuitCard, {
             playerId: Number(ctx.playerID),
-            suit,
             cardId,
         });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    DiscardSuitCardAction(G, ctx, suit, cardId);
+    DiscardSuitCardAction(G, ctx, cardId);
 };
 
 /**
@@ -111,7 +109,7 @@ export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGam
  * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnirMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
-    type: string, isInitial: boolean): string | void => {
+    type: CoinTypes, isInitial: boolean): string | void => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
             coinId,

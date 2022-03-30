@@ -34,7 +34,7 @@ const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes => {
             action = StartVidofnirVedrfolnirAction;
             break;
         case UpgradeCoinAction.name:
-            action = UpgradeCoinAction;
+            action = UpgradeCoinAction as IActionFunctionTypes;
             break;
         default:
             throw new Error(`Нет такого действия.`);

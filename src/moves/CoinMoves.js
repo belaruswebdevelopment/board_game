@@ -1,9 +1,9 @@
 import { INVALID_MOVE } from "boardgame.io/core";
-import { UpgradeCoinAction } from "../actions/AutoActions";
 import { IsCoin } from "../Coin";
+import { UpgradeCoinActions } from "../helpers/ActionHelpers";
 import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { Stages, SuitNames } from "../typescript/enums";
+import { CoinTypes, Stages, SuitNames } from "../typescript/enums";
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>
  * <p>Применения:</p>
@@ -95,7 +95,6 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
  * @returns
  */
 export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
-    var _a;
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.UpgradeCoin, {
         coinId,
         type,
@@ -115,19 +114,18 @@ export const ClickCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
             G.distinctions[SuitNames.EXPLORER] = undefined;
         }
     }
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    UpgradeCoinActions(G, ctx, coinId, type, isInitial);
+};
+export const ClickConcreteCoinToUpgradeMove = (G, ctx, coinId, type, isInitial) => {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PickConcreteCoinToUpgrade, {
+        coinId,
+        type,
+        isInitial,
+    });
+    if (!isValidMove) {
+        return INVALID_MOVE;
     }
-    const stack = player.stack[0];
-    if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-    }
-    const value = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.value;
-    if (value === undefined) {
-        throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.value'.`);
-    }
-    UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
+    UpgradeCoinActions(G, ctx, coinId, type, isInitial);
 };
 /**
  * <h3>Выбор монеты в руке для выкладки монет.</h3>

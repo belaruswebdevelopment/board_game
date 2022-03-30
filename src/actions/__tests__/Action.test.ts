@@ -1,8 +1,8 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../../data/SuitData";
-import { ArtefactNames, BuffNames, ConfigNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames, TavernNames } from "../../typescript/enums";
+import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames, TavernNames } from "../../typescript/enums";
 import type { CampDeckCardTypes, DeckCardTypes, IActionCard, IArtefactCampCard, IBuffs, ICard, IHeroCard, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IPublicPlayers, IVariant, OptionalSuitPropertyTypes, PlayerCardsType, RequiredSuitPropertyTypes, TavernCardTypes } from "../../typescript/interfaces";
-import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCard, PlaceEnlistmentMercenariesAction } from "../Actions";
+import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
     it(`should remove non-hero discarded card from player's cards to cards discard`, (): void => {
@@ -345,7 +345,6 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
                         {},
                         {
                             config: {
-                                name: ConfigNames.PlaceEnlistmentMercenaries,
                                 drawName: DrawNames.PlaceEnlistmentMercenaries,
                             },
                         },
@@ -472,7 +471,7 @@ describe(`Test PassEnlistmentMercenariesAction method`, (): void => {
     });
 });
 
-describe(`Test PickDiscardCard method`, (): void => {
+describe(`Test PickDiscardCardAction method`, (): void => {
     it(`should pick non-action discarded card from discard deck`, (): void => {
         const G = {
             publicPlayers: {
@@ -495,7 +494,7 @@ describe(`Test PickDiscardCard method`, (): void => {
             ] as DeckCardTypes[],
             logData: [],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>;
-        PickDiscardCard(G as IMyGameState, {
+        PickDiscardCardAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx, 0);
         expect(G).toEqual({
@@ -549,7 +548,6 @@ describe(`Test PickDiscardCard method`, (): void => {
                     stack: [
                         {
                             config: {
-                                name: ConfigNames.UpgradeCoin,
                                 stageName: Stages.UpgradeCoin,
                                 value: 5,
                                 drawName: DrawNames.UpgradeCoin,
@@ -561,7 +559,7 @@ describe(`Test PickDiscardCard method`, (): void => {
             ],
             logData: [],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>;
-        PickDiscardCard(G as IMyGameState, {
+        PickDiscardCardAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx, 0);
         expect(G).toEqual({
@@ -573,7 +571,6 @@ describe(`Test PickDiscardCard method`, (): void => {
                         stack: [
                             {
                                 config: {
-                                    name: ConfigNames.UpgradeCoin,
                                     stageName: Stages.UpgradeCoin,
                                     value: 5,
                                     drawName: DrawNames.UpgradeCoin,
@@ -586,7 +583,6 @@ describe(`Test PickDiscardCard method`, (): void => {
                         {},
                         {
                             config: {
-                                name: ConfigNames.UpgradeCoin,
                                 stageName: Stages.UpgradeCoin,
                                 value: 5,
                                 drawName: DrawNames.UpgradeCoin,
@@ -600,7 +596,6 @@ describe(`Test PickDiscardCard method`, (): void => {
                     stack: [
                         {
                             config: {
-                                name: ConfigNames.UpgradeCoin,
                                 stageName: Stages.UpgradeCoin,
                                 value: 5,
                                 drawName: DrawNames.UpgradeCoin,
@@ -647,7 +642,7 @@ describe(`Test PickDiscardCard method`, (): void => {
             ],
             logData: [],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>;
-        PickDiscardCard(G as IMyGameState, {
+        PickDiscardCardAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx, 0);
         expect(G).toEqual({
@@ -665,7 +660,6 @@ describe(`Test PickDiscardCard method`, (): void => {
                         {
                             config: {
                                 stageName: Stages.PickDiscardCard,
-                                name: ConfigNames.BrisingamensAction,
                                 drawName: DrawNames.Brisingamens,
                                 number: undefined,
                             },
@@ -741,7 +735,7 @@ describe(`Test PickDiscardCard method`, (): void => {
             ],
             logData: [],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>;
-        PickDiscardCard(G as IMyGameState, {
+        PickDiscardCardAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx, 0);
         expect(G).toEqual({
@@ -847,7 +841,7 @@ describe(`Test PickDiscardCard method`, (): void => {
             ],
             logData: [],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>;
-        PickDiscardCard(G as IMyGameState, {
+        PickDiscardCardAction(G as IMyGameState, {
             currentPlayer: `0`,
         } as Ctx, 0);
         expect(G).toEqual({
@@ -863,7 +857,7 @@ describe(`Test PickDiscardCard method`, (): void => {
                     ],
                     pickedCard: {
                         suit: SuitNames.HUNTER,
-                        name: `Test`,
+                        name: HeroNames.Thrud,
                     } as ICard,
                     stack: [
                         {},
@@ -897,9 +891,7 @@ describe(`Test PickDiscardCard method`, (): void => {
                             },
                             config: {
                                 stageName: Stages.PlaceThrudHero,
-                                name: ConfigNames.PlaceThrudHero,
                                 drawName: DrawNames.Thrud,
-                                suit: SuitNames.HUNTER,
                             },
                         },
                     ],
@@ -934,7 +926,7 @@ describe(`Test PickDiscardCard method`, (): void => {
             discardCardsDeck: [],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck`>;
         expect((): void => {
-            PickDiscardCard(G as IMyGameState, {
+            PickDiscardCardAction(G as IMyGameState, {
                 currentPlayer: `0`,
             } as Ctx, 0);
         }).toThrowError(`В массиве колоды сброса отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
@@ -1312,26 +1304,8 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                     nickname: `Dan`,
                     campCards: [] as CampDeckCardTypes[],
                     pickedCard: {
-                        type: RusCardTypes.MERCENARYPLAYERCARD,
                         suit: SuitNames.WARRIOR,
-                        rank: 1,
-                        points: 6,
-                        name: `Test`,
-                        tier: 0,
-                        path: ``,
-                        game: GameNames.Thingvellir,
-                        variants: {
-                            warrior: {
-                                suit: SuitNames.WARRIOR,
-                                rank: 1,
-                                points: 6,
-                            },
-                            explorer: {
-                                suit: SuitNames.EXPLORER,
-                                rank: 1,
-                                points: 8,
-                            },
-                        },
+                        name: HeroNames.Thrud,
                     },
                     stack: [
                         {},
@@ -1365,9 +1339,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                             },
                             config: {
                                 stageName: Stages.PlaceThrudHero,
-                                name: ConfigNames.PlaceThrudHero,
                                 drawName: DrawNames.Thrud,
-                                suit: SuitNames.WARRIOR,
                             },
                         },
                     ],
@@ -1510,7 +1482,6 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                         {},
                         {
                             config: {
-                                name: ConfigNames.EnlistmentMercenaries,
                                 drawName: DrawNames.EnlistmentMercenaries,
                             },
                         }

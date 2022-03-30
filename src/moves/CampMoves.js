@@ -1,7 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { AddCoinToPouchAction, DiscardSuitCardAction, PickCampCardAction, UpgradeCoinVidofnirVedrfolnirAction } from "../actions/CampActions";
 import { IsValidMove } from "../MoveValidator";
-import { Stages } from "../typescript/enums";
+import { CoinTypes, Stages } from "../typescript/enums";
 /**
  * <h3>Выбор монеты для выкладки монет в кошель при наличии героя Улина по артефакту Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -67,21 +67,19 @@ export const ClickCampCardMove = (G, ctx, cardId) => {
  *
  * @param G
  * @param ctx
- * @param suit Название фракции.
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  * @returns
  */
-export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, suit, cardId) => {
+export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, cardId) => {
     const isValidMove = ctx.playerID !== ctx.currentPlayer && IsValidMove(G, ctx, Stages.DiscardSuitCard, {
         playerId: Number(ctx.playerID),
-        suit,
         cardId,
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    DiscardSuitCardAction(G, ctx, suit, cardId);
+    DiscardSuitCardAction(G, ctx, cardId);
 };
 /**
  * <h3>Выбор монеты для улучшения по артефакту Vidofnir Vedrfolnir.</h3>

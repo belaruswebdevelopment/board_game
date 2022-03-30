@@ -1,7 +1,8 @@
+import { StackData } from "../data/StackData";
 import { CheckDistinction } from "../Distinction";
-import { AddGetDistinctionsActionToStack } from "../helpers/ActionHelpers";
 import { RefillCamp } from "../helpers/CampHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'getDistinctions'.</h3>
  * <p>Применения:</p>
@@ -75,7 +76,7 @@ export const OnGetDistinctionsMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
 };
 export const OnGetDistinctionsTurnBegin = (G, ctx) => {
-    AddGetDistinctionsActionToStack(G, ctx);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
 };
 export const OnGetDistinctionsTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);

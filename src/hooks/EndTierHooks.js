@@ -57,11 +57,16 @@ export const CheckEndTierOrder = (G) => {
     if (yludIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.EndTier}.`);
     }
+    const player = G.publicPlayers[yludIndex];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует игрок с обязательным бафом ${BuffNames.EndTier}.`);
+    }
+    const yludHeroCard = player.heroes.find((hero) => hero.name === HeroNames.Ylud);
+    if (yludHeroCard === undefined) {
+        throw new Error(`В массиве карт игрока отсутствует карта героя ${HeroNames.Ylud}.`);
+    }
+    player.pickedCard = yludHeroCard;
     if (G.tierToEnd === 0) {
-        const player = G.publicPlayers[yludIndex];
-        if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с картой героя ${HeroNames.Ylud}.`);
-        }
         const cards = Object.values(player.cards).flat(), index = cards.findIndex((card) => card.name === HeroNames.Ylud);
         if (index !== -1) {
             const yludCard = cards[index];

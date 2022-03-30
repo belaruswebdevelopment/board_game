@@ -58,10 +58,10 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
         }
         const coin: PublicPlayerBoardCoinTypes | undefined = playerI.boardCoins[G.currentTavern];
         if (coin !== undefined) {
+            exchangeOrder.push(i);
             if (IsCoin(coin)) {
                 coinValues[i] = coin.value;
                 playersOrderNumbers.push(i);
-                exchangeOrder.push(i);
             }
             for (let j: number = playersOrderNumbers.length - 1; j > 0; j--) {
                 const playersOrderNumberCur: number | undefined = playersOrderNumbers[j],
@@ -153,10 +153,10 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
                 const exchangeOrderMax: number | undefined = exchangeOrder[maxIndex],
                     exchangeOrderMin: number | undefined = exchangeOrder[minIndex];
                 if (exchangeOrderMax === undefined) {
-                    throw new Error(`В массиве изменений порядка хода игроков отсутствует максимальная ${exchangeOrder[maxIndex]}.`);
+                    throw new Error(`В массиве изменений порядка хода игроков отсутствует максимальная ${exchangeOrder[maxIndex]} с индексом ${maxIndex}.`);
                 }
                 if (exchangeOrderMin === undefined) {
-                    throw new Error(`В массиве изменений порядка хода игроков отсутствует минимальная ${exchangeOrder[minIndex]}.`);
+                    throw new Error(`В массиве изменений порядка хода игроков отсутствует минимальная ${exchangeOrder[minIndex]}  с индексом ${minIndex}.`);
                 }
                 [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrderMax, exchangeOrderMin];
             }

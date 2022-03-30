@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { IsMercenaryCampCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
-import { AddPickCardActionToStack, DrawCurrentProfit, StartDiscardCardFromTavernActionFor2Players } from "../helpers/ActionHelpers";
+import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
@@ -179,7 +179,7 @@ export const OnPickCardsMove = (G: IMyGameState, ctx: Ctx): void => {
     if (!player.stack.length) {
         if (ctx.numPlayers === 2 && G.campPicked && ctx.currentPlayer === ctx.playOrder[0]
             && !CheckIfCurrentTavernEmpty(G) && !G.tavernCardDiscarded2Players) {
-            StartDiscardCardFromTavernActionFor2Players(G, ctx);
+            AddActionsToStackAfterCurrent(G, ctx, [StackData.discardTavernCard()]);
             DrawCurrentProfit(G, ctx);
         } else {
             if (ctx.numPlayers === 2 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
@@ -197,7 +197,7 @@ export const OnPickCardsMove = (G: IMyGameState, ctx: Ctx): void => {
 };
 
 export const OnPickCardsTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddPickCardActionToStack(G, ctx);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.pickCard()]);
     const multiplayer: boolean = IsMultiplayer(G);
     if (multiplayer) {
         const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];

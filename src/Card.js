@@ -1,6 +1,6 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
-import { GameNames, RusCardTypes } from "./typescript/enums";
+import { CardNames, GameNames, RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
  * <p>Применения:</p>
@@ -144,6 +144,10 @@ export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name
     game,
     tier,
     path,
+});
+export const CreateOlwinDoubleNonPlacedCard = ({ name = CardNames.OlwinsDouble, suit, } = {}) => ({
+    name,
+    suit,
 });
 export const IsActionCard = (card) => card !== null && card.value !== undefined;
 /**

@@ -1,16 +1,10 @@
-import { IsCardNotActionAndNotNull } from "../Card";
-import { StackData } from "../data/StackData";
+import { UpgradeCoinAction } from "../actions/AutoActions";
+import { CreateOlwinDoubleNonPlacedCard, IsCardNotActionAndNotNull } from "../Card";
 import { AddDataToLog } from "../Logging";
-import { LogTypes } from "../typescript/enums";
+import { CardNames, CoinTypes, DrawNames, HeroNames, LogTypes } from "../typescript/enums";
 import { AddCardToPlayer } from "./CardHelpers";
 import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
-export const AddGetDistinctionsActionToStack = (G, ctx) => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
-};
-export const AddPickCardActionToStack = (G, ctx) => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.pickCard()]);
-};
 /**
  * <h3>Действия, связанные с отображением профита.</h3>
  * <p>Применения:</p>
@@ -34,6 +28,23 @@ export const DrawCurrentProfit = (G, ctx) => {
     if (config !== undefined) {
         AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
         StartOrEndActionStage(G, ctx, config);
+        if (config.drawName === DrawNames.Olwin) {
+            const pickedCard = player.pickedCard;
+            if (pickedCard !== null
+                && (pickedCard.name === HeroNames.Olwin || pickedCard.name === CardNames.OlwinsDouble)) {
+                let suit = null;
+                if (`suit` in pickedCard) {
+                    suit = pickedCard.suit;
+                }
+                const olwinDouble = CreateOlwinDoubleNonPlacedCard({
+                    suit,
+                });
+                player.pickedCard = olwinDouble;
+            }
+        }
+        else if (config.drawName === DrawNames.EnlistmentMercenaries) {
+            player.pickedCard = null;
+        }
         player.actionsNum = (_b = config.number) !== null && _b !== void 0 ? _b : 1;
         if (config.name !== undefined) {
             G.drawProfit = config.name;
@@ -82,17 +93,20 @@ const StartOrEndActionStage = (G, ctx, config) => {
         (_c = ctx.events) === null || _c === void 0 ? void 0 : _c.endStage();
     }
 };
-/**
- * <h3>Действия, связанные с сбросом карты из таверны при выборе карты лагеря при игре на 2-х игроков.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>После выбора карт лагеря, если играет 2-а игрока.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const StartDiscardCardFromTavernActionFor2Players = (G, ctx) => {
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.discardTavernCard()]);
+export const UpgradeCoinActions = (G, ctx, coinId, type, isInitial) => {
+    var _a;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
+    const stack = player.stack[0];
+    if (stack === undefined) {
+        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
+    }
+    const value = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.value;
+    if (value === undefined) {
+        throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.value'.`);
+    }
+    UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
 };
 //# sourceMappingURL=ActionHelpers.js.map

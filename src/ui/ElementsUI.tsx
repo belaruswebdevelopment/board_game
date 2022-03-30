@@ -19,13 +19,12 @@ import type { AllCardTypes, ArgsTypes, IBackground, IMoveFunctionTypes, IMyGameS
  *
  * @param data Глобальные параметры.
  * @param boardCells Ячейки для отрисовки.
- * @param key Ключ.
  * @param name Имя кнопки.
  * @param player Игрок.
  * @param moveName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], key: string, name: string,
+export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], name: string,
     player: IPublicPlayer, moveName?: MoveNames, ...args: ArgsTypes): void => {
     let action: IMoveFunctionTypes;
     switch (moveName) {
@@ -40,7 +39,7 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
     }
     boardCells.push(
         <td className="cursor-pointer" onClick={() => action?.(...args)}
-            key={`${player?.nickname ? `Player ${player.nickname} ` : ``}${key}`}>
+            key={`${player?.nickname ? `Player ${player.nickname} ` : ``}${name}`}>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 {name}
             </button>
@@ -275,19 +274,14 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     );
 };
 
-export const DrawSuit = (data: BoardProps<IMyGameState>, boardCells: JSX.Element[], suit: SuitTypes, key: string,
-    value: number | string, player: IPublicPlayer | null, moveName: MoveNames | null): void => {
+export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Element[], suit: SuitTypes,
+    player: IPublicPlayer, moveName: MoveNames | null): void => {
     let action: IMoveFunctionTypes;
     switch (moveName) {
         case MoveNames.GetMjollnirProfitMove:
             action = data.moves.GetMjollnirProfitMove!;
             break;
-        case MoveNames.ClickHandCoinMove:
-            action = data.moves.ClickHandCoinMove!;
-            break;
-        case MoveNames.ClickHandCoinUlineMove:
-            action = data.moves.ClickHandCoinUlineMove!;
-            break;
+        // TODO Move it to playerBoard actions
         case MoveNames.PlaceThrudHeroMove:
             action = data.moves.PlaceThrudHeroMove!;
             break;
@@ -301,17 +295,18 @@ export const DrawSuit = (data: BoardProps<IMyGameState>, boardCells: JSX.Element
             action = data.moves.PlaceEnlistmentMercenariesMove!;
             break;
         default:
-            throw new Error(`Нет такого мува.`);
+            action = null;
+            break;
     }
-    boardCells.push(
-        <td className={`${suitsConfig[suit].suitColor} cursor-pointer`}
-            key={`${player?.nickname ? `player ${player.nickname} ` : ``}choose ${suit} suit to ${key}`}
+    let className = ``;
+    if (action !== null) {
+        className += ` cursor-pointer`;
+    }
+    playerHeaders.push(
+        <th className={`${suitsConfig[suit].suitColor}${className}`}
+            key={`${player.nickname} ${suitsConfig[suit].suitName}`}
             onClick={() => action?.(suit)}>
-            <span style={Styles.Suits(suit)} className="bg-suit-icon">
-                <b className="whitespace-nowrap text-white">
-                    {value}
-                </b>
-            </span>
-        </td>
+            <span style={Styles.Suits(suit)} className="bg-suit-icon"></span>
+        </th>
     );
 };

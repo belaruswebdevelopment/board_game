@@ -152,7 +152,7 @@ export const PassEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx): void
  * @param ctx
  * @param cardId Id карты.
  */
-export const PickDiscardCard = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
+export const PickDiscardCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);

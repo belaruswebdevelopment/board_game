@@ -1,11 +1,13 @@
 import type { Ctx } from "boardgame.io";
 import { UpgradeCoinAction } from "../actions/AutoActions";
 import { IsCoin } from "../Coin";
+import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
 import type { ICoin, IMyGameState, IPublicPlayer, PublicPlayerBoardCoinTypes } from "../typescript/interfaces";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
 import { IsMultiplayer } from "./MultiplayerHelpers";
+import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**
  * <h3>Активирует обмен монет.</h3>
@@ -73,43 +75,40 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
         coinMinIndex = 0,
         value: number;
     AddDataToLog(G, LogTypes.GAME, `Активирован обмен монет с ценностью ('${coinsMinValue}' и '${coinsMaxValue}') игрока ${player.nickname}.`);
-    // TODO trading isInitial first or playerChoose?
-    for (let i = 0; i < tradingCoins.length; i++) {
-        const tradingCoin: ICoin | undefined = tradingCoins[i];
-        if (tradingCoin === undefined) {
-            throw new Error(`В массиве обменных монет игрока отсутствует монета ${i}.`);
-        }
-        if (tradingCoin.value === coinsMaxValue) {
-            coinMaxIndex = i;
-            // if (tradingCoin.isInitial) {
-            //     break;
-            // }
-        }
-        if (tradingCoin.value === coinsMinValue) {
-            coinMinIndex = i;
-            // if (tradingCoin.isInitial) {
-            //     break;
-            // }
-        }
-    }
-    if (CheckPlayerHasBuff(player, BuffNames.UpgradeNextCoin)) {
-        value = coinsMaxValue;
-        upgradingCoinId = G.tavernsNum + coinMinIndex;
-        const minTradingCoin: ICoin | undefined = tradingCoins[coinMinIndex];
-        if (minTradingCoin === undefined) {
-            throw new Error(`В массиве обменных монет игрока отсутствует минимальная монета ${coinMinIndex}.`);
-        }
-        upgradingCoin = minTradingCoin;
-        DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
+    if (coinsMinValue === coinsMaxValue) {
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.pickConcreteCoinToUpgrade(coinsMaxValue)]);
     } else {
-        value = coinsMinValue;
-        upgradingCoinId = G.tavernsNum + coinMaxIndex;
-        const maxTradingCoin: ICoin | undefined = tradingCoins[coinMaxIndex];
-        if (maxTradingCoin === undefined) {
-            throw new Error(`В массиве обменных монет игрока отсутствует максимальная монета ${coinMaxIndex
-                }.`);
+        for (let i = 0; i < tradingCoins.length; i++) {
+            const tradingCoin: ICoin | undefined = tradingCoins[i];
+            if (tradingCoin === undefined) {
+                throw new Error(`В массиве обменных монет игрока отсутствует монета ${i}.`);
+            }
+            if (tradingCoin.value === coinsMaxValue) {
+                coinMaxIndex = i;
+            }
+            if (tradingCoin.value === coinsMinValue) {
+                coinMinIndex = i;
+            }
         }
-        upgradingCoin = maxTradingCoin;
+        if (CheckPlayerHasBuff(player, BuffNames.UpgradeNextCoin)) {
+            value = coinsMaxValue;
+            upgradingCoinId = G.tavernsNum + coinMinIndex;
+            const minTradingCoin: ICoin | undefined = tradingCoins[coinMinIndex];
+            if (minTradingCoin === undefined) {
+                throw new Error(`В массиве обменных монет игрока отсутствует минимальная монета ${coinMinIndex}.`);
+            }
+            upgradingCoin = minTradingCoin;
+            DeleteBuffFromPlayer(G, ctx, BuffNames.UpgradeNextCoin);
+        } else {
+            value = coinsMinValue;
+            upgradingCoinId = G.tavernsNum + coinMaxIndex;
+            const maxTradingCoin: ICoin | undefined = tradingCoins[coinMaxIndex];
+            if (maxTradingCoin === undefined) {
+                throw new Error(`В массиве обменных монет игрока отсутствует максимальная монета ${coinMaxIndex
+                    }.`);
+            }
+            upgradingCoin = maxTradingCoin;
+        }
+        UpgradeCoinAction(G, ctx, value, upgradingCoinId, CoinTypes.Board, upgradingCoin.isInitial);
     }
-    UpgradeCoinAction(G, ctx, value, upgradingCoinId, CoinTypes.Board, upgradingCoin.isInitial);
 };

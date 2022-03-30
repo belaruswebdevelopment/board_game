@@ -1,7 +1,7 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
-import { GameNames, RusCardTypes } from "./typescript/enums";
-import type { AdditionalCardTypes, DeckCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, INumberArrayValues, INumberValues, SuitTypes } from "./typescript/interfaces";
+import { CardNames, GameNames, RusCardTypes } from "./typescript/enums";
+import type { AdditionalCardTypes, DeckCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, ICreateOlwinDoubleNonPlacedCard, IDeckConfig, INumberArrayValues, INumberValues, IOlwinDoubleNonPlacedCard, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
@@ -162,6 +162,14 @@ export const CreateCard = ({
     game,
     tier,
     path,
+});
+
+export const CreateOlwinDoubleNonPlacedCard = ({
+    name = CardNames.OlwinsDouble,
+    suit,
+}: ICreateOlwinDoubleNonPlacedCard = {} as ICreateOlwinDoubleNonPlacedCard): IOlwinDoubleNonPlacedCard => ({
+    name,
+    suit,
 });
 
 export const IsActionCard = (card: unknown): card is IActionCard =>

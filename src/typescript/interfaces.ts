@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { ArtefactNames, GameNames, HeroNames, LogTypes, MoveNames, RusCardTypes } from "./enums";
+import { ArtefactNames, CardNames, CoinTypes, GameNames, HeroNames, LogTypes, MoveNames, RusCardTypes } from "./enums";
 
 export interface ISecret {
     campDecks: CampDeckCardTypes[][],
@@ -79,9 +79,9 @@ export interface IAction {
 export interface IConfig {
     readonly number?: number,
     readonly coinId?: number,
+    readonly coinValue?: number,
     readonly suit?: SuitTypes | null,
     readonly value?: number,
-    // TODO Do we need it!?!?!?
     readonly drawName?: string,
     readonly stageName?: string,
     readonly name?: string,
@@ -285,6 +285,11 @@ export interface IMercenaryPlayerCard {
     readonly variants: OptionalSuitPropertyTypes<IVariant>,
 }
 
+export interface IOlwinDoubleNonPlacedCard {
+    readonly name: CardNames.OlwinsDouble,
+    readonly suit: SuitTypes | null,
+}
+
 /**
  * <h3>Интерфейс для создания карты дворфа.</h3>
  */
@@ -309,6 +314,11 @@ export interface ICreateMercenaryPlayerCard {
     readonly tier: number,
     readonly path: string,
     readonly variants: OptionalSuitPropertyTypes<IVariant>,
+}
+
+export interface ICreateOlwinDoubleNonPlacedCard {
+    readonly name?: CardNames.OlwinsDouble,
+    readonly suit: SuitTypes | null,
 }
 
 /**
@@ -585,17 +595,17 @@ export interface IMoveCoinsArguments {
  * <h3>Интерфейс для выбранного аргумента мувов с фракциями для ботов.</h3>
  */
 export interface IMoveSuitCardCurrentId {
-    readonly suit: SuitTypes,
     readonly cardId: number,
-}
-
-export interface IMoveSuitCardPlayerCurrentId extends IMoveSuitCardCurrentId {
-    readonly playerId: number,
-}
-
-export interface IMoveSuitCardPlayerIdArguments {
-    readonly playerId: number,
     readonly suit: SuitTypes,
+}
+
+export interface IMoveCardPlayerCurrentId {
+    readonly cardId: number,
+    readonly playerId: number,
+}
+
+export interface IMoveCardIdPlayerIdArguments {
+    readonly playerId: number,
     readonly cards: number[],
 }
 
@@ -640,6 +650,7 @@ export interface IMoveByPickCardsOptions {
     readonly discardBoardCard: IMoveValidator,
     readonly discardSuitCard: IMoveValidator,
     readonly pickCampCardHolda: IMoveValidator,
+    readonly pickConcreteCoinToUpgrade: IMoveValidator,
     readonly pickDiscardCard: IMoveValidator,
     readonly pickHero: IMoveValidator,
     readonly placeOlwinCards: IMoveValidator,
@@ -664,6 +675,7 @@ export interface IMoveByEnlistmentMercenariesOptions {
     readonly discardBoardCard: IMoveValidator,
     readonly discardSuitCard: IMoveValidator,
     readonly pickCampCardHolda: IMoveValidator,
+    readonly pickConcreteCoinToUpgrade: IMoveValidator,
     readonly pickDiscardCard: IMoveValidator,
     readonly pickHero: IMoveValidator,
     readonly placeOlwinCards: IMoveValidator,
@@ -683,6 +695,7 @@ export interface IMoveByEndTierOptions {
     readonly discardBoardCard: IMoveValidator,
     readonly discardSuitCard: IMoveValidator,
     readonly pickCampCardHolda: IMoveValidator,
+    readonly pickConcreteCoinToUpgrade: IMoveValidator,
     readonly pickDiscardCard: IMoveValidator,
     readonly pickHero: IMoveValidator,
     readonly placeOlwinCards: IMoveValidator,
@@ -702,6 +715,7 @@ export interface IMoveByGetDistinctionsOptions {
     readonly discardBoardCard: IMoveValidator,
     readonly discardSuitCard: IMoveValidator,
     readonly pickCampCardHolda: IMoveValidator,
+    readonly pickConcreteCoinToUpgrade: IMoveValidator,
     readonly pickDiscardCard: IMoveValidator,
     readonly pickHero: IMoveValidator,
     readonly placeOlwinCards: IMoveValidator,
@@ -761,6 +775,7 @@ export interface IMoveValidators {
     // start
     readonly AddCoinToPouchMoveValidator: IMoveValidator,
     readonly ClickCampCardHoldaMoveValidator: IMoveValidator,
+    readonly PickConcreteCoinToUpgradeMoveValidator: IMoveValidator,
     readonly ClickCoinToUpgradeMoveValidator: IMoveValidator,
     readonly ClickHeroCardMoveValidator: IMoveValidator,
     readonly DiscardCardMoveValidator: IMoveValidator,
@@ -964,11 +979,6 @@ export interface ITavernsConfig {
     readonly [index: number]: ITavernInConfig,
 }
 
-export type StageTypes = keyof IMoveByPlaceCoinsOptions | keyof IMoveByPlaceCoinsUlineOptions
-    | keyof IMoveByPickCardsOptions | keyof IMoveByEnlistmentMercenariesOptions | keyof IMoveByEndTierOptions
-    | keyof IMoveByGetDistinctionsOptions | keyof IMoveByBrisingamensEndGameOptions
-    | keyof IMoveByGetMjollnirProfitOptions;
-
 /**
  * <h3>Типы данных для лагеря.</h3>
  */
@@ -998,7 +1008,8 @@ export type CardsHasStackValidators = IHeroCard | IArtefactCampCard;
 /**
  * <h3>Типы данных для карт выбранных игроком.</h3>
  */
-export type PickedCardType = DeckCardTypes | CampDeckCardTypes | IHeroCard | IMercenaryPlayerCard | null;
+export type PickedCardType = DeckCardTypes | CampDeckCardTypes | IHeroCard | IMercenaryPlayerCard
+    | IOlwinDoubleNonPlacedCard | null;
 
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>
@@ -1021,8 +1032,6 @@ export type IActionFunctionTypes = IActionFunction | null;
 
 export type IMoveFunctionTypes = IMoveFunction | null;
 
-export type MoveByTypes = keyof IMoveBy;
-
 export type BuffTypes = keyof IBuffs;
 
 export type IArtefactTypes = keyof IArtefactConfig;
@@ -1031,10 +1040,8 @@ export type IHeroTypes = keyof IHeroConfig;
 
 export type AdditionalCardTypes = keyof IAdditionalCardsConfig;
 
-export type MoveValidatorTypes = keyof IMoveValidators;
-
 export type MoveValidatorGetRangeTypes = IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`]
-    | IMoveArgumentsStage<IMoveSuitCardPlayerIdArguments>[`args`]
+    | IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`]
     | IMoveArgumentsStage<number[][]>[`args`]
     | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`]
     | IMoveArgumentsStage<null>[`args`]
@@ -1042,7 +1049,7 @@ export type MoveValidatorGetRangeTypes = IMoveArgumentsStage<OptionalSuitPropert
     | IMoveArgumentsStage<string[]>[`args`];
 
 export type ValidMoveIdParamTypes = number | SuitTypes | number[] | IMoveSuitCardCurrentId
-    | IMoveSuitCardPlayerCurrentId | IMoveCoinsArguments | null;
+    | IMoveCardPlayerCurrentId | IMoveCoinsArguments | null;
 
 export type SuitTypes = keyof ISuitConfig;
 
@@ -1059,7 +1066,9 @@ export type RequiredSuitPropertyTypes<Type> = {
 /**
  * <h3>Типы данных для остаточных аргументов функций.</h3>
  */
-export type ArgsTypes = (string | number | boolean | object | null)[];
+export type ArgsTypes = (CoinTypes | SuitTypes | number | boolean)[];
+
+export type CoinArgsTypes = [number] | [number, number, CoinTypes, boolean];
 
 /**
  * <h3>Типы данных для преимуществ.</h3>

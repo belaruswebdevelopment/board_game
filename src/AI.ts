@@ -4,7 +4,7 @@ import { IsCardNotActionAndNotNull } from "./Card";
 import { GetValidator } from "./MoveValidator";
 import { CurrentScoring } from "./Score";
 import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
-import type { IBuffs, IMoves, IMoveValidator, IMyGameState, IPublicPlayer, IStack, MoveArgsTypes, MoveByTypes, MoveValidatorGetRangeTypes, StageTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import type { IBuffs, IMoves, IMoveValidator, IMyGameState, IPublicPlayer, MoveArgsTypes, MoveValidatorGetRangeTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Возвращает массив возможных ходов для ботов.</h3>
@@ -20,10 +20,14 @@ import type { IBuffs, IMoves, IMoveValidator, IMyGameState, IPublicPlayer, IStac
 export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
     const moves: IMoves[] = [];
     let playerId: number | undefined;
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
     if (ctx.phase !== null) {
         const currentStage: string | undefined = ctx.activePlayers?.[Number(ctx.currentPlayer)];
-        let activeStageOfCurrentPlayer: StageTypes | `default` =
-            currentStage !== undefined ? currentStage as StageTypes : `default`;
+        let activeStageOfCurrentPlayer: Stages | `default` =
+            currentStage !== undefined ? currentStage as Stages : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
             if (ctx.phase === Phases.PlaceCoins) {
                 activeStageOfCurrentPlayer = Stages.Default3;
@@ -31,10 +35,6 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                 // TODO Add BotPlaceCoinUline and others moves only for bots?!
                 activeStageOfCurrentPlayer = Stages.Default1;
             } else if (ctx.phase === Phases.PickCards) {
-                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
                 if (ctx.activePlayers === null) {
                     let pickCardOrCampCard = `card`;
                     if (G.expansions.thingvellir?.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
@@ -47,26 +47,6 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                     } else {
                         activeStageOfCurrentPlayer = Stages.Default2;
                     }
-                } else {
-                    activeStageOfCurrentPlayer = Stages.DiscardSuitCard;
-                    // TODO Bot can't do async turns...?
-                    const stack: IStack | undefined = player.stack[0];
-                    if (stack === undefined) {
-                        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-                    }
-                    if (stack.config?.suit === undefined) {
-                        throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.suit'.`);
-                    }
-                    for (let p = 0; p < ctx.numPlayers; p++) {
-                        const playerP: IPublicPlayer | undefined = G.publicPlayers[p];
-                        if (playerP === undefined) {
-                            throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
-                        }
-                        if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
-                            playerId = p;
-                            break;
-                        }
-                    }
                 }
             } else if (ctx.phase === Phases.EnlistmentMercenaries) {
                 if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
@@ -76,9 +56,11 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                         activeStageOfCurrentPlayer = Stages.Default2;
                     }
                 } else if (G.drawProfit === ``) {
-                    activeStageOfCurrentPlayer = Stages.Default3;
-                } else if (G.drawProfit === ConfigNames.PlaceEnlistmentMercenaries) {
-                    activeStageOfCurrentPlayer = Stages.Default4;
+                    if (player.pickedCard === null) {
+                        activeStageOfCurrentPlayer = Stages.Default3;
+                    } else {
+                        activeStageOfCurrentPlayer = Stages.Default4;
+                    }
                 }
             } else if (ctx.phase === Phases.EndTier) {
                 activeStageOfCurrentPlayer = Stages.Default1;
@@ -89,13 +71,27 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
             } else if (ctx.phase === Phases.GetMjollnirProfit) {
                 activeStageOfCurrentPlayer = Stages.Default1;
             }
+            if (ctx.activePlayers !== null) {
+                activeStageOfCurrentPlayer = Stages.DiscardSuitCard;
+                // TODO Bot can't do async turns...?
+                for (let p = 0; p < ctx.numPlayers; p++) {
+                    const playerP: IPublicPlayer | undefined = G.publicPlayers[p];
+                    if (playerP === undefined) {
+                        throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
+                    }
+                    if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
+                        playerId = p;
+                        break;
+                    }
+                }
+            }
         }
         if (activeStageOfCurrentPlayer === `default`) {
             throw new Error(`Variable 'activeStageOfCurrentPlayer' can't be 'default'.`);
         }
         // TODO Add smart bot logic to get move arguments from getValue() (now it's random move mostly)
         const validator: IMoveValidator | null =
-            GetValidator(ctx.phase as MoveByTypes, activeStageOfCurrentPlayer);
+            GetValidator(ctx.phase as Phases, activeStageOfCurrentPlayer);
         if (validator !== null) {
             const moveName: MoveNames = validator.moveName,
                 moveRangeData: MoveValidatorGetRangeTypes = validator.getRange(G, ctx, playerId),
@@ -110,6 +106,8 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
                     moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
                 } else if (`suit` in moveValue) {
                     moveValues = [moveValue.suit, moveValue.cardId];
+                } else if (`playerId` in moveValue) {
+                    moveValues = [moveValue.cardId];
                 }
             } else if (moveValue === null) {
                 moveValues = [];

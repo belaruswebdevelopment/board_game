@@ -8,7 +8,7 @@ import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, MoveNames, MoveValidatorNames, Phases, Stages } from "../typescript/enums";
 import { DrawCard, DrawCoin } from "./ElementsUI";
-import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetMjollnirProfitProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, StartEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ProfitUI";
+import { ExplorerDistinctionProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 /**
  * <h3>Отрисовка карт лагеря.</h3>
  * <p>Применения:</p>
@@ -23,7 +23,7 @@ import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardF
  * @returns Поле лагеря | данные для списка доступных аргументов мува.
  */
 export const DrawCamp = (G, ctx, validatorName, data) => {
-    var _a, _b;
+    var _a, _b, _c;
     const boardCells = [], moveMainArgs = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.campNum; j++) {
@@ -48,7 +48,24 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
                 if ((ctx.phase === Phases.PickCards && ctx.activePlayers === null)
                     || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickCampCardHolda)) {
                     if (data !== undefined) {
-                        DrawCard(data, boardCells, campCard, j, player, suit, MoveNames.ClickCampCardMove, j);
+                        const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
+                        let moveName;
+                        switch (stage) {
+                            case Stages.PickCampCardHolda:
+                                moveName = MoveNames.ClickCampCardHoldaMove;
+                                break;
+                            case undefined:
+                                if (ctx.activePlayers === null) {
+                                    moveName = MoveNames.ClickCampCardMove;
+                                    break;
+                                }
+                                else {
+                                    throw new Error(`Нет такого мува 1.`);
+                                }
+                            default:
+                                throw new Error(`Нет такого мува 2.`);
+                        }
+                        DrawCard(data, boardCells, campCard, j, player, suit, moveName, j);
                     }
                     else if (validatorName === MoveValidatorNames.ClickCampCardMoveValidator
                         || validatorName === MoveValidatorNames.ClickCampCardHoldaMoveValidator) {
@@ -65,7 +82,7 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
     }
     if (data !== undefined) {
         return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.Camp(), className: "bg-top-camp-icon" }), _jsxs("span", { children: [_jsx("span", { style: Styles.CampBack(G.campDeckLength.length - G.tierToEnd + 1 >
-                                        G.campDeckLength.length ? 1 : G.campDeckLength.length - G.tierToEnd), className: "bg-top-card-back-icon" }), "Camp (", (_b = G.campDeckLength[G.campDeckLength.length - G.tierToEnd]) !== null && _b !== void 0 ? _b : 0, (G.campDeckLength.length - G.tierToEnd === 0 ? `/` +
+                                        G.campDeckLength.length ? 1 : G.campDeckLength.length - G.tierToEnd), className: "bg-top-card-back-icon" }), "Camp (", (_c = G.campDeckLength[G.campDeckLength.length - G.tierToEnd]) !== null && _c !== void 0 ? _c : 0, (G.campDeckLength.length - G.tierToEnd === 0 ? `/` +
                                     (G.campDeckLength[0] + G.campDeckLength[1]) : ``), " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
     }
     else if (validatorName !== null) {
@@ -291,65 +308,19 @@ export const DrawProfit = (G, ctx, data) => {
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок.`);
     }
-    const stack = player.stack[0];
-    if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-    }
-    const config = stack.config, option = G.drawProfit;
+    const option = G.drawProfit;
     let caption = `Get `;
-    if (option === ConfigNames.PlaceThrudHero || option === ConfigNames.PlaceYludHero
-        || option === ConfigNames.PlaceOlwinCards) {
-        if (config !== undefined) {
-            caption += `suit to place ${player.actionsNum} ${config.drawName} ${player.actionsNum > 1 ? `s` : ``} to ${player.actionsNum > 1 ? `different` : `that`} suit.`;
-            PlaceCardsProfit(G, ctx, null, data, boardCells);
-        }
-    }
-    else if (option === ConfigNames.ExplorerDistinction) {
-        caption += `one card to your board.`;
-        ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
-    }
-    else if (option === ConfigNames.BonfurAction || option === ConfigNames.DagdaAction
-        || option === ConfigNames.CrovaxTheDoppelgangerAction) {
-        caption += `${player.actionsNum} card${player.actionsNum > 1 ? `s` : ``} to discard from your board.`;
-        DiscardCardFromBoardProfit(G, ctx, null, data, boardCells);
-    }
-    else if (option === ConfigNames.BrisingamensEndGameAction) {
-        caption += `one card to discard from your board.`;
-        DiscardAnyCardFromPlayerBoardProfit(G, ctx, null, data, boardCells);
-    }
-    else if (option === ConfigNames.HofudAction) {
-        caption += `one warrior card to discard from your board.`;
-        DiscardSuitCardFromPlayerBoardProfit(G, ctx, null, null, data, boardCells);
-    }
-    else if (option === ConfigNames.GetMjollnirProfit) {
-        caption += `suit to get Mjollnir profit from ranks on that suit.`;
-        GetMjollnirProfitProfit(G, ctx, null, data, boardCells);
-    }
-    else if (option === ConfigNames.StartOrPassEnlistmentMercenaries) {
-        caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
-        StartEnlistmentMercenariesProfit(G, ctx, data, boardCells);
-    }
-    else if (option === ConfigNames.PlaceEnlistmentMercenaries) {
-        const card = player.pickedCard;
-        if (card !== null) {
-            caption += `suit to place ${card.name} to that suit.`;
-            PlaceEnlistmentMercenariesProfit(G, ctx, null, data, boardCells);
-        }
-    }
-    else if (option === ConfigNames.AddCoinToPouchVidofnirVedrfolnir) {
-        caption += `${player.actionsNum} coin${player.actionsNum > 1 ? `s` : ``} to add to your pouch to fill it.`;
-        AddCoinToPouchProfit(G, ctx, null, data, boardCells);
-    }
-    else {
-        if (config !== undefined) {
-            caption += `coin to upgrade up to ${config.value}.`;
-            if (option === ConfigNames.VidofnirVedrfolnirAction) {
-                UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, null, data, boardCells);
-            }
-            else if (option === ConfigNames.UpgradeCoin) {
-                UpgradeCoinProfit(G, ctx, null, data, boardCells);
-            }
-        }
+    switch (option) {
+        case ConfigNames.ExplorerDistinction:
+            caption += `one card to your board.`;
+            ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
+            break;
+        case ConfigNames.StartOrPassEnlistmentMercenaries:
+            caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;
+            StartEnlistmentMercenariesProfit(G, ctx, data, boardCells);
+            break;
+        default:
+            throw new Error(`Не задан обязательный параметр 'drawProfit'.`);
     }
     return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.DistinctionsBack(), className: "bg-top-distinctions-icon" }), _jsx("span", { children: caption })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }) })] }));
 };
@@ -368,7 +339,7 @@ export const DrawProfit = (G, ctx, data) => {
  * @returns Поле таверн.
  */
 export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
-    var _a;
+    var _a, _b;
     const tavernsBoards = [], moveMainArgs = [];
     for (let t = 0; t < G.tavernsNum; t++) {
         const currentTavernConfig = tavernsConfig[t];
@@ -396,28 +367,35 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                     if (IsCardNotActionAndNotNull(tavernCard)) {
                         suit = tavernCard.suit;
                     }
-                    if (t === G.currentTavern) {
-                        const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                        if (player === undefined) {
-                            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                    if (player === undefined) {
+                        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                    }
+                    if (t === G.currentTavern && ctx.phase === Phases.PickCards && ((ctx.activePlayers === null)
+                        || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.DiscardCard))) {
+                        if (data !== undefined) {
+                            const stage = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)];
+                            let moveName;
+                            switch (stage) {
+                                case Stages.DiscardCard:
+                                    moveName = MoveNames.DiscardCard2PlayersMove;
+                                    break;
+                                case undefined:
+                                    if (ctx.activePlayers === null) {
+                                        moveName = MoveNames.ClickCardMove;
+                                        break;
+                                    }
+                                    else {
+                                        throw new Error(`Нет такого мува 1.`);
+                                    }
+                                default:
+                                    throw new Error(`Нет такого мува 2.`);
+                            }
+                            DrawCard(data, boardCells, tavernCard, j, player, suit, moveName, j);
                         }
-                        if (ctx.phase === Phases.PickCards && ctx.activePlayers === null
-                            && ctx.currentPlayer === ctx.playOrder[ctx.playOrderPos]) {
-                            if (data !== undefined) {
-                                DrawCard(data, boardCells, tavernCard, j, player, suit, MoveNames.ClickCardMove, j);
-                            }
-                            else if (validatorName === MoveValidatorNames.ClickCardMoveValidator) {
-                                moveMainArgs.push(j);
-                            }
-                        }
-                        else if (ctx.phase === Phases.PickCards
-                            && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.DiscardCard) {
-                            if (data !== undefined) {
-                                DrawCard(data, boardCells, tavernCard, j, player, suit, MoveNames.DiscardCard2PlayersMove, j);
-                            }
-                            else if (validatorName === MoveValidatorNames.DiscardCard2PlayersMoveValidator) {
-                                moveMainArgs.push(j);
-                            }
+                        else if (validatorName === MoveValidatorNames.ClickCardMoveValidator
+                            || validatorName === MoveValidatorNames.DiscardCard2PlayersMoveValidator) {
+                            moveMainArgs.push(j);
                         }
                     }
                     else {

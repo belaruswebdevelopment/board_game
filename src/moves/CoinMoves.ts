@@ -1,11 +1,11 @@
 import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { UpgradeCoinAction } from "../actions/AutoActions";
 import { IsCoin } from "../Coin";
+import { UpgradeCoinActions } from "../helpers/ActionHelpers";
 import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { IsValidMove } from "../MoveValidator";
-import { Stages, SuitNames } from "../typescript/enums";
-import type { CoinType, IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerBoardCoinTypes } from "../typescript/interfaces";
+import { CoinTypes, Stages, SuitNames } from "../typescript/enums";
+import type { CoinType, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerBoardCoinTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Выбор места для монет на столе для выкладки монет.</h3>
@@ -97,7 +97,7 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  * @param isInitial Является ли базовой.
  * @returns
  */
-export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number, type: string,
+export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number, type: CoinTypes,
     isInitial: boolean): string | void => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.UpgradeCoin, {
@@ -118,19 +118,21 @@ export const ClickCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx:
             G.distinctions[SuitNames.EXPLORER] = undefined;
         }
     }
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    UpgradeCoinActions(G, ctx, coinId, type, isInitial);
+};
+
+export const ClickConcreteCoinToUpgradeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
+    type: CoinTypes, isInitial: boolean): string | void => {
+    const isValidMove: boolean =
+        ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PickConcreteCoinToUpgrade, {
+            coinId,
+            type,
+            isInitial,
+        });
+    if (!isValidMove) {
+        return INVALID_MOVE;
     }
-    const stack: IStack | undefined = player.stack[0];
-    if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-    }
-    const value: number | undefined = stack.config?.value;
-    if (value === undefined) {
-        throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.value'.`);
-    }
-    UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
+    UpgradeCoinActions(G, ctx, coinId, type, isInitial);
 };
 
 /**

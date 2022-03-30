@@ -16,13 +16,12 @@ import { ArtefactNames, MoveNames } from "../typescript/enums";
  *
  * @param data Глобальные параметры.
  * @param boardCells Ячейки для отрисовки.
- * @param key Ключ.
  * @param name Имя кнопки.
  * @param player Игрок.
  * @param moveName Название действия.
  * @param args Аргументы действия.
  */
-export const DrawButton = (data, boardCells, key, name, player, moveName, ...args) => {
+export const DrawButton = (data, boardCells, name, player, moveName, ...args) => {
     let action;
     switch (moveName) {
         case MoveNames.StartEnlistmentMercenariesMove:
@@ -34,7 +33,7 @@ export const DrawButton = (data, boardCells, key, name, player, moveName, ...arg
         default:
             throw new Error(`Нет такого мува.`);
     }
-    boardCells.push(_jsx("td", { className: "cursor-pointer", onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded", children: name }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `Player ${player.nickname} ` : ``}${key}`));
+    boardCells.push(_jsx("td", { className: "cursor-pointer", onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded", children: name }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `Player ${player.nickname} ` : ``}${name}`));
 };
 /**
  * <h3>Отрисовка карт.</h3>
@@ -246,18 +245,13 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
     }
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, className: spanClasses, children: span }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}coin ${id}${IsCoin(coin) ? ` ${coin.value}` : ` empty`}`));
 };
-export const DrawSuit = (data, boardCells, suit, key, value, player, moveName) => {
+export const DrawSuit = (data, playerHeaders, suit, player, moveName) => {
     let action;
     switch (moveName) {
         case MoveNames.GetMjollnirProfitMove:
             action = data.moves.GetMjollnirProfitMove;
             break;
-        case MoveNames.ClickHandCoinMove:
-            action = data.moves.ClickHandCoinMove;
-            break;
-        case MoveNames.ClickHandCoinUlineMove:
-            action = data.moves.ClickHandCoinUlineMove;
-            break;
+        // TODO Move it to playerBoard actions
         case MoveNames.PlaceThrudHeroMove:
             action = data.moves.PlaceThrudHeroMove;
             break;
@@ -271,8 +265,13 @@ export const DrawSuit = (data, boardCells, suit, key, value, player, moveName) =
             action = data.moves.PlaceEnlistmentMercenariesMove;
             break;
         default:
-            throw new Error(`Нет такого мува.`);
+            action = null;
+            break;
     }
-    boardCells.push(_jsx("td", { className: `${suitsConfig[suit].suitColor} cursor-pointer`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon", children: _jsx("b", { className: "whitespace-nowrap text-white", children: value }) }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}choose ${suit} suit to ${key}`));
+    let className = ``;
+    if (action !== null) {
+        className += ` cursor-pointer`;
+    }
+    playerHeaders.push(_jsx("th", { className: `${suitsConfig[suit].suitColor}${className}`, onClick: () => action === null || action === void 0 ? void 0 : action(suit), children: _jsx("span", { style: Styles.Suits(suit), className: "bg-suit-icon" }) }, `${player.nickname} ${suitsConfig[suit].suitName}`));
 };
 //# sourceMappingURL=ElementsUI.js.map

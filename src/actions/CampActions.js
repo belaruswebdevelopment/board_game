@@ -6,7 +6,7 @@ import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { LogTypes, RusCardTypes } from "../typescript/enums";
+import { CoinTypes, LogTypes, RusCardTypes, SuitNames } from "../typescript/enums";
 import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
@@ -59,11 +59,10 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
  *
  * @param G
  * @param ctx
- * @param suit Название фракции.
  * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  */
-export const DiscardSuitCardAction = (G, ctx, suit, cardId) => {
+export const DiscardSuitCardAction = (G, ctx, cardId) => {
     if (ctx.playerID === undefined) {
         throw new Error(`Отсутствует обязательный параметр 'ctx.playerID'.`);
     }
@@ -71,7 +70,7 @@ export const DiscardSuitCardAction = (G, ctx, suit, cardId) => {
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок ${ctx.playerID}.`);
     }
-    const discardedCard = player.cards[suit].splice(cardId, 1)[0];
+    const discardedCard = player.cards[SuitNames.WARRIOR].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
         throw new Error(`В массиве карт игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
     }

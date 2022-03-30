@@ -2,7 +2,6 @@ import { ConfigNames, DrawNames, Stages, SuitNames } from "../typescript/enums";
 export const StackData = {
     addCoinToPouch: (number) => ({
         config: {
-            name: ConfigNames.AddCoinToPouchVidofnirVedrfolnir,
             stageName: Stages.AddCoinToPouch,
             number,
             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
@@ -17,7 +16,6 @@ export const StackData = {
         config: {
             stageName: Stages.DiscardBoardCard,
             drawName: DrawNames.Bonfur,
-            name: ConfigNames.BonfurAction,
             suit: SuitNames.BLACKSMITH,
         },
     }),
@@ -25,29 +23,21 @@ export const StackData = {
         config: {
             stageName: Stages.DiscardBoardCard,
             drawName: DrawNames.CrovaxTheDoppelganger,
-            name: ConfigNames.CrovaxTheDoppelgangerAction,
-            suit: null,
         },
     }),
     discardCardFromBoardDagda: (number) => ({
         config: {
             stageName: Stages.DiscardBoardCard,
             drawName: DrawNames.Dagda,
-            name: ConfigNames.DagdaAction,
             suit: SuitNames.HUNTER,
             number,
         },
     }),
     discardSuitCard: (playerId) => ({
         playerId,
-        config: {
-            suit: SuitNames.WARRIOR,
-        },
     }),
     discardSuitCardHofud: () => ({
         config: {
-            suit: SuitNames.WARRIOR,
-            name: ConfigNames.HofudAction,
             drawName: DrawNames.Hofud,
         },
     }),
@@ -69,7 +59,6 @@ export const StackData = {
     }),
     getMjollnirProfit: () => ({
         config: {
-            name: ConfigNames.GetMjollnirProfit,
             drawName: DrawNames.Mjollnir,
         },
     }),
@@ -84,6 +73,13 @@ export const StackData = {
             drawName: DrawNames.PickCard,
         },
     }),
+    pickConcreteCoinToUpgrade: (coinValue) => ({
+        config: {
+            stageName: Stages.PickConcreteCoinToUpgrade,
+            drawName: DrawNames.PickConcreteCoinToUpgrade,
+            coinValue,
+        },
+    }),
     pickDiscardCardAndumia: () => ({
         config: {
             stageName: Stages.PickDiscardCard,
@@ -93,7 +89,6 @@ export const StackData = {
     pickDiscardCardBrisingamens: (number) => ({
         config: {
             stageName: Stages.PickDiscardCard,
-            name: ConfigNames.BrisingamensAction,
             drawName: DrawNames.Brisingamens,
             number,
         },
@@ -134,13 +129,12 @@ export const StackData = {
             },
         },
         config: {
-            name: ConfigNames.PlaceOlwinCards,
             stageName: Stages.PlaceOlwinCards,
             drawName: DrawNames.Olwin,
             number,
         },
     }),
-    placeThrudHero: (suit) => ({
+    placeThrudHero: () => ({
         variants: {
             blacksmith: {
                 suit: SuitNames.BLACKSMITH,
@@ -170,9 +164,7 @@ export const StackData = {
         },
         config: {
             stageName: Stages.PlaceThrudHero,
-            name: ConfigNames.PlaceThrudHero,
             drawName: DrawNames.Thrud,
-            suit,
         },
     }),
     placeTradingCoinsUline: (number) => ({
@@ -212,7 +204,6 @@ export const StackData = {
         },
         config: {
             drawName: DrawNames.Ylud,
-            name: ConfigNames.PlaceYludHero,
         },
     }),
     pickHero: () => ({
@@ -223,7 +214,6 @@ export const StackData = {
     }),
     placeEnlistmentMercenaries: () => ({
         config: {
-            name: ConfigNames.PlaceEnlistmentMercenaries,
             drawName: DrawNames.PlaceEnlistmentMercenaries,
         },
     }),
@@ -235,7 +225,6 @@ export const StackData = {
     }),
     upgradeCoin: (value) => ({
         config: {
-            name: ConfigNames.UpgradeCoin,
             stageName: Stages.UpgradeCoin,
             value,
             drawName: DrawNames.UpgradeCoin,
@@ -244,7 +233,6 @@ export const StackData = {
     upgradeCoinVidofnirVedrfolnir: (value, coinId) => ({
         config: {
             coinId,
-            name: ConfigNames.VidofnirVedrfolnirAction,
             stageName: Stages.UpgradeVidofnirVedrfolnirCoin,
             value,
             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
@@ -252,7 +240,6 @@ export const StackData = {
     }),
     upgradeCoinWarriorDistinction: () => ({
         config: {
-            name: ConfigNames.UpgradeCoin,
             stageName: Stages.UpgradeCoin,
             value: 5,
             drawName: DrawNames.UpgradeCoinWarriorDistinction,

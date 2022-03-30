@@ -1,10 +1,9 @@
 import { ConfigNames, DrawNames, Stages, SuitNames } from "../typescript/enums";
-import type { IStack, SuitTypes } from "../typescript/interfaces";
+import type { IStack } from "../typescript/interfaces";
 
 export const StackData = {
     addCoinToPouch: (number: number): IStack => ({
         config: {
-            name: ConfigNames.AddCoinToPouchVidofnirVedrfolnir,
             stageName: Stages.AddCoinToPouch,
             number,
             drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
@@ -19,7 +18,6 @@ export const StackData = {
         config: {
             stageName: Stages.DiscardBoardCard,
             drawName: DrawNames.Bonfur,
-            name: ConfigNames.BonfurAction,
             suit: SuitNames.BLACKSMITH,
         },
     }),
@@ -27,29 +25,21 @@ export const StackData = {
         config: {
             stageName: Stages.DiscardBoardCard,
             drawName: DrawNames.CrovaxTheDoppelganger,
-            name: ConfigNames.CrovaxTheDoppelgangerAction,
-            suit: null,
         },
     }),
     discardCardFromBoardDagda: (number?: number): IStack => ({
         config: {
             stageName: Stages.DiscardBoardCard,
             drawName: DrawNames.Dagda,
-            name: ConfigNames.DagdaAction,
             suit: SuitNames.HUNTER,
             number,
         },
     }),
     discardSuitCard: (playerId: number): IStack => ({
         playerId,
-        config: {
-            suit: SuitNames.WARRIOR,
-        },
     }),
     discardSuitCardHofud: (): IStack => ({
         config: {
-            suit: SuitNames.WARRIOR,
-            name: ConfigNames.HofudAction,
             drawName: DrawNames.Hofud,
         },
     }),
@@ -71,7 +61,6 @@ export const StackData = {
     }),
     getMjollnirProfit: (): IStack => ({
         config: {
-            name: ConfigNames.GetMjollnirProfit,
             drawName: DrawNames.Mjollnir,
         },
     }),
@@ -86,6 +75,13 @@ export const StackData = {
             drawName: DrawNames.PickCard,
         },
     }),
+    pickConcreteCoinToUpgrade: (coinValue: number): IStack => ({
+        config: {
+            stageName: Stages.PickConcreteCoinToUpgrade,
+            drawName: DrawNames.PickConcreteCoinToUpgrade,
+            coinValue,
+        },
+    }),
     pickDiscardCardAndumia: (): IStack => ({
         config: {
             stageName: Stages.PickDiscardCard,
@@ -95,7 +91,6 @@ export const StackData = {
     pickDiscardCardBrisingamens: (number?: number): IStack => ({
         config: {
             stageName: Stages.PickDiscardCard,
-            name: ConfigNames.BrisingamensAction,
             drawName: DrawNames.Brisingamens,
             number,
         },
@@ -136,13 +131,12 @@ export const StackData = {
             },
         },
         config: {
-            name: ConfigNames.PlaceOlwinCards,
             stageName: Stages.PlaceOlwinCards,
             drawName: DrawNames.Olwin,
             number,
         },
     }),
-    placeThrudHero: (suit?: SuitTypes): IStack => ({
+    placeThrudHero: (): IStack => ({
         variants: {
             blacksmith: {
                 suit: SuitNames.BLACKSMITH,
@@ -172,9 +166,7 @@ export const StackData = {
         },
         config: {
             stageName: Stages.PlaceThrudHero,
-            name: ConfigNames.PlaceThrudHero,
             drawName: DrawNames.Thrud,
-            suit,
         },
     }),
     placeTradingCoinsUline: (number?: number): IStack => ({
@@ -214,7 +206,6 @@ export const StackData = {
         },
         config: {
             drawName: DrawNames.Ylud,
-            name: ConfigNames.PlaceYludHero,
         },
     }),
     pickHero: (): IStack => ({
@@ -225,7 +216,6 @@ export const StackData = {
     }),
     placeEnlistmentMercenaries: (): IStack => ({
         config: {
-            name: ConfigNames.PlaceEnlistmentMercenaries,
             drawName: DrawNames.PlaceEnlistmentMercenaries,
         },
     }),
@@ -237,7 +227,6 @@ export const StackData = {
     }),
     upgradeCoin: (value: number): IStack => ({
         config: {
-            name: ConfigNames.UpgradeCoin,
             stageName: Stages.UpgradeCoin,
             value,
             drawName: DrawNames.UpgradeCoin,
@@ -246,7 +235,6 @@ export const StackData = {
     upgradeCoinVidofnirVedrfolnir: (value: number, coinId?: number): IStack => ({
         config: {
             coinId,
-            name: ConfigNames.VidofnirVedrfolnirAction,
             stageName: Stages.UpgradeVidofnirVedrfolnirCoin,
             value,
             drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
@@ -254,7 +242,6 @@ export const StackData = {
     }),
     upgradeCoinWarriorDistinction: (): IStack => ({
         config: {
-            name: ConfigNames.UpgradeCoin,
             stageName: Stages.UpgradeCoin,
             value: 5,
             drawName: DrawNames.UpgradeCoinWarriorDistinction,

@@ -4,7 +4,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
 import { BuffNames, HeroNames } from "../typescript/enums";
-import type { IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
+import type { IHeroCard, IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
@@ -64,11 +64,17 @@ export const CheckEndTierOrder = (G: IMyGameState): void => {
     if (yludIndex === -1) {
         throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.EndTier}.`);
     }
+    const player: IPublicPlayer | undefined = G.publicPlayers[yludIndex];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует игрок с обязательным бафом ${BuffNames.EndTier}.`);
+    }
+    const yludHeroCard: IHeroCard | undefined =
+        player.heroes.find((hero: IHeroCard): boolean => hero.name === HeroNames.Ylud);
+    if (yludHeroCard === undefined) {
+        throw new Error(`В массиве карт игрока отсутствует карта героя ${HeroNames.Ylud}.`);
+    }
+    player.pickedCard = yludHeroCard;
     if (G.tierToEnd === 0) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[yludIndex];
-        if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с картой героя ${HeroNames.Ylud}.`);
-        }
         const cards: PlayerCardsType[] = Object.values(player.cards).flat(),
             index: number =
                 cards.findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);

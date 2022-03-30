@@ -37,6 +37,11 @@ export const CheckAndMoveThrud = (G, ctx, card) => {
         }
         const index = player.cards[card.suit].findIndex((card) => card.name === HeroNames.Thrud);
         if (index !== -1) {
+            const thrudCard = player.cards[card.suit][index];
+            if (thrudCard === undefined) {
+                throw new Error(`В массиве карт игрока во фракции ${card.suit} под индексом ${index} отсутствует карта героя ${HeroNames.Thrud} для перемещения на новое место.`);
+            }
+            player.pickedCard = thrudCard;
             player.cards[card.suit].splice(index, 1);
         }
         return index !== -1;
@@ -57,7 +62,7 @@ export const CheckAndMoveThrud = (G, ctx, card) => {
 export const CheckAndMoveThrudOrPickHeroAction = (G, ctx, card) => {
     const isMoveThrud = CheckAndMoveThrud(G, ctx, card);
     if (isMoveThrud) {
-        StartThrudMoving(G, ctx, card);
+        StartThrudMoving(G, ctx);
     }
     else {
         CheckPickHero(G, ctx);
@@ -98,11 +103,8 @@ export const CheckPickHero = (G, ctx) => {
  я
  * @param G
  * @param ctx
- * @param card Карта.
  */
-export const StartThrudMoving = (G, ctx, card) => {
-    if (card.suit !== null) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.placeThrudHero(card.suit)]);
-    }
+export const StartThrudMoving = (G, ctx) => {
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.placeThrudHero()]);
 };
 //# sourceMappingURL=HeroHelpers.js.map

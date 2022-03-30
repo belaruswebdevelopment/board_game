@@ -15,9 +15,13 @@ import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
  * @returns Массив возможных мувов у ботов.
  */
 export const enumerate = (G, ctx) => {
-    var _a, _b, _c;
+    var _a, _b;
     const moves = [];
     let playerId;
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+    }
     if (ctx.phase !== null) {
         const currentStage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)];
         let activeStageOfCurrentPlayer = currentStage !== undefined ? currentStage : `default`;
@@ -30,10 +34,6 @@ export const enumerate = (G, ctx) => {
                 activeStageOfCurrentPlayer = Stages.Default1;
             }
             else if (ctx.phase === Phases.PickCards) {
-                const player = G.publicPlayers[Number(ctx.currentPlayer)];
-                if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-                }
                 if (ctx.activePlayers === null) {
                     let pickCardOrCampCard = `card`;
                     if (((_b = G.expansions.thingvellir) === null || _b === void 0 ? void 0 : _b.active) && (ctx.currentPlayer === G.publicPlayersOrder[0]
@@ -47,27 +47,6 @@ export const enumerate = (G, ctx) => {
                         activeStageOfCurrentPlayer = Stages.Default2;
                     }
                 }
-                else {
-                    activeStageOfCurrentPlayer = Stages.DiscardSuitCard;
-                    // TODO Bot can't do async turns...?
-                    const stack = player.stack[0];
-                    if (stack === undefined) {
-                        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-                    }
-                    if (((_c = stack.config) === null || _c === void 0 ? void 0 : _c.suit) === undefined) {
-                        throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.suit'.`);
-                    }
-                    for (let p = 0; p < ctx.numPlayers; p++) {
-                        const playerP = G.publicPlayers[p];
-                        if (playerP === undefined) {
-                            throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
-                        }
-                        if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
-                            playerId = p;
-                            break;
-                        }
-                    }
-                }
             }
             else if (ctx.phase === Phases.EnlistmentMercenaries) {
                 if (G.drawProfit === ConfigNames.StartOrPassEnlistmentMercenaries) {
@@ -79,10 +58,12 @@ export const enumerate = (G, ctx) => {
                     }
                 }
                 else if (G.drawProfit === ``) {
-                    activeStageOfCurrentPlayer = Stages.Default3;
-                }
-                else if (G.drawProfit === ConfigNames.PlaceEnlistmentMercenaries) {
-                    activeStageOfCurrentPlayer = Stages.Default4;
+                    if (player.pickedCard === null) {
+                        activeStageOfCurrentPlayer = Stages.Default3;
+                    }
+                    else {
+                        activeStageOfCurrentPlayer = Stages.Default4;
+                    }
                 }
             }
             else if (ctx.phase === Phases.EndTier) {
@@ -96,6 +77,20 @@ export const enumerate = (G, ctx) => {
             }
             else if (ctx.phase === Phases.GetMjollnirProfit) {
                 activeStageOfCurrentPlayer = Stages.Default1;
+            }
+            if (ctx.activePlayers !== null) {
+                activeStageOfCurrentPlayer = Stages.DiscardSuitCard;
+                // TODO Bot can't do async turns...?
+                for (let p = 0; p < ctx.numPlayers; p++) {
+                    const playerP = G.publicPlayers[p];
+                    if (playerP === undefined) {
+                        throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
+                    }
+                    if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
+                        playerId = p;
+                        break;
+                    }
+                }
             }
         }
         if (activeStageOfCurrentPlayer === `default`) {
@@ -118,6 +113,9 @@ export const enumerate = (G, ctx) => {
                 }
                 else if (`suit` in moveValue) {
                     moveValues = [moveValue.suit, moveValue.cardId];
+                }
+                else if (`playerId` in moveValue) {
+                    moveValues = [moveValue.cardId];
                 }
             }
             else if (moveValue === null) {

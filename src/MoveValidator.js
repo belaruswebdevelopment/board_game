@@ -7,10 +7,10 @@ import { IsMultiplayer } from "./helpers/MultiplayerHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { MoveNames, MoveValidatorNames, Phases, ValidatorNames } from "./typescript/enums";
+import { CoinTypes, MoveNames, MoveValidatorNames, Phases, Stages, SuitNames, ValidatorNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
-import { AddCoinToPouchProfit, DiscardAnyCardFromPlayerBoardProfit, DiscardCardFromBoardProfit, DiscardSuitCardFromPlayerBoardProfit, ExplorerDistinctionProfit, GetMjollnirProfitProfit, PlaceCardsProfit, PlaceEnlistmentMercenariesProfit, UpgradeCoinProfit, UpgradeCoinVidofnirVedrfolnirProfit } from "./ui/ProfitUI";
+import { ExplorerDistinctionProfit } from "./ui/ProfitUI";
 /**
  * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
  * <p>Применения:</p>
@@ -39,19 +39,19 @@ export const CoinUpgradeValidation = (G, ctx, coinData) => {
     else {
         handCoins = player.handCoins;
     }
-    if (coinData.type === "hand") {
-        const handCoinPosition = player.boardCoins.filter((coin, index) => coin === null && index <= coinData.coinId).length - 1, handCoin = handCoins.filter((coin) => IsCoin(coin))[handCoinPosition];
+    if (coinData.type === CoinTypes.Hand) {
+        const handCoin = handCoins[coinData.coinId];
         if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока в руке отсутствует монета ${handCoinPosition}.`);
+            throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinData.coinId}.`);
         }
         if (handCoin === null) {
-            throw new Error(`Выбранная для улучшения монета игрока в руке ${handCoinPosition} не может отсутствовать там.`);
+            throw new Error(`Выбранная для улучшения монета игрока в руке ${coinData.coinId} не может отсутствовать там.`);
         }
         if (!handCoin.isTriggerTrading) {
             return true;
         }
     }
-    else {
+    else if (coinData.type === CoinTypes.Board) {
         const boardCoin = player.boardCoins[coinData.coinId];
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока на столе отсутствует монета ${coinData.coinId}.`);
@@ -62,6 +62,9 @@ export const CoinUpgradeValidation = (G, ctx, coinData) => {
         if (!boardCoin.isTriggerTrading) {
             return true;
         }
+    }
+    else {
+        throw new Error(`Не существует типа монеты - ${coinData.type}.`);
     }
     return false;
 };
@@ -489,7 +492,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return DiscardAnyCardFromPlayerBoardProfit(G, ctx, MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator);
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator, null);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, suitNames = [];
@@ -547,7 +550,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return DrawPlayersBoards(G, ctx, MoveValidatorNames.GetEnlistmentMercenariesMoveValidator);
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.GetEnlistmentMercenariesMoveValidator, null);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -567,7 +570,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return GetMjollnirProfitProfit(G, ctx, MoveValidatorNames.GetMjollnirProfitMoveValidator);
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.GetMjollnirProfitMoveValidator, null);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, totalSuitsRanks = [];
@@ -624,7 +627,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return PlaceEnlistmentMercenariesProfit(G, ctx, MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator);
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator, null);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -644,7 +647,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceYludHeroMoveValidator);
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceYludHeroMoveValidator, null);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -671,7 +674,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return AddCoinToPouchProfit(G, ctx, MoveValidatorNames.AddCoinToPouchMoveValidator);
+            return DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.AddCoinToPouchMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -703,6 +706,47 @@ export const moveValidators = {
         moveName: MoveNames.ClickCampCardHoldaMove,
         validate: () => true,
     },
+    PickConcreteCoinToUpgradeMoveValidator: {
+        // TODO FIX IT!!!
+        getRange: (G, ctx) => {
+            if (G === undefined) {
+                throw new Error(`Function param 'G' is undefined.`);
+            }
+            if (ctx === undefined) {
+                throw new Error(`Function param 'ctx' is undefined.`);
+            }
+            return DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator).concat(DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator));
+        },
+        getValue: (G, ctx, currentMoveArguments) => {
+            const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
+            if (moveArgument === undefined) {
+                throw new Error(`Отсутствует необходимый аргумент мува для бота.`);
+            }
+            return moveArgument;
+        },
+        moveName: MoveNames.ClickConcreteCoinToUpgradeMove,
+        validate: (G, ctx, id) => {
+            if (G === undefined) {
+                throw new Error(`Function param 'G' is undefined.`);
+            }
+            if (ctx === undefined) {
+                throw new Error(`Function param 'ctx' is undefined.`);
+            }
+            if (id === undefined) {
+                throw new Error(`Function param 'id' is undefined.`);
+            }
+            if (typeof id !== `object`) {
+                throw new Error(`Function param 'id' isn't object.`);
+            }
+            if (id === null) {
+                throw new Error(`Function param 'id' is null.`);
+            }
+            if (!(`coinId` in id)) {
+                throw new Error(`Function param 'id' hasn't 'coinId'.`);
+            }
+            return CoinUpgradeValidation(G, ctx, id);
+        },
+    },
     ClickCoinToUpgradeMoveValidator: {
         getRange: (G, ctx) => {
             if (G === undefined) {
@@ -711,7 +755,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return UpgradeCoinProfit(G, ctx, MoveValidatorNames.ClickCoinToUpgradeMoveValidator);
+            return DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.ClickCoinToUpgradeMoveValidator).concat(DrawPlayersHandsCoins(G, ctx, MoveValidatorNames.ClickCoinToUpgradeMoveValidator));
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -811,7 +855,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return DiscardCardFromBoardProfit(G, ctx, MoveValidatorNames.DiscardCardMoveValidator);
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.DiscardCardMoveValidator, null);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, suitNamesArray = [];
@@ -852,22 +896,22 @@ export const moveValidators = {
             if (playerId === undefined) {
                 throw new Error(`Function param 'playerId' is undefined.`);
             }
-            return DiscardSuitCardFromPlayerBoardProfit(G, ctx, MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator, playerId);
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator, playerId);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, player = G.publicPlayers[moveArguments.playerId];
             if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует игрок ${moveArguments.playerId}.`);
             }
-            const cardFirst = player.cards[moveArguments.suit][0];
+            const cardFirst = player.cards[SuitNames.WARRIOR][0];
             if (cardFirst === undefined) {
-                throw new Error(`В массиве карт игрока во фракции ${moveArguments.suit} отсутствует первая карта.`);
+                throw new Error(`В массиве карт игрока во фракции ${SuitNames.WARRIOR} отсутствует первая карта.`);
             }
             let minCardIndex = 0, minCardValue = cardFirst.points;
             moveArguments.cards.forEach((value, index) => {
-                const card = player.cards[moveArguments.suit][value];
+                const card = player.cards[SuitNames.WARRIOR][value];
                 if (card === undefined) {
-                    throw new Error(`В массиве карт игрока во фракции ${moveArguments.suit} отсутствует карта ${value}.`);
+                    throw new Error(`В массиве карт игрока во фракции ${SuitNames.WARRIOR} отсутствует карта ${value}.`);
                 }
                 const cardPoints = card.points;
                 if (cardPoints === null || minCardValue === null) {
@@ -884,7 +928,6 @@ export const moveValidators = {
             }
             return {
                 playerId: moveArguments.playerId,
-                suit: moveArguments.suit,
                 cardId: cardIndex,
             };
         },
@@ -920,7 +963,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceOlwinCardMoveValidator);
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceOlwinCardMoveValidator, null);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -940,7 +983,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return PlaceCardsProfit(G, ctx, MoveValidatorNames.PlaceThrudHeroMoveValidator);
+            return DrawPlayersBoards(G, ctx, MoveValidatorNames.PlaceThrudHeroMoveValidator, null);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             // TODO Move same logic for SuitTypes & number to functions and use it in getValue
@@ -961,7 +1004,7 @@ export const moveValidators = {
             if (ctx === undefined) {
                 throw new Error(`Function param 'ctx' is undefined.`);
             }
-            return UpgradeCoinVidofnirVedrfolnirProfit(G, ctx, MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator);
+            return DrawPlayersBoardsCoins(G, ctx, MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator);
         },
         getValue: (G, ctx, currentMoveArguments) => {
             const moveArguments = currentMoveArguments, moveArgument = moveArguments[Math.floor(Math.random() * moveArguments.length)];
@@ -1025,6 +1068,7 @@ export const moveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
+        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
@@ -1045,6 +1089,7 @@ export const moveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
+        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
@@ -1060,6 +1105,7 @@ export const moveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
+        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
@@ -1075,6 +1121,7 @@ export const moveBy = {
         discardBoardCard: moveValidators.DiscardCardMoveValidator,
         discardSuitCard: moveValidators.DiscardSuitCardFromPlayerBoardMoveValidator,
         pickCampCardHolda: moveValidators.ClickCampCardHoldaMoveValidator,
+        pickConcreteCoinToUpgrade: moveValidators.PickConcreteCoinToUpgradeMoveValidator,
         pickDiscardCard: moveValidators.PickDiscardCardMoveValidator,
         pickHero: moveValidators.ClickHeroCardMoveValidator,
         placeOlwinCards: moveValidators.PlaceOlwinCardMoveValidator,
@@ -1109,6 +1156,5 @@ const ValidateByObjectSuitCardIdValues = (value, values) => {
     const objectSuitCardIdValues = values[value.suit];
     return objectSuitCardIdValues !== undefined && objectSuitCardIdValues.includes(value.cardId);
 };
-const ValidateByObjectSuitCardIdPlayerIdValues = (value, values) => values.suit === value.suit
-    && values.playerId === value.playerId && values.cards.includes(value.cardId);
+const ValidateByObjectSuitCardIdPlayerIdValues = (value, values) => values.playerId === value.playerId && values.cards.includes(value.cardId);
 //# sourceMappingURL=MoveValidator.js.map
