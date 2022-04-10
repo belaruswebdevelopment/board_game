@@ -1,5 +1,6 @@
 import type { Ctx } from "boardgame.io";
-import { AddPickHeroAction, DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, GetClosedCoinIntoPlayerHandAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "../actions/AutoActions";
+import { AddPickHeroAction, DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
+import { GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 import type { IAction, IActionFunctionTypes, IMyGameState } from "../typescript/interfaces";
 
 /**
@@ -33,11 +34,11 @@ const ActionDispatcherSwitcher = (actionName: string): IActionFunctionTypes => {
         case StartVidofnirVedrfolnirAction.name:
             action = StartVidofnirVedrfolnirAction;
             break;
-        case UpgradeCoinAction.name:
-            action = UpgradeCoinAction as IActionFunctionTypes;
+        case UpgradeMinCoinAction.name:
+            action = UpgradeMinCoinAction;
             break;
         default:
-            throw new Error(`Нет такого действия.`);
+            throw new Error(`Нет такого действия '${actionName}'.`);
     }
     return action;
 };

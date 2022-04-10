@@ -1,5 +1,5 @@
-import { RusCardTypes } from "./typescript/enums";
-import type { ICreateHero, IHeroCard, IHeroConfig, IHeroData, IHeroTypes } from "./typescript/interfaces";
+import { CardNames, RusCardTypes } from "./typescript/enums";
+import type { ICreateHero, ICreateOlwinDoubleNonPlacedCard, IHeroCard, IHeroConfig, IHeroData, IHeroTypes, IOlwinDoubleNonPlacedCard } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -84,6 +84,14 @@ export const CreateHero = ({
     validators,
     actions,
     stack,
+});
+
+export const CreateOlwinDoubleNonPlacedCard = ({
+    name = CardNames.OlwinsDouble,
+    suit,
+}: ICreateOlwinDoubleNonPlacedCard = {} as ICreateOlwinDoubleNonPlacedCard): IOlwinDoubleNonPlacedCard => ({
+    name,
+    suit,
 });
 
 export const IsHeroCard = (card: unknown): card is IHeroCard =>

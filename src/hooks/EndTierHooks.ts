@@ -1,8 +1,9 @@
 import type { Ctx } from "boardgame.io";
+import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { AddEndTierActionsToStack } from "../helpers/HeroHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames, HeroNames } from "../typescript/enums";
 import type { IHeroCard, IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 
@@ -20,20 +21,20 @@ export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext
     if (G.publicPlayersOrder.length) {
         const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
         if (!player.stack.length && !player.actionsNum) {
             const yludIndex: number =
                 Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
                     CheckPlayerHasBuff(player, BuffNames.EndTier));
             if (G.tierToEnd !== 0 && yludIndex === -1) {
-                throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Ylud}.`);
+                throw new Error(`У игрока отсутствует обязательная карта героя '${HeroNames.Ylud}'.`);
             }
             let nextPhase = true;
             if (yludIndex !== -1) {
                 const yludPlayer: IPublicPlayer | undefined = G.publicPlayers[yludIndex];
                 if (yludPlayer === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок с картой героя ${HeroNames.Ylud}.`);
+                    throw new Error(`В массиве игроков отсутствует игрок с картой героя '${HeroNames.Ylud}'.`);
                 }
                 const index: number = Object.values(yludPlayer.cards).flat()
                     .findIndex((card: PlayerCardsType): boolean => card.name === HeroNames.Ylud);
@@ -62,16 +63,16 @@ export const CheckEndTierOrder = (G: IMyGameState): void => {
     const yludIndex: number = Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
         CheckPlayerHasBuff(player, BuffNames.EndTier));
     if (yludIndex === -1) {
-        throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.EndTier}.`);
+        throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.EndTier}'.`);
     }
     const player: IPublicPlayer | undefined = G.publicPlayers[yludIndex];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с обязательным бафом ${BuffNames.EndTier}.`);
+        throw new Error(`В массиве игроков отсутствует игрок с id '${yludIndex}' с обязательным бафом '${BuffNames.EndTier}'.`);
     }
     const yludHeroCard: IHeroCard | undefined =
         player.heroes.find((hero: IHeroCard): boolean => hero.name === HeroNames.Ylud);
     if (yludHeroCard === undefined) {
-        throw new Error(`В массиве карт игрока отсутствует карта героя ${HeroNames.Ylud}.`);
+        throw new Error(`В массиве карт игрока с id '${yludIndex}' отсутствует карта героя '${HeroNames.Ylud}'.`);
     }
     player.pickedCard = yludHeroCard;
     if (G.tierToEnd === 0) {
@@ -81,7 +82,7 @@ export const CheckEndTierOrder = (G: IMyGameState): void => {
         if (index !== -1) {
             const yludCard: PlayerCardsType | undefined = cards[index];
             if (yludCard === undefined) {
-                throw new Error(`В массиве карт игрока отсутствует карта героя ${HeroNames.Ylud}.`);
+                throw new Error(`В массиве карт игрока с id '${yludIndex}' отсутствует карта героя '${HeroNames.Ylud}' с id '${index}'.`);
             }
             const suit: SuitTypes | null = yludCard.suit;
             if (suit !== null) {
@@ -102,7 +103,7 @@ export const CheckEndEndTierTurn = (G: IMyGameState, ctx: Ctx): boolean | void =
 export const EndEndTierActions = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     player.pickedCard = null;
     if (G.tierToEnd === 0) {
@@ -119,6 +120,6 @@ export const OnEndTierTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
 };
 
 export const OnEndTierTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddEndTierActionsToStack(G, ctx);
+    AddActionsToStackAfterCurrent(G, ctx, [StackData.placeYludHero()]);
     DrawCurrentProfit(G, ctx);
 };

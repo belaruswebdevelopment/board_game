@@ -20,7 +20,7 @@ export const enumerate = (G, ctx) => {
     let playerId;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     if (ctx.phase !== null) {
         const currentStage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)];
@@ -84,7 +84,7 @@ export const enumerate = (G, ctx) => {
                 for (let p = 0; p < ctx.numPlayers; p++) {
                     const playerP = G.publicPlayers[p];
                     if (playerP === undefined) {
-                        throw new Error(`В массиве игроков отсутствует игрок ${p}.`);
+                        throw new Error(`В массиве игроков отсутствует игрок с id '${p}'.`);
                     }
                     if (p !== Number(ctx.currentPlayer) && playerP.stack[0] !== undefined) {
                         playerId = p;
@@ -109,7 +109,7 @@ export const enumerate = (G, ctx) => {
             }
             else if (typeof moveValue === `object` && !Array.isArray(moveValue) && moveValue !== null) {
                 if (`coinId` in moveValue) {
-                    moveValues = [moveValue.coinId, moveValue.type, moveValue.isInitial];
+                    moveValues = [moveValue.coinId, moveValue.type];
                 }
                 else if (`suit` in moveValue) {
                     moveValues = [moveValue.suit, moveValue.cardId];
@@ -130,7 +130,7 @@ export const enumerate = (G, ctx) => {
             });
         }
         if (moves.length === 0) {
-            console.log(`ALERT: bot has ${moves.length} moves.Phase: ${ctx.phase}`);
+            console.log(`ALERT: bot has '${moves.length}' moves. Phase: '${ctx.phase}'.`);
         }
     }
     return moves;
@@ -152,14 +152,14 @@ export const iterations = (G, ctx) => {
     if (ctx.phase === Phases.PickCards) {
         const currentTavern = G.taverns[G.currentTavern];
         if (currentTavern === undefined) {
-            throw new Error(`Отсутствует текущая таверна.`);
+            throw new Error(`Отсутствует текущая таверна с id '${G.currentTavern}'.`);
         }
         if (currentTavern.filter((card) => card !== null).length === 1) {
             return 1;
         }
         const cardIndex = currentTavern.findIndex((card) => card !== null), tavernNotNullCard = currentTavern[cardIndex];
         if (tavernNotNullCard === undefined) {
-            throw new Error(`Отсутствует карта ${cardIndex} в текущей таверне 1.`);
+            throw new Error(`Отсутствует карта с id '${cardIndex}' в текущей таверне '1'.`);
         }
         if (currentTavern.every((card) => card === null || (IsCardNotActionAndNotNull(card) && IsCardNotActionAndNotNull(tavernNotNullCard)
             && card.suit === tavernNotNullCard.suit && CompareCards(card, tavernNotNullCard) === 0))) {
@@ -169,7 +169,7 @@ export const iterations = (G, ctx) => {
         for (let i = 0; i < currentTavern.length; i++) {
             const tavernCard = currentTavern[i];
             if (tavernCard === undefined) {
-                throw new Error(`Отсутствует карта ${cardIndex} в текущей таверне 2.`);
+                throw new Error(`Отсутствует карта с id '${cardIndex}' в текущей таверне '2'.`);
             }
             if (tavernCard === null) {
                 continue;
@@ -179,7 +179,7 @@ export const iterations = (G, ctx) => {
             }
             const deck0 = G.secret.decks[0];
             if (deck0 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
+                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
             }
             if (deck0.length > 18) {
                 if (IsCardNotActionAndNotNull(tavernCard)) {
@@ -215,7 +215,7 @@ export const objectives = () => ({
         checker: (G) => {
             const deck0 = G.secret.decks[0];
             if (deck0 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
+                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
             }
             return deck0.length > 0;
         },
@@ -301,11 +301,11 @@ export const objectives = () => ({
             }
             const deck1 = G.secret.decks[1];
             if (deck1 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека 1 эпохи.`);
+                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
             }
             const tavern0 = G.taverns[0];
             if (tavern0 === undefined) {
-                throw new Error(`В массиве таверн отсутствует первая таверна.`);
+                throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
             }
             if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -317,17 +317,17 @@ export const objectives = () => ({
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const player = G.publicPlayers[i];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
                 }
                 totalScore.push(CurrentScoring(player));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
             if (totalScoreCurPlayer === undefined) {
-                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока.`);
+                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
             }
             if (totalScoreCurPlayer === top1) {
                 if (top2 === undefined) {
-                    throw new Error(`В массиве общего счёта отсутствует счёт топ 2 игрока.`);
+                    throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
                 }
                 return totalScoreCurPlayer >= Math.floor(1.05 * top2);
             }
@@ -342,11 +342,11 @@ export const objectives = () => ({
             }
             const deck1 = G.secret.decks[1];
             if (deck1 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека 2 эпохи.`);
+                throw new Error(`В массиве дек карт отсутствует дека '2' эпохи.`);
             }
             const tavern0 = G.taverns[0];
             if (tavern0 === undefined) {
-                throw new Error(`В массиве таверн отсутствует первая таверна.`);
+                throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
             }
             if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
@@ -358,17 +358,17 @@ export const objectives = () => ({
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const player = G.publicPlayers[i];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
                 }
                 totalScore.push(CurrentScoring(player));
             }
             const [top1, top2] = totalScore.sort((a, b) => b - a).slice(0, 2), totalScoreCurPlayer = totalScore[Number(ctx.currentPlayer)];
             if (totalScoreCurPlayer === undefined) {
-                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока.`);
+                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
             }
             if (totalScoreCurPlayer === top1) {
                 if (top2 === undefined) {
-                    throw new Error(`В массиве общего счёта отсутствует счёт топ 2 игрока.`);
+                    throw new Error(`В массиве общего счёта отсутствует счёт топ '2' игрока.`);
                 }
                 return totalScoreCurPlayer >= Math.floor(1.10 * top2);
             }
@@ -392,11 +392,11 @@ export const objectives = () => ({
 export const playoutDepth = (G, ctx) => {
     const deck1 = G.secret.decks[1];
     if (deck1 === undefined) {
-        throw new Error(`В массиве дек карт отсутствует дека 2 эпохи.`);
+        throw new Error(`В массиве дек карт отсутствует дека '2' эпохи.`);
     }
     const tavern0 = G.taverns[0];
     if (tavern0 === undefined) {
-        throw new Error(`В массиве таверн отсутствует первая таверна.`);
+        throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
     }
     if (deck1.length < G.botData.deckLength) {
         return 3 * G.tavernsNum * tavern0.length + 4 * ctx.numPlayers + 20;

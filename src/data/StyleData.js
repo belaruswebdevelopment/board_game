@@ -90,7 +90,7 @@ export const Styles = {
                         background: `${campCardsPath}${tier}.png) no-repeat -96px -96px / 128px 144px`,
                     };
                 default:
-                    throw new Error(`Нет такой карты лагеря во 1-й эпохе.`);
+                    throw new Error(`Нет такой карты '${cardPath}' лагеря в '1' эпохе.`);
             }
         }
         else if (tier === 1) {
@@ -148,7 +148,7 @@ export const Styles = {
                         background: `${campCardsPath}${tier}.png) no-repeat -96px -96px / 128px 144px`,
                     };
                 default:
-                    throw new Error(`Нет такой карты лагеря во 2-й эпохе.`);
+                    throw new Error(`Нет такой карты '${cardPath}' лагеря в '2' эпохе.`);
             }
         }
         throw new Error(`Нет такой карты лагеря.`);
@@ -168,7 +168,7 @@ export const Styles = {
                         background: `${heroesThingvellirPath}heroes.png) no-repeat -32px -50px / 128px 100px`,
                     };
                 default:
-                    throw new Error(`Нет такой карты среди дополнительных карт.`);
+                    throw new Error(`Нет такой карты '${name}' среди дополнительных карт.`);
             }
         }
         else if (suit !== null) {
@@ -234,7 +234,7 @@ export const Styles = {
                                 background: `${basicCardsPath}0.png) no-repeat -32px -240px / 288px 288px`,
                             };
                         default:
-                            throw new Error(`Нет такой карты во фракции ${SuitNames.WARRIOR}.`);
+                            throw new Error(`Нет такой карты '${points}' во фракции ${SuitNames.WARRIOR}.`);
                     }
                 case SuitNames.EXPLORER:
                     switch (points) {
@@ -271,7 +271,7 @@ export const Styles = {
                                 background: `${basicCardsPath}0.png) no-repeat -96px -240px / 288px 288px`,
                             };
                         default:
-                            throw new Error(`Нет такой карты во фракции ${SuitNames.EXPLORER}.`);
+                            throw new Error(`Нет такой карты '${points}' во фракции ${SuitNames.EXPLORER}.`);
                     }
                 default:
                     throw new Error(`Нет такой карты.`);
@@ -288,7 +288,7 @@ export const Styles = {
                         background: `${basicCardsPath}1.png) no-repeat -128px -240px / 288px 288px`,
                     };
                 default:
-                    throw new Error(`Нет такой карты улучшения монеты.`);
+                    throw new Error(`Нет такой карты '${name}' улучшения монеты.`);
             }
         }
     },
@@ -324,7 +324,7 @@ export const Styles = {
                     background: `${distinctionsPath} no-repeat 0px 0px / 96px 150px`,
                 };
             default:
-                throw new Error(`Нет такого преимущества конца эпохи.`);
+                throw new Error(`Нет такого преимущества '${distinction}' конца эпохи.`);
         }
     },
     DistinctionsBack: () => ({
@@ -425,7 +425,7 @@ export const Styles = {
                         background: `${heroesBasicPath}heroes.png) no-repeat 0px -96px / 288px 144px`,
                     };
                 default:
-                    throw new Error(`Нет такого героя в базовой игре.`);
+                    throw new Error(`Нет такого героя '${heroName}' в базовой игре.`);
             }
         }
         else if (game === GameNames.Thingvellir) {
@@ -455,7 +455,7 @@ export const Styles = {
                         background: `${promosPath} no-repeat -4px -4px / 76px 58px`,
                     };
                 default:
-                    throw new Error(`Нет такого героя в дополнении 'thingvellir'.`);
+                    throw new Error(`Нет такого героя '${heroName}' в дополнении '${GameNames.Thingvellir}'.`);
             }
         }
         throw new Error(`Нет такого героя.`);
@@ -487,7 +487,7 @@ export const Styles = {
                     background: `${tavernsPath} no-repeat -50px -9px / 75px 42px`,
                 };
             default:
-                throw new Error(`Нет такой таверны.`);
+                throw new Error(`Нет такой таверны '${tavernId}'.`);
         }
     },
 };

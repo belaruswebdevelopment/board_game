@@ -19,7 +19,7 @@ export const IdunnScoring = (G, playerId) => {
     }
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+        throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
     }
     return player.cards[SuitNames.EXPLORER].reduce(TotalRank, 0) * 2;
 };

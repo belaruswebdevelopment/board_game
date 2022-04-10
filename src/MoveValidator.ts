@@ -9,7 +9,7 @@ import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFrom
 import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { CoinTypes, MoveNames, MoveValidatorNames, Phases, Stages, SuitNames, ValidatorNames } from "./typescript/enums";
-import type { CampDeckCardTypes, CoinType, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPlayer, IPublicPlayer, IValidatorsConfig, MoveValidatorGetRangeTypes, OptionalSuitPropertyTypes, PlayerCardsType, PublicPlayerBoardCoinTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPlayer, IPublicPlayer, IValidatorsConfig, MoveValidatorGetRangeTypes, OptionalSuitPropertyTypes, PlayerCardsType, PublicPlayerCoinTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ExplorerDistinctionProfit } from "./ui/ProfitUI";
@@ -32,41 +32,50 @@ export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMove
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    let handCoins: CoinType[];
+    if (privatePlayer === undefined) {
+        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    let handCoins: PublicPlayerCoinTypes[],
+        boardCoins: PublicPlayerCoinTypes[];
     if (multiplayer) {
-        if (privatePlayer === undefined) {
-            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
-        }
         handCoins = privatePlayer.handCoins;
+        boardCoins = privatePlayer.boardCoins;
     } else {
         handCoins = player.handCoins;
+        boardCoins = player.boardCoins;
     }
     if (coinData.type === CoinTypes.Hand) {
-        const handCoin: CoinType | undefined = handCoins[coinData.coinId];
+        const handCoin: PublicPlayerCoinTypes | undefined = handCoins[coinData.coinId];
         if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinData.coinId}.`);
+            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${coinData.coinId}'.`);
         }
         if (handCoin === null) {
-            throw new Error(`Выбранная для улучшения монета игрока в руке ${coinData.coinId} не может отсутствовать там.`);
+            throw new Error(`Выбранная для улучшения монета игрока с id '${ctx.currentPlayer}' в руке с id '${coinData.coinId}' не может отсутствовать там.`);
+        }
+        if (!IsCoin(handCoin)) {
+            throw new Error(`Монета с id '${coinData.coinId}' в руке текущего игрока с id '${ctx.currentPlayer}' не может быть закрытой для него.`);
         }
         if (!handCoin.isTriggerTrading) {
             return true;
         }
     } else if (coinData.type === CoinTypes.Board) {
-        const boardCoin: PublicPlayerBoardCoinTypes | undefined = player.boardCoins[coinData.coinId];
+        const boardCoin: PublicPlayerCoinTypes | undefined = boardCoins[coinData.coinId];
         if (boardCoin === undefined) {
-            throw new Error(`В массиве монет игрока на столе отсутствует монета ${coinData.coinId}.`);
+            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует монета с id '${coinData.coinId}'.`);
         }
         if (boardCoin === null) {
-            throw new Error(`Выбранная для улучшения монета игрока на столе ${coinData.coinId} не может отсутствовать там.`);
+            throw new Error(`Выбранная для улучшения монета игрока с id '${ctx.currentPlayer}' на столе с id '${coinData.coinId}' не может отсутствовать там.`);
+        }
+        if (!IsCoin(boardCoin)) {
+            throw new Error(`Монета с id '${coinData.coinId}' на столе текущего игрока с id '${ctx.currentPlayer}' не может быть закрытой для него.`);
         }
         if (!boardCoin.isTriggerTrading) {
             return true;
         }
     } else {
-        throw new Error(`Не существует типа монеты - ${coinData.type}.`);
+        throw new Error(`Не существует типа монеты - '${coinData.type}'.`);
     }
     return false;
 };
@@ -177,7 +186,7 @@ export const moveValidators: IMoveValidators = {
                 maxResultForCoins: number = Math.max(...resultsForCoins);
             const deck: DeckCardTypes[] | undefined = G.secret.decks[G.secret.decks.length - 1];
             if (deck === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека ${G.secret.decks.length - 1} эпохи.`);
+                throw new Error(`В массиве дек карт отсутствует дека '${G.secret.decks.length - 1}' эпохи.`);
             }
             const tradingProfit: number = deck.length > 9 ? 1 : 0;
             let [positionForMinCoin, positionForMaxCoin]: number[] = [-1, -1];
@@ -187,17 +196,18 @@ export const moveValidators: IMoveValidators = {
             if (maxResultForCoins >= 0) {
                 positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
             }
+            // TODO Check it bot can't play in multiplayer now...
             const multiplayer = IsMultiplayer(G),
                 player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
                 privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
             }
-            let handCoins: CoinType[];
+            if (privatePlayer === undefined) {
+                throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+            }
+            let handCoins: PublicPlayerCoinTypes[];
             if (multiplayer) {
-                if (privatePlayer === undefined) {
-                    throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
-                }
                 handCoins = privatePlayer.handCoins;
             } else {
                 handCoins = player.handCoins;
@@ -205,14 +215,20 @@ export const moveValidators: IMoveValidators = {
             for (let i = 0; i < allCoinsOrder.length; i++) {
                 const allCoinsOrderI: number[] | undefined = allCoinsOrder[i];
                 if (allCoinsOrderI === undefined) {
-                    throw new Error(`В массиве выкладки монет отсутствует выкладка ${i}.`);
+                    throw new Error(`В массиве выкладки монет отсутствует выкладка '${i}'.`);
                 }
                 const hasTrading: boolean = allCoinsOrderI.some((coinId: number): boolean => {
-                    const handCoin: CoinType | undefined = handCoins[coinId];
+                    const handCoin: PublicPlayerCoinTypes | undefined = handCoins[coinId];
                     if (handCoin === undefined) {
-                        throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
+                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${coinId}'.`);
                     }
-                    return Boolean(handCoins[coinId]?.isTriggerTrading);
+                    if (handCoin !== null && !IsCoin(handCoin)) {
+                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${coinId}'.`);
+                    }
+                    if (IsCoin(handCoin) && handCoin.isOpened) {
+                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${coinId}'.`);
+                    }
+                    return Boolean(handCoin?.isTriggerTrading);
                 });
                 // TODO How tradingProfit can be < 0?
                 if (tradingProfit < 0) {
@@ -232,38 +248,52 @@ export const moveValidators: IMoveValidators = {
                     }
                     const hasPositionForMaxCoin: boolean = positionForMaxCoin !== -1,
                         hasPositionForMinCoin: boolean = positionForMinCoin !== -1,
-                        coinsOrderPositionForMaxCoin = allCoinsOrderI[positionForMaxCoin],
-                        coinsOrderPositionForMinCoin = allCoinsOrderI[positionForMinCoin];
+                        coinsOrderPositionForMaxCoin: number | undefined = allCoinsOrderI[positionForMaxCoin],
+                        coinsOrderPositionForMinCoin: number | undefined = allCoinsOrderI[positionForMinCoin];
                     if (coinsOrderPositionForMaxCoin !== undefined
                         && coinsOrderPositionForMinCoin !== undefined) {
-                        const maxCoin: CoinType | undefined = handCoins[coinsOrderPositionForMaxCoin],
-                            minCoin: CoinType | undefined = handCoins[coinsOrderPositionForMinCoin];
+                        const maxCoin: PublicPlayerCoinTypes | undefined = handCoins[coinsOrderPositionForMaxCoin],
+                            minCoin: PublicPlayerCoinTypes | undefined = handCoins[coinsOrderPositionForMinCoin];
                         if (maxCoin === undefined) {
-                            throw new Error(`В массиве монет игрока в руке отсутствует максимальная монета.`);
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует максимальная монета с id '${positionForMaxCoin}'.`);
                         }
                         if (minCoin === undefined) {
-                            throw new Error(`В массиве монет игрока в руке отсутствует минимальная монета.`);
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует минимальная монета с id '${positionForMinCoin}'.`);
                         }
                         if (!IsCoin(maxCoin)) {
-                            throw new Error(`В массиве выкладки монет отсутствует выкладка для максимальной ${coinsOrderPositionForMaxCoin} монеты.`);
+                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' отсутствует выкладка для максимальной '${coinsOrderPositionForMaxCoin}' монеты.`);
                         }
                         if (!IsCoin(minCoin)) {
-                            throw new Error(`В массиве выкладки монет отсутствует выкладка для минимальной ${coinsOrderPositionForMinCoin} монеты.`);
+                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' отсутствует выкладка для минимальной '${coinsOrderPositionForMinCoin}' монеты.`);
                         }
                         let isTopCoinsOnPosition = false,
                             isMinCoinsOnPosition = false;
                         if (hasPositionForMaxCoin) {
                             isTopCoinsOnPosition = allCoinsOrderI.filter((coinIndex: number): boolean => {
-                                const handCoin: CoinType | undefined = handCoins[coinIndex];
+                                const handCoin: PublicPlayerCoinTypes | undefined = handCoins[coinIndex];
                                 if (handCoin === undefined) {
-                                    throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinIndex}.`);
+                                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${coinIndex}'.`);
+                                }
+                                if (handCoin !== null && !IsCoin(handCoin)) {
+                                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
+                                }
+                                if (IsCoin(handCoin) && handCoin.isOpened) {
+                                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${coinIndex}'.`);
                                 }
                                 return IsCoin(handCoin) && handCoin.value > maxCoin.value;
                             }).length <= 1;
                         }
                         if (hasPositionForMinCoin) {
-                            isMinCoinsOnPosition = handCoins.filter((coin: CoinType): boolean =>
-                                IsCoin(coin) && coin.value < minCoin.value).length <= 1;
+                            isMinCoinsOnPosition =
+                                handCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean => {
+                                    if (coin !== null && !IsCoin(coin)) {
+                                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+                                    }
+                                    if (IsCoin(coin) && coin.isOpened) {
+                                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${index}'.`);
+                                    }
+                                    return IsCoin(coin) && coin.value < minCoin.value;
+                                }).length <= 1;
                         }
                         if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
                             return allCoinsOrderI;
@@ -333,7 +363,7 @@ export const moveValidators: IMoveValidators = {
             }
             const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
             }
             return G.expansions.thingvellir?.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
                 || (!G.campPicked && player.buffs.find((buff: IBuffs): boolean =>
@@ -357,17 +387,17 @@ export const moveValidators: IMoveValidators = {
                 uniqueArr: DeckCardTypes[] = [],
                 currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
             if (currentTavern === undefined) {
-                throw new Error(`В массиве таверн отсутствует текущая таверна.`);
+                throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
             }
             let flag = true;
             for (let i = 0; i < moveArguments.length; i++) {
                 const moveArgument: number | undefined = moveArguments[i];
                 if (moveArgument === undefined) {
-                    throw new Error(`В массиве аргументов мува отсутствует аргумент ${i}.`);
+                    throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${i}'.`);
                 }
                 const tavernCard: TavernCardTypes | undefined = currentTavern[moveArgument];
                 if (tavernCard === undefined) {
-                    throw new Error(`В массиве карт текущей таверны отсутствует карта ${moveArgument}.`);
+                    throw new Error(`В массиве карт текущей таверны с id '${G.currentTavern}' отсутствует карта с id '${moveArgument}'.`);
                 }
                 if (tavernCard === null) {
                     continue;
@@ -389,7 +419,7 @@ export const moveValidators: IMoveValidators = {
                 for (let j = 0; j < uniqueArrLength; j++) {
                     const uniqueCard: DeckCardTypes | undefined = uniqueArr[j];
                     if (uniqueCard === undefined) {
-                        throw new Error(`В массиве уникальных карт отсутствует карта ${j}.`);
+                        throw new Error(`В массиве уникальных карт отсутствует карта с id '${j}'.`);
                     }
                     if (IsCardNotActionAndNotNull(tavernCard)
                         && IsCardNotActionAndNotNull(uniqueCard)
@@ -555,11 +585,11 @@ export const moveValidators: IMoveValidators = {
             }
             const suitName: SuitTypes | undefined = suitNames[Math.floor(Math.random() * suitNames.length)];
             if (suitName === undefined) {
-                throw new Error(`Отсутствует выбранная случайно фракция для сброса карты.`);
+                throw new Error(`Отсутствует выбранная случайно фракция '${suitName}' для сброса карты.`);
             }
             const moveArgumentForSuit: number[] | undefined = moveArguments[suitName];
             if (moveArgumentForSuit === undefined) {
-                throw new Error(`Отсутствует обязательный параметр 'moveArguments[suitName]'.`);
+                throw new Error(`Отсутствует обязательный параметр с аргументом '${suitName}'.`);
             }
             const moveArgument: number | undefined =
                 moveArgumentForSuit[Math.floor(Math.random() * moveArgumentForSuit.length)];
@@ -638,11 +668,11 @@ export const moveValidators: IMoveValidators = {
             for (let j = 0; j < moveArguments.length; j++) {
                 const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                 }
                 const moveArgumentI: SuitTypes | undefined = moveArguments[j];
                 if (moveArgumentI === undefined) {
-                    throw new Error(`В массиве аргументов мува отсутствует аргумент ${j}.`);
+                    throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${j}'.`);
                 }
                 totalSuitsRanks.push(player.cards[moveArgumentI]
                     .reduce(TotalRank, 0) * 2);
@@ -653,7 +683,7 @@ export const moveValidators: IMoveValidators = {
             }
             const moveArgument: SuitTypes | undefined = moveArguments[index];
             if (moveArgument === undefined) {
-                throw new Error(`В массиве аргументов мува отсутствует аргумент ${index}.`);
+                throw new Error(`В массиве аргументов мува отсутствует аргумент с id '${index}'.`);
             }
             return moveArgument;
         },
@@ -673,7 +703,7 @@ export const moveValidators: IMoveValidators = {
             }
             const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
             }
             const mercenariesCount = player.campCards.filter((card: CampDeckCardTypes): boolean =>
                 IsMercenaryCampCard(card)).length;
@@ -916,7 +946,7 @@ export const moveValidators: IMoveValidators = {
             let isValid = false;
             const hero: IHeroCard | undefined = G.heroes[id];
             if (hero === undefined) {
-                throw new Error(`В массиве карт героев отсутствует герой ${id}.`);
+                throw new Error(`В массиве карт героев отсутствует герой с id '${id}'.`);
             }
             const validators: IValidatorsConfig | undefined = hero.validators;
             if (validators !== undefined) {
@@ -971,7 +1001,7 @@ export const moveValidators: IMoveValidators = {
             }
             const moveArgumentForSuit: number[] | undefined = moveArguments[suitName];
             if (moveArgumentForSuit === undefined) {
-                throw new Error(`Отсутствует обязательный параметр 'moveArguments[suitName]'.`);
+                throw new Error(`Отсутствует обязательный параметр с аргументом '${suitName}'.`);
             }
             const moveArgument: number | undefined =
                 moveArgumentForSuit[Math.floor(Math.random() * moveArgumentForSuit.length)];
@@ -1008,18 +1038,18 @@ export const moveValidators: IMoveValidators = {
                 currentMoveArguments as IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`],
                 player: IPublicPlayer | undefined = G.publicPlayers[moveArguments.playerId];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует игрок ${moveArguments.playerId}.`);
+                throw new Error(`В массиве игроков отсутствует игрок с id '${moveArguments.playerId}'.`);
             }
             const cardFirst: PlayerCardsType | undefined = player.cards[SuitNames.WARRIOR][0];
             if (cardFirst === undefined) {
-                throw new Error(`В массиве карт игрока во фракции ${SuitNames.WARRIOR} отсутствует первая карта.`);
+                throw new Error(`В массиве карт игрока во фракции '${SuitNames.WARRIOR}' отсутствует первая карта.`);
             }
             let minCardIndex = 0,
                 minCardValue: number | null = cardFirst.points;
             moveArguments.cards.forEach((value: number, index: number) => {
                 const card: PlayerCardsType | undefined = player.cards[SuitNames.WARRIOR][value];
                 if (card === undefined) {
-                    throw new Error(`В массиве карт игрока во фракции ${SuitNames.WARRIOR} отсутствует карта ${value}.`);
+                    throw new Error(`В массиве карт игрока во фракции '${SuitNames.WARRIOR}' отсутствует карта ${value}.`);
                 }
                 const cardPoints: number | null = card.points;
                 if (cardPoints === null || minCardValue === null) {
@@ -1032,7 +1062,7 @@ export const moveValidators: IMoveValidators = {
             });
             const cardIndex: number | undefined = moveArguments.cards[minCardIndex];
             if (cardIndex === undefined) {
-                throw new Error(`В массиве аргументов для 'cardId' отсутствует значение ${minCardIndex}.`);
+                throw new Error(`В массиве аргументов для 'cardId' отсутствует значение с id '${minCardIndex}'.`);
             }
             return {
                 playerId: moveArguments.playerId,
@@ -1161,7 +1191,7 @@ export const moveValidators: IMoveValidators = {
             }
             const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
             }
             return player.stack[0]?.config?.coinId !== id.coinId && CoinUpgradeValidation(G, ctx, id);
         },
@@ -1281,7 +1311,7 @@ const ValidateByValues = <T>(value: T, values: T[]): boolean => values.includes(
 
 const ValidateByObjectCoinIdTypeIsInitialValues = (value: IMoveCoinsArguments,
     values: IMoveCoinsArguments[]): boolean => values.findIndex((coin: IMoveCoinsArguments) =>
-        value.coinId === coin.coinId && value.type === coin.type && value.isInitial === coin.isInitial) !== -1;
+        value.coinId === coin.coinId && value.type === coin.type) !== -1;
 
 const ValidateByObjectSuitCardIdValues = (value: IMoveSuitCardCurrentId,
     values: OptionalSuitPropertyTypes<number[]>): boolean => {

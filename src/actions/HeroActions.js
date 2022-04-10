@@ -1,14 +1,14 @@
-import { IsArtefactCard, IsMercenaryPlayerCard } from "../Camp";
 import { CreateCard } from "../Card";
 import { heroesConfig } from "../data/HeroData";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
 import { DeleteBuffFromPlayer } from "../helpers/BuffHelpers";
 import { AddCardToPlayer } from "../helpers/CardHelpers";
+import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
+import { CheckAndMoveThrudAction } from "../helpers/HeroActionHelpers";
 import { AddHeroCardToPlayerCards } from "../helpers/HeroCardHelpers";
-import { CheckAndMoveThrudOrPickHeroAction, CheckPickHero } from "../helpers/HeroHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { CreateHero, IsHeroCard } from "../Hero";
+import { CreateHero } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CardNames, GameNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
 /**
@@ -26,23 +26,14 @@ import { BuffNames, CardNames, GameNames, HeroNames, LogTypes, RusCardTypes } fr
 export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const discardedCard = player.cards[suit].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
-        throw new Error(`В массиве карт игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
-    }
-    if (IsHeroCard(discardedCard)) {
-        throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
+        throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
     player.pickedCard = discardedCard;
-    if (IsMercenaryPlayerCard(discardedCard) || IsArtefactCard(discardedCard)) {
-        G.discardCampCardsDeck.push(discardedCard);
-    }
-    else {
-        G.discardCardsDeck.push(discardedCard);
-    }
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} отправил в колоду сброса карту '${discardedCard.name}'.`);
+    DiscardPickedCard(G, player, discardedCard);
     if (player.actionsNum === 2) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.discardCardFromBoardDagda()]);
     }
@@ -59,18 +50,17 @@ export const DiscardCardsFromPlayerBoardAction = (G, ctx, suit, cardId) => {
  * @param suit Название фракции.
  */
 export const PlaceOlwinCardsAction = (G, ctx, suit) => {
-    var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
+        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
     const playerVariants = stack.variants;
     if (playerVariants === undefined) {
-        throw new Error(`У конфига действия игрока отсутствует обязательный параметр вариантов выкладки карты ${CardNames.OlwinsDouble}.`);
+        throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${CardNames.OlwinsDouble}'.`);
     }
     const olwinDouble = CreateCard({
         suit,
@@ -79,16 +69,12 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
         name: CardNames.OlwinsDouble,
         game: GameNames.Thingvellir,
     });
-    const drawName = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.drawName;
-    if (drawName === undefined) {
-        throw new Error(`У конфига действия игрока отсутствует обязательный параметр описания отрисовки профита.`);
-    }
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${drawName} во фракцию ${suitsConfig[suit].suitName}.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' добавил карту '${CardNames.OlwinsDouble}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddCardToPlayer(G, ctx, olwinDouble);
     if (player.actionsNum === 2) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.placeOlwinCards()]);
     }
-    CheckAndMoveThrudOrPickHeroAction(G, ctx, olwinDouble);
+    CheckAndMoveThrudAction(G, ctx, olwinDouble);
 };
 /**
  * <h3>Действия, связанные с проверкой расположением конкретного героя на игровом поле игрока.</h3>
@@ -102,18 +88,17 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
  * @param suit Название фракции.
  */
 export const PlaceThrudAction = (G, ctx, suit) => {
-    var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
+        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
     const playerVariants = stack.variants;
     if (playerVariants === undefined) {
-        throw new Error(`У конфига действия игрока отсутствует обязательный параметр вариантов выкладки карты ${HeroNames.Thrud}.`);
+        throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Thrud}'.`);
     }
     const heroCard = CreateHero({
         suit,
@@ -124,13 +109,8 @@ export const PlaceThrudAction = (G, ctx, suit) => {
         game: GameNames.Basic,
         description: heroesConfig.Thrud.description,
     });
-    const drawName = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.drawName;
-    if (drawName === undefined) {
-        throw new Error(`У конфига действия игрока отсутствует обязательный параметр описания отрисовки профита.`);
-    }
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${drawName} во фракцию ${suitsConfig[suit].suitName}.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' добавил карту '${HeroNames.Thrud}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddHeroCardToPlayerCards(G, ctx, heroCard);
-    CheckPickHero(G, ctx);
 };
 /**
  * <h3>Действия, связанные с проверкой расположением конкретного героя на игровом поле игрока.</h3>
@@ -144,18 +124,17 @@ export const PlaceThrudAction = (G, ctx, suit) => {
  * @param suit Название фракции.
  */
 export const PlaceYludAction = (G, ctx, suit) => {
-    var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
+        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
     const playerVariants = stack.variants;
     if (playerVariants === undefined) {
-        throw new Error(`У конфига действия игрока отсутствует обязательный параметр вариантов выкладки карты ${HeroNames.Ylud}.`);
+        throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Ylud}'.`);
     }
     const heroCard = CreateHero({
         suit,
@@ -166,13 +145,9 @@ export const PlaceYludAction = (G, ctx, suit) => {
         game: GameNames.Basic,
         description: heroesConfig.Ylud.description,
     });
-    const drawName = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.drawName;
-    if (drawName === undefined) {
-        throw new Error(`У конфига действия игрока отсутствует обязательный параметр описания отрисовки профита.`);
-    }
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} добавил карту ${drawName} во фракцию ${suitsConfig[suit].suitName}.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' добавил карту '${HeroNames.Ylud}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddHeroCardToPlayerCards(G, ctx, heroCard);
-    CheckAndMoveThrudOrPickHeroAction(G, ctx, heroCard);
+    CheckAndMoveThrudAction(G, ctx, heroCard);
     if (G.tierToEnd === 0) {
         DeleteBuffFromPlayer(G, ctx, BuffNames.EndTier);
     }

@@ -1,6 +1,6 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
-import { CardNames, GameNames, RusCardTypes } from "./typescript/enums";
+import { GameNames, RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
  * <p>Применения:</p>
@@ -23,7 +23,7 @@ export const BuildCards = (deckConfig, data) => {
             }
             const points = pointValuesPlayers[data.tier];
             if (points === undefined) {
-                throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - ${data.tier}.`);
+                throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - '${data.tier}'.`);
             }
             let count = 0;
             if (Array.isArray(points)) {
@@ -37,7 +37,7 @@ export const BuildCards = (deckConfig, data) => {
                 if (Array.isArray(points)) {
                     const cardPoints = points[j];
                     if (cardPoints === undefined) {
-                        throw new Error(`Отсутствует значение очков карты ${j}.`);
+                        throw new Error(`Отсутствует значение очков карты с id '${j}'.`);
                     }
                     currentPoints = cardPoints;
                 }
@@ -58,7 +58,7 @@ export const BuildCards = (deckConfig, data) => {
     for (let i = 0; i < actionCardConfig.length; i++) {
         const currentActionCardConfig = actionCardConfig[i];
         if (currentActionCardConfig === undefined) {
-            throw new Error(`В массиве конфигов карт улучшения монет отсутствует значение ${i}.`);
+            throw new Error(`В массиве конфигов карт улучшения монет отсутствует значение с id '${i}'.`);
         }
         const amountPlayersValue = currentActionCardConfig.amount()[data.players];
         if (amountPlayersValue === undefined) {
@@ -66,7 +66,7 @@ export const BuildCards = (deckConfig, data) => {
         }
         const amountTierValue = amountPlayersValue[data.tier];
         if (amountTierValue === undefined) {
-            throw new Error(`Отсутствует массив значений количества карт улучшения монет для указанного числа игроков - '${data.players}' для эпохи ${data.tier}.`);
+            throw new Error(`Отсутствует массив значений количества карт улучшения монет для указанного числа игроков - '${data.players}' для эпохи '${data.tier}'.`);
         }
         for (let j = 0; j < amountTierValue; j++) {
             cards.push(CreateActionCard({
@@ -144,10 +144,6 @@ export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name
     game,
     tier,
     path,
-});
-export const CreateOlwinDoubleNonPlacedCard = ({ name = CardNames.OlwinsDouble, suit, } = {}) => ({
-    name,
-    suit,
 });
 export const IsActionCard = (card) => card !== null && card.value !== undefined;
 /**

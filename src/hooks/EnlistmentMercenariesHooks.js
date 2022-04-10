@@ -1,8 +1,10 @@
 import { IsMercenaryCampCard } from "../Camp";
+import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddEnlistmentMercenariesActionsToStack } from "../helpers/CampHelpers";
 import { CheckEndTierActionsOrEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
+import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames } from "../typescript/enums";
 /**
  * <h3>Проверяет необходимость завершения фазы 'enlistmentMercenaries'.</h3>
@@ -18,7 +20,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
             && !player.actionsNum) {
@@ -26,7 +28,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
             for (let i = 0; i < ctx.numPlayers; i++) {
                 const playerI = G.publicPlayers[i];
                 if (playerI === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
                 }
                 allMercenariesPlayed = playerI.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
                 if (!allMercenariesPlayed) {
@@ -53,7 +55,7 @@ export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
 export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     if (ctx.currentPlayer === ctx.playOrder[0] && Number(ctx.numMoves) === 1 && !player.stack.length) {
         return EndTurnActions(G, ctx);
@@ -73,6 +75,17 @@ export const EndEnlistmentMercenariesActions = (G, ctx) => {
 };
 export const OnEnlistmentMercenariesMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    if (!player.actionsNum) {
+        const mercenariesCount = player.campCards.filter((card) => IsMercenaryCampCard(card)).length;
+        if (mercenariesCount) {
+            AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
+            DrawCurrentProfit(G, ctx);
+        }
+    }
 };
 export const OnEnlistmentMercenariesTurnBegin = (G, ctx) => {
     AddEnlistmentMercenariesActionsToStack(G, ctx);

@@ -26,7 +26,7 @@ export const DrawLogData = (G) => {
                     loggingData.push(_jsx("li", { className: "text-green-500", children: log.value }, `Log ${i}`));
                 }
                 else {
-                    throw new Error(`Попытка отобразить недопустимый тип логов.`);
+                    throw new Error(`Попытка отобразить недопустимый тип логов '${log.type}'.`);
                 }
             }
         }

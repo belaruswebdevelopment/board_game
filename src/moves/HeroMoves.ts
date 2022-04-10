@@ -28,7 +28,7 @@ export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
     }
     const hero: IHeroCard | undefined = G.heroes[heroId];
     if (hero === undefined) {
-        throw new Error(`Не существует кликнутая карта героя.`);
+        throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
     }
     AddHeroToCards(G, ctx, hero);
     AddActionsToStackAfterCurrent(G, ctx, hero.stack, hero);

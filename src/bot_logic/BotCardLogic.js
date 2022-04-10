@@ -1,4 +1,5 @@
 import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
+import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { GameNames } from "../typescript/enums";
@@ -50,7 +51,7 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
     if (IsCardNotActionAndNotNull(compareCard)) {
         const deckTier1 = G.secret.decks[0];
         if (deckTier1 === undefined) {
-            throw new Error(`В массиве колод карт отсутствует колода 1 эпохи.`);
+            throw new Error(`В массиве колод карт отсутствует колода '1' эпохи.`);
         }
         if (deckTier1.length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
             return CompareCards(compareCard, G.averageCards[compareCard.suit]);
@@ -58,7 +59,7 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
     }
     const deckTier2 = G.secret.decks[1];
     if (deckTier2 === undefined) {
-        throw new Error(`В массиве колод карт отсутствует колода 2 эпохи.`);
+        throw new Error(`В массиве колод карт отсутствует колода '2' эпохи.`);
     }
     if (deckTier2.length < G.botData.deckLength) {
         const temp = tavern.map((card) => Object.values(G.publicPlayers).map((player, index) => PotentialScoring(G, index, card)));
@@ -68,7 +69,7 @@ export const EvaluateCard = (G, ctx, compareCard, cardId, tavern) => {
         }
         const result = tavernCardResults[Number(ctx.currentPlayer)];
         if (result === undefined) {
-            throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат для текущего игрока.`);
+            throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат для текущего игрока с id '${ctx.currentPlayer}'.`);
         }
         temp.splice(cardId, 1);
         temp.forEach((player) => player.splice(Number(ctx.currentPlayer), 1));
@@ -106,7 +107,7 @@ export const GetAverageSuitCard = (suitConfig, data) => {
         if (Array.isArray(points)) {
             const pointsValue = points[i];
             if (pointsValue === undefined) {
-                throw new Error(`Отсутствует значение ${i} в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
+                throw new Error(`Отсутствует значение с id '${i}' в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
             }
             totalPoints += pointsValue;
         }
@@ -140,13 +141,13 @@ const PotentialScoring = (G, playerId, card) => {
     var _a, _b, _c;
     const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+        throw new Error(`В массиве игроков отсутствует игрок  с id '${playerId}'.`);
+    }
+    if (privatePlayer === undefined) {
+        throw new Error(`В массиве приватных игроков отсутствует игрок с id '${playerId}'.`);
     }
     let handCoins;
     if (multiplayer) {
-        if (privatePlayer === undefined) {
-            throw new Error(`В массиве приватных игроков отсутствует игрок ${playerId}.`);
-        }
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -169,12 +170,15 @@ const PotentialScoring = (G, playerId, card) => {
     for (let i = 0; i < player.boardCoins.length; i++) {
         const boardCoin = player.boardCoins[i];
         if (boardCoin === undefined) {
-            throw new Error(`В массиве монет игрока на столе отсутствует монета ${i}.`);
+            throw new Error(`В массиве монет игрока с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
         }
         score += (_b = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _b !== void 0 ? _b : 0;
         const handCoin = handCoins[i];
         if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
+            throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует монета с id '${i}'.`);
+        }
+        if (handCoin !== null && !IsCoin(handCoin)) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' в руке не может быть закрыта монета с id '${i}'.`);
         }
         score += (_c = handCoin === null || handCoin === void 0 ? void 0 : handCoin.value) !== null && _c !== void 0 ? _c : 0;
     }

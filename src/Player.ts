@@ -18,7 +18,6 @@ import type { ICoin, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPub
 export const BuildPlayer = (): IPlayer => CreatePlayer({
     handCoins: BuildCoins(initialPlayerCoinsConfig, {
         isInitial: true,
-        isTriggerTrading: false,
     }),
     boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
 });
@@ -44,8 +43,11 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority, multipl
     }
     let handCoins: ICoin[] = [];
     if (!multiplayer) {
-        handCoins = BuildCoins(initialPlayerCoinsConfig,
-            { isInitial: true, isTriggerTrading: false });
+        handCoins = BuildCoins(initialPlayerCoinsConfig, {
+            isInitial: true,
+        });
+    } else {
+        handCoins = Array(initialPlayerCoinsConfig.length).fill({});
     }
     return CreatePublicPlayer({
         nickname,
@@ -72,7 +74,7 @@ export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player: IPublicPlayer | undefined = G.publicPlayers[i];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+            throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }
         if (ctx.phase !== Phases.PlaceCoinsUline) {
             if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {

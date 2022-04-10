@@ -30,11 +30,11 @@ export const AddBrisingamensEndGameActionsToStack = (G, ctx) => {
 const AddCardToCamp = (G, cardIndex) => {
     const campDeck = G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd];
     if (campDeck === undefined) {
-        throw new Error(`Отсутствует колода карт лагеря текущей эпохи.`);
+        throw new Error(`Отсутствует колода карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd}'.`);
     }
     const newCampCard = campDeck.splice(0, 1)[0];
     if (newCampCard === undefined) {
-        throw new Error(`Отсутствует карта лагеря в колоде карт лагеря текущей эпохи.`);
+        throw new Error(`Отсутствует карта лагеря в колоде карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd}'.`);
     }
     G.campDeckLength[G.secret.campDecks.length - G.tierToEnd] = campDeck.length;
     G.camp.splice(cardIndex, 1, newCampCard);
@@ -86,12 +86,12 @@ const AddRemainingCampCardsToDiscard = (G) => {
     for (let i = 0; i < G.camp.length; i++) {
         const campCard = G.camp[i];
         if (campCard === undefined) {
-            throw new Error(`В массиве карт лагеря отсутствует карта лагеря ${i}.`);
+            throw new Error(`В массиве карт лагеря отсутствует карта лагеря с id '${i}'.`);
         }
         if (campCard !== null) {
             const discardedCard = G.camp.splice(i, 1, null)[0];
             if (discardedCard === undefined) {
-                throw new Error(`В массиве карт лагеря отсутствует карта лагеря ${i} для сброса.`);
+                throw new Error(`В массиве карт лагеря отсутствует карта лагеря с id '${i}' для сброса.`);
             }
             if (discardedCard !== null) {
                 G.discardCampCardsDeck.push(discardedCard);
@@ -100,7 +100,7 @@ const AddRemainingCampCardsToDiscard = (G) => {
     }
     const campDeck = G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd - 1];
     if (campDeck === undefined) {
-        throw new Error(`Отсутствует колода карт лагеря текущей эпохи.`);
+        throw new Error(`Отсутствует колода карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd - 1}'.`);
     }
     if (campDeck.length) {
         G.discardCampCardsDeck.push(...G.discardCampCardsDeck.concat(campDeck));
@@ -122,17 +122,17 @@ const AddRemainingCampCardsToDiscard = (G) => {
 export const DiscardCardFromTavernJarnglofi = (G) => {
     const tavern = G.taverns[G.currentTavern];
     if (tavern === undefined) {
-        throw new Error(`Отсутствует текущая таверна.`);
+        throw new Error(`Отсутствует текущая таверна с id '${G.currentTavern}'.`);
     }
     const cardIndex = tavern.findIndex((card) => card !== null);
     if (cardIndex === -1) {
-        throw new Error(`Не удалось сбросить лишнюю карту из таверны при пике артефакта Jarnglofi.`);
+        throw new Error(`Не удалось сбросить лишнюю карту из таверны с id '${G.currentTavern}' при пике артефакта '${ArtefactNames.Jarnglofi}'.`);
     }
     const currentTavernConfig = tavernsConfig[G.currentTavern];
     if (currentTavernConfig === undefined) {
-        throw new Error(`Отсутствует конфиг текущей таверны.`);
+        throw new Error(`Отсутствует конфиг текущей таверны с id '${G.currentTavern}'.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за пика артефакта Jarnglofi.`);
+    AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за пика артефакта '${ArtefactNames.Jarnglofi}'.`);
     DiscardCardFromTavern(G, cardIndex);
     G.mustDiscardTavernCardJarnglofi = false;
 };
@@ -149,7 +149,7 @@ export const DiscardCardIfCampCardPicked = (G) => {
     if (G.campPicked) {
         const tavern = G.taverns[G.currentTavern];
         if (tavern === undefined) {
-            throw new Error(`Отсутствует текущая таверна.`);
+            throw new Error(`Отсутствует текущая таверна с id '${G.currentTavern}'.`);
         }
         const discardCardIndex = tavern.findIndex((card) => card !== null);
         let isCardDiscarded = false;
@@ -157,7 +157,7 @@ export const DiscardCardIfCampCardPicked = (G) => {
             isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
         }
         if (!isCardDiscarded) {
-            throw new Error(`Не удалось сбросить лишнюю карту из таверны после выбора карты лагеря в конце пиков из таверны.`);
+            throw new Error(`Не удалось сбросить лишнюю карту из таверны с id '${G.currentTavern}' после выбора карты лагеря в конце пиков из таверны.`);
         }
         G.campPicked = false;
     }
@@ -175,19 +175,19 @@ export const RefillCamp = (G) => {
     AddRemainingCampCardsToDiscard(G);
     const campDeck1 = G.secret.campDecks[1];
     if (campDeck1 === undefined) {
-        throw new Error(`Колода карт лагеря 2 эпохи не может отсутствовать.`);
+        throw new Error(`Колода карт лагеря '2' эпохи не может отсутствовать.`);
     }
     const index = campDeck1.findIndex((card) => card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron);
     if (index === -1) {
-        throw new Error(`Отсутствует артефакт ${ArtefactNames.Odroerir_The_Mythic_Cauldron}.`);
+        throw new Error(`Отсутствует артефакт '${ArtefactNames.Odroerir_The_Mythic_Cauldron}' в колоде лагеря '2' эпохи.`);
     }
     const campCardTemp = campDeck1[0];
     if (campCardTemp === undefined) {
-        throw new Error(`Отсутствует артефакт ${ArtefactNames.Odroerir_The_Mythic_Cauldron}.`);
+        throw new Error(`Отсутствует артефакт '${ArtefactNames.Odroerir_The_Mythic_Cauldron}' в колоде лагеря '1' эпохи.`);
     }
     const odroerirTheMythicCauldron = campDeck1[index];
     if (odroerirTheMythicCauldron === undefined) {
-        throw new Error(`В колоде лагеря 2 эпохи отсутствует карта ${index}.`);
+        throw new Error(`В колоде лагеря '2' эпохи отсутствует карта с id '${index}'.`);
     }
     campDeck1[0] = odroerirTheMythicCauldron;
     campDeck1[index] = campCardTemp;
@@ -215,7 +215,7 @@ export const RefillEmptyCampCards = (G) => {
     });
     const isEmptyCampCards = emptyCampCards.length === 0, campDeck = G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd];
     if (campDeck === undefined) {
-        throw new Error(`Отсутствует колода карт лагеря текущей эпохи.`);
+        throw new Error(`Отсутствует колода карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd}'.`);
     }
     let isEmptyCurrentTierCampDeck = campDeck.length === 0;
     if (!isEmptyCampCards && !isEmptyCurrentTierCampDeck) {

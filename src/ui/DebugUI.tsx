@@ -37,6 +37,7 @@ export const DrawDebugData = (G: IMyGameState, ctx: Ctx): JSX.Element | null => 
  * @returns
  */
 const DrawObjectData = (obj: {
+    // TODO Rework 'any'?
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any,
 }): JSX.Element => {

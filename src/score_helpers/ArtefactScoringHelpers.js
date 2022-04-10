@@ -3,13 +3,22 @@ import { IsCoin } from "../Coin";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { BuffNames } from "../typescript/enums";
 import { TotalRank } from "./ScoreHelpers";
-export const DraupnirScoring = (player) => {
+export const DraupnirScoring = (G, player) => {
     if (player === undefined) {
         throw new Error(`Function param 'player' is undefined.`);
     }
-    return player.boardCoins.filter((coin) => IsCoin(coin) && coin.value >= 15).length * 6;
+    if (G === undefined) {
+        throw new Error(`Function param 'G' is undefined.`);
+    }
+    const basicScore = player.boardCoins.filter((coin, index) => {
+        if (coin !== null && !IsCoin(coin)) {
+            throw new Error(`В массиве монет игрока ${player.nickname} в руке не может быть закрыта монета с id ${index}.`);
+        }
+        return IsCoin(coin) && coin.value >= 15;
+    }).length, odroerirScore = G.odroerirTheMythicCauldronCoins.filter((coin) => coin.value >= 15).length;
+    return (basicScore + odroerirScore) * 6;
 };
-export const HrafnsmerkiScoring = (player) => {
+export const HrafnsmerkiScoring = (G, player) => {
     if (player === undefined) {
         throw new Error(`Function param 'player' is undefined.`);
     }
@@ -21,7 +30,7 @@ export const HrafnsmerkiScoring = (player) => {
     }
     return score;
 };
-export const MjollnirScoring = (player) => {
+export const MjollnirScoring = (G, player) => {
     var _a;
     if (player === undefined) {
         throw new Error(`Function param 'player' is undefined.`);
@@ -32,7 +41,7 @@ export const MjollnirScoring = (player) => {
     }
     return player.cards[suit].reduce(TotalRank, 0) * 2;
 };
-export const OdroerirTheMythicCauldronScoring = (player, G) => {
+export const OdroerirTheMythicCauldronScoring = (G, player) => {
     if (player === undefined) {
         throw new Error(`Function param 'player' is undefined.`);
     }
@@ -41,7 +50,7 @@ export const OdroerirTheMythicCauldronScoring = (player, G) => {
     }
     return GetOdroerirTheMythicCauldronCoinsValues(G);
 };
-export const SvalinnScoring = (player) => {
+export const SvalinnScoring = (G, player) => {
     if (player === undefined) {
         throw new Error(`Function param 'player' is undefined.`);
     }

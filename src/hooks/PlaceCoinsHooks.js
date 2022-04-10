@@ -1,6 +1,6 @@
-import { IsCoin, ReturnCoinsToPlayerHands } from "../Coin";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
+import { ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
 import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
@@ -23,7 +23,13 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
         if (multiplayer) {
             isEveryPlayersHandCoinsEmpty =
                 Object.values(G.publicPlayers).filter((player) => !CheckPlayerHasBuff(player, BuffNames.EveryTurn))
-                    .every((player) => player.boardCoins.every((coin) => !IsCoin(coin) && coin !== null));
+                    .every((player, index) => {
+                    const privatePlayer = G.players[index];
+                    if (privatePlayer === undefined) {
+                        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${index}'.`);
+                    }
+                    return privatePlayer.handCoins.every((coin) => coin === null);
+                });
         }
         else {
             isEveryPlayersHandCoinsEmpty =
@@ -49,13 +55,13 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
 export const CheckEndPlaceCoinsTurn = (G, ctx) => {
     const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    if (privatePlayer === undefined) {
+        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins;
     if (multiplayer) {
-        if (privatePlayer === undefined) {
-            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
-        }
         handCoins = privatePlayer.handCoins;
     }
     else {

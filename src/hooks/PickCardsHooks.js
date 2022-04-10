@@ -1,5 +1,5 @@
 import { IsMercenaryCampCard } from "../Camp";
-import { IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
@@ -26,13 +26,13 @@ import { BuffNames, LogTypes, Phases, Stages } from "../typescript/enums";
 const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
     const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    if (privatePlayer === undefined) {
+        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins;
     if (multiplayer) {
-        if (privatePlayer === undefined) {
-            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
-        }
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -41,11 +41,14 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
     const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((findPlayer) => CheckPlayerHasBuff(findPlayer, BuffNames.EveryTurn));
     if (ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
-            const coin = player.boardCoins[G.currentTavern];
-            if (coin === undefined) {
-                throw new Error(`В массиве монет игрока на поле отсутствует монета на месте текущей эпохи.`);
+            const boardCoin = player.boardCoins[G.currentTavern];
+            if (boardCoin === undefined) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета на месте текущей таверны с id '${G.currentTavern}'.`);
             }
-            if (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) {
+            if (boardCoin !== null && !IsCoin(boardCoin)) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета на месте текущей таверны с id '${G.currentTavern}'.`);
+            }
+            if (boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.isTriggerTrading) {
                 const tradingCoinPlacesLength = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
                 if (tradingCoinPlacesLength > 0) {
                     const handCoinsLength = handCoins.filter((coin) => IsCoin(coin)).length;
@@ -72,7 +75,7 @@ export const CheckEndPickCardsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
         if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1] && !player.stack.length
             && !player.actionsNum && CheckIfCurrentTavernEmpty(G)) {
@@ -114,15 +117,15 @@ export const EndPickCardsActions = (G, ctx) => {
     var _a;
     const currentTavernConfig = tavernsConfig[G.currentTavern];
     if (currentTavernConfig === undefined) {
-        throw new Error(`Отсутствует конфиг текущей таверны.`);
+        throw new Error(`Отсутствует конфиг текущей таверны с id '${G.currentTavern}'.`);
     }
     if (!CheckIfCurrentTavernEmpty(G)) {
-        throw new Error(`Таверна ${currentTavernConfig.name} не может не быть пустой в конце фазы ${Phases.PickCards}.`);
+        throw new Error(`Таверна '${currentTavernConfig.name}' не может не быть пустой в конце фазы '${Phases.PickCards}'.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Таверна ${currentTavernConfig.name} пустая.`);
+    AddDataToLog(G, LogTypes.GAME, `Таверна '${currentTavernConfig.name}' пустая.`);
     const deck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
     if (deck === undefined) {
-        throw new Error(`Отсутствует колода карт текущей эпохи.`);
+        throw new Error(`Отсутствует колода карт текущей эпохи с id '${G.secret.decks.length - G.tierToEnd}'.`);
     }
     if (G.tavernsNum - 1 === G.currentTavern && deck.length === 0) {
         G.tierToEnd--;
@@ -135,7 +138,7 @@ export const EndPickCardsActions = (G, ctx) => {
                 for (let i = 0; i < ctx.numPlayers; i++) {
                     const player = G.publicPlayers[i];
                     if (player === undefined) {
-                        throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+                        throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
                     }
                     startThrud = player.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
                     if (!startThrud) {
@@ -159,7 +162,7 @@ export const OnPickCardsMove = (G, ctx) => {
     var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     StartOrEndActions(G, ctx);
     if (!player.stack.length) {
@@ -184,27 +187,6 @@ export const OnPickCardsMove = (G, ctx) => {
 };
 export const OnPickCardsTurnBegin = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.pickCard()]);
-    const multiplayer = IsMultiplayer(G);
-    if (multiplayer) {
-        const player = G.publicPlayers[Number(ctx.currentPlayer)];
-        if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-        }
-        const currentTavernBoardCoin = player.boardCoins[G.currentTavern];
-        if (currentTavernBoardCoin === null || currentTavernBoardCoin === void 0 ? void 0 : currentTavernBoardCoin.isTriggerTrading) {
-            const privatePlayer = G.players[Number(ctx.currentPlayer)];
-            if (privatePlayer === undefined) {
-                throw new Error(`В массиве приватных игроков отсутствует текущий игрок ${Number(ctx.currentPlayer)}.`);
-            }
-            for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
-                const privateBoardCoin = privatePlayer.boardCoins[i];
-                if (privateBoardCoin === undefined) {
-                    throw new Error(`В массиве монет приватного игрока в руке отсутствует монета в кошеле ${i}.`);
-                }
-                player.boardCoins[i] = privateBoardCoin;
-            }
-        }
-    }
 };
 export const OnPickCardsTurnEnd = (G, ctx) => {
     var _a;
@@ -241,19 +223,29 @@ export const OnPickCardsTurnEnd = (G, ctx) => {
 export const ResolveCurrentTavernOrders = (G, ctx) => {
     const multiplayer = IsMultiplayer(G);
     G.currentTavern++;
-    if (multiplayer) {
-        Object.values(G.publicPlayers).forEach((player, index) => {
+    Object.values(G.publicPlayers).forEach((player, index) => {
+        if (multiplayer) {
             const privatePlayer = G.players[index];
             if (privatePlayer === undefined) {
-                throw new Error(`В массиве приватных игроков отсутствует игрок ${index}.`);
+                throw new Error(`В массиве приватных игроков отсутствует игрок с id '${index}'.`);
             }
             const privateBoardCoin = privatePlayer.boardCoins[G.currentTavern];
             if (privateBoardCoin === undefined) {
-                throw new Error(`В массиве монет приватного игрока в руке отсутствует монета текущей таверны ${G.currentTavern}.`);
+                throw new Error(`В массиве монет приватного игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
             }
             player.boardCoins[G.currentTavern] = privateBoardCoin;
-        });
-    }
+        }
+        const publicBoardCoin = player.boardCoins[G.currentTavern];
+        if (publicBoardCoin === undefined) {
+            throw new Error(`В массиве монет игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
+        }
+        if (publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
+            throw new Error(`В массиве монет игрока с id '${index}' в руке не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
+        }
+        if (publicBoardCoin !== null && !publicBoardCoin.isOpened) {
+            ChangeIsOpenedCoinStatus(publicBoardCoin, true);
+        }
+    });
     const { playersOrder, exchangeOrder } = ResolveBoardCoins(G, ctx);
     [G.publicPlayersOrder, G.exchangeOrder] = [playersOrder, exchangeOrder];
 };

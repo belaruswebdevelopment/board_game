@@ -7,7 +7,7 @@ import { suitsConfig } from "../data/SuitData";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { IsHeroCard } from "../Hero";
 import { ArtefactNames, MoveNames } from "../typescript/enums";
-import type { AllCardTypes, ArgsTypes, IBackground, IMoveFunctionTypes, IMyGameState, IPublicPlayer, PublicPlayerBoardCoinTypes, SuitTypes } from "../typescript/interfaces";
+import type { AllCardTypes, ArgsTypes, IBackground, IMoveFunctionTypes, IMyGameState, IPublicPlayer, PublicPlayerCoinTypes, SuitTypes } from "../typescript/interfaces";
 
 
 /**
@@ -105,7 +105,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
                 action = data.moves.GetEnlistmentMercenariesMove!;
                 break;
             default:
-                throw new Error(`Нет такого мува.`);
+                throw new Error(`Нет такого мува '${moveName}'.`);
         }
     } else {
         action = null;
@@ -183,7 +183,7 @@ export const DrawCard = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
  * @param args Аргументы действия.
  */
 export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Element[], type: string,
-    coin: PublicPlayerBoardCoinTypes, id: number, player: IPublicPlayer | null, coinClasses?: string | null,
+    coin: PublicPlayerCoinTypes, id: number, player: IPublicPlayer | null, coinClasses?: string | null,
     additionalParam?: number | null, moveName?: MoveNames, ...args: ArgsTypes): void => {
     let styles: IBackground = { background: `` },
         span: JSX.Element | number | null = null,
@@ -203,6 +203,9 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
                 break;
             case MoveNames.ClickHandTradingCoinUlineMove:
                 action = data.moves.ClickHandTradingCoinUlineMove!;
+                break;
+            case MoveNames.ClickConcreteCoinToUpgradeMove:
+                action = data.moves.ClickConcreteCoinToUpgradeMove!;
                 break;
             case MoveNames.ClickCoinToUpgradeMove:
                 action = data.moves.ClickCoinToUpgradeMove!;
@@ -249,6 +252,9 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
             if (coin === null) {
                 styles = Styles.CoinBack();
             } else {
+                if (!IsCoin(coin)) {
+                    throw new Error(`Монета с типом 'coin' не может быть закрыта.`);
+                }
                 if (IsCoin(coin) && coin.isInitial !== undefined) {
                     styles = Styles.Coin(coin.value, coin.isInitial);
                 }

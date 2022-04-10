@@ -2,18 +2,29 @@ import { IsMercenaryPlayerCard } from "../Camp";
 import { IsCoin } from "../Coin";
 import { GetOdroerirTheMythicCauldronCoinsValues } from "../helpers/CampCardHelpers";
 import { BuffNames } from "../typescript/enums";
-import type { IBuffs, IMyGameState, IPublicPlayer, PlayerCardsType, PublicPlayerBoardCoinTypes, SuitTypes } from "../typescript/interfaces";
+import type { IBuffs, ICoin, IMyGameState, IPublicPlayer, PlayerCardsType, PublicPlayerCoinTypes, SuitTypes } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
-export const DraupnirScoring = (player?: IPublicPlayer): number => {
+export const DraupnirScoring = (G?: IMyGameState, player?: IPublicPlayer): number => {
     if (player === undefined) {
         throw new Error(`Function param 'player' is undefined.`);
     }
-    return player.boardCoins.filter((coin: PublicPlayerBoardCoinTypes): boolean =>
-        IsCoin(coin) && coin.value >= 15).length * 6;
+    if (G === undefined) {
+        throw new Error(`Function param 'G' is undefined.`);
+    }
+    const basicScore: number =
+        player.boardCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean => {
+            if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
+                throw new Error(`В массиве монет игрока ${player.nickname} в руке не может быть закрыта монета с id ${index}.`);
+            }
+            return IsCoin(coin) && coin.value >= 15;
+        }).length,
+        odroerirScore: number = G.odroerirTheMythicCauldronCoins.filter((coin: ICoin): boolean =>
+            coin.value >= 15).length;
+    return (basicScore + odroerirScore) * 6;
 };
 
-export const HrafnsmerkiScoring = (player?: IPublicPlayer): number => {
+export const HrafnsmerkiScoring = (G?: IMyGameState, player?: IPublicPlayer): number => {
     if (player === undefined) {
         throw new Error(`Function param 'player' is undefined.`);
     }
@@ -28,7 +39,7 @@ export const HrafnsmerkiScoring = (player?: IPublicPlayer): number => {
     return score;
 };
 
-export const MjollnirScoring = (player?: IPublicPlayer): number => {
+export const MjollnirScoring = (G?: IMyGameState, player?: IPublicPlayer): number => {
     if (player === undefined) {
         throw new Error(`Function param 'player' is undefined.`);
     }
@@ -40,7 +51,7 @@ export const MjollnirScoring = (player?: IPublicPlayer): number => {
     return player.cards[suit].reduce(TotalRank, 0) * 2;
 };
 
-export const OdroerirTheMythicCauldronScoring = (player?: IPublicPlayer, G?: IMyGameState): number => {
+export const OdroerirTheMythicCauldronScoring = (G?: IMyGameState, player?: IPublicPlayer): number => {
     if (player === undefined) {
         throw new Error(`Function param 'player' is undefined.`);
     }
@@ -50,7 +61,7 @@ export const OdroerirTheMythicCauldronScoring = (player?: IPublicPlayer, G?: IMy
     return GetOdroerirTheMythicCauldronCoinsValues(G);
 };
 
-export const SvalinnScoring = (player?: IPublicPlayer): number => {
+export const SvalinnScoring = (G?: IMyGameState, player?: IPublicPlayer): number => {
     if (player === undefined) {
         throw new Error(`Function param 'player' is undefined.`);
     }

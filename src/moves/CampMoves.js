@@ -92,18 +92,16 @@ export const DiscardSuitCardFromPlayerBoardMove = (G, ctx, cardId) => {
  * @param ctx
  * @param coinId Id монеты.
  * @param type Тип монеты.
- * @param isInitial Является ли базовой.
  * @returns
  */
-export const UpgradeCoinVidofnirVedrfolnirMove = (G, ctx, coinId, type, isInitial) => {
+export const UpgradeCoinVidofnirVedrfolnirMove = (G, ctx, coinId, type) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
         coinId,
         type,
-        isInitial,
     });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    UpgradeCoinVidofnirVedrfolnirAction(G, ctx, coinId, type, isInitial);
+    UpgradeCoinVidofnirVedrfolnirAction(G, ctx, coinId, type);
 };
 //# sourceMappingURL=CampMoves.js.map

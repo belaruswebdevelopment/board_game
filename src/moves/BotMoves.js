@@ -21,13 +21,13 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
     }
     const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    if (privatePlayer === undefined) {
+        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins;
     if (multiplayer) {
-        if (privatePlayer === undefined) {
-            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
-        }
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -35,13 +35,27 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
         const coinId = coinsOrder[i]
-            || handCoins.findIndex((coin) => IsCoin(coin));
+            || handCoins.findIndex((coin, index) => {
+                if (coin !== null && !IsCoin(coin)) {
+                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта для него монета с id '${index}'.`);
+                }
+                return IsCoin(coin);
+            });
         if (coinId !== -1) {
             const handCoin = handCoins[coinId];
             if (handCoin === undefined) {
-                throw new Error(`В массиве монет игрока в руке отсутствует монета ${coinId}.`);
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${coinId}'.`);
             }
-            player.boardCoins[i] = handCoin;
+            if (handCoin !== null && !IsCoin(handCoin)) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта для него монета с id '${coinId}'.`);
+            }
+            if (multiplayer) {
+                privatePlayer.boardCoins[i] = handCoin;
+                player.boardCoins[i] = {};
+            }
+            else {
+                player.boardCoins[i] = handCoin;
+            }
             handCoins[coinId] = null;
         }
     }

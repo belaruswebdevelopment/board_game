@@ -2,7 +2,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../actions/Actions";
 import { StackData } from "../data/StackData";
 import { suitsConfig } from "../data/SuitData";
-import { PickCardOrActionCardActions } from "../helpers/ActionHelpers";
+import { PickCardOrActionCardActions } from "../helpers/CardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages, SuitNames } from "../typescript/enums";
@@ -25,14 +25,14 @@ export const ClickCardMove = (G, ctx, cardId) => {
     }
     const currentTavern = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
-        throw new Error(`Отсутствует текущая таверна.`);
+        throw new Error(`Отсутствует текущая таверна с id '${G.currentTavern}'.`);
     }
     const card = currentTavern[cardId];
     if (card === undefined) {
-        throw new Error(`Отсутствует карта ${cardId} текущей таверны.`);
+        throw new Error(`Отсутствует карта с id '${cardId}' текущей таверны с id '${G.currentTavern}'.`);
     }
     if (card === null) {
-        throw new Error(`Не существует кликнутая карта.`);
+        throw new Error(`Не существует кликнутая карта с id '${cardId}'.`);
     }
     currentTavern.splice(cardId, 1, null);
     PickCardOrActionCardActions(G, ctx, card);
@@ -55,15 +55,15 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     }
     const deck1 = G.secret.decks[1];
     if (deck1 === undefined) {
-        throw new Error(`Отсутствует колода карт 2 эпохи.`);
+        throw new Error(`Отсутствует колода карт '2' эпохи.`);
     }
     const card = deck1[cardId];
     if (card === undefined) {
-        throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 1.`);
+        throw new Error(`Отсутствует выбранная карта с id '${cardId}' '2' эпохи '1'.`);
     }
     const pickedCard = deck1.splice(cardId, 1)[0];
     if (pickedCard === undefined) {
-        throw new Error(`Отсутствует выбранная карта ${cardId} 2 эпохи 2.`);
+        throw new Error(`Отсутствует выбранная карта с id '${cardId}' '2' эпохи '2'.`);
     }
     G.deckLength[1] = deck1.length;
     G.secret.decks[1] = ctx.random.Shuffle(deck1);

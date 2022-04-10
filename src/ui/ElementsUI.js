@@ -89,7 +89,7 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
                 action = data.moves.GetEnlistmentMercenariesMove;
                 break;
             default:
-                throw new Error(`Нет такого мува.`);
+                throw new Error(`Нет такого мува '${moveName}'.`);
         }
     }
     else {
@@ -180,6 +180,9 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
             case MoveNames.ClickHandTradingCoinUlineMove:
                 action = data.moves.ClickHandTradingCoinUlineMove;
                 break;
+            case MoveNames.ClickConcreteCoinToUpgradeMove:
+                action = data.moves.ClickConcreteCoinToUpgradeMove;
+                break;
             case MoveNames.ClickCoinToUpgradeMove:
                 action = data.moves.ClickCoinToUpgradeMove;
                 break;
@@ -226,6 +229,9 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
                 styles = Styles.CoinBack();
             }
             else {
+                if (!IsCoin(coin)) {
+                    throw new Error(`Монета с типом 'coin' не может быть закрыта.`);
+                }
                 if (IsCoin(coin) && coin.isInitial !== undefined) {
                     styles = Styles.Coin(coin.value, coin.isInitial);
                 }

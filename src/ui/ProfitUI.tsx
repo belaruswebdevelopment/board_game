@@ -11,7 +11,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
     for (let j = 0; j < G.explorerDistinctionCards.length; j++) {
         const card: DeckCardTypes | undefined = G.explorerDistinctionCards[j];
         if (card === undefined) {
-            throw new Error(`В массиве карт 2 эпохи отсутствует карта ${j}.`);
+            throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
         let suit: null | SuitTypes = null;
         if (IsCardNotActionAndNotNull(card)) {
@@ -19,7 +19,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
         }
         const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
         if (data !== undefined && boardCells !== undefined) {
             DrawCard(data, boardCells, card, j, player, suit,
@@ -40,7 +40,7 @@ export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
     for (let j = 0; j < 2; j++) {
         const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
         if (j === 0) {
             DrawButton(data, boardCells, ButtonNames.Start, player,

@@ -1,13 +1,15 @@
-import { IsArtefactCard, IsMercenaryPlayerCard } from "../Camp";
+import { IsArtefactCard } from "../Camp";
+import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddCampCardToCards } from "../helpers/CampCardHelpers";
+import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { CoinTypes, LogTypes, RusCardTypes, SuitNames } from "../typescript/enums";
-import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions";
+import { ArtefactNames, CoinTypes, LogTypes, SuitNames } from "../typescript/enums";
+import { StartVidofnirVedrfolnirAction } from "./CampAutoActions";
+import { UpgradeCoinAction } from "./CoinActions";
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -22,32 +24,39 @@ import { StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "./AutoActions"
 export const AddCoinToPouchAction = (G, ctx, coinId) => {
     const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    const tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
+    if (tempId === -1) {
+        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
+    }
+    if (privatePlayer === undefined) {
+        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins;
     if (multiplayer) {
-        if (privatePlayer === undefined) {
-            throw new Error(`В массиве приватных игроков отсутствует текущий игрок.`);
-        }
         handCoins = privatePlayer.handCoins;
     }
     else {
         handCoins = player.handCoins;
     }
-    const tempId = player.boardCoins.findIndex((coin, index) => index >= G.tavernsNum && coin === null);
-    if (tempId === -1) {
-        throw new Error(`В массиве монет игрока на столе отсутствует монета для добавления в кошель для обмена для действия артефакта 'VidofnirVedrfolnir'.`);
+    const handCoin = handCoins[coinId];
+    if (handCoin === undefined) {
+        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует выбранная монета с id '${coinId}': это должно проверяться в MoveValidator.`);
     }
-    const coin = handCoins[coinId];
-    if (coin === undefined) {
-        throw new Error(`В массиве монет игрока в руке отсутствует выбранная монета: это должно проверяться в MoveValidator.`);
+    if (handCoin === null) {
+        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может не быть монеты с id '${coinId}'.`);
     }
-    if (multiplayer && privatePlayer !== undefined) {
-        privatePlayer.boardCoins[tempId] = coin;
+    if (!IsCoin(handCoin)) {
+        throw new Error(`Монета с id '${coinId}' в руке текущего игрока с id '${ctx.currentPlayer}' не может быть закрытой для него.`);
     }
-    player.boardCoins[tempId] = coin;
+    ChangeIsOpenedCoinStatus(handCoin, true);
+    if (multiplayer) {
+        privatePlayer.boardCoins[tempId] = handCoin;
+    }
+    player.boardCoins[tempId] = handCoin;
     handCoins[coinId] = null;
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} положил монету ценностью '${player.boardCoins[tempId]}' в свой кошель.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' положил монету ценностью '${handCoin.value}' в свой кошель.`);
     StartVidofnirVedrfolnirAction(G, ctx);
 };
 /**
@@ -63,36 +72,24 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
  * @param cardId Id сбрасываемой карты.
  */
 export const DiscardSuitCardAction = (G, ctx, cardId) => {
-    if (ctx.playerID === undefined) {
-        throw new Error(`Отсутствует обязательный параметр 'ctx.playerID'.`);
-    }
     const player = G.publicPlayers[Number(ctx.playerID)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок ${ctx.playerID}.`);
+        throw new Error(`В массиве игроков отсутствует игрок с id '${ctx.playerID}'.`);
     }
     const discardedCard = player.cards[SuitNames.WARRIOR].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
-        throw new Error(`В массиве карт игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
+        throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
-    if (IsHeroCard(discardedCard)) {
-        throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
-    }
-    if (IsMercenaryPlayerCard(discardedCard) || IsArtefactCard(discardedCard)) {
-        G.discardCampCardsDeck.push(discardedCard);
-    }
-    else {
-        G.discardCardsDeck.push(discardedCard);
-    }
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} сбросил карту '${discardedCard.name}' в колоду сброса.`);
+    DiscardPickedCard(G, player, discardedCard);
     player.stack = [];
 };
 export const PickCampCardAction = (G, ctx, cardId) => {
     const campCard = G.camp[cardId];
     if (campCard === undefined) {
-        throw new Error(`Отсутствует кликнутая карта лагеря.`);
+        throw new Error(`Отсутствует кликнутая карта лагеря с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
     if (campCard === null) {
-        throw new Error(`Не существует кликнутая карта лагеря.`);
+        throw new Error(`Не существует кликнутая карта лагеря с id '${cardId}'.`);
     }
     G.camp.splice(cardId, 1, null);
     AddCampCardToCards(G, ctx, campCard);
@@ -104,11 +101,11 @@ export const PickCampCardAction = (G, ctx, cardId) => {
         const minCoinValue = G.marketCoins.reduceRight((prev, curr) => prev.value < curr.value ? prev : curr).value;
         const minCoinIndex = G.marketCoins.findIndex((coin) => coin.value === minCoinValue);
         if (minCoinIndex === -1) {
-            throw new Error(`Не существует минимальная монета на рынке с значением - ${minCoinValue}.`);
+            throw new Error(`Не существует минимальная монета на рынке с значением - '${minCoinValue}'.`);
         }
         const coin = G.marketCoins.splice(minCoinIndex, 1)[0];
         if (coin === undefined) {
-            throw new Error(`Отсутствует минимальная монета на рынке с индексом - ${minCoinIndex}.`);
+            throw new Error(`Отсутствует минимальная монета на рынке с id '${minCoinIndex}'.`);
         }
         G.odroerirTheMythicCauldronCoins.push(coin);
     }
@@ -124,25 +121,24 @@ export const PickCampCardAction = (G, ctx, cardId) => {
  * @param ctx
  * @param coinId Id монеты.
  * @param type Тип монеты.
- * @param isInitial Является ли монета базовой.
  */
-export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, coinId, type, isInitial) => {
+export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, coinId, type) => {
     var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
+        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
     const value = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.value;
     if (value === undefined) {
-        throw new Error(`У конфига действия игрока отсутствует обязательный параметр значения улучшаемой монеты 'VidofnirVedrfolnir'.`);
+        throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр значения улучшаемой монеты '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
     }
     if (value === 3) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
     }
-    UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
+    UpgradeCoinAction(G, ctx, value, coinId, type);
 };
 //# sourceMappingURL=CampActions.js.map

@@ -105,19 +105,17 @@ export const DiscardSuitCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGam
  * @param ctx
  * @param coinId Id монеты.
  * @param type Тип монеты.
- * @param isInitial Является ли базовой.
  * @returns
  */
 export const UpgradeCoinVidofnirVedrfolnirMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number,
-    type: CoinTypes, isInitial: boolean): string | void => {
+    type: CoinTypes): string | void => {
     const isValidMove: boolean =
         ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.UpgradeVidofnirVedrfolnirCoin, {
             coinId,
             type,
-            isInitial,
         });
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    UpgradeCoinVidofnirVedrfolnirAction(G, ctx, coinId, type, isInitial);
+    UpgradeCoinVidofnirVedrfolnirAction(G, ctx, coinId, type);
 };

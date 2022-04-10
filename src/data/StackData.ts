@@ -75,11 +75,12 @@ export const StackData = {
             drawName: DrawNames.PickCard,
         },
     }),
-    pickConcreteCoinToUpgrade: (coinValue: number): IStack => ({
+    pickConcreteCoinToUpgrade: (coinValue: number, value: number): IStack => ({
         config: {
             stageName: Stages.PickConcreteCoinToUpgrade,
             drawName: DrawNames.PickConcreteCoinToUpgrade,
             coinValue,
+            value,
         },
     }),
     pickDiscardCardAndumia: (): IStack => ({

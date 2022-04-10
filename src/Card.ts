@@ -1,7 +1,7 @@
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
-import { CardNames, GameNames, RusCardTypes } from "./typescript/enums";
-import type { AdditionalCardTypes, DeckCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, ICreateOlwinDoubleNonPlacedCard, IDeckConfig, INumberArrayValues, INumberValues, IOlwinDoubleNonPlacedCard, SuitTypes } from "./typescript/interfaces";
+import { GameNames, RusCardTypes } from "./typescript/enums";
+import type { AdditionalCardTypes, DeckCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, INumberArrayValues, INumberValues, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
@@ -26,7 +26,7 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
             }
             const points: number | number[] | undefined = pointValuesPlayers[data.tier];
             if (points === undefined) {
-                throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - ${data.tier}.`);
+                throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - '${data.tier}'.`);
             }
             let count = 0;
             if (Array.isArray(points)) {
@@ -39,7 +39,7 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
                 if (Array.isArray(points)) {
                     const cardPoints: number | undefined = points[j];
                     if (cardPoints === undefined) {
-                        throw new Error(`Отсутствует значение очков карты ${j}.`);
+                        throw new Error(`Отсутствует значение очков карты с id '${j}'.`);
                     }
                     currentPoints = cardPoints;
                 } else {
@@ -59,7 +59,7 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
     for (let i = 0; i < actionCardConfig.length; i++) {
         const currentActionCardConfig: IActionCardConfig | undefined = actionCardConfig[i];
         if (currentActionCardConfig === undefined) {
-            throw new Error(`В массиве конфигов карт улучшения монет отсутствует значение ${i}.`);
+            throw new Error(`В массиве конфигов карт улучшения монет отсутствует значение с id '${i}'.`);
         }
         const amountPlayersValue: INumberValues | undefined = currentActionCardConfig.amount()[data.players];
         if (amountPlayersValue === undefined) {
@@ -67,7 +67,7 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
         }
         const amountTierValue: number | undefined = amountPlayersValue[data.tier];
         if (amountTierValue === undefined) {
-            throw new Error(`Отсутствует массив значений количества карт улучшения монет для указанного числа игроков - '${data.players}' для эпохи ${data.tier}.`);
+            throw new Error(`Отсутствует массив значений количества карт улучшения монет для указанного числа игроков - '${data.players}' для эпохи '${data.tier}'.`);
         }
         for (let j = 0; j < amountTierValue; j++) {
             cards.push(CreateActionCard({
@@ -162,14 +162,6 @@ export const CreateCard = ({
     game,
     tier,
     path,
-});
-
-export const CreateOlwinDoubleNonPlacedCard = ({
-    name = CardNames.OlwinsDouble,
-    suit,
-}: ICreateOlwinDoubleNonPlacedCard = {} as ICreateOlwinDoubleNonPlacedCard): IOlwinDoubleNonPlacedCard => ({
-    name,
-    suit,
 });
 
 export const IsActionCard = (card: unknown): card is IActionCard =>

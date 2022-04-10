@@ -1,4 +1,4 @@
-import { GetClosedCoinIntoPlayerHandAction, UpgradeCoinAction } from "../actions/AutoActions";
+import { GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 import { AstridScoring, IdunnScoring } from "../score_helpers/HeroScoringHelpers";
 import { BuffNames, GameNames, HeroNames, SuitNames } from "../typescript/enums";
 import type { IHeroConfig, IHeroData } from "../typescript/interfaces";
@@ -308,11 +308,8 @@ const Khrad: IHeroData = {
     description: `Прибавьте 4 победных очка к итоговому показателю храбрости. Как только вы призвали Крада, сразу же улучшите одну свою монету с наименьшим номиналом на +10. Обменная монета с номиналом 0 не может быть улучшена.`,
     game: GameNames.Thingvellir,
     points: 4,
-    buff: {
-        name: BuffNames.Coin,
-    },
     actions: {
-        name: UpgradeCoinAction.name,
+        name: UpgradeMinCoinAction.name,
         params: [10],
     },
     scoringRule: (): number => 4,

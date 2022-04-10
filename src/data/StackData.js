@@ -73,11 +73,12 @@ export const StackData = {
             drawName: DrawNames.PickCard,
         },
     }),
-    pickConcreteCoinToUpgrade: (coinValue) => ({
+    pickConcreteCoinToUpgrade: (coinValue, value) => ({
         config: {
             stageName: Stages.PickConcreteCoinToUpgrade,
             drawName: DrawNames.PickConcreteCoinToUpgrade,
             coinValue,
+            value,
         },
     }),
     pickDiscardCardAndumia: () => ({

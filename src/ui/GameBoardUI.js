@@ -29,7 +29,7 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
         for (let j = 0; j < G.campNum; j++) {
             const campCard = G.camp[j];
             if (campCard === undefined) {
-                throw new Error(`В массиве карт лагеря отсутствует карта ${j}.`);
+                throw new Error(`В массиве карт лагеря отсутствует карта с id '${j}'.`);
             }
             if (campCard === null) {
                 if (data !== undefined) {
@@ -39,7 +39,7 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
             else {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                 }
                 let suit = null;
                 if (IsArtefactCard(campCard)) {
@@ -60,10 +60,10 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
                                     break;
                                 }
                                 else {
-                                    throw new Error(`Нет такого мува 1.`);
+                                    throw new Error(`Нет такого мува '1'.`);
                                 }
                             default:
-                                throw new Error(`Нет такого мува 2.`);
+                                throw new Error(`Нет такого мува '2'.`);
                         }
                         DrawCard(data, boardCells, campCard, j, player, suit, moveName, j);
                     }
@@ -92,6 +92,10 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
         throw new Error(`Функция должна возвращать значение.`);
     }
 };
+export const DrawCurrentPhaseStage = (ctx) => {
+    var _a, _b, _c;
+    return (_jsxs("b", { children: ["Phase: ", _jsx("span", { className: "italic", children: (_a = ctx.phase) !== null && _a !== void 0 ? _a : `none` }), "(Stage: ", _jsx("span", { className: "italic", children: (_c = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) !== null && _c !== void 0 ? _c : `none` }), ")"] }));
+};
 /**
  * <h3>Отрисовка игровой информации о текущем игроке и текущем ходе.</h3>
  * <p>Применения:</p>
@@ -102,7 +106,7 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
  * @param ctx
  * @returns Поле информации о текущем ходу.
  */
-export const DrawCurrentPlayerTurn = (ctx) => (_jsxs("b", { children: ["Current player: ", _jsxs("span", { className: "italic", children: ["Player ", Number(ctx.currentPlayer) + 1] }), " | Turn: ", _jsx("span", { className: "italic", children: ctx.turn })] }));
+export const DrawCurrentPlayerTurn = (ctx) => (_jsxs("b", { children: [_jsxs("span", { className: "italic", children: ["Player ", Number(ctx.currentPlayer) + 1] }), " | Turn: ", _jsx("span", { className: "italic", children: ctx.turn })] }));
 /**
  * <h3>Отрисовка преимуществ по фракциям в конце эпохи.</h3>
  * <p>Применения:</p>
@@ -125,7 +129,8 @@ export const DrawDistinctions = (G, ctx, validatorName, data) => {
                 if (ctx.phase === Phases.GetDistinctions && ctx.activePlayers === null
                     && G.distinctions[suit] === ctx.currentPlayer) {
                     if (data !== undefined) {
-                        boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suit); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
+                        const suitArg = suit;
+                        boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suitArg); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                     }
                     else if (validatorName === MoveValidatorNames.ClickDistinctionCardMoveValidator) {
                         moveMainArgs.push(suit);
@@ -168,7 +173,7 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
     for (let j = 0; j < G.discardCardsDeck.length; j++) {
         const card = G.discardCardsDeck[j];
         if (card === undefined) {
-            throw new Error(`В массиве колоды сброса карт отсутствует карта ${j}.`);
+            throw new Error(`В массиве колоды сброса карт отсутствует карта с id '${j}'.`);
         }
         let suit = null;
         if (!IsActionCard(card)) {
@@ -177,7 +182,7 @@ export const DrawDiscardedCards = (G, ctx, validatorName, data) => {
         if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickDiscardCard) {
             const player = G.publicPlayers[Number(ctx.currentPlayer)];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
             }
             if (data !== undefined) {
                 DrawCard(data, boardCells, card, j, player, suit, MoveNames.PickDiscardCardMove, j);
@@ -223,13 +228,13 @@ export const DrawHeroes = (G, ctx, validatorName, data) => {
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j, hero = G.heroes[increment];
             if (hero === undefined) {
-                throw new Error(`В массиве карт героев отсутствует герой ${increment}.`);
+                throw new Error(`В массиве карт героев отсутствует герой с id '${increment}'.`);
             }
             const suit = hero.suit;
             if (hero.active && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickHero) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                 }
                 if (data !== undefined) {
                     DrawCard(data, boardCells, hero, increment, player, suit, MoveNames.ClickHeroCardMove, increment);
@@ -279,7 +284,7 @@ export const DrawMarketCoins = (G, data) => {
         for (let j = 0; j < drawData.boardCols; j++) {
             const increment = i * drawData.boardCols + j, marketCoin = G.marketCoinsUnique[increment];
             if (marketCoin === undefined) {
-                throw new Error(`В массиве монет рынка героев отсутствует монета ${increment}.`);
+                throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
             }
             const tempCoinValue = marketCoin.value, coinClassName = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
             DrawCoin(data, boardCells, `market`, marketCoin, increment, null, coinClassName, countMarketCoins[tempCoinValue], MoveNames.ClickHandCoinMove, j);
@@ -306,7 +311,7 @@ export const DrawMarketCoins = (G, data) => {
 export const DrawProfit = (G, ctx, data) => {
     const boardCells = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const option = G.drawProfit;
     let caption = `Get `;
@@ -351,11 +356,11 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
             for (let j = 0; j < G.drawSize; j++) {
                 const tavern = G.taverns[t];
                 if (tavern === undefined) {
-                    throw new Error(`В массиве таверн отсутствует таверна ${t}.`);
+                    throw new Error(`В массиве таверн отсутствует таверна с id '${t}'.`);
                 }
                 const tavernCard = tavern[j];
                 if (tavernCard === undefined) {
-                    throw new Error(`В массиве карт таверны ${t} отсутствует карта ${j}.`);
+                    throw new Error(`В массиве карт таверны с id '${t}' отсутствует карта с id '${j}'.`);
                 }
                 if (tavernCard === null) {
                     if (data !== undefined) {
@@ -369,7 +374,7 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                     }
                     const player = G.publicPlayers[Number(ctx.currentPlayer)];
                     if (player === undefined) {
-                        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+                        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                     }
                     if (t === G.currentTavern && ctx.phase === Phases.PickCards && ((ctx.activePlayers === null)
                         || (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.DiscardCard))) {
@@ -386,10 +391,10 @@ export const DrawTaverns = (G, ctx, validatorName, data, gridClass) => {
                                         break;
                                     }
                                     else {
-                                        throw new Error(`Нет такого мува 1.`);
+                                        throw new Error(`Нет такого мува '1'.`);
                                     }
                                 default:
-                                    throw new Error(`Нет такого мува 2.`);
+                                    throw new Error(`Нет такого мува '2'.`);
                             }
                             DrawCard(data, boardCells, tavernCard, j, player, suit, moveName, j);
                         }
@@ -458,7 +463,7 @@ export const DrawWinner = (G, ctx) => {
                 }
                 const winnerPlayer = G.publicPlayers[winnerIndex];
                 if (winnerPlayer === undefined) {
-                    throw new Error(`Отсутствует игрок победитель ${winnerIndex}.`);
+                    throw new Error(`Отсутствует игрок победитель с id '${winnerIndex}'.`);
                 }
                 winner = `Winner: Player ${winnerPlayer.nickname}`;
             }
@@ -467,9 +472,9 @@ export const DrawWinner = (G, ctx) => {
                 G.winner.forEach((playerId, index) => {
                     const winnerPlayerI = G.publicPlayers[playerId];
                     if (winnerPlayerI === undefined) {
-                        throw new Error(`Отсутствует игрок победитель ${playerId}.`);
+                        throw new Error(`Отсутствует игрок победитель с id '${playerId}'.`);
                     }
-                    winner += `${index + 1}) Player ${winnerPlayerI.nickname}; `;
+                    winner += `${index + 1}) Player '${winnerPlayerI.nickname}'; `;
                 });
             }
         }

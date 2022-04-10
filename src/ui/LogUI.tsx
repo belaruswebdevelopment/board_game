@@ -36,7 +36,7 @@ export const DrawLogData = (G: IMyGameState): JSX.Element | null => {
                         </li>
                     );
                 } else {
-                    throw new Error(`Попытка отобразить недопустимый тип логов.`);
+                    throw new Error(`Попытка отобразить недопустимый тип логов '${log.type}'.`);
                 }
             }
         }

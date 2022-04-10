@@ -1,4 +1,4 @@
-import { RusCardTypes } from "./typescript/enums";
+import { CardNames, RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -68,6 +68,10 @@ export const CreateHero = ({ type = RusCardTypes.HERO, name, description, game, 
     validators,
     actions,
     stack,
+});
+export const CreateOlwinDoubleNonPlacedCard = ({ name = CardNames.OlwinsDouble, suit, } = {}) => ({
+    name,
+    suit,
 });
 export const IsHeroCard = (card) => card !== null && card.active !== undefined;
 //# sourceMappingURL=Hero.js.map

@@ -48,7 +48,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
             campMercenarySuit: SuitTypes;
         const mercenaryData: OptionalSuitPropertyTypes<IMercenary> | undefined = mercenariesConfigTier[i];
         if (mercenaryData === undefined) {
-            throw new Error(`Отсутствует массив значений карты наёмника ${i} в указанной эпохе - '${tier}'.`);
+            throw new Error(`Отсутствует массив значений карты наёмника с id '${i}' в указанной эпохе - '${tier}'.`);
         }
         for (campMercenarySuit in mercenaryData) {
             if (Object.prototype.hasOwnProperty.call(mercenaryData, campMercenarySuit)) {

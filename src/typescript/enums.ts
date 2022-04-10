@@ -21,7 +21,6 @@ export const enum ArtefactNames {
  * <h3>Перечисление для названия бафов в конфиге.</h3>
  */
 export const enum BuffNames {
-    Coin = `coin`,
     DiscardCardEndGame = `discardCardEndGame`,
     EndTier = `endTier`,
     EveryTurn = `everyTurn`,
@@ -45,8 +44,8 @@ export const enum CardNames {
 }
 
 export const enum CoinTypes {
-    Hand = `hand`,
-    Board = `board`,
+    Hand = `Рука`,
+    Board = `Стол`,
 }
 
 /**
@@ -91,8 +90,8 @@ export const enum DrawNames {
 }
 
 export const enum GameNames {
-    Basic = `basic`,
-    Thingvellir = `thingvellir`,
+    Basic = `База`,
+    Thingvellir = `Тингвеллир`,
 }
 
 /**
@@ -190,12 +189,12 @@ export const enum Phases {
  * <h3>Перечисление для типов карт.</h3>
  */
 export const enum RusCardTypes {
-    ACTION = `улучшение монеты`,
-    ARTEFACT = `артефакт`,
-    BASIC = `базовая`,
-    HERO = `герой`,
-    MERCENARY = `наёмник`,
-    MERCENARYPLAYERCARD = `наёмник в руке игрока`,
+    ACTION = `Улучшение монеты`,
+    ARTEFACT = `Артефакт`,
+    BASIC = `Базовая`,
+    HERO = `Герой`,
+    MERCENARY = `Наёмник`,
+    MERCENARYPLAYERCARD = `Наёмник на игрока`,
 }
 
 /**

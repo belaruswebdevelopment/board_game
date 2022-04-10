@@ -5,6 +5,7 @@ import { BuffNames, HeroNames, LogTypes, Phases } from "../typescript/enums";
 import type { CampDeckCardTypes, DeckCardTypes, IMyGameState, INext, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
+import { CheckPickHero } from "./HeroHelpers";
 
 /**
  * <h3>Выполняет основные действия после того как опустела последняя таверна.</h3>
@@ -19,7 +20,7 @@ import { CheckPlayerHasBuff } from "./BuffHelpers";
 export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): boolean | INext => {
     const deck: DeckCardTypes[] | undefined = G.secret.decks[G.secret.decks.length - G.tierToEnd];
     if (deck === undefined) {
-        throw new Error(`Отсутствует колода карт текущей эпохи.`);
+        throw new Error(`Отсутствует колода карт текущей эпохи '${G.secret.decks.length - G.tierToEnd}'.`);
     }
     if (deck.length === 0) {
         if (G.expansions.thingvellir?.active) {
@@ -71,10 +72,10 @@ export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
     const deck1: DeckCardTypes[] | undefined = G.secret.decks[0],
         deck2: DeckCardTypes[] | undefined = G.secret.decks[1];
     if (deck1 === undefined) {
-        throw new Error(`Отсутствует колода карт 1 эпохи.`);
+        throw new Error(`Отсутствует колода карт '1' эпохи.`);
     }
     if (deck2 === undefined) {
-        throw new Error(`Отсутствует колода карт 2 эпохи.`);
+        throw new Error(`Отсутствует колода карт '2' эпохи.`);
     }
     if (!deck1.length && deck2.length) {
         return {
@@ -139,7 +140,7 @@ const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): boolean | INext 
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player: IPublicPlayer | undefined = G.publicPlayers[i];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+            throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }
         if (player.campCards.filter((card: CampDeckCardTypes): boolean =>
             IsMercenaryCampCard(card)).length) {
@@ -159,7 +160,7 @@ const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): boolean | INext 
 export const ClearPlayerPickedCard = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     player.pickedCard = null;
 };
@@ -180,7 +181,7 @@ export const EndGame = (ctx: Ctx): void => {
 export const EndTurnActions = (G: IMyGameState, ctx: Ctx): boolean | void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     if (!player.stack.length && !player.actionsNum) {
         return true;
@@ -201,7 +202,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player: IPublicPlayer | undefined = G.publicPlayers[i];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+            throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }
         const playerCards: PlayerCardsType[] = Object.values(player.cards).flat(),
             thrud: PlayerCardsType | undefined =
@@ -211,10 +212,10 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx
                 player.cards[thrud.suit].findIndex((card: PlayerCardsType): boolean =>
                     card.name === HeroNames.Thrud);
             if (thrudIndex === -1) {
-                throw new Error(`У игрока отсутствует обязательная карта героя ${HeroNames.Thrud}.`);
+                throw new Error(`У игрока с id '${i}' отсутствует обязательная карта героя '${HeroNames.Thrud}'.`);
             }
             player.cards[thrud.suit].splice(thrudIndex, 1);
-            AddDataToLog(G, LogTypes.GAME, `Герой ${HeroNames.Thrud} игрока ${player.nickname} уходит с игрового поля.`);
+            AddDataToLog(G, LogTypes.GAME, `Герой '${HeroNames.Thrud}' игрока '${player.nickname}' уходит с игрового поля.`);
         }
     }
 };
@@ -222,13 +223,14 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx
 export const StartOrEndActions = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     if (player.actionsNum) {
         player.actionsNum--;
     }
     if (ctx.activePlayers === null || ctx.activePlayers?.[Number(ctx.currentPlayer)] !== undefined) {
         player.stack.shift();
+        CheckPickHero(G, ctx);
         DrawCurrentProfit(G, ctx);
     }
 };

@@ -18,7 +18,7 @@ export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
         if (!player.stack.length && !player.actionsNum) {
             return CheckPlayerHasBuff(player, BuffNames.SuitIdForMjollnir);
@@ -28,7 +28,7 @@ export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
 export const CheckGetMjollnirProfitOrder = (G) => {
     const mjollnirPlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
     if (mjollnirPlayerIndex === -1) {
-        throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.GetMjollnirProfit}.`);
+        throw new Error(`У игроков отсутствует обязательный баф '${BuffNames.GetMjollnirProfit}'.`);
     }
     G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
 };

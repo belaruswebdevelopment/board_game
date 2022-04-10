@@ -22,7 +22,6 @@ export var ArtefactNames;
  */
 export var BuffNames;
 (function (BuffNames) {
-    BuffNames["Coin"] = "coin";
     BuffNames["DiscardCardEndGame"] = "discardCardEndGame";
     BuffNames["EndTier"] = "endTier";
     BuffNames["EveryTurn"] = "everyTurn";
@@ -46,8 +45,8 @@ export var CardNames;
 })(CardNames || (CardNames = {}));
 export var CoinTypes;
 (function (CoinTypes) {
-    CoinTypes["Hand"] = "hand";
-    CoinTypes["Board"] = "board";
+    CoinTypes["Hand"] = "\u0420\u0443\u043A\u0430";
+    CoinTypes["Board"] = "\u0421\u0442\u043E\u043B";
 })(CoinTypes || (CoinTypes = {}));
 /**
  * <h3>Перечисление для названия отображения действий в конфиге.</h3>
@@ -92,8 +91,8 @@ export var DrawNames;
 })(DrawNames || (DrawNames = {}));
 export var GameNames;
 (function (GameNames) {
-    GameNames["Basic"] = "basic";
-    GameNames["Thingvellir"] = "thingvellir";
+    GameNames["Basic"] = "\u0411\u0430\u0437\u0430";
+    GameNames["Thingvellir"] = "\u0422\u0438\u043D\u0433\u0432\u0435\u043B\u043B\u0438\u0440";
 })(GameNames || (GameNames = {}));
 /**
  * <h3>Перечисление для названий героев.</h3>
@@ -191,12 +190,12 @@ export var Phases;
  */
 export var RusCardTypes;
 (function (RusCardTypes) {
-    RusCardTypes["ACTION"] = "\u0443\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B";
-    RusCardTypes["ARTEFACT"] = "\u0430\u0440\u0442\u0435\u0444\u0430\u043A\u0442";
-    RusCardTypes["BASIC"] = "\u0431\u0430\u0437\u043E\u0432\u0430\u044F";
-    RusCardTypes["HERO"] = "\u0433\u0435\u0440\u043E\u0439";
-    RusCardTypes["MERCENARY"] = "\u043D\u0430\u0451\u043C\u043D\u0438\u043A";
-    RusCardTypes["MERCENARYPLAYERCARD"] = "\u043D\u0430\u0451\u043C\u043D\u0438\u043A \u0432 \u0440\u0443\u043A\u0435 \u0438\u0433\u0440\u043E\u043A\u0430";
+    RusCardTypes["ACTION"] = "\u0423\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u0435 \u043C\u043E\u043D\u0435\u0442\u044B";
+    RusCardTypes["ARTEFACT"] = "\u0410\u0440\u0442\u0435\u0444\u0430\u043A\u0442";
+    RusCardTypes["BASIC"] = "\u0411\u0430\u0437\u043E\u0432\u0430\u044F";
+    RusCardTypes["HERO"] = "\u0413\u0435\u0440\u043E\u0439";
+    RusCardTypes["MERCENARY"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A";
+    RusCardTypes["MERCENARYPLAYERCARD"] = "\u041D\u0430\u0451\u043C\u043D\u0438\u043A \u043D\u0430 \u0438\u0433\u0440\u043E\u043A\u0430";
 })(RusCardTypes || (RusCardTypes = {}));
 /**
  * <h3>Перечисление для русских названий фракций.</h3>

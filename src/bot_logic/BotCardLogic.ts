@@ -1,9 +1,10 @@
 import type { Ctx } from "boardgame.io";
 import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
+import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
 import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { GameNames } from "../typescript/enums";
-import type { CoinType, DeckCardTypes, IAverageSuitCardData, ICard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPublicPlayer, ISuit, PublicPlayerBoardCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
+import type { DeckCardTypes, IAverageSuitCardData, ICard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPublicPlayer, ISuit, PublicPlayerCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
 // Check all types in this file!
 /**
@@ -54,7 +55,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
     if (IsCardNotActionAndNotNull(compareCard)) {
         const deckTier1: DeckCardTypes[] | undefined = G.secret.decks[0];
         if (deckTier1 === undefined) {
-            throw new Error(`В массиве колод карт отсутствует колода 1 эпохи.`);
+            throw new Error(`В массиве колод карт отсутствует колода '1' эпохи.`);
         }
         if (deckTier1.length >= G.botData.deckLength - G.tavernsNum * G.drawSize) {
             return CompareCards(compareCard, G.averageCards[compareCard.suit]);
@@ -62,7 +63,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
     }
     const deckTier2: DeckCardTypes[] | undefined = G.secret.decks[1];
     if (deckTier2 === undefined) {
-        throw new Error(`В массиве колод карт отсутствует колода 2 эпохи.`);
+        throw new Error(`В массиве колод карт отсутствует колода '2' эпохи.`);
     }
     if (deckTier2.length < G.botData.deckLength) {
         const temp: number[][] = tavern.map((card: TavernCardTypes): number[] =>
@@ -74,7 +75,7 @@ export const EvaluateCard = (G: IMyGameState, ctx: Ctx, compareCard: TavernCardT
         }
         const result: number | undefined = tavernCardResults[Number(ctx.currentPlayer)];
         if (result === undefined) {
-            throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат для текущего игрока.`);
+            throw new Error(`В массиве потенциального количества очков карт отсутствует нужный результат для текущего игрока с id '${ctx.currentPlayer}'.`);
         }
         temp.splice(cardId, 1);
         temp.forEach((player: number[]): number[] =>
@@ -115,7 +116,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
         if (Array.isArray(points)) {
             const pointsValue: number | undefined = points[i];
             if (pointsValue === undefined) {
-                throw new Error(`Отсутствует значение ${i} в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
+                throw new Error(`Отсутствует значение с id '${i}' в массиве карт для числа игроков - '${data.players}' в указанной эпохе - '${data.tier}'.`);
             }
             totalPoints += pointsValue;
         } else {
@@ -150,13 +151,13 @@ const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTyp
         player: IPublicPlayer | undefined = G.publicPlayers[playerId],
         privatePlayer: IPlayer | undefined = G.players[playerId];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
+        throw new Error(`В массиве игроков отсутствует игрок  с id '${playerId}'.`);
     }
-    let handCoins: CoinType[];
+    if (privatePlayer === undefined) {
+        throw new Error(`В массиве приватных игроков отсутствует игрок с id '${playerId}'.`);
+    }
+    let handCoins: PublicPlayerCoinTypes[];
     if (multiplayer) {
-        if (privatePlayer === undefined) {
-            throw new Error(`В массиве приватных игроков отсутствует игрок ${playerId}.`);
-        }
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
@@ -176,14 +177,21 @@ const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTyp
         score += card.value;
     }
     for (let i = 0; i < player.boardCoins.length; i++) {
-        const boardCoin: PublicPlayerBoardCoinTypes | undefined = player.boardCoins[i];
+        const boardCoin: PublicPlayerCoinTypes | undefined = player.boardCoins[i];
         if (boardCoin === undefined) {
-            throw new Error(`В массиве монет игрока на столе отсутствует монета ${i}.`);
+            throw new Error(`В массиве монет игрока с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
+        }
+        // TODO Check it it can be error in !multiplayer, but bot can't play in multiplayer now...
+        if (boardCoin !== null && !IsCoin(boardCoin)) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' на столе не может быть закрыта монета с id '${i}'.`);
         }
         score += boardCoin?.value ?? 0;
-        const handCoin: CoinType | undefined = handCoins[i];
+        const handCoin: PublicPlayerCoinTypes | undefined = handCoins[i];
         if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока в руке отсутствует монета ${i}.`);
+            throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует монета с id '${i}'.`);
+        }
+        if (handCoin !== null && !IsCoin(handCoin)) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' в руке не может быть закрыта монета с id '${i}'.`);
         }
         score += handCoin?.value ?? 0;
     }

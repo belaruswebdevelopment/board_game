@@ -1,4 +1,5 @@
-import { AddPickHeroAction, DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, GetClosedCoinIntoPlayerHandAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction, UpgradeCoinAction } from "../actions/AutoActions";
+import { AddPickHeroAction, DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
+import { GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 /**
  * <h3>Диспетчер всех автоматических действий.</h3>
  * <p>Применения:</p>
@@ -30,11 +31,11 @@ const ActionDispatcherSwitcher = (actionName) => {
         case StartVidofnirVedrfolnirAction.name:
             action = StartVidofnirVedrfolnirAction;
             break;
-        case UpgradeCoinAction.name:
-            action = UpgradeCoinAction;
+        case UpgradeMinCoinAction.name:
+            action = UpgradeMinCoinAction;
             break;
         default:
-            throw new Error(`Нет такого действия.`);
+            throw new Error(`Нет такого действия '${actionName}'.`);
     }
     return action;
 };

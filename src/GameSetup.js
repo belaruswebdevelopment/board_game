@@ -102,16 +102,12 @@ export const SetupGame = (ctx) => {
         if (priority === undefined) {
             throw new Error(`Отсутствует приоритет ${i}.`);
         }
-        if (multiplayer) {
-            players[i] = BuildPlayer();
-        }
+        players[i] = BuildPlayer();
         publicPlayers[i] = BuildPublicPlayer(`Dan` + i, priority, multiplayer);
     }
     const marketCoinsUnique = [], marketCoins = BuildCoins(marketCoinsConfig, {
         count: marketCoinsUnique,
         players: ctx.numPlayers,
-        isInitial: false,
-        isTriggerTrading: false,
     });
     const averageCards = {};
     for (suit in suitsConfig) {

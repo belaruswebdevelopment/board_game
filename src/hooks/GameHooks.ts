@@ -29,7 +29,7 @@ export const CheckEndGame = (G: IMyGameState, ctx: Ctx): boolean | void => {
         for (let i = 0; i < ctx.numPlayers; i++) {
             const player: IPublicPlayer | undefined = G.publicPlayers[i];
             if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+                throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
             }
             allMercenariesPlayed = player.campCards.filter((card: CampDeckCardTypes): boolean =>
                 IsMercenaryCampCard(card)).length === 0;

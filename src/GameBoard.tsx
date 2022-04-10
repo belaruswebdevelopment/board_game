@@ -2,7 +2,7 @@ import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import React from "react";
 import type { IMyGameState } from "./typescript/interfaces";
 import { DrawDebugData } from "./ui/DebugUI";
-import { DrawCamp, DrawCurrentPlayerTurn, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
+import { DrawCamp, DrawCurrentPhaseStage, DrawCurrentPlayerTurn, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
 import { DrawLogData } from "./ui/LogUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 
@@ -16,9 +16,10 @@ import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from
 export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
     render() {
         const gridClass = `col-span-4 justify-self-center`,
-            classes = `col-span-4 text-center underline border`,
+            classes = `col-span-3 text-center underline border`,
             tierCardsUI: JSX.Element = DrawTierCards(this.props.G),
             currentPlayerTurnUI: JSX.Element = DrawCurrentPlayerTurn(this.props.ctx),
+            currentPhaseStageUI: JSX.Element = DrawCurrentPhaseStage(this.props.ctx),
             winnerUI: JSX.Element = DrawWinner(this.props.G, this.props.ctx),
             drawDiscardCards: JSX.Element =
                 DrawDiscardedCards(this.props.G, this.props.ctx, null, this.props) as JSX.Element,
@@ -38,10 +39,11 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
                 DrawPlayersBoardsCoins(this.props.G, this.props.ctx, null, this.props) as
                 JSX.Element[],
             playersHandsCoinsUI: JSX.Element[] =
-                DrawPlayersHandsCoins(this.props.G, this.props.ctx, null, this.props) as JSX.
-                Element[],
+                DrawPlayersHandsCoins(this.props.G, this.props.ctx, null, this.props) as
+                JSX.Element[],
             playersBoardsUI: JSX.Element[] =
-                DrawPlayersBoards(this.props.G, this.props.ctx, null, null, this.props) as JSX.Element[],
+                DrawPlayersBoards(this.props.G, this.props.ctx, null, null,
+                    this.props) as JSX.Element[],
             logUI: JSX.Element | null = DrawLogData(this.props.G),
             debugUI: JSX.Element | null = DrawDebugData(this.props.G, this.props.ctx);
         return (
@@ -49,6 +51,9 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
                 <div className="grid auto-cols-min grid-cols-1 md:grid-cols-12 gap-1">
                     <div className={classes}>
                         {tierCardsUI}
+                    </div>
+                    <div className={classes}>
+                        {currentPhaseStageUI}
                     </div>
                     <div className={classes}>
                         {currentPlayerTurnUI}

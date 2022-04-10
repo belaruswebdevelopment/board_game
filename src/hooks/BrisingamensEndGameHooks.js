@@ -6,7 +6,7 @@ import { BuffNames, Phases } from "../typescript/enums";
 export const CheckBrisingamensEndGameOrder = (G) => {
     const brisingamensPlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
     if (brisingamensPlayerIndex === -1) {
-        throw new Error(`У игрока отсутствует обязательный баф ${BuffNames.DiscardCardEndGame}.`);
+        throw new Error(`У игрока отсутствует обязательный баф '${BuffNames.DiscardCardEndGame}'.`);
     }
     G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
 };
@@ -35,7 +35,7 @@ export const StartGetMjollnirProfitOrEndGame = (G, ctx) => {
         && ctx.currentPlayer === ctx.playOrder[0]) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с первым ходом.`);
+            throw new Error(`В массиве игроков отсутствует игрок с первым ходом с id '${ctx.currentPlayer}'.`);
         }
         if (!CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame) && !player.stack.length
             && !player.actionsNum) {

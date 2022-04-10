@@ -13,7 +13,7 @@ import { ValidatorNames } from "../typescript/enums";
  * @param card Карта.
  */
 export const AddActionsToStackAfterCurrent = (G, ctx, stack, card) => {
-    var _a, _b;
+    var _a;
     let isValid = false;
     if (stack !== undefined) {
         if (card !== undefined && `validators` in card) {
@@ -44,13 +44,13 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack, card) => {
         }
         if (isValid) {
             for (let i = stack.length - 1; i >= 0; i--) {
-                const playerId = (_b = (_a = stack[i]) === null || _a === void 0 ? void 0 : _a.playerId) !== null && _b !== void 0 ? _b : Number(ctx.currentPlayer), player = G.publicPlayers[playerId];
-                if (player === undefined) {
-                    throw new Error(`В массиве игроков отсутствует игрок ${playerId}.`);
-                }
                 const stackI = stack[i];
                 if (stackI === undefined) {
-                    throw new Error(`В массиве новых действий отсутствует стэк ${i}.`);
+                    throw new Error(`В массиве стэка новых действий отсутствует действие с id '${i}'.`);
+                }
+                const playerId = (_a = stackI.playerId) !== null && _a !== void 0 ? _a : Number(ctx.currentPlayer), player = G.publicPlayers[playerId];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
                 }
                 player.stack.splice(1, 0, stackI);
             }

@@ -15,7 +15,6 @@ import { BuffNames, Phases } from "./typescript/enums";
 export const BuildPlayer = () => CreatePlayer({
     handCoins: BuildCoins(initialPlayerCoinsConfig, {
         isInitial: true,
-        isTriggerTrading: false,
     }),
     boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
 });
@@ -40,7 +39,12 @@ export const BuildPublicPlayer = (nickname, priority, multiplayer) => {
     }
     let handCoins = [];
     if (!multiplayer) {
-        handCoins = BuildCoins(initialPlayerCoinsConfig, { isInitial: true, isTriggerTrading: false });
+        handCoins = BuildCoins(initialPlayerCoinsConfig, {
+            isInitial: true,
+        });
+    }
+    else {
+        handCoins = Array(initialPlayerCoinsConfig.length).fill({});
     }
     return CreatePublicPlayer({
         nickname,
@@ -66,7 +70,7 @@ export const CheckPlayersBasicOrder = (G, ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
         const player = G.publicPlayers[i];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок ${i}.`);
+            throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }
         if (ctx.phase !== Phases.PlaceCoinsUline) {
             if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {

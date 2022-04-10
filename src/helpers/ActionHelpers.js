@@ -1,10 +1,6 @@
-import { UpgradeCoinAction } from "../actions/AutoActions";
-import { CreateOlwinDoubleNonPlacedCard, IsCardNotActionAndNotNull } from "../Card";
+import { CreateOlwinDoubleNonPlacedCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
-import { CardNames, CoinTypes, DrawNames, HeroNames, LogTypes } from "../typescript/enums";
-import { AddCardToPlayer } from "./CardHelpers";
-import { CheckAndMoveThrudOrPickHeroAction } from "./HeroHelpers";
-import { AddActionsToStackAfterCurrent } from "./StackHelpers";
+import { CardNames, DrawNames, HeroNames, LogTypes } from "../typescript/enums";
 /**
  * <h3>Действия, связанные с отображением профита.</h3>
  * <p>Применения:</p>
@@ -22,11 +18,11 @@ export const DrawCurrentProfit = (G, ctx) => {
     var _a, _b;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const config = (_a = player.stack[0]) === null || _a === void 0 ? void 0 : _a.config;
     if (config !== undefined) {
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} должен получить преимущества от действия '${config.drawName}'.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' должен получить преимущества от действия '${config.drawName}'.`);
         StartOrEndActionStage(G, ctx, config);
         if (config.drawName === DrawNames.Olwin) {
             const pickedCard = player.pickedCard;
@@ -57,19 +53,6 @@ export const DrawCurrentProfit = (G, ctx) => {
         G.drawProfit = ``;
     }
 };
-export const PickCardOrActionCardActions = (G, ctx, card) => {
-    const isAdded = AddCardToPlayer(G, ctx, card);
-    if (IsCardNotActionAndNotNull(card)) {
-        if (isAdded) {
-            CheckAndMoveThrudOrPickHeroAction(G, ctx, card);
-        }
-    }
-    else {
-        AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
-        G.discardCardsDeck.push(card);
-    }
-    return isAdded;
-};
 /**
  * <h3>Действия, связанные со стартом конкретной стадии.</h3>
  * <p>Применения:</p>
@@ -87,26 +70,10 @@ const StartOrEndActionStage = (G, ctx, config) => {
         (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.setActivePlayers({
             currentPlayer: config.stageName,
         });
-        AddDataToLog(G, LogTypes.GAME, `Начало стадии ${config.stageName}.`);
+        AddDataToLog(G, LogTypes.GAME, `Начало стадии '${config.stageName}'.`);
     }
     else if (((_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) !== undefined) {
         (_c = ctx.events) === null || _c === void 0 ? void 0 : _c.endStage();
     }
-};
-export const UpgradeCoinActions = (G, ctx, coinId, type, isInitial) => {
-    var _a;
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
-    }
-    const stack = player.stack[0];
-    if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока отсутствует 0 действие.`);
-    }
-    const value = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.value;
-    if (value === undefined) {
-        throw new Error(`У игрока в стеке действий отсутствует обязательный параметр 'config.value'.`);
-    }
-    UpgradeCoinAction(G, ctx, value, coinId, type, isInitial);
 };
 //# sourceMappingURL=ActionHelpers.js.map

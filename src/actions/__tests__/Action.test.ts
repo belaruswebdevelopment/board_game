@@ -48,11 +48,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan отправил карту 'Test' в колоду сброса карт.`,
+                    value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan потерял баф '${BuffNames.DiscardCardEndGame}'.`,
+                    value: `Игрок 'Dan' потерял баф '${BuffNames.DiscardCardEndGame}'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -104,11 +104,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan отправил карту '${ArtefactNames.Brisingamens}' в колоду сброса карт лагеря.`,
+                    value: `Игрок 'Dan' отправил карту '${ArtefactNames.Brisingamens}' в колоду сброса карт лагеря.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan потерял баф '${BuffNames.DiscardCardEndGame}'.`,
+                    value: `Игрок 'Dan' потерял баф '${BuffNames.DiscardCardEndGame}'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCampCardsDeck` | `logData`>);
@@ -161,11 +161,11 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan отправил карту 'Test' в колоду сброса карт лагеря.`,
+                    value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт лагеря.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan потерял баф '${BuffNames.DiscardCardEndGame}'.`,
+                    value: `Игрок 'Dan' потерял баф '${BuffNames.DiscardCardEndGame}'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCampCardsDeck` | `logData`>);
@@ -204,7 +204,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             DiscardAnyCardFromPlayerBoardAction(G as IMyGameState, {
                 currentPlayer: `0`,
             } as Ctx, SuitNames.WARRIOR, 0);
-        }).toThrowError(`В массиве карт игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
+        }).toThrowError(`В массиве карт игрока с id '0' отсутствует выбранная карта с id '0': это должно проверяться в MoveValidator.`);
     });
 });
 
@@ -251,7 +251,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan отправил в колоду сброса карту из таверны:`,
+                    value: `Игрок 'Dan' отправил в колоду сброса карту из таверны:`,
                 },
                 {
                     type: LogTypes.GAME,
@@ -277,7 +277,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             DiscardCardFromTavernAction(G as IMyGameState, {
                 currentPlayer: `0`,
             } as Ctx, 0);
-        }).toThrowError(`Не удалось сбросить карту 0 из таверны`);
+        }).toThrowError(`Не удалось сбросить карту с id '0' из таверны`);
     });
     it(`shouldn't remove non-exists card from tavern and must throw Error`, (): void => {
         const G = {
@@ -296,7 +296,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             DiscardCardFromTavernAction(G as IMyGameState, {
                 currentPlayer: `0`,
             } as Ctx, 0);
-        }).toThrowError(`В текущей таверне отсутствует карта 0.`);
+        }).toThrowError(`В текущей таверне с id '0' отсутствует карта с id '0'.`);
     });
 });
 
@@ -354,7 +354,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan во время фазы 'enlistmentMercenaries' выбрал наёмника 'Test'.`,
+                    value: `Игрок 'Dan' во время фазы 'enlistmentMercenaries' выбрал наёмника 'Test'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `logData`>);
@@ -372,7 +372,7 @@ describe(`Test GetEnlistmentMercenariesAction method`, (): void => {
                 currentPlayer: `0`,
                 phase: Phases.EnlistmentMercenaries,
             } as Ctx, 0);
-        }).toThrowError(`В массиве карт лагеря игрока отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
+        }).toThrowError(`В массиве карт лагеря игрока с id '0' отсутствует выбранная карта с id '0': это должно проверяться в MoveValidator.`);
     });
     it(`shouldn't remove null card from tavern and must throw Error`, (): void => {
         const G = {
@@ -426,15 +426,15 @@ describe(`Test GetMjollnirProfitAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan получил баф '${BuffNames.SuitIdForMjollnir}'.`,
+                    value: `Игрок 'Dan' получил баф '${BuffNames.SuitIdForMjollnir}'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan потерял баф '${BuffNames.GetMjollnirProfit}'.`,
+                    value: `Игрок 'Dan' потерял баф '${BuffNames.GetMjollnirProfit}'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan выбрал фракцию ${suitsConfig[SuitNames.HUNTER].suitName} для эффекта артефакта 'Mjollnir'.`,
+                    value: `Игрок 'Dan' выбрал фракцию '${suitsConfig[SuitNames.HUNTER].suitName}' для эффекта артефакта '${ArtefactNames.Mjollnir}'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `logData`>);
@@ -464,7 +464,7 @@ describe(`Test PassEnlistmentMercenariesAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan пасанул во время фазы '${Phases.EnlistmentMercenaries}'.`,
+                    value: `Игрок 'Dan' пасанул во время фазы '${Phases.EnlistmentMercenaries}'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `logData`>);
@@ -522,11 +522,11 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.PUBLIC,
-                    value: `Игрок Dan выбрал карту 'Test' во фракцию ${suitsConfig[SuitNames.WARRIOR].suitName}.`,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan взял карту 'Test' из колоды сброса.`,
+                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -608,11 +608,11 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.PUBLIC,
-                    value: `Игрок Dan выбрал карту 'Test'.`,
+                    value: `Игрок 'Dan' выбрал карту 'Test'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan взял карту 'Test' из колоды сброса.`,
+                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -680,16 +680,16 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.PUBLIC,
-                    value: `Игрок Dan выбрал карту 'Test' во фракцию ${suitsConfig[SuitNames.WARRIOR].suitName}.`,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan взял карту 'Test' из колоды сброса.`,
+                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
     });
-    it(`should pick hero`, (): void => {
+    /* it(`should pick hero`, (): void => {
         const G = {
             publicPlayers: {
                 0: {
@@ -794,19 +794,19 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.PUBLIC,
-                    value: `Игрок Dan выбрал карту 'Test' во фракцию ${suitsConfig[SuitNames.WARRIOR].suitName}.`,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan должен выбрать нового героя.`,
+                    value: `Игрок 'Dan' должен выбрать нового героя.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan взял карту 'Test' из колоды сброса.`,
+                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
-    });
+    }); */
     it(`should move thrud`, (): void => {
         const G = {
             publicPlayers: {
@@ -909,11 +909,11 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.PUBLIC,
-                    value: `Игрок Dan выбрал карту 'Test' во фракцию ${suitsConfig[SuitNames.HUNTER].suitName}.`,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.HUNTER].suitName}'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan взял карту 'Test' из колоды сброса.`,
+                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -929,7 +929,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             PickDiscardCardAction(G as IMyGameState, {
                 currentPlayer: `0`,
             } as Ctx, 0);
-        }).toThrowError(`В массиве колоды сброса отсутствует выбранная карта: это должно проверяться в MoveValidator.`);
+        }).toThrowError(`В массиве колоды сброса отсутствует выбранная карта с id '0': это должно проверяться в MoveValidator.`);
     });
 });
 
@@ -1050,16 +1050,16 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.PUBLIC,
-                    value: `Игрок Dan выбрал карту 'Test' во фракцию ${suitsConfig[SuitNames.BLACKSMITH].suitName}.`,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.BLACKSMITH].suitName}'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan во время фазы 'Enlistment Mercenaries' завербовал наёмника 'Test'.`,
+                    value: `Игрок 'Dan' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `logData`>);
     });
-    it(`should get mercenary card from player's camp cards to place and pick hero`, (): void => {
+    /* it(`should get mercenary card from player's camp cards to place and pick hero`, (): void => {
         const G = {
             publicPlayers: {
                 0: {
@@ -1225,19 +1225,19 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.PUBLIC,
-                    value: `Игрок Dan выбрал карту 'Test' во фракцию ${suitsConfig[SuitNames.WARRIOR].suitName}.`,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan во время фазы 'Enlistment Mercenaries' завербовал наёмника 'Test'.`,
+                    value: `Игрок 'Dan' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan должен выбрать нового героя.`,
+                    value: `Игрок 'Dan' должен выбрать нового героя.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `logData`>);
-    });
+    }); */
     it(`should get mercenary card from player's camp cards to place and move Thrud`, (): void => {
         const G = {
             publicPlayers: {
@@ -1374,11 +1374,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.PUBLIC,
-                    value: `Игрок Dan выбрал карту 'Test' во фракцию ${suitsConfig[SuitNames.WARRIOR].suitName}.`,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan во время фазы 'Enlistment Mercenaries' завербовал наёмника 'Test'.`,
+                    value: `Игрок 'Dan' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `logData`>);
@@ -1519,11 +1519,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
             logData: [
                 {
                     type: LogTypes.PUBLIC,
-                    value: `Игрок Dan выбрал карту 'Test' во фракцию ${suitsConfig[SuitNames.BLACKSMITH].suitName}.`,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.BLACKSMITH].suitName}'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок Dan во время фазы 'Enlistment Mercenaries' завербовал наёмника 'Test'.`,
+                    value: `Игрок 'Dan' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника 'Test'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `logData`>);
@@ -1584,7 +1584,7 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                 PlaceEnlistmentMercenariesAction(G as IMyGameState, {
                     currentPlayer: `0`,
                 } as Ctx, SuitNames.EXPLORER);
-            }).toThrowError(`У игрока в массиве карт лагеря отсутствует выбранная карта.`);
+            }).toThrowError(`У игрока с id '0' в массиве карт лагеря отсутствует выбранная карта.`);
         });
     it(`shouldn't use non-existing suit in picked mercenary card and must throw Error`, (): void => {
         const G = {

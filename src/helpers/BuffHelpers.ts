@@ -20,12 +20,12 @@ export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?:
     if (buff !== undefined) {
         const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+            throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
         player.buffs.push({
             [buff.name]: value ?? true,
         });
-        AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} получил баф '${buff.name}'.`);
+        AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' получил баф '${buff.name}'.`);
     }
 };
 
@@ -35,13 +35,13 @@ export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffTypes): 
 export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const buffIndex: number =
         player.buffs.findIndex((buff: IBuffs): boolean => buff[buffName] !== undefined);
     if (buffIndex === -1) {
-        throw new Error(`У игрока в 'buffs' отсутствует баф ${buffName}.`);
+        throw new Error(`У игрока в 'buffs' отсутствует баф '${buffName}'.`);
     }
     player.buffs.splice(buffIndex, 1);
-    AddDataToLog(G, LogTypes.GAME, `Игрок ${player.nickname} потерял баф '${buffName}'.`);
+    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);
 };
