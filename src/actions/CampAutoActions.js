@@ -1,6 +1,7 @@
 import { IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
+import { DiscardTradingCoin } from "../helpers/CoinHelpers";
 import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
@@ -34,45 +35,11 @@ export const AddPickHeroAction = (G, ctx) => {
  * @param ctx
  */
 export const DiscardTradingCoinAction = (G, ctx) => {
-    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        throw new Error(`В массиве игроков отсутствует игрок с id '${ctx.currentPlayer}'.`);
     }
-    if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
-    }
-    let handCoins;
-    if (multiplayer) {
-        handCoins = privatePlayer.handCoins;
-    }
-    else {
-        handCoins = player.handCoins;
-    }
-    let tradingCoinIndex = player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true);
-    if (tradingCoinIndex === -1 && multiplayer) {
-        tradingCoinIndex = privatePlayer.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true);
-    }
-    if (tradingCoinIndex === -1 && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-        tradingCoinIndex = handCoins.findIndex((coin, index) => {
-            if (coin !== null && !IsCoin(coin)) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
-            }
-            return (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true;
-        });
-        if (tradingCoinIndex === -1) {
-            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
-        }
-        handCoins.splice(tradingCoinIndex, 1, null);
-    }
-    else {
-        if (tradingCoinIndex === -1) {
-            throw new Error(`У игрока с id '${ctx.currentPlayer}' на столе не может отсутствовать обменная монета.`);
-        }
-        if (multiplayer) {
-            privatePlayer.boardCoins.splice(tradingCoinIndex, 1, null);
-        }
-        player.boardCoins.splice(tradingCoinIndex, 1, null);
-    }
+    DiscardTradingCoin(G, Number(ctx.currentPlayer));
     AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
 };
 export const FinishOdroerirTheMythicCauldronAction = (G) => {
@@ -139,7 +106,12 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
     else {
         handCoins = player.handCoins;
     }
-    const noCoinsOnPouchNumber = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = handCoins.filter((coin) => IsCoin(coin)).length, everyTurnBuff = CheckPlayerHasBuff(player, BuffNames.EveryTurn);
+    const noCoinsOnPouchNumber = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length, handCoinsNumber = handCoins.filter((coin, index) => {
+        if (coin !== null && !IsCoin(coin)) {
+            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+        }
+        return IsCoin(coin);
+    }).length, everyTurnBuff = CheckPlayerHasBuff(player, BuffNames.EveryTurn);
     if (everyTurnBuff && noCoinsOnPouchNumber > 0 && handCoinsNumber) {
         const addCoinsToPouchNumber = noCoinsOnPouchNumber <= handCoinsNumber ? noCoinsOnPouchNumber : handCoinsNumber;
         AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(addCoinsToPouchNumber)]);

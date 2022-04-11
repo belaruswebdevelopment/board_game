@@ -3,7 +3,7 @@ import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CardNames, LogTypes, SuitNames } from "../typescript/enums";
-import { GetMaxCoinValue } from "./CoinHelpers";
+import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { IsMultiplayer } from "./MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
@@ -48,26 +48,15 @@ export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
     return 0;
 };
 export const HunterDistinctionAwarding = (G, ctx, playerId) => {
-    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
-    }
-    if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует игрок с id '${playerId}'.`);
-    }
     if (G.tierToEnd !== 0) {
-        let tradingCoinIndex;
-        if (multiplayer) {
-            tradingCoinIndex = privatePlayer.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === 0);
+        const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
+        if (player === undefined) {
+            throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
         }
-        else {
-            tradingCoinIndex =
-                player.boardCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === 0);
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${playerId}'.`);
         }
-        if (tradingCoinIndex === -1) {
-            throw new Error(`У игрока с id '${playerId}' не может отсутствовать обменная монета в '1' эпоху.`);
-        }
-        const coin = CreateCoin({
+        const tradingCoinIndex = DiscardTradingCoin(G, playerId), coin = CreateCoin({
             isOpened: true,
             isTriggerTrading: true,
             value: 3,

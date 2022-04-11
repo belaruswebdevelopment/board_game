@@ -188,6 +188,7 @@ export const moveValidators = {
             if (maxResultForCoins >= 0) {
                 positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
             }
+            // TODO Check it bot can't play in multiplayer now...
             const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -214,6 +215,9 @@ export const moveValidators = {
                     }
                     if (handCoin !== null && !IsCoin(handCoin)) {
                         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${coinId}'.`);
+                    }
+                    if (IsCoin(handCoin) && handCoin.isOpened) {
+                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${coinId}'.`);
                     }
                     return Boolean(handCoin === null || handCoin === void 0 ? void 0 : handCoin.isTriggerTrading);
                 });
@@ -260,11 +264,23 @@ export const moveValidators = {
                                 if (handCoin !== null && !IsCoin(handCoin)) {
                                     throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
                                 }
+                                if (IsCoin(handCoin) && handCoin.isOpened) {
+                                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${coinIndex}'.`);
+                                }
                                 return IsCoin(handCoin) && handCoin.value > maxCoin.value;
                             }).length <= 1;
                         }
                         if (hasPositionForMinCoin) {
-                            isMinCoinsOnPosition = handCoins.filter((coin) => IsCoin(coin) && coin.value < minCoin.value).length <= 1;
+                            isMinCoinsOnPosition =
+                                handCoins.filter((coin, index) => {
+                                    if (coin !== null && !IsCoin(coin)) {
+                                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+                                    }
+                                    if (IsCoin(coin) && coin.isOpened) {
+                                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${index}'.`);
+                                    }
+                                    return IsCoin(coin) && coin.value < minCoin.value;
+                                }).length <= 1;
                         }
                         if (isTopCoinsOnPosition && isMinCoinsOnPosition) {
                             return allCoinsOrderI;

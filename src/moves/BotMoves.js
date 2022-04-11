@@ -15,6 +15,7 @@ import { Stages } from "../typescript/enums";
  * @param coinsOrder Порядок выкладки монет.
  */
 export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
+    // TODO Check it bot can't play in multiplayer now...
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default3, coinsOrder);
     if (!isValidMove) {
         return INVALID_MOVE;
@@ -39,6 +40,9 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
                 if (coin !== null && !IsCoin(coin)) {
                     throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта для него монета с id '${index}'.`);
                 }
+                if (IsCoin(coin) && coin.isOpened) {
+                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${index}'.`);
+                }
                 return IsCoin(coin);
             });
         if (coinId !== -1) {
@@ -48,6 +52,9 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
             }
             if (handCoin !== null && !IsCoin(handCoin)) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта для него монета с id '${coinId}'.`);
+            }
+            if (IsCoin(handCoin) && handCoin.isOpened) {
+                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${coinId}'.`);
             }
             if (multiplayer) {
                 privatePlayer.boardCoins[i] = handCoin;

@@ -188,9 +188,6 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
         throw new Error(`У игрока с id '${ctx.currentPlayer}' в массиве карт лагеря отсутствует выбранная карта.`);
     }
     player.campCards.splice(cardIndex, 1);
-    if (player.campCards.filter((card) => IsMercenaryCampCard(card)).length) {
-        AddActionsToStackAfterCurrent(G, ctx, [StackData.enlistmentMercenaries()]);
-    }
     if (isAdded) {
         CheckAndMoveThrudAction(G, ctx, mercenaryCard);
     }

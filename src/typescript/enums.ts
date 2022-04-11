@@ -90,8 +90,8 @@ export const enum DrawNames {
 }
 
 export const enum GameNames {
-    Basic = `База`,
-    Thingvellir = `Тингвеллир`,
+    Basic = `basic`,
+    Thingvellir = `thingvellir`,
 }
 
 /**

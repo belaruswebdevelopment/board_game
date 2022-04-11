@@ -33,9 +33,6 @@ export const CheckEndPlaceCoinsUlinePhase = (G, ctx) => {
                 if (boardCoin !== null && !IsCoin(boardCoin)) {
                     throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрыта монета с id '${G.currentTavern + 1}'.`);
                 }
-                if (IsCoin(boardCoin) && boardCoin.isOpened) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть ранее выложена и закрыта монета с id '${G.currentTavern + 1}'.`);
-                }
                 return IsCoin(boardCoin);
             }
         }

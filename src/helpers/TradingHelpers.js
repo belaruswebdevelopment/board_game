@@ -29,7 +29,8 @@ export const ActivateTrading = (G, ctx) => {
     if (boardCoinCurrentTavern === undefined) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
     }
-    if (boardCoinCurrentTavern !== null && !IsCoin(boardCoinCurrentTavern)) {
+    if ((boardCoinCurrentTavern !== null && !IsCoin(boardCoinCurrentTavern))
+        || (IsCoin(boardCoinCurrentTavern) && !boardCoinCurrentTavern.isOpened)) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
     }
     if (boardCoinCurrentTavern === null || boardCoinCurrentTavern === void 0 ? void 0 : boardCoinCurrentTavern.isTriggerTrading) {

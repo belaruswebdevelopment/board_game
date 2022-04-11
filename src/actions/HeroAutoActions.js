@@ -28,6 +28,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G, ctx) => {
         }
     }
 };
+// TODO Refactor and add throw errors
 export const UpgradeMinCoinAction = (G, ctx, ...args) => {
     if (args.length !== 1) {
         throw new Error(`В массиве параметров функции отсутствует требуемый параметр 'value'.`);
