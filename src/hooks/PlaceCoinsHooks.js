@@ -1,3 +1,4 @@
+import { IsCoin } from "../Coin";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
 import { ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
@@ -34,7 +35,12 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
         else {
             isEveryPlayersHandCoinsEmpty =
                 Object.values(G.publicPlayers).filter((player) => !CheckPlayerHasBuff(player, BuffNames.EveryTurn))
-                    .every((player) => player.handCoins.every((coin) => coin === null));
+                    .every((player, playerIndex) => player.handCoins.every((coin, coinIndex) => {
+                    if (coin !== null && !IsCoin(coin)) {
+                        throw new Error(`В массиве монет игрока с id '${playerIndex}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
+                    }
+                    return coin === null;
+                }));
         }
         if (isEveryPlayersHandCoinsEmpty) {
             return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
@@ -67,7 +73,12 @@ export const CheckEndPlaceCoinsTurn = (G, ctx) => {
     else {
         handCoins = player.handCoins;
     }
-    if (handCoins.every((coin) => coin === null)) {
+    if (handCoins.every((coin, index) => {
+        if (coin !== null && !IsCoin(coin)) {
+            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+        }
+        return coin === null;
+    })) {
         return true;
     }
 };

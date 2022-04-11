@@ -91,8 +91,8 @@ export var DrawNames;
 })(DrawNames || (DrawNames = {}));
 export var GameNames;
 (function (GameNames) {
-    GameNames["Basic"] = "\u0411\u0430\u0437\u0430";
-    GameNames["Thingvellir"] = "\u0422\u0438\u043D\u0433\u0432\u0435\u043B\u043B\u0438\u0440";
+    GameNames["Basic"] = "basic";
+    GameNames["Thingvellir"] = "thingvellir";
 })(GameNames || (GameNames = {}));
 /**
  * <h3>Перечисление для названий героев.</h3>

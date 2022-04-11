@@ -45,13 +45,18 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
             if (boardCoin === undefined) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета на месте текущей таверны с id '${G.currentTavern}'.`);
             }
-            if (boardCoin !== null && !IsCoin(boardCoin)) {
+            if (boardCoin !== null && (!IsCoin(boardCoin) || !boardCoin.isOpened)) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета на месте текущей таверны с id '${G.currentTavern}'.`);
             }
             if (boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.isTriggerTrading) {
                 const tradingCoinPlacesLength = player.boardCoins.filter((coin, index) => index >= G.tavernsNum && coin === null).length;
                 if (tradingCoinPlacesLength > 0) {
-                    const handCoinsLength = handCoins.filter((coin) => IsCoin(coin)).length;
+                    const handCoinsLength = handCoins.filter((coin, index) => {
+                        if (coin !== null && !IsCoin(coin)) {
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета с id '${index}'.`);
+                        }
+                        return IsCoin(coin);
+                    }).length;
                     player.actionsNum =
                         G.suitsNum - G.tavernsNum <= handCoinsLength ? G.suitsNum - G.tavernsNum : handCoinsLength;
                     AddActionsToStackAfterCurrent(G, ctx, [StackData.placeTradingCoinsUline(player.actionsNum)]);
@@ -233,17 +238,22 @@ export const ResolveCurrentTavernOrders = (G, ctx) => {
             if (privateBoardCoin === undefined) {
                 throw new Error(`В массиве монет приватного игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
             }
+            if (privateBoardCoin !== null && !privateBoardCoin.isOpened) {
+                ChangeIsOpenedCoinStatus(privateBoardCoin, true);
+            }
             player.boardCoins[G.currentTavern] = privateBoardCoin;
         }
-        const publicBoardCoin = player.boardCoins[G.currentTavern];
-        if (publicBoardCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
-        }
-        if (publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
-            throw new Error(`В массиве монет игрока с id '${index}' в руке не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
-        }
-        if (publicBoardCoin !== null && !publicBoardCoin.isOpened) {
-            ChangeIsOpenedCoinStatus(publicBoardCoin, true);
+        else {
+            const publicBoardCoin = player.boardCoins[G.currentTavern];
+            if (publicBoardCoin === undefined) {
+                throw new Error(`В массиве монет игрока с id '${index}' в руке отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
+            }
+            if (publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
+                throw new Error(`В массиве монет игрока с id '${index}' в руке не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
+            }
+            if (publicBoardCoin !== null && !publicBoardCoin.isOpened) {
+                ChangeIsOpenedCoinStatus(publicBoardCoin, true);
+            }
         }
     });
     const { playersOrder, exchangeOrder } = ResolveBoardCoins(G, ctx);

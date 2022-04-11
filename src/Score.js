@@ -60,7 +60,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             coinsValue += (_a = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _a !== void 0 ? _a : 0;
         }
         else {
-            throw new Error(`Отсутствует открытая монета с id '${i}' на столе игрока с id '${playerId}'.`);
+            throw new Error(`В массиве монет игрока с id '${playerId}' на столе должна быть ранее открыта монета с id '${i}' в конце игры.`);
         }
     }
     score += coinsValue;
@@ -143,6 +143,12 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
  * @returns Финальные данные о победителях, если закончилась игра.
  */
 export const ScoreWinner = (G, ctx) => {
+    Object.values(G.publicPlayers).forEach((player, index) => {
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+            ReturnCoinsToPlayerBoard(G, index);
+        }
+        OpenClosedCoinsOnPlayerBoard(G, index);
+    });
     G.drawProfit = ``;
     AddDataToLog(G, LogTypes.GAME, `Финальные результаты игры:`);
     const warriorDistinctions = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR);
@@ -166,12 +172,6 @@ export const ScoreWinner = (G, ctx) => {
         }
     }
     if (G.winner.length) {
-        Object.values(G.publicPlayers).forEach((player, index) => {
-            if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                ReturnCoinsToPlayerBoard(G, index);
-                OpenClosedCoinsOnPlayerBoard(G, index);
-            }
-        });
         return G;
     }
 };

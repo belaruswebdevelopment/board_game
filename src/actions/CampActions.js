@@ -50,7 +50,9 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
     if (!IsCoin(handCoin)) {
         throw new Error(`Монета с id '${coinId}' в руке текущего игрока с id '${ctx.currentPlayer}' не может быть закрытой для него.`);
     }
-    ChangeIsOpenedCoinStatus(handCoin, true);
+    if (!handCoin.isOpened) {
+        ChangeIsOpenedCoinStatus(handCoin, true);
+    }
     if (multiplayer) {
         privatePlayer.boardCoins[tempId] = handCoin;
     }

@@ -172,6 +172,10 @@ const PotentialScoring = (G, playerId, card) => {
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
         }
+        // TODO Check it it can be error in !multiplayer, but bot can't play in multiplayer now...
+        if (boardCoin !== null && !IsCoin(boardCoin)) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' на столе не может быть закрыта монета с id '${i}'.`);
+        }
         score += (_b = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _b !== void 0 ? _b : 0;
         const handCoin = handCoins[i];
         if (handCoin === undefined) {

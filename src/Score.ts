@@ -151,6 +151,12 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
  * @returns Финальные данные о победителях, если закончилась игра.
  */
 export const ScoreWinner = (G: IMyGameState, ctx: Ctx): IMyGameState | void => {
+    Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+            ReturnCoinsToPlayerBoard(G, index);
+        }
+        OpenClosedCoinsOnPlayerBoard(G, index);
+    });
     G.drawProfit = ``;
     AddDataToLog(G, LogTypes.GAME, `Финальные результаты игры:`);
     const warriorDistinctions: number[] = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR);
@@ -175,12 +181,6 @@ export const ScoreWinner = (G: IMyGameState, ctx: Ctx): IMyGameState | void => {
         }
     }
     if (G.winner.length) {
-        Object.values(G.publicPlayers).forEach((player: IPublicPlayer, index: number): void => {
-            if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
-                ReturnCoinsToPlayerBoard(G, index);
-                OpenClosedCoinsOnPlayerBoard(G, index);
-            }
-        });
         return G;
     }
 };

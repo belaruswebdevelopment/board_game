@@ -3,6 +3,61 @@ import { AddDataToLog } from "../Logging";
 import { BuffNames, LogTypes } from "../typescript/enums";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { IsMultiplayer } from "./MultiplayerHelpers";
+export const DiscardTradingCoin = (G, playerId) => {
+    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${playerId}'.`);
+    }
+    if (privatePlayer === undefined) {
+        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${playerId}'.`);
+    }
+    let handCoins;
+    if (multiplayer) {
+        handCoins = privatePlayer.handCoins;
+    }
+    else {
+        handCoins = player.handCoins;
+    }
+    let tradingCoinIndex = player.boardCoins.findIndex((coin, index) => {
+        if (coin !== null && !IsCoin(coin)) {
+            throw new Error(`В массиве монет публичного игрока с id '${playerId}' на столе не может быть закрыта монета с id '${index}'.`);
+        }
+        return (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true;
+    });
+    if (tradingCoinIndex === -1 && multiplayer) {
+        tradingCoinIndex = privatePlayer.boardCoins.findIndex((coin, index) => {
+            if (coin !== null && !IsCoin(coin)) {
+                throw new Error(`В массиве монет приватного игрока с id '${playerId}' на столе не может быть закрыта монета с id '${index}'.`);
+            }
+            return (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true;
+        });
+    }
+    if (tradingCoinIndex === -1 && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+        tradingCoinIndex = handCoins.findIndex((coin, index) => {
+            if (coin !== null && !IsCoin(coin)) {
+                throw new Error(`В массиве монет игрока с id '${playerId}' в руке не может быть закрыта монета с id '${index}'.`);
+            }
+            return (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true;
+        });
+        if (tradingCoinIndex === -1) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
+        }
+        handCoins.splice(tradingCoinIndex, 1, null);
+        if (multiplayer) {
+            player.handCoins.splice(tradingCoinIndex, 1, null);
+        }
+    }
+    else {
+        if (tradingCoinIndex === -1) {
+            throw new Error(`У игрока с id '${playerId}' на столе не может отсутствовать обменная монета.`);
+        }
+        if (multiplayer) {
+            privatePlayer.boardCoins.splice(tradingCoinIndex, 1, null);
+        }
+        player.boardCoins.splice(tradingCoinIndex, 1, null);
+    }
+    return tradingCoinIndex;
+};
 /**
  * <h3>Находит максимальную монету игрока.</h3>
  * <p>Применения:</p>
@@ -29,7 +84,23 @@ export const GetMaxCoinValue = (G, playerId) => {
     else {
         handCoins = player.handCoins;
     }
-    return Math.max(...player.boardCoins.filter((coin) => IsCoin(coin)).map((coin) => coin.value), ...handCoins.filter((coin) => IsCoin(coin)).map((coin) => coin.value));
+    return Math.max(...player.boardCoins.filter((coin) => IsCoin(coin)).map((coin, index) => {
+        if (coin === null) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' на поле отсутствует монета с id '${index}'.`);
+        }
+        if (coin !== null && !IsCoin(coin)) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' на поле не может быть закрыта монета с id '${index}'.`);
+        }
+        return coin.value;
+    }), ...handCoins.filter((coin) => IsCoin(coin)).map((coin, index) => {
+        if (coin === null) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует монета с id '${index}'.`);
+        }
+        if (coin !== null && !IsCoin(coin)) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' в руке не может быть закрыта монета с id '${index}'.`);
+        }
+        return coin.value;
+    }));
 };
 export const OpenClosedCoinsOnPlayerBoard = (G, playerId) => {
     const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
@@ -159,6 +230,9 @@ export const ResolveBoardCoins = (G, ctx) => {
                 if (boardCoinCurrentTavern === undefined) {
                     throw new Error(`В массиве монет игрока с id '${index}' отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
                 }
+                if (boardCoinCurrentTavern !== null && !IsCoin(boardCoinCurrentTavern)) {
+                    throw new Error(`В массиве монет игрока с id '${index}' не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
+                }
                 return (boardCoinCurrentTavern === null || boardCoinCurrentTavern === void 0 ? void 0 : boardCoinCurrentTavern.value) === Number(prop) && player.priority.isExchangeable;
             });
             while (tiePlayers.length > 1) {
@@ -200,11 +274,17 @@ export const ReturnCoinsToPlayerBoard = (G, playerId) => {
     for (let i = 0; i < handCoins.length; i++) {
         const handCoin = handCoins[i];
         if (handCoin === undefined) {
-            throw new Error(`В массиве монет игрока в руке отсутствует монета с id '${i}'.`);
+            throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует монета с id '${i}'.`);
+        }
+        if (handCoin !== null && !IsCoin(handCoin)) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' в руке не может быть закрыта монета с id '${i}'.`);
         }
         if (IsCoin(handCoin)) {
             const tempCoinId = player.boardCoins.indexOf(null);
             if (tempCoinId !== -1) {
+                if (!handCoin.isOpened) {
+                    ChangeIsOpenedCoinStatus(handCoin, true);
+                }
                 if (multiplayer) {
                     privatePlayer.boardCoins[tempCoinId] = handCoin;
                 }

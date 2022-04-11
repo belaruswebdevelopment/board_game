@@ -88,7 +88,7 @@ export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => 
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    if (!player.actionsNum) {
+    if (!player.stack.length) {
         const mercenariesCount: number =
             player.campCards.filter((card: CampDeckCardTypes): boolean => IsMercenaryCampCard(card)).length;
         if (mercenariesCount) {
@@ -99,8 +99,14 @@ export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => 
 };
 
 export const OnEnlistmentMercenariesTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
-    AddEnlistmentMercenariesActionsToStack(G, ctx);
-    DrawCurrentProfit(G, ctx);
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    if (!player.stack.length) {
+        AddEnlistmentMercenariesActionsToStack(G, ctx);
+        DrawCurrentProfit(G, ctx);
+    }
 };
 
 export const OnEnlistmentMercenariesTurnEnd = (G: IMyGameState, ctx: Ctx): void => {

@@ -11,7 +11,7 @@ export const DraupnirScoring = (G, player) => {
         throw new Error(`Function param 'G' is undefined.`);
     }
     const basicScore = player.boardCoins.filter((coin, index) => {
-        if (coin !== null && !IsCoin(coin)) {
+        if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
             throw new Error(`В массиве монет игрока ${player.nickname} в руке не может быть закрыта монета с id ${index}.`);
         }
         return IsCoin(coin) && coin.value >= 15;
