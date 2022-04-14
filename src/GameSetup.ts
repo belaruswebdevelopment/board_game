@@ -29,7 +29,8 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     const suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
-        multiplayer = false,
+        explorerDistinctionCardId = null,
+        multiplayer = true,
         odroerirTheMythicCauldron = false,
         log = true,
         debug = false,
@@ -46,12 +47,12 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         additionalCardsDeck: ICard[] = BuildAdditionalCards(),
         discardCardsDeck: DeckCardTypes[] = [],
         explorerDistinctionCards: DeckCardTypes[] = [],
-        distinctions: OptionalSuitPropertyTypes<DistinctionTypes> = {};
+        distinctions: OptionalSuitPropertyTypes<DistinctionTypes> = {},
+        secret: ISecret = {
+            campDecks: [],
+            decks: [],
+        };
     let suit: SuitTypes;
-    const secret: ISecret = {
-        campDecks: [],
-        decks: [],
-    };
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             distinctions[suit] = null;
@@ -60,9 +61,9 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     const winner: number[] = [],
         campPicked = false,
         mustDiscardTavernCardJarnglofi = null,
-        discardCampCardsDeck: CampDeckCardTypes[] = [];
+        discardCampCardsDeck: CampDeckCardTypes[] = [],
+        campDeckLength: [number, number] = [0, 0];
     let camp: CampDeckCardTypes[] = [];
-    const campDeckLength: [number, number] = [0, 0];
     if (expansions.thingvellir?.active) {
         for (let i = 0; i < tierToEnd; i++) {
             secret.campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
@@ -179,6 +180,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         odroerirTheMythicCauldronCoins,
         camp,
         explorerDistinctionCards,
+        explorerDistinctionCardId,
         deckLength,
         campDeckLength,
         secret,

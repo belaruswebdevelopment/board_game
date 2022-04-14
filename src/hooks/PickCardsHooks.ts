@@ -27,7 +27,7 @@ import type { CampDeckCardTypes, CoinType, DeckCardTypes, IMyGameState, INext, I
  * @param ctx
  */
 const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void => {
-    const multiplayer = IsMultiplayer(G),
+    const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {

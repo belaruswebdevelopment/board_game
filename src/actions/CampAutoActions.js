@@ -1,4 +1,4 @@
-import { IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
@@ -131,6 +131,9 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                     throw new Error(`В массиве публичных монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${j}'.`);
                 }
                 if (IsCoin(boardCoin) && publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
+                    if (!boardCoin.isOpened) {
+                        ChangeIsOpenedCoinStatus(boardCoin, true);
+                    }
                     player.boardCoins[j] = boardCoin;
                 }
             }
@@ -141,6 +144,9 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
                 }
                 if (boardCoin !== null && !IsCoin(boardCoin)) {
                     throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не должна быть закрыта монета в кошеле с id '${j}'.`);
+                }
+                if (boardCoin !== null && !boardCoin.isOpened) {
+                    ChangeIsOpenedCoinStatus(boardCoin, true);
                 }
             }
             if (IsCoin(boardCoin) && !boardCoin.isTriggerTrading) {

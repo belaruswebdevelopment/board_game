@@ -1,13 +1,16 @@
-import { Client } from "boardgame.io/react";
+import { jsx as _jsx } from "react/jsx-runtime";
+/* import { Client } from "boardgame.io/react";
 import { BoardGame } from "./Game";
 import { GameBoard } from "./GameBoard";
+
 const App = Client({
     // debug: false,
     game: BoardGame,
     board: GameBoard,
     numPlayers: 5,
 });
-export default App;
+
+export default App; */
 /*import React from "react";
 import {Client} from "boardgame.io/react";
 import {Local} from "boardgame.io/multiplayer";
@@ -116,18 +119,12 @@ render(<App/>, document.getElementById("root"));
 
 export default App;
 */
-/* import React from "react";
+import React from "react";
 import LobbyClient from "./LobbyClient";
-
 class App extends React.Component {
     render() {
-        return (
-            <div>
-                <LobbyClient />
-            </div>
-        );
+        return (_jsx("div", { children: _jsx(LobbyClient, {}) }));
     }
 }
-
-export default App; */
+export default App;
 //# sourceMappingURL=App.js.map

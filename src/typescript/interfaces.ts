@@ -412,6 +412,7 @@ export interface IMyGameState {
     readonly botData: IBotData;
     readonly deckLength: [number, number];
     readonly campDeckLength: [number, number];
+    explorerDistinctionCardId: number | null,
     readonly explorerDistinctionCards: DeckCardTypes[];
     readonly camp: CampCardTypes[];
     readonly secret: ISecret;

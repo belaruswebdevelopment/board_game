@@ -229,7 +229,16 @@ export const moveValidators = {
                     return allCoinsOrderI;
                 }
                 else if (tradingProfit > 0) {
-                    if (!hasTrading && handCoins.every(coin => IsCoin(coin))) {
+                    const isEveryCoinsInHands = handCoins.every((coin, index) => {
+                        if (coin !== null && !IsCoin(coin)) {
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+                        }
+                        if (IsCoin(coin) && coin.isOpened) {
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${index}'.`);
+                        }
+                        return IsCoin(coin);
+                    });
+                    if (!hasTrading && isEveryCoinsInHands) {
                         continue;
                     }
                     if (positionForMaxCoin === undefined) {
@@ -239,20 +248,31 @@ export const moveValidators = {
                         throw new Error(`Отсутствуют значения выкладки для минимальной монеты.`);
                     }
                     const hasPositionForMaxCoin = positionForMaxCoin !== -1, hasPositionForMinCoin = positionForMinCoin !== -1, coinsOrderPositionForMaxCoin = allCoinsOrderI[positionForMaxCoin], coinsOrderPositionForMinCoin = allCoinsOrderI[positionForMinCoin];
-                    if (coinsOrderPositionForMaxCoin !== undefined
-                        && coinsOrderPositionForMinCoin !== undefined) {
+                    if (coinsOrderPositionForMaxCoin !== undefined && coinsOrderPositionForMinCoin !== undefined) {
                         const maxCoin = handCoins[coinsOrderPositionForMaxCoin], minCoin = handCoins[coinsOrderPositionForMinCoin];
                         if (maxCoin === undefined) {
-                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует максимальная монета с id '${positionForMaxCoin}'.`);
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
                         }
                         if (minCoin === undefined) {
-                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует минимальная монета с id '${positionForMinCoin}'.`);
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует минимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
+                        }
+                        if (maxCoin === null) {
+                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' не может не быть максимальной монеты с id '${coinsOrderPositionForMaxCoin}'.`);
+                        }
+                        if (minCoin === null) {
+                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' не может не быть минимальной монеты с id '${coinsOrderPositionForMinCoin}'.`);
                         }
                         if (!IsCoin(maxCoin)) {
-                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' отсутствует выкладка для максимальной '${coinsOrderPositionForMaxCoin}' монеты.`);
+                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' не может быть закрыта максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
                         }
                         if (!IsCoin(minCoin)) {
-                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' отсутствует выкладка для минимальной '${coinsOrderPositionForMinCoin}' монеты.`);
+                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' не может быть закрыта минимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
+                        }
+                        if (IsCoin(maxCoin) && maxCoin.isOpened) {
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
+                        }
+                        if (IsCoin(minCoin) && minCoin.isOpened) {
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта максимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
                         }
                         let isTopCoinsOnPosition = false, isMinCoinsOnPosition = false;
                         if (hasPositionForMaxCoin) {

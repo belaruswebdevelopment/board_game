@@ -15,14 +15,15 @@ import type { CoinType, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlaye
  *
  * @param G
  * @param ctx
+ * @param isTrading Является ли монета обменной.
  * @param value Значение увеличения монеты.
  * @param upgradingCoinId Id обменной монеты.
  * @param type Тип обменной монеты.
  * @param isInitial Является ли обменная монета базовой.
  */
-export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, value: number, upgradingCoinId: number, type: CoinTypes):
-    void => {
-    const multiplayer = IsMultiplayer(G),
+export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean, value: number,
+    upgradingCoinId: number, type: CoinTypes): void => {
+    const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -105,8 +106,22 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, value: number, upgr
         if (!upgradedCoin.isOpened) {
             ChangeIsOpenedCoinStatus(upgradedCoin, true);
         }
-        if (type === CoinTypes.Hand) {
-            handCoins[upgradingCoinId] = upgradedCoin;
+        if (type === CoinTypes.Hand
+            || (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && type === CoinTypes.Board && isTrading)) {
+            if (isTrading) {
+                const handCoinId: number = player.handCoins.indexOf(null);
+                if (multiplayer) {
+                    privatePlayer.boardCoins[upgradingCoinId] = null;
+                    player.handCoins[handCoinId] = upgradedCoin;
+                }
+                player.boardCoins[upgradingCoinId] = null;
+                handCoins[handCoinId] = upgradedCoin;
+            } else {
+                if (multiplayer) {
+                    player.handCoins[upgradingCoinId] = upgradedCoin;
+                }
+                handCoins[upgradingCoinId] = upgradedCoin;
+            }
             AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
         } else if (type === CoinTypes.Board) {
             if (multiplayer) {

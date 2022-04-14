@@ -14,6 +14,6 @@ export const UpgradeCoinActions = (G, ctx, coinId, type) => {
     if (value === undefined) {
         throw new Error(`У игрока с id '${ctx.currentPlayer}' в стеке действий отсутствует обязательный параметр 'config.value'.`);
     }
-    UpgradeCoinAction(G, ctx, value, coinId, type);
+    UpgradeCoinAction(G, ctx, false, value, coinId, type);
 };
 //# sourceMappingURL=CoinActionHelpers.js.map

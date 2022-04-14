@@ -12,12 +12,13 @@ import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
  *
  * @param G
  * @param ctx
+ * @param isTrading Является ли монета обменной.
  * @param value Значение увеличения монеты.
  * @param upgradingCoinId Id обменной монеты.
  * @param type Тип обменной монеты.
  * @param isInitial Является ли обменная монета базовой.
  */
-export const UpgradeCoinAction = (G, ctx, value, upgradingCoinId, type) => {
+export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, type) => {
     const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -103,8 +104,23 @@ export const UpgradeCoinAction = (G, ctx, value, upgradingCoinId, type) => {
         if (!upgradedCoin.isOpened) {
             ChangeIsOpenedCoinStatus(upgradedCoin, true);
         }
-        if (type === CoinTypes.Hand) {
-            handCoins[upgradingCoinId] = upgradedCoin;
+        if (type === CoinTypes.Hand
+            || (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && type === CoinTypes.Board && isTrading)) {
+            if (isTrading) {
+                const handCoinId = player.handCoins.indexOf(null);
+                if (multiplayer) {
+                    privatePlayer.boardCoins[upgradingCoinId] = null;
+                    player.handCoins[handCoinId] = upgradedCoin;
+                }
+                player.boardCoins[upgradingCoinId] = null;
+                handCoins[handCoinId] = upgradedCoin;
+            }
+            else {
+                if (multiplayer) {
+                    player.handCoins[upgradingCoinId] = upgradedCoin;
+                }
+                handCoins[upgradingCoinId] = upgradedCoin;
+            }
             AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
         }
         else if (type === CoinTypes.Board) {

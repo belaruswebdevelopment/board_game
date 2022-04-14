@@ -31,17 +31,6 @@ export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
         throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
     }
     if (G.tierToEnd !== 0) {
-        for (let j = 0; j < 3; j++) {
-            const deck1 = G.secret.decks[1];
-            if (deck1 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
-            }
-            const card = deck1[j];
-            if (card === undefined) {
-                throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
-            }
-            G.explorerDistinctionCards.push(card);
-        }
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDistinctionCard()]);
         AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
     }

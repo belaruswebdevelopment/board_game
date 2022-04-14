@@ -203,6 +203,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                             }
                         }
                         if (data !== undefined) {
+                            // TODO Draw heroes with more then one ranks no after the last card but when last rank of this hero card placed!?
                             let action;
                             if ((!IsMercenaryCampCard(pickedCard) && suit !== pickedCard.suit)
                                 || (IsMercenaryCampCard(pickedCard) && cardVariants !== undefined
@@ -346,17 +347,6 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
             case Phases.PlaceCoins:
                 moveName = MoveNames.ClickBoardCoinMove;
                 break;
-            case Phases.PickCards:
-                if (stage === Stages.UpgradeCoin) {
-                    moveName = MoveNames.ClickCoinToUpgradeMove;
-                }
-                else if (stage === Stages.PickConcreteCoinToUpgrade) {
-                    moveName = MoveNames.ClickConcreteCoinToUpgradeMove;
-                }
-                else if (stage === Stages.UpgradeVidofnirVedrfolnirCoin) {
-                    moveName = MoveNames.UpgradeCoinVidofnirVedrfolnirMove;
-                }
-                break;
             default:
                 if (stage === Stages.UpgradeCoin) {
                     moveName = MoveNames.ClickCoinToUpgradeMove;
@@ -451,7 +441,15 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                                 else {
                                     if (multiplayer && privateBoardCoin !== undefined) {
                                         if (IsCoin(publicBoardCoin)) {
-                                            DrawCoin(data, playerCells, `coin`, publicBoardCoin, id, player);
+                                            if (!publicBoardCoin.isOpened) {
+                                                throw new Error(`В массиве монет игрока на столе не может быть закрыта для других игроков ранее открытая монета с id '${id}'.`);
+                                            }
+                                            if (ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern < j) {
+                                                DrawCoin(data, playerCells, `coin`, publicBoardCoin, id, player);
+                                            }
+                                            else {
+                                                DrawCoin(data, playerCells, `hidden-coin`, publicBoardCoin, id, player, `bg-small-coin`);
+                                            }
                                         }
                                         else {
                                             if (Number(ctx.currentPlayer) === p && IsCoin(privateBoardCoin)
@@ -565,23 +563,12 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
             case Phases.PlaceCoinsUline:
                 moveName = MoveNames.ClickHandCoinUlineMove;
                 break;
-            case Phases.PickCards:
+            default:
                 if (stage === Stages.UpgradeCoin) {
                     moveName = MoveNames.ClickCoinToUpgradeMove;
                 }
                 else if (stage === Stages.PlaceTradingCoinsUline) {
                     moveName = MoveNames.ClickHandTradingCoinUlineMove;
-                }
-                else if (stage === Stages.PickConcreteCoinToUpgrade) {
-                    moveName = MoveNames.ClickConcreteCoinToUpgradeMove;
-                }
-                else if (stage === Stages.AddCoinToPouch) {
-                    moveName = MoveNames.AddCoinToPouchMove;
-                }
-                break;
-            default:
-                if (stage === Stages.UpgradeCoin) {
-                    moveName = MoveNames.ClickCoinToUpgradeMove;
                 }
                 else if (stage === Stages.PickConcreteCoinToUpgrade) {
                     moveName = MoveNames.ClickConcreteCoinToUpgradeMove;

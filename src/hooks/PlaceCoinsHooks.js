@@ -23,24 +23,31 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
         let isEveryPlayersHandCoinsEmpty = false;
         if (multiplayer) {
             isEveryPlayersHandCoinsEmpty =
-                Object.values(G.publicPlayers).filter((player) => !CheckPlayerHasBuff(player, BuffNames.EveryTurn))
-                    .every((player, index) => {
-                    const privatePlayer = G.players[index];
-                    if (privatePlayer === undefined) {
-                        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${index}'.`);
+                Object.values(G.publicPlayers).map((player) => player).every((player, index) => {
+                    if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                        const privatePlayer = G.players[index];
+                        if (privatePlayer === undefined) {
+                            throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${index}'.`);
+                        }
+                        return privatePlayer.handCoins.every((coin) => coin === null);
                     }
-                    return privatePlayer.handCoins.every((coin) => coin === null);
+                    return true;
                 });
         }
         else {
             isEveryPlayersHandCoinsEmpty =
-                Object.values(G.publicPlayers).filter((player) => !CheckPlayerHasBuff(player, BuffNames.EveryTurn))
-                    .every((player, playerIndex) => player.handCoins.every((coin, coinIndex) => {
-                    if (coin !== null && !IsCoin(coin)) {
-                        throw new Error(`В массиве монет игрока с id '${playerIndex}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
+                Object.values(G.publicPlayers).map((player) => player)
+                    .every((player, playerIndex) => {
+                    if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                        return player.handCoins.every((coin, coinIndex) => {
+                            if (coin !== null && !IsCoin(coin)) {
+                                throw new Error(`В массиве монет игрока с id '${playerIndex}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
+                            }
+                            return coin === null;
+                        });
                     }
-                    return coin === null;
-                }));
+                    return true;
+                });
         }
         if (isEveryPlayersHandCoinsEmpty) {
             return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);

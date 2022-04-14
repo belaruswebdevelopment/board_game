@@ -28,7 +28,7 @@ import { ExplorerDistinctionProfit } from "./ui/ProfitUI";
  * @returns
  */
 export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMoveCoinsArguments): boolean => {
-    const multiplayer = IsMultiplayer(G),
+    const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -197,7 +197,7 @@ export const moveValidators: IMoveValidators = {
                 positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
             }
             // TODO Check it bot can't play in multiplayer now...
-            const multiplayer = IsMultiplayer(G),
+            const multiplayer: boolean = IsMultiplayer(G),
                 player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
                 privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
             if (player === undefined) {
@@ -237,7 +237,17 @@ export const moveValidators: IMoveValidators = {
                     }
                     return allCoinsOrderI;
                 } else if (tradingProfit > 0) {
-                    if (!hasTrading && handCoins.every(coin => IsCoin(coin))) {
+                    const isEveryCoinsInHands: boolean =
+                        handCoins.every((coin: PublicPlayerCoinTypes, index: number): boolean => {
+                            if (coin !== null && !IsCoin(coin)) {
+                                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+                            }
+                            if (IsCoin(coin) && coin.isOpened) {
+                                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${index}'.`);
+                            }
+                            return IsCoin(coin);
+                        });
+                    if (!hasTrading && isEveryCoinsInHands) {
                         continue;
                     }
                     if (positionForMaxCoin === undefined) {
@@ -250,21 +260,32 @@ export const moveValidators: IMoveValidators = {
                         hasPositionForMinCoin: boolean = positionForMinCoin !== -1,
                         coinsOrderPositionForMaxCoin: number | undefined = allCoinsOrderI[positionForMaxCoin],
                         coinsOrderPositionForMinCoin: number | undefined = allCoinsOrderI[positionForMinCoin];
-                    if (coinsOrderPositionForMaxCoin !== undefined
-                        && coinsOrderPositionForMinCoin !== undefined) {
+                    if (coinsOrderPositionForMaxCoin !== undefined && coinsOrderPositionForMinCoin !== undefined) {
                         const maxCoin: PublicPlayerCoinTypes | undefined = handCoins[coinsOrderPositionForMaxCoin],
                             minCoin: PublicPlayerCoinTypes | undefined = handCoins[coinsOrderPositionForMinCoin];
                         if (maxCoin === undefined) {
-                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует максимальная монета с id '${positionForMaxCoin}'.`);
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
                         }
                         if (minCoin === undefined) {
-                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует минимальная монета с id '${positionForMinCoin}'.`);
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует минимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
+                        }
+                        if (maxCoin === null) {
+                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' не может не быть максимальной монеты с id '${coinsOrderPositionForMaxCoin}'.`);
+                        }
+                        if (minCoin === null) {
+                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' не может не быть минимальной монеты с id '${coinsOrderPositionForMinCoin}'.`);
                         }
                         if (!IsCoin(maxCoin)) {
-                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' отсутствует выкладка для максимальной '${coinsOrderPositionForMaxCoin}' монеты.`);
+                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' не может быть закрыта максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
                         }
                         if (!IsCoin(minCoin)) {
-                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' отсутствует выкладка для минимальной '${coinsOrderPositionForMinCoin}' монеты.`);
+                            throw new Error(`В массиве выкладки монет игрока с id '${ctx.currentPlayer}' не может быть закрыта минимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
+                        }
+                        if (IsCoin(maxCoin) && maxCoin.isOpened) {
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта максимальная монета с id '${coinsOrderPositionForMaxCoin}'.`);
+                        }
+                        if (IsCoin(minCoin) && minCoin.isOpened) {
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта максимальная монета с id '${coinsOrderPositionForMinCoin}'.`);
                         }
                         let isTopCoinsOnPosition = false,
                             isMinCoinsOnPosition = false;

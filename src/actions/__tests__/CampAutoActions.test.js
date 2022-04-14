@@ -38,7 +38,7 @@ describe(`Test AddPickHeroAction method`, () => {
     });
 });
 describe(`Test DiscardTradingCoinAction method`, () => {
-    it(`should discard trading coin from board (multiplayer=false)`, () => {
+    it(`should discard trading coin isOpened=true from board (multiplayer=false)`, () => {
         const G = {
             multiplayer: false,
             players: {
@@ -49,6 +49,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     nickname: `Dan`,
                     boardCoins: [
                         {
+                            isOpened: true,
                             isTriggerTrading: true,
                         },
                     ],
@@ -82,7 +83,52 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             ],
         });
     });
-    it(`should discard trading coin from board (multiplayer=true)`, () => {
+    it(`should discard trading coin isOpened=false from board (multiplayer=false)`, () => {
+        const G = {
+            multiplayer: false,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    boardCoins: [
+                        {
+                            isOpened: false,
+                            isTriggerTrading: true,
+                        },
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [],
+        };
+        DiscardTradingCoinAction(G, {
+            currentPlayer: `0`,
+        });
+        expect(G).toEqual({
+            multiplayer: false,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    boardCoins: [
+                        null,
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard closed trading coin from board (multiplayer=true)`, () => {
         const G = {
             multiplayer: true,
             players: {
@@ -90,6 +136,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     boardCoins: [
                         {
                             isTriggerTrading: true,
+                            value: 0,
                         },
                     ],
                 },
@@ -134,7 +181,63 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             ],
         });
     });
-    it(`should discard trading coin from board if player has Uline but trading coin on the board (multiplayer=false)`, () => {
+    it(`should discard opened trading coin from board (multiplayer=true)`, () => {
+        const G = {
+            multiplayer: true,
+            players: {
+                0: {
+                    boardCoins: [
+                        {
+                            isTriggerTrading: true,
+                            value: 0,
+                        },
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    boardCoins: [
+                        {
+                            isTriggerTrading: true,
+                            value: 0,
+                        },
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [],
+        };
+        DiscardTradingCoinAction(G, {
+            currentPlayer: `0`,
+        });
+        expect(G).toEqual({
+            multiplayer: true,
+            players: {
+                0: {
+                    boardCoins: [
+                        null,
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    boardCoins: [
+                        null,
+                    ],
+                    buffs: [],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard trading coin isOpened=true from board if player has Uline but trading coin on the board (multiplayer=false)`, () => {
         const G = {
             multiplayer: false,
             players: {
@@ -145,6 +248,60 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     nickname: `Dan`,
                     boardCoins: [
                         {
+                            isOpened: true,
+                            isTriggerTrading: true,
+                        },
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [],
+        };
+        DiscardTradingCoinAction(G, {
+            currentPlayer: `0`,
+        });
+        expect(G).toEqual({
+            multiplayer: false,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    boardCoins: [
+                        null,
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard trading coin isOpened=false from board if player has Uline but trading coin on the board (multiplayer=false)`, () => {
+        const G = {
+            multiplayer: false,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    boardCoins: [
+                        {
+                            isOpened: false,
                             isTriggerTrading: true,
                         },
                     ],
@@ -194,6 +351,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     boardCoins: [
                         {
                             isTriggerTrading: true,
+                            value: 0,
                         },
                     ],
                 },
@@ -204,6 +362,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     boardCoins: [
                         {
                             isTriggerTrading: true,
+                            value: 0,
                         },
                     ],
                     buffs: [
@@ -256,6 +415,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
                     boardCoins: [
                         {
                             isTriggerTrading: true,
+                            value: 0,
                         },
                     ],
                 },
@@ -363,7 +523,7 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             ],
         });
     });
-    it(`should discard trading coin from hand if player has Uline but trading coin in the hand (multiplayer=true)`, () => {
+    it(`should discard closed trading coin from hand if player has Uline but trading coin in the hand (multiplayer=true)`, () => {
         const G = {
             multiplayer: true,
             players: {
@@ -380,6 +540,9 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    handCoins: [
+                        {},
+                    ],
                     boardCoins: [],
                     buffs: [
                         {
@@ -406,6 +569,77 @@ describe(`Test DiscardTradingCoinAction method`, () => {
             publicPlayers: {
                 0: {
                     nickname: `Dan`,
+                    handCoins: [
+                        null,
+                    ],
+                    boardCoins: [],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок 'Dan' сбросил монету активирующую обмен.`,
+                },
+            ],
+        });
+    });
+    it(`should discard trading coin isOpened=true from hand if player has Uline but trading coin in the hand (multiplayer=true)`, () => {
+        const G = {
+            multiplayer: true,
+            players: {
+                0: {
+                    handCoins: [
+                        {
+                            isTriggerTrading: true,
+                            value: 0,
+                        },
+                    ],
+                    boardCoins: [],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    handCoins: [
+                        {
+                            isTriggerTrading: true,
+                            value: 0,
+                        },
+                    ],
+                    boardCoins: [],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                },
+            },
+            logData: [],
+        };
+        DiscardTradingCoinAction(G, {
+            currentPlayer: `0`,
+        });
+        expect(G).toEqual({
+            multiplayer: true,
+            players: {
+                0: {
+                    handCoins: [
+                        null,
+                    ],
+                    boardCoins: [],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    handCoins: [
+                        null,
+                    ],
                     boardCoins: [],
                     buffs: [
                         {
@@ -640,7 +874,7 @@ describe(`Test StartDiscardSuitCardAction method`, () => {
     });
 });
 describe(`Test StartVidofnirVedrfolnirAction method`, () => {
-    it(`should start VidofnirVedrfolnir action for 2 coins value=3 (multiplayer=false)`, () => {
+    it(`should start VidofnirVedrfolnir action for 2 coins isOpened=true value=3 (multiplayer=false)`, () => {
         const G = {
             multiplayer: false,
             tavernsNum: 3,
@@ -654,12 +888,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     handCoins: [],
@@ -684,12 +920,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     handCoins: [],
@@ -708,7 +946,79 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
             },
         });
     });
-    it(`should start VidofnirVedrfolnir action for 2 coins value=3 (multiplayer=true)`, () => {
+    it(`should start VidofnirVedrfolnir action for 2 coins isOpened=false value=3 (multiplayer=false)`, () => {
+        const G = {
+            multiplayer: false,
+            tavernsNum: 3,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    boardCoins: [
+                        {},
+                        {},
+                        {},
+                        {
+                            isOpened: false,
+                            isTriggerTrading: false,
+                            value: 2,
+                        },
+                        {
+                            isOpened: false,
+                            isTriggerTrading: false,
+                            value: 3,
+                        },
+                    ],
+                    handCoins: [],
+                    buffs: [],
+                    stack: [],
+                },
+            },
+        };
+        StartVidofnirVedrfolnirAction(G, {
+            currentPlayer: `0`,
+        });
+        expect(G).toEqual({
+            multiplayer: false,
+            tavernsNum: 3,
+            players: {
+                0: {},
+            },
+            publicPlayers: {
+                0: {
+                    boardCoins: [
+                        {},
+                        {},
+                        {},
+                        {
+                            isOpened: true,
+                            isTriggerTrading: false,
+                            value: 2,
+                        },
+                        {
+                            isOpened: true,
+                            isTriggerTrading: false,
+                            value: 3,
+                        },
+                    ],
+                    handCoins: [],
+                    buffs: [],
+                    stack: [
+                        {
+                            config: {
+                                coinId: undefined,
+                                stageName: Stages.UpgradeVidofnirVedrfolnirCoin,
+                                value: 3,
+                                drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+    });
+    it(`should start VidofnirVedrfolnir action for 2 closed coins value=3 (multiplayer=true)`, () => {
         const G = {
             multiplayer: true,
             tavernsNum: 3,
@@ -720,12 +1030,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
+                            isOpened: false,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
+                            isOpened: false,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -758,12 +1070,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -775,12 +1089,118 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
+                        },
+                    ],
+                    buffs: [],
+                    stack: [
+                        {
+                            config: {
+                                coinId: undefined,
+                                stageName: Stages.UpgradeVidofnirVedrfolnirCoin,
+                                value: 3,
+                                drawName: DrawNames.UpgradeCoinVidofnirVedrfolnir,
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+    });
+    it(`should start VidofnirVedrfolnir action for 2 coins isOpened=true value=3 (multiplayer=true)`, () => {
+        const G = {
+            multiplayer: true,
+            tavernsNum: 3,
+            players: {
+                0: {
+                    handCoins: [],
+                    boardCoins: [
+                        {},
+                        {},
+                        {},
+                        {
+                            isOpened: true,
+                            isTriggerTrading: false,
+                            value: 2,
+                        },
+                        {
+                            isOpened: true,
+                            isTriggerTrading: false,
+                            value: 3,
+                        },
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    boardCoins: [
+                        {},
+                        {},
+                        {},
+                        {
+                            isOpened: true,
+                            isTriggerTrading: false,
+                            value: 2,
+                        },
+                        {
+                            isOpened: true,
+                            isTriggerTrading: false,
+                            value: 3,
+                        },
+                    ],
+                    buffs: [],
+                    stack: [],
+                },
+            },
+        };
+        StartVidofnirVedrfolnirAction(G, {
+            currentPlayer: `0`,
+        });
+        expect(G).toEqual({
+            multiplayer: true,
+            tavernsNum: 3,
+            players: {
+                0: {
+                    handCoins: [],
+                    boardCoins: [
+                        {},
+                        {},
+                        {},
+                        {
+                            isOpened: true,
+                            isTriggerTrading: false,
+                            value: 2,
+                        },
+                        {
+                            isOpened: true,
+                            isTriggerTrading: false,
+                            value: 3,
+                        },
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    boardCoins: [
+                        {},
+                        {},
+                        {},
+                        {
+                            isOpened: true,
+                            isTriggerTrading: false,
+                            value: 2,
+                        },
+                        {
+                            isOpened: true,
+                            isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     buffs: [],
@@ -812,12 +1232,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 0,
+                            isOpened: true,
                             isTriggerTrading: true,
+                            value: 0,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     handCoins: [],
@@ -842,12 +1264,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 0,
+                            isOpened: true,
                             isTriggerTrading: true,
+                            value: 0,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     handCoins: [],
@@ -878,12 +1302,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 0,
+                            isOpened: false,
                             isTriggerTrading: true,
+                            value: 0,
                         },
                         {
-                            value: 3,
+                            isOpened: false,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -916,12 +1342,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 0,
+                            isOpened: true,
                             isTriggerTrading: true,
+                            value: 0,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -933,12 +1361,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 0,
+                            isOpened: true,
                             isTriggerTrading: true,
+                            value: 0,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     buffs: [],
@@ -971,8 +1401,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     handCoins: [],
@@ -998,8 +1429,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     handCoins: [],
@@ -1031,8 +1463,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            value: 3,
+                            isOpened: false,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -1066,8 +1499,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -1080,8 +1514,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     buffs: [],
@@ -2039,12 +2474,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     handCoins: [],
@@ -2073,12 +2510,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     handCoins: [],
@@ -2217,12 +2656,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
+                            isOpened: false,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -2234,8 +2675,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {},
                     ],
@@ -2262,12 +2704,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -2279,12 +2723,14 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     buffs: [
@@ -2321,8 +2767,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     handCoins: [],
@@ -2352,8 +2799,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     handCoins: [],
@@ -2389,8 +2837,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            value: 3,
+                            isOpened: false,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -2428,8 +2877,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -2442,8 +2892,9 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         null,
                         {
-                            value: 3,
+                            isOpened: true,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     buffs: [

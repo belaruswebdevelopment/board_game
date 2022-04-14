@@ -141,6 +141,6 @@ const Trading = (G: IMyGameState, ctx: Ctx, tradingCoins: ICoin[]): void => {
             value = coinsMinValue;
             upgradingCoinId = G.tavernsNum + coinMaxIndex;
         }
-        UpgradeCoinAction(G, ctx, value, upgradingCoinId, CoinTypes.Board);
+        UpgradeCoinAction(G, ctx, true, value, upgradingCoinId, CoinTypes.Board);
     }
 };

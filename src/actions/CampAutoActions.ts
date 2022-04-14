@@ -1,5 +1,5 @@
 import type { Ctx, StageArg } from "boardgame.io";
-import { IsCoin } from "../Coin";
+import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
@@ -98,7 +98,7 @@ export const StartDiscardSuitCardAction = (G: IMyGameState, ctx: Ctx): void => {
  * @param ctx
  */
 export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void => {
-    const multiplayer = IsMultiplayer(G),
+    const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -144,6 +144,9 @@ export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void =
                     throw new Error(`В массиве публичных монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${j}'.`);
                 }
                 if (IsCoin(boardCoin) && publicBoardCoin !== null && !IsCoin(publicBoardCoin)) {
+                    if (!boardCoin.isOpened) {
+                        ChangeIsOpenedCoinStatus(boardCoin, true);
+                    }
                     player.boardCoins[j] = boardCoin;
                 }
             } else {
@@ -153,6 +156,9 @@ export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void =
                 }
                 if (boardCoin !== null && !IsCoin(boardCoin)) {
                     throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не должна быть закрыта монета в кошеле с id '${j}'.`);
+                }
+                if (boardCoin !== null && !boardCoin.isOpened) {
+                    ChangeIsOpenedCoinStatus(boardCoin, true);
                 }
             }
             if (IsCoin(boardCoin) && !boardCoin.isTriggerTrading) {

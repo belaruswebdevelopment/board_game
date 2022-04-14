@@ -54,6 +54,7 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
         ChangeIsOpenedCoinStatus(handCoin, true);
     }
     if (multiplayer) {
+        player.handCoins[coinId] = null;
         privatePlayer.boardCoins[tempId] = handCoin;
     }
     player.boardCoins[tempId] = handCoin;
@@ -141,6 +142,6 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, coinId, type) => {
     if (value === 3) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
     }
-    UpgradeCoinAction(G, ctx, value, coinId, type);
+    UpgradeCoinAction(G, ctx, false, value, coinId, type);
 };
 //# sourceMappingURL=CampActions.js.map

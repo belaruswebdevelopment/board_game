@@ -49,7 +49,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
             currentTavern: 0,
         });
     });
-    it(`should return all board coins to hand (multiplayer=true)`, () => {
+    it(`should return all closed board coins to hand (multiplayer=true)`, () => {
         const G = {
             multiplayer: true,
             players: {
@@ -59,6 +59,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
                             value: 2,
                         },
                         {
+                            isOpened: false,
                             value: 0,
                         },
                     ],
@@ -74,6 +75,9 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
                             value: 2,
                         },
                         {},
+                    ],
+                    handCoins: [
+                        null,
                     ],
                 },
             },
@@ -94,6 +98,7 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
                     ],
                     handCoins: [
                         {
+                            isOpened: false,
                             value: 0,
                         },
                     ],
@@ -106,6 +111,86 @@ describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
                             value: 2,
                         },
                         null,
+                    ],
+                    handCoins: [
+                        {},
+                    ],
+                },
+            },
+            currentTavern: 0,
+        });
+    });
+    it(`should return all isOpened=true board coins to hand (multiplayer=true)`, () => {
+        const G = {
+            multiplayer: true,
+            players: {
+                0: {
+                    boardCoins: [
+                        {
+                            value: 2,
+                        },
+                        {
+                            isOpened: true,
+                            value: 0,
+                        },
+                    ],
+                    handCoins: [
+                        null,
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    boardCoins: [
+                        {
+                            value: 2,
+                        },
+                        {
+                            isOpened: true,
+                            value: 0,
+                        },
+                    ],
+                    handCoins: [
+                        null,
+                    ],
+                },
+            },
+            currentTavern: 0,
+        };
+        GetClosedCoinIntoPlayerHandAction(G, {
+            currentPlayer: `0`,
+        });
+        expect(G).toEqual({
+            multiplayer: true,
+            players: {
+                0: {
+                    boardCoins: [
+                        {
+                            value: 2,
+                        },
+                        null,
+                    ],
+                    handCoins: [
+                        {
+                            isOpened: true,
+                            value: 0,
+                        },
+                    ],
+                },
+            },
+            publicPlayers: {
+                0: {
+                    boardCoins: [
+                        {
+                            value: 2,
+                        },
+                        null,
+                    ],
+                    handCoins: [
+                        {
+                            isOpened: true,
+                            value: 0,
+                        },
                     ],
                 },
             },

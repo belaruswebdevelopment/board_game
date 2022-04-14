@@ -53,25 +53,16 @@ export const ClickCardToPickDistinctionMove = (G, ctx, cardId) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const deck1 = G.secret.decks[1];
-    if (deck1 === undefined) {
-        throw new Error(`Отсутствует колода карт '2' эпохи.`);
-    }
-    const card = deck1[cardId];
-    if (card === undefined) {
-        throw new Error(`Отсутствует выбранная карта с id '${cardId}' '2' эпохи '1'.`);
-    }
-    const pickedCard = deck1.splice(cardId, 1)[0];
+    const pickedCard = G.explorerDistinctionCards.splice(cardId, 1)[0];
     if (pickedCard === undefined) {
-        throw new Error(`Отсутствует выбранная карта с id '${cardId}' '2' эпохи '2'.`);
+        throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
     }
-    G.deckLength[1] = deck1.length;
-    G.secret.decks[1] = ctx.random.Shuffle(deck1);
     G.explorerDistinctionCards.splice(0);
-    const isAdded = PickCardOrActionCardActions(G, ctx, card);
+    const isAdded = PickCardOrActionCardActions(G, ctx, pickedCard);
     if (isAdded) {
         G.distinctions[SuitNames.EXPLORER] = undefined;
     }
+    G.explorerDistinctionCardId = cardId;
 };
 /**
  * <h3>Выбор конкретного преимущества по фракциям в конце первой эпохи.</h3>

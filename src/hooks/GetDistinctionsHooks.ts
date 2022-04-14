@@ -4,7 +4,8 @@ import { CheckDistinction } from "../Distinction";
 import { RefillCamp } from "../helpers/CampHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import type { DistinctionTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import { SuitNames } from "../typescript/enums";
+import type { DeckCardTypes, DistinctionTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'getDistinctions'.</h3>
@@ -89,8 +90,31 @@ export const OnGetDistinctionsMove = (G: IMyGameState, ctx: Ctx): void => {
 
 export const OnGetDistinctionsTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
+    if (G.distinctions[SuitNames.EXPLORER] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
+        for (let j = 0; j < 3; j++) {
+            const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
+            if (deck1 === undefined) {
+                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
+            }
+            const card: DeckCardTypes | undefined = deck1[j];
+            if (card === undefined) {
+                throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
+            }
+            G.explorerDistinctionCards.push(card);
+        }
+    }
 };
 
 export const OnGetDistinctionsTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
     ClearPlayerPickedCard(G, ctx);
+    if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
+        const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
+        if (deck1 === undefined) {
+            throw new Error(`Отсутствует колода карт '2' эпохи.`);
+        }
+        deck1.splice(G.explorerDistinctionCardId, 1);
+        G.deckLength[1] = deck1.length;
+        G.secret.decks[1] = ctx.random!.Shuffle(deck1);
+        G.explorerDistinctionCardId = null;
+    }
 };

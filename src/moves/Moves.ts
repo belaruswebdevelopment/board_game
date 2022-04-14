@@ -60,25 +60,16 @@ export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameSta
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
-    if (deck1 === undefined) {
-        throw new Error(`Отсутствует колода карт '2' эпохи.`);
-    }
-    const card: DeckCardTypes | undefined = deck1[cardId];
-    if (card === undefined) {
-        throw new Error(`Отсутствует выбранная карта с id '${cardId}' '2' эпохи '1'.`);
-    }
-    const pickedCard: DeckCardTypes | undefined = deck1.splice(cardId, 1)[0];
+    const pickedCard: DeckCardTypes | undefined = G.explorerDistinctionCards.splice(cardId, 1)[0];
     if (pickedCard === undefined) {
-        throw new Error(`Отсутствует выбранная карта с id '${cardId}' '2' эпохи '2'.`);
+        throw new Error(`Отсутствует выбранная карта с id '${cardId}' эпохи '2'.`);
     }
-    G.deckLength[1] = deck1.length;
-    G.secret.decks[1] = ctx.random!.Shuffle(deck1);
     G.explorerDistinctionCards.splice(0);
-    const isAdded: boolean = PickCardOrActionCardActions(G, ctx, card);
+    const isAdded: boolean = PickCardOrActionCardActions(G, ctx, pickedCard);
     if (isAdded) {
         G.distinctions[SuitNames.EXPLORER] = undefined;
     }
+    G.explorerDistinctionCardId = cardId;
 };
 
 /**

@@ -24,24 +24,22 @@ import { GameNames } from "./typescript/enums";
  */
 export const SetupGame = (ctx) => {
     var _a;
-    const suitsNum = 5, tierToEnd = 2, campNum = 5, multiplayer = false, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = ``, expansions = {
+    const suitsNum = 5, tierToEnd = 2, campNum = 5, explorerDistinctionCardId = null, multiplayer = true, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = ``, expansions = {
         thingvellir: {
             active: true,
         },
-    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], additionalCardsDeck = BuildAdditionalCards(), discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {};
-    let suit;
-    const secret = {
+    }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], additionalCardsDeck = BuildAdditionalCards(), discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
         campDecks: [],
         decks: [],
     };
+    let suit;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             distinctions[suit] = null;
         }
     }
-    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [];
+    const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], campDeckLength = [0, 0];
     let camp = [];
-    const campDeckLength = [0, 0];
     if ((_a = expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
         for (let i = 0; i < tierToEnd; i++) {
             secret.campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
@@ -147,6 +145,7 @@ export const SetupGame = (ctx) => {
         odroerirTheMythicCauldronCoins,
         camp,
         explorerDistinctionCards,
+        explorerDistinctionCardId,
         deckLength,
         campDeckLength,
         secret,

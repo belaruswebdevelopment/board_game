@@ -37,7 +37,7 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
     if (args.length !== 1) {
         throw new Error(`В массиве параметров функции отсутствует требуемый параметр 'value'.`);
     }
-    const multiplayer = IsMultiplayer(G),
+    const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -128,7 +128,7 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
                 }
                 type = CoinTypes.Board;
             }
-            UpgradeCoinAction(G, ctx, ...args, upgradingCoinId, type);
+            UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
         } else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
             AddActionsToStackAfterCurrent(G, ctx,
                 [StackData.pickConcreteCoinToUpgrade(minCoinValue, ...args)]);
@@ -165,7 +165,7 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
             }
             type = CoinTypes.Board;
-            UpgradeCoinAction(G, ctx, ...args, upgradingCoinId, type);
+            UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
         } else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
             AddActionsToStackAfterCurrent(G, ctx,
                 [StackData.pickConcreteCoinToUpgrade(minCoinValue, ...args)]);

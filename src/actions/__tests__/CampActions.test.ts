@@ -4,7 +4,7 @@ import type { DeckCardTypes, DiscardCampCardTypes, IMyGameState, IPlayer, IPubli
 import { AddCoinToPouchAction, DiscardSuitCardAction } from "../CampActions";
 
 describe(`Test AddCoinToPouchAction method`, (): void => {
-    it(`should add first coin to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=false)`, (): void => {
+    it(`should add first coin isOpened=false to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=false)`, (): void => {
         const G = {
             multiplayer: false,
             tavernsNum: 3,
@@ -24,6 +24,113 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                     handCoins: [
                         {
                             isOpened: false,
+                            isTriggerTrading: false,
+                            value: 2,
+                        },
+                        {
+                            isTriggerTrading: false,
+                            value: 3,
+                        },
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                    stack: [
+                        {
+                            config: {
+                                stageName: Stages.AddCoinToPouch,
+                                number: 2,
+                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
+                            },
+                        },
+                    ] as IStack[],
+                } as IPublicPlayer,
+            },
+            logData: [],
+        } as Pick<IMyGameState, `publicPlayers` | `tavernsNum` | `players` | `multiplayer` | `logData`>;
+        AddCoinToPouchAction(G as IMyGameState, {
+            currentPlayer: `0`,
+        } as Ctx, 0);
+        expect(G).toEqual({
+            multiplayer: false,
+            tavernsNum: 3,
+            players: {
+                0: {} as IPlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    boardCoins: [
+                        {},
+                        {},
+                        {},
+                        {
+                            isOpened: true,
+                            isTriggerTrading: false,
+                            value: 2,
+                        },
+                        null,
+                    ],
+                    handCoins: [
+                        null,
+                        {
+                            isTriggerTrading: false,
+                            value: 3,
+                        },
+                    ],
+                    buffs: [
+                        {
+                            everyTurn: true,
+                        },
+                    ],
+                    stack: [
+                        {
+                            config: {
+                                stageName: Stages.AddCoinToPouch,
+                                number: 2,
+                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
+                            },
+                        },
+                        {
+                            config: {
+                                stageName: Stages.AddCoinToPouch,
+                                number: 1,
+                                drawName: DrawNames.AddCoinToPouchVidofnirVedrfolnir,
+                            },
+                        },
+                    ],
+                } as IPublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок 'Dan' положил монету ценностью '2' в свой кошель.`,
+                },
+            ],
+        } as Pick<IMyGameState, `publicPlayers` | `players` | `tavernsNum` | `multiplayer` | `logData`>);
+    });
+    it(`should add first coin isOpened=true to pouch of 2 necessary coins and add next AddCoinToPouchAction to stack (multiplayer=false)`, (): void => {
+        const G = {
+            multiplayer: false,
+            tavernsNum: 3,
+            players: {
+                0: {} as IPlayer,
+            },
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    boardCoins: [
+                        {},
+                        {},
+                        {},
+                        null,
+                        null,
+                    ],
+                    handCoins: [
+                        {
+                            isOpened: true,
                             isTriggerTrading: false,
                             value: 2,
                         },
@@ -147,6 +254,10 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         null,
                         null,
                     ],
+                    handCoins: [
+                        {},
+                        {},
+                    ],
                     buffs: [
                         {
                             everyTurn: true,
@@ -207,6 +318,10 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         },
                         null,
                     ],
+                    handCoins: [
+                        null,
+                        {},
+                    ],
                     buffs: [
                         {
                             everyTurn: true,
@@ -253,6 +368,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {},
                         {
+                            isOpened: true,
                             isTriggerTrading: false,
                             value: 2,
                         },
@@ -300,6 +416,7 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                         {},
                         {},
                         {
+                            isOpened: true,
                             isTriggerTrading: false,
                             value: 2,
                         },
@@ -387,6 +504,13 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             everyTurn: true,
                         },
                     ],
+                    handCoins: [
+                        {
+                            isOpened: false,
+                            isTriggerTrading: false,
+                            value: 3,
+                        },
+                    ],
                     stack: [
                         {
                             config: {
@@ -443,6 +567,9 @@ describe(`Test AddCoinToPouchAction method`, (): void => {
                             isTriggerTrading: false,
                             value: 3,
                         },
+                    ],
+                    handCoins: [
+                        null,
                     ],
                     buffs: [
                         {

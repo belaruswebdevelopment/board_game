@@ -22,30 +22,37 @@ import type { CoinType, IMyGameState, INext, IPlayer, IPublicPlayer, PublicPlaye
  */
 export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): void | INext => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        const multiplayer = IsMultiplayer(G);
+        const multiplayer: boolean = IsMultiplayer(G);
         let isEveryPlayersHandCoinsEmpty = false;
         if (multiplayer) {
             isEveryPlayersHandCoinsEmpty =
-                Object.values(G.publicPlayers).filter((player: IPublicPlayer): boolean =>
-                    !CheckPlayerHasBuff(player, BuffNames.EveryTurn))
-                    .every((player: IPublicPlayer, index: number): boolean => {
-                        const privatePlayer: IPlayer | undefined = G.players[index];
-                        if (privatePlayer === undefined) {
-                            throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${index}'.`);
+                Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer =>
+                    player).every((player: IPublicPlayer, index: number): boolean => {
+                        if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                            const privatePlayer: IPlayer | undefined = G.players[index];
+                            if (privatePlayer === undefined) {
+                                throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${index}'.`);
+                            }
+                            return privatePlayer.handCoins.every((coin: CoinType): boolean => coin === null);
                         }
-                        return privatePlayer.handCoins.every((coin: CoinType): boolean => coin === null);
+                        return true;
                     });
         } else {
             isEveryPlayersHandCoinsEmpty =
-                Object.values(G.publicPlayers).filter((player: IPublicPlayer): boolean =>
-                    !CheckPlayerHasBuff(player, BuffNames.EveryTurn))
-                    .every((player: IPublicPlayer, playerIndex: number): boolean =>
-                        player.handCoins.every((coin: PublicPlayerCoinTypes, coinIndex: number): boolean => {
-                            if (coin !== null && !IsCoin(coin)) {
-                                throw new Error(`В массиве монет игрока с id '${playerIndex}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
-                            }
-                            return coin === null;
-                        }));
+                Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer =>
+                    player)
+                    .every((player: IPublicPlayer, playerIndex: number): boolean => {
+                        if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                            return player.handCoins.every((coin: PublicPlayerCoinTypes, coinIndex: number):
+                                boolean => {
+                                if (coin !== null && !IsCoin(coin)) {
+                                    throw new Error(`В массиве монет игрока с id '${playerIndex}' в руке не может быть закрыта монета с id '${coinIndex}'.`);
+                                }
+                                return coin === null;
+                            });
+                        }
+                        return true;
+                    });
         }
         if (isEveryPlayersHandCoinsEmpty) {
             return CheckAndStartPlaceCoinsUlineOrPickCardsPhase(G);
@@ -65,7 +72,7 @@ export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): void | INext
  * @returns
  */
 export const CheckEndPlaceCoinsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    const multiplayer = IsMultiplayer(G),
+    const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {

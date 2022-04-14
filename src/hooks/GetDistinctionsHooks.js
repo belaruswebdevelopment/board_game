@@ -3,6 +3,7 @@ import { CheckDistinction } from "../Distinction";
 import { RefillCamp } from "../helpers/CampHelpers";
 import { ClearPlayerPickedCard, EndTurnActions, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
+import { SuitNames } from "../typescript/enums";
 /**
  * <h3>Определяет порядок получения преимуществ при начале фазы 'getDistinctions'.</h3>
  * <p>Применения:</p>
@@ -77,8 +78,31 @@ export const OnGetDistinctionsMove = (G, ctx) => {
 };
 export const OnGetDistinctionsTurnBegin = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
+    if (G.distinctions[SuitNames.EXPLORER] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
+        for (let j = 0; j < 3; j++) {
+            const deck1 = G.secret.decks[1];
+            if (deck1 === undefined) {
+                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
+            }
+            const card = deck1[j];
+            if (card === undefined) {
+                throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
+            }
+            G.explorerDistinctionCards.push(card);
+        }
+    }
 };
 export const OnGetDistinctionsTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);
+    if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
+        const deck1 = G.secret.decks[1];
+        if (deck1 === undefined) {
+            throw new Error(`Отсутствует колода карт '2' эпохи.`);
+        }
+        deck1.splice(G.explorerDistinctionCardId, 1);
+        G.deckLength[1] = deck1.length;
+        G.secret.decks[1] = ctx.random.Shuffle(deck1);
+        G.explorerDistinctionCardId = null;
+    }
 };
 //# sourceMappingURL=GetDistinctionsHooks.js.map

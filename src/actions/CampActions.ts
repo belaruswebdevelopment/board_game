@@ -25,7 +25,7 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param coinId Id монеты.
  */
 export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number): void => {
-    const multiplayer = IsMultiplayer(G),
+    const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -60,6 +60,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
         ChangeIsOpenedCoinStatus(handCoin, true);
     }
     if (multiplayer) {
+        player.handCoins[coinId] = null;
         privatePlayer.boardCoins[tempId] = handCoin;
     }
     player.boardCoins[tempId] = handCoin;
@@ -154,5 +155,5 @@ export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, c
         AddActionsToStackAfterCurrent(G, ctx,
             [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
     }
-    UpgradeCoinAction(G, ctx, value, coinId, type);
+    UpgradeCoinAction(G, ctx, false, value, coinId, type);
 };

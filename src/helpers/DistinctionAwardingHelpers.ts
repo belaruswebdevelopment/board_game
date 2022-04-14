@@ -4,7 +4,7 @@ import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
 import { CardNames, LogTypes, SuitNames } from "../typescript/enums";
-import type { DeckCardTypes, ICard, ICoin, IMyGameState, IPlayer, IPublicPlayer } from "../typescript/interfaces";
+import type { ICard, ICoin, IMyGameState, IPlayer, IPublicPlayer } from "../typescript/interfaces";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { IsMultiplayer } from "./MultiplayerHelpers";
@@ -36,17 +36,6 @@ export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId:
         throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
     }
     if (G.tierToEnd !== 0) {
-        for (let j = 0; j < 3; j++) {
-            const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
-            if (deck1 === undefined) {
-                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
-            }
-            const card: DeckCardTypes | undefined = deck1[j];
-            if (card === undefined) {
-                throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
-            }
-            G.explorerDistinctionCards.push(card);
-        }
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDistinctionCard()]);
         AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' получил по знаку отличия разведчиков возможность получить карту из колоды второй эпохи:`);
     }
@@ -55,7 +44,7 @@ export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId:
 
 export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     if (G.tierToEnd !== 0) {
-        const multiplayer = IsMultiplayer(G),
+        const multiplayer: boolean = IsMultiplayer(G),
             player: IPublicPlayer | undefined = G.publicPlayers[playerId],
             privatePlayer: IPlayer | undefined = G.players[playerId];
         if (player === undefined) {

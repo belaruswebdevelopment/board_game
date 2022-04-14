@@ -26,7 +26,7 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const multiplayer = IsMultiplayer(G),
+    const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -182,7 +182,7 @@ export const ClickHandCoinUlineMove: Move<IMyGameState> = (G: IMyGameState, ctx:
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const multiplayer = IsMultiplayer(G),
+    const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -245,7 +245,7 @@ export const ClickHandTradingCoinUlineMove: Move<IMyGameState> = (G: IMyGameStat
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const multiplayer = IsMultiplayer(G),
+    const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {

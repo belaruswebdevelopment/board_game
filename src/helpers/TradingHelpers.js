@@ -132,7 +132,7 @@ const Trading = (G, ctx, tradingCoins) => {
             value = coinsMinValue;
             upgradingCoinId = G.tavernsNum + coinMaxIndex;
         }
-        UpgradeCoinAction(G, ctx, value, upgradingCoinId, CoinTypes.Board);
+        UpgradeCoinAction(G, ctx, true, value, upgradingCoinId, CoinTypes.Board);
     }
 };
 //# sourceMappingURL=TradingHelpers.js.map

@@ -18,10 +18,7 @@ export const DiscardTradingCoin = (G, playerId) => {
     else {
         handCoins = player.handCoins;
     }
-    let tradingCoinIndex = player.boardCoins.findIndex((coin, index) => {
-        if (coin !== null && !IsCoin(coin)) {
-            throw new Error(`В массиве монет публичного игрока с id '${playerId}' на столе не может быть закрыта монета с id '${index}'.`);
-        }
+    let tradingCoinIndex = player.boardCoins.findIndex((coin) => {
         return (coin === null || coin === void 0 ? void 0 : coin.isTriggerTrading) === true;
     });
     if (tradingCoinIndex === -1 && multiplayer) {
@@ -70,19 +67,9 @@ export const DiscardTradingCoin = (G, playerId) => {
  * @returns Максимальная монета игрока.
  */
 export const GetMaxCoinValue = (G, playerId) => {
-    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
+    const player = G.publicPlayers[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
-    }
-    if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует игрок с id '${playerId}'.`);
-    }
-    let handCoins;
-    if (multiplayer) {
-        handCoins = privatePlayer.handCoins;
-    }
-    else {
-        handCoins = player.handCoins;
     }
     return Math.max(...player.boardCoins.filter((coin) => IsCoin(coin)).map((coin, index) => {
         if (coin === null) {
@@ -91,13 +78,8 @@ export const GetMaxCoinValue = (G, playerId) => {
         if (coin !== null && !IsCoin(coin)) {
             throw new Error(`В массиве монет игрока с id '${playerId}' на поле не может быть закрыта монета с id '${index}'.`);
         }
-        return coin.value;
-    }), ...handCoins.filter((coin) => IsCoin(coin)).map((coin, index) => {
-        if (coin === null) {
-            throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует монета с id '${index}'.`);
-        }
-        if (coin !== null && !IsCoin(coin)) {
-            throw new Error(`В массиве монет игрока с id '${playerId}' в руке не может быть закрыта монета с id '${index}'.`);
+        if (coin !== null && IsCoin(coin) && !coin.isOpened) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' на поле не может быть ранее не открыта монета с id '${index}'.`);
         }
         return coin.value;
     }));
@@ -287,6 +269,7 @@ export const ReturnCoinsToPlayerBoard = (G, playerId) => {
                 }
                 if (multiplayer) {
                     privatePlayer.boardCoins[tempCoinId] = handCoin;
+                    player.handCoins[i] = null;
                 }
                 player.boardCoins[tempCoinId] = handCoin;
                 handCoins[i] = null;
@@ -306,11 +289,14 @@ export const ReturnCoinsToPlayerBoard = (G, playerId) => {
  */
 export const ReturnCoinsToPlayerHands = (G, ctx) => {
     for (let i = 0; i < ctx.numPlayers; i++) {
-        const player = G.publicPlayers[i];
+        const multiplayer = IsMultiplayer(G), player = G.publicPlayers[i], privatePlayer = G.players[i];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }
-        if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+        if (privatePlayer === undefined) {
+            throw new Error(`В массиве приватных игроков отсутствует игрок с id '${i}'.`);
+        }
+        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
             for (let j = 0; j < player.handCoins.length; j++) {
                 const handCoin = player.handCoins[j];
                 if (handCoin === undefined) {
@@ -318,6 +304,12 @@ export const ReturnCoinsToPlayerHands = (G, ctx) => {
                 }
                 if (IsCoin(handCoin) && handCoin.isOpened) {
                     ChangeIsOpenedCoinStatus(handCoin, false);
+                }
+                if (multiplayer) {
+                    if (IsCoin(handCoin)) {
+                        player.handCoins[j] = {};
+                        privatePlayer.handCoins[j] = handCoin;
+                    }
                 }
             }
         }
@@ -368,6 +360,11 @@ export const ReturnCoinToPlayerHands = (G, playerId, coinId, close) => {
         throw new Error(`В массиве монет игрока с id '${playerId}' на поле отсутствует нужная монета с id '${coinId}'.`);
     }
     if (IsCoin(coin)) {
+        if (multiplayer) {
+            if (!coin.isOpened) {
+                throw new Error(`В массиве монет игрока с id '${playerId}' на поле не может быть ранее не открыта монета с id '${coinId}'.`);
+            }
+        }
         if (close && coin.isOpened) {
             ChangeIsOpenedCoinStatus(coin, false);
         }
@@ -380,7 +377,7 @@ export const ReturnCoinToPlayerHands = (G, playerId, coinId, close) => {
                 throw new Error(`В массиве монет приватного игрока с id '${playerId}' на поле отсутствует монета с id '${coinId}'.`);
             }
             if (IsCoin(privateBoardCoin)) {
-                if (privateBoardCoin.isOpened) {
+                if (close && privateBoardCoin.isOpened) {
                     ChangeIsOpenedCoinStatus(privateBoardCoin, false);
                 }
                 handCoins[tempCoinId] = privateBoardCoin;
@@ -388,6 +385,12 @@ export const ReturnCoinToPlayerHands = (G, playerId, coinId, close) => {
         }
     }
     if (multiplayer) {
+        if (close) {
+            player.handCoins[tempCoinId] = {};
+        }
+        else {
+            player.handCoins[tempCoinId] = coin;
+        }
         privatePlayer.boardCoins[coinId] = null;
     }
     player.boardCoins[coinId] = null;

@@ -147,7 +147,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * @returns Потенциальное значение.
  */
 const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTypes): number => {
-    const multiplayer = IsMultiplayer(G),
+    const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[playerId],
         privatePlayer: IPlayer | undefined = G.players[playerId];
     if (player === undefined) {

@@ -113,7 +113,7 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
                 }
                 type = CoinTypes.Board;
             }
-            UpgradeCoinAction(G, ctx, ...args, upgradingCoinId, type);
+            UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
         }
         else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.pickConcreteCoinToUpgrade(minCoinValue, ...args)]);
@@ -143,7 +143,7 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
             }
             type = CoinTypes.Board;
-            UpgradeCoinAction(G, ctx, ...args, upgradingCoinId, type);
+            UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);
         }
         else if (upgradingCoinsValue > 1 && isInitialInUpgradingCoinsValue) {
             AddActionsToStackAfterCurrent(G, ctx, [StackData.pickConcreteCoinToUpgrade(minCoinValue, ...args)]);
