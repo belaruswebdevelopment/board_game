@@ -123,11 +123,17 @@ export const DrawCurrentPlayerTurn = (ctx) => (_jsxs("b", { children: [_jsxs("sp
 export const DrawDistinctions = (G, ctx, validatorName, data) => {
     const boardCells = [], moveMainArgs = [];
     for (let i = 0; i < 1; i++) {
-        let suit;
+        let suit, currentDistinctionSuit;
+        for (suit in G.distinctions) {
+            if (G.distinctions[suit] !== undefined) {
+                currentDistinctionSuit = suit;
+                break;
+            }
+        }
         for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 if (ctx.phase === Phases.GetDistinctions && ctx.activePlayers === null
-                    && G.distinctions[suit] === ctx.currentPlayer) {
+                    && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
                     if (data !== undefined) {
                         const suitArg = suit;
                         boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suitArg); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));

@@ -32,11 +32,14 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    let handCoins: PublicPlayerCoinTypes[];
+    let handCoins: PublicPlayerCoinTypes[],
+        boardCoins: PublicPlayerCoinTypes[];
     if (multiplayer) {
         handCoins = privatePlayer.handCoins;
+        boardCoins = privatePlayer.boardCoins;
     } else {
         handCoins = player.handCoins;
+        boardCoins = player.boardCoins;
     }
     let upgradingCoin: ICoin | undefined;
     if (type === CoinTypes.Hand) {
@@ -52,7 +55,7 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
         }
         upgradingCoin = handCoin;
     } else if (type === CoinTypes.Board) {
-        const boardCoin: PublicPlayerCoinTypes | undefined = player.boardCoins[upgradingCoinId];
+        const boardCoin: PublicPlayerCoinTypes | undefined = boardCoins[upgradingCoinId];
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
         }
@@ -111,7 +114,7 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
             if (isTrading) {
                 const handCoinId: number = player.handCoins.indexOf(null);
                 if (multiplayer) {
-                    privatePlayer.boardCoins[upgradingCoinId] = null;
+                    boardCoins[upgradingCoinId] = null;
                     player.handCoins[handCoinId] = upgradedCoin;
                 }
                 player.boardCoins[upgradingCoinId] = null;
@@ -125,7 +128,7 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
             AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
         } else if (type === CoinTypes.Board) {
             if (multiplayer) {
-                privatePlayer.boardCoins[upgradingCoinId] = upgradedCoin;
+                boardCoins[upgradingCoinId] = upgradedCoin;
             }
             player.boardCoins[upgradingCoinId] = upgradedCoin;
             AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока '${player.nickname}'.`);

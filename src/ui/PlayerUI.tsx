@@ -472,6 +472,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                 if (multiplayer && privateBoardCoin === undefined) {
                                     throw new Error(`Монета с id '${id}' на столе текущего приватного игрока не может отсутствовать.`);
                                 }
+                                // TODO Add errors!
                                 if (!multiplayer && !IsCoin(publicBoardCoin)
                                     || (multiplayer && privateBoardCoin !== undefined
                                         && !IsCoin(privateBoardCoin))) {
@@ -489,6 +490,9 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                 || (stage === Stages.UpgradeVidofnirVedrfolnirCoin
                                     && player.stack[0]?.config?.coinId !== id && id >= G.tavernsNum))) {
                             if (data !== undefined) {
+                                if (!publicBoardCoin.isOpened) {
+                                    throw new Error(`В массиве монет игрока на столе не может быть закрыта ранее открытая монета с id '${id}'.`);
+                                }
                                 DrawCoin(data, playerCells, `coin`, publicBoardCoin, id, player,
                                     `border-2`, null, moveName, id,
                                     CoinTypes.Board);
@@ -501,16 +505,23 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                 });
                             }
                         } else {
-                            if (data !== undefined) {
-                                if (G.winner.length
-                                    || (ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern >= j)) {
+                            if (G.winner.length) {
+                                if (data !== undefined) {
+                                    if (!IsCoin(publicBoardCoin)) {
+                                        throw new Error(`Монета с id '${id}' на столе текущего игрока не может быть закрытой для него.`);
+                                    }
+                                    if (!publicBoardCoin.isOpened) {
+                                        throw new Error(`В массиве монет игрока на столе не может быть закрыта для других игроков ранее открытая монета с id '${id}'.`);
+                                    }
                                     DrawCoin(data, playerCells, `coin`, publicBoardCoin, id, player);
-                                } else {
-                                    if (multiplayer && privateBoardCoin !== undefined) {
-                                        if (IsCoin(publicBoardCoin)) {
-                                            if (!publicBoardCoin.isOpened) {
-                                                throw new Error(`В массиве монет игрока на столе не может быть закрыта для других игроков ранее открытая монета с id '${id}'.`);
-                                            }
+                                }
+                            } else {
+                                if (multiplayer && privateBoardCoin !== undefined) {
+                                    if (IsCoin(publicBoardCoin)) {
+                                        if (!publicBoardCoin.isOpened) {
+                                            throw new Error(`В массиве монет игрока на столе не может быть закрыта для других игроков ранее открытая монета с id '${id}'.`);
+                                        }
+                                        if (data !== undefined) {
                                             if (ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern < j) {
                                                 DrawCoin(data, playerCells, `coin`, publicBoardCoin, id,
                                                     player);
@@ -518,34 +529,41 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                                 DrawCoin(data, playerCells, `hidden-coin`,
                                                     publicBoardCoin, id, player, `bg-small-coin`);
                                             }
+                                        }
+                                    } else {
+                                        if (Number(ctx.currentPlayer) === p && IsCoin(privateBoardCoin)
+                                            && !privateBoardCoin.isTriggerTrading
+                                            && ((stage === Stages.UpgradeCoin)
+                                                || (stage === Stages.PickConcreteCoinToUpgrade
+                                                    && player.stack[0]?.config?.coinValue ===
+                                                    privateBoardCoin.value))) {
+                                            if (data !== undefined) {
+                                                DrawCoin(data, playerCells, `hidden-coin`,
+                                                    privateBoardCoin, id, player,
+                                                    `bg-small-coin`, null, moveName,
+                                                    id, CoinTypes.Board);
+                                            } else if (validatorName ===
+                                                MoveValidatorNames.ClickCoinToUpgradeMoveValidator
+                                                || validatorName ===
+                                                MoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator) {
+                                                (moveMainArgs as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`])
+                                                    .push({
+                                                        coinId: id,
+                                                        type: CoinTypes.Board,
+                                                    });
+                                            }
                                         } else {
-                                            if (Number(ctx.currentPlayer) === p && IsCoin(privateBoardCoin)
-                                                && !privateBoardCoin.isTriggerTrading
-                                                && ((stage === Stages.UpgradeCoin)
-                                                    || (stage === Stages.PickConcreteCoinToUpgrade
-                                                        && player.stack[0]?.config?.coinValue ===
-                                                        privateBoardCoin.value))) {
-                                                if (data !== undefined) {
-                                                    DrawCoin(data, playerCells, `hidden-coin`,
-                                                        privateBoardCoin, id, player,
-                                                        `bg-small-coin`, null, moveName,
-                                                        id, CoinTypes.Board);
-                                                } else if (validatorName ===
-                                                    MoveValidatorNames.ClickCoinToUpgradeMoveValidator
-                                                    || validatorName ===
-                                                    MoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator) {
-                                                    (moveMainArgs as IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`])
-                                                        .push({
-                                                            coinId: id,
-                                                            type: CoinTypes.Board,
-                                                        });
+                                            if (data !== undefined) {
+                                                if (!IsCoin(privateBoardCoin)) {
+                                                    throw new Error(`Монета с id '${id}' на столе текущего приватного игрока не может отсутствовать.`);
                                                 }
-                                            } else {
                                                 DrawCoin(data, playerCells, `hidden-coin`,
                                                     privateBoardCoin, id, player, `bg-small-coin`);
                                             }
                                         }
-                                    } else {
+                                    }
+                                } else {
+                                    if (data !== undefined) {
                                         if (!IsCoin(publicBoardCoin) || !publicBoardCoin.isOpened) {
                                             DrawCoin(data, playerCells, `back`, publicBoardCoin, id,
                                                 player);

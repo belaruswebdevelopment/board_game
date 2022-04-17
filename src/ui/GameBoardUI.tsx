@@ -148,11 +148,18 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveV
     const boardCells: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<SuitTypes[]>[`args`] = [];
     for (let i = 0; i < 1; i++) {
-        let suit: SuitTypes;
+        let suit: SuitTypes,
+            currentDistinctionSuit: string | undefined;
+        for (suit in G.distinctions) {
+            if (G.distinctions[suit] !== undefined) {
+                currentDistinctionSuit = suit;
+                break;
+            }
+        }
         for (suit in suitsConfig) {
             if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
                 if (ctx.phase === Phases.GetDistinctions && ctx.activePlayers === null
-                    && G.distinctions[suit] === ctx.currentPlayer) {
+                    && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
                     if (data !== undefined) {
                         const suitArg: SuitTypes = suit;
                         boardCells.push(

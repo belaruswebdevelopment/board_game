@@ -26,12 +26,14 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
     if (privatePlayer === undefined) {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    let handCoins;
+    let handCoins, boardCoins;
     if (multiplayer) {
         handCoins = privatePlayer.handCoins;
+        boardCoins = privatePlayer.boardCoins;
     }
     else {
         handCoins = player.handCoins;
+        boardCoins = player.boardCoins;
     }
     let upgradingCoin;
     if (type === CoinTypes.Hand) {
@@ -48,7 +50,7 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
         upgradingCoin = handCoin;
     }
     else if (type === CoinTypes.Board) {
-        const boardCoin = player.boardCoins[upgradingCoinId];
+        const boardCoin = boardCoins[upgradingCoinId];
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
         }
@@ -109,7 +111,7 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
             if (isTrading) {
                 const handCoinId = player.handCoins.indexOf(null);
                 if (multiplayer) {
-                    privatePlayer.boardCoins[upgradingCoinId] = null;
+                    boardCoins[upgradingCoinId] = null;
                     player.handCoins[handCoinId] = upgradedCoin;
                 }
                 player.boardCoins[upgradingCoinId] = null;
@@ -125,7 +127,7 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
         }
         else if (type === CoinTypes.Board) {
             if (multiplayer) {
-                privatePlayer.boardCoins[upgradingCoinId] = upgradedCoin;
+                boardCoins[upgradingCoinId] = upgradedCoin;
             }
             player.boardCoins[upgradingCoinId] = upgradedCoin;
             AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на поле игрока '${player.nickname}'.`);
