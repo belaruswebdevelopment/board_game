@@ -2402,8 +2402,8 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             null,
                             null,
                             {
-                                value: 2,
                                 isTriggerTrading: false,
+                                value: 2,
                             },
                             null,
                         ],
@@ -2416,8 +2416,8 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             null,
                             null,
                             {
-                                value: 2,
                                 isTriggerTrading: false,
+                                value: 2,
                             },
                             null,
                         ],
@@ -2467,8 +2467,8 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             null,
                             null,
                             {
-                                value: 2,
                                 isTriggerTrading: false,
+                                value: 2,
                             },
                             null,
                         ],
@@ -2584,12 +2584,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             {},
                             {},
                             {
-                                value: 2,
                                 isTriggerTrading: false,
+                                value: 2,
                             },
                             {
-                                value: 3,
                                 isTriggerTrading: false,
+                                value: 3,
                             },
                         ],
                     } as IPlayer,
@@ -2601,12 +2601,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             {},
                             {},
                             {
-                                value: 2,
                                 isTriggerTrading: false,
+                                value: 2,
                             },
                             {
-                                value: 3,
                                 isTriggerTrading: false,
+                                value: 3,
                             },
                         ],
                         buffs: [
@@ -2632,12 +2632,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             {},
                             {},
                             {
-                                value: 2,
                                 isTriggerTrading: false,
+                                value: 2,
                             },
                             {
-                                value: 3,
                                 isTriggerTrading: false,
+                                value: 3,
                             },
                         ],
                     } as IPlayer,
@@ -2649,12 +2649,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, (): void => {
                             {},
                             {},
                             {
-                                value: 2,
                                 isTriggerTrading: false,
+                                value: 2,
                             },
                             {
-                                value: 3,
                                 isTriggerTrading: false,
+                                value: 3,
                             },
                         ],
                         buffs: [

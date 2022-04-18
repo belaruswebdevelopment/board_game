@@ -59,6 +59,7 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
             if (multiplayer) {
                 privatePlayer.boardCoins[i] = handCoin;
                 player.boardCoins[i] = {};
+                player.handCoins[i] = null;
             }
             else {
                 player.boardCoins[i] = handCoin;

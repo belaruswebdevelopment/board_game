@@ -94,7 +94,12 @@ export const UpgradeMinCoinAction = (G, ctx, ...args) => {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
             }
             if (boardCoin === null) {
-                const handCoinIndex = handCoins.findIndex((coin) => (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue);
+                const handCoinIndex = handCoins.findIndex((coin, index) => {
+                    if (coin !== null && !IsCoin(coin)) {
+                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+                    }
+                    return (coin === null || coin === void 0 ? void 0 : coin.value) === minCoinValue;
+                });
                 if (handCoinIndex === -1) {
                     throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке нет минимальной монеты с значением '${minCoinValue}'.`);
                 }

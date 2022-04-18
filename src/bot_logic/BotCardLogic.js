@@ -138,7 +138,7 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  * @returns Потенциальное значение.
  */
 const PotentialScoring = (G, playerId, card) => {
-    var _a, _b, _c;
+    var _a;
     const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок  с id '${playerId}'.`);
@@ -176,7 +176,9 @@ const PotentialScoring = (G, playerId, card) => {
         if (boardCoin !== null && !IsCoin(boardCoin)) {
             throw new Error(`В массиве монет игрока с id '${playerId}' на столе не может быть закрыта монета с id '${i}'.`);
         }
-        score += (_b = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _b !== void 0 ? _b : 0;
+        if (IsCoin(boardCoin)) {
+            score += boardCoin.value;
+        }
         const handCoin = handCoins[i];
         if (handCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует монета с id '${i}'.`);
@@ -184,7 +186,9 @@ const PotentialScoring = (G, playerId, card) => {
         if (handCoin !== null && !IsCoin(handCoin)) {
             throw new Error(`В массиве монет игрока с id '${playerId}' в руке не может быть закрыта монета с id '${i}'.`);
         }
-        score += (_c = handCoin === null || handCoin === void 0 ? void 0 : handCoin.value) !== null && _c !== void 0 ? _c : 0;
+        if (IsCoin(handCoin)) {
+            score += handCoin.value;
+        }
     }
     return score;
 };

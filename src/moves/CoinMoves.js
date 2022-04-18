@@ -56,6 +56,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
             }
         }
         if (multiplayer) {
+            player.handCoins[tempId] = {};
             privatePlayer.boardCoins[coinId] = null;
         }
         player.boardCoins[coinId] = null;
@@ -74,6 +75,7 @@ export const ClickBoardCoinMove = (G, ctx, coinId) => {
             }
             privatePlayer.boardCoins[coinId] = handCoin;
             player.boardCoins[coinId] = {};
+            player.handCoins[tempSelectedId] = null;
         }
         else {
             player.boardCoins[coinId] = handCoin;

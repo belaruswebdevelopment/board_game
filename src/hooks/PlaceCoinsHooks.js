@@ -80,12 +80,13 @@ export const CheckEndPlaceCoinsTurn = (G, ctx) => {
     else {
         handCoins = player.handCoins;
     }
-    if (handCoins.every((coin, index) => {
+    const isEveryCoinsInHandsNull = handCoins.every((coin, index) => {
         if (coin !== null && !IsCoin(coin)) {
             throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
         }
         return coin === null;
-    })) {
+    });
+    if (isEveryCoinsInHandsNull) {
         return true;
     }
 };

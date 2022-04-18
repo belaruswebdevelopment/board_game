@@ -2372,8 +2372,8 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         null,
                         {
-                            value: 2,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         null,
                     ],
@@ -2386,8 +2386,8 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         null,
                         {
-                            value: 2,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         null,
                     ],
@@ -2437,8 +2437,8 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         null,
                         null,
                         {
-                            value: 2,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         null,
                     ],
@@ -2552,12 +2552,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -2569,12 +2569,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     buffs: [
@@ -2600,12 +2600,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                 },
@@ -2617,12 +2617,12 @@ describe(`Test StartVidofnirVedrfolnirAction method`, () => {
                         {},
                         {},
                         {
-                            value: 2,
                             isTriggerTrading: false,
+                            value: 2,
                         },
                         {
-                            value: 3,
                             isTriggerTrading: false,
+                            value: 3,
                         },
                     ],
                     buffs: [

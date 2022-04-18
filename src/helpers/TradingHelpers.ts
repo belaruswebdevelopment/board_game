@@ -38,7 +38,7 @@ export const ActivateTrading = (G: IMyGameState, ctx: Ctx): void => {
         || (IsCoin(boardCoinCurrentTavern) && !boardCoinCurrentTavern.isOpened)) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
     }
-    if (boardCoinCurrentTavern?.isTriggerTrading) {
+    if (IsCoin(boardCoinCurrentTavern) && boardCoinCurrentTavern.isTriggerTrading) {
         const tradingCoins: ICoin[] = [];
         for (let i: number = G.tavernsNum; i < player.boardCoins.length; i++) {
             if (multiplayer) {

@@ -3,7 +3,7 @@ import { CreateCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { AddDataToLog } from "../Logging";
 import { CreatePriority } from "../Priority";
-import { CardNames, LogTypes, SuitNames } from "../typescript/enums";
+import { CardNames, CoinTypes, LogTypes, SuitNames } from "../typescript/enums";
 import type { ICard, ICoin, IMyGameState, IPlayer, IPublicPlayer } from "../typescript/interfaces";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
@@ -53,16 +53,25 @@ export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: n
         if (privatePlayer === undefined) {
             throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${playerId}'.`);
         }
-        const tradingCoinIndex: number = DiscardTradingCoin(G, playerId),
+        const [type, tradingCoinIndex]: [CoinTypes, number] = DiscardTradingCoin(G, playerId),
             coin: ICoin = CreateCoin({
                 isOpened: true,
                 isTriggerTrading: true,
                 value: 3,
             });
-        if (multiplayer) {
-            privatePlayer.boardCoins[tradingCoinIndex] = coin;
+        if (type === CoinTypes.Board) {
+            if (multiplayer) {
+                privatePlayer.boardCoins[tradingCoinIndex] = coin;
+            }
+            player.boardCoins[tradingCoinIndex] = coin;
+        } else if (type === CoinTypes.Hand) {
+            if (multiplayer) {
+                privatePlayer.handCoins[tradingCoinIndex] = coin;
+            }
+            player.handCoins[tradingCoinIndex] = coin;
+        } else {
+            throw new Error(`Не существует типа монеты - '${type}'.`);
         }
-        player.boardCoins[tradingCoinIndex] = coin;
         G.distinctions[SuitNames.HUNTER] = undefined;
         AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' обменял по знаку отличия охотников свою монету с номиналом '0' на особую монету с номиналом '3'.`);
     }

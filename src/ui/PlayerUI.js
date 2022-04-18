@@ -663,6 +663,7 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                 }
                 else {
                     if (data !== undefined) {
+                        // TODO Add Throw errors to all UI files
                         const boardCoinsLength = player.boardCoins.filter((coin) => coin !== null).length;
                         if (!multiplayer && IsCoin(publicHandCoin) && !publicHandCoin.isOpened) {
                             DrawCoin(data, playerCells, `back`, publicHandCoin, j, player);

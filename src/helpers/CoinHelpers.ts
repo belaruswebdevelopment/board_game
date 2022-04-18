@@ -1,12 +1,12 @@
 import type { Ctx } from "boardgame.io";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { AddDataToLog } from "../Logging";
-import { BuffNames, LogTypes } from "../typescript/enums";
+import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
 import type { CoinType, IMyGameState, INumberValues, IPlayer, IPriority, IPublicPlayer, IResolveBoardCoins, PublicPlayerCoinTypes } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { IsMultiplayer } from "./MultiplayerHelpers";
 
-export const DiscardTradingCoin = (G: IMyGameState, playerId: number): number => {
+export const DiscardTradingCoin = (G: IMyGameState, playerId: number): [CoinTypes, number] => {
     const multiplayer: boolean = IsMultiplayer(G),
         player: IPublicPlayer | undefined = G.publicPlayers[playerId],
         privatePlayer: IPlayer | undefined = G.players[playerId];
@@ -25,7 +25,8 @@ export const DiscardTradingCoin = (G: IMyGameState, playerId: number): number =>
     let tradingCoinIndex: number =
         player.boardCoins.findIndex((coin: PublicPlayerCoinTypes): boolean => {
             return coin?.isTriggerTrading === true;
-        });
+        }),
+        type: CoinTypes = CoinTypes.Board;
     if (tradingCoinIndex === -1 && multiplayer) {
         tradingCoinIndex = privatePlayer.boardCoins.findIndex((coin: CoinType, index: number): boolean => {
             if (coin !== null && !IsCoin(coin)) {
@@ -44,6 +45,7 @@ export const DiscardTradingCoin = (G: IMyGameState, playerId: number): number =>
         if (tradingCoinIndex === -1) {
             throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует обменная монета при наличии бафа '${BuffNames.EveryTurn}'.`);
         }
+        type = CoinTypes.Hand;
         handCoins.splice(tradingCoinIndex, 1, null);
         if (multiplayer) {
             player.handCoins.splice(tradingCoinIndex, 1, null);
@@ -57,7 +59,7 @@ export const DiscardTradingCoin = (G: IMyGameState, playerId: number): number =>
         }
         player.boardCoins.splice(tradingCoinIndex, 1, null);
     }
-    return tradingCoinIndex;
+    return [type, tradingCoinIndex];
 };
 
 /**

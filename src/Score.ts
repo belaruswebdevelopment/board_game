@@ -61,10 +61,14 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
         }
-        if ((IsCoin(boardCoin) && boardCoin.isOpened) || boardCoin === null) {
-            coinsValue += boardCoin?.value ?? 0;
-        } else {
+        if (boardCoin !== null && !IsCoin(boardCoin)) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' на столе не может не быть монеты с id '${i}'.`);
+        }
+        if (IsCoin(boardCoin) && !boardCoin.isOpened) {
             throw new Error(`В массиве монет игрока с id '${playerId}' на столе должна быть ранее открыта монета с id '${i}' в конце игры.`);
+        }
+        if (IsCoin(boardCoin)) {
+            coinsValue += boardCoin.value;
         }
     }
     score += coinsValue;

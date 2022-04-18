@@ -43,7 +43,7 @@ export const CurrentScoring = (player) => {
  * @returns Финальный счёт указанного игрока.
  */
 export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
-    var _a, _b;
+    var _a;
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
@@ -56,11 +56,14 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
         if (boardCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
         }
-        if ((IsCoin(boardCoin) && boardCoin.isOpened) || boardCoin === null) {
-            coinsValue += (_a = boardCoin === null || boardCoin === void 0 ? void 0 : boardCoin.value) !== null && _a !== void 0 ? _a : 0;
+        if (boardCoin !== null && !IsCoin(boardCoin)) {
+            throw new Error(`В массиве монет игрока с id '${playerId}' на столе не может не быть монеты с id '${i}'.`);
         }
-        else {
+        if (IsCoin(boardCoin) && !boardCoin.isOpened) {
             throw new Error(`В массиве монет игрока с id '${playerId}' на столе должна быть ранее открыта монета с id '${i}' в конце игры.`);
+        }
+        if (IsCoin(boardCoin)) {
+            coinsValue += boardCoin.value;
         }
     }
     score += coinsValue;
@@ -107,7 +110,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
     }
     score += heroesScore;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за героев игрока '${player.nickname}': ${heroesScore}.`);
-    if ((_b = G.expansions.thingvellir) === null || _b === void 0 ? void 0 : _b.active) {
+    if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
             const campCard = player.campCards[i];

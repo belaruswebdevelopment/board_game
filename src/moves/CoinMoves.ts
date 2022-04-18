@@ -61,6 +61,7 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
             }
         }
         if (multiplayer) {
+            player.handCoins[tempId] = {};
             privatePlayer.boardCoins[coinId] = null;
         }
         player.boardCoins[coinId] = null;
@@ -79,6 +80,7 @@ export const ClickBoardCoinMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
             }
             privatePlayer.boardCoins[coinId] = handCoin;
             player.boardCoins[coinId] = {};
+            player.handCoins[tempSelectedId] = null;
         } else {
             player.boardCoins[coinId] = handCoin;
         }

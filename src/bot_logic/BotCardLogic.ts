@@ -185,7 +185,9 @@ const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTyp
         if (boardCoin !== null && !IsCoin(boardCoin)) {
             throw new Error(`В массиве монет игрока с id '${playerId}' на столе не может быть закрыта монета с id '${i}'.`);
         }
-        score += boardCoin?.value ?? 0;
+        if (IsCoin(boardCoin)) {
+            score += boardCoin.value;
+        }
         const handCoin: PublicPlayerCoinTypes | undefined = handCoins[i];
         if (handCoin === undefined) {
             throw new Error(`В массиве монет игрока с id '${playerId}' в руке отсутствует монета с id '${i}'.`);
@@ -193,7 +195,9 @@ const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTyp
         if (handCoin !== null && !IsCoin(handCoin)) {
             throw new Error(`В массиве монет игрока с id '${playerId}' в руке не может быть закрыта монета с id '${i}'.`);
         }
-        score += handCoin?.value ?? 0;
+        if (IsCoin(handCoin)) {
+            score += handCoin.value;
+        }
     }
     return score;
 };

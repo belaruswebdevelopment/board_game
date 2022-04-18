@@ -65,6 +65,7 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
             if (multiplayer) {
                 privatePlayer.boardCoins[i] = handCoin;
                 player.boardCoins[i] = {};
+                player.handCoins[i] = null;
             } else {
                 player.boardCoins[i] = handCoin;
             }

@@ -109,8 +109,12 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
             }
             if (boardCoin === null) {
                 const handCoinIndex: number =
-                    handCoins.findIndex((coin: PublicPlayerCoinTypes): boolean =>
-                        coin?.value === minCoinValue);
+                    handCoins.findIndex((coin: PublicPlayerCoinTypes, index: number): boolean => {
+                        if (coin !== null && !IsCoin(coin)) {
+                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+                        }
+                        return coin?.value === minCoinValue;
+                    });
                 if (handCoinIndex === -1) {
                     throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке нет минимальной монеты с значением '${minCoinValue}'.`);
                 }
@@ -138,8 +142,8 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
         }
     } else {
         const minCoinValue: number =
-            Math.min(...player.boardCoins.filter((coin: PublicPlayerCoinTypes):
-                boolean => IsCoin(coin) && !coin.isTriggerTrading)
+            Math.min(...player.boardCoins.filter((coin: PublicPlayerCoinTypes): boolean =>
+                IsCoin(coin) && !coin.isTriggerTrading)
                 .map((coin: PublicPlayerCoinTypes): number => (coin as ICoin).value)), upgradingCoinsArray =
                 player.boardCoins.filter((coin: PublicPlayerCoinTypes): boolean =>
                     coin?.value === minCoinValue),

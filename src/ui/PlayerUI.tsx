@@ -746,6 +746,7 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
                     }
                 } else {
                     if (data !== undefined) {
+                        // TODO Add Throw errors to all UI files
                         const boardCoinsLength: number =
                             player.boardCoins.filter((coin: PublicPlayerCoinTypes): boolean =>
                                 coin !== null).length;
