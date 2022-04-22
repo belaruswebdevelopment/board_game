@@ -1,7 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../../data/SuitData";
 import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames, TavernNames } from "../../typescript/enums";
-import type { CampDeckCardTypes, DeckCardTypes, IActionCard, IArtefactCampCard, IBuffs, ICard, IHeroCard, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IPublicPlayers, IVariant, OptionalSuitPropertyTypes, PlayerCardsType, RequiredSuitPropertyTypes, TavernCardTypes } from "../../typescript/interfaces";
+import type { CampDeckCardTypes, DeckCardTypes, IActionCard, IArtefactCampCard, IBuffs, ICard, IHeroCard, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IPublicPlayers, IVariant, PlayerCardsType, SuitPropertyTypes, TavernCardTypes } from "../../typescript/interfaces";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
@@ -123,7 +123,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                         warrior: [
                             {
                                 name: `Test`,
-                                variants: {} as OptionalSuitPropertyTypes<IVariant>,
+                                variants: {} as Partial<SuitPropertyTypes<IVariant>>,
                                 suit: SuitNames.WARRIOR,
                             } as IMercenaryPlayerCard,
                         ],
@@ -154,7 +154,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             discardCampCardsDeck: [
                 {
                     name: `Test`,
-                    variants: {} as OptionalSuitPropertyTypes<IVariant>,
+                    variants: {} as Partial<SuitPropertyTypes<IVariant>>,
                     suit: SuitNames.WARRIOR,
                 } as IMercenaryPlayerCard,
             ],
@@ -196,7 +196,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                 0: {
                     cards: {
                         warrior: [] as PlayerCardsType[],
-                    } as RequiredSuitPropertyTypes<PlayerCardsType[]>,
+                    } as SuitPropertyTypes<PlayerCardsType[]>,
                 } as IPublicPlayer,
             },
         } as Pick<IMyGameState, `publicPlayers`>;
@@ -482,7 +482,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                     heroes: [] as IHeroCard[],
                     cards: {
                         warrior: [] as PlayerCardsType[],
-                    } as RequiredSuitPropertyTypes<PlayerCardsType[]>,
+                    } as SuitPropertyTypes<PlayerCardsType[]>,
                     buffs: [] as IBuffs,
                 } as IPublicPlayer,
             },
@@ -514,7 +514,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                                 suit: SuitNames.WARRIOR,
                             } as ICard,
                         ],
-                    } as RequiredSuitPropertyTypes<PlayerCardsType[]>,
+                    } as SuitPropertyTypes<PlayerCardsType[]>,
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
             },
@@ -630,7 +630,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                     ],
                     cards: {
                         warrior: [] as PlayerCardsType[],
-                    } as RequiredSuitPropertyTypes<PlayerCardsType[]>,
+                    } as SuitPropertyTypes<PlayerCardsType[]>,
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
             },
@@ -672,7 +672,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                                 suit: SuitNames.WARRIOR,
                             } as ICard,
                         ],
-                    } as RequiredSuitPropertyTypes<PlayerCardsType[]>,
+                    } as SuitPropertyTypes<PlayerCardsType[]>,
                     buffs: [] as IBuffs[],
                 } as IPublicPlayer,
             },

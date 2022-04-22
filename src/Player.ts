@@ -4,7 +4,7 @@ import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { BuffNames, Phases } from "./typescript/enums";
-import type { ICoin, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, OptionalSuitPropertyTypes, PlayerCardsType, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { ICoin, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, SuitPropertyTypes, PlayerCardsType, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -34,7 +34,7 @@ export const BuildPlayer = (): IPlayer => CreatePlayer({
  * @returns Публичные данные игрока.
  */
 export const BuildPublicPlayer = (nickname: string, priority: IPriority, multiplayer: boolean): IPublicPlayer => {
-    const cards: OptionalSuitPropertyTypes<PlayerCardsType[]> = {};
+    const cards: Partial<SuitPropertyTypes<PlayerCardsType[]>> = {};
     let suit: SuitTypes;
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
@@ -51,7 +51,7 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority, multipl
     }
     return CreatePublicPlayer({
         nickname,
-        cards: cards as RequiredSuitPropertyTypes<PlayerCardsType[]>,
+        cards: cards as SuitPropertyTypes<PlayerCardsType[]>,
         handCoins,
         boardCoins: Array(initialPlayerCoinsConfig.length).fill(null),
         priority,

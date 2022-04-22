@@ -78,7 +78,7 @@ export const CheckNextGetDistinctionsTurn = (G: IMyGameState, ctx: Ctx): boolean
  * @param G
  */
 export const EndGetDistinctionsPhaseActions = (G: IMyGameState): void => {
-    if (G.expansions.thingvellir?.active) {
+    if (G.expansions.thingvellir.active) {
         RefillCamp(G);
     }
     G.publicPlayersOrder = [];

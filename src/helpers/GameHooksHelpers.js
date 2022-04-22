@@ -15,13 +15,12 @@ import { CheckPickHero } from "./HeroHelpers";
  * @param ctx
  */
 export const AfterLastTavernEmptyActions = (G, ctx) => {
-    var _a;
     const deck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
     if (deck === undefined) {
         throw new Error(`Отсутствует колода карт текущей эпохи '${G.secret.decks.length - G.tierToEnd}'.`);
     }
     if (deck.length === 0) {
-        if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
+        if (G.expansions.thingvellir.active) {
             return CheckEnlistmentMercenaries(G, ctx);
         }
         else {
@@ -66,7 +65,6 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
  * @param G
  */
 export const CheckEndGameLastActions = (G) => {
-    var _a;
     const deck1 = G.secret.decks[0], deck2 = G.secret.decks[1];
     if (deck1 === undefined) {
         throw new Error(`Отсутствует колода карт '1' эпохи.`);
@@ -80,7 +78,7 @@ export const CheckEndGameLastActions = (G) => {
         };
     }
     else {
-        if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
+        if (G.expansions.thingvellir.active) {
             const brisingamensBuffIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
             if (brisingamensBuffIndex !== -1) {
                 return {

@@ -117,7 +117,7 @@ export const PreparationPhaseActions = (G: IMyGameState, ctx: Ctx): void => {
     G.currentTavern = -1;
     if (ctx.turn !== 0) {
         ReturnCoinsToPlayerHands(G, ctx);
-        if (G.expansions.thingvellir?.active) {
+        if (G.expansions.thingvellir.active) {
             RefillEmptyCampCards(G);
         }
         RefillTaverns(G);

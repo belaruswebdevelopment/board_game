@@ -1,6 +1,6 @@
 import { suitsConfig } from "./data/SuitData";
 import { GameNames, RusCardTypes } from "./typescript/enums";
-import type { CampDeckCardTypes, IArtefact, IArtefactCampCard, IArtefactConfig, IArtefactTypes, ICreateArtefactCampCard, ICreateMercenaryCampCard, ICreateMercenaryPlayerCard, IMercenary, IMercenaryCampCard, IMercenaryPlayerCard, OptionalSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, IArtefact, IArtefactCampCard, IArtefactConfig, IArtefactTypes, ICreateArtefactCampCard, ICreateMercenaryCampCard, ICreateMercenaryPlayerCard, IMercenary, IMercenaryCampCard, IMercenaryPlayerCard, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты лагеря из конфига.</h3>
@@ -15,7 +15,7 @@ import type { CampDeckCardTypes, IArtefact, IArtefactCampCard, IArtefactConfig, 
  * @returns Все карты лагеря.
  */
 export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
-    mercenariesConfig: OptionalSuitPropertyTypes<IMercenary>[][]): CampDeckCardTypes[] => {
+    mercenariesConfig: Partial<SuitPropertyTypes<IMercenary>>[][]): CampDeckCardTypes[] => {
     const campCards: CampDeckCardTypes[] = [];
     let artefactName: IArtefactTypes;
     for (artefactName in artefactConfig) {
@@ -38,7 +38,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
             }
         }
     }
-    const mercenariesConfigTier: OptionalSuitPropertyTypes<IMercenary>[] | undefined = mercenariesConfig[tier];
+    const mercenariesConfigTier: Partial<SuitPropertyTypes<IMercenary>>[] | undefined = mercenariesConfig[tier];
     if (mercenariesConfigTier === undefined) {
         throw new Error(`Отсутствует массив значений карт наёмников в указанной эпохе - '${tier}'.`);
     }
@@ -46,7 +46,7 @@ export const BuildCampCards = (tier: number, artefactConfig: IArtefactConfig,
         let name = ``,
             path = ``,
             campMercenarySuit: SuitTypes;
-        const mercenaryData: OptionalSuitPropertyTypes<IMercenary> | undefined = mercenariesConfigTier[i];
+        const mercenaryData: Partial<SuitPropertyTypes<IMercenary>> | undefined = mercenariesConfigTier[i];
         if (mercenaryData === undefined) {
             throw new Error(`Отсутствует массив значений карты наёмника с id '${i}' в указанной эпохе - '${tier}'.`);
         }

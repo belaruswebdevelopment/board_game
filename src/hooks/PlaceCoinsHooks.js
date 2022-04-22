@@ -104,11 +104,10 @@ export const OnPlaceCoinsTurnEnd = (G) => {
  * @param ctx
  */
 export const PreparationPhaseActions = (G, ctx) => {
-    var _a;
     G.currentTavern = -1;
     if (ctx.turn !== 0) {
         ReturnCoinsToPlayerHands(G, ctx);
-        if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
+        if (G.expansions.thingvellir.active) {
             RefillEmptyCampCards(G);
         }
         RefillTaverns(G);

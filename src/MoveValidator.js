@@ -357,7 +357,6 @@ export const moveValidators = {
         },
         moveName: MoveNames.ClickCampCardMove,
         validate: (G, ctx) => {
-            var _a;
             if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
             }
@@ -368,7 +367,7 @@ export const moveValidators = {
             if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
             }
-            return ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) && (ctx.currentPlayer === G.publicPlayersOrder[0]
+            return G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
                 || (!G.campPicked && player.buffs.find((buff) => buff.goCamp !== undefined) !== undefined));
         },
     },

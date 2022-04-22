@@ -37,7 +37,7 @@ export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
             } else if (ctx.phase === Phases.PickCards) {
                 if (ctx.activePlayers === null) {
                     let pickCardOrCampCard = `card`;
-                    if (G.expansions.thingvellir?.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
+                    if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
                         || (!G.campPicked && player.buffs.find((buff: IBuffs): boolean =>
                             buff.goCamp !== undefined) !== undefined))) {
                         pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;

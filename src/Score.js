@@ -43,7 +43,6 @@ export const CurrentScoring = (player) => {
  * @returns Финальный счёт указанного игрока.
  */
 export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
-    var _a;
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
@@ -110,7 +109,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
     }
     score += heroesScore;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за героев игрока '${player.nickname}': ${heroesScore}.`);
-    if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
+    if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
             const campCard = player.campCards[i];

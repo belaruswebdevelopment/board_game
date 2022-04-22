@@ -12,7 +12,7 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { CreateHero } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CardNames, GameNames, HeroNames, LogTypes, RusCardTypes } from "../typescript/enums";
-import type { ICard, IHeroCard, IMyGameState, IPublicPlayer, IStack, IVariant, PlayerCardsType, RequiredSuitPropertyTypes, SuitTypes } from "../typescript/interfaces";
+import type { ICard, IHeroCard, IMyGameState, IPublicPlayer, IStack, IVariant, PlayerCardsType, SuitPropertyTypes, SuitTypes } from "../typescript/interfaces";
 
 /**
  * <h3>Действия, связанные с сбросом карт с планшета игрока.</h3>
@@ -62,7 +62,7 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
     if (stack === undefined) {
         throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
-    const playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = stack.variants;
+    const playerVariants: SuitPropertyTypes<IVariant> | undefined = stack.variants;
     if (playerVariants === undefined) {
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${CardNames.OlwinsDouble}'.`);
     }
@@ -101,7 +101,7 @@ export const PlaceThrudAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): vo
     if (stack === undefined) {
         throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
-    const playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = stack.variants;
+    const playerVariants: SuitPropertyTypes<IVariant> | undefined = stack.variants;
     if (playerVariants === undefined) {
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Thrud}'.`);
     }
@@ -138,7 +138,7 @@ export const PlaceYludAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): voi
     if (stack === undefined) {
         throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
-    const playerVariants: RequiredSuitPropertyTypes<IVariant> | undefined = stack.variants;
+    const playerVariants: SuitPropertyTypes<IVariant> | undefined = stack.variants;
     if (playerVariants === undefined) {
         throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Ylud}'.`);
     }

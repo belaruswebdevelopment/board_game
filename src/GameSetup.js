@@ -23,7 +23,6 @@ import { GameNames } from "./typescript/enums";
  * @returns Данные игры.
  */
 export const SetupGame = (ctx) => {
-    var _a;
     const suitsNum = 5, tierToEnd = 2, campNum = 5, explorerDistinctionCardId = null, multiplayer = true, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = ``, expansions = {
         thingvellir: {
             active: true,
@@ -40,7 +39,7 @@ export const SetupGame = (ctx) => {
     }
     const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], campDeckLength = [0, 0];
     let camp = [];
-    if ((_a = expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
+    if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
             secret.campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
             let campDeck = secret.campDecks[i];
@@ -60,7 +59,6 @@ export const SetupGame = (ctx) => {
     }
     const deckLength = [0, 0];
     for (let i = 0; i < tierToEnd; i++) {
-        // TODO Deck cards must be hidden from users?
         secret.decks[i] = BuildCards({
             suits: suitsConfig,
             actions: actionCardsConfigArray
@@ -86,7 +84,6 @@ export const SetupGame = (ctx) => {
     }
     const heroes = BuildHeroes(heroesConfigOptions, heroesConfig), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
-        // TODO Taverns cards must be hidden from users?
         const deck0 = secret.decks[0];
         if (deck0 === undefined) {
             throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);

@@ -15,7 +15,7 @@ import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
  * @returns Массив возможных мувов у ботов.
  */
 export const enumerate = (G, ctx) => {
-    var _a, _b;
+    var _a;
     const moves = [];
     let playerId;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -36,7 +36,7 @@ export const enumerate = (G, ctx) => {
             else if (ctx.phase === Phases.PickCards) {
                 if (ctx.activePlayers === null) {
                     let pickCardOrCampCard = `card`;
-                    if (((_b = G.expansions.thingvellir) === null || _b === void 0 ? void 0 : _b.active) && (ctx.currentPlayer === G.publicPlayersOrder[0]
+                    if (G.expansions.thingvellir.active && (ctx.currentPlayer === G.publicPlayersOrder[0]
                         || (!G.campPicked && player.buffs.find((buff) => buff.goCamp !== undefined) !== undefined))) {
                         pickCardOrCampCard = Math.floor(Math.random() * 2) ? `card` : `camp`;
                     }

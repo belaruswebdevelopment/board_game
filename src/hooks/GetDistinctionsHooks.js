@@ -67,8 +67,7 @@ export const CheckNextGetDistinctionsTurn = (G, ctx) => {
  * @param G
  */
 export const EndGetDistinctionsPhaseActions = (G) => {
-    var _a;
-    if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
+    if (G.expansions.thingvellir.active) {
         RefillCamp(G);
     }
     G.publicPlayersOrder = [];

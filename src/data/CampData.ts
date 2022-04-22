@@ -1,7 +1,7 @@
 import { AddPickHeroAction, DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../actions/CampAutoActions";
 import { DraupnirScoring, HrafnsmerkiScoring, MjollnirScoring, OdroerirTheMythicCauldronScoring, SvalinnScoring } from "../score_helpers/ArtefactScoringHelpers";
 import { ArtefactNames, BuffNames, SuitNames } from "../typescript/enums";
-import type { IArtefact, IArtefactConfig, IMercenary, OptionalSuitPropertyTypes } from "../typescript/interfaces";
+import type { IArtefact, IArtefactConfig, IMercenary, SuitPropertyTypes } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
 /**
@@ -221,7 +221,7 @@ const Vidofnir_Vedrfolnir: IArtefact = {
  * <li>Происходит при создании всех карт артефактов для лагеря при инициализации игры.</li>
  * </ol>
  */
-export const mercenariesConfig: OptionalSuitPropertyTypes<IMercenary>[][] = [
+export const mercenariesConfig: Partial<SuitPropertyTypes<IMercenary>>[][] = [
     [
         {
             warrior: {

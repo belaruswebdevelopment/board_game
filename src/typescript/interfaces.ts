@@ -91,7 +91,7 @@ export interface IConfig {
  * <h3>Интерфейс для стэка у карт.</h3>
  */
 export interface IStack {
-    readonly variants?: RequiredSuitPropertyTypes<IVariant>;
+    readonly variants?: SuitPropertyTypes<IVariant>;
     readonly config?: IConfig;
     readonly playerId?: number;
 }
@@ -224,7 +224,7 @@ export interface ICreateMercenaryCampCard {
     readonly path: string;
     readonly name: string;
     readonly game?: GameNames;
-    readonly variants: OptionalSuitPropertyTypes<IVariant>;
+    readonly variants: Partial<SuitPropertyTypes<IVariant>>;
 }
 
 /**
@@ -245,7 +245,7 @@ export interface IMercenaryCampCard {
     readonly path: string;
     readonly name: string;
     readonly game: GameNames;
-    readonly variants: OptionalSuitPropertyTypes<IVariant>;
+    readonly variants: Partial<SuitPropertyTypes<IVariant>>;
 }
 
 /**
@@ -282,7 +282,7 @@ export interface IMercenaryPlayerCard {
     readonly game: GameNames;
     readonly tier: number;
     readonly path: string;
-    readonly variants: OptionalSuitPropertyTypes<IVariant>;
+    readonly variants: Partial<SuitPropertyTypes<IVariant>>;
 }
 
 export interface IOlwinDoubleNonPlacedCard {
@@ -313,7 +313,7 @@ export interface ICreateMercenaryPlayerCard {
     readonly game?: GameNames;
     readonly tier: number;
     readonly path: string;
-    readonly variants: OptionalSuitPropertyTypes<IVariant>;
+    readonly variants: Partial<SuitPropertyTypes<IVariant>>;
 }
 
 export interface ICreateOlwinDoubleNonPlacedCard {
@@ -408,7 +408,7 @@ export interface IMyGameState {
     readonly multiplayer: boolean;
     odroerirTheMythicCauldron: boolean;
     readonly odroerirTheMythicCauldronCoins: ICoin[];
-    readonly averageCards: RequiredSuitPropertyTypes<ICard>;
+    readonly averageCards: SuitPropertyTypes<ICard>;
     readonly botData: IBotData;
     readonly deckLength: [number, number];
     readonly campDeckLength: [number, number];
@@ -424,7 +424,7 @@ export interface IMyGameState {
     readonly additionalCardsDeck: ICard[];
     readonly discardCampCardsDeck: DiscardCampCardTypes[];
     readonly discardCardsDeck: DiscardDeckCardTypes[];
-    readonly distinctions: RequiredSuitPropertyTypes<DistinctionTypes>;
+    readonly distinctions: SuitPropertyTypes<DistinctionTypes>;
     drawProfit: string;
     readonly drawSize: number;
     exchangeOrder: (number | undefined)[];
@@ -835,7 +835,7 @@ export interface IBuffs {
 export interface ICreatePublicPlayer {
     readonly actionsNum?: number;
     readonly nickname: string;
-    readonly cards: RequiredSuitPropertyTypes<PlayerCardsType[]>;
+    readonly cards: SuitPropertyTypes<PlayerCardsType[]>;
     readonly heroes?: IHeroCard[];
     readonly campCards?: CampDeckCardTypes[];
     readonly handCoins: ICoin[];
@@ -875,7 +875,7 @@ export interface IPublicPlayers {
 export interface IPublicPlayer {
     actionsNum: number;
     readonly nickname: string;
-    readonly cards: RequiredSuitPropertyTypes<PlayerCardsType[]>;
+    readonly cards: SuitPropertyTypes<PlayerCardsType[]>;
     readonly heroes: IHeroCard[];
     readonly campCards: CampDeckCardTypes[];
     readonly handCoins: PublicPlayerCoinTypes[];
@@ -1044,7 +1044,7 @@ export type IHeroTypes = keyof IHeroConfig;
 
 export type AdditionalCardTypes = keyof IAdditionalCardsConfig;
 
-export type MoveValidatorGetRangeTypes = IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`]
+export type MoveValidatorGetRangeTypes = IMoveArgumentsStage<Partial<SuitPropertyTypes<number[]>>>[`args`]
     | IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`]
     | IMoveArgumentsStage<number[][]>[`args`]
     | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`]
@@ -1059,11 +1059,7 @@ export type SuitTypes = keyof ISuitConfig;
 
 export type ExpansionTypes = keyof IExpansions;
 
-export type OptionalSuitPropertyTypes<Type> = {
-    [Property in SuitTypes]?: Type;
-};
-
-export type RequiredSuitPropertyTypes<Type> = {
+export type SuitPropertyTypes<Type> = {
     [Property in SuitTypes]: Type;
 };
 

@@ -26,7 +26,7 @@ import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
  * @constructor
  */
 export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
-    var _a, _b, _c;
+    var _a, _b;
     const playersBoards = [];
     let moveMainArgs;
     if (validatorName !== null) {
@@ -251,7 +251,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                     j++;
                 }
             }
-            for (let k = 0; k < 1 + Number((_c = G.expansions.thingvellir) === null || _c === void 0 ? void 0 : _c.active); k++) {
+            for (let k = 0; k < 1 + Number(G.expansions.thingvellir.active); k++) {
                 id += k + 1;
                 if (k === 0) {
                     const playerCards = Object.values(player.cards).flat(), hero = player.heroes[i];

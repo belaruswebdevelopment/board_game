@@ -119,7 +119,6 @@ export const CheckEndPickCardsTurn = (G, ctx) => {
  * @param ctx
  */
 export const EndPickCardsActions = (G, ctx) => {
-    var _a;
     const currentTavernConfig = tavernsConfig[G.currentTavern];
     if (currentTavernConfig === undefined) {
         throw new Error(`Отсутствует конфиг текущей таверны с id '${G.currentTavern}'.`);
@@ -139,7 +138,7 @@ export const EndPickCardsActions = (G, ctx) => {
         const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex !== -1) {
             let startThrud = true;
-            if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
+            if (G.expansions.thingvellir.active) {
                 for (let i = 0; i < ctx.numPlayers; i++) {
                     const player = G.publicPlayers[i];
                     if (player === undefined) {
@@ -194,10 +193,9 @@ export const OnPickCardsTurnBegin = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.pickCard()]);
 };
 export const OnPickCardsTurnEnd = (G, ctx) => {
-    var _a;
     ClearPlayerPickedCard(G, ctx);
     if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        if ((_a = G.expansions.thingvellir) === null || _a === void 0 ? void 0 : _a.active) {
+        if (G.expansions.thingvellir.active) {
             if (ctx.numPlayers === 2) {
                 G.campPicked = false;
             }

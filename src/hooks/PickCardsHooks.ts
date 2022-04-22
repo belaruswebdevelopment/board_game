@@ -152,7 +152,7 @@ export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void => {
                 CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex !== -1) {
             let startThrud = true;
-            if (G.expansions.thingvellir?.active) {
+            if (G.expansions.thingvellir.active) {
                 for (let i = 0; i < ctx.numPlayers; i++) {
                     const player: IPublicPlayer | undefined = G.publicPlayers[i];
                     if (player === undefined) {
@@ -211,7 +211,7 @@ export const OnPickCardsTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
 export const OnPickCardsTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
     ClearPlayerPickedCard(G, ctx);
     if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        if (G.expansions.thingvellir?.active) {
+        if (G.expansions.thingvellir.active) {
             if (ctx.numPlayers === 2) {
                 G.campPicked = false;
             } else {

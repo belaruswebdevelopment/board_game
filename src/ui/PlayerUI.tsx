@@ -11,7 +11,7 @@ import { CurrentScoring } from "../Score";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { tavernsConfig } from "../Tavern";
 import { BuffNames, CardNames, CoinTypes, HeroNames, MoveNames, MoveValidatorNames, Phases, RusCardTypes, Stages, SuitNames } from "../typescript/enums";
-import type { CampDeckCardTypes, CoinType, IHeroCard, IMoveArgumentsStage, IMoveCardIdPlayerIdArguments, IMoveCoinsArguments, IMoveFunctionTypes, IMyGameState, IPlayer, IPublicPlayer, IStack, ITavernInConfig, IVariant, OptionalSuitPropertyTypes, PickedCardType, PlayerCardsType, PublicPlayerCoinTypes, SuitTypes } from "../typescript/interfaces";
+import type { CampDeckCardTypes, CoinType, IHeroCard, IMoveArgumentsStage, IMoveCardIdPlayerIdArguments, IMoveCoinsArguments, IMoveFunctionTypes, IMyGameState, IPlayer, IPublicPlayer, IStack, ITavernInConfig, IVariant, PickedCardType, PlayerCardsType, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes } from "../typescript/interfaces";
 import { DrawCard, DrawCoin, DrawSuit } from "./ElementsUI";
 
 // TODO Move strings coins names to enum!
@@ -32,10 +32,10 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
     playerId: number | null, data?: BoardProps<IMyGameState>): JSX.Element[]
     | (IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<SuitTypes[]>[`args`]
         | IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`]
-        | IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`]) => {
+        | IMoveArgumentsStage<Partial<SuitPropertyTypes<number[]>>>[`args`]) => {
     const playersBoards: JSX.Element[] = [];
     let moveMainArgs: IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<SuitTypes[]>[`args`]
-        | IMoveArgumentsStage<OptionalSuitPropertyTypes<number[]>>[`args`]
+        | IMoveArgumentsStage<Partial<SuitPropertyTypes<number[]>>>[`args`]
         | IMoveArgumentsStage<IMoveCardIdPlayerIdArguments>[`args`] | undefined;
     if (validatorName !== null) {
         switch (validatorName) {
@@ -286,7 +286,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                     j++;
                 }
             }
-            for (let k = 0; k < 1 + Number(G.expansions.thingvellir?.active); k++) {
+            for (let k = 0; k < 1 + Number(G.expansions.thingvellir.active); k++) {
                 id += k + 1;
                 if (k === 0) {
                     const playerCards: PlayerCardsType[] = Object.values(player.cards).flat(),

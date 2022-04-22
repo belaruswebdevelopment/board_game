@@ -23,7 +23,7 @@ export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): boolean 
         throw new Error(`Отсутствует колода карт текущей эпохи '${G.secret.decks.length - G.tierToEnd}'.`);
     }
     if (deck.length === 0) {
-        if (G.expansions.thingvellir?.active) {
+        if (G.expansions.thingvellir.active) {
             return CheckEnlistmentMercenaries(G, ctx);
         } else {
             return CheckEndTierActionsOrEndGameLastActions(G);
@@ -82,7 +82,7 @@ export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
             next: Phases.GetDistinctions,
         };
     } else {
-        if (G.expansions.thingvellir?.active) {
+        if (G.expansions.thingvellir.active) {
             const brisingamensBuffIndex: number =
                 Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
                     CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));

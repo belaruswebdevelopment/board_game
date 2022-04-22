@@ -13,7 +13,7 @@ import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { GameNames } from "./typescript/enums";
-import type { CampDeckCardTypes, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICard, ICoin, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPriority, IPublicPlayers, ISecret, OptionalSuitPropertyTypes, RequiredSuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICard, ICoin, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPriority, IPublicPlayers, ISecret, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -47,7 +47,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         additionalCardsDeck: ICard[] = BuildAdditionalCards(),
         discardCardsDeck: DeckCardTypes[] = [],
         explorerDistinctionCards: DeckCardTypes[] = [],
-        distinctions: OptionalSuitPropertyTypes<DistinctionTypes> = {},
+        distinctions: Partial<SuitPropertyTypes<DistinctionTypes>> = {},
         secret: ISecret = {
             campDecks: [],
             decks: [],
@@ -64,7 +64,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         discardCampCardsDeck: CampDeckCardTypes[] = [],
         campDeckLength: [number, number] = [0, 0];
     let camp: CampDeckCardTypes[] = [];
-    if (expansions.thingvellir?.active) {
+    if (expansions.thingvellir.active) {
         for (let i = 0; i < tierToEnd; i++) {
             secret.campDecks[i] = BuildCampCards(i, artefactsConfig, mercenariesConfig);
             let campDeck: CampDeckCardTypes[] | undefined = secret.campDecks[i];
@@ -84,7 +84,6 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     }
     const deckLength: [number, number] = [0, 0];
     for (let i = 0; i < tierToEnd; i++) {
-        // TODO Deck cards must be hidden from users?
         secret.decks[i] = BuildCards({
             suits: suitsConfig,
             actions: actionCardsConfigArray
@@ -114,7 +113,6 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         currentTavern = -1,
         drawSize: number = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
-        // TODO Taverns cards must be hidden from users?
         const deck0: DeckCardTypes[] | undefined = secret.decks[0];
         if (deck0 === undefined) {
             throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
@@ -141,7 +139,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             count: marketCoinsUnique,
             players: ctx.numPlayers,
         });
-    const averageCards: OptionalSuitPropertyTypes<ICard> = {};
+    const averageCards: Partial<SuitPropertyTypes<ICard>> = {};
     for (suit in suitsConfig) {
         if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
             averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
@@ -175,7 +173,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         multiplayer,
         odroerirTheMythicCauldron,
         tavernCardDiscarded2Players,
-        averageCards: averageCards as RequiredSuitPropertyTypes<ICard>,
+        averageCards: averageCards as SuitPropertyTypes<ICard>,
         botData,
         odroerirTheMythicCauldronCoins,
         camp,
@@ -192,7 +190,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         additionalCardsDeck,
         discardCampCardsDeck,
         discardCardsDeck,
-        distinctions: distinctions as RequiredSuitPropertyTypes<DistinctionTypes>,
+        distinctions: distinctions as SuitPropertyTypes<DistinctionTypes>,
         drawProfit,
         drawSize,
         exchangeOrder,

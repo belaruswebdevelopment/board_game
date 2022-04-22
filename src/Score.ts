@@ -116,7 +116,7 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
     }
     score += heroesScore;
     AddDataToLog(G, LogTypes.PUBLIC, `Очки за героев игрока '${player.nickname}': ${heroesScore}.`);
-    if (G.expansions.thingvellir?.active) {
+    if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
             const campCard: CampDeckCardTypes | undefined = player.campCards[i];
