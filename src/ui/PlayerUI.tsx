@@ -486,7 +486,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                 || (stage === Stages.UpgradeVidofnirVedrfolnirCoin
                                     && player.stack[0]?.config?.coinId !== id && id >= G.tavernsNum))) {
                             if (data !== undefined) {
-                                if (!publicBoardCoin.isOpened) {
+                                if (multiplayer && !publicBoardCoin.isOpened) {
                                     throw new Error(`В массиве монет игрока на столе не может быть закрыта ранее открытая монета с id '${id}'.`);
                                 }
                                 DrawCoin(data, playerCells, `coin`, publicBoardCoin, id, player,
@@ -501,7 +501,9 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                 });
                             }
                         } else {
-                            if (G.winner.length) {
+                            if (G.winner.length
+                                || (!multiplayer && ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern >= j)
+                            ) {
                                 if (data !== undefined) {
                                     if (!IsCoin(publicBoardCoin)) {
                                         throw new Error(`Монета с id '${id}' на столе текущего игрока не может быть закрытой для него.`);
