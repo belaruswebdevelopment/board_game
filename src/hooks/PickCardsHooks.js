@@ -155,7 +155,9 @@ export const EndPickCardsActions = (G, ctx) => {
             }
         }
     }
-    G.mustDiscardTavernCardJarnglofi = null;
+    if (G.expansions.thingvellir.active) {
+        G.mustDiscardTavernCardJarnglofi = null;
+    }
     if (ctx.numPlayers === 2) {
         G.tavernCardDiscarded2Players = false;
     }
@@ -194,21 +196,19 @@ export const OnPickCardsTurnBegin = (G, ctx) => {
 };
 export const OnPickCardsTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);
-    if (ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        if (G.expansions.thingvellir.active) {
-            if (ctx.numPlayers === 2) {
-                G.campPicked = false;
+    if (G.expansions.thingvellir.active && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
+        if (ctx.numPlayers === 2) {
+            G.campPicked = false;
+        }
+        else {
+            DiscardCardIfCampCardPicked(G);
+        }
+        if (ctx.playOrder.length < ctx.numPlayers) {
+            if (G.mustDiscardTavernCardJarnglofi === null) {
+                G.mustDiscardTavernCardJarnglofi = true;
             }
-            else {
-                DiscardCardIfCampCardPicked(G);
-            }
-            if (ctx.playOrder.length < ctx.numPlayers) {
-                if (G.mustDiscardTavernCardJarnglofi === null) {
-                    G.mustDiscardTavernCardJarnglofi = true;
-                }
-                if (G.mustDiscardTavernCardJarnglofi) {
-                    DiscardCardFromTavernJarnglofi(G);
-                }
+            if (G.mustDiscardTavernCardJarnglofi) {
+                DiscardCardFromTavernJarnglofi(G);
             }
         }
     }

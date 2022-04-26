@@ -16,42 +16,40 @@ export const BuildCards = (deckConfig, data) => {
     const cards = [];
     let suit;
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            const pointValuesPlayers = deckConfig.suits[suit].pointsValues()[data.players];
-            if (pointValuesPlayers === undefined) {
-                throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}'.`);
-            }
-            const points = pointValuesPlayers[data.tier];
-            if (points === undefined) {
-                throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - '${data.tier}'.`);
-            }
-            let count = 0;
+        const pointValuesPlayers = deckConfig.suits[suit].pointsValues()[data.players];
+        if (pointValuesPlayers === undefined) {
+            throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}'.`);
+        }
+        const points = pointValuesPlayers[data.tier];
+        if (points === undefined) {
+            throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - '${data.tier}'.`);
+        }
+        let count = 0;
+        if (Array.isArray(points)) {
+            count = points.length;
+        }
+        else {
+            count = points;
+        }
+        for (let j = 0; j < count; j++) {
+            let currentPoints;
             if (Array.isArray(points)) {
-                count = points.length;
+                const cardPoints = points[j];
+                if (cardPoints === undefined) {
+                    throw new Error(`Отсутствует значение очков карты с id '${j}'.`);
+                }
+                currentPoints = cardPoints;
             }
             else {
-                count = points;
+                currentPoints = null;
             }
-            for (let j = 0; j < count; j++) {
-                let currentPoints;
-                if (Array.isArray(points)) {
-                    const cardPoints = points[j];
-                    if (cardPoints === undefined) {
-                        throw new Error(`Отсутствует значение очков карты с id '${j}'.`);
-                    }
-                    currentPoints = cardPoints;
-                }
-                else {
-                    currentPoints = null;
-                }
-                cards.push(CreateCard({
-                    suit: deckConfig.suits[suit].suit,
-                    rank: 1,
-                    points: currentPoints,
-                    name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
-                    game: GameNames.Basic,
-                }));
-            }
+            cards.push(CreateCard({
+                suit: deckConfig.suits[suit].suit,
+                rank: 1,
+                points: currentPoints,
+                name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
+                game: GameNames.Basic,
+            }));
         }
     }
     const actionCardConfig = deckConfig.actions;
@@ -82,16 +80,14 @@ export const BuildAdditionalCards = () => {
     const cards = [];
     let cardName;
     for (cardName in additionalCardsConfig) {
-        if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, cardName)) {
-            const card = additionalCardsConfig[cardName];
-            cards.push(CreateCard({
-                suit: card.suit,
-                rank: card.rank,
-                points: card.points,
-                name: card.name,
-                game: GameNames.Basic,
-            }));
-        }
+        const card = additionalCardsConfig[cardName];
+        cards.push(CreateCard({
+            suit: card.suit,
+            rank: card.rank,
+            points: card.points,
+            name: card.name,
+            game: GameNames.Basic,
+        }));
     }
     return cards;
 };

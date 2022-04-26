@@ -2,23 +2,40 @@ import type { Ctx } from "boardgame.io";
 import { ArtefactNames, CardNames, CoinTypes, GameNames, HeroNames, LogTypes, MoveNames, RusCardTypes, RusSuitNames, TavernNames } from "./enums";
 
 export interface ISecret {
-    campDecks: CampDeckCardTypes[][];
-    decks: DeckCardTypes[][];
+    readonly campDecks: CampDeckCardTypes[][];
+    readonly decks: DeckCardTypes[][];
+}
+
+export interface IObjective {
+    readonly weight: number;
+    readonly checker: (G: IMyGameState, ctx: Ctx) => boolean;
+}
+
+export interface IObjectives {
+    readonly isEarlyGame: IObjective;
+    readonly isFirst: IObjective;
+    readonly isStronger: IObjective;
 }
 
 export interface IDebugData {
-    G: Record<string, unknown>;
-    ctx: Record<string, unknown>;
+    readonly G: Record<string, unknown>;
+    readonly ctx: Record<string, unknown>;
+}
+
+export interface IDebugDrawData {
+    // TODO Rework 'any'?
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    readonly [key: string]: any,
 }
 
 export interface ICardCharacteristics {
-    variation: number;
-    mean: number;
+    readonly variation: number;
+    readonly mean: number;
 }
 
 export interface IHeuristic<T> {
-    heuristic: (array: T) => boolean;
-    weight: number;
+    readonly heuristic: (array: T) => boolean;
+    readonly weight: number;
 }
 
 /**
@@ -33,18 +50,16 @@ export interface IDeckConfig {
  * <h3>Интерфейс для карты улучшения монеты.</h3>
  */
 export interface IActionCard {
+    readonly name: string;
+    readonly stack: IStack[];
     readonly type: RusCardTypes.ACTION;
     readonly value: number;
-    readonly stack: IStack[];
-    readonly name: string;
 }
 
 /**
  * <h3>Интерфейс для конфига карт обновления монет.</h3>
  */
-export interface IActionCardConfig {
-    readonly value: number;
-    readonly stack: IStack[];
+export interface IActionCardConfig extends Pick<IActionCard, `stack` | `value`> {
     readonly amount: () => IActionCardValues;
 }
 
@@ -53,16 +68,6 @@ export interface IActionCardConfig {
  */
 export interface IActionCardValues {
     readonly [index: number]: INumberValues;
-}
-
-/**
- * <h3>Интерфейс для создания карты улучшения монеты.</h3>
- */
-export interface ICreateActionCard {
-    readonly type?: RusCardTypes.ACTION;
-    readonly value: number;
-    readonly stack: IStack[];
-    readonly name: string;
 }
 
 /**
@@ -94,15 +99,6 @@ export interface IStack {
     readonly variants?: SuitPropertyTypes<IVariant>;
     readonly config?: IConfig;
     readonly playerId?: number;
-}
-
-/**
- * <h3>Интерфейс для варианта карты героя.</h3>
- */
-export interface IVariant {
-    readonly suit: SuitTypes;
-    readonly rank: number;
-    readonly points: number | null;
 }
 
 /**
@@ -143,38 +139,17 @@ export interface IMoves {
 /**
  * <h3>Интерфейс для данных карт лагеря артефакт.</h3>
  */
-export interface IArtefact {
-    readonly name: ArtefactNames;
-    readonly description: string;
-    readonly game?: GameNames;
-    readonly tier: number;
-    readonly suit?: SuitTypes | null;
-    readonly rank?: number | null;
-    readonly points?: number | null;
-    readonly buff?: IBuff;
-    readonly validators?: IValidatorsConfig;
-    readonly actions?: IAction;
-    readonly stack?: IStack[];
+export interface IArtefact extends PartialBy<Omit<IArtefactCampCard, `game` | `type` | `path`>, `suit` | `rank`
+    | `points`> {
     readonly scoringRule: (G?: IMyGameState, player?: IPublicPlayer) => number;
 }
 
 /**
  * <h3>Интерфейс для карты лагеря артефакта.</h3>
  */
-export interface IArtefactCampCard {
+export interface IArtefactCampCard extends IBasicSuitableNullableCardInfo, ISecondaryCardInfo, ICardWithActionInfo {
     readonly type: RusCardTypes.ARTEFACT;
-    readonly tier: number;
-    readonly path: string;
     readonly name: ArtefactNames;
-    readonly description: string;
-    readonly game: GameNames;
-    readonly suit: SuitTypes | null;
-    readonly rank: number | null;
-    readonly points: number | null;
-    readonly buff?: IBuff;
-    readonly validators?: IValidatorsConfig;
-    readonly actions?: IAction;
-    readonly stack?: IStack[];
 }
 
 /**
@@ -196,19 +171,25 @@ export interface IArtefactConfig {
     readonly Vidofnir_Vedrfolnir: IArtefact;
 }
 
-/**
- * <h3>Интерфейс для создания карты лагеря артефакта.</h3>
- */
-export interface ICreateArtefactCampCard {
-    readonly type?: RusCardTypes.ARTEFACT;
+export interface IBasicSuitableNullableCardInfo {
+    readonly suit: SuitTypes | null;
+    readonly rank: number | null;
+    readonly points: number | null;
+}
+
+export interface IBasicSuitableCardInfo extends Pick<IBasicSuitableNullableCardInfo, `points`> {
+    readonly suit: NonNullable<IBasicSuitableNullableCardInfo[`suit`]>;
+    readonly rank: NonNullable<IBasicSuitableNullableCardInfo[`rank`]>;
+}
+
+export interface ISecondaryCardInfo {
     readonly tier: number;
     readonly path: string;
-    readonly name: ArtefactNames;
+    readonly game: GameNames;
+}
+
+export interface ICardWithActionInfo {
     readonly description: string;
-    readonly game?: GameNames;
-    readonly suit?: SuitTypes | null;
-    readonly rank?: number | null;
-    readonly points?: number | null;
     readonly buff?: IBuff;
     readonly validators?: IValidatorsConfig;
     readonly actions?: IAction;
@@ -216,35 +197,21 @@ export interface ICreateArtefactCampCard {
 }
 
 /**
- * <h3>Интерфейс для создания карты лагеря наёмника.</h3>
+ * <h3>Интерфейс для карты лагеря наёмника.</h3>
  */
-export interface ICreateMercenaryCampCard {
-    readonly type?: RusCardTypes.MERCENARY;
-    readonly tier: number;
-    readonly path: string;
+export interface IMercenaryCampCard extends ISecondaryCardInfo {
+    // TODO Rework all cards name in Enums
     readonly name: string;
-    readonly game?: GameNames;
+    readonly type: RusCardTypes.MERCENARY;
     readonly variants: Partial<SuitPropertyTypes<IVariant>>;
 }
 
 /**
- * <h3>Интерфейс для данных карт лагеря наёмник.</h3>
+ * <h3>Интерфейс для карты наёмника на столе игрока.</h3>
  */
-export interface IMercenary {
-    readonly suit: SuitTypes;
-    readonly rank: number;
-    readonly points: number | null;
-}
-
-/**
- * <h3>Интерфейс для карты лагеря наёмника.</h3>
- */
-export interface IMercenaryCampCard {
-    readonly type: RusCardTypes.MERCENARY;
-    readonly tier: number;
-    readonly path: string;
+export interface IMercenaryPlayerCard extends IMercenary, ISecondaryCardInfo {
     readonly name: string;
-    readonly game: GameNames;
+    readonly type: RusCardTypes.MERCENARYPLAYERCARD;
     readonly variants: Partial<SuitPropertyTypes<IVariant>>;
 }
 
@@ -262,62 +229,16 @@ export interface IAdditionalCardsConfig {
 /**
  * <h3>Интерфейс для карты дворфа.</h3>
  */
-export interface ICard {
+export interface ICard extends IBasicSuitableCardInfo, ISecondaryCardInfo {
+    readonly name: string;
     readonly type: RusCardTypes.BASIC;
-    readonly suit: SuitTypes;
-    readonly rank: number;
-    readonly points: number | null;
-    readonly name: string;
-    readonly game: GameNames;
-    readonly tier: number;
-    readonly path: string;
-}
-
-export interface IMercenaryPlayerCard {
-    readonly type: RusCardTypes.MERCENARYPLAYERCARD;
-    readonly suit: SuitTypes;
-    readonly rank: number;
-    readonly points: number | null;
-    readonly name: string;
-    readonly game: GameNames;
-    readonly tier: number;
-    readonly path: string;
-    readonly variants: Partial<SuitPropertyTypes<IVariant>>;
-}
-
-export interface IOlwinDoubleNonPlacedCard {
-    readonly name: CardNames.OlwinsDouble;
-    readonly suit: SuitTypes | null;
 }
 
 /**
- * <h3>Интерфейс для создания карты дворфа.</h3>
+ * <h3>Интерфейс для карты Двойник Ольвюна.</h3>
  */
-export interface ICreateCard {
-    readonly type?: RusCardTypes.BASIC;
-    readonly suit: SuitTypes;
-    readonly rank: number;
-    readonly points: number | null;
-    readonly name: string;
-    readonly game: GameNames;
-    readonly tier?: number;
-    readonly path?: string;
-}
-
-export interface ICreateMercenaryPlayerCard {
-    readonly type?: RusCardTypes.MERCENARYPLAYERCARD;
-    readonly suit: SuitTypes;
-    readonly rank: number;
-    readonly points: number | null;
-    readonly name: string;
-    readonly game?: GameNames;
-    readonly tier: number;
-    readonly path: string;
-    readonly variants: Partial<SuitPropertyTypes<IVariant>>;
-}
-
-export interface ICreateOlwinDoubleNonPlacedCard {
-    readonly name?: CardNames.OlwinsDouble;
+export interface IOlwinDoubleNonPlacedCard {
+    readonly name: CardNames.OlwinsDouble;
     readonly suit: SuitTypes | null;
 }
 
@@ -340,33 +261,10 @@ export interface ICoin {
     readonly value: number;
 }
 
-export type ClosedCoinType = Record<string, never>;
-
-export type PublicPlayerCoinTypes = CoinType | ClosedCoinType;
-
-/**
- * <h3>Интерфейс для создания монеты.</h3>
- */
-export interface ICreateCoin {
-    readonly isInitial?: boolean;
-    readonly isOpened?: boolean;
-    readonly isTriggerTrading?: boolean;
-    readonly value: number;
-}
-
-/**
- * <h3>Интерфейс для конфига базовых монет.</h3>
- */
-export interface IInitialTradingCoinConfig {
-    readonly value: number;
-    readonly isTriggerTrading: boolean;
-}
-
 /**
  * <h3>Интерфейс для конфига монет рынка.</h3>
  */
-export interface IMarketCoinConfig {
-    readonly value: number;
+export interface IMarketCoinConfig extends Pick<ICoin, `value`> {
     readonly count: () => INumberValues;
 }
 
@@ -471,39 +369,20 @@ export interface IResolveBoardCoins {
 }
 
 /**
- * <h3>Интерфейс для создания героя.</h3>
+ * <h3>Интерфейс для героя.</h3>
  */
-export interface ICreateHero {
-    readonly type?: RusCardTypes.HERO;
+export interface IHeroCard extends IBasicSuitableNullableCardInfo, Pick<ISecondaryCardInfo, `game`>,
+    ICardWithActionInfo {
+    readonly type: RusCardTypes.HERO;
     readonly name: HeroNames;
-    readonly description: string;
-    readonly game: GameNames;
-    readonly suit?: SuitTypes | null;
-    readonly rank?: number | null;
-    readonly points?: number | null;
-    readonly active?: boolean;
-    readonly buff?: IBuff;
-    readonly validators?: IValidatorsConfig;
-    readonly actions?: IAction;
-    readonly stack?: IStack[];
+    active: boolean;
 }
 
 /**
- * <h3>Интерфейс для героя.</h3>
+ * <h3>Интерфейс для данных карты героя.</h3>
  */
-export interface IHeroCard {
-    readonly type: RusCardTypes.HERO;
-    readonly name: HeroNames;
-    readonly description: string;
-    readonly game: GameNames;
-    readonly suit: SuitTypes | null;
-    readonly rank: number | null;
-    readonly points: number | null;
-    active: boolean;
-    readonly buff?: IBuff;
-    readonly validators?: IValidatorsConfig;
-    readonly actions?: IAction;
-    readonly stack?: IStack[];
+export interface IHeroData extends PartialBy<Omit<IHeroCard, `type` | `active`>, `suit` | `rank` | `points`> {
+    readonly scoringRule: (G?: IMyGameState, playerId?: number) => number;
 }
 
 /**
@@ -538,23 +417,6 @@ export interface IHeroConfig {
     readonly Khrad: IHeroData;
     readonly Olwin: IHeroData;
     readonly Zolkur: IHeroData;
-}
-
-/**
- * <h3>Интерфейс для данных карты героя.</h3>
- */
-export interface IHeroData {
-    readonly name: HeroNames;
-    readonly description: string;
-    readonly game: GameNames;
-    readonly suit?: SuitTypes | null;
-    readonly rank?: number | null;
-    readonly points?: number | null;
-    readonly buff?: IBuff;
-    readonly validators?: IValidatorsConfig;
-    readonly actions?: IAction;
-    readonly stack?: IStack[];
-    readonly scoringRule: (G?: IMyGameState, playerId?: number) => number;
 }
 
 /**
@@ -830,21 +692,21 @@ export interface IBuffs {
 }
 
 /**
- * <h3>Интерфейс для создания публичных данных игрока.</h3>
+ * <h3>Интерфейс для публичных данных игрока.</h3>
  */
-export interface ICreatePublicPlayer {
-    readonly actionsNum?: number;
+export interface IPublicPlayer {
+    actionsNum: number;
     readonly nickname: string;
     readonly cards: SuitPropertyTypes<PlayerCardsType[]>;
-    readonly heroes?: IHeroCard[];
-    readonly campCards?: CampDeckCardTypes[];
-    readonly handCoins: ICoin[];
-    readonly boardCoins: ICoin[];
-    readonly stack?: IStack[];
-    readonly priority: IPriority;
-    readonly buffs?: IBuffs[];
-    readonly selectedCoin?: number | null;
-    readonly pickedCard?: PickedCardType;
+    readonly heroes: IHeroCard[];
+    readonly campCards: CampDeckCardTypes[];
+    readonly handCoins: PublicPlayerCoinTypes[];
+    readonly boardCoins: PublicPlayerCoinTypes[];
+    stack: IStack[];
+    priority: IPriority;
+    readonly buffs: IBuffs[];
+    selectedCoin: number | null;
+    pickedCard: PickedCardType;
 }
 
 /**
@@ -870,32 +732,6 @@ export interface IPublicPlayers {
 }
 
 /**
- * <h3>Интерфейс для публичных данных игрока.</h3>
- */
-export interface IPublicPlayer {
-    actionsNum: number;
-    readonly nickname: string;
-    readonly cards: SuitPropertyTypes<PlayerCardsType[]>;
-    readonly heroes: IHeroCard[];
-    readonly campCards: CampDeckCardTypes[];
-    readonly handCoins: PublicPlayerCoinTypes[];
-    readonly boardCoins: PublicPlayerCoinTypes[];
-    stack: IStack[];
-    priority: IPriority;
-    readonly buffs: IBuffs[];
-    selectedCoin: number | null;
-    pickedCard: PickedCardType;
-}
-
-/**
- * <h3>Интерфейс для создания кристалла.</h3>
- */
-export interface ICreatePriority {
-    readonly value: number;
-    readonly isExchangeable?: boolean;
-}
-
-/**
  * <h3>Интерфейс для конфига всех кристаллов.</h3>
  */
 export interface IPrioritiesConfig {
@@ -906,8 +742,8 @@ export interface IPrioritiesConfig {
  * <h3>Интерфейс для кристалла.</h3>
  */
 export interface IPriority {
-    readonly value: number;
     readonly isExchangeable: boolean;
+    readonly value: number;
 }
 
 /**
@@ -993,6 +829,10 @@ export type CampCardTypes = CampDeckCardTypes | null;
  */
 export type CampDeckCardTypes = IArtefactCampCard | IMercenaryCampCard;
 
+export type ClosedCoinType = Record<string, never>;
+
+export type PublicPlayerCoinTypes = CoinType | ClosedCoinType;
+
 /**
  * <h3>Типы данных для дек карт.</h3>
  */
@@ -1076,3 +916,78 @@ export type AutoActionArgsTypes = [number] | [number, number, CoinTypes];
 export type DistinctionTypes = string | null | undefined;
 
 export type MoveArgsTypes = number[][] | [SuitTypes] | [number] | [SuitTypes, number] | [number, CoinTypes];
+
+/**
+ * <h3>Тип для создания карты улучшения монеты.</h3>
+ */
+export type ICreateActionCard = PartialBy<IActionCard, `type`>;
+
+/**
+ * <h3>Тип для создания карты лагеря артефакта.</h3>
+ */
+export type ICreateArtefactCampCard = PartialBy<IArtefactCampCard, `type` | `game` | `suit` | `rank` | `points`>;
+
+/**
+ * <h3>Тип для создания карты лагеря наёмника.</h3>
+ */
+export type ICreateMercenaryCampCard = PartialBy<IMercenaryCampCard, `type` | `game`>;
+
+/**
+ * <h3>Тип для создания карты наёмника на столе игрока.</h3>
+ */
+export type ICreateMercenaryPlayerCard = PartialBy<IMercenaryPlayerCard, `type` | `game`>;
+
+/**
+ * <h3>Тип для создания карты дворфа.</h3>
+ */
+export type ICreateCard = PartialBy<ICard, `type` | `tier` | `path`>;
+
+/**
+ * <h3>Тип для создания героя.</h3>
+ */
+export type ICreateHero = PartialBy<Omit<IHeroCard, `active`>
+    & ReadonlyBy<IHeroCard, `active`>, `type` | `suit` | `rank` | `points` | `active`>;
+
+/**
+ * <h3>Тип для создания карты Двойник Ольвюна.</h3>
+ */
+export type ICreateOlwinDoubleNonPlacedCard = PartialBy<IOlwinDoubleNonPlacedCard, `name`>;
+
+/**
+ * <h3>Тип для создания монеты.</h3>
+ */
+export type ICreateCoin =
+    PartialBy<Omit<ICoin, `isOpened`> & ReadonlyBy<ICoin, `isOpened`>, `isInitial` | `isOpened` | `isTriggerTrading`>;
+
+/**
+* <h3>Тип для конфига базовых монет.</h3>
+*/
+export type IInitialTradingCoinConfig = Pick<ICoin, `isTriggerTrading` | `value`>;
+
+/**
+ * <h3>Тип для создания кристалла.</h3>
+ */
+export type ICreatePriority = PartialBy<IPriority, `isExchangeable`>;
+
+/**
+ * <h3>Тип для данных карт лагеря наёмник.</h3>
+ */
+export type IMercenary = IBasicSuitableCardInfo;
+
+/**
+ * <h3>Тип для варианта карты героя.</h3>
+ */
+export type IVariant = IBasicSuitableCardInfo;
+
+/**
+ * <h3>Тип для создания публичных данных игрока.</h3>
+ */
+export type ICreatePublicPlayer =
+    PartialBy<Omit<IPublicPlayer, `actionsNum` | `pickedCard` | `priority` | `selectedCoin` | `stack`>
+        & ReadonlyBy<IPublicPlayer, `actionsNum` | `pickedCard` | `priority` | `selectedCoin` | `stack`>,
+        `actionsNum` | `heroes` | `campCards` | `stack` | `buffs` | `selectedCoin` | `pickedCard`>;
+
+// My Utilities types
+type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+type ReadonlyBy<T, K extends keyof T> = Omit<T, K> & Readonly<Pick<T, K>>;

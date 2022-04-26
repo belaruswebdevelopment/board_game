@@ -546,9 +546,7 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments, suitNames = [];
             let suit;
             for (suit in moveArguments) {
-                if (Object.prototype.hasOwnProperty.call(moveArguments, suit)) {
-                    suitNames.push(suit);
-                }
+                suitNames.push(suit);
             }
             const suitName = suitNames[Math.floor(Math.random() * suitNames.length)];
             if (suitName === undefined) {
@@ -755,7 +753,6 @@ export const moveValidators = {
         validate: () => true,
     },
     PickConcreteCoinToUpgradeMoveValidator: {
-        // TODO FIX IT!!!
         getRange: (G, ctx) => {
             if (G === undefined) {
                 throw new Error(`Function param 'G' is undefined.`);
@@ -874,18 +871,16 @@ export const moveValidators = {
             const validators = hero.validators;
             if (validators !== undefined) {
                 for (const validator in validators) {
-                    if (Object.prototype.hasOwnProperty.call(validators, validator)) {
-                        switch (validator) {
-                            case ValidatorNames.Conditions:
-                                isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
-                                break;
-                            case ValidatorNames.DiscardCard:
-                                isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
-                                break;
-                            default:
-                                isValid = true;
-                                break;
-                        }
+                    switch (validator) {
+                        case ValidatorNames.Conditions:
+                            isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
+                            break;
+                        case ValidatorNames.DiscardCard:
+                            isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
+                            break;
+                        default:
+                            isValid = true;
+                            break;
                     }
                 }
             }
@@ -909,9 +904,7 @@ export const moveValidators = {
             const moveArguments = currentMoveArguments, suitNamesArray = [];
             let suit;
             for (suit in moveArguments) {
-                if (Object.prototype.hasOwnProperty.call(moveArguments, suit)) {
-                    suitNamesArray.push(suit);
-                }
+                suitNamesArray.push(suit);
             }
             const suitName = suitNamesArray[Math.floor(Math.random() * suitNamesArray.length)];
             if (suitName === undefined) {

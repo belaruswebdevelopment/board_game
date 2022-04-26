@@ -77,7 +77,7 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
         newValue: number = upgradingCoin.value + value + buffValue;
     let upgradedCoin: CoinType = null;
     if (G.marketCoins.length) {
-        const lastMarketCoin = G.marketCoins[G.marketCoins.length - 1];
+        const lastMarketCoin: ICoin | undefined = G.marketCoins[G.marketCoins.length - 1];
         if (lastMarketCoin === undefined) {
             throw new Error(`В массиве монет рынка отсутствует последняя монета с id '${G.marketCoins.length - 1}'.`);
         }
@@ -86,7 +86,7 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
             G.marketCoins.splice(G.marketCoins.length - 1, 1);
         } else {
             for (let i = 0; i < G.marketCoins.length; i++) {
-                const marketCoin = G.marketCoins[i];
+                const marketCoin: ICoin | undefined = G.marketCoins[i];
                 if (marketCoin === undefined) {
                     throw new Error(`В массиве монет рынка отсутствует монета с id '${i}'.`);
                 }
@@ -137,7 +137,7 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
             let returningIndex = 0;
             for (let i = 0; i < G.marketCoins.length; i++) {
                 returningIndex = i;
-                const marketCoinReturn = G.marketCoins[i];
+                const marketCoinReturn: ICoin | undefined = G.marketCoins[i];
                 if (marketCoinReturn === undefined) {
                     throw new Error(`В массиве монет рынка отсутствует монета ${i}.`);
                 }

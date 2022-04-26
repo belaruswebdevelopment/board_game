@@ -165,12 +165,10 @@ const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTyp
     let score = 0,
         suit: SuitTypes;
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            if (IsCardNotActionAndNotNull(card) && card.suit === suit) {
-                score += suitsConfig[suit].scoringRule(player.cards[suit], card.points ?? 1);
-            } else {
-                score += suitsConfig[suit].scoringRule(player.cards[suit]);
-            }
+        if (IsCardNotActionAndNotNull(card) && card.suit === suit) {
+            score += suitsConfig[suit].scoringRule(player.cards[suit], card.points ?? 1);
+        } else {
+            score += suitsConfig[suit].scoringRule(player.cards[suit]);
         }
     }
     if (IsActionCard(card)) {

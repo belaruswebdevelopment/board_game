@@ -3,8 +3,7 @@ import { UpgradeCoinAction } from "../actions/CoinActions";
 import { CoinTypes } from "../typescript/enums";
 import type { IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
-export const UpgradeCoinActions = (G: IMyGameState, ctx: Ctx, coinId: number, type: CoinTypes):
-    void => {
+export const UpgradeCoinActions = (G: IMyGameState, ctx: Ctx, coinId: number, type: CoinTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);

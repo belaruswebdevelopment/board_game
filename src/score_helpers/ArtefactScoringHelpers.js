@@ -24,9 +24,7 @@ export const HrafnsmerkiScoring = (G, player) => {
     }
     let score = 0, suit;
     for (suit in player.cards) {
-        if (Object.prototype.hasOwnProperty.call(player.cards, suit)) {
-            score += player.cards[suit].filter((card) => IsMercenaryPlayerCard(card)).length * 5;
-        }
+        score += player.cards[suit].filter((card) => IsMercenaryPlayerCard(card)).length * 5;
     }
     return score;
 };

@@ -16,22 +16,20 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
     const heroes: IHeroCard[] = [];
     let heroName: IHeroTypes;
     for (heroName in heroesConfig) {
-        if (Object.prototype.hasOwnProperty.call(heroesConfig, heroName)) {
-            const heroData: IHeroData = heroesConfig[heroName];
-            if (configOptions.includes(heroData.game)) {
-                heroes.push(CreateHero({
-                    name: heroData.name,
-                    description: heroData.description,
-                    game: heroData.game,
-                    suit: heroData.suit,
-                    rank: heroData.rank,
-                    points: heroData.points,
-                    buff: heroData.buff,
-                    validators: heroData.validators,
-                    actions: heroData.actions,
-                    stack: heroData.stack,
-                }));
-            }
+        const heroData: IHeroData = heroesConfig[heroName];
+        if (configOptions.includes(heroData.game)) {
+            heroes.push(CreateHero({
+                name: heroData.name,
+                description: heroData.description,
+                game: heroData.game,
+                suit: heroData.suit,
+                rank: heroData.rank,
+                points: heroData.points,
+                buff: heroData.buff,
+                validators: heroData.validators,
+                actions: heroData.actions,
+                stack: heroData.stack,
+            }));
         }
     }
     return heroes;

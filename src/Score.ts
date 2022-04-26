@@ -26,9 +26,7 @@ export const CurrentScoring = (player: IPublicPlayer): number => {
     let score = 0,
         suit: SuitTypes;
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            score += suitsConfig[suit].scoringRule(player.cards[suit]);
-        }
+        score += suitsConfig[suit].scoringRule(player.cards[suit]);
     }
     return score;
 };

@@ -48,7 +48,7 @@ export const OnGetMjollnirProfitTurnBegin = (G: IMyGameState, ctx: Ctx): void =>
     DrawCurrentProfit(G, ctx);
 };
 
-export const StartEndGame = (G: IMyGameState, ctx: Ctx) => {
+export const StartEndGame = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
     EndGame(ctx);
 };

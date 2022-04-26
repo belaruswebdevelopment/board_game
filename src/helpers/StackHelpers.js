@@ -20,18 +20,16 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack, card) => {
             const validators = card.validators;
             if (validators !== undefined) {
                 for (const validator in validators) {
-                    if (Object.prototype.hasOwnProperty.call(validators, validator)) {
-                        switch (validator) {
-                            case ValidatorNames.PickDiscardCardToStack:
-                                isValid = IsCanPickPickDiscardCardToStack(G, card);
-                                break;
-                            case ValidatorNames.PickCampCardToStack:
-                                isValid = IsCanPickPickCampCardToStack(G, card);
-                                break;
-                            default:
-                                isValid = true;
-                                break;
-                        }
+                    switch (validator) {
+                        case ValidatorNames.PickDiscardCardToStack:
+                            isValid = IsCanPickPickDiscardCardToStack(G, card);
+                            break;
+                        case ValidatorNames.PickCampCardToStack:
+                            isValid = IsCanPickPickCampCardToStack(G, card);
+                            break;
+                        default:
+                            isValid = true;
+                            break;
                     }
                 }
             }

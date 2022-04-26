@@ -131,21 +131,19 @@ export const DrawDistinctions = (G, ctx, validatorName, data) => {
             }
         }
         for (suit in suitsConfig) {
-            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                if (ctx.phase === Phases.GetDistinctions && ctx.activePlayers === null
-                    && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
-                    if (data !== undefined) {
-                        const suitArg = suit;
-                        boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suitArg); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
-                    }
-                    else if (validatorName === MoveValidatorNames.ClickDistinctionCardMoveValidator) {
-                        moveMainArgs.push(suit);
-                    }
+            if (ctx.phase === Phases.GetDistinctions && ctx.activePlayers === null
+                && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
+                if (data !== undefined) {
+                    const suitArg = suit;
+                    boardCells.push(_jsx("td", { className: "bg-green-500 cursor-pointer", onClick: () => { var _a, _b; return (_b = (_a = data.moves).ClickDistinctionCardMove) === null || _b === void 0 ? void 0 : _b.call(_a, suitArg); }, title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                 }
-                else {
-                    if (data !== undefined) {
-                        boardCells.push(_jsx("td", { className: "bg-green-500", title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
-                    }
+                else if (validatorName === MoveValidatorNames.ClickDistinctionCardMoveValidator) {
+                    moveMainArgs.push(suit);
+                }
+            }
+            else {
+                if (data !== undefined) {
+                    boardCells.push(_jsx("td", { className: "bg-green-500", title: suitsConfig[suit].distinction.description, children: _jsx("span", { style: Styles.Distinctions(suit), className: "bg-suit-distinction" }) }, `Distinction ${suit} card`));
                 }
             }
         }

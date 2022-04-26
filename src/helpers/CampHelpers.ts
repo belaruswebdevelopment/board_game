@@ -186,7 +186,7 @@ export const RefillCamp = (G: IMyGameState): void => {
     if (campDeck1 === undefined) {
         throw new Error(`Колода карт лагеря '2' эпохи не может отсутствовать.`);
     }
-    const index: number = campDeck1.findIndex((card: CampDeckCardTypes) =>
+    const index: number = campDeck1.findIndex((card: CampDeckCardTypes): boolean =>
         card.name === ArtefactNames.Odroerir_The_Mythic_Cauldron);
     if (index === -1) {
         throw new Error(`Отсутствует артефакт '${ArtefactNames.Odroerir_The_Mythic_Cauldron}' в колоде лагеря '2' эпохи.`);

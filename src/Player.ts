@@ -4,7 +4,7 @@ import { initialPlayerCoinsConfig } from "./data/CoinData";
 import { suitsConfig } from "./data/SuitData";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { BuffNames, Phases } from "./typescript/enums";
-import type { ICoin, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, SuitPropertyTypes, PlayerCardsType, SuitTypes } from "./typescript/interfaces";
+import type { ICoin, ICreatePublicPlayer, IMyGameState, IPlayer, IPriority, IPublicPlayer, PlayerCardsType, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех игроков (приватные данные).</h3>
@@ -37,9 +37,7 @@ export const BuildPublicPlayer = (nickname: string, priority: IPriority, multipl
     const cards: Partial<SuitPropertyTypes<PlayerCardsType[]>> = {};
     let suit: SuitTypes;
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            cards[suit] = [];
-        }
+        cards[suit] = [];
     }
     let handCoins: ICoin[] = [];
     if (!multiplayer) {

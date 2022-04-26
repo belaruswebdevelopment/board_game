@@ -30,7 +30,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         tierToEnd = 2,
         campNum = 5,
         explorerDistinctionCardId = null,
-        multiplayer = true,
+        multiplayer = false,
         odroerirTheMythicCauldron = false,
         log = true,
         debug = false,
@@ -54,9 +54,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         };
     let suit: SuitTypes;
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            distinctions[suit] = null;
-        }
+        distinctions[suit] = null;
     }
     const winner: number[] = [],
         campPicked = false,
@@ -101,10 +99,8 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     const heroesConfigOptions: string[] = [GameNames.Basic];
     let expansion: ExpansionTypes;
     for (expansion in expansions) {
-        if (Object.prototype.hasOwnProperty.call(expansions, expansion)) {
-            if (expansions[expansion].active) {
-                heroesConfigOptions.push(expansion);
-            }
+        if (expansions[expansion].active) {
+            heroesConfigOptions.push(expansion);
         }
     }
     const heroes: IHeroCard[] = BuildHeroes(heroesConfigOptions, heroesConfig),
@@ -138,15 +134,13 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         marketCoins: ICoin[] = BuildCoins(marketCoinsConfig, {
             count: marketCoinsUnique,
             players: ctx.numPlayers,
-        });
-    const averageCards: Partial<SuitPropertyTypes<ICard>> = {};
+        }),
+        averageCards: Partial<SuitPropertyTypes<ICard>> = {};
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
-                players: ctx.numPlayers,
-                tier: 0,
-            });
-        }
+        averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
+            players: ctx.numPlayers,
+            tier: 0,
+        });
     }
     const initHandCoinsId: number[] = Array(initialPlayerCoinsConfig.length).fill(undefined)
         .map((item: undefined, index: number): number => index),

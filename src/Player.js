@@ -33,9 +33,7 @@ export const BuildPublicPlayer = (nickname, priority, multiplayer) => {
     const cards = {};
     let suit;
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            cards[suit] = [];
-        }
+        cards[suit] = [];
     }
     let handCoins = [];
     if (!multiplayer) {

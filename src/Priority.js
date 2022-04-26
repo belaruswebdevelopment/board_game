@@ -97,11 +97,21 @@ export const HasLowestPriority = (G, playerId) => {
  * </ol>
  */
 const priorities = [
-    CreatePriority({ value: 1 }),
-    CreatePriority({ value: 2 }),
-    CreatePriority({ value: 3 }),
-    CreatePriority({ value: 4 }),
-    CreatePriority({ value: 5 }),
+    CreatePriority({
+        value: 1,
+    }),
+    CreatePriority({
+        value: 2,
+    }),
+    CreatePriority({
+        value: 3,
+    }),
+    CreatePriority({
+        value: 4,
+    }),
+    CreatePriority({
+        value: 5,
+    }),
 ];
 /**
  * <h3>Конфиг кристаллов.</h3>

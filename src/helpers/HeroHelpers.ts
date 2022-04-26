@@ -2,7 +2,7 @@ import type { Ctx } from "boardgame.io";
 import { AddPickHeroAction } from "../actions/CampAutoActions";
 import { TotalRank } from "../score_helpers/ScoreHelpers";
 import { BuffNames, Stages } from "../typescript/enums";
-import type { IMyGameState, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
+import type { IMyGameState, IPublicPlayer, IStack, PlayerCardsType } from "../typescript/interfaces";
 import { CheckPlayerHasBuff } from "./BuffHelpers";
 
 /**
@@ -29,8 +29,8 @@ export const CheckPickHero = (G: IMyGameState, ctx: Ctx): void => {
             isCanPickHero: boolean =
                 Math.min(...playerCards.map((item: PlayerCardsType[]): number =>
                     item.reduce(TotalRank, 0))) > player.heroes.length,
-            isPlayerHasPickHeroActionInStack: number =
-                player.stack.findIndex((stack): boolean => stack.config?.stageName === Stages.PickHero);
+            isPlayerHasPickHeroActionInStack: number = player.stack.findIndex((stack: IStack): boolean =>
+                stack.config?.stageName === Stages.PickHero);
         if (isCanPickHero && isPlayerHasPickHeroActionInStack === -1) {
             AddPickHeroAction(G, ctx);
         }

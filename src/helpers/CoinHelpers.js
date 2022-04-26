@@ -200,37 +200,35 @@ export const ResolveBoardCoins = (G, ctx) => {
         }
     }
     for (const prop in counts) {
-        if (Object.prototype.hasOwnProperty.call(counts, prop)) {
-            const value = counts[prop];
-            if (value === undefined) {
-                throw new Error(`В массиве значений монет отсутствует с id '${prop}'.`);
+        const value = counts[prop];
+        if (value === undefined) {
+            throw new Error(`В массиве значений монет отсутствует с id '${prop}'.`);
+        }
+        if (value <= 1) {
+            continue;
+        }
+        const tiePlayers = Object.values(G.publicPlayers).filter((player, index) => {
+            const boardCoinCurrentTavern = player.boardCoins[G.currentTavern];
+            if (boardCoinCurrentTavern === undefined) {
+                throw new Error(`В массиве монет игрока с id '${index}' отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
             }
-            if (value <= 1) {
-                continue;
+            if (boardCoinCurrentTavern !== null && !IsCoin(boardCoinCurrentTavern)) {
+                throw new Error(`В массиве монет игрока с id '${index}' не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
             }
-            const tiePlayers = Object.values(G.publicPlayers).filter((player, index) => {
-                const boardCoinCurrentTavern = player.boardCoins[G.currentTavern];
-                if (boardCoinCurrentTavern === undefined) {
-                    throw new Error(`В массиве монет игрока с id '${index}' отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
-                }
-                if (boardCoinCurrentTavern !== null && !IsCoin(boardCoinCurrentTavern)) {
-                    throw new Error(`В массиве монет игрока с id '${index}' не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
-                }
-                return (boardCoinCurrentTavern === null || boardCoinCurrentTavern === void 0 ? void 0 : boardCoinCurrentTavern.value) === Number(prop) && player.priority.isExchangeable;
-            });
-            while (tiePlayers.length > 1) {
-                const tiePlayersPriorities = tiePlayers.map((player) => player.priority.value), maxPriority = Math.max(...tiePlayersPriorities), minPriority = Math.min(...tiePlayersPriorities), maxIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === maxPriority), minIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === minPriority);
-                tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === maxPriority), 1);
-                tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === minPriority), 1);
-                const exchangeOrderMax = exchangeOrder[maxIndex], exchangeOrderMin = exchangeOrder[minIndex];
-                if (exchangeOrderMax === undefined) {
-                    throw new Error(`В массиве изменений порядка хода игроков отсутствует максимальная '${exchangeOrder[maxIndex]}' с id '${maxIndex}'.`);
-                }
-                if (exchangeOrderMin === undefined) {
-                    throw new Error(`В массиве изменений порядка хода игроков отсутствует минимальная '${exchangeOrder[minIndex]}'  с id '${minIndex}'.`);
-                }
-                [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrderMax, exchangeOrderMin];
+            return (boardCoinCurrentTavern === null || boardCoinCurrentTavern === void 0 ? void 0 : boardCoinCurrentTavern.value) === Number(prop) && player.priority.isExchangeable;
+        });
+        while (tiePlayers.length > 1) {
+            const tiePlayersPriorities = tiePlayers.map((player) => player.priority.value), maxPriority = Math.max(...tiePlayersPriorities), minPriority = Math.min(...tiePlayersPriorities), maxIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === maxPriority), minIndex = Object.values(G.publicPlayers).findIndex((player) => player.priority.value === minPriority);
+            tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === maxPriority), 1);
+            tiePlayers.splice(tiePlayers.findIndex((player) => player.priority.value === minPriority), 1);
+            const exchangeOrderMax = exchangeOrder[maxIndex], exchangeOrderMin = exchangeOrder[minIndex];
+            if (exchangeOrderMax === undefined) {
+                throw new Error(`В массиве изменений порядка хода игроков отсутствует максимальная '${exchangeOrder[maxIndex]}' с id '${maxIndex}'.`);
             }
+            if (exchangeOrderMin === undefined) {
+                throw new Error(`В массиве изменений порядка хода игроков отсутствует минимальная '${exchangeOrder[minIndex]}'  с id '${minIndex}'.`);
+            }
+            [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrderMax, exchangeOrderMin];
         }
     }
     const playersOrder = playersOrderNumbers.map((index) => String(index));

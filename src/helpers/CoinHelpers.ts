@@ -213,51 +213,48 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
         }
     }
     for (const prop in counts) {
-        if (Object.prototype.hasOwnProperty.call(counts, prop)) {
-            const value: number | undefined = counts[prop];
-            if (value === undefined) {
-                throw new Error(`В массиве значений монет отсутствует с id '${prop}'.`);
-            }
-            if (value <= 1) {
-                continue;
-            }
-            const tiePlayers: IPublicPlayer[] =
-                Object.values(G.publicPlayers).filter((player: IPublicPlayer, index: number): boolean => {
-                    const boardCoinCurrentTavern: PublicPlayerCoinTypes | undefined =
-                        player.boardCoins[G.currentTavern];
-                    if (boardCoinCurrentTavern === undefined) {
-                        throw new Error(`В массиве монет игрока с id '${index}' отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
-                    }
-                    if (boardCoinCurrentTavern !== null && !IsCoin(boardCoinCurrentTavern)) {
-                        throw new Error(`В массиве монет игрока с id '${index}' не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
-                    }
-                    return boardCoinCurrentTavern?.value === Number(prop) && player.priority.isExchangeable;
-                });
-            while (tiePlayers.length > 1) {
-                const tiePlayersPriorities: number[] =
-                    tiePlayers.map((player: IPublicPlayer): number => player.priority.value),
-                    maxPriority: number = Math.max(...tiePlayersPriorities),
-                    minPriority: number = Math.min(...tiePlayersPriorities),
-                    maxIndex: number =
-                        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
-                            player.priority.value === maxPriority),
-                    minIndex: number =
-                        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
-                            player.priority.value === minPriority);
-                tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
-                    player.priority.value === maxPriority), 1);
-                tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
-                    player.priority.value === minPriority), 1);
-                const exchangeOrderMax: number | undefined = exchangeOrder[maxIndex],
-                    exchangeOrderMin: number | undefined = exchangeOrder[minIndex];
-                if (exchangeOrderMax === undefined) {
-                    throw new Error(`В массиве изменений порядка хода игроков отсутствует максимальная '${exchangeOrder[maxIndex]}' с id '${maxIndex}'.`);
+        const value: number | undefined = counts[prop];
+        if (value === undefined) {
+            throw new Error(`В массиве значений монет отсутствует с id '${prop}'.`);
+        }
+        if (value <= 1) {
+            continue;
+        }
+        const tiePlayers: IPublicPlayer[] =
+            Object.values(G.publicPlayers).filter((player: IPublicPlayer, index: number): boolean => {
+                const boardCoinCurrentTavern: PublicPlayerCoinTypes | undefined = player.boardCoins[G.currentTavern];
+                if (boardCoinCurrentTavern === undefined) {
+                    throw new Error(`В массиве монет игрока с id '${index}' отсутствует монета текущей таверны с id '${G.currentTavern}'.`);
                 }
-                if (exchangeOrderMin === undefined) {
-                    throw new Error(`В массиве изменений порядка хода игроков отсутствует минимальная '${exchangeOrder[minIndex]}'  с id '${minIndex}'.`);
+                if (boardCoinCurrentTavern !== null && !IsCoin(boardCoinCurrentTavern)) {
+                    throw new Error(`В массиве монет игрока с id '${index}' не может быть закрыта монета текущей таверны с id '${G.currentTavern}'.`);
                 }
-                [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrderMax, exchangeOrderMin];
+                return boardCoinCurrentTavern?.value === Number(prop) && player.priority.isExchangeable;
+            });
+        while (tiePlayers.length > 1) {
+            const tiePlayersPriorities: number[] =
+                tiePlayers.map((player: IPublicPlayer): number => player.priority.value),
+                maxPriority: number = Math.max(...tiePlayersPriorities),
+                minPriority: number = Math.min(...tiePlayersPriorities),
+                maxIndex: number =
+                    Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
+                        player.priority.value === maxPriority),
+                minIndex: number =
+                    Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
+                        player.priority.value === minPriority);
+            tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
+                player.priority.value === maxPriority), 1);
+            tiePlayers.splice(tiePlayers.findIndex((player: IPublicPlayer): boolean =>
+                player.priority.value === minPriority), 1);
+            const exchangeOrderMax: number | undefined = exchangeOrder[maxIndex],
+                exchangeOrderMin: number | undefined = exchangeOrder[minIndex];
+            if (exchangeOrderMax === undefined) {
+                throw new Error(`В массиве изменений порядка хода игроков отсутствует максимальная '${exchangeOrder[maxIndex]}' с id '${maxIndex}'.`);
             }
+            if (exchangeOrderMin === undefined) {
+                throw new Error(`В массиве изменений порядка хода игроков отсутствует минимальная '${exchangeOrder[minIndex]}'  с id '${minIndex}'.`);
+            }
+            [exchangeOrder[minIndex], exchangeOrder[maxIndex]] = [exchangeOrderMax, exchangeOrderMin];
         }
     }
     const playersOrder = playersOrderNumbers.map((index: number): string => String(index));

@@ -22,9 +22,7 @@ import { BuffNames, LogTypes, SuitNames } from "./typescript/enums";
 export const CurrentScoring = (player) => {
     let score = 0, suit;
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            score += suitsConfig[suit].scoringRule(player.cards[suit]);
-        }
+        score += suitsConfig[suit].scoringRule(player.cards[suit]);
     }
     return score;
 };

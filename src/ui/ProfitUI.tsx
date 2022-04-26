@@ -13,7 +13,7 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
         if (card === undefined) {
             throw new Error(`В массиве карт '2' эпохи отсутствует карта с id '${j}'.`);
         }
-        let suit: null | SuitTypes = null;
+        let suit: SuitTypes | null = null;
         if (IsCardNotActionAndNotNull(card)) {
             suit = card.suit;
         }

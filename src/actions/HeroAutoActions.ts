@@ -144,9 +144,9 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
         const minCoinValue: number =
             Math.min(...player.boardCoins.filter((coin: PublicPlayerCoinTypes): boolean =>
                 IsCoin(coin) && !coin.isTriggerTrading)
-                .map((coin: PublicPlayerCoinTypes): number => (coin as ICoin).value)), upgradingCoinsArray =
-                player.boardCoins.filter((coin: PublicPlayerCoinTypes): boolean =>
-                    coin?.value === minCoinValue),
+                .map((coin: PublicPlayerCoinTypes): number => (coin as ICoin).value)),
+            upgradingCoinsArray = player.boardCoins.filter((coin: PublicPlayerCoinTypes): boolean =>
+                coin?.value === minCoinValue),
             upgradingCoinsValue: number = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {

@@ -33,9 +33,7 @@ export const SetupGame = (ctx) => {
     };
     let suit;
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            distinctions[suit] = null;
-        }
+        distinctions[suit] = null;
     }
     const winner = [], campPicked = false, mustDiscardTavernCardJarnglofi = null, discardCampCardsDeck = [], campDeckLength = [0, 0];
     let camp = [];
@@ -76,10 +74,8 @@ export const SetupGame = (ctx) => {
     const heroesConfigOptions = [GameNames.Basic];
     let expansion;
     for (expansion in expansions) {
-        if (Object.prototype.hasOwnProperty.call(expansions, expansion)) {
-            if (expansions[expansion].active) {
-                heroesConfigOptions.push(expansion);
-            }
+        if (expansions[expansion].active) {
+            heroesConfigOptions.push(expansion);
         }
     }
     const heroes = BuildHeroes(heroesConfigOptions, heroesConfig), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
@@ -103,15 +99,12 @@ export const SetupGame = (ctx) => {
     const marketCoinsUnique = [], marketCoins = BuildCoins(marketCoinsConfig, {
         count: marketCoinsUnique,
         players: ctx.numPlayers,
-    });
-    const averageCards = {};
+    }), averageCards = {};
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
-                players: ctx.numPlayers,
-                tier: 0,
-            });
-        }
+        averageCards[suit] = GetAverageSuitCard(suitsConfig[suit], {
+            players: ctx.numPlayers,
+            tier: 0,
+        });
     }
     const initHandCoinsId = Array(initialPlayerCoinsConfig.length).fill(undefined)
         .map((item, index) => index), initCoinsOrder = k_combinations(initHandCoinsId, tavernsNum);

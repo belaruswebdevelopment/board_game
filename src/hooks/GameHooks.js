@@ -8,26 +8,29 @@ export const CheckEndGame = (G, ctx) => {
         if (yludIndex !== -1) {
             return false;
         }
-        const brisingamensIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
-        if (brisingamensIndex !== -1) {
-            return false;
-        }
-        const mjollnirIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
-        if (mjollnirIndex !== -1) {
-            return false;
-        }
-        let allMercenariesPlayed = true;
-        for (let i = 0; i < ctx.numPlayers; i++) {
-            const player = G.publicPlayers[i];
-            if (player === undefined) {
-                throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+        if (G.expansions.thingvellir.active) {
+            const brisingamensIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
+            if (brisingamensIndex !== -1) {
+                return false;
             }
-            allMercenariesPlayed = player.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
-            if (!allMercenariesPlayed) {
-                break;
+            const mjollnirIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
+            if (mjollnirIndex !== -1) {
+                return false;
             }
+            let allMercenariesPlayed = true;
+            for (let i = 0; i < ctx.numPlayers; i++) {
+                const player = G.publicPlayers[i];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                }
+                allMercenariesPlayed = player.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
+                if (!allMercenariesPlayed) {
+                    break;
+                }
+            }
+            return allMercenariesPlayed;
         }
-        return allMercenariesPlayed;
+        return true;
     }
 };
 /**

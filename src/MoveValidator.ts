@@ -427,8 +427,8 @@ export const moveValidators: IMoveValidators = {
                     CompareCards(tavernCard, card) < 0)) {
                     continue;
                 }
-                const isCurrentCardWorse: boolean = EvaluateCard(G, ctx, tavernCard,
-                    moveArgument, currentTavern) < 0,
+                const isCurrentCardWorse: boolean =
+                    EvaluateCard(G, ctx, tavernCard, moveArgument, currentTavern) < 0,
                     isExistCardNotWorse: boolean =
                         currentTavern.some((card: TavernCardTypes): boolean => (card !== null)
                             && (EvaluateCard(G, ctx, tavernCard, moveArgument,
@@ -600,9 +600,7 @@ export const moveValidators: IMoveValidators = {
                 suitNames: SuitTypes[] = [];
             let suit: SuitTypes;
             for (suit in moveArguments) {
-                if (Object.prototype.hasOwnProperty.call(moveArguments, suit)) {
-                    suitNames.push(suit);
-                }
+                suitNames.push(suit);
             }
             const suitName: SuitTypes | undefined = suitNames[Math.floor(Math.random() * suitNames.length)];
             if (suitName === undefined) {
@@ -833,7 +831,6 @@ export const moveValidators: IMoveValidators = {
         validate: (): boolean => true,
     },
     PickConcreteCoinToUpgradeMoveValidator: {
-        // TODO FIX IT!!!
         getRange: (G?: IMyGameState, ctx?: Ctx):
             IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] => {
             if (G === undefined) {
@@ -972,18 +969,16 @@ export const moveValidators: IMoveValidators = {
             const validators: IValidatorsConfig | undefined = hero.validators;
             if (validators !== undefined) {
                 for (const validator in validators) {
-                    if (Object.prototype.hasOwnProperty.call(validators, validator)) {
-                        switch (validator) {
-                            case ValidatorNames.Conditions:
-                                isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
-                                break;
-                            case ValidatorNames.DiscardCard:
-                                isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
-                                break;
-                            default:
-                                isValid = true;
-                                break;
-                        }
+                    switch (validator) {
+                        case ValidatorNames.Conditions:
+                            isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
+                            break;
+                        case ValidatorNames.DiscardCard:
+                            isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
+                            break;
+                        default:
+                            isValid = true;
+                            break;
                     }
                 }
             } else {
@@ -1011,9 +1006,7 @@ export const moveValidators: IMoveValidators = {
                 suitNamesArray: SuitTypes[] = [];
             let suit: SuitTypes;
             for (suit in moveArguments) {
-                if (Object.prototype.hasOwnProperty.call(moveArguments, suit)) {
-                    suitNamesArray.push(suit);
-                }
+                suitNamesArray.push(suit);
             }
             const suitName: SuitTypes | undefined =
                 suitNamesArray[Math.floor(Math.random() * suitNamesArray.length)];
@@ -1067,7 +1060,7 @@ export const moveValidators: IMoveValidators = {
             }
             let minCardIndex = 0,
                 minCardValue: number | null = cardFirst.points;
-            moveArguments.cards.forEach((value: number, index: number) => {
+            moveArguments.cards.forEach((value: number, index: number): void => {
                 const card: PlayerCardsType | undefined = player.cards[SuitNames.WARRIOR][value];
                 if (card === undefined) {
                     throw new Error(`В массиве карт игрока во фракции '${SuitNames.WARRIOR}' отсутствует карта ${value}.`);
@@ -1331,7 +1324,7 @@ export const moveBy: IMoveBy = {
 const ValidateByValues = <T>(value: T, values: T[]): boolean => values.includes(value);
 
 const ValidateByObjectCoinIdTypeIsInitialValues = (value: IMoveCoinsArguments,
-    values: IMoveCoinsArguments[]): boolean => values.findIndex((coin: IMoveCoinsArguments) =>
+    values: IMoveCoinsArguments[]): boolean => values.findIndex((coin: IMoveCoinsArguments): boolean =>
         value.coinId === coin.coinId && value.type === coin.type) !== -1;
 
 const ValidateByObjectSuitCardIdValues = (value: IMoveSuitCardCurrentId,

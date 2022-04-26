@@ -16,9 +16,8 @@ import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
  */
 export const enumerate = (G, ctx) => {
     var _a;
-    const moves = [];
+    const moves = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
     let playerId;
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -221,79 +220,127 @@ export const objectives = () => ({
         },
         weight: -100.0,
     },
-    /*isWeaker: {
-        checker: (G: MyGameState, ctx: Ctx): boolean => {
+    /* isWeaker: {
+        checker: (G: IMyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
-            {
+            const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
+            if (deck1 === undefined) {
+                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
+            }
+            const tavern0: TavernCardTypes[] | undefined = G.taverns[0];
+            if (tavern0 === undefined) {
+                throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
+            }
+            if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (G.taverns[0].some(card => card === null)) {
+            if (tavern0.some((card: TavernCardTypes): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i: number = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(Scoring(G.publicPlayers[i]));
+            for (let i = 0; i < ctx.numPlayers; i++) {
+                const player: IPublicPlayer | undefined = G.publicPlayers[i];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                }
+                totalScore.push(CurrentScoring(player));
             }
-            const [top1, top2]: number[] = totalScore.sort((a, b) => b - a).slice(0, 2);
-            if (totalScore[Number(ctx.currentPlayer)] < top2 && top2 < top1) {
-                return totalScore[Number(ctx.currentPlayer)] >= Math.floor(0.85 * top1);
+            const [top1, top2]: number[] =
+                totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
+                totalScoreCurPlayer: number | undefined = totalScore[Number(ctx.currentPlayer)];
+            if (totalScoreCurPlayer === undefined) {
+                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
+            }
+            if (totalScoreCurPlayer < top2 && top2 < top1) {
+                return totalScoreCurPlayer >= Math.floor(0.85 * top1);
             }
             return false;
         },
         weight: 0.01,
-    },*/
-    /*isSecond: {
+    }, */
+    /* isSecond: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
-            {
+            const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
+            if (deck1 === undefined) {
+                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
+            }
+            const tavern0: TavernCardTypes[] | undefined = G.taverns[0];
+            if (tavern0 === undefined) {
+                throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
+            }
+            if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (G.taverns[0].some(card => card === null)) {
+            if (tavern0.some((card: TavernCardTypes): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i: number = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(Scoring(G.publicPlayers[i]));
+            for (let i = 0; i < ctx.numPlayers; i++) {
+                const player: IPublicPlayer | undefined = G.publicPlayers[i];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                }
+                totalScore.push(CurrentScoring(player));
             }
-            const [top1, top2]: number[] = totalScore.sort((a, b) => b - a).slice(0, 2);
-            if (totalScore[Number(ctx.currentPlayer)] === top2 && top2 < top1) {
-                return totalScore[Number(ctx.currentPlayer)] >= Math.floor(0.90 * top1);
+            const [top1, top2]: number[] =
+                totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
+                totalScoreCurPlayer: number | undefined = totalScore[Number(ctx.currentPlayer)];
+            if (totalScoreCurPlayer === undefined) {
+                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
+            }
+            if (totalScoreCurPlayer === top2 && top2 < top1) {
+                return totalScoreCurPlayer >= Math.floor(0.90 * top1);
             }
             return false;
         },
         weight: 0.1,
-    },*/
-    /*isEqual: {
+    }, */
+    /* isEqual: {
         checker: (G: MyGameState, ctx: Ctx): boolean => {
             if (ctx.phase !== Phases.PlaceCoins) {
                 return false;
             }
-            if (G.secret.decks[1].length < (G.botData.deckLength - 2 * G.tavernsNum * G.taverns[0].length))
-            {
+            const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
+            if (deck1 === undefined) {
+                throw new Error(`В массиве дек карт отсутствует дека '1' эпохи.`);
+            }
+            const tavern0: TavernCardTypes[] | undefined = G.taverns[0];
+            if (tavern0 === undefined) {
+                throw new Error(`В массиве таверн отсутствует таверна с id '0'.`);
+            }
+            if (deck1.length < (G.botData.deckLength - 2 * G.tavernsNum * tavern0.length)) {
                 return false;
             }
-            if (G.taverns[0].some(card => card === null)) {
+            if (tavern0.some((card: TavernCardTypes): boolean => card === null)) {
                 return false;
             }
             const totalScore: number[] = [];
             for (let i: number = 0; i < ctx.numPlayers; i++) {
-                totalScore.push(Scoring(G.publicPlayers[i]));
+                const player: IPublicPlayer | undefined = G.publicPlayers[i];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+                }
+                totalScore.push(CurrentScoring(player));
             }
-            const [top1, top2]: number[] = totalScore.sort((a, b) => b - a).slice(0, 2);
-            if (totalScore[Number(ctx.currentPlayer)] < top2 && top2 === top1) {
-                return totalScore[Number(ctx.currentPlayer)] >= Math.floor(0.90 * top1);
+            const [top1, top2]: number[] =
+                totalScore.sort((a: number, b: number): number => b - a).slice(0, 2),
+                totalScoreCurPlayer: number | undefined = totalScore[Number(ctx.currentPlayer)];
+            if (totalScoreCurPlayer === undefined) {
+                throw new Error(`В массиве общего счёта отсутствует счёт текущего игрока с id '${ctx.currentPlayer}'.`);
+            }
+            if (totalScoreCurPlayer < top2 && top2 === top1) {
+                return totalScoreCurPlayer >= Math.floor(0.90 * top1);
             }
             return false;
 
         },
         weight: 0.1,
-    },*/
+    }, */
     isFirst: {
         checker: (G, ctx) => {
             if (ctx.phase !== Phases.PickCards) {

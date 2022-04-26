@@ -145,14 +145,14 @@ export const BoardGame: Game<IMyGameState> = {
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnPickCardsTurnBegin(G, ctx),
                 onMove: (G: IMyGameState, ctx: Ctx): void => OnPickCardsMove(G, ctx),
                 endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndPickCardsTurn(G, ctx),
-                onEnd: (G: IMyGameState, ctx: Ctx) => OnPickCardsTurnEnd(G, ctx),
+                onEnd: (G: IMyGameState, ctx: Ctx): void => OnPickCardsTurnEnd(G, ctx),
             },
             moves: {
                 ClickCardMove,
                 ClickCampCardMove,
             },
             onBegin: (G: IMyGameState, ctx: Ctx): void => ResolveCurrentTavernOrders(G, ctx),
-            endIf: (G: IMyGameState, ctx: Ctx) => CheckEndPickCardsPhase(G, ctx),
+            endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void => CheckEndPickCardsPhase(G, ctx),
             onEnd: (G: IMyGameState, ctx: Ctx): void => EndPickCardsActions(G, ctx),
         },
         enlistmentMercenaries: {

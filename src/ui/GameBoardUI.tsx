@@ -157,32 +157,30 @@ export const DrawDistinctions = (G: IMyGameState, ctx: Ctx, validatorName: MoveV
             }
         }
         for (suit in suitsConfig) {
-            if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                if (ctx.phase === Phases.GetDistinctions && ctx.activePlayers === null
-                    && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
-                    if (data !== undefined) {
-                        const suitArg: SuitTypes = suit;
-                        boardCells.push(
-                            <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
-                                onClick={() => data.moves.ClickDistinctionCardMove?.(suitArg)}
-                                title={suitsConfig[suit].distinction.description}>
-                                <span style={Styles.Distinctions(suit)}
-                                    className="bg-suit-distinction"></span>
-                            </td>
-                        );
-                    } else if (validatorName === MoveValidatorNames.ClickDistinctionCardMoveValidator) {
-                        moveMainArgs.push(suit);
-                    }
-                } else {
-                    if (data !== undefined) {
-                        boardCells.push(
-                            <td className="bg-green-500" key={`Distinction ${suit} card`}
-                                title={suitsConfig[suit].distinction.description}>
-                                <span style={Styles.Distinctions(suit)}
-                                    className="bg-suit-distinction"></span>
-                            </td>
-                        );
-                    }
+            if (ctx.phase === Phases.GetDistinctions && ctx.activePlayers === null
+                && G.distinctions[suit] === ctx.currentPlayer && currentDistinctionSuit === suit) {
+                if (data !== undefined) {
+                    const suitArg: SuitTypes = suit;
+                    boardCells.push(
+                        <td className="bg-green-500 cursor-pointer" key={`Distinction ${suit} card`}
+                            onClick={() => data.moves.ClickDistinctionCardMove?.(suitArg)}
+                            title={suitsConfig[suit].distinction.description}>
+                            <span style={Styles.Distinctions(suit)}
+                                className="bg-suit-distinction"></span>
+                        </td>
+                    );
+                } else if (validatorName === MoveValidatorNames.ClickDistinctionCardMoveValidator) {
+                    moveMainArgs.push(suit);
+                }
+            } else {
+                if (data !== undefined) {
+                    boardCells.push(
+                        <td className="bg-green-500" key={`Distinction ${suit} card`}
+                            title={suitsConfig[suit].distinction.description}>
+                            <span style={Styles.Distinctions(suit)}
+                                className="bg-suit-distinction"></span>
+                        </td>
+                    );
                 }
             }
         }
@@ -364,7 +362,7 @@ export const DrawMarketCoins = (G: IMyGameState, data: BoardProps<IMyGameState>)
             if (marketCoin === undefined) {
                 throw new Error(`В массиве монет рынка героев отсутствует монета с id '${increment}'.`);
             }
-            const tempCoinValue = marketCoin.value,
+            const tempCoinValue: number = marketCoin.value,
                 coinClassName: string = countMarketCoins[tempCoinValue] === 0 ? `text-red-500` : `text-blue-500`;
             DrawCoin(data, boardCells, `market`, marketCoin, increment, null,
                 coinClassName, countMarketCoins[tempCoinValue],
@@ -409,7 +407,7 @@ export const DrawProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameSt
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
-    const option = G.drawProfit;
+    const option: string = G.drawProfit;
     let caption = `Get `;
     switch (option) {
         case ConfigNames.ExplorerDistinction:

@@ -31,10 +31,8 @@ export const HrafnsmerkiScoring = (G?: IMyGameState, player?: IPublicPlayer): nu
     let score = 0,
         suit: SuitTypes;
     for (suit in player.cards) {
-        if (Object.prototype.hasOwnProperty.call(player.cards, suit)) {
-            score += player.cards[suit].filter((card: PlayerCardsType): boolean =>
-                IsMercenaryPlayerCard(card)).length * 5;
-        }
+        score += player.cards[suit].filter((card: PlayerCardsType): boolean =>
+            IsMercenaryPlayerCard(card)).length * 5;
     }
     return score;
 };

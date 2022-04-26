@@ -16,23 +16,21 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
     const campCards = [];
     let artefactName;
     for (artefactName in artefactConfig) {
-        if (Object.prototype.hasOwnProperty.call(artefactConfig, artefactName)) {
-            const artefactData = artefactConfig[artefactName];
-            if (artefactData.tier === tier) {
-                campCards.push(CreateArtefactCampCard({
-                    tier,
-                    path: artefactData.name,
-                    name: artefactData.name,
-                    description: artefactData.description,
-                    suit: artefactData.suit,
-                    rank: artefactData.rank,
-                    points: artefactData.points,
-                    buff: artefactData.buff,
-                    validators: artefactData.validators,
-                    actions: artefactData.actions,
-                    stack: artefactData.stack,
-                }));
-            }
+        const artefactData = artefactConfig[artefactName];
+        if (artefactData.tier === tier) {
+            campCards.push(CreateArtefactCampCard({
+                tier,
+                path: artefactData.name,
+                name: artefactData.name,
+                description: artefactData.description,
+                suit: artefactData.suit,
+                rank: artefactData.rank,
+                points: artefactData.points,
+                buff: artefactData.buff,
+                validators: artefactData.validators,
+                actions: artefactData.actions,
+                stack: artefactData.stack,
+            }));
         }
     }
     const mercenariesConfigTier = mercenariesConfig[tier];
@@ -46,21 +44,17 @@ export const BuildCampCards = (tier, artefactConfig, mercenariesConfig) => {
             throw new Error(`Отсутствует массив значений карты наёмника с id '${i}' в указанной эпохе - '${tier}'.`);
         }
         for (campMercenarySuit in mercenaryData) {
-            if (Object.prototype.hasOwnProperty.call(mercenaryData, campMercenarySuit)) {
-                path += campMercenarySuit + ` `;
-                name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
-                for (const campMercenaryCardProperty in mercenaryData[campMercenarySuit]) {
-                    if (Object.prototype.hasOwnProperty.call(mercenaryData[campMercenarySuit], campMercenaryCardProperty)) {
-                        const mercenaryVariant = mercenaryData[campMercenarySuit];
-                        if (mercenaryVariant !== undefined) {
-                            if (campMercenaryCardProperty === `rank`) {
-                                name += `шевронов: ${mercenaryVariant.rank}, `;
-                            }
-                            if (campMercenaryCardProperty === `points`) {
-                                path += mercenaryVariant.points ? mercenaryVariant.points + ` ` : ``;
-                                name += `очков: ${mercenaryVariant.points ? mercenaryVariant.points + `) ` : `нет) `}`;
-                            }
-                        }
+            path += campMercenarySuit + ` `;
+            name += `(фракция: ${suitsConfig[campMercenarySuit].suitName}, `;
+            for (const campMercenaryCardProperty in mercenaryData[campMercenarySuit]) {
+                const mercenaryVariant = mercenaryData[campMercenarySuit];
+                if (mercenaryVariant !== undefined) {
+                    if (campMercenaryCardProperty === `rank`) {
+                        name += `шевронов: ${mercenaryVariant.rank}, `;
+                    }
+                    if (campMercenaryCardProperty === `points`) {
+                        path += mercenaryVariant.points ? mercenaryVariant.points + ` ` : ``;
+                        name += `очков: ${mercenaryVariant.points ? mercenaryVariant.points + `) ` : `нет) `}`;
                     }
                 }
             }

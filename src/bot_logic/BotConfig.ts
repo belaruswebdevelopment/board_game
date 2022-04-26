@@ -21,7 +21,8 @@ export const CheckHeuristicsForCoinsPlacement = (G: IMyGameState, ctx: Ctx): num
             absoluteHeuristicsForTradingCoin.reduce((acc: number, item: IHeuristic<TavernCardTypes[]>):
                 number => acc + (item.heuristic(tavern) ? item.weight : 0), 0)),
         result: number[] =
-            Array(taverns.length).fill(0).map((value: number, index: number) => {
+            Array(taverns.length).fill(0).map((value: number, index: number):
+                number => {
                 const num: number | undefined = temp[index];
                 if (num === undefined) {
                     throw new Error(`Отсутствует значение с id '${index}'.`);

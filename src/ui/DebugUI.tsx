@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import type { IDebugData, IMyGameState } from "../typescript/interfaces";
+import type { IDebugData, IDebugDrawData, IMyGameState } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -36,11 +36,7 @@ export const DrawDebugData = (G: IMyGameState, ctx: Ctx): JSX.Element | null => 
  * @param obj Информация.
  * @returns
  */
-const DrawObjectData = (obj: {
-    // TODO Rework 'any'?
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any,
-}): JSX.Element => {
+const DrawObjectData = (obj: IDebugDrawData): JSX.Element => {
     const values: JSX.Element[] = [];
     for (const [key, value] of Object.entries(obj)) {
         if (value instanceof Object) {

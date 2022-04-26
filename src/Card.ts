@@ -18,41 +18,39 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
     const cards: DeckCardTypes[] = [];
     let suit: SuitTypes;
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            const pointValuesPlayers: INumberValues | INumberArrayValues | undefined =
-                deckConfig.suits[suit].pointsValues()[data.players];
-            if (pointValuesPlayers === undefined) {
-                throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}'.`);
-            }
-            const points: number | number[] | undefined = pointValuesPlayers[data.tier];
-            if (points === undefined) {
-                throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - '${data.tier}'.`);
-            }
-            let count = 0;
+        const pointValuesPlayers: INumberValues | INumberArrayValues | undefined =
+            deckConfig.suits[suit].pointsValues()[data.players];
+        if (pointValuesPlayers === undefined) {
+            throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}'.`);
+        }
+        const points: number | number[] | undefined = pointValuesPlayers[data.tier];
+        if (points === undefined) {
+            throw new Error(`Отсутствует массив значений очков карт для указанного числа игроков - '${data.players}' для указанной эпохи - '${data.tier}'.`);
+        }
+        let count = 0;
+        if (Array.isArray(points)) {
+            count = points.length;
+        } else {
+            count = points;
+        }
+        for (let j = 0; j < count; j++) {
+            let currentPoints: number | null;
             if (Array.isArray(points)) {
-                count = points.length;
-            } else {
-                count = points;
-            }
-            for (let j = 0; j < count; j++) {
-                let currentPoints: number | null;
-                if (Array.isArray(points)) {
-                    const cardPoints: number | undefined = points[j];
-                    if (cardPoints === undefined) {
-                        throw new Error(`Отсутствует значение очков карты с id '${j}'.`);
-                    }
-                    currentPoints = cardPoints;
-                } else {
-                    currentPoints = null;
+                const cardPoints: number | undefined = points[j];
+                if (cardPoints === undefined) {
+                    throw new Error(`Отсутствует значение очков карты с id '${j}'.`);
                 }
-                cards.push(CreateCard({
-                    suit: deckConfig.suits[suit].suit,
-                    rank: 1,
-                    points: currentPoints,
-                    name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
-                    game: GameNames.Basic,
-                }));
+                currentPoints = cardPoints;
+            } else {
+                currentPoints = null;
             }
+            cards.push(CreateCard({
+                suit: deckConfig.suits[suit].suit,
+                rank: 1,
+                points: currentPoints,
+                name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
+                game: GameNames.Basic,
+            }));
         }
     }
     const actionCardConfig: IActionCardConfig[] = deckConfig.actions;
@@ -84,16 +82,14 @@ export const BuildAdditionalCards = (): ICard[] => {
     const cards: ICard[] = [];
     let cardName: AdditionalCardTypes;
     for (cardName in additionalCardsConfig) {
-        if (Object.prototype.hasOwnProperty.call(additionalCardsConfig, cardName)) {
-            const card: ICard = additionalCardsConfig[cardName];
-            cards.push(CreateCard({
-                suit: card.suit,
-                rank: card.rank,
-                points: card.points,
-                name: card.name,
-                game: GameNames.Basic,
-            }));
-        }
+        const card: ICard = additionalCardsConfig[cardName];
+        cards.push(CreateCard({
+            suit: card.suit,
+            rank: card.rank,
+            points: card.points,
+            name: card.name,
+            game: GameNames.Basic,
+        }));
     }
     return cards;
 };

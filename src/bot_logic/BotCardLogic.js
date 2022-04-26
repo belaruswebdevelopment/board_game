@@ -155,13 +155,11 @@ const PotentialScoring = (G, playerId, card) => {
     }
     let score = 0, suit;
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            if (IsCardNotActionAndNotNull(card) && card.suit === suit) {
-                score += suitsConfig[suit].scoringRule(player.cards[suit], (_a = card.points) !== null && _a !== void 0 ? _a : 1);
-            }
-            else {
-                score += suitsConfig[suit].scoringRule(player.cards[suit]);
-            }
+        if (IsCardNotActionAndNotNull(card) && card.suit === suit) {
+            score += suitsConfig[suit].scoringRule(player.cards[suit], (_a = card.points) !== null && _a !== void 0 ? _a : 1);
+        }
+        else {
+            score += suitsConfig[suit].scoringRule(player.cards[suit]);
         }
     }
     if (IsActionCard(card)) {

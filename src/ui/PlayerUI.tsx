@@ -76,40 +76,38 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
         const pickedCard: PickedCardType = player.pickedCard;
         let suitTop: SuitTypes;
         for (suitTop in suitsConfig) {
-            if (Object.prototype.hasOwnProperty.call(suitsConfig, suitTop)) {
-                if (p === Number(ctx.currentPlayer)
-                    && validatorName === MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) {
-                    if (player.cards[suitTop].length) {
-                        if (moveMainArgs === undefined || typeof moveMainArgs !== `object`
-                            || Array.isArray(moveMainArgs) || `cards` in moveMainArgs) {
-                            throw new Error(`Аргумент валидатора '${validatorName}' должен быть объектом с полем '${suitTop}'.`);
-                        }
-                        moveMainArgs[suitTop] = [];
+            if (p === Number(ctx.currentPlayer)
+                && validatorName === MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) {
+                if (player.cards[suitTop].length) {
+                    if (moveMainArgs === undefined || typeof moveMainArgs !== `object`
+                        || Array.isArray(moveMainArgs) || `cards` in moveMainArgs) {
+                        throw new Error(`Аргумент валидатора '${validatorName}' должен быть объектом с полем '${suitTop}'.`);
                     }
+                    moveMainArgs[suitTop] = [];
                 }
-                if (p === Number(ctx.currentPlayer) && ctx.phase === Phases.GetMjollnirProfit) {
-                    if (data !== undefined) {
-                        const suitArg: SuitTypes = suitTop;
-                        DrawSuit(data, playerHeaders, suitArg, player, MoveNames.GetMjollnirProfitMove);
-                    } else if (validatorName === MoveValidatorNames.GetMjollnirProfitMoveValidator) {
-                        if (!Array.isArray(moveMainArgs)) {
-                            throw new Error(`Аргумент валидатора '${validatorName}' должен быть массивом`);
-                        }
-                        (moveMainArgs as IMoveArgumentsStage<SuitTypes[]>[`args`]).push(suitTop);
-                    }
-                } else {
-                    if (data !== undefined) {
-                        DrawSuit(data, playerHeaders, suitTop, player, null);
-                    }
-                }
+            }
+            if (p === Number(ctx.currentPlayer) && ctx.phase === Phases.GetMjollnirProfit) {
                 if (data !== undefined) {
-                    playerHeadersCount.push(
-                        <th className={`${suitsConfig[suitTop].suitColor} text-white`}
-                            key={`${player.nickname} ${suitsConfig[suitTop].suitName} count`}>
-                            <b>{player.cards[suitTop].reduce(TotalRank, 0)}</b>
-                        </th>
-                    );
+                    const suitArg: SuitTypes = suitTop;
+                    DrawSuit(data, playerHeaders, suitArg, player, MoveNames.GetMjollnirProfitMove);
+                } else if (validatorName === MoveValidatorNames.GetMjollnirProfitMoveValidator) {
+                    if (!Array.isArray(moveMainArgs)) {
+                        throw new Error(`Аргумент валидатора '${validatorName}' должен быть массивом`);
+                    }
+                    (moveMainArgs as IMoveArgumentsStage<SuitTypes[]>[`args`]).push(suitTop);
                 }
+            } else {
+                if (data !== undefined) {
+                    DrawSuit(data, playerHeaders, suitTop, player, null);
+                }
+            }
+            if (data !== undefined) {
+                playerHeadersCount.push(
+                    <th className={`${suitsConfig[suitTop].suitColor} text-white`}
+                        key={`${player.nickname} ${suitsConfig[suitTop].suitName} count`}>
+                        <b>{player.cards[suitTop].reduce(TotalRank, 0)}</b>
+                    </th>
+                );
             }
         }
         if (data !== undefined) {
@@ -148,143 +146,141 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                 j = 0,
                 suit: SuitTypes;
             for (suit in suitsConfig) {
-                if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-                    id = i + j;
-                    const card: PlayerCardsType | undefined = player.cards[suit][i],
-                        last: number = player.cards[suit].length - 1;
-                    if (card !== undefined) {
-                        isDrawRow = true;
-                        if (p !== Number(ctx.currentPlayer) && stage === Stages.DiscardSuitCard
-                            && suit === SuitNames.WARRIOR && !IsHeroCard(card)) {
-                            if (data !== undefined) {
-                                DrawCard(data, playerCells, card, id, player, suit,
-                                    MoveNames.DiscardSuitCardFromPlayerBoardMove, i);
-                            } else if (validatorName === MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator
-                                && p === playerId) {
-                                if (moveMainArgs === undefined || !(`cards` in moveMainArgs)) {
-                                    throw new Error(`Аргумент валидатора '${validatorName}' должен быть объектом с полем 'cards'.`);
-                                }
-                                moveMainArgs.cards.push(i);
+                id = i + j;
+                const card: PlayerCardsType | undefined = player.cards[suit][i],
+                    last: number = player.cards[suit].length - 1;
+                if (card !== undefined) {
+                    isDrawRow = true;
+                    if (p !== Number(ctx.currentPlayer) && stage === Stages.DiscardSuitCard
+                        && suit === SuitNames.WARRIOR && !IsHeroCard(card)) {
+                        if (data !== undefined) {
+                            DrawCard(data, playerCells, card, id, player, suit,
+                                MoveNames.DiscardSuitCardFromPlayerBoardMove, i);
+                        } else if (validatorName === MoveValidatorNames.DiscardSuitCardFromPlayerBoardMoveValidator
+                            && p === playerId) {
+                            if (moveMainArgs === undefined || !(`cards` in moveMainArgs)) {
+                                throw new Error(`Аргумент валидатора '${validatorName}' должен быть объектом с полем 'cards'.`);
                             }
-                        } else if (p === Number(ctx.currentPlayer) && last === i
-                            && stage === Stages.DiscardBoardCard && !IsHeroCard(card)) {
-                            const stack: IStack | undefined = player.stack[0];
-                            if (stack === undefined) {
-                                throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`);
-                            }
-                            const configSuit: SuitTypes | null | undefined = stack.config?.suit,
-                                pickedCard: PickedCardType = player.pickedCard;
-                            if (suit !== configSuit
-                                && !(configSuit === SuitNames.HUNTER && player.actionsNum === 1
-                                    && pickedCard !== null && `suit` in pickedCard && suit === pickedCard.suit)) {
-                                if (data !== undefined) {
-                                    const suitArg: SuitTypes = suit;
-                                    DrawCard(data, playerCells, card, id, player, suit,
-                                        MoveNames.DiscardCardMove, suitArg, last);
-                                } else if (validatorName === MoveValidatorNames.DiscardCardMoveValidator) {
-                                    if (moveMainArgs === undefined || typeof moveMainArgs !== `object`
-                                        || Array.isArray(moveMainArgs) || `cards` in moveMainArgs) {
-                                        throw new Error(`Аргумент валидатора '${validatorName}' должен быть объектом с полем '${suit}'.`);
-                                    }
-                                    moveMainArgs[suit] = [];
-                                    const moveMainArgsFoSuit: number[] | undefined = moveMainArgs[suit];
-                                    if (moveMainArgsFoSuit === undefined) {
-                                        throw new Error(`Массив значений должен содержать фракцию '${suit}'.`);
-                                    }
-                                    moveMainArgsFoSuit.push(last);
-                                }
-                            }
-                        } else if (p === Number(ctx.currentPlayer)
-                            && ctx.phase === Phases.BrisingamensEndGame && !IsHeroCard(card)) {
+                            moveMainArgs.cards.push(i);
+                        }
+                    } else if (p === Number(ctx.currentPlayer) && last === i
+                        && stage === Stages.DiscardBoardCard && !IsHeroCard(card)) {
+                        const stack: IStack | undefined = player.stack[0];
+                        if (stack === undefined) {
+                            throw new Error(`В массиве стека действий игрока отсутствует '0' действие.`);
+                        }
+                        const configSuit: SuitTypes | null | undefined = stack.config?.suit,
+                            pickedCard: PickedCardType = player.pickedCard;
+                        if (suit !== configSuit
+                            && !(configSuit === SuitNames.HUNTER && player.actionsNum === 1
+                                && pickedCard !== null && `suit` in pickedCard && suit === pickedCard.suit)) {
                             if (data !== undefined) {
                                 const suitArg: SuitTypes = suit;
                                 DrawCard(data, playerCells, card, id, player, suit,
-                                    MoveNames.DiscardCardFromPlayerBoardMove, suitArg, i);
-                            } else if (validatorName === MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) {
+                                    MoveNames.DiscardCardMove, suitArg, last);
+                            } else if (validatorName === MoveValidatorNames.DiscardCardMoveValidator) {
                                 if (moveMainArgs === undefined || typeof moveMainArgs !== `object`
                                     || Array.isArray(moveMainArgs) || `cards` in moveMainArgs) {
                                     throw new Error(`Аргумент валидатора '${validatorName}' должен быть объектом с полем '${suit}'.`);
                                 }
+                                moveMainArgs[suit] = [];
                                 const moveMainArgsFoSuit: number[] | undefined = moveMainArgs[suit];
                                 if (moveMainArgsFoSuit === undefined) {
                                     throw new Error(`Массив значений должен содержать фракцию '${suit}'.`);
                                 }
-                                moveMainArgsFoSuit.push(i);
-                            }
-                        } else {
-                            if (data !== undefined) {
-                                DrawCard(data, playerCells, card, id, player, suit);
+                                moveMainArgsFoSuit.push(last);
                             }
                         }
-                    } else if (p === Number(ctx.currentPlayer) && (last + 1) === i && pickedCard !== null
-                        && (((ctx.phase === Phases.EndTier || ctx.phase === Phases.EnlistmentMercenaries)
-                            && ctx.activePlayers === null) || stage === Stages.PlaceThrudHero
-                            || stage === Stages.PlaceOlwinCards)) {
-                        let cardVariants: IVariant | undefined = undefined;
-                        if (ctx.phase === Phases.EnlistmentMercenaries && ctx.activePlayers === null) {
-                            if (!IsMercenaryCampCard(pickedCard)) {
-                                throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
-                            }
-                            cardVariants = pickedCard.variants[suit];
-                            if (cardVariants !== undefined && cardVariants.suit !== suit) {
-                                throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
-                            }
-                        } else {
-                            if (!("suit" in pickedCard)) {
-                                throw new Error(`У выбранной карты отсутствует обязательный параметр 'suit'.`);
-                            }
-                        }
+                    } else if (p === Number(ctx.currentPlayer)
+                        && ctx.phase === Phases.BrisingamensEndGame && !IsHeroCard(card)) {
                         if (data !== undefined) {
-                            // TODO Draw heroes with more then one ranks no after the last card but when last rank of this hero card placed!?
-                            let action: IMoveFunctionTypes;
-                            if ((!IsMercenaryCampCard(pickedCard) && suit !== pickedCard.suit)
-                                || (IsMercenaryCampCard(pickedCard) && cardVariants !== undefined
-                                    && suit === cardVariants.suit)) {
-                                switch (pickedCard.name) {
-                                    case HeroNames.Thrud:
-                                        action = data.moves.PlaceThrudHeroMove!;
-                                        break;
-                                    case HeroNames.Ylud:
-                                        action = data.moves.PlaceYludHeroMove!;
-                                        break;
-                                    case CardNames.OlwinsDouble:
-                                        action = data.moves.PlaceOlwinCardMove!;
-                                        break;
-                                    default:
-                                        if (ctx.phase === Phases.EnlistmentMercenaries && ctx.activePlayers === null) {
-                                            action = data.moves.PlaceEnlistmentMercenariesMove!;
-                                            break;
-                                        } else {
-                                            throw new Error(`Нет такого мува.`);
-                                        }
-                                }
-                                isDrawRow = true;
-                                const suitArg: SuitTypes = suit;
-                                playerCells.push(
-                                    <td onClick={() => action?.(suitArg)} className="cursor-pointer"
-                                        key={`${player.nickname} place card ${pickedCard.name} to ${suit}`}></td>
-                                );
-                            } else {
-                                playerCells.push(
-                                    <td key={`${player.nickname} empty card ${id}`}></td>
-                                );
+                            const suitArg: SuitTypes = suit;
+                            DrawCard(data, playerCells, card, id, player, suit,
+                                MoveNames.DiscardCardFromPlayerBoardMove, suitArg, i);
+                        } else if (validatorName === MoveValidatorNames.DiscardCardFromPlayerBoardMoveValidator) {
+                            if (moveMainArgs === undefined || typeof moveMainArgs !== `object`
+                                || Array.isArray(moveMainArgs) || `cards` in moveMainArgs) {
+                                throw new Error(`Аргумент валидатора '${validatorName}' должен быть объектом с полем '${suit}'.`);
                             }
-                        } else if (validatorName === MoveValidatorNames.PlaceThrudHeroMoveValidator
-                            || validatorName === MoveValidatorNames.PlaceYludHeroMoveValidator
-                            || validatorName === MoveValidatorNames.PlaceOlwinCardMoveValidator
-                            || (validatorName === MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator
-                                && cardVariants !== undefined && suit === cardVariants.suit)) {
-                            (moveMainArgs as IMoveArgumentsStage<SuitTypes[]>[`args`]).push(suit);
+                            const moveMainArgsFoSuit: number[] | undefined = moveMainArgs[suit];
+                            if (moveMainArgsFoSuit === undefined) {
+                                throw new Error(`Массив значений должен содержать фракцию '${suit}'.`);
+                            }
+                            moveMainArgsFoSuit.push(i);
                         }
                     } else {
                         if (data !== undefined) {
+                            DrawCard(data, playerCells, card, id, player, suit);
+                        }
+                    }
+                } else if (p === Number(ctx.currentPlayer) && (last + 1) === i && pickedCard !== null
+                    && (((ctx.phase === Phases.EndTier || ctx.phase === Phases.EnlistmentMercenaries)
+                        && ctx.activePlayers === null) || stage === Stages.PlaceThrudHero
+                        || stage === Stages.PlaceOlwinCards)) {
+                    let cardVariants: IVariant | undefined = undefined;
+                    if (ctx.phase === Phases.EnlistmentMercenaries && ctx.activePlayers === null) {
+                        if (!IsMercenaryCampCard(pickedCard)) {
+                            throw new Error(`Выбранная карта должна быть с типом '${RusCardTypes.MERCENARY}'.`);
+                        }
+                        cardVariants = pickedCard.variants[suit];
+                        if (cardVariants !== undefined && cardVariants.suit !== suit) {
+                            throw new Error(`У выбранной карты отсутствует обязательный параметр 'variants[suit]'.`);
+                        }
+                    } else {
+                        if (!("suit" in pickedCard)) {
+                            throw new Error(`У выбранной карты отсутствует обязательный параметр 'suit'.`);
+                        }
+                    }
+                    if (data !== undefined) {
+                        // TODO Draw heroes with more then one ranks no after the last card but when last rank of this hero card placed!?
+                        let action: IMoveFunctionTypes;
+                        if ((!IsMercenaryCampCard(pickedCard) && suit !== pickedCard.suit)
+                            || (IsMercenaryCampCard(pickedCard) && cardVariants !== undefined
+                                && suit === cardVariants.suit)) {
+                            switch (pickedCard.name) {
+                                case HeroNames.Thrud:
+                                    action = data.moves.PlaceThrudHeroMove!;
+                                    break;
+                                case HeroNames.Ylud:
+                                    action = data.moves.PlaceYludHeroMove!;
+                                    break;
+                                case CardNames.OlwinsDouble:
+                                    action = data.moves.PlaceOlwinCardMove!;
+                                    break;
+                                default:
+                                    if (ctx.phase === Phases.EnlistmentMercenaries && ctx.activePlayers === null) {
+                                        action = data.moves.PlaceEnlistmentMercenariesMove!;
+                                        break;
+                                    } else {
+                                        throw new Error(`Нет такого мува.`);
+                                    }
+                            }
+                            isDrawRow = true;
+                            const suitArg: SuitTypes = suit;
+                            playerCells.push(
+                                <td onClick={() => action?.(suitArg)} className="cursor-pointer"
+                                    key={`${player.nickname} place card ${pickedCard.name} to ${suit}`}></td>
+                            );
+                        } else {
                             playerCells.push(
                                 <td key={`${player.nickname} empty card ${id}`}></td>
                             );
                         }
+                    } else if (validatorName === MoveValidatorNames.PlaceThrudHeroMoveValidator
+                        || validatorName === MoveValidatorNames.PlaceYludHeroMoveValidator
+                        || validatorName === MoveValidatorNames.PlaceOlwinCardMoveValidator
+                        || (validatorName === MoveValidatorNames.PlaceEnlistmentMercenariesMoveValidator
+                            && cardVariants !== undefined && suit === cardVariants.suit)) {
+                        (moveMainArgs as IMoveArgumentsStage<SuitTypes[]>[`args`]).push(suit);
                     }
-                    j++;
+                } else {
+                    if (data !== undefined) {
+                        playerCells.push(
+                            <td key={`${player.nickname} empty card ${id}`}></td>
+                        );
+                    }
                 }
+                j++;
             }
             for (let k = 0; k < 1 + Number(G.expansions.thingvellir.active); k++) {
                 id += k + 1;

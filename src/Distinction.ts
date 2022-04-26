@@ -76,7 +76,7 @@ export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: Su
         throw new Error(`Должны быть карты во фракции '${suitsConfig[suit].suitName}' хотя бы у 1 игрока.`);
     }
     const maxPlayers: number[] = [];
-    playersRanks.forEach((value: number, index: number) => {
+    playersRanks.forEach((value: number, index: number): void => {
         if (value === max) {
             maxPlayers.push(index);
             const playerIndex: IPublicPlayer | undefined = G.publicPlayers[index];
@@ -106,22 +106,20 @@ export const CheckDistinction = (G: IMyGameState, ctx: Ctx): void => {
     AddDataToLog(G, LogTypes.GAME, `Преимущество по фракциям в конце эпохи:`);
     let suit: SuitTypes;
     for (suit in suitsConfig) {
-        if (Object.prototype.hasOwnProperty.call(suitsConfig, suit)) {
-            const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
-            G.distinctions[suit] = result;
-            if (suit === SuitNames.EXPLORER && result === undefined) {
-                const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
-                if (deck1 === undefined) {
-                    throw new Error(`В массиве дек арт отсутствует дека '2' эпохи.`);
-                }
-                const discardedCard: DeckCardTypes | undefined = deck1.splice(0, 1)[0];
-                if (discardedCard === undefined) {
-                    throw new Error(`Отсутствует сбрасываемая карта из колоды '2' эпохи при отсутствии преимущества по фракции разведчиков.`);
-                }
-                G.deckLength[1] = deck1.length;
-                G.discardCardsDeck.push(discardedCard);
-                AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: '${discardedCard.name}'.`);
+        const result: DistinctionTypes = CheckCurrentSuitDistinction(G, ctx, suit);
+        G.distinctions[suit] = result;
+        if (suit === SuitNames.EXPLORER && result === undefined) {
+            const deck1: DeckCardTypes[] | undefined = G.secret.decks[1];
+            if (deck1 === undefined) {
+                throw new Error(`В массиве дек арт отсутствует дека '2' эпохи.`);
             }
+            const discardedCard: DeckCardTypes | undefined = deck1.splice(0, 1)[0];
+            if (discardedCard === undefined) {
+                throw new Error(`Отсутствует сбрасываемая карта из колоды '2' эпохи при отсутствии преимущества по фракции разведчиков.`);
+            }
+            G.deckLength[1] = deck1.length;
+            G.discardCardsDeck.push(discardedCard);
+            AddDataToLog(G, LogTypes.PRIVATE, `Из-за отсутствия преимущества по фракции разведчиков сброшена карта: '${discardedCard.name}'.`);
         }
     }
 };
