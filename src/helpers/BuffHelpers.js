@@ -33,7 +33,7 @@ export const DeleteBuffFromPlayer = (G, ctx, buffName) => {
     }
     const buffIndex = player.buffs.findIndex((buff) => buff[buffName] !== undefined);
     if (buffIndex === -1) {
-        throw new Error(`У игрока в 'buffs' отсутствует баф '${buffName}'.`);
+        throw new Error(`У игрока в массиве бафов отсутствует баф '${buffName}'.`);
     }
     player.buffs.splice(buffIndex, 1);
     AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' потерял баф '${buffName}'.`);

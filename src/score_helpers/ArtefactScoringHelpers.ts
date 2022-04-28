@@ -15,7 +15,7 @@ export const DraupnirScoring = (G?: IMyGameState, player?: IPublicPlayer): numbe
     const basicScore: number =
         player.boardCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean => {
             if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
-                throw new Error(`В массиве монет игрока ${player.nickname} в руке не может быть закрыта монета с id ${index}.`);
+                throw new Error(`В массиве монет игрока '${player.nickname}' в руке не может быть закрыта монета с id '${index}'.`);
             }
             return IsCoin(coin) && coin.value >= 15;
         }).length,

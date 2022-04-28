@@ -257,7 +257,6 @@ export const DrawSuit = (data, playerHeaders, suit, player, moveName) => {
         case MoveNames.GetMjollnirProfitMove:
             action = data.moves.GetMjollnirProfitMove;
             break;
-        // TODO Move it to playerBoard actions
         case MoveNames.PlaceThrudHeroMove:
             action = data.moves.PlaceThrudHeroMove;
             break;

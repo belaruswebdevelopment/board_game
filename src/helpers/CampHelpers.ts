@@ -127,11 +127,11 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void => {
-    const tavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
-    if (tavern === undefined) {
-        throw new Error(`Отсутствует текущая таверна с id '${G.currentTavern}'.`);
+    const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
+    if (currentTavern === undefined) {
+        throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
     }
-    const cardIndex: number = tavern.findIndex((card: TavernCardTypes): boolean => card !== null);
+    const cardIndex: number = currentTavern.findIndex((card: TavernCardTypes): boolean => card !== null);
     if (cardIndex === -1) {
         throw new Error(`Не удалось сбросить лишнюю карту из таверны с id '${G.currentTavern}' при пике артефакта '${ArtefactNames.Jarnglofi}'.`);
     }
@@ -155,11 +155,12 @@ export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void => {
  */
 export const DiscardCardIfCampCardPicked = (G: IMyGameState): void => {
     if (G.campPicked) {
-        const tavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
-        if (tavern === undefined) {
-            throw new Error(`Отсутствует текущая таверна с id '${G.currentTavern}'.`);
+        const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
+        if (currentTavern === undefined) {
+            throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
         }
-        const discardCardIndex: number = tavern.findIndex((card: TavernCardTypes): boolean => card !== null);
+        const discardCardIndex: number =
+            currentTavern.findIndex((card: TavernCardTypes): boolean => card !== null);
         let isCardDiscarded = false;
         if (discardCardIndex !== -1) {
             isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);

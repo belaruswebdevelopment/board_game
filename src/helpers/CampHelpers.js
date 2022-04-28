@@ -120,11 +120,11 @@ const AddRemainingCampCardsToDiscard = (G) => {
  * @returns Сброшена ли карта из таверны.
  */
 export const DiscardCardFromTavernJarnglofi = (G) => {
-    const tavern = G.taverns[G.currentTavern];
-    if (tavern === undefined) {
-        throw new Error(`Отсутствует текущая таверна с id '${G.currentTavern}'.`);
+    const currentTavern = G.taverns[G.currentTavern];
+    if (currentTavern === undefined) {
+        throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
     }
-    const cardIndex = tavern.findIndex((card) => card !== null);
+    const cardIndex = currentTavern.findIndex((card) => card !== null);
     if (cardIndex === -1) {
         throw new Error(`Не удалось сбросить лишнюю карту из таверны с id '${G.currentTavern}' при пике артефакта '${ArtefactNames.Jarnglofi}'.`);
     }
@@ -147,11 +147,11 @@ export const DiscardCardFromTavernJarnglofi = (G) => {
  */
 export const DiscardCardIfCampCardPicked = (G) => {
     if (G.campPicked) {
-        const tavern = G.taverns[G.currentTavern];
-        if (tavern === undefined) {
-            throw new Error(`Отсутствует текущая таверна с id '${G.currentTavern}'.`);
+        const currentTavern = G.taverns[G.currentTavern];
+        if (currentTavern === undefined) {
+            throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
         }
-        const discardCardIndex = tavern.findIndex((card) => card !== null);
+        const discardCardIndex = currentTavern.findIndex((card) => card !== null);
         let isCardDiscarded = false;
         if (discardCardIndex !== -1) {
             isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);

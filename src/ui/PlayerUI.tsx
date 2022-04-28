@@ -416,20 +416,20 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
             playerFooters: JSX.Element[] = [];
         for (let i = 0; i < 2; i++) {
             const playerCells: JSX.Element[] = [];
-            for (let j = 0; j < G.tavernsNum; j++) {
+            for (let t = 0; t < G.tavernsNum; t++) {
                 if (data !== undefined) {
                     if (i === 0) {
-                        const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[j];
+                        const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[t];
                         if (currentTavernConfig === undefined) {
-                            throw new Error(`Отсутствует конфиг таверны с id '${j}'.`);
+                            throw new Error(`Отсутствует конфиг таверны с id '${t}'.`);
                         }
                         playerHeaders.push(
                             <th key={`Tavern ${currentTavernConfig.name}`}>
-                                <span style={Styles.Taverns(j)} className="bg-tavern-icon"></span>
+                                <span style={Styles.Taverns(t)} className="bg-tavern-icon"></span>
                             </th>
                         );
                     } else {
-                        if (j === G.tavernsNum - 1) {
+                        if (t === G.tavernsNum - 1) {
                             playerFooters.push(
                                 <th key={`${player.nickname} priority icon`}>
                                     <span style={Styles.Priority()} className="bg-priority-icon"></span>
@@ -445,7 +445,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                         } else {
                             if (data !== undefined) {
                                 playerFooters.push(
-                                    <th key={`${player.nickname} exchange icon ${j}`}>
+                                    <th key={`${player.nickname} exchange icon ${t}`}>
                                         <span style={Styles.Exchange()} className="bg-small-market-coin"></span>
                                     </th>
                                 );
@@ -453,8 +453,8 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                         }
                     }
                 }
-                if (i === 0 || (i === 1 && j !== G.tavernsNum - 1)) {
-                    const id: number = j + G.tavernsNum * i,
+                if (i === 0 || (i === 1 && t !== G.tavernsNum - 1)) {
+                    const id: number = t + G.tavernsNum * i,
                         publicBoardCoin: PublicPlayerCoinTypes | undefined = player.boardCoins[id],
                         privateBoardCoin: PublicPlayerCoinTypes | undefined = privatePlayer?.boardCoins[id];
                     if (publicBoardCoin === undefined) {
@@ -502,8 +502,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                             }
                         } else {
                             if (G.winner.length
-                                || (!multiplayer && ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern >= j)
-                            ) {
+                                || (ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern >= t)) {
                                 if (data !== undefined) {
                                     if (!IsCoin(publicBoardCoin)) {
                                         throw new Error(`Монета с id '${id}' на столе текущего игрока не может быть закрытой для него.`);
@@ -520,7 +519,7 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                                             throw new Error(`В массиве монет игрока на столе не может быть закрыта для других игроков ранее открытая монета с id '${id}'.`);
                                         }
                                         if (data !== undefined) {
-                                            if (ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern < j) {
+                                            if (ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern < t) {
                                                 DrawCoin(data, playerCells, `coin`, publicBoardCoin, id,
                                                     player);
                                             } else {

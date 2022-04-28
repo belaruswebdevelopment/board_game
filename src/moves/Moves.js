@@ -25,7 +25,7 @@ export const ClickCardMove = (G, ctx, cardId) => {
     }
     const currentTavern = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
-        throw new Error(`Отсутствует текущая таверна с id '${G.currentTavern}'.`);
+        throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
     }
     const card = currentTavern[cardId];
     if (card === undefined) {

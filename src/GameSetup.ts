@@ -30,7 +30,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         tierToEnd = 2,
         campNum = 5,
         explorerDistinctionCardId = null,
-        multiplayer = false,
+        multiplayer = true,
         odroerirTheMythicCauldron = false,
         log = true,
         debug = false,

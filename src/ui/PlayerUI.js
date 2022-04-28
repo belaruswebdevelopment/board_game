@@ -365,29 +365,29 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
         const playerRows = [], playerHeaders = [], playerFooters = [];
         for (let i = 0; i < 2; i++) {
             const playerCells = [];
-            for (let j = 0; j < G.tavernsNum; j++) {
+            for (let t = 0; t < G.tavernsNum; t++) {
                 if (data !== undefined) {
                     if (i === 0) {
-                        const currentTavernConfig = tavernsConfig[j];
+                        const currentTavernConfig = tavernsConfig[t];
                         if (currentTavernConfig === undefined) {
-                            throw new Error(`Отсутствует конфиг таверны с id '${j}'.`);
+                            throw new Error(`Отсутствует конфиг таверны с id '${t}'.`);
                         }
-                        playerHeaders.push(_jsx("th", { children: _jsx("span", { style: Styles.Taverns(j), className: "bg-tavern-icon" }) }, `Tavern ${currentTavernConfig.name}`));
+                        playerHeaders.push(_jsx("th", { children: _jsx("span", { style: Styles.Taverns(t), className: "bg-tavern-icon" }) }, `Tavern ${currentTavernConfig.name}`));
                     }
                     else {
-                        if (j === G.tavernsNum - 1) {
+                        if (t === G.tavernsNum - 1) {
                             playerFooters.push(_jsx("th", { children: _jsx("span", { style: Styles.Priority(), className: "bg-priority-icon" }) }, `${player.nickname} priority icon`));
                             playerCells.push(_jsx("td", { className: "bg-gray-300", children: _jsx("span", { style: Styles.Priorities(player.priority.value), className: "bg-priority" }) }, `${player.nickname} priority gem`));
                         }
                         else {
                             if (data !== undefined) {
-                                playerFooters.push(_jsx("th", { children: _jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }) }, `${player.nickname} exchange icon ${j}`));
+                                playerFooters.push(_jsx("th", { children: _jsx("span", { style: Styles.Exchange(), className: "bg-small-market-coin" }) }, `${player.nickname} exchange icon ${t}`));
                             }
                         }
                     }
                 }
-                if (i === 0 || (i === 1 && j !== G.tavernsNum - 1)) {
-                    const id = j + G.tavernsNum * i, publicBoardCoin = player.boardCoins[id], privateBoardCoin = privatePlayer === null || privatePlayer === void 0 ? void 0 : privatePlayer.boardCoins[id];
+                if (i === 0 || (i === 1 && t !== G.tavernsNum - 1)) {
+                    const id = t + G.tavernsNum * i, publicBoardCoin = player.boardCoins[id], privateBoardCoin = privatePlayer === null || privatePlayer === void 0 ? void 0 : privatePlayer.boardCoins[id];
                     if (publicBoardCoin === undefined) {
                         throw new Error(`В массиве монет игрока на столе отсутствует монета с id '${id}'.`);
                     }
@@ -434,7 +434,7 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                         }
                         else {
                             if (G.winner.length
-                                || (!multiplayer && ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern >= j)) {
+                                || (ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern >= t)) {
                                 if (data !== undefined) {
                                     if (!IsCoin(publicBoardCoin)) {
                                         throw new Error(`Монета с id '${id}' на столе текущего игрока не может быть закрытой для него.`);
@@ -452,7 +452,7 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                                             throw new Error(`В массиве монет игрока на столе не может быть закрыта для других игроков ранее открытая монета с id '${id}'.`);
                                         }
                                         if (data !== undefined) {
-                                            if (ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern < j) {
+                                            if (ctx.phase !== Phases.PlaceCoins && i === 0 && G.currentTavern < t) {
                                                 DrawCoin(data, playerCells, `coin`, publicBoardCoin, id, player);
                                             }
                                             else {

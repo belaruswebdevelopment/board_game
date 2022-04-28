@@ -64,18 +64,18 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
         }
     }
     score += coinsValue;
-    AddDataToLog(G, LogTypes.PUBLIC, `Очки за монеты игрока '${player.nickname}': ${coinsValue}`);
+    AddDataToLog(G, LogTypes.PUBLIC, `Очки за монеты игрока '${player.nickname}': '${coinsValue}';`);
     if (warriorDistinctions.length && warriorDistinctions.includes(playerId)) {
         const warriorDistinctionScore = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, playerId);
         score += warriorDistinctionScore;
         if (warriorDistinctionScore) {
-            AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока '${player.nickname}': ${warriorDistinctionScore}`);
+            AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока '${player.nickname}': '${warriorDistinctionScore}';`);
         }
     }
     const minerDistinctionPriorityScore = suitsConfig[SuitNames.MINER].distinction.awarding(G, ctx, playerId);
     score += minerDistinctionPriorityScore;
     if (minerDistinctionPriorityScore) {
-        AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока '${player.nickname}': ${minerDistinctionPriorityScore}`);
+        AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока '${player.nickname}': '${minerDistinctionPriorityScore}';`);
     }
     let heroesScore = 0, dwerg_brothers = 0;
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
@@ -94,7 +94,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
         else {
             const currentHeroScore = heroData.scoringRule(G, playerId);
             heroesScore += currentHeroScore;
-            AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя '${hero.name}' игрока '${player.nickname}': ${currentHeroScore}.`);
+            AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя '${hero.name}' игрока '${player.nickname}': '${currentHeroScore}';`);
         }
     }
     if (dwerg_brothers) {
@@ -103,10 +103,10 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             throw new Error(`Не существует количества очков за количество героев братьев Двергов - '${dwerg_brothers}'.`);
         }
         heroesScore += dwerg_brother_value;
-        AddDataToLog(G, LogTypes.PRIVATE, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) игрока '${player.nickname}': ${dwerg_brothers_scoring[dwerg_brothers]}.`);
+        AddDataToLog(G, LogTypes.PRIVATE, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) игрока '${player.nickname}': '${dwerg_brothers_scoring[dwerg_brothers]}';`);
     }
     score += heroesScore;
-    AddDataToLog(G, LogTypes.PUBLIC, `Очки за героев игрока '${player.nickname}': ${heroesScore}.`);
+    AddDataToLog(G, LogTypes.PUBLIC, `Очки за героев игрока '${player.nickname}': ;${heroesScore};'`);
     if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
@@ -122,13 +122,13 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
             currentArtefactScore = artefact.scoringRule(G, player);
             if (currentArtefactScore) {
                 artifactsScore += currentArtefactScore;
-                AddDataToLog(G, LogTypes.PRIVATE, `Очки за артефакт '${campCard.name}' игрока '${player.nickname}': ${currentArtefactScore}.`);
+                AddDataToLog(G, LogTypes.PRIVATE, `Очки за артефакт '${campCard.name}' игрока '${player.nickname}': '${currentArtefactScore}';`);
             }
         }
         score += artifactsScore;
-        AddDataToLog(G, LogTypes.PUBLIC, `Очки за артефакты игрока '${player.nickname}': ${artifactsScore}.`);
+        AddDataToLog(G, LogTypes.PUBLIC, `Очки за артефакты игрока '${player.nickname}': '${artifactsScore}';`);
     }
-    AddDataToLog(G, LogTypes.PUBLIC, `Итоговый счёт игрока '${player.nickname}': ${score}.`);
+    AddDataToLog(G, LogTypes.PUBLIC, `Итоговый счёт игрока '${player.nickname}': '${score}'.`);
     return score;
 };
 /**

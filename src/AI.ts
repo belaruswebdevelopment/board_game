@@ -143,7 +143,7 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
     if (ctx.phase === Phases.PickCards) {
         const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
         if (currentTavern === undefined) {
-            throw new Error(`Отсутствует текущая таверна с id '${G.currentTavern}'.`);
+            throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
         }
         if (currentTavern.filter((card: TavernCardTypes): boolean => card !== null).length === 1) {
             return 1;
@@ -156,7 +156,8 @@ export const iterations = (G: IMyGameState, ctx: Ctx): number => {
         }
         if (currentTavern.every((card: TavernCardTypes): boolean =>
             card === null || (IsCardNotActionAndNotNull(card) && IsCardNotActionAndNotNull(tavernNotNullCard)
-                && card.suit === tavernNotNullCard.suit && CompareCards(card, tavernNotNullCard) === 0))) {
+                && card.suit === tavernNotNullCard.suit && CompareCards(card, tavernNotNullCard) === 0))
+        ) {
             return 1;
         }
         let efficientMovesCount = 0;

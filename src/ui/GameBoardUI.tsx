@@ -455,7 +455,7 @@ export const DrawTaverns = (G: IMyGameState, ctx: Ctx, validatorName: MoveValida
     for (let t = 0; t < G.tavernsNum; t++) {
         const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[t];
         if (currentTavernConfig === undefined) {
-            throw new Error(`Отсутствует конфиг таверны ${t}.`);
+            throw new Error(`Отсутствует конфиг таверны с id '${t}'.`);
         }
         for (let i = 0; i < 1; i++) {
             const boardCells: JSX.Element[] = [];

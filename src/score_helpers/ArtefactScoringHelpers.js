@@ -12,7 +12,7 @@ export const DraupnirScoring = (G, player) => {
     }
     const basicScore = player.boardCoins.filter((coin, index) => {
         if (coin !== null && (!IsCoin(coin) || !coin.isOpened)) {
-            throw new Error(`В массиве монет игрока ${player.nickname} в руке не может быть закрыта монета с id ${index}.`);
+            throw new Error(`В массиве монет игрока '${player.nickname}' в руке не может быть закрыта монета с id '${index}'.`);
         }
         return IsCoin(coin) && coin.value >= 15;
     }).length, odroerirScore = G.odroerirTheMythicCauldronCoins.filter((coin) => coin.value >= 15).length;

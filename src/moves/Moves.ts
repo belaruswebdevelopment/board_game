@@ -29,7 +29,7 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
     }
     const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
-        throw new Error(`Отсутствует текущая таверна с id '${G.currentTavern}'.`);
+        throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
     }
     const card: TavernCardTypes | undefined = currentTavern[cardId];
     if (card === undefined) {
