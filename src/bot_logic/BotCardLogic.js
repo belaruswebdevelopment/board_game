@@ -1,7 +1,6 @@
 import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
-import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { GameNames } from "../typescript/enums";
 // Check all types in this file!
 /**
@@ -139,7 +138,7 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  */
 const PotentialScoring = (G, playerId, card) => {
     var _a;
-    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
+    const multiplayer = G.multiplayer, player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок  с id '${playerId}'.`);
     }

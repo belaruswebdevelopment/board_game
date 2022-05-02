@@ -146,7 +146,7 @@ export const CreateMercenaryCampCard = ({ type = RusCardTypes.MERCENARY, tier, p
  * @param variants Варианты расположения карты наёмника.
  * @returns Карта наёмника в руке игрока.
  */
-export const CreateMercenaryPlayerCard = ({ type = RusCardTypes.MERCENARYPLAYERCARD, suit, rank, points, name, game = GameNames.Thingvellir, tier, path, variants, } = {}) => ({
+export const CreateMercenaryPlayerCard = ({ type = RusCardTypes.MERCENARYPLAYERCARD, suit, rank = 1, points, name, game = GameNames.Thingvellir, tier, path, variants, } = {}) => ({
     type,
     suit,
     rank,

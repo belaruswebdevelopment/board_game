@@ -90,6 +90,21 @@ export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtef
     return true;
 };
 
+export const AddCoinOnOdroerirTheMythicCauldronCampCard = (G: IMyGameState): void => {
+    const minCoinValue: number = G.marketCoins.reduceRight((prev: ICoin, curr: ICoin): ICoin =>
+        prev.value < curr.value ? prev : curr).value,
+        minCoinIndex: number =
+            G.marketCoins.findIndex((coin: ICoin): boolean => coin.value === minCoinValue);
+    if (minCoinIndex === -1) {
+        throw new Error(`Не существует минимальная монета на рынке с значением - '${minCoinValue}'.`);
+    }
+    const coin: ICoin | undefined = G.marketCoins.splice(minCoinIndex, 1)[0];
+    if (coin === undefined) {
+        throw new Error(`Отсутствует минимальная монета на рынке с id '${minCoinIndex}'.`);
+    }
+    G.odroerirTheMythicCauldronCoins.push(coin);
+};
+
 export const GetOdroerirTheMythicCauldronCoinsValues = (G: IMyGameState): number =>
     G.odroerirTheMythicCauldronCoins.reduce((prev: number, curr: ICoin): number =>
         prev + curr.value, 0);

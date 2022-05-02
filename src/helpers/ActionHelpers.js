@@ -1,4 +1,4 @@
-import { CreateOlwinDoubleNonPlacedCard } from "../Hero";
+import { CreateOlwinDoubleNonPlacedCard } from "../AdditionalCard";
 import { AddDataToLog } from "../Logging";
 import { CardNames, DrawNames, HeroNames, LogTypes } from "../typescript/enums";
 /**

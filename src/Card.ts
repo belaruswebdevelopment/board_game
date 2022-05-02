@@ -1,7 +1,6 @@
-import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
 import { GameNames, RusCardTypes } from "./typescript/enums";
-import type { AdditionalCardTypes, DeckCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, INumberArrayValues, INumberValues, SuitTypes } from "./typescript/interfaces";
+import type { DeckCardTypes, IActionCard, IActionCardConfig, IAverageSuitCardData, ICard, ICreateActionCard, ICreateCard, IDeckConfig, INumberArrayValues, INumberValues, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт все карты и карты улучшения монеты.</h3>
@@ -74,22 +73,6 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
                 name: `улучшение монеты на +${currentActionCardConfig.value}`,
             }));
         }
-    }
-    return cards;
-};
-
-export const BuildAdditionalCards = (): ICard[] => {
-    const cards: ICard[] = [];
-    let cardName: AdditionalCardTypes;
-    for (cardName in additionalCardsConfig) {
-        const card: ICard = additionalCardsConfig[cardName];
-        cards.push(CreateCard({
-            suit: card.suit,
-            rank: card.rank,
-            points: card.points,
-            name: card.name,
-            game: GameNames.Basic,
-        }));
     }
     return cards;
 };

@@ -1,7 +1,6 @@
 import type { Ctx, Move } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
 import { IsCoin } from "../Coin";
-import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
 import type { IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
@@ -25,7 +24,7 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const multiplayer: boolean = IsMultiplayer(G),
+    const multiplayer: boolean = G.multiplayer,
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {

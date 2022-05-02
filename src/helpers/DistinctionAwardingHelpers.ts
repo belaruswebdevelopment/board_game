@@ -7,7 +7,6 @@ import { CardNames, CoinTypes, LogTypes, SuitNames } from "../typescript/enums";
 import type { ICard, ICoin, IMyGameState, IPlayer, IPublicPlayer } from "../typescript/interfaces";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
-import { IsMultiplayer } from "./MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
@@ -44,7 +43,7 @@ export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId:
 
 export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     if (G.tierToEnd !== 0) {
-        const multiplayer: boolean = IsMultiplayer(G),
+        const multiplayer: boolean = G.multiplayer,
             player: IPublicPlayer | undefined = G.publicPlayers[playerId],
             privatePlayer: IPlayer | undefined = G.players[playerId];
         if (player === undefined) {

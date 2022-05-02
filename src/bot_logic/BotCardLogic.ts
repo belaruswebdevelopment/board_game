@@ -2,7 +2,6 @@ import type { Ctx } from "boardgame.io";
 import { CreateCard, IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsCoin } from "../Coin";
 import { suitsConfig } from "../data/SuitData";
-import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { GameNames } from "../typescript/enums";
 import type { DeckCardTypes, IAverageSuitCardData, ICard, IMyGameState, INumberArrayValues, INumberValues, IPlayer, IPublicPlayer, ISuit, PublicPlayerCoinTypes, SuitTypes, TavernCardTypes } from "../typescript/interfaces";
 
@@ -147,7 +146,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * @returns Потенциальное значение.
  */
 const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTypes): number => {
-    const multiplayer: boolean = IsMultiplayer(G),
+    const multiplayer: boolean = G.multiplayer,
         player: IPublicPlayer | undefined = G.publicPlayers[playerId],
         privatePlayer: IPlayer | undefined = G.players[playerId];
     if (player === undefined) {

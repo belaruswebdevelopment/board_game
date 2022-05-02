@@ -2,6 +2,7 @@ import { IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
+import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
@@ -33,6 +34,10 @@ export const AddCardToPlayer = (G, ctx, card) => {
     return false;
 };
 export const PickCardOrActionCardActions = (G, ctx, card) => {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
     const isAdded = AddCardToPlayer(G, ctx, card);
     if (IsCardNotActionAndNotNull(card)) {
         if (isAdded) {
@@ -41,7 +46,7 @@ export const PickCardOrActionCardActions = (G, ctx, card) => {
     }
     else {
         AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
-        G.discardCardsDeck.push(card);
+        DiscardPickedCard(G, player, card);
     }
     return isAdded;
 };

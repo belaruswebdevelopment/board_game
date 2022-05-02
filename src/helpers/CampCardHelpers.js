@@ -85,5 +85,16 @@ export const AddCampCardToPlayerCards = (G, ctx, card) => {
     AddDataToLog(G, LogTypes.PRIVATE, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
     return true;
 };
+export const AddCoinOnOdroerirTheMythicCauldronCampCard = (G) => {
+    const minCoinValue = G.marketCoins.reduceRight((prev, curr) => prev.value < curr.value ? prev : curr).value, minCoinIndex = G.marketCoins.findIndex((coin) => coin.value === minCoinValue);
+    if (minCoinIndex === -1) {
+        throw new Error(`Не существует минимальная монета на рынке с значением - '${minCoinValue}'.`);
+    }
+    const coin = G.marketCoins.splice(minCoinIndex, 1)[0];
+    if (coin === undefined) {
+        throw new Error(`Отсутствует минимальная монета на рынке с id '${minCoinIndex}'.`);
+    }
+    G.odroerirTheMythicCauldronCoins.push(coin);
+};
 export const GetOdroerirTheMythicCauldronCoinsValues = (G) => G.odroerirTheMythicCauldronCoins.reduce((prev, curr) => prev + curr.value, 0);
 //# sourceMappingURL=CampCardHelpers.js.map

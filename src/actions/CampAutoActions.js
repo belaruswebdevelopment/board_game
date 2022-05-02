@@ -2,7 +2,6 @@ import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardTradingCoin } from "../helpers/CoinHelpers";
-import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, BuffNames, LogTypes, Stages, SuitNames } from "../typescript/enums";
@@ -92,7 +91,7 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
  * @param ctx
  */
 export const StartVidofnirVedrfolnirAction = (G, ctx) => {
-    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+    const multiplayer = G.multiplayer, player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }

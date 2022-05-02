@@ -4,6 +4,7 @@ import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
 import type { DeckCardTypes, IMercenaryPlayerCard, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
+import { DiscardPickedCard } from "./DiscardCardHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
@@ -37,6 +38,10 @@ export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes |
 };
 
 export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes): boolean => {
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
     const isAdded: boolean = AddCardToPlayer(G, ctx, card);
     if (IsCardNotActionAndNotNull(card)) {
         if (isAdded) {
@@ -44,7 +49,7 @@ export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: Dec
         }
     } else {
         AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
-        G.discardCardsDeck.push(card);
+        DiscardPickedCard(G, player, card);
     }
     return isAdded;
 };

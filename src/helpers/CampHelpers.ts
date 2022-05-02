@@ -124,9 +124,10 @@ const AddRemainingCampCardsToDiscard = (G: IMyGameState): void => {
  * </ol>
  *
  * @param G
+ * @param ctx
  * @returns Сброшена ли карта из таверны.
  */
-export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void => {
+export const DiscardCardFromTavernJarnglofi = (G: IMyGameState, ctx: Ctx): void => {
     const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
         throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
@@ -140,7 +141,7 @@ export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void => {
         throw new Error(`Отсутствует конфиг текущей таверны с id '${G.currentTavern}'.`);
     }
     AddDataToLog(G, LogTypes.GAME, `Дополнительная карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за пика артефакта '${ArtefactNames.Jarnglofi}'.`);
-    DiscardCardFromTavern(G, cardIndex);
+    DiscardCardFromTavern(G, ctx, cardIndex);
     G.mustDiscardTavernCardJarnglofi = false;
 };
 
@@ -152,8 +153,9 @@ export const DiscardCardFromTavernJarnglofi = (G: IMyGameState): void => {
  * </ol>
  *
  * @param G
+ * @param ctx
  */
-export const DiscardCardIfCampCardPicked = (G: IMyGameState): void => {
+export const DiscardCardIfCampCardPicked = (G: IMyGameState, ctx: Ctx): void => {
     if (G.campPicked) {
         const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
         if (currentTavern === undefined) {
@@ -163,7 +165,7 @@ export const DiscardCardIfCampCardPicked = (G: IMyGameState): void => {
             currentTavern.findIndex((card: TavernCardTypes): boolean => card !== null);
         let isCardDiscarded = false;
         if (discardCardIndex !== -1) {
-            isCardDiscarded = DiscardCardFromTavern(G, discardCardIndex);
+            isCardDiscarded = DiscardCardFromTavern(G, ctx, discardCardIndex);
         }
         if (!isCardDiscarded) {
             throw new Error(`Не удалось сбросить лишнюю карту из таверны с id '${G.currentTavern}' после выбора карты лагеря в конце пиков из таверны.`);
@@ -225,8 +227,8 @@ export const RefillEmptyCampCards = (G: IMyGameState): void => {
                 return index;
             }
             return null;
-        });
-    const isEmptyCampCards: boolean = emptyCampCards.length === 0,
+        }),
+        isEmptyCampCards: boolean = emptyCampCards.length === 0,
         campDeck: CampDeckCardTypes[] | undefined = G.secret.campDecks[G.secret.campDecks.length - G.tierToEnd];
     if (campDeck === undefined) {
         throw new Error(`Отсутствует колода карт лагеря текущей эпохи '${G.secret.campDecks.length - G.tierToEnd}'.`);

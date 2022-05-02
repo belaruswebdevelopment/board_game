@@ -1,6 +1,5 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { IsCoin } from "../Coin";
-import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
 /**
@@ -20,7 +19,7 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+    const multiplayer = G.multiplayer, player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }

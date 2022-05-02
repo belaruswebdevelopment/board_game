@@ -178,7 +178,7 @@ export const CreateMercenaryCampCard = ({
 export const CreateMercenaryPlayerCard = ({
     type = RusCardTypes.MERCENARYPLAYERCARD,
     suit,
-    rank,
+    rank = 1,
     points,
     name,
     game = GameNames.Thingvellir,

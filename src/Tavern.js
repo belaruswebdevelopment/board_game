@@ -1,3 +1,4 @@
+import { DiscardPickedCard } from "./helpers/DiscardCardHelpers";
 import { AddDataToLog } from "./Logging";
 import { ArtefactNames, LogTypes, TavernNames } from "./typescript/enums";
 /**
@@ -19,7 +20,7 @@ export const CheckIfCurrentTavernEmpty = (G) => {
     }
     return currentTavern.every((card) => card === null);
 };
-export const DiscardCardIfTavernHasCardFor2Players = (G) => {
+export const DiscardCardIfTavernHasCardFor2Players = (G, ctx) => {
     const currentTavern = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
         throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
@@ -33,7 +34,7 @@ export const DiscardCardIfTavernHasCardFor2Players = (G) => {
         throw new Error(`Отсутствует конфиг текущей таверны с id '${G.currentTavern}'.`);
     }
     AddDataToLog(G, LogTypes.GAME, `Карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за наличия двух игроков в игре.`);
-    DiscardCardFromTavern(G, cardIndex);
+    DiscardCardFromTavern(G, ctx, cardIndex);
 };
 /**
  * <h3>Убирает карту из таверны в стопку сброса.</h3>
@@ -46,10 +47,15 @@ export const DiscardCardIfTavernHasCardFor2Players = (G) => {
  * </ol>
  *
  * @param G
+ * @param ctx
  * @param discardCardIndex Индекс сбрасываемой карты в таверне.
  * @returns Сброшена ли карта из таверны.
  */
-export const DiscardCardFromTavern = (G, discardCardIndex) => {
+export const DiscardCardFromTavern = (G, ctx, discardCardIndex) => {
+    const player = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
     const currentTavern = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
         throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
@@ -59,7 +65,7 @@ export const DiscardCardFromTavern = (G, discardCardIndex) => {
         throw new Error(`В текущей таверне с id '${G.currentTavern}' отсутствует карта с id '${discardCardIndex}'.`);
     }
     if (discardedCard !== null) {
-        G.discardCardsDeck.push(discardedCard);
+        DiscardPickedCard(G, player, discardedCard);
         currentTavern.splice(discardCardIndex, 1, null);
         const currentTavernConfig = tavernsConfig[G.currentTavern];
         if (currentTavernConfig === undefined) {

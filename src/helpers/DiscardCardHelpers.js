@@ -1,4 +1,5 @@
 import { IsArtefactCard, IsMercenaryPlayerCard } from "../Camp";
+import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsHeroCard } from "../Hero";
 import { AddDataToLog } from "../Logging";
 import { LogTypes, RusCardTypes } from "../typescript/enums";
@@ -10,7 +11,7 @@ export const DiscardPickedCard = (G, player, discardedCard) => {
         G.discardCampCardsDeck.push(discardedCard);
         AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' отправил карту '${discardedCard.name}' в колоду сброса карт лагеря.`);
     }
-    else {
+    else if (IsActionCard(discardedCard) || IsCardNotActionAndNotNull(discardedCard)) {
         G.discardCardsDeck.push(discardedCard);
         AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' отправил карту '${discardedCard.name}' в колоду сброса карт.`);
     }

@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import { CreateOlwinDoubleNonPlacedCard } from "../Hero";
+import { CreateOlwinDoubleNonPlacedCard } from "../AdditionalCard";
 import { AddDataToLog } from "../Logging";
 import { CardNames, DrawNames, HeroNames, LogTypes } from "../typescript/enums";
 import type { IConfig, IMyGameState, IOlwinDoubleNonPlacedCard, IPublicPlayer, PickedCardType, SuitTypes } from "../typescript/interfaces";

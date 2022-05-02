@@ -1,4 +1,3 @@
-import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { suitsConfig } from "./data/SuitData";
 import { GameNames, RusCardTypes } from "./typescript/enums";
 /**
@@ -73,21 +72,6 @@ export const BuildCards = (deckConfig, data) => {
                 name: `улучшение монеты на +${currentActionCardConfig.value}`,
             }));
         }
-    }
-    return cards;
-};
-export const BuildAdditionalCards = () => {
-    const cards = [];
-    let cardName;
-    for (cardName in additionalCardsConfig) {
-        const card = additionalCardsConfig[cardName];
-        cards.push(CreateCard({
-            suit: card.suit,
-            rank: card.rank,
-            points: card.points,
-            name: card.name,
-            game: GameNames.Basic,
-        }));
     }
     return cards;
 };

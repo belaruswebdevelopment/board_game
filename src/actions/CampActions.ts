@@ -3,13 +3,12 @@ import { IsArtefactCard } from "../Camp";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
-import { AddCampCardToCards } from "../helpers/CampCardHelpers";
+import { AddCampCardToCards, AddCoinOnOdroerirTheMythicCauldronCampCard } from "../helpers/CampCardHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
-import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CoinTypes, LogTypes, SuitNames } from "../typescript/enums";
-import type { CampCardTypes, ICoin, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardsType, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CampCardTypes, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardsType, PublicPlayerCoinTypes } from "../typescript/interfaces";
 import { StartVidofnirVedrfolnirAction } from "./CampAutoActions";
 import { UpgradeCoinAction } from "./CoinActions";
 
@@ -25,20 +24,20 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param coinId Id монеты.
  */
 export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number): void => {
-    const multiplayer: boolean = IsMultiplayer(G),
+    const multiplayer: boolean = G.multiplayer,
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    if (privatePlayer === undefined) {
+        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const tempId: number =
         player.boardCoins.findIndex((coin: PublicPlayerCoinTypes, index: number): boolean =>
             index >= G.tavernsNum && coin === null);
     if (tempId === -1) {
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
-    }
-    if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins: PublicPlayerCoinTypes[];
     if (multiplayer) {
@@ -110,18 +109,7 @@ export const PickCampCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): v
         StartAutoAction(G, ctx, campCard.actions);
     }
     if (G.odroerirTheMythicCauldron) {
-        const minCoinValue: number = G.marketCoins.reduceRight((prev: ICoin, curr: ICoin): ICoin =>
-            prev.value < curr.value ? prev : curr).value;
-        const minCoinIndex: number =
-            G.marketCoins.findIndex((coin: ICoin): boolean => coin.value === minCoinValue);
-        if (minCoinIndex === -1) {
-            throw new Error(`Не существует минимальная монета на рынке с значением - '${minCoinValue}'.`);
-        }
-        const coin: ICoin | undefined = G.marketCoins.splice(minCoinIndex, 1)[0];
-        if (coin === undefined) {
-            throw new Error(`Отсутствует минимальная монета на рынке с id '${minCoinIndex}'.`);
-        }
-        G.odroerirTheMythicCauldronCoins.push(coin);
+        AddCoinOnOdroerirTheMythicCauldronCampCard(G);
     }
 };
 

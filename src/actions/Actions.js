@@ -28,7 +28,7 @@ export const DiscardAnyCardFromPlayerBoardAction = (G, ctx, suit, cardId) => {
     }
     const discardedCard = player.cards[suit].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
-        throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта с id '${cardId}': это должно проверяться в MoveValidator.`);
+        throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта во фракции ${suit} с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
     DiscardPickedCard(G, player, discardedCard);
     DeleteBuffFromPlayer(G, ctx, BuffNames.DiscardCardEndGame);
@@ -50,7 +50,7 @@ export const DiscardCardFromTavernAction = (G, ctx, cardId) => {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' отправил в колоду сброса карту из таверны:`);
-    const isCardDiscarded = DiscardCardFromTavern(G, cardId);
+    const isCardDiscarded = DiscardCardFromTavern(G, ctx, cardId);
     if (isCardDiscarded) {
         G.tavernCardDiscarded2Players = true;
     }
@@ -174,7 +174,6 @@ export const PlaceEnlistmentMercenariesAction = (G, ctx, suit) => {
     }
     const mercenaryCard = CreateMercenaryPlayerCard({
         suit,
-        rank: 1,
         points: cardVariants.points,
         name: pickedCard.name,
         tier: pickedCard.tier,

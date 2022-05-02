@@ -5,7 +5,6 @@ import { CreatePriority } from "../Priority";
 import { CardNames, CoinTypes, LogTypes, SuitNames } from "../typescript/enums";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
-import { IsMultiplayer } from "./MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
@@ -38,7 +37,7 @@ export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
 };
 export const HunterDistinctionAwarding = (G, ctx, playerId) => {
     if (G.tierToEnd !== 0) {
-        const multiplayer = IsMultiplayer(G), player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
+        const multiplayer = G.multiplayer, player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
         }
