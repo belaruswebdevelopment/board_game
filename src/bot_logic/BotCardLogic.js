@@ -138,7 +138,7 @@ export const GetAverageSuitCard = (suitConfig, data) => {
  */
 const PotentialScoring = (G, playerId, card) => {
     var _a;
-    const multiplayer = G.multiplayer, player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
+    const player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок  с id '${playerId}'.`);
     }
@@ -146,7 +146,7 @@ const PotentialScoring = (G, playerId, card) => {
         throw new Error(`В массиве приватных игроков отсутствует игрок с id '${playerId}'.`);
     }
     let handCoins;
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     }
     else {

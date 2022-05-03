@@ -24,8 +24,7 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const multiplayer: boolean = G.multiplayer,
-        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -34,7 +33,7 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins: PublicPlayerCoinTypes[];
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
@@ -61,7 +60,7 @@ export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
             if (IsCoin(handCoin) && handCoin.isOpened) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${coinId}'.`);
             }
-            if (multiplayer) {
+            if (G.multiplayer) {
                 privatePlayer.boardCoins[i] = handCoin;
                 player.boardCoins[i] = {};
                 player.handCoins[i] = null;

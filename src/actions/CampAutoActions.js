@@ -91,7 +91,7 @@ export const StartDiscardSuitCardAction = (G, ctx) => {
  * @param ctx
  */
 export const StartVidofnirVedrfolnirAction = (G, ctx) => {
-    const multiplayer = G.multiplayer, player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -99,7 +99,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins;
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -120,7 +120,7 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         let coinsValue = 0, stack = [];
         for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
             let boardCoin;
-            if (multiplayer) {
+            if (G.multiplayer) {
                 boardCoin = privatePlayer.boardCoins[j];
                 if (boardCoin === undefined) {
                     throw new Error(`В массиве приватных монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${j}'.`);

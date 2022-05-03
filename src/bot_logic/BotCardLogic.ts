@@ -146,8 +146,7 @@ export const GetAverageSuitCard = (suitConfig: ISuit, data: IAverageSuitCardData
  * @returns Потенциальное значение.
  */
 const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTypes): number => {
-    const multiplayer: boolean = G.multiplayer,
-        player: IPublicPlayer | undefined = G.publicPlayers[playerId],
+    const player: IPublicPlayer | undefined = G.publicPlayers[playerId],
         privatePlayer: IPlayer | undefined = G.players[playerId];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует игрок  с id '${playerId}'.`);
@@ -156,7 +155,7 @@ const PotentialScoring = (G: IMyGameState, playerId: number, card: TavernCardTyp
         throw new Error(`В массиве приватных игроков отсутствует игрок с id '${playerId}'.`);
     }
     let handCoins: PublicPlayerCoinTypes[];
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;

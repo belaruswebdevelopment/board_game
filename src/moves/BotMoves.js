@@ -19,7 +19,7 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
     if (!isValidMove) {
         return INVALID_MOVE;
     }
-    const multiplayer = G.multiplayer, player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -27,7 +27,7 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins;
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -55,7 +55,7 @@ export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
             if (IsCoin(handCoin) && handCoin.isOpened) {
                 throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть ранее открыта монета с id '${coinId}'.`);
             }
-            if (multiplayer) {
+            if (G.multiplayer) {
                 privatePlayer.boardCoins[i] = handCoin;
                 player.boardCoins[i] = {};
                 player.handCoins[i] = null;

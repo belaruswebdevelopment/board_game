@@ -37,7 +37,7 @@ export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
 };
 export const HunterDistinctionAwarding = (G, ctx, playerId) => {
     if (G.tierToEnd !== 0) {
-        const multiplayer = G.multiplayer, player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
+        const player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
         }
@@ -50,13 +50,13 @@ export const HunterDistinctionAwarding = (G, ctx, playerId) => {
             value: 3,
         });
         if (type === CoinTypes.Board) {
-            if (multiplayer) {
+            if (G.multiplayer) {
                 privatePlayer.boardCoins[tradingCoinIndex] = coin;
             }
             player.boardCoins[tradingCoinIndex] = coin;
         }
         else if (type === CoinTypes.Hand) {
-            if (multiplayer) {
+            if (G.multiplayer) {
                 privatePlayer.handCoins[tradingCoinIndex] = coin;
             }
             player.handCoins[tradingCoinIndex] = coin;

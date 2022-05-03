@@ -24,8 +24,7 @@ import { UpgradeCoinAction } from "./CoinActions";
  * @param coinId Id монеты.
  */
 export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number): void => {
-    const multiplayer: boolean = G.multiplayer,
-        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -40,7 +39,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
         throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует место для добавления в кошель для действия артефакта '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
     }
     let handCoins: PublicPlayerCoinTypes[];
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
@@ -58,7 +57,7 @@ export const AddCoinToPouchAction = (G: IMyGameState, ctx: Ctx, coinId: number):
     if (!handCoin.isOpened) {
         ChangeIsOpenedCoinStatus(handCoin, true);
     }
-    if (multiplayer) {
+    if (G.multiplayer) {
         player.handCoins[coinId] = null;
         privatePlayer.boardCoins[tempId] = handCoin;
     }
