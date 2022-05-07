@@ -16,6 +16,7 @@ import { CheckPickHero } from "./HeroHelpers";
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): boolean | INext => {
     const deck: DeckCardTypes[] | undefined = G.secret.decks[G.secret.decks.length - G.tierToEnd];
@@ -43,6 +44,7 @@ export const AfterLastTavernEmptyActions = (G: IMyGameState, ctx: Ctx): boolean 
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G: IMyGameState): INext => {
     const ulinePlayerIndex: number =
@@ -67,6 +69,7 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G: IMyGameState): I
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
     const deck1: DeckCardTypes[] | undefined = G.secret.decks[0],
@@ -113,6 +116,7 @@ export const CheckEndGameLastActions = (G: IMyGameState): boolean | INext => {
 * </ol>
 *
 * @param G
+* @returns
 */
 export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState): boolean | INext => {
     const yludIndex: number = Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
@@ -134,6 +138,7 @@ export const CheckEndTierActionsOrEndGameLastActions = (G: IMyGameState): boolea
  * </ol>
  *
  * @param G
+ * @returns
  */
 const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): boolean | INext => {
     let count = false;
@@ -157,6 +162,16 @@ const CheckEnlistmentMercenaries = (G: IMyGameState, ctx: Ctx): boolean | INext 
     }
 };
 
+/**
+ * <h3>Действия очистки выбранной карты игроком при завершении хода в любой фазе.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении хода в любой фазе.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const ClearPlayerPickedCard = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -178,6 +193,16 @@ export const EndGame = (ctx: Ctx): void => {
     ctx.events?.endGame();
 };
 
+/**
+ * <h3>Проверяет необходимость завершения хода в любой фазе.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверке завершения любой фазы.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const EndTurnActions = (G: IMyGameState, ctx: Ctx): boolean | void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -220,6 +245,16 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx
     }
 };
 
+/**
+ * <h3>Действия старта или завершения действий при завершении мува в любой фазе.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в любой фазе.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const StartOrEndActions = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {

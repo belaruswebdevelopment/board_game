@@ -65,7 +65,7 @@ export const BuildPublicPlayer = (nickname, priority, multiplayer) => {
 */
 export const CheckPlayersBasicOrder = (G, ctx) => {
     G.publicPlayersOrder = [];
-    for (let i = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
         const player = G.publicPlayers[i];
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);

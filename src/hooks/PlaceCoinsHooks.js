@@ -1,9 +1,8 @@
 import { IsCoin } from "../Coin";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
-import { ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
+import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
-import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { BuffNames } from "../typescript/enums";
@@ -16,12 +15,12 @@ import { BuffNames } from "../typescript/enums";
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckEndPlaceCoinsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        const multiplayer = IsMultiplayer(G);
         let isEveryPlayersHandCoinsEmpty = false;
-        if (multiplayer) {
+        if (G.multiplayer) {
             isEveryPlayersHandCoinsEmpty =
                 Object.values(G.publicPlayers).map((player) => player).every((player, index) => {
                     if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
@@ -66,7 +65,7 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
  * @returns
  */
 export const CheckEndPlaceCoinsTurn = (G, ctx) => {
-    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -74,7 +73,7 @@ export const CheckEndPlaceCoinsTurn = (G, ctx) => {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins;
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -90,7 +89,16 @@ export const CheckEndPlaceCoinsTurn = (G, ctx) => {
         return true;
     }
 };
-export const OnPlaceCoinsTurnEnd = (G) => {
+/**
+ * <h3>Действия при завершении фазы 'placeCoins'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении фазы 'placeCoins'.</li>
+ * </ol>
+ *
+ * @param G
+ */
+export const EndPlaceCoinsActions = (G) => {
     G.publicPlayersOrder = [];
 };
 /**
@@ -112,6 +120,7 @@ export const PreparationPhaseActions = (G, ctx) => {
         }
         RefillTaverns(G);
     }
+    MixUpCoinsInPlayerHands(G, ctx);
     CheckPlayersBasicOrder(G, ctx);
 };
 //# sourceMappingURL=PlaceCoinsHooks.js.map

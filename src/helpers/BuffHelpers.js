@@ -25,7 +25,29 @@ export const AddBuffToPlayer = (G, ctx, buff, value) => {
         AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' получил баф '${buff.name}'.`);
     }
 };
+/**
+ * <h3>Действия, связанные с проверкой наличия конкретного бафа у игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В любой ситуации, требующей наличия конкретного бафа у игрока.</li>
+ * </ol>
+ *
+ * @param player Игрок.
+ * @param buffName Баф.
+ * @returns
+ */
 export const CheckPlayerHasBuff = (player, buffName) => player.buffs.find((buff) => buff[buffName] !== undefined) !== undefined;
+/**
+* <h3>Действия, связанные с удалением бафов у игрока.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>>В любой ситуации, требующей удаления конкретного бафа у игрока.</li>
+* </ol>
+*
+* @param G
+* @param ctx
+* @param buffName Баф.
+*/
 export const DeleteBuffFromPlayer = (G, ctx, buffName) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {

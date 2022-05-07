@@ -36,7 +36,7 @@ export const CheckAndResolveDistinctionsOrders = (G: IMyGameState, ctx: Ctx): vo
  * </ol>
  *
  * @param G
-* @param ctx
+ * @param ctx
  * @returns
  */
 export const CheckEndGetDistinctionsPhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
@@ -63,10 +63,9 @@ export const CheckEndGetDistinctionsPhase = (G: IMyGameState, ctx: Ctx): boolean
  *
  * @param G
  * @param ctx
+ * @returns
  */
-export const CheckNextGetDistinctionsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    return EndTurnActions(G, ctx);
-};
+export const CheckNextGetDistinctionsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => EndTurnActions(G, ctx);
 
 /**
  * <h3>Действия при завершении фазы 'getDistinctions'.</h3>
@@ -84,10 +83,30 @@ export const EndGetDistinctionsPhaseActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
 };
 
+/**
+ * <h3>Действия при завершении мува в фазе 'getDistinctions'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в фазе 'getDistinctions'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnGetDistinctionsMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
 };
 
+/**
+ * <h3>Действия при начале хода в фазе 'getDistinctions'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале хода в фазе 'getDistinctions'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnGetDistinctionsTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
     if (G.distinctions[SuitNames.EXPLORER] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
@@ -105,6 +124,16 @@ export const OnGetDistinctionsTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     }
 };
 
+/**
+ * <h3>Действия при завершении хода в фазе 'getDistinctions'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении хода в фазе 'getDistinctions'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnGetDistinctionsTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
     ClearPlayerPickedCard(G, ctx);
     if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {

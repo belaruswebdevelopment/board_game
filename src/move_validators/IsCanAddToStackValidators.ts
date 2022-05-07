@@ -9,6 +9,7 @@ import type { CardsHasStackValidators, IMyGameState, IValidatorsConfig } from ".
  *
  * @param G
  * @param card Карта.
+ * @returns
  */
 export const IsCanPickPickCampCardToStack = (G: IMyGameState, card: CardsHasStackValidators): boolean => {
     const validators: IValidatorsConfig | undefined = card.validators;
@@ -31,6 +32,7 @@ export const IsCanPickPickCampCardToStack = (G: IMyGameState, card: CardsHasStac
  *
  * @param G
  * @param card Карта.
+ * @returns
  */
 export const IsCanPickPickDiscardCardToStack = (G: IMyGameState, card: CardsHasStackValidators): boolean => {
     const validators: IValidatorsConfig | undefined = card.validators;

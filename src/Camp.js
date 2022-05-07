@@ -158,19 +158,39 @@ export const CreateMercenaryPlayerCard = ({ type = RusCardTypes.MERCENARYPLAYERC
     variants,
 });
 /**
- * <h3>Проверка, является ли объект картой лагеря артефакта или картой лагеря наёмника.</h3>
+ * <h3>Проверка, является ли объект картой лагеря артефакта.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При проверках в функциях.</li>
  * </ol>
  *
  * @param card Карта.
- * @returns Является ли объект картой лагеря артефакта или картой лагеря наёмника.
+ * @returns Является ли объект картой лагеря артефакта.
  */
 export const IsArtefactCard = (card) => card !== null
     && card.description !== undefined && card.tier !== undefined;
+/**
+ * <h3>Проверка, является ли объект картой лагеря наёмника.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой лагеря наёмника.
+ */
 export const IsMercenaryCampCard = (card) => card !== null
     && card.variants !== undefined && card.tier !== undefined;
+/**
+ * <h3>Проверка, является ли объект картой наёмника на поле игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой наёмника на поле игрока.
+ */
 export const IsMercenaryPlayerCard = (card) => card !== null
     && card.variants !== undefined && card.suit !== undefined;
 //# sourceMappingURL=Camp.js.map

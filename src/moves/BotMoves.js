@@ -12,6 +12,7 @@ import { Stages } from "../typescript/enums";
  * @param G
  * @param ctx
  * @param coinsOrder Порядок выкладки монет.
+ * @returns
  */
 export const BotsPlaceAllCoinsMove = (G, ctx, coinsOrder) => {
     // TODO Check it bot can't play in multiplayer now...

@@ -68,7 +68,6 @@ export const PlaceOlwinCardsAction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes
     }
     const olwinDouble: ICard = CreateCard({
         suit,
-        rank: playerVariants[suit].rank,
         points: playerVariants[suit].points,
         name: CardNames.OlwinsDouble,
         game: GameNames.Thingvellir,

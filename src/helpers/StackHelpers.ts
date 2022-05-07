@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
-import { ValidatorNames } from "../typescript/enums";
+import { PickCardValidatorNames } from "../typescript/enums";
 import type { CardsHasStack, IMyGameState, IPublicPlayer, IStack, IValidatorsConfig } from "../typescript/interfaces";
 
 /**
@@ -24,10 +24,10 @@ export const AddActionsToStackAfterCurrent = (G: IMyGameState, ctx: Ctx, stack?:
             if (validators !== undefined) {
                 for (const validator in validators) {
                     switch (validator) {
-                        case ValidatorNames.PickDiscardCardToStack:
+                        case PickCardValidatorNames.PickDiscardCardToStack:
                             isValid = IsCanPickPickDiscardCardToStack(G, card);
                             break;
-                        case ValidatorNames.PickCampCardToStack:
+                        case PickCardValidatorNames.PickCampCardToStack:
                             isValid = IsCanPickPickCampCardToStack(G, card);
                             break;
                         default:

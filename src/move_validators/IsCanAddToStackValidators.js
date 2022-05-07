@@ -7,6 +7,7 @@
  *
  * @param G
  * @param card Карта.
+ * @returns
  */
 export const IsCanPickPickCampCardToStack = (G, card) => {
     const validators = card.validators;
@@ -28,6 +29,7 @@ export const IsCanPickPickCampCardToStack = (G, card) => {
  *
  * @param G
  * @param card Карта.
+ * @returns
  */
 export const IsCanPickPickDiscardCardToStack = (G, card) => {
     const validators = card.validators;

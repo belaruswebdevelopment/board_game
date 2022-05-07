@@ -9,6 +9,7 @@ import { tavernsConfig } from "../Tavern";
 import { ConfigNames, MoveNames, MoveValidatorNames, Phases, Stages } from "../typescript/enums";
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { ExplorerDistinctionProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
+// TODO Check Solo Bot & multiplayer actions!
 /**
  * <h3>Отрисовка карт лагеря.</h3>
  * <p>Применения:</p>
@@ -92,6 +93,16 @@ export const DrawCamp = (G, ctx, validatorName, data) => {
         throw new Error(`Функция должна возвращать значение.`);
     }
 };
+/**
+ * <h3>Отрисовка фазы и стадии игры.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка фазы и стадии игры на игровом поле.</li>
+ * </ol>
+ *
+ * @param ctx
+ * @returns Поле информации о текущей фазе и стадии игры.
+ */
 export const DrawCurrentPhaseStage = (ctx) => {
     var _a, _b, _c;
     return (_jsxs("b", { children: ["Phase: ", _jsx("span", { className: "italic", children: (_a = ctx.phase) !== null && _a !== void 0 ? _a : `none` }), "(Stage: ", _jsx("span", { className: "italic", children: (_c = (_b = ctx.activePlayers) === null || _b === void 0 ? void 0 : _b[Number(ctx.currentPlayer)]) !== null && _c !== void 0 ? _c : `none` }), ")"] }));
@@ -262,6 +273,59 @@ export const DrawHeroes = (G, ctx, validatorName, data) => {
     }
     if (data !== undefined) {
         return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }), _jsxs("span", { children: ["Heroes (", G.heroes.length, " cards)"] })] }), _jsx("tbody", { children: boardRows })] }));
+    }
+    else if (validatorName !== null) {
+        return moveMainArgs;
+    }
+    else {
+        throw new Error(`Функция должна возвращать значение.`);
+    }
+};
+/**
+ * <h3>Отрисовка всех героев для выбора соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param validatorName Название валидатора.
+ * @param data Глобальные параметры.
+ * @returns Поле героев для соло бота.
+ */
+export const DrawHeroesForSoloBotUI = (G, ctx, validatorName, data) => {
+    var _a;
+    // TODO Rework validator?
+    const boardCells = [], moveMainArgs = [];
+    for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < G.heroesForSoloBot.length; j++) {
+            const hero = G.heroesForSoloBot[j];
+            if (hero === undefined) {
+                throw new Error(`В массиве карт героев отсутствует герой с id '${j}'.`);
+            }
+            if (hero.active && Number(ctx.currentPlayer) === 1
+                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickHero) {
+                const player = G.publicPlayers[Number(ctx.currentPlayer)];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                }
+                if (data !== undefined) {
+                    DrawCard(data, boardCells, hero, j, player, null, MoveNames.ClickHeroCardMove, j);
+                }
+                else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
+                    moveMainArgs.push(j);
+                }
+            }
+            else {
+                if (data !== undefined) {
+                    DrawCard(data, boardCells, hero, j, null, null);
+                }
+            }
+        }
+    }
+    if (data !== undefined) {
+        return (_jsxs("table", { children: [_jsxs("caption", { children: [_jsx("span", { style: Styles.HeroBack(), className: "bg-top-hero-icon" }), _jsxs("span", { children: ["Heroes (", G.heroes.length, " cards)"] })] }), _jsx("tbody", { children: _jsx("tr", { children: boardCells }, `Heroes row 0`) })] }));
     }
     else if (validatorName !== null) {
         return moveMainArgs;

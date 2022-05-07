@@ -251,6 +251,19 @@ export const DrawCoin = (data, playerCells, type, coin, id, player, coinClasses,
     }
     playerCells.push(_jsx("td", { className: tdClasses, onClick: () => action === null || action === void 0 ? void 0 : action(...args), children: _jsx("span", { style: styles, className: spanClasses, children: span }) }, `${(player === null || player === void 0 ? void 0 : player.nickname) ? `player ${player.nickname} ` : ``}coin ${id}${IsCoin(coin) ? ` ${coin.value}` : ` empty`}`));
 };
+/**
+ * <h3>Отрисовка фракций.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка фракций на игровом поле.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param playerHeaders Ячейки для отрисовки.
+ * @param suit Фракция.
+ * @param player Игрок.
+ * @param moveName Название действия.
+ */
 export const DrawSuit = (data, playerHeaders, suit, player, moveName) => {
     let action;
     switch (moveName) {

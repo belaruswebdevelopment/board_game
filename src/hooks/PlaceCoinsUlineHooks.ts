@@ -56,6 +56,15 @@ export const CheckEndPlaceCoinsUlinePhase = (G: IMyGameState, ctx: Ctx): boolean
  */
 export const CheckUlinePlaceCoinsOrder = (G: IMyGameState, ctx: Ctx): void => CheckPlayersBasicOrder(G, ctx);
 
+/**
+ * <h3>Действия при завершении фазы 'placeCoinsUline'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении фазы 'placeCoinsUline'.</li>
+ * </ol>
+ *
+ * @param G
+ */
 export const EndPlaceCoinsUlineActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
 };

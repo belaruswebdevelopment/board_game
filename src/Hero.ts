@@ -1,5 +1,6 @@
-import { CardNames, RusCardTypes } from "./typescript/enums";
-import type { ICreateHero, ICreateOlwinDoubleNonPlacedCard, IHeroCard, IHeroConfig, IHeroData, IHeroTypes, IOlwinDoubleNonPlacedCard } from "./typescript/interfaces";
+import { heroesConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
+import { RusCardTypes } from "./typescript/enums";
+import type { ICreateHero, IHeroCard, IHeroData, IHeroTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
@@ -9,16 +10,18 @@ import type { ICreateHero, ICreateOlwinDoubleNonPlacedCard, IHeroCard, IHeroConf
  * </ol>
  *
  * @param configOptions Конфиг опций героев.
- * @param heroesConfig Конфиг героев.
+ * @param solo Является ли режим игры соло игрой.
  * @returns Массив всех героев.
  */
-export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig): IHeroCard[] => {
-    const heroes: IHeroCard[] = [];
+export const BuildHeroes = (configOptions: string[], solo: boolean): [IHeroCard[], IHeroCard[], IHeroCard[]] => {
+    const heroes: IHeroCard[] = [],
+        heroesForSoloBot: IHeroCard[] = [],
+        heroesForSoloGameDifficultyLevel: IHeroCard[] = [];
     let heroName: IHeroTypes;
     for (heroName in heroesConfig) {
         const heroData: IHeroData = heroesConfig[heroName];
-        if (configOptions.includes(heroData.game)) {
-            heroes.push(CreateHero({
+        if (solo || (!solo && configOptions.includes(heroData.game))) {
+            const hero: IHeroCard = CreateHero({
                 name: heroData.name,
                 description: heroData.description,
                 game: heroData.game,
@@ -29,10 +32,19 @@ export const BuildHeroes = (configOptions: string[], heroesConfig: IHeroConfig):
                 validators: heroData.validators,
                 actions: heroData.actions,
                 stack: heroData.stack,
-            }));
+            });
+            if (!solo || solo && heroName in soloGameHeroesForPlayerConfig) {
+                heroes.push(hero);
+            }
+            if (solo && heroName in soloGameHeroesForBotConfig) {
+                heroesForSoloBot.push(hero);
+            }
+            if (solo && heroName in soloGameDifficultyLevelHeroesConfig) {
+                heroesForSoloGameDifficultyLevel.push(hero);
+            }
         }
     }
-    return heroes;
+    return [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel];
 };
 
 /**
@@ -84,13 +96,15 @@ export const CreateHero = ({
     stack,
 });
 
-export const CreateOlwinDoubleNonPlacedCard = ({
-    name = CardNames.OlwinsDouble,
-    suit,
-}: ICreateOlwinDoubleNonPlacedCard = {} as ICreateOlwinDoubleNonPlacedCard): IOlwinDoubleNonPlacedCard => ({
-    name,
-    suit,
-});
-
+/**
+ * <h3>Проверка, является ли объект картой героя.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой героя.
+ */
 export const IsHeroCard = (card: unknown): card is IHeroCard =>
     card !== null && (card as IHeroCard).active !== undefined;

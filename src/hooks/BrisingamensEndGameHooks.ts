@@ -6,6 +6,15 @@ import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames, Phases } from "../typescript/enums";
 import type { IMyGameState, INext, IPublicPlayer } from "../typescript/interfaces";
 
+/**
+ * <h3>Проверяет порядок хода при начале фазы 'brisingamensEndGame'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале фазы 'brisingamensEndGame'.</li>
+ * </ol>
+ *
+ * @param G
+ */
 export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
     const brisingamensPlayerIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
@@ -16,14 +25,43 @@ export const CheckBrisingamensEndGameOrder = (G: IMyGameState): void => {
     G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
 };
 
+/**
+ * <h3>Действия при завершении фазы 'brisingamensEndGame'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении фазы 'brisingamensEndGame'.</li>
+ * </ol>
+ *
+ * @param G
+ */
 export const EndBrisingamensEndGameActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
 };
 
+/**
+ * <h3>Действия при завершении мува в фазе 'brisingamensEndGame'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в фазе 'brisingamensEndGame'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnBrisingamensEndGameMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
 };
 
+/**
+ * <h3>Действия при начале хода в фазе 'brisingamensEndGame'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале хода в фазе 'brisingamensEndGame'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnBrisingamensEndGameTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddBrisingamensEndGameActionsToStack(G, ctx);
     DrawCurrentProfit(G, ctx);

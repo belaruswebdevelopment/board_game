@@ -184,6 +184,7 @@ const Dwerg_Ymir = {
     game: GameNames.Basic,
     scoringRule: () => 1,
 };
+// TODO For Solo game `Replace the coin of value 2 at the start of the game with a coin of value 9 and add 7 points to the final Bravery Value.`
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -372,6 +373,7 @@ const Tarah = {
     points: 14,
     scoringRule: () => 0,
 };
+// TODO For SOlo Game `She is the most formidable opponent since she will always be present in your army to try to complete the guard lines and recruit the Dwerg brothers.During the countdown, she returns to the Command Zone and adds 13 points to the Final Bravery Value.`
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -407,6 +409,7 @@ const Uline = {
     },
     scoringRule: () => 9,
 };
+// TODO For Solo Game `Will be positioned at the end of Age 1, before the Troop Evaluation, in the order of priority determined in point 4 of the game round.She will remain in this position until the end of the game.`
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -492,5 +495,53 @@ export const heroesConfig = {
     Khrad,
     Olwin,
     Zolkur,
+};
+/**
+ * <h3>Конфиг героев для выбора соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании списка героев для выбора соло ботом при инициализации игры.</li>
+ * </ol>
+ */
+export const soloGameHeroesForBotConfig = {
+    Dwerg_Aesir,
+    Dwerg_Bergelmir,
+    Dwerg_Jungir,
+    Dwerg_Sigmir,
+    Dwerg_Ymir,
+};
+/**
+ * <h3>Конфиг героев для выбора игроком в соло игре.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании списка героев для выбора игроком в соло игре при инициализации игры.</li>
+ * </ol>
+ */
+export const soloGameHeroesForPlayerConfig = {
+    Kraal,
+    Tarah,
+    Aral,
+    Dagda,
+    Lokdur,
+    Zoral,
+    Aegur,
+    Bonfur,
+    Hourya,
+    Idunn,
+};
+/**
+ * <h3>Конфиг героев для выбора уровня сложности.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании списка героев для выбора уровня сложности для соло бота при инициализации игры.</li>
+ * </ol>
+ */
+export const soloGameDifficultyLevelHeroesConfig = {
+    Astrid,
+    Grid,
+    Skaa,
+    Thrud,
+    Uline,
+    Ylud,
 };
 //# sourceMappingURL=HeroData.js.map

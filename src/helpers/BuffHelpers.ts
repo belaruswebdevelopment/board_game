@@ -29,9 +29,31 @@ export const AddBuffToPlayer = (G: IMyGameState, ctx: Ctx, buff?: IBuff, value?:
     }
 };
 
+/**
+ * <h3>Действия, связанные с проверкой наличия конкретного бафа у игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В любой ситуации, требующей наличия конкретного бафа у игрока.</li>
+ * </ol>
+ *
+ * @param player Игрок.
+ * @param buffName Баф.
+ * @returns
+ */
 export const CheckPlayerHasBuff = (player: IPublicPlayer, buffName: BuffTypes): boolean =>
     player.buffs.find((buff: IBuffs): boolean => buff[buffName] !== undefined) !== undefined;
 
+/**
+* <h3>Действия, связанные с удалением бафов у игрока.</h3>
+* <p>Применения:</p>
+* <ol>
+* <li>>В любой ситуации, требующей удаления конкретного бафа у игрока.</li>
+* </ol>
+*
+* @param G
+* @param ctx
+* @param buffName Баф.
+*/
 export const DeleteBuffFromPlayer = (G: IMyGameState, ctx: Ctx, buffName: BuffTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {

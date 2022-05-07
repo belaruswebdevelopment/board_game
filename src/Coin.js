@@ -38,6 +38,16 @@ export const BuildCoins = (coinConfig, options) => {
     }
     return coins;
 };
+/**
+ * <h3>Изменяет статус, который открывает или закрывает монету.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Вызывается при различных действиях с монетами.</li>
+ * </ol>
+ *
+ * @param coin Монета.
+ * @param status Статус, который показывает нужно ли открыть или закрыть монету.
+ */
 export const ChangeIsOpenedCoinStatus = (coin, status) => {
     if (coin.isOpened === status) {
         throw new Error(`Монета уже ${status ? `открыта` : `закрыта`}.`);
@@ -74,9 +84,10 @@ export const CountMarketCoins = (G) => {
  * <li>Вызывается при создании монеты преимущества по охотникам.</li>
  * </ol>
  *.
- * @param value Значение.
  * @param isInitial Является ли базовой.
+ * @param isOpened Является ли монета открытой.
  * @param isTriggerTrading Активирует ли обмен монет.
+ * @param value Значение.
  * @returns Монета.
  */
 export const CreateCoin = ({ isInitial = false, isOpened = false, isTriggerTrading = false, value, } = {}) => ({

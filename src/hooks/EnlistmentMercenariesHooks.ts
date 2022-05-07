@@ -18,6 +18,7 @@ import type { CampDeckCardTypes, IMyGameState, INext, IPublicPlayer } from "../t
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckEndEnlistmentMercenariesPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     if (G.publicPlayersOrder.length) {
@@ -70,6 +71,16 @@ export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): bo
     }
 };
 
+/**
+ * <h3>Действия при завершении фазы 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении фазы 'enlistmentMercenaries'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void => {
     if (G.tierToEnd === 0) {
         const yludIndex: number =
@@ -82,6 +93,16 @@ export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void
     G.publicPlayersOrder = [];
 };
 
+/**
+ * <h3>Действия при завершении мува в фазе 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в фазе 'enlistmentMercenaries'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -98,6 +119,16 @@ export const OnEnlistmentMercenariesMove = (G: IMyGameState, ctx: Ctx): void => 
     }
 };
 
+/**
+ * <h3>Действия при начале хода в фазе 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале хода в фазе 'enlistmentMercenaries'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnEnlistmentMercenariesTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -109,6 +140,16 @@ export const OnEnlistmentMercenariesTurnBegin = (G: IMyGameState, ctx: Ctx): voi
     }
 };
 
+/**
+ * <h3>Действия при завершении хода в фазе 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении хода в фазе 'enlistmentMercenaries'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnEnlistmentMercenariesTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
     ClearPlayerPickedCard(G, ctx);
 };

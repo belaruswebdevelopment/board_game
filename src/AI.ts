@@ -18,6 +18,7 @@ import type { DeckCardTypes, IBuffs, IMoves, IMoveValidator, IMyGameState, IObje
  * @returns Массив возможных мувов у ботов.
  */
 export const enumerate = (G: IMyGameState, ctx: Ctx): IMoves[] => {
+    // TODO Add AI logic for Solo Bot
     const moves: IMoves[] = [],
         player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     let playerId: number | undefined;

@@ -15,6 +15,7 @@ import type { IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from
  * @param G
  * @param ctx
  * @param coinsOrder Порядок выкладки монет.
+ * @returns
  */
 export const BotsPlaceAllCoinsMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinsOrder: number[]):
     string | void => {

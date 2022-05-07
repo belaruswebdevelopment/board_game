@@ -4,11 +4,10 @@ import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
 import { IsMercenaryCampCard } from "./Camp";
 import { IsCardNotActionAndNotNull } from "./Card";
 import { IsCoin } from "./Coin";
-import { IsMultiplayer } from "./helpers/MultiplayerHelpers";
+import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
-import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { CoinTypes, MoveNames, MoveValidatorNames, Phases, Stages, SuitNames, ValidatorNames } from "./typescript/enums";
+import { CoinTypes, MoveNames, MoveValidatorNames, Phases, PickCardValidatorNames, Stages, SuitNames } from "./typescript/enums";
 import type { CampDeckCardTypes, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPlayer, IPublicPlayer, IValidatorsConfig, MoveValidatorGetRangeTypes, PlayerCardsType, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
@@ -28,8 +27,7 @@ import { ExplorerDistinctionProfit } from "./ui/ProfitUI";
  * @returns
  */
 export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMoveCoinsArguments): boolean => {
-    const multiplayer: boolean = IsMultiplayer(G),
-        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -39,7 +37,7 @@ export const CoinUpgradeValidation = (G: IMyGameState, ctx: Ctx, coinData: IMove
     }
     let handCoins: PublicPlayerCoinTypes[],
         boardCoins: PublicPlayerCoinTypes[];
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
         boardCoins = privatePlayer.boardCoins;
     } else {
@@ -123,6 +121,18 @@ export const IsValidMove = (G: IMyGameState, ctx: Ctx, stage: Stages, id?: Valid
     return isValid;
 };
 
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @TODO Саше: сделать описание функции и параметров.
+ * @param phase Фаза игры.
+ * @param stage Стадия игры.
+ * @returns
+ */
 export const GetValidator = (phase: Phases, stage: Stages): IMoveValidator | null => {
     let validator: IMoveValidator | null;
     switch (phase) {
@@ -166,6 +176,7 @@ export const GetValidator = (phase: Phases, stage: Stages): IMoveValidator | nul
  * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveValidators: IMoveValidators = {
+    // TODO Add validators for solo bot moves!
     BotsPlaceAllCoinsMoveValidator: {
         getRange: (G?: IMyGameState): IMoveArgumentsStage<number[][]>[`args`] => {
             if (G === undefined) {
@@ -183,8 +194,8 @@ export const moveValidators: IMoveValidators = {
                     index === 0 ? num - 20 : num);
             }
             const minResultForCoins: number = Math.min(...resultsForCoins),
-                maxResultForCoins: number = Math.max(...resultsForCoins);
-            const deck: DeckCardTypes[] | undefined = G.secret.decks[G.secret.decks.length - 1];
+                maxResultForCoins: number = Math.max(...resultsForCoins),
+                deck: DeckCardTypes[] | undefined = G.secret.decks[G.secret.decks.length - 1];
             if (deck === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека '${G.secret.decks.length - 1}' эпохи.`);
             }
@@ -197,8 +208,7 @@ export const moveValidators: IMoveValidators = {
                 positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
             }
             // TODO Check it bot can't play in multiplayer now...
-            const multiplayer: boolean = IsMultiplayer(G),
-                player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
+            const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
                 privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -207,7 +217,7 @@ export const moveValidators: IMoveValidators = {
                 throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
             }
             let handCoins: PublicPlayerCoinTypes[];
-            if (multiplayer) {
+            if (G.multiplayer) {
                 handCoins = privatePlayer.handCoins;
             } else {
                 handCoins = player.handCoins;
@@ -970,10 +980,10 @@ export const moveValidators: IMoveValidators = {
             if (validators !== undefined) {
                 for (const validator in validators) {
                     switch (validator) {
-                        case ValidatorNames.Conditions:
+                        case PickCardValidatorNames.Conditions:
                             isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
                             break;
-                        case ValidatorNames.DiscardCard:
+                        case PickCardValidatorNames.DiscardCard:
                             isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
                             break;
                         default:
@@ -1323,16 +1333,52 @@ export const moveBy: IMoveBy = {
  */
 const ValidateByValues = <T>(value: T, values: T[]): boolean => values.includes(value);
 
-const ValidateByObjectCoinIdTypeIsInitialValues = (value: IMoveCoinsArguments,
-    values: IMoveCoinsArguments[]): boolean => values.findIndex((coin: IMoveCoinsArguments): boolean =>
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @TODO Саше: сделать описание функции и параметров.
+ * @param value
+ * @param values
+ * @returns
+ */
+const ValidateByObjectCoinIdTypeIsInitialValues = (value: IMoveCoinsArguments, values: IMoveCoinsArguments[]):
+    boolean => values.findIndex((coin: IMoveCoinsArguments): boolean =>
         value.coinId === coin.coinId && value.type === coin.type) !== -1;
 
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @TODO Саше: сделать описание функции и параметров.
+ * @param value
+ * @param values
+ * @returns
+ */
 const ValidateByObjectSuitCardIdValues = (value: IMoveSuitCardCurrentId,
     values: Partial<SuitPropertyTypes<number[]>>): boolean => {
     const objectSuitCardIdValues: number[] | undefined = values[value.suit];
     return objectSuitCardIdValues !== undefined && objectSuitCardIdValues.includes(value.cardId);
 };
 
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @TODO Саше: сделать описание функции и параметров.
+ * @param value
+ * @param values
+ * @returns
+ */
 const ValidateByObjectSuitCardIdPlayerIdValues = (value: IMoveCardPlayerCurrentId,
     values: IMoveCardIdPlayerIdArguments): boolean =>
     values.playerId === value.playerId && values.cards.includes(value.cardId);

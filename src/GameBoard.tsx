@@ -2,7 +2,7 @@ import type { BoardProps } from "boardgame.io/dist/types/packages/react";
 import React from "react";
 import type { IMyGameState } from "./typescript/interfaces";
 import { DrawDebugData } from "./ui/DebugUI";
-import { DrawCamp, DrawCurrentPhaseStage, DrawCurrentPlayerTurn, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
+import { DrawCamp, DrawCurrentPhaseStage, DrawCurrentPlayerTurn, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawMarketCoins, DrawProfit, DrawTaverns, DrawTierCards, DrawWinner } from "./ui/GameBoardUI";
 import { DrawLogData } from "./ui/LogUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 
@@ -15,7 +15,8 @@ import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from
  */
 export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
     render() {
-        const gridClass = `col-span-4 justify-self-center`,
+        const gridClasses = `col-span-4 justify-self-center`,
+            gridColClasses = `h-full flex flex-col justify-evenly`,
             classes = `col-span-3 text-center underline border`,
             tierCardsUI: JSX.Element = DrawTierCards(this.props.G),
             currentPlayerTurnUI: JSX.Element = DrawCurrentPlayerTurn(this.props.ctx),
@@ -26,6 +27,8 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
             marketCoinsUI: JSX.Element = DrawMarketCoins(this.props.G, this.props),
             drawHeroesUI: JSX.Element =
                 DrawHeroes(this.props.G, this.props.ctx, null, this.props) as JSX.Element,
+            drawHeroesForSoloBotUI: JSX.Element | null = this.props.G.solo ?
+                DrawHeroesForSoloBotUI(this.props.G, this.props.ctx, null, this.props) as JSX.Element : null,
             drawCampUI: JSX.Element | null = this.props.G.expansions.thingvellir.active ?
                 (DrawCamp(this.props.G, this.props.ctx, null, this.props) as JSX.Element) : null,
             drawDistinctionsUI: JSX.Element =
@@ -33,8 +36,8 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
             drawDistinctionProfitUI: JSX.Element | string = this.props.G.drawProfit ?
                 DrawProfit(this.props.G, this.props.ctx, this.props) : this.props.G.drawProfit,
             tavernsUI: JSX.Element[] =
-                DrawTaverns(this.props.G, this.props.ctx, null, this.props, gridClass) as
-                JSX.Element[],
+                DrawTaverns(this.props.G, this.props.ctx, null, this.props,
+                    gridClasses) as JSX.Element[],
             playersBoardsCoinsUI: JSX.Element[] =
                 DrawPlayersBoardsCoins(this.props.G, this.props.ctx, null, this.props) as
                 JSX.Element[],
@@ -64,13 +67,14 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
                     <div className="col-span-12 justify-self-center">
                         {drawDiscardCards}
                     </div>
-                    <div className={`${gridClass}`}>
+                    <div className={`${gridClasses}`}>
                         {marketCoinsUI}
                     </div>
-                    <div className={`${gridClass}`}>
+                    <div className={`${gridClasses} ${gridColClasses}`}>
                         {drawHeroesUI}
+                        {drawHeroesForSoloBotUI}
                     </div>
-                    <div className={`${gridClass} h-full flex flex-col justify-evenly`}>
+                    <div className={`${gridClasses} ${gridColClasses}`}>
                         {drawDistinctionsUI}
                         {drawCampUI}
                         {drawDistinctionProfitUI}

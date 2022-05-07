@@ -41,6 +41,15 @@ export const DiscardTradingCoinAction = (G, ctx) => {
     DiscardTradingCoin(G, Number(ctx.currentPlayer));
     AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' сбросил монету активирующую обмен.`);
 };
+/**
+ * <h3>Действия, связанные с завершением выкладки монет на артефакт Odroerir The Mythic Cauldron.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе карты лагеря артефакта Odroerir The Mythic Cauldron.</li>
+ * </ol>
+ *
+ * @param G
+ */
 export const FinishOdroerirTheMythicCauldronAction = (G) => {
     G.odroerirTheMythicCauldron = false;
 };

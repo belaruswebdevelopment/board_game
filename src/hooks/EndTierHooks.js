@@ -4,6 +4,7 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { CheckEndGameLastActions, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames, HeroNames } from "../typescript/enums";
+// TODO Check `Ylud the Unpredictable Will be positioned at the end of Age 1, before the Troop; Evaluation, in the order of priority determined in point 4 of the game round.She will remain in this position until the end of the game.`
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
  * <p>Применения:</p>
@@ -13,6 +14,7 @@ import { BuffNames, HeroNames } from "../typescript/enums";
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckEndEndTierPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
@@ -83,9 +85,28 @@ export const CheckEndTierOrder = (G) => {
     }
     G.publicPlayersOrder.push(String(yludIndex));
 };
-export const CheckEndEndTierTurn = (G, ctx) => {
-    return EndTurnActions(G, ctx);
-};
+/**
+ * <h3>Проверяет необходимость завершения хода в фазе 'endTier'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При каждом действии в фазе 'endTier'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @returns
+ */
+export const CheckEndEndTierTurn = (G, ctx) => EndTurnActions(G, ctx);
+/**
+ * <h3>Действия при завершении фазы 'endTier'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении фазы 'endTier'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const EndEndTierActions = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -97,14 +118,44 @@ export const EndEndTierActions = (G, ctx) => {
     }
     G.publicPlayersOrder = [];
 };
+/**
+ * <h3>Действия при завершении мува в фазе 'endTier'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в фазе 'endTier'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnEndTierMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
 };
-export const OnEndTierTurnEnd = (G, ctx) => {
-    ClearPlayerPickedCard(G, ctx);
-};
+/**
+ * <h3>Действия при начале хода в фазе 'endTier'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале хода в фазе 'endTier'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnEndTierTurnBegin = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.placeYludHero()]);
     DrawCurrentProfit(G, ctx);
+};
+/**
+ * <h3>Действия при завершении хода в фазе 'endTier'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении хода в фазе 'endTier'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const OnEndTierTurnEnd = (G, ctx) => {
+    ClearPlayerPickedCard(G, ctx);
 };
 //# sourceMappingURL=EndTierHooks.js.map

@@ -9,7 +9,6 @@ import { IsHeroCard } from "../Hero";
 import { ArtefactNames, MoveNames } from "../typescript/enums";
 import type { AllCardTypes, ArgsTypes, IBackground, IMoveFunctionTypes, IMyGameState, IPublicPlayer, PublicPlayerCoinTypes, SuitTypes } from "../typescript/interfaces";
 
-
 /**
  * <h3>Отрисовка кнопок.</h3>
  * <p>Применения:</p>
@@ -280,6 +279,19 @@ export const DrawCoin = (data: BoardProps<IMyGameState>, playerCells: JSX.Elemen
     );
 };
 
+/**
+ * <h3>Отрисовка фракций.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка фракций на игровом поле.</li>
+ * </ol>
+ *
+ * @param data Глобальные параметры.
+ * @param playerHeaders Ячейки для отрисовки.
+ * @param suit Фракция.
+ * @param player Игрок.
+ * @param moveName Название действия.
+ */
 export const DrawSuit = (data: BoardProps<IMyGameState>, playerHeaders: JSX.Element[], suit: SuitTypes,
     player: IPublicPlayer, moveName: MoveNames | null): void => {
     let action: IMoveFunctionTypes;

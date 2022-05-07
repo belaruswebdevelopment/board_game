@@ -70,7 +70,6 @@ export const AddCoinToPouchAction = (G, ctx, coinId) => {
  *
  * @param G
  * @param ctx
- * @param playerId Id игрока.
  * @param cardId Id сбрасываемой карты.
  */
 export const DiscardSuitCardAction = (G, ctx, cardId) => {
@@ -85,6 +84,18 @@ export const DiscardSuitCardAction = (G, ctx, cardId) => {
     DiscardPickedCard(G, player, discardedCard);
     player.stack = [];
 };
+/**
+ * <h3>Действия, связанные с выбором карты лагеря.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе карты лагеря.</li>
+ * <li>При выборе карты лагеря по действию персонажа Хольда.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param cardId Id выбранной карты.
+ */
 export const PickCampCardAction = (G, ctx, cardId) => {
     const campCard = G.camp[cardId];
     if (campCard === undefined) {

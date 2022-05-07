@@ -304,6 +304,8 @@ export interface ILogData {
  */
 export interface IMyGameState {
     readonly multiplayer: boolean;
+    readonly solo: boolean;
+    soloGameDifficultyLevel: number | null;
     odroerirTheMythicCauldron: boolean;
     readonly odroerirTheMythicCauldronCoins: ICoin[];
     readonly averageCards: SuitPropertyTypes<ICard>;
@@ -328,6 +330,8 @@ export interface IMyGameState {
     exchangeOrder: (number | undefined)[];
     readonly expansions: IExpansions;
     readonly heroes: IHeroCard[];
+    readonly heroesForSoloBot: IHeroCard[];
+    readonly heroesForSoloGameDifficultyLevel: IHeroCard[];
     readonly log: boolean;
     readonly logData: ILogData[];
     readonly marketCoins: ICoin[];
@@ -713,7 +717,7 @@ export interface IPublicPlayer {
  * <h3>Интерфейс для приватных данных игрока.</h3>
  */
 export interface IPlayer {
-    readonly handCoins: CoinType[];
+    handCoins: CoinType[];
     readonly boardCoins: CoinType[];
 }
 
@@ -925,22 +929,22 @@ export type ICreateActionCard = PartialBy<IActionCard, `type`>;
 /**
  * <h3>Тип для создания карты лагеря артефакта.</h3>
  */
-export type ICreateArtefactCampCard = PartialBy<IArtefactCampCard, `type` | `game` | `suit` | `rank` | `points`>;
+export type ICreateArtefactCampCard = PartialBy<IArtefactCampCard, `game` | `points` | `rank` | `suit` | `type`>;
 
 /**
  * <h3>Тип для создания карты лагеря наёмника.</h3>
  */
-export type ICreateMercenaryCampCard = PartialBy<IMercenaryCampCard, `type` | `game`>;
+export type ICreateMercenaryCampCard = PartialBy<IMercenaryCampCard, `game` | `type`>;
 
 /**
  * <h3>Тип для создания карты наёмника на столе игрока.</h3>
  */
-export type ICreateMercenaryPlayerCard = PartialBy<IMercenaryPlayerCard, `type` | `game`>;
+export type ICreateMercenaryPlayerCard = PartialBy<IMercenaryPlayerCard, `game` | `rank` | `type`>;
 
 /**
  * <h3>Тип для создания карты дворфа.</h3>
  */
-export type ICreateCard = PartialBy<ICard, `type` | `tier` | `path`>;
+export type ICreateCard = PartialBy<ICard, `rank` | `type` | `tier` | `path`>;
 
 /**
  * <h3>Тип для создания героя.</h3>
@@ -987,7 +991,22 @@ export type ICreatePublicPlayer =
         & ReadonlyBy<IPublicPlayer, `actionsNum` | `pickedCard` | `priority` | `selectedCoin` | `stack`>,
         `actionsNum` | `heroes` | `campCards` | `stack` | `buffs` | `selectedCoin` | `pickedCard`>;
 
+export type ISoloGameDifficultyLevelHeroesConfig =
+    Pick<IHeroConfig, `Astrid` | `Grid` | `Skaa` | `Thrud` | `Uline` | `Ylud`>;
+
+export type ISoloGameHeroesForBotConfig =
+    Pick<IHeroConfig, `Dwerg_Aesir` | `Dwerg_Bergelmir` | `Dwerg_Jungir` | `Dwerg_Sigmir` | `Dwerg_Ymir`>;
+
+export type ISoloGameHeroesForPlayerConfig = Pick<IHeroConfig, `Kraal` | `Tarah` | `Aral` | `Dagda` | `Lokdur`
+    | `Zoral` | `Aegur` | `Bonfur` | `Hourya` | `Idunn`>;
+
 // My Utilities types
+/**
+ * <h3>Тип для того, чтобы сделать некоторые поля объекта опциональными.</h3>
+ */
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
+/**
+ * <h3>Тип для того, чтобы сделать некоторые поля объекта только для чтения.</h3>
+ */
 type ReadonlyBy<T, K extends keyof T> = Omit<T, K> & Readonly<Pick<T, K>>;

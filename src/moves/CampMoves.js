@@ -12,6 +12,7 @@ import { CoinTypes, Stages } from "../typescript/enums";
  * @param G
  * @param ctx
  * @param coinId Id монеты.
+ * @returns
  */
 export const AddCoinToPouchMove = (G, ctx, coinId) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.AddCoinToPouch, coinId);

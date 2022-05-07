@@ -22,7 +22,7 @@ export const CheckPickHero = (G, ctx) => {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     if (!CheckPlayerHasBuff(player, BuffNames.NoHero)) {
-        const playerCards = Object.values(player.cards), isCanPickHero = Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) > player.heroes.length, isPlayerHasPickHeroActionInStack = player.stack.findIndex((stack) => { var _a; return ((_a = stack.config) === null || _a === void 0 ? void 0 : _a.stageName) === Stages.PickHero; });
+        const playerCards = Object.values(player.cards), heroesLength = G.solo ? player.heroes.filter((hero) => hero.name.startsWith(`Dwerg`)).length : player.heroes.length, isCanPickHero = Math.min(...playerCards.map((item) => item.reduce(TotalRank, 0))) > heroesLength, isPlayerHasPickHeroActionInStack = player.stack.findIndex((stack) => { var _a; return ((_a = stack.config) === null || _a === void 0 ? void 0 : _a.stageName) === Stages.PickHero; });
         if (isCanPickHero && isPlayerHasPickHeroActionInStack === -1) {
             AddPickHeroAction(G, ctx);
         }

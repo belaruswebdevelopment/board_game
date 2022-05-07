@@ -6,11 +6,10 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { DiscardCardFromTavernJarnglofi, DiscardCardIfCampCardPicked } from "../helpers/CampHelpers";
 import { ResolveBoardCoins } from "../helpers/CoinHelpers";
 import { AfterLastTavernEmptyActions, CheckAndStartPlaceCoinsUlineOrPickCardsPhase, ClearPlayerPickedCard, EndTurnActions, RemoveThrudFromPlayerBoardAfterGameEnd, StartOrEndActions } from "../helpers/GameHooksHelpers";
-import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
+import { ChangePlayersPriorities } from "../helpers/PriorityHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { ActivateTrading } from "../helpers/TradingHelpers";
 import { AddDataToLog } from "../Logging";
-import { ChangePlayersPriorities } from "../Priority";
 import { CheckIfCurrentTavernEmpty, DiscardCardIfTavernHasCardFor2Players, tavernsConfig } from "../Tavern";
 import { BuffNames, LogTypes, Phases, Stages } from "../typescript/enums";
 /**
@@ -24,7 +23,7 @@ import { BuffNames, LogTypes, Phases, Stages } from "../typescript/enums";
  * @param ctx
  */
 const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
-    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -32,7 +31,7 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins;
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     }
     else {
@@ -75,6 +74,7 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckEndPickCardsPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
@@ -105,9 +105,7 @@ export const CheckEndPickCardsPhase = (G, ctx) => {
  * @param ctx
  * @returns
  */
-export const CheckEndPickCardsTurn = (G, ctx) => {
-    return EndTurnActions(G, ctx);
-};
+export const CheckEndPickCardsTurn = (G, ctx) => EndTurnActions(G, ctx);
 /**
  * <h3>Порядок обмена кристаллов при завершении фазы 'pickCards'.</h3>
  * <p>Применения:</p>
@@ -164,6 +162,16 @@ export const EndPickCardsActions = (G, ctx) => {
     G.publicPlayersOrder = [];
     ChangePlayersPriorities(G);
 };
+/**
+ * <h3>Действия при завершении мува в фазе 'pickCards'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в фазе 'pickCards'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnPickCardsMove = (G, ctx) => {
     var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -178,22 +186,43 @@ export const OnPickCardsMove = (G, ctx) => {
             DrawCurrentProfit(G, ctx);
         }
         else {
-            if (ctx.numPlayers === 2 && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
+            if ((G.solo || ctx.numPlayers === 2) && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]
                 && !CheckIfCurrentTavernEmpty(G)) {
-                DiscardCardIfTavernHasCardFor2Players(G);
+                DiscardCardIfTavernHasCardFor2Players(G, ctx);
             }
             if (((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) !== Stages.PlaceTradingCoinsUline) {
                 CheckAndStartUlineActionsOrContinue(G, ctx);
             }
             if (!player.actionsNum) {
+                // TODO For solo mode `And if the zero value coin is on the purse, the Neutral clan also increases the value of the other coin in the purse, replacing it with the higher value available in the Royal Treasure.`
                 ActivateTrading(G, ctx);
             }
         }
     }
 };
+/**
+ * <h3>Действия при начале хода в фазе 'pickCards'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале хода в фазе 'pickCards'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnPickCardsTurnBegin = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.pickCard()]);
 };
+/**
+ * <h3>Действия при завершении хода в фазе 'pickCards'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении хода в фазе 'pickCards'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnPickCardsTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);
     if (G.expansions.thingvellir.active && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
@@ -201,14 +230,14 @@ export const OnPickCardsTurnEnd = (G, ctx) => {
             G.campPicked = false;
         }
         else {
-            DiscardCardIfCampCardPicked(G);
+            DiscardCardIfCampCardPicked(G, ctx);
         }
         if (ctx.playOrder.length < ctx.numPlayers) {
             if (G.mustDiscardTavernCardJarnglofi === null) {
                 G.mustDiscardTavernCardJarnglofi = true;
             }
             if (G.mustDiscardTavernCardJarnglofi) {
-                DiscardCardFromTavernJarnglofi(G);
+                DiscardCardFromTavernJarnglofi(G, ctx);
             }
         }
     }
@@ -224,10 +253,9 @@ export const OnPickCardsTurnEnd = (G, ctx) => {
  * @param ctx
  */
 export const ResolveCurrentTavernOrders = (G, ctx) => {
-    const multiplayer = IsMultiplayer(G);
     G.currentTavern++;
     Object.values(G.publicPlayers).forEach((player, index) => {
-        if (multiplayer) {
+        if (G.multiplayer) {
             const privatePlayer = G.players[index];
             if (privatePlayer === undefined) {
                 throw new Error(`В массиве приватных игроков отсутствует игрок с id '${index}'.`);

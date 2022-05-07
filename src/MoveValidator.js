@@ -3,11 +3,10 @@ import { CheckHeuristicsForCoinsPlacement } from "./bot_logic/BotConfig";
 import { IsMercenaryCampCard } from "./Camp";
 import { IsCardNotActionAndNotNull } from "./Card";
 import { IsCoin } from "./Coin";
-import { IsMultiplayer } from "./helpers/MultiplayerHelpers";
+import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
-import { HasLowestPriority } from "./Priority";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
-import { CoinTypes, MoveNames, MoveValidatorNames, Phases, Stages, SuitNames, ValidatorNames } from "./typescript/enums";
+import { CoinTypes, MoveNames, MoveValidatorNames, Phases, PickCardValidatorNames, Stages, SuitNames } from "./typescript/enums";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { ExplorerDistinctionProfit } from "./ui/ProfitUI";
@@ -25,7 +24,7 @@ import { ExplorerDistinctionProfit } from "./ui/ProfitUI";
  * @returns
  */
 export const CoinUpgradeValidation = (G, ctx, coinData) => {
-    const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+    const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -33,7 +32,7 @@ export const CoinUpgradeValidation = (G, ctx, coinData) => {
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins, boardCoins;
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
         boardCoins = privatePlayer.boardCoins;
     }
@@ -120,6 +119,18 @@ export const IsValidMove = (G, ctx, stage, id) => {
     }
     return isValid;
 };
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @TODO Саше: сделать описание функции и параметров.
+ * @param phase Фаза игры.
+ * @param stage Стадия игры.
+ * @returns
+ */
 export const GetValidator = (phase, stage) => {
     let validator;
     switch (phase) {
@@ -162,6 +173,7 @@ export const GetValidator = (phase, stage) => {
  * @TODO Саше: сделать описание функции и параметров.
  */
 export const moveValidators = {
+    // TODO Add validators for solo bot moves!
     BotsPlaceAllCoinsMoveValidator: {
         getRange: (G) => {
             if (G === undefined) {
@@ -175,8 +187,7 @@ export const moveValidators = {
             if (hasLowestPriority) {
                 resultsForCoins = resultsForCoins.map((num, index) => index === 0 ? num - 20 : num);
             }
-            const minResultForCoins = Math.min(...resultsForCoins), maxResultForCoins = Math.max(...resultsForCoins);
-            const deck = G.secret.decks[G.secret.decks.length - 1];
+            const minResultForCoins = Math.min(...resultsForCoins), maxResultForCoins = Math.max(...resultsForCoins), deck = G.secret.decks[G.secret.decks.length - 1];
             if (deck === undefined) {
                 throw new Error(`В массиве дек карт отсутствует дека '${G.secret.decks.length - 1}' эпохи.`);
             }
@@ -189,7 +200,7 @@ export const moveValidators = {
                 positionForMaxCoin = resultsForCoins.indexOf(maxResultForCoins);
             }
             // TODO Check it bot can't play in multiplayer now...
-            const multiplayer = IsMultiplayer(G), player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
+            const player = G.publicPlayers[Number(ctx.currentPlayer)], privatePlayer = G.players[Number(ctx.currentPlayer)];
             if (player === undefined) {
                 throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
             }
@@ -197,7 +208,7 @@ export const moveValidators = {
                 throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
             }
             let handCoins;
-            if (multiplayer) {
+            if (G.multiplayer) {
                 handCoins = privatePlayer.handCoins;
             }
             else {
@@ -872,10 +883,10 @@ export const moveValidators = {
             if (validators !== undefined) {
                 for (const validator in validators) {
                     switch (validator) {
-                        case ValidatorNames.Conditions:
+                        case PickCardValidatorNames.Conditions:
                             isValid = IsCanPickHeroWithConditionsValidator(G, ctx, id);
                             break;
-                        case ValidatorNames.DiscardCard:
+                        case PickCardValidatorNames.DiscardCard:
                             isValid = IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator(G, ctx, id);
                             break;
                         default:
@@ -1192,10 +1203,46 @@ export const moveBy = {
  * @returns
  */
 const ValidateByValues = (value, values) => values.includes(value);
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @TODO Саше: сделать описание функции и параметров.
+ * @param value
+ * @param values
+ * @returns
+ */
 const ValidateByObjectCoinIdTypeIsInitialValues = (value, values) => values.findIndex((coin) => value.coinId === coin.coinId && value.type === coin.type) !== -1;
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @TODO Саше: сделать описание функции и параметров.
+ * @param value
+ * @param values
+ * @returns
+ */
 const ValidateByObjectSuitCardIdValues = (value, values) => {
     const objectSuitCardIdValues = values[value.suit];
     return objectSuitCardIdValues !== undefined && objectSuitCardIdValues.includes(value.cardId);
 };
+/**
+ * <h3>ДОБАВИТЬ ОПИСАНИЕ.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>ДОБАВИТЬ ПРИМЕНЕНИЯ.</li>
+ * </oL>
+ *
+ * @TODO Саше: сделать описание функции и параметров.
+ * @param value
+ * @param values
+ * @returns
+ */
 const ValidateByObjectSuitCardIdPlayerIdValues = (value, values) => values.playerId === value.playerId && values.cards.includes(value.cardId);
 //# sourceMappingURL=MoveValidator.js.map

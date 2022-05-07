@@ -46,6 +46,7 @@ export const ClickHeroCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx,
  * @param ctx
  * @param suit Название фракции.
  * @param cardId Id карты.
+ * @returns
  */
 export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes, cardId: number):
     string | void => {
@@ -70,6 +71,7 @@ export const DiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, s
  * @param G
  * @param ctx
  * @param suit Название фракции.
+ * @returns
  */
 export const PlaceOlwinCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): string | void => {
     const isValidMove: boolean =
@@ -90,6 +92,7 @@ export const PlaceOlwinCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  * @param G
  * @param ctx
  * @param suit Название фракции.
+ * @returns
  */
 export const PlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): string | void => {
     const isValidMove: boolean =
@@ -110,6 +113,7 @@ export const PlaceThrudHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx
  * @param G
  * @param ctx
  * @param suit Название фракции.
+ * @returns
  */
 export const PlaceYludHeroMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): string | void => {
     const isValidMove: boolean =

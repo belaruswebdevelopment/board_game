@@ -9,6 +9,19 @@ import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
+/**
+ * <h3>Получение преимущества по фракции кузнецов.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце 1-й эпохи, когда получается преимущество по фракции кузнецов.</li>
+ * <li>В конце игры, когда получается преимущество по фракции кузнецов.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @returns
+ */
 export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     const player: IPublicPlayer | undefined = G.publicPlayers[playerId];
     if (player === undefined) {
@@ -29,6 +42,19 @@ export const BlacksmithDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerI
     return 0;
 };
 
+/**
+ * <h3>Получение преимущества по фракции разведчиков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце 1-й эпохи, когда получается преимущество по фракции разведчиков.</li>
+ * <li>В конце игры, когда получается преимущество по фракции разведчиков.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @returns
+ */
 export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     const player: IPublicPlayer | undefined = G.publicPlayers[playerId];
     if (player === undefined) {
@@ -41,6 +67,19 @@ export const ExplorerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId:
     return 0;
 };
 
+/**
+ * <h3>Получение преимущества по фракции охотников.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце 1-й эпохи, когда получается преимущество по фракции охотников.</li>
+ * <li>В конце игры, когда получается преимущество по фракции охотников.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @returns
+ */
 export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     if (G.tierToEnd !== 0) {
         const player: IPublicPlayer | undefined = G.publicPlayers[playerId],
@@ -76,6 +115,19 @@ export const HunterDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: n
     return 0;
 };
 
+/**
+ * <h3>Получение преимущества по фракции горняков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце 1-й эпохи, когда получается преимущество по фракции горняков.</li>
+ * <li>В конце игры, когда получается преимущество по фракции горняков.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @returns
+ */
 export const MinerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     const player: IPublicPlayer | undefined = G.publicPlayers[playerId];
     if (player === undefined) {
@@ -97,6 +149,19 @@ export const MinerDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: nu
     return 0;
 };
 
+/**
+ * <h3>Получение преимущества по фракции воинов.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце 1-й эпохи, когда получается преимущество по фракции воинов.</li>
+ * <li>В конце игры, когда получается преимущество по фракции воинов.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @returns
+ */
 export const WarriorDistinctionAwarding = (G: IMyGameState, ctx: Ctx, playerId: number): number => {
     const player: IPublicPlayer | undefined = G.publicPlayers[playerId];
     if (player === undefined) {

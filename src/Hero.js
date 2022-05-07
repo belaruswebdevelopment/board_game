@@ -1,4 +1,5 @@
-import { CardNames, RusCardTypes } from "./typescript/enums";
+import { heroesConfig, soloGameDifficultyLevelHeroesConfig, soloGameHeroesForBotConfig, soloGameHeroesForPlayerConfig } from "./data/HeroData";
+import { RusCardTypes } from "./typescript/enums";
 /**
  * <h3>Создаёт всех героев при инициализации игры.</h3>
  * <p>Применения:</p>
@@ -7,16 +8,16 @@ import { CardNames, RusCardTypes } from "./typescript/enums";
  * </ol>
  *
  * @param configOptions Конфиг опций героев.
- * @param heroesConfig Конфиг героев.
+ * @param solo Является ли режим игры соло игрой.
  * @returns Массив всех героев.
  */
-export const BuildHeroes = (configOptions, heroesConfig) => {
-    const heroes = [];
+export const BuildHeroes = (configOptions, solo) => {
+    const heroes = [], heroesForSoloBot = [], heroesForSoloGameDifficultyLevel = [];
     let heroName;
     for (heroName in heroesConfig) {
         const heroData = heroesConfig[heroName];
-        if (configOptions.includes(heroData.game)) {
-            heroes.push(CreateHero({
+        if (solo || (!solo && configOptions.includes(heroData.game))) {
+            const hero = CreateHero({
                 name: heroData.name,
                 description: heroData.description,
                 game: heroData.game,
@@ -27,10 +28,19 @@ export const BuildHeroes = (configOptions, heroesConfig) => {
                 validators: heroData.validators,
                 actions: heroData.actions,
                 stack: heroData.stack,
-            }));
+            });
+            if (!solo || solo && heroName in soloGameHeroesForPlayerConfig) {
+                heroes.push(hero);
+            }
+            if (solo && heroName in soloGameHeroesForBotConfig) {
+                heroesForSoloBot.push(hero);
+            }
+            if (solo && heroName in soloGameDifficultyLevelHeroesConfig) {
+                heroesForSoloGameDifficultyLevel.push(hero);
+            }
         }
     }
-    return heroes;
+    return [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel];
 };
 /**
  * <h3>Создание героя.</h3>
@@ -67,9 +77,15 @@ export const CreateHero = ({ type = RusCardTypes.HERO, name, description, game, 
     actions,
     stack,
 });
-export const CreateOlwinDoubleNonPlacedCard = ({ name = CardNames.OlwinsDouble, suit, } = {}) => ({
-    name,
-    suit,
-});
+/**
+ * <h3>Проверка, является ли объект картой героя.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой героя.
+ */
 export const IsHeroCard = (card) => card !== null && card.active !== undefined;
 //# sourceMappingURL=Hero.js.map

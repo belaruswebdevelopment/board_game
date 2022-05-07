@@ -15,6 +15,7 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  * <li>Происходит при взятии карты из текущей таверны.</li>
  * <li>Происходит при взятии карты из карт преимущества по разведчикам в конце 1 эпохи.</li>
  * <li>Происходит при взятии карты из сброса при активации героя.</li>
+ * <li>Происходит при взятии карты из сброса при активации карты лагеря.</li>
  * </ol>
  *
  * @param G
@@ -37,6 +38,21 @@ export const AddCardToPlayer = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes |
     return false;
 };
 
+/**
+ * <h3>Добавляет взятую карту в массив карт игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при взятии карты из текущей таверны.</li>
+ * <li>Происходит при взятии карты из карт преимущества по разведчикам в конце 1 эпохи.</li>
+ * <li>Происходит при взятии карты из сброса при активации героя.</li>
+ * <li>Происходит при взятии карты из сброса при активации карты лагеря.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param card Выбранная карта дворфа или улучшения монет.
+ * @returns
+ */
 export const PickCardOrActionCardActions = (G: IMyGameState, ctx: Ctx, card: DeckCardTypes): boolean => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {

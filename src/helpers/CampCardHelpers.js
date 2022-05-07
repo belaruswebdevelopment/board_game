@@ -85,6 +85,15 @@ export const AddCampCardToPlayerCards = (G, ctx, card) => {
     AddDataToLog(G, LogTypes.PRIVATE, `Игрок '${player.nickname}' выбрал карту лагеря '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
     return true;
 };
+/**
+ * <h3>Действия, связанные с выкладкой монет на артефакт Odroerir The Mythic Cauldron.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе карты лагеря.</li>
+ * </ol>
+ *
+ * @param G
+ */
 export const AddCoinOnOdroerirTheMythicCauldronCampCard = (G) => {
     const minCoinValue = G.marketCoins.reduceRight((prev, curr) => prev.value < curr.value ? prev : curr).value, minCoinIndex = G.marketCoins.findIndex((coin) => coin.value === minCoinValue);
     if (minCoinIndex === -1) {
@@ -96,5 +105,16 @@ export const AddCoinOnOdroerirTheMythicCauldronCampCard = (G) => {
     }
     G.odroerirTheMythicCauldronCoins.push(coin);
 };
+/**
+ * <h3>Действия, связанные с завершением выкладки монет на артефакт Odroerir The Mythic Cauldron.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При отрисовке артефакта Odroerir The Mythic Cauldron.</li>
+ * <li>При финальном подсчёте очков за артефакт Odroerir The Mythic Cauldron.</li>
+ * </ol>
+ *
+ * @param G
+ * @returns Значение всех монет на артефакте Odroerir The Mythic Cauldron.
+ */
 export const GetOdroerirTheMythicCauldronCoinsValues = (G) => G.odroerirTheMythicCauldronCoins.reduce((prev, curr) => prev + curr.value, 0);
 //# sourceMappingURL=CampCardHelpers.js.map

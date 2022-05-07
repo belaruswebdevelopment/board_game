@@ -3,6 +3,17 @@ import { SuitNames } from "../typescript/enums";
 import type { IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 import { TotalRank } from "./ScoreHelpers";
 
+/**
+ * <h3>Получение победных очков по герою Astrid.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце игры, когда получаются победные очки по герою Astrid.</li>
+ * </ol>
+ *
+ * @param G
+ * @param playerId Игрок.
+ * @returns
+ */
 export const AstridScoring = (G?: IMyGameState, playerId?: number): number => {
     if (G === undefined) {
         throw new Error(`Function param 'G' is undefined.`);
@@ -14,6 +25,17 @@ export const AstridScoring = (G?: IMyGameState, playerId?: number): number => {
 
 };
 
+/**
+ * <h3>Получение победных очков по герою Idunn.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце игры, когда получаются победные очки по герою Idunn.</li>
+ * </ol>
+ *
+ * @param G
+ * @param playerId Игрок.
+ * @returns
+ */
 export const IdunnScoring = (G?: IMyGameState, playerId?: number): number => {
     if (G === undefined) {
         throw new Error(`Function param 'G' is undefined.`);

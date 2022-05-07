@@ -25,6 +25,15 @@ export const CheckEndGetMjollnirProfitPhase = (G, ctx) => {
         }
     }
 };
+/**
+ * <h3>Проверяет порядок хода при начале фазы 'getMjollnirProfit'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале фазы 'getMjollnirProfit'.</li>
+ * </ol>
+ *
+ * @param G
+ */
 export const CheckGetMjollnirProfitOrder = (G) => {
     const mjollnirPlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.GetMjollnirProfit));
     if (mjollnirPlayerIndex === -1) {
@@ -32,13 +41,43 @@ export const CheckGetMjollnirProfitOrder = (G) => {
     }
     G.publicPlayersOrder.push(String(mjollnirPlayerIndex));
 };
+/**
+ * <h3>Действия при завершении мува в фазе 'getMjollnirProfit'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в фазе 'getMjollnirProfit'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnGetMjollnirProfitMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
 };
+/**
+ * <h3>Действия при начале хода в фазе 'getMjollnirProfit'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале хода в фазе 'getMjollnirProfit'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnGetMjollnirProfitTurnBegin = (G, ctx) => {
     AddGetMjollnirProfitActionsToStack(G, ctx);
     DrawCurrentProfit(G, ctx);
 };
+/**
+ * <h3>Действия завершения игры при завершении фазы 'getMjollnirProfit'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении фазы 'getMjollnirProfit'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const StartEndGame = (G, ctx) => {
     G.publicPlayersOrder = [];
     EndGame(ctx);

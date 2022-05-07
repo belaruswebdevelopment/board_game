@@ -5,7 +5,6 @@ import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
 import { DrawCurrentProfit } from "./ActionHelpers";
 import { CheckPlayerHasBuff, DeleteBuffFromPlayer } from "./BuffHelpers";
-import { IsMultiplayer } from "./MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 /**
  * <h3>Активирует обмен монет.</h3>
@@ -18,7 +17,8 @@ import { AddActionsToStackAfterCurrent } from "./StackHelpers";
  * @param ctx
  */
 export const ActivateTrading = (G, ctx) => {
-    const multiplayer = IsMultiplayer(G), privatePlayer = G.players[Number(ctx.currentPlayer)], player = G.publicPlayers[Number(ctx.currentPlayer)];
+    // TODO For solo mode `And if the zero value coin is on the purse, the Neutral clan also increases the value of the other coin in the purse, replacing it with the higher value available in the Royal Treasure.`
+    const privatePlayer = G.players[Number(ctx.currentPlayer)], player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
@@ -36,7 +36,7 @@ export const ActivateTrading = (G, ctx) => {
     if (IsCoin(boardCoinCurrentTavern) && boardCoinCurrentTavern.isTriggerTrading) {
         const tradingCoins = [];
         for (let i = G.tavernsNum; i < player.boardCoins.length; i++) {
-            if (multiplayer) {
+            if (G.multiplayer) {
                 const privateBoardCoin = privatePlayer.boardCoins[i];
                 if (privateBoardCoin === undefined) {
                     throw new Error(`В массиве монет приватного игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${i}'.`);

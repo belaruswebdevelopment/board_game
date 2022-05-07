@@ -12,6 +12,7 @@ import type { CampCardTypes, DiscardDeckCardTypes, ICoin, IDrawBoardOptions, IHe
 import { DrawCard, DrawCoin } from "./ElementsUI";
 import { ExplorerDistinctionProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 
+// TODO Check Solo Bot & multiplayer actions!
 /**
  * <h3>Отрисовка карт лагеря.</h3>
  * <p>Применения:</p>
@@ -110,6 +111,16 @@ export const DrawCamp = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidator
     }
 };
 
+/**
+ * <h3>Отрисовка фазы и стадии игры.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка фазы и стадии игры на игровом поле.</li>
+ * </ol>
+ *
+ * @param ctx
+ * @returns Поле информации о текущей фазе и стадии игры.
+ */
 export const DrawCurrentPhaseStage = (ctx: Ctx): JSX.Element => (
     <b>Phase: <span className="italic">{ctx.phase ?? `none`}</span>
         (Stage: <span className="italic">{ctx.activePlayers?.[Number(ctx.currentPlayer)] ?? `none`}</span>)</b>
@@ -329,6 +340,68 @@ export const DrawHeroes = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidat
                 </caption>
                 <tbody>
                     {boardRows}
+                </tbody>
+            </table>
+        );
+    } else if (validatorName !== null) {
+        return moveMainArgs;
+    } else {
+        throw new Error(`Функция должна возвращать значение.`);
+    }
+};
+
+/**
+ * <h3>Отрисовка всех героев для выбора соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param validatorName Название валидатора.
+ * @param data Глобальные параметры.
+ * @returns Поле героев для соло бота.
+ */
+export const DrawHeroesForSoloBotUI = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
+    data?: BoardProps<IMyGameState>): JSX.Element | IMoveArgumentsStage<number[]>[`args`] => {
+    // TODO Rework validator?
+    const boardCells: JSX.Element[] = [],
+        moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
+    for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < G.heroesForSoloBot.length; j++) {
+            const hero: IHeroCard | undefined = G.heroesForSoloBot[j];
+            if (hero === undefined) {
+                throw new Error(`В массиве карт героев отсутствует герой с id '${j}'.`);
+            }
+            if (hero.active && Number(ctx.currentPlayer) === 1
+                && ctx.activePlayers?.[Number(ctx.currentPlayer)] === Stages.PickHero) {
+                const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+                if (player === undefined) {
+                    throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+                }
+                if (data !== undefined) {
+                    DrawCard(data, boardCells, hero, j, player, null,
+                        MoveNames.ClickHeroCardMove, j);
+                } else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
+                    moveMainArgs.push(j);
+                }
+            } else {
+                if (data !== undefined) {
+                    DrawCard(data, boardCells, hero, j, null, null);
+                }
+            }
+        }
+    }
+    if (data !== undefined) {
+        return (
+            <table>
+                <caption>
+                    <span style={Styles.HeroBack()} className="bg-top-hero-icon"></span>
+                    <span>Heroes ({G.heroes.length} cards)</span>
+                </caption>
+                <tbody>
+                    <tr key={`Heroes row 0`}>{boardCells}</tr>
                 </tbody>
             </table>
         );

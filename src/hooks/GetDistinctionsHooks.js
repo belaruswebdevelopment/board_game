@@ -29,7 +29,7 @@ export const CheckAndResolveDistinctionsOrders = (G, ctx) => {
  * </ol>
  *
  * @param G
-* @param ctx
+ * @param ctx
  * @returns
  */
 export const CheckEndGetDistinctionsPhase = (G, ctx) => {
@@ -53,10 +53,9 @@ export const CheckEndGetDistinctionsPhase = (G, ctx) => {
  *
  * @param G
  * @param ctx
+ * @returns
  */
-export const CheckNextGetDistinctionsTurn = (G, ctx) => {
-    return EndTurnActions(G, ctx);
-};
+export const CheckNextGetDistinctionsTurn = (G, ctx) => EndTurnActions(G, ctx);
 /**
  * <h3>Действия при завершении фазы 'getDistinctions'.</h3>
  * <p>Применения:</p>
@@ -72,9 +71,29 @@ export const EndGetDistinctionsPhaseActions = (G) => {
     }
     G.publicPlayersOrder = [];
 };
+/**
+ * <h3>Действия при завершении мува в фазе 'getDistinctions'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в фазе 'getDistinctions'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnGetDistinctionsMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
 };
+/**
+ * <h3>Действия при начале хода в фазе 'getDistinctions'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале хода в фазе 'getDistinctions'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnGetDistinctionsTurnBegin = (G, ctx) => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.getDistinctions()]);
     if (G.distinctions[SuitNames.EXPLORER] === ctx.currentPlayer && ctx.playOrderPos === (ctx.playOrder.length - 1)) {
@@ -91,6 +110,16 @@ export const OnGetDistinctionsTurnBegin = (G, ctx) => {
         }
     }
 };
+/**
+ * <h3>Действия при завершении хода в фазе 'getDistinctions'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении хода в фазе 'getDistinctions'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnGetDistinctionsTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);
     if (G.explorerDistinctionCardId !== null && ctx.playOrderPos === (ctx.playOrder.length - 1)) {

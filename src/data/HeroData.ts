@@ -1,7 +1,7 @@
 import { GetClosedCoinIntoPlayerHandAction, UpgradeMinCoinAction } from "../actions/HeroAutoActions";
 import { AstridScoring, IdunnScoring } from "../score_helpers/HeroScoringHelpers";
 import { BuffNames, GameNames, HeroNames, SuitNames } from "../typescript/enums";
-import type { IHeroConfig, IHeroData } from "../typescript/interfaces";
+import type { IHeroConfig, IHeroData, ISoloGameDifficultyLevelHeroesConfig, ISoloGameHeroesForBotConfig, ISoloGameHeroesForPlayerConfig } from "../typescript/interfaces";
 import { StackData } from "./StackData";
 
 /**
@@ -198,6 +198,7 @@ const Dwerg_Ymir: IHeroData = {
     scoringRule: (): number => 1,
 };
 
+// TODO For Solo game `Replace the coin of value 2 at the start of the game with a coin of value 9 and add 7 points to the final Bravery Value.`
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -397,6 +398,7 @@ const Tarah: IHeroData = {
     scoringRule: (): number => 0,
 };
 
+// TODO For SOlo Game `She is the most formidable opponent since she will always be present in your army to try to complete the guard lines and recruit the Dwerg brothers.During the countdown, she returns to the Command Zone and adds 13 points to the Final Bravery Value.`
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -434,6 +436,7 @@ const Uline: IHeroData = {
     scoringRule: (): number => 9,
 };
 
+// TODO For Solo Game `Will be positioned at the end of Age 1, before the Troop Evaluation, in the order of priority determined in point 4 of the game round.She will remain in this position until the end of the game.`
 /**
  * <h3>Данные о герое.</h3>
  * <p>Применения:</p>
@@ -522,4 +525,55 @@ export const heroesConfig: IHeroConfig = {
     Khrad,
     Olwin,
     Zolkur,
+};
+
+/**
+ * <h3>Конфиг героев для выбора соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании списка героев для выбора соло ботом при инициализации игры.</li>
+ * </ol>
+ */
+export const soloGameHeroesForBotConfig: ISoloGameHeroesForBotConfig = {
+    Dwerg_Aesir,
+    Dwerg_Bergelmir,
+    Dwerg_Jungir,
+    Dwerg_Sigmir,
+    Dwerg_Ymir,
+};
+
+/**
+ * <h3>Конфиг героев для выбора игроком в соло игре.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании списка героев для выбора игроком в соло игре при инициализации игры.</li>
+ * </ol>
+ */
+export const soloGameHeroesForPlayerConfig: ISoloGameHeroesForPlayerConfig = {
+    Kraal,
+    Tarah,
+    Aral,
+    Dagda,
+    Lokdur,
+    Zoral,
+    Aegur,
+    Bonfur,
+    Hourya,
+    Idunn,
+};
+
+/**
+ * <h3>Конфиг героев для выбора уровня сложности.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании списка героев для выбора уровня сложности для соло бота при инициализации игры.</li>
+ * </ol>
+ */
+export const soloGameDifficultyLevelHeroesConfig: ISoloGameDifficultyLevelHeroesConfig = {
+    Astrid,
+    Grid,
+    Skaa,
+    Thrud,
+    Uline,
+    Ylud,
 };

@@ -3,6 +3,19 @@ import { UpgradeCoinAction } from "../actions/CoinActions";
 import { CoinTypes } from "../typescript/enums";
 import type { IMyGameState, IPublicPlayer, IStack } from "../typescript/interfaces";
 
+// TODO Do we need it because we use UpgradeCoinAction separately!?
+/**
+ * <h3>Действия, связанные с улучшением монет от действий улучшающих монеты.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При действиях улучшающих монеты.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param coinId Id монеты.
+ * @param type Тип обменной монеты.
+ */
 export const UpgradeCoinActions = (G: IMyGameState, ctx: Ctx, coinId: number, type: CoinTypes): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {

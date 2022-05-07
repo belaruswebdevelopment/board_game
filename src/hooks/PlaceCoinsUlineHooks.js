@@ -49,6 +49,15 @@ export const CheckEndPlaceCoinsUlinePhase = (G, ctx) => {
  * @param ctx
  */
 export const CheckUlinePlaceCoinsOrder = (G, ctx) => CheckPlayersBasicOrder(G, ctx);
+/**
+ * <h3>Действия при завершении фазы 'placeCoinsUline'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении фазы 'placeCoinsUline'.</li>
+ * </ol>
+ *
+ * @param G
+ */
 export const EndPlaceCoinsUlineActions = (G) => {
     G.publicPlayersOrder = [];
 };

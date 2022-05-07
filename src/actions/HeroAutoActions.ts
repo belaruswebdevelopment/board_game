@@ -4,7 +4,6 @@ import { StackData } from "../data/StackData";
 import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
-import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames, CoinTypes } from "../typescript/enums";
 import type { AutoActionArgsTypes, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
@@ -33,23 +32,34 @@ export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): vo
 };
 
 // TODO Refactor and add throw errors
+/**
+ * <h3>Действия, связанные с улучшением минимальной монеты игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, улучшающих минимальную монету игрока.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param args Аргументы действия.
+ */
 export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoActionArgsTypes): void => {
     if (args.length !== 1) {
         throw new Error(`В массиве параметров функции отсутствует требуемый параметр 'value'.`);
     }
-    const multiplayer: boolean = IsMultiplayer(G),
-        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
-        privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
+    const currentPlayer: number = G.solo ? 1 : Number(ctx.currentPlayer),
+        player: IPublicPlayer | undefined = G.publicPlayers[currentPlayer],
+        privatePlayer: IPlayer | undefined = G.players[currentPlayer];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${currentPlayer}'.`);
     }
     if (privatePlayer === undefined) {
-        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${currentPlayer}'.`);
     }
     let type: CoinTypes;
     if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
         let handCoins: PublicPlayerCoinTypes[];
-        if (multiplayer) {
+        if (G.multiplayer) {
             handCoins = privatePlayer.handCoins;
         } else {
             handCoins = player.handCoins;
@@ -58,7 +68,7 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
             allHandCoins: PublicPlayerCoinTypes[] =
                 handCoins.filter((coin: PublicPlayerCoinTypes, index: number): boolean => {
                     if (coin !== null && !IsCoin(coin)) {
-                        throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+                        throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
                     }
                     return IsCoin(coin);
                 });
@@ -67,21 +77,21 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
             if (boardCoin === null) {
                 const handCoin: PublicPlayerCoinTypes | undefined = allHandCoins.splice(0, 1)[0];
                 if (handCoin === undefined) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${i}'.`);
+                    throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке отсутствует монета с id '${i}'.`);
                 }
                 if (handCoin === null) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может не быть монеты с id '${i}'.`);
+                    throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке не может не быть монеты с id '${i}'.`);
                 }
                 if (!IsCoin(handCoin)) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${i}'.`);
+                    throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке не может быть закрыта монета с id '${i}'.`);
                 }
                 allCoins.push(handCoin);
             } else {
                 if (boardCoin === undefined) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле отсутствует монета с id '${i}'.`);
+                    throw new Error(`В массиве монет игрока с id '${currentPlayer}' на поле отсутствует монета с id '${i}'.`);
                 }
                 if (!IsCoin(boardCoin)) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на поле не может быть закрыта монета с id '${i}'.`);
+                    throw new Error(`В массиве монет игрока с id '${currentPlayer}' на поле не может быть закрыта монета с id '${i}'.`);
                 }
                 if (IsCoin(boardCoin)) {
                     allCoins.push(boardCoin);
@@ -91,9 +101,12 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
         const minCoinValue: number =
             Math.min(...allCoins.filter((coin: PublicPlayerCoinTypes): boolean =>
                 IsCoin(coin) && !coin.isTriggerTrading).map((coin: PublicPlayerCoinTypes): number =>
-                    (coin as ICoin).value)),
-            upgradingCoinsArray =
-                allCoins.filter((coin: PublicPlayerCoinTypes): boolean => coin?.value === minCoinValue),
+                    (coin as ICoin).value));
+        if (G.solo && minCoinValue !== 2) {
+            throw new Error(`В массиве монет соло бота с id '${currentPlayer}' не может быть минимальная монета не со значением '2'.`);
+        }
+        const upgradingCoinsArray: PublicPlayerCoinTypes[] =
+            allCoins.filter((coin: PublicPlayerCoinTypes): boolean => coin?.value === minCoinValue),
             upgradingCoinsValue: number = upgradingCoinsArray.length;
         let isInitialInUpgradingCoinsValue = false;
         if (upgradingCoinsValue > 1) {
@@ -105,30 +118,30 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
                 coin?.value === minCoinValue),
                 boardCoin: PublicPlayerCoinTypes | undefined = player.boardCoins[upgradingCoinId];
             if (boardCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
             }
             if (boardCoin === null) {
                 const handCoinIndex: number =
                     handCoins.findIndex((coin: PublicPlayerCoinTypes, index: number): boolean => {
                         if (coin !== null && !IsCoin(coin)) {
-                            throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
+                            throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке не может быть закрыта монета с id '${index}'.`);
                         }
                         return coin?.value === minCoinValue;
                     });
                 if (handCoinIndex === -1) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке нет минимальной монеты с значением '${minCoinValue}'.`);
+                    throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке нет минимальной монеты с значением '${minCoinValue}'.`);
                 }
                 const handCoin: PublicPlayerCoinTypes | undefined = handCoins[handCoinIndex];
                 if (handCoin === undefined) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке отсутствует монета с id '${handCoinIndex}'.`);
+                    throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке отсутствует монета с id '${handCoinIndex}'.`);
                 }
                 if (!IsCoin(handCoin)) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' в руке не может не быть монеты с id '${upgradingCoinId}'.`);
+                    throw new Error(`В массиве монет игрока с id '${currentPlayer}' в руке не может не быть монеты с id '${upgradingCoinId}'.`);
                 }
                 type = CoinTypes.Hand;
             } else {
                 if (!IsCoin(boardCoin)) {
-                    throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
+                    throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
                 }
                 type = CoinTypes.Board;
             }
@@ -160,13 +173,13 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
                     coin?.value === minCoinValue),
                 boardCoin: PublicPlayerCoinTypes | undefined = player.boardCoins[upgradingCoinId];
             if (boardCoin === undefined) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе отсутствует монета с id '${upgradingCoinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе отсутствует монета с id '${upgradingCoinId}'.`);
             }
             if (boardCoin === null) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе нет монеты с id '${upgradingCoinId}'.`);
             }
             if (!IsCoin(boardCoin)) {
-                throw new Error(`В массиве монет игрока с id '${ctx.currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
+                throw new Error(`В массиве монет игрока с id '${currentPlayer}' на столе не может быть закрытой монеты с id '${upgradingCoinId}'.`);
             }
             type = CoinTypes.Board;
             UpgradeCoinAction(G, ctx, false, ...args, upgradingCoinId, type);

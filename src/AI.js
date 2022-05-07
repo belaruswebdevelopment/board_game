@@ -16,6 +16,7 @@ import { ConfigNames, MoveNames, Phases, Stages } from "./typescript/enums";
  */
 export const enumerate = (G, ctx) => {
     var _a;
+    // TODO Add AI logic for Solo Bot
     const moves = [], player = G.publicPlayers[Number(ctx.currentPlayer)];
     let playerId;
     if (player === undefined) {

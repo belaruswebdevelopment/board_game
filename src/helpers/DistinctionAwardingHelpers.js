@@ -6,6 +6,19 @@ import { CardNames, CoinTypes, LogTypes, SuitNames } from "../typescript/enums";
 import { DiscardTradingCoin, GetMaxCoinValue } from "./CoinHelpers";
 import { CheckAndMoveThrudAction } from "./HeroActionHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
+/**
+ * <h3>Получение преимущества по фракции кузнецов.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце 1-й эпохи, когда получается преимущество по фракции кузнецов.</li>
+ * <li>В конце игры, когда получается преимущество по фракции кузнецов.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @returns
+ */
 export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
@@ -24,6 +37,19 @@ export const BlacksmithDistinctionAwarding = (G, ctx, playerId) => {
     }
     return 0;
 };
+/**
+ * <h3>Получение преимущества по фракции разведчиков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце 1-й эпохи, когда получается преимущество по фракции разведчиков.</li>
+ * <li>В конце игры, когда получается преимущество по фракции разведчиков.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @returns
+ */
 export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
@@ -35,6 +61,19 @@ export const ExplorerDistinctionAwarding = (G, ctx, playerId) => {
     }
     return 0;
 };
+/**
+ * <h3>Получение преимущества по фракции охотников.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце 1-й эпохи, когда получается преимущество по фракции охотников.</li>
+ * <li>В конце игры, когда получается преимущество по фракции охотников.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @returns
+ */
 export const HunterDistinctionAwarding = (G, ctx, playerId) => {
     if (G.tierToEnd !== 0) {
         const player = G.publicPlayers[playerId], privatePlayer = G.players[playerId];
@@ -69,6 +108,19 @@ export const HunterDistinctionAwarding = (G, ctx, playerId) => {
     }
     return 0;
 };
+/**
+ * <h3>Получение преимущества по фракции горняков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце 1-й эпохи, когда получается преимущество по фракции горняков.</li>
+ * <li>В конце игры, когда получается преимущество по фракции горняков.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @returns
+ */
 export const MinerDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
@@ -90,6 +142,19 @@ export const MinerDistinctionAwarding = (G, ctx, playerId) => {
     }
     return 0;
 };
+/**
+ * <h3>Получение преимущества по фракции воинов.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>В конце 1-й эпохи, когда получается преимущество по фракции воинов.</li>
+ * <li>В конце игры, когда получается преимущество по фракции воинов.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param playerId Id игрока.
+ * @returns
+ */
 export const WarriorDistinctionAwarding = (G, ctx, playerId) => {
     const player = G.publicPlayers[playerId];
     if (player === undefined) {

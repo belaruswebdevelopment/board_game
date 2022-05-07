@@ -1,5 +1,5 @@
 import { IsCanPickPickCampCardToStack, IsCanPickPickDiscardCardToStack } from "../move_validators/IsCanAddToStackValidators";
-import { ValidatorNames } from "../typescript/enums";
+import { PickCardValidatorNames } from "../typescript/enums";
 /**
  * <h3>Добавляет действия в стэк действий конкретного игрока после текущего.</h3>
  * <p>Применения:</p>
@@ -21,10 +21,10 @@ export const AddActionsToStackAfterCurrent = (G, ctx, stack, card) => {
             if (validators !== undefined) {
                 for (const validator in validators) {
                     switch (validator) {
-                        case ValidatorNames.PickDiscardCardToStack:
+                        case PickCardValidatorNames.PickDiscardCardToStack:
                             isValid = IsCanPickPickDiscardCardToStack(G, card);
                             break;
-                        case ValidatorNames.PickCampCardToStack:
+                        case PickCardValidatorNames.PickCampCardToStack:
                             isValid = IsCanPickPickCampCardToStack(G, card);
                             break;
                         default:

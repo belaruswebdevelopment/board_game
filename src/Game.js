@@ -2,20 +2,24 @@ import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
 import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
+import { CheckChooseDifficultySoloModeOrder, CheckEndChooseDifficultySoloModePhase, EndChooseDifficultySoloModeActions } from "./hooks/ChooseDifficultySoloModeHooks";
 import { CheckEndEndTierPhase, CheckEndEndTierTurn, CheckEndTierOrder, EndEndTierActions, OnEndTierMove, OnEndTierTurnBegin, OnEndTierTurnEnd } from "./hooks/EndTierHooks";
 import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, OnEnlistmentMercenariesTurnEnd, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
 import { CheckEndGame, ReturnEndGameData } from "./hooks/GameHooks";
 import { CheckAndResolveDistinctionsOrders, CheckEndGetDistinctionsPhase, CheckNextGetDistinctionsTurn, EndGetDistinctionsPhaseActions, OnGetDistinctionsMove, OnGetDistinctionsTurnBegin, OnGetDistinctionsTurnEnd } from "./hooks/GetDistinctionsHooks";
 import { CheckEndGetMjollnirProfitPhase, CheckGetMjollnirProfitOrder, OnGetMjollnirProfitMove, OnGetMjollnirProfitTurnBegin, StartEndGame } from "./hooks/GetMjollnirProfitHooks";
 import { CheckEndPickCardsPhase, CheckEndPickCardsTurn, EndPickCardsActions, OnPickCardsMove, OnPickCardsTurnBegin, OnPickCardsTurnEnd, ResolveCurrentTavernOrders } from "./hooks/PickCardsHooks";
-import { CheckEndPlaceCoinsPhase, CheckEndPlaceCoinsTurn, OnPlaceCoinsTurnEnd, PreparationPhaseActions } from "./hooks/PlaceCoinsHooks";
+import { CheckEndPlaceCoinsPhase, CheckEndPlaceCoinsTurn, EndPlaceCoinsActions, PreparationPhaseActions } from "./hooks/PlaceCoinsHooks";
 import { CheckEndPlaceCoinsUlinePhase, CheckUlinePlaceCoinsOrder, EndPlaceCoinsUlineActions } from "./hooks/PlaceCoinsUlineHooks";
 import { BotsPlaceAllCoinsMove } from "./moves/BotMoves";
 import { AddCoinToPouchMove, ClickCampCardHoldaMove, ClickCampCardMove, DiscardSuitCardFromPlayerBoardMove, UpgradeCoinVidofnirVedrfolnirMove } from "./moves/CampMoves";
 import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickConcreteCoinToUpgradeMove, ClickHandCoinMove, ClickHandCoinUlineMove, ClickHandTradingCoinUlineMove } from "./moves/CoinMoves";
+import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove } from "./moves/GameConfigMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceOlwinCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
+import { SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
 import { Phases } from "./typescript/enums";
+// TODO Check all coins for solo (player===public, bot=private+sometimes public)
 // TODO Add logging
 // TODO Add dock block
 // TODO Add all logs errors and other text in ENUMS!
@@ -39,20 +43,40 @@ export const BoardGame = {
     setup: SetupGame,
     playerView: PlayerView.STRIP_SECRETS,
     phases: {
+        chooseDifficultySoloMode: {
+            turn: {
+                order,
+                stages: {
+                    chooseHeroesForSoloMode: {
+                        moves: {
+                            ChooseHeroForDifficultySoloModeMove,
+                        },
+                    },
+                },
+            },
+            start: true,
+            moves: {
+                ChooseDifficultyLevelForSoloModeMove,
+            },
+            next: Phases.PlaceCoins,
+            onBegin: (G, ctx) => CheckChooseDifficultySoloModeOrder(G, ctx),
+            endIf: (G) => CheckEndChooseDifficultySoloModePhase(G),
+            onEnd: (G) => EndChooseDifficultySoloModeActions(G),
+        },
         placeCoins: {
             turn: {
                 order,
                 endIf: (G, ctx) => CheckEndPlaceCoinsTurn(G, ctx),
             },
-            start: true,
             moves: {
                 ClickHandCoinMove,
                 ClickBoardCoinMove,
                 BotsPlaceAllCoinsMove,
+                SoloBotPlaceAllCoinsMove,
             },
             onBegin: (G, ctx) => PreparationPhaseActions(G, ctx),
             endIf: (G, ctx) => CheckEndPlaceCoinsPhase(G, ctx),
-            onEnd: (G) => OnPlaceCoinsTurnEnd(G),
+            onEnd: (G) => EndPlaceCoinsActions(G),
         },
         placeCoinsUline: {
             turn: {

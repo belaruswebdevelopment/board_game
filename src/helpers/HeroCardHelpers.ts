@@ -64,9 +64,37 @@ export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IH
  * @param ctx
  * @param hero Карта героя.
  */
-export const AddHeroToCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
+export const AddHeroToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     AddHeroCardToPlayerHeroCards(G, ctx, hero);
     AddHeroCardToPlayerCards(G, ctx, hero);
     AddBuffToPlayer(G, ctx, hero.buff);
     CheckAndMoveThrudAction(G, ctx, hero);
+};
+
+/**
+ * <h3>Действия, связанные с добавлением героев в массив карт соло бота.</li>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе конкретных героев, добавляющихся в массив карт соло бота.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param hero Карта героя.
+ */
+export const AddHeroForDifficultyToSoloBotCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
+    const soloBotPublicPlayer: IPublicPlayer | undefined = G.publicPlayers[1],
+        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+    }
+    if (soloBotPublicPlayer === undefined) {
+        throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+    }
+    if (!hero.active) {
+        throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран каким-то игроком.`);
+    }
+    hero.active = false;
+    soloBotPublicPlayer.heroes.push(hero);
+    AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал героя '${hero.name}' для соло бота.`);
 };

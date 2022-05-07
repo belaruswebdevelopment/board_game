@@ -13,6 +13,7 @@ import { CheckPickHero } from "./HeroHelpers";
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const AfterLastTavernEmptyActions = (G, ctx) => {
     const deck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
@@ -41,6 +42,7 @@ export const AfterLastTavernEmptyActions = (G, ctx) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
     const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
@@ -63,6 +65,7 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 export const CheckEndGameLastActions = (G) => {
     const deck1 = G.secret.decks[0], deck2 = G.secret.decks[1];
@@ -104,6 +107,7 @@ export const CheckEndGameLastActions = (G) => {
 * </ol>
 *
 * @param G
+* @returns
 */
 export const CheckEndTierActionsOrEndGameLastActions = (G) => {
     const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
@@ -124,6 +128,7 @@ export const CheckEndTierActionsOrEndGameLastActions = (G) => {
  * </ol>
  *
  * @param G
+ * @returns
  */
 const CheckEnlistmentMercenaries = (G, ctx) => {
     let count = false;
@@ -146,6 +151,16 @@ const CheckEnlistmentMercenaries = (G, ctx) => {
         return CheckEndTierActionsOrEndGameLastActions(G);
     }
 };
+/**
+ * <h3>Действия очистки выбранной карты игроком при завершении хода в любой фазе.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении хода в любой фазе.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const ClearPlayerPickedCard = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -166,6 +181,16 @@ export const EndGame = (ctx) => {
     var _a;
     (_a = ctx.events) === null || _a === void 0 ? void 0 : _a.endGame();
 };
+/**
+ * <h3>Проверяет необходимость завершения хода в любой фазе.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверке завершения любой фазы.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const EndTurnActions = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -202,6 +227,16 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
         }
     }
 };
+/**
+ * <h3>Действия старта или завершения действий при завершении мува в любой фазе.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в любой фазе.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const StartOrEndActions = (G, ctx) => {
     var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];

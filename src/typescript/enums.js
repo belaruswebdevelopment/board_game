@@ -33,16 +33,25 @@ export var BuffNames;
     BuffNames["UpgradeCoin"] = "upgradeCoin";
     BuffNames["UpgradeNextCoin"] = "upgradeNextCoin";
 })(BuffNames || (BuffNames = {}));
+/**
+ * <h3>Перечисление для названия кнопок.</h3>
+ */
 export var ButtonNames;
 (function (ButtonNames) {
     ButtonNames["Start"] = "\u0421\u0442\u0430\u0440\u0442";
     ButtonNames["Pass"] = "\u041F\u0430\u0441";
 })(ButtonNames || (ButtonNames = {}));
+/**
+ * <h3>Перечисление для названия дополнительных карт.</h3>
+ */
 export var CardNames;
 (function (CardNames) {
     CardNames["ChiefBlacksmith"] = "\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u043A\u0443\u0437\u043D\u0435\u0446";
     CardNames["OlwinsDouble"] = "\u0414\u0432\u043E\u0439\u043D\u0438\u043A \u041E\u043B\u044C\u0432\u044E\u043D\u0430";
 })(CardNames || (CardNames = {}));
+/**
+ * <h3>Перечисление для названия типов монет.</h3>
+ */
 export var CoinTypes;
 (function (CoinTypes) {
     CoinTypes["Hand"] = "\u0420\u0443\u043A\u0430";
@@ -89,6 +98,9 @@ export var DrawNames;
     DrawNames["UpgradeCoinWarriorDistinction"] = "Upgrade coin Warrior distinction";
     DrawNames["Ylud"] = "Ylud";
 })(DrawNames || (DrawNames = {}));
+/**
+ * <h3>Перечисление для названия игры и дополнений.</h3>
+ */
 export var GameNames;
 (function (GameNames) {
     GameNames["Basic"] = "basic";
@@ -177,6 +189,7 @@ export var MoveNames;
 export var Phases;
 (function (Phases) {
     Phases["BrisingamensEndGame"] = "brisingamensEndGame";
+    Phases["ChooseDifficultySoloMode"] = "chooseDifficultySoloMode";
     Phases["EndTier"] = "endTier";
     Phases["EnlistmentMercenaries"] = "enlistmentMercenaries";
     Phases["GetDistinctions"] = "getDistinctions";
@@ -229,6 +242,7 @@ export var Stages;
     Stages["PlaceOlwinCards"] = "placeOlwinCards";
     Stages["PlaceTradingCoinsUline"] = "placeTradingCoinsUline";
     Stages["PlaceThrudHero"] = "placeThrudHero";
+    Stages["ChooseHeroesForSoloMode"] = "chooseHeroesForSoloMode";
     Stages["UpgradeCoin"] = "upgradeCoin";
     Stages["UpgradeVidofnirVedrfolnirCoin"] = "upgradeVidofnirVedrfolnirCoin";
 })(Stages || (Stages = {}));
@@ -243,19 +257,28 @@ export var SuitNames;
     SuitNames["MINER"] = "miner";
     SuitNames["WARRIOR"] = "warrior";
 })(SuitNames || (SuitNames = {}));
-export var ValidatorNames;
-(function (ValidatorNames) {
-    ValidatorNames["Conditions"] = "conditions";
-    ValidatorNames["DiscardCard"] = "discardCard";
-    ValidatorNames["PickDiscardCardToStack"] = "pickDiscardCardToStack";
-    ValidatorNames["PickCampCardToStack"] = "pickCampCardToStack";
-})(ValidatorNames || (ValidatorNames = {}));
+/**
+ * <h3>Перечисление для названия валидаторов для выбора карт.</h3>
+ */
+export var PickCardValidatorNames;
+(function (PickCardValidatorNames) {
+    PickCardValidatorNames["Conditions"] = "conditions";
+    PickCardValidatorNames["DiscardCard"] = "discardCard";
+    PickCardValidatorNames["PickDiscardCardToStack"] = "pickDiscardCardToStack";
+    PickCardValidatorNames["PickCampCardToStack"] = "pickCampCardToStack";
+})(PickCardValidatorNames || (PickCardValidatorNames = {}));
+/**
+ * <h3>Перечисление для названия таверн.</h3>
+ */
 export var TavernNames;
 (function (TavernNames) {
     TavernNames["LaughingGoblin"] = "\u00AB\u0412\u0435\u0441\u0451\u043B\u044B\u0439 \u0433\u043E\u0431\u043B\u0438\u043D\u00BB";
     TavernNames["DancingDragon"] = "\u00AB\u041F\u0430\u0440\u044F\u0449\u0438\u0439 \u0434\u0440\u0430\u043A\u043E\u043D\u00BB";
     TavernNames["ShiningHorse"] = "\u00AB\u0413\u0430\u0440\u0446\u0443\u044E\u0449\u0438\u0439 \u043A\u043E\u043D\u044C\u00BB";
 })(TavernNames || (TavernNames = {}));
+/**
+ * <h3>Перечисление для названия валидаторов мувов.</h3>
+ */
 export var MoveValidatorNames;
 (function (MoveValidatorNames) {
     MoveValidatorNames["BotsPlaceAllCoinsMoveValidator"] = "BotsPlaceAllCoinsMoveValidator";

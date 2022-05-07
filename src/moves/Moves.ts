@@ -52,6 +52,7 @@ export const ClickCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, car
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const ClickCardToPickDistinctionMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     string | void => {
@@ -105,6 +106,7 @@ export const ClickDistinctionCardMove: Move<IMyGameState> = (G: IMyGameState, ct
  * @param ctx
  * @param suit Название фракции.
  * @param cardId Id сбрасываемой карты.
+ * @returns
  */
 export const DiscardCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes,
     cardId: number): string | void => {
@@ -129,6 +131,7 @@ export const DiscardCardFromPlayerBoardMove: Move<IMyGameState> = (G: IMyGameSta
  * @param G
  * @param ctx
  * @param cardId Id сбрасываемой карты.
+ * @returns
  */
 export const DiscardCard2PlayersMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     string | void => {
@@ -150,6 +153,7 @@ export const DiscardCard2PlayersMove: Move<IMyGameState> = (G: IMyGameState, ctx
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const GetEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number):
     string | void => {
@@ -171,6 +175,7 @@ export const GetEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState
  * @param G
  * @param ctx
  * @param suit Название фракции.
+ * @returns
  */
 export const GetMjollnirProfitMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes):
     string | void => {
@@ -191,6 +196,7 @@ export const GetMjollnirProfitMove: Move<IMyGameState> = (G: IMyGameState, ctx: 
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const PassEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx): string | void => {
     const isValidMove: boolean =
@@ -212,6 +218,7 @@ export const PassEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameStat
  * @param G
  * @param ctx
  * @param cardId Id карты.
+ * @returns
  */
 export const PickDiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, cardId: number): string | void => {
     const isValidMove: boolean =
@@ -232,6 +239,7 @@ export const PickDiscardCardMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ct
  * @param G
  * @param ctx
  * @param suit Название фракции.
+ * @returns
  */
 export const PlaceEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, suit: SuitTypes):
     string | void => {
@@ -252,6 +260,7 @@ export const PlaceEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameSta
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const StartEnlistmentMercenariesMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx): string | void => {
     const isValidMove: boolean =

@@ -5,6 +5,17 @@ import { ScoreWinner } from "../Score";
 import { BuffNames } from "../typescript/enums";
 import type { CampDeckCardTypes, IMyGameState, IPublicPlayer } from "../typescript/interfaces";
 
+/**
+ * <h3>Проверяет необходимость завершения игры.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При любом действии.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @returns Должна ли быть завершена игра.
+ */
 export const CheckEndGame = (G: IMyGameState, ctx: Ctx): boolean | void => {
     if (G.tierToEnd === 0) {
         const yludIndex: number =

@@ -33,16 +33,25 @@ export const enum BuffNames {
     UpgradeNextCoin = `upgradeNextCoin`,
 }
 
+/**
+ * <h3>Перечисление для названия кнопок.</h3>
+ */
 export const enum ButtonNames {
     Start = `Старт`,
     Pass = `Пас`,
 }
 
+/**
+ * <h3>Перечисление для названия дополнительных карт.</h3>
+ */
 export const enum CardNames {
     ChiefBlacksmith = `Главный кузнец`,
     OlwinsDouble = `Двойник Ольвюна`,
 }
 
+/**
+ * <h3>Перечисление для названия типов монет.</h3>
+ */
 export const enum CoinTypes {
     Hand = `Рука`,
     Board = `Стол`,
@@ -89,6 +98,9 @@ export const enum DrawNames {
     Ylud = `Ylud`,
 }
 
+/**
+ * <h3>Перечисление для названия игры и дополнений.</h3>
+ */
 export const enum GameNames {
     Basic = `basic`,
     Thingvellir = `thingvellir`,
@@ -176,6 +188,7 @@ export const enum MoveNames {
  */
 export const enum Phases {
     BrisingamensEndGame = `brisingamensEndGame`,
+    ChooseDifficultySoloMode = `chooseDifficultySoloMode`,
     EndTier = `endTier`,
     EnlistmentMercenaries = `enlistmentMercenaries`,
     GetDistinctions = `getDistinctions`,
@@ -228,6 +241,7 @@ export const enum Stages {
     PlaceOlwinCards = `placeOlwinCards`,
     PlaceTradingCoinsUline = `placeTradingCoinsUline`,
     PlaceThrudHero = `placeThrudHero`,
+    ChooseHeroesForSoloMode = `chooseHeroesForSoloMode`,
     UpgradeCoin = `upgradeCoin`,
     UpgradeVidofnirVedrfolnirCoin = `upgradeVidofnirVedrfolnirCoin`,
 }
@@ -243,19 +257,28 @@ export const enum SuitNames {
     WARRIOR = `warrior`,
 }
 
-export const enum ValidatorNames {
+/**
+ * <h3>Перечисление для названия валидаторов для выбора карт.</h3>
+ */
+export const enum PickCardValidatorNames {
     Conditions = `conditions`,
     DiscardCard = `discardCard`,
     PickDiscardCardToStack = `pickDiscardCardToStack`,
     PickCampCardToStack = `pickCampCardToStack`,
 }
 
+/**
+ * <h3>Перечисление для названия таверн.</h3>
+ */
 export const enum TavernNames {
     LaughingGoblin = `«Весёлый гоблин»`,
     DancingDragon = `«Парящий дракон»`,
     ShiningHorse = `«Гарцующий конь»`,
 }
 
+/**
+ * <h3>Перечисление для названия валидаторов мувов.</h3>
+ */
 export const enum MoveValidatorNames {
     BotsPlaceAllCoinsMoveValidator = `BotsPlaceAllCoinsMoveValidator`,
     ClickBoardCoinMoveValidator = `ClickBoardCoinMoveValidator`,

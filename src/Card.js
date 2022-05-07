@@ -44,7 +44,6 @@ export const BuildCards = (deckConfig, data) => {
             }
             cards.push(CreateCard({
                 suit: deckConfig.suits[suit].suit,
-                rank: 1,
                 points: currentPoints,
                 name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
                 game: GameNames.Basic,
@@ -115,7 +114,7 @@ const CreateActionCard = ({ type = RusCardTypes.ACTION, value, stack, name, } = 
  * @param path URL путь.
  * @returns Карта дворфа.
  */
-export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name, game, tier = 0, path = ``, } = {}) => ({
+export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank = 1, points, name, game, tier = 0, path = ``, } = {}) => ({
     type,
     suit,
     rank,
@@ -125,6 +124,16 @@ export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank, points, name
     tier,
     path,
 });
+/**
+ * <h3>Проверка, является ли объект картой обмена монеты.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой обмена монеты.
+ */
 export const IsActionCard = (card) => card !== null && card.value !== undefined;
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>

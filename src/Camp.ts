@@ -198,20 +198,40 @@ export const CreateMercenaryPlayerCard = ({
 });
 
 /**
- * <h3>Проверка, является ли объект картой лагеря артефакта или картой лагеря наёмника.</h3>
+ * <h3>Проверка, является ли объект картой лагеря артефакта.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>При проверках в функциях.</li>
  * </ol>
  *
  * @param card Карта.
- * @returns Является ли объект картой лагеря артефакта или картой лагеря наёмника.
+ * @returns Является ли объект картой лагеря артефакта.
  */
 export const IsArtefactCard = (card: unknown): card is IArtefactCampCard => card !== null
     && (card as IArtefactCampCard).description !== undefined && (card as IArtefactCampCard).tier !== undefined;
 
+/**
+ * <h3>Проверка, является ли объект картой лагеря наёмника.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой лагеря наёмника.
+ */
 export const IsMercenaryCampCard = (card: unknown): card is IMercenaryCampCard => card !== null
     && (card as IMercenaryCampCard).variants !== undefined && (card as IMercenaryCampCard).tier !== undefined;
 
+/**
+ * <h3>Проверка, является ли объект картой наёмника на поле игрока.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой наёмника на поле игрока.
+ */
 export const IsMercenaryPlayerCard = (card: unknown): card is IMercenaryPlayerCard => card !== null
     && (card as IMercenaryPlayerCard).variants !== undefined && (card as IMercenaryPlayerCard).suit !== undefined;

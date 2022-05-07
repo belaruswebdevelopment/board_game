@@ -1,6 +1,15 @@
 import { CreateCard } from "./Card";
 import { additionalCardsConfig } from "./data/AdditionalCardData";
 import { CardNames, GameNames } from "./typescript/enums";
+/**
+ * <h3>Создание дополнительной карты.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании дополнительной карты во время получения преимущества по фракции 'Кузнецы'.</li>
+ * </ol>
+ *
+ * @returns Массив дополнительных карт.
+ */
 export const BuildAdditionalCards = () => {
     const cards = [];
     let cardName;
@@ -16,6 +25,17 @@ export const BuildAdditionalCards = () => {
     }
     return cards;
 };
+/**
+ * <h3>Создание фейковой карты 'Двойник Ольвюна'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Происходит при создании фейковой карты 'Двойник Ольвюна' при необходимости отрисовки выкладки карты на стол игрока.</li>
+ * </ol>
+ *
+ * @param name Название.
+ * @param suit Фракция.
+ * @returns
+ */
 export const CreateOlwinDoubleNonPlacedCard = ({ name = CardNames.OlwinsDouble, suit, } = {}) => ({
     name,
     suit,

@@ -2,9 +2,8 @@ import type { Ctx } from "boardgame.io";
 import { IsCoin } from "../Coin";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { RefillEmptyCampCards } from "../helpers/CampHelpers";
-import { ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
+import { MixUpCoinsInPlayerHands, ReturnCoinsToPlayerHands } from "../helpers/CoinHelpers";
 import { CheckAndStartPlaceCoinsUlineOrPickCardsPhase } from "../helpers/GameHooksHelpers";
-import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { CheckPlayersBasicOrder } from "../Player";
 import { RefillTaverns } from "../Tavern";
 import { BuffNames } from "../typescript/enums";
@@ -19,12 +18,12 @@ import type { CoinType, IMyGameState, INext, IPlayer, IPublicPlayer, PublicPlaye
  *
  * @param G
  * @param ctx
+ * @returns
  */
-export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): void | INext => {
+export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): INext | void => {
     if (G.publicPlayersOrder.length && ctx.currentPlayer === ctx.playOrder[ctx.playOrder.length - 1]) {
-        const multiplayer: boolean = IsMultiplayer(G);
         let isEveryPlayersHandCoinsEmpty = false;
-        if (multiplayer) {
+        if (G.multiplayer) {
             isEveryPlayersHandCoinsEmpty =
                 Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer =>
                     player).every((player: IPublicPlayer, index: number): boolean => {
@@ -72,8 +71,7 @@ export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): void | INext
  * @returns
  */
 export const CheckEndPlaceCoinsTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    const multiplayer: boolean = IsMultiplayer(G),
-        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -82,7 +80,7 @@ export const CheckEndPlaceCoinsTurn = (G: IMyGameState, ctx: Ctx): boolean | voi
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     let handCoins: PublicPlayerCoinTypes[];
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
     } else {
         handCoins = player.handCoins;
@@ -99,7 +97,16 @@ export const CheckEndPlaceCoinsTurn = (G: IMyGameState, ctx: Ctx): boolean | voi
     }
 };
 
-export const OnPlaceCoinsTurnEnd = (G: IMyGameState): void => {
+/**
+ * <h3>Действия при завершении фазы 'placeCoins'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении фазы 'placeCoins'.</li>
+ * </ol>
+ *
+ * @param G
+ */
+export const EndPlaceCoinsActions = (G: IMyGameState): void => {
     G.publicPlayersOrder = [];
 };
 
@@ -122,5 +129,6 @@ export const PreparationPhaseActions = (G: IMyGameState, ctx: Ctx): void => {
         }
         RefillTaverns(G);
     }
+    MixUpCoinsInPlayerHands(G, ctx);
     CheckPlayersBasicOrder(G, ctx);
 };

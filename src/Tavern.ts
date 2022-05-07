@@ -24,6 +24,17 @@ export const CheckIfCurrentTavernEmpty = (G: IMyGameState): boolean => {
     return currentTavern.every((card: TavernCardTypes): boolean => card === null);
 };
 
+/**
+ * <h3>Убирает карту из таверны в стопку сброса при игре на 2-х игроков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При соло игре убирает не выбранную карту.</li>
+ * <li>При игре на 2-х игроков убирает не выбранную карту.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const DiscardCardIfTavernHasCardFor2Players = (G: IMyGameState, ctx: Ctx): void => {
     const currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
@@ -45,6 +56,7 @@ export const DiscardCardIfTavernHasCardFor2Players = (G: IMyGameState, ctx: Ctx)
  * <h3>Убирает карту из таверны в стопку сброса.</h3>
  * <p>Применения:</p>
  * <ol>
+ * <li>При соло игре убирает не выбранную карту.</li>
  * <li>При игре на 2-х игроков убирает не выбранную карту.</li>
  * <li>Убирает оставшуюся карту при выборе карты из лагеря.</li>
  * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из лагеря.</li>

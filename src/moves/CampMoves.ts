@@ -15,6 +15,7 @@ import type { IMyGameState } from "../typescript/interfaces";
  * @param G
  * @param ctx
  * @param coinId Id монеты.
+ * @returns
  */
 export const AddCoinToPouchMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, coinId: number): string | void => {
     const isValidMove: boolean =

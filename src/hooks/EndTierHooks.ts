@@ -7,6 +7,7 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { BuffNames, HeroNames } from "../typescript/enums";
 import type { IHeroCard, IMyGameState, INext, IPublicPlayer, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 
+// TODO Check `Ylud the Unpredictable Will be positioned at the end of Age 1, before the Troop; Evaluation, in the order of priority determined in point 4 of the game round.She will remain in this position until the end of the game.`
 /**
  * <h3>Проверяет необходимость завершения фазы 'placeCoins'.</h3>
  * <p>Применения:</p>
@@ -16,6 +17,7 @@ import type { IHeroCard, IMyGameState, INext, IPublicPlayer, PlayerCardsType, Su
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckEndEndTierPhase = (G: IMyGameState, ctx: Ctx): boolean | INext | void => {
     if (G.publicPlayersOrder.length) {
@@ -96,10 +98,29 @@ export const CheckEndTierOrder = (G: IMyGameState): void => {
     G.publicPlayersOrder.push(String(yludIndex));
 };
 
-export const CheckEndEndTierTurn = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    return EndTurnActions(G, ctx);
-};
+/**
+ * <h3>Проверяет необходимость завершения хода в фазе 'endTier'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При каждом действии в фазе 'endTier'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @returns
+ */
+export const CheckEndEndTierTurn = (G: IMyGameState, ctx: Ctx): boolean | void => EndTurnActions(G, ctx);
 
+/**
+ * <h3>Действия при завершении фазы 'endTier'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении фазы 'endTier'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const EndEndTierActions = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -112,14 +133,45 @@ export const EndEndTierActions = (G: IMyGameState, ctx: Ctx): void => {
     G.publicPlayersOrder = [];
 };
 
+/**
+ * <h3>Действия при завершении мува в фазе 'endTier'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в фазе 'endTier'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnEndTierMove = (G: IMyGameState, ctx: Ctx): void => {
     StartOrEndActions(G, ctx);
 };
-export const OnEndTierTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
-    ClearPlayerPickedCard(G, ctx);
-};
 
+/**
+ * <h3>Действия при начале хода в фазе 'endTier'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале хода в фазе 'endTier'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnEndTierTurnBegin = (G: IMyGameState, ctx: Ctx): void => {
     AddActionsToStackAfterCurrent(G, ctx, [StackData.placeYludHero()]);
     DrawCurrentProfit(G, ctx);
+};
+
+/**
+ * <h3>Действия при завершении хода в фазе 'endTier'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении хода в фазе 'endTier'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const OnEndTierTurnEnd = (G: IMyGameState, ctx: Ctx): void => {
+    ClearPlayerPickedCard(G, ctx);
 };

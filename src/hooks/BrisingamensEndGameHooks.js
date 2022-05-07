@@ -3,6 +3,15 @@ import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { AddBrisingamensEndGameActionsToStack } from "../helpers/CampHelpers";
 import { StartOrEndActions } from "../helpers/GameHooksHelpers";
 import { BuffNames, Phases } from "../typescript/enums";
+/**
+ * <h3>Проверяет порядок хода при начале фазы 'brisingamensEndGame'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале фазы 'brisingamensEndGame'.</li>
+ * </ol>
+ *
+ * @param G
+ */
 export const CheckBrisingamensEndGameOrder = (G) => {
     const brisingamensPlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.DiscardCardEndGame));
     if (brisingamensPlayerIndex === -1) {
@@ -10,12 +19,41 @@ export const CheckBrisingamensEndGameOrder = (G) => {
     }
     G.publicPlayersOrder.push(String(brisingamensPlayerIndex));
 };
+/**
+ * <h3>Действия при завершении фазы 'brisingamensEndGame'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении фазы 'brisingamensEndGame'.</li>
+ * </ol>
+ *
+ * @param G
+ */
 export const EndBrisingamensEndGameActions = (G) => {
     G.publicPlayersOrder = [];
 };
+/**
+ * <h3>Действия при завершении мува в фазе 'brisingamensEndGame'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в фазе 'brisingamensEndGame'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnBrisingamensEndGameMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
 };
+/**
+ * <h3>Действия при начале хода в фазе 'brisingamensEndGame'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале хода в фазе 'brisingamensEndGame'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnBrisingamensEndGameTurnBegin = (G, ctx) => {
     AddBrisingamensEndGameActionsToStack(G, ctx);
     DrawCurrentProfit(G, ctx);

@@ -20,6 +20,17 @@ export const CheckIfCurrentTavernEmpty = (G) => {
     }
     return currentTavern.every((card) => card === null);
 };
+/**
+ * <h3>Убирает карту из таверны в стопку сброса при игре на 2-х игроков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При соло игре убирает не выбранную карту.</li>
+ * <li>При игре на 2-х игроков убирает не выбранную карту.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const DiscardCardIfTavernHasCardFor2Players = (G, ctx) => {
     const currentTavern = G.taverns[G.currentTavern];
     if (currentTavern === undefined) {
@@ -33,13 +44,14 @@ export const DiscardCardIfTavernHasCardFor2Players = (G, ctx) => {
     if (currentTavernConfig === undefined) {
         throw new Error(`Отсутствует конфиг текущей таверны с id '${G.currentTavern}'.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за наличия двух игроков в игре.`);
+    AddDataToLog(G, LogTypes.GAME, `Карта из таверны ${currentTavernConfig.name} должна быть убрана в сброс из-за ${G.solo ? `игры в соло режиме` : `наличия двух игроков в игре`}.`);
     DiscardCardFromTavern(G, ctx, cardIndex);
 };
 /**
  * <h3>Убирает карту из таверны в стопку сброса.</h3>
  * <p>Применения:</p>
  * <ol>
+ * <li>При соло игре убирает не выбранную карту.</li>
  * <li>При игре на 2-х игроков убирает не выбранную карту.</li>
  * <li>Убирает оставшуюся карту при выборе карты из лагеря.</li>
  * <li>Игрок убирает одну карту при игре на двух игроков, если выбирает карту из лагеря.</li>

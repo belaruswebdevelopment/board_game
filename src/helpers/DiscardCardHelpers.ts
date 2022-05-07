@@ -5,6 +5,17 @@ import { AddDataToLog } from "../Logging";
 import { LogTypes, RusCardTypes } from "../typescript/enums";
 import type { DeckCardTypes, IMyGameState, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
 
+/**
+ * <h3>Действия, связанные с сбросом карт от действий сбрасывающих карты.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При действиях сбрасывающих карты.</li>
+ * </ol>
+ *
+ * @param G
+ * @param player Игрок.
+ * @param discardedCard Сбрасываемая карта.
+ */
 export const DiscardPickedCard = (G: IMyGameState, player: IPublicPlayer,
     discardedCard: PlayerCardsType | DeckCardTypes): void => {
     if (IsHeroCard(discardedCard)) {

@@ -45,7 +45,6 @@ export const BuildCards = (deckConfig: IDeckConfig, data: IAverageSuitCardData):
             }
             cards.push(CreateCard({
                 suit: deckConfig.suits[suit].suit,
-                rank: 1,
                 points: currentPoints,
                 name: `(фракция: ${suitsConfig[deckConfig.suits[suit].suit].suitName}, шевронов: 1, очков: ${Array.isArray(points) ? points[j] + `)` : `нет)`}`,
                 game: GameNames.Basic,
@@ -126,7 +125,7 @@ const CreateActionCard = ({
 export const CreateCard = ({
     type = RusCardTypes.BASIC,
     suit,
-    rank,
+    rank = 1,
     points,
     name,
     game,
@@ -143,6 +142,16 @@ export const CreateCard = ({
     path,
 });
 
+/**
+ * <h3>Проверка, является ли объект картой обмена монеты.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При проверках в функциях.</li>
+ * </ol>
+ *
+ * @param card Карта.
+ * @returns Является ли объект картой обмена монеты.
+ */
 export const IsActionCard = (card: unknown): card is IActionCard =>
     card !== null && (card as IActionCard).value !== undefined;
 

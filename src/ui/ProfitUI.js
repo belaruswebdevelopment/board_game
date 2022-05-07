@@ -1,6 +1,20 @@
 import { IsCardNotActionAndNotNull } from "../Card";
 import { ButtonNames, MoveNames, MoveValidatorNames } from "../typescript/enums";
 import { DrawButton, DrawCard } from "./ElementsUI";
+/**
+ * <h3>Отрисовка поля для получения профита по фракции разведчиков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param validatorName Название валидатора.
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @returns Игровое поле для отрисовки получения профита по фракции разведчиков.
+ */
 export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCells) => {
     const moveMainArgs = [];
     for (let j = 0; j < G.explorerDistinctionCards.length; j++) {
@@ -30,6 +44,19 @@ export const ExplorerDistinctionProfit = (G, ctx, validatorName, data, boardCell
         return moveMainArgs;
     }
 };
+/**
+ * <h3>Отрисовка поля для старта фазы 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @returns Игровое поле для отрисовки старта фазы 'enlistmentMercenaries'.
+ */
 export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
     for (let j = 0; j < 2; j++) {
         const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -44,4 +71,5 @@ export const StartEnlistmentMercenariesProfit = (G, ctx, data, boardCells) => {
         }
     }
 };
+// TODO Add Profit(?) for pick solo mode difficult level!?
 //# sourceMappingURL=ProfitUI.js.map

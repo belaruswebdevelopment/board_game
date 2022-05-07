@@ -1,11 +1,12 @@
 import type { Ctx } from "boardgame.io";
 import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
-import { IsMultiplayer } from "../helpers/MultiplayerHelpers";
 import { AddDataToLog } from "../Logging";
 import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
 import type { CoinType, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
+// TODO Done it for Grid in Solo mode at the start of the game (return coin closed for player!)
+// TODO For Solo mode `When trading or exchanging coins, always select the coin with the lowest visible value to increase.`
 /**
  * <h3>Действия, связанные с улучшением монет от карт улучшения монет.</h3>
  * <p>Применения:</p>
@@ -19,12 +20,10 @@ import type { CoinType, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlaye
  * @param value Значение увеличения монеты.
  * @param upgradingCoinId Id обменной монеты.
  * @param type Тип обменной монеты.
- * @param isInitial Является ли обменная монета базовой.
  */
 export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean, value: number,
     upgradingCoinId: number, type: CoinTypes): void => {
-    const multiplayer: boolean = IsMultiplayer(G),
-        player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)],
         privatePlayer: IPlayer | undefined = G.players[Number(ctx.currentPlayer)];
     if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
@@ -34,7 +33,7 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
     }
     let handCoins: PublicPlayerCoinTypes[],
         boardCoins: PublicPlayerCoinTypes[];
-    if (multiplayer) {
+    if (G.multiplayer) {
         handCoins = privatePlayer.handCoins;
         boardCoins = privatePlayer.boardCoins;
     } else {
@@ -106,28 +105,28 @@ export const UpgradeCoinAction = (G: IMyGameState, ctx: Ctx, isTrading: boolean,
     AddDataToLog(G, LogTypes.GAME, `Начато обновление монеты с ценностью '${upgradingCoin.value}' на '+${value}'.`);
     if (upgradedCoin !== null) {
         AddDataToLog(G, LogTypes.PRIVATE, `Начато обновление монеты c ID '${upgradingCoinId}' с типом '${type}' с initial '${upgradingCoin.isInitial}' с ценностью '${upgradingCoin.value}' на '+${value}' с новым значением '${newValue}' с итоговым значением '${upgradedCoin.value}'.`);
-        if (!upgradedCoin.isOpened) {
+        if (!upgradedCoin.isOpened && !(G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) {
             ChangeIsOpenedCoinStatus(upgradedCoin, true);
         }
         if (type === CoinTypes.Hand
             || (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && type === CoinTypes.Board && isTrading)) {
             if (isTrading) {
                 const handCoinId: number = player.handCoins.indexOf(null);
-                if (multiplayer) {
+                if (G.multiplayer) {
                     boardCoins[upgradingCoinId] = null;
                     player.handCoins[handCoinId] = upgradedCoin;
                 }
                 player.boardCoins[upgradingCoinId] = null;
                 handCoins[handCoinId] = upgradedCoin;
             } else {
-                if (multiplayer) {
+                if (G.multiplayer) {
                     player.handCoins[upgradingCoinId] = upgradedCoin;
                 }
                 handCoins[upgradingCoinId] = upgradedCoin;
             }
             AddDataToLog(G, LogTypes.PUBLIC, `Монета с ценностью '${upgradedCoin.value}' вернулась на руку игрока '${player.nickname}'.`);
         } else if (type === CoinTypes.Board) {
-            if (multiplayer) {
+            if (G.multiplayer) {
                 boardCoins[upgradingCoinId] = upgradedCoin;
             }
             player.boardCoins[upgradingCoinId] = upgradedCoin;

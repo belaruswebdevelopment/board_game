@@ -15,6 +15,7 @@ import { BuffNames } from "../typescript/enums";
  *
  * @param G
  * @param ctx
+ * @returns
  */
 export const CheckEndEnlistmentMercenariesPhase = (G, ctx) => {
     if (G.publicPlayersOrder.length) {
@@ -64,6 +65,16 @@ export const CheckEndEnlistmentMercenariesTurn = (G, ctx) => {
         return player.campCards.filter((card) => IsMercenaryCampCard(card)).length === 0;
     }
 };
+/**
+ * <h3>Действия при завершении фазы 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении фазы 'enlistmentMercenaries'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const EndEnlistmentMercenariesActions = (G, ctx) => {
     if (G.tierToEnd === 0) {
         const yludIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EndTier));
@@ -73,6 +84,16 @@ export const EndEnlistmentMercenariesActions = (G, ctx) => {
     }
     G.publicPlayersOrder = [];
 };
+/**
+ * <h3>Действия при завершении мува в фазе 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении мува в фазе 'enlistmentMercenaries'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnEnlistmentMercenariesMove = (G, ctx) => {
     StartOrEndActions(G, ctx);
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
@@ -87,6 +108,16 @@ export const OnEnlistmentMercenariesMove = (G, ctx) => {
         }
     }
 };
+/**
+ * <h3>Действия при начале хода в фазе 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При начале хода в фазе 'enlistmentMercenaries'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnEnlistmentMercenariesTurnBegin = (G, ctx) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
@@ -97,6 +128,16 @@ export const OnEnlistmentMercenariesTurnBegin = (G, ctx) => {
         DrawCurrentProfit(G, ctx);
     }
 };
+/**
+ * <h3>Действия при завершении хода в фазе 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При завершении хода в фазе 'enlistmentMercenaries'.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
 export const OnEnlistmentMercenariesTurnEnd = (G, ctx) => {
     ClearPlayerPickedCard(G, ctx);
 };

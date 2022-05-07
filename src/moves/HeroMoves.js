@@ -41,6 +41,7 @@ export const ClickHeroCardMove = (G, ctx, heroId) => {
  * @param ctx
  * @param suit Название фракции.
  * @param cardId Id карты.
+ * @returns
  */
 export const DiscardCardMove = (G, ctx, suit, cardId) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.DiscardBoardCard, {
@@ -62,6 +63,7 @@ export const DiscardCardMove = (G, ctx, suit, cardId) => {
  * @param G
  * @param ctx
  * @param suit Название фракции.
+ * @returns
  */
 export const PlaceOlwinCardMove = (G, ctx, suit) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PlaceOlwinCards, suit);
@@ -80,6 +82,7 @@ export const PlaceOlwinCardMove = (G, ctx, suit) => {
  * @param G
  * @param ctx
  * @param suit Название фракции.
+ * @returns
  */
 export const PlaceThrudHeroMove = (G, ctx, suit) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PlaceThrudHero, suit);
@@ -98,6 +101,7 @@ export const PlaceThrudHeroMove = (G, ctx, suit) => {
  * @param G
  * @param ctx
  * @param suit Название фракции.
+ * @returns
  */
 export const PlaceYludHeroMove = (G, ctx, suit) => {
     const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default1, suit);

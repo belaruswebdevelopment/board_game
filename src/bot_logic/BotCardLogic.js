@@ -117,7 +117,6 @@ export const GetAverageSuitCard = (suitConfig, data) => {
     totalPoints /= count;
     return CreateCard({
         suit: suitConfig.suit,
-        rank: 1,
         points: totalPoints,
         name: `Average card`,
         game: GameNames.Basic,

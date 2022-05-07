@@ -1,13 +1,13 @@
 import type { Ctx } from "boardgame.io";
+import { BuildAdditionalCards } from "./AdditionalCard";
 import { GetAverageSuitCard } from "./bot_logic/BotCardLogic";
 import { GetAllPicks, k_combinations, Permute } from "./bot_logic/BotConfig";
 import { BuildCampCards } from "./Camp";
-import { BuildAdditionalCards, BuildCards } from "./Card";
+import { BuildCards } from "./Card";
 import { BuildCoins } from "./Coin";
 import { actionCardsConfigArray } from "./data/ActionCardData";
 import { artefactsConfig, mercenariesConfig } from "./data/CampData";
 import { initialPlayerCoinsConfig, marketCoinsConfig } from "./data/CoinData";
-import { heroesConfig } from "./data/HeroData";
 import { suitsConfig } from "./data/SuitData";
 import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
@@ -29,8 +29,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     const suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
+        soloGameDifficultyLevel = null,
         explorerDistinctionCardId = null,
-        multiplayer = true,
+        multiplayer = false,
+        solo = ctx.numPlayers === 1,
         odroerirTheMythicCauldron = false,
         log = true,
         debug = false,
@@ -38,7 +40,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         drawProfit = ``,
         expansions: IExpansions = {
             thingvellir: {
-                active: true,
+                active: solo ? false : true,
             },
         },
         totalScore: number[] = [],
@@ -52,6 +54,9 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             campDecks: [],
             decks: [],
         };
+    if (solo && multiplayer) {
+        throw new Error(`Не может быть одновременно режим мультиплеера и соло игры.`);
+    }
     let suit: SuitTypes;
     for (suit in suitsConfig) {
         distinctions[suit] = null;
@@ -84,7 +89,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     for (let i = 0; i < tierToEnd; i++) {
         secret.decks[i] = BuildCards({
             suits: suitsConfig,
-            actions: actionCardsConfigArray
+            actions: actionCardsConfigArray,
         }, {
             players: ctx.numPlayers,
             tier: i,
@@ -103,11 +108,12 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             heroesConfigOptions.push(expansion);
         }
     }
-    const heroes: IHeroCard[] = BuildHeroes(heroesConfigOptions, heroesConfig),
+    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel]: [IHeroCard[], IHeroCard[], IHeroCard[]] =
+        BuildHeroes(heroesConfigOptions, solo),
         taverns: DeckCardTypes[][] = [],
         tavernsNum = 3,
         currentTavern = -1,
-        drawSize: number = ctx.numPlayers === 2 ? 3 : ctx.numPlayers;
+        drawSize: number = (solo || ctx.numPlayers === 2) ? 3 : ctx.numPlayers;
     for (let i = 0; i < tavernsNum; i++) {
         const deck0: DeckCardTypes[] | undefined = secret.decks[0];
         if (deck0 === undefined) {
@@ -121,14 +127,15 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         publicPlayersOrder: string[] = [],
         exchangeOrder: number[] = [],
         priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        const randomPriorityIndex: number = Math.floor(Math.random() * priorities.length),
+    for (let i = 0; i < ctx.numPlayers + Number(solo); i++) {
+        // TODO Bot don't have priority or `1` priority enough (by rules bot must have all `1`, `2`, `3` priorities for random pick cards - it can be done by simple random from `1`, `2`, `3` numbers)?
+        const randomPriorityIndex: number = solo ? i : Math.floor(Math.random() * priorities.length),
             priority: IPriority | undefined = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
             throw new Error(`Отсутствует приоритет ${i}.`);
         }
         players[i] = BuildPlayer();
-        publicPlayers[i] = BuildPublicPlayer(`Dan` + i, priority, multiplayer);
+        publicPlayers[i] = BuildPublicPlayer(solo && i === 1 ? `SoloBot` : `Dan` + i, priority, multiplayer);
     }
     const marketCoinsUnique: ICoin[] = [],
         marketCoins: ICoin[] = BuildCoins(marketCoinsConfig, {
@@ -165,6 +172,8 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     };
     return {
         multiplayer,
+        solo,
+        soloGameDifficultyLevel,
         odroerirTheMythicCauldron,
         tavernCardDiscarded2Players,
         averageCards: averageCards as SuitPropertyTypes<ICard>,
@@ -190,6 +199,8 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         exchangeOrder,
         expansions,
         heroes,
+        heroesForSoloBot,
+        heroesForSoloGameDifficultyLevel,
         log,
         logData,
         marketCoins,

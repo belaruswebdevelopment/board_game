@@ -90,6 +90,15 @@ export const AddCampCardToPlayerCards = (G: IMyGameState, ctx: Ctx, card: IArtef
     return true;
 };
 
+/**
+ * <h3>Действия, связанные с выкладкой монет на артефакт Odroerir The Mythic Cauldron.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При выборе карты лагеря.</li>
+ * </ol>
+ *
+ * @param G
+ */
 export const AddCoinOnOdroerirTheMythicCauldronCampCard = (G: IMyGameState): void => {
     const minCoinValue: number = G.marketCoins.reduceRight((prev: ICoin, curr: ICoin): ICoin =>
         prev.value < curr.value ? prev : curr).value,
@@ -105,6 +114,17 @@ export const AddCoinOnOdroerirTheMythicCauldronCampCard = (G: IMyGameState): voi
     G.odroerirTheMythicCauldronCoins.push(coin);
 };
 
+/**
+ * <h3>Действия, связанные с завершением выкладки монет на артефакт Odroerir The Mythic Cauldron.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При отрисовке артефакта Odroerir The Mythic Cauldron.</li>
+ * <li>При финальном подсчёте очков за артефакт Odroerir The Mythic Cauldron.</li>
+ * </ol>
+ *
+ * @param G
+ * @returns Значение всех монет на артефакте Odroerir The Mythic Cauldron.
+ */
 export const GetOdroerirTheMythicCauldronCoinsValues = (G: IMyGameState): number =>
     G.odroerirTheMythicCauldronCoins.reduce((prev: number, curr: ICoin): number =>
         prev + curr.value, 0);

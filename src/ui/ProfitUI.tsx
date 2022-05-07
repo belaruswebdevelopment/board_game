@@ -5,6 +5,20 @@ import { ButtonNames, MoveNames, MoveValidatorNames } from "../typescript/enums"
 import type { DeckCardTypes, IMoveArgumentsStage, IMyGameState, IPublicPlayer, SuitTypes } from "../typescript/interfaces";
 import { DrawButton, DrawCard } from "./ElementsUI";
 
+/**
+ * <h3>Отрисовка поля для получения профита по фракции разведчиков.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param validatorName Название валидатора.
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @returns Игровое поле для отрисовки получения профита по фракции разведчиков.
+ */
 export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorName: MoveValidatorNames | null,
     data?: BoardProps<IMyGameState>, boardCells?: JSX.Element[]): void | IMoveArgumentsStage<number[]>[`args`] => {
     const moveMainArgs: IMoveArgumentsStage<number[]>[`args`] = [];
@@ -35,6 +49,19 @@ export const ExplorerDistinctionProfit = (G: IMyGameState, ctx: Ctx, validatorNa
     }
 };
 
+/**
+ * <h3>Отрисовка поля для старта фазы 'enlistmentMercenaries'.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Отрисовка игрового поля.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param data Глобальные параметры.
+ * @param boardCells Ячейки для отрисовки.
+ * @returns Игровое поле для отрисовки старта фазы 'enlistmentMercenaries'.
+ */
 export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data: BoardProps<IMyGameState>,
     boardCells: JSX.Element[]): void => {
     for (let j = 0; j < 2; j++) {
@@ -51,3 +78,5 @@ export const StartEnlistmentMercenariesProfit = (G: IMyGameState, ctx: Ctx, data
         }
     }
 };
+
+// TODO Add Profit(?) for pick solo mode difficult level!?
