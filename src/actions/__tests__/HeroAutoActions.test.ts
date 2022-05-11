@@ -1,6 +1,45 @@
 import type { Ctx } from "boardgame.io";
-import type { IMyGameState, IPlayer, IPublicPlayer } from "../../typescript/interfaces";
-import { GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
+import { DrawNames, LogTypes, Stages } from "../../typescript/enums";
+import type { IMyGameState, IPlayer, IPublicPlayer, IStack } from "../../typescript/interfaces";
+import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
+
+describe(`Test AddPickHeroAction method`, (): void => {
+    it(`should add pick hero action to stack`, (): void => {
+        const G = {
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    stack: [] as IStack[],
+                } as IPublicPlayer,
+            },
+            logData: [],
+        } as Pick<IMyGameState, `publicPlayers` | `logData`>;
+        AddPickHeroAction(G as IMyGameState, {
+            currentPlayer: `0`,
+        } as Ctx);
+        expect(G).toEqual({
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    stack: [
+                        {
+                            config: {
+                                stageName: Stages.PickHero,
+                                drawName: DrawNames.PickHero,
+                            },
+                        }
+                    ],
+                } as IPublicPlayer,
+            },
+            logData: [
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок 'Dan' должен выбрать нового героя.`,
+                },
+            ],
+        } as Pick<IMyGameState, `publicPlayers` | `logData`>);
+    });
+});
 
 describe(`Test GetClosedCoinIntoPlayerHandAction method`, (): void => {
     it(`should return all board coins to hand (multiplayer=false)`, (): void => {

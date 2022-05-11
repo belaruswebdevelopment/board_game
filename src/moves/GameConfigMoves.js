@@ -15,7 +15,6 @@ import { Stages } from "../typescript/enums";
  * @returns
  */
 export const ChooseDifficultyLevelForSoloModeMove = (G, ctx, level) => {
-    // TODO Add Validation logic
     const isValidMove = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, Stages.Default1, level);
     if (!isValidMove) {
@@ -36,7 +35,6 @@ export const ChooseDifficultyLevelForSoloModeMove = (G, ctx, level) => {
  * @returns
  */
 export const ChooseHeroForDifficultySoloModeMove = (G, ctx, heroId) => {
-    // TODO Add Validation logic
     const isValidMove = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, Stages.ChooseHeroesForSoloMode, heroId);
     if (!isValidMove) {

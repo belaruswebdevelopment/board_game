@@ -46,7 +46,7 @@ export const AfterLastTavernEmptyActions = (G, ctx) => {
  */
 export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G) => {
     const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
-    if (ulinePlayerIndex !== -1) {
+    if (!G.solo && ulinePlayerIndex !== -1) {
         return {
             next: Phases.PlaceCoinsUline,
         };
@@ -208,19 +208,19 @@ export const EndTurnActions = (G, ctx) => {
  * </ol>
  *
  * @param G
- * @param ctx
  */
-export const RemoveThrudFromPlayerBoardAfterGameEnd = (G, ctx) => {
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        const player = G.publicPlayers[i];
+export const RemoveThrudFromPlayerBoardAfterGameEnd = (G) => {
+    const thrudPlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.MoveThrud));
+    if (thrudPlayerIndex !== -1) {
+        const player = G.publicPlayers[thrudPlayerIndex];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+            throw new Error(`В массиве игроков отсутствует игрок с id '${thrudPlayerIndex}'.`);
         }
         const playerCards = Object.values(player.cards).flat(), thrud = playerCards.find((card) => card.name === HeroNames.Thrud);
         if (thrud !== undefined && thrud.suit !== null) {
             const thrudIndex = player.cards[thrud.suit].findIndex((card) => card.name === HeroNames.Thrud);
             if (thrudIndex === -1) {
-                throw new Error(`У игрока с id '${i}' отсутствует обязательная карта героя '${HeroNames.Thrud}'.`);
+                throw new Error(`У игрока с id '${thrudPlayerIndex}' отсутствует обязательная карта героя '${HeroNames.Thrud}'.`);
             }
             player.cards[thrud.suit].splice(thrudIndex, 1);
             AddDataToLog(G, LogTypes.GAME, `Герой '${HeroNames.Thrud}' игрока '${player.nickname}' уходит с игрового поля.`);
@@ -241,7 +241,7 @@ export const StartOrEndActions = (G, ctx) => {
     var _a;
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
     }
     if (player.actionsNum) {
         player.actionsNum--;

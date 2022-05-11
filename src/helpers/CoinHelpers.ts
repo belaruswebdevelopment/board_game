@@ -45,7 +45,7 @@ export const DiscardTradingCoin = (G: IMyGameState, playerId: number): [CoinType
             return coin?.isTriggerTrading === true;
         });
     }
-    if (tradingCoinIndex === -1 && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+    if (!G.solo && tradingCoinIndex === -1 && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
         tradingCoinIndex = handCoins.findIndex((coin: PublicPlayerCoinTypes, index: number): boolean => {
             if (coin !== null && !IsCoin(coin)) {
                 throw new Error(`В массиве монет игрока с id '${playerId}' в руке не может быть закрыта монета с id '${index}'.`);
@@ -354,7 +354,7 @@ export const ReturnCoinsToPlayerHands = (G: IMyGameState, ctx: Ctx): void => {
         if (privatePlayer === undefined) {
             throw new Error(`В массиве приватных игроков отсутствует игрок с id '${i}'.`);
         }
-        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+        if (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
             for (let j = 0; j < player.handCoins.length; j++) {
                 const handCoin: PublicPlayerCoinTypes | undefined = player.handCoins[j];
                 if (handCoin === undefined) {

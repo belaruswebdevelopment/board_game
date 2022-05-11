@@ -27,6 +27,9 @@ export const DrawButton = (data: BoardProps<IMyGameState>, boardCells: JSX.Eleme
     player: IPublicPlayer, moveName?: MoveNames, ...args: ArgsTypes): void => {
     let action: IMoveFunctionTypes;
     switch (moveName) {
+        case MoveNames.ChooseDifficultyLevelForSoloModeMove:
+            action = data.moves.ChooseDifficultyLevelForSoloModeMove!;
+            break;
         case MoveNames.StartEnlistmentMercenariesMove:
             action = data.moves.StartEnlistmentMercenariesMove!;
             break;

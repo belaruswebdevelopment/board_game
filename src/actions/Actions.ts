@@ -9,7 +9,7 @@ import { CheckAndMoveThrudAction } from "../helpers/HeroActionHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { DiscardCardFromTavern } from "../Tavern";
-import { ArtefactNames, BuffNames, LogTypes, Phases, RusCardTypes } from "../typescript/enums";
+import { ArtefactNames, BuffNames, LogTypes, Phases, RusCardTypes, RusSuitNames } from "../typescript/enums";
 import type { CampDeckCardTypes, DiscardDeckCardTypes, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IVariant, PickedCardType, PlayerCardsType, SuitTypes } from "../typescript/interfaces";
 
 /**
@@ -32,7 +32,7 @@ export const DiscardAnyCardFromPlayerBoardAction = (G: IMyGameState, ctx: Ctx, s
     }
     const discardedCard: PlayerCardsType | undefined = player.cards[suit].splice(cardId, 1)[0];
     if (discardedCard === undefined) {
-        throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта во фракции ${suit} с id '${cardId}': это должно проверяться в MoveValidator.`);
+        throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' отсутствует выбранная карта во фракции '${RusSuitNames[suit]}' с id '${cardId}': это должно проверяться в MoveValidator.`);
     }
     DiscardPickedCard(G, player, discardedCard);
     DeleteBuffFromPlayer(G, ctx, BuffNames.DiscardCardEndGame);

@@ -1,5 +1,5 @@
 import type { Ctx } from "boardgame.io";
-import type { IDebugData, IDebugDrawData, IMyGameState } from "../typescript/interfaces";
+import type { IDebugData, IDebugDrawData, IMyGameState, ObjectEntries } from "../typescript/interfaces";
 
 /**
  * <h3>Отрисовка дебаг панели.</h3>
@@ -100,7 +100,7 @@ const GetDebugData = (G: IMyGameState, ctx: Ctx): IDebugData | undefined => {
             G: {},
             ctx: {},
         };
-        for (const [key, value] of Object.entries(G)) {
+        for (const [key, value] of Object.entries(G) as ObjectEntries<typeof G>) {
             debugData.G[key] = value;
         }
         for (const [key, value] of Object.entries(ctx)) {

@@ -114,7 +114,7 @@ export const EndEndTierActions = (G, ctx) => {
     }
     player.pickedCard = null;
     if (G.tierToEnd === 0) {
-        RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+        RemoveThrudFromPlayerBoardAfterGameEnd(G);
     }
     G.publicPlayersOrder = [];
 };

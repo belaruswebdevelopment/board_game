@@ -19,7 +19,6 @@ import type { IHeroCard, IMyGameState } from "../typescript/interfaces";
  */
 export const ChooseDifficultyLevelForSoloModeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, level: number):
     string | void => {
-    // TODO Add Validation logic
     const isValidMove: boolean = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, Stages.Default1, level);
     if (!isValidMove) {
@@ -42,7 +41,6 @@ export const ChooseDifficultyLevelForSoloModeMove: Move<IMyGameState> = (G: IMyG
  */
 export const ChooseHeroForDifficultySoloModeMove: Move<IMyGameState> = (G: IMyGameState, ctx: Ctx, heroId: number):
     string | void => {
-    // TODO Add Validation logic
     const isValidMove: boolean = ctx.playerID === `0` && ctx.playerID === ctx.currentPlayer
         && IsValidMove(G, ctx, Stages.ChooseHeroesForSoloMode, heroId);
     if (!isValidMove) {

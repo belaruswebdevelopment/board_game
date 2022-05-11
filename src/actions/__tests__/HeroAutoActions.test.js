@@ -1,4 +1,42 @@
-import { GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
+import { DrawNames, LogTypes, Stages } from "../../typescript/enums";
+import { AddPickHeroAction, GetClosedCoinIntoPlayerHandAction } from "../HeroAutoActions";
+describe(`Test AddPickHeroAction method`, () => {
+    it(`should add pick hero action to stack`, () => {
+        const G = {
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    stack: [],
+                },
+            },
+            logData: [],
+        };
+        AddPickHeroAction(G, {
+            currentPlayer: `0`,
+        });
+        expect(G).toEqual({
+            publicPlayers: {
+                0: {
+                    nickname: `Dan`,
+                    stack: [
+                        {
+                            config: {
+                                stageName: Stages.PickHero,
+                                drawName: DrawNames.PickHero,
+                            },
+                        }
+                    ],
+                },
+            },
+            logData: [
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок 'Dan' должен выбрать нового героя.`,
+                },
+            ],
+        });
+    });
+});
 describe(`Test GetClosedCoinIntoPlayerHandAction method`, () => {
     it(`should return all board coins to hand (multiplayer=false)`, () => {
         const G = {

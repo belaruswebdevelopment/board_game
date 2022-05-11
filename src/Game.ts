@@ -3,7 +3,7 @@ import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
 import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
-import { CheckChooseDifficultySoloModeOrder, CheckEndChooseDifficultySoloModePhase, EndChooseDifficultySoloModeActions } from "./hooks/ChooseDifficultySoloModeHooks";
+import { CheckChooseDifficultySoloModeOrder, CheckEndChooseDifficultySoloModePhase, CheckEndChooseDifficultySoloModeTurn, EndChooseDifficultySoloModeActions, OnChooseDifficultySoloModeMove, OnChooseDifficultySoloModeTurnBegin } from "./hooks/ChooseDifficultySoloModeHooks";
 import { CheckEndEndTierPhase, CheckEndEndTierTurn, CheckEndTierOrder, EndEndTierActions, OnEndTierMove, OnEndTierTurnBegin, OnEndTierTurnEnd } from "./hooks/EndTierHooks";
 import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, OnEnlistmentMercenariesTurnEnd, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
 import { CheckEndGame, ReturnEndGameData } from "./hooks/GameHooks";
@@ -18,7 +18,7 @@ import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickConcreteCoinToUpgradeM
 import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove } from "./moves/GameConfigMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceOlwinCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
-import { SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
+import { SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
 import { Phases } from "./typescript/enums";
 import type { IMyGameState, INext, IOrder } from "./typescript/interfaces";
 
@@ -57,6 +57,9 @@ export const BoardGame: Game<IMyGameState> = {
                         },
                     },
                 },
+                onBegin: (G: IMyGameState, ctx: Ctx): void => OnChooseDifficultySoloModeTurnBegin(G, ctx),
+                onMove: (G: IMyGameState, ctx: Ctx): void => OnChooseDifficultySoloModeMove(G, ctx),
+                endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndChooseDifficultySoloModeTurn(G, ctx),
             },
             start: true,
             moves: {
@@ -64,7 +67,7 @@ export const BoardGame: Game<IMyGameState> = {
             },
             next: Phases.PlaceCoins,
             onBegin: (G: IMyGameState, ctx: Ctx): void => CheckChooseDifficultySoloModeOrder(G, ctx),
-            endIf: (G: IMyGameState): boolean => CheckEndChooseDifficultySoloModePhase(G),
+            endIf: (G: IMyGameState, ctx: Ctx): boolean | void => CheckEndChooseDifficultySoloModePhase(G, ctx),
             onEnd: (G: IMyGameState): void => EndChooseDifficultySoloModeActions(G),
         },
         placeCoins: {
@@ -165,6 +168,12 @@ export const BoardGame: Game<IMyGameState> = {
                             ClickHandTradingCoinUlineMove,
                         },
                     },
+                    // Solo Mode
+                    pickHeroSoloBot: {
+                        moves: {
+                            SoloBotClickHeroCardMove,
+                        },
+                    },
                 },
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnPickCardsTurnBegin(G, ctx),
                 onMove: (G: IMyGameState, ctx: Ctx): void => OnPickCardsMove(G, ctx),
@@ -249,7 +258,7 @@ export const BoardGame: Game<IMyGameState> = {
             },
             onBegin: (G: IMyGameState): void => PrepareMercenaryPhaseOrders(G),
             endIf: (G: IMyGameState, ctx: Ctx): boolean | INext | void => CheckEndEnlistmentMercenariesPhase(G, ctx),
-            onEnd: (G: IMyGameState, ctx: Ctx): void => EndEnlistmentMercenariesActions(G, ctx),
+            onEnd: (G: IMyGameState): void => EndEnlistmentMercenariesActions(G),
         },
         endTier: {
             turn: {

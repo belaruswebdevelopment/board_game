@@ -75,11 +75,11 @@ export const CheckPlayersBasicOrder = (G: IMyGameState, ctx: Ctx): void => {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
         }
         if (ctx.phase !== Phases.PlaceCoinsUline) {
-            if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+            if (G.solo || (!G.solo && !CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 G.publicPlayersOrder.push(String(i));
             }
         } else {
-            if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+            if (G.solo || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
                 G.publicPlayersOrder.push(String(i));
             }
         }

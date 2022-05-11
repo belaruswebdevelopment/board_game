@@ -43,7 +43,7 @@ const CheckAndStartUlineActionsOrContinue = (G: IMyGameState, ctx: Ctx): void =>
     const ulinePlayerIndex: number =
         Object.values(G.publicPlayers).findIndex((findPlayer: IPublicPlayer): boolean =>
             CheckPlayerHasBuff(findPlayer, BuffNames.EveryTurn));
-    if (ulinePlayerIndex !== -1) {
+    if (!G.solo && ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
             const boardCoin: PublicPlayerCoinTypes | undefined = player.boardCoins[G.currentTavern];
             if (boardCoin === undefined) {
@@ -163,7 +163,7 @@ export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void => {
                 }
             }
             if (startThrud) {
-                RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+                RemoveThrudFromPlayerBoardAfterGameEnd(G);
             }
         }
     }

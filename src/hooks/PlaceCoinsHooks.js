@@ -23,7 +23,7 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
         if (G.multiplayer) {
             isEveryPlayersHandCoinsEmpty =
                 Object.values(G.publicPlayers).map((player) => player).every((player, index) => {
-                    if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                    if (!G.solo && !CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                         const privatePlayer = G.players[index];
                         if (privatePlayer === undefined) {
                             throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${index}'.`);
@@ -37,7 +37,7 @@ export const CheckEndPlaceCoinsPhase = (G, ctx) => {
             isEveryPlayersHandCoinsEmpty =
                 Object.values(G.publicPlayers).map((player) => player)
                     .every((player, playerIndex) => {
-                    if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                    if (!G.solo && !CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                         return player.handCoins.every((coin, coinIndex) => {
                             if (coin !== null && !IsCoin(coin)) {
                                 throw new Error(`В массиве монет игрока с id '${playerIndex}' в руке не может быть закрыта монета с id '${coinIndex}'.`);

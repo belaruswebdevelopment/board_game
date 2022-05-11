@@ -84,6 +84,13 @@ const Bonfur = {
     stack: [StackData.discardCardFromBoardBonfur()],
     scoringRule: () => 0,
 };
+/**
+ * <h3>Данные о герое.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>Используется при обращении к данным героя.</li>
+ * </ol>
+ */
 const Crovax_The_Doppelganger = {
     name: HeroNames.Crovax_The_Doppelganger,
     description: `Кровакс — нейтральный герой, добавляющий 25 очков к итоговому показателю храбрости. Поместите его в свою командную зону и немедленно сбросьте последнюю карту дворфа из выбранной вами колонки. Это та же сила, что и у Бонфура, поэтому все правила, применимые к Бонфуру, применимы и к Кроваксу.`,
@@ -387,6 +394,9 @@ const Thrud = {
     game: GameNames.Basic,
     points: 13,
     stack: [StackData.placeThrudHero()],
+    buff: {
+        name: BuffNames.MoveThrud,
+    },
     scoringRule: () => 13,
 };
 /**

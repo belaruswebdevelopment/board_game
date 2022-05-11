@@ -28,7 +28,8 @@ export class GameBoard extends React.Component<BoardProps<IMyGameState>> {
             drawHeroesUI: JSX.Element =
                 DrawHeroes(this.props.G, this.props.ctx, null, this.props) as JSX.Element,
             drawHeroesForSoloBotUI: JSX.Element | null = this.props.G.solo ?
-                DrawHeroesForSoloBotUI(this.props.G, this.props.ctx, null, this.props) as JSX.Element : null,
+                DrawHeroesForSoloBotUI(this.props.G, this.props.ctx, null, this.props) as
+                JSX.Element : null,
             drawCampUI: JSX.Element | null = this.props.G.expansions.thingvellir.active ?
                 (DrawCamp(this.props.G, this.props.ctx, null, this.props) as JSX.Element) : null,
             drawDistinctionsUI: JSX.Element =

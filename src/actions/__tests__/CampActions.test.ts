@@ -798,6 +798,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
                         warrior: [
                             {
                                 name: `Test`,
+                                suit: SuitNames.WARRIOR,
                             },
                         ],
                     },
@@ -827,6 +828,7 @@ describe(`Test DiscardSuitCardAction method`, (): void => {
             discardCardsDeck: [
                 {
                     name: `Test`,
+                    suit: SuitNames.WARRIOR,
                 },
             ] as DeckCardTypes[],
             logData: [

@@ -24,6 +24,9 @@ import { ArtefactNames, MoveNames } from "../typescript/enums";
 export const DrawButton = (data, boardCells, name, player, moveName, ...args) => {
     let action;
     switch (moveName) {
+        case MoveNames.ChooseDifficultyLevelForSoloModeMove:
+            action = data.moves.ChooseDifficultyLevelForSoloModeMove;
+            break;
         case MoveNames.StartEnlistmentMercenariesMove:
             action = data.moves.StartEnlistmentMercenariesMove;
             break;

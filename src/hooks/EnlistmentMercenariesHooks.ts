@@ -79,15 +79,14 @@ export const CheckEndEnlistmentMercenariesTurn = (G: IMyGameState, ctx: Ctx): bo
  * </ol>
  *
  * @param G
- * @param ctx
  */
-export const EndEnlistmentMercenariesActions = (G: IMyGameState, ctx: Ctx): void => {
+export const EndEnlistmentMercenariesActions = (G: IMyGameState): void => {
     if (G.tierToEnd === 0) {
         const yludIndex: number =
             Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
                 CheckPlayerHasBuff(player, BuffNames.EndTier));
         if (yludIndex === -1) {
-            RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+            RemoveThrudFromPlayerBoardAfterGameEnd(G);
         }
     }
     G.publicPlayersOrder = [];

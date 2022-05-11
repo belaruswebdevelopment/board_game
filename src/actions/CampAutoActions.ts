@@ -9,25 +9,6 @@ import { ArtefactNames, BuffNames, LogTypes, Stages, SuitNames } from "../typesc
 import type { IMyGameState, IPlayer, IPublicPlayer, IStack, PublicPlayerCoinTypes } from "../typescript/interfaces";
 
 /**
- * <h3>Действия, связанные с взятием героя.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При игровых моментах, дающих возможность взять карту героя.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx): void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
-    }
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.pickHero()]);
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' должен выбрать нового героя.`);
-};
-
-/**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -131,12 +112,12 @@ export const StartVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx): void =
                 return IsCoin(coin);
             }).length,
         everyTurnBuff: boolean = CheckPlayerHasBuff(player, BuffNames.EveryTurn);
-    if (everyTurnBuff && noCoinsOnPouchNumber > 0 && handCoinsNumber) {
+    if (!G.solo && everyTurnBuff && noCoinsOnPouchNumber > 0 && handCoinsNumber) {
         const addCoinsToPouchNumber: number =
             noCoinsOnPouchNumber <= handCoinsNumber ? noCoinsOnPouchNumber : handCoinsNumber;
         AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(addCoinsToPouchNumber)]);
-    } else if ((everyTurnBuff && (!noCoinsOnPouchNumber || (noCoinsOnPouchNumber === 1 && !handCoinsNumber)))
-        || !everyTurnBuff) {
+    } else if (!G.solo && !everyTurnBuff
+        || ((everyTurnBuff && (!noCoinsOnPouchNumber || (noCoinsOnPouchNumber === 1 && !handCoinsNumber))))) {
         let coinsValue = 0,
             stack: IStack[] = [];
         for (let j: number = G.tavernsNum; j < player.boardCoins.length; j++) {

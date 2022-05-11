@@ -1,6 +1,6 @@
 import type { Ctx } from "boardgame.io";
 import { suitsConfig } from "../../data/SuitData";
-import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames, TavernNames } from "../../typescript/enums";
+import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, RusSuitNames, Stages, SuitNames, TavernNames } from "../../typescript/enums";
 import type { CampDeckCardTypes, DeckCardTypes, IActionCard, IArtefactCampCard, IBuffs, ICard, IHeroCard, IMercenaryCampCard, IMercenaryPlayerCard, IMyGameState, IPublicPlayer, IPublicPlayers, IVariant, PlayerCardsType, SuitPropertyTypes, TavernCardTypes } from "../../typescript/interfaces";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 
@@ -14,6 +14,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
                         warrior: [
                             {
                                 name: `Test`,
+                                suit: SuitNames.WARRIOR,
                             } as ICard,
                         ],
                     },
@@ -43,6 +44,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             discardCardsDeck: [
                 {
                     name: `Test`,
+                    suit: SuitNames.WARRIOR,
                 },
             ] as DeckCardTypes[],
             logData: [
@@ -204,7 +206,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, (): void => {
             DiscardAnyCardFromPlayerBoardAction(G as IMyGameState, {
                 currentPlayer: `0`,
             } as Ctx, SuitNames.WARRIOR, 0);
-        }).toThrowError(`В массиве карт игрока с id '0' отсутствует выбранная карта с id '0': это должно проверяться в MoveValidator.`);
+        }).toThrowError(`В массиве карт игрока с id '0' отсутствует выбранная карта во фракции '${RusSuitNames['warrior']}' с id '0': это должно проверяться в MoveValidator.`);
     });
 });
 
@@ -221,6 +223,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
                 [
                     {
                         name: `Test`,
+                        suit: SuitNames.WARRIOR,
                     },
                 ],
             ] as TavernCardTypes[][],
@@ -245,6 +248,7 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
             discardCardsDeck: [
                 {
                     name: `Test`,
+                    suit: SuitNames.WARRIOR,
                 },
             ] as DeckCardTypes[],
             tavernCardDiscarded2Players: true,
@@ -252,6 +256,10 @@ describe(`Test DiscardCardFromTavernAction method`, (): void => {
                 {
                     type: LogTypes.GAME,
                     value: `Игрок 'Dan' отправил в колоду сброса карту из таверны:`,
+                },
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
                 },
                 {
                     type: LogTypes.GAME,
@@ -591,20 +599,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-            discardCardsDeck: [
-                {
-                    stack: [
-                        {
-                            config: {
-                                stageName: Stages.UpgradeCoin,
-                                value: 5,
-                                drawName: DrawNames.UpgradeCoin,
-                            },
-                        }
-                    ],
-                    name: `Test`,
-                } as IActionCard,
-            ],
+            discardCardsDeck: [],
             logData: [
                 {
                     type: LogTypes.PUBLIC,

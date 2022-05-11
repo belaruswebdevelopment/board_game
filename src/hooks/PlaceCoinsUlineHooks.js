@@ -20,7 +20,7 @@ export const CheckEndPlaceCoinsUlinePhase = (G, ctx) => {
             throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
         const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((player) => CheckPlayerHasBuff(player, BuffNames.EveryTurn));
-        if (ulinePlayerIndex !== -1) {
+        if (!G.solo && ulinePlayerIndex !== -1) {
             const ulinePlayer = G.publicPlayers[ulinePlayerIndex];
             if (ulinePlayer === undefined) {
                 throw new Error(`В массиве игроков отсутствует игрок с бафом '${BuffNames.EveryTurn}'.`);

@@ -2,7 +2,7 @@ import { PlayerView, TurnOrder } from "boardgame.io/core";
 import { enumerate, iterations, objectives, playoutDepth } from "./AI";
 import { SetupGame } from "./GameSetup";
 import { CheckBrisingamensEndGameOrder, EndBrisingamensEndGameActions, OnBrisingamensEndGameMove, OnBrisingamensEndGameTurnBegin, StartGetMjollnirProfitOrEndGame } from "./hooks/BrisingamensEndGameHooks";
-import { CheckChooseDifficultySoloModeOrder, CheckEndChooseDifficultySoloModePhase, EndChooseDifficultySoloModeActions } from "./hooks/ChooseDifficultySoloModeHooks";
+import { CheckChooseDifficultySoloModeOrder, CheckEndChooseDifficultySoloModePhase, CheckEndChooseDifficultySoloModeTurn, EndChooseDifficultySoloModeActions, OnChooseDifficultySoloModeMove, OnChooseDifficultySoloModeTurnBegin } from "./hooks/ChooseDifficultySoloModeHooks";
 import { CheckEndEndTierPhase, CheckEndEndTierTurn, CheckEndTierOrder, EndEndTierActions, OnEndTierMove, OnEndTierTurnBegin, OnEndTierTurnEnd } from "./hooks/EndTierHooks";
 import { CheckEndEnlistmentMercenariesPhase, CheckEndEnlistmentMercenariesTurn, EndEnlistmentMercenariesActions, OnEnlistmentMercenariesMove, OnEnlistmentMercenariesTurnBegin, OnEnlistmentMercenariesTurnEnd, PrepareMercenaryPhaseOrders } from "./hooks/EnlistmentMercenariesHooks";
 import { CheckEndGame, ReturnEndGameData } from "./hooks/GameHooks";
@@ -17,7 +17,7 @@ import { ClickBoardCoinMove, ClickCoinToUpgradeMove, ClickConcreteCoinToUpgradeM
 import { ChooseDifficultyLevelForSoloModeMove, ChooseHeroForDifficultySoloModeMove } from "./moves/GameConfigMoves";
 import { ClickHeroCardMove, DiscardCardMove, PlaceOlwinCardMove, PlaceThrudHeroMove, PlaceYludHeroMove } from "./moves/HeroMoves";
 import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove, DiscardCard2PlayersMove, DiscardCardFromPlayerBoardMove, GetEnlistmentMercenariesMove, GetMjollnirProfitMove, PassEnlistmentMercenariesMove, PickDiscardCardMove, PlaceEnlistmentMercenariesMove, StartEnlistmentMercenariesMove } from "./moves/Moves";
-import { SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
+import { SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
 import { Phases } from "./typescript/enums";
 // TODO Check all coins for solo (player===public, bot=private+sometimes public)
 // TODO Add logging
@@ -53,6 +53,9 @@ export const BoardGame = {
                         },
                     },
                 },
+                onBegin: (G, ctx) => OnChooseDifficultySoloModeTurnBegin(G, ctx),
+                onMove: (G, ctx) => OnChooseDifficultySoloModeMove(G, ctx),
+                endIf: (G, ctx) => CheckEndChooseDifficultySoloModeTurn(G, ctx),
             },
             start: true,
             moves: {
@@ -60,7 +63,7 @@ export const BoardGame = {
             },
             next: Phases.PlaceCoins,
             onBegin: (G, ctx) => CheckChooseDifficultySoloModeOrder(G, ctx),
-            endIf: (G) => CheckEndChooseDifficultySoloModePhase(G),
+            endIf: (G, ctx) => CheckEndChooseDifficultySoloModePhase(G, ctx),
             onEnd: (G) => EndChooseDifficultySoloModeActions(G),
         },
         placeCoins: {
@@ -161,6 +164,12 @@ export const BoardGame = {
                             ClickHandTradingCoinUlineMove,
                         },
                     },
+                    // Solo Mode
+                    pickHeroSoloBot: {
+                        moves: {
+                            SoloBotClickHeroCardMove,
+                        },
+                    },
                 },
                 onBegin: (G, ctx) => OnPickCardsTurnBegin(G, ctx),
                 onMove: (G, ctx) => OnPickCardsMove(G, ctx),
@@ -245,7 +254,7 @@ export const BoardGame = {
             },
             onBegin: (G) => PrepareMercenaryPhaseOrders(G),
             endIf: (G, ctx) => CheckEndEnlistmentMercenariesPhase(G, ctx),
-            onEnd: (G, ctx) => EndEnlistmentMercenariesActions(G, ctx),
+            onEnd: (G) => EndEnlistmentMercenariesActions(G),
         },
         endTier: {
             turn: {

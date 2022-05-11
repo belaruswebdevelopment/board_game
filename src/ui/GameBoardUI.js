@@ -8,7 +8,7 @@ import { DrawBoard } from "../helpers/DrawHelpers";
 import { tavernsConfig } from "../Tavern";
 import { ConfigNames, MoveNames, MoveValidatorNames, Phases, Stages } from "../typescript/enums";
 import { DrawCard, DrawCoin } from "./ElementsUI";
-import { ExplorerDistinctionProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
+import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDistinctionProfit, StartEnlistmentMercenariesProfit } from "./ProfitUI";
 // TODO Check Solo Bot & multiplayer actions!
 /**
  * <h3>Отрисовка карт лагеря.</h3>
@@ -296,7 +296,6 @@ export const DrawHeroes = (G, ctx, validatorName, data) => {
  */
 export const DrawHeroesForSoloBotUI = (G, ctx, validatorName, data) => {
     var _a;
-    // TODO Rework validator?
     const boardCells = [], moveMainArgs = [];
     for (let i = 0; i < 1; i++) {
         for (let j = 0; j < G.heroesForSoloBot.length; j++) {
@@ -305,15 +304,15 @@ export const DrawHeroesForSoloBotUI = (G, ctx, validatorName, data) => {
                 throw new Error(`В массиве карт героев отсутствует герой с id '${j}'.`);
             }
             if (hero.active && Number(ctx.currentPlayer) === 1
-                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickHero) {
+                && ((_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[Number(ctx.currentPlayer)]) === Stages.PickHeroSoloBot) {
                 const player = G.publicPlayers[Number(ctx.currentPlayer)];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
                 }
                 if (data !== undefined) {
-                    DrawCard(data, boardCells, hero, j, player, null, MoveNames.ClickHeroCardMove, j);
+                    DrawCard(data, boardCells, hero, j, player, null, MoveNames.SoloBotClickHeroCardMove, j);
                 }
-                else if (validatorName === MoveValidatorNames.ClickHeroCardMoveValidator && hero.active) {
+                else if (validatorName === MoveValidatorNames.SoloBotClickHeroCardMoveValidator && hero.active) {
                     moveMainArgs.push(j);
                 }
             }
@@ -382,11 +381,19 @@ export const DrawProfit = (G, ctx, data) => {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const option = G.drawProfit;
-    let caption = `Get `;
+    let caption = ``;
     switch (option) {
         case ConfigNames.ExplorerDistinction:
-            caption += `one card to your board.`;
+            caption += `Get one card to your board.`;
             ExplorerDistinctionProfit(G, ctx, null, data, boardCells);
+            break;
+        case ConfigNames.GetDifficultyLevelForSoloMode:
+            caption += `Get one card to your board.`;
+            DrawDifficultyLevelForSoloModeUI(G, ctx, null, data, boardCells);
+            break;
+        case ConfigNames.GetHeroesForSoloMode:
+            caption += `Get one card to your board.`;
+            DrawHeroesForSoloModeUI(G, ctx, null, data, boardCells);
             break;
         case ConfigNames.StartOrPassEnlistmentMercenaries:
             caption = `Press Start to begin 'Enlistment Mercenaries' or Pass to do it after all players.`;

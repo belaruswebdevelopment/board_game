@@ -6,7 +6,7 @@ import { CheckCurrentSuitDistinctions } from "./Distinction";
 import { CheckPlayerHasBuff } from "./helpers/BuffHelpers";
 import { OpenClosedCoinsOnPlayerBoard, ReturnCoinsToPlayerBoard } from "./helpers/CoinHelpers";
 import { AddDataToLog } from "./Logging";
-import { BuffNames, LogTypes, SuitNames } from "./typescript/enums";
+import { BuffNames, HeroNames, LogTypes, SuitNames } from "./typescript/enums";
 /**
  * <h3>Подсчитывает суммарное количество текущих очков выбранного игрока за карты в колонках фракций.</h3>
  * <p>Применения:</p>
@@ -43,39 +43,39 @@ export const CurrentScoring = (player) => {
 export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
     const player = G.publicPlayers[playerId];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует игрок с id '${playerId}'.`);
+        throw new Error(`В массиве игроков отсутствует ${G.solo && playerId === 0 ? `игрок` : `соло бот`} с id '${playerId}'.`);
     }
-    AddDataToLog(G, LogTypes.GAME, `Результаты игры игрока '${player.nickname}':`);
+    AddDataToLog(G, LogTypes.GAME, `Результаты игры ${G.solo && playerId === 0 ? `игрока '${player.nickname}'` : `соло бота`}:`);
     let score = CurrentScoring(player), coinsValue = 0;
-    AddDataToLog(G, LogTypes.PUBLIC, `Очки за карты дворфов игрока '${player.nickname}': ${score}`);
+    AddDataToLog(G, LogTypes.PUBLIC, `Очки за карты дворфов ${G.solo && playerId === 0 ? `игрока '${player.nickname}'` : `соло бота`}: ${score}`);
     for (let i = 0; i < player.boardCoins.length; i++) {
         const boardCoin = player.boardCoins[i];
         if (boardCoin === undefined) {
-            throw new Error(`В массиве монет игрока с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
+            throw new Error(`В массиве монет ${G.solo && playerId === 0 ? `игрока` : `соло бота`} с id '${playerId}' на столе отсутствует монета с id '${i}'.`);
         }
         if (boardCoin !== null && !IsCoin(boardCoin)) {
-            throw new Error(`В массиве монет игрока с id '${playerId}' на столе не может не быть монеты с id '${i}'.`);
+            throw new Error(`В массиве монет ${G.solo && playerId === 0 ? `игрока` : `соло бота`} с id '${playerId}' на столе не может не быть монеты с id '${i}'.`);
         }
         if (IsCoin(boardCoin) && !boardCoin.isOpened) {
-            throw new Error(`В массиве монет игрока с id '${playerId}' на столе должна быть ранее открыта монета с id '${i}' в конце игры.`);
+            throw new Error(`В массиве монет ${G.solo && playerId === 0 ? `игрока` : `соло бота`} с id '${playerId}' на столе должна быть ранее открыта монета с id '${i}' в конце игры.`);
         }
         if (IsCoin(boardCoin)) {
             coinsValue += boardCoin.value;
         }
     }
     score += coinsValue;
-    AddDataToLog(G, LogTypes.PUBLIC, `Очки за монеты игрока '${player.nickname}': '${coinsValue}';`);
+    AddDataToLog(G, LogTypes.PUBLIC, `Очки за монеты ${G.solo && playerId === 0 ? `игрока '${player.nickname}'` : `соло бота`}: '${coinsValue}';`);
     if (warriorDistinctions.length && warriorDistinctions.includes(playerId)) {
         const warriorDistinctionScore = suitsConfig[SuitNames.WARRIOR].distinction.awarding(G, ctx, playerId);
         score += warriorDistinctionScore;
         if (warriorDistinctionScore) {
-            AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам игрока '${player.nickname}': '${warriorDistinctionScore}';`);
+            AddDataToLog(G, LogTypes.PUBLIC, `Очки за преимущество по воинам ${G.solo && playerId === 0 ? `игрока '${player.nickname}'` : `соло бота`}: '${warriorDistinctionScore}';`);
         }
     }
     const minerDistinctionPriorityScore = suitsConfig[SuitNames.MINER].distinction.awarding(G, ctx, playerId);
     score += minerDistinctionPriorityScore;
     if (minerDistinctionPriorityScore) {
-        AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам игрока '${player.nickname}': '${minerDistinctionPriorityScore}';`);
+        AddDataToLog(G, LogTypes.PUBLIC, `Очки за кристалл преимущества по горнякам ${G.solo && playerId === 0 ? `игрока '${player.nickname}'` : `соло бота`}: '${minerDistinctionPriorityScore}';`);
     }
     let heroesScore = 0, dwerg_brothers = 0;
     const dwerg_brothers_scoring = [0, 13, 40, 81, 108, 135];
@@ -89,25 +89,43 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
         if (heroData === undefined) {
             throw new Error(`Не удалось найти героя '${hero.name}'.`);
         }
-        if (hero.name.startsWith(`Dwerg`)) {
+        if (G.solo && playerId === 1 && hero.name === HeroNames.Uline) {
+            continue;
+        }
+        if ((!G.solo || G.solo && playerId === 1) && hero.name.startsWith(`Dwerg`)) {
             dwerg_brothers += heroData.scoringRule();
         }
         else {
             const currentHeroScore = heroData.scoringRule(G, playerId);
             heroesScore += currentHeroScore;
-            AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя '${hero.name}' игрока '${player.nickname}': '${currentHeroScore}';`);
+            AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя '${hero.name}' ${G.solo && playerId === 0 ? `игрока '${player.nickname}'` : `соло бота`}': '${currentHeroScore}';`);
         }
     }
-    if (dwerg_brothers) {
+    if (G.solo && playerId === 0) {
+        const soloBotPublicPlayer = G.publicPlayers[1];
+        if (soloBotPublicPlayer === undefined) {
+            throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+        }
+        if (CheckPlayerHasBuff(soloBotPublicPlayer, BuffNames.EveryTurn)) {
+            const heroData = Object.values(heroesConfig).find((heroObj) => heroObj.name === HeroNames.Uline);
+            if (heroData === undefined) {
+                throw new Error(`Не удалось найти героя '${HeroNames.Uline}'.`);
+            }
+            const currentHeroScore = heroData.scoringRule(G, playerId);
+            heroesScore += currentHeroScore;
+            AddDataToLog(G, LogTypes.PRIVATE, `Очки за героя '${HeroNames.Uline}' у соло бота из-за нарушения им правил игры добавляются игроку '${player.nickname}': '${currentHeroScore}';`);
+        }
+    }
+    if ((!G.solo || G.solo && playerId === 1) && dwerg_brothers) {
         const dwerg_brother_value = dwerg_brothers_scoring[dwerg_brothers];
         if (dwerg_brother_value === undefined) {
             throw new Error(`Не существует количества очков за количество героев братьев Двергов - '${dwerg_brothers}'.`);
         }
         heroesScore += dwerg_brother_value;
-        AddDataToLog(G, LogTypes.PRIVATE, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) игрока '${player.nickname}': '${dwerg_brothers_scoring[dwerg_brothers]}';`);
+        AddDataToLog(G, LogTypes.PRIVATE, `Очки за героев братьев Двергов (${dwerg_brothers} шт.) ${G.solo ? `соло бота` : `игрока '${player.nickname}'`}: '${dwerg_brothers_scoring[dwerg_brothers]}';`);
     }
     score += heroesScore;
-    AddDataToLog(G, LogTypes.PUBLIC, `Очки за героев игрока '${player.nickname}': ;${heroesScore};'`);
+    AddDataToLog(G, LogTypes.PUBLIC, `Очки за героев ${G.solo && playerId === 0 ? `игрока '${player.nickname}'` : `соло бота`}: ;${heroesScore};'`);
     if (G.expansions.thingvellir.active) {
         let artifactsScore = 0;
         for (let i = 0; i < player.campCards.length; i++) {
@@ -129,7 +147,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
         score += artifactsScore;
         AddDataToLog(G, LogTypes.PUBLIC, `Очки за артефакты игрока '${player.nickname}': '${artifactsScore}';`);
     }
-    AddDataToLog(G, LogTypes.PUBLIC, `Итоговый счёт игрока '${player.nickname}': '${score}'.`);
+    AddDataToLog(G, LogTypes.PUBLIC, `Итоговый счёт ${G.solo && playerId === 0 ? `игрока '${player.nickname}'` : `соло бота`}: '${score}'.`);
     return score;
 };
 /**
@@ -145,7 +163,7 @@ export const FinalScoring = (G, ctx, playerId, warriorDistinctions) => {
  */
 export const ScoreWinner = (G, ctx) => {
     Object.values(G.publicPlayers).forEach((player, index) => {
-        if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+        if (G.solo || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn))) {
             ReturnCoinsToPlayerBoard(G, index);
         }
         OpenClosedCoinsOnPlayerBoard(G, index);

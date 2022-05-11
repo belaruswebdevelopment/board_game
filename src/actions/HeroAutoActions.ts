@@ -5,9 +5,33 @@ import { DrawCurrentProfit } from "../helpers/ActionHelpers";
 import { CheckPlayerHasBuff } from "../helpers/BuffHelpers";
 import { ReturnCoinToPlayerHands } from "../helpers/CoinHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
-import { BuffNames, CoinTypes } from "../typescript/enums";
+import { AddDataToLog } from "../Logging";
+import { BuffNames, CoinTypes, LogTypes } from "../typescript/enums";
 import type { AutoActionArgsTypes, ICoin, IMyGameState, IPlayer, IPublicPlayer, PublicPlayerCoinTypes } from "../typescript/interfaces";
 import { UpgradeCoinAction } from "./CoinActions";
+
+/**
+ * <h3>Действия, связанные с взятием героя.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При игровых моментах, дающих возможность взять карту героя.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ */
+export const AddPickHeroAction = (G: IMyGameState, ctx: Ctx): void => {
+    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
+    if (player === undefined) {
+        throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
+    }
+    if (G.solo && ctx.currentPlayer === `1`) {
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.pickHeroSoloBot()]);
+    } else {
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.pickHero()]);
+    }
+    AddDataToLog(G, LogTypes.GAME, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} должен выбрать нового героя.`);
+};
 
 /**
  * <h3>Действия, связанные с возвращением закрытых монет со стола в руку.</h3>
@@ -57,7 +81,7 @@ export const UpgradeMinCoinAction = (G: IMyGameState, ctx: Ctx, ...args: AutoAct
         throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${currentPlayer}'.`);
     }
     let type: CoinTypes;
-    if (CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+    if (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
         let handCoins: PublicPlayerCoinTypes[];
         if (G.multiplayer) {
             handCoins = privatePlayer.handCoins;

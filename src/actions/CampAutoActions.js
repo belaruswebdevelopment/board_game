@@ -6,24 +6,6 @@ import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, BuffNames, LogTypes, Stages, SuitNames } from "../typescript/enums";
 /**
- * <h3>Действия, связанные с взятием героя.</h3>
- * <p>Применения:</p>
- * <ol>
- * <li>При игровых моментах, дающих возможность взять карту героя.</li>
- * </ol>
- *
- * @param G
- * @param ctx
- */
-export const AddPickHeroAction = (G, ctx) => {
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
-    }
-    AddActionsToStackAfterCurrent(G, ctx, [StackData.pickHero()]);
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' должен выбрать нового героя.`);
-};
-/**
  * <h3>Действия, связанные со сбросом обменной монеты.</h3>
  * <p>Применения:</p>
  * <ol>
@@ -120,12 +102,12 @@ export const StartVidofnirVedrfolnirAction = (G, ctx) => {
         }
         return IsCoin(coin);
     }).length, everyTurnBuff = CheckPlayerHasBuff(player, BuffNames.EveryTurn);
-    if (everyTurnBuff && noCoinsOnPouchNumber > 0 && handCoinsNumber) {
+    if (!G.solo && everyTurnBuff && noCoinsOnPouchNumber > 0 && handCoinsNumber) {
         const addCoinsToPouchNumber = noCoinsOnPouchNumber <= handCoinsNumber ? noCoinsOnPouchNumber : handCoinsNumber;
         AddActionsToStackAfterCurrent(G, ctx, [StackData.addCoinToPouch(addCoinsToPouchNumber)]);
     }
-    else if ((everyTurnBuff && (!noCoinsOnPouchNumber || (noCoinsOnPouchNumber === 1 && !handCoinsNumber)))
-        || !everyTurnBuff) {
+    else if (!G.solo && !everyTurnBuff
+        || ((everyTurnBuff && (!noCoinsOnPouchNumber || (noCoinsOnPouchNumber === 1 && !handCoinsNumber))))) {
         let coinsValue = 0, stack = [];
         for (let j = G.tavernsNum; j < player.boardCoins.length; j++) {
             let boardCoin;

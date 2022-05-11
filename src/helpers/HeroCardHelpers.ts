@@ -29,10 +29,11 @@ export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroC
 };
 
 /**
- * <h3>Добавляет героя в массив героев игрока.</h3>
+ * <h3>Добавляет героя в массив героев игрока или соло бота.</h3>
  * <p>Применения:</p>
  * <ol>
  * <li>Происходит при добавлении героя на планшет игрока.</li>
+ * <li>Происходит при добавлении героя на планшет соло бота.</li>
  * </ol>
  *
  * @param G
@@ -41,16 +42,18 @@ export const AddHeroCardToPlayerCards = (G: IMyGameState, ctx: Ctx, hero: IHeroC
  */
 export const AddHeroCardToPlayerHeroCards = (G: IMyGameState, ctx: Ctx, hero: IHeroCard): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
+    if (G.solo && player === undefined && ctx.currentPlayer === `1`) {
+        throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+    } else if (player === undefined) {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     player.pickedCard = hero;
     if (!hero.active) {
-        throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран каким-то игроком.`);
+        throw new Error(`Не удалось добавить героя '${hero.name}' из-за того, что он был уже выбран ${G.solo && ctx.currentPlayer === `1` ? `соло ботом` : `каким-то игроком`}.`);
     }
     hero.active = false;
     player.heroes.push(hero);
-    AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал героя '${hero.name}'.`);
+    AddDataToLog(G, LogTypes.PUBLIC, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Игрок '${player.nickname}'`} выбрал героя '${hero.name}'.`);
 };
 
 /**

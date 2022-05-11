@@ -25,7 +25,7 @@ export const CheckEndPlaceCoinsUlinePhase = (G: IMyGameState, ctx: Ctx): boolean
         const ulinePlayerIndex: number =
             Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
                 CheckPlayerHasBuff(player, BuffNames.EveryTurn));
-        if (ulinePlayerIndex !== - 1) {
+        if (!G.solo && ulinePlayerIndex !== - 1) {
             const ulinePlayer: IPublicPlayer | undefined = G.publicPlayers[ulinePlayerIndex];
             if (ulinePlayer === undefined) {
                 throw new Error(`В массиве игроков отсутствует игрок с бафом '${BuffNames.EveryTurn}'.`);

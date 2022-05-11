@@ -788,6 +788,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
                         warrior: [
                             {
                                 name: `Test`,
+                                suit: SuitNames.WARRIOR,
                             },
                         ],
                     },
@@ -817,6 +818,7 @@ describe(`Test DiscardSuitCardAction method`, () => {
             discardCardsDeck: [
                 {
                     name: `Test`,
+                    suit: SuitNames.WARRIOR,
                 },
             ],
             logData: [

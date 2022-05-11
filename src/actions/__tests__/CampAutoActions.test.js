@@ -1,42 +1,5 @@
 import { ArtefactNames, BuffNames, DrawNames, LogTypes, Stages, SuitNames } from "../../typescript/enums";
-import { AddPickHeroAction, DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
-describe(`Test AddPickHeroAction method`, () => {
-    it(`should add pick hero action to stack`, () => {
-        const G = {
-            publicPlayers: {
-                0: {
-                    nickname: `Dan`,
-                    stack: [],
-                },
-            },
-            logData: [],
-        };
-        AddPickHeroAction(G, {
-            currentPlayer: `0`,
-        });
-        expect(G).toEqual({
-            publicPlayers: {
-                0: {
-                    nickname: `Dan`,
-                    stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickHero,
-                                drawName: DrawNames.PickHero,
-                            },
-                        }
-                    ],
-                },
-            },
-            logData: [
-                {
-                    type: LogTypes.GAME,
-                    value: `Игрок 'Dan' должен выбрать нового героя.`,
-                },
-            ],
-        });
-    });
-});
+import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
 describe(`Test DiscardTradingCoinAction method`, () => {
     it(`should discard trading coin isOpened=true from board (multiplayer=false)`, () => {
         const G = {

@@ -38,7 +38,7 @@ const CheckAndStartUlineActionsOrContinue = (G, ctx) => {
         handCoins = player.handCoins;
     }
     const ulinePlayerIndex = Object.values(G.publicPlayers).findIndex((findPlayer) => CheckPlayerHasBuff(findPlayer, BuffNames.EveryTurn));
-    if (ulinePlayerIndex !== -1) {
+    if (!G.solo && ulinePlayerIndex !== -1) {
         if (ulinePlayerIndex === Number(ctx.currentPlayer)) {
             const boardCoin = player.boardCoins[G.currentTavern];
             if (boardCoin === undefined) {
@@ -149,7 +149,7 @@ export const EndPickCardsActions = (G, ctx) => {
                 }
             }
             if (startThrud) {
-                RemoveThrudFromPlayerBoardAfterGameEnd(G, ctx);
+                RemoveThrudFromPlayerBoardAfterGameEnd(G);
             }
         }
     }

@@ -25,6 +25,7 @@ export const BuildAdditionalCards = () => {
     }
     return cards;
 };
+// TODO Can OlwinDouble be discarded and if picked from discard which suit it has?
 /**
  * <h3>Создание фейковой карты 'Двойник Ольвюна'.</h3>
  * <p>Применения:</p>

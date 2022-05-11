@@ -1,45 +1,7 @@
 import type { Ctx } from "boardgame.io";
 import { ArtefactNames, BuffNames, DrawNames, LogTypes, Stages, SuitNames } from "../../typescript/enums";
 import type { CoinType, IBuffs, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardsType, PublicPlayerCoinTypes } from "../../typescript/interfaces";
-import { AddPickHeroAction, DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
-
-describe(`Test AddPickHeroAction method`, (): void => {
-    it(`should add pick hero action to stack`, (): void => {
-        const G = {
-            publicPlayers: {
-                0: {
-                    nickname: `Dan`,
-                    stack: [] as IStack[],
-                } as IPublicPlayer,
-            },
-            logData: [],
-        } as Pick<IMyGameState, `publicPlayers` | `logData`>;
-        AddPickHeroAction(G as IMyGameState, {
-            currentPlayer: `0`,
-        } as Ctx);
-        expect(G).toEqual({
-            publicPlayers: {
-                0: {
-                    nickname: `Dan`,
-                    stack: [
-                        {
-                            config: {
-                                stageName: Stages.PickHero,
-                                drawName: DrawNames.PickHero,
-                            },
-                        }
-                    ],
-                } as IPublicPlayer,
-            },
-            logData: [
-                {
-                    type: LogTypes.GAME,
-                    value: `Игрок 'Dan' должен выбрать нового героя.`,
-                },
-            ],
-        } as Pick<IMyGameState, `publicPlayers` | `logData`>);
-    });
-});
+import { DiscardTradingCoinAction, FinishOdroerirTheMythicCauldronAction, StartDiscardSuitCardAction, StartVidofnirVedrfolnirAction } from "../CampAutoActions";
 
 describe(`Test DiscardTradingCoinAction method`, (): void => {
     it(`should discard trading coin isOpened=true from board (multiplayer=false)`, (): void => {

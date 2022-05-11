@@ -423,7 +423,7 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                                 DrawCoin(data, playerCells, `coin`, publicBoardCoin, id, player, `border-2`, null, moveName, id, CoinTypes.Board);
                             }
                             else if (validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
-                                || validatorName === MoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator
+                                || validatorName === MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator
                                 || validatorName === MoveValidatorNames.UpgradeCoinVidofnirVedrfolnirMoveValidator) {
                                 moveMainArgs.push({
                                     coinId: id,
@@ -472,7 +472,7 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                                             else if (validatorName ===
                                                 MoveValidatorNames.ClickCoinToUpgradeMoveValidator
                                                 || validatorName ===
-                                                    MoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator) {
+                                                    MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator) {
                                                 moveMainArgs
                                                     .push({
                                                     coinId: id,
@@ -617,7 +617,7 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                     }
                     if (Number(ctx.currentPlayer) === p
                         && (ctx.phase === Phases.PlaceCoins || ctx.phase === Phases.PlaceCoinsUline
-                            || (stage === Stages.PlaceTradingCoinsUline) || (stage === Stages.AddCoinToPouch
+                            || (stage === Stages.PlaceTradingCoinsUline) || (!G.solo && stage === Stages.AddCoinToPouch
                             && CheckPlayerHasBuff(player, BuffNames.EveryTurn)))) {
                         if (data !== undefined) {
                             DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses, null, moveName, j);
@@ -629,7 +629,7 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                             moveMainArgs.push(j);
                         }
                     }
-                    else if (Number(ctx.currentPlayer) === p
+                    else if (!G.solo && Number(ctx.currentPlayer) === p
                         && CheckPlayerHasBuff(player, BuffNames.EveryTurn)
                         && (stage === Stages.UpgradeCoin || (stage === Stages.PickConcreteCoinToUpgrade
                             && ((_c = (_b = player.stack[0]) === null || _b === void 0 ? void 0 : _b.config) === null || _c === void 0 ? void 0 : _c.coinValue) === handCoin.value))) {
@@ -637,7 +637,7 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                             DrawCoin(data, playerCells, `coin`, handCoin, j, player, coinClasses, null, moveName, j, CoinTypes.Hand);
                         }
                         else if (validatorName === MoveValidatorNames.ClickCoinToUpgradeMoveValidator
-                            || validatorName === MoveValidatorNames.PickConcreteCoinToUpgradeMoveValidator) {
+                            || validatorName === MoveValidatorNames.ClickConcreteCoinToUpgradeMoveValidator) {
                             moveMainArgs.push({
                                 coinId: j,
                                 type: CoinTypes.Hand,
@@ -657,20 +657,27 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
                     }
                 }
                 else {
-                    if (data !== undefined) {
-                        // TODO Add Throw errors to all UI files
-                        if (!G.multiplayer && ((!G.solo && IsCoin(publicHandCoin) && !publicHandCoin.isOpened)
-                            || (G.solo && p === 1))) {
+                    // TODO Add Throw errors to all UI files
+                    if (!G.multiplayer && ((!G.solo && IsCoin(publicHandCoin) && !publicHandCoin.isOpened)
+                        || (G.solo && p === 1))) {
+                        if (data !== undefined) {
                             const handCoin = privateHandCoin !== null && privateHandCoin !== void 0 ? privateHandCoin : publicHandCoin;
                             if (!IsCoin(handCoin)) {
                                 throw new Error(`В массиве монет игрока в руке должна быть открыта для текущего игрока монета с id '${j}'.`);
                             }
                             DrawCoin(data, playerCells, `back`, handCoin, j, player);
                         }
-                        else if (G.multiplayer && privateHandCoin === undefined) {
+                        else if (validatorName === MoveValidatorNames.SoloBotPlaceAllCoinsMoveValidator) {
+                            moveMainArgs.push(j);
+                        }
+                    }
+                    else if (G.multiplayer && privateHandCoin === undefined) {
+                        if (data !== undefined) {
                             DrawCoin(data, playerCells, `back`, null, j, player);
                         }
-                        else {
+                    }
+                    else {
+                        if (data !== undefined) {
                             playerCells.push(_jsx("td", { className: "bg-yellow-300", children: _jsx("span", { className: "bg-coin bg-yellow-300 border-2" }) }, `${player.nickname} hand coin ${j} empty`));
                         }
                     }

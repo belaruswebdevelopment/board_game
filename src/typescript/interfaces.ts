@@ -18,7 +18,7 @@ export interface IObjectives {
 }
 
 export interface IDebugData {
-    readonly G: Record<string, unknown>;
+    readonly G: Partial<Record<keyof IMyGameState, unknown>>;
     readonly ctx: Record<string, unknown>;
 }
 
@@ -476,14 +476,15 @@ export interface IMoveCardPlayerCurrentId {
 }
 
 export interface IMoveCardIdPlayerIdArguments {
-    readonly playerId: number;
     readonly cards: number[];
+    readonly playerId: number;
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мувов.</h3>
  */
 export interface IMoveBy {
+    readonly chooseDifficultySoloMode: IMoveByChooseDifficultySoloModeOptions;
     readonly placeCoins: IMoveByPlaceCoinsOptions;
     readonly placeCoinsUline: IMoveByPlaceCoinsUlineOptions;
     readonly pickCards: IMoveByPickCardsOptions;
@@ -492,6 +493,11 @@ export interface IMoveBy {
     readonly getDistinctions: IMoveByGetDistinctionsOptions;
     readonly brisingamensEndGame: IMoveByBrisingamensEndGameOptions;
     readonly getMjollnirProfit: IMoveByGetMjollnirProfitOptions;
+}
+
+export interface IMoveByChooseDifficultySoloModeOptions {
+    readonly default1: IMoveValidator;
+    readonly chooseHeroesForSoloMode: IMoveValidator;
 }
 
 /**
@@ -510,13 +516,7 @@ export interface IMoveByPlaceCoinsUlineOptions {
     readonly default1: IMoveValidator;
 }
 
-/**
- * <h3>Интерфейс для возможных валидаторов у мува.</h3>
- */
-export interface IMoveByPickCardsOptions {
-    readonly default1: IMoveValidator;
-    readonly default2: IMoveValidator;
-    // start
+interface IMoveByCommonOptions {
     readonly addCoinToPouch: IMoveValidator;
     readonly discardBoardCard: IMoveValidator;
     readonly discardSuitCard: IMoveValidator;
@@ -528,7 +528,14 @@ export interface IMoveByPickCardsOptions {
     readonly placeThrudHero: IMoveValidator;
     readonly upgradeCoin: IMoveValidator;
     readonly upgradeVidofnirVedrfolnirCoin: IMoveValidator;
-    // end
+}
+
+/**
+ * <h3>Интерфейс для возможных валидаторов у мува.</h3>
+ */
+export interface IMoveByPickCardsOptions extends IMoveByCommonOptions {
+    readonly default1: IMoveValidator;
+    readonly default2: IMoveValidator;
     readonly discardCard: IMoveValidator;
     readonly placeTradingCoinsUline: IMoveValidator;
 }
@@ -536,64 +543,25 @@ export interface IMoveByPickCardsOptions {
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveByEnlistmentMercenariesOptions {
+export interface IMoveByEnlistmentMercenariesOptions extends IMoveByCommonOptions {
     readonly default1: IMoveValidator;
     readonly default2: IMoveValidator;
     readonly default3: IMoveValidator;
     readonly default4: IMoveValidator;
-    // start
-    readonly addCoinToPouch: IMoveValidator;
-    readonly discardBoardCard: IMoveValidator;
-    readonly discardSuitCard: IMoveValidator;
-    readonly pickCampCardHolda: IMoveValidator;
-    readonly pickConcreteCoinToUpgrade: IMoveValidator;
-    readonly pickDiscardCard: IMoveValidator;
-    readonly pickHero: IMoveValidator;
-    readonly placeOlwinCards: IMoveValidator;
-    readonly placeThrudHero: IMoveValidator;
-    readonly upgradeCoin: IMoveValidator;
-    readonly upgradeVidofnirVedrfolnirCoin: IMoveValidator;
-    // end
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveByEndTierOptions {
+export interface IMoveByEndTierOptions extends IMoveByCommonOptions {
     readonly default1: IMoveValidator;
-    // start
-    readonly addCoinToPouch: IMoveValidator;
-    readonly discardBoardCard: IMoveValidator;
-    readonly discardSuitCard: IMoveValidator;
-    readonly pickCampCardHolda: IMoveValidator;
-    readonly pickConcreteCoinToUpgrade: IMoveValidator;
-    readonly pickDiscardCard: IMoveValidator;
-    readonly pickHero: IMoveValidator;
-    readonly placeOlwinCards: IMoveValidator;
-    readonly placeThrudHero: IMoveValidator;
-    readonly upgradeCoin: IMoveValidator;
-    readonly upgradeVidofnirVedrfolnirCoin: IMoveValidator;
-    // end
 }
 
 /**
  * <h3>Интерфейс для возможных валидаторов у мува.</h3>
  */
-export interface IMoveByGetDistinctionsOptions {
+export interface IMoveByGetDistinctionsOptions extends IMoveByCommonOptions {
     readonly default1: IMoveValidator;
-    // start
-    readonly addCoinToPouch: IMoveValidator;
-    readonly discardBoardCard: IMoveValidator;
-    readonly discardSuitCard: IMoveValidator;
-    readonly pickCampCardHolda: IMoveValidator;
-    readonly pickConcreteCoinToUpgrade: IMoveValidator;
-    readonly pickDiscardCard: IMoveValidator;
-    readonly pickHero: IMoveValidator;
-    readonly placeOlwinCards: IMoveValidator;
-    readonly placeThrudHero: IMoveValidator;
-    readonly upgradeCoin: IMoveValidator;
-    readonly upgradeVidofnirVedrfolnirCoin: IMoveValidator;
-    // end
     readonly pickDistinctionCard: IMoveValidator;
 }
 
@@ -626,7 +594,6 @@ export interface IMoveValidator {
  * <h3>Интерфейс для объекта валидаторов мувов.</h3>
  */
 export interface IMoveValidators {
-    readonly BotsPlaceAllCoinsMoveValidator: IMoveValidator;
     readonly ClickBoardCoinMoveValidator: IMoveValidator;
     readonly ClickCampCardMoveValidator: IMoveValidator;
     readonly ClickCardMoveValidator: IMoveValidator;
@@ -643,6 +610,14 @@ export interface IMoveValidators {
     readonly PlaceEnlistmentMercenariesMoveValidator: IMoveValidator;
     readonly PlaceYludHeroMoveValidator: IMoveValidator;
     readonly StartEnlistmentMercenariesMoveValidator: IMoveValidator;
+    // Bots
+    readonly BotsPlaceAllCoinsMoveValidator: IMoveValidator;
+    // Solo Bot
+    readonly SoloBotPlaceAllCoinsMoveValidator: IMoveValidator;
+    readonly SoloBotClickHeroCardMoveValidator: IMoveValidator;
+    // Solo Mode
+    readonly ChooseDifficultyLevelForSoloModeMoveValidator: IMoveValidator;
+    readonly ChooseHeroesForSoloModeMoveValidator: IMoveValidator;
     // start
     readonly AddCoinToPouchMoveValidator: IMoveValidator;
     readonly ClickCampCardHoldaMoveValidator: IMoveValidator;
@@ -689,6 +664,7 @@ export interface IBuffs {
     readonly getMjollnirProfit?: true;
     readonly goCamp?: true;
     readonly goCampOneTime?: true;
+    readonly moveThrud?: true;
     readonly noHero?: true;
     readonly suitIdForMjollnir?: SuitTypes;
     readonly upgradeCoin?: true;
@@ -1001,6 +977,13 @@ export type ISoloGameHeroesForPlayerConfig = Pick<IHeroConfig, `Kraal` | `Tarah`
     | `Zoral` | `Aegur` | `Bonfur` | `Hourya` | `Idunn`>;
 
 // My Utilities types
+/**
+ * <h3>Тип для того, чтобы получить типы пары [ключ, значение] у Object.entries.</h3>
+ */
+export type ObjectEntries<T> = {
+    [K in keyof T]: [K, T[K]];
+}[keyof T][];
+
 /**
  * <h3>Тип для того, чтобы сделать некоторые поля объекта опциональными.</h3>
  */

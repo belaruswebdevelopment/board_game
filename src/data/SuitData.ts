@@ -13,7 +13,7 @@ import type { IPointsValues, ISuit, ISuitConfig } from "../typescript/interfaces
  */
 const blacksmith: ISuit = {
     suit: SuitNames.BLACKSMITH,
-    suitName: RusSuitNames.BLACKSMITH,
+    suitName: RusSuitNames.blacksmith,
     suitColor: `bg-purple-600`,
     description: `Их показатель храбрости определяется математической последовательностью (+3, +4, +5, +6, …).`,
     pointsValues: (): IPointsValues => ({
@@ -50,7 +50,7 @@ const blacksmith: ISuit = {
  */
 const explorer: ISuit = {
     suit: SuitNames.EXPLORER,
-    suitName: RusSuitNames.EXPLORER,
+    suitName: RusSuitNames.explorer,
     suitColor: `bg-blue-500`,
     description: `Их показатель храбрости равен сумме очков храбрости разведчиков в армии игрока.`,
     pointsValues: (): IPointsValues => ({
@@ -87,7 +87,7 @@ const explorer: ISuit = {
  */
 const hunter: ISuit = {
     suit: SuitNames.HUNTER,
-    suitName: RusSuitNames.HUNTER,
+    suitName: RusSuitNames.hunter,
     suitColor: `bg-green-600`,
     description: `Их показатель храбрости равен квадрату числа карт охотников в армии игрока.`,
     pointsValues: (): IPointsValues => ({
@@ -124,7 +124,7 @@ const hunter: ISuit = {
  */
 const miner: ISuit = {
     suit: SuitNames.MINER,
-    suitName: RusSuitNames.MINER,
+    suitName: RusSuitNames.miner,
     suitColor: `bg-yellow-600`,
     description: `Их показатель храбрости равен произведению суммы очков храбрости на сумму шевронов горняков в армии игрока.`,
     pointsValues: (): IPointsValues => ({
@@ -161,7 +161,7 @@ const miner: ISuit = {
  */
 const warrior: ISuit = {
     suit: SuitNames.WARRIOR,
-    suitName: RusSuitNames.WARRIOR,
+    suitName: RusSuitNames.warrior,
     suitColor: `bg-red-600`,
     description: `Их показатель храбрости равен сумме очков храбрости всех воинов в армии игрока. Однако игрок, который обладает наибольшим количеством шевронов воинов, добавляет к показателю храбрости номинал своей самой ценной монеты. В случае равного количества шевронов у нескольких игроков все эти игроки прибавляют номинал своей самой ценной монеты к показателю храбрости своих воинов.`,
     pointsValues: (): IPointsValues => ({

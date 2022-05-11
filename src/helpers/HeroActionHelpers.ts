@@ -1,7 +1,8 @@
 import type { Ctx } from "boardgame.io";
 import { StackData } from "../data/StackData";
-import { HeroNames } from "../typescript/enums";
+import { BuffNames, HeroNames } from "../typescript/enums";
 import type { IMyGameState, IPublicPlayer, PlayerCardsType } from "../typescript/interfaces";
+import { CheckPlayerHasBuff } from "./BuffHelpers";
 import { AddActionsToStackAfterCurrent } from "./StackHelpers";
 
 /**
@@ -22,17 +23,19 @@ export const CheckAndMoveThrud = (G: IMyGameState, ctx: Ctx, card: PlayerCardsTy
         if (player === undefined) {
             throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
         }
-        const index: number = player.cards[card.suit].findIndex((card: PlayerCardsType): boolean =>
-            card.name === HeroNames.Thrud);
-        if (index !== -1) {
-            const thrudCard: PlayerCardsType | undefined = player.cards[card.suit][index];
-            if (thrudCard === undefined) {
-                throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' во фракции '${card.suit}' с id '${index}' отсутствует карта героя '${HeroNames.Thrud}' для перемещения на новое место.`);
+        if (CheckPlayerHasBuff(player, BuffNames.MoveThrud)) {
+            const index: number = player.cards[card.suit].findIndex((card: PlayerCardsType): boolean =>
+                card.name === HeroNames.Thrud);
+            if (index !== -1) {
+                const thrudCard: PlayerCardsType | undefined = player.cards[card.suit][index];
+                if (thrudCard === undefined) {
+                    throw new Error(`В массиве карт игрока с id '${ctx.currentPlayer}' во фракции '${card.suit}' с id '${index}' отсутствует карта героя '${HeroNames.Thrud}' для перемещения на новое место.`);
+                }
+                player.pickedCard = thrudCard;
+                player.cards[card.suit].splice(index, 1);
             }
-            player.pickedCard = thrudCard;
-            player.cards[card.suit].splice(index, 1);
+            return index !== -1;
         }
-        return index !== -1;
     }
     return false;
 };

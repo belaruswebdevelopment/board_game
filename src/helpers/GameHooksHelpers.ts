@@ -50,7 +50,7 @@ export const CheckAndStartPlaceCoinsUlineOrPickCardsPhase = (G: IMyGameState): I
     const ulinePlayerIndex: number =
         Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
             CheckPlayerHasBuff(player, BuffNames.EveryTurn));
-    if (ulinePlayerIndex !== -1) {
+    if (!G.solo && ulinePlayerIndex !== -1) {
         return {
             next: Phases.PlaceCoinsUline,
         };
@@ -221,13 +221,15 @@ export const EndTurnActions = (G: IMyGameState, ctx: Ctx): boolean | void => {
  * </ol>
  *
  * @param G
- * @param ctx
  */
-export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx): void => {
-    for (let i = 0; i < ctx.numPlayers; i++) {
-        const player: IPublicPlayer | undefined = G.publicPlayers[i];
+export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState): void => {
+    const thrudPlayerIndex: number =
+        Object.values(G.publicPlayers).findIndex((player: IPublicPlayer): boolean =>
+            CheckPlayerHasBuff(player, BuffNames.MoveThrud));
+    if (thrudPlayerIndex !== -1) {
+        const player: IPublicPlayer | undefined = G.publicPlayers[thrudPlayerIndex];
         if (player === undefined) {
-            throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
+            throw new Error(`В массиве игроков отсутствует игрок с id '${thrudPlayerIndex}'.`);
         }
         const playerCards: PlayerCardsType[] = Object.values(player.cards).flat(),
             thrud: PlayerCardsType | undefined =
@@ -237,7 +239,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx
                 player.cards[thrud.suit].findIndex((card: PlayerCardsType): boolean =>
                     card.name === HeroNames.Thrud);
             if (thrudIndex === -1) {
-                throw new Error(`У игрока с id '${i}' отсутствует обязательная карта героя '${HeroNames.Thrud}'.`);
+                throw new Error(`У игрока с id '${thrudPlayerIndex}' отсутствует обязательная карта героя '${HeroNames.Thrud}'.`);
             }
             player.cards[thrud.suit].splice(thrudIndex, 1);
             AddDataToLog(G, LogTypes.GAME, `Герой '${HeroNames.Thrud}' игрока '${player.nickname}' уходит с игрового поля.`);
@@ -258,7 +260,7 @@ export const RemoveThrudFromPlayerBoardAfterGameEnd = (G: IMyGameState, ctx: Ctx
 export const StartOrEndActions = (G: IMyGameState, ctx: Ctx): void => {
     const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
     }
     if (player.actionsNum) {
         player.actionsNum--;

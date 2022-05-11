@@ -1,5 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { IsCoin } from "../Coin";
+import { AddHeroCardToPlayerHeroCards } from "../helpers/HeroCardHelpers";
 import { IsValidMove } from "../MoveValidator";
 import { Stages } from "../typescript/enums";
 // TODO Add all solo bot moves!
@@ -15,8 +16,7 @@ import { Stages } from "../typescript/enums";
  * @returns
  */
 export const SoloBotPlaceAllCoinsMove = (G, ctx) => {
-    // TODO Change `Stages.Default3` + Add Validation logic
-    const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default3);
+    const isValidMove = ctx.playerID === `1` && ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.Default4);
     if (!isValidMove) {
         return INVALID_MOVE;
     }
@@ -36,5 +36,28 @@ export const SoloBotPlaceAllCoinsMove = (G, ctx) => {
         privatePlayer.boardCoins[i] = handCoin;
         handCoins[i] = null;
     }
+};
+/**
+ * <h3>Выбор героя соло ботом.</h3>
+ * <p>Применения:</p>
+ * <ol>
+ * <li>При необходимости выбора героя соло ботом.</li>
+ * </ol>
+ *
+ * @param G
+ * @param ctx
+ * @param heroId Id героя.
+ * @returns
+ */
+export const SoloBotClickHeroCardMove = (G, ctx, heroId) => {
+    const isValidMove = ctx.playerID === ctx.currentPlayer && IsValidMove(G, ctx, Stages.PickHeroSoloBot, heroId);
+    if (!isValidMove) {
+        return INVALID_MOVE;
+    }
+    const hero = G.heroesForSoloBot[heroId];
+    if (hero === undefined) {
+        throw new Error(`Не существует кликнутая карта героя с id '${heroId}'.`);
+    }
+    AddHeroCardToPlayerHeroCards(G, ctx, hero);
 };
 //# sourceMappingURL=SoloBotMoves.js.map

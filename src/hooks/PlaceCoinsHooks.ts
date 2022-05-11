@@ -27,7 +27,7 @@ export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): INext | void
             isEveryPlayersHandCoinsEmpty =
                 Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer =>
                     player).every((player: IPublicPlayer, index: number): boolean => {
-                        if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                        if (!G.solo && !CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                             const privatePlayer: IPlayer | undefined = G.players[index];
                             if (privatePlayer === undefined) {
                                 throw new Error(`В массиве приватных игроков отсутствует текущий игрок с id '${index}'.`);
@@ -41,7 +41,7 @@ export const CheckEndPlaceCoinsPhase = (G: IMyGameState, ctx: Ctx): INext | void
                 Object.values(G.publicPlayers).map((player: IPublicPlayer): IPublicPlayer =>
                     player)
                     .every((player: IPublicPlayer, playerIndex: number): boolean => {
-                        if (!CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
+                        if (!G.solo && !CheckPlayerHasBuff(player, BuffNames.EveryTurn)) {
                             return player.handCoins.every((coin: PublicPlayerCoinTypes, coinIndex: number):
                                 boolean => {
                                 if (coin !== null && !IsCoin(coin)) {

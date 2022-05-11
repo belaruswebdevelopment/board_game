@@ -52,6 +52,17 @@ export const StackData = {
             drawName: DrawNames.EnlistmentMercenaries,
         },
     }),
+    getDifficultyLevelForSoloMode: () => ({
+        config: {
+            drawName: DrawNames.EnlistmentMercenaries,
+        },
+    }),
+    getHeroesForSoloMode: () => ({
+        config: {
+            stageName: Stages.ChooseHeroesForSoloMode,
+            drawName: DrawNames.GetHeroesForSoloMode,
+        },
+    }),
     getDistinctions: () => ({
         config: {
             drawName: DrawNames.GetMjollnirProfit,
@@ -211,6 +222,12 @@ export const StackData = {
         config: {
             stageName: Stages.PickHero,
             drawName: DrawNames.PickHero,
+        },
+    }),
+    pickHeroSoloBot: () => ({
+        config: {
+            stageName: Stages.PickHeroSoloBot,
+            drawName: DrawNames.PickHeroSoloBot,
         },
     }),
     placeEnlistmentMercenaries: () => ({

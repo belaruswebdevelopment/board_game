@@ -27,7 +27,12 @@ export const enumerate = (G, ctx) => {
         let activeStageOfCurrentPlayer = currentStage !== undefined ? currentStage : `default`;
         if (activeStageOfCurrentPlayer === `default`) {
             if (ctx.phase === Phases.PlaceCoins) {
-                activeStageOfCurrentPlayer = Stages.Default3;
+                if (!G.solo || (G.solo && ctx.currentPlayer === `0`)) {
+                    activeStageOfCurrentPlayer = Stages.Default3;
+                }
+                else if (G.solo && ctx.currentPlayer === `1`) {
+                    activeStageOfCurrentPlayer = Stages.Default4;
+                }
             }
             else if (ctx.phase === Phases.PlaceCoinsUline) {
                 // TODO Add BotPlaceCoinUline and others moves only for bots?!

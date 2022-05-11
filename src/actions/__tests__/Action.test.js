@@ -1,5 +1,5 @@
 import { suitsConfig } from "../../data/SuitData";
-import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, Stages, SuitNames, TavernNames } from "../../typescript/enums";
+import { ArtefactNames, BuffNames, DrawNames, GameNames, HeroNames, LogTypes, Phases, RusCardTypes, RusSuitNames, Stages, SuitNames, TavernNames } from "../../typescript/enums";
 import { DiscardAnyCardFromPlayerBoardAction, DiscardCardFromTavernAction, GetEnlistmentMercenariesAction, GetMjollnirProfitAction, PassEnlistmentMercenariesAction, PickDiscardCardAction, PlaceEnlistmentMercenariesAction } from "../Actions";
 describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
     it(`should remove non-hero discarded card from player's cards to cards discard`, () => {
@@ -11,6 +11,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
                         warrior: [
                             {
                                 name: `Test`,
+                                suit: SuitNames.WARRIOR,
                             },
                         ],
                     },
@@ -40,6 +41,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             discardCardsDeck: [
                 {
                     name: `Test`,
+                    suit: SuitNames.WARRIOR,
                 },
             ],
             logData: [
@@ -200,7 +202,7 @@ describe(`Test DiscardAnyCardFromPlayerBoardAction method`, () => {
             DiscardAnyCardFromPlayerBoardAction(G, {
                 currentPlayer: `0`,
             }, SuitNames.WARRIOR, 0);
-        }).toThrowError(`В массиве карт игрока с id '0' отсутствует выбранная карта с id '0': это должно проверяться в MoveValidator.`);
+        }).toThrowError(`В массиве карт игрока с id '0' отсутствует выбранная карта во фракции '${RusSuitNames['warrior']}' с id '0': это должно проверяться в MoveValidator.`);
     });
 });
 describe(`Test DiscardCardFromTavernAction method`, () => {
@@ -216,6 +218,7 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
                 [
                     {
                         name: `Test`,
+                        suit: SuitNames.WARRIOR,
                     },
                 ],
             ],
@@ -239,6 +242,7 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
             discardCardsDeck: [
                 {
                     name: `Test`,
+                    suit: SuitNames.WARRIOR,
                 },
             ],
             tavernCardDiscarded2Players: true,
@@ -246,6 +250,10 @@ describe(`Test DiscardCardFromTavernAction method`, () => {
                 {
                     type: LogTypes.GAME,
                     value: `Игрок 'Dan' отправил в колоду сброса карту из таверны:`,
+                },
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.`,
                 },
                 {
                     type: LogTypes.GAME,
@@ -581,20 +589,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                     ],
                 },
             },
-            discardCardsDeck: [
-                {
-                    stack: [
-                        {
-                            config: {
-                                stageName: Stages.UpgradeCoin,
-                                value: 5,
-                                drawName: DrawNames.UpgradeCoin,
-                            },
-                        }
-                    ],
-                    name: `Test`,
-                },
-            ],
+            discardCardsDeck: [],
             logData: [
                 {
                     type: LogTypes.PUBLIC,
