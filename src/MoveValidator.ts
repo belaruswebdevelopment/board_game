@@ -8,7 +8,7 @@ import { HasLowestPriority } from "./helpers/PriorityHelpers";
 import { IsCanPickHeroWithConditionsValidator, IsCanPickHeroWithDiscardCardsFromPlayerBoardValidator } from "./move_validators/IsCanPickCurrentHeroValidator";
 import { TotalRank } from "./score_helpers/ScoreHelpers";
 import { CoinTypes, MoveNames, MoveValidatorNames, Phases, PickCardValidatorNames, Stages, SuitNames } from "./typescript/enums";
-import type { CampDeckCardTypes, DeckCardTypes, IBuffs, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPlayer, IPublicPlayer, IValidatorsConfig, MoveValidatorGetRangeTypes, PlayerCardsType, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, DeckCardTypes, IBuffs, IdavollDeckCardTypes, IHeroCard, IMoveArgumentsStage, IMoveBy, IMoveByBrisingamensEndGameOptions, IMoveByChooseDifficultySoloModeOptions, IMoveByEndTierOptions, IMoveByEnlistmentMercenariesOptions, IMoveByGetDistinctionsOptions, IMoveByGetMjollnirProfitOptions, IMoveByPickCardsOptions, IMoveByPlaceCoinsOptions, IMoveByPlaceCoinsUlineOptions, IMoveCardIdPlayerIdArguments, IMoveCardPlayerCurrentId, IMoveCoinsArguments, IMoveSuitCardCurrentId, IMoveValidator, IMoveValidators, IMyGameState, IPlayer, IPublicPlayer, IValidatorsConfig, MoveValidatorGetRangeTypes, PlayerCardsType, PublicPlayerCoinTypes, SuitPropertyTypes, SuitTypes, TavernCardTypes, ValidMoveIdParamTypes } from "./typescript/interfaces";
 import { DrawCamp, DrawDiscardedCards, DrawDistinctions, DrawHeroes, DrawHeroesForSoloBotUI, DrawTaverns } from "./ui/GameBoardUI";
 import { DrawPlayersBoards, DrawPlayersBoardsCoins, DrawPlayersHandsCoins } from "./ui/PlayerUI";
 import { DrawDifficultyLevelForSoloModeUI, DrawHeroesForSoloModeUI, ExplorerDistinctionProfit } from "./ui/ProfitUI";
@@ -254,7 +254,7 @@ export const moveValidators: IMoveValidators = {
         getValue: (G: IMyGameState, ctx: Ctx, currentMoveArguments: MoveValidatorGetRangeTypes):
             ValidMoveIdParamTypes => {
             const moveArguments: IMoveArgumentsStage<number[]>[`args`] = currentMoveArguments as number[],
-                uniqueArr: DeckCardTypes[] = [],
+                uniqueArr: (DeckCardTypes | IdavollDeckCardTypes)[] = [],
                 currentTavern: TavernCardTypes[] | undefined = G.taverns[G.currentTavern];
             if (currentTavern === undefined) {
                 throw new Error(`В массиве таверн отсутствует текущая таверна с id '${G.currentTavern}'.`);
@@ -287,7 +287,7 @@ export const moveValidators: IMoveValidators = {
                 }
                 const uniqueArrLength: number = uniqueArr.length;
                 for (let j = 0; j < uniqueArrLength; j++) {
-                    const uniqueCard: DeckCardTypes | undefined = uniqueArr[j];
+                    const uniqueCard: DeckCardTypes | IdavollDeckCardTypes | undefined = uniqueArr[j];
                     if (uniqueCard === undefined) {
                         throw new Error(`В массиве уникальных карт отсутствует карта с id '${j}'.`);
                     }

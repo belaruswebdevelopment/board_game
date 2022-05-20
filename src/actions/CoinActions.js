@@ -106,8 +106,9 @@ export const UpgradeCoinAction = (G, ctx, isTrading, value, upgradingCoinId, typ
         if (!upgradedCoin.isOpened && !(G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) {
             ChangeIsOpenedCoinStatus(upgradedCoin, true);
         }
-        if (!G.solo && (type === CoinTypes.Hand
-            || (CheckPlayerHasBuff(player, BuffNames.EveryTurn) && type === CoinTypes.Board && isTrading))) {
+        if (((!G.solo || (G.solo && ctx.currentPlayer === `1` && upgradingCoin.value === 2)) && type === CoinTypes.Hand)
+            || (!G.solo && CheckPlayerHasBuff(player, BuffNames.EveryTurn) && type === CoinTypes.Board
+                && isTrading)) {
             if (isTrading) {
                 const handCoinId = player.handCoins.indexOf(null);
                 if (G.multiplayer) {

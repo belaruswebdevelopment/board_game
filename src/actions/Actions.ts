@@ -154,8 +154,8 @@ export const PickDiscardCardAction = (G: IMyGameState, ctx: Ctx, cardId: number)
     if (player.actionsNum === 2) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.pickDiscardCardBrisingamens()]);
     }
-    PickCardOrActionCardActions(G, ctx, card);
     AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' взял карту '${card.name}' из колоды сброса.`);
+    PickCardOrActionCardActions(G, ctx, card);
 };
 
 /**
@@ -189,15 +189,15 @@ export const PlaceEnlistmentMercenariesAction = (G: IMyGameState, ctx: Ctx, suit
         tier: pickedCard.tier,
         path: pickedCard.path,
         variants: pickedCard.variants,
-    });
-    const isAdded: boolean = AddCardToPlayer(G, ctx, mercenaryCard);
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника '${mercenaryCard.name}'.`);
-    const cardIndex: number =
-        player.campCards.findIndex((card: CampDeckCardTypes): boolean => card.name === pickedCard.name);
+    }),
+        isAdded: boolean = AddCardToPlayer(G, ctx, mercenaryCard),
+        cardIndex: number =
+            player.campCards.findIndex((card: CampDeckCardTypes): boolean => card.name === pickedCard.name);
     if (cardIndex === -1) {
         throw new Error(`У игрока с id '${ctx.currentPlayer}' в массиве карт лагеря отсутствует выбранная карта.`);
     }
     player.campCards.splice(cardIndex, 1);
+    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' во время фазы '${Phases.EnlistmentMercenaries}' завербовал наёмника '${mercenaryCard.name}'.`);
     if (isAdded) {
         CheckAndMoveThrudAction(G, ctx, mercenaryCard);
     }

@@ -155,6 +155,7 @@ export const CreateCard = ({
 export const IsActionCard = (card: unknown): card is IActionCard =>
     card !== null && (card as IActionCard).value !== undefined;
 
+// TODO Rework it not only suit checked
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
  * <p>Применения:</p>

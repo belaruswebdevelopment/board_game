@@ -55,6 +55,7 @@ export const GetClosedCoinIntoPlayerHandAction = (G: IMyGameState, ctx: Ctx): vo
     }
 };
 
+// TODO Add code for Thrud Grid action!
 // TODO Refactor and add throw errors
 /**
  * <h3>Действия, связанные с улучшением минимальной монеты игрока.</h3>

@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { IsArtefactCard, IsMercenaryCampCard, IsMercenaryPlayerCard } from "../Camp";
-import { IsActionCard } from "../Card";
+import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { IsCoin } from "../Coin";
 import { Styles } from "../data/StyleData";
 import { suitsConfig } from "../data/SuitData";
@@ -122,7 +122,10 @@ export const DrawCard = (data, playerCells, card, id, player, suit, moveName, ..
     }
     else {
         if (!IsActionCard(card)) {
-            styles = Styles.Cards(card.suit, card.name, card.points);
+            // TODO Fix for Idavoll
+            if (IsCardNotActionAndNotNull(card)) {
+                styles = Styles.Cards(card.suit, card.name, card.points);
+            }
         }
         else {
             styles = Styles.Cards(null, card.name, null);

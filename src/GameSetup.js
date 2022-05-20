@@ -23,13 +23,20 @@ import { GameNames } from "./typescript/enums";
  * @returns Данные игры.
  */
 export const SetupGame = (ctx) => {
-    const suitsNum = 5, tierToEnd = 2, campNum = 5, soloGameDifficultyLevel = null, explorerDistinctionCardId = null, multiplayer = false, solo = ctx.numPlayers === 1, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = ``, expansions = {
+    const suitsNum = 5, tierToEnd = 2, campNum = 5, round = 0, soloGameDifficultyLevel = null, explorerDistinctionCardId = null, multiplayer = false, solo = ctx.numPlayers === 1, odroerirTheMythicCauldron = false, log = true, debug = false, tavernCardDiscarded2Players = false, drawProfit = ``, expansions = {
         thingvellir: {
             active: solo ? false : true,
+        },
+        // TODO Fix me to "true" after expansion finished
+        idavoll: {
+            active: solo ? false : false,
         },
     }, totalScore = [], logData = [], odroerirTheMythicCauldronCoins = [], additionalCardsDeck = BuildAdditionalCards(), discardCardsDeck = [], explorerDistinctionCards = [], distinctions = {}, secret = {
         campDecks: [],
         decks: [],
+        // TODO Add Idavoll deck length info on main page?
+        // TODO Idavoll
+        idavollDecks: [],
     };
     if (solo && multiplayer) {
         throw new Error(`Не может быть одновременно режим мультиплеера и соло игры.`);
@@ -81,18 +88,22 @@ export const SetupGame = (ctx) => {
             heroesConfigOptions.push(expansion);
         }
     }
-    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel] = BuildHeroes(heroesConfigOptions, solo), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = (solo || ctx.numPlayers === 2) ? 3 : ctx.numPlayers;
+    const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel] = BuildHeroes(heroesConfigOptions, solo), taverns = [], tavernsNum = 3, currentTavern = -1, drawSize = (solo || ctx.numPlayers === 2) ? 3 : ctx.numPlayers, deck0 = secret.decks[0];
+    if (deck0 === undefined) {
+        throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
+    }
     for (let i = 0; i < tavernsNum; i++) {
-        const deck0 = secret.decks[0];
-        if (deck0 === undefined) {
-            throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
+        if (expansions.idavoll.active && i === 1) {
+            secret.idavollDecks = ctx.random.Shuffle(secret.idavollDecks);
+            taverns[1] = secret.idavollDecks.splice(0, drawSize);
         }
-        taverns[i] = deck0.splice(0, drawSize);
+        else {
+            taverns[i] = deck0.splice(0, drawSize);
+        }
         deckLength[0] = deck0.length;
     }
     const players = {}, publicPlayers = {}, publicPlayersOrder = [], exchangeOrder = [], priorities = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
     for (let i = 0; i < ctx.numPlayers + Number(solo); i++) {
-        // TODO Bot don't have priority or `1` priority enough (by rules bot must have all `1`, `2`, `3` priorities for random pick cards - it can be done by simple random from `1`, `2`, `3` numbers)?
         const randomPriorityIndex = solo ? i : Math.floor(Math.random() * priorities.length), priority = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
             throw new Error(`Отсутствует приоритет ${i}.`);
@@ -165,6 +176,7 @@ export const SetupGame = (ctx) => {
         logData,
         marketCoins,
         marketCoinsUnique,
+        round,
         suitsNum,
         taverns,
         tavernsNum,

@@ -20,6 +20,7 @@ import { ClickCardMove, ClickCardToPickDistinctionMove, ClickDistinctionCardMove
 import { SoloBotClickHeroCardMove, SoloBotPlaceAllCoinsMove } from "./moves/SoloBotMoves";
 import { Phases } from "./typescript/enums";
 // TODO Check all coins for solo (player===public, bot=private+sometimes public)
+// TODO Add Log data fo Solo Bot fo all files!
 // TODO Add logging
 // TODO Add dock block
 // TODO Add all logs errors and other text in ENUMS!
@@ -312,6 +313,12 @@ export const BoardGame = {
                         },
                     },
                     // End
+                    // Solo Mode
+                    pickHeroSoloBot: {
+                        moves: {
+                            SoloBotClickHeroCardMove,
+                        },
+                    },
                 },
                 onBegin: (G, ctx) => OnEndTierTurnBegin(G, ctx),
                 onMove: (G, ctx) => OnEndTierMove(G, ctx),
@@ -384,6 +391,12 @@ export const BoardGame = {
                     pickDistinctionCard: {
                         moves: {
                             ClickCardToPickDistinctionMove,
+                        },
+                    },
+                    // Solo Mode
+                    pickHeroSoloBot: {
+                        moves: {
+                            SoloBotClickHeroCardMove,
                         },
                     },
                 },

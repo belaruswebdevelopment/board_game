@@ -243,7 +243,7 @@ export const objectives = (): IObjectives => ({
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i = 0; i < ctx.numPlayers; i++) {
+            for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
                 const player: IPublicPlayer | undefined = G.publicPlayers[i];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
@@ -283,7 +283,7 @@ export const objectives = (): IObjectives => ({
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i = 0; i < ctx.numPlayers; i++) {
+            for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
                 const player: IPublicPlayer | undefined = G.publicPlayers[i];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
@@ -323,7 +323,7 @@ export const objectives = (): IObjectives => ({
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i: number = 0; i < ctx.numPlayers; i++) {
+            for (let i: number = 0; i < ctx.numPlayers + Number(G.solo); i++) {
                 const player: IPublicPlayer | undefined = G.publicPlayers[i];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
@@ -364,7 +364,7 @@ export const objectives = (): IObjectives => ({
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i = 0; i < ctx.numPlayers; i++) {
+            for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
                 const player: IPublicPlayer | undefined = G.publicPlayers[i];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
@@ -407,7 +407,7 @@ export const objectives = (): IObjectives => ({
                 return false;
             }
             const totalScore: number[] = [];
-            for (let i = 0; i < ctx.numPlayers; i++) {
+            for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
                 const player: IPublicPlayer | undefined = G.publicPlayers[i];
                 if (player === undefined) {
                     throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);

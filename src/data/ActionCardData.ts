@@ -12,6 +12,10 @@ const upgradeCoinUpTo3: IActionCardConfig = {
     value: 3,
     stack: [StackData.upgradeCoin(3)],
     amount: (): IActionCardValues => ({
+        1: {
+            0: 1,
+            1: 0,
+        },
         2: {
             0: 1,
             1: 0,
@@ -42,6 +46,10 @@ const upgradeCoinUpTo5: IActionCardConfig = {
     value: 5,
     stack: [StackData.upgradeCoin(5)],
     amount: (): IActionCardValues => ({
+        1: {
+            0: 0,
+            1: 2,
+        },
         2: {
             0: 0,
             1: 2,

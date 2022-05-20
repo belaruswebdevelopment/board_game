@@ -174,7 +174,9 @@ export const EndPickCardsActions = (G: IMyGameState, ctx: Ctx): void => {
         G.tavernCardDiscarded2Players = false;
     }
     G.publicPlayersOrder = [];
-    ChangePlayersPriorities(G);
+    if (!G.solo) {
+        ChangePlayersPriorities(G);
+    }
 };
 
 /**

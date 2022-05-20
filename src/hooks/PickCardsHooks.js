@@ -160,7 +160,9 @@ export const EndPickCardsActions = (G, ctx) => {
         G.tavernCardDiscarded2Players = false;
     }
     G.publicPlayersOrder = [];
-    ChangePlayersPriorities(G);
+    if (!G.solo) {
+        ChangePlayersPriorities(G);
+    }
 };
 /**
  * <h3>Действия при завершении мува в фазе 'pickCards'.</h3>

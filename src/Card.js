@@ -135,6 +135,7 @@ export const CreateCard = ({ type = RusCardTypes.BASIC, suit, rank = 1, points, 
  * @returns Является ли объект картой обмена монеты.
  */
 export const IsActionCard = (card) => card !== null && card.value !== undefined;
+// TODO Rework it not only suit checked
 /**
  * <h3>Проверка, является ли объект картой дворфа или картой обмена монеты.</h3>
  * <p>Применения:</p>

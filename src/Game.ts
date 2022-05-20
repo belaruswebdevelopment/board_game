@@ -23,6 +23,7 @@ import { Phases } from "./typescript/enums";
 import type { IMyGameState, INext, IOrder } from "./typescript/interfaces";
 
 // TODO Check all coins for solo (player===public, bot=private+sometimes public)
+// TODO Add Log data fo Solo Bot fo all files!
 // TODO Add logging
 // TODO Add dock block
 // TODO Add all logs errors and other text in ENUMS!
@@ -316,6 +317,12 @@ export const BoardGame: Game<IMyGameState> = {
                         },
                     },
                     // End
+                    // Solo Mode
+                    pickHeroSoloBot: {
+                        moves: {
+                            SoloBotClickHeroCardMove,
+                        },
+                    },
                 },
                 onBegin: (G: IMyGameState, ctx: Ctx): void => OnEndTierTurnBegin(G, ctx),
                 onMove: (G: IMyGameState, ctx: Ctx): void => OnEndTierMove(G, ctx),
@@ -388,6 +395,12 @@ export const BoardGame: Game<IMyGameState> = {
                     pickDistinctionCard: {
                         moves: {
                             ClickCardToPickDistinctionMove,
+                        },
+                    },
+                    // Solo Mode
+                    pickHeroSoloBot: {
+                        moves: {
+                            SoloBotClickHeroCardMove,
                         },
                     },
                 },

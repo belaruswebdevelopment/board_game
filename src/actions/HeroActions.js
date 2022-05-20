@@ -80,6 +80,7 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
  * <p>Применения:</p>
  * <ol>
  * <li>При добавлении героя Труд на игровое поле игрока.</li>
+ * <li>При добавлении героя Труд на игровое поле соло бота.</li>
  * </ol>
  *
  * @param G
@@ -89,15 +90,15 @@ export const PlaceOlwinCardsAction = (G, ctx, suit) => {
 export const PlaceThrudAction = (G, ctx, suit) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+        throw new Error(`В массиве стека действий ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
     const playerVariants = stack.variants;
     if (playerVariants === undefined) {
-        throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Thrud}'.`);
+        throw new Error(`У конфига действия ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Thrud}'.`);
     }
     const heroCard = CreateHero({
         suit,
@@ -108,7 +109,7 @@ export const PlaceThrudAction = (G, ctx, suit) => {
         game: GameNames.Basic,
         description: heroesConfig.Thrud.description,
     });
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' добавил карту '${HeroNames.Thrud}' во фракцию '${suitsConfig[suit].suitName}'.`);
+    AddDataToLog(G, LogTypes.GAME, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} добавил карту '${HeroNames.Thrud}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddHeroCardToPlayerCards(G, ctx, heroCard);
 };
 /**
@@ -116,6 +117,7 @@ export const PlaceThrudAction = (G, ctx, suit) => {
  * <p>Применения:</p>
  * <ol>
  * <li>При добавлении героя Илуд на игровом поле игрока.</li>
+ * <li>При добавлении героя Илуд на игровом поле соло бота.</li>
  * </ol>
  *
  * @param G
@@ -125,15 +127,15 @@ export const PlaceThrudAction = (G, ctx, suit) => {
 export const PlaceYludAction = (G, ctx, suit) => {
     const player = G.publicPlayers[Number(ctx.currentPlayer)];
     if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
+        throw new Error(`В массиве игроков отсутствует ${G.solo && ctx.currentPlayer === `1` ? `соло бот` : `текущий игрок`} с id '${ctx.currentPlayer}'.`);
     }
     const stack = player.stack[0];
     if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
+        throw new Error(`В массиве стека действий ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
     }
     const playerVariants = stack.variants;
     if (playerVariants === undefined) {
-        throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Ylud}'.`);
+        throw new Error(`У конфига действия ${G.solo && ctx.currentPlayer === `1` ? `соло бота` : `текущего игрока`} с id '${ctx.currentPlayer}' отсутствует обязательный параметр вариантов выкладки карты '${HeroNames.Ylud}'.`);
     }
     const heroCard = CreateHero({
         suit,
@@ -144,7 +146,7 @@ export const PlaceYludAction = (G, ctx, suit) => {
         game: GameNames.Basic,
         description: heroesConfig.Ylud.description,
     });
-    AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' добавил карту '${HeroNames.Ylud}' во фракцию '${suitsConfig[suit].suitName}'.`);
+    AddDataToLog(G, LogTypes.GAME, `${G.solo && ctx.currentPlayer === `1` ? `Соло бот` : `Текущий игрок`} '${player.nickname}' добавил карту '${HeroNames.Ylud}' во фракцию '${suitsConfig[suit].suitName}'.`);
     AddHeroCardToPlayerCards(G, ctx, heroCard);
     CheckAndMoveThrudAction(G, ctx, heroCard);
     if (G.tierToEnd === 0) {

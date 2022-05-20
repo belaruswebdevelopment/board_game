@@ -110,6 +110,7 @@ export var DrawNames;
 export var GameNames;
 (function (GameNames) {
     GameNames["Basic"] = "basic";
+    GameNames["Idavoll"] = "idavoll";
     GameNames["Thingvellir"] = "thingvellir";
 })(GameNames || (GameNames = {}));
 /**

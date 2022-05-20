@@ -42,6 +42,10 @@ export const GeneratePrioritiesForPlayerNumbers = (numPlayers) => {
 const priorities = [
     CreatePriority({
         isExchangeable: false,
+        value: -1,
+    }),
+    CreatePriority({
+        isExchangeable: false,
         value: 0,
     }),
     CreatePriority({
@@ -68,7 +72,7 @@ const priorities = [
  * </ol>
  */
 export const prioritiesConfig = {
-    1: priorities.slice(0, 0),
+    1: priorities.slice(0, 1),
     2: priorities.slice(-2),
     3: priorities.slice(-3),
     4: priorities.slice(-4),

@@ -20,7 +20,7 @@ import type { DeckCardTypes, DistinctionTypes, IMyGameState, IPublicPlayer, Suit
  */
 export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): DistinctionTypes => {
     const playersRanks: number[] = [];
-    for (let i = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
         const playerI: IPublicPlayer | undefined = G.publicPlayers[i];
         if (playerI === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
@@ -64,7 +64,7 @@ export const CheckCurrentSuitDistinction = (G: IMyGameState, ctx: Ctx, suit: Sui
  */
 export const CheckCurrentSuitDistinctions = (G: IMyGameState, ctx: Ctx, suit: SuitTypes): number[] => {
     const playersRanks: number[] = [];
-    for (let i = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
         const playerI: IPublicPlayer | undefined = G.publicPlayers[i];
         if (playerI === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);

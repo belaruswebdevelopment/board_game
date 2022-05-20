@@ -87,7 +87,6 @@ export const FinalScoring = (G: IMyGameState, ctx: Ctx, playerId: number, warrio
         dwerg_brothers = 0;
     const dwerg_brothers_scoring: number[] = [0, 13, 40, 81, 108, 135];
     for (let i = 0; i < player.heroes.length; i++) {
-        // TODO Uline for Solo game must be changed `It adds 9 pts to your final Bravery Value. There is a price to breach the rules!`
         const hero: IHeroCard | undefined = player.heroes[i];
         if (hero === undefined) {
             throw new Error(`Не существует карта героя с id '${i}'.`);
@@ -184,7 +183,7 @@ export const ScoreWinner = (G: IMyGameState, ctx: Ctx): IMyGameState | void => {
     G.drawProfit = ``;
     AddDataToLog(G, LogTypes.GAME, `Финальные результаты игры:`);
     const warriorDistinctions: number[] = CheckCurrentSuitDistinctions(G, ctx, SuitNames.WARRIOR);
-    for (let i = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
         G.totalScore.push(FinalScoring(G, ctx, i, warriorDistinctions));
     }
     const maxScore: number = Math.max(...G.totalScore),

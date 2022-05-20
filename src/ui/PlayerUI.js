@@ -247,6 +247,7 @@ export const DrawPlayersBoards = (G, ctx, validatorName, playerId, data) => {
                 }
                 j++;
             }
+            // TODO Draw Idavoll cards column!
             for (let k = 0; k < 1 + Number(G.expansions.thingvellir.active); k++) {
                 id += k + 1;
                 if (k === 0) {
@@ -376,7 +377,8 @@ export const DrawPlayersBoardsCoins = (G, ctx, validatorName, data) => {
                     else {
                         if (t === G.tavernsNum - 1) {
                             playerFooters.push(_jsx("th", { children: _jsx("span", { style: Styles.Priority(), className: "bg-priority-icon" }) }, `${player.nickname} priority icon`));
-                            playerCells.push(_jsx("td", { className: "bg-gray-300", children: _jsx("span", { style: Styles.Priorities(player.priority.value), className: "bg-priority" }) }, `${player.nickname} priority gem`));
+                            playerCells.push(_jsx("td", { className: "bg-gray-300", children: _jsx("span", { style: player.priority.value > 0 ?
+                                        Styles.Priorities(player.priority.value) : undefined, className: "bg-priority" }) }, `${player.nickname} priority gem`));
                         }
                         else {
                             if (data !== undefined) {
@@ -567,7 +569,7 @@ export const DrawPlayersHandsCoins = (G, ctx, validatorName, data) => {
     var _a, _b, _c;
     const playersHandsCoins = [], moveMainArgs = [];
     let moveName;
-    for (let p = 0; p < ctx.numPlayers; p++) {
+    for (let p = 0; p < ctx.numPlayers + Number(G.solo); p++) {
         const stage = (_a = ctx.activePlayers) === null || _a === void 0 ? void 0 : _a[p];
         switch (ctx.phase) {
             case Phases.PlaceCoins:

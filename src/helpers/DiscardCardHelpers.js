@@ -15,6 +15,7 @@ import { LogTypes, RusCardTypes } from "../typescript/enums";
  * @param discardedCard Сбрасываемая карта.
  */
 export const DiscardPickedCard = (G, player, discardedCard) => {
+    // TODO Fix IdavollDeckCardTypes
     if (IsHeroCard(discardedCard)) {
         throw new Error(`Сброшенная карта не может быть с типом '${RusCardTypes.HERO}'.`);
     }

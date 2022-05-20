@@ -1,6 +1,6 @@
 import { DiscardPickedCard } from "./helpers/DiscardCardHelpers";
 import { AddDataToLog } from "./Logging";
-import { ArtefactNames, LogTypes, TavernNames } from "./typescript/enums";
+import { LogTypes, TavernNames } from "./typescript/enums";
 /**
  * <h3>Проверяет все ли карты выбраны игроками в текущей таверне.</h1>
  * <p>Применения:</p>
@@ -38,7 +38,7 @@ export const DiscardCardIfTavernHasCardFor2Players = (G, ctx) => {
     }
     const cardIndex = currentTavern.findIndex((card) => card !== null);
     if (cardIndex === -1) {
-        throw new Error(`Не удалось сбросить лишнюю карту из таверны с id '${G.currentTavern}' при пике артефакта '${ArtefactNames.Jarnglofi}'.`);
+        throw new Error(`Не удалось сбросить лишнюю карту из текущей таверны с id '${G.currentTavern}'.`);
     }
     const currentTavernConfig = tavernsConfig[G.currentTavern];
     if (currentTavernConfig === undefined) {
@@ -99,16 +99,23 @@ export const DiscardCardFromTavern = (G, ctx, discardCardIndex) => {
  * @param G
  */
 export const RefillTaverns = (G) => {
+    G.round++;
     for (let t = 0; t < G.tavernsNum; t++) {
-        const deck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
-        if (deck === undefined) {
-            throw new Error(`Отсутствует колода карт текущей эпохи '${G.secret.decks.length - G.tierToEnd}'.`);
+        let refillDeck;
+        if (G.expansions.idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {
+            refillDeck = G.secret.idavollDecks.splice(0, G.drawSize);
         }
-        const refillDeck = deck.splice(0, G.drawSize);
+        else {
+            const deck = G.secret.decks[G.secret.decks.length - G.tierToEnd];
+            if (deck === undefined) {
+                throw new Error(`Отсутствует колода карт текущей эпохи '${G.secret.decks.length - G.tierToEnd}'.`);
+            }
+            refillDeck = deck.splice(0, G.drawSize);
+            G.deckLength[G.secret.decks.length - G.tierToEnd] = deck.length;
+        }
         if (refillDeck.length !== G.drawSize) {
             throw new Error(`Таверна с id '${t}' не заполнена новыми картами из-за их нехватки в колоде.`);
         }
-        G.deckLength[G.secret.decks.length - G.tierToEnd] = deck.length;
         const currentTavern = G.taverns[t];
         if (currentTavern === undefined) {
             throw new Error(`Отсутствует текущая таверна с id '${t}'.`);

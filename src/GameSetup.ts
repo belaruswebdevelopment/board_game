@@ -13,7 +13,7 @@ import { BuildHeroes } from "./Hero";
 import { BuildPlayer, BuildPublicPlayer } from "./Player";
 import { GeneratePrioritiesForPlayerNumbers } from "./Priority";
 import { GameNames } from "./typescript/enums";
-import type { CampDeckCardTypes, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICard, ICoin, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPriority, IPublicPlayers, ISecret, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
+import type { CampDeckCardTypes, DeckCardTypes, DistinctionTypes, ExpansionTypes, IBotData, ICard, ICoin, IdavollDeckCardTypes, IExpansions, IHeroCard, ILogData, IMyGameState, IPlayers, IPriority, IPublicPlayers, ISecret, SuitPropertyTypes, SuitTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Инициализация игры.</h3>
@@ -29,6 +29,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     const suitsNum = 5,
         tierToEnd = 2,
         campNum = 5,
+        round = 0,
         soloGameDifficultyLevel = null,
         explorerDistinctionCardId = null,
         multiplayer = false,
@@ -42,6 +43,10 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
             thingvellir: {
                 active: solo ? false : true,
             },
+            // TODO Fix me to "true" after expansion finished
+            idavoll: {
+                active: solo ? false : false,
+            },
         },
         totalScore: number[] = [],
         logData: ILogData[] = [],
@@ -53,6 +58,9 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         secret: ISecret = {
             campDecks: [],
             decks: [],
+            // TODO Add Idavoll deck length info on main page?
+            // TODO Idavoll
+            idavollDecks: [],
         };
     if (solo && multiplayer) {
         throw new Error(`Не может быть одновременно режим мультиплеера и соло игры.`);
@@ -110,16 +118,21 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
     }
     const [heroes, heroesForSoloBot, heroesForSoloGameDifficultyLevel]: [IHeroCard[], IHeroCard[], IHeroCard[]] =
         BuildHeroes(heroesConfigOptions, solo),
-        taverns: DeckCardTypes[][] = [],
+        taverns: (DeckCardTypes[] | IdavollDeckCardTypes[])[] = [],
         tavernsNum = 3,
         currentTavern = -1,
-        drawSize: number = (solo || ctx.numPlayers === 2) ? 3 : ctx.numPlayers;
+        drawSize: number = (solo || ctx.numPlayers === 2) ? 3 : ctx.numPlayers,
+        deck0: DeckCardTypes[] | undefined = secret.decks[0];
+    if (deck0 === undefined) {
+        throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
+    }
     for (let i = 0; i < tavernsNum; i++) {
-        const deck0: DeckCardTypes[] | undefined = secret.decks[0];
-        if (deck0 === undefined) {
-            throw new Error(`Колода карт 1 эпохи не может отсутствовать.`);
+        if (expansions.idavoll.active && i === 1) {
+            secret.idavollDecks = ctx.random!.Shuffle(secret.idavollDecks);
+            taverns[1] = secret.idavollDecks.splice(0, drawSize);
+        } else {
+            taverns[i] = deck0.splice(0, drawSize);
         }
-        taverns[i] = deck0.splice(0, drawSize);
         deckLength[0] = deck0.length;
     }
     const players: IPlayers = {},
@@ -128,7 +141,6 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         exchangeOrder: number[] = [],
         priorities: IPriority[] = GeneratePrioritiesForPlayerNumbers(ctx.numPlayers);
     for (let i = 0; i < ctx.numPlayers + Number(solo); i++) {
-        // TODO Bot don't have priority or `1` priority enough (by rules bot must have all `1`, `2`, `3` priorities for random pick cards - it can be done by simple random from `1`, `2`, `3` numbers)?
         const randomPriorityIndex: number = solo ? i : Math.floor(Math.random() * priorities.length),
             priority: IPriority | undefined = priorities.splice(randomPriorityIndex, 1)[0];
         if (priority === undefined) {
@@ -205,6 +217,7 @@ export const SetupGame = (ctx: Ctx): IMyGameState => {
         logData,
         marketCoins,
         marketCoinsUnique,
+        round,
         suitsNum,
         taverns,
         tavernsNum,

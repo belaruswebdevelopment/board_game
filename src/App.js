@@ -5,7 +5,7 @@ const App = Client({
     // debug: false,
     game: BoardGame,
     board: GameBoard,
-    numPlayers: 5,
+    numPlayers: 1,
 });
 export default App;
 /*import React from "react";
@@ -58,8 +58,7 @@ const enableLocalPlayer: boolean = true,
     );
 
 export default App;*/
-/*
-import React from "react";
+/*import React from "react";
 import {render} from "react-dom";
 import {Client} from "boardgame.io/react";
 import {BoardGame} from "./Game";
@@ -116,7 +115,7 @@ render(<App/>, document.getElementById("root"));
 
 export default App;
 */
-/* import React from "react";
+/*import React from "react";
 import LobbyClient from "./LobbyClient";
 
 class App extends React.Component {

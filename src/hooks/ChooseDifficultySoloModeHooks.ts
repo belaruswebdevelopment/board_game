@@ -31,12 +31,16 @@ export const CheckChooseDifficultySoloModeOrder = (G: IMyGameState, ctx: Ctx): v
  * @returns
  */
 export const CheckEndChooseDifficultySoloModePhase = (G: IMyGameState, ctx: Ctx): boolean | void => {
-    if (ctx.currentPlayer === `1`) {
-        const soloBotPublicPlayer: IPublicPlayer | undefined = G.publicPlayers[1];
-        if (soloBotPublicPlayer === undefined) {
-            throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+    if (G.solo) {
+        if (ctx.currentPlayer === `1`) {
+            const soloBotPublicPlayer: IPublicPlayer | undefined = G.publicPlayers[1];
+            if (soloBotPublicPlayer === undefined) {
+                throw new Error(`В массиве игроков отсутствует соло бот с id '1'.`);
+            }
+            return !soloBotPublicPlayer.stack.length;
         }
-        return !soloBotPublicPlayer.stack.length;
+    } else {
+        return true;
     }
 };
 

@@ -519,12 +519,12 @@ describe(`Test PickDiscardCardAction method`, () => {
             discardCardsDeck: [],
             logData: [
                 {
-                    type: LogTypes.PUBLIC,
-                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
-                },
-                {
                     type: LogTypes.GAME,
                     value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                },
+                {
+                    type: LogTypes.PUBLIC,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
                 },
             ],
         });
@@ -553,6 +553,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                         }
                     ],
                     name: `Test`,
+                    value: 5,
                 },
             ],
             logData: [],
@@ -576,6 +577,7 @@ describe(`Test PickDiscardCardAction method`, () => {
                             }
                         ],
                         name: `Test`,
+                        value: 5,
                     },
                     stack: [
                         {},
@@ -589,15 +591,33 @@ describe(`Test PickDiscardCardAction method`, () => {
                     ],
                 },
             },
-            discardCardsDeck: [],
+            discardCardsDeck: [
+                {
+                    stack: [
+                        {
+                            config: {
+                                stageName: Stages.UpgradeCoin,
+                                value: 5,
+                                drawName: DrawNames.UpgradeCoin,
+                            },
+                        }
+                    ],
+                    name: `Test`,
+                    value: 5,
+                },
+            ],
             logData: [
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                },
                 {
                     type: LogTypes.PUBLIC,
                     value: `Игрок 'Dan' выбрал карту 'Test'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                    value: "Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.",
                 },
             ],
         });
@@ -664,12 +684,12 @@ describe(`Test PickDiscardCardAction method`, () => {
             discardCardsDeck: [],
             logData: [
                 {
-                    type: LogTypes.PUBLIC,
-                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
-                },
-                {
                     type: LogTypes.GAME,
                     value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                },
+                {
+                    type: LogTypes.PUBLIC,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
                 },
             ],
         });
@@ -816,6 +836,11 @@ describe(`Test PickDiscardCardAction method`, () => {
                             },
                         ],
                     },
+                    buffs: [
+                        {
+                            moveThrud: true,
+                        },
+                    ],
                 },
             },
             discardCardsDeck: [
@@ -888,17 +913,22 @@ describe(`Test PickDiscardCardAction method`, () => {
                             },
                         ],
                     },
+                    buffs: [
+                        {
+                            moveThrud: true,
+                        },
+                    ],
                 },
             },
             discardCardsDeck: [],
             logData: [
                 {
-                    type: LogTypes.PUBLIC,
-                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.HUNTER].suitName}'.`,
-                },
-                {
                     type: LogTypes.GAME,
                     value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                },
+                {
+                    type: LogTypes.PUBLIC,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.HUNTER].suitName}'.`,
                 },
             ],
         });
@@ -1274,6 +1304,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                             },
                         ],
                     },
+                    buffs: [
+                        {
+                            moveThrud: true,
+                        },
+                    ],
                 },
             },
             logData: [],
@@ -1353,6 +1388,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, () => {
                             },
                         ],
                     },
+                    buffs: [
+                        {
+                            moveThrud: true,
+                        },
+                    ],
                 },
             },
             logData: [

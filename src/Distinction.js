@@ -17,7 +17,7 @@ import { LogTypes, SuitNames } from "./typescript/enums";
  */
 export const CheckCurrentSuitDistinction = (G, ctx, suit) => {
     const playersRanks = [];
-    for (let i = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
         const playerI = G.publicPlayers[i];
         if (playerI === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
@@ -60,7 +60,7 @@ export const CheckCurrentSuitDistinction = (G, ctx, suit) => {
  */
 export const CheckCurrentSuitDistinctions = (G, ctx, suit) => {
     const playersRanks = [];
-    for (let i = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
         const playerI = G.publicPlayers[i];
         if (playerI === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);

@@ -529,12 +529,12 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             discardCardsDeck: [],
             logData: [
                 {
-                    type: LogTypes.PUBLIC,
-                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
-                },
-                {
                     type: LogTypes.GAME,
                     value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                },
+                {
+                    type: LogTypes.PUBLIC,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -563,6 +563,8 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                         }
                     ],
                     name: `Test`,
+                    value: 5,
+
                 } as IActionCard,
             ],
             logData: [],
@@ -586,6 +588,7 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                             }
                         ],
                         name: `Test`,
+                        value: 5,
                     },
                     stack: [
                         {},
@@ -599,15 +602,34 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                     ],
                 } as IPublicPlayer,
             },
-            discardCardsDeck: [],
+            discardCardsDeck: [
+                {
+                    stack: [
+                        {
+                            config: {
+                                stageName: Stages.UpgradeCoin,
+                                value: 5,
+                                drawName: DrawNames.UpgradeCoin,
+                            },
+                        }
+                    ],
+                    name: `Test`,
+                    value: 5,
+
+                } as IActionCard,
+            ],
             logData: [
+                {
+                    type: LogTypes.GAME,
+                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                },
                 {
                     type: LogTypes.PUBLIC,
                     value: `Игрок 'Dan' выбрал карту 'Test'.`,
                 },
                 {
                     type: LogTypes.GAME,
-                    value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                    value: "Игрок 'Dan' отправил карту 'Test' в колоду сброса карт.",
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -674,12 +696,12 @@ describe(`Test PickDiscardCardAction method`, (): void => {
             discardCardsDeck: [],
             logData: [
                 {
-                    type: LogTypes.PUBLIC,
-                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
-                },
-                {
                     type: LogTypes.GAME,
                     value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                },
+                {
+                    type: LogTypes.PUBLIC,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.WARRIOR].suitName}'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -826,6 +848,11 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                             },
                         ],
                     },
+                    buffs: [
+                        {
+                            moveThrud: true,
+                        },
+                    ],
                 } as IPublicPlayer,
             },
             discardCardsDeck: [
@@ -898,17 +925,22 @@ describe(`Test PickDiscardCardAction method`, (): void => {
                             },
                         ],
                     },
+                    buffs: [
+                        {
+                            moveThrud: true,
+                        },
+                    ],
                 } as IPublicPlayer,
             },
             discardCardsDeck: [],
             logData: [
                 {
-                    type: LogTypes.PUBLIC,
-                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.HUNTER].suitName}'.`,
-                },
-                {
                     type: LogTypes.GAME,
                     value: `Игрок 'Dan' взял карту 'Test' из колоды сброса.`,
+                },
+                {
+                    type: LogTypes.PUBLIC,
+                    value: `Игрок 'Dan' выбрал карту 'Test' во фракцию '${suitsConfig[SuitNames.HUNTER].suitName}'.`,
                 },
             ],
         } as Pick<IMyGameState, `publicPlayers` | `discardCardsDeck` | `logData`>);
@@ -1285,6 +1317,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                             } as IHeroCard,
                         ],
                     },
+                    buffs: [
+                        {
+                            moveThrud: true,
+                        },
+                    ],
                 } as IPublicPlayer,
             },
             logData: [],
@@ -1364,6 +1401,11 @@ describe(`Test PlaceEnlistmentMercenariesAction method`, (): void => {
                             } as IMercenaryPlayerCard,
                         ],
                     },
+                    buffs: [
+                        {
+                            moveThrud: true,
+                        },
+                    ],
                 } as IPublicPlayer,
             },
             logData: [

@@ -4,13 +4,13 @@ import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddCampCardToCards, AddCoinOnOdroerirTheMythicCauldronCampCard } from "../helpers/CampCardHelpers";
+import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CoinTypes, LogTypes, SuitNames } from "../typescript/enums";
-import type { CampCardTypes, IMyGameState, IPlayer, IPublicPlayer, IStack, PlayerCardsType, PublicPlayerCoinTypes } from "../typescript/interfaces";
+import type { CampCardTypes, IMyGameState, IPlayer, IPublicPlayer, PlayerCardsType, PublicPlayerCoinTypes } from "../typescript/interfaces";
 import { StartVidofnirVedrfolnirAction } from "./CampAutoActions";
-import { UpgradeCoinAction } from "./CoinActions";
 
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
@@ -137,21 +137,8 @@ export const PickCampCardAction = (G: IMyGameState, ctx: Ctx, cardId: number): v
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G: IMyGameState, ctx: Ctx, coinId: number, type: CoinTypes):
     void => {
-    const player: IPublicPlayer | undefined = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
-    }
-    const stack: IStack | undefined = player.stack[0];
-    if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
-    }
-    const value: number | undefined = stack.config?.value;
-    if (value === undefined) {
-        throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр значения улучшаемой монеты '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
-    }
+    const value: number = UpgradeCoinActions(G, ctx, coinId, type);
     if (value === 3) {
-        AddActionsToStackAfterCurrent(G, ctx,
-            [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
+        AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
     }
-    UpgradeCoinAction(G, ctx, false, value, coinId, type);
 };

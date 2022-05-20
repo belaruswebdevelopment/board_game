@@ -3,12 +3,12 @@ import { ChangeIsOpenedCoinStatus, IsCoin } from "../Coin";
 import { StackData } from "../data/StackData";
 import { StartAutoAction } from "../helpers/ActionDispatcherHelpers";
 import { AddCampCardToCards, AddCoinOnOdroerirTheMythicCauldronCampCard } from "../helpers/CampCardHelpers";
+import { UpgradeCoinActions } from "../helpers/CoinActionHelpers";
 import { DiscardPickedCard } from "../helpers/DiscardCardHelpers";
 import { AddActionsToStackAfterCurrent } from "../helpers/StackHelpers";
 import { AddDataToLog } from "../Logging";
 import { ArtefactNames, CoinTypes, LogTypes, SuitNames } from "../typescript/enums";
 import { StartVidofnirVedrfolnirAction } from "./CampAutoActions";
-import { UpgradeCoinAction } from "./CoinActions";
 /**
  * <h3>Действия, связанные с добавлением монет в кошель для обмена при наличии персонажа Улина для начала действия артефакта Vidofnir Vedrfolnir.</h3>
  * <p>Применения:</p>
@@ -127,22 +127,9 @@ export const PickCampCardAction = (G, ctx, cardId) => {
  * @param type Тип монеты.
  */
 export const UpgradeCoinVidofnirVedrfolnirAction = (G, ctx, coinId, type) => {
-    var _a;
-    const player = G.publicPlayers[Number(ctx.currentPlayer)];
-    if (player === undefined) {
-        throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
-    }
-    const stack = player.stack[0];
-    if (stack === undefined) {
-        throw new Error(`В массиве стека действий игрока с id '${ctx.currentPlayer}' отсутствует '0' действие.`);
-    }
-    const value = (_a = stack.config) === null || _a === void 0 ? void 0 : _a.value;
-    if (value === undefined) {
-        throw new Error(`У конфига действия игрока с id '${ctx.currentPlayer}' отсутствует обязательный параметр значения улучшаемой монеты '${ArtefactNames.Vidofnir_Vedrfolnir}'.`);
-    }
+    const value = UpgradeCoinActions(G, ctx, coinId, type);
     if (value === 3) {
         AddActionsToStackAfterCurrent(G, ctx, [StackData.upgradeCoinVidofnirVedrfolnir(2, coinId)]);
     }
-    UpgradeCoinAction(G, ctx, false, value, coinId, type);
 };
 //# sourceMappingURL=CampActions.js.map

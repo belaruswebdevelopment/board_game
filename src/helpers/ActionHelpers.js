@@ -24,22 +24,24 @@ export const DrawCurrentProfit = (G, ctx) => {
     if (config !== undefined) {
         AddDataToLog(G, LogTypes.GAME, `Игрок '${player.nickname}' должен получить преимущества от действия '${config.drawName}'.`);
         StartOrEndActionStage(G, ctx, config);
-        if (config.drawName === DrawNames.Olwin) {
-            const pickedCard = player.pickedCard;
-            if (pickedCard !== null
-                && (pickedCard.name === HeroNames.Olwin || pickedCard.name === CardNames.OlwinsDouble)) {
-                let suit = null;
-                if (`suit` in pickedCard) {
-                    suit = pickedCard.suit;
+        if (G.expansions.thingvellir.active) {
+            if (config.drawName === DrawNames.Olwin) {
+                const pickedCard = player.pickedCard;
+                if (pickedCard !== null
+                    && (pickedCard.name === HeroNames.Olwin || pickedCard.name === CardNames.OlwinsDouble)) {
+                    let suit = null;
+                    if (`suit` in pickedCard) {
+                        suit = pickedCard.suit;
+                    }
+                    const olwinDouble = CreateOlwinDoubleNonPlacedCard({
+                        suit,
+                    });
+                    player.pickedCard = olwinDouble;
                 }
-                const olwinDouble = CreateOlwinDoubleNonPlacedCard({
-                    suit,
-                });
-                player.pickedCard = olwinDouble;
             }
-        }
-        else if (config.drawName === DrawNames.EnlistmentMercenaries) {
-            player.pickedCard = null;
+            else if (config.drawName === DrawNames.EnlistmentMercenaries) {
+                player.pickedCard = null;
+            }
         }
         player.actionsNum = (_b = config.number) !== null && _b !== void 0 ? _b : 1;
         if (config.name !== undefined) {

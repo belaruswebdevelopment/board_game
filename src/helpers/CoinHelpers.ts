@@ -165,7 +165,7 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
     const playersOrderNumbers: number[] = [],
         coinValues: number[] = [],
         exchangeOrder: number[] = [];
-    for (let i = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
         const playerI: IPublicPlayer | undefined = G.publicPlayers[i];
         if (playerI === undefined) {
             throw new Error(`В массиве игроков отсутствует игрок с id '${i}'.`);
@@ -203,7 +203,6 @@ export const ResolveBoardCoins = (G: IMyGameState, ctx: Ctx): IResolveBoardCoins
                     throw new Error(`В массиве монет предыдущего игрока с id '${playersOrderNumberPrev}' на столе отсутствует монета в позиции текущей таверны с id '${G.currentTavern}'.`);
                 }
                 if (IsCoin(coin) && IsCoin(prevCoin)) {
-                    // TODO Move same logic 1place: [playersOrderNumbers[j], playersOrderNumbers[j - 1]] = [playersOrderNumberPrev, playersOrderNumberCur]
                     if (coin.value > prevCoin.value) {
                         [playersOrderNumbers[j], playersOrderNumbers[j - 1]] =
                             [playersOrderNumberPrev, playersOrderNumberCur];
@@ -345,7 +344,7 @@ export const ReturnCoinsToPlayerBoard = (G: IMyGameState, playerId: number): voi
  * @param ctx
  */
 export const ReturnCoinsToPlayerHands = (G: IMyGameState, ctx: Ctx): void => {
-    for (let i = 0; i < ctx.numPlayers; i++) {
+    for (let i = 0; i < ctx.numPlayers + Number(G.solo); i++) {
         const player: IPublicPlayer | undefined = G.publicPlayers[i],
             privatePlayer: IPlayer | undefined = G.players[i];
         if (player === undefined) {

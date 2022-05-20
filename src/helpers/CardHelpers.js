@@ -1,4 +1,4 @@
-import { IsCardNotActionAndNotNull } from "../Card";
+import { IsActionCard, IsCardNotActionAndNotNull } from "../Card";
 import { suitsConfig } from "../data/SuitData";
 import { AddDataToLog } from "../Logging";
 import { LogTypes } from "../typescript/enums";
@@ -26,6 +26,7 @@ export const AddCardToPlayer = (G, ctx, card) => {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     player.pickedCard = card;
+    // TODO Idavoll && IMythicalAnimal
     if (IsCardNotActionAndNotNull(card)) {
         player.cards[card.suit].push(card);
         AddDataToLog(G, LogTypes.PUBLIC, `Игрок '${player.nickname}' выбрал карту '${card.name}' во фракцию '${suitsConfig[card.suit].suitName}'.`);
@@ -55,14 +56,20 @@ export const PickCardOrActionCardActions = (G, ctx, card) => {
         throw new Error(`В массиве игроков отсутствует текущий игрок с id '${ctx.currentPlayer}'.`);
     }
     const isAdded = AddCardToPlayer(G, ctx, card);
+    // TODO Idavoll && IMythicalAnimal
     if (IsCardNotActionAndNotNull(card)) {
         if (isAdded) {
             CheckAndMoveThrudAction(G, ctx, card);
         }
     }
     else {
-        AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
-        DiscardPickedCard(G, player, card);
+        if (IsActionCard(card)) {
+            AddActionsToStackAfterCurrent(G, ctx, card.stack, card);
+            DiscardPickedCard(G, player, card);
+        }
+        else {
+            // TODO Add Idavoll cards to Player's Idavoll cards Command Zone
+        }
     }
     return isAdded;
 };

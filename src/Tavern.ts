@@ -1,8 +1,8 @@
 import type { Ctx } from "boardgame.io";
 import { DiscardPickedCard } from "./helpers/DiscardCardHelpers";
 import { AddDataToLog } from "./Logging";
-import { ArtefactNames, LogTypes, TavernNames } from "./typescript/enums";
-import type { DeckCardTypes, IMyGameState, IPublicPlayer, ITavernInConfig, ITavernsConfig, TavernCardTypes } from "./typescript/interfaces";
+import { LogTypes, TavernNames } from "./typescript/enums";
+import type { DeckCardTypes, IdavollDeckCardTypes, IMyGameState, IPublicPlayer, ITavernInConfig, ITavernsConfig, TavernCardTypes } from "./typescript/interfaces";
 
 /**
  * <h3>Проверяет все ли карты выбраны игроками в текущей таверне.</h1>
@@ -42,7 +42,7 @@ export const DiscardCardIfTavernHasCardFor2Players = (G: IMyGameState, ctx: Ctx)
     }
     const cardIndex: number = currentTavern.findIndex((card: TavernCardTypes): boolean => card !== null);
     if (cardIndex === -1) {
-        throw new Error(`Не удалось сбросить лишнюю карту из таверны с id '${G.currentTavern}' при пике артефакта '${ArtefactNames.Jarnglofi}'.`);
+        throw new Error(`Не удалось сбросить лишнюю карту из текущей таверны с id '${G.currentTavern}'.`);
     }
     const currentTavernConfig: ITavernInConfig | undefined = tavernsConfig[G.currentTavern];
     if (currentTavernConfig === undefined) {
@@ -105,16 +105,22 @@ export const DiscardCardFromTavern = (G: IMyGameState, ctx: Ctx, discardCardInde
  * @param G
  */
 export const RefillTaverns = (G: IMyGameState): void => {
+    G.round++;
     for (let t = 0; t < G.tavernsNum; t++) {
-        const deck: DeckCardTypes[] | undefined = G.secret.decks[G.secret.decks.length - G.tierToEnd];
-        if (deck === undefined) {
-            throw new Error(`Отсутствует колода карт текущей эпохи '${G.secret.decks.length - G.tierToEnd}'.`);
+        let refillDeck: DeckCardTypes[] | IdavollDeckCardTypes[];
+        if (G.expansions.idavoll.active && G.tierToEnd === 2 && G.round < 3 && t === 1) {
+            refillDeck = G.secret.idavollDecks.splice(0, G.drawSize);
+        } else {
+            const deck: DeckCardTypes[] | undefined = G.secret.decks[G.secret.decks.length - G.tierToEnd];
+            if (deck === undefined) {
+                throw new Error(`Отсутствует колода карт текущей эпохи '${G.secret.decks.length - G.tierToEnd}'.`);
+            }
+            refillDeck = deck.splice(0, G.drawSize);
+            G.deckLength[G.secret.decks.length - G.tierToEnd] = deck.length;
         }
-        const refillDeck: DeckCardTypes[] = deck.splice(0, G.drawSize);
         if (refillDeck.length !== G.drawSize) {
             throw new Error(`Таверна с id '${t}' не заполнена новыми картами из-за их нехватки в колоде.`);
         }
-        G.deckLength[G.secret.decks.length - G.tierToEnd] = deck.length;
         const currentTavern: TavernCardTypes[] | undefined = G.taverns[t];
         if (currentTavern === undefined) {
             throw new Error(`Отсутствует текущая таверна с id '${t}'.`);

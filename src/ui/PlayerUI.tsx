@@ -282,6 +282,7 @@ export const DrawPlayersBoards = (G: IMyGameState, ctx: Ctx, validatorName: Move
                 }
                 j++;
             }
+            // TODO Draw Idavoll cards column!
             for (let k = 0; k < 1 + Number(G.expansions.thingvellir.active); k++) {
                 id += k + 1;
                 if (k === 0) {
@@ -436,7 +437,8 @@ export const DrawPlayersBoardsCoins = (G: IMyGameState, ctx: Ctx, validatorName:
                             playerCells.push(
                                 <td key={`${player.nickname} priority gem`}
                                     className="bg-gray-300">
-                                    <span style={Styles.Priorities(player.priority.value)}
+                                    <span style={player.priority.value > 0 ?
+                                        Styles.Priorities(player.priority.value) : undefined}
                                         className="bg-priority"></span>
                                 </td>
                             );
@@ -652,7 +654,7 @@ export const DrawPlayersHandsCoins = (G: IMyGameState, ctx: Ctx, validatorName: 
     const playersHandsCoins: JSX.Element[] = [],
         moveMainArgs: IMoveArgumentsStage<number[]>[`args`] | IMoveArgumentsStage<IMoveCoinsArguments[]>[`args`] = [];
     let moveName: MoveNames | undefined;
-    for (let p = 0; p < ctx.numPlayers; p++) {
+    for (let p = 0; p < ctx.numPlayers + Number(G.solo); p++) {
         const stage: string | undefined = ctx.activePlayers?.[p];
         switch (ctx.phase) {
             case Phases.PlaceCoins:

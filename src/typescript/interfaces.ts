@@ -4,6 +4,8 @@ import { ArtefactNames, CardNames, CoinTypes, GameNames, HeroNames, LogTypes, Mo
 export interface ISecret {
     readonly campDecks: CampDeckCardTypes[][];
     readonly decks: DeckCardTypes[][];
+    // TODO Idavoll
+    idavollDecks: IdavollDeckCardTypes[];
 }
 
 export interface IObjective {
@@ -44,6 +46,35 @@ export interface IHeuristic<T> {
 export interface IDeckConfig {
     readonly suits: ISuitConfig;
     readonly actions: IActionCardConfig[];
+}
+
+// TODO Idavoll IGodCard | IGiantCard | IValkyryCard | IMythicalAnimalCard
+/**
+ * <h3>Интерфейс для карты Idavoll.</h3>
+ */
+export interface IGodCard {
+    readonly name: string;
+}
+
+/**
+ * <h3>Интерфейс для карты Idavoll.</h3>
+ */
+export interface IGiantCard {
+    readonly name: string;
+}
+
+/**
+ * <h3>Интерфейс для карты Idavoll.</h3>
+ */
+export interface IValkyryCard {
+    readonly name: string;
+}
+
+/**
+ * <h3>Интерфейс для карты Idavoll.</h3>
+ */
+export interface IMythicalAnimalCard extends IBasicSuitableNullableCardInfo {
+    readonly name: string;
 }
 
 /**
@@ -289,6 +320,7 @@ interface IExpansion {
  */
 export interface IExpansions {
     readonly thingvellir: IExpansion;
+    readonly idavoll: IExpansion;
 }
 
 /**
@@ -336,9 +368,10 @@ export interface IMyGameState {
     readonly logData: ILogData[];
     readonly marketCoins: ICoin[];
     readonly marketCoinsUnique: ICoin[];
+    round: number;
     readonly suitsNum: number;
     tavernCardDiscarded2Players: boolean;
-    readonly taverns: TavernCardTypes[][];
+    readonly taverns: (TavernCardTypes[] | IdavollDeckCardTypes[])[];
     readonly tavernsNum: number;
     tierToEnd: number;
     readonly totalScore: number[];
@@ -799,6 +832,12 @@ export interface ITavernsConfig {
     readonly [index: number]: ITavernInConfig;
 }
 
+// TODO Idavoll
+/**
+ * <h3>Типы данных для карт Idavoll.</h3>
+ */
+export type IdavollDeckCardTypes = IGodCard | IGiantCard | IValkyryCard | IMythicalAnimalCard;
+
 /**
  * <h3>Типы данных для лагеря.</h3>
  */
@@ -833,19 +872,19 @@ export type CardsHasStackValidators = IHeroCard | IArtefactCampCard;
  * <h3>Типы данных для карт выбранных игроком.</h3>
  */
 export type PickedCardType = DeckCardTypes | CampDeckCardTypes | IHeroCard | IMercenaryPlayerCard
-    | IOlwinDoubleNonPlacedCard | null;
+    | IOlwinDoubleNonPlacedCard | IdavollDeckCardTypes | null;
 
 /**
  * <h3>Типы данных для карт на планшете игрока.</h3>
  */
-export type PlayerCardsType = ICard | IArtefactCampCard | IHeroCard | IMercenaryPlayerCard;
+export type PlayerCardsType = ICard | IArtefactCampCard | IHeroCard | IMercenaryPlayerCard | IMythicalAnimalCard;
 
 /**
  * <h3>Типы данных для карт таверн.</h3>
  */
-export type TavernCardTypes = DeckCardTypes | null;
+export type TavernCardTypes = DeckCardTypes | IdavollDeckCardTypes | null;
 
-export type AllCardTypes = DeckCardTypes | CampDeckCardTypes | IHeroCard | IMercenaryPlayerCard;
+export type AllCardTypes = DeckCardTypes | CampDeckCardTypes | IHeroCard | IMercenaryPlayerCard | IdavollDeckCardTypes;
 
 /**
  * <h3>Типы данных для монет на столе или в руке.</h3>
